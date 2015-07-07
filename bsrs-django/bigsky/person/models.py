@@ -25,10 +25,10 @@ class Person(User):
     role = models.ForeignKey(Role, null=True)
     # fields
     title = models.CharField(max_length=100, blank=True)
-    empnumber = models.CharField(max_length=100, blank=True)
-    authamount = models.DecimalField(max_digits=15, decimal_places=4, null=True)
-    middleinitial = models.CharField(max_length=30, blank=True)
-    acceptassign = models.BooleanField(default=False)
+    emp_number = models.CharField(max_length=100, blank=True)
+    auth_amount = models.DecimalField(max_digits=15, decimal_places=4, null=True)
+    middle_initial = models.CharField(max_length=30, blank=True)
+    accept_assign = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'person_person'
