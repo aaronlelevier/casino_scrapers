@@ -20,7 +20,7 @@ var XNumber = Ember.Object.extend({
 
 
 
-moduleForComponent('input-multi', 'integration: input-multi test', {
+moduleForComponent('input-multi', 'xx integration: input-multi test', {
   integration: true,
   setup: function() {
     initializer.initialize(this);
