@@ -1,6 +1,6 @@
 {{#each model as |thing|}}
   <div class="input-group">
-    {{dynamic-input-field obj=thing prop=fieldNames}}
+    {{input-dynamic obj=thing prop=fieldNames}}
     <span class="input-group-btn">
       <button class="t-del-btn btn btn-default delete" type="button" {{action 'delete' thing}}>{{fa-icon "minus"}}</button>
     </span>

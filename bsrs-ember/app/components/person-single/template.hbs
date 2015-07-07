@@ -10,13 +10,13 @@
 	</header>
 	<section class="docSection col-sm-12" id="people">
 
-			{{#form-group title="Active"}}
-				<div class="switch"></div>
+			{{! #form-group title="Active"}}
+			<!--	<div class="switch"></div>
 					{{input id="myonoffswitch" name="myonoffswitch" type="checkbox" class="cmn-toggle cmn-toggle-round" checked=model.isActive}}
-					<label for="myonoffswitch"></label>
-			{{/form-group}}
+					<label for="myonoffswitch"></label> -->
+			{{! /form-group}}
 
-			{{#form-group title="First Name" for="username"}}
+			{{#form-group title="Username" for="username"}}
 		    {{input type="text" placeholder="Username" value=model.username class="form-control t-person-username" id="username" required="required"}}
 			{{/form-group}}
 
@@ -33,11 +33,11 @@
 			{{/form-group}}
 
 			{{#form-group title="Employee Number" for="empnumber"}}
-		    {{input type="text" placeholder="Employee Number" value=model.empnumber class="form-control" id="empnumber"}}
+		    {{input type="text" placeholder="Employee Number" value=model.empnumber class="form-control t-person-empnumber" id="empnumber"}}
 			{{/form-group}}
 
 			{{#form-group title="Phone Numbers"}}
-				{{multi-input model=model.phone_numbers modelType="phonenumber" fieldNames="number"}}
+				{{input-multi model=model.phone_numbers modelType="phonenumber" fieldNames="number"}}
 			{{/form-group}}
 
 			{{#form-group title="Addresses" for="addresses"}}
@@ -45,20 +45,13 @@
 			{{/form-group}}
 
 			{{#form-group title="Authorization Amount" for="authamount"}}
-		    {{input type="text" placeholder="Authorization Amount" value=model.authamount class="form-control" id="authamount" disabled=editPrivilege}}
+		    {{input type="text" placeholder="Authorization Amount" value=model.authamount class="form-control t-person-authamount" id="authamount" disabled=editPrivilege}}
 			{{/form-group}}
 
 			{{#form-group title="Role" for="role"}}
 		    {{input type="text" placeholder="Role" value=model.role class="form-control" id="role"}}
 			{{/form-group}}
 
-			{{#form-group title="Dropdown Test" for="role"}}
-				{{view "select" classNames="form-control" content=model.phoneNumbers
-												optionValuePath="content.type.name"
-												optionLabelPath="content.type.name"
-												value=""
-				}}
-			{{/form-group}}
 
 	</section>
 </form>

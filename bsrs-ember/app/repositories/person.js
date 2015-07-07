@@ -45,7 +45,9 @@ export default Ember.Object.extend({
         $.ajax({
             url: endpoint
         }).then(function(response) {
-            store.push("person", response);
+            Ember.run(function() {
+                store.push("person", response);
+            });
         });
         return store.find("person", id);
     }
