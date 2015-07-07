@@ -1,8 +1,8 @@
 import {test, module} from 'qunit';
-import InputFieldComponent from "bsrs-ember/components/dynamic-input-field/component";
+import InputFieldComponent from "bsrs-ember/components/input-dynamic/component";
 import Ember from 'ember';
 
-module('unit: dynamic-input-field test');
+module('unit: input-dynamic test');
 
 test('value is dynamic based on model and property value', (assert) => {
   var too = Ember.Object.create({
