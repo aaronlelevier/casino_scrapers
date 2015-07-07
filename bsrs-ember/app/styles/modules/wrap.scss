@@ -1,0 +1,186 @@
+
+section.wrap{
+  position: absolute;
+  top: $mainTop;
+  right: 0;
+  bottom: 0;
+  left: $mainLeft;
+  border: $borderStyle;
+  border-width: 1px 0 0 1px;
+  background: $light;
+  font-size: 1.3rem;
+
+  aside.side-panel{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    border: $borderStyle;
+    border-width: 0 1px 0 0;
+    width: $documentLeft;
+    overflow: hidden;
+    header{
+      height: $documentHeaderHeight;
+      line-height: $documentHeaderHeight;
+      border: $borderStyle;
+      border-width: 0 0 1px;
+      padding: 0 15px;
+      position: relative;
+      box-shadow: 0 0 5px $shadowColor;
+      z-index: 5;
+      h1{
+        vertical-align: middle;
+        font-size: 1.6em;
+        font-weight: normal;
+        display: inline;
+        @media screen and (max-width: $mobileDeviceWidth) {
+          font-size: 1.35rem;
+        }
+      }//h1
+    }
+    menu{
+      position: absolute;
+      top: $documentHeaderHeight;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      padding: 0;
+      margin: 0;
+      overflow: auto;
+      background-color: $white;
+      section{
+
+        h3{
+          margin: 0;
+          color: $dark;
+          font-size: 1.1em;
+          padding: 10px 5px;
+          i.menuIcon{
+            width: 25px;
+            text-align: center;
+            color: $darkGray;
+          }
+        }//h3
+
+        ul{
+          padding: 0;
+          margin: 0 0 10px;
+          font-size: 0.9em;
+          li{
+            line-height: 2rem;
+            a{
+              color: $darkGray;
+              text-decoration: none;
+              padding: 3px 8px 3px 30px;
+              display: block;
+              &:hover{
+                cursor: pointer;
+                color: $dark;
+                background-color: $light;
+              }
+              &.active{
+                color: $activeColor;
+                background-color: $light;
+              }
+              &.active:hover{
+                cursor: default;
+              }
+            }//a
+            @media screen and (max-width: $mobileDeviceWidth){
+              line-height: 2.3rem;
+            }
+          }//li
+          @media screen and (max-width: $mobileDeviceWidth){
+            margin: 0 0 25px
+          }
+        }//ul
+      }//section
+    }//menu
+    @media screen and (max-width: $mobileDeviceWidth){
+      display: none;
+    }
+  }// aside.side-panel
+
+  article.main { //if no side panel
+    position: absolute;
+    left: $documentLeft;
+    right: 0;
+    bottom: 0;
+    top: 0;
+    overflow: auto;
+
+    header{
+      height: $documentHeaderHeight;
+      line-height: $documentHeaderHeight;
+      padding: 0 15px;
+      border: $borderStyle;
+      border-width: 0 0 1px 0;
+      position: relative;
+      margin: auto 0;
+      box-shadow: 0 0 5px $shadowColor;
+      z-index: 5;
+
+      h1{
+        vertical-align: middle;
+        font-size: 1.6em;
+        font-weight: normal;
+        display: inline;
+        @media screen and (max-width: $mobileDeviceWidth) {
+          font-size: 1.35rem;
+        }
+      }//h1
+
+      span.add-btn {
+        float: right;
+        height: 100%;
+        width: 75px;
+        i {
+          color: $darkGray;
+          vertical-align: middle;
+          font-size: 2.0em;
+          cursor: pointer;
+          &:hover {
+            color: $hoverColor;
+          }
+          &:active {
+            color: $activeColor;
+          }
+        }
+      }
+      .btn-group{
+        @include vertical-align;
+      }
+
+    }//header
+    section.docSection {
+      position: absolute;
+      top: $documentHeaderHeight;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      background: $white;
+      overflow: auto;
+    }//section.docSection
+
+  }//article.main
+
+  article.full { //if no article.side-panel
+    left: 0
+  }
+}//section.wrap
+@media screen and (max-width: $mobileDeviceWidth){
+  section.wrap,
+  section.wrap article.main,
+  section.wrap article.main section.docSection,
+  section.wrap aside.side-panel {
+    position: static;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    height: auto;
+    width: auto;
+    overflow: auto;
+    border: none;
+  }
+}

@@ -1,0 +1,29 @@
+/*=================
+general form styles
+===================*/
+
+section.docSection{
+	padding: 6% 4%;
+
+}
+
+/*=================
+button group on form
+===================*/
+div.buttonGroup {
+	margin-top: 5rem;
+	button {
+		margin: 0 1rem;
+	}
+}//buttonGroup
+
+@media screen and (max-width: $mobileDeviceWidth){
+  div.login_form {
+	  margin: 30px auto;
+	  padding: 0;
+	  width: auto;
+	}
+}
+.input-multi .input-group{
+	margin-bottom: 7px;
+}

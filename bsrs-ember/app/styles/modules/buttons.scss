@@ -1,0 +1,17 @@
+.delete{
+	&:hover{
+		color: $orange;
+	}
+}
+.add-btn,
+.add-btn:hover,
+.add-btn:focus {
+	background-color: $activeColor;
+	border-color: $activeColor;
+	color: $white;
+	&:active{
+		background-color: $darkGreen;
+		border-color: $darkGreen;
+		color: $light;
+	}
+}

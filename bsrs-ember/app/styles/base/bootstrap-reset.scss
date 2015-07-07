@@ -1,0 +1,65 @@
+input, textarea, select {
+	outline: none;
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	-ms-box-shadow: none !important;
+	box-shadow: none !important;
+}
+
+input[type="text"]:disabled {
+	border: none;
+	box-shadow: none;
+	&:hover {
+		border: none;
+		box-shadow: none;
+	}
+}//input
+
+.form-control:focus{
+	border-color: $activeColor;
+}
+
+
+//remove browser default
+.btn:focus,.btn:active {
+   outline: none !important;
+}
+
+.input-group .btn {
+    height: 34px !important; //Remove after bootstrap fix released
+ }
+
+.btn-default:hover,
+.input-group-addon,
+.form-control[disabled], 
+.form-control[readonly], 
+fieldset[disabled] .form-control,
+.btn-default:active, 
+.btn-default.active, 
+.open > .btn-default.dropdown-toggle, 
+.btn-default:active:hover, 
+.btn-default:active:focus, 
+.btn-default:active.focus, 
+.btn-default.active:hover, 
+.btn-default.active:focus, 
+.btn-default.active.focus, 
+.open > .btn-default.dropdown-toggle:hover, 
+.open > .btn-default.dropdown-toggle:focus, 
+.open > .btn-default.dropdown-toggle.focus{
+	background-color: $light;
+	
+}
+.btn-default:active, 
+.btn-default.active, 
+.open > .btn-default.dropdown-toggle, 
+.btn-default:active:hover, 
+.btn-default:active:focus, 
+.btn-default:active.focus, 
+.btn-default.active:hover, 
+.btn-default.active:focus, 
+.btn-default.active.focus, 
+.open > .btn-default.dropdown-toggle:hover, 
+.open > .btn-default.dropdown-toggle:focus, 
+.open > .btn-default.dropdown-toggle.focus{
+	border-color: $activeColor;
+}

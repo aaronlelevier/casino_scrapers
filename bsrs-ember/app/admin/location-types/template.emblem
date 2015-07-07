@@ -1,0 +1,4 @@
+header
+	h1 
+		= t "admin.locationOrg" count="2"
+section.docSection {{outlet}}

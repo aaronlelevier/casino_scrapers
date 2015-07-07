@@ -1,0 +1,52 @@
+nav.tabs{
+  font-size: 1.1rem;
+  position: absolute;
+  top: $tabTop;
+  right: 0;
+  left: $tabLeft;
+  height: $tabHeight;
+  overflow: hidden;
+  ul{
+    margin-left: 0px;
+    li{
+      height: $tabHeight;
+      line-height: $tabHeight;
+      background: $light;
+      border: $borderStyle;
+      border-width: 1px 1px 0 1px;
+      padding: 0 10px;
+      font-size: 1.2em;
+      width: $tabWidth;
+      margin: 0 3px 0 0;
+      border-radius: 3px 3px 0 0;
+      .close-icon{
+        float: right;
+        margin: 3px -7px 0 0;
+        color: $darkGray;
+      }
+      .close-icon:hover{
+        cursor: pointer;
+        color: $dark;
+      }
+
+      &:hover{
+        cursor: pointer;
+      }
+      &.active{
+        background: $white;
+      }
+      @media screen and (max-width: $mobileDeviceWidth){
+        float: none;
+      }
+    }//li
+
+    li.new{
+      width: 40px;
+      text-align: center;
+      color: $darkGray;
+    }//li.new
+  }//ul
+  @media screen and (max-width: $mobileDeviceWidth){
+    display: none
+  }
+}//nav.tabs

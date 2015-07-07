@@ -1,0 +1,56 @@
+//Add Color Palette
+$blue: #2980b9;
+$lightBlue: #3498db;
+$lightGreen: #1abc9c;
+$darkGreen: #0fa085;
+$orange: #e67e22;
+$darkOrange: #d15627;
+$white: #FFF;
+$light: #F5F5F5;
+$lightGray: #E5F6FF;
+$gray: #E5E5E5;
+$medGray: #989898;
+$darkGray: #666;
+$dark: #333;
+$fadeRed: #FF7061;
+
+//applies to btns as well
+$hoverColor: $lightBlue;
+$activeColor: $lightGreen;
+
+$borderColor: $gray;
+$bgColor: $light;
+
+//shadows
+$shadowColor: $medGray;
+//Font variables
+$fontfamily: "Helvetica Neue", Helvetica, Arial, sans-serif;
+
+// Layout
+$menuHeight: 42px;
+$tabTop: 56px;
+$tabLeft: 56px;
+$tabHeight: 34px;
+$tabWidth: 180px;
+
+$mainTop: 90px; //tabTop + tabHeight
+$mainLeft: 56px; //same as tabLeft
+
+$documentLeft: 250px;
+$documentHeaderHeight: 50px;
+$documentHeaderHeightPlus1: 51px;
+
+// Responsive Gates
+$mobileDeviceWidth: 20px;
+
+// Borders
+$borderStyle: 1px solid $borderColor;
+
+//checkbox border when highlighted - a bit darker
+$fieldBorder: #CCC;
+$fieldBoxShadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+
+//tables
+$hoverRow: $gray;
+$activeRow: $gray;
+$tableHeadRow: $lightGray;

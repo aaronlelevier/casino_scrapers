@@ -1,0 +1,14 @@
+<a>
+	<span class="user">{{fullName}}</span>
+	<span class="role">Role goes here</span>
+	<span class="caret"></span>
+</a>
+<ul class="submenu">
+	<li class="userOpt">
+		<a href="#" title="Log Out" id="logout">Logout</a>
+	</li>
+
+	<li class="userOpt">
+		{{#link-to "admin.people.person" person_id title="Profile" id="profile"}}Profile{{/link-to}}
+	</li>
+</ul>

@@ -1,0 +1,4 @@
+header
+	h1.roles 
+		= t "admin.role" count="2"
+section.docSection {{outlet}}

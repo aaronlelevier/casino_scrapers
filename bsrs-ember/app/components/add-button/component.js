@@ -1,0 +1,12 @@
+import Ember from 'ember';
+
+export default Ember.Component.extend({
+  tagName: 'button',
+  classNames: ['add-btn btn btn-default'],
+  actions: {
+    addInput: function() {
+      //not working
+      $('.input-multi').append(Ember.Handlebars.compile('{{input-field}}'));
+    }
+  }
+});

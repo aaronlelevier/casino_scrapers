@@ -1,0 +1,11 @@
+aside.tray
+  nav.trayMain
+    ul.list-unstyled
+      li = link-to "index"
+        span = fa-icon "home"
+      li = link-to "calendar"
+        span = fa-icon "calendar"
+      li = link-to "reports"
+        span = fa-icon "pie-chart"
+      li = link-to "admin"
+        span = fa-icon "cog"

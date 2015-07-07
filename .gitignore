@@ -1,0 +1,33 @@
+*.py[co]
+*.swp
+*.db
+*.pid
+.DS_Store
+.coverage
+static/
+htmlcov/
+/__pycache__
+*.ipynb*
+vendor/
+config.rst
+dump.rdb
+**/environ/init.sls
+*id_rsa*
+so_*
+db.sqlite3
+*.log
+
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+dist/
+tmp/
+
+# dependencies
+node_modules/
+bower_components/
+
+# misc
+.sass-cache/
+connect.lock/
+coverage/

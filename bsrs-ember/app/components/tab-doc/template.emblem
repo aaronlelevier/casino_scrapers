@@ -1,0 +1,3 @@
+li
+	span title
+	span = fa-icon "times-circle" classNames="close-icon"

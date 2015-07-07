@@ -1,0 +1,28 @@
+html, body{
+  margin: 0;
+  padding: 0;
+  font-family: $fontfamily;
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  .wrapper {
+    padding: 0;
+    margin: 0;
+  }//wrapper for components
+  @media screen and (max-width: $mobileDeviceWidth){
+    font-size: 13px;
+    height: auto;
+    width: auto;
+    position: static;
+    top: auto;
+    right: auto;
+    bottom: auto;
+    left: auto;
+    overflow: auto;
+  }
+}//html, body

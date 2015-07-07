@@ -1,0 +1,15 @@
+section.rowTable {
+  padding: 2%;
+
+  table.table-hover {
+    tr:hover td{
+      cursor: pointer;
+    }
+  }//table
+}//section#userTable
+
+.tableSearch {
+  position: absolute;
+  right: 20px;
+  border-radius: 15px;
+}//.peopleSearch

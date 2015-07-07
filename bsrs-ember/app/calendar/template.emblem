@@ -1,0 +1,4 @@
+article.main.full
+	header
+		h1 Calendar
+	section.docSection {{outlet}}

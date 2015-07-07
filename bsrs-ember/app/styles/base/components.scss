@@ -1,0 +1,317 @@
+.radio label, .checkbox label{
+  padding-left: 0;
+  color: $darkGray;
+}
+
+/* ============================================================
+  checkbox
+============================================================ */
+[type="checkbox"]:not(:checked),
+[type="checkbox"]:checked {
+  position: absolute;
+  left: -9999px;
+}
+[type="checkbox"]:not(:checked) + span,
+[type="checkbox"]:checked + span {
+  position: relative;
+  overflow: hidden;
+  padding-left: 30px;
+  cursor: pointer;
+  display: inline-block;
+  height: 20px;
+  line-height: 20px;
+
+	//prevent selecting checkbox if copying and pasting
+  -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+  -moz-user-select: none; /* mozilla browsers */
+  -khtml-user-select: none; /* webkit (konqueror) browsers */
+  -ms-user-select: none; /* IE10+ */
+}
+
+/* checkbox aspect */
+[type="checkbox"] + span:before,
+[type="checkbox"] + span:after {
+  content: '';
+  position: absolute;
+  left: 0;
+  z-index: 1;
+
+  -webkit-transition: .2s;
+  -moz-transition: .2s;
+  -ms-transition: .2s;
+  transition: .2s;
+}
+/* Unchecked styles */
+[type="checkbox"]:not(:checked) + span:before {
+  top: 0px;
+  width: 19px;
+  height: 19px;
+  border: 1px solid $fieldBorder;
+  border-radius: 2px;
+  -webkit-box-shadow: $fieldBoxShadow;
+  box-shadow: $fieldBoxShadow;
+}
+[type="checkbox"]:not(:checked) + span:after {
+  top: 0px;
+  width: 19px; height: 19px;
+  /* border: 3px solid $fieldBorder; */
+  z-index: 0;
+}
+/* Checked styles - spins out to just show two borders in color green */
+[type="checkbox"]:checked + span:before {
+  top: 2px;
+  left: 6px;
+  width: 6px;
+  height: 12px;
+  border-top: 1px solid transparent;
+  border-left: 1px solid transparent;
+  border-right: 2px solid $white;
+  border-bottom: 3px solid $white;
+  -webkit-transform: rotateZ(37deg);
+  -moz-transform: rotateZ(37deg);
+  -ms-transform: rotateZ(37deg);
+  transform: rotateZ(37deg);
+
+  -webkit-box-shadow: none;
+  box-shadow: none;
+
+  // -webkit-transform-origin: 20% 40%;
+  // -moz-transform-origin: 20% 40%;
+  // -ms-transform-origin: 20% 40%;
+  // transform-origin: 100% 100%;
+}
+/* border after checked */
+[type="checkbox"]:checked + span:after {
+  top: 0px;
+  width: 19px;
+  height: 19px;
+  border: 1px solid $activeColor;
+  background-color: $activeColor;
+  border-radius: 3px;
+  z-index: 0;
+}
+/* disabled checkbox */
+[type="checkbox"]:disabled:not(:checked) + span:before,
+[type="checkbox"]:disabled:checked + span:before {
+  top: 0;
+  box-shadow: none;
+  background-color: #444;
+  width: 19px; height: 19px;
+  border: 1px solid $fieldBorder;
+  // -webkit-transform: rotateZ(0deg);
+  // -moz-transform: rotateZ(0deg);
+  // -ms-transform: rotateZ(0deg);
+  // transform: rotateZ(0deg);
+}
+
+[type="checkbox"]:disabled + span {
+  color: #555;
+}
+
+[type="checkbox"]:disabled:not(:checked) + span:hover:before {
+  border-color: $fieldBorder;
+}
+
+/* hover style just for information */
+[type="checkbox"]:not(:checked) + span:hover:before {
+  border-color: $fieldBorder;
+}
+
+
+/* ============================================================
+  radio
+============================================================ */
+input[type="radio"] {
+  position: absolute;
+  left: -9999px;
+}
+
+input[type="radio"]:not(:checked) + span,
+input[type="radio"]:checked + span {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  display: inline-block;
+  height: 20px;
+  line-height: 19px;
+
+	//prevent selecting checkbox if copying and pasting
+  -webkit-user-select: none; /* webkit (safari, chrome) browsers */
+  -moz-user-select: none; /* mozilla browsers */
+  -khtml-user-select: none; /* webkit (konqueror) browsers */
+  -ms-user-select: none; /* IE10+ */
+}
+
+input[type="radio"] + span:before {
+  content: '';
+  display: inline-block;
+  width: 19px;
+  height: 19px;
+  margin: -1px 8px 1px 0;
+  vertical-align: middle;
+  cursor: pointer;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  border-radius: 50%;
+  border: 1px solid $fieldBorder;
+
+  -webkit-box-shadow: $fieldBoxShadow;
+  box-shadow: $fieldBoxShadow;
+
+  -webkit-transition: .2s;
+  -moz-transition: .2s;
+  -ms-transition: .2s;
+  transition: .2s;
+}
+
+// input[type="radio"]:not(:checked) + span:hover:before {
+//   border: 1px solid $fieldBorder;
+// }
+
+input[type="radio"]:checked + span:before {
+  //background-color: $activeColor;
+  border: 7px solid  $activeColor;
+
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+/* input[type="radio"] + span:before,
+input[type="radio"]:checked + span:before {
+  -webkit-transition:background-color 0.4s linear;
+  -o-transition:background-color 0.4s linear;
+  -moz-transition:background-color 0.4s linear;
+  -ms-transition:background-color 0.4s linear;
+  transition:background-color 0.4s linear;
+} */
+
+/* ============================================================
+  SWITCH
+============================================================ */
+input.cmn-toggle-round + label {
+  padding: 2px !important;
+  width: 50px !important;
+  height: 28px;
+  background-color: $fieldBorder;
+  -webkit-border-radius: 24px;
+  -moz-border-radius: 24px;
+  -ms-border-radius: 24px;
+  -o-border-radius: 24px;
+  border-radius: 24px;
+
+  float: none !important;
+  text-align: left  !important;
+  font-weight: normal  !important;
+  line-height: normal !important;
+
+}
+input.cmn-toggle-round + label:before, input.cmn-toggle-round + label:after {
+  display: block;
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  bottom: 1px;
+  content: "";
+}
+input.cmn-toggle-round + label:before {
+  right: 1px;
+  background-color: $white;
+
+  -webkit-box-shadow: $fieldBoxShadow;
+  box-shadow: $fieldBoxShadow;
+
+  -webkit-border-radius: 24px;
+  -moz-border-radius: 24px;
+  -ms-border-radius: 24px;
+  -o-border-radius: 24px;
+  border-radius: 24px;
+  -webkit-transition: 0.4s;
+  -moz-transition: 0.4s;
+  -ms-transition: 0.4s;
+  -o-transition: 0.4s;
+  transition: 0.4s;
+}
+input.cmn-toggle-round + label:after {
+  width: 26px;
+  background-color: $white;
+  -webkit-border-radius: 100%;
+  -moz-border-radius: 100%;
+  -ms-border-radius: 100%;
+  -o-border-radius: 100%;
+  border-radius: 100%;
+  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  -ms-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+  -webkit-transition: margin 0.2s;
+  -moz-transition: margin 0.2s;
+  -ms-transition: margin 0.2s;
+  -o-transition: margin 0.2s;
+  transition: margin 0.2s;
+  content: "" !important;
+}
+input.cmn-toggle-round:checked + label{
+  background-color: $activeColor;
+}
+input.cmn-toggle-round:checked + label:before {
+  background-color: $activeColor;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+input.cmn-toggle-round:checked + label:after {
+  margin-left: 22px;
+}
+
+/* ============================================================
+  COMMON SWITCH CODE
+============================================================ */
+.switch{
+	padding: 3px 0 0;
+}
+.cmn-toggle {
+  position: absolute;
+  margin-left: -9999px;
+  visibility: hidden;
+}
+.cmn-toggle + label {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+
+/* ============================================================
+  Submit Btn
+============================================================ */
+.submit_btn {//color is bootstrap btn-info color
+
+  &:hover {
+    background-color: $lightBlue;
+  }
+  &:active {
+    background-color: $lightGreen;
+  }
+}//.submit_login
+
+.delete_btn {
+  &:hover {
+    background-color: $fadeRed;
+  }
+  &:active {
+    background-color: $activeColor;
+  }
+}//delete_btn
+
+
+/* ============================================================
+  Select dropdown
+============================================================ */
+select {
+  
+}

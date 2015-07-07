@@ -1,0 +1,64 @@
+<form class="form-horizontal" {{action "return false" this on="submit"}}>
+	<header>
+		<h1>{{model.first_name}} {{model.last_name}} <small>{{model.title}}</small></h1>
+		<div class="btn-group btn-group-sm pull-right center-block">
+			{{save-button save="savePerson"}}
+			{{cancel-button cancel="cancelPerson"}}
+			{{delete-button delete="deletePerson"}}
+		</div>
+
+	</header>
+	<section class="docSection col-sm-12" id="people">
+
+			{{#form-group title="Active"}}
+				<div class="switch"></div>
+					{{input id="myonoffswitch" name="myonoffswitch" type="checkbox" class="cmn-toggle cmn-toggle-round" checked=model.isActive}}
+					<label for="myonoffswitch"></label>
+			{{/form-group}}
+
+			{{#form-group title="First Name" for="username"}}
+		    {{input type="text" placeholder="Username" value=model.username class="form-control t-person-username" id="username" required="required"}}
+			{{/form-group}}
+
+			{{#form-group title="First Name" for="first_name"}}
+		    {{input type="text" placeholder="First Name" value=model.first_name class="form-control t-person-first-name" id="first_name" required="required"}}
+			{{/form-group}}
+
+			{{#form-group title="Last Name" for="last_name"}}
+		    {{input type="text" placeholder="Last Name" value=model.last_name class="form-control t-person-last-name" id="last_name" required="required"}}
+			{{/form-group}}
+
+			{{#form-group title="Title" for="title"}}
+		  	{{input type="text" placeholder="Title" value=model.title class="form-control t-person-title" id="title"}}
+			{{/form-group}}
+
+			{{#form-group title="Employee Number" for="empnumber"}}
+		    {{input type="text" placeholder="Employee Number" value=model.empnumber class="form-control" id="empnumber"}}
+			{{/form-group}}
+
+			{{#form-group title="Phone Numbers"}}
+				{{multi-input model=model.phone_numbers modelType="phonenumber" fieldNames="number"}}
+			{{/form-group}}
+
+			{{#form-group title="Addresses" for="addresses"}}
+		    {{input type="text" placeholder="Addresses" value=addresses class="form-control" id="addresses"}}
+			{{/form-group}}
+
+			{{#form-group title="Authorization Amount" for="authamount"}}
+		    {{input type="text" placeholder="Authorization Amount" value=model.authamount class="form-control" id="authamount" disabled=editPrivilege}}
+			{{/form-group}}
+
+			{{#form-group title="Role" for="role"}}
+		    {{input type="text" placeholder="Role" value=model.role class="form-control" id="role"}}
+			{{/form-group}}
+
+			{{#form-group title="Dropdown Test" for="role"}}
+				{{view "select" classNames="form-control" content=model.phoneNumbers
+												optionValuePath="content.type.name"
+												optionLabelPath="content.type.name"
+												value=""
+				}}
+			{{/form-group}}
+
+	</section>
+</form>
