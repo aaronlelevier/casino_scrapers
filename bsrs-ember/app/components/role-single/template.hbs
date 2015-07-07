@@ -1,0 +1,18 @@
+<form class="form-horizontal" {{action "return false" this on="submit"}}>
+	<header>
+		<h1>{{model.name}}</h1>
+		<div class="btn-group btn-group-sm pull-right center-block">
+			{{save-button save="saveRole"}}
+			{{cancel-button cancel="cancelRole"}}
+			{{delete-button delete="deleteRole"}}
+		</div>
+
+	</header>
+	<section class="docSection col-sm-12">
+
+			{{#form-group title="admin.role.name" for="name"}}
+		    {{input type="text" placeholder="admin.role.name" value=model.name class="form-control" id="name" required="required"}}
+			{{/form-group}}
+
+	</section>
+</form>

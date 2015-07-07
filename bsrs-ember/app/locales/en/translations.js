@@ -99,11 +99,32 @@ export default {
 		},
 		role: {
 			one: "Role",
-			other: "Roles"
+			other: "Roles",
+			label: {
+				name: "Role Name",
+				location_org: "Location Org.",
+				number_users: "# of Users"
+			}
 		},
 		person: {
 			one: "Person",
-			other: "People"
+			other: "People",
+			label: {
+				name: "Name",
+				username: "Username",
+				status: "Status",
+				title: "Title",
+				emp_number: "Employee No.",
+				role: "Role",
+				auth_amount: "Auth. Amount",
+				first_name: "First Name",
+				last_name: "Last Name",
+				phone_number: {
+					one: "Phone Number",
+					other: "Phone Numbers"
+				},
+				address: "Address"
+			}
 		},
 		location: {
 			one: "Location",
@@ -135,7 +156,7 @@ export default {
 		},
 		phonenumbertype: {
 			office: "Office",
-			mobile: "Mobile"			
+			mobile: "Mobile"
 		},
 		locationlevel:{
 			department: "Department",

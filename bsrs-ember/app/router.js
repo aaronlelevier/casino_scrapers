@@ -10,7 +10,6 @@ Router.map(function() {
     this.route('templates');
     this.route('location-types');
     this.route('category-types');
-    this.route('roles');
     this.route('contractors');
     this.route('general');
     this.route('contractor-assignments');
@@ -22,6 +21,10 @@ Router.map(function() {
     this.route('people', function() {
       this.route('new');
       this.route('person', {path: '/:person_id'});
+    });
+    this.route('roles', function() {
+      this.route('new');
+      this.route('role', {path: '/:role_id'});
     });
     this.route('locationlevels');
     this.route('locationlevel', {path: '/locationlevels/:loc_id'}, function() {});
