@@ -8,50 +8,51 @@
 		</div>
 
 	</header>
-	<section class="docSection col-sm-12" id="people">
+	<section class="docSection col-sm-12">
 
-			{{! #form-group title="Active"}}
-			<!--	<div class="switch"></div>
-					{{input id="myonoffswitch" name="myonoffswitch" type="checkbox" class="cmn-toggle cmn-toggle-round" checked=model.isActive}}
-					<label for="myonoffswitch"></label> -->
-			{{! /form-group}}
-
-			{{#form-group title="Username" for="username"}}
-		    {{input type="text" placeholder="Username" value=model.username class="form-control t-person-username" id="username" required="required"}}
+			{{#form-group title="admin.person.label.status"}}
+				<select class="form-control">
+					<option>Active</option>
+					<option>Inactive</option>
+					<option>Expired</option>
+				</select>
 			{{/form-group}}
 
-			{{#form-group title="First Name" for="first_name"}}
-		    {{input type="text" placeholder="First Name" value=model.first_name class="form-control t-person-first-name" id="first_name" required="required"}}
+			{{#form-group title="admin.person.label.username" for="username"}}
+		    {{input type="text" placeholder=(t "admin.person.label.username") value=model.username class="form-control t-person-username" id="username" required="required"}}
 			{{/form-group}}
 
-			{{#form-group title="Last Name" for="last_name"}}
-		    {{input type="text" placeholder="Last Name" value=model.last_name class="form-control t-person-last-name" id="last_name" required="required"}}
+			{{#form-group title="admin.person.label.first_name" for="first_name"}}
+		    {{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name" required="required"}}
 			{{/form-group}}
 
-			{{#form-group title="Title" for="title"}}
-		  	{{input type="text" placeholder="Title" value=model.title class="form-control t-person-title" id="title"}}
+			{{#form-group title="admin.person.label.last_name" for="last_name"}}
+		    {{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name" required="required"}}
 			{{/form-group}}
 
-			{{#form-group title="Employee Number" for="empnumber"}}
-		    {{input type="text" placeholder="Employee Number" value=model.empnumber class="form-control t-person-empnumber" id="empnumber"}}
+			{{#form-group title="admin.person.label.title" for="title"}}
+		  	{{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
 			{{/form-group}}
 
-			{{#form-group title="Phone Numbers"}}
-				{{input-multi model=model.phone_numbers modelType="phonenumber" fieldNames="number"}}
+			{{#form-group title="admin.person.label.emp_number" for="empnumber"}}
+		    {{input type="text" placeholder=(t "admin.person.label.emp_number") value=model.empnumber class="form-control t-person-empnumber" id="empnumber"}}
 			{{/form-group}}
 
-			{{#form-group title="Addresses" for="addresses"}}
-		    {{input type="text" placeholder="Addresses" value=addresses class="form-control" id="addresses"}}
+			{{#form-group title="admin.person.label.phone_number.other"}}
+				{{input-multi placeholder=(t "admin.person.label.phone_number.one") model=model.phone_numbers modelType="phonenumber" fieldNames="number"}}
 			{{/form-group}}
 
-			{{#form-group title="Authorization Amount" for="authamount"}}
-		    {{input type="text" placeholder="Authorization Amount" value=model.authamount class="form-control t-person-authamount" id="authamount" disabled=editPrivilege}}
+			{{#form-group title="admin.person.label.address" for="addresses"}}
+		    {{input type="text" placeholder=(t "admin.person.label.address") value=addresses class="form-control" id="addresses"}}
 			{{/form-group}}
 
-			{{#form-group title="Role" for="role"}}
-		    {{input type="text" placeholder="Role" value=model.role class="form-control" id="role"}}
+			{{#form-group title="admin.person.label.auth_amount" for="authamount"}}
+		    {{input type="text" placeholder=(t "admin.person.label.auth_amount") value=model.authamount class="form-control t-person-authamount" id="authamount" disabled=editPrivilege}}
 			{{/form-group}}
 
+			{{#form-group title="admin.person.label.role" for="role"}}
+		    {{input type="text" placeholder=(t "admin.person.label.role") value=model.role class="form-control" id="role"}}
+			{{/form-group}}
 
 	</section>
 </form>
