@@ -20,7 +20,7 @@ var XNumber = Ember.Object.extend({
 
 
 
-moduleForComponent('multi-input', 'integration: multi-input test', {
+moduleForComponent('input-multi', 'integration: input-multi test', {
   integration: true,
   setup: function() {
     initializer.initialize(this);
@@ -29,7 +29,7 @@ moduleForComponent('multi-input', 'integration: multi-input test', {
 
 test('renders a single button with a class of t-add-btn', function(assert){
 
-  this.render(hbs`{{multi-input model=things}}`);
+  this.render(hbs`{{input-multi model=things}}`);
   var $component = this.$('.t-input-multi');
   assert.equal($component.find('.t-add-btn').length, 1);
 
@@ -45,7 +45,7 @@ test('click add btn will append blank entry to list of entries and binds value t
   this.set('model', model);
 
   // render the component - a new entry will be a phone number, and the value will be a "number"
-  this.render(hbs`{{multi-input model=model.phonenumbers modelType="x-number" fieldNames="number"}}`);
+  this.render(hbs`{{input-multi model=model.phonenumbers modelType="x-number" fieldNames="number"}}`);
 
   //get a jQuery handle to the component
   var $component = this.$('.t-input-multi');
@@ -84,7 +84,7 @@ test('click delete btn will remove input', function(assert) {
 
   this.set('model', model);
 
-  this.render(hbs`{{multi-input model=model.phonenumbers }}`);
+  this.render(hbs`{{input-multi model=model.phonenumbers }}`);
   var $component = this.$('.t-input-multi');
 
   assert.equal(this.$('.t-new-entry').length, 1);
@@ -106,7 +106,7 @@ test('model with existing array of entries is shown at render and bound to model
 
   this.set('model', model);
 
-  this.render(hbs`{{multi-input model=model.phonenumbers modelType="x-number" fieldNames="number"}}`);
+  this.render(hbs`{{input-multi model=model.phonenumbers modelType="x-number" fieldNames="number"}}`);
   var $component = this.$('.multi-entry');
 
   assert.equal(this.$('.t-new-entry').length, 3);
@@ -130,7 +130,7 @@ test('keep original value for editing', function(assert) {
   this.set('model', model);
 
   // render the component - a new entry will be a phone number, and the value will be a "number"
-  this.render(hbs`{{multi-input model=model.phonenumbers modelType="x-number" fieldNames="number"}}`);
+  this.render(hbs`{{input-multi model=model.phonenumbers modelType="x-number" fieldNames="number"}}`);
 
   //get a jQuery handle to the component
   var $component = this.$('.t-input-multi');

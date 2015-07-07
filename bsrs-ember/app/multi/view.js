@@ -10,7 +10,7 @@ export default Ember.ContainerView.extend({
   },
 
   appendComponent: function() {
-    var emailArray = this.get('controller.emailArray');//controller is multi-input controller
+    var emailArray = this.get('controller.emailArray');//controller is input-multi controller
     var component = this.get('inputFields');
     console.log(emailArray.length);
     emailArray.forEach((email) => {
