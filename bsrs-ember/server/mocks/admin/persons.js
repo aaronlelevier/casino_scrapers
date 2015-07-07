@@ -3,7 +3,7 @@ var USERS = {"count":3,"next":null,"previous":null,"results":[
   {"id":4,"username":"tkrier","first_name":"Tom","middleinitial":"J","last_name":"Krier","title":"Starship Overlord","empnumber":"5026","role_name":"admin.role.hosting_administrator","authamount":"266532.0000","status_name":"person.status.active"},
   {"id":2,"username":"snewcomer","first_name":"Scotty","middleinitial":"","last_name":"Newcomer","title":"Darth Vader","empnumber":"5037","role_name":"admin.role.hosting_administrator","authamount":"0.0000","status_name":"person.status.active"}]}
 
-var PERSON = {
+var PEOPLE = [{
   "id":4,
   "username":"tkrier",
   "first_name":"Thomas",
@@ -42,7 +42,88 @@ var PERSON = {
     }],
   "addresses":[],
   "emails":[]
-};
+}, 
+
+{ 
+  "id":3, 
+  "username":"akrier",
+  "first_name":"Andy",
+  "middleinitial":"J",
+  "last_name":"Krier",
+  "title":"Mr. Rodgers",
+  "empnumber":"5027",
+  "role":{
+    "id":1,
+    "name":"admin.role.hosting_administrator",
+    "locationlevel":1,
+    "roletype":"location"
+  },
+  "authamount":"266532.0000",
+  "status":{
+    "id":1,
+    "name":"person.status.active"
+  },
+  "acceptassign":false,
+  "phone_numbers":[
+    {
+      "id":3,
+      "number":"858-715-5026",
+      "type":{
+        "id":1,
+        "name":"admin.phonenumbertype.office"
+      }
+    },
+    {
+      "id":4,
+      "number":"858-715-5056",
+      "type":{
+        "id":2,
+        "name":"admin.phonenumbertype.mobile"
+      }
+    }],
+  "addresses":[],
+  "emails":[]
+},
+{ 
+  "id":2, 
+  "username":"snewcomer",
+  "first_name":"Scott",
+  "middleinitial":"N",
+  "last_name":"Newcomer",
+  "title":"Mickey Mouse's Right Hand Hand",
+  "empnumber":"5026",
+  "role":{
+    "id":1,
+    "name":"admin.role.hosting_administrator",
+    "locationlevel":1,
+    "roletype":"location"
+  },
+  "authamount":"266532.0000",
+  "status":{
+    "id":1,
+    "name":"person.status.active"
+  },
+  "acceptassign":false,
+  "phone_numbers":[
+    {
+      "id":3,
+      "number":"858-715-5026",
+      "type":{
+        "id":1,
+        "name":"admin.phonenumbertype.office"
+      }
+    },
+    {
+      "id":4,
+      "number":"858-715-5056",
+      "type":{
+        "id":2,
+        "name":"admin.phonenumbertype.mobile"
+      }
+    }],
+  "addresses":[],
+  "emails":[]
+}];
 
 module.exports = function(app) {
   var express = require('express');
@@ -57,9 +138,11 @@ module.exports = function(app) {
   });
 
   adminPersonsRouter.get('/:id', function(req, res) {
-    var response = PERSON;
-    response.id = req.params.id;
-    res.send(response);
+    var response = PEOPLE;
+    res.send(response.find(function(person) {
+        console.log('shit')
+       return person.id === req.params.id;
+    }));
   });
 
   adminPersonsRouter.put('/:id', function(req, res) {
