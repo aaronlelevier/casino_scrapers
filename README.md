@@ -1,3 +1,6 @@
-# README for Combined Project
+### README for Combined Project
 
-### Please see the relevant *README* for the `bsrs-django` and `bsrs-ember`
+Refer to separate README's for `Ember` + `Django`
+
+- [bsrs-ember/README.md](https://github.com/bigskytech/bsrs/blob/master/bsrs-ember/README.md)
+- [bsrs-django/README.md](https://github.com/bigskytech/bsrs/blob/master/bsrs-django/README.md)

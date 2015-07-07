@@ -14,9 +14,9 @@ import contact.serializers as contactSerializers
 import role.serializers as roleSerializers
 
 '''
-Users consist of the standard Django User model plus the BSRSuser model
-    This serializer hides the relationship to BSRSuser from the client
-    Special care needed when updating passwords and creating new users
+Users consist of the standard Django User model plus the ``Person`` model
+    This serializer hides the relationship to ``Person`` from the client
+    Special care needed when updating passwords and creating new users.
     
     Todo: we may want to create a separate action here to update password. 
         With this current implementation the password can be updated in the 
@@ -30,12 +30,37 @@ Users consist of the standard Django User model plus the BSRSuser model
         update the password as well.
         
 '''
+
+#################
+# PERSON STATUS #
+#################
+
 class PersonStatusSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = personModels.PersonStatus
         fields = ('id', 'name')
+
         
+##########
+# PERSON #
+##########
+
+PERSON_BASE_FIELDS = (
+    # navite User fields
+    'id',
+    'username',
+    'first_name',
+    'last_name',
+    # extended User fields
+    'role',
+    'status',
+    'title',
+    'emp_number',
+    'auth_amount',
+    'middle_initial',
+    )
+
 class PersonSerializer(serializers.ModelSerializer):
     
 #     role = serializers.PrimaryKeyRelatedField(required=False, queryset=Models.Role.objects.all())
@@ -45,8 +70,7 @@ class PersonSerializer(serializers.ModelSerializer):
     class Meta:
         model = personModels.Person
         write_only_fields = ('password',)
-        fields = ('id', 'username', 'password', 'first_name', 'middleinitial', 'last_name',
-                  'title', 'empnumber', 'role', 'authamount', 'status')
+        fields = PERSON_BASE_FIELDS + ('password',)
 
     def create(self, validated_data):
         #need to use create_user to make sure password is encrypted
@@ -93,6 +117,7 @@ class PersonSerializer(serializers.ModelSerializer):
         
         return instance
 
+
 class PersonListSerializer(serializers.ModelSerializer):
     
     role_name = serializers.CharField(source='role.name', read_only=True)
@@ -100,8 +125,7 @@ class PersonListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = personModels.Person
-        fields = ('id', 'username', 'first_name', 'middleinitial', 'last_name',
-                  'title', 'empnumber', 'role_name', 'authamount', 'status_name')
+        fields = PERSON_BASE_FIELDS
 
 
 class PersonFullSerializer(serializers.ModelSerializer):
@@ -109,12 +133,10 @@ class PersonFullSerializer(serializers.ModelSerializer):
     phone_numbers = contactSerializers.PhoneNumberShortSerializer(many=True, read_only=True)
     addresses = contactSerializers.AddressShortSerializer(many=True, read_only=True)
     emails = contactSerializers.EmailShortSerializer(many=True, read_only=True)
-    role = roleSerializers.RoleSerializer(read_only=True)
-    status = PersonStatusSerializer(read_only=True)
+    # role = roleSerializers.RoleSerializer(read_only=True)
+    # status = PersonStatusSerializer(read_only=True)
 
     class Meta:
         model = personModels.Person
-        fields = ('id', 'username', 'first_name', 'middleinitial', 'last_name',
-                  'title', 'empnumber', 'role', 'authamount', 'status', 'acceptassign',
-                  'phone_numbers', 'addresses', 'emails')
+        fields = PERSON_BASE_FIELDS + ('accept_assign', 'phone_numbers', 'addresses', 'emails')
     

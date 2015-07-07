@@ -8,6 +8,7 @@ Created on Jan 21, 2015
 
 '''
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
 from person.models import Person
 from location.models import Location
@@ -18,6 +19,7 @@ class PhoneNumberType(AbstractNameOrder):
     pass
 
 
+@python_2_unicode_compatible
 class PhoneNumber(models.Model):
     # keys
     type = models.ForeignKey(PhoneNumberType, related_name='phone_numbers')
@@ -29,7 +31,7 @@ class PhoneNumber(models.Model):
     class Meta:
         ordering = ('type', 'number',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.number
 
 
@@ -37,6 +39,7 @@ class AddressType(AbstractNameOrder):
     pass
 
 
+@python_2_unicode_compatible
 class Address(models.Model):
     # keys
     type = models.ForeignKey(AddressType, related_name='addresses')
@@ -54,7 +57,7 @@ class Address(models.Model):
     class Meta:
         ordering = ('type',)
         
-    def __unicode__(self):
+    def __str__(self):
         if self.address1:
             return self.address1
         else:
@@ -65,6 +68,7 @@ class EmailType(AbstractNameOrder):
     pass
 
 
+@python_2_unicode_compatible
 class Email(models.Model):
     # keys
     type = models.ForeignKey(EmailType, related_name='emails')
@@ -76,5 +80,5 @@ class Email(models.Model):
     class Meta:
         ordering = ('type', 'email',)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.email

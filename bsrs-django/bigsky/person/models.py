@@ -5,6 +5,7 @@ Created on Jan 30, 2014
 '''
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.encoding import python_2_unicode_compatible
 
 from role.models import Role
 from location.models import AbstractName
@@ -14,15 +15,11 @@ class PersonStatus(AbstractName):
     pass
 
 
+@python_2_unicode_compatible
 class Person(User):
-    '''
-    Subclassing based on this Quora answer:
-
-    http://www.quora.com/Could-someone-help-me-understand-the-Django-user-model-in-more-detail-and-ways-to-extend-it
-    '''
     # keys
-    status = models.ForeignKey(PersonStatus, null=True)
-    role = models.ForeignKey(Role, null=True)
+    status = models.ForeignKey(PersonStatus, null=True, blank=True)
+    role = models.ForeignKey(Role, null=True, blank=True)
     # fields
     title = models.CharField(max_length=100, blank=True)
     emp_number = models.CharField(max_length=100, blank=True)
@@ -33,5 +30,5 @@ class Person(User):
     class Meta:
         db_table = 'person_person'
 
-    def __unicode__(self):
+    def __str__(self):
         return self.username

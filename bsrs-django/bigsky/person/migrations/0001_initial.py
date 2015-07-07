@@ -18,10 +18,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('user_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('title', models.CharField(max_length=100, blank=True)),
-                ('empnumber', models.CharField(max_length=100, blank=True)),
-                ('authamount', models.DecimalField(null=True, max_digits=15, decimal_places=4)),
-                ('middleinitial', models.CharField(max_length=30, blank=True)),
-                ('acceptassign', models.BooleanField(default=False)),
+                ('emp_number', models.CharField(max_length=100, blank=True)),
+                ('auth_amount', models.DecimalField(null=True, max_digits=15, decimal_places=4)),
+                ('middle_initial', models.CharField(max_length=30, blank=True)),
+                ('accept_assign', models.BooleanField(default=False)),
             ],
             options={
                 'db_table': 'person_person',

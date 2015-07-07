@@ -7,14 +7,14 @@ Created on Jan 16, 2015
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission
 
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
-from rest_framework import status
 
 import serializers as personSerializers
 import models as personModels
 from permissions import BSModelPermissions
+
 
 class PersonStatusViewSet(viewsets.ModelViewSet):
 
@@ -55,7 +55,7 @@ class PersonViewSet(viewsets.ModelViewSet):
         if request.method == 'GET':
             user = self.get_object()
             if not request.query_params.has_key('model'):
-                #no model specified
+                # no model specified
                 respObj['code'] = 400
                 respObj['message'] = 'Please specify a model'
                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)
@@ -70,7 +70,7 @@ class PersonViewSet(viewsets.ModelViewSet):
                 perms = self._getPersonPerms(user, model)
                 return Response(perms)
         else:
-#             should never get here
+            # should never get here
             respObj['code'] = 400
             respObj['message'] = 'Method not supported - ' + request.method
             return Response(respObj, status=status.HTTP_400_BAD_REQUEST)
@@ -82,18 +82,12 @@ class PersonViewSet(viewsets.ModelViewSet):
         perms = {}
 
         ctype = ContentType.objects.filter(name=model)
-#         userPerms = user.user_permissions.filter(content_type=ctype)
         availPerms = Permission.objects.filter(content_type=ctype)
             
         for aperm in availPerms:
             perms[aperm.codename] = False
             if person.has_perm('person.' + aperm.codename):
                 perms[aperm.codename] = True
-                
-#             for uperm in userPerms:
-#                 if uperm.id == aperm.id:
-#                     perms[aperm.codename] = True
-#                     break            
                                 
         return perms
 
