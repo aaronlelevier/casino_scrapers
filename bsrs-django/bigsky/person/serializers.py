@@ -62,10 +62,6 @@ PERSON_BASE_FIELDS = (
     )
 
 class PersonSerializer(serializers.ModelSerializer):
-    
-#     role = serializers.PrimaryKeyRelatedField(required=False, queryset=Models.Role.objects.all())
-    authamount = serializers.DecimalField(max_digits=15, decimal_places=4, required=False)
-#     status_name = serializers.CharField(source='status.name', read_only=True)
 
     class Meta:
         model = personModels.Person
@@ -119,9 +115,6 @@ class PersonSerializer(serializers.ModelSerializer):
 
 
 class PersonListSerializer(serializers.ModelSerializer):
-    
-    role_name = serializers.CharField(source='role.name', read_only=True)
-    status_name = serializers.CharField(source='status.name', read_only=True)
 
     class Meta:
         model = personModels.Person
@@ -133,8 +126,6 @@ class PersonFullSerializer(serializers.ModelSerializer):
     phone_numbers = contactSerializers.PhoneNumberShortSerializer(many=True, read_only=True)
     addresses = contactSerializers.AddressShortSerializer(many=True, read_only=True)
     emails = contactSerializers.EmailShortSerializer(many=True, read_only=True)
-    # role = roleSerializers.RoleSerializer(read_only=True)
-    # status = PersonStatusSerializer(read_only=True)
 
     class Meta:
         model = personModels.Person
