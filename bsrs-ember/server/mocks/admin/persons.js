@@ -139,10 +139,10 @@ module.exports = function(app) {
 
   adminPersonsRouter.get('/:id', function(req, res) {
     var response = PEOPLE;
-    res.send(response.find(function(person) {
-        console.log('shit')
-       return person.id === req.params.id;
-    }));
+    var found = response.filter(function(person){
+       return person.id == req.params.id; 
+    })[0];
+    res.send(found);
   });
 
   adminPersonsRouter.put('/:id', function(req, res) {
