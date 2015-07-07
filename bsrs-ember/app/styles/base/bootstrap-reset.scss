@@ -1,9 +1,12 @@
-input, textarea, select {
+input, textarea, select, button {
 	outline: none;
 	-webkit-box-shadow: none !important;
 	-moz-box-shadow: none !important;
 	-ms-box-shadow: none !important;
 	box-shadow: none !important;
+	-webkit-border-radius: 0px !important;
+	-moz-border-radius: 0px !important;
+	border-radius: 0px !important;
 }
 
 input[type="text"]:disabled {
@@ -31,35 +34,35 @@ input[type="text"]:disabled {
 
 .btn-default:hover,
 .input-group-addon,
-.form-control[disabled], 
-.form-control[readonly], 
+.form-control[disabled],
+.form-control[readonly],
 fieldset[disabled] .form-control,
-.btn-default:active, 
-.btn-default.active, 
-.open > .btn-default.dropdown-toggle, 
-.btn-default:active:hover, 
-.btn-default:active:focus, 
-.btn-default:active.focus, 
-.btn-default.active:hover, 
-.btn-default.active:focus, 
-.btn-default.active.focus, 
-.open > .btn-default.dropdown-toggle:hover, 
-.open > .btn-default.dropdown-toggle:focus, 
+.btn-default:active,
+.btn-default.active,
+.open > .btn-default.dropdown-toggle,
+.btn-default:active:hover,
+.btn-default:active:focus,
+.btn-default:active.focus,
+.btn-default.active:hover,
+.btn-default.active:focus,
+.btn-default.active.focus,
+.open > .btn-default.dropdown-toggle:hover,
+.open > .btn-default.dropdown-toggle:focus,
 .open > .btn-default.dropdown-toggle.focus{
 	background-color: $light;
-	
+
 }
-.btn-default:active, 
-.btn-default.active, 
-.open > .btn-default.dropdown-toggle, 
-.btn-default:active:hover, 
-.btn-default:active:focus, 
-.btn-default:active.focus, 
-.btn-default.active:hover, 
-.btn-default.active:focus, 
-.btn-default.active.focus, 
-.open > .btn-default.dropdown-toggle:hover, 
-.open > .btn-default.dropdown-toggle:focus, 
+.btn-default:active,
+.btn-default.active,
+.open > .btn-default.dropdown-toggle,
+.btn-default:active:hover,
+.btn-default:active:focus,
+.btn-default:active.focus,
+.btn-default.active:hover,
+.btn-default.active:focus,
+.btn-default.active.focus,
+.open > .btn-default.dropdown-toggle:hover,
+.open > .btn-default.dropdown-toggle:focus,
 .open > .btn-default.dropdown-toggle.focus{
 	border-color: $activeColor;
 }
