@@ -5,6 +5,7 @@ Created on Apr 7, 2015
 '''
 from rest_framework.permissions import DjangoModelPermissions
 
+
 class BSModelPermissions(DjangoModelPermissions):
     """
     Overrdide DjangoModelPermissions to include the view option

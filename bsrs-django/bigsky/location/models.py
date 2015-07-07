@@ -8,6 +8,7 @@ Created on Jan 21, 2015
 
 '''
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
 from util.models import AbstractName
 
@@ -25,6 +26,7 @@ class LocationType(AbstractName):
     pass
     
 
+@python_2_unicode_compatible
 class Location(models.Model):
     # keys
     level = models.ForeignKey(LocationLevel, related_name='locations')
@@ -39,5 +41,5 @@ class Location(models.Model):
     class Meta:
         ordering = ('number',)
     
-    def __unicode__(self):
+    def __str__(self):
         return self.name
