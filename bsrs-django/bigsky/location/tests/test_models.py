@@ -11,6 +11,7 @@ class LocationLevelTests(TestCase):
     def test_children(self):
         district = mommy.make(LocationLevel, name='district')
         region = mommy.make(LocationLevel, name='region')
+        # store = mommy.make(LocationLevel, )
 
         # no children levels
         self.assertEqual(region.children.count(), 0)
