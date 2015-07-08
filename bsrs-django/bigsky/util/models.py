@@ -35,7 +35,7 @@ class Setting(models.Model):
     at levels. ex - Location, Role, User.
     '''
     custom = models.BooleanField(blank=True, default=True)
-    settings = models.TextField(help_text="JSON Dict saved as a string in DB")
+    settings = models.TextField(blank=True, help_text="JSON Dict saved as a string in DB")
 
     # Generic ForeignKey Settings, so ``Setting`` can be set 
     # for any Django Model
