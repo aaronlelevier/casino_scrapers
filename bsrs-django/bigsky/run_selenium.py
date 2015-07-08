@@ -12,9 +12,10 @@ def django_app():
     execute_from_command_line(['manage.py'] + ['migrate'])
     execute_from_command_line(['manage.py'] + ['runserver'] + ['--noreload'])
 
-def run_watir_tests_with_firefox():
+def run_selenium_tests():
     os.environ['browser'] = 'firefox'
-    run_result = subprocess.call(['bundle', 'exec', 'ruby', 'selenium/tests.rb'])
+    run_result = subprocess.call(['python', 'selenium/tests.py'])
+    print run_result
     if run_result > 0:
         raise Exception("{} selenium test(s) failed".format(run_result))
 
@@ -24,5 +25,5 @@ if __name__ == '__main__':
     p.daemon = True
     p.start()
     time.sleep(2)
-    run_watir_tests_with_firefox()
+    run_selenium_tests()
     os.kill(int(p.pid), signal.SIGTERM)
