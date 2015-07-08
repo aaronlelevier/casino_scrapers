@@ -22,17 +22,15 @@ if [ "$?" == 1 ]; then
 fi
 
 cd bigsky
-python manage.py test --settings=bigsky.settings.ci
-if [ "$?" == 1 ]; then
-  echo "django test failed"
-  exit $?
-fi
+# python manage.py test --settings=bigsky.settings.ci
+# if [ "$?" == 1 ]; then
+#   echo "django test failed"
+#   exit $?
+# fi
 
-rvm gemset create bigsky
-rvm gemset use bigsky
 bundle install
 if [ "$?" == 1 ]; then
-  echo "gem install failed"
+  echo "bundle install failed"
   exit $?
 fi
 
