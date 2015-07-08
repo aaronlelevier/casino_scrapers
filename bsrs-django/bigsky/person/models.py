@@ -9,10 +9,12 @@ from django.contrib.auth.models import User, Group
 from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.contenttypes.fields import GenericRelation
 
 from rest_framework.authtoken.models import Token
 
 from location.models import AbstractName, LocationLevel
+from util.models import Setting
 
 
 @python_2_unicode_compatible
@@ -24,12 +26,16 @@ class Role(models.Model):
         (CONTRACTOR, 'admin.role.contractor'),
         (LOCATION, 'admin.role.location'),
     )
-
+    # keys
     group = models.OneToOneField(Group)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29,
                                 choices=ROLE_TYPE_CHOICES,
                                 default=LOCATION)
+
+    # use as a normal Django Manager() to access related setting objects.
+    settings = GenericRelation(Setting)
+
 
     class Meta:
         db_table = 'role_role'
@@ -63,6 +69,9 @@ class Person(User):
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, null=True)
     middle_initial = models.CharField(max_length=30, blank=True)
     accept_assign = models.BooleanField(default=False)
+    
+    # use as a normal Django Manager() to access related setting objects.
+    settings = GenericRelation(Setting)
 
     class Meta:
         db_table = 'person_person'
