@@ -8,6 +8,7 @@ from person import views
 router = routers.DefaultRouter()
 router.register(r'person', views.PersonViewSet)
 router.register(r'person_status', views.PersonStatusViewSet)
+router.register(r'role', views.RoleViewSet)
 
 
 urlpatterns = patterns('',

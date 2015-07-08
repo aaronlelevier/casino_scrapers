@@ -4,7 +4,7 @@ import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-SECRET_KEY = '&8g%ple@(yc11&hb*k!zu2&e+wgaggk79_k(3=!w2ngv!5qh5&' # os.environ['BS_SECRET_KEY']
+SECRET_KEY = '&8g%ple@(yc11&hb*k!zu2&e+wgaggk79_k(3=!w2ngv!5qh5&'
 
 SITE_ID = 1
 
@@ -79,17 +79,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bigsky.wsgi.application'
 
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
-        'NAME': 'aaron', # os.environ['BSRS_DB_NAME'],
-        'USER': '', # os.environ['BSRS_DB_USER'], 
-        'PASSWORD': '', #os.environ['BSRS_DB_PW'],
-        'HOST': 'localhost',                      
-        'PORT': '5432',
-    }
-}
+# Must Override!
+DATABASES = {}
 
 LANGUAGE_CODE = 'en-us'
 
@@ -111,6 +102,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 
 ### Native Configurations ###
+
+LOGIN_REDIRECT_URL = '/'
 
 
 ### 3RD PARTY APPS ###

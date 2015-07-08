@@ -10,6 +10,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('auth', '0006_require_contenttypes_0002'),
+        ('location', '0001_initial'),
     ]
 
     operations = [
@@ -40,5 +41,28 @@ class Migration(migrations.Migration):
             options={
                 'abstract': False,
             },
+        ),
+        migrations.CreateModel(
+            name='Role',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('role_type', models.CharField(default=b'location', max_length=29, choices=[(b'contractor', b'admin.role.contractor'), (b'location', b'admin.role.location')])),
+                ('group', models.OneToOneField(to='auth.Group')),
+                ('location_level', models.ForeignKey(blank=True, to='location.LocationLevel', null=True)),
+            ],
+            options={
+                'ordering': ('group__name',),
+                'db_table': 'role_role',
+            },
+        ),
+        migrations.AddField(
+            model_name='person',
+            name='role',
+            field=models.ForeignKey(blank=True, to='person.Role', null=True),
+        ),
+        migrations.AddField(
+            model_name='person',
+            name='status',
+            field=models.ForeignKey(blank=True, to='person.PersonStatus', null=True),
         ),
     ]
