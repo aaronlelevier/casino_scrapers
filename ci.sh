@@ -1,4 +1,4 @@
-#!/bin/bash -l
+#!/bin/bash -lx
 
 cd bsrs-ember
 npm install
@@ -28,8 +28,8 @@ if [ "$?" == 1 ]; then
   exit $?
 fi
 
-# rvm use --install --create 2.2@bigsky
-rvm use 2.2.1@bigsky
+rm -rf tests.db
+rvm use --install --create 2.2@bigsky
 bundle install
 if [ "$?" == 1 ]; then
   echo "bundle install failed"
