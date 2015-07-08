@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -l
 
 cd bsrs-ember
 npm install
@@ -22,12 +22,14 @@ if [ "$?" == 1 ]; then
 fi
 
 cd bigsky
-# python manage.py test --settings=bigsky.settings.ci
-# if [ "$?" == 1 ]; then
-#   echo "django test failed"
-#   exit $?
-# fi
+python manage.py test --settings=bigsky.settings.ci
+if [ "$?" == 1 ]; then
+  echo "django test failed"
+  exit $?
+fi
 
+# rvm use --install --create 2.2@bigsky
+rvm use 2.2.1@bigsky
 bundle install
 if [ "$?" == 1 ]; then
   echo "bundle install failed"
