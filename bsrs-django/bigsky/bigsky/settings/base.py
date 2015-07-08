@@ -103,6 +103,8 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 ### Native Configurations ###
 
+LOGIN_REDIRECT_URL = '/'
+
 
 ### 3RD PARTY APPS ###
 

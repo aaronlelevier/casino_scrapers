@@ -14,3 +14,6 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+if 'test' in sys.argv:
+    from .ci import *
