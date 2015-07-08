@@ -11,7 +11,7 @@ export default Ember.Component.extend({
       this.sendAction('saveRole');
     },//savePerson
     deleteRole: function() {
-      var model = this.modelFor('admin.role');
+      var model = this.modelFor('admin.roles.role');
       // model.destroyRecord().then(() => {
       //   this.transitionTo('admin.people');
       // });
