@@ -1,5 +1,7 @@
 #!/bin/bash -lx
 
+echo "BUILD STARTED!"
+
 cd bsrs-ember
 npm install
 if [ "$?" == 1 ]; then
@@ -35,6 +37,3 @@ if [ "$?" == 1 ]; then
   echo "selenium test failed"
   exit $?
 fi
-
-echo "BUILD FINISHED!"
-exit $?
