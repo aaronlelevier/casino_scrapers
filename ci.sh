@@ -28,5 +28,5 @@ if [ "$?" == 1 ]; then
   exit $?
 fi
 
-echo "BUILD SUCCESSFUL!"
-exit 0
+echo "BUILD FINISHED!"
+exit $?

@@ -31,3 +31,6 @@ bower_components/
 .sass-cache/
 connect.lock/
 coverage/
+
+# ci script
+bsrs-django/venv/
