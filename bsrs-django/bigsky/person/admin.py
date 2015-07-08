@@ -11,3 +11,8 @@ class PersonAdmin(admin.ModelAdmin):
 @admin.register(models.PersonStatus)
 class PersonStatusAdmin(admin.ModelAdmin):
     pass
+
+
+@admin.register(models.Role)
+class RoleAdmin(admin.ModelAdmin):
+    pass

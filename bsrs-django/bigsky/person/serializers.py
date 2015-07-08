@@ -9,9 +9,9 @@ Created on Jan 16, 2015
 from django.contrib.auth import update_session_auth_hash
 from rest_framework import serializers
 
-import person.models as personModels
-import contact.serializers as contactSerializers
-import role.serializers as roleSerializers
+from person.models import PersonStatus, Person, Role
+import contact.serializers as contact_serializers
+
 
 '''
 Users consist of the standard Django User model plus the ``Person`` model
@@ -38,7 +38,7 @@ Users consist of the standard Django User model plus the ``Person`` model
 class PersonStatusSerializer(serializers.ModelSerializer):
     
     class Meta:
-        model = personModels.PersonStatus
+        model = PersonStatus
         fields = ('id', 'name')
 
         
@@ -64,13 +64,13 @@ PERSON_BASE_FIELDS = (
 class PersonSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = personModels.Person
+        model = Person
         write_only_fields = ('password',)
         fields = PERSON_BASE_FIELDS + ('password',)
 
     def create(self, validated_data):
         #need to use create_user to make sure password is encrypted
-        newuser = personModels.Person.objects.create_user(username=validated_data.get('username'),
+        newuser = Person.objects.create_user(username=validated_data.get('username'),
                                                           password=validated_data.get('password'))
         
         #remove password from payload and update included fields
@@ -117,17 +117,28 @@ class PersonSerializer(serializers.ModelSerializer):
 class PersonListSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = personModels.Person
+        model = Person
         fields = PERSON_BASE_FIELDS
 
 
 class PersonFullSerializer(serializers.ModelSerializer):
     
-    phone_numbers = contactSerializers.PhoneNumberShortSerializer(many=True, read_only=True)
-    addresses = contactSerializers.AddressShortSerializer(many=True, read_only=True)
-    emails = contactSerializers.EmailShortSerializer(many=True, read_only=True)
+    phone_numbers = contact_serializers.PhoneNumberShortSerializer(many=True, read_only=True)
+    addresses = contact_serializers.AddressShortSerializer(many=True, read_only=True)
+    emails = contact_serializers.EmailShortSerializer(many=True, read_only=True)
 
     class Meta:
-        model = personModels.Person
+        model = Person
         fields = PERSON_BASE_FIELDS + ('accept_assign', 'phone_numbers', 'addresses', 'emails')
+
+
+########
+# ROLE #
+########
+
+class RoleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Role
+        fields = ('id', 'name', 'locationlevel', 'roletype',)
     

@@ -7,7 +7,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=bsrsadmin.session',
+    '--cover-package=bigsky,contact,location,person,role,session,util',
 ]
 
 DEBUG = True

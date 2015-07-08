@@ -8,7 +8,7 @@ from rest_framework.permissions import DjangoModelPermissions
 
 class BSModelPermissions(DjangoModelPermissions):
     """
-    Overrdide DjangoModelPermissions to include the view option
+    Overrdide DjangoModelPermissions to include the view options
     """
 
     perms_map = {

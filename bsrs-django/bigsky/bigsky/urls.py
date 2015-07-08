@@ -22,6 +22,4 @@ urlpatterns = patterns('',
     url(r'', include('contact.urls')),
     url(r'', include('location.urls')),
     url(r'', include('person.urls')),
-    url(r'^api-token-auth/', 'rest_framework_jwt.views.obtain_jwt_token'),
-    url(r'^api-token-refresh/', 'rest_framework_jwt.views.refresh_jwt_token'),
 )
