@@ -29,7 +29,7 @@ if [ "$?" == 1 ]; then
 fi
 
 rm -rf tests.db
-rvm 2.2.1
+rvm 2.2
 rvm gemset create bigsky
 rvm gemset use bigsky
 bundle install
