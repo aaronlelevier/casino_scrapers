@@ -18,7 +18,7 @@ describe "Example Selenium Tests" do
 
     describe "login acceptance tests" do
       it "should show a login page at the root of the web app" do
-        @b.goto "http://127.0.0.1:8000/"
+        @b.goto "http://localhost:8000/login/"
         assert @b.text_field(:id => "id_username").visible?
         assert @b.text_field(:id => "id_password").visible?
       end
