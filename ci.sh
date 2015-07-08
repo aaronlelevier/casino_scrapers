@@ -37,3 +37,5 @@ if [ "$?" == 1 ]; then
   echo "selenium test failed"
   exit $?
 fi
+
+exit $?
