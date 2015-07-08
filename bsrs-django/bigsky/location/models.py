@@ -14,7 +14,11 @@ from util.models import AbstractName
 
 
 class LocationLevel(AbstractName):
-    # use symmetrical = false to indicate one way relationship
+    '''
+    Use symmetrical = false to indicate one way relationship
+
+    :docs: https://docs.djangoproject.com/en/1.8/ref/models/fields/#django.db.models.ManyToManyField.symmetrical
+    '''
     children = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='parents')
 
 
