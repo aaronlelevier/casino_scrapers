@@ -29,7 +29,9 @@ if [ "$?" == 1 ]; then
 fi
 
 rm -rf tests.db
-rvm gemset use --install --create 2.2@bsrs
+rvm 2.2.1
+rvm gemset create bigsky
+rvm gemset use bigsky
 bundle install
 if [ "$?" == 1 ]; then
   echo "bundle install failed"
