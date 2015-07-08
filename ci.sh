@@ -28,5 +28,19 @@ if [ "$?" == 1 ]; then
   exit $?
 fi
 
+rvm gemset create bigsky
+rvm gemset use bigsky
+bundle install
+if [ "$?" == 1 ]; then
+  echo "gem install failed"
+  exit $?
+fi
+
+python run_selenium.py
+if [ "$?" == 1 ]; then
+  echo "selenium test failed"
+  exit $?
+fi
+
 echo "BUILD FINISHED!"
 exit $?
