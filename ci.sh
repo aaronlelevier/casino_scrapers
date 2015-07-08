@@ -29,14 +29,6 @@ if [ "$?" == 1 ]; then
 fi
 
 rm -rf tests.db
-rvm 2.2
-rvm gemset create bigsky
-rvm gemset use bigsky
-bundle install
-if [ "$?" == 1 ]; then
-  echo "bundle install failed"
-  exit $?
-fi
 
 python run_selenium.py
 if [ "$?" == 1 ]; then
