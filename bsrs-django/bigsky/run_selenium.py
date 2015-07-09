@@ -11,6 +11,7 @@ from django.core.management import execute_from_command_line
 def django_app():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bigsky.settings.ci")
     execute_from_command_line(['manage.py'] + ['migrate'])
+    execute_from_command_line(['manage.py'] + ['loaddata'] + ['fixtures/jenkins'])
     execute_from_command_line(['manage.py'] + ['runserver'] + ['--noreload'])
 
 def run_selenium_tests():
@@ -24,6 +25,6 @@ if __name__ == '__main__':
     p = multiprocessing.Process(target=django_app)
     p.daemon = True
     p.start()
-    time.sleep(2)
+    time.sleep(20)
     run_selenium_tests()
     os.kill(int(p.pid), signal.SIGTERM)

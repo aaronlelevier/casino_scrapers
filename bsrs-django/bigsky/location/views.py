@@ -19,7 +19,6 @@ import models as locModels
 import serializers as locSerializers
 
 
-# class CoalesceFilterBackend(rffilters.BaseFilterBackend):
 class CoalesceFilterBackend(filters.backends.DjangoFilterBackend):
 
     """
@@ -35,7 +34,6 @@ class CoalesceFilterBackend(filters.backends.DjangoFilterBackend):
 
 class LocationFilter(filters.FilterSet):
     
-#     type = django_filters.CharFilter(name='type__name')
     state = filters.CharFilter(name='addresses__state')
     
     class Meta:
@@ -73,10 +71,6 @@ class LocationViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = locModels.Location.objects.all()
     filter_class = LocationFilter
-#     filter_backends = (
-#                        CoalesceFilterBackend,
-#                        filters.backends.DjangoFilterBackend,
-#                        )
     
     def get_queryset(self):
         queryset = self.queryset
@@ -141,33 +135,14 @@ class LocationViewSet(viewsets.ModelViewSet):
                     respObj['message'] = 'location ' + pk + ' does not exist'
                     return Response(respObj, status=status.HTTP_400_BAD_REQUEST)
                 
-                
-                
-                
-                '''
-                build the query based on levels
-                
-                recurse through relations until at least one is found with the right level
-                
-                '''                
-#                 locs = locModels.Location.objects.filter(relations=locs[0].relations)
-#                 locs = locs[0].relations
-#                 while locs > 0:
-#                     
-#                     selectlocs = locs.filter(level=level)
-#                     if selectlocs.count() > 0:
-#                         return Response(locSerializers.LocationGridSerializer(selectlocs, many=True).data)
-#                     else:
-#                         #TBD - go through each related object and get related to those that haven't been checked - hmmm
-#                         locs = locModels.Location.objects.filter(relations__in=locs.relations_set.manager_method())
-                
+                # build the query based on levels
+                # recurse through relations until at least one is found with the right level
                 respObj['code'] = 400
                 respObj['message'] = 'no relations for level id ' + level_id + ' found'
                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)
 
             
         else:
-#             should never get here
             respObj['code'] = 400
             respObj['message'] = 'Method not supported - ' + request.method
             return Response(respObj, status=status.HTTP_400_BAD_REQUEST)

@@ -1,0 +1,20 @@
+[
+{
+  "fields": {
+    "username": "aaron",
+    "first_name": "",
+    "last_name": "",
+    "is_active": true,
+    "is_superuser": true,
+    "is_staff": true,
+    "last_login": "2015-07-08T23:22:27.864Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "md5$kjzCbGKXL1w9$b1020262b4921dcff4329fb1f01406a6",
+    "email": "pyaaron@gmail.com",
+    "date_joined": "2015-07-08T23:22:07.383Z"
+  },
+  "model": "auth.user",
+  "pk": 2
+}
+]
