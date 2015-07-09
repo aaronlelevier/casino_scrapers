@@ -99,7 +99,6 @@ STATICFILES_DIRS = (
 
 STATIC_URL = '/assets/'
 
-
 ### Native Configurations ###
 
 LOGIN_REDIRECT_URL = '/'
