@@ -25,10 +25,10 @@ var PEOPLE_FACTORY = {
     list: function() {
         'use strict';
         var response = [];
-        for (let i=0; i < 50; i++) { 
-            results.push(generatePerson(i));
+        for (var i=0; i < 50; i++) { 
+            response.push(generatePerson(i));
         }
-        return {results: response};
+        return {"results": response};
     },
 }
 
@@ -36,7 +36,7 @@ var PEOPLE_FACTORY = {
 if (typeof window === 'undefined') {
     module.exports = PEOPLE_FACTORY; 
 } else {
-    define('bsrs-ember/vendor/toran', ['exports'], function (exports) {
+    define('bsrs-ember/vendor/people_fixtures', ['exports'], function (exports) {
         'use strict';
         return PEOPLE_FACTORY;
     });

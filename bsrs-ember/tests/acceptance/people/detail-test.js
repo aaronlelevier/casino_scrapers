@@ -5,7 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PeopleFactory from 'bsrs-ember/tests/helpers/people';
 import config from 'bsrs-ember/config/environment'; 
-
+import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 const PEOPLE_URL = "/admin/people";
 const DETAIL_URL = "/admin/people/11";
 const SUBMIT_BTN = ".submit_btn";
@@ -25,7 +25,7 @@ module('Acceptance | people-detail', {
   }
 });
 
-test('clicking a persons name will redirect to the given detail view', function(assert) {
+test('forbar clicking a persons name will redirect to the given detail view', function(assert) {
   visit(PEOPLE_URL);
 
   andThen(function() {
@@ -39,7 +39,7 @@ test('clicking a persons name will redirect to the given detail view', function(
   });
 });
 
-test('xx when you deep link to the person detail view you get bound attrs', function(assert) {
+test('when you deep link to the person detail view you get bound attrs', function(assert) {
   visit(DETAIL_URL);
 
   andThen(function() {
