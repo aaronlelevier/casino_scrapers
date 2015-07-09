@@ -2,51 +2,102 @@
 
 echo "BUILD STARTED!"
 
+function npmInstall {
+    npm install
+    NPM_INSTALL=$?
+    echo "WAT!"
+    echo $NPM_INSTALL
+    if [ "$NPM_INSTALL" == 1 ]; then
+      echo "npm install failed"
+      exit $NPM_INSTALL
+    fi
+}
+
+function emberTest {
+    ./node_modules/ember-cli/bin/ember test
+    EMBER_TEST=$?
+    if [ "$EMBER_TEST" == 1 ]; then
+      echo "ember test failed"
+      exit $EMBER_TEST
+    fi
+}
+
+function pipInstall {
+    virtualenv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+    PIP_INSTALL=$?
+    if [ "$PIP_INSTALL" == 1 ]; then
+      echo "pip install failed"
+      exit $PIP_INSTALL
+    fi
+}
+
+function djangoTest {
+    python manage.py test --settings=bigsky.settings.ci
+    DJANGO_TEST=$?
+    if [ "$DJANGO_TEST" == 1 ]; then
+      echo "django test failed"
+      exit $DJANGO_TEST
+    fi
+}
+
+function productionEmberBuild {
+    ./node_modules/ember-cli/bin/ember build --env=production
+    EMBER_BUILD=$?
+    if [ "$EMBER_BUILD" == 1 ]; then
+      echo "production ember build failed"
+      exit $EMBER_BUILD
+    fi
+}
+
+function copyEmberAssetsToDjango {
+    rm -rf -rf assets
+    rm -rf -rf templates/index.html
+    rm -rf tests.db
+
+    cp -r ../../bsrs-ember/dist/assets .
+    COPY_EMBER_ASSETS=$?
+    if [ "$COPY_EMBER_ASSETS" == 1 ]; then
+      echo "copy of assets from ember to django failed"
+      exit $COPY_EMBER_ASSETS
+    fi
+
+    cp -r ../../bsrs-ember/dist/index.html templates
+    COPY_INDEX_HTML=$?
+    if [ "$COPY_INDEX_HTML" == 1 ]; then
+      echo "copy of index.html from ember to django failed"
+      exit $COPY_INDEX_HTML
+    fi
+}
+
+function runSeleniumTests {
+    python run_selenium.py
+    SELENIUM_TEST=$?
+    if [ "$SELENIUM_TEST" == 1 ]; then
+      echo "selenium test failed"
+      exit $SELENIUM_TEST
+    fi
+}
+
 cd bsrs-ember
-npm install
-if [ "$?" == 1 ]; then
-  echo "npm install failed"
-  exit $?
-fi
-./node_modules/ember-cli/bin/ember test
-if [ "$?" == 1 ]; then
-  echo "ember test failed"
-  exit $?
-fi
+npmInstall
+emberTest
 
 cd ../bsrs-django
-virtualenv venv
-source venv/bin/activate
-pip install -r requirements.txt
-if [ "$?" == 1 ]; then
-  echo "pip install failed"
-  exit $?
-fi
+pipInstall
 
 cd bigsky
-python manage.py test --settings=bigsky.settings.ci
-if [ "$?" == 1 ]; then
-  echo "django test failed"
-  exit $?
-fi
+djangoTest
 
 cd ../../bsrs-ember
-./node_modules/ember-cli/bin/ember build --env=production
-if [ "$?" == 1 ]; then
-  echo "production ember build failed"
-  exit $?
-fi
+productionEmberBuild
 
 cd ../bsrs-django
 cd bigsky
-rm -rf -rf assets && rm -rf -rf templates/index.html && rm -rf tests.db
-cp -r ../../bsrs-ember/dist/assets .
-cp -r ../../bsrs-ember/dist/index.html templates
 
-python run_selenium.py
-if [ "$?" == 1 ]; then
-  echo "selenium test failed"
-  exit $?
-fi
+copyEmberAssetsToDjango
 
-exit $?
+runSeleniumTests
+
+exit 1
