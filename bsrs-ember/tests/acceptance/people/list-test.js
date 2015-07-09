@@ -12,7 +12,7 @@ const API_PREFIX = "/" + config.APP.NAMESPACE;
 
 var application;
 
-module('forbar Acceptance | people-list', {
+module('Acceptance | people-list', {
   beforeEach: function() {
     application = startApp();
     var endpoint = API_PREFIX + PEOPLE_URL + "/";

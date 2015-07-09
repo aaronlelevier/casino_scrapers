@@ -25,7 +25,7 @@ module('Acceptance | people-detail', {
   }
 });
 
-test('forbar clicking a persons name will redirect to the given detail view', function(assert) {
+test('clicking a persons name will redirect to the given detail view', function(assert) {
   visit(PEOPLE_URL);
 
   andThen(function() {
