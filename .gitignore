@@ -33,4 +33,4 @@ connect.lock/
 coverage/
 
 # ci script
-bsrs-django/venv/
+venv/
