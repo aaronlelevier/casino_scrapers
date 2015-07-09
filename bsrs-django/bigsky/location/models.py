@@ -15,31 +15,24 @@ from util.models import AbstractName
 
 class LocationLevelQuerySet(models.query.QuerySet):
     '''
-    Returns a set() of all Child IDs for a single Parent ``LocationLevel``
+    Returns a distinct list of all Child IDs for a single Parent ``LocationLevel`` 
+    regardless of level
     '''
 
     def get_all_children(self, parent, all_children=None):
-        # init an empty all_children if not present
         if not all_children:
             all_children = set()
 
-        new_children = parent.children.values_list('id', flat=True)
+        new_children = set(parent.children.values_list('id', flat=True))
 
-        if new_children:
+        if new_children - all_children:
             all_children.update(new_children)
             # for each child, call the function in a tree
             for x in new_children:
                 ea = LocationLevel.objects.get(id=x)
                 self.get_all_children(ea, all_children)
-        else:
-            return all_children
 
-'''
-from location.models import LocationLevel
-region = LocationLevel.objects.get(name='Region')
-ll = LocationLevel.objects.get_all_children(region)
-print ll
-'''
+        return list(all_children)
 
 
 class LocationLevelManager(models.Manager):

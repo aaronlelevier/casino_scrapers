@@ -6,12 +6,29 @@ from location.models import (LocationLevel, LocationStatus,
     LocationType, Location)
 
 
+class LocationLevelManagerTests(TestCase):
+
+    def setUp(self):
+        self.region = mommy.make(LocationLevel, name='region')
+        self.district = mommy.make(LocationLevel, name='district')
+        self.store1 = mommy.make(LocationLevel, name='store1')
+        self.store2 = mommy.make(LocationLevel, name='store2')
+
+    def test_get_all_children(self):
+        self.region.children.add(self.district)
+        self.district.children.add(self.store1)
+        self.district.children.add(self.store2)
+
+        #test
+        all_children = LocationLevel.objects.get_all_children(self.region)
+        self.assertEqual(len(all_children), 3)
+
+
 class LocationLevelTests(TestCase):
 
     def test_children(self):
         district = mommy.make(LocationLevel, name='district')
         region = mommy.make(LocationLevel, name='region')
-        # store = mommy.make(LocationLevel, )
 
         # no children levels
         self.assertEqual(region.children.count(), 0)
