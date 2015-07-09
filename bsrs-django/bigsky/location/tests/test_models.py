@@ -1,3 +1,4 @@
+from django.db import models
 from django.test import TestCase
 
 from model_mommy import mommy
@@ -15,13 +16,15 @@ class LocationLevelManagerTests(TestCase):
         self.store2 = mommy.make(LocationLevel, name='store2')
 
     def test_get_all_children(self):
+        # test that ``get_all_children()`` traverses multiple levels, and
+        # doesn't just get the ``children`` for a single ``LocationLevel``
         self.region.children.add(self.district)
         self.district.children.add(self.store1)
         self.district.children.add(self.store2)
-
         #test
         all_children = LocationLevel.objects.get_all_children(self.region)
         self.assertEqual(len(all_children), 3)
+        self.assertIsInstance(all_children, models.query.QuerySet)
 
 
 class LocationLevelTests(TestCase):
