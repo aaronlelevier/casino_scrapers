@@ -34,6 +34,7 @@ THIRD_PARTY_APPS = (
     # test libraries
     'django_nose',
     'django_coverage',
+    'debug_toolbar',
     )
 
 LOCAL_APPS = (
@@ -93,12 +94,10 @@ USE_L10N = True
 USE_TZ = True
 
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'source'),
+    os.path.join(BASE_DIR, 'assets'),
     )
 
-STATIC_URL = '/static/'
-
-STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/assets/'
 
 
 ### Native Configurations ###
@@ -107,6 +106,8 @@ LOGIN_REDIRECT_URL = '/'
 
 
 ### 3RD PARTY APPS ###
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 CORS_ORIGIN_ALLOW_ALL = True
 #CORS_ORIGIN_WHITELIST = (

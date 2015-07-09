@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
 from django.core.urlresolvers import reverse
@@ -23,3 +24,9 @@ urlpatterns = patterns('',
     url(r'', include('location.urls')),
     url(r'', include('person.urls')),
 )
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )
