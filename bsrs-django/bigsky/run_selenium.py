@@ -11,6 +11,7 @@ from django.core.management import execute_from_command_line
 def django_app():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bigsky.settings.ci")
     execute_from_command_line(['manage.py'] + ['migrate'])
+    execute_from_command_line(['manage.py'] + ['loaddata'] + ['fixtures/jenkins'])
     execute_from_command_line(['manage.py'] + ['runserver'] + ['--noreload'])
 
 def run_selenium_tests():
