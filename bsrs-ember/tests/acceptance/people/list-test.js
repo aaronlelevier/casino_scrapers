@@ -4,6 +4,7 @@ import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PeopleFactory from 'bsrs-ember/tests/helpers/people';
+import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import config from 'bsrs-ember/config/environment';
 
 const PEOPLE_URL = "/admin/people";
@@ -11,11 +12,11 @@ const API_PREFIX = "/" + config.APP.NAMESPACE;
 
 var application;
 
-module('Acceptance | people-list', {
+module('forbar Acceptance | people-list', {
   beforeEach: function() {
     application = startApp();
     var endpoint = API_PREFIX + PEOPLE_URL + "/";
-    xhr( endpoint ,"GET",null,{},200,PeopleFactory.list() );
+    xhr( endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.list() );
   },
   afterEach: function() {
     Ember.run(application, 'destroy');
