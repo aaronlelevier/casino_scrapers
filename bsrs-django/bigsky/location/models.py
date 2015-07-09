@@ -23,16 +23,16 @@ class LocationLevelQuerySet(models.query.QuerySet):
         if not all_children:
             all_children = set()
 
-        new_children = set(parent.children.values_list('id', flat=True))
+        new_children = parent.children.values_list('id', flat=True)
 
-        while new_children:
+        if new_children:
             all_children.update(new_children)
             # for each child, call the function in a tree
-            for ea in new_children:
-                ea = LocationLevel.objects.get(id=ea)
+            for x in new_children:
+                ea = LocationLevel.objects.get(id=x)
                 self.get_all_children(ea, all_children)
-        
-        return all_children
+        else:
+            return all_children
 
 '''
 from location.models import LocationLevel
