@@ -15,16 +15,23 @@ class LocationLevelManagerTests(TestCase):
         self.store1 = mommy.make(LocationLevel, name='store1')
         self.store2 = mommy.make(LocationLevel, name='store2')
 
-    def test_get_all_children(self):
         # test that ``get_all_children()`` traverses multiple levels, and
         # doesn't just get the ``children`` for a single ``LocationLevel``
         self.region.children.add(self.district)
         self.district.children.add(self.store1)
         self.district.children.add(self.store2)
-        #test
+
+    def test_get_all_children(self):
+        # should have 3 children, now 1
         all_children = LocationLevel.objects.get_all_children(self.region)
         self.assertEqual(len(all_children), 3)
         self.assertIsInstance(all_children, models.query.QuerySet)
+
+    def test_get_all_parents(self):
+        # should have 2 parents, not 1
+        all_parents = LocationLevel.objects.get_all_parents(self.store1)
+        self.assertEqual(len(all_parents), 2)
+        self.assertIsInstance(all_parents, models.query.QuerySet)
 
 
 class LocationLevelTests(TestCase):

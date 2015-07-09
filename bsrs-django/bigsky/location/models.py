@@ -14,9 +14,13 @@ from util.models import AbstractName
 
 
 class LocationLevelQuerySet(models.query.QuerySet):
-    
+
     def get_all_children(self, parent, all_children=None):
         '''
+        :parent: LocationLevel
+
+        :all_children: default to None always until recursively called
+
         Returns all Childen for a single Parent ``LocationLevel`` regardless of Level.
         '''
         if not all_children:
@@ -33,6 +37,40 @@ class LocationLevelQuerySet(models.query.QuerySet):
 
         return self.filter(id__in=all_children)
 
+    def get_all_parents(self, child, first_child_id=None, all_parents=None):
+        '''
+        :first_child_id: the ``child_id`` that we are looking up all parents for, 
+        and will be excluded from the output
+
+        :child: LocationLevel
+
+        :all_parents: default to None always until recursively called
+        '''
+        first_child_id = child.id
+
+        if not all_parents:
+            all_parents = set()
+
+        # filter for ``parents`` where this is their ``child``
+        new_parents = set(self.filter(children=child).values_list('id', flat=True))
+
+        if new_parents - all_parents:
+            all_parents.update(new_parents)
+            # for each child, call the function in a tree
+            for x in new_parents:
+                ea = LocationLevel.objects.get(id=x)
+                self.get_all_parents(ea, first_child_id, all_parents)
+
+        return self.filter(id__in=all_parents).exclude(id=first_child_id)
+
+'''
+
+from location.models import LocationLevel
+store = LocationLevel.objects.get(name='Store')
+LocationLevel.objects.get_all_parents(store)
+
+'''
+
 
 class LocationLevelManager(models.Manager):
     
@@ -41,6 +79,9 @@ class LocationLevelManager(models.Manager):
 
     def get_all_children(self, parent, all_children=None):
         return self.get_queryset().get_all_children(parent, all_children)
+
+    def get_all_parents(self, child, first_child_id=None, all_parents=None):
+        return self.get_queryset().get_all_parents(child, first_child_id, all_parents)
 
 
 class LocationLevel(AbstractName):
