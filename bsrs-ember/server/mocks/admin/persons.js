@@ -1,3 +1,4 @@
+var PEOPLE_FIXTURES = require('../../../vendor/people_fixtures.js');
 var USERS = {"count":3,"next":null,"previous":null,"results":[
   {"id":3,"username":"akrier","first_name":"Andrew","middleinitial":"M","last_name":"Krier","title":"Grand Poobah","empnumber":"5043","role_name":"admin.role.system_administrator","authamount":"1000.0000","status_name":"person.status.active"},
   {"id":4,"username":"tkrier","first_name":"Tom","middleinitial":"J","last_name":"Krier","title":"Starship Overlord","empnumber":"5026","role_name":"admin.role.hosting_administrator","authamount":"266532.0000","status_name":"person.status.active"},

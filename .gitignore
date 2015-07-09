@@ -9,7 +9,6 @@ assets/
 htmlcov/
 /__pycache__
 *.ipynb*
-vendor/
 config.rst
 dump.rdb
 **/environ/init.sls
