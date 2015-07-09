@@ -100,4 +100,5 @@ copyEmberAssetsToDjango
 
 runSeleniumTests
 
-exit "BUILD SUCCESSFUL!"
+echo "BUILD SUCCESSFUL!"
+exit 0
