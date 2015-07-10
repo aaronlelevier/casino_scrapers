@@ -1,5 +1,0 @@
-article.main.full
-	header
-		h1
-			= t "admin.approval" count="2"
-	section.docSection {{outlet}}

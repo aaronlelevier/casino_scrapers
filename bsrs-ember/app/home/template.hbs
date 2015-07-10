@@ -1,0 +1,67 @@
+<header class="main">
+  <nav class="modules">
+    <ul>
+      <li> {{#link-to "home"}} | Home{{/link-to}}</li>
+      <li> {{#link-to "home.tickets"}} | Tickets{{/link-to}}</li>
+      <li> {{#link-to "home.work-orders"}} | Work Orders{{/link-to}}</li>
+      <li> {{#link-to "home.purchase-orders"}} | Purchase Orders{{/link-to}}</li>
+      <li> {{#link-to "home.tasks"}} | Tasks{{/link-to}}</li>
+      <li> {{#link-to "home.projects"}} | Projects{{/link-to}}</li>
+      <li> {{#link-to "home.rfqs"}} | RFQs{{/link-to}}</li>
+      <li> {{#link-to "home.pm"}} | PM{{/link-to}}</li>
+      <li> {{#link-to "home.assets"}} | Assets{{/link-to}}</li>
+      <li> {{#link-to "home.invoices"}} | Invoices{{/link-to}}</li>
+    </ul>
+  </nav>
+  <nav class="userOptions">
+    <ul>
+      <li>
+        <a>{{fa-icon "question" classNames="menuIcon"}}</a>
+      </li>
+      <li>
+        <a>{{fa-icon "bell-o" classNames="menuIcon"}}</a>
+        <span class="count">2</span>
+      </li>
+      <li>
+        <a>{{fa-icon "envelope-o" classNames="menuIcon"}}</a>
+        <span class="count">56</span>
+      </li>
+      <li class="currentUser">
+        <a>
+          <span class="user">Current User</span>
+          <span class="role">Current User Role</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<nav class="tabs">
+  <ul>
+    <li class="active">
+      <span> Tab One</span>
+      <span>{{fa-icon "times-circle" classNames="close-icon"}}</span>
+    </li>
+    <li>
+      <span>Tab Two</span>
+      <span>{{fa-icon "times-circle" classNames="close-icon"}}</span>
+    </li>
+    <li class="new">
+      <span>{{fa-icon "plus"}}</span>
+    </li>
+  </ul>
+</nav>
+
+<aside class="tray">
+  <nav class="trayMain">
+    <ul>
+      <li>{{link-to "home"}} <span>{{fa-icon "home"}}</span></li>
+      <li>{{link-to "home.calendar"}} <span>{{fa-icon "calendar"}}</span></li>
+
+      <li>{{link-to "home.search"}} <span>{{fa-icon "search"}}</span></li>
+      <li>{{link-to "home.reports"}} <span>{{fa-icon "pie-chart"}}</span></li>
+      <li>{{link-to "home.admin"}} <span>{{fa-icon "cog"}}</span></li>
+    </ul>
+  </nav>
+</aside>
+<section class="wrap">{{outlet}}</section>

@@ -1,4 +1,0 @@
-article.main.full
-	header
-		h1 PM's
-	section.docSection {{outlet}}

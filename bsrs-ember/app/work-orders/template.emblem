@@ -1,4 +1,0 @@
-article.main.full
-	header
-		h1 Work Orders
-	section.docSection {{outlet}}

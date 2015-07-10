@@ -5,7 +5,6 @@ var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var app = new EmberApp({
   // sassOptions: {
 //   includePaths: [
-//     'bower_components/foundation/scss'
 //   ]
 // }
 	'ember-cli-bootstrap-sassy': {
@@ -13,7 +12,7 @@ var app = new EmberApp({
 	}
 });
 
-app.import('bower_components/ember/ember-template-compiler.js');
+//app.import('bower_components/ember/ember-template-compiler.js');
 app.import('bower_components/fauxjax/dist/fauxjax.min.js');
 app.import('vendor/people_fixtures.js');
 // Use `app.import` to add additional libraries to the generated

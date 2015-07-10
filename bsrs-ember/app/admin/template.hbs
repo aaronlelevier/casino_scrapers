@@ -1,0 +1,61 @@
+<aside class="side-panel">
+	<header>
+		<h1>Admin</h1>
+	</header>
+	<menu>
+		<section>
+			<h3>
+				{{fa-icon "cogs" classNames="menuIcon"}}
+				{{t "admin.setting" count="2"}}
+			</h3>
+			<ul class="list-unstyled">
+				<li>{{#link-to "admin.general"}} {{t "admin.general" count="2"}} {{/link-to}}</li>
+				<li>{{#link-to "admin.notifications"}} {{t "admin.notification" count="2"}} {{/link-to}}</li>
+				<li>{{#link-to "admin.assignments"}} {{t "admin.assignment" count="2"}} {{/link-to}}</li>
+				<li>{{#link-to "admin.approvals"}} {{t "admin.approval" count="2"}} {{/link-to}}</li>
+				<li>{{#link-to "admin.templates"}} {{t "admin.template" count="2"}} {{/link-to}}</li>
+			</ul>
+		</section>
+		<section>
+			<h3>
+				{{fa-icon "users" classNames="menuIcon"}}
+				{{t "admin.users.other"}}
+			</h3>
+			<ul class="list-unstyled">
+				<li> {{#link-to "admin.roles"}} {{t "admin.role" count="2"}} {{/link-to}}</li>
+				<li>{{#link-to "admin.people"}} {{t "admin.person" count="2"}} {{/link-to}}</li>
+			</ul>
+		</section>
+		<section>
+			<h3>
+				{{fa-icon "building" classNames="menuIcon"}}
+				{{t "admin.location" count="2"}}
+			</h3>
+			<ul class="list-unstyled">
+				<li>{{#link-to "admin.locationlevels"}} {{t "admin.locationOrg" count="2"}} {{/link-to}}</li>
+				<li>{{#link-to "admin.locations"}} {{t "admin.location" count="2"}} {{/link-to}} </li>
+			</ul>
+		</section>
+		<section>
+			<h3>
+				{{fa-icon "list" classNames="menuIcon"}}
+				{{t "admin.category" count="2"}}
+			</h3>
+			<ul class="list-unstyled">
+				<li> {{#link-to "admin.category-types"}} {{t "admin.categoryType" count="2"}} {{/link-to}} </li>
+				<li> {{#link-to "admin.categories"}} {{t "admin.category" count="2"}}{{/link-to}}	</li>
+			</ul>
+		</section>
+		<section>
+			<h3>
+				{{fa-icon "wrench" classNames="menuIcon"}}
+				{{t "admin.contractor" count="2"}}
+			</h3>
+			<ul class="list-unstyled">
+				<li>{{#link-to "admin.contractors"}} {{t "admin.company" count="2"}} {{/link-to}}</li>
+				<li>{{#link-to "admin.contractor-assignments"}} {{t "admin.contractorAssignment" count="2"}} {{/link-to}}</li>
+			</ul>
+		</section>
+	</menu>
+</aside>
+<article class="main">{{outlet}}</article>

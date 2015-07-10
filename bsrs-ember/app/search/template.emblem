@@ -1,4 +1,0 @@
-article.main.full
-	header
-		h1 Search
-	section.docSection {{outlet}}

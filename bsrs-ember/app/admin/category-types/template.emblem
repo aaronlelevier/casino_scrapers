@@ -1,4 +1,0 @@
-header
-	h1 
-		= t "admin.categoryType" count="2"
-section.docSection {{outlet}}

@@ -1,4 +1,0 @@
-header
-	h1 
-		= t "admin.location" count="2"
-section.docSection {{outlet}}
