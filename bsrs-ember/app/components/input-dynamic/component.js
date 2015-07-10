@@ -9,7 +9,6 @@ export default Ember.TextField.extend({
     },
     set(key, value){
       //TODO: Original value lost on first set
-      // debugger;
       var prop = this.get('prop');
       this.set('obj.' + prop, value);
       return this.get('obj.' + prop, value);

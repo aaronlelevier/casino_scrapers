@@ -5,7 +5,6 @@ echo "BUILD STARTED!"
 function npmInstall {
     npm install
     NPM_INSTALL=$?
-    echo "WAT!"
     echo $NPM_INSTALL
     if [ "$NPM_INSTALL" == 1 ]; then
       echo "npm install failed"
