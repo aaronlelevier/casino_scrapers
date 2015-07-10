@@ -25,7 +25,7 @@ class LoginTests(unittest.TestCase):
         password_input.send_keys("1234")
         password_input.send_keys(Keys.RETURN)
 
-        wait.until(lambda self.driver: self.driver.title.lower().startswith('bsrs-ember'))
+        self.wait.until(lambda d: d.title.lower().startswith('bsrs-ember'))
 
         current_user = self.driver.find_element_by_class_name("current-user")
         assert current_user.is_displayed()
