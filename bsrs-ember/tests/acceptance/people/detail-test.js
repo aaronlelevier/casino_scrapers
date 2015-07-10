@@ -4,20 +4,20 @@ import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment'; 
-import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
+import PEOPLE_FIXTURES from 'bsrs-ember/tests/helpers/people';
 const PEOPLE_URL = "/admin/people";
-const DETAIL_URL = "/admin/people/1";
+const DETAIL_URL = "/admin/people/11";
 const SUBMIT_BTN = ".submit_btn";
 const API_PREFIX = "/" + config.APP.NAMESPACE;
 
 var application;
 
-module('xx Acceptance | people-detail', {
+module('Acceptance | people-detail', {
   beforeEach: function() {
     application = startApp();
     var endpoint = API_PREFIX + PEOPLE_URL + "/";
     xhr( endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.list() );
-    xhr( endpoint + "1/","GET",null,{},200,PEOPLE_FIXTURES.detail(1) );
+    xhr( endpoint + "11/","GET",null,{},200,PEOPLE_FIXTURES.detail(1) );
   },
   afterEach: function() {
     Ember.run(application, 'destroy');
@@ -44,9 +44,9 @@ test('when you deep link to the person detail view you get bound attrs', functio
   andThen(function() {
     //TODO: verify ALL the other dynamic bits
     assert.equal(currentURL(),DETAIL_URL);
-    assert.equal(find('.t-person-username').val(), 'akrier');
-    assert.equal(find('.t-person-first-name').val(), 'Andy');
-    assert.equal(find('.t-person-last-name').val(), 'Krier');
+    assert.equal(find('.t-person-username').val(), 'lcooley');
+    assert.equal(find('.t-person-first-name').val(), 'Lynne');
+    assert.equal(find('.t-person-last-name').val(), 'Cooley');
     assert.equal(find('.t-person-title').val(), 'RVP');
     assert.equal(find('.t-person-emp_number').val(), '5063');
     assert.equal(find('.t-input-multi').find('input').length, 2);
