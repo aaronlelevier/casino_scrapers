@@ -3,16 +3,16 @@ import Ember from 'ember';
 export default Ember.Component.extend({
   tagName: 'div',
   model: null,
-  classNames: ['input-multi t-input-multi'],
+  classNames: ['input-multi-address t-input-multi-address'],
   actions: {
-    append: function() {
+    append: function(){
       var factory = this.container.lookupFactory('model:' + this.get('modelType'));
       this.get('model').pushObject(
         factory.create()
       );
-    },//append
-    delete: function(entry) {
+    },
+    delete: function(){
       this.get('model').removeObject(entry);
-    },//delete
+    }
   }//action
 });

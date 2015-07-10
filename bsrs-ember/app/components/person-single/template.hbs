@@ -43,7 +43,7 @@
 			{{/form-group}}
 
 			{{#form-group title="admin.person.label.address" for="addresses"}}
-		    {{input type="text" placeholder=(t "admin.person.label.address") value=addresses class="form-control" id="addresses"}}
+				{{input-multi-address model=model.addresses modelType="address"}}
 			{{/form-group}}
 
 			{{#form-group title="admin.person.label.auth_amount" for="authamount"}}

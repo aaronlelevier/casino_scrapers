@@ -1,0 +1,40 @@
+{{#each model as |address|}}
+  <div class="input-group-vertical">
+    <div class="input-group" style="width: 100%">
+      <span class="input-group-btn">
+        <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' address}}>{{fa-icon "minus"}}</button>
+      </span>
+      <select class="form-control selectpicker">
+        <option value={{address.type.id}}>{{t address.type.name}}</option>
+        <option value="Something else">TODO 1</option>
+        <option value="The last one">TODO 2</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon address-label">{{t "admin.address.address"}}</span>
+      {{textarea value=address.address class="form-control t-address" placeholder=(t "admin.address.address")}}
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon address-label">{{t "admin.address.city"}}</span>
+      {{input type="text" value=address.city class="form-control" placeholder=(t "admin.address.city")}}
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon address-label">{{t "admin.address.state"}}</span>
+      {{select-dynamic modelType="states"}}
+      {{!-- input type="text" id="state" value=address.state class="form-control" placeholder=(t "admin.address.state") --}}
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon address-label">{{t "admin.address.postal_code"}}</span>
+      {{input type="text" value=address.postal_code class="form-control" placeholder=(t "admin.address.postal_code")}}
+    </div>
+    <div class="input-group">
+      <span class="input-group-addon address-label">{{t "admin.address.country"}}</span>
+      <select class="form-control">
+        <option>United States</option>
+      </select>
+      {{!--input type="text" id="country" value=address.country class="form-control" placeholder=(t "admin.address.country")--}}
+    </div>
+  </div>
+
+{{/each}}
+<button class="t-add-btn add-btn btn btn-default btn-sm" type="button" {{action 'append'}}><span class="btn-label">{{fa-icon "plus"}}</span></button>

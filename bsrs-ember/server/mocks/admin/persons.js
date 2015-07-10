@@ -41,12 +41,30 @@ var PEOPLE = [{
         "name":"admin.phonenumbertype.mobile"
       }
     }],
-  "addresses":[],
+  "addresses":[
+    {
+      "type": {
+        "id": 1,
+        "name": "admin.adresstype.office"
+      },
+      "address": "9325 Sky Park Ct.\nSuite 120",
+      "city": "San Diego",
+      "state": {
+        "id": 1,
+        "name": "California"
+      },
+      "postal_code": "92123",
+      "country": {
+        "id": 1,
+        "name": "United States of America"
+      }
+    }
+  ],
   "emails":[]
-}, 
+},
 
-{ 
-  "id":3, 
+{
+  "id":3,
   "username":"akrier",
   "first_name":"Andy",
   "middleinitial":"J",
@@ -85,8 +103,8 @@ var PEOPLE = [{
   "addresses":[],
   "emails":[]
 },
-{ 
-  "id":2, 
+{
+  "id":2,
   "username":"snewcomer",
   "first_name":"Scott",
   "middleinitial":"N",
@@ -141,7 +159,7 @@ module.exports = function(app) {
   adminPersonsRouter.get('/:id', function(req, res) {
     var response = PEOPLE;
     var found = response.filter(function(person){
-       return person.id == req.params.id; 
+       return person.id == req.params.id;
     })[0];
     res.send(found);
   });

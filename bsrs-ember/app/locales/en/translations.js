@@ -106,6 +106,9 @@ export default {
 				number_users: "# of Users"
 			}
 		},
+		adresstype: {
+			office: "Office"
+		},
 		person: {
 			one: "Person",
 			other: "People",
@@ -126,6 +129,17 @@ export default {
 				address: "Address"
 			}
 		},
+		address: {
+			label: "Type",
+			address: "Street Address",
+			city: "City",
+			state: "State",
+			postal_code: "Zip",
+			country: "Country",
+			add: "Add Address",
+			delete: "Delete Address"
+		},
+
 		location: {
 			one: "Location",
 			other: "Locations"
