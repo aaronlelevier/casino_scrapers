@@ -132,7 +132,7 @@ class PersonSerializer(PersonListSerializer):
         return instance
 
 
-class PersonFullSerializer(serializers.ModelSerializer):
+class PersonContactSerializer(PersonSerializer):
     
     phone_numbers = contact_serializers.PhoneNumberShortSerializer(many=True, read_only=True)
     addresses = contact_serializers.AddressShortSerializer(many=True, read_only=True)
@@ -140,7 +140,7 @@ class PersonFullSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_BASE_FIELDS + ('accept_assign', 'phone_numbers', 'addresses', 'emails')
+        fields = PERSON_BASE_FIELDS + PERSON_FIELDS + ('accept_assign', 'phone_numbers', 'addresses', 'emails')
 
 
 ########

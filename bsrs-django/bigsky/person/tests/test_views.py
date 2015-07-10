@@ -4,8 +4,8 @@ from django.test import TestCase
 from django.contrib.auth.models import User, ContentType, Group, Permission
 
 from model_mommy import mommy
-from rest_framework.test import APITestCase
 
+from contact.models import Address, PhoneNumber, Email
 from person.models import Person, Role
 from person.tests.factory import PASSWORD, create_person
 
@@ -46,7 +46,48 @@ class PersonViewSetTests(TestCase):
         response = self.client.get('/api/person/person/1/')
         person = json.loads(response.content)
         self.assertEqual(person['username'], self.person1.username)
-        
+
+
+class PersonContactViewSetTests(TestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+
+        # contact info
+        self.address = mommy.make(Address)
+        self.phone_number = mommy.make(PhoneNumber)
+        self.email = mommy.make(Email)
+
+        # join to Person
+        for m in [self.address, self.phone_number, self.email]:
+            m.person = self.person
+            m.save()
+
+        # Login
+        self.client.login(username=self.person.username, password=self.password)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_create(self):
+        self.assertEqual(self.address.person, self.person)
+
+    def test_list(self):
+        # setup
+        response = self.client.get('/api/person/person_contact/')
+        people = json.loads(response.content)['results']
+        print 'people', people
+        # list data
+        self.assertEqual(response.status_code, 200)
+        # attr tests
+        person = people[0]
+        print 'person', person
+        self.assertEqual(person['id'], self.person.id)
+        self.assertEqual(person['emails'][0]['id'], self.email.person.id)
+        self.assertEqual(person['addresses'][0]['id'], self.address.person.id)
+        self.assertEqual(person['phone_numbers'][0]['id'], self.phone_number.person.id)
+
 
 class PersonAccessTests(TestCase):
 

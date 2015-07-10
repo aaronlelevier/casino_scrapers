@@ -13,7 +13,7 @@ from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 
 from person.serializers import (PersonStatusSerializer, PersonSerializer,
-    PersonListSerializer, PersonFullSerializer, RoleSerializer)
+    PersonListSerializer, PersonContactSerializer, RoleSerializer)
 from person.models import Person, PersonStatus, Role
 from person.permissions import BSModelPermissions
 
@@ -22,12 +22,21 @@ from person.permissions import BSModelPermissions
 
 class PersonStatusViewSet(viewsets.ModelViewSet):
 
-    permission_classes = [BSModelPermissions]
     queryset = PersonStatus.objects.all()
     serializer_class = PersonStatusSerializer
+    permission_classes = (permissions.IsAuthenticated,)
 
 
 ### PERSON ###
+
+class PersonContactViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint for People with all thier Contact Information.
+    """
+    queryset = Person.objects.all()
+    serializer_class = PersonContactSerializer
+    permission_classes = (permissions.IsAuthenticated,)
+
 
 class PersonViewSet(viewsets.ModelViewSet):
     """
@@ -46,10 +55,10 @@ class PersonViewSet(viewsets.ModelViewSet):
     # def create(self, request):
     #     pass
 
-    # def retrieve(self, request, pk=None):
-    #     person = get_object_or_404(self.queryset, pk=pk)
-    #     serializer = PersonSerializer(person)
-    #     return Response(serializer.data)
+    def retrieve(self, request, pk=None):
+        person = get_object_or_404(self.queryset, pk=pk)
+        serializer = PersonSerializer(person)
+        return Response(serializer.data)
 
     # def update(self, request, pk=None):
     #     pass

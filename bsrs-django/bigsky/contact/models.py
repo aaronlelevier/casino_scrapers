@@ -1,12 +1,8 @@
 '''
-Big Sky Retail Systems Framework
-Contact models
-
-Created on Jan 21, 2015
-
-@author: tkrier
-
+All contact Models: PhoneNumber, Address, and Email must have 
+a ForeignKey to ``location`` or ``person`` but not both.
 '''
+
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -21,6 +17,11 @@ class PhoneNumberType(AbstractNameOrder):
 
 @python_2_unicode_compatible
 class PhoneNumber(models.Model):
+    '''
+    TODO: Will use this "phone number lib" for validation:
+
+    https://github.com/daviddrysdale/python-phonenumbers
+    '''
     # keys
     type = models.ForeignKey(PhoneNumberType, related_name='phone_numbers')
     location = models.ForeignKey(Location, related_name='phone_numbers', null=True, blank=True)
@@ -41,6 +42,10 @@ class AddressType(AbstractNameOrder):
 
 @python_2_unicode_compatible
 class Address(models.Model):
+    '''
+    Not every field is required to be a valid address, but at 
+    least one "non-foreign-key" field must be populated.
+    '''
     # keys
     type = models.ForeignKey(AddressType, related_name='addresses')
     location = models.ForeignKey(Location, related_name='addresses', null=True, blank=True)
