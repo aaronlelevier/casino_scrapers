@@ -6,7 +6,6 @@ from person.models import Person
 
 
 USER_DICT = {
-    'username': 'testuser',
     'password': 'torment',
     'first_name': 'Test',
     'last_name': 'User',

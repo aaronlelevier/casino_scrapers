@@ -1,18 +1,54 @@
-"""
-Created on Feb 17, 2015
+import json
 
-@author: tkrier
-"""
 from django.test import TestCase
 from django.contrib.auth.models import User, ContentType, Group, Permission
 
 from model_mommy import mommy
+from rest_framework.test import APITestCase
 
 from person.models import Person, Role
 from person.tests.factory import PASSWORD, create_person
 
 
 class PersonViewSetTests(TestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.title = 'VP'
+        self.person1 = create_person()
+        self.person1.title = self.title
+        self.person1.save()
+
+        self.person2 = create_person()
+
+        # Login
+        self.client.login(username=self.person1.username, password=self.password)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_list(self):
+        # setup
+        response = self.client.get('/api/person/person/')
+        people = json.loads(response.content)
+        # list data
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(people), 2)
+        # single person fields in list
+        person = people[0]
+        self.assertEqual(person['title'], self.title)
+        # username is in the `retrieve()` view and not the `list()` view
+        with self.assertRaises(KeyError):
+            person['username']
+
+    def test_retrieve(self):
+        # setup
+        response = self.client.get('/api/person/person/1/')
+        person = json.loads(response.content)
+        self.assertEqual(person['username'], self.person1.username)
+        
+
+class PersonAccessTests(TestCase):
 
     def setUp(self):
         self.password = PASSWORD
