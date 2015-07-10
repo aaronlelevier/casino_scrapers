@@ -15,5 +15,11 @@ DATABASES = {
     }
 }
 
+
+
+INSTALLED_APPS += (
+    'django_extensions',
+    )
+
 if 'test' in sys.argv:
     from .ci import *

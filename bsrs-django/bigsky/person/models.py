@@ -23,8 +23,8 @@ class Role(models.Model):
     CONTRACTOR = 'contractor'
     LOCATION = 'location'
     ROLE_TYPE_CHOICES = (
-        (CONTRACTOR, 'admin.role.contractor'),
-        (LOCATION, 'admin.role.location'),
+        (CONTRACTOR, CONTRACTOR),
+        (LOCATION, LOCATION),
     )
     # keys
     group = models.OneToOneField(Group)
@@ -36,22 +36,29 @@ class Role(models.Model):
     # use as a normal Django Manager() to access related setting objects.
     settings = GenericRelation(Setting)
 
-
     class Meta:
         db_table = 'role_role'
         ordering = ('group__name',)
+        permissions = (
+            ('view_role', 'can view role'),
+        )
 
     def __str__(self):
         return self.group.name
 
+    @property 
+    def _name(self):
+        return self.__name__.lower()
 
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    '''
-    Auto generates a Token every time a User is created to be used with TokenAuth.
-    '''
-    if created:
-        Token.objects.create(user=instance)
+'''
+
+from django.contrib.auth.models import User, Group, Permission, ContentType
+ct = ContentType.objects.get(app_label='person', model='role')
+perms = Permission.objects.filter(content_type=ct)
+for p in perms:
+    print p
+
+'''
 
 
 class PersonStatus(AbstractName):
@@ -78,3 +85,12 @@ class Person(User):
 
     def __str__(self):
         return self.username
+
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    '''
+    Auto generates a Token every time a User is created to be used with TokenAuth.
+    '''
+    if created:
+        Token.objects.create(user=instance)
