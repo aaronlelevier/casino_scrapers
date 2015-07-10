@@ -4,8 +4,9 @@ import { moduleForComponent, test } from 'ember-qunit';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import Person from 'bsrs-ember/models/person';
 import PhoneNumberType from 'bsrs-ember/models/phonenumber-type';
+import PhoneNumberDefaults from 'bsrs-ember/value-defaults/phonenumber-type';
 
-moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
+moduleForComponent('input-multi-phone', 'xx integration: input-multi-phone test', {
   integration: true,
   setup: function() {
     translation.initialize(this);
@@ -32,14 +33,14 @@ test('defaults to use phone number model with field name of number', function(as
 
   assert.equal(model.get('phonenumbers').objectAt(0).get('number'), '');
 
-  this.$('.t-new-entry').val('andier').trigger('change');
+  this.$('.t-new-entry').val('888-888-8888').trigger('change');
 
-  assert.equal(model.get('phonenumbers').objectAt(0).get('number'), 'andier');
+  assert.equal(model.get('phonenumbers').objectAt(0).get('number'), '888-888-8888');
 });
 
 test('once added a button for phone number type appears', function(assert) {
   var model = Person.create({ phonenumbers: []});
-  var phoneNumberTypes = [PhoneNumberType.create({ id: 1, name: 'admin.phonenumbertype.office' }), PhoneNumberType.create({ id: 2, name: 'admin.phonenumbertype.mobile' })];
+  var phoneNumberTypes = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
   this.set('model', model);
   this.set('phonenumberTypes', phoneNumberTypes);
 
@@ -56,12 +57,12 @@ test('once added a button for phone number type appears', function(assert) {
   assert.equal($first_type_select.find('option').length, 2);
   assert.equal($first_type_select.find('option:eq(0)').text(), 'Office');
   assert.equal($first_type_select.find('option:eq(1)').text(), 'Mobile');
-  assert.equal(model.get("phonenumbers").objectAt(0).get("type"), 1);
+  assert.equal(model.get("phonenumbers").objectAt(0).get("type"), PhoneNumberDefaults.officeType);
 });
 
 test('changing the phone number type will alter the bound value', function(assert) {
   var model = Person.create({ phonenumbers: []});
-  var phoneNumberTypes = [PhoneNumberType.create({ id: 1, name: 'admin.phonenumbertype.office' }), PhoneNumberType.create({ id: 2, name: 'admin.phonenumbertype.mobile' })];
+  var phoneNumberTypes = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
   this.set('model', model);
   this.set('phonenumberTypes', phoneNumberTypes);
 
@@ -73,7 +74,9 @@ test('changing the phone number type will alter the bound value', function(asser
   assert.equal($first_type_select.length, 0);
   $first_btn.trigger('click');
   $first_type_select = $component.find('.t-multi-phone-type');
-  assert.equal(model.get("phonenumbers").objectAt(0).get("type"), 1);
-  $first_type_select.val(2).trigger("change");
-  assert.equal(model.get("phonenumbers").objectAt(0).get("type"), 2);
+  assert.equal(model.get("phonenumbers").objectAt(0).get("type"), PhoneNumberDefaults.officeType);
+  $first_type_select.val(PhoneNumberDefaults.mobileType).trigger("change");
+  
+  assert.equal(model.get("phonenumbers").objectAt(0).get("type"), PhoneNumberDefaults.mobileType);
+  assert.equal($first_type_select.val(), PhoneNumberDefaults.mobileType);
 });
