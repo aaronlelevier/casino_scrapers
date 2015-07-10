@@ -1,8 +1,8 @@
 var PEOPLE_FIXTURES = require('../../../vendor/people_fixtures.js');
 var USERS = {"count":3,"next":null,"previous":null,"results":[
-  {"id":3,"username":"akrier","first_name":"Andrew","middleinitial":"M","last_name":"Krier","title":"Grand Poobah","empnumber":"5043","role_name":"admin.role.system_administrator","authamount":"1000.0000","status_name":"person.status.active"},
-  {"id":4,"username":"tkrier","first_name":"Tom","middleinitial":"J","last_name":"Krier","title":"Starship Overlord","empnumber":"5026","role_name":"admin.role.hosting_administrator","authamount":"266532.0000","status_name":"person.status.active"},
-  {"id":2,"username":"snewcomer","first_name":"Scotty","middleinitial":"","last_name":"Newcomer","title":"Darth Vader","empnumber":"5037","role_name":"admin.role.hosting_administrator","authamount":"0.0000","status_name":"person.status.active"}]}
+  {"id":3,"username":"akrier","first_name":"Andrew","middleinitial":"M","last_name":"Krier","title":"Grand Poobah","emp_number":"5043","role_name":"admin.role.system_administrator","auth_amount":"1000.0000","status_name":"person.status.active"},
+  {"id":4,"username":"tkrier","first_name":"Tom","middleinitial":"J","last_name":"Krier","title":"Starship Overlord","emp_number":"5026","role_name":"admin.role.hosting_administrator","auth_amount":"266532.0000","status_name":"person.status.active"},
+  {"id":2,"username":"snewcomer","first_name":"Scotty","middleinitial":"","last_name":"Newcomer","title":"Darth Vader","emp_number":"5037","role_name":"admin.role.hosting_administrator","auth_amount":"0.0000","status_name":"person.status.active"}]}
 
 var PEOPLE = [{
   "id":4,
@@ -11,14 +11,14 @@ var PEOPLE = [{
   "middleinitial":"J",
   "last_name":"Krier",
   "title":"Mob Boss",
-  "empnumber":"5026",
+  "emp_number":"5026",
   "role":{
     "id":1,
     "name":"admin.role.hosting_administrator",
     "locationlevel":1,
     "roletype":"location"
   },
-  "authamount":"266532.0000",
+  "auth_amount":"266532.0000",
   "status":{
     "id":1,
     "name":"person.status.active"
@@ -70,14 +70,14 @@ var PEOPLE = [{
   "middleinitial":"J",
   "last_name":"Krier",
   "title":"Mr. Rodgers",
-  "empnumber":"5027",
+  "emp_number":"5027",
   "role":{
     "id":1,
     "name":"admin.role.hosting_administrator",
     "locationlevel":1,
     "roletype":"location"
   },
-  "authamount":"266532.0000",
+  "auth_amount":"266532.0000",
   "status":{
     "id":1,
     "name":"person.status.active"
@@ -110,14 +110,14 @@ var PEOPLE = [{
   "middleinitial":"N",
   "last_name":"Newcomer",
   "title":"Mickey Mouse's Right Hand Hand",
-  "empnumber":"5026",
+  "emp_number":"5026",
   "role":{
     "id":1,
     "name":"admin.role.hosting_administrator",
     "locationlevel":1,
     "roletype":"location"
   },
-  "authamount":"266532.0000",
+  "auth_amount":"266532.0000",
   "status":{
     "id":1,
     "name":"person.status.active"

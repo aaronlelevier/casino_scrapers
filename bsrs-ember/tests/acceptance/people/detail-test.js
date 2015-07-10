@@ -49,11 +49,11 @@ test('when you deep link to the person detail view you get bound attrs', functio
     assert.equal(find('.t-person-first-name').val(), 'Lynne');
     assert.equal(find('.t-person-last-name').val(), 'Cooley');
     assert.equal(find('.t-person-title').val(), 'RVP');
-    assert.equal(find('.t-person-empnumber').val(), '5063');
+    assert.equal(find('.t-person-emp_number').val(), '5063');
     assert.equal(find('.t-input-multi').find('input').length, 2);
     assert.equal(find('.t-input-multi').find('input:eq(0)').val(), '858-715-5026');
     assert.equal(find('.t-input-multi').find('input:eq(1)').val(), '858-715-5056');
-    assert.equal(find('.t-person-authamount').val(), '50000.0000');
+    assert.equal(find('.t-person-auth_amount').val(), '50000.0000');
   });
 
   var url = API_PREFIX + DETAIL_URL + "/";
@@ -64,8 +64,8 @@ test('when you deep link to the person detail view you get bound attrs', functio
   fillIn('.t-person-first-name', 'Ice');
   fillIn('.t-person-last-name', 'Cube');
   fillIn('.t-person-title', 'mastermind');
-  fillIn('.t-person-empnumber', '1122');
-  fillIn('.t-person-authamount', '0.000');
+  fillIn('.t-person-emp_number', '1122');
+  fillIn('.t-person-auth_amount', '0.000');
   click('.t-save-btn');
   andThen(function() {
     assert.equal(currentURL(),PEOPLE_URL);

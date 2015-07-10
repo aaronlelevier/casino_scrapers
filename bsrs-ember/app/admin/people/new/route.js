@@ -10,10 +10,10 @@ export default Ember.Route.extend({
           first_name = this.get('first_name'),
           last_name = this.get('last_name'),
           is_active = this.get('is_active'),
-          empnumber = this.get('empnumber'),
+          emp_number = this.get('emp_number'),
           role = this.get('role'),
           username = this.get('username'),
-          authamount = this.get('authamount');
+          auth_amount = this.get('auth_amount');
 
       if (!title.trim() || !first_name.trim()) {return;}
 
@@ -23,8 +23,8 @@ export default Ember.Route.extend({
         firstName: first_name,
         lastName: last_name,
         isActive: is_active,
-        authamount: authamount,
-        empnumber: empnumber,
+        auth_amount: auth_amount,
+        emp_number: emp_number,
         role: role
       });
       this.set('first_name', '');

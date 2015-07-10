@@ -21,10 +21,10 @@ export default Person;
 //   lastName: attr('string'),
 //   //isActive: attr('boolean', {defaultValue: false}),
 //   title: attr('string'),
-//   empnumber: attr('number'),
+//   emp_number: attr('number'),
 //   // role: attr('number'),
 //   // roleName: attr('string'),
-//   authamount: attr('number', {defaultValue: 0}),
+//   auth_amount: attr('number', {defaultValue: 0}),
 //   // phoneNumbers: hasMany('admin/phonenumber', { async: false }), //corrent folder structure determines api req string
 //   phoneNumbers: [],
 //   //addresses: attr('string'),

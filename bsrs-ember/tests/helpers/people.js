@@ -23,8 +23,8 @@ var generatePerson = function() {
         "first_name": "Lynne",
         "last_name": "Cooley",
         "title": "RVP",
-        "empnumber": "5063",
-        "authamount": "50000.0000"
+        "emp_number": "5063",
+        "auth_amount": "50000.0000"
     };
 };
 
@@ -39,15 +39,15 @@ var PeopleFactory = {
     detail: function() {
         return generatePerson();
     },
-    put: function(username, first_name, last_name, title, empnumber, authamount) {
+    put: function(username, first_name, last_name, title, emp_number, auth_amount) {
         var response = generatePerson();
         response.title = title;
         response.username = username;
         response.first_name = first_name;
         response.last_name = last_name;
         response.title = title;
-        response.empnumber = empnumber;
-        response.authamount = authamount;
+        response.emp_number = emp_number;
+        response.auth_amount = auth_amount;
         return response;
     }
 };
