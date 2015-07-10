@@ -1,0 +1,61 @@
+[
+{
+  "fields": {
+    "username": "admin",
+    "first_name": "",
+    "last_name": "",
+    "is_active": true,
+    "is_superuser": true,
+    "is_staff": true,
+    "last_login": "2015-07-09T00:35:37.390Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$20000$R1lezAM2pD5s$3MSUjA5tfRxkd6HsegXkzkRh3qzMIxYc5XOYB+4jqIw=",
+    "email": "alelevier@bigskytech.com",
+    "date_joined": "2015-07-07T18:11:55.823Z"
+  },
+  "model": "auth.user",
+  "pk": 1
+},
+{
+  "fields": {
+    "username": "CXROCTZiUgnrHHoFalSiLsQXGNkEpf",
+    "first_name": "",
+    "last_name": "",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": null,
+    "groups": [],
+    "user_permissions": [],
+    "password": "ismNehILRnUqpNqqidYbSlTaOYnkUKLLnWGAbODpFHbefOfHItmgMtSnyxrUVEaLJiWyIhIYkeKJoJtfIhtBbWIMseemfFRzsFkvVyCZWBVxfWVuhZNVSbhBQOnkrlYU",
+    "email": "",
+    "date_joined": "2015-07-08T18:49:11.650Z"
+  },
+  "model": "auth.user",
+  "pk": 2
+},
+{
+  "fields": {
+    "username": "wvCjuVDaniNHMAbaoTvNyTZnqpvlsZ",
+    "first_name": "",
+    "last_name": "",
+    "is_active": true,
+    "is_superuser": false,
+    "is_staff": false,
+    "last_login": null,
+    "groups": [],
+    "user_permissions": [
+      31,
+      32,
+      33,
+      75
+    ],
+    "password": "NGRVAiWLRuwXHAIlvhgxCCnrwEXqqEUKooKWQttLPEiWEVuOsIOSJjCeMJStHBbTkYoiprlpBvBkAHudobpkRrPtIsDpuPgwOkoqxrYuwSuYkYOzKkFGsVZRxdirvIdC",
+    "email": "",
+    "date_joined": "2015-07-08T19:49:36.525Z"
+  },
+  "model": "auth.user",
+  "pk": 3
+}
+]
