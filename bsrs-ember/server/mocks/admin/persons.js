@@ -20,7 +20,7 @@ var PEOPLE = [{
   },
   "auth_amount":"266532.0000",
   "status":{
-    "id":1,
+    "fd":1,
     "name":"person.status.active"
   },
   "acceptassign":false,
@@ -149,7 +149,7 @@ module.exports = function(app) {
   var adminPersonsRouter = express.Router();
 
   adminPersonsRouter.get('/', function(req, res) {
-    res.send(USERS);
+    res.send(PEOPLE_FIXTURES.list());
   });
 
   adminPersonsRouter.post('/', function(req, res) {
@@ -157,11 +157,11 @@ module.exports = function(app) {
   });
 
   adminPersonsRouter.get('/:id', function(req, res) {
-    var response = PEOPLE;
-    var found = response.filter(function(person){
-       return person.id == req.params.id;
-    })[0];
-    res.send(found);
+    // var response = PEOPLE;
+    // var found = response.filter(function(person){
+    //    return person.id == req.params.id;
+    // })[0];
+    res.send(PEOPLE_FIXTURES.detail(req.params.id));
   });
 
   adminPersonsRouter.put('/:id', function(req, res) {

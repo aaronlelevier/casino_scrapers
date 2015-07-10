@@ -5,6 +5,7 @@ import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import Person from 'bsrs-ember/models/person';
 import PhoneNumberType from 'bsrs-ember/models/phonenumber-type';
 import PhoneNumberDefaults from 'bsrs-ember/value-defaults/phonenumber-type';
+import PEOPLE_FACTORY from 'bsrs-ember/vendor/people_fixtures';
 
 moduleForComponent('input-multi-phone', 'xx integration: input-multi-phone test', {
   integration: true,
@@ -80,3 +81,26 @@ test('changing the phone number type will alter the bound value', function(asser
   assert.equal(model.get("phonenumbers").objectAt(0).get("type"), PhoneNumberDefaults.mobileType);
   assert.equal($first_type_select.val(), PhoneNumberDefaults.mobileType);
 });
+
+// test('changing existing phone number type will alter the model', function(assert) {
+//   var model = PEOPLE_FACTORY.detail();  
+//   var phoneNumberTypes = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
+//   this.set('model', model);
+//   this.set('phonenumberTypes', phoneNumberTypes);
+
+//   this.render(hbs`{{input-multi-phone model=model.phonenumbers types=phonenumberTypes}}`);
+
+//   var $component = this.$('.t-input-multi-phone');
+//   var $first_type_select = $component.find('.t-multi-phone-type');
+  // assert.equal($first_type_select.length, 2);
+  //verify model has 2 phone number and verif y each loop is looping over those then
+  //see why select is not rendered twice
+  //
+  // $first_type_select = $component.find('.t-multi-phone-type');
+  // verfiy offcie is first one in fixture
+  // assert.equal(model.get("phonenumbers").objectAt(0).get("type"), PhoneNumberDefaults.officeType);
+  // $first_type_select.val(PhoneNumberDefaults.mobileType).trigger("change");
+ //change to mobile and verify mobile 
+  // assert.equal(model.get("phonenumbers").objectAt(0).get("type"), PhoneNumberDefaults.mobileType);
+  // assert.equal($first_type_select.val(), PhoneNumberDefaults.mobileType);
+//});

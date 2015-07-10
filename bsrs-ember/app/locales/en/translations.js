@@ -104,7 +104,8 @@ export default {
 				name: "Role Name",
 				location_org: "Location Org.",
 				number_users: "# of Users"
-			}
+			},
+            system_administrator: "Admin"
 		},
 		adresstype: {
 			office: "Office"
@@ -115,19 +116,23 @@ export default {
 			label: {
 				name: "Name",
 				username: "Username",
-				status: "Status",
 				title: "Title",
 				emp_number: "Employee No.",
 				role: "Role",
 				auth_amount: "Auth. Amount",
 				first_name: "First Name",
 				last_name: "Last Name",
+                status: "Status",
 				phone_number: {
 					one: "Phone Number",
 					other: "Phone Numbers"
 				},
 				address: "Address"
-			}
+			},
+            status: {
+                active: "Active",  
+                inactive: "Inactive"
+            },
 		},
 		address: {
 			label: "Type",

@@ -43,6 +43,7 @@
 			{{/form-group}}
 
 			{{#form-group title="admin.person.label.address" for="addresses"}}
+{{log model.phone_numbers}}
 				{{input-multi-address model=model.addresses modelType="address"}}
 			{{/form-group}}
 
@@ -51,7 +52,7 @@
 			{{/form-group}}
 
 			{{#form-group title="admin.person.label.role" for="role"}}
-		    {{input type="text" placeholder=(t "admin.person.label.role") value=model.role class="form-control" id="role"}}
+		    {{input type="text" placeholder=(t "admin.person.label.role") value=(t model.role.name) class="form-control" id="role"}}
 			{{/form-group}}
 
 	</section>
