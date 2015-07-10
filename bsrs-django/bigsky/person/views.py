@@ -66,7 +66,7 @@ class PersonViewSet(viewsets.ModelViewSet):
                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)
             else:
                 model = request.query_params['model']
-                ctype = ContentType.objects.filter(name=model)
+                ctype = ContentType.objects.filter(model=model)
                 if ctype.count() == 0:
                     respObj['code'] = 400
                     respObj['message'] = 'Model (' + model + ') is not valid'
@@ -86,7 +86,7 @@ class PersonViewSet(viewsets.ModelViewSet):
         '''
         perms = {}
 
-        ctype = ContentType.objects.filter(name=model)
+        ctype = ContentType.objects.filter(model=model)
         availPerms = Permission.objects.filter(content_type=ctype)
             
         for aperm in availPerms:
@@ -129,7 +129,7 @@ class RoleViewSet(viewsets.ModelViewSet):
                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)
             else:
                 model = request.query_params['model']
-                ctype = ContentType.objects.filter(name=model)
+                ctype = ContentType.objects.filter(model=model)
                 if ctype.count() == 0:
                     respObj['code'] = 400
                     respObj['message'] = 'Model (' + model + ') is not valid'
@@ -148,7 +148,7 @@ class RoleViewSet(viewsets.ModelViewSet):
             
             else:
                 model = request.query_params['model']
-                ctype = ContentType.objects.filter(name=model)
+                ctype = ContentType.objects.filter(model=model)
                 if ctype.count() == 0:
                     respObj['code'] = 400
                     respObj['message'] = 'Model (' + model + ') is not valid'
@@ -156,18 +156,18 @@ class RoleViewSet(viewsets.ModelViewSet):
 
                 permobj = request.DATA
                 for perm, value in permobj.items():
-                    rperm = role.permissions.filter(codename=perm)
+                    rperm = role.group.permissions.filter(codename=perm)
                     aperm = Permission.objects.filter(codename=perm)
                     if aperm.count() > 0:
                         aperm = aperm[0]
                     
                         if value == True:
                             if not rperm:
-                                role.permissions.add(aperm)
+                                role.group.permissions.add(aperm)
                                 
                         if value == False:
                             if rperm:
-                                role.permissions.remove(aperm)
+                                role.group.permissions.remove(aperm)
                                 
                     else:
                         respObj['code'] = 400
@@ -189,8 +189,8 @@ class RoleViewSet(viewsets.ModelViewSet):
         '''
         perms = {}
 
-        ctype = ContentType.objects.filter(name=model)
-        rolePerms = role.permissions.filter(content_type=ctype)
+        ctype = ContentType.objects.filter(model=model)
+        rolePerms = role.group.permissions.filter(content_type=ctype)
         availPerms = Permission.objects.filter(content_type=ctype)
             
         for aperm in availPerms:

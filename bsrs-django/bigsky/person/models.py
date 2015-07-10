@@ -39,9 +39,26 @@ class Role(models.Model):
     class Meta:
         db_table = 'role_role'
         ordering = ('group__name',)
+        permissions = (
+            ('view_role', 'can view role'),
+        )
 
     def __str__(self):
         return self.group.name
+
+    @property 
+    def _name(self):
+        return self.__name__.lower()
+
+'''
+
+from django.contrib.auth.models import User, Group, Permission, ContentType
+ct = ContentType.objects.get(app_label='person', model='role')
+perms = Permission.objects.filter(content_type=ct)
+for p in perms:
+    print p
+
+'''
 
 
 class PersonStatus(AbstractName):
