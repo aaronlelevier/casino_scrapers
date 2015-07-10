@@ -34,3 +34,4 @@ coverage/
 
 # ci script
 bsrs-django/venv/
+bsrs-django/bigsky/assets/
