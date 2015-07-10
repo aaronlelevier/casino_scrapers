@@ -132,6 +132,3 @@ class RoleViewSetTests(TestCase):
         self.client.login(username=self.person.username, password=self.password)
         response = self.client.get('/api/person/role/1/', format='json')
         self.assertEqual(response.status_code, 200)
-
-
-
