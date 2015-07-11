@@ -1,3 +1,4 @@
+//To be replaced by vendor/people_fixtures
 var phone_numbers = [
 {
     "id":3,
