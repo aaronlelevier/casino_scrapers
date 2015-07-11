@@ -16,7 +16,13 @@ export default Ember.Object.extend({
            'last_name': model.get('last_name'),
            'title': model.get('title'),
            'emp_number': model.get('emp_number'),
-           'auth_amount': model.get('auth_amount')
+           'auth_amount': model.get('auth_amount'),
+           'status': model.get('status'),
+           'role': model.get('role'),
+           'acceptassign': model.get('acceptassign'),
+           'phone_numbers': model.get('phone_numbers'),
+           'addresses': model.get('addresses'),
+           'emails': model.get('emails')
         };
         return $.ajax({
             url: endpoint,

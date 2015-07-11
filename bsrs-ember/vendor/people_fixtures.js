@@ -3,7 +3,7 @@ var generatePerson = function(i) {
         'id': i,
         'username': 'akrier',
         'first_name': 'Andy',
-        'middle_initial':'J',
+        //TODO: edit middle name in form? 'middle_initial':'J',
         'last_name': 'Krier',
         'title': 'RVP',
         'emp_number': '5063',
@@ -70,14 +70,14 @@ var PEOPLE_FACTORY = {
     },
     detail: function(i) {
         var person = generatePerson(i);
-        person['acceptassign']= false;
-        person['phone_numbers']= phone_numbers;
-        person['addresses']= addresses;
-        person['emails']= []
+        person.acceptassign = false;
+        person.phone_numbers = phone_numbers;
+        person.addresses = addresses;
+        person.emails = []
         return person;
     },
-    put: function(username, first_name, last_name, title, emp_number, auth_amount) {
-        var response = generatePerson();
+    put: function(i, username, first_name, last_name, title, emp_number, auth_amount) {
+        var response = generatePerson(i);
         response.title = title;
         response.username = username;
         response.first_name = first_name;
@@ -85,6 +85,10 @@ var PEOPLE_FACTORY = {
         response.title = title;
         response.emp_number = emp_number;
         response.auth_amount = auth_amount;
+        response.acceptassign= false;
+        response.phone_numbers= phone_numbers;
+        response.addresses= addresses;
+        response.emails= [];
         return response;
     }
 
