@@ -8,7 +8,7 @@ import PhoneNumberType from 'bsrs-ember/models/phonenumber-type';
 import PhoneNumberDefaults from 'bsrs-ember/value-defaults/phonenumber-type';
 import PEOPLE_FACTORY from 'bsrs-ember/vendor/people_fixtures';
 
-moduleForComponent('input-multi-phone', 'xx integration: input-multi-phone test', {
+moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
     integration: true,
     setup: function() {
         translation.initialize(this);
@@ -40,7 +40,7 @@ test('defaults to use phone number model with field name of number', function(as
     assert.equal(model.get('phone_numbers').objectAt(0).get('number'), '888-888-8888');
 });
 
-test('once added a button for phone number type appears', function(assert) {
+test('once added a button for phone number type appears wth a button to delete it', function(assert) {
     //currently in General Settings Route
     var model = Person.create({ phone_numbers: []});
     var phoneNumberTypes = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
@@ -108,7 +108,7 @@ test('changing existing phone number type will alter the model', function(assert
         }
     }];
     var phoneNumberTypes = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
-    var model = Person.create({ phone_numbers: [PhoneNumber.create({ id: 1, number: '888-888-8888', type: phoneNumberTypes[0].get('id') }), PhoneNumber.create({ id: 1, number: '999-999-9999', type: 'bbb'})] }); 
+    var model = Person.create({ phone_numbers: [PhoneNumber.create({ id: 1, number: '888-888-8888', type: phoneNumberTypes[0].get('id') }), PhoneNumber.create({ id: 2, number: '999-999-9999', type: phoneNumberTypes[1].get('id') })] }); 
     this.set('model', model);
     this.set('phonenumberTypes', phoneNumberTypes);
 
