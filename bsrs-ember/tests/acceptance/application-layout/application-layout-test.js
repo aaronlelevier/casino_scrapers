@@ -7,19 +7,23 @@ const HOME_URL = '/';
 
 var application;
 
-module('xx Acceptance | navbar test', {
-  beforeEach: function() {
-    application = startApp();
-  },
-  afterEach: function() {
-    Ember.run(application, 'destroy');
-  }
+module('Acceptance | application layout test', {
+    beforeEach: function() {
+        application = startApp();
+    },
+    afterEach: function() {
+        Ember.run(application, 'destroy');
+    }
 });
 
-test('navbar has correct items', function(assert) {
+test('navbar and tray have correct items', function(assert) {
     visit(HOME_URL);
     var $navbar = '.t-navbar-items';
+    var $tray = '.t-tray-items';
+
     andThen(() => {
+        assert.equal(find($tray + ' > li').length, 4);
+        
         assert.equal(find($navbar + ' > li').length, 10);
         assert.equal(find($navbar + ' > li:eq(0)').text(), ' Home');
         assert.equal(find($navbar + ' > li:eq(1)').text(), ' Tickets');
