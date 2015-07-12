@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
             name='PersonStatus',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('name', models.CharField(max_length=100)),
+                ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
                 'abstract': False,
@@ -46,13 +46,14 @@ class Migration(migrations.Migration):
             name='Role',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('role_type', models.CharField(default=b'location', max_length=29, choices=[(b'contractor', b'admin.role.contractor'), (b'location', b'admin.role.location')])),
+                ('role_type', models.CharField(default=b'location', max_length=29, choices=[(b'contractor', b'contractor'), (b'location', b'location')])),
                 ('group', models.OneToOneField(to='auth.Group')),
                 ('location_level', models.ForeignKey(blank=True, to='location.LocationLevel', null=True)),
             ],
             options={
                 'ordering': ('group__name',),
                 'db_table': 'role_role',
+                'permissions': (('view_role', 'can view role'),),
             },
         ),
         migrations.AddField(

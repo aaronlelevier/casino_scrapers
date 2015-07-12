@@ -52,31 +52,45 @@ class PersonStatusSerializer(serializers.ModelSerializer):
 ##########
 
 PERSON_BASE_FIELDS = (
-    # navite User fields
     'id',
-    'username',
-    'first_name',
-    'last_name',
-    # extended User fields
-    'role',
-    'status',
+    'name', # calculated DRF field
     'title',
+    'role',
     'emp_number',
+    'status',
     'auth_amount',
-    'middle_initial',
     )
 
-class PersonSerializer(serializers.ModelSerializer):
+PERSON_FIELDS = (
+    'username',
+    'first_name',
+    'middle_initial',
+    'last_name',
+    )
+
+class PersonListSerializer(serializers.ModelSerializer):
+
+    name = serializers.SerializerMethodField('get_full_name')
+
+    class Meta:
+        model = Person
+        fields = PERSON_BASE_FIELDS
+
+    def get_full_name(self, obj):
+        return '{} {}'.format(obj.first_name, obj.last_name)
+
+
+class PersonSerializer(PersonListSerializer):
 
     class Meta:
         model = Person
         write_only_fields = ('password',)
-        fields = PERSON_BASE_FIELDS + ('password',)
+        fields = PERSON_BASE_FIELDS + PERSON_FIELDS + ('password',)
 
     def create(self, validated_data):
         #need to use create_user to make sure password is encrypted
         newuser = Person.objects.create_user(username=validated_data.get('username'),
-                                                          password=validated_data.get('password'))
+                                             password=validated_data.get('password'))
         
         #remove password from payload and update included fields
         if 'password' in validated_data:
@@ -87,7 +101,6 @@ class PersonSerializer(serializers.ModelSerializer):
         return newuser
 
     def update(self, instance, validated_data):
-        
         #remove password from dict so it isn't saved in the clear
         if 'password' in validated_data:
             password = validated_data.pop('password')
@@ -119,14 +132,7 @@ class PersonSerializer(serializers.ModelSerializer):
         return instance
 
 
-class PersonListSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Person
-        fields = PERSON_BASE_FIELDS
-
-
-class PersonFullSerializer(serializers.ModelSerializer):
+class PersonContactSerializer(PersonSerializer):
     
     phone_numbers = contact_serializers.PhoneNumberShortSerializer(many=True, read_only=True)
     addresses = contact_serializers.AddressShortSerializer(many=True, read_only=True)
@@ -134,7 +140,7 @@ class PersonFullSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_BASE_FIELDS + ('accept_assign', 'phone_numbers', 'addresses', 'emails')
+        fields = PERSON_BASE_FIELDS + PERSON_FIELDS + ('accept_assign', 'phone_numbers', 'addresses', 'emails')
 
 
 ########

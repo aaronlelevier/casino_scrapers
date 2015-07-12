@@ -15,7 +15,8 @@ class Migration(migrations.Migration):
             name='Setting',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('settings', models.CharField(max_length=100)),
+                ('custom', models.BooleanField(default=True)),
+                ('settings', models.TextField(help_text=b'JSON Dict saved as a string in DB', blank=True)),
                 ('object_id', models.PositiveIntegerField()),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
             ],
