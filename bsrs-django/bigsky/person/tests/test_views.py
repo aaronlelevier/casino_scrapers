@@ -55,12 +55,12 @@ class PersonContactViewSetTests(TestCase):
         self.person = create_person()
 
         # contact info
-        self.address = mommy.make(Address)
+        self.address = mommy.make(Address, person=self.person)
         self.phone_number = mommy.make(PhoneNumber)
         self.email = mommy.make(Email)
 
         # join to Person
-        for m in [self.address, self.phone_number, self.email]:
+        for m in [self.phone_number, self.email]:
             m.person = self.person
             m.save()
 

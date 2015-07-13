@@ -57,4 +57,19 @@ class Migration(migrations.Migration):
             name='level',
             field=models.ForeignKey(related_name='locations', to='location.LocationLevel'),
         ),
+        migrations.AddField(
+            model_name='location',
+            name='relations',
+            field=models.ManyToManyField(related_name='relations_rel_+', to='location.Location'),
+        ),
+        migrations.AddField(
+            model_name='location',
+            name='status',
+            field=models.ForeignKey(related_name='locations', to='location.LocationStatus'),
+        ),
+        migrations.AddField(
+            model_name='location',
+            name='type',
+            field=models.ForeignKey(related_name='locations', to='location.LocationType'),
+        ),
     ]

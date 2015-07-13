@@ -56,9 +56,9 @@ PERSON_BASE_FIELDS = (
     'name', # calculated DRF field
     'title',
     'role',
-    'emp_number',
+    'employee_id',
     'status',
-    'auth_amount',
+    'authorized_amount',
     )
 
 PERSON_FIELDS = (

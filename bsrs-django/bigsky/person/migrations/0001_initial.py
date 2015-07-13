@@ -18,11 +18,14 @@ class Migration(migrations.Migration):
             name='Person',
             fields=[
                 ('user_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
-                ('title', models.CharField(max_length=100, blank=True)),
-                ('emp_number', models.CharField(max_length=100, blank=True)),
-                ('auth_amount', models.DecimalField(null=True, max_digits=15, decimal_places=4)),
-                ('middle_initial', models.CharField(max_length=30, blank=True)),
-                ('accept_assign', models.BooleanField(default=False)),
+                ('authorized_amount', models.PositiveIntegerField()),
+                ('authorized_amount_currency', models.CharField(max_length=25, choices=[(b'usd', b'usd'), (b'eur', b'eur'), (b'jpy', b'jpy')])),
+                ('accept_assign', models.BooleanField(default=True)),
+                ('accept_notify', models.BooleanField(default=True)),
+                ('employee_id', models.CharField(max_length=100, null=True, blank=True)),
+                ('middle_initial', models.CharField(max_length=30, null=True, blank=True)),
+                ('title', models.CharField(max_length=100, null=True, blank=True)),
+                ('location', models.ManyToManyField(to='location.Location')),
             ],
             options={
                 'db_table': 'person_person',
@@ -59,11 +62,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='person',
             name='role',
-            field=models.ForeignKey(blank=True, to='person.Role', null=True),
+            field=models.ForeignKey(to='person.Role'),
         ),
         migrations.AddField(
             model_name='person',
             name='status',
-            field=models.ForeignKey(blank=True, to='person.PersonStatus', null=True),
+            field=models.ForeignKey(to='person.PersonStatus'),
         ),
     ]

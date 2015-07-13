@@ -110,7 +110,6 @@ class Location(models.Model):
     level = models.ForeignKey(LocationLevel, related_name='locations')
     status = models.ForeignKey(LocationStatus, related_name='locations')
     type = models.ForeignKey(LocationType, related_name='locations')
-    people = models.ManyToManyField("person.Person", related_name='locations')
     relations = models.ManyToManyField('self')
     # fields
     name = models.CharField(max_length=100)
