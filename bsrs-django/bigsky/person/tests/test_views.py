@@ -5,7 +5,7 @@ from django.contrib.auth.models import User, ContentType, Group, Permission
 
 from model_mommy import mommy
 
-from contact.models import Address, PhoneNumber, Email
+from contact.models import PersonAddress, PersonPhoneNumber, PersonEmail
 from person.models import Person, Role
 from person.tests.factory import PASSWORD, create_person
 
@@ -56,8 +56,8 @@ class PersonContactViewSetTests(TestCase):
 
         # contact info
         self.address = mommy.make(Address, person=self.person)
-        self.phone_number = mommy.make(PhoneNumber)
-        self.email = mommy.make(Email)
+        self.phone_number = mommy.make(PersonPhoneNumber)
+        self.email = mommy.make(PersonEmail)
 
         # join to Person
         for m in [self.phone_number, self.email]:

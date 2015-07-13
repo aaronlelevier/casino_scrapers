@@ -1,15 +1,12 @@
-'''
-Big Sky Retail Systems Framework
-Contact serializers
-
-Created on Jan 21, 2015
-
-@author: tkrier
-'''
 import re
+
 from rest_framework import serializers
-from contact.models import (PhoneNumberType, PhoneNumber, AddressType,
-    Address, EmailType, Email)
+
+from contact.models import (
+    PhoneNumberType, PersonPhoneNumber, LocationPhoneNumber,
+    AddressType, PersonAddress, LocationAddress, EmailType,
+    PersonEmail
+    )
 
 
 class PhoneNumberTypeSerializer(serializers.ModelSerializer):
@@ -19,6 +16,10 @@ class PhoneNumberTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+PHONE_NUMBER_FIELDS_LIST = ('id', 'number', 'type')
+PHONE_NUMBER_FIELDS_DETAIL = ('id', 'number', 'type', 'location', 'person')
+
+
 class PhoneNumberSerializer(serializers.ModelSerializer):
     '''
     Use a PATCH and PrimaryKeyRelated field to just add [user pk, new ph_num] 
@@ -26,19 +27,17 @@ class PhoneNumberSerializer(serializers.ModelSerializer):
     '''
 
     class Meta:
-        model = PhoneNumber
-        fields = ('id', 'number', 'type', 'location', 'person')
+        model = PersonPhoneNumber
+        fields = PHONE_NUMBER_FIELDS
         
     def validate_number(self, value):
         """
-        Check for valid phone number and reformat
+        All phone numbes should be submitted as: \d{10}
         """
-        value = re.sub(r"\D", "", value)
+        value = re.sub(r"\d", "", value)
         if len(value) != 10:
             raise serializers.ValidationError("Phone Number does not include 10 digits")
-        
         value = value[0:3] + '-' + value[3:6] + '-' + value[6:10]
-        
         return value
     
 
@@ -47,7 +46,7 @@ class PhoneNumberShortSerializer(PhoneNumberSerializer):
     type = PhoneNumberTypeSerializer(read_only=True)
 
     class Meta:
-        model = PhoneNumber
+        model = PersonPhoneNumber
         fields = ('id', 'number', 'type')
         
 
@@ -60,7 +59,7 @@ class AddressTypeSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Address
+        model = PersonAddress
 
 
 class AddressShortSerializer(AddressSerializer):
@@ -68,7 +67,7 @@ class AddressShortSerializer(AddressSerializer):
     type_name = serializers.CharField(source='type.name', read_only=True)
 
     class Meta:
-        model = Address
+        model = PersonAddress
         fields = ('id', 'address1', 'address2', 'address3', 'city', 'state', 'country',
                   'postalcode', 'type_name') 
 
@@ -82,7 +81,7 @@ class EmailTypeSerializer(serializers.ModelSerializer):
 class EmailSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = Email
+        model = PersonEmail
 
 
 class EmailShortSerializer(EmailSerializer):
@@ -90,5 +89,5 @@ class EmailShortSerializer(EmailSerializer):
     type_name = serializers.CharField(source='type.name', read_only=True)
 
     class Meta:
-        model = Email
+        model = PersonEmail
         fields = ('id', 'email', 'type_name') 

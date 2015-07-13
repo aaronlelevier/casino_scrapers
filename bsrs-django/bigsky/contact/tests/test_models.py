@@ -4,7 +4,8 @@ from model_mommy import mommy
 
 from contact.models import (
     PersonPhoneNumber, LocationPhoneNumber, PhoneNumberType,
-    Address, AddressType, Email, EmailType
+    PersonAddress, LocationAddress, AddressType,
+    PersonEmail, LocationEmail, EmailType
 )
 from location.models import Location
 from person.models import Person
@@ -22,42 +23,29 @@ class PhoneNumberTests(TestCase):
         self.assertIsInstance(ph.type, PhoneNumberType)
 
 
-class AddresTests(TestCase):
-
-    def test_address(self):
-        p = create_person()
-        a  = mommy.make(Address, person=p)
-        self.assertIsInstance(a, Address)
-        self.assertIsInstance(a.type, AddressType)
+class AddressTests(TestCase):
 
     def test_address_str(self):
-        p = create_person()
-        a  = mommy.make(Address, person=p)
+        a  = mommy.make(PersonAddress)
         self.assertEqual(str(a), "")
 
+        p = create_person()
         st_name = '123 St.'
-        b = mommy.make(Address, person=p, address1=st_name)
+        b = mommy.make(PersonAddress, person=p, address1=st_name)
         self.assertEqual(str(b), st_name)
 
-    def test_no_person_or_location(self):
-        with self.assertRaises(excp.PersonOrLocationRequired):
-            a  = mommy.make(Address)
 
-    def test_person_and_location(self):
-        p = mommy.make(Person)
-        l = mommy.make(Location)
-        with self.assertRaises(excp.CantHavePersonLocation):
-            a  = mommy.make(Address, person=p, location=l)
+class PersonAddressTests(TestCase):
 
-    def test_valid_person_or_location_ok(self):
-        l = mommy.make(Location)
-        a  = mommy.make(Address, location=l)
-        self.assertIsInstance(a, Address)
+    def test_address(self):
+        pa  = mommy.make(PersonAddress)
+        self.assertIsInstance(pa, PersonAddress)
+        self.assertIsInstance(pa.person, Person)
 
 
-class EmailTests(TestCase):
+class PersonEmailTests(TestCase):
 
     def test_email(self):
-        e = mommy.make(Email)
-        self.assertIsInstance(e, Email)
-        self.assertIsInstance(e.type, EmailType)
+        e = mommy.make(PersonEmail)
+        self.assertIsInstance(e, PersonEmail)
+        self.assertIsInstance(e.person, Person)
