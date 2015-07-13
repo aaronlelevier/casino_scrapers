@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import multi from '../input-multi/component';
 
 export default Ember.Component.extend({
   tagName: 'button',

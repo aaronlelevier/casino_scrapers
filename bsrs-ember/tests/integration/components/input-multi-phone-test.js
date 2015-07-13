@@ -15,6 +15,12 @@ moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
     }
 });
 
+// test('renders a single button with a class of t-add-btn', function(assert){
+//   this.render(hbs`{{input-multi model=things}}`);
+//   var $component = this.$('.t-input-multi');
+//   assert.equal($component.find('.t-add-btn').length, 1);
+// });
+
 test('defaults to use phone number model with field name of number', function(assert) {
     var model = Person.create({ phone_numbers: []}); //TODO: is this callout in create needed/good for the reader
     this.set('model', model);
@@ -40,7 +46,7 @@ test('defaults to use phone number model with field name of number', function(as
     assert.equal(model.get('phone_numbers').objectAt(0).get('number'), '888-888-8888');
 });
 
-test('once added a button for phone number type appears wth a button to delete it', function(assert) {
+test('once added a button for phone number type appears with a button to delete it', function(assert) {
     //currently in General Settings Route
     var model = Person.create({ phone_numbers: []});
     var phoneNumberTypes = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];

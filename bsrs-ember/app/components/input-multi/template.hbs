@@ -1,9 +1,0 @@
-{{#each model as |thing|}}
-  <div class="input-group">
-    <span class="input-group-btn">
-      <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' thing}}>{{fa-icon "minus"}}</button>
-    </span>
-    {{input-dynamic obj=thing prop=fieldNames placeholder=placeholder}}
-  </div>
-{{/each}}
-<button class="t-add-btn add-btn btn btn-default btn-sm" type="button" {{action 'append'}}><span class="btn-label">{{fa-icon "plus"}}</span></button>

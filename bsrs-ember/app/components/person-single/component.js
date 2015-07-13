@@ -1,24 +1,19 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
 
 export default Ember.Component.extend({
-  classNames: ['wrapper', 'form'],
-  // init: function(){
-	// 	var comp = this.get("tabDoc");
-  //   this.set('editPrivilege', true);
-	// },
-  actions: {
-    savePerson: function() {
-      this.sendAction('savePerson');
-    },//savePerson
-    deletePerson: function() {
-      var model = this.modelFor('admin.person');
-      // model.destroyRecord().then(() => {
-      //   this.transitionTo('admin.people');
-      // });
-      this.transitionTo('admin.people');
-    },
-    cancelPerson: function() {
-      this.sendAction('cancelPerson');
+    repository: inject('person'),
+    classNames: ['wrapper', 'form'],
+    actions: {
+        savePerson: function() {
+            var model = this.get('model');
+            var repository = this.get('repository');
+            repository.save(model).then(() => {
+                this.sendAction('savePerson');
+            });
+        },
+        cancelPerson: function() {
+            this.sendAction('cancelPerson');
+        }
     }
-  },//actions
 });
