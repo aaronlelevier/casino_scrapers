@@ -76,7 +76,7 @@ class LocationLevelManager(models.Manager):
     
     def get_queryset(self):
         return LocationLevelQuerySet(self.model, self._db)
-
+        
     def get_all_children(self, parent, all_children=None):
         return self.get_queryset().get_all_children(parent, all_children)
 

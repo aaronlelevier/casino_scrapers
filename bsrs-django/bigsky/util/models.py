@@ -4,6 +4,42 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
 
+class BaseQuerySet(models.query.QuerySet):
+    pass
+
+class BaseManager(models.Manager):
+    '''
+    Auto exclude deleted records
+    '''
+    def get_queryset(self):
+        return BaseQuerySet(self.model, using=self._db).filter(deleted=False)
+
+
+@python_2_unicode_compatible
+class BaseModel(models.Model):
+    '''
+    All Model inheritance will start with this model.  It uses 
+    time stamps, and defaults for `deleted=False` for querysets
+    '''
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+    deleted = models.BooleanField(blank=True, default=False)
+
+    objects = BaseManager()
+    objects_all = models.Manager()
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return "id: {self.id}; class: {self.__class__.__name__}; deleted: \
+{self.deleted}".format(self=self)
+
+
+class Tester(BaseModel):
+    pass
+
+
 @python_2_unicode_compatible
 class AbstractNameOrder(models.Model):
     order = models.IntegerField()
