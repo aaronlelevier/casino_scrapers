@@ -5,7 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
-// import StateFactory from 'bsrs-ember/tests/helpers/states';
+import StateFactory from 'bsrs-ember/tests/helpers/states';
 
 const PEOPLE_URL = "/admin/people";
 const DETAIL_URL = "/admin/people/1";
@@ -22,7 +22,7 @@ module('Acceptance | people-detail', {
     xhr( endpoint + "1/","GET",null,{},200,PEOPLE_FIXTURES.detail(1) );
 
     // Need to convert to the new new
-    // xhr( API_PREFIX + "/states/","GET",null,{},200,StateFactory.list() );
+    xhr( API_PREFIX + "/states/","GET",null,{},200,StateFactory.list() );
 
   },
   afterEach: function() {

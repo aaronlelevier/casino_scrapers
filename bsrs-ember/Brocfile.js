@@ -16,6 +16,7 @@ var app = new EmberApp({
 app.import('bower_components/fauxjax/dist/fauxjax.min.js');
 app.import('vendor/people_fixtures.js');
 app.import('vendor/state_fixtures.js');
+app.import('vendor/address_types_fixtures.js');
 // Use `app.import` to add additional libraries to the generated
 // output files.
 //
