@@ -34,8 +34,8 @@
 		  	{{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
 			{{/form-group}}
 
-			{{#form-group title="admin.person.label.emp_number" for="empnumber"}}
-		    {{input type="text" placeholder=(t "admin.person.label.emp_number") value=model.empnumber class="form-control t-person-empnumber" id="empnumber"}}
+			{{#form-group title="admin.person.label.emp_number" for="emp_number"}}
+		    {{input type="text" placeholder=(t "admin.person.label.emp_number") value=model.emp_number class="form-control t-person-emp_number" id="emp_number"}}
 			{{/form-group}}
 
 			{{#form-group title="admin.person.label.phone_number.other"}}
@@ -46,12 +46,12 @@
 				{{input-multi-address model=model.addresses state_list=state_list address_types=address_types}}
 			{{/form-group}}
 
-			{{#form-group title="admin.person.label.auth_amount" for="authamount"}}
-		    {{input type="text" placeholder=(t "admin.person.label.auth_amount") value=model.authamount class="form-control t-person-authamount" id="authamount" disabled=editPrivilege}}
+			{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
+		    {{input type="text" placeholder=(t "admin.person.label.auth_amount") value=model.auth_amount class="form-control t-person-auth_amount" id="auth_amount" disabled=editPrivilege}}
 			{{/form-group}}
 
 			{{#form-group title="admin.person.label.role" for="role"}}
-		    {{input type="text" placeholder=(t "admin.person.label.role") value=model.role class="form-control" id="role"}}
+		    {{input type="text" placeholder=(t "admin.person.label.role") value=(t model.role.name) class="form-control" id="role"}}
 			{{/form-group}}
 
 	</section>

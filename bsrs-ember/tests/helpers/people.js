@@ -1,3 +1,4 @@
+//To be replaced by vendor/people_fixtures
 var phone_numbers = [
 {
     "id":3,
@@ -23,8 +24,8 @@ var generatePerson = function() {
         "first_name": "Lynne",
         "last_name": "Cooley",
         "title": "RVP",
-        "empnumber": "5063",
-        "authamount": "50000.0000"
+        "emp_number": "5063",
+        "auth_amount": "50000.0000"
     };
 };
 
@@ -34,19 +35,20 @@ var PeopleFactory = {
         response.role = 10;
         response.role_name = 'user.role.regional_manager';
         response.phone_numbers = phone_numbers;
-        return {results: [response]}; //TODO: updated the mocks in server/mocks
+        return {results: [response]}; // TODO: updated the mocks in server/mocks
     },
     detail: function() {
         return generatePerson();
     },
-    put: function(username, first_name, last_name, title, empnumber, authamount) {
+    put: function(username, first_name, last_name, title, emp_number, auth_amount) {
         var response = generatePerson();
         response.title = title;
         response.username = username;
         response.first_name = first_name;
         response.last_name = last_name;
-        response.empnumber = empnumber;
-        response.authamount = authamount;
+        response.title = title;
+        response.emp_number = emp_number;
+        response.auth_amount = auth_amount;
         return response;
     }
 };

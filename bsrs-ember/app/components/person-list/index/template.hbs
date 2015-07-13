@@ -20,15 +20,15 @@
 			</tr>
 		</thead>
 		<tbody>
-			{{#each model key="id" as |person|}}
+			{{#each model as |person|}}
 				{{#link-to 'admin.people.person' person.id tagName="tr" class="t-data"}}
 					<td><input type="checkbox" /></td>
 					<td>{{person.first_name}} {{person.last_name}}</td>
 					<td>{{person.title}}</td>
-					<td>{{person.role}}</td>
-					<td>{{person.empnumber}}</td>
-					<td>{{person.status}}</td>
-					<td class="text-right">{{person.authamount}}</td>
+					<td>{{t person.role.name}}</td>
+					<td>{{person.emp_number}}</td>
+					<td>{{t person.status.name}}</td>
+					<td class="text-right">{{person.auth_amount}}</td>
 				{{/link-to}}
 			{{/each}}
 		</tbody>

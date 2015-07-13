@@ -20,7 +20,7 @@ nav.userMenu{
       min-width: 16px;
       border-radius: 8px;
       font-size: 0.8em;
-      padding: 0 3px;
+      padding: 0.5px;
       margin: 0;
       line-height: 16px;
       text-align: center;
@@ -51,12 +51,12 @@ nav.userMenu{
       }
       span.caret {
         position: absolute;
-        top: 10px;
+        top: 28px;
         right: 2px;
-        -webkit-transition: transform .15s ease-out;
-        -moz-transition: transform .15s ease-out;
-        -ms-transition: transform .15s ease-out;
-        transition: transform .15s ease-out;
+        -webkit-transition: transform .25s ease-out;
+        -moz-transition: transform .25s ease-out;
+        -o-transition: transform .25s ease-out;
+        transition: transform .25s ease-out;
       }
     }//a
 
@@ -64,28 +64,37 @@ nav.userMenu{
     ul.submenu {
       width: 100%;
       height: 0px;
+      opacity: 0;
+      visibility: hidden;
       background-color: $white;
       position: absolute;
       -webkit-box-shadow: 0 2px 2px $medGray;
       -moz-box-shadow: 0 2px 2px $medGray;
       -ms-box-shadow: 0 2px 2px $medGray;
+      -o-box-shadow: 0 2px 2px $medGray;
       box-shadow: 0 2px 2px $medGray;
-      -webkit-transition:height 0.12s ease-in;
-      -moz-transition:height 0.12s ease-in;
-      -ms-transition:height 0.12s ease-in;
-      -o-transition:height 0.12s ease-in;
-      transition:height 0.12s ease-in;
+      -webkit-transition:opacity 0.3s ease-out, visibility 0.1s linear, height 0.2s ease;
+      -moz-transition:opacity 0.3s ease-out, visibility 0.1s linear, height 0.2s ease;
+      -o-transition:opacity 0.3s ease-out, visibility 0.1s linear, height 0.2s ease;
+      transition:opacity 0.3s ease-out, visibility 0.1s linear, height 0.2s ease;
       overflow: hidden;
-      z-index: 1;
       li {
+        margin-top: -15px;
         clear: both;
         position: relative;
         width: 100%;
         line-height: 40px;
         border-bottom: 2px solid $lightGray;
+        -moz-transition:opacity 0.1s 0.15s ease-out, margin 0.3s 0.1s ease-out;
+        -webkit-transition:opacity 0.1s 0.15s ease-out, margin 0.3s 0.1s ease-out;
+        -o-transition:opacity 0.15s 0.15s ease-out, margin 0.3s 0.1s ease-out;
+        transition:opacity 0.15s 0.15s ease-out, margin 0.3s 0.1s ease-out;
         a {
           width: 100%;
-          color: $darkGray;
+          color:rgba(255,255,255,0);
+          -webkit-transition:color 0.3s ease-out;
+          -o-transition:color 0.3s ease-out;
+          transition:color 0.3s ease-out;
           &:hover {
             background-color: $activeColor !important;
           }
@@ -105,12 +114,21 @@ nav.userMenu{
 
     //hover .current-user li
     &:hover {
+      background-color: $hoverColor;
       span.caret {
-        transform: translateY(20px);
+        transform: translateY(5px);
       }
       ul.submenu {
         height: 80px;
-        z-index: 1;
+        opacity: 1;
+        visibility: visible;
+        li {
+          margin-top: 0px;
+          opacity: 1;
+          a {
+            color: $darkGray;
+          }
+        }
       }//submenu
     }//hover
 

@@ -6,12 +6,12 @@ from contact import views
 
 
 router = routers.DefaultRouter()
-router.register(r'phonenumbers', views.PhoneNumberViewSet)
-router.register(r'phonenumbertypes', views.PhoneNumberTypeViewSet)
+router.register(r'phone_numbers', views.PhoneNumberViewSet)
+router.register(r'phone_number_types', views.PhoneNumberTypeViewSet)
 router.register(r'addresses', views.AddressViewSet)
-router.register(r'addresstypes', views.AddressTypeViewSet)
+router.register(r'address_types', views.AddressTypeViewSet)
 router.register(r'emails', views.EmailViewSet)
-router.register(r'emailtypes', views.EmailTypeViewSet)
+router.register(r'email_types', views.EmailTypeViewSet)
 
 
 urlpatterns = patterns('',

@@ -7,7 +7,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 @python_2_unicode_compatible
 class AbstractNameOrder(models.Model):
     order = models.IntegerField()
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
     
     class Meta:
         abstract = True
@@ -19,7 +19,7 @@ class AbstractNameOrder(models.Model):
 
 @python_2_unicode_compatible
 class AbstractName(models.Model):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     class Meta:
         abstract = True

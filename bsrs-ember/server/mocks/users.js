@@ -6,10 +6,10 @@ var USERS = [
             "last_name": "Cooley",
             "is_active": true,
             "title": "RVP",
-            "empnumber": "5063",
+            "emp_number": "5063",
             "role": 10,
             "role_name": "user.role.regional_manager",
-            "authamount": "50000.0000"
+            "auth_amount": "50000.0000"
         },
         {
             "id": 8,
@@ -18,10 +18,10 @@ var USERS = [
             "last_name": "Doll",
             "is_active": true,
             "title": "District Manager - So Calif",
-            "empnumber": "5024",
+            "emp_number": "5024",
             "role": 9,
             "role_name": "user.role.district_manager",
-            "authamount": "1024.5000"
+            "auth_amount": "1024.5000"
         },
         {
             "id": 10,
@@ -30,10 +30,10 @@ var USERS = [
             "last_name": "Hasselmann",
             "is_active": true,
             "title": "Project Manager",
-            "empnumber": "5021",
+            "emp_number": "5021",
             "role": 11,
             "role_name": "user.role.project_manager",
-            "authamount": "1000.0000"
+            "auth_amount": "1000.0000"
         },
         {
             "id": 7,
@@ -42,10 +42,10 @@ var USERS = [
             "last_name": "Krier",
             "is_active": true,
             "title": "Secretary of State",
-            "empnumber": "6998",
+            "emp_number": "6998",
             "role": 5,
             "role_name": "user.role.system_administrator",
-            "authamount": "1250.0000"
+            "auth_amount": "1250.0000"
         },
         {
             "id": 1,
@@ -54,10 +54,10 @@ var USERS = [
             "last_name": "Krier",
             "is_active": true,
             "title": "Dude",
-            "empnumber": "5026",
+            "emp_number": "5026",
             "role": 5,
             "role_name": "user.role.system_administrator",
-            "authamount": "11000000.0000"
+            "auth_amount": "11000000.0000"
         },
         {
             "id": 9,
@@ -66,10 +66,10 @@ var USERS = [
             "last_name": "O'Brien",
             "is_active": true,
             "title": "General Manager",
-            "empnumber": "5569",
+            "emp_number": "5569",
             "role": 2,
             "role_name": "user.role.store_manager",
-            "authamount": "10.0000"
+            "auth_amount": "10.0000"
         }
 ]
 
