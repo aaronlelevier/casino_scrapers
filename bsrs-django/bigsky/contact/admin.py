@@ -8,8 +8,13 @@ class PhoneNumberAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(models.PhoneNumber)
-class PhoneNumberAdmin(admin.ModelAdmin):
+@admin.register(models.PersonPhoneNumber)
+class PersonPhoneNumberAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.LocationPhoneNumber)
+class LocationPhoneNumberAdmin(admin.ModelAdmin):
     pass
 
 
@@ -18,8 +23,13 @@ class AddressTypeAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(models.Address)
-class AddressAdmin(admin.ModelAdmin):
+@admin.register(models.PersonAddress)
+class PersonAddressAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.LocationAddress)
+class LocationAddressAdmin(admin.ModelAdmin):
     pass
 
 
@@ -28,6 +38,11 @@ class EmailTypeAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(models.Email)
-class EmailAdmin(admin.ModelAdmin):
+@admin.register(models.PersonEmail)
+class PersonEmailAdmin(admin.ModelAdmin):
+    pass
+
+
+@admin.register(models.LocationEmail)
+class LocationEmailAdmin(admin.ModelAdmin):
     pass

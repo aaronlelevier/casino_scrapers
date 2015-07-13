@@ -8,51 +8,61 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from person.models import Person
 from location.models import Location
-from util.models import AbstractNameOrder
+from util.models import AbstractNameOrder, BaseModel
 from util import exceptions as excp
+
+
+################
+# PHONE NUMBER #
+################
 
 class PhoneNumberType(AbstractNameOrder):
     pass
 
 
 @python_2_unicode_compatible
-class PhoneNumber(models.Model):
+class BasePhoneNumber(BaseModel):
     '''
     TODO: Will use this "phone number lib" for validation:
 
     https://github.com/daviddrysdale/python-phonenumbers
     '''
     # keys
-    type = models.ForeignKey(PhoneNumberType, related_name='phone_numbers')
-    location = models.ForeignKey(Location, related_name='phone_numbers', null=True, blank=True)
-    person = models.ForeignKey(Person, related_name='phone_numbers', null=True, blank=True)
+    type = models.ForeignKey(PhoneNumberType)
     # fields
     number = models.CharField(max_length=32, unique=True)
     
     class Meta:
+        abstract = True
         ordering = ('type', 'number',)
 
     def __str__(self):
         return self.number
 
 
+class PersonPhoneNumber(BasePhoneNumber):
+    person = models.ForeignKey(Person, related_name='phone_numbers')
+
+
+class LocationPhoneNumber(BasePhoneNumber):
+    location = models.ForeignKey(Location, related_name='phone_numbers', null=True, blank=True)
+
+
+###########
+# ADDRESS #
+###########
+
 class AddressType(AbstractNameOrder):
     pass
 
 
 @python_2_unicode_compatible
-class Address(models.Model):
+class BaseAddress(BaseModel):
     '''
-    Not every field is required to be a valid address, but at 
-    least one "non-foreign-key" field must be populated.
-
-    ForeignKey Reqs: either the `location` or `person` FK must be 
-    populated, but not both.
+    Not every field is required to be a valid address.
     '''
     # keys
-    type = models.ForeignKey(AddressType, related_name='addresses')
-    location = models.ForeignKey(Location, related_name='addresses', null=True, blank=True)
-    person = models.ForeignKey(Person, related_name='addresses', null=True, blank=True)
+    type = models.ForeignKey(AddressType)
     # fields
     address1 = models.CharField(max_length=200, null=True, blank=True)
     address2 = models.CharField(max_length=200, null=True, blank=True)
@@ -63,17 +73,8 @@ class Address(models.Model):
     postalcode = models.CharField(max_length=32, null=True, blank=True)
 
     class Meta:
+        abstract = True
         ordering = ('type',)
-
-    def save(self, *args, **kwargs):
-        self._valid_person_or_location()
-        return super(Address, self).save(*args, **kwargs)
-
-    def _valid_person_or_location(self):
-        if not (self.person or self.location):
-            raise excp.PersonOrLocationRequired("Must have either a Person or Location FK.")
-        elif self.person and self.location:
-            raise excp.CantHavePersonLocation("Cannot have both a Person and Location FK.")
         
     def __str__(self):
         if self.address1:
@@ -82,21 +83,41 @@ class Address(models.Model):
             return ""
 
 
+class PersonAddress(BaseAddress):
+    person = models.ForeignKey(Person, related_name='addresses')
+
+
+class LocationAddress(BaseAddress):
+    location = models.ForeignKey(Location, related_name='addresses')
+
+
+
+#########
+# EMAIL #
+#########
+
 class EmailType(AbstractNameOrder):
     pass
 
 
 @python_2_unicode_compatible
-class Email(models.Model):
+class BaseEmail(BaseModel):
     # keys
-    type = models.ForeignKey(EmailType, related_name='emails')
-    location = models.ForeignKey(Location, related_name='emails', null=True, blank=True)
-    person = models.ForeignKey(Person, related_name='emails', null=True, blank=True)
+    type = models.ForeignKey(EmailType)
     # fields
     email = models.EmailField(max_length=255, unique=True)
     
     class Meta:
+        abstract = True
         ordering = ('type', 'email',)
 
     def __str__(self):
         return self.email
+
+
+class PersonEmail(BaseEmail):
+    person = models.ForeignKey(Person)
+
+
+class LocationEmail(BaseEmail):
+    location = models.ForeignKey(Location)

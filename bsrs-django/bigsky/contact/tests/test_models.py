@@ -2,8 +2,10 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from contact.models import (PhoneNumber, PhoneNumberType,
-    Address, AddressType, Email, EmailType)
+from contact.models import (
+    PersonPhoneNumber, LocationPhoneNumber, PhoneNumberType,
+    Address, AddressType, Email, EmailType
+)
 from location.models import Location
 from person.models import Person
 from person.tests.factory import create_person
@@ -11,10 +13,12 @@ from util import exceptions as excp
 
 
 class PhoneNumberTests(TestCase):
+    # Only test ``PersonPhoneNumber`` for common functionality b/n
+    # PhoneNumber Models.
 
     def test_ph_num(self):
-        ph = mommy.make(PhoneNumber)
-        self.assertIsInstance(ph, PhoneNumber)
+        ph = mommy.make(PersonPhoneNumber)
+        self.assertIsInstance(ph, PersonPhoneNumber)
         self.assertIsInstance(ph.type, PhoneNumberType)
 
 

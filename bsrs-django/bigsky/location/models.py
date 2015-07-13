@@ -10,7 +10,7 @@ Created on Jan 21, 2015
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
-from util.models import AbstractName
+from util.models import AbstractName, BaseModel
 
 
 class LocationLevelQuerySet(models.query.QuerySet):
@@ -105,7 +105,7 @@ class LocationType(AbstractName):
     
 
 @python_2_unicode_compatible
-class Location(models.Model):
+class Location(BaseModel):
     # keys
     level = models.ForeignKey(LocationLevel, related_name='locations')
     status = models.ForeignKey(LocationStatus, related_name='locations')
