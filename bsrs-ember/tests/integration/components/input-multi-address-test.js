@@ -1,6 +1,7 @@
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import initializer from "bsrs-ember/instance-initializers/ember-i18n";
+import STATE_FIXTURES from 'bsrs-ember/vendor/state_fixtures';
 import Ember from 'ember';
 
 function createAddress(id) {
@@ -28,8 +29,6 @@ var XAddress = Ember.Object.extend({
   country: ''
 });
 
-
-
 moduleForComponent('input-multi-address', 'integration: input-multi-address test', {
   integration: true,
   setup: function() {
@@ -53,8 +52,10 @@ test('click add btn will append blank entry to list of entries and binds value t
   var model = People.create({ addresses: []});
   this.set('model', model);
 
+  this.set('state_list', STATE_FIXTURES);
+
   // render the component - a new entry will be a phone number, and the value will be a "number"
-  this.render(hbs`{{input-multi-address model=model.addresses modelType="x-address"}}`);
+  this.render(hbs`{{input-multi-address model=model.addresses modelType="x-address" state_list=state_list}}`);
 
   //get a jQuery handle to the component
   var $component = this.$('.t-input-multi-address');
@@ -66,20 +67,30 @@ test('click add btn will append blank entry to list of entries and binds value t
   var $first_btn = $component.find('.t-add-btn:eq(0)');
 
   // click the add button
-  // $first_btn.trigger('click');
+  $first_btn.trigger('click');
 
   //make sure there is now 1 empty input
-  // assert.equal(this.$('.t-del-btn').length, 1);
+  assert.equal($component.find('.t-del-btn').length, 1);
+  assert.equal($component.find('.t-select').length, 1);
+  assert.equal($component.find('.t-select option').length, 51);
 
-  // //make sure that we also added a record to the model
-  // assert.equal(model.get('addresses').length, 1);
+  // make sure that we also added a record to the model
+  assert.equal(model.get('addresses').length, 1);
   //
   // //make sure that the record is blank
-  // assert.equal(model.get('addresses').objectAt(0).get('type'), '');
-  //
-  // this.$('.t-address').val('andier').trigger('change');
-  //
-  // assert.equal(model.get('addresses').objectAt(0).get('address'), 'andier');
+  assert.equal(model.get('addresses').objectAt(0).get('type'), '');
+  assert.equal(model.get('addresses').objectAt(0).get('address'), '');
+  assert.equal(model.get('addresses').objectAt(0).get('city'), '');
+  assert.equal(model.get('addresses').objectAt(0).get('state'), '');
+  assert.equal(model.get('addresses').objectAt(0).get('zip'), '');
+
+  //Update all fields and make sure that the model is updated
+  //this.$('.t-address-type').val(2).trigger('change');
+  this.$('.t-address').val('andier').trigger('change');
+
+
+  //assert.equal(model.get('addresses').objectAt(0).get('type'), 2);
+  assert.equal(model.get('addresses').objectAt(0).get('address'), 'andier');
 
 });
 

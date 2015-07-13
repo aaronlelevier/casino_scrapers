@@ -45,7 +45,6 @@ var PeopleFactory = {
         response.username = username;
         response.first_name = first_name;
         response.last_name = last_name;
-        response.title = title;
         response.empnumber = empnumber;
         response.authamount = authamount;
         return response;

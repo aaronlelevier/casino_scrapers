@@ -13,6 +13,20 @@ export default Ember.Component.extend({
     },
     delete: function(){
       this.get('model').removeObject(entry);
+    },
+    changeType: function(address, val) {
+        Ember.run(function() {
+            console.log("New Type: " + val);
+            address.set("type.id", val);
+        });
+        this.get('target').send('changeType', val); //?? when is this used?
+    },
+    changeState: function(state, val) {
+        Ember.run(function() {
+            console.log("New State: " + val);
+            state.set("state.id", val);
+        });
+        this.get('target').send('changeState', val); //?? when is this used?
     }
   }//action
 });

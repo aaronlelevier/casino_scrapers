@@ -1,15 +1,16 @@
 {{#each model as |phonenumber|}}
   <div class="input-group">
     <span class="input-group-btn">
-      <select class="t-multi-phone-type" onchange={{action (action "changed" phonenumber) value="target.value"}}>
+      <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' phonenumber}}>{{fa-icon "minus"}}</button>
+    </span>
+    <span class="input-group-btn">
+      <select class="t-multi-phone-type form-control phonenumber-type" onchange={{action (action "changed" phonenumber) value="target.value"}}>
         {{#each types as |phoneNumberType|}}
-          <option value={{phoneNumberType.id}} selected={{is-equal phonenumber.type phoneNumberType.id}}>{{t phoneNumberType.name}}</option>
+          <option value={{phoneNumberType.id}} selected={{is-equal phonenumber.type.id phoneNumberType.id}}>{{t phoneNumberType.name}}</option>
         {{/each}}
       </select>
     </span>
-    <span class="input-group-btn">
-      <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' phonenumber}}>{{fa-icon "minus"}}</button>
-    </span>
+
     {{input-dynamic obj=phonenumber prop=fieldNames placeholder=placeholder}}
   </div>
 {{/each}}

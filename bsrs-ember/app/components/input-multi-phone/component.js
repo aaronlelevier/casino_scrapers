@@ -16,4 +16,4 @@ export default InputMultiComponent.extend({
       this.get('model').pushObject(PhoneNumber.create({type: 1}));
     }
   }
-}); 
+});

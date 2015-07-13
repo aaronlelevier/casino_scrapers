@@ -106,8 +106,9 @@ export default {
 				number_users: "# of Users"
 			}
 		},
-		adresstype: {
-			office: "Office"
+		address_type: {
+			office: "Office",
+			shipping: "Shipping"
 		},
 		person: {
 			one: "Person",

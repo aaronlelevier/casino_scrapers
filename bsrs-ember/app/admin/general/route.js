@@ -15,8 +15,8 @@ export default Ember.Route.extend({
             phoneNumberTypes: phoneNumberTypes
         });
 	},
-    setupController: function(controller, hash) {
-        controller.set('model', hash.model);
-        controller.set('phoneNumberTypes', hash.phoneNumberTypes);
-    }
+  setupController: function(controller, hash) {
+      controller.set('model', hash.model);
+      controller.set('phoneNumberTypes', hash.phoneNumberTypes);
+  }
 });
