@@ -9,3 +9,10 @@ or will it be translated and archived w/i ".js" files?
 
 4. Take a quick look at Capistrano, and check if it's worth looking at, or use 
 SaltStack and work with Bill on putting it on the server
+
+5. Use a ``BaseModel`` w/ ``deleted=False`` kwarg defaulted.
+
+..code-block:: python
+    objects = BaseManager()
+    objects_all = models.Manager()
+

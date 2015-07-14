@@ -9,7 +9,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from person.models import Person
 from location.models import Location
 from util.models import AbstractNameOrder
-
+from util import exceptions as excp
 
 class PhoneNumberType(AbstractNameOrder):
     pass
@@ -45,6 +45,9 @@ class Address(models.Model):
     '''
     Not every field is required to be a valid address, but at 
     least one "non-foreign-key" field must be populated.
+
+    ForeignKey Reqs: either the `location` or `person` FK must be 
+    populated, but not both.
     '''
     # keys
     type = models.ForeignKey(AddressType, related_name='addresses')
@@ -61,6 +64,16 @@ class Address(models.Model):
 
     class Meta:
         ordering = ('type',)
+
+    def save(self, *args, **kwargs):
+        self._valid_person_or_location()
+        return super(Address, self).save(*args, **kwargs)
+
+    def _valid_person_or_location(self):
+        if not (self.person or self.location):
+            raise excp.PersonOrLocationRequired("Must have either a Person or Location FK.")
+        elif self.person and self.location:
+            raise excp.CantHavePersonLocation("Cannot have both a Person and Location FK.")
         
     def __str__(self):
         if self.address1:

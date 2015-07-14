@@ -7,8 +7,8 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
+        ('contact', '0001_initial'),
         ('location', '0001_initial'),
-        ('contact', '0002_phonenumber_location'),
         ('person', '0001_initial'),
     ]
 

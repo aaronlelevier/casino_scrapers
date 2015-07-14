@@ -9,8 +9,16 @@ Created on Jan 21, 2015
 '''
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-import serializers as contactSerializers
-import models as contactModels
+
+from contact.serializers import (
+    PhoneNumberTypeSerializer, PhoneNumberSerializer, PhoneNumberShortSerializer,
+    AddressTypeSerializer, AddressSerializer, AddressShortSerializer,
+    EmailTypeSerializer, EmailSerializer, EmailShortSerializer,
+)
+from contact.models import (
+    PhoneNumber, PhoneNumberType, Address, AddressType,
+    Email, EmailType
+)
 
 
 class PhoneNumberViewSet(viewsets.ModelViewSet):
@@ -18,14 +26,14 @@ class PhoneNumberViewSet(viewsets.ModelViewSet):
     API endpoint that allows locations to be viewed or edited.
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = contactSerializers.PhoneNumberSerializer
-    queryset = contactModels.PhoneNumber.objects.all()
+    serializer_class = PhoneNumberSerializer
+    queryset = PhoneNumber.objects.all()
     
     def get_queryset(self):
         """
         Restricts locations to a given type
         """
-        queryset = contactModels.PhoneNumber.objects.all()
+        queryset = PhoneNumber.objects.all()
         pn_type = self.request.QUERY_PARAMS.get('type', None)
         if pn_type is not None:
             queryset = queryset.filter(type__name__exact=pn_type)
@@ -37,8 +45,8 @@ class PhoneNumberTypeViewSet(viewsets.ModelViewSet):
     API endpoint that allows location types to be viewed or edited.
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = contactSerializers.PhoneNumberTypeSerializer
-    queryset = contactModels.PhoneNumberType.objects.all()
+    serializer_class = PhoneNumberTypeSerializer
+    queryset = PhoneNumberType.objects.all()
     
 
 class AddressViewSet(viewsets.ModelViewSet):
@@ -46,14 +54,14 @@ class AddressViewSet(viewsets.ModelViewSet):
     API endpoint that allows locations to be viewed or edited.
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = contactSerializers.AddressSerializer
-    queryset = contactModels.Address.objects.all()
+    serializer_class = AddressSerializer
+    queryset = Address.objects.all()
     
     def get_queryset(self):
         """
         Restricts locations to a given type
         """
-        queryset = contactModels.Address.objects.all()
+        queryset = Address.objects.all()
         address_type = self.request.QUERY_PARAMS.get('type', None)
         if address_type is not None:
             queryset = queryset.filter(type__name__exact=address_type)
@@ -65,8 +73,8 @@ class AddressTypeViewSet(viewsets.ModelViewSet):
     API endpoint that allows location types to be viewed or edited.
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = contactSerializers.AddressTypeSerializer
-    queryset = contactModels.AddressType.objects.all()
+    serializer_class = AddressTypeSerializer
+    queryset = AddressType.objects.all()
     
 
 class EmailViewSet(viewsets.ModelViewSet):
@@ -74,25 +82,24 @@ class EmailViewSet(viewsets.ModelViewSet):
     API endpoint that allows locations to be viewed or edited.
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = contactSerializers.EmailSerializer
-    queryset = contactModels.Email.objects.all()
+    serializer_class = EmailSerializer
+    queryset = Email.objects.all()
     
     def get_queryset(self):
         """
         Restricts locations to a given type
         """
-        queryset = contactModels.Email.objects.all()
+        queryset = Email.objects.all()
         email_type = self.request.QUERY_PARAMS.get('type', None)
         if email_type is not None:
             queryset = queryset.filter(type__name__exact=email_type)
         return queryset
     
+
 class EmailTypeViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows location types to be viewed or edited.
     """
     permission_classes = (IsAuthenticated,)
-    serializer_class = contactSerializers.EmailTypeSerializer
-    queryset = contactModels.EmailType.objects.all()
-    
-    
+    serializer_class = EmailTypeSerializer
+    queryset = EmailType.objects.all()
