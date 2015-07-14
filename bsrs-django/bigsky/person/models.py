@@ -15,7 +15,7 @@ from django.core.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
 
 from location.models import LocationLevel, Location
-from role.models import Category
+from order.models import WorkOrderStatus
 from util import choices
 from util.models import AbstractName, MainSetting, CustomSetting, BaseModel
 
@@ -71,13 +71,24 @@ class Role(BaseModel):
     # Invoices
     inv_options = models.CharField(max_length=255, choices=choices.INVOICE_CHOICES,
         default=choices.INVOICE_CHOICES[0][0])
-    inv_wo_status
-    inv_wait
-    inv_select_assign
-    inv_autoapprove
-    inv_max_approval
-    inv_req_attach
-    inv_close_wo
+    inv_wo_status = models.ForeignKey(WorkOrderStatus, blank=True, null=True)
+    inv_wait = models.PositiveIntegerField(blank=True)
+    inv_select_assign = models.CharField(max_length=255, choices=choices.INVOICE_SELECT_ASSIGN_CHOICES,
+        default=choices.INVOICE_SELECT_ASSIGN_CHOICES[0][0])
+    inv_autoapprove = models.BooleanField(blank=True, default=False)
+    inv_max_approval_amount = models.PositiveIntegerField(blank=True, default=0)
+    inv_max_approval_currency = models.CharField(max_length=25, blank=True, default='usd')
+    inv_req_attach = models.BooleanField(blank=True, default=True)
+    inv_close_wo = models.CharField(max_length=255, choices=choices.CLOSE_WO_ON_APPROVAL_CHOICES,
+        default=choices.CLOSE_WO_ON_APPROVAL_CHOICES[0][0])
+    # Messages
+    # TODO: are these "Email" or "SMS" messages, or any particular type?
+    msg_address = models.BooleanField(blank=True, default=False,
+        help_text="Enable Addressing")
+    msg_viewall = models.BooleanField(blank=True, default=False)
+    msg_copy_email = models.BooleanField(blank=True, default=False)
+    msg_copy_default = models.BooleanField(blank=True, default=False)
+    msg_stored_link = models.BooleanField(blank=True, default=False)
 
 
     # use as a normal Django Manager() to access related setting objects.

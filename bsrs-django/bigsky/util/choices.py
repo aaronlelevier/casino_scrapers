@@ -18,3 +18,14 @@ INVOICE_CHOICES = (
     ('new', 'new'),
     ('draft', 'draft'),
 )
+
+INVOICE_SELECT_ASSIGN_CHOICES = (
+    ('all', 'all'),
+    ('managers', 'managers'),
+)
+
+CLOSE_WO_ON_APPROVAL_CHOICES = (
+    ('Do not display', 'Do not display'),
+    ('unchecked', 'unchecked'),
+    ('checked', 'checked'),
+)

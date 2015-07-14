@@ -38,12 +38,13 @@ THIRD_PARTY_APPS = (
     )
 
 LOCAL_APPS = (
-    'session',
+    'contact',
+    'location',
     'person',
     'role',
-    'location',
-    'contact',
+    'session',
     'util',
+    'order',
     )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -133,31 +134,3 @@ JWT_AUTH = {
     'JWT_RESPONSE_PAYLOAD_HANDLER': 'session.views.jwt_response_payload_handler',
     'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=1800),
 }
-
-
-### LOGGING ###
-
-LOGGING = None
-#  {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'simple': {
-#             'format': '[%(asctime)s %(module)s] %(levelname)s: %(message)s'
-#         },
-#     },
-#     'handlers': {
-#         'console': {
-#             'level': 'DEBUG',
-#             'class': 'logging.StreamHandler',
-#             'formatter': 'simple',
-#         },
-#     },
-#     'loggers': {
-#         'django': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#             'propagate': True,
-#         },
-#     },
-# }
