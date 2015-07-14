@@ -10,7 +10,7 @@ Created on Jan 21, 2015
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
-from util.models import AbstractName
+from util.models import AbstractName, BaseModel
 
 
 class LocationLevelQuerySet(models.query.QuerySet):
@@ -63,14 +63,6 @@ class LocationLevelQuerySet(models.query.QuerySet):
 
         return self.filter(id__in=all_parents).exclude(id=first_child_id)
 
-'''
-
-from location.models import LocationLevel
-store = LocationLevel.objects.get(name='Store')
-LocationLevel.objects.get_all_parents(store)
-
-'''
-
 
 class LocationLevelManager(models.Manager):
     
@@ -105,7 +97,7 @@ class LocationType(AbstractName):
     
 
 @python_2_unicode_compatible
-class Location(models.Model):
+class Location(BaseModel):
     # keys
     level = models.ForeignKey(LocationLevel, related_name='locations')
     status = models.ForeignKey(LocationStatus, related_name='locations')

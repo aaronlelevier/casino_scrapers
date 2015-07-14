@@ -12,10 +12,6 @@ from util.models import AbstractNameOrder, BaseModel
 from util import exceptions as excp
 
 
-class PhoneNumberType(AbstractNameOrder):
-    pass
-
-
 class ContactBaseModel(BaseModel):
     pass
 
@@ -31,6 +27,10 @@ class ContactBaseModel(BaseModel):
             raise excp.PersonOrLocationRequired("Must have either a Person or Location FK.")
         elif self.person and self.location:
             raise excp.CantHavePersonAndLocation("Cannot have both a Person and Location FK.")
+
+
+class PhoneNumberType(AbstractNameOrder):
+    pass
 
 
 @python_2_unicode_compatible
