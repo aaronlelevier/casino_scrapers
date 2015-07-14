@@ -74,23 +74,14 @@ class PersonCreateSerializer(serializers.ModelSerializer):
     '''
     Only required fields.
     '''
-    role = serializers.PrimaryKeyRelatedField(
-        queryset=Role.objects.all(),
-        required=False
-        )
-    status = serializers.PrimaryKeyRelatedField(
-        queryset=PersonStatus.objects.all(),
-        required=False
-        )
-    location = serializers.PrimaryKeyRelatedField(
-        queryset=Location.objects.all(),
-        required=False
-        )
     class Meta:
         model = Person
         write_only_fields = ('password',)
-        fields = ('username', 'email', 'password', 'role', 'status', 'location',
-            'authorized_amount', 'authorized_amount_currency',)
+        fields = (
+            'username', 'email', 'password', # user fields
+            'role', 'status', 'location',    # keys
+            'authorized_amount', 'authorized_amount_currency', # required - other
+        )
 
 
 class PersonListSerializer(serializers.ModelSerializer):

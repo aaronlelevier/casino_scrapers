@@ -68,7 +68,7 @@ class Person(User):
     # Keys
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus)
-    location = models.ManyToManyField(Location)
+    location = models.ForeignKey(Location)
     # required
     authorized_amount = models.PositiveIntegerField()
     authorized_amount_currency = models.CharField(max_length=25, choices=choices.CURRENCY_CHOICES,
