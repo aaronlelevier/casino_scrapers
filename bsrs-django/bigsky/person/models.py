@@ -53,11 +53,11 @@ class Role(BaseModel):
     # that set the Person settings for these fields when first
     # adding a Person to a Role
     default_accept_assign = models.BooleanField(blank=True, default=True)
-    accept_assign = models.BooleanField(blank=True)
+    accept_assign = models.BooleanField(blank=True, default=False)
     default_accept_notify = models.BooleanField(blank=True, default=True)
-    accept_notify = models.BooleanField(blank=True)
+    accept_notify = models.BooleanField(blank=True, default=False)
     default_authorized_amount = models.BooleanField(blank=True, default=True)
-    authorized_amount = models.PositiveIntegerField(blank=True)
+    authorized_amount = models.PositiveIntegerField(blank=True, null=True)
     # Approvals
     allow_approval = models.BooleanField(blank=True, default=False)
     proxy_approval_bypass = models.BooleanField(blank=True, default=False)
@@ -67,12 +67,12 @@ class Role(BaseModel):
     wo_show_inactive = models.BooleanField(blank=True, default=False)
     wo_show_tkt_attach = models.BooleanField(blank=True, default=False)
     wo_allow_backdate = models.BooleanField(blank=True, default=False)
-    wo_days_backdate = models.PositiveIntegerField(blank=True)
+    wo_days_backdate = models.PositiveIntegerField(blank=True, null=True)
     # Invoices
     inv_options = models.CharField(max_length=255, choices=choices.INVOICE_CHOICES,
         default=choices.INVOICE_CHOICES[0][0])
     inv_wo_status = models.ForeignKey(WorkOrderStatus, blank=True, null=True)
-    inv_wait = models.PositiveIntegerField(blank=True)
+    inv_wait = models.PositiveIntegerField(blank=True, null=True)
     inv_select_assign = models.CharField(max_length=255, choices=choices.INVOICE_SELECT_ASSIGN_CHOICES,
         default=choices.INVOICE_SELECT_ASSIGN_CHOICES[0][0])
     inv_autoapprove = models.BooleanField(blank=True, default=False)
