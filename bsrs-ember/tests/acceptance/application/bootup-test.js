@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
-import PhoneNumberTypes from 'bsrs-ember/vendor/phonenumber_types_fixtures';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import PhoneNumberDefaults from 'bsrs-ember/value-defaults/phonenumber-type';
@@ -21,7 +20,7 @@ module('Acceptance | bootup test', {
     }
 });
 
-test('toran on boot we should fetch and load the phone number types', function(assert) {
+test('on boot we should fetch and load the phone number types', function(assert) {
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('phonenumber-type').length, 2);

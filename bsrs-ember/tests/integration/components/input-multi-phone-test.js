@@ -22,10 +22,10 @@ moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
 // });
 
 test('defaults to use phone number model with field name of number', function(assert) {
-    var model = Person.create({ phone_numbers: []}); //TODO: is this callout in create needed/good for the reader
+    var model = [];
     this.set('model', model);
 
-    this.render(hbs`{{input-multi-phone model=model.phone_numbers}}`);
+    this.render(hbs`{{input-multi-phone model=model}}`);
 
     var $component = this.$('.t-input-multi-phone');
 
@@ -37,23 +37,23 @@ test('defaults to use phone number model with field name of number', function(as
 
     assert.equal(this.$('.t-new-entry').length, 1);
 
-    assert.equal(model.get('phone_numbers').length, 1);
+    assert.equal(model.length, 1);
 
-    assert.equal(model.get('phone_numbers').objectAt(0).get('number'), '');
+    assert.equal(model.objectAt(0).get('number'), '');
 
     this.$('.t-new-entry').val('888-888-8888').trigger('change');
 
-    assert.equal(model.get('phone_numbers').objectAt(0).get('number'), '888-888-8888');
+    assert.equal(model.objectAt(0).get('number'), '888-888-8888');
 });
 
 test('once added a button for phone number type appears with a button to delete it', function(assert) {
     //currently in General Settings Route
-    var model = Person.create({ phone_numbers: []});
+    var model = [];
     var phoneNumberTypes = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
     this.set('model', model);
     this.set('phonenumberTypes', phoneNumberTypes);
 
-    this.render(hbs`{{input-multi-phone model=model.phone_numbers types=phonenumberTypes}}`);
+    this.render(hbs`{{input-multi-phone model=model types=phonenumberTypes}}`);
 
     var $component = this.$('.t-input-multi-phone');
     var $first_btn = $component.find('.t-add-btn:eq(0)');
@@ -70,16 +70,17 @@ test('once added a button for phone number type appears with a button to delete 
     assert.equal($first_type_select.find('option').length, 2);
     assert.equal($first_type_select.find('option:eq(0)').text(), 'Office');
     assert.equal($first_type_select.find('option:eq(1)').text(), 'Mobile');
-    assert.equal(model.get("phone_numbers").objectAt(0).get("type"), PhoneNumberDefaults.officeType);
+    assert.equal(model.objectAt(0).get("type"), PhoneNumberDefaults.officeType);
 });
 
 test('changing the phone number type will alter the bound value', function(assert) {
-    var model = Person.create({ phone_numbers: []});
     var phoneNumberTypes = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
+    var model = [];
+
     this.set('model', model);
     this.set('phonenumberTypes', phoneNumberTypes);
 
-    this.render(hbs`{{input-multi-phone model=model.phone_numbers types=phonenumberTypes}}`);
+    this.render(hbs`{{input-multi-phone model=model types=phonenumberTypes}}`);
 
     var $component = this.$('.t-input-multi-phone');
     var $first_btn = $component.find('.t-add-btn:eq(0)');
@@ -87,40 +88,42 @@ test('changing the phone number type will alter the bound value', function(asser
     assert.equal($first_type_select.length, 0);
     $first_btn.trigger('click');
     $first_type_select = $component.find('.t-multi-phone-type');
-    assert.equal(model.get("phone_numbers").objectAt(0).get("type"), PhoneNumberDefaults.officeType);
+    assert.equal(model.objectAt(0).get("type"), PhoneNumberDefaults.officeType);
     $first_type_select.val(PhoneNumberDefaults.mobileType).trigger("change");
 
-    assert.equal(model.get("phone_numbers").objectAt(0).get("type"), PhoneNumberDefaults.mobileType);
+    assert.equal(model.objectAt(0).get("type"), PhoneNumberDefaults.mobileType);
     assert.equal($first_type_select.val(), PhoneNumberDefaults.mobileType);
 });
 
 test('changing existing phone number type will alter the model', function(assert) {
     var phoneNumberTypes = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
-    var model = Person.create({ phone_numbers: [PhoneNumber.create({ id: 1, number: '888-888-8888', type: phoneNumberTypes[0].get('id') }), PhoneNumber.create({ id: 2, number: '999-999-9999', type: phoneNumberTypes[1].get('id') })] }); 
+    var model = [PhoneNumber.create({ id: 1, number: '888-888-8888', type: phoneNumberTypes[0].get('id') }), PhoneNumber.create({ id: 2, number: '999-999-9999', type: phoneNumberTypes[1].get('id') })];
+
     this.set('model', model);
     this.set('phonenumberTypes', phoneNumberTypes);
 
-    this.render(hbs`{{input-multi-phone model=model.phone_numbers types=phonenumberTypes}}`);
+    this.render(hbs`{{input-multi-phone model=model types=phonenumberTypes}}`);
 
     var $component = this.$('.t-input-multi-phone');
     var $first_type_select = $component.find('.t-multi-phone-type');
     assert.equal($first_type_select.length, 2);
 
     $first_type_select = $component.find('.t-multi-phone-type');
-    assert.equal(model.get("phone_numbers").objectAt(0).get('type'), PhoneNumberDefaults.officeType);
+    assert.equal(model.objectAt(0).get('type'), PhoneNumberDefaults.officeType);
     $first_type_select.val(PhoneNumberDefaults.mobileType).trigger("change");
-    assert.equal(model.get("phone_numbers").objectAt(0).get("type"), PhoneNumberDefaults.mobileType);
+    assert.equal(model.objectAt(0).get("type"), PhoneNumberDefaults.mobileType);
     assert.equal($first_type_select.val(), PhoneNumberDefaults.mobileType);
 });
 
 test('click delete btn will remove input', function(assert) {
     //todo: reduce the duplication on phoneNumberTypes
     var phoneNumberTypes = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
-    var model = Person.create({ phone_numbers: [PhoneNumber.create({ id: 1, number: '888-888-8888', type: phoneNumberTypes[0].get('id') }), PhoneNumber.create({ id: 2, number: '999-999-9999', type: phoneNumberTypes[1].get('id') })] }); 
+    var model = [PhoneNumber.create({ id: 1, number: '888-888-8888', type: phoneNumberTypes[0].get('id') }), PhoneNumber.create({ id: 2, number: '999-999-9999', type: phoneNumberTypes[1].get('id') })];
+
     this.set('model', model);
     this.set('phonenumberTypes', phoneNumberTypes);
 
-    this.render(hbs`{{input-multi-phone model=model.phone_numbers types=phonenumberTypes}}`);
+    this.render(hbs`{{input-multi-phone model=model types=phonenumberTypes}}`);
     var $component = this.$('.t-input-multi-phone');
 
     assert.equal(this.$('.t-new-entry').length, 2);

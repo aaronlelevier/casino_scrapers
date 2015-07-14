@@ -57,7 +57,8 @@ test('when you deep link to the person detail view you get bound attrs', functio
 
   var url = API_PREFIX + DETAIL_URL + "/";
   var response = PEOPLE_FIXTURES.detail(1);
-  var payload = PEOPLE_FIXTURES.put(1, 'llcoolj', 'Ice', 'Cube', 'mastermind', '1122', '0.000');
+  var phone_numbers = [{id: 3, number: '858-715-5026', type: 1}, {id: 4, number: '858-715-5056', type: 2}];
+  var payload = PEOPLE_FIXTURES.put(1, 'llcoolj', 'Ice', 'Cube', 'mastermind', '1122', '0.000', phone_numbers);
   xhr( url,'PUT',payload,{},200,response );
   fillIn('.t-person-username', 'llcoolj');
   fillIn('.t-person-first-name', 'Ice');
@@ -88,5 +89,18 @@ test('clicking cancel button will take from detail view to list view', function(
 
   andThen(function() {
     assert.equal(currentURL(), PEOPLE_URL);
+  });
+});
+
+test('when you change a related phone numbers type it will be persisted correctly', function(assert) {
+  visit(DETAIL_URL);
+  var url = API_PREFIX + DETAIL_URL + "/";
+  var phone_numbers = [{id: 3, number: '858-715-5026', type: 2}, {id: 4, number: '858-715-5056', type: 2}];
+  var payload = PEOPLE_FIXTURES.put(1, null, null, null, null, null, null, phone_numbers);
+  xhr(url,'PUT',payload,{},200);
+  fillIn('.t-multi-phone-type:eq(0)', 2);
+  click('.t-save-btn');
+  andThen(function() {
+    assert.equal(currentURL(),PEOPLE_URL);
   });
 });

@@ -76,18 +76,18 @@ var PEOPLE_FACTORY = {
         person.emails = []
         return person;
     },
-    put: function(i, username, first_name, last_name, title, emp_number, auth_amount) {
+    put: function(i, username, first_name, last_name, title, emp_number, auth_amount, phone_numbers) {
         var response = generatePerson(i);
-        response.title = title;
-        response.username = username;
-        response.first_name = first_name;
-        response.last_name = last_name;
-        response.title = title;
-        response.emp_number = emp_number;
-        response.auth_amount = auth_amount;
-        response.acceptassign= false;
+        response.title = title || response.title;
+        response.username = username || response.username;
+        response.first_name = first_name || response.first_name;
+        response.last_name = last_name || response.last_name;
+        response.title = title || response.title;
+        response.emp_number = emp_number || response.emp_number;
+        response.auth_amount = auth_amount || response.auth_amount;
         response.phone_numbers= phone_numbers;
         response.addresses= addresses;
+        response.acceptassign= false;
         response.emails= [];
         return response;
     }

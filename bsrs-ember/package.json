@@ -44,7 +44,8 @@
     "ember-promise": "^0.2.1",
     "express": "^4.13.1",
     "glob": "^4.5.3",
-    "morgan": "^1.6.1"
+    "morgan": "^1.6.1",
+    "bsrs-bootstrap-config": "git+ssh://git@github.com:bigskytech/bsrs-bootstrap-config.git#master"
   },
   "dependencies": {
     "ember-cli-font-awesome": "0.0.9"
