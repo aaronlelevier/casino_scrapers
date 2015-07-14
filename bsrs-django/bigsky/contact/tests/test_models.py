@@ -12,13 +12,31 @@ from util import exceptions as excp
 
 class PhoneNumberTests(TestCase):
 
-    def test_ph_num(self):
-        ph = mommy.make(PhoneNumber)
+    # also tests ``ContactBaseModel`` save() methods
+
+    def setUp(self):
+        self.person = mommy.make(Person)
+        self.location = mommy.make(Location)
+
+    def test_ph_model_create(self):
+        ph = mommy.make(PhoneNumber, person=self.person)
         self.assertIsInstance(ph, PhoneNumber)
         self.assertIsInstance(ph.type, PhoneNumberType)
 
+    def test_ph_str(self):
+        ph = mommy.make(PhoneNumber, person=self.person)
+        self.assertEqual(str(ph), ph.number)
 
-class AddresTests(TestCase):
+    def test_person_and_location(self):
+        with self.assertRaises(excp.CantHavePersonAndLocation):
+            mommy.make(PhoneNumber, person=self.person, location=self.location)
+
+    def test_no_person_or_location(self):
+        with self.assertRaises(excp.PersonOrLocationRequired):
+            mommy.make(PhoneNumber)
+
+
+class AddressTests(TestCase):
 
     def test_address(self):
         p = create_person()
@@ -39,21 +57,17 @@ class AddresTests(TestCase):
         with self.assertRaises(excp.PersonOrLocationRequired):
             a  = mommy.make(Address)
 
-    def test_person_and_location(self):
-        p = mommy.make(Person)
-        l = mommy.make(Location)
-        with self.assertRaises(excp.CantHavePersonLocation):
-            a  = mommy.make(Address, person=p, location=l)
-
-    def test_valid_person_or_location_ok(self):
-        l = mommy.make(Location)
-        a  = mommy.make(Address, location=l)
-        self.assertIsInstance(a, Address)
-
 
 class EmailTests(TestCase):
 
+    def setUp(self):
+        self.person = mommy.make(Person)
+
     def test_email(self):
-        e = mommy.make(Email)
+        e = mommy.make(Email, person=self.person)
         self.assertIsInstance(e, Email)
         self.assertIsInstance(e.type, EmailType)
+
+    def test_str(self):
+        e = mommy.make(Email, person=self.person)
+        self.assertEqual(str(e), e.email)

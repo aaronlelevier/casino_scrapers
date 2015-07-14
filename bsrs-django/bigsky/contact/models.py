@@ -8,22 +8,40 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from person.models import Person
 from location.models import Location
-from util.models import AbstractNameOrder
+from util.models import AbstractNameOrder, BaseModel
 from util import exceptions as excp
+
 
 class PhoneNumberType(AbstractNameOrder):
     pass
 
 
+class ContactBaseModel(BaseModel):
+    pass
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        self._valid_person_or_location()
+        return super(ContactBaseModel, self).save(*args, **kwargs)
+
+    def _valid_person_or_location(self):
+        if not (self.person or self.location):
+            raise excp.PersonOrLocationRequired("Must have either a Person or Location FK.")
+        elif self.person and self.location:
+            raise excp.CantHavePersonAndLocation("Cannot have both a Person and Location FK.")
+
+
 @python_2_unicode_compatible
-class PhoneNumber(models.Model):
+class PhoneNumber(ContactBaseModel):
     '''
     TODO: Will use this "phone number lib" for validation:
 
     https://github.com/daviddrysdale/python-phonenumbers
     '''
     # keys
-    type = models.ForeignKey(PhoneNumberType, related_name='phone_numbers')
+    type = models.ForeignKey(PhoneNumberType)
     location = models.ForeignKey(Location, related_name='phone_numbers', null=True, blank=True)
     person = models.ForeignKey(Person, related_name='phone_numbers', null=True, blank=True)
     # fields
@@ -41,7 +59,7 @@ class AddressType(AbstractNameOrder):
 
 
 @python_2_unicode_compatible
-class Address(models.Model):
+class Address(ContactBaseModel):
     '''
     Not every field is required to be a valid address, but at 
     least one "non-foreign-key" field must be populated.
@@ -50,7 +68,7 @@ class Address(models.Model):
     populated, but not both.
     '''
     # keys
-    type = models.ForeignKey(AddressType, related_name='addresses')
+    type = models.ForeignKey(AddressType)
     location = models.ForeignKey(Location, related_name='addresses', null=True, blank=True)
     person = models.ForeignKey(Person, related_name='addresses', null=True, blank=True)
     # fields
@@ -64,16 +82,6 @@ class Address(models.Model):
 
     class Meta:
         ordering = ('type',)
-
-    def save(self, *args, **kwargs):
-        self._valid_person_or_location()
-        return super(Address, self).save(*args, **kwargs)
-
-    def _valid_person_or_location(self):
-        if not (self.person or self.location):
-            raise excp.PersonOrLocationRequired("Must have either a Person or Location FK.")
-        elif self.person and self.location:
-            raise excp.CantHavePersonLocation("Cannot have both a Person and Location FK.")
         
     def __str__(self):
         if self.address1:
@@ -87,9 +95,9 @@ class EmailType(AbstractNameOrder):
 
 
 @python_2_unicode_compatible
-class Email(models.Model):
+class Email(ContactBaseModel):
     # keys
-    type = models.ForeignKey(EmailType, related_name='emails')
+    type = models.ForeignKey(EmailType)
     location = models.ForeignKey(Location, related_name='emails', null=True, blank=True)
     person = models.ForeignKey(Person, related_name='emails', null=True, blank=True)
     # fields

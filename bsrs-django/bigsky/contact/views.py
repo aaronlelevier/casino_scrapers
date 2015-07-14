@@ -21,6 +21,15 @@ from contact.models import (
 )
 
 
+class PhoneNumberTypeViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint that allows location types to be viewed or edited.
+    """
+    permission_classes = (IsAuthenticated,)
+    serializer_class = PhoneNumberTypeSerializer
+    queryset = PhoneNumberType.objects.all()
+
+
 class PhoneNumberViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows locations to be viewed or edited.
@@ -38,15 +47,6 @@ class PhoneNumberViewSet(viewsets.ModelViewSet):
         if pn_type is not None:
             queryset = queryset.filter(type__name__exact=pn_type)
         return queryset
-
-
-class PhoneNumberTypeViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows location types to be viewed or edited.
-    """
-    permission_classes = (IsAuthenticated,)
-    serializer_class = PhoneNumberTypeSerializer
-    queryset = PhoneNumberType.objects.all()
     
 
 class AddressViewSet(viewsets.ModelViewSet):

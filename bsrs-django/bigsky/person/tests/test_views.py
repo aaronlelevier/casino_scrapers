@@ -45,12 +45,12 @@ class PersonViewSetDataChangeTests(APITestCase):
         new_email = 'new@mail.com'
         # get a person
         response = self.client.get('/api/person/person/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         person = json.loads(response.content)
         self.assertNotEqual(person['email'], new_email)
         # change email and send update
         person.update({'email':new_email})
         response = self.client.patch('/api/person/person/1/', person, format='json')
-        print response
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # get back the same person, and confirm that their email is changed in the DB
         response = self.client.get('/api/person/person/1/')
@@ -102,13 +102,8 @@ class PersonContactViewSetTests(TestCase):
 
         # contact info
         self.address = mommy.make(Address, person=self.person)
-        self.phone_number = mommy.make(PhoneNumber)
-        self.email = mommy.make(Email)
-
-        # join to Person
-        for m in [self.phone_number, self.email]:
-            m.person = self.person
-            m.save()
+        self.phone_number = mommy.make(PhoneNumber, person=self.person)
+        self.email = mommy.make(Email, person=self.person)
 
         # Login
         self.client.login(username=self.person.username, password=self.password)
