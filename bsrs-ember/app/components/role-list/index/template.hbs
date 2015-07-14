@@ -15,7 +15,7 @@
 			</tr>
 		</thead>
 		<tbody>
-			{{#each model key="id" as |role|}}
+			{{#each model as |role|}}
 				{{#link-to 'admin.roles.role' role.id tagName="tr" class="t-data"}}
 					<td><input type="checkbox" /></td>
 					<td>{{role.name}}</td>
