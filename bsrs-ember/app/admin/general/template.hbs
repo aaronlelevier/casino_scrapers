@@ -29,7 +29,8 @@
 			{{/form-group}}
 
 			{{#form-group title="Multi Input"}}
-				{{input-multi-phone types=phoneNumberTypes model=model.numbers }} 
+				{{log phoneNumberTypes}}
+				{{input-multi-phone types=phoneNumberTypes model=model.numbers }}
 			{{/form-group}}
 			{{#form-group title="Select Field" for="selectField"}}
 				<select name="selectField" class="form-control">

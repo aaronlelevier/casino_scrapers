@@ -23,8 +23,18 @@ div.buttonGroup {
 	  width: auto;
 	}
 }
-.input-multi .input-group{
-	margin-bottom: 7px;
+.input-multi{
+	.input-group{
+		margin-bottom: 7px;
+	}
+	.phonenumber-type{
+		min-width: 6em;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		margin-left: -1px;
+		margin-right: -1px;
+	}
 }
 .input-multi-address{
 	.address-label{
@@ -65,5 +75,4 @@ div.buttonGroup {
 	.btn{
 		border-radius: 0;
 	}
-
 }

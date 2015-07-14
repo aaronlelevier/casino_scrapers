@@ -3,8 +3,10 @@ import { test } from 'qunit';
 import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import config from 'bsrs-ember/config/environment'; 
+import config from 'bsrs-ember/config/environment';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
+import StateFactory from 'bsrs-ember/tests/helpers/states';
+
 const PEOPLE_URL = "/admin/people";
 const DETAIL_URL = "/admin/people/1";
 const SUBMIT_BTN = ".submit_btn";
@@ -18,6 +20,10 @@ module('Acceptance | people-detail', {
     var endpoint = API_PREFIX + PEOPLE_URL + "/";
     xhr( endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.list() );
     xhr( endpoint + "1/","GET",null,{},200,PEOPLE_FIXTURES.detail(1) );
+
+    // Need to convert to the new new
+    xhr( API_PREFIX + "/states/","GET",null,{},200,StateFactory.list() );
+
   },
   afterEach: function() {
     Ember.run(application, 'destroy');
@@ -60,12 +66,14 @@ test('when you deep link to the person detail view you get bound attrs', functio
   var phone_numbers = [{id: 3, number: '858-715-5026', type: 1}, {id: 4, number: '858-715-5056', type: 2}];
   var payload = PEOPLE_FIXTURES.put(1, 'llcoolj', 'Ice', 'Cube', 'mastermind', '1122', '0.000', phone_numbers);
   xhr( url,'PUT',payload,{},200,response );
+
   fillIn('.t-person-username', 'llcoolj');
   fillIn('.t-person-first-name', 'Ice');
   fillIn('.t-person-last-name', 'Cube');
   fillIn('.t-person-title', 'mastermind');
   fillIn('.t-person-emp_number', '1122');
   fillIn('.t-person-auth_amount', '0.000');
+
   click('.t-save-btn');
   andThen(function() {
     assert.equal(currentURL(),PEOPLE_URL);

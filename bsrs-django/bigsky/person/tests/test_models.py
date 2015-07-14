@@ -8,7 +8,7 @@ from django.contrib.auth.models import User
 
 from model_mommy import mommy
 
-from person.models import Person, PersonStatus
+from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person
 
 
@@ -22,11 +22,11 @@ class PersonTests(TestCase):
         self.assertIsInstance(self.person, User)
 
     def test_person_defaults(self):
-        self.assertFalse(self.person.accept_assign)
+        self.assertTrue(self.person.accept_assign)
 
-    def test_foreignkeys_not_required(self):
-        self.assertIsNone(self.person.status)
-        self.assertIsNone(self.person.role)
+    def test_foreignkeys(self):
+        self.assertIsInstance(self.person.status, PersonStatus)
+        self.assertIsInstance(self.person.role, Role)
 
 
 class PersonStatusTests(TestCase):

@@ -1,5 +1,5 @@
-<select class="form-control">
-{{#each model as |state|}}
-  <option value={{state.abbr}}>{{state.name}}</option>
+<select class="form-control t-select">
+{{#each options as |option|}}
+  <option value={{option.abbr}}>{{option.name}}</option>
 {{/each}}
 </select>

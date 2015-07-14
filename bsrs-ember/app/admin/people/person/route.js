@@ -1,8 +1,11 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import AddressType from 'bsrs-ember/models/address-type';
+import PhoneNumberType from 'bsrs-ember/models/phonenumber-type';
 
 export default Ember.Route.extend({
     repository: inject('person'),
+    state_repository: inject('state'),
     phonenumber_repo: inject('phonenumber'),
     phonenumber_type_repo: inject('phonenumber-type'),
     init: function() {
@@ -10,6 +13,20 @@ export default Ember.Route.extend({
         this.set('editPrivilege', true);
     },
     model: function(params) {
+        var state_repository = this.get('state_repository');
+
+        //Rip this out and make a repository
+        var address_types = [
+            AddressType.create({
+              id: 1,
+              name: 'admin.address_type.office'
+            }),
+            AddressType.create({
+              id: 2,
+              name: 'admin.address_type.shipping'
+            })
+        ];
+
         var repository = this.get('repository');
         var person = repository.findById(params.person_id);
 
@@ -22,13 +39,17 @@ export default Ember.Route.extend({
         return Ember.RSVP.hash({
             model: person,
             phoneNumberTypes: phonenumber_types,
-            phone_numbers: phone_numbers
+            phone_numbers: phone_numbers,
+            state_list: state_repository.find(),
+            address_types: address_types
         });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
         controller.set('phoneNumberTypes', hash.phoneNumberTypes);
         controller.set('phone_numbers', hash.phone_numbers);
+        controller.set('state_list', hash.state_list);
+        controller.set('address_types', hash.address_types);
     },
     actions: {
         savePerson: function() {

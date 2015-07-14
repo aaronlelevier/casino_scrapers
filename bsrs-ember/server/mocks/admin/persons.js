@@ -50,7 +50,7 @@ var PEOPLE = [{
       "address": "9325 Sky Park Ct.\nSuite 120",
       "city": "San Diego",
       "state": {
-        "id": 1,
+        "id": 5,
         "name": "California"
       },
       "postal_code": "92123",

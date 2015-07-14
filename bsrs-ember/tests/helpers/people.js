@@ -35,7 +35,7 @@ var PeopleFactory = {
         response.role = 10;
         response.role_name = 'user.role.regional_manager';
         response.phone_numbers = phone_numbers;
-        return {results: [response]}; //TODO: updated the mocks in server/mocks
+        return {results: [response]}; // TODO: updated the mocks in server/mocks
     },
     detail: function() {
         return generatePerson();

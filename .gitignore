@@ -38,3 +38,4 @@ bsrs-django/bigsky/assets/
 bsrs-django/bigsky/templates/index.html
 
 .ctags
+_todo.rst

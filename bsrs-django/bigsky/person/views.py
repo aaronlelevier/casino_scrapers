@@ -5,7 +5,7 @@ Created on Jan 16, 2015
 '''
 # from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, User
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, permissions, status
@@ -13,7 +13,9 @@ from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 
 from person.serializers import (PersonStatusSerializer, PersonSerializer,
-    PersonListSerializer, PersonContactSerializer, RoleSerializer)
+    PersonListSerializer, PersonContactSerializer, PersonCreateSerializer,
+    RoleSerializer
+    )
 from person.models import Person, PersonStatus, Role
 from person.permissions import BSModelPermissions
 
@@ -45,38 +47,39 @@ class PersonViewSet(viewsets.ModelViewSet):
     includes model level permissions, not user level yet
     """
     queryset = Person.objects.all()
-    serializer_class = PersonSerializer
+    serializer_class = PersonCreateSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    def list(self, request):
-        serializer = PersonListSerializer(self.queryset, many=True)
-        return Response(serializer.data)
-
-    # def create(self, request):
-    #     pass
-
-    def retrieve(self, request, pk=None):
-        person = get_object_or_404(self.queryset, pk=pk)
-        serializer = PersonSerializer(person)
-        return Response(serializer.data)
-
-    # def update(self, request, pk=None):
-    #     pass
-
-    # def partial_update(self, request, pk=None):
-    #     pass
-    
     # def get_serializer_class(self):
     #     """
     #     set the serializer based on the method
     #     """
-    #     if (self.action == 'retrieve'):
+    #     if self.action == 'retrieve'):
     #         self.serializer_class = PersonFullSerializer
     #     elif (self.action == 'list'):
     #         self.serializer_class = PersonListSerializer
     #     else:
     #         self.serializer_class = PersonSerializer
     #     return self.serializer_class
+
+    # def list(self, request):
+    #     serializer = PersonListSerializer(self.queryset, many=True)
+    #     return Response(serializer.data)
+
+    # def create(self, request, *args, **kwargs):
+    #     serializer = PersonCreateSerializer(data=request.DATA)
+    #     return super(PersonViewSet, self).create(request, *args, **kwargs)
+
+    # def retrieve(self, request, pk=None):
+    #     person = get_object_or_404(User, pk=pk)
+    #     serializer = PersonSerializer(person)
+    #     return Response(serializer.data)
+
+    # def update(self, request, pk=None):
+    #     pass
+
+    # def partial_update(self, request, pk=None):
+    #     pass
     
     # @detail_route(methods=['get'])
     # def perms(self, request, pk):

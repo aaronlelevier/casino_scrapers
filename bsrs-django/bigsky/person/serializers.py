@@ -11,9 +11,11 @@ from django.contrib.auth.models import Group
 
 from rest_framework import serializers
 
-from location.models import LocationLevel
+from location.models import LocationLevel, Location
 from person.models import PersonStatus, Person, Role
-import contact.serializers as contact_serializers
+from contact.serializers import (
+    PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer
+)
 
 
 '''
@@ -56,9 +58,9 @@ PERSON_BASE_FIELDS = (
     'name', # calculated DRF field
     'title',
     'role',
-    'emp_number',
+    'employee_id',
     'status',
-    'auth_amount',
+    'authorized_amount',
     )
 
 PERSON_FIELDS = (
@@ -67,6 +69,20 @@ PERSON_FIELDS = (
     'middle_initial',
     'last_name',
     )
+
+class PersonCreateSerializer(serializers.ModelSerializer):
+    '''
+    Only required fields.
+    '''
+    class Meta:
+        model = Person
+        write_only_fields = ('password',)
+        fields = (
+            'username', 'email', 'password', # user fields
+            'role', 'status', 'location',    # keys
+            'authorized_amount', 'authorized_amount_currency', # required - other
+        )
+
 
 class PersonListSerializer(serializers.ModelSerializer):
 
@@ -134,9 +150,9 @@ class PersonSerializer(PersonListSerializer):
 
 class PersonContactSerializer(PersonSerializer):
     
-    phone_numbers = contact_serializers.PhoneNumberShortSerializer(many=True, read_only=True)
-    addresses = contact_serializers.AddressShortSerializer(many=True, read_only=True)
-    emails = contact_serializers.EmailShortSerializer(many=True, read_only=True)
+    phone_numbers = PhoneNumberShortSerializer(many=True, read_only=True)
+    addresses = AddressShortSerializer(many=True, read_only=True)
+    emails = EmailShortSerializer(many=True, read_only=True)
 
     class Meta:
         model = Person

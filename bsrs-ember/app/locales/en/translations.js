@@ -107,8 +107,9 @@ export default {
 			},
             system_administrator: "Admin"
 		},
-		adresstype: {
-			office: "Office"
+		address_type: {
+			office: "Office",
+			shipping: "Shipping"
 		},
 		person: {
 			one: "Person",
