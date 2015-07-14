@@ -13,7 +13,9 @@ from rest_framework import serializers
 
 from location.models import LocationLevel
 from person.models import PersonStatus, Person, Role
-import contact.serializers as contact_serializers
+from contact.serializers import (
+    PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer
+)
 
 
 '''
@@ -134,9 +136,9 @@ class PersonSerializer(PersonListSerializer):
 
 class PersonContactSerializer(PersonSerializer):
     
-    phone_numbers = contact_serializers.PhoneNumberShortSerializer(many=True, read_only=True)
-    addresses = contact_serializers.AddressShortSerializer(many=True, read_only=True)
-    emails = contact_serializers.EmailShortSerializer(many=True, read_only=True)
+    phone_numbers = PhoneNumberShortSerializer(many=True, read_only=True)
+    addresses = AddressShortSerializer(many=True, read_only=True)
+    emails = EmailShortSerializer(many=True, read_only=True)
 
     class Meta:
         model = Person
