@@ -15,16 +15,45 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='CoveringUser',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('modified', models.DateTimeField(auto_now=True)),
+                ('deleted', models.BooleanField(default=False)),
+            ],
+            options={
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
+            name='NextApprover',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('modified', models.DateTimeField(auto_now=True)),
+                ('deleted', models.BooleanField(default=False)),
+            ],
+            options={
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
             name='Person',
             fields=[
                 ('user_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
                 ('authorized_amount', models.PositiveIntegerField()),
-                ('authorized_amount_currency', models.CharField(max_length=25, choices=[(b'usd', b'usd'), (b'eur', b'eur'), (b'jpy', b'jpy')])),
+                ('authorized_amount_currency', models.CharField(default=b'usd', max_length=25, choices=[(b'usd', b'usd'), (b'eur', b'eur'), (b'jpy', b'jpy')])),
                 ('accept_assign', models.BooleanField(default=True)),
                 ('accept_notify', models.BooleanField(default=True)),
                 ('employee_id', models.CharField(max_length=100, null=True, blank=True)),
                 ('middle_initial', models.CharField(max_length=30, null=True, blank=True)),
                 ('title', models.CharField(max_length=100, null=True, blank=True)),
+                ('password_expiration', models.DateField(null=True, blank=True)),
+                ('password_one_time', models.CharField(max_length=255, null=True, blank=True)),
+                ('ooto_status', models.CharField(max_length=100, null=True, verbose_name=b'Out of the Office Status', blank=True)),
+                ('ooto_start_date', models.DateField(max_length=100, null=True, verbose_name=b'Out of the Office Status Start Date', blank=True)),
+                ('ooto_end_date', models.DateField(max_length=100, null=True, verbose_name=b'Out of the Office Status End Date', blank=True)),
                 ('location', models.ManyToManyField(to='location.Location')),
             ],
             options={
@@ -39,7 +68,11 @@ class Migration(migrations.Migration):
             name='PersonStatus',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('modified', models.DateTimeField(auto_now=True)),
+                ('deleted', models.BooleanField(default=False)),
                 ('name', models.CharField(unique=True, max_length=100)),
+                ('description', models.CharField(default=b'one', max_length=100, choices=[(b'one', b'one'), (b'two', b'two')])),
             ],
             options={
                 'abstract': False,
@@ -68,5 +101,15 @@ class Migration(migrations.Migration):
             model_name='person',
             name='status',
             field=models.ForeignKey(to='person.PersonStatus'),
+        ),
+        migrations.AddField(
+            model_name='nextapprover',
+            name='person',
+            field=models.OneToOneField(to='person.Person'),
+        ),
+        migrations.AddField(
+            model_name='coveringuser',
+            name='person',
+            field=models.OneToOneField(to='person.Person'),
         ),
     ]
