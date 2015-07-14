@@ -16,3 +16,6 @@ SaltStack and work with Bill on putting it on the server
     objects = BaseManager()
     objects_all = models.Manager()
 
+6. for ``/util/json_settings/role.json`` are "accept_assign" or "authorized_amount"
+needed b/c these fields exist in the Person?
+

@@ -15,26 +15,71 @@ from django.core.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
 
 from location.models import LocationLevel, Location
+from role.models import Category
 from util import choices
 from util.models import AbstractName, MainSetting, CustomSetting, BaseModel
 
 
 @python_2_unicode_compatible
-class Role(models.Model):
-
-    CONTRACTOR = 'contractor'
-    LOCATION = 'location'
-    ROLE_TYPE_CHOICES = (
-        (CONTRACTOR, CONTRACTOR),
-        (LOCATION, LOCATION),
-    )
+class Role(BaseModel):
     # keys
-    group = models.OneToOneField(Group)
+    group = models.OneToOneField(Group) # each ``Group`` has a name
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29,
-                                choices=ROLE_TYPE_CHOICES,
-                                default=LOCATION)
+                                 choices=choices.ROLE_TYPE_CHOICES,
+                                 default=choices.ROLE_TYPE_CHOICES[0][0])
+    # required
     
+    # optional
+    dashboad_text = models.CharField(max_length=255, blank=True)
+    create_all = models.BooleanField(blank=True, default=False,
+        help_text='Allow document creation for all locations')
+    modules = models.TextField(blank=True)
+    dashboad_links = models.TextField(blank=True)
+    tabs = models.TextField(blank=True)
+    password_min_length = models.PositiveIntegerField(blank=True, default=6)
+    password_history_length = models.PositiveIntegerField(blank=True, null=True,
+        help_text="Will be NULL if password length has never been changed.")
+    password_char_types = models.CharField(max_length=100,
+        help_text="Password characters allowed") # TODO: This field will need to be accessed when someone for 
+                                                 # the role saves their PW to validate it.
+    password_expire = models.PositiveIntegerField(
+        help_text="Number of days after setting password that it will expire.")
+    password_expire_alert = models.BooleanField(blank=True, default=True,
+        help_text="Does the Person want to be alerted 'pre pw expiring'. Alerts start 3 days before password expires.")
+    proxy_set = models.BooleanField(blank=True, default=False,
+        help_text="Users in this Role can set their own proxy")
+    # Default Settings
+    # that set the Person settings for these fields when first
+    # adding a Person to a Role
+    default_accept_assign = models.BooleanField(blank=True, default=True)
+    accept_assign = models.BooleanField(blank=True)
+    default_accept_notify = models.BooleanField(blank=True, default=True)
+    accept_notify = models.BooleanField(blank=True)
+    default_authorized_amount = models.BooleanField(blank=True, default=True)
+    authorized_amount = models.PositiveIntegerField(blank=True)
+    # Approvals
+    allow_approval = models.BooleanField(blank=True, default=False)
+    proxy_approval_bypass = models.BooleanField(blank=True, default=False)
+    # Work Orders
+    wo_notes = models.BooleanField(blank=True, default=False)
+    wo_edit_closeout = models.BooleanField(blank=True, default=False)
+    wo_show_inactive = models.BooleanField(blank=True, default=False)
+    wo_show_tkt_attach = models.BooleanField(blank=True, default=False)
+    wo_allow_backdate = models.BooleanField(blank=True, default=False)
+    wo_days_backdate = models.PositiveIntegerField(blank=True)
+    # Invoices
+    inv_options = models.CharField(max_length=255, choices=choices.INVOICE_CHOICES,
+        default=choices.INVOICE_CHOICES[0][0])
+    inv_wo_status
+    inv_wait
+    inv_select_assign
+    inv_autoapprove
+    inv_max_approval
+    inv_req_attach
+    inv_close_wo
+
+
     # use as a normal Django Manager() to access related setting objects.
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
@@ -52,6 +97,10 @@ class Role(models.Model):
     @property 
     def _name(self):
         return self.__name__.lower()
+
+
+class ProxyRole(BaseModel):
+    role = models.ForeignKey(Role)
 
 
 class PersonStatus(AbstractName):
