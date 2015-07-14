@@ -11,7 +11,7 @@ from django.contrib.auth.models import Group
 
 from rest_framework import serializers
 
-from location.models import LocationLevel
+from location.models import LocationLevel, Location
 from person.models import PersonStatus, Person, Role
 from contact.serializers import (
     PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer
@@ -69,6 +69,29 @@ PERSON_FIELDS = (
     'middle_initial',
     'last_name',
     )
+
+class PersonCreateSerializer(serializers.ModelSerializer):
+    '''
+    Only required fields.
+    '''
+    role = serializers.PrimaryKeyRelatedField(
+        queryset=Role.objects.all(),
+        required=False
+        )
+    status = serializers.PrimaryKeyRelatedField(
+        queryset=PersonStatus.objects.all(),
+        required=False
+        )
+    location = serializers.PrimaryKeyRelatedField(
+        queryset=Location.objects.all(),
+        required=False
+        )
+    class Meta:
+        model = Person
+        write_only_fields = ('password',)
+        fields = ('username', 'email', 'password', 'role', 'status', 'location',
+            'authorized_amount', 'authorized_amount_currency',)
+
 
 class PersonListSerializer(serializers.ModelSerializer):
 

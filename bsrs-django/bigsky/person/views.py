@@ -52,11 +52,15 @@ class PersonViewSet(viewsets.ModelViewSet):
         serializer = PersonListSerializer(self.queryset, many=True)
         return Response(serializer.data)
 
-    # def create(self, request):
-    #     pass
+    def create(self, request):
+        serializer = PersonCreateSerializer(data=request.DATA)
+        if serializer.is_valid():
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
 
     def retrieve(self, request, pk=None):
-        person = get_object_or_404(self.queryset, pk=pk)
+        person = Person.objects.get_object_or_404(pk=pk)
         serializer = PersonSerializer(person)
         return Response(serializer.data)
 

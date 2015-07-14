@@ -62,10 +62,6 @@ class PersonStatus(AbstractName):
 @python_2_unicode_compatible
 class Person(User):
     '''
-    Addit. required fields: `first_name` and `last_name` will be required 
-    fields even though they aren't in the default Django User models, so 
-    enforce this using as "pre_save @receiver signal"
-
     "pw" : password
     "ooto" : out-of-the-office
     '''
@@ -77,8 +73,8 @@ class Person(User):
     authorized_amount = models.PositiveIntegerField()
     authorized_amount_currency = models.CharField(max_length=25, choices=choices.CURRENCY_CHOICES,
         default=choices.CURRENCY_CHOICES[0][0])
-    accept_assign = models.BooleanField(default=True)
-    accept_notify = models.BooleanField(default=True)
+    accept_assign = models.BooleanField(default=True, blank=True)
+    accept_notify = models.BooleanField(default=True, blank=True)
     # optional
     employee_id = models.CharField(max_length=100, blank=True, null=True)
     middle_initial = models.CharField(max_length=30, blank=True, null=True)
@@ -113,18 +109,6 @@ class CoveringUser(BaseModel):
     '''Person that covers for another Person when they are 
      out-of-the-office.'''
     person = models.OneToOneField(Person)
-
-
-@receiver(pre_save, sender=settings.AUTH_USER_MODEL)
-def user_pre_save(sender, instance=None, created=False, **kwargs):
-    # Avoid this error for the time being in test
-    if settings.DEBUG:
-        instance.first_name = instance.username
-        instance.last_name = instance.last_name
-        instance.save()
-        
-    if not instance.first_name or instance.last_name:
-        raise ValidationError("Person first and last name is required.")
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
