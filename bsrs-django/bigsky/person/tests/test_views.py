@@ -4,6 +4,8 @@ from django.test import TestCase
 from django.http import JsonResponse
 from django.contrib.auth.models import User, ContentType, Group, Permission
 
+from rest_framework import status
+from rest_framework.test import APITestCase
 from model_mommy import mommy
 
 from contact.models import Address, PhoneNumber, Email
@@ -12,7 +14,8 @@ from person.models import Person, Role, PersonStatus
 from person.tests.factory import PASSWORD, create_person
 
 
-class PersonViewSetCreateTests(TestCase):
+class PersonViewSetDataChangeTests(APITestCase):
+    # Test: create, update, partial_update
 
     def setUp(self):
         self.password = PASSWORD
@@ -34,8 +37,25 @@ class PersonViewSetCreateTests(TestCase):
         data = {"username":"one","password":"one","email":"","role":1,"status":1,
         "location":1,"authorized_amount":204,"authorized_amount_currency":"usd"}
         response = self.client.post('/api/person/person/', data, format='json')
-        print response
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(Person.objects.all()), 2)
+
+    def test_partial_update(self):
+        # email pre check before test
+        new_email = 'new@mail.com'
+        # get a person
+        response = self.client.get('/api/person/person/1/')
+        person = json.loads(response.content)
+        self.assertNotEqual(person['email'], new_email)
+        # change email and send update
+        person.update({'email':new_email})
+        response = self.client.patch('/api/person/person/1/', person, format='json')
+        print response
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # get back the same person, and confirm that their email is changed in the DB
+        response = self.client.get('/api/person/person/1/')
+        person = json.loads(response.content)
+        self.assertEqual(person['email'], new_email)
 
 
 class PersonViewSetTests(TestCase):
@@ -68,8 +88,8 @@ class PersonViewSetTests(TestCase):
         self.assertEqual(person['username'], self.person1.username)
 
     def test_retrieve(self):
-        # setup
         response = self.client.get('/api/person/person/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         person = json.loads(response.content)
         self.assertEqual(person['username'], self.person1.username)
 
