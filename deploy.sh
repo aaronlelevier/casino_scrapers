@@ -2,7 +2,7 @@
 
 echo "DEPLOY STARTED!"
 
-sudo killall -s INT uwsgi
+killall -s INT uwsgi
 
 NEW_UUID=$(( ( RANDOM  )  + 1 ))
 
