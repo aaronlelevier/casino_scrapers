@@ -12,12 +12,16 @@ export default Ember.Route.extend({
     },
     model: function() {
         return {};
+    },
+    actions: {
+        cancel_modal: function() {
+            $('.t-modal').modal('hide');
+        }
     }
-  //need to figure out how to output errors on screen
-  // actions: {
-  //   //application error resource -- still not working; default route defined with wildcard in router
-  //   error: function(error) {
-  //     this.transitionTo('application-error', error);
-  //   }
-  // }
+    //need to figure out how to output errors on screen
+    //   //application error resource -- still not working; default route defined with wildcard in router
+    //   error: function(error) {
+    //     this.transitionTo('application-error', error);
+    //   }
+    // }
 });

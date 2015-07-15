@@ -6,6 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import StateFactory from 'bsrs-ember/tests/helpers/states';
+import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
 const PEOPLE_URL = "/admin/people";
 const DETAIL_URL = "/admin/people/1";
@@ -110,5 +111,48 @@ test('when you change a related phone numbers type it will be persisted correctl
   click('.t-save-btn');
   andThen(function() {
     assert.equal(currentURL(),PEOPLE_URL);
+  });
+});
+
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', function(assert) {
+  visit(DETAIL_URL);
+  fillIn('.t-person-username', 'llcoolj');
+  click('.t-cancel-btn');
+  andThen(function() {
+      waitFor(function() {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-modal').is(':visible'), true);
+        assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes');
+      });
+  });
+  click('.t-modal-footer .t-modal-cancel-btn');
+  andThen(function() {
+      waitFor(function() {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-person-username').val(), 'llcoolj');
+        assert.equal(find('.t-modal').is(':hidden'), true);
+      });
+  });
+});
+
+test('toran when user changes an attribute and clicks cancel we prompt them with a modal and they roll back', function(assert) {
+  // var done = assert.async();
+  visit(DETAIL_URL);
+  fillIn('.t-person-username', 'llcoolj');
+  click('.t-cancel-btn');
+  andThen(function() {
+      waitFor(function() {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-modal').is(':visible'), true);
+        assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
+      });
+  });
+  click('.t-modal-footer .t-modal-rollback-btn');
+  andThen(function() {
+      waitFor(function() {
+        assert.equal(currentURL(), PEOPLE_URL);
+        // assert.equal(find('.t-person-username').val(), 'llcoolj');
+        // assert.equal(find('.t-modal').is(':hidden'), true);
+      });
   });
 });

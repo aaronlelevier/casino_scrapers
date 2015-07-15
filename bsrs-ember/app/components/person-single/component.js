@@ -4,6 +4,7 @@ import inject from 'bsrs-ember/utilities/inject';
 export default Ember.Component.extend({
     repository: inject('person'),
     classNames: ['wrapper', 'form'],
+    attemptedTransition: '',
     actions: {
         savePerson: function() {
             var model = this.get('model');
@@ -13,7 +14,8 @@ export default Ember.Component.extend({
             });
         },
         cancelPerson: function() {
-            this.sendAction('cancelPerson');
+            var model = this.get('model');
+            this.sendAction('cancelPerson', model);
         }
     }
 });

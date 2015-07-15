@@ -18,12 +18,12 @@ export default Ember.Route.extend({
         //Rip this out and make a repository
         var address_types = [
             AddressType.create({
-              id: 1,
-              name: 'admin.address_type.office'
+                id: 1,
+                name: 'admin.address_type.office'
             }),
             AddressType.create({
-              id: 2,
-              name: 'admin.address_type.shipping'
+                id: 2,
+                name: 'admin.address_type.shipping'
             })
         ];
 
@@ -52,10 +52,21 @@ export default Ember.Route.extend({
         controller.set('address_types', hash.address_types);
     },
     actions: {
+        willTransition: function(transition) {
+            var controller = this.get('controller');
+            var model = this.currentModel.model;
+            console.log('WAT WAT WAT');
+            if(model.get('isDirty')) {
+                $('.t-modal').modal('show');
+                this.trx.attemptedTransition = transition;
+                this.trx.attemptedTransitionModel = model;
+                transition.abort();
+            }
+        },
         savePerson: function() {
             this.transitionTo('admin.people');
         },
-        cancelPerson: function() {
+        cancelPerson: function(model) {
             this.transitionTo('admin.people');
         }
     }
