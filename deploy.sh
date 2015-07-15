@@ -2,6 +2,8 @@
 
 echo "DEPLOY STARTED!"
 
+sudo killall -s INT uwsgi
+
 NEW_UUID=$(( ( RANDOM  )  + 1 ))
 
 cd /www/django/releases
@@ -14,8 +16,8 @@ venv/bin/pip install -r bsrs-django/requirements.txt
 
 cd bsrs-django/bigsky
 
-python manage.py migrate --settings=bigsky.settings.ci
-uwsgi --http :8000 --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/venv
+../../venv/bin/python manage.py migrate --settings=bigsky.settings.ci
+uwsgi --http :8000 --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/venv --daemonize /tmp/bigsky.log
 
 echo "DEPLOY SUCCESSFUL!"
 exit 0
