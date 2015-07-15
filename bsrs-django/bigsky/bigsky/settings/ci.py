@@ -7,7 +7,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=contact,location,person,role,session,util',
+    '--cover-package=contact,location,order,person,role,session,util',
 ]
 
 DEBUG = True
