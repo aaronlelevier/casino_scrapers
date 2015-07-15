@@ -55,18 +55,19 @@ export default Ember.Route.extend({
         willTransition: function(transition) {
             var controller = this.get('controller');
             var model = this.currentModel.model;
-            console.log('WAT WAT WAT');
             if(model.get('isDirty')) {
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;
                 transition.abort();
+            }else{
+                $('.t-modal').modal('hide');
             }
         },
         savePerson: function() {
             this.transitionTo('admin.people');
         },
-        cancelPerson: function(model) {
+        cancelPerson: function() {
             this.transitionTo('admin.people');
         }
     }
