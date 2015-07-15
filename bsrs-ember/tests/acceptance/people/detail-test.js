@@ -13,11 +13,12 @@ const DETAIL_URL = "/admin/people/1";
 const SUBMIT_BTN = ".submit_btn";
 const API_PREFIX = "/" + config.APP.NAMESPACE;
 
-var application;
+var application, store;
 
 module('Acceptance | people-detail', {
   beforeEach: function() {
     application = startApp();
+    store = application.__container__.lookup('store:main');
     var endpoint = API_PREFIX + PEOPLE_URL + "/";
     xhr( endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.list() );
     xhr( endpoint + "1/","GET",null,{},200,PEOPLE_FIXTURES.detail(1) );
@@ -94,7 +95,7 @@ test('clicking cancel button will take from detail view to list view', function(
     assert.equal(currentURL(),DETAIL_URL);
   });
 
-  click('.t-cancel');
+  click('.t-cancel-btn');
 
   andThen(function() {
     assert.equal(currentURL(), PEOPLE_URL);
@@ -122,7 +123,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       waitFor(function() {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-modal').is(':visible'), true);
-        assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes');
+        assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
       });
   });
   click('.t-modal-footer .t-modal-cancel-btn');
@@ -143,7 +144,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       waitFor(function() {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-modal').is(':visible'), true);
-        assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
       });
   });
   click('.t-modal-footer .t-modal-rollback-btn');
@@ -151,7 +151,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
       waitFor(function() {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-modal').is(':hidden'), true);
-        // assert.equal(find('.t-person-username').val(), 'llcoolj');
+        var person = store.find('person', 1);
+        assert.equal(person.get('username'), 'akrier');
       });
   });
 });

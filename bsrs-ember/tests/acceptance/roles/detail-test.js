@@ -72,7 +72,7 @@ test('clicking cancel button will take from detail view to list view', function(
     assert.equal(currentURL(),DETAIL_URL);
   });
 
-  click('.t-cancel');
+  click('.t-cancel-btn');
 
   andThen(function() {
     assert.equal(currentURL(), LIST_URL);

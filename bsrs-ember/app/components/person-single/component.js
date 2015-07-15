@@ -10,6 +10,7 @@ export default Ember.Component.extend({
             var model = this.get('model');
             var repository = this.get('repository');
             repository.save(model).then(() => {
+                model.save();
                 this.sendAction('savePerson');
             });
         },
