@@ -6,7 +6,7 @@
     <span class="input-group-btn">
       <select class="t-multi-phone-type form-control phonenumber-type" onchange={{action (action "changed" phonenumber) value="target.value"}}>
         {{#each types as |phoneNumberType|}}
-          <option value={{phoneNumberType.id}} selected={{is-equal phonenumber.type.id phoneNumberType.id}}>{{t phoneNumberType.name}}</option>
+          <option value={{phoneNumberType.id}} selected={{is-equal phonenumber.type phoneNumberType.id}}>{{t phoneNumberType.name}}</option>
         {{/each}}
       </select>
     </span>

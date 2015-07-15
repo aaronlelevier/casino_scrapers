@@ -3,10 +3,15 @@ import Ember from 'ember';
 export default Ember.Route.extend({
     beforeModel: function() {
         var store = this.get('store');
-        var configuration = $('[data-preload-phonenumber_types]').html();
-        var phonenumber_types = JSON.parse(configuration);
-        phonenumber_types.forEach(function(model) {
+        var phone_number_config = $('[data-preload-phonenumber_types]').html();
+        var address_config = $('[data-preload-address_types]').html();
+        var phone_number_types = JSON.parse(phone_number_config);
+        var address_types = JSON.parse(address_config);
+        phone_number_types.forEach((model) => {
             store.push('phonenumber-type', model);
+        });
+        address_types.forEach((model) => {
+            store.push('address-type', model);
         });
         return {};
     },

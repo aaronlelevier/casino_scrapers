@@ -63,8 +63,8 @@ test('click add btn will append blank entry to list of entries and binds value t
   //make sure there is now 1 empty input
   assert.equal($component.find('.t-del-btn').length, 1);
   assert.equal($component.find('.t-address-type').length, 1);
-  assert.equal($component.find('.t-select-state').length, 1);
-  assert.equal($component.find('.t-select-state option').length, 51);
+  assert.equal($component.find('.t-address-state').length, 1);
+  assert.equal($component.find('.t-address-state option').length, 51);
 
   // make sure that we also added a record to the model
   assert.equal(model.get('addresses').length, 1);

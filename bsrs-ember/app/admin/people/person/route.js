@@ -6,8 +6,10 @@ import PhoneNumberType from 'bsrs-ember/models/phonenumber-type';
 export default Ember.Route.extend({
     repository: inject('person'),
     state_repository: inject('state'),
-    phonenumber_repo: inject('phonenumber'),
-    phonenumber_type_repo: inject('phonenumber-type'),
+    phone_number_repo: inject('phonenumber'),
+    phone_number_type_repo: inject('phonenumber-type'),
+    address_repo: inject('address'),
+    address_type_repo: inject('address-type'),
     init: function() {
         var comp = this.get("tabDoc");
         this.set('editPrivilege', true);
@@ -15,32 +17,25 @@ export default Ember.Route.extend({
     model: function(params) {
         var state_repository = this.get('state_repository');
 
-        //Rip this out and make a repository
-        var address_types = [
-            AddressType.create({
-                id: 1,
-                name: 'admin.address_type.office'
-            }),
-            AddressType.create({
-                id: 2,
-                name: 'admin.address_type.shipping'
-            })
-        ];
+        var repository = this.get('repository'),
+            person = repository.findById(params.person_id);
 
-        var repository = this.get('repository');
-        var person = repository.findById(params.person_id);
+        var phone_number_repo = this.get('phone_number_repo'),
+            phone_numbers = phone_number_repo.findByPersonId(params.person_id),
+            phone_number_type_repo = this.get('phone_number_type_repo'),
+            phone_number_types = phone_number_type_repo.find(),
 
-        var phonenumber_repo = this.get('phonenumber_repo');
-        var phone_numbers = phonenumber_repo.findByPersonId(params.person_id);
-
-        var phonenumber_type_repo = this.get('phonenumber_type_repo');
-        var phonenumber_types = phonenumber_type_repo.find();
+            address_repo = this.get('address_repo'),
+            addresses = address_repo.findByPersonId(params.person_id),
+            address_type_repo = this.get('address_type_repo'),
+            address_types = address_type_repo.find();
 
         return Ember.RSVP.hash({
             model: person,
-            phoneNumberTypes: phonenumber_types,
+            phoneNumberTypes: phone_number_types,
             phone_numbers: phone_numbers,
             state_list: state_repository.find(),
+            addresses: addresses,
             address_types: address_types
         });
     },
@@ -49,6 +44,7 @@ export default Ember.Route.extend({
         controller.set('phoneNumberTypes', hash.phoneNumberTypes);
         controller.set('phone_numbers', hash.phone_numbers);
         controller.set('state_list', hash.state_list);
+        controller.set('addresses', hash.addresses);
         controller.set('address_types', hash.address_types);
     },
     actions: {

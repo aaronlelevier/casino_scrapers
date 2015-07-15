@@ -1,12 +1,12 @@
 {{#each model as |address|}}
-  <div class="input-group-vertical">
+  <div class="input-group-vertical t-address-group">
     <div class="input-group" style="width: 100%">
       <span class="input-group-btn">
         <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' address}}>{{fa-icon "minus"}}</button>
       </span>
       <select class="t-address-type form-control" onchange={{action (action "changeType" address) value="target.value"}}>
         {{#each address_types as |address_type|}}
-          <option value={{address_type.id}} selected={{is-equal address.type.id address_type.id}}>{{t address_type.name}}</option>
+          <option value={{address_type.id}} selected={{is-equal address.type address_type.id}}>{{t address_type.name}}</option>
         {{/each}}
       </select>
     </div>
@@ -16,29 +16,25 @@
     </div>
     <div class="input-group">
       <span class="input-group-addon address-label">{{t "admin.address.city"}}</span>
-      {{input type="text" value=address.city class="form-control" placeholder=(t "admin.address.city")}}
+      {{input type="text" value=address.city class="form-control t-address-city" placeholder=(t "admin.address.city")}}
     </div>
     <div class="input-group">
       <span class="input-group-addon address-label">{{t "admin.address.state"}}</span>
-      <select class="form-control t-select-state" onchange={{action (action "changeState" address) value="target.value"}}>
+      <select class="form-control t-address-state" onchange={{action (action "changeState" address) value="target.value"}}>
         {{#each state_list as |state_single|}}
           <option value={{state_single.id}} selected={{is-equal address.state.id state_single.id}}>{{state_single.name}}</option>
         {{/each}}
       </select>
-      {{! select-dynamic modelType="states"}}
-      {{!-- input type="text" id="state" value=address.state class="form-control" placeholder=(t "admin.address.state") --}}
-
     </div>
     <div class="input-group">
       <span class="input-group-addon address-label">{{t "admin.address.postal_code"}}</span>
-      {{input type="text" value=address.postal_code class="form-control" placeholder=(t "admin.address.postal_code")}}
+      {{input type="text" value=address.postal_code class="form-control t-address-postal-code" placeholder=(t "admin.address.postal_code")}}
     </div>
     <div class="input-group">
       <span class="input-group-addon address-label">{{t "admin.address.country"}}</span>
-      <select class="form-control">
+      <select class="form-control t-address-country">
         <option>United States</option>
       </select>
-      {{!--input type="text" id="country" value=address.country class="form-control" placeholder=(t "admin.address.country")--}}
     </div>
   </div>
 
