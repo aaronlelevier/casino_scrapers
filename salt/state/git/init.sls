@@ -19,4 +19,4 @@ git-website-prod:
         - require:
             - sls: keys
             - pkg: git
-            - ssh_known_hosts: bitbucket.org
+            - ssh_known_hosts: github.org
