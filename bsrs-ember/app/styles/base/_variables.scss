@@ -24,7 +24,7 @@ $bgColor: $light;
 //shadows
 $shadowColor: $medGray;
 //Font variables
-$fontfamily: "Helvetica Neue", Helvetica, Arial, sans-serif;
+$fontfamily: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 // Layout
 $menuHeight: 42px;
@@ -45,6 +45,14 @@ $mobileDeviceWidth: 20px;
 
 // Borders
 $borderStyle: 1px solid $borderColor;
+$borderRadius: 2px;
+$borderRadiusTopLeft: 2px 0 0 0;
+$borderRadiusTop: 2px 2px 0 0;
+$borderRadiusTopRight: 0 2px 0 0;
+$borderRadiusRight: 0 2px 2px 0;
+$borderRadiusBottomRight: 0 0 2px 0;
+$borderRadiusBottom: 0 0 2px 2px;
+$borderRadiusBottomLeft: 0 0 0 2px;
 
 //checkbox border when highlighted - a bit darker
 $fieldBorder: #CCC;

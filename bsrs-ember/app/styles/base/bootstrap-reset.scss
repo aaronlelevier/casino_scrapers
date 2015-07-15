@@ -18,8 +18,8 @@ input[type="text"]:disabled {
 
 .form-control{
 	// border-width: 0 0 1px;
-	// border-radius: 0;
-	// border-color: $gray;
+	border-radius: $borderRadius;
+	border-color: $gray;
 	&:hover{
 		// border-color: $hoverColor;
 	}
@@ -28,7 +28,10 @@ input[type="text"]:disabled {
 	}
 
 }
-
+.btn-default,
+.input-group-addon{
+	border-color: $gray;
+}
 //remove browser default
 .btn:focus,.btn:active {
    outline: none !important;
@@ -56,6 +59,7 @@ fieldset[disabled] .form-control,
 .open > .btn-default.dropdown-toggle:focus,
 .open > .btn-default.dropdown-toggle.focus{
 	background-color: $light;
+	border-color: $gray
 }
 .btn-default:active,
 .btn-default.active,
