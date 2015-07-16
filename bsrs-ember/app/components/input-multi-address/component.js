@@ -15,17 +15,24 @@ export default Ember.Component.extend({
     },
     changeType: function(address, val) {
         Ember.run(function() {
-            console.log("New Type: " + val);
-            address.set("type.id", val);
+            var address_type = parseInt(val, 10);
+            address.set("type", address_type);
         });
-        this.get('target').send('changeType', val); //?? when is this used?
+        //this.get('target').send('changeType', val); //?? when is this used?
     },
     changeState: function(state, val) {
         Ember.run(function() {
-            console.log("New State: " + val);
-            state.set("state.id", val);
+            var state_id = parseInt(val, 10);
+            state.set("state", state_id);
         });
-        this.get('target').send('changeState', val); //?? when is this used?
+        //this.get('target').send('changeState', val); //?? when is this used?
+    },
+    changeCountry: function(country, val) {
+        Ember.run(function() {
+            var country_id = parseInt(val, 10);
+            country.set("country", country_id);
+        });
+        //this.get('target').send('changeState', val); //?? when is this used?
     }
   }//action
 });

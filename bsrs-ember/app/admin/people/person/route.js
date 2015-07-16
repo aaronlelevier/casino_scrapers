@@ -5,7 +5,8 @@ import PhoneNumberType from 'bsrs-ember/models/phonenumber-type';
 
 export default Ember.Route.extend({
     repository: inject('person'),
-    state_repository: inject('state'),
+    state_repo: inject('state'),
+    country_repo: inject('country'),
     phone_number_repo: inject('phonenumber'),
     phone_number_type_repo: inject('phonenumber-type'),
     address_repo: inject('address'),
@@ -15,16 +16,14 @@ export default Ember.Route.extend({
         this.set('editPrivilege', true);
     },
     model: function(params) {
-        var state_repository = this.get('state_repository');
-
-        var repository = this.get('repository'),
-            person = repository.findById(params.person_id);
-
-        var phone_number_repo = this.get('phone_number_repo'),
+        var country_repo = this.get('country_repo'),
+            state_repo = this.get('state_repo'),
+            repository = this.get('repository'),
+            person = repository.findById(params.person_id),
+            phone_number_repo = this.get('phone_number_repo'),
             phone_numbers = phone_number_repo.findByPersonId(params.person_id),
             phone_number_type_repo = this.get('phone_number_type_repo'),
             phone_number_types = phone_number_type_repo.find(),
-
             address_repo = this.get('address_repo'),
             addresses = address_repo.findByPersonId(params.person_id),
             address_type_repo = this.get('address_type_repo'),
@@ -34,7 +33,8 @@ export default Ember.Route.extend({
             model: person,
             phoneNumberTypes: phone_number_types,
             phone_numbers: phone_numbers,
-            state_list: state_repository.find(),
+            countries: country_repo.find(),
+            state_list: state_repo.find(),
             addresses: addresses,
             address_types: address_types
         });
@@ -44,6 +44,7 @@ export default Ember.Route.extend({
         controller.set('phoneNumberTypes', hash.phoneNumberTypes);
         controller.set('phone_numbers', hash.phone_numbers);
         controller.set('state_list', hash.state_list);
+        controller.set('countries', hash.countries);
         controller.set('addresses', hash.addresses);
         controller.set('address_types', hash.address_types);
     },

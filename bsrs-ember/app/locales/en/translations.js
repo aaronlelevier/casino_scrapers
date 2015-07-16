@@ -131,19 +131,31 @@ export default {
 				address: "Address"
 			},
             status: {
-                active: "Active",  
+                active: "Active",
                 inactive: "Inactive"
             },
+		},
+		phone:{
+			number: "Phone Number",
+			numbers: "Phone Numbers",
+			add: "Add Phone Number"
 		},
 		address: {
 			label: "Type",
 			address: "Street Address",
 			city: "City",
-			state: "State",
+			state: {
+				one: "State",
+				other: "States",
+				select: "Select a State"
+			},
 			postal_code: "Zip",
-			country: "Country",
-			add: "Add Address",
-			delete: "Delete Address"
+			country: {
+				one: "Country",
+				other: "Countries",
+				select: "Select a Country"
+			},
+			add: "Add Address"
 		},
 
 		location: {

@@ -17,9 +17,9 @@ input[type="text"]:disabled {
 
 
 .form-control{
-	// border-width: 0 0 1px;
 	border-radius: $borderRadius;
 	border-color: $gray;
+	color: $dark;
 	&:hover{
 		// border-color: $hoverColor;
 	}

@@ -5,7 +5,6 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
-import StateFactory from 'bsrs-ember/tests/helpers/states';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
 const PEOPLE_URL = "/admin/people";
@@ -22,10 +21,6 @@ module('Acceptance | people-detail', {
     var endpoint = API_PREFIX + PEOPLE_URL + "/";
     xhr( endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.list() );
     xhr( endpoint + "1/","GET",null,{},200,PEOPLE_FIXTURES.detail(1) );
-
-    // Need to convert to the new new
-    xhr( API_PREFIX + "/states/","GET",null,{},200,StateFactory.list() );
-
   },
   afterEach: function() {
     Ember.run(application, 'destroy');
@@ -66,14 +61,14 @@ test('when you deep link to the person detail view you get bound attrs', functio
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), 'San Diego');
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), 5);
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), '92123');
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), 'United States');
+    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), 1);
 
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), '2');
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address').val(), '123 PB');
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), 'San Diego');
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), 5);
     assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), '92100');
-    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), 'United States');
+    assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), 1);
 
     assert.equal(find('.t-person-auth_amount').val(), '50000.0000');
   });
@@ -81,8 +76,8 @@ test('when you deep link to the person detail view you get bound attrs', functio
   var url = API_PREFIX + DETAIL_URL + "/";
   var response = PEOPLE_FIXTURES.detail(1);
   var phone_numbers = [{id: 3, number: '858-715-5026', type: 1}, {id: 4, number: '858-715-5056', type: 2}];
-  var addresses = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: {id: 5, name:'California'}, postal_code: '92123', country: {id: 1, name:'United States'}},
-                   {id: 2, type: 2, address: '123 PB', city: 'San Diego', state: {id:5, name:'California'}, postal_code: '92100', country: {id: 1, name: 'United States'}}];
+  var addresses = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: {id: 5, name:'California'}, postal_code: '92123', country: 1},
+                   {id: 2, type: 2, address: '123 PB', city: 'San Diego', state: {id:5, name:'California'}, postal_code: '92100', country: 1}];
   var payload = PEOPLE_FIXTURES.put(1, 'llcoolj', 'Ice', 'Cube', 'mastermind', '1122', '0.000', phone_numbers, addresses);
   xhr( url,'PUT',payload,{},200,response );
 
@@ -124,8 +119,8 @@ test('when you change a related phone numbers type it will be persisted correctl
   var url = API_PREFIX + DETAIL_URL + "/";
   //phone_number fixture type for id:3 is 1 in the fixture data
   var phone_numbers = [{id: 3, number: '858-715-5026', type: 2}, {id: 4, number: '858-715-5056', type: 2}];
-  var addresses = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: {id: 5, name:'California'}, postal_code: '92123', country: {id: 1, name:'United States'}},
-                   {id: 2, type: 2, address: '123 PB', city: 'San Diego', state: {id:5, name:'California'}, postal_code: '92100', country: {id: 1, name: 'United States'}}];
+  var addresses = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: {id: 5, name:'California'}, postal_code: '92123', country: 1},
+                   {id: 2, type: 2, address: '123 PB', city: 'San Diego', state: {id:5, name:'California'}, postal_code: '92100', country: 1}];
   var payload = PEOPLE_FIXTURES.put(1, null, null, null, null, null, null, phone_numbers, addresses);
   fillIn('.t-multi-phone-type:eq(0)', 2);
 

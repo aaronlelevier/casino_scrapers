@@ -19,7 +19,7 @@ var generatePerson = function(i) {
     }
 }//generatePerson
 
-/* important keys */ 
+/* important keys */
 var phone_number_types = [];
 var phone_numbers = [
 {
@@ -53,10 +53,7 @@ var addresses = [
         'name': 'California'
     },
     'postal_code': '92123',
-    'country': {
-        'id': 1,
-        'name': 'United States'
-    }
+    'country': 1
 },
 {
     'id': 2,
@@ -71,10 +68,7 @@ var addresses = [
         'name': 'California'
     },
     'postal_code': '92100',
-    'country': {
-        'id': 1,
-        'name': 'United States'
-    }
+    'country': 1
 }
 ];
  /* END important keys */
@@ -82,7 +76,7 @@ var addresses = [
 var PEOPLE_FACTORY = {
     list: function() {
         var response = [];
-        for (var i=1; i <= 5; i++) { 
+        for (var i=1; i <= 5; i++) {
             response.push(generatePerson(i));
         }
         return {'count':3,'next':null,'previous':null,'results': response};
@@ -110,16 +104,14 @@ var PEOPLE_FACTORY = {
         response.emails= [];
         return response;
     }
-
 };//People_Factory
 
 
 if (typeof window === 'undefined') {
-    module.exports = PEOPLE_FACTORY; 
+    module.exports = PEOPLE_FACTORY;
 } else {
     define('bsrs-ember/vendor/people_fixtures', ['exports'], function (exports) {
         'use strict';
         return PEOPLE_FACTORY;
     });
 }
-

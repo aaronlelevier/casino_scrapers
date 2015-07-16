@@ -12,19 +12,19 @@ nav.userMenu{
 
     /* notification incrementer */
     span.count{
-      position: absolute;
-      top: 4px;
-      left: 26px;
-      background: $orange;
-      height: 16px;
-      min-width: 16px;
-      border-radius: 8px;
-      font-size: 0.8em;
-      padding: 0.5px;
-      margin: 0;
-      line-height: 16px;
-      text-align: center;
-      z-index: 1
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        background: #e67e22;
+        height: 16px;
+        min-width: 16px;
+        border-radius: 8px;
+        font-size: 0.8em;
+        padding: 0.5px 5px;
+        margin: 0;
+        line-height: 14px;
+        text-align: center;
+        z-index: 1;
     }//.count
     @media screen and (max-width: $mobileDeviceWidth){
       min-height: $menuHeight;

@@ -7,6 +7,6 @@ var NAMESPACE = config.APP.NAMESPACE;
 export default Ember.Object.extend({
     find: function() {
         var store = this.get('store');
-        return store.find("state");
+        return store.find("country");
     }
 });

@@ -43,8 +43,12 @@
 			{{/form-group}}
 
 			{{#form-group title="admin.person.label.address" for="addresses"}}
-      {{log addresses}}
-				{{input-multi-address model=addresses state_list=state_list address_types=address_types}}
+				{{input-multi-address
+					model=addresses
+					state_list=state_list
+					countries=countries
+					address_types=address_types
+				}}
 			{{/form-group}}
 
 			{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}

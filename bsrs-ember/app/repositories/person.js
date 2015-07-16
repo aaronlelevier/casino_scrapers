@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment'; 
+import config from 'bsrs-ember/config/environment';
 
 var API_HOST = config.APP.API_HOST;
 var NAMESPACE = config.APP.NAMESPACE;
@@ -69,7 +69,7 @@ var create_people_with_nested = function(model, store) {
         'role': model.get('role'),
         'acceptassign': model.get('acceptassign'),
         'phone_numbers': phoneNumbers,
-        'addresses': addresses, 
+        'addresses': addresses,
         'emails': model.get('emails')
     };
 };
