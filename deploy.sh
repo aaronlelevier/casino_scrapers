@@ -11,6 +11,9 @@ git clone git@github.com:bigskytech/bsrs.git $NEW_UUID
 cd $NEW_UUID
 cd bsrs-ember/
 npm install
+
+killall -s INT uwsgi
+
 ./node_modules/ember-cli/bin/ember build --env=production
 cd ../
 
@@ -30,7 +33,6 @@ fi
 cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/index.html templates
 
-killall -s INT uwsgi
 uwsgi --http :8000 --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/venv --daemonize /tmp/bigsky.log
 
 WSGI_EXIT=$?
