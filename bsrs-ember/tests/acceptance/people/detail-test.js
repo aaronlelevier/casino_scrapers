@@ -30,13 +30,13 @@ module('Acceptance | people-detail', {
 test('clicking a persons name will redirect to the given detail view', function(assert) {
     visit(PEOPLE_URL);
 
-    andThen(function() {
+    andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
     });
 
     click('.t-data:eq(0)');
 
-    andThen(function() {
+    andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
     });
 });
@@ -45,7 +45,7 @@ test('when you deep link to the person detail view you get bound attrs', functio
 
     visit(DETAIL_URL);
 
-    andThen(function() {
+    andThen(() => {
         //TODO: verify ALL the other dynamic bits
         assert.equal(currentURL(),DETAIL_URL);
         assert.equal(find('.t-person-username').val(), 'akrier');
@@ -97,7 +97,7 @@ test('when you deep link to the person detail view you get bound attrs', functio
     fillIn('.t-person-auth_amount', '0.000');
 
     click('.t-save-btn');
-    andThen(function() {
+    andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
     });
 });
@@ -105,13 +105,13 @@ test('when you deep link to the person detail view you get bound attrs', functio
 test('clicking cancel button will take from detail view to list view', function(assert) {
     visit(PEOPLE_URL);
 
-    andThen(function() {
+    andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
     });
 
     click('.t-data:eq(0)');
 
-    andThen(function() {
+    andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
     });
 
@@ -159,16 +159,16 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     visit(DETAIL_URL);
     fillIn('.t-person-username', 'llcoolj');
     click('.t-cancel-btn');
-    andThen(function() {
-        waitFor(function() {
+    andThen(() => {
+        waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
             assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
         });
     });
     click('.t-modal-footer .t-modal-cancel-btn');
-    andThen(function() {
-        waitFor(function() {
+    andThen(() => {
+        waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-person-username').val(), 'llcoolj');
             assert.equal(find('.t-modal').is(':hidden'), true);
@@ -180,15 +180,15 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     visit(DETAIL_URL);
     fillIn('.t-person-username', 'llcoolj');
     click('.t-cancel-btn');
-    andThen(function() {
-        waitFor(function() {
+    andThen(() => {
+        waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
         });
     });
     click('.t-modal-footer .t-modal-rollback-btn');
-    andThen(function() {
-        waitFor(function() {
+    andThen(() => {
+        waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', 1);

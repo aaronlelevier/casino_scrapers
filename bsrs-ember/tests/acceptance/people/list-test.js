@@ -26,7 +26,7 @@ module('Acceptance | people-list', {
 test('visiting /people', function(assert) {
   visit(PEOPLE_URL);
 
-  andThen(function() {
+  andThen(() => {
     assert.equal(currentURL(),PEOPLE_URL);
     assert.equal(find('h1.t-people').text(), 'People');
     assert.equal(find('tr.t-data').length, 5);

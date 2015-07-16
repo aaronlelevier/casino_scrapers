@@ -14,21 +14,21 @@ export default Ember.Component.extend({
       this.get('model').removeObject(entry);
     },
     changeType: function(address, val) {
-        Ember.run(function() {
+        Ember.run(() => {
             var address_type = parseInt(val, 10);
             address.set("type", address_type);
         });
         //this.get('target').send('changeType', val); //?? when is this used?
     },
     changeState: function(state, val) {
-        Ember.run(function() {
+        Ember.run(() => {
             var state_id = parseInt(val, 10);
             state.set("state", state_id);
         });
         //this.get('target').send('changeState', val); //?? when is this used?
     },
     changeCountry: function(country, val) {
-        Ember.run(function() {
+        Ember.run(() => {
             var country_id = parseInt(val, 10);
             country.set("country", country_id);
         });

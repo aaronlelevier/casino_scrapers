@@ -9,7 +9,7 @@ export default Ember.Component.extend({
     actions: {
         changed: function(phonenumber, val) {
             var phonenumber_type = parseInt(val, 10);
-            Ember.run(function() {
+            Ember.run(() => {
                 phonenumber.set('type', phonenumber_type);
             });
         },

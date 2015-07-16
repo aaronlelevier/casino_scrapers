@@ -25,7 +25,7 @@ export default Ember.Object.extend({
         $.ajax({
             url: prefix + '/admin/roles/'
         }).then(function(response) {
-            Ember.run(function() {
+            Ember.run(() => {
                 response.results.forEach(function(model) {
                     store.push("role", model);
                 });
@@ -40,7 +40,7 @@ export default Ember.Object.extend({
         $.ajax({
             url: endpoint
         }).then(function(response) {
-            Ember.run(function() {
+            Ember.run(() => {
                 store.push("role", response);
             });
         });

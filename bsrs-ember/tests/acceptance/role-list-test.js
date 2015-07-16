@@ -39,7 +39,7 @@
 //  fillIn(PASSWORD_INPUT, PASSWORD);
 //  click(SUBMIT_BTN);
 //
-//  andThen(function() {
+//  andThen(() => {
 //    assert.equal(currentURL(), '/admin/roles');
 //    assert.equal(find('h1.roles').text(), 'Roles');
 //  });
