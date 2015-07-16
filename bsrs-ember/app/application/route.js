@@ -8,7 +8,7 @@ export default Ember.Route.extend({
         var phone_number_types = JSON.parse(phone_number_config);
         var address_types = JSON.parse(address_config);
         phone_number_types.forEach((model) => {
-            store.push('phonenumber-type', model);
+            store.push('phone-number-type', model);
         });
         address_types.forEach((model) => {
             store.push('address-type', model);
