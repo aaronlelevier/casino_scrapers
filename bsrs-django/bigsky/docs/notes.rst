@@ -50,33 +50,17 @@ ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
 /www/django/releases
 # permissions for this dir = drwxr-xr-x
 
-# Nginx
-sudo apt-get install nginx
-sudo service nginx start
-ifconfig eth0 | grep inet | awk (print $2)
-
 # Postgres 
 # (b/c pip install will fail w/o it b/c psycogp2)
 postgresql-9.1
 postgresql-server-dev-9.1
 
-Migrations steps
-----------------
-# step 0: create a Dir w/ a unique name under /www/django/releases w/ unique name
 
-# step 1: deployment automation:
-git clone git@github.com:bigskytech/bsrs.git 20150715
-
-# step 2: create virtualenv
-# add pip reqs to virtualenv
-venv/bin/pip install -r bsrs-django/requirements.txt
-
-# step 3: migrate
-cd into ../bsrs-django/bigsky/
-python manage.py migrate --settings=bigsky.settings.ci
-
-# start uWSGI
- uwsgi --http :8000 --wsgi-file /www/django/releases/20150715/bsrs-django/bigsky/bigskysgi
+Nginx
+-----
+sudo apt-get install nginx
+sudo service nginx start
+ifconfig eth0 | grep inet | awk (print $2)
 
 
 
