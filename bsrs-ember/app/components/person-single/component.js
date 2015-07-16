@@ -6,7 +6,7 @@ export default Ember.Component.extend({
     classNames: ['wrapper', 'form'],
     attemptedTransition: '',
     actions: {
-        savePerson: function() {
+        savePerson() {
             var model = this.get('model');
             var repository = this.get('repository');
             repository.save(model).then(() => {
@@ -14,7 +14,7 @@ export default Ember.Component.extend({
                 this.sendAction('savePerson');
             });
         },
-        cancelPerson: function() {
+        cancelPerson() {
             var model = this.get('model');
             this.sendAction('cancelPerson', model);
         }
