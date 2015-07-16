@@ -27,10 +27,6 @@ class PhoneNumberTests(TestCase):
         ph = mommy.make(PhoneNumber, person=self.person)
         self.assertEqual(str(ph), ph.number)
 
-    def test_person_and_location(self):
-        with self.assertRaises(excp.CantHavePersonAndLocation):
-            mommy.make(PhoneNumber, person=self.person, location=self.location)
-
     def test_no_person_or_location(self):
         with self.assertRaises(excp.PersonOrLocationRequired):
             mommy.make(PhoneNumber)
