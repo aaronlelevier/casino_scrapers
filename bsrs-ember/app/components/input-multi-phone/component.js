@@ -7,10 +7,9 @@ export default Ember.Component.extend({
     classNames: ['input-multi t-input-multi-phone'],
     fieldNames: 'number',
     actions: {
-        changed: function(phonenumber) {
-            var val = arguments[1].target.selectedIndex + 1; //+1 to increase index to match ids for options
+        changed: function(phonenumber, val) {
+            var phonenumber_type = parseInt(val, 10);
             Ember.run(function() {
-                var phonenumber_type = val;
                 phonenumber.set('type', phonenumber_type);
             });
         },
