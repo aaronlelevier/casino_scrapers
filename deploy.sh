@@ -2,8 +2,6 @@
 
 echo "DEPLOY STARTED!"
 
-killall -s INT uwsgi
-
 NEW_UUID=$(( ( RANDOM  )  + 1 ))
 
 cd /www/django/releases
@@ -11,6 +9,11 @@ cd /www/django/releases
 git clone git@github.com:bigskytech/bsrs.git $NEW_UUID
 
 cd $NEW_UUID
+cd bsrs-ember/
+npm install
+./node_modules/ember-cli/bin/ember build --env=production
+cd ../
+
 virtualenv venv
 venv/bin/pip install -r bsrs-django/requirements.txt
 
@@ -24,6 +27,10 @@ if [ "$MIGRATE_EXIT" == 1 ]; then
   exit $MIGRATE_EXIT
 fi
 
+cp -r ../../bsrs-ember/dist/assets .
+cp -r ../../bsrs-ember/dist/index.html templates
+
+killall -s INT uwsgi
 uwsgi --http :8000 --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/venv --daemonize /tmp/bigsky.log
 
 WSGI_EXIT=$?
