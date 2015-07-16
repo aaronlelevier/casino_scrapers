@@ -27,7 +27,7 @@ var extractAddresses = function(addresses, store) {
 };
 
 var create_people_with_relationships = function(response, store, id) {
-    Ember.run(function() {
+    Ember.run(() => {
         var phone_number_ids = [],
             address_ids = [];
             // phone_number_type_ids = [];

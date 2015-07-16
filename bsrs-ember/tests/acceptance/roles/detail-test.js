@@ -28,13 +28,13 @@ module('Acceptance | role-detail', {
 test('clicking a role name will redirect to the given detail view', function(assert) {
   visit(LIST_URL);
 
-  andThen(function() {
+  andThen(() => {
     assert.equal(currentURL(),LIST_URL);
   });
 
   click('.t-data:eq(0)');
 
-  andThen(function() {
+  andThen(() => {
     assert.equal(currentURL(),DETAIL_URL);
   });
 });
@@ -42,7 +42,7 @@ test('clicking a role name will redirect to the given detail view', function(ass
 test('when you deep link to the role detail view you get bound attrs', function(assert) {
   visit(DETAIL_URL);
 
-  andThen(function() {
+  andThen(() => {
     //TODO: verify ALL the other dynamic bits
     assert.equal(currentURL(),DETAIL_URL);
     assert.equal(find('.t-role-name').val(), 'System Administrator');
@@ -54,7 +54,7 @@ test('when you deep link to the role detail view you get bound attrs', function(
   xhr( url,'PUT',payload,{},200,response );
   fillIn('.t-role-name', 'Broom Pusher');
   click('.t-save-btn');
-  andThen(function() {
+  andThen(() => {
     assert.equal(currentURL(),LIST_URL);
   });
 });
@@ -62,19 +62,19 @@ test('when you deep link to the role detail view you get bound attrs', function(
 test('clicking cancel button will take from detail view to list view', function(assert) {
   visit(LIST_URL);
 
-  andThen(function() {
+  andThen(() => {
     assert.equal(currentURL(),LIST_URL);
   });
 
   click('.t-data:eq(0)');
 
-  andThen(function() {
+  andThen(() => {
     assert.equal(currentURL(),DETAIL_URL);
   });
 
   click('.t-cancel-btn');
 
-  andThen(function() {
+  andThen(() => {
     assert.equal(currentURL(), LIST_URL);
   });
 });
