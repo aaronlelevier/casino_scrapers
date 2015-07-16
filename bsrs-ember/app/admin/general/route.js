@@ -1,10 +1,10 @@
 import Ember from 'ember';
-import PhoneNumberType from 'bsrs-ember/models/phonenumber-type';
+import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 import Scott from 'bsrs-ember/admin/scott/model';
 
 export default Ember.Route.extend({
 	model: function(){
-        var phoneNumberTypes = [
+        var phone_number_types = [
             PhoneNumberType.create(
                 {id: 1, name: 'admin.phonenumbertype.office'}),
             PhoneNumberType.create(
@@ -12,11 +12,11 @@ export default Ember.Route.extend({
         ];
         return Ember.RSVP.hash({
             model: Scott.create(),
-            phoneNumberTypes: phoneNumberTypes
+            phone_number_types: phone_number_types
         });
 	},
   setupController: function(controller, hash) {
       controller.set('model', hash.model);
-      controller.set('phoneNumberTypes', hash.phoneNumberTypes);
+      controller.set('phone_number_types', hash.phone_number_types);
   }
 });
