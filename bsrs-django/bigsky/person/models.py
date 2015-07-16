@@ -17,6 +17,7 @@ from rest_framework.authtoken.models import Token
 from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
 from util import choices
+from util import exceptions as excp
 from util.models import AbstractName, MainSetting, CustomSetting, BaseModel
 
 
@@ -158,6 +159,11 @@ class Person(User):
 
     def __str__(self):
         return self.username
+
+    def save(self, *args, **kwargs):
+        if not (self.first_name or self.last_name):
+            raise excp.PersonFLNameRequired
+        return super(Person, self).save(*args, **kwargs)
 
 
 class NextApprover(BaseModel):

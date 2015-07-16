@@ -15,7 +15,7 @@ class PhoneNumberTests(TestCase):
     # also tests ``ContactBaseModel`` save() methods
 
     def setUp(self):
-        self.person = mommy.make(Person)
+        self.person = create_person()
         self.location = mommy.make(Location)
 
     def test_ph_model_create(self):
@@ -57,7 +57,7 @@ class AddressTests(TestCase):
 class EmailTests(TestCase):
 
     def setUp(self):
-        self.person = mommy.make(Person)
+        self.person = create_person()
 
     def test_email(self):
         e = mommy.make(Email, person=self.person)

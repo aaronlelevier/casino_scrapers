@@ -19,6 +19,9 @@ PASSWORD = '1234'
 
 
 def create_person(username=None):
+    '''
+    Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )
+    '''
     if not username:
         username = ''.join([random.choice(string.ascii_letters) for x in range(10)])
     USER_DICT['username'] = username

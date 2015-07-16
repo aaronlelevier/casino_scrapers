@@ -78,7 +78,7 @@ class PersonCreateSerializer(serializers.ModelSerializer):
         model = Person
         write_only_fields = ('password',)
         fields = (
-            'username', 'email', 'password', # user fields
+            'username', 'email', 'password', 'first_name', 'last_name', # user fields
             'role', 'status', 'location',    # keys
             'authorized_amount', 'authorized_amount_currency', # required - other
         )

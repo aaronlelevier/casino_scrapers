@@ -34,8 +34,9 @@ class PersonViewSetDataChangeTests(APITestCase):
         self.assertEqual(len(Person.objects.all()), 1)
 
         # simulate posting a Json Dict to create a new Person
-        data = {"username":"one","password":"one","email":"","role":1,"status":1,
-        "location":1,"authorized_amount":204,"authorized_amount_currency":"usd"}
+        data = {"username":"one","password":"one","first_name":"foo",
+        "last_name":"bar","email":"","role":1,"status":1,"location":1,
+        "authorized_amount":204,"authorized_amount_currency":"usd"}
         response = self.client.post('/api/person/person/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(Person.objects.all()), 2)
