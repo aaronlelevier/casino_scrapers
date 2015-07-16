@@ -33,7 +33,7 @@ function pipInstall {
 }
 
 function djangoTest {
-    python manage.py test --settings=bigsky.settings.ci
+    python manage.py test --settings=bigsky.settings.ci --liveserver=localhost:8001
     DJANGO_TEST=$?
     if [ "$DJANGO_TEST" == 1 ]; then
       echo "django test failed"

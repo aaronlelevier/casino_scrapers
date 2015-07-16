@@ -29,7 +29,6 @@ class IndexTests(TestCase):
 class SeleniumTests(LiveServerTestCase):
 
     def setUp(self):
-        self.start_server(port=8001)
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
