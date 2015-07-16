@@ -89,9 +89,11 @@ test('changing the phone number type will alter the bound value', function(asser
     assert.equal($first_type_select.val(), PhoneNumberDefaults.mobileType);
 });
 
-test('changing existing phone number type will alter the model', function(assert) {
-    var phone_number_types = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
-    var model = [PhoneNumber.create({ id: 1, number: '888-888-8888', type: phone_number_types[0].get('id') }), PhoneNumber.create({ id: 2, number: '999-999-9999', type: phone_number_types[1].get('id') })];
+test('changing existing phone number type will alter the model regardless of the primary key value', function(assert) {
+    var officePhoneNumber = 9;
+    var mobilePhoneNumber = 8;
+    var phone_number_types = [PhoneNumberType.create({ id: officePhoneNumber, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: mobilePhoneNumber, name: PhoneNumberDefaults.mobileName })];
+    var model = [PhoneNumber.create({ id: 1, number: '888-888-8888', type: officePhoneNumber }), PhoneNumber.create({ id: 2, number: '999-999-9999', type: mobilePhoneNumber })];
 
     this.set('model', model);
     this.set('phone_number_types', phone_number_types);
@@ -103,10 +105,10 @@ test('changing existing phone number type will alter the model', function(assert
     assert.equal($first_type_select.length, 2);
 
     $first_type_select = $component.find('.t-multi-phone-type');
-    assert.equal(model.objectAt(0).get('type'), PhoneNumberDefaults.officeType);
-    $first_type_select.val(PhoneNumberDefaults.mobileType).trigger("change");
-    assert.equal(model.objectAt(0).get("type"), PhoneNumberDefaults.mobileType);
-    assert.equal($first_type_select.val(), PhoneNumberDefaults.mobileType);
+    assert.equal(model.objectAt(0).get('type'), officePhoneNumber);
+    $first_type_select.val(mobilePhoneNumber).trigger("change");
+    assert.equal(model.objectAt(0).get("type"), mobilePhoneNumber);
+    assert.equal($first_type_select.val(), mobilePhoneNumber);
 });
 
 test('click delete btn will remove input', function(assert) {
