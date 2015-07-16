@@ -33,7 +33,7 @@ var create_people_with_relationships = function(response, store, id) {
             // phone_number_type_ids = [];
             // address_type_ids = [];
         response.phone_numbers.forEach((phone_number) => {
-            store.push("phonenumber-type", phone_number.type);
+            store.push("phone-number-type", phone_number.type);
             phone_number.type = phone_number.type.id;
             phone_number.person_id = id;
             store.push("phonenumber", phone_number);

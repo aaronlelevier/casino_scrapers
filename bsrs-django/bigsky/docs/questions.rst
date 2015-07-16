@@ -19,3 +19,11 @@ SaltStack and work with Bill on putting it on the server
 6. for ``/util/json_settings/role.json`` are "accept_assign" or "authorized_amount"
 needed b/c these fields exist in the Person?
 
+
+7. symlinks for prior deploy projects for simple rollbacks like in "capistrano"
+
+    - postgres: creae a separage settings.py file: w/ credentials for staging
+        - localhost
+
+8. Is it just gonna b Bill, Tom, and I to do the Prod deploy? or will Toran's friend 
+being showing us Docker.

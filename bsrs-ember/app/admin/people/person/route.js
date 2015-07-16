@@ -1,14 +1,14 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import AddressType from 'bsrs-ember/models/address-type';
-import PhoneNumberType from 'bsrs-ember/models/phonenumber-type';
+import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 
 export default Ember.Route.extend({
     repository: inject('person'),
     state_repo: inject('state'),
     country_repo: inject('country'),
     phone_number_repo: inject('phonenumber'),
-    phone_number_type_repo: inject('phonenumber-type'),
+    phone_number_type_repo: inject('phone-number-type'),
     address_repo: inject('address'),
     address_type_repo: inject('address-type'),
     init: function() {
@@ -31,7 +31,7 @@ export default Ember.Route.extend({
 
         return Ember.RSVP.hash({
             model: person,
-            phoneNumberTypes: phone_number_types,
+            phone_number_types: phone_number_types,
             phone_numbers: phone_numbers,
             countries: country_repo.find(),
             state_list: state_repo.find(),
@@ -41,7 +41,7 @@ export default Ember.Route.extend({
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('phoneNumberTypes', hash.phoneNumberTypes);
+        controller.set('phone_number_types', hash.phone_number_types);
         controller.set('phone_numbers', hash.phone_numbers);
         controller.set('state_list', hash.state_list);
         controller.set('countries', hash.countries);

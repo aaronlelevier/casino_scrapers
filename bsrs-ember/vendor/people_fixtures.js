@@ -48,10 +48,7 @@ var addresses = [
     },
     'address': 'Sky Park',
     'city': 'San Diego',
-    'state': {
-        'id': 5,
-        'name': 'California'
-    },
+    'state': 5,
     'postal_code': '92123',
     'country': 1
 },
@@ -63,10 +60,7 @@ var addresses = [
     },
     'address': '123 PB',
     'city': 'San Diego',
-    'state': {
-        'id': 5,
-        'name': 'California'
-    },
+    'state': 5,
     'postal_code': '92100',
     'country': 1
 }

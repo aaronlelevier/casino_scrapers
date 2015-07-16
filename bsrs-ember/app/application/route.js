@@ -7,7 +7,7 @@ export default Ember.Route.extend({
         var phone_number_config = $('[data-preload-phonenumber_types]').html();
         var phone_number_types = JSON.parse(phone_number_config);
         phone_number_types.forEach((model) => {
-            store.push('phonenumber-type', model);
+            store.push('phone-number-type', model);
         });
         // Get address types from config
         var address_config = $('[data-preload-address_types]').html();
