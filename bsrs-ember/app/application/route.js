@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Route.extend({
-    beforeModel: function() {
+    beforeModel() {
         var store = this.get('store');
         // Get phone number types from config
         var phone_number_config = $('[data-preload-phonenumber_types]').html();
@@ -31,11 +31,11 @@ export default Ember.Route.extend({
         return {};
 
     },
-    model: function() {
+    model() {
         return {};
     },
     actions: {
-        cancel_modal: function() {
+        cancel_modal() {
             $('.t-modal').modal('hide');
         }
     }

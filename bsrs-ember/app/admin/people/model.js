@@ -30,7 +30,7 @@ export default Person;
 //   //addresses: attr('string'),
 //   //emails: hasMany('emails'),
 //   //createdAt: attr('string', {
-//     //defaultValue: function() { return new Date(); }
+//     //defaultValue() { return new Date(); }
 //   //})
 //   fullName: computed('firstName', 'lastName', function(key, value) {
 //     return this.get('firstName') + ' ' + this.get('lastName');

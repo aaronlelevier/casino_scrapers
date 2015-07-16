@@ -9,10 +9,10 @@ var application;
 const ADMINPANEL = '.t-side-menu';
 
 module('xx Acceptance | admin layout test', {
-    beforeEach: function() {
+    beforeEach() {
         application = startApp();
     },
-    afterEach: function() {
+    afterEach() {
         Ember.run(application, 'destroy');
     }
 });

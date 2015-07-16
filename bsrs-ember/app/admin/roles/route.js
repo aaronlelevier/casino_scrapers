@@ -8,10 +8,10 @@ export default Ember.Route.extend({
     return repository.find();
   },
   actions: {
-    cancel: function() {
+    cancel() {
       this.transitionTo('admin.roles');
     },
-    new: function() {
+    new() {
       this.transitionTo('admin.roles.new');
     }
   }

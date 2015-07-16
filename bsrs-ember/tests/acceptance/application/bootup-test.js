@@ -10,11 +10,11 @@ const HOME_URL = '/';
 var application, store;
 
 module('Acceptance | bootup test', {
-    beforeEach: function() {
+    beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
     },
-    afterEach: function() {
+    afterEach() {
         store = null;
         Ember.run(application, 'destroy');
     }

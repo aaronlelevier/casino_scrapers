@@ -8,24 +8,24 @@ export default Ember.Route.extend({
     return repository.findById(params.role_id);
   },//model
 
-  init: function() {
+  init() {
   },
   actions: {
-    saveRole: function() {
+    saveRole() {
       var model = this.modelFor('admin.roles.role');
       var repository = this.get('repository');
       repository.save(model).then(() => {
         this.transitionTo('admin.roles');
       });
     },//saveRole
-    deleteRole: function() {
+    deleteRole() {
       var model = this.modelFor('admin.roles.role');
       // model.destroyRecord().then(() => {
       //   this.transitionTo('admin.people');
       // });
       this.transitionTo('admin.roles');
     },
-    cancelRole: function() {
+    cancelRole() {
       this.transitionTo('admin.roles');
     }
   },//actions
