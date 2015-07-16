@@ -41,20 +41,39 @@ var phone_numbers = [
 
 var addresses = [
 {
+    'id': 1,
     'type': {
         'id': 1,
-        'name': 'admin.adresstype.office'
+        'name': 'admin.address_type.office'
     },
-    'address': '9325 Sky Park Ct.\nSuite 120',
+    'address': 'Sky Park',
     'city': 'San Diego',
     'state': {
-        'id': 1,
+        'id': 5,
         'name': 'California'
     },
     'postal_code': '92123',
     'country': {
         'id': 1,
-        'name': 'United States of America'
+        'name': 'United States'
+    }
+},
+{
+    'id': 2,
+    'type': {
+        'id': 2,
+        'name': 'admin.address_type.shipping'
+    },
+    'address': '123 PB',
+    'city': 'San Diego',
+    'state': {
+        'id': 5,
+        'name': 'California'
+    },
+    'postal_code': '92100',
+    'country': {
+        'id': 1,
+        'name': 'United States'
     }
 }
 ];
@@ -76,8 +95,8 @@ var PEOPLE_FACTORY = {
         person.emails = []
         return person;
     },
-    put: function(i, username, first_name, last_name, title, emp_number, auth_amount, phone_numbers) {
-        var response = generatePerson(i);
+    put: function(i, username, first_name, last_name, title, emp_number, auth_amount, phone_numbers, addresses) {
+        var response = generatePerson(i, 'PUT');
         response.title = title || response.title;
         response.username = username || response.username;
         response.first_name = first_name || response.first_name;
@@ -85,7 +104,7 @@ var PEOPLE_FACTORY = {
         response.title = title || response.title;
         response.emp_number = emp_number || response.emp_number;
         response.auth_amount = auth_amount || response.auth_amount;
-        response.phone_numbers= phone_numbers;
+        response.phone_numbers= phone_numbers || response.phone_numbers;
         response.addresses= addresses;
         response.acceptassign= false;
         response.emails= [];

@@ -1,27 +1,17 @@
 <!-- Large modal -->
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+<div class="modal fade bs-example-modal-lg t-modal" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-
-      <div class="row">
-        <div class="col-lg-12">
-          <div class="input-group">
-
-
-            <input type="text" class="form-control" aria-label="...">
-            <div class="input-group-btn">
-              <button type="button" class="btn btn-default">Search</button>
-              <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span class="fa fa-filter"></span></button>
-              <ul class="dropdown-menu dropdown-menu-right">
-                <li><a href="#">People</a></li>
-                <li><a href="#">Roles</a></li>   
-                <li role="separator" class="divider"></li>
-                <li><a href="#">Advanced</a></li>
-              </ul>
-            </div><!-- /btn-group -->
-            
-          </div><!-- /input-group -->
-        </div><!-- /.col-lg-6 -->
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title">Abandon changes?</h4>
+      </div>
+      <div class="modal-body t-modal-body">
+        <p>You have unsaved changes. Are you sure?</p>
+      </div>
+      <div class="modal-footer t-modal-footer">
+        <button type="button" class="btn btn-default t-modal-cancel-btn" {{action "cancel_modal"}}>No</button>
+        <button type="button" class="btn btn-primary t-modal-rollback-btn" {{action "rollback_model"}}>Yes</button>
       </div>
     </div>
   </div>

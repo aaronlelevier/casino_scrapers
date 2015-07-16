@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
-export default Ember.Object.extend({
+var AddressType = Ember.Object.extend({
   name: ''
 });
+
+export default AddressType;

@@ -6,17 +6,32 @@ var NAMESPACE = config.APP.NAMESPACE;
 
 var extractPhoneNumbers = function(phoneNumbers, store) {
     return phoneNumbers.map((phoneNumber) => {
-        var phone_number_model = store.find('phonenumber', phoneNumber);
-        var number = phone_number_model.get('number');
-        var type = phone_number_model.get('type');
+        var phone_number_model = store.find('phonenumber', phoneNumber),
+            number = phone_number_model.get('number'),
+            type = phone_number_model.get('type');
         return {id: phoneNumber, number: number, type: type};
+    });
+};
+
+var extractAddresses = function(addresses, store) {
+    return addresses.map((address) => {
+        var address_model = store.find('address', address),
+            type = address_model.get('type'),
+            addressLoc = address_model.get('address'),
+            city = address_model.get('city'),
+            state = address_model.get('state'),
+            postal_code = address_model.get('postal_code'),
+            country = address_model.get('country');
+        return {id: address, type:type, address: addressLoc, city: city, state: state, postal_code: postal_code, country: country};
     });
 };
 
 var create_people_with_relationships = function(response, store, id) {
     Ember.run(function() {
-        var phone_number_ids = [];
-        var phone_number_type_ids = [];
+        var phone_number_ids = [],
+            address_ids = [];
+            // phone_number_type_ids = [];
+            // address_type_ids = [];
         response.phone_numbers.forEach((phone_number) => {
             store.push("phonenumber-type", phone_number.type);
             phone_number.type = phone_number.type.id;
@@ -25,12 +40,23 @@ var create_people_with_relationships = function(response, store, id) {
             phone_number_ids.push(phone_number.id);
         });
         response.phone_numbers = phone_number_ids;
+        response.addresses.forEach((address) => {
+            store.push("address-type", address.type);
+            // store.push("state", address.state);
+            // store.push("country", address.country);
+            address.type = address.type.id;
+            address.person_id = id;
+            store.push("address", address);
+            address_ids.push(address.id);
+        });
+        response.addresses = address_ids;
         store.push("person", response);
     });
 };
 
-var extractPerson = function(model, store) {
+var create_people_with_nested = function(model, store) {
     var phoneNumbers = extractPhoneNumbers(model.get('phone_numbers'), store);
+    var addresses = extractAddresses(model.get('addresses'), store);
     return {
         'id': model.get('id'),
         'username': model.get('username'),
@@ -43,7 +69,7 @@ var extractPerson = function(model, store) {
         'role': model.get('role'),
         'acceptassign': model.get('acceptassign'),
         'phone_numbers': phoneNumbers,
-        'addresses': model.get('addresses'),
+        'addresses': addresses, 
         'emails': model.get('emails')
     };
 };
@@ -53,7 +79,7 @@ export default Ember.Object.extend({
         var prefix = API_HOST + '/' + NAMESPACE;
         var endpoint = prefix + '/admin/people/' + model.get('id') + '/';
         var store = this.get('store');
-        var payload = extractPerson(model, store);
+        var payload = create_people_with_nested(model, store);
         return $.ajax({
             url: endpoint,
             data: payload,

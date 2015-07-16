@@ -28,21 +28,15 @@ test('defaults to use phone number model with field name of number', function(as
     this.render(hbs`{{input-multi-phone model=model}}`);
 
     var $component = this.$('.t-input-multi-phone');
-
     assert.equal(this.$('.t-new-entry').length, 0);
-
+    
     var $first_btn = $component.find('.t-add-btn:eq(0)');
-
     $first_btn.trigger('click');
 
     assert.equal(this.$('.t-new-entry').length, 1);
-
     assert.equal(model.length, 1);
-
     assert.equal(model.objectAt(0).get('number'), '');
-
     this.$('.t-new-entry').val('888-888-8888').trigger('change');
-
     assert.equal(model.objectAt(0).get('number'), '888-888-8888');
 });
 
