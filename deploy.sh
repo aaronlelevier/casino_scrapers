@@ -12,7 +12,7 @@ cd $NEW_UUID
 cd bsrs-ember/
 npm install
 
-killall -s INT uwsgi
+kill -9 `ps aux | grep uwsgi | awk '{print $2}'`
 
 ./node_modules/ember-cli/bin/ember build --env=production
 cd ../
@@ -23,6 +23,7 @@ venv/bin/pip install -r bsrs-django/requirements.txt
 cd bsrs-django/bigsky
 
 ../../venv/bin/python manage.py migrate --settings=bigsky.settings.ci
+../../venv/bin/python manage.py loaddata fixtures/jenkins.json --settings=bigsky.settings.ci
 
 MIGRATE_EXIT=$?
 if [ "$MIGRATE_EXIT" == 1 ]; then
