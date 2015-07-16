@@ -1,25 +1,3 @@
-Notes
-=====
-
-BaseCamp
---------
-Work w/ Toran for coordinating Django stuff
-
-Dates are thought of somewhat more as reminder dates than due dates
-
-Vagrant Random Commands
------------------------
-# restart vagrant
-sudo shutdown -r now
-
-
-Vagrant
--------
-2 parts:
-    1. what are the servers dependencies to run the web app at all?
-    2. how do I copy the django server over n symlink nginx?
-
-
 How to provision?
 -----------------
 sudo apt-get update
@@ -90,10 +68,6 @@ Nginx
 sudo apt-get install nginx
 sudo service nginx start
 ifconfig eth0 | grep inet | awk (print $2)
-
-
-
-
 
 
 
