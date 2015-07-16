@@ -13,6 +13,10 @@ from util import exceptions as excp
 
 
 class ContactBaseModel(BaseModel):
+    '''
+    `Person` and/or `Location` FK must be defined on all classes 
+    this model because the contact obj must belong to something.
+    '''
     pass
 
     class Meta:
