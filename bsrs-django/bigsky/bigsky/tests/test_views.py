@@ -29,11 +29,12 @@ class IndexTests(TestCase):
 class SeleniumTests(LiveServerTestCase):
 
     def setUp(self):
+        self.start_server(port=8001)
         self.browser = webdriver.Firefox()
 
     def tearDown(self):
         self.browser.quit()
 
     def test_login(self):
-        self.browser.get('http://localhost:8000/login/')
+        self.browser.get('http://localhost:8001/login/')
         #self.assertIn('Login', self.browser.title) WIP!toranb
