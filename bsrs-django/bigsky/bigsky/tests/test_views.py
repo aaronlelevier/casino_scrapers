@@ -35,5 +35,5 @@ class SeleniumTests(LiveServerTestCase):
         self.browser.quit()
 
     def test_login(self):
-        self.browser.get('http://localhost:8000/login/')
+        self.browser.get('http://localhost:8001/login/')
         #self.assertIn('Login', self.browser.title) WIP!toranb

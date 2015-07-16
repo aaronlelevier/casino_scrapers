@@ -21,13 +21,13 @@
 //var response = {"token":"ey.ey.ab","session":{"username":"tkrier","status":"valid","first_name":"Tom","last_name":"Krier","id":4}};
 //
 //module('xx Acceptance | role-list', {
-//  beforeEach: function() {
+//  beforeEach() {
 //    application = startApp();
 //    var endpoint = API_PREFIX + ROLE_URL + "/";
 //    xhr( endpoint ,"GET",null,authorization,200,roles );
 //    xhr( API_PREFIX + "/api-token-auth/","POST",request,{},200,response );
 //  },
-//  afterEach: function() {
+//  afterEach() {
 //    Ember.run(application, 'destroy');
 //  }
 //});

@@ -12,12 +12,12 @@ const API_PREFIX = "/" + config.APP.NAMESPACE;
 var application;
 
 module('Acceptance | people-list', {
-  beforeEach: function() {
+  beforeEach() {
     application = startApp();
     var endpoint = API_PREFIX + PEOPLE_URL + "/";
     xhr( endpoint ,"GET",null,{},200,PeopleFactory.list() );
   },
-  afterEach: function() {
+  afterEach() {
     Ember.run(application, 'destroy');
   }
 });

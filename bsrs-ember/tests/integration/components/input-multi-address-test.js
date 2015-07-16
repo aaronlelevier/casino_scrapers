@@ -26,7 +26,7 @@ var COUNTRIES = [Country.create({ id: 1, name: 'United States' }), Country.creat
 
 moduleForComponent('input-multi-address', 'integration: input-multi-address test', {
     integration: true,
-    setup: function() {
+    setup() {
         initializer.initialize(this);
     }
 });

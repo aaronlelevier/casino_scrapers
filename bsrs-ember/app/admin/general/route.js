@@ -3,7 +3,7 @@ import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 import Scott from 'bsrs-ember/admin/scott/model';
 
 export default Ember.Route.extend({
-	model: function(){
+	model(){
         var phone_number_types = [
             PhoneNumberType.create(
                 {id: 1, name: 'admin.phonenumbertype.office'}),

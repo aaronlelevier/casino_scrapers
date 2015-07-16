@@ -9,10 +9,10 @@ const NAVBAR = '.t-navbar-items';
 var application;
 
 module('Acceptance | application layout test', {
-    beforeEach: function() {
+    beforeEach() {
         application = startApp();
     },
-    afterEach: function() {
+    afterEach() {
         Ember.run(application, 'destroy');
     }
 });

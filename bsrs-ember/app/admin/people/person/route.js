@@ -11,7 +11,7 @@ export default Ember.Route.extend({
     phone_number_type_repo: inject('phone-number-type'),
     address_repo: inject('address'),
     address_type_repo: inject('address-type'),
-    init: function() {
+    init() {
         var comp = this.get("tabDoc");
         this.set('editPrivilege', true);
     },
@@ -61,10 +61,10 @@ export default Ember.Route.extend({
                 $('.t-modal').modal('hide');
             }
         },
-        savePerson: function() {
+        savePerson() {
             this.transitionTo('admin.people');
         },
-        cancelPerson: function() {
+        cancelPerson() {
             this.transitionTo('admin.people');
         }
     }

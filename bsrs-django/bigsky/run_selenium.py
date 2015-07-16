@@ -12,7 +12,7 @@ def django_app():
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "bigsky.settings.ci")
     execute_from_command_line(['manage.py'] + ['migrate'])
     execute_from_command_line(['manage.py'] + ['loaddata'] + ['fixtures/jenkins.json'])
-    execute_from_command_line(['manage.py'] + ['runserver'] + ['--noreload'])
+    execute_from_command_line(['manage.py'] + ['runserver'] + ['0.0.0.0:8001'] + ['--noreload'])
 
 def run_selenium_tests():
     os.environ['browser'] = 'firefox'

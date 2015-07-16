@@ -8,11 +8,11 @@ var generateRecord = function() {
 };
 
 var RecordFactory = {
-    list: function() {
+    list() {
         var response = generateRecord();
         return {results: [response]}; //TODO: updated the mocks in server/mocks
     },
-    detail: function() {
+    detail() {
         return generateRecord();
     },
     put: function(name) {

@@ -10,7 +10,7 @@ import PEOPLE_FACTORY from 'bsrs-ember/vendor/people_fixtures';
 
 moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
     integration: true,
-    setup: function() {
+    setup() {
         translation.initialize(this);
     }
 });

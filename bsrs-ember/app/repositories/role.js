@@ -19,7 +19,7 @@ export default Ember.Object.extend({
             method: 'PUT'
         });
     },
-    find: function() {
+    find() {
         var prefix = API_HOST + '/' + NAMESPACE;
         var store = this.get('store');
         $.ajax({

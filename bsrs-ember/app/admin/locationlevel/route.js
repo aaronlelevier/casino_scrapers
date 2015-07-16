@@ -8,12 +8,12 @@ export default Ember.Route.extend({
     controller.set("model", model);
     controller.set("mylocationlevels", this.store.find("admin/locationlevel"));
   },
-  init: function() {
+  init() {
     this.set('editPrivilege', true);
   },
 
   actions: {
-    save: function() {
+    save() {
       var model = this.modelFor('admin.locationlevel');
       model.save().then(() => {
         this.transitionTo('admin.locationlevels');
@@ -21,14 +21,14 @@ export default Ember.Route.extend({
         console.log(error);
       });
     },//savePerson
-    delete: function() {
+    delete() {
       var model = this.modelFor('admin.locationlevel');
       // model.destroyRecord().then(() => {
       //   this.transitionTo('admin.people');
       // });
       this.transitionTo('admin.locationlevels');
     },
-    cancel: function() {
+    cancel() {
       this.transitionTo('admin.locationlevels');
     }
   },//actions

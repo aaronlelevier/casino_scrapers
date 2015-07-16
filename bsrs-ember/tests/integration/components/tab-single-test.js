@@ -13,7 +13,7 @@ function createTab(id) {
 
 moduleForComponent('tab-single', 'integration: tab-single test', {
   integration: true,
-  setup: function() {
+  setup() {
     initializer.initialize(this);
     faInitializer.initialize(this);
   }

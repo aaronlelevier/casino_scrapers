@@ -15,14 +15,14 @@ const API_PREFIX = "/" + config.APP.NAMESPACE;
 var application, store;
 
 module('Acceptance | people-detail', {
-  beforeEach: function() {
+  beforeEach() {
     application = startApp();
     store = application.__container__.lookup('store:main');
     var endpoint = API_PREFIX + PEOPLE_URL + "/";
     xhr( endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.list() );
     xhr( endpoint + "1/","GET",null,{},200,PEOPLE_FIXTURES.detail(1) );
   },
-  afterEach: function() {
+  afterEach() {
     Ember.run(application, 'destroy');
   }
 });

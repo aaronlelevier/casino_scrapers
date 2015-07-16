@@ -14,13 +14,13 @@ const API_PREFIX = "/" + config.APP.NAMESPACE;
 var application;
 
 module('Acceptance | role-detail', {
-  beforeEach: function() {
+  beforeEach() {
     application = startApp();
     var endpoint = API_PREFIX + LIST_URL + "/";
     xhr( endpoint ,"GET",null,{},200,RoleFactory.list() );
     xhr( endpoint + "3/","GET",null,{},200,RoleFactory.detail() );
   },
-  afterEach: function() {
+  afterEach() {
     Ember.run(application, 'destroy');
   }
 });

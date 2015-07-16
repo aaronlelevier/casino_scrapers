@@ -2,10 +2,10 @@ import Ember from 'ember';
 
 export default Ember.Route.extend({
   actions: {
-    cancelPersonEdit: function() {
+    cancelPersonEdit() {
       this.transitionTo('admin.people');
     },
-    createPerson: function() {
+    createPerson() {
       var title = this.get('title'),
           first_name = this.get('first_name'),
           last_name = this.get('last_name'),

@@ -14,7 +14,7 @@ class LoginTests(unittest.TestCase):
         self.driver.close()
 
     def test_login_page_rendered_with_inputs(self):
-        self.driver.get("http://127.0.0.1:8000/login/")
+        self.driver.get("http://127.0.0.1:8001/login/")
 
         # Login Inputs needed
         username_input = self.driver.find_element_by_id("id_username")
