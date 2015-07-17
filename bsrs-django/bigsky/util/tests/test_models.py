@@ -1,10 +1,13 @@
-from django.test import TestCase
-from django.contrib.contenttypes.models import ContentType
+from django.test import TestCase, TransactionTestCase
+from django.contrib.auth.models import ContentType, Group, Permission, User
+from django.core.exceptions import ObjectDoesNotExist
 
 from model_mommy import mommy
 
 from person.models import Person
+from person.permissions import perms_map
 from person.tests.factory import create_person
+from util import create
 from util.models import MainSetting, CustomSetting, Tester
 
 
@@ -32,6 +35,50 @@ class TesterTests(TestCase):
     def test_delete_real(self):
         self.t_del.delete(override=True)
         self.assertEqual(len(Tester.objects_all.all()), 1)
+
+
+class TesterPermissionTests(TestCase):
+
+    def setUp(self):
+        self.model = Tester.__name__.lower() # returns: 'tester'
+        self.ct = ContentType.objects.get(app_label="util", model=self.model)
+
+    def test_perms(self):
+        ct = self.ct
+        self.assertIsInstance(ct, ContentType)
+
+        # perm doesn't exit yet
+        with self.assertRaises(ObjectDoesNotExist):
+            Permission.objects.get(content_type=ct, codename='view_{}'.format(self.model))
+
+        # create perm
+        # VARs
+        name = 'Can view {}'.format(ct.name)
+        codename = 'view_{}'.format(ct.name)
+
+        # create a single instance to be used in all 3 view types
+        for i in perms_map.keys():
+            if i in ['HEAD', 'OPTIONS', 'GET']:
+                return Permission.objects.create(name=name, codename=codename, content_type=ct)
+
+        self.assertIsInstance(
+            Permission.objects.get(content_type=ct, codename='view_{}'.format(self.model)),
+            Permission
+            )
+
+
+class TesterPermissionAlreadyCreatedTests(TransactionTestCase):
+
+    def test_perms(self):
+        self.model = Tester.__name__.lower() # returns: 'tester'
+        self.ct = ContentType.objects.get(app_label="util", model=self.model)
+
+        create._create_model_view_permissions()
+
+        self.assertIsInstance(
+            Permission.objects.get(content_type=self.ct, codename='view_{}'.format(self.model)),
+            Permission
+            )
 
 
 class MainSettingTests(TestCase):

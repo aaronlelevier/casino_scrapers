@@ -50,18 +50,15 @@ class PersonViewSet(viewsets.ModelViewSet):
     serializer_class = PersonCreateSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
-    # def get_serializer_class(self):
-    #     """
-    #     set the serializer based on the method
-    #     """
-    #     if self.action == 'retrieve'):
-    #         self.serializer_class = PersonFullSerializer
-    #     elif (self.action == 'list'):
-    #         self.serializer_class = PersonListSerializer
-    #     else:
-    #         self.serializer_class = PersonSerializer
-    #     return self.serializer_class
-
+    def get_serializer_class(self):
+        """
+        set the serializer based on the method
+        """
+        if self.action == 'list':
+            return PersonListSerializer
+        else:
+            return PersonCreateSerializer
+            
     # def list(self, request):
     #     serializer = PersonListSerializer(self.queryset, many=True)
     #     return Response(serializer.data)

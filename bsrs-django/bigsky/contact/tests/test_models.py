@@ -15,7 +15,7 @@ class PhoneNumberTests(TestCase):
     # also tests ``ContactBaseModel`` save() methods
 
     def setUp(self):
-        self.person = mommy.make(Person)
+        self.person = create_person()
         self.location = mommy.make(Location)
 
     def test_ph_model_create(self):
@@ -26,10 +26,6 @@ class PhoneNumberTests(TestCase):
     def test_ph_str(self):
         ph = mommy.make(PhoneNumber, person=self.person)
         self.assertEqual(str(ph), ph.number)
-
-    def test_person_and_location(self):
-        with self.assertRaises(excp.CantHavePersonAndLocation):
-            mommy.make(PhoneNumber, person=self.person, location=self.location)
 
     def test_no_person_or_location(self):
         with self.assertRaises(excp.PersonOrLocationRequired):
@@ -61,7 +57,7 @@ class AddressTests(TestCase):
 class EmailTests(TestCase):
 
     def setUp(self):
-        self.person = mommy.make(Person)
+        self.person = create_person()
 
     def test_email(self):
         e = mommy.make(Email, person=self.person)

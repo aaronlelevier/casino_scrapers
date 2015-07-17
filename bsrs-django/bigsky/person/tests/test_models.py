@@ -8,8 +8,10 @@ from django.contrib.auth.models import User
 
 from model_mommy import mommy
 
+from location.models import Location
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person
+from util import exceptions as excp
 
 
 class PersonTests(TestCase):
@@ -29,8 +31,34 @@ class PersonTests(TestCase):
         self.assertIsInstance(self.person.role, Role)
 
 
+class PersonCreateTests(TestCase):
+
+    def setUp(self):
+        # all required fields in order to create a person
+        self.role = mommy.make(Role)
+        self.person_status = mommy.make(PersonStatus)
+        self.location = mommy.make(Location)
+
+    def test_create(self):
+        with self.assertRaises(excp.PersonFLNameRequired):
+            Person.objects.create(
+                username='foo',
+                password='bar',
+                role=self.role,
+                status=self.person_status,
+                location=self.location,
+                auth_amount=204,
+                auth_amount_currency="usd"
+                )
+
+
 class PersonStatusTests(TestCase):
 
     def test_create(self):
         ps = mommy.make(PersonStatus)
         self.assertIsInstance(ps, PersonStatus)
+
+
+
+
+

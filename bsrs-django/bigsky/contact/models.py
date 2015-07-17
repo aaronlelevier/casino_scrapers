@@ -13,6 +13,10 @@ from util import exceptions as excp
 
 
 class ContactBaseModel(BaseModel):
+    '''
+    `Person` and/or `Location` FK must be defined on all classes 
+    this model because the contact obj must belong to something.
+    '''
     pass
 
     class Meta:
@@ -25,11 +29,12 @@ class ContactBaseModel(BaseModel):
     def _valid_person_or_location(self):
         if not (self.person or self.location):
             raise excp.PersonOrLocationRequired("Must have either a Person or Location FK.")
-        elif self.person and self.location:
-            raise excp.CantHavePersonAndLocation("Cannot have both a Person and Location FK.")
 
 
 class PhoneNumberType(AbstractNameOrder):
+    '''
+    Ex- mobile, cell, home, fax.
+    '''
     pass
 
 

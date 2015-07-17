@@ -38,9 +38,16 @@ Special care needed when updating passwords and creating new users.
     
 '''
 
-#################
-# PERSON STATUS #
-#################
+### Base ###
+
+class RoleSerializer(serializers.ModelSerializer):
+
+    name = serializers.CharField(source='group.name')
+
+    class Meta:
+        model = Role
+        fields = ('id', 'name',)
+
 
 class PersonStatusSerializer(serializers.ModelSerializer):
     
@@ -48,19 +55,15 @@ class PersonStatusSerializer(serializers.ModelSerializer):
         model = PersonStatus
         fields = ('id', 'name')
 
-        
-##########
-# PERSON #
-##########
 
 PERSON_BASE_FIELDS = (
     'id',
     'name', # calculated DRF field
     'title',
     'role',
-    'employee_id',
+    'emp_number',
     'status',
-    'authorized_amount',
+    'auth_amount',
     )
 
 PERSON_FIELDS = (
@@ -78,25 +81,30 @@ class PersonCreateSerializer(serializers.ModelSerializer):
         model = Person
         write_only_fields = ('password',)
         fields = (
-            'username', 'email', 'password', # user fields
+            'username', 'email', 'password', 'first_name', 'last_name', # user fields
             'role', 'status', 'location',    # keys
-            'authorized_amount', 'authorized_amount_currency', # required - other
+            'auth_amount', 'auth_amount_currency', # required - other
         )
 
 
 class PersonListSerializer(serializers.ModelSerializer):
 
-    name = serializers.SerializerMethodField('get_full_name')
+    role = RoleSerializer(read_only=True)
+    status = PersonStatusSerializer(read_only=True)
 
     class Meta:
         model = Person
-        fields = PERSON_BASE_FIELDS
-
-    def get_full_name(self, obj):
-        return '{} {}'.format(obj.first_name, obj.last_name)
+        fields = ('id', 'username', 'first_name', 'middle_initial',
+            'last_name', 'title', 'emp_number', 'auth_amount',
+            'role', 'status')
 
 
 class PersonSerializer(PersonListSerializer):
+
+    name = serializers.SerializerMethodField('get_full_name')
+
+    def get_full_name(self, obj):
+        return '{} {}'.format(obj.first_name, obj.last_name)
 
     class Meta:
         model = Person
@@ -159,11 +167,7 @@ class PersonContactSerializer(PersonSerializer):
         fields = PERSON_BASE_FIELDS + PERSON_FIELDS + ('accept_assign', 'phone_numbers', 'addresses', 'emails')
 
 
-########
-# ROLE #
-########
-
-class RoleSerializer(serializers.ModelSerializer):
+class RoleDetailSerializer(serializers.ModelSerializer):
 
     group = serializers.PrimaryKeyRelatedField(
         queryset=Group.objects.all(),

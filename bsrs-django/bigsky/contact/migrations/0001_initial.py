@@ -8,7 +8,6 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('location', '0001_initial'),
-        ('person', '0001_initial'),
     ]
 
     operations = [
@@ -26,8 +25,6 @@ class Migration(migrations.Migration):
                 ('state', models.CharField(max_length=100, null=True, blank=True)),
                 ('country', models.CharField(max_length=100, null=True, blank=True)),
                 ('postalcode', models.CharField(max_length=32, null=True, blank=True)),
-                ('location', models.ForeignKey(related_name='addresses', blank=True, to='location.Location', null=True)),
-                ('person', models.ForeignKey(related_name='addresses', blank=True, to='person.Person', null=True)),
             ],
             options={
                 'ordering': ('type',),
@@ -56,8 +53,6 @@ class Migration(migrations.Migration):
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
                 ('email', models.EmailField(unique=True, max_length=255)),
-                ('location', models.ForeignKey(related_name='emails', blank=True, to='location.Location', null=True)),
-                ('person', models.ForeignKey(related_name='emails', blank=True, to='person.Person', null=True)),
             ],
             options={
                 'ordering': ('type', 'email'),
@@ -87,7 +82,6 @@ class Migration(migrations.Migration):
                 ('deleted', models.BooleanField(default=False)),
                 ('number', models.CharField(unique=True, max_length=32)),
                 ('location', models.ForeignKey(related_name='phone_numbers', blank=True, to='location.Location', null=True)),
-                ('person', models.ForeignKey(related_name='phone_numbers', blank=True, to='person.Person', null=True)),
             ],
             options={
                 'ordering': ('type', 'number'),
@@ -107,20 +101,5 @@ class Migration(migrations.Migration):
                 'ordering': ('order', 'name'),
                 'abstract': False,
             },
-        ),
-        migrations.AddField(
-            model_name='phonenumber',
-            name='type',
-            field=models.ForeignKey(to='contact.PhoneNumberType'),
-        ),
-        migrations.AddField(
-            model_name='email',
-            name='type',
-            field=models.ForeignKey(to='contact.EmailType'),
-        ),
-        migrations.AddField(
-            model_name='address',
-            name='type',
-            field=models.ForeignKey(to='contact.AddressType'),
         ),
     ]

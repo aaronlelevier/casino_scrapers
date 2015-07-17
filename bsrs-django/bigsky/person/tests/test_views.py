@@ -34,8 +34,9 @@ class PersonViewSetDataChangeTests(APITestCase):
         self.assertEqual(len(Person.objects.all()), 1)
 
         # simulate posting a Json Dict to create a new Person
-        data = {"username":"one","password":"one","email":"","role":1,"status":1,
-        "location":1,"authorized_amount":204,"authorized_amount_currency":"usd"}
+        data = {"username":"one","password":"one","first_name":"foo",
+        "last_name":"bar","email":"","role":1,"status":1,"location":1,
+        "auth_amount":204,"auth_amount_currency":"usd"}
         response = self.client.post('/api/person/person/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(Person.objects.all()), 2)
@@ -58,18 +59,17 @@ class PersonViewSetDataChangeTests(APITestCase):
         self.assertEqual(person['email'], new_email)
 
 
-class PersonViewSetTests(TestCase):
+### PersonViewSetTests ###
+
+class PersonListTests(TestCase):
 
     def setUp(self):
         self.password = PASSWORD
-        self.title = 'VP'
-        self.person1 = create_person()
-        self.person1.title = self.title
-        self.person1.save()
-
-        self.person2 = create_person()
+        self.people = 10
+        create_person(_many=self.people)
 
         # Login
+        self.person1 = Person.objects.first()
         self.client.login(username=self.person1.username, password=self.password)
 
     def tearDown(self):
@@ -82,16 +82,29 @@ class PersonViewSetTests(TestCase):
         # list data        
         data = json.loads(response.content)
         people = data['results']
-        self.assertNotEqual(len(people), 0)
+        self.assertEqual(len(people), self.people)
         # single person fields in list
         person = people[0]
         self.assertEqual(person['username'], self.person1.username)
+
+
+class PersonViewSetTests(TestCase):
+    
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+
+        # Login
+        self.client.login(username=self.person.username, password=self.password)
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_retrieve(self):
         response = self.client.get('/api/person/person/1/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         person = json.loads(response.content)
-        self.assertEqual(person['username'], self.person1.username)
+        self.assertEqual(person['username'], self.person.username)
 
 
 class PersonContactViewSetTests(TestCase):
