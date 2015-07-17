@@ -19,9 +19,11 @@ module('Acceptance | detail test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('store:main');
+    var people_list_data = PEOPLE_FIXTURES.list();
+    var people_detail_data = PEOPLE_FIXTURES.detail(PERSON_PK);
     var endpoint = API_PREFIX + PEOPLE_URL + "/";
-    xhr( endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.list() );
-    xhr( endpoint + PERSON_PK + "/","GET",null,{},200,PEOPLE_FIXTURES.detail(PERSON_PK) );
+    xhr(endpoint ,"GET",null,{},200,people_list_data);
+    xhr(endpoint + PERSON_PK + "/","GET",null,{},200,people_detail_data);
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -214,7 +216,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
             assert.equal(currentURL(), PEOPLE_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PERSON_PK);
-            var phone_numbers = store.find('phonenumber', PERSON_PK.toString()); //TODO: ?
+            var phone_numbers = store.find('phonenumber', PERSON_PK);
             assert.equal(phone_numbers.source[0].get('type'), 1);
         });
     });

@@ -16,16 +16,17 @@ export default Ember.Route.extend({
         this.set('editPrivilege', true);
     },
     model: function(params) {
+        var person_pk = parseInt(params.person_id, 10);
         var country_repo = this.get('country_repo'),
             state_repo = this.get('state_repo'),
             repository = this.get('repository'),
-            person = repository.findById(params.person_id),
+            person = repository.findById(person_pk),
             phone_number_repo = this.get('phone_number_repo'),
-            phone_numbers = phone_number_repo.findByPersonId(params.person_id),
+            phone_numbers = phone_number_repo.findByPersonId(person_pk),
             phone_number_type_repo = this.get('phone_number_type_repo'),
             phone_number_types = phone_number_type_repo.find(),
             address_repo = this.get('address_repo'),
-            addresses = address_repo.findByPersonId(params.person_id),
+            addresses = address_repo.findByPersonId(person_pk),
             address_type_repo = this.get('address_type_repo'),
             address_types = address_type_repo.find();
 
@@ -52,7 +53,7 @@ export default Ember.Route.extend({
         willTransition: function(transition) {
             var model = this.currentModel.model;
             var store = this.get('store');
-            var phone_numbers = store.find('phonenumber', {person_id: model.get('id').toString()});
+            var phone_numbers = store.find('phonenumber', {person_id: model.get('id')});
             var phone_number_dirty = false;
             phone_numbers.forEach((num) => {
                 if (num.get('isDirty')) {

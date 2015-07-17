@@ -13,7 +13,7 @@ export default Ember.Component.extend({
             repository.save(model).then(() => {
                 model.save(); //TODO: move to repository soon
 
-                var phone_numbers = store.find('phonenumber', {person_id: model.get('id').toString()}); //TODO: fix toString hack
+                var phone_numbers = store.find('phonenumber', {person_id: model.get('id')});
                 phone_numbers.forEach((num) => {
                     num.save();
                 });
