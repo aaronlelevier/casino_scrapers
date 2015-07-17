@@ -30,7 +30,6 @@ THIRD_PARTY_APPS = (
     'psycopg2',
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',
     # test libraries
     'django_nose',
     'debug_toolbar',
@@ -121,15 +120,8 @@ REST_FRAMEWORK = {
     'MAX_PAGINATE_BY': 100,
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_filters.backends.DjangoFilterBackend',
     ),
-}
-
-JWT_AUTH = {
-    'JWT_ALLOW_REFRESH': True,
-    'JWT_RESPONSE_PAYLOAD_HANDLER': 'session.views.jwt_response_payload_handler',
-    'JWT_EXPIRATION_DELTA': datetime.timedelta(seconds=1800),
 }

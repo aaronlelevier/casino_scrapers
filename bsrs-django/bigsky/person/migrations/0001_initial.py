@@ -43,11 +43,11 @@ class Migration(migrations.Migration):
             name='Person',
             fields=[
                 ('user_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
-                ('auth_amount', models.PositiveIntegerField()),
+                ('auth_amount', models.PositiveIntegerField(default=0, blank=True)),
                 ('auth_amount_currency', models.CharField(default=b'usd', max_length=25, choices=[(b'usd', b'usd'), (b'eur', b'eur'), (b'jpy', b'jpy')])),
                 ('accept_assign', models.BooleanField(default=True)),
                 ('accept_notify', models.BooleanField(default=True)),
-                ('employee_id', models.CharField(max_length=100, null=True, blank=True)),
+                ('emp_number', models.CharField(max_length=100, null=True, blank=True)),
                 ('middle_initial', models.CharField(max_length=30, null=True, blank=True)),
                 ('title', models.CharField(max_length=100, null=True, blank=True)),
                 ('password_expiration', models.DateField(null=True, blank=True)),
@@ -55,7 +55,7 @@ class Migration(migrations.Migration):
                 ('ooto_status', models.CharField(max_length=100, null=True, verbose_name=b'Out of the Office Status', blank=True)),
                 ('ooto_start_date', models.DateField(max_length=100, null=True, verbose_name=b'Out of the Office Status Start Date', blank=True)),
                 ('ooto_end_date', models.DateField(max_length=100, null=True, verbose_name=b'Out of the Office Status End Date', blank=True)),
-                ('location', models.ForeignKey(to='location.Location')),
+                ('location', models.ForeignKey(blank=True, to='location.Location', null=True)),
             ],
             options={
                 'db_table': 'person_person',

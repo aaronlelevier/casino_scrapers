@@ -12,8 +12,6 @@ from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 
-from rest_framework.authtoken.models import Token
-
 from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
 from util import choices
@@ -175,12 +173,3 @@ class CoveringUser(BaseModel):
     '''Person that covers for another Person when they are 
      out-of-the-office.'''
     person = models.OneToOneField(Person)
-
-
-@receiver(post_save, sender=settings.AUTH_USER_MODEL)
-def create_auth_token(sender, instance=None, created=False, **kwargs):
-    '''
-    Auto generates a Token every time a User is created to be used with TokenAuth.
-    '''
-    if created:
-        Token.objects.create(user=instance)
