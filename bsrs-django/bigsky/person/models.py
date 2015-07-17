@@ -57,8 +57,8 @@ class Role(BaseModel):
     accept_assign = models.BooleanField(blank=True, default=False)
     default_accept_notify = models.BooleanField(blank=True, default=True)
     accept_notify = models.BooleanField(blank=True, default=False)
-    default_authorized_amount = models.BooleanField(blank=True, default=True)
-    authorized_amount = models.PositiveIntegerField(blank=True, null=True)
+    default_auth_amount = models.BooleanField(blank=True, default=True)
+    auth_amount = models.PositiveIntegerField(blank=True, null=True)
     # Approvals
     allow_approval = models.BooleanField(blank=True, default=False)
     proxy_approval_bypass = models.BooleanField(blank=True, default=False)
@@ -131,13 +131,13 @@ class Person(User):
     status = models.ForeignKey(PersonStatus)
     location = models.ForeignKey(Location)
     # required
-    authorized_amount = models.PositiveIntegerField()
-    authorized_amount_currency = models.CharField(max_length=25, choices=choices.CURRENCY_CHOICES,
+    auth_amount = models.PositiveIntegerField()
+    auth_amount_currency = models.CharField(max_length=25, choices=choices.CURRENCY_CHOICES,
         default=choices.CURRENCY_CHOICES[0][0])
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
     # optional
-    employee_id = models.CharField(max_length=100, blank=True, null=True)
+    emp_number = models.CharField(max_length=100, blank=True, null=True)
     middle_initial = models.CharField(max_length=30, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     password_expiration = models.DateField(blank=True, null=True)

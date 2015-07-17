@@ -7,12 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('util', '0001_initial'),
+        ('person', '0001_initial'),
     ]
 
     operations = [
-        migrations.AlterModelOptions(
-            name='tester',
-            options={'permissions': (('GET', ['%(app_label)s.view_%(model_name)s']),)},
+        migrations.RenameField(
+            model_name='person',
+            old_name='employee_id',
+            new_name='emp_number',
         ),
     ]

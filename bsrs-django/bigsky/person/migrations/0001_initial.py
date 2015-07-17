@@ -9,7 +9,7 @@ import django.contrib.auth.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('location', '__first__'),
+        ('location', '0001_initial'),
         ('order', '0001_initial'),
         ('auth', '0006_require_contenttypes_0002'),
     ]
@@ -43,8 +43,8 @@ class Migration(migrations.Migration):
             name='Person',
             fields=[
                 ('user_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to=settings.AUTH_USER_MODEL)),
-                ('authorized_amount', models.PositiveIntegerField()),
-                ('authorized_amount_currency', models.CharField(default=b'usd', max_length=25, choices=[(b'usd', b'usd'), (b'eur', b'eur'), (b'jpy', b'jpy')])),
+                ('auth_amount', models.PositiveIntegerField()),
+                ('auth_amount_currency', models.CharField(default=b'usd', max_length=25, choices=[(b'usd', b'usd'), (b'eur', b'eur'), (b'jpy', b'jpy')])),
                 ('accept_assign', models.BooleanField(default=True)),
                 ('accept_notify', models.BooleanField(default=True)),
                 ('employee_id', models.CharField(max_length=100, null=True, blank=True)),
@@ -114,8 +114,8 @@ class Migration(migrations.Migration):
                 ('accept_assign', models.BooleanField(default=False)),
                 ('default_accept_notify', models.BooleanField(default=True)),
                 ('accept_notify', models.BooleanField(default=False)),
-                ('default_authorized_amount', models.BooleanField(default=True)),
-                ('authorized_amount', models.PositiveIntegerField(null=True, blank=True)),
+                ('default_auth_amount', models.BooleanField(default=True)),
+                ('auth_amount', models.PositiveIntegerField(null=True, blank=True)),
                 ('allow_approval', models.BooleanField(default=False)),
                 ('proxy_approval_bypass', models.BooleanField(default=False)),
                 ('wo_notes', models.BooleanField(default=False)),

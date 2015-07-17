@@ -32,6 +32,9 @@ class ContactBaseModel(BaseModel):
 
 
 class PhoneNumberType(AbstractNameOrder):
+    '''
+    Ex- mobile, cell, home, fax.
+    '''
     pass
 
 

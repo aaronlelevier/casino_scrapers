@@ -15,3 +15,12 @@ class FactoryTests(TestCase):
         person = factory.create_person(username=new_person_name)
         self.assertIsInstance(person, Person)
         self.assertEqual(person.username, new_person_name)
+
+    def test_multiple_person_create(self):
+        people = 10
+        factory.create_person(_many=people)
+        self.assertEqual(Person.objects.count(), people)
+
+    def test_many_with_username(self):
+        with self.assertRaises(Exception):
+            factory.create_person(username='bob', _many=people)

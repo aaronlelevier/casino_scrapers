@@ -18,14 +18,31 @@ USER_DICT = {
 PASSWORD = '1234'
 
 
-def create_person(username=None):
-    '''
-    Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )
-    '''
-    if not username:
-        username = ''.join([random.choice(string.ascii_letters) for x in range(10)])
+def create_single_person(username):
     USER_DICT['username'] = username
     user = mommy.make(Person, **USER_DICT)
     user.set_password(PASSWORD)
     user.save()
+    return user
+
+
+def create_person(username=None, _many=1):
+    '''
+    Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )
+
+    Return: the last user created from the `forloop`
+    '''
+    if username and _many != 1:
+        raise Exception("Can't specify more than 1 user with a specific username. \
+You specified {} user(s) with username: {}".format(_many, username))
+    elif username:
+        return create_single_person(username)
+        
+    for i in range(_many):
+        username = ''.join([random.choice(string.ascii_letters) for x in range(10)])
+        USER_DICT['username'] = username
+        user = mommy.make(Person, **USER_DICT)
+        user.set_password(PASSWORD)
+        user.save()
+    
     return user
