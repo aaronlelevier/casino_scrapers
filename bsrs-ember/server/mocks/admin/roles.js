@@ -50,5 +50,5 @@ module.exports = function(app) {
     res.status(204).end();
   });
 
-  app.use('/bsrs_deva/admin/roles/', adminRolesRouter);
+  app.use('/api/admin/roles/', adminRolesRouter);
 };

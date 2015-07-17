@@ -9,11 +9,11 @@
 //
 //const USERNAME = "akrier";
 //const PASSWORD = "tango";
-//const ROLE_URL = "/admin/roles";
 //const USERNAME_INPUT = "input.username";
 //const PASSWORD_INPUT = "input.password";
 //const SUBMIT_BTN = ".submit_btn";
-//const API_PREFIX = "/" + config.APP.NAMESPACE;
+//const PREFIX = config.APP.NAMESPACE;
+//const ROLE_URL = "/admin/roles";
 //
 //var application;
 //
@@ -23,9 +23,8 @@
 //module('xx Acceptance | role-list', {
 //  beforeEach() {
 //    application = startApp();
-//    var endpoint = API_PREFIX + ROLE_URL + "/";
+//    var endpoint = PREFIX + ROLE_URL + "/";
 //    xhr( endpoint ,"GET",null,authorization,200,roles );
-//    xhr( API_PREFIX + "/api-token-auth/","POST",request,{},200,response );
 //  },
 //  afterEach() {
 //    Ember.run(application, 'destroy');

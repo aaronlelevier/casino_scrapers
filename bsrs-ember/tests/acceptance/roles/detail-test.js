@@ -6,17 +6,17 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import RoleFactory from 'bsrs-ember/tests/helpers/roles';
 import config from 'bsrs-ember/config/environment';
 
+const PREFIX = config.APP.NAMESPACE;
 const LIST_URL = "/admin/roles";
 const DETAIL_URL = "/admin/roles/3";
 const SUBMIT_BTN = ".submit_btn";
-const API_PREFIX = "/" + config.APP.NAMESPACE;
 
 var application;
 
 module('Acceptance | role-detail', {
   beforeEach() {
     application = startApp();
-    var endpoint = API_PREFIX + LIST_URL + "/";
+    var endpoint = PREFIX + LIST_URL + "/";
     xhr( endpoint ,"GET",null,{},200,RoleFactory.list() );
     xhr( endpoint + "3/","GET",null,{},200,RoleFactory.detail() );
   },
@@ -48,7 +48,7 @@ test('when you deep link to the role detail view you get bound attrs', function(
     assert.equal(find('.t-role-name').val(), 'System Administrator');
   });
 
-  var url = API_PREFIX + DETAIL_URL + "/";
+  var url = PREFIX + DETAIL_URL + "/";
   var response = RoleFactory.detail();
   var payload = RoleFactory.put('Broom Pusher');
   xhr( url,'PUT',payload,{},200,response );

@@ -1,13 +1,11 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 
-var API_HOST = config.APP.API_HOST;
-var NAMESPACE = config.APP.NAMESPACE;
+var PREFIX = config.APP.NAMESPACE;
 
 export default Ember.Object.extend({
     save: function(model) {
-        var prefix = API_HOST + '/' + NAMESPACE;
-        var endpoint = prefix + '/admin/roles/' + model.get('id') + '/';
+        var endpoint = PREFIX + '/admin/roles/' + model.get('id') + '/';
         var store = this.get('store');
         var payload = {
            'id': model.get('id'),
@@ -20,10 +18,9 @@ export default Ember.Object.extend({
         });
     },
     find() {
-        var prefix = API_HOST + '/' + NAMESPACE;
         var store = this.get('store');
         $.ajax({
-            url: prefix + '/admin/roles/'
+            url: PREFIX + '/admin/roles/'
         }).then(function(response) {
             Ember.run(() => {
                 response.results.forEach(function(model) {
@@ -34,8 +31,7 @@ export default Ember.Object.extend({
         return store.find("role");
     },
     findById: function(id) {
-        var prefix = API_HOST + '/' + NAMESPACE;
-        var endpoint = prefix + '/admin/roles/' + id + '/';
+        var endpoint = PREFIX + '/admin/roles/' + id + '/';
         var store = this.get('store');
         $.ajax({
             url: endpoint

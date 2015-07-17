@@ -1,8 +1,7 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 
-var API_HOST = config.APP.API_HOST;
-var NAMESPACE = config.APP.NAMESPACE;
+var PREFIX = config.APP.NAMESPACE;
 
 var extractPhoneNumbers = function(phoneNumbers, store) {
     return phoneNumbers.map((phoneNumber) => {
@@ -76,8 +75,7 @@ var create_people_with_nested = function(model, store) {
 
 export default Ember.Object.extend({
     save: function(model) {
-        var prefix = API_HOST + '/' + NAMESPACE;
-        var endpoint = prefix + '/admin/people/' + model.get('id') + '/';
+        var endpoint = PREFIX + '/admin/people/' + model.get('id') + '/';
         var store = this.get('store');
         var payload = create_people_with_nested(model, store);
         return $.ajax({
@@ -87,10 +85,9 @@ export default Ember.Object.extend({
         });
     },
     find() {
-        var prefix = API_HOST + '/' + NAMESPACE;
         var store = this.get('store');
         $.ajax({
-            url: prefix + '/admin/people/'
+            url: PREFIX + '/admin/people/'
         }).then((response) => {
             Ember.run(() => {
                 response.results.forEach((model) => {
@@ -101,8 +98,7 @@ export default Ember.Object.extend({
         return store.find("person");
     },
     findById: function(id) {
-        var prefix = API_HOST + '/' + NAMESPACE;
-        var endpoint = prefix + '/admin/people/' + id + '/';
+        var endpoint = PREFIX + '/admin/people/' + id + '/';
         var store = this.get('store');
         $.ajax({
             url: endpoint

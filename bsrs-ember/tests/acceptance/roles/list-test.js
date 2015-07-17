@@ -7,14 +7,14 @@ import PeopleFactory from 'bsrs-ember/tests/helpers/people';
 import config from 'bsrs-ember/config/environment';
 
 const PEOPLE_URL = "/admin/people";
-const API_PREFIX = "/" + config.APP.NAMESPACE;
+const PREFIX = config.APP.NAMESPACE;
 
 var application;
 
 module('Acceptance | people-list', {
   beforeEach() {
     application = startApp();
-    var endpoint = API_PREFIX + PEOPLE_URL + "/";
+    var endpoint = PREFIX + PEOPLE_URL + "/";
     xhr( endpoint ,"GET",null,{},200,PeopleFactory.list() );
   },
   afterEach() {

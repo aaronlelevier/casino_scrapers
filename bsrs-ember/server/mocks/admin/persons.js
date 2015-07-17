@@ -28,5 +28,5 @@ module.exports = function(app) {
     res.status(204).end();
   });
 
-  app.use('/bsrs_deva/admin/people/', adminPersonsRouter);
+  app.use('/api/admin/people/', adminPersonsRouter);
 };

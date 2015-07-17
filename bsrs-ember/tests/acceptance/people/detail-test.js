@@ -8,10 +8,10 @@ import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
 const PERSON_PK = 1;
+const PREFIX = config.APP.NAMESPACE;
 const PEOPLE_URL = "/admin/people";
-const DETAIL_URL = "/admin/people/" + PERSON_PK;
+const DETAIL_URL = PEOPLE_URL + "/" + PERSON_PK;
 const SUBMIT_BTN = ".submit_btn";
-const API_PREFIX = "/" + config.APP.NAMESPACE;
 
 var application, store;
 
@@ -21,7 +21,7 @@ module('Acceptance | detail test', {
     store = application.__container__.lookup('store:main');
     var people_list_data = PEOPLE_FIXTURES.list();
     var people_detail_data = PEOPLE_FIXTURES.detail(PERSON_PK);
-    var endpoint = API_PREFIX + PEOPLE_URL + "/";
+    var endpoint = PREFIX + PEOPLE_URL + "/";
     xhr(endpoint ,"GET",null,{},200,people_list_data);
     xhr(endpoint + PERSON_PK + "/","GET",null,{},200,people_detail_data);
   },
@@ -84,7 +84,7 @@ test('when you deep link to the person detail view you get bound attrs', functio
         assert.equal(find('.t-person-auth_amount').val(), '50000.0000');
     });
 
-    var url = API_PREFIX + DETAIL_URL + "/";
+    var url = PREFIX + DETAIL_URL + "/";
     var response = PEOPLE_FIXTURES.detail(PERSON_PK);
     var phone_numbers = [{id: 3, number: '858-715-5026', type: 1}, {id: 4, number: '858-715-5056', type: 2}];
     var addresses = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: 5, postal_code: '92123', country: 1},
@@ -128,7 +128,7 @@ test('clicking cancel button will take from detail view to list view', function(
 test('when you change a related phone numbers type it will be persisted correctly', function(assert) {
 
     visit(DETAIL_URL);
-    var url = API_PREFIX + DETAIL_URL + "/";
+    var url = PREFIX + DETAIL_URL + "/";
     //phone_number fixture type for id:3 is 1 in the fixture data
     var phone_numbers = [{id: 3, number: '858-715-5026', type: 2}, {id: 4, number: '858-715-5056', type: 2}];
     var addresses = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: 5, postal_code: '92123', country: 1},
@@ -145,7 +145,7 @@ test('when you change a related phone numbers type it will be persisted correctl
 
 test('when you change a related address type it will be persisted correctly', function(assert) {
     visit(DETAIL_URL);
-    var url = API_PREFIX + DETAIL_URL + "/";
+    var url = PREFIX + DETAIL_URL + "/";
     var phone_numbers = [{id: 3, number: '858-715-5026', type: 2}, {id: 4, number: '858-715-5056', type: 2}];
     var addresses = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: 5, postal_code: '92123', country: 1},
         {id: 2, type: 2, address: '123 PB', city: 'San Diego', state: 5, postal_code: '92100', country: 1}];
