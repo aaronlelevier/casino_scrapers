@@ -33,7 +33,6 @@ THIRD_PARTY_APPS = (
     'rest_framework.authtoken',
     # test libraries
     'django_nose',
-    'django_coverage',
     'debug_toolbar',
     )
 

@@ -129,9 +129,9 @@ class Person(User):
     # Keys
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus)
-    location = models.ForeignKey(Location)
+    location = models.ForeignKey(Location, blank=True, null=True)
     # required
-    auth_amount = models.PositiveIntegerField()
+    auth_amount = models.PositiveIntegerField(blank=True, default=0)
     auth_amount_currency = models.CharField(max_length=25, choices=choices.CURRENCY_CHOICES,
         default=choices.CURRENCY_CHOICES[0][0])
     accept_assign = models.BooleanField(default=True, blank=True)
