@@ -1,6 +1,6 @@
 import json
 
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.http import JsonResponse
 from django.contrib.auth.models import User, ContentType, Group, Permission
 
@@ -12,6 +12,7 @@ from contact.models import Address, PhoneNumber, Email
 from location.models import Location
 from person.models import Person, Role, PersonStatus
 from person.tests.factory import PASSWORD, create_person
+from person.serializers import PersonUpdateSerializer
 
 
 class PersonViewSetDataChangeTests(APITestCase):
@@ -21,7 +22,6 @@ class PersonViewSetDataChangeTests(APITestCase):
         self.password = PASSWORD
         self.person1 = create_person()
         self.client.login(username=self.person1.username, password=self.password)
-
         # all required fields in order to create a person
         self.role = mommy.make(Role)
         self.person_status = mommy.make(PersonStatus)
@@ -32,31 +32,43 @@ class PersonViewSetDataChangeTests(APITestCase):
 
     def test_create(self):
         self.assertEqual(len(Person.objects.all()), 1)
-
         # simulate posting a Json Dict to create a new Person
         data = {"username":"one","password":"one","first_name":"foo",
-        "last_name":"bar","email":"","role":1,"status":1,"location":1,
-        "auth_amount":204,"auth_amount_currency":"usd"}
+        "last_name":"bar","email":"","role":1,"status":1}
         response = self.client.post('/api/admin/people/', data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(Person.objects.all()), 2)
 
-    # def test_partial_update(self):
-    #     # email pre check before test
-    #     new_email = 'new@mail.com'
-    #     # get a person
-    #     response = self.client.get('/api/admin/people/1/')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     person = json.loads(response.content)
-    #     self.assertNotEqual(person['email'], new_email)
-    #     # change email and send update
-    #     person.update({'email':new_email})
-    #     response = self.client.patch('/api/admin/people/1/', person, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # get back the same person, and confirm that their email is changed in the DB
-    #     response = self.client.get('/api/admin/people/1/')
-    #     person = json.loads(response.content)
-    #     self.assertEqual(person['email'], new_email)
+    def test_patch(self):
+        # email pre check before test
+        title = 'manager'
+        # get a person
+        response = self.client.get('/api/admin/people/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        person = json.loads(response.content)
+        self.assertNotEqual(person['title'], title)
+        # change email and send update
+        person.update({'title': title})
+        response = self.client.patch('/api/admin/people/1/', person, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # get back the same person, and confirm that their email is changed in the DB
+        response = self.client.get('/api/admin/people/1/')
+        person = json.loads(response.content)
+        self.assertEqual(person['title'], title)
+
+    def test_put(self):
+        title = 'manager'
+        person = PersonUpdateSerializer(self.person1).data # returns a python dict
+                                                           # serialized object
+        self.assertNotEqual(person['title'], title)
+        # change a field on the Person to see if the PUT works!
+        person.update({'title':title})
+        response = self.client.put('/api/admin/people/1/', person, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # get back the same person, and confirm that their email is changed in the DB
+        response = self.client.get('/api/admin/people/1/')
+        person = json.loads(response.content)
+        self.assertEqual(person['title'], title)
 
 
 ### PersonViewSetTests ###
@@ -67,7 +79,6 @@ class PersonListTests(TestCase):
         self.password = PASSWORD
         self.people = 10
         create_person(_many=self.people)
-
         # Login
         self.person1 = Person.objects.first()
         self.client.login(username=self.person1.username, password=self.password)

@@ -15,8 +15,11 @@ from rest_framework.decorators import detail_route
 
 import rest_framework_filters as filters
 
-import models as locModels
-import serializers as locSerializers
+from location.models import Location, LocationLevel, LocationStatus, LocationType
+from location.serializers import (
+    LocationLevelSerializer, LocationStatusSerializer, LocationTypeSerializer,
+    LocationSerializer, LocationGridSerializer, LocationFullSerializer
+    )    
 
 
 class CoalesceFilterBackend(filters.backends.DjangoFilterBackend):
@@ -37,7 +40,7 @@ class LocationFilter(filters.FilterSet):
     state = filters.CharFilter(name='addresses__state')
     
     class Meta:
-        model = locModels.Location
+        model = Location
         fields = ['number', 'name', 'level', 'status', 'type', 'state', 
                   'relations', 'relations__type']
         order_by = ['number', 'name', '-number', '-name', 'level', '-level',
@@ -48,28 +51,28 @@ class LocationFilter(filters.FilterSet):
 class LocationLevelViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticated,)
-    serializer_class = locSerializers.LocationLevelSerializer
-    queryset = locModels.LocationLevel.objects.all()
+    serializer_class = LocationLevelSerializer
+    queryset = LocationLevel.objects.all()
     
 
 class LocationStatusViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticated,)
-    serializer_class = locSerializers.LocationStatusSerializer
-    queryset = locModels.LocationStatus.objects.all()
+    serializer_class = LocationStatusSerializer
+    queryset = LocationStatus.objects.all()
 
 
 class LocationTypeViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticated,)
-    serializer_class = locSerializers.LocationTypeSerializer
-    queryset = locModels.LocationType.objects.all()
+    serializer_class = LocationTypeSerializer
+    queryset = LocationType.objects.all()
     
     
 class LocationViewSet(viewsets.ModelViewSet):
    
     permission_classes = (IsAuthenticated,)
-    queryset = locModels.Location.objects.all()
+    queryset = Location.objects.all()
     filter_class = LocationFilter
     
     def get_queryset(self):
@@ -88,7 +91,7 @@ class LocationViewSet(viewsets.ModelViewSet):
         '''
         parent_loc_id = self.request.QUERY_PARAMS.get('parent_loc')
         if parent_loc_id:
-            parent_loc = locModels.Location.objects.get(id=parent_loc_id)
+            parent_loc = Location.objects.get(id=parent_loc_id)
             if parent_loc:
                 queryset = queryset.filter(relations=parent_loc)
 
@@ -99,11 +102,11 @@ class LocationViewSet(viewsets.ModelViewSet):
         set the serializer based on the method
         """
         if (self.action == 'retrieve'):
-            self.serializer_class = locSerializers.LocationFullSerializer
+            self.serializer_class = LocationFullSerializer
         elif (self.action == 'list'):
-            self.serializer_class = locSerializers.LocationGridSerializer
+            self.serializer_class = LocationGridSerializer
         else:
-            self.serializer_class = locSerializers.LocationSerializer
+            self.serializer_class = LocationSerializer
 
         return self.serializer_class
 
@@ -123,13 +126,13 @@ class LocationViewSet(viewsets.ModelViewSet):
                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)
             else:
                 level_id = request.query_params['level']
-                level = locModels.LocationLevel.objects.filter(id=level_id)
+                level = LocationLevel.objects.filter(id=level_id)
                 if level.count() != 1:
                     respObj['code'] = 400
                     respObj['message'] = 'level id ' + level_id + ' does not exist'
                     return Response(respObj, status=status.HTTP_400_BAD_REQUEST)
                 
-                locs = locModels.Location.objects.filter(id=pk)
+                locs = Location.objects.filter(id=pk)
                 if locs.count() != 1:
                     respObj['code'] = 400
                     respObj['message'] = 'location ' + pk + ' does not exist'
