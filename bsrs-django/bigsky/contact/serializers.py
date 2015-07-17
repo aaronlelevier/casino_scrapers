@@ -36,20 +36,23 @@ class PhoneNumberSerializer(serializers.ModelSerializer):
         value = re.sub(r"\D", "", value)
         if len(value) != 10:
             raise serializers.ValidationError("Phone Number does not include 10 digits")
-        
         value = value[0:3] + '-' + value[3:6] + '-' + value[6:10]
-        
         return value
-    
 
-class PhoneNumberShortSerializer(PhoneNumberSerializer):
 
-    type = PhoneNumberTypeSerializer(read_only=True)
+class PhoneNumberShortFKSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = PhoneNumber
         fields = ('id', 'number', 'type')
-        
+    
+
+class PhoneNumberShortSerializer(PhoneNumberShortFKSerializer):
+
+    type = PhoneNumberTypeSerializer(read_only=True)
+
+
+ADDRESS_FIELDS = ('id', 'type', 'address', 'city', 'state', 'postal_code', 'country',)
 
 class AddressTypeSerializer(serializers.ModelSerializer):
 
@@ -64,13 +67,20 @@ class AddressSerializer(serializers.ModelSerializer):
         model = Address
 
 
-class AddressShortSerializer(AddressSerializer):
+class AddressShortSerializer(serializers.ModelSerializer):
 
     type = AddressTypeSerializer(read_only=True)
 
     class Meta:
         model = Address
-        fields = ('id', 'type', 'address', 'city', 'state', 'postal_code', 'country',)
+        fields = ADDRESS_FIELDS
+
+
+class AddressShortFKSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Address
+        fields = ADDRESS_FIELDS
 
 
 class EmailTypeSerializer(serializers.ModelSerializer):

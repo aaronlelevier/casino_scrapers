@@ -14,7 +14,8 @@ from rest_framework import serializers
 from location.models import LocationLevel, Location
 from person.models import PersonStatus, Person, Role
 from contact.serializers import (
-    PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer
+    PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer,
+    AddressShortFKSerializer, PhoneNumberShortFKSerializer,
 )
 
 
@@ -56,23 +57,12 @@ class PersonStatusSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-PERSON_BASE_FIELDS = (
-    'id',
-    'name', # calculated DRF field
-    'title',
-    'role',
-    'emp_number',
-    'status',
-    'auth_amount',
-    )
+PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial',
+            'last_name', 'title', 'emp_number', 'auth_amount',
+            'role', 'status')
 
-PERSON_FIELDS = (
-    'username',
-    'first_name',
-    'middle_initial',
-    'last_name',
-    )
 
+# NOT IN USE: todo to add this
 class PersonCreateSerializer(serializers.ModelSerializer):
     '''
     Only required fields.
@@ -86,10 +76,6 @@ class PersonCreateSerializer(serializers.ModelSerializer):
             'auth_amount', 'auth_amount_currency', # required - other
         )
 
-
-PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial',
-            'last_name', 'title', 'emp_number', 'auth_amount',
-            'role', 'status')
 
 class PersonListSerializer(serializers.ModelSerializer):
 
@@ -111,72 +97,14 @@ class PersonDetailSerializer(PersonListSerializer):
         fields = PERSON_FIELDS + ('phone_numbers', 'addresses',)
 
 
-class PersonSerializer(PersonListSerializer):
+class PersonUpdateSerializer(serializers.ModelSerializer):
 
-    name = serializers.SerializerMethodField('get_full_name')
-
-    def get_full_name(self, obj):
-        return '{} {}'.format(obj.first_name, obj.last_name)
+    phone_numbers = PhoneNumberShortFKSerializer(many=True, read_only=True)
+    addresses = AddressShortFKSerializer(many=True, read_only=True)
 
     class Meta:
         model = Person
-        write_only_fields = ('password',)
-        fields = PERSON_BASE_FIELDS + PERSON_FIELDS + ('password',)
-
-    def create(self, validated_data):
-        #need to use create_user to make sure password is encrypted
-        newuser = Person.objects.create_user(username=validated_data.get('username'),
-                                             password=validated_data.get('password'))
-        
-        #remove password from payload and update included fields
-        if 'password' in validated_data:
-            validated_data.pop('password')
-        
-        newuser = self.update(newuser, validated_data)
-                
-        return newuser
-
-    def update(self, instance, validated_data):
-        #remove password from dict so it isn't saved in the clear
-        if 'password' in validated_data:
-            password = validated_data.pop('password')
-        else:
-            password = ''
-
-        #remove the user from the group if the role has changed
-        role_changed = False
-        if not instance.role:
-            role_changed = True
-        elif 'role' in validated_data and validated_data['role'].id != instance.role.id:
-            role_changed = True
-            instance.role.user_set.remove(instance)
-        
-        #call base class to get model fields
-        super(PersonSerializer, self).update(instance, validated_data)
-        
-        #now add the user to the new group
-        if role_changed:
-            instance.role.user_set.add(instance)
-        
-        #check for a password change
-        if password:
-            instance.set_password(password)
-            instance.save()
-            #updates session cookie or token for current session if current user's password was updated 
-            update_session_auth_hash(self.context['request'], instance)
-        
-        return instance
-
-
-class PersonContactSerializer(PersonSerializer):
-    
-    phone_numbers = PhoneNumberShortSerializer(many=True, read_only=True)
-    addresses = AddressShortSerializer(many=True, read_only=True)
-    emails = EmailShortSerializer(many=True, read_only=True)
-
-    class Meta:
-        model = Person
-        fields = PERSON_BASE_FIELDS + PERSON_FIELDS + ('accept_assign', 'phone_numbers', 'addresses', 'emails')
+        fields = PERSON_FIELDS + ('phone_numbers', 'addresses',)
 
 
 class RoleDetailSerializer(serializers.ModelSerializer):

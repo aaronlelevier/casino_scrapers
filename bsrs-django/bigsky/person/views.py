@@ -12,8 +12,8 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 
-from person.serializers import (PersonStatusSerializer, PersonSerializer,
-    PersonListSerializer, PersonContactSerializer, PersonCreateSerializer,
+from person.serializers import (PersonStatusSerializer, PersonDetailSerializer,
+    PersonListSerializer, PersonCreateSerializer, PersonUpdateSerializer,
     PersonDetailSerializer, RoleSerializer
     )
 from person.models import Person, PersonStatus, Role
@@ -31,15 +31,6 @@ class PersonStatusViewSet(viewsets.ModelViewSet):
 
 ### PERSON ###
 
-class PersonContactViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint for People with all thier Contact Information.
-    """
-    queryset = Person.objects.all()
-    serializer_class = PersonContactSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-
-
 class PersonViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -54,13 +45,16 @@ class PersonViewSet(viewsets.ModelViewSet):
         """
         set the serializer based on the method
         """
-        if self.action == 'list':
-            return PersonListSerializer
-        elif self.action == 'retrieve':
+        if self.action == 'retrieve':
             return PersonDetailSerializer
-        else:
+        elif self.action == ('update' or 'partial_update'):
+            return PersonUpdateSerializer
+        elif self.action == 'create':
             return PersonCreateSerializer
-            
+        else:
+            return PersonListSerializer
+
+
     # def list(self, request):
     #     serializer = PersonListSerializer(self.queryset, many=True)
     #     return Response(serializer.data)
@@ -71,7 +65,7 @@ class PersonViewSet(viewsets.ModelViewSet):
 
     # def retrieve(self, request, pk=None):
     #     person = get_object_or_404(User, pk=pk)
-    #     serializer = PersonSerializer(person)
+    #     serializer = PersonDetailSerializer(person)
     #     return Response(serializer.data)
 
     # def update(self, request, pk=None):

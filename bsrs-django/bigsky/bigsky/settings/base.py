@@ -80,7 +80,12 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bigsky.wsgi.application'
 
 # Must Override!
-DATABASES = {}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'mydatabase',
+    }
+}
 
 LANGUAGE_CODE = 'en-us'
 

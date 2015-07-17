@@ -9,8 +9,10 @@ Created on Jan 21, 2015
 from rest_framework import serializers
 
 import models as locModels
-import contact.serializers as contactSerializers
-import person.serializers as personSerializers
+from contact.serializers import (
+    PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer,
+    )
+from person.serializers import PersonListSerializer
 
 
 class LocationLevelSerializer(serializers.ModelSerializer):
@@ -49,10 +51,10 @@ class LocationGridSerializer(LocationSerializer):
 
 class LocationFullSerializer(LocationGridSerializer):
     
-    people = personSerializers.PersonSerializer(many=True, read_only=True)
-    phone_numbers = contactSerializers.PhoneNumberShortSerializer(many=True, read_only=True)
-    addresses = contactSerializers.AddressShortSerializer(many=True, read_only=True)
-    emails = contactSerializers.EmailShortSerializer(many=True, read_only=True)
+    people = PersonListSerializer(many=True, read_only=True)
+    phone_numbers = PhoneNumberShortSerializer(many=True, read_only=True)
+    addresses = AddressShortSerializer(many=True, read_only=True)
+    emails = EmailShortSerializer(many=True, read_only=True)
     
     class Meta:
         model = locModels.Location
