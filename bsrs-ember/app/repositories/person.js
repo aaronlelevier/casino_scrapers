@@ -81,6 +81,8 @@ export default Ember.Object.extend({
         return $.ajax({
             url: endpoint,
             data: payload,
+            dataType: 'json',
+            contentType: 'application/json',
             method: 'PUT'
         });
     },
