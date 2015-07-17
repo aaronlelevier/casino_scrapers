@@ -50,9 +50,17 @@ export default Ember.Route.extend({
     },
     actions: {
         willTransition: function(transition) {
-            var controller = this.get('controller');
             var model = this.currentModel.model;
-            if(model.get('isDirty')) {
+            var store = this.get('store');
+            var phone_numbers = store.find('phonenumber', {person_id: model.get('id').toString()});
+            var phone_number_dirty = false;
+            phone_numbers.forEach((num) => {
+                if (num.get('isDirty')) {
+                    phone_number_dirty = true;
+                }
+            });
+            
+            if (model.get('isDirty'))  {
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;

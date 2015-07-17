@@ -179,6 +179,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they roll back', function(assert) {
     visit(DETAIL_URL);
     fillIn('.t-person-username', 'llcoolj');
+    fillIn('.t-multi-phone-type:eq(0)', 2);
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {
@@ -192,7 +193,9 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), PEOPLE_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', 1);
+            var phone_numbers = store.find('phonenumber', "1");
             assert.equal(person.get('username'), 'akrier');
+            assert.equal(phone_numbers.source[0].get('type'), 1);
         });
     });
 });

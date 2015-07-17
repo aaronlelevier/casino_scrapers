@@ -130,7 +130,6 @@ test('model with existing array of entries is shown at render and bound to model
 
     var $component = this.$('.t-input-multi-address');
     assert.equal($component.find('.t-del-btn').length, 3);
-    console.log(model.get('addresses').objectAt(0).get('type'));
     $component.find('.t-address-type:eq(0)').val(2).trigger('change');
     $component.find('.t-address:eq(0)').val('andier').trigger('change');
     $component.find('.t-address-city:eq(0)').val('San Jose').trigger('change');
