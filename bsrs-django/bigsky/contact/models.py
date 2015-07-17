@@ -77,20 +77,18 @@ class Address(ContactBaseModel):
     location = models.ForeignKey(Location, related_name='addresses', null=True, blank=True)
     person = models.ForeignKey(Person, related_name='addresses', null=True, blank=True)
     # fields
-    address1 = models.CharField(max_length=200, null=True, blank=True)
-    address2 = models.CharField(max_length=200, null=True, blank=True)
-    address3 = models.CharField(max_length=200, null=True, blank=True)
+    address = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     state = models.CharField(max_length=100, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
-    postalcode = models.CharField(max_length=32, null=True, blank=True)
+    postal_code = models.CharField(max_length=32, null=True, blank=True)
 
     class Meta:
         ordering = ('type',)
         
     def __str__(self):
-        if self.address1:
-            return self.address1
+        if self.address:
+            return self.address
         else:
             return ""
 

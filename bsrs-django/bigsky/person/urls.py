@@ -6,12 +6,10 @@ from person import views
 
 
 router = routers.DefaultRouter()
-router.register(r'person', views.PersonViewSet)
-router.register(r'person_contact', views.PersonContactViewSet)
-router.register(r'person_status', views.PersonStatusViewSet)
-router.register(r'role', views.RoleViewSet)
+router.register(r'people', views.PersonViewSet)
+router.register(r'roles', views.RoleViewSet)
 
 
 urlpatterns = patterns('',
-    url(r'^api/person/', include(router.urls)),
+    url(r'^api/admin/', include(router.urls)),
     )

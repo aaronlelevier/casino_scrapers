@@ -55,6 +55,7 @@ class AddressTypeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = AddressType
+        fields = ('id', 'name',)
 
 
 class AddressSerializer(serializers.ModelSerializer):
@@ -65,12 +66,11 @@ class AddressSerializer(serializers.ModelSerializer):
 
 class AddressShortSerializer(AddressSerializer):
 
-    type_name = serializers.CharField(source='type.name', read_only=True)
+    type = AddressTypeSerializer(read_only=True)
 
     class Meta:
         model = Address
-        fields = ('id', 'address1', 'address2', 'address3', 'city', 'state', 'country',
-                  'postalcode', 'type_name') 
+        fields = ('id', 'type', 'address', 'city', 'state', 'postal_code', 'country',)
 
 
 class EmailTypeSerializer(serializers.ModelSerializer):

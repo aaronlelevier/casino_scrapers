@@ -14,7 +14,7 @@ from rest_framework.decorators import detail_route
 
 from person.serializers import (PersonStatusSerializer, PersonSerializer,
     PersonListSerializer, PersonContactSerializer, PersonCreateSerializer,
-    RoleSerializer
+    PersonDetailSerializer, RoleSerializer
     )
 from person.models import Person, PersonStatus, Role
 from person.permissions import BSModelPermissions
@@ -56,6 +56,8 @@ class PersonViewSet(viewsets.ModelViewSet):
         """
         if self.action == 'list':
             return PersonListSerializer
+        elif self.action == 'retrieve':
+            return PersonDetailSerializer
         else:
             return PersonCreateSerializer
             

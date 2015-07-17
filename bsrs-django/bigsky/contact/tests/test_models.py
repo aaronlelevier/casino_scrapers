@@ -46,7 +46,7 @@ class AddressTests(TestCase):
         self.assertEqual(str(a), "")
 
         st_name = '123 St.'
-        b = mommy.make(Address, person=p, address1=st_name)
+        b = mommy.make(Address, person=p, address=st_name)
         self.assertEqual(str(b), st_name)
 
     def test_no_person_or_location(self):

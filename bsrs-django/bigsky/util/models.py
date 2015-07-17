@@ -75,7 +75,7 @@ class AbstractName(BaseModel):
 
 @python_2_unicode_compatible
 class AbstractNameOrder(BaseModel):
-    order = models.IntegerField()
+    order = models.IntegerField(blank=True, default=0)
     name = models.CharField(max_length=100, unique=True)
     
     class Meta:

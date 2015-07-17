@@ -87,6 +87,10 @@ class PersonCreateSerializer(serializers.ModelSerializer):
         )
 
 
+PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial',
+            'last_name', 'title', 'emp_number', 'auth_amount',
+            'role', 'status')
+
 class PersonListSerializer(serializers.ModelSerializer):
 
     role = RoleSerializer(read_only=True)
@@ -94,9 +98,17 @@ class PersonListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = ('id', 'username', 'first_name', 'middle_initial',
-            'last_name', 'title', 'emp_number', 'auth_amount',
-            'role', 'status')
+        fields = PERSON_FIELDS
+
+
+class PersonDetailSerializer(PersonListSerializer):
+
+    phone_numbers = PhoneNumberShortSerializer(many=True, read_only=True)
+    addresses = AddressShortSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Person
+        fields = PERSON_FIELDS + ('phone_numbers', 'addresses',)
 
 
 class PersonSerializer(PersonListSerializer):
