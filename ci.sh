@@ -24,7 +24,7 @@ function emberTest {
 function pipInstall {
     virtualenv venv
     source venv/bin/activate
-    pip install -r requirements_dev.txt
+    pip install -r requirements.txt
     PIP_INSTALL=$?
     if [ "$PIP_INSTALL" == 1 ]; then
       echo "pip install failed"
