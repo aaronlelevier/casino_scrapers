@@ -60,7 +60,7 @@ class BaseModel(models.Model):
 
 class Tester(BaseModel):
     pass
-
+    
 
 @python_2_unicode_compatible
 class AbstractName(BaseModel):

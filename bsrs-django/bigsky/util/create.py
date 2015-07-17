@@ -1,4 +1,7 @@
+from django.db import IntegrityError
 from django.contrib.auth.models import ContentType, Group, Permission
+
+from person.permissions import perms_map
 
 
 def _get_groups_and_perms():
@@ -13,12 +16,22 @@ def _get_groups_and_perms():
             group.permissions.add(perm)
             group.save()
 
-'''
 
-from util.create import _get_groups_and_perms
-_get_groups_and_perms()
-from django.contrib.auth.models import Group
-groups = Group.objects.all()
-groups
+def _create_model_view_permissions():
+    '''
+    Create 'view_(model_name)' Permission for all models.
 
-'''
+    Run this when adding a new Model to the DB.
+    '''
+    for ct in ContentType.objects.all():
+
+        name = 'Can view {}'.format(ct.name)
+        codename = 'view_{}'.format(ct.name)
+
+        # create a single instance to be used in all 3 view types
+        for i in perms_map.keys():
+            if i in ['HEAD', 'OPTIONS', 'GET']:
+                try:
+                    Permission.objects.create(name=name, codename=codename, content_type=ct)
+                except IntegrityError:
+                    pass
