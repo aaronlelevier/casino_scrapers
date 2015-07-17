@@ -60,7 +60,7 @@ export default Ember.Route.extend({
                 }
             });
             
-            if (model.get('isDirty'))  {
+            if (model.get('isDirty') || phone_number_dirty)  {
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;

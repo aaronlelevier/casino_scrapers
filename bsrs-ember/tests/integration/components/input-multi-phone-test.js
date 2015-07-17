@@ -35,7 +35,7 @@ test('defaults to use phone number model with field name of number', function(as
 
     assert.equal(this.$('.t-new-entry').length, 1);
     assert.equal(model.length, 1);
-    assert.equal(model.objectAt(0).get('number'), '');
+    assert.equal(model.objectAt(0).get('number'), undefined);
     this.$('.t-new-entry').val('888-888-8888').trigger('change');
     assert.equal(model.objectAt(0).get('number'), '888-888-8888');
 });

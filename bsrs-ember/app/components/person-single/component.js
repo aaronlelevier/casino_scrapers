@@ -7,10 +7,17 @@ export default Ember.Component.extend({
     attemptedTransition: '',
     actions: {
         savePerson() {
+            var store = this.get('store'); //TODO: move to repository ...soon
             var model = this.get('model');
             var repository = this.get('repository');
             repository.save(model).then(() => {
-                model.save();
+                model.save(); //TODO: move to repository soon
+
+                var phone_numbers = store.find('phonenumber', {person_id: model.get('id').toString()}); //TODO: fix toString hack
+                phone_numbers.forEach((num) => {
+                    num.save();
+                });
+
                 this.sendAction('savePerson');
             });
         },

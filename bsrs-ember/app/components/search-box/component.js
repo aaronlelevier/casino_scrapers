@@ -14,8 +14,6 @@ export default Ember.Component.extend({
                 }
             });
             transition.retry();
-            //rollback the model ... how?
-            //this.sendAction('rollback_model');
         },
         cancel_modal() {
             this.sendAction('cancel_modal');
