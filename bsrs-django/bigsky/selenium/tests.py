@@ -26,8 +26,11 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         nav_admin_people = self.wait_for_xhr_request("t-nav-admin-people")
         nav_admin_people.click()
 
-        # username_input = self.wait_for_xhr_request("t-nav-admin-people")
-        # assert username_input.get_attribute("value") == "aaron"
+        first_person = self.wait_for_xhr_request("t-person-data")
+        first_person.click()
+
+        username_input = self.wait_for_xhr_request("t-person-username")
+        assert username_input.get_attribute("value") == "aaron"
 
 
 if __name__ == "__main__":
