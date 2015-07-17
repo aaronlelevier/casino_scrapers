@@ -8,11 +8,9 @@ ipython==3.2.0
 Jinja2==2.7.3
 jsonschema==2.5.1
 mistune==0.6
-model-mommy==1.2.4
 ptyprocess==0.5
 Pygments==2.0.2
 pyzmq==14.7.0
-selenium==2.46.0
 sqlparse==0.1.15
 terminado==0.5
 tornado==4.2
