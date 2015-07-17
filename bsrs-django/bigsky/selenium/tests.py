@@ -32,6 +32,10 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         username_input = self.wait_for_xhr_request("t-person-username")
         assert username_input.get_attribute("value") == "aaron"
 
+        self.driver.find_element_by_class_name('t-save-btn').click()
+
+        self.wait_for_xhr_request("t-person-data")
+
 
 if __name__ == "__main__":
     unittest.main()

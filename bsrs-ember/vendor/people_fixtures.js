@@ -85,6 +85,8 @@ var PEOPLE_FACTORY = {
     },
     put: function(i, username, first_name, last_name, title, emp_number, auth_amount, phone_numbers, addresses) {
         var response = generatePerson(i, 'PUT');
+        response.role = response.role.id;
+        response.status = response.status.id;
         response.title = title || response.title;
         response.username = username || response.username;
         response.first_name = first_name || response.first_name;

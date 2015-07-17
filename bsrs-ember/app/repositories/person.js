@@ -64,8 +64,8 @@ var create_people_with_nested = function(model, store) {
         'title': model.get('title'),
         'emp_number': model.get('emp_number'),
         'auth_amount': model.get('auth_amount'),
-        'status': model.get('status'),
-        'role': model.get('role'),
+        'status': model.get('status').id,
+        'role': model.get('role').id,
         'acceptassign': model.get('acceptassign'),
         'phone_numbers': phoneNumbers,
         'addresses': addresses,
@@ -82,7 +82,6 @@ export default Ember.Object.extend({
             url: endpoint,
             data: payload,
             dataType: 'json',
-            contentType: 'application/json',
             method: 'PUT'
         });
     },
