@@ -34,7 +34,7 @@ fi
 cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/index.html templates
 
-uwsgi --http :8000 --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/venv --daemonize /tmp/bigsky.log
+uwsgi --http :8000 --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
 
 WSGI_EXIT=$?
 if [ "$WSGI_EXIT" == 1 ]; then
