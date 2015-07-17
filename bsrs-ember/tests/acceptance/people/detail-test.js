@@ -37,7 +37,7 @@ test('clicking a persons name will redirect to the given detail view', function(
         assert.equal(currentURL(),PEOPLE_URL);
     });
 
-    click('.t-data:eq(0)');
+    click('.t-person-data:eq(0)');
 
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
@@ -112,7 +112,7 @@ test('clicking cancel button will take from detail view to list view', function(
         assert.equal(currentURL(),PEOPLE_URL);
     });
 
-    click('.t-data:eq(0)');
+    click('.t-person-data:eq(0)');
 
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);

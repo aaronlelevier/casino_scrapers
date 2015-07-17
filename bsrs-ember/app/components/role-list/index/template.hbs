@@ -16,7 +16,7 @@
 		</thead>
 		<tbody>
 			{{#each model as |role|}}
-				{{#link-to 'admin.roles.role' role.id tagName="tr" class="t-data"}}
+				{{#link-to 'admin.roles.role' role.id tagName="tr" class="t-person-data"}}
 					<td><input type="checkbox" /></td>
 					<td>{{role.name}}</td>
 					<td>{{role.location_level}}</td>

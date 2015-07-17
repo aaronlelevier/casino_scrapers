@@ -21,7 +21,7 @@
 		</thead>
 		<tbody>
 			{{#each model as |person|}}
-				{{#link-to 'admin.people.person' person.id tagName="tr" class="t-data"}}
+				{{#link-to 'admin.people.person' person.id tagName="tr" class="t-person-data"}}
 					<td><input type="checkbox" /></td>
 					<td>{{person.first_name}} {{person.last_name}}</td>
 					<td>{{person.title}}</td>
