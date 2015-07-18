@@ -11,9 +11,8 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
     # Admin
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^django-admin/', include(admin.site.urls)),
     # Bigsky Django Views
-    url(r'^$', IndexView.as_view(), name='index'),
     url(r'^login/',auth_views.login,
         {'template_name': 'login.html',
         'authentication_form': forms.AuthenticationForm
@@ -25,6 +24,7 @@ urlpatterns = patterns('',
     url(r'', include('contact.urls')),
     url(r'', include('location.urls')),
     url(r'', include('person.urls')),
+    url(r'^.*$', IndexView.as_view(), name='index'),
 )
 
 if settings.DEBUG:
