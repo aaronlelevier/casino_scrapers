@@ -24,6 +24,11 @@ export default Ember.Component.extend({
         cancelPerson() {
             var model = this.get('model');
             this.sendAction('cancelPerson', model);
+        },
+        deletePerson() {            
+            //TODO: Add Delete Person here... FYI - delete will not actually delete.
+            var model = this.get('model');
+            this.sendAction('cancelPerson', model);
         }
     }
 });

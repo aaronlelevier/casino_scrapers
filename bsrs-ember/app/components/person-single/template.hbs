@@ -1,63 +1,71 @@
 <form class="form-horizontal" {{action "return false" this on="submit"}}>
 	<header>
 		<h1>{{model.first_name}} {{model.last_name}} <small>{{model.title}}</small></h1>
-		<div class="btn-group btn-group-sm pull-right center-block">
-			{{save-button save="savePerson"}}
-			{{cancel-button cancel="cancelPerson"}}
-			{{delete-button delete="deletePerson"}}
+		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
+		  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			<span class="caret"></span>
+		  </button>
+		  <ul class="dropdown-menu">
+			<li>{{delete-button delete="deletePerson"}}</li>
+		  </ul>
 		</div>
-
 	</header>
 	<section class="docSection col-sm-12">
+		
+		{{#form-group title="admin.person.label.status"}}
+			<select class="form-control">
+				<option>Active</option>
+				<option>Inactive</option>
+				<option>Expired</option>
+			</select>
+		{{/form-group}}
 
-			{{#form-group title="admin.person.label.status"}}
-				<select class="form-control">
-					<option>Active</option>
-					<option>Inactive</option>
-					<option>Expired</option>
-				</select>
-			{{/form-group}}
+		{{#form-group title="admin.person.label.username" for="username"}}
+	    {{input type="text" placeholder=(t "admin.person.label.username") value=model.username class="form-control t-person-username" id="username" required="required"}}
+		{{/form-group}}
 
-			{{#form-group title="admin.person.label.username" for="username"}}
-		    {{input type="text" placeholder=(t "admin.person.label.username") value=model.username class="form-control t-person-username" id="username" required="required"}}
-			{{/form-group}}
+		{{#form-group title="admin.person.label.first_name" for="first_name"}}
+	    {{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name" required="required"}}
+		{{/form-group}}
 
-			{{#form-group title="admin.person.label.first_name" for="first_name"}}
-		    {{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name" required="required"}}
-			{{/form-group}}
+		{{#form-group title="admin.person.label.last_name" for="last_name"}}
+	    {{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name" required="required"}}
+		{{/form-group}}
 
-			{{#form-group title="admin.person.label.last_name" for="last_name"}}
-		    {{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name" required="required"}}
-			{{/form-group}}
+		{{#form-group title="admin.person.label.title" for="title"}}
+	  	{{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
+		{{/form-group}}
 
-			{{#form-group title="admin.person.label.title" for="title"}}
-		  	{{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
-			{{/form-group}}
+		{{#form-group title="admin.person.label.emp_number" for="emp_number"}}
+	    {{input type="text" placeholder=(t "admin.person.label.emp_number") value=model.emp_number class="form-control t-person-emp_number" id="emp_number"}}
+		{{/form-group}}
 
-			{{#form-group title="admin.person.label.emp_number" for="emp_number"}}
-		    {{input type="text" placeholder=(t "admin.person.label.emp_number") value=model.emp_number class="form-control t-person-emp_number" id="emp_number"}}
-			{{/form-group}}
+		{{#form-group title="admin.person.label.phone_number.other"}}
+			{{input-multi-phone placeholder=(t "admin.person.label.phone_number.one") model=phone_numbers types=phone_number_types}}
+		{{/form-group}}
 
-			{{#form-group title="admin.person.label.phone_number.other"}}
-				{{input-multi-phone placeholder=(t "admin.person.label.phone_number.one") model=phone_numbers types=phone_number_types}}
-			{{/form-group}}
+		{{#form-group title="admin.person.label.address" for="addresses"}}
+			{{input-multi-address
+				model=addresses
+				state_list=state_list
+				countries=countries
+				address_types=address_types
+			}}
+		{{/form-group}}
 
-			{{#form-group title="admin.person.label.address" for="addresses"}}
-				{{input-multi-address
-					model=addresses
-					state_list=state_list
-					countries=countries
-					address_types=address_types
-				}}
-			{{/form-group}}
+		{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
+	    {{input type="text" placeholder=(t "admin.person.label.auth_amount") value=model.auth_amount class="form-control t-person-auth_amount" id="auth_amount" disabled=editPrivilege}}
+		{{/form-group}}
 
-			{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
-		    {{input type="text" placeholder=(t "admin.person.label.auth_amount") value=model.auth_amount class="form-control t-person-auth_amount" id="auth_amount" disabled=editPrivilege}}
-			{{/form-group}}
-
-			{{#form-group title="admin.person.label.role" for="role"}}
-		    {{input type="text" placeholder=(t "admin.person.label.role") value=(t model.role.name) class="form-control" id="role"}}
-			{{/form-group}}
+		{{#form-group title="admin.person.label.role" for="role"}}
+	    {{input type="text" placeholder=(t "admin.person.label.role") value=(t model.role.name) class="form-control" id="role"}}
+		{{/form-group}}
 
 	</section>
+	<footer>
+		<div class="btn-group btn-group-sm pull-right center-block">
+			{{cancel-button cancel="cancelPerson"}}
+			{{save-button save="savePerson"}}
+		</div>
+	</footer>
 </form>
