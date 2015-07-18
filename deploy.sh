@@ -26,9 +26,10 @@ cd bsrs-django/bigsky
 ../../venv/bin/python manage.py loaddata fixtures/jenkins.json --settings=bigsky.settings.ci
 
 cp -r ../../bsrs-ember/dist/assets .
+cp -r ../../bsrs-ember/dist/fonts .
 cp -r ../../bsrs-ember/dist/index.html templates
 
-uwsgi --http :8000 --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
+uwsgi --http :8000 --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --static-map /fonts=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
 
 echo "DEPLOY FINISHED!"
 exit 0
