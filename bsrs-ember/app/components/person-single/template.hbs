@@ -56,7 +56,7 @@
 		{{/form-group}}
 
 		{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
-	    {{input type="text" placeholder=(t "admin.person.label.auth_amount") value=model.auth_amount class="form-control t-person-auth_amount" id="auth_amount" disabled=editPrivilege}}
+      {{input type="text" placeholder=(t "admin.person.label.auth_amount") value=(currency-format model.auth_amount "USD") class="form-control t-person-auth_amount" id="auth_amount" disabled=editPrivilege}}
 		{{/form-group}}
 
 		{{#form-group title="admin.person.label.role" for="role"}}
