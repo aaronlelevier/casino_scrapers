@@ -6,12 +6,14 @@
 			<span class="caret"></span>
 		  </button>
 		  <ul class="dropdown-menu">
-			<li>{{delete-button delete="deletePerson"}}</li>
+			<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
+  			<li><a href="#">{{fa-icon "print"}} Print</a></li>
+  			<li>{{delete-button delete="deletePerson"}}</li>
 		  </ul>
 		</div>
 	</header>
 	<section class="docSection col-sm-12">
-		
+
 		{{#form-group title="admin.person.label.status"}}
 			<select class="form-control">
 				<option>Active</option>
