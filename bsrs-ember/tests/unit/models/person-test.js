@@ -6,7 +6,7 @@ import Ember from 'ember';
 
 var container, registry, store;
 
-module('sco unit: person test', {
+module('unit: person test', {
     beforeEach() {
         registry = new Ember.Registry();
         registry.register('model:person', Person);
