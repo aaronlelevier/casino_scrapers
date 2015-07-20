@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 class DestroyModelMixin(object):
     """
-    Destroy a model instance.
+    Destroy a model instance, extended to handle `override` kwarg.
     """
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
