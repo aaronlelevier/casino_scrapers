@@ -70,6 +70,20 @@ class PersonViewSetDataChangeTests(APITestCase):
         person = json.loads(response.content)
         self.assertEqual(person['title'], title)
 
+    def test_put_password_change(self):
+        # test the User is currently logged in
+        self.assertIn('_auth_user_id', self.client.session)
+        # update their PW and see if they are still logged in
+        password = 'new-password'
+        person = PersonUpdateSerializer(self.person1).data # returns a python dict
+                                                           # serialized object
+        # change a field on the Person to see if the PUT works!
+        person.update({'password':password})
+        response = self.client.put('/api/admin/people/1/', person, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # still logged in after PW change test
+        self.assertIn('_auth_user_id', self.client.session)
+
 
 ### PersonViewSetTests ###
 
