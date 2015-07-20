@@ -16,6 +16,21 @@ from person.tests.factory import PASSWORD, create_person
 from person.serializers import PersonUpdateSerializer
 
 
+# Base fields: this will always be a Python Dict unless explicitly
+# read in from a Serializer endpoint
+PERSON_DATA = {
+    "username":"one",
+    "password":"one",
+    "first_name":"foo",
+    "last_name":"bar",
+    "email":"",
+    "role":1,
+    "status":1,
+    "phone_numbers":[],
+    'addresses': []
+}
+
+
 class PersonCreateTests(APITestCase):
     # Test: create, update, partial_update
 
@@ -29,23 +44,8 @@ class PersonCreateTests(APITestCase):
         self.location = mommy.make(Location)
         self.phone_number = mommy.make(PhoneNumber, location=self.location)
         self.phone_number2 = mommy.make(PhoneNumber, location=self.location)
-
-        # Address
         self.address = mommy.make(Address, location=self.location)
-
-        # Base fields: this will always be a Python Dict unless explicitly
-        # read in from a Serializer endpoint
-        self.data = {
-            "username":"one",
-            "password":"one",
-            "first_name":"foo",
-            "last_name":"bar",
-            "email":"",
-            "role":1,
-            "status":1,
-            "phone_numbers":[],
-            'addresses': []
-        }
+        self.data = PERSON_DATA
 
     def tearDown(self):
         self.client.logout()
@@ -98,8 +98,7 @@ class PersonCreateTests(APITestCase):
         self.assertEqual(Address.objects.exclude(person__isnull=True).count(), 1)
 
 
-class PersonViewSetDataChangeTests(APITestCase):
-    # Test: create, update, partial_update
+class PersonPatchTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
@@ -129,6 +128,21 @@ class PersonViewSetDataChangeTests(APITestCase):
         response = self.client.get('/api/admin/people/1/')
         person = json.loads(response.content)
         self.assertEqual(person['title'], title)
+
+
+class PersonPutTests(APITestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person1 = create_person()
+        self.client.login(username=self.person1.username, password=self.password)
+        # all required fields in order to create a person
+        self.role = mommy.make(Role)
+        self.person_status = mommy.make(PersonStatus)
+        self.location = mommy.make(Location)
+
+    def tearDown(self):
+        self.client.logout()
 
     def test_put(self):
         title = 'manager'
@@ -187,26 +201,7 @@ class PersonListTests(TestCase):
         self.assertEqual(person['username'], self.person1.username)
 
 
-class PersonViewSetTests(TestCase):
-    
-    def setUp(self):
-        self.password = PASSWORD
-        self.person = create_person()
-
-        # Login
-        self.client.login(username=self.person.username, password=self.password)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_retrieve(self):
-        response = self.client.get('/api/admin/people/1/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        person = json.loads(response.content)
-        self.assertEqual(person['username'], self.person.username)
-
-
-class PersonContactViewSetTests(TestCase):
+class PersonDetailTests(TestCase):
 
     def setUp(self):
         self.password = PASSWORD
@@ -226,6 +221,13 @@ class PersonContactViewSetTests(TestCase):
     def test_create(self):
         self.assertEqual(self.address.person, self.person)
 
+    def test_retrieve(self):
+        response = self.client.get('/api/admin/people/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        person = json.loads(response.content)
+        self.assertEqual(person['username'], self.person.username)
+        self.assertIsNotNone(person['phone_numbers'])
+
 
 class PersonAccessTests(TestCase):
 
@@ -240,6 +242,7 @@ class PersonAccessTests(TestCase):
         self.client.login(username=self.person.username, password=self.password)
         response = self.client.get('/api/admin/people/1/', format='json')
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(int(self.client.session['_auth_user_id']), self.person.pk)
 
     def test_noaccess_user(self):
         """
