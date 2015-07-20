@@ -24,14 +24,17 @@ class PersonCreateTests(APITestCase):
         self.person = create_person()
         self.client.login(username=self.person.username, password=self.password)
 
-        # PhoneNumber (create a `phone_number` which can be joined on the person
-        #              for a test nested create Person w/ PhoneNumber)
+        # PhoneNumber: create a `phone_number` which can be joined on the person
+        # for a test nested create Person w/ PhoneNumber
         self.location = mommy.make(Location)
         self.phone_number = mommy.make(PhoneNumber, location=self.location)
         self.phone_number2 = mommy.make(PhoneNumber, location=self.location)
 
-        # Base fields (this will always be a Python Dict unless explicitly
-        #              read in from a Serializer endpoint)
+        # Address
+        self.address = mommy.make(Address, location=self.location)
+
+        # Base fields: this will always be a Python Dict unless explicitly
+        # read in from a Serializer endpoint
         self.data = {
             "username":"one",
             "password":"one",
@@ -40,7 +43,8 @@ class PersonCreateTests(APITestCase):
             "email":"",
             "role":1,
             "status":1,
-            "phone_numbers":[]
+            "phone_numbers":[],
+            'addresses': []
         }
 
     def tearDown(self):
@@ -76,6 +80,22 @@ class PersonCreateTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Person.objects.count(), 2)
         self.assertEqual(PhoneNumber.objects.exclude(person__isnull=True).count(), 2)
+
+    def test_two_related(self):
+        # Test creating a single Person w/ PhoneNumber and Address
+        # nested creates
+        self.assertEqual(Person.objects.count(), 1)
+        self.assertEqual(Address.objects.exclude(person__isnull=True).count(), 0)
+        # simulate posting a Json Dict to create a new Person
+        self.data.update({
+            'phone_numbers': [model_to_dict(self.phone_number)],
+            'addresses': [model_to_dict(self.address)]
+            })
+        response = self.client.post('/api/admin/people/', self.data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Person.objects.count(), 2)
+        self.assertEqual(PhoneNumber.objects.exclude(person__isnull=True).count(), 1)
+        self.assertEqual(Address.objects.exclude(person__isnull=True).count(), 1)
 
 
 class PersonViewSetDataChangeTests(APITestCase):

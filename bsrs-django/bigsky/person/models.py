@@ -109,6 +109,9 @@ class Role(BaseModel):
 
 
 class ProxyRole(BaseModel):
+    '''
+    A `Role` that can proxy for, or act on the behalf of, another `Role`
+    '''
     role = models.ForeignKey(Role)
 
 

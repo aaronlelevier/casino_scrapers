@@ -67,7 +67,7 @@ class PersonCreateSerializer(serializers.ModelSerializer):
 
     # optional contact info
     phone_numbers = PhoneNumberShortFKSerializer(many=True)
-    # addresses = AddressShortFKSerializer(many=True)
+    addresses = AddressShortFKSerializer(many=True)
 
     class Meta:
         model = Person
@@ -75,20 +75,21 @@ class PersonCreateSerializer(serializers.ModelSerializer):
         fields = (
             'username', 'email', 'password', 'first_name', 'last_name', # user fields
             'role', 'status', # keys
-            'location', 'phone_numbers', #'addresses',
+            'location', 'phone_numbers', 'addresses',
         )
 
     def create(self, validated_data):
-        # PhoneNumbers
+        # first pop off related models or else they will be sent to 
+        # `Person` create()
         phone_numbers = validated_data.pop('phone_numbers')
+        addresses = validated_data.pop('addresses')
+        # PhoneNumbers
         person = Person.objects.create(**validated_data)
         for ph in phone_numbers:
             PhoneNumber.objects.create(person=person, **ph)
         # Addresses
-        # addresses = validated_data.pop('addresses')
-        # for add in addresses:
-        #     Address.objects.create(person=person, **a)
-
+        for ad in addresses:
+            Address.objects.create(person=person, **ad)
         return person
 
 
