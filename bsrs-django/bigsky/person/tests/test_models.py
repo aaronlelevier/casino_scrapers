@@ -33,8 +33,8 @@ class PersonTests(TestCase):
     # delete()
 
     def test_delete(self):
-        self.assertEqual(Person.objects.count(), 1)
-        self.assertEqual(Person.objects.filter(deleted=True).count(), 0)
+        self.assertEqual(Person.objects.filter(deleted=False).count(),
+            Person.objects.count())
         self.person.delete()
         self.assertEqual(Person.objects.count(), 1)
         self.assertEqual(Person.objects.filter(deleted=True).count(), 1)
@@ -43,6 +43,14 @@ class PersonTests(TestCase):
         self.assertEqual(Person.objects.count(), 1)
         self.person.delete(override=True)
         self.assertEqual(Person.objects.count(), 0)
+
+    # def test_delete_related_objects(self):
+    #     self.assertIsInstance(self.person, Person)
+    #     self.assertIsInstance(self.person.role, Role)
+    #     # delete n check
+    #     self.person.delete(override=True)
+    #     self.assertEqual(Person.objects.count(), 0)
+    #     self.assertEqual(Role.objects.count(), 0)
 
 
 class PersonCreateTests(TestCase):
