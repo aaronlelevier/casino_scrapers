@@ -5,9 +5,9 @@ export default Ember.Component.extend({
     classNames: ["current-user"],
     init() {
         //TODO: change this to person that is logged in
-        var firstName = "Andier"; 
-        var lastName = "Krier"; 
-        var person_id = 3; 
+        var firstName = "Andier";
+        var lastName = "Krier";
+        var person_id = 3;
         var name = firstName + " " + lastName;
         this.set('fullName', name);
         this.set('person_id', person_id);

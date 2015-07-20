@@ -3,7 +3,7 @@ import config from 'bsrs-ember/config/environment';
 
 var PREFIX = config.APP.NAMESPACE;
 
-var extractPhoneNumbers = function(phoneNumbers, store) {
+var extractPhoneNumbers = (phoneNumbers, store) => {
     return phoneNumbers.map((phoneNumber) => {
         var phone_number_model = store.find('phonenumber', phoneNumber),
             number = phone_number_model.get('number'),
@@ -12,7 +12,7 @@ var extractPhoneNumbers = function(phoneNumbers, store) {
     });
 };
 
-var extractAddresses = function(addresses, store) {
+var extractAddresses = (addresses, store) => {
     return addresses.map((address) => {
         var address_model = store.find('address', address),
             type = address_model.get('type'),
@@ -25,12 +25,10 @@ var extractAddresses = function(addresses, store) {
     });
 };
 
-var create_people_with_relationships = function(response, store, id) {
+var create_people_with_relationships = (response, store, id) => {
     Ember.run(() => {
         var phone_number_ids = [],
             address_ids = [];
-            // phone_number_type_ids = [];
-            // address_type_ids = [];
         response.phone_numbers.forEach((phone_number) => {
             store.push("phone-number-type", phone_number.type);
             phone_number.type = phone_number.type.id;
@@ -53,7 +51,7 @@ var create_people_with_relationships = function(response, store, id) {
     });
 };
 
-var create_people_with_nested = function(model, store) {
+var create_people_with_nested = (model, store) => {
     var phoneNumbers = extractPhoneNumbers(model.get('phone_numbers'), store);
     var addresses = extractAddresses(model.get('addresses'), store);
     return {
@@ -74,7 +72,7 @@ var create_people_with_nested = function(model, store) {
 };
 
 export default Ember.Object.extend({
-    save: function(model) {
+    save(model) {
         var endpoint = PREFIX + '/admin/people/' + model.get('id') + '/';
         var store = this.get('store');
         var payload = create_people_with_nested(model, store);
@@ -98,7 +96,7 @@ export default Ember.Object.extend({
         });
         return store.find("person");
     },
-    findById: function(id) {
+    findById(id) {
         var endpoint = PREFIX + '/admin/people/' + id + '/';
         var store = this.get('store');
         $.ajax({

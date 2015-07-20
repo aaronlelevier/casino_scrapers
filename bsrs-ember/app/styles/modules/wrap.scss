@@ -7,7 +7,7 @@ section.wrap{
   left: $mainLeft;
   border: $borderStyle;
   border-width: 1px 0 0 1px;
-  background: $light;
+  background: $white;
   font-size: 1.3rem;
 
   aside.side-panel{
@@ -26,6 +26,7 @@ section.wrap{
       border-width: 0 0 1px;
       padding: 0 15px;
       position: relative;
+      background: $light;
       //z-index: 5;
       h1{
         vertical-align: middle;
@@ -108,9 +109,11 @@ section.wrap{
     top: 0;
     overflow: auto;
 
-    header{
+    header,
+    footer{
       height: $documentHeaderHeight;
       line-height: $documentHeaderHeight;
+      background: $light;
       padding: 0 15px;
       border: $borderStyle;
       border-width: 0 0 1px 0;
@@ -150,6 +153,7 @@ section.wrap{
       }
 
     }//header
+
     section.docSection {
       position: absolute;
       top: $documentHeaderHeight;
@@ -159,8 +163,24 @@ section.wrap{
       background: $white;
       overflow: auto;
     }//section.docSection
+    .form{
+        section.docSection {
+            margin-bottom: $documentFooterHeight;
+        }
+    }
+    footer{
+        height: $documentFooterHeight;
+        position: absolute;
+        top: auto;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        border: $borderStyle;
+        border-width: 1px 0 0;
+    }
 
   }//article.main
+
 
   article.full { //if no article.side-panel
     left: 0

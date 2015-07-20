@@ -20,8 +20,11 @@ var generatePerson = function(i) {
 }//generatePerson
 
 /* important keys */
+var phone_numbers_fixture_put = [{id: 3, number: '858-715-5026', type: 2}, {id: 4, number: '858-715-5056', type: 2}];
+var addresses_fixture_put = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: 5, postal_code: '92123', country: 1},
+    {id: 2, type: 2, address: '123 PB', city: 'San Diego', state: 5, postal_code: '92100', country: 1}];
 var phone_number_types = [];
-var phone_numbers = [
+var phone_numbers_fixture_get = [
 {
     'id':3,
     'number':'858-715-5026',
@@ -39,7 +42,7 @@ var phone_numbers = [
     }
 }];
 
-var addresses = [
+var addresses_fixture_get = [
 {
     'id': 1,
     'type': {
@@ -78,8 +81,8 @@ var PEOPLE_FACTORY = {
     detail: function(i) {
         var person = generatePerson(i);
         person.acceptassign = false;
-        person.phone_numbers = phone_numbers;
-        person.addresses = addresses;
+        person.phone_numbers = phone_numbers_fixture_get;
+        person.addresses = addresses_fixture_get;
         person.emails = []
         return person;
     },
@@ -91,11 +94,10 @@ var PEOPLE_FACTORY = {
         response.username = username || response.username;
         response.first_name = first_name || response.first_name;
         response.last_name = last_name || response.last_name;
-        response.title = title || response.title;
         response.emp_number = emp_number || response.emp_number;
         response.auth_amount = auth_amount || response.auth_amount;
-        response.phone_numbers= phone_numbers || response.phone_numbers;
-        response.addresses= addresses;
+        response.phone_numbers= phone_numbers || phone_numbers_fixture_put;
+        response.addresses= addresses || addresses_fixture_put;
         response.acceptassign= false;
         response.emails= [];
         return response;

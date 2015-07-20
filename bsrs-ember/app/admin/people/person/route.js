@@ -15,9 +15,9 @@ export default Ember.Route.extend({
         var comp = this.get("tabDoc");
         this.set('editPrivilege', true);
     },
-    model: function(params) {
-        var person_pk = parseInt(params.person_id, 10);
-        var country_repo = this.get('country_repo'),
+    model(params) {
+        var person_pk = parseInt(params.person_id, 10),
+            country_repo = this.get('country_repo'),
             state_repo = this.get('state_repo'),
             repository = this.get('repository'),
             person = repository.findById(person_pk),
@@ -40,7 +40,7 @@ export default Ember.Route.extend({
             address_types: address_types
         });
     },
-    setupController: function(controller, hash) {
+    setupController(controller, hash) {
         controller.set('model', hash.model);
         controller.set('phone_number_types', hash.phone_number_types);
         controller.set('phone_numbers', hash.phone_numbers);
@@ -50,7 +50,7 @@ export default Ember.Route.extend({
         controller.set('address_types', hash.address_types);
     },
     actions: {
-        willTransition: function(transition) {
+        willTransition(transition) {
             var model = this.currentModel.model;
             var store = this.get('store');
             var phone_numbers = store.find('phonenumber', {person_id: model.get('id')});
@@ -66,7 +66,7 @@ export default Ember.Route.extend({
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;
                 transition.abort();
-            }else{
+            } else {
                 $('.t-modal').modal('hide');
             }
         },
