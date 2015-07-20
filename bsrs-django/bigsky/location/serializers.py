@@ -8,34 +8,36 @@ Created on Jan 21, 2015
 '''
 from rest_framework import serializers
 
-import models as locModels
 from contact.serializers import (
     PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer,
+    )
+from location.models import (
+    LocationLevel, LocationStatus, LocationType, Location, 
     )
 from person.serializers import PersonListSerializer
 
 
 class LocationLevelSerializer(serializers.ModelSerializer):
     class Meta:
-        model = locModels.LocationLevel
+        model = LocationLevel
         fields = ('id', 'name', 'children')
         
 
 class LocationStatusSerializer(serializers.ModelSerializer):
     class Meta:
-        model = locModels.LocationStatus
+        model = LocationStatus
         fields = ('id', 'name')
 
 
 class LocationTypeSerializer(serializers.ModelSerializer):
     class Meta:
-        model = locModels.LocationType
+        model = LocationType
         fields = ('id', 'name')
 
 
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
-        model = locModels.Location
+        model = Location
         fields = ('id', 'name', 'number', 'level', 'status', 'type',
                   'people', 'relations')
         
@@ -46,7 +48,7 @@ class LocationGridSerializer(LocationSerializer):
     type_name = serializers.CharField(source='type.name', read_only=True)
     
     class Meta:
-        model = locModels.Location
+        model = Location
         fields = ('id', 'name', 'number', 'level_name', 'status_name', 'type_name')
 
 class LocationFullSerializer(LocationGridSerializer):
@@ -57,7 +59,7 @@ class LocationFullSerializer(LocationGridSerializer):
     emails = EmailShortSerializer(many=True, read_only=True)
     
     class Meta:
-        model = locModels.Location
+        model = Location
         fields = ('id', 'name', 'number', 'level', 'level_name', 'status',
                   'status_name', 'type', 'type_name', 'people', 'relations',
                   'phone_numbers', 'addresses', 'emails')
