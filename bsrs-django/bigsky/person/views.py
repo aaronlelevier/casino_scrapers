@@ -54,7 +54,6 @@ class PersonViewSet(viewsets.ModelViewSet):
         else:
             return PersonListSerializer
 
-
     # def list(self, request):
     #     serializer = PersonListSerializer(self.queryset, many=True)
     #     return Response(serializer.data)

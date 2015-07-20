@@ -89,7 +89,6 @@ class Role(BaseModel):
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
 
-
     # use as a normal Django Manager() to access related setting objects.
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
@@ -130,8 +129,9 @@ class Person(User):
     location = models.ForeignKey(Location, blank=True, null=True)
     # required
     auth_amount = models.PositiveIntegerField(blank=True, default=0)
-    auth_amount_currency = models.CharField(max_length=25, choices=choices.CURRENCY_CHOICES,
-        default=choices.CURRENCY_CHOICES[0][0])
+    auth_amount_currency = models.CharField(max_length=25,
+                                            choices=choices.CURRENCY_CHOICES,
+                                            default=choices.CURRENCY_CHOICES[0][0])
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
     # optional

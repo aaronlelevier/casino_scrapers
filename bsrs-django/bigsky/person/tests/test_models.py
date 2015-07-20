@@ -46,9 +46,7 @@ class PersonCreateTests(TestCase):
                 password='bar',
                 role=self.role,
                 status=self.person_status,
-                location=self.location,
-                auth_amount=204,
-                auth_amount_currency="usd"
+                location=self.location
                 )
 
 

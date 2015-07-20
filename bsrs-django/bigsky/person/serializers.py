@@ -13,6 +13,7 @@ from rest_framework import serializers
 
 from location.models import LocationLevel, Location
 from person.models import PersonStatus, Person, Role
+from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (
     PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer,
     AddressShortFKSerializer, PhoneNumberShortFKSerializer,
@@ -62,19 +63,33 @@ PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial',
             'role', 'status')
 
 
-# NOT IN USE: todo to add this
 class PersonCreateSerializer(serializers.ModelSerializer):
-    '''
-    Only required fields.
-    '''
+
+    # optional contact info
+    phone_numbers = PhoneNumberShortFKSerializer(many=True)
+    # addresses = AddressShortFKSerializer(many=True)
+
     class Meta:
         model = Person
         write_only_fields = ('password',)
         fields = (
             'username', 'email', 'password', 'first_name', 'last_name', # user fields
-            'role', 'status', 'location',    # keys
-            'auth_amount', 'auth_amount_currency', # required - other
+            'role', 'status', # keys
+            'location', 'phone_numbers', #'addresses',
         )
+
+    def create(self, validated_data):
+        # PhoneNumbers
+        phone_numbers = validated_data.pop('phone_numbers')
+        person = Person.objects.create(**validated_data)
+        for ph in phone_numbers:
+            PhoneNumber.objects.create(person=person, **ph)
+        # Addresses
+        # addresses = validated_data.pop('addresses')
+        # for add in addresses:
+        #     Address.objects.create(person=person, **a)
+
+        return person
 
 
 class PersonListSerializer(serializers.ModelSerializer):

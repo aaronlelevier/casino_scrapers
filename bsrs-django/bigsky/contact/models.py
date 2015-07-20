@@ -28,8 +28,7 @@ class ContactBaseModel(BaseModel):
 
     def _valid_person_or_location(self):
         if not (self.person or self.location):
-            raise excp.PersonOrLocationRequired("Must have either a Person \
-or Location FK.")
+            raise excp.PersonOrLocationRequired("Must have either a Person or Location FK.")
 
 
 class PhoneNumberType(AbstractNameOrder):
@@ -48,10 +47,8 @@ class PhoneNumber(ContactBaseModel):
     '''
     # keys
     type = models.ForeignKey(PhoneNumberType)
-    location = models.ForeignKey(Location, related_name='phone_numbers',
-        null=True, blank=True)
-    person = models.ForeignKey(Person, related_name='phone_numbers',
-        null=True, blank=True)
+    location = models.ForeignKey(Location, related_name='phone_numbers', null=True, blank=True)
+    person = models.ForeignKey(Person, related_name='phone_numbers', null=True, blank=True)
     # fields
     number = models.CharField(max_length=32)
     
