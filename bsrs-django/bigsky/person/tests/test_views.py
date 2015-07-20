@@ -239,9 +239,14 @@ class PersonDeleteTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         # get the Person Back, and check their deleted flag
         response = self.client.get('/api/admin/people/1/')
-        print response
         person = json.loads(response.content)
         self.assertEqual(person['deleted'], True)
+
+    def test_delete_override(self):
+        self.assertEqual(Person.objects.count(), 1)
+        response = self.client.delete('/api/admin/people/1/', {'override':True}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Person.objects.count(), 0)
 
 
 class PersonAccessTests(TestCase):

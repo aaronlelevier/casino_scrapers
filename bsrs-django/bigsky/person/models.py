@@ -14,8 +14,7 @@ from django.core.exceptions import ValidationError
 
 from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
-from util import choices
-from util import exceptions as excp
+from util import choices, exceptions as excp
 from util.models import AbstractName, MainSetting, CustomSetting, BaseModel
 
 
