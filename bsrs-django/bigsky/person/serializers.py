@@ -58,9 +58,10 @@ class PersonStatusSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial',
-            'last_name', 'title', 'emp_number', 'auth_amount',
-            'role', 'status')
+PERSON_FIELDS = (
+    'deleted', 'id', 'username', 'first_name', 'middle_initial',
+    'last_name', 'title', 'emp_number', 'auth_amount', 'role', 'status'
+    )
 
 
 class PersonCreateSerializer(serializers.ModelSerializer):

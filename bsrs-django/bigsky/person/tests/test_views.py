@@ -98,83 +98,6 @@ class PersonCreateTests(APITestCase):
         self.assertEqual(Address.objects.exclude(person__isnull=True).count(), 1)
 
 
-class PersonPatchTests(APITestCase):
-
-    def setUp(self):
-        self.password = PASSWORD
-        self.person1 = create_person()
-        self.client.login(username=self.person1.username, password=self.password)
-        # all required fields in order to create a person
-        self.role = mommy.make(Role)
-        self.person_status = mommy.make(PersonStatus)
-        self.location = mommy.make(Location)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_patch(self):
-        # email pre check before test
-        title = 'manager'
-        # get a person
-        response = self.client.get('/api/admin/people/1/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        person = json.loads(response.content)
-        self.assertNotEqual(person['title'], title)
-        # change email and send update
-        person.update({'title': title})
-        response = self.client.patch('/api/admin/people/1/', person, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # get back the same person, and confirm that their email is changed in the DB
-        response = self.client.get('/api/admin/people/1/')
-        person = json.loads(response.content)
-        self.assertEqual(person['title'], title)
-
-
-class PersonPutTests(APITestCase):
-
-    def setUp(self):
-        self.password = PASSWORD
-        self.person1 = create_person()
-        self.client.login(username=self.person1.username, password=self.password)
-        # all required fields in order to create a person
-        self.role = mommy.make(Role)
-        self.person_status = mommy.make(PersonStatus)
-        self.location = mommy.make(Location)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_put(self):
-        title = 'manager'
-        person = PersonUpdateSerializer(self.person1).data # returns a python dict
-                                                           # serialized object
-        self.assertNotEqual(person['title'], title)
-        # change a field on the Person to see if the PUT works!
-        person.update({'title':title})
-        response = self.client.put('/api/admin/people/1/', person, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # get back the same person, and confirm that their email is changed in the DB
-        response = self.client.get('/api/admin/people/1/')
-        person = json.loads(response.content)
-        self.assertEqual(person['title'], title)
-
-    def test_put_password_change(self):
-        # test the User is currently logged in
-        self.assertIn('_auth_user_id', self.client.session)
-        # update their PW and see if they are still logged in
-        password = 'new-password'
-        person = PersonUpdateSerializer(self.person1).data # returns a python dict
-                                                           # serialized object
-        # change a field on the Person to see if the PUT works!
-        person.update({'password':password})
-        response = self.client.put('/api/admin/people/1/', person, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # still logged in after PW change test
-        self.assertIn('_auth_user_id', self.client.session)
-
-
-### PersonViewSetTests ###
-
 class PersonListTests(TestCase):
 
     def setUp(self):
@@ -227,6 +150,98 @@ class PersonDetailTests(TestCase):
         person = json.loads(response.content)
         self.assertEqual(person['username'], self.person.username)
         self.assertIsNotNone(person['phone_numbers'])
+
+
+class PersonPatchTests(APITestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person1 = create_person()
+        self.client.login(username=self.person1.username, password=self.password)
+        # all required fields in order to create a person
+        self.role = mommy.make(Role)
+        self.person_status = mommy.make(PersonStatus)
+        self.location = mommy.make(Location)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_patch(self):
+        # email pre check before test
+        title = 'manager'
+        # get a person
+        response = self.client.get('/api/admin/people/1/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        person = json.loads(response.content)
+        self.assertNotEqual(person['title'], title)
+        # change email and send update
+        person.update({'title': title})
+        response = self.client.patch('/api/admin/people/1/', person, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # get back the same person, and confirm that their email is changed in the DB
+        response = self.client.get('/api/admin/people/1/')
+        person = json.loads(response.content)
+        self.assertEqual(person['title'], title)
+
+
+class PersonPutTests(APITestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person1 = create_person()
+        self.client.login(username=self.person1.username, password=self.password)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_put(self):
+        title = 'manager'
+        person = PersonUpdateSerializer(self.person1).data # returns a python dict
+                                                           # serialized object
+        self.assertNotEqual(person['title'], title)
+        # change a field on the Person to see if the PUT works!
+        person.update({'title':title})
+        response = self.client.put('/api/admin/people/1/', person, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # get back the same person, and confirm that their email is changed in the DB
+        response = self.client.get('/api/admin/people/1/')
+        person = json.loads(response.content)
+        self.assertEqual(person['title'], title)
+
+    def test_put_password_change(self):
+        # test the User is currently logged in
+        self.assertIn('_auth_user_id', self.client.session)
+        # update their PW and see if they are still logged in
+        password = 'new-password'
+        person = PersonUpdateSerializer(self.person1).data # returns a python dict
+                                                           # serialized object
+        # change a field on the Person to see if the PUT works!
+        person.update({'password':password})
+        response = self.client.put('/api/admin/people/1/', person, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # still logged in after PW change test
+        self.assertIn('_auth_user_id', self.client.session)
+
+
+class PersonDeleteTests(APITestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=self.password)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_delete(self):
+        self.assertFalse(self.person.deleted)
+        response = self.client.delete('/api/admin/people/1/')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        # get the Person Back, and check their deleted flag
+        response = self.client.get('/api/admin/people/1/')
+        print response
+        person = json.loads(response.content)
+        self.assertEqual(person['deleted'], True)
 
 
 class PersonAccessTests(TestCase):

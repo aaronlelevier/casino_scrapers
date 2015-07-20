@@ -128,7 +128,7 @@ class Person(User):
     '''
     # Keys
     role = models.ForeignKey(Role)
-    status = models.ForeignKey(PersonStatus)
+    status = models.ForeignKey(PersonStatus) # will now be defaulted
     location = models.ForeignKey(Location, blank=True, null=True)
     # required
     auth_amount = models.PositiveIntegerField(blank=True, default=0)
@@ -138,6 +138,7 @@ class Person(User):
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
     # optional
+    deleted = models.BooleanField(blank=True, default=False)
     emp_number = models.CharField(max_length=100, blank=True, null=True)
     middle_initial = models.CharField(max_length=30, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
@@ -165,6 +166,17 @@ class Person(User):
         if not (self.first_name or self.last_name):
             raise excp.PersonFLNameRequired
         return super(Person, self).save(*args, **kwargs)
+
+    def delete(self, override=False, *args, **kwargs):
+        '''
+        Enforce only hiding objects and not deleting them unless explicitly 
+        overriden.
+        '''
+        if not override:
+            self.deleted=True
+            self.save()
+        else:
+            super(Person, self).delete(*args, **kwargs)
 
 
 class NextApprover(BaseModel):
