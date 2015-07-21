@@ -108,13 +108,13 @@ Posgres Configuration
 
 Application Configurations
 
+**Note:** when running ``makemigrations`` in postgres-9.1 vs. postgres-9.3 they are different
+and they will fail when running `/.manage.py migrate`
+
 .. code-block::
 
     pip install psycopg2
     
-    # remove all old sqlite3 migrations
-    rm -rf */migrations
-
     # run migrations
     ./manage.py makemigrations contact location order person role session util
     ./manage.py migrate
