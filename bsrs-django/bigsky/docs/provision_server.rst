@@ -82,6 +82,22 @@ Nginx
 Postgres
 --------
 
+Install ``psql`` and ``postgres DB server``
+
+.. code-block::
+
+    # install psql
+    sudo apt-get install postgresql-client-common
+
+    # install postgres
+    sudo apt-get install postgresql-9.1
+    
+    sudo apt-get install postgresql-contrib
+    sudo apt-get install postgresql-client
+    sudo apt-get install postgresql-server-dev-9.1
+
+
+
 .. code-block::
 
     # create Postgres DB on dev machine named "local"
