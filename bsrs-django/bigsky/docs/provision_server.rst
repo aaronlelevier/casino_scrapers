@@ -95,6 +95,17 @@ Install ``psql`` and ``postgres DB server``
     sudo apt-get install postgresql-client
     sudo apt-get install postgresql-server-dev-9.1
 
+Posgres Configuration
+
+.. code-block::
+
+    # create DB, and set User password if unknown
+    sudo su postgres
+    psql
+    CREATE DATABASE staging;
+    ALTER ROLE postgres WITH password 'postgres';
+    \q
+
 Application Configurations
 
 .. code-block::
