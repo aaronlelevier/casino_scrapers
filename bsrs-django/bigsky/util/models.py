@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.contenttypes.models import ContentType
@@ -59,7 +61,8 @@ class BaseModel(models.Model):
 
 
 class Tester(BaseModel):
-    pass
+    "Auto-gen UUID Primary Keys."
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     
 
 @python_2_unicode_compatible
