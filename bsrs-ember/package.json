@@ -35,7 +35,7 @@
     "ember-cli-lodash": "^1.0.1",
     "ember-cli-qunit": "^0.3.14",
     "ember-cli-sass": "4.0.1",
-    "ember-cli-simple-store": "2.2.0",
+    "ember-cli-simple-store": "2.3.0",
     "ember-cli-test-helpers": "^1.2.0",
     "ember-cli-uglify": "^1.2.0",
     "ember-disable-proxy-controllers": "^1.0.0",
