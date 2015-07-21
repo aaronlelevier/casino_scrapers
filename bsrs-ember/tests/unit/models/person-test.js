@@ -49,10 +49,10 @@ test('when new phone number is added, the person model is dirty', (assert) => {
     assert.ok(person.get('isNotDirty'));
     person.set('phone_numbers', [2,3]);
     assert.ok(person.get('isDirty'));
-    //TODO: toran will look at simple-store
-    // person.set('phone_numbers', [2]);
-    // assert.ok(person.get('isNotDirty'));
+    person.set('phone_numbers', [2]);
+    assert.ok(person.get('isNotDirty'));
 });
+
 
 test('related phone numbers is dirty when second phone number is added to phone_numbers array', (assert) => {
     var person = store.push('person', {id: 1, phone_numbers: [2]});

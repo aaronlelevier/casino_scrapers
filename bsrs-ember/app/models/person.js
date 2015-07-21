@@ -3,8 +3,8 @@ import inject from 'bsrs-ember/utilities/store';
 
 export default Model.extend({
     store: inject('main'),
-    username: attr(),
-    phone_numbers: attr(),
+    username: attr(''),
+    phone_numbers: attr([]),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', function() {
        return this.get('isDirty') || this.get('phoneNumbersIsDirty'); 
     }).volatile(), 
