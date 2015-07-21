@@ -1,6 +1,7 @@
 from django.test import TestCase
 
-from person.models import Person
+from location.models import Location
+from person.models import Person, Role, PersonStatus
 from person.tests import factory
 
 
@@ -10,7 +11,7 @@ class FactoryTests(TestCase):
         person = factory.create_person()
         self.assertIsInstance(person, Person)
 
-        # 2nd person
+    def test_create_with_username(self):
         new_person_name = 'new_person'
         person = factory.create_person(username=new_person_name)
         self.assertIsInstance(person, Person)
@@ -24,3 +25,9 @@ class FactoryTests(TestCase):
     def test_many_with_username(self):
         with self.assertRaises(Exception):
             factory.create_person(username='bob', _many=people)
+
+    def test_related_obj_creates(self):
+        person = factory.create_person()
+        self.assertIsInstance(person.role, Role)
+        self.assertIsInstance(person.status, PersonStatus)
+        self.assertIsInstance(person.location, Location)

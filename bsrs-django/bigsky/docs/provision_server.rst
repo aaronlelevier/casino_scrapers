@@ -79,6 +79,24 @@ Nginx
     ifconfig eth0 | grep inet | awk (print $2)
 
 
+Postgres
+--------
+
+**For Local Dev Machine**
+
+.. code-block::
+
+    pip install psycopg2
+    
+    # add pyscopg2 to settings.py INSTALLED_APPS
+
+    # remove all old sqlite3 migrations
+    rm -rf */migrations
+
+    # run migrations
+    ./manage.py makemigrations contact location order person role session util
+    ./manage.py migrate
+
 
 
 

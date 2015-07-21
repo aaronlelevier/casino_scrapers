@@ -25,7 +25,7 @@ class PhoneNumberViewSetTests(APITestCase):
         self.client.logout()
 
     def test_get(self):
-        response = self.client.get('/api/contact/phone_numbers/1/')
+        response = self.client.get('/api/contact/phone_numbers/{}/'.format(self.phone_number.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         self.assertEqual(data['number'], self.phone_number.number)
@@ -53,10 +53,10 @@ class PhoneNumberTypeViewSetTests(APITestCase):
         self.client.logout()
 
     def test_get(self):
-        response = self.client.get('/api/contact/phone_number_types/1/')
+        response = self.client.get('/api/contact/phone_numbers/{}/'.format(self.phone_number.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(data['name'], self.type.name)
+        self.assertEqual(data['type'], self.type.pk)
 
     def test_list(self):
         # have 2 ph #'s total
