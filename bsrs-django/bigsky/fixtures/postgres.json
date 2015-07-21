@@ -249,14 +249,6 @@
 },
 {
   "fields": {
-    "expire_date": "2015-08-04T20:34:17.024Z",
-    "session_data": "NDdlMjlmY2M1ZTRjNThhYWIwMjY3MjhhNTJlMWRhNDQwM2M5ZmEyMTp7Il9hdXRoX3VzZXJfaGFzaCI6ImExMjI3MzQxM2NjZjg5ZjYyNDIyMGY4NWI4ZWUxMDA4Njk2YzY2MjEiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIxIn0="
-  },
-  "model": "sessions.session",
-  "pk": "fvxp6upw5romes9ocb9se0lextmt2j4q"
-},
-{
-  "fields": {
     "domain": "example.com",
     "name": "example.com"
   },
@@ -267,9 +259,9 @@
   "fields": {
     "deleted": false,
     "children": [],
-    "modified": "2015-07-21T20:33:55.885Z",
-    "name": "TjmagPGsmeHMYgSGaLQKqvRsQnaEtBNZcNjpizlnCENgjmYvRnGnHIhlTQIJcFsaqiRfIRATZyDYNXYMeScGnGDllfGycyeUJPkQ",
-    "created": "2015-07-21T20:33:55.885Z"
+    "modified": "2015-07-21T22:50:36.175Z",
+    "name": "KkoWThVUUnDaxOyjmhLnzXVEWMTsaydlmGeeDunPbrRHfznTucYPPlGMAPLkSDsypvgBPOsrFawAGvGwlMNkcOJtZJhbsnysQGeJ",
+    "created": "2015-07-21T22:50:36.175Z"
   },
   "model": "location.locationlevel",
   "pk": 1
@@ -277,9 +269,9 @@
 {
   "fields": {
     "deleted": false,
-    "modified": "2015-07-21T20:33:55.886Z",
-    "name": "nUYGXGSOtdNZRZTMLPkcBSxWnNAUyzCbsRlAZnBwoXgetRoWhLanyWClNMGSoEDAnkomJJgrWtzhfknBVVwkrRMEZCbhQplqYGGv",
-    "created": "2015-07-21T20:33:55.886Z"
+    "modified": "2015-07-21T22:50:36.176Z",
+    "name": "MfPdCqaIFlOnBAfCjknnBfvKBdtgjdbHCapehJXvGEKGkCVjvLqDmLlbBbbLOLsmEuLLYVEyONYnlJSQtaWQzbsFhDmKlcIBrArg",
+    "created": "2015-07-21T22:50:36.176Z"
   },
   "model": "location.locationstatus",
   "pk": 1
@@ -287,9 +279,9 @@
 {
   "fields": {
     "deleted": false,
-    "modified": "2015-07-21T20:33:55.887Z",
-    "name": "yytvJSewbpojvrfznqhXJzKTaROzCxFnuEhcvhmuZOeMHZvxvKJOYsVNMGfLvJDnSWjGWieXZQaqXRZnqNegFzUEVHiJJgMsLFSX",
-    "created": "2015-07-21T20:33:55.887Z"
+    "modified": "2015-07-21T22:50:36.177Z",
+    "name": "GkyeHNBmxUQHWXOjbRGQXoAuxaEPQbMqhRzpsEvnUSzbtyMYwBEAhfEtQSuIRTiTXfBaUHJXJdxPxxqicbkfJtCURulbCDTmHlEE",
+    "created": "2015-07-21T22:50:36.177Z"
   },
   "model": "location.locationtype",
   "pk": 1
@@ -297,13 +289,13 @@
 {
   "fields": {
     "status": 1,
-    "name": "kOPmVSQJunttefsPlIpLGnsoOcUOQpjGbSEwrcESGnXteydubvgdnCEJRfEecKfUPxOMygLJQGQAqGrqXPBIGpXaRMURXAOboWNs",
+    "name": "NJCALqgPaTqhUBklXcvKEVxCgKLylRcKfPGezjqpZJYMGkDMPFKqHzFWMIDjllfKYXNBGxIfwMOaoiraZKLaJjozLYKNhVDzGvXy",
     "level": 1,
     "deleted": false,
-    "created": "2015-07-21T20:33:55.889Z",
-    "modified": "2015-07-21T20:33:55.889Z",
+    "created": "2015-07-21T22:50:36.179Z",
+    "modified": "2015-07-21T22:50:36.179Z",
     "relations": [],
-    "number": "LijJGsjlAHBbkPvCInGt",
+    "number": "TuSWTfLkOXbOaLBLgCSj",
     "type": 1
   },
   "model": "location.location",
@@ -313,9 +305,9 @@
   "fields": {
     "deleted": false,
     "description": "active",
-    "modified": "2015-07-21T20:33:55.884Z",
-    "name": "XrXTGFLJOjylwvRXsVZQYjAxwRXiRiQVzdzoSFcKYSTHOlWfuJHLPokudMZMZWJdeaOvHXyePOtcMaAaOyFbMeuiJdqFzjEordWF",
-    "created": "2015-07-21T20:33:55.884Z"
+    "modified": "2015-07-21T22:50:36.174Z",
+    "name": "vbgtkaMUEJgWbvtczvnYabhXErmNZnYwPnoPXJMdgYvWXpyeJTRcpVBoRKrXqGONaEeEYSDnIngDrQbvHnQpVJffWfUhgOvxQhmQ",
+    "created": "2015-07-21T22:50:36.174Z"
   },
   "model": "person.personstatus",
   "pk": 1
@@ -1168,7 +1160,7 @@
 },
 {
   "fields": {
-    "name": "GXkXkagFvuoEqHiAmaYWrNpmKZfccihiygJsJjLidkNnvfFSBonMyTGJmxyFvZmGhPACAmPkrSBvCSQw",
+    "name": "bSiSRBFSrfIWSFZRRqJxoSvzOMINWcfhYKVsXADpeJYaRthkbUBlLTtHYnustIKYuNTjEfXrWdGPRrIc",
     "permissions": []
   },
   "model": "auth.group",
@@ -1182,12 +1174,12 @@
     "is_active": true,
     "is_superuser": false,
     "is_staff": false,
-    "last_login": "2015-07-21T20:34:17.022Z",
+    "last_login": null,
     "groups": [],
     "user_permissions": [],
-    "password": "pbkdf2_sha256$20000$rlZCZ5OlMP9s$AvvdGaxv3ANnNvcQ1E/w9XbbDSu6VpYFYoW9MEHv93Q=",
+    "password": "pbkdf2_sha256$20000$AV2f2Y9FYXOM$pRXMqNk/iFxq0bIAyQ4dRsM6YBjFr2RYC0UxL+Bv00I=",
     "email": "tuser@bigskytech.com",
-    "date_joined": "2015-07-21T20:33:55.890Z"
+    "date_joined": "2015-07-21T22:50:36.181Z"
   },
   "model": "auth.user",
   "pk": 1
@@ -1213,9 +1205,9 @@
     "password_history_length": null,
     "inv_wo_status": null,
     "proxy_approval_bypass": false,
-    "password_char_types": "wvRjAARXmuMiWSZzqzkNRuHPxZFUCgqAIXyixlTFUlnbEwKIYaXBYdhesXBKPDAfIRhTogyChlsiwJcbDCAPRVnHngQRvadWgKps",
+    "password_char_types": "kKGMuIZrAGxRGTtDjWyiOyEWzrcJygUgcyfToBReYkRQXhPxoUvuLrTRSDJHdCPQexgmyGhtCadjUnvPMlTmqfOsUpDyxfRhwAKw",
     "dashboad_text": "",
-    "password_expire": 9718,
+    "password_expire": 809,
     "inv_max_approval_currency": "usd",
     "wo_show_tkt_attach": false,
     "wo_show_inactive": false,
@@ -1228,10 +1220,10 @@
     "accept_notify": false,
     "role_type": "contractor",
     "inv_close_wo": "Do not display",
-    "created": "2015-07-21T20:33:55.880Z",
+    "created": "2015-07-21T22:50:36.171Z",
     "wo_edit_closeout": false,
     "modules": "",
-    "modified": "2015-07-21T20:33:55.880Z",
+    "modified": "2015-07-21T22:50:36.171Z",
     "inv_req_attach": true,
     "wo_allow_backdate": false,
     "default_auth_amount": true,
