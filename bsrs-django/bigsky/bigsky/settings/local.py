@@ -4,7 +4,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# Change for now b/c PostgreSQL uses different PW hashes
+# Change for now b/c PostgreSQL uses different PW hashes if generating
+# sqlite test fixtures.
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
@@ -15,12 +16,6 @@ ALLOWED_HOSTS = ['*']
 #         'PORT': '5432',
 #     }
 # }
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
-    }
-}
 
 INSTALLED_APPS += (
     'django_extensions',

@@ -44,14 +44,6 @@ class PersonTests(TestCase):
         self.person.delete(override=True)
         self.assertEqual(Person.objects.count(), 0)
 
-    # def test_delete_related_objects(self):
-    #     self.assertIsInstance(self.person, Person)
-    #     self.assertIsInstance(self.person.role, Role)
-    #     # delete n check
-    #     self.person.delete(override=True)
-    #     self.assertEqual(Person.objects.count(), 0)
-    #     self.assertEqual(Role.objects.count(), 0)
-
 
 class PersonCreateTests(TestCase):
 

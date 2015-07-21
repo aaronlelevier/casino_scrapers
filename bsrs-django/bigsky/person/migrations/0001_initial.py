@@ -47,6 +47,7 @@ class Migration(migrations.Migration):
                 ('auth_amount_currency', models.CharField(default=b'usd', max_length=25, choices=[(b'usd', b'usd'), (b'eur', b'eur'), (b'jpy', b'jpy')])),
                 ('accept_assign', models.BooleanField(default=True)),
                 ('accept_notify', models.BooleanField(default=True)),
+                ('deleted', models.BooleanField(default=False)),
                 ('emp_number', models.CharField(max_length=100, null=True, blank=True)),
                 ('middle_initial', models.CharField(max_length=30, null=True, blank=True)),
                 ('title', models.CharField(max_length=100, null=True, blank=True)),
@@ -73,7 +74,7 @@ class Migration(migrations.Migration):
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
                 ('name', models.CharField(unique=True, max_length=100)),
-                ('description', models.CharField(default=b'one', max_length=100, choices=[(b'one', b'one'), (b'two', b'two')])),
+                ('description', models.CharField(default=b'active', max_length=100, choices=[(b'active', b'active'), (b'two', b'two')])),
             ],
             options={
                 'abstract': False,

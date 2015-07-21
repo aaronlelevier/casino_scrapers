@@ -27,10 +27,10 @@ DEFAULT_APPS = (
     )
 
 THIRD_PARTY_APPS = (
-    'psycopg2',
+    # 'psycopg2',
     'corsheaders',
     'rest_framework',
-    # test libraries
+    # testing
     'django_nose',
     'debug_toolbar',
     )
@@ -80,10 +80,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bigsky.wsgi.application'
 
 # Must Override!
+# DATABASES = {}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
+        'NAME': 'sqlite3.db',
     }
 }
 

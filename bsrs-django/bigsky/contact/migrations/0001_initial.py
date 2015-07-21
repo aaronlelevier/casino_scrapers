@@ -18,13 +18,11 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
-                ('address1', models.CharField(max_length=200, null=True, blank=True)),
-                ('address2', models.CharField(max_length=200, null=True, blank=True)),
-                ('address3', models.CharField(max_length=200, null=True, blank=True)),
+                ('address', models.CharField(max_length=200, null=True, blank=True)),
                 ('city', models.CharField(max_length=100, null=True, blank=True)),
                 ('state', models.CharField(max_length=100, null=True, blank=True)),
                 ('country', models.CharField(max_length=100, null=True, blank=True)),
-                ('postalcode', models.CharField(max_length=32, null=True, blank=True)),
+                ('postal_code', models.CharField(max_length=32, null=True, blank=True)),
             ],
             options={
                 'ordering': ('type',),
@@ -37,7 +35,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
-                ('order', models.IntegerField()),
+                ('order', models.IntegerField(default=0, blank=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
@@ -52,7 +50,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
-                ('email', models.EmailField(unique=True, max_length=255)),
+                ('email', models.EmailField(max_length=255)),
             ],
             options={
                 'ordering': ('type', 'email'),
@@ -65,7 +63,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
-                ('order', models.IntegerField()),
+                ('order', models.IntegerField(default=0, blank=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
@@ -80,7 +78,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
-                ('number', models.CharField(unique=True, max_length=32)),
+                ('number', models.CharField(max_length=32)),
                 ('location', models.ForeignKey(related_name='phone_numbers', blank=True, to='location.Location', null=True)),
             ],
             options={
@@ -94,7 +92,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.BooleanField(default=False)),
-                ('order', models.IntegerField()),
+                ('order', models.IntegerField(default=0, blank=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
