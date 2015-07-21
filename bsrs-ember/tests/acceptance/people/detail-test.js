@@ -105,7 +105,7 @@ test('when you deep link to the person detail view you get bound attrs', functio
     });
 });
 
-test('torans when editing username to invalid, it checks for validation', (assert) => {
+test('when editing username to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);    
     fillIn('.t-person-username', '');
     click('.t-save-btn');
