@@ -125,7 +125,7 @@ test('clicking cancel button will take from detail view to list view', function(
     });
 });
 
-test('sco when you change a related phone numbers type it will be persisted correctly', function(assert) {
+test('when you change a related phone numbers type it will be persisted correctly', function(assert) {
 
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
@@ -141,7 +141,7 @@ test('sco when you change a related phone numbers type it will be persisted corr
     });
 });
 
-test('sco when you change a related address type it will be persisted correctly', function(assert) {
+test('when you change a related address type it will be persisted correctly', function(assert) {
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
     var addresses = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: 5, postal_code: '92123', country: 1},
