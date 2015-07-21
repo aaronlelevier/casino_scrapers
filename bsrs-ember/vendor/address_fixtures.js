@@ -1,13 +1,14 @@
 var BSRS_ADDRESS_FACTORY = (function() {
-    var factory = function() {
+    var factory = function(address_type_defaults) {
+        this.address_type_defaults = address_type_defaults;
     };
     factory.prototype.get = function() {
         return [
             {
                 'id': 1,
                 'type': {
-                    'id': 1,
-                    'name': 'admin.address_type.office'
+                    'id': this.address_type_defaults.officeType,
+                    'name':this.address_type_defaults.officeName
                 },
                 'address': 'Sky Park',
                 'city': 'San Diego',
@@ -18,8 +19,8 @@ var BSRS_ADDRESS_FACTORY = (function() {
             {
                 'id': 2,
                 'type': {
-                    'id': 2,
-                    'name': 'admin.address_type.shipping'
+                    'id': this.address_type_defaults.shippingType,
+                    'name':this.address_type_defaults.shippingName
                 },
                 'address': '123 PB',
                 'city': 'San Diego',
@@ -39,10 +40,11 @@ var BSRS_ADDRESS_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    module.exports = new BSRS_ADDRESS_FACTORY();
+    var address_type_defaults = require('../app/value-defaults/address-type');
+    module.exports = new BSRS_ADDRESS_FACTORY(address_type_defaults['default']);
 } else {
-    define('bsrs-ember/vendor/address_fixtures', ['exports'], function (exports) {
+    define('bsrs-ember/vendor/address_fixtures', ['exports', 'bsrs-ember/value-defaults/address-type'], function (exports, address_type_defaults) {
         'use strict';
-        return new BSRS_ADDRESS_FACTORY();
+        return new BSRS_ADDRESS_FACTORY(address_type_defaults['default']);
     });
 }
