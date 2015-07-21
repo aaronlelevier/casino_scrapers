@@ -82,14 +82,16 @@ Nginx
 Postgres
 --------
 
-**For Local Dev Machine**
-
 .. code-block::
+
+    # create Postgres DB on dev machine named "local"
+    # in "psql" the commands starting from command line are:
+    psql    # enter psql
+    create database local;
+    \q      # exit psql
 
     pip install psycopg2
     
-    # add pyscopg2 to settings.py INSTALLED_APPS
-
     # remove all old sqlite3 migrations
     rm -rf */migrations
 

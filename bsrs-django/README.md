@@ -62,8 +62,24 @@ and so on in a plain vanilla naming standard. For example:
 
 Are named as `name_as_lowercase_with_underscores` as opposed to `camelCase`
 
-### Suggested next steps
+### Postgres
 
-- To create a test directory for each app to break up the tests logically
-- To discuss needend DRF tests for the Person model to support the current 
-progress of the Ember frontend
+#### Installation
+
+```
+# create Postgres DB on dev machine named "local"
+# in "psql" the commands starting from command line are:
+psql 	# enter psql
+create database local;
+\q   	# exit psql
+
+pip install psycopg2
+
+# remove all old sqlite3 migrations (if present)
+rm -rf */migrations
+
+# run migrations
+./manage.py makemigrations contact location order person role session util
+./manage.py migrate
+```
+
