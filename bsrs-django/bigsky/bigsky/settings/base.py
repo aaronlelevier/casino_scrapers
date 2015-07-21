@@ -27,7 +27,7 @@ DEFAULT_APPS = (
     )
 
 THIRD_PARTY_APPS = (
-    # 'psycopg2',
+    'psycopg2',
     'corsheaders',
     'rest_framework',
     # testing

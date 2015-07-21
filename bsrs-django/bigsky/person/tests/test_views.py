@@ -6,7 +6,7 @@ from django.contrib.auth.models import User, ContentType, Group, Permission
 from django.forms.models import model_to_dict
 
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
 from contact.models import Address, PhoneNumber, Email
@@ -24,8 +24,9 @@ PERSON_DATA = {
     "first_name":"foo",
     "last_name":"bar",
     "email":"",
-    "role":1,
-    "status":1,
+    "role":"",
+    "status":"",
+    "location":"",
     "phone_numbers":[],
     'addresses': []
 }
@@ -45,7 +46,13 @@ class PersonCreateTests(APITestCase):
         self.phone_number = mommy.make(PhoneNumber, location=self.location)
         self.phone_number2 = mommy.make(PhoneNumber, location=self.location)
         self.address = mommy.make(Address, location=self.location)
+        
+        # update for mock data
         self.data = PERSON_DATA
+        self.data.update({
+            'role': self.person.role.pk,
+            'status': self.person.status.pk
+            })
 
     def tearDown(self):
         self.client.logout()
@@ -112,16 +119,10 @@ class PersonListTests(TestCase):
         self.client.logout()
 
     def test_list(self):
-        # setup
         response = self.client.get('/api/admin/people/')
         self.assertEqual(response.status_code, 200)
-        # list data        
         data = json.loads(response.content)
-        people = data['results']
-        self.assertEqual(len(people), self.people)
-        # single person fields in list
-        person = people[0]
-        self.assertEqual(person['username'], self.person1.username)
+        self.assertEqual(data['count'], self.people)
 
 
 class PersonDetailTests(TestCase):
@@ -145,7 +146,7 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.address.person, self.person)
 
     def test_retrieve(self):
-        response = self.client.get('/api/admin/people/1/')
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         person = json.loads(response.content)
         self.assertEqual(person['username'], self.person.username)
@@ -156,8 +157,8 @@ class PersonPatchTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
-        self.person1 = create_person()
-        self.client.login(username=self.person1.username, password=self.password)
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=self.password)
         # all required fields in order to create a person
         self.role = mommy.make(Role)
         self.person_status = mommy.make(PersonStatus)
@@ -170,16 +171,16 @@ class PersonPatchTests(APITestCase):
         # email pre check before test
         title = 'manager'
         # get a person
-        response = self.client.get('/api/admin/people/1/')
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         person = json.loads(response.content)
         self.assertNotEqual(person['title'], title)
         # change email and send update
         person.update({'title': title})
-        response = self.client.patch('/api/admin/people/1/', person, format='json')
+        response = self.client.patch('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # get back the same person, and confirm that their email is changed in the DB
-        response = self.client.get('/api/admin/people/1/')
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         person = json.loads(response.content)
         self.assertEqual(person['title'], title)
 
@@ -188,23 +189,23 @@ class PersonPutTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
-        self.person1 = create_person()
-        self.client.login(username=self.person1.username, password=self.password)
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=self.password)
 
     def tearDown(self):
         self.client.logout()
 
     def test_put(self):
         title = 'manager'
-        person = PersonUpdateSerializer(self.person1).data # returns a python dict
+        person = PersonUpdateSerializer(self.person).data # returns a python dict
                                                            # serialized object
         self.assertNotEqual(person['title'], title)
         # change a field on the Person to see if the PUT works!
         person.update({'title':title})
-        response = self.client.put('/api/admin/people/1/', person, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # get back the same person, and confirm that their email is changed in the DB
-        response = self.client.get('/api/admin/people/1/')
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         person = json.loads(response.content)
         self.assertEqual(person['title'], title)
 
@@ -213,11 +214,11 @@ class PersonPutTests(APITestCase):
         self.assertIn('_auth_user_id', self.client.session)
         # update their PW and see if they are still logged in
         password = 'new-password'
-        person = PersonUpdateSerializer(self.person1).data # returns a python dict
+        person = PersonUpdateSerializer(self.person).data # returns a python dict
                                                            # serialized object
         # change a field on the Person to see if the PUT works!
         person.update({'password':password})
-        response = self.client.put('/api/admin/people/1/', person, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # still logged in after PW change test
         self.assertIn('_auth_user_id', self.client.session)
@@ -235,16 +236,17 @@ class PersonDeleteTests(APITestCase):
 
     def test_delete(self):
         self.assertFalse(self.person.deleted)
-        response = self.client.delete('/api/admin/people/1/')
+        response = self.client.delete('/api/admin/people/{}/'.format(self.person.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         # get the Person Back, and check their deleted flag
-        response = self.client.get('/api/admin/people/1/')
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         person = json.loads(response.content)
         self.assertEqual(person['deleted'], True)
 
     def test_delete_override(self):
         self.assertEqual(Person.objects.count(), 1)
-        response = self.client.delete('/api/admin/people/1/', {'override':True}, format='json')
+        response = self.client.delete('/api/admin/people/{}/'.format(self.person.pk),
+            {'override':True}, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Person.objects.count(), 0)
 
@@ -260,7 +262,7 @@ class PersonAccessTests(TestCase):
         verify we can access user records correctly as a super user
         """
         self.client.login(username=self.person.username, password=self.password)
-        response = self.client.get('/api/admin/people/1/', format='json')
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(int(self.client.session['_auth_user_id']), self.person.pk)
 
@@ -269,7 +271,7 @@ class PersonAccessTests(TestCase):
         verify we can't acccess users as a normal user
         """
         self.client.login(username='noaccess_user', password='noaccess_password')
-        response = self.client.get('/api/admin/people/1/', format='json')
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         self.assertEqual(response.status_code, 403)
         
 
@@ -291,5 +293,5 @@ class RoleViewSetTests(TestCase):
         verify we can access user records correctly as a super user
         """
         self.client.login(username=self.person.username, password=self.password)
-        response = self.client.get('/api/admin/roles/1/', format='json')
+        response = self.client.get('/api/admin/roles/{}/'.format(self.person.role.pk))
         self.assertEqual(response.status_code, 200)

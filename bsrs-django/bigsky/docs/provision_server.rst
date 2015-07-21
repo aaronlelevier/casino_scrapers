@@ -79,6 +79,35 @@ Nginx
     ifconfig eth0 | grep inet | awk (print $2)
 
 
+Postgres
+--------
+
+Install ``psql`` and ``postgres DB server``
+
+.. code-block::
+
+    # install psql
+    sudo apt-get install postgresql-client-common
+
+    # install postgres
+    sudo apt-get install postgresql-9.1
+    sudo apt-get install postgresql-contrib
+    sudo apt-get install postgresql-client
+    sudo apt-get install postgresql-server-dev-9.1
+
+Application Configurations
+
+.. code-block::
+
+    pip install psycopg2
+    
+    # remove all old sqlite3 migrations
+    rm -rf */migrations
+
+    # run migrations
+    ./manage.py makemigrations contact location order person role session util
+    ./manage.py migrate
+
 
 
 
