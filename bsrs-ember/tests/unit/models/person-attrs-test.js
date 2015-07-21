@@ -1,7 +1,7 @@
 import {test, module} from 'qunit';
 import Person from 'bsrs-ember/models/person';
 
-module('scooter unit: person attrs test');
+module('unit: person attrs test');
 
 test('default state for phone numbers on person model is an empty array', (assert) => {
     var person = Person.create({id: 1, phone_numbers: undefined});

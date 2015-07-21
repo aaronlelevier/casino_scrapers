@@ -105,6 +105,26 @@ test('when you deep link to the person detail view you get bound attrs', functio
     });
 });
 
+test('when editing username to invalid, it checks for validation', (assert) => {
+    visit(DETAIL_URL);    
+    fillIn('.t-person-username', '');
+    click('.t-save-btn');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-username-validation-error').text().trim(), 'invalid username');
+    });
+    fillIn('.t-person-username', 'llcoolj');
+    var url = PREFIX + DETAIL_URL + "/";
+    var response = PEOPLE_FIXTURES.detail(PERSON_PK);
+    var phone_numbers = [{id: 3, number: '858-715-5026', type: 1}, {id: 4, number: '858-715-5056', type: 2}];
+    var payload = PEOPLE_FIXTURES.put(PERSON_PK, 'llcoolj', null, null, null, null, null, phone_numbers, null);
+    xhr( url,'PUT',payload,{},200,response );
+    click('.t-save-btn');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+});
+
 test('clicking cancel button will take from detail view to list view', function(assert) {
     visit(PEOPLE_URL);
 
