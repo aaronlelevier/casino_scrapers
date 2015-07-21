@@ -38,20 +38,17 @@ var BSRS_PEOPLE_FACTORY = (function() {
         person.emails = []
         return person;
     };
-    factory.prototype.put = function(i, username, first_name, last_name, title, emp_number, auth_amount, phone_numbers, addresses) {
-        var response = generatePerson(i, 'PUT');
+    factory.prototype.put = function(person) {
+        var response = generatePerson(person.id);
+        response.phone_numbers = this.phone_number_fixtures.put();
+        response.addresses= this.addresses_fixtures.put();
         response.role = response.role.id;
         response.status = response.status.id;
-        response.title = title || response.title;
-        response.username = username || response.username;
-        response.first_name = first_name || response.first_name;
-        response.last_name = last_name || response.last_name;
-        response.emp_number = emp_number || response.emp_number;
-        response.auth_amount = auth_amount || response.auth_amount;
-        response.phone_numbers= phone_numbers || this.phone_number_fixtures.put();
-        response.addresses= addresses || this.addresses_fixtures.put();
         response.acceptassign= false;
         response.emails= [];
+        for(var key in person) {
+           response[key] = person[key]; 
+        }
         return response;
     };
     return factory;

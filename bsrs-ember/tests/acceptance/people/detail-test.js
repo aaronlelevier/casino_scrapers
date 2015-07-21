@@ -5,6 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
+import PHONE_NUMBER_FIXTURES from 'bsrs-ember/vendor/phone_number_fixtures';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
 const PERSON_PK = 1;
@@ -86,10 +87,9 @@ test('when you deep link to the person detail view you get bound attrs', functio
 
     var url = PREFIX + DETAIL_URL + "/";
     var response = PEOPLE_FIXTURES.detail(PERSON_PK);
-    var phone_numbers = [{id: 3, number: '858-715-5026', type: 1}, {id: 4, number: '858-715-5056', type: 2}];
     var addresses = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: 5, postal_code: '92123', country: 1},
         {id: 2, type: 2, address: '123 PB', city: 'San Diego', state: 5, postal_code: '92100', country: 1}];
-    var payload = PEOPLE_FIXTURES.put(PERSON_PK, 'llcoolj', 'Ice', 'Cube', 'mastermind', '1122', '0.000', phone_numbers, addresses);
+    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, username: 'llcoolj', first_name: 'Ice', last_name: 'Cube', title: 'mastermind', emp_number: '1122', auth_amount: '0.000', addresses: addresses});
     xhr( url,'PUT',payload,{},200,response );
 
     fillIn('.t-person-username', 'llcoolj');
@@ -116,8 +116,7 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     fillIn('.t-person-username', 'llcoolj');
     var url = PREFIX + DETAIL_URL + "/";
     var response = PEOPLE_FIXTURES.detail(PERSON_PK);
-    var phone_numbers = [{id: 3, number: '858-715-5026', type: 1}, {id: 4, number: '858-715-5056', type: 2}];
-    var payload = PEOPLE_FIXTURES.put(PERSON_PK, 'llcoolj', null, null, null, null, null, phone_numbers, null);
+    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, username: 'llcoolj'});
     xhr( url,'PUT',payload,{},200,response );
     click('.t-save-btn');
     andThen(() => {
@@ -125,7 +124,7 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     });
 });
 
-test('clicking cancel button will take from detail view to list view', function(assert) {
+test('clicking cancel button will take from detail view to list view', (assert) => {
     visit(PEOPLE_URL);
 
     andThen(() => {
@@ -145,13 +144,11 @@ test('clicking cancel button will take from detail view to list view', function(
     });
 });
 
-test('when you change a related phone numbers type it will be persisted correctly', function(assert) {
-
+test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
-    //phone_number fixture type for id:3 is 1 in the fixture data
-    var phone_numbers = [{id: 3, number: '858-715-5026', type: 2}, {id: 4, number: '858-715-5056', type: 2}];
-    var payload = PEOPLE_FIXTURES.put(PERSON_PK, null, null, null, null, null, null, phone_numbers, null);
+    var phone_numbers = PHONE_NUMBER_FIXTURES.put({id: 3, type: 2});
+    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, phone_numbers: phone_numbers});
     fillIn('.t-multi-phone-type:eq(0)', 2);
 
     xhr(url,'PUT',payload,{},200);
@@ -166,7 +163,8 @@ test('when you change a related address type it will be persisted correctly', fu
     var url = PREFIX + DETAIL_URL + "/";
     var addresses = [{id: 1, type: 1, address: 'Sky Park', city: 'San Diego', state: 5, postal_code: '92123', country: 1},
         {id: 2, type: 2, address: '123 PB', city: 'San Diego', state: 5, postal_code: '92100', country: 1}];
-    var payload = PEOPLE_FIXTURES.put(PERSON_PK, null, null, null, null, null, null, null, addresses);
+    var phone_numbers = PHONE_NUMBER_FIXTURES.put({id: 3, type: 2});
+    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, phone_numbers: phone_numbers, addresses: addresses});
     xhr(url,'PUT',payload,{},200);
     fillIn('.t-multi-phone-type:eq(0)', 2);
     click('.t-save-btn');
