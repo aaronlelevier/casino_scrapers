@@ -91,20 +91,13 @@ Install ``psql`` and ``postgres DB server``
 
     # install postgres
     sudo apt-get install postgresql-9.1
-    
     sudo apt-get install postgresql-contrib
     sudo apt-get install postgresql-client
     sudo apt-get install postgresql-server-dev-9.1
 
-
+Application Configurations
 
 .. code-block::
-
-    # create Postgres DB on dev machine named "local"
-    # in "psql" the commands starting from command line are:
-    psql    # enter psql
-    create database local;
-    \q      # exit psql
 
     pip install psycopg2
     
