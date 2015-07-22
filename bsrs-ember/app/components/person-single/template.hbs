@@ -15,10 +15,10 @@
 	<section class="docSection col-sm-12">
 
 		{{#form-group title="admin.person.label.status"}}
-			<select class="form-control">
-				<option>Active</option>
-				<option>Inactive</option>
-				<option>Expired</option>
+			<select class="form-control t-statuses-select">
+        {{#each statuses as |status|}}
+            <option class="t-status-option">{{status.name}}</option>
+        {{/each}}
 			</select>
 		{{/form-group}}
 
