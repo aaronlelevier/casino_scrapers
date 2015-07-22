@@ -1,9 +1,11 @@
 import {test, module} from 'qunit';
 import Person from 'bsrs-ember/models/person';
+import Currency from 'bsrs-ember/models/currency';
 import Store from 'ember-cli-simple-store/store';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import CurrencyService from 'bsrs-ember/services/currency';
 import Ember from 'ember';
+import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
 
 var container, registry, store;
 
@@ -13,9 +15,11 @@ module('unit: person test', {
         registry.register('model:person', Person);
         registry.register('model:phonenumber', PhoneNumber);
         registry.register('store:main', Store);
+        registry.register('model:currency', Currency);
         registry.register('service:currency', CurrencyService);
         container = registry.container();
         store = container.lookup('store:main');
+        store.push('currency', CurrencyDefaults);
     },
     afterEach() {
         container = null;

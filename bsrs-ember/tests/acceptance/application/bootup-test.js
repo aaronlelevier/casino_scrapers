@@ -8,6 +8,7 @@ import StateDefaults from 'bsrs-ember/vendor/state';
 import CountryDefaults from 'bsrs-ember/vendor/country';
 import AddressTypeDefaults from 'bsrs-ember/vendor/address-type';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/phone-number-type';
+import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
 
 const HOME_URL = '/';
 
@@ -75,5 +76,21 @@ test('on boot we should fetch and load the status configuration', function(asser
         assert.equal(store.find('status').objectAt(1).get('name'), StatusDefaults.inactiveName);
         assert.equal(store.find('status').objectAt(2).get('id'), StatusDefaults.expiredId);
         assert.equal(store.find('status').objectAt(2).get('name'), StatusDefaults.expiredName);
+    });
+});
+
+test('on boot we should fetch and load the currency configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        var currency_models = store.find('currency');
+        assert.equal(currency_models.length, 4);
+        assert.equal(currency_models.objectAt(0).get('id'), CurrencyDefaults.id);
+        assert.equal(currency_models.objectAt(0).get('symbol'), CurrencyDefaults.symbol);
+        assert.equal(currency_models.objectAt(0).get('decimal_digits'), CurrencyDefaults.decimal_digits);
+        assert.equal(currency_models.objectAt(0).get('code'), CurrencyDefaults.code);
+        assert.equal(currency_models.objectAt(0).get('symbol_native'), CurrencyDefaults.symbol_native);
+        assert.equal(currency_models.objectAt(0).get('rounding'), CurrencyDefaults.rounding);
+        assert.equal(currency_models.objectAt(0).get('name_plural'), CurrencyDefaults.name_plural);
+        assert.equal(currency_models.objectAt(0).get('name'), CurrencyDefaults.name);
     });
 });

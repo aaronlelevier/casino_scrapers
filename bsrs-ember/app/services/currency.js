@@ -1,49 +1,22 @@
 import Ember from 'ember';
-
-var currency_list = 
-    {
-    "USD": {
-        "symbol": "$",
-        "name": "US Dollar",
-        "symbol_native": "$",
-        "decimal_digits": 2,
-        "rounding": 0,
-        "code": "USD",
-        "name_plural": "US dollars"
-    },
-    "CAD": {
-        "symbol": "CA$",
-        "name": "Canadian Dollar",
-        "symbol_native": "$",
-        "decimal_digits": 2,
-        "rounding": 0,
-        "code": "CAD",
-        "name_plural": "Canadian dollars"
-    },
-    "EUR": {
-        "symbol": "€",
-        "name": "Euro",
-        "symbol_native": "€",
-        "decimal_digits": 2,
-        "rounding": 0,
-        "code": "EUR",
-        "name_plural": "euros"
-    },
-    "CNY": {
-        "symbol": "CN¥",
-        "name": "Chinese Yuan",
-        "symbol_native": "CN¥",
-        "decimal_digits": 2,
-        "rounding": 0,
-        "code": "CNY",
-        "name_plural": "Chinese yuan"
-    },
-};
+import inject from 'bsrs-ember/utilities/store';
 
 var CurrencyService = Ember.Service.extend({
+    store: inject('main'),
     format_currency: function(val, attr, currency) {
-        var currency_found = currency_list[currency];
+        var store = this.get('store');
+        var currency_found = store.find('currency').objectAt(0);
         return parseInt(val).toFixed(currency_found[attr]);
+    },
+    format_symbol: function(currency) {
+        var store = this.get('store');
+        var currency_found = store.find('currency').objectAt(0);
+        return currency_found.symbol;
+    },
+    format_code: function(currency) {
+        var store = this.get('store');
+        var currency_found = store.find('currency').objectAt(0);
+        return currency_found.code;
     }
 });
 
