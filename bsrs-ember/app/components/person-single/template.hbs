@@ -16,9 +16,9 @@
 
 		{{#form-group title="admin.person.label.status"}}
 			<select class="form-control t-statuses-select">
-				<option class="t-status-option">Active</option>
-				<option class="t-status-option">Inactive</option>
-				<option class="t-status-option">Expired</option>
+        {{#each statuses as |status|}}
+            <option class="t-status-option">{{status.name}}</option>
+        {{/each}}
 			</select>
 		{{/form-group}}
 
