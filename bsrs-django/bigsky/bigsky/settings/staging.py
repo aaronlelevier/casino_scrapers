@@ -21,8 +21,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
         'NAME': 'staging',          # os.environ['DB_NAME']
-        'USER': 'postgres',         # os.environ['DB_USER']
-        'PASSWORD': 'postgres',     # os.environ['DB_PASSWORD']
+        'USER': 'bsdev',         # os.environ['DB_USER']
+        'PASSWORD': 'tango',     # os.environ['DB_PASSWORD']
         'HOST': 'localhost',
         'PORT': '5432',
     }
