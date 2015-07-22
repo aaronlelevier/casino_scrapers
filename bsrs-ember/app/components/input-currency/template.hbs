@@ -1,0 +1,9 @@
+<div class="input-group">
+  <div class="input-group-addon t-currency-symbol">
+    {{currency-format model "USD" "symbol"}}
+  </div>
+  {{input type="text" placeholder=(t "admin.person.label.auth_amount") value=(currency-format model "USD" "decimal_digits") class="form-control t-person-auth_amount" id="auth_amount" disabled=editPrivilege}}
+  <div class="input-group-addon t-currency-code">
+    {{currency-format model "USD" "code"}}
+  </div>
+</div>

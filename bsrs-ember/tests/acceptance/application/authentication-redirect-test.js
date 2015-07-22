@@ -11,7 +11,7 @@ var application, originalLoggerError, originalTestAdapterException;
 const PREFIX = config.APP.NAMESPACE;
 const PEOPLE_URL = "/admin/people";
 
-module('sco Acceptance | application redirect test', {
+module('Acceptance | application redirect test', {
     beforeEach() {
         application = startApp();
         //required to allow tests to pass.
