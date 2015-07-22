@@ -108,7 +108,14 @@ Posgres Configuration
     ALTER ROLE bsdev CREATEDB;
     \q
 
-Application Configurations
+**Web User Configuration**
+
+The web user running the deploy script will also have to be 
+created as a postgres user in order to run:
+
+``createdb <db_name>`` and ``dropdb <db_name>`` from the command line.
+
+**Application Configurations**
 
 **Note:** when running ``makemigrations`` in postgres-9.1 vs. postgres-9.3 they are different
 and they will fail when running `/.manage.py migrate`
