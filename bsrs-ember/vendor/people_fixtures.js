@@ -20,7 +20,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         }
     };
     var factory = function(address_fixtures, phone_number_fixtures) {
-        this.addresses_fixtures = address_fixtures;
+        this.address_fixtures = address_fixtures;
         this.phone_number_fixtures = phone_number_fixtures;
     };
     factory.prototype.list = function() {
@@ -34,14 +34,14 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var person = generatePerson(i);
         person.acceptassign = false;
         person.phone_numbers = this.phone_number_fixtures.get();
-        person.addresses = this.addresses_fixtures.get();
+        person.addresses = this.address_fixtures.get();
         person.emails = []
         return person;
     };
     factory.prototype.put = function(person) {
         var response = generatePerson(person.id);
         response.phone_numbers = this.phone_number_fixtures.put();
-        response.addresses= this.addresses_fixtures.put();
+        response.addresses = this.address_fixtures.put();
         response.role = response.role.id;
         response.status = response.status.id;
         response.acceptassign= false;

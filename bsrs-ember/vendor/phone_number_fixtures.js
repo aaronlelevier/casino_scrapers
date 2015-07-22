@@ -44,11 +44,11 @@ var BSRS_PHONE_NUMBER_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    var phone_number_type_defaults = require('../app/value-defaults/phone-number-type');
-    module.exports = new BSRS_PHONE_NUMBER_FACTORY(phone_number_type_defaults['default']);
+    var phone_number_type_defaults = require('./phone-number-type');
+    module.exports = new BSRS_PHONE_NUMBER_FACTORY(phone_number_type_defaults);
 } else {
-    define('bsrs-ember/vendor/phone_number_fixtures', ['exports', 'bsrs-ember/value-defaults/phone-number-type'], function (exports, phone_number_type_defaults) {
+    define('bsrs-ember/vendor/phone_number_fixtures', ['exports', 'bsrs-ember/vendor/phone-number-type'], function (exports, phone_number_type_defaults) {
         'use strict';
-        return new BSRS_PHONE_NUMBER_FACTORY(phone_number_type_defaults['default']);
+        return new BSRS_PHONE_NUMBER_FACTORY(phone_number_type_defaults);
     });
 }

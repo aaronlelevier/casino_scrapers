@@ -3,11 +3,11 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
-import StatusDefaults from 'bsrs-ember/value-defaults/status';
-import StateDefaults from 'bsrs-ember/value-defaults/state';
-import CountryDefaults from 'bsrs-ember/value-defaults/country';
-import AddressTypeDefaults from 'bsrs-ember/value-defaults/address-type';
-import PhoneNumberDefaults from 'bsrs-ember/value-defaults/phone-number-type';
+import StatusDefaults from 'bsrs-ember/vendor/status';
+import StateDefaults from 'bsrs-ember/vendor/state';
+import CountryDefaults from 'bsrs-ember/vendor/country';
+import AddressTypeDefaults from 'bsrs-ember/vendor/address-type';
+import PhoneNumberDefaults from 'bsrs-ember/vendor/phone-number-type';
 
 const HOME_URL = '/';
 
@@ -59,9 +59,9 @@ test('on boot we should fetch and load the state configuration', function(assert
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('state').length, 51);
-        assert.equal(store.find('state').objectAt(0).get('id'), StateDefaults.firstId);
-        assert.equal(store.find('state').objectAt(0).get('name'), StateDefaults.firstName);
-        assert.equal(store.find('state').objectAt(0).get('abbr'), StateDefaults.firstAbbr);
+        assert.equal(store.find('state').objectAt(4).get('id'), StateDefaults.firstId);
+        assert.equal(store.find('state').objectAt(4).get('name'), StateDefaults.firstName);
+        assert.equal(store.find('state').objectAt(4).get('abbr'), StateDefaults.firstAbbr);
     });
 });
 
