@@ -4,6 +4,7 @@ import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
+import StatusDefaults from 'bsrs-ember/vendor/status';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PHONE_NUMBER_FIXTURES from 'bsrs-ember/vendor/phone_number_fixtures';
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
@@ -82,6 +83,10 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), 5);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), '92100');
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), 1);
+
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), StatusDefaults.activeName);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), StatusDefaults.inactiveName);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), StatusDefaults.expiredName);
 
         assert.equal(find('.t-person-auth_amount').val(), '50000.0000');
     });
