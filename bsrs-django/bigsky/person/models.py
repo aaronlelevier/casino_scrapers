@@ -150,7 +150,9 @@ class Person(User):
     ooto_end_date = models.DateField("Out of the Office Status End Date", max_length=100, blank=True, null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
-    
+    next_approver = models.ForeignKey("self", related_name='nextapprover', null=True)
+    covering_user = models.ForeignKey("self", related_name='coveringuser', null=True)
+
     # use as a normal Django Manager() to access related setting objects.
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
@@ -176,14 +178,4 @@ class Person(User):
             self.save()
         else:
             super(Person, self).delete(*args, **kwargs)
-
-
-class NextApprover(BaseModel):
-    "A Person can only have one next-approver"
-    person = models.OneToOneField(Person)
-
-
-class CoveringUser(BaseModel):
-    '''Person that covers for another Person when they are 
-     out-of-the-office.'''
-    person = models.OneToOneField(Person)
+            
