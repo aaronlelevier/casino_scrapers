@@ -6,19 +6,15 @@ import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import CurrencyService from 'bsrs-ember/services/currency';
 import Ember from 'ember';
 import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
+import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var container, registry, store;
 
 module('unit: person test', {
     beforeEach() {
         registry = new Ember.Registry();
-        registry.register('model:person', Person);
-        registry.register('model:phonenumber', PhoneNumber);
-        registry.register('store:main', Store);
-        registry.register('model:currency', Currency);
-        registry.register('service:currency', CurrencyService);
         container = registry.container();
-        store = container.lookup('store:main');
+        store = module_registry(container, registry, ['model:person', 'model:currency', 'model:phonenumber','service:currency']);
         store.push('currency', CurrencyDefaults);
     },
     afterEach() {

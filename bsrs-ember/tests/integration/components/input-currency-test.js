@@ -6,19 +6,15 @@ import Person from 'bsrs-ember/models/person';
 import Currency from 'bsrs-ember/models/currency';
 import PEOPLE_FACTORY from 'bsrs-ember/vendor/people_fixtures';
 import CurrencyService from 'bsrs-ember/services/currency';
-import Store from 'ember-cli-simple-store/store';
 import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
+import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var container, registry, store, service;
 
 moduleForComponent('input-currency', 'integration: input-currency test', {
     integration: true,
     setup() {
-        this.container._registry.register('model:person', Person);
-        this.container._registry.register('model:currency', Currency);
-        this.container._registry.register('store:main', Store);
-        this.container._registry.register('service:currency', CurrencyService);
-        store = this.container.lookup('store:main');
+        store = module_registry(this.container, this.registry, ['model:person', 'model:currency', 'service:currency']);
         store.push('currency', CurrencyDefaults);
         translation.initialize(this);
     }
