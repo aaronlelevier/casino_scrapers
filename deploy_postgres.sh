@@ -31,7 +31,11 @@ echo "RUN DATABASE MIGRATIONS"
 DB_NAME="staging"
 echo "DB NAME TO DROP: $DB_NAME"
 dropdb $DB_NAME
-createdb $DB_NAME
+createdb $DB_NAME -O web
+psql staging -c "GRANT ALL ON ALL TABLES IN SCHEMA public to bsdev;"
+psql staging -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public to bsdev;"
+psql staging -c "GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to bsdev;"
+
 export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
 ../../venv/bin/python manage.py makemigrations contact location order person role session util
 ../../venv/bin/python manage.py migrate
