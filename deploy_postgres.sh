@@ -31,7 +31,7 @@ echo "RUN DATABASE MIGRATIONS"
 DB_NAME="staging"
 echo "DB NAME TO DROP: $DB_NAME"
 dropdb $DB_NAME
-createdb $DB_NAME -O web
+createdb $DB_NAME -O tomcat
 psql staging -c "GRANT ALL ON ALL TABLES IN SCHEMA public to bsdev;"
 psql staging -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public to bsdev;"
 psql staging -c "GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to bsdev;"
