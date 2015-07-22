@@ -13,6 +13,7 @@ from rest_framework import serializers
 
 from location.models import LocationLevel, Location
 from person.models import PersonStatus, Person, Role
+from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (
     PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer,
     AddressShortFKSerializer, PhoneNumberShortFKSerializer,
@@ -57,24 +58,40 @@ class PersonStatusSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-PERSON_FIELDS = ('id', 'username', 'first_name', 'middle_initial',
-            'last_name', 'title', 'emp_number', 'auth_amount',
-            'role', 'status')
+PERSON_FIELDS = (
+    'deleted', 'id', 'username', 'first_name', 'middle_initial',
+    'last_name', 'title', 'emp_number', 'auth_amount', 'role', 'status'
+    )
 
 
-# NOT IN USE: todo to add this
 class PersonCreateSerializer(serializers.ModelSerializer):
-    '''
-    Only required fields.
-    '''
+
+    # optional contact info
+    phone_numbers = PhoneNumberShortFKSerializer(many=True)
+    addresses = AddressShortFKSerializer(many=True)
+
     class Meta:
         model = Person
         write_only_fields = ('password',)
         fields = (
             'username', 'email', 'password', 'first_name', 'last_name', # user fields
-            'role', 'status', 'location',    # keys
-            'auth_amount', 'auth_amount_currency', # required - other
+            'role', 'status', # keys
+            'location', 'phone_numbers', 'addresses',
         )
+
+    def create(self, validated_data):
+        # first pop off related models or else they will be sent to 
+        # `Person` create()
+        phone_numbers = validated_data.pop('phone_numbers')
+        addresses = validated_data.pop('addresses')
+        # PhoneNumbers
+        person = Person.objects.create(**validated_data)
+        for ph in phone_numbers:
+            PhoneNumber.objects.create(person=person, **ph)
+        # Addresses
+        for ad in addresses:
+            Address.objects.create(person=person, **ad)
+        return person
 
 
 class PersonListSerializer(serializers.ModelSerializer):

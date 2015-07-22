@@ -14,8 +14,7 @@ from django.core.exceptions import ValidationError
 
 from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
-from util import choices
-from util import exceptions as excp
+from util import choices, exceptions as excp
 from util.models import AbstractName, MainSetting, CustomSetting, BaseModel
 
 
@@ -89,7 +88,6 @@ class Role(BaseModel):
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
 
-
     # use as a normal Django Manager() to access related setting objects.
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
@@ -110,6 +108,9 @@ class Role(BaseModel):
 
 
 class ProxyRole(BaseModel):
+    '''
+    A `Role` that can proxy for, or act on the behalf of, another `Role`
+    '''
     role = models.ForeignKey(Role)
 
 
@@ -126,15 +127,17 @@ class Person(User):
     '''
     # Keys
     role = models.ForeignKey(Role)
-    status = models.ForeignKey(PersonStatus)
+    status = models.ForeignKey(PersonStatus) # will now be defaulted
     location = models.ForeignKey(Location, blank=True, null=True)
     # required
     auth_amount = models.PositiveIntegerField(blank=True, default=0)
-    auth_amount_currency = models.CharField(max_length=25, choices=choices.CURRENCY_CHOICES,
-        default=choices.CURRENCY_CHOICES[0][0])
+    auth_amount_currency = models.CharField(max_length=25,
+                                            choices=choices.CURRENCY_CHOICES,
+                                            default=choices.CURRENCY_CHOICES[0][0])
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
     # optional
+    deleted = models.BooleanField(blank=True, default=False)
     emp_number = models.CharField(max_length=100, blank=True, null=True)
     middle_initial = models.CharField(max_length=30, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
@@ -147,7 +150,9 @@ class Person(User):
     ooto_end_date = models.DateField("Out of the Office Status End Date", max_length=100, blank=True, null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
-    
+    next_approver = models.ForeignKey("self", related_name='nextapprover', null=True)
+    covering_user = models.ForeignKey("self", related_name='coveringuser', null=True)
+
     # use as a normal Django Manager() to access related setting objects.
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
@@ -163,13 +168,14 @@ class Person(User):
             raise excp.PersonFLNameRequired
         return super(Person, self).save(*args, **kwargs)
 
-
-class NextApprover(BaseModel):
-    "A Person can only have one next-approver"
-    person = models.OneToOneField(Person)
-
-
-class CoveringUser(BaseModel):
-    '''Person that covers for another Person when they are 
-     out-of-the-office.'''
-    person = models.OneToOneField(Person)
+    def delete(self, override=False, *args, **kwargs):
+        '''
+        Enforce only hiding objects and not deleting them unless explicitly 
+        overriden.
+        '''
+        if not override:
+            self.deleted=True
+            self.save()
+        else:
+            super(Person, self).delete(*args, **kwargs)
+            

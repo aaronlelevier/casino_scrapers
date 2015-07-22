@@ -24,6 +24,7 @@
 
 		{{#form-group title="admin.person.label.username" for="username"}}
 	    {{input type="text" placeholder=(t "admin.person.label.username") value=model.username class="form-control t-person-username" id="username" required="required"}}
+      {{#validation-error-field submitted=submitted field="username" className="t-username-validation-error" model=model validation=usernameValidation}}invalid username{{/validation-error-field}}
 		{{/form-group}}
 
 		{{#form-group title="admin.person.label.first_name" for="first_name"}}

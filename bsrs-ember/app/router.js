@@ -43,10 +43,7 @@ Router.map(function() {
   this.route('pms');
   this.route('invoices');
   this.route('reports');
-  this.route('login');
 
-  //wildcard route
-  this.route('application-error', { path: '/*wildcard' });
   this.route('phone-number');
   this.route('dashboard');
 });

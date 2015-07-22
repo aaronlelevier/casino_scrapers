@@ -4,21 +4,14 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# Change for now b/c PostgreSQL uses different PW hashes
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
-#         'NAME': 'aaron',
-#         'USER': '',
-#         'PASSWORD': '',
-#         'HOST': 'localhost',
-#         'PORT': '5432',
-#     }
-# }
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
+        'NAME': 'local', # Either create this DB on your machine, or replace 
+        'USER': '',		 # this with the name of your Postgres Django Dev DB.
+        'PASSWORD': '',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -26,5 +19,13 @@ INSTALLED_APPS += (
     'django_extensions',
     )
 
+
 if 'test' in sys.argv:
-    from .ci import *
+	TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+	NOSE_ARGS = [
+	    '--cover-package=contact,location,order,person,role,session,util',
+	]
+
+	PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher', )
+	DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'

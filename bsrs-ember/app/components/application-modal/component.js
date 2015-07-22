@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    classNames: ['search-box'],
+    classNames: ['application-modal'],
     actions: {
         rollback_model() {
             var transition = this.trx.attemptedTransition;

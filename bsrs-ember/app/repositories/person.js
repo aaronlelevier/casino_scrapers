@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
+import PromiseMixin from 'ember-promise/mixins/promise';
 
 var PREFIX = config.APP.NAMESPACE;
 
@@ -47,7 +48,10 @@ var create_people_with_relationships = (response, store, id) => {
             address_ids.push(address.id);
         });
         response.addresses = address_ids;
-        store.push("person", response);
+        //discuss dirty attr for prop not included in the list
+        //meaning ... if the user is dirty NOW what should do?
+        var originalPerson = store.push("person", response);
+        originalPerson.save();
     });
 };
 
@@ -85,13 +89,9 @@ export default Ember.Object.extend({
     },
     find() {
         var store = this.get('store');
-        $.ajax({
-            url: PREFIX + '/admin/people/'
-        }).then((response) => {
-            Ember.run(() => {
-                response.results.forEach((model) => {
-                    store.push("person", model);
-                });
+        PromiseMixin.xhr(PREFIX + '/admin/people/', 'GET').then((response) => {
+            response.results.forEach((model) => {
+                store.push("person", model);
             });
         });
         return store.find("person");

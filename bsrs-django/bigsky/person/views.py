@@ -18,6 +18,7 @@ from person.serializers import (PersonStatusSerializer, PersonDetailSerializer,
     )
 from person.models import Person, PersonStatus, Role
 from person.permissions import BSModelPermissions
+from util.mixins import DestroyModelMixin
 
 
 ### PERSON STATUS ###
@@ -31,7 +32,7 @@ class PersonStatusViewSet(viewsets.ModelViewSet):
 
 ### PERSON ###
 
-class PersonViewSet(viewsets.ModelViewSet):
+class PersonViewSet(DestroyModelMixin, viewsets.ModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
     
@@ -53,7 +54,6 @@ class PersonViewSet(viewsets.ModelViewSet):
             return PersonCreateSerializer
         else:
             return PersonListSerializer
-
 
     # def list(self, request):
     #     serializer = PersonListSerializer(self.queryset, many=True)

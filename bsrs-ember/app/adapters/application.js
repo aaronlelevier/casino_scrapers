@@ -1,5 +1,4 @@
 import config from 'bsrs_deva/config/environment';
-import DS from 'ember-data';
 import DRFAdapter from './drf';
 
 //logic for communicating with backend

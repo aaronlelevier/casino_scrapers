@@ -16,6 +16,14 @@ module.exports = function(app) {
   var morgan  = require('morgan');
   app.use(morgan('dev'));
 
+  function usingProxy() {
+    return !!process.argv.filter(function (arg) {
+        return arg.indexOf('--proxy') === 0;
+    }).length;
+  }
+
+  if (usingProxy()) { return; }
+
   mocks.forEach(function(route) { route(app); });
   proxies.forEach(function(route) { route(app); });
 

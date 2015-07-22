@@ -30,7 +30,7 @@ THIRD_PARTY_APPS = (
     'psycopg2',
     'corsheaders',
     'rest_framework',
-    # test libraries
+    # testing
     'django_nose',
     'debug_toolbar',
     )
@@ -55,6 +55,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
 )
@@ -80,10 +81,11 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bigsky.wsgi.application'
 
 # Must Override!
+# DATABASES = {}
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
+        'NAME': 'sqlite3.db',
     }
 }
 
@@ -112,13 +114,6 @@ LOGIN_REDIRECT_URL = '/'
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
-CORS_ORIGIN_ALLOW_ALL = True
-#CORS_ORIGIN_WHITELIST = (
-#    'localhost:4200',
-#    '10.4.6.34:80',
-#    '127.0.0.1:8000',
-#)
-
 REST_FRAMEWORK = {
     'PAGINATE_BY': 25,
     'PAGINATE_BY_PARAM': 'page_size',
@@ -130,3 +125,10 @@ REST_FRAMEWORK = {
         'rest_framework_filters.backends.DjangoFilterBackend',
     ),
 }
+
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8000$', ) #staging
+
+# get w/ Aaron to understand what settings people run for local dev
+# CORS_ORIGIN_REGEX_WHITELIST = ('^https?://localhost:\d{4}$', '^https?://192\.168\.\d{1,3}\.\d{1,3}:\d{4}$', )

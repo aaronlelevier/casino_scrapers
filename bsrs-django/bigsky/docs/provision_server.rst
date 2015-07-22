@@ -79,6 +79,46 @@ Nginx
     ifconfig eth0 | grep inet | awk (print $2)
 
 
+Postgres
+--------
+
+Install ``psql`` and ``postgres DB server``
+
+.. code-block::
+
+    # install psql
+    sudo apt-get install postgresql-client-common
+
+    # install postgres
+    sudo apt-get install postgresql-9.1
+    sudo apt-get install postgresql-contrib
+    sudo apt-get install postgresql-client
+    sudo apt-get install postgresql-server-dev-9.1
+
+Posgres Configuration
+
+.. code-block::
+
+    # create DB, and set User password if unknown
+    sudo su postgres
+    psql
+    CREATE DATABASE staging;
+    ALTER ROLE postgres WITH password 'postgres';
+    \q
+
+Application Configurations
+
+**Note:** when running ``makemigrations`` in postgres-9.1 vs. postgres-9.3 they are different
+and they will fail when running `/.manage.py migrate`
+
+.. code-block::
+
+    pip install psycopg2
+    
+    # run migrations
+    ./manage.py makemigrations contact location order person role session util
+    ./manage.py migrate
+
 
 
 

@@ -50,7 +50,7 @@ class PhoneNumber(ContactBaseModel):
     location = models.ForeignKey(Location, related_name='phone_numbers', null=True, blank=True)
     person = models.ForeignKey(Person, related_name='phone_numbers', null=True, blank=True)
     # fields
-    number = models.CharField(max_length=32, unique=True)
+    number = models.CharField(max_length=32)
     
     class Meta:
         ordering = ('type', 'number',)
@@ -104,7 +104,7 @@ class Email(ContactBaseModel):
     location = models.ForeignKey(Location, related_name='emails', null=True, blank=True)
     person = models.ForeignKey(Person, related_name='emails', null=True, blank=True)
     # fields
-    email = models.EmailField(max_length=255, unique=True)
+    email = models.EmailField(max_length=255)
     
     class Meta:
         ordering = ('type', 'email',)
