@@ -117,6 +117,7 @@ export default {
 			label: {
 				name: "Name",
 				username: "Username",
+                password: "Password",
 				title: "Title",
 				emp_number: "Employee No.",
 				role: "Role",
