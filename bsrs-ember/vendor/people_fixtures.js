@@ -30,6 +30,9 @@ var BSRS_PEOPLE_FACTORY = (function() {
         }
         return {'count':3,'next':null,'previous':null,'results': response};
     };
+    factory.prototype.empty = function() {
+        return {'count':3,'next':null,'previous':null,'results': []};
+    };
     factory.prototype.detail = function(i) {
         var person = generatePerson(i);
         person.acceptassign = false;

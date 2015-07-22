@@ -77,15 +77,29 @@ var create_people_with_nested = (model, store) => {
 
 export default Ember.Object.extend({
     save(model) {
-        var endpoint = PREFIX + '/admin/people/' + model.get('id') + '/';
         var store = this.get('store');
-        var payload = create_people_with_nested(model, store);
-        return $.ajax({
-            url: endpoint,
-            data: payload,
-            dataType: 'json',
-            method: 'PUT'
-        });
+        var payload, endpoint;
+        if (model.get('id')) {
+            endpoint = PREFIX + '/admin/people/' + model.get('id') + '/';
+            payload = create_people_with_nested(model, store);
+            return $.ajax({
+                url: endpoint,
+                data: payload,
+                dataType: 'json',
+                method: 'PUT'
+            });
+        } else {
+            endpoint = PREFIX + '/admin/people/new/';
+            payload = {username: model.get('username'), password: model.get('password')}; 
+            return $.ajax({
+                url: endpoint,
+                data: payload,
+                dataType: 'json',
+                method: 'POST'
+            }).then((response) => {
+                store.push('person', response);
+            });
+        }
     },
     find() {
         var store = this.get('store');
