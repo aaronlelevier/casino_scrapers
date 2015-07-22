@@ -103,7 +103,9 @@ Posgres Configuration
     sudo su postgres
     psql
     CREATE DATABASE staging;
-    ALTER ROLE postgres WITH password 'postgres';
+    CREATE USER bsdev WITH PASSWORD 'tango';
+    GRANT ALL PRIVILEGES ON DATABASE "staging" TO bsdev;
+    ALTER ROLE bsdev CREATEDB;
     \q
 
 Application Configurations
