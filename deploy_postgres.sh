@@ -37,7 +37,7 @@ psql staging -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public to bsdev;"
 psql staging -c "GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to bsdev;"
 
 export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
-../../venv/bin/python manage.py makemigrations contact location order person role session util
+../../venv/bin/python manage.py makemigrations
 ../../venv/bin/python manage.py migrate
 ../../venv/bin/python manage.py loaddata fixtures/postgres.json
 
