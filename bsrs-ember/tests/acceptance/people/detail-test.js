@@ -47,7 +47,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     });
 });
 
-test('scooter when you deep link to the person detail view you get bound attrs', (assert) => {
+test('when you deep link to the person detail view you get bound attrs', (assert) => {
 
     visit(DETAIL_URL);
 
@@ -88,7 +88,7 @@ test('scooter when you deep link to the person detail view you get bound attrs',
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), StatusDefaults.inactiveName);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), StatusDefaults.expiredName);
 
-        assert.equal(find('.t-person-auth_amount').val(), '50000.0000');
+        assert.equal(find('.t-person-auth_amount').val(), '50000.00');
     });
 
     var url = PREFIX + DETAIL_URL + '/';
