@@ -85,8 +85,9 @@ fieldset[disabled] .form-control,
 	border-color: $gray;
 }
 .badge{
-	background-color: $darkGray;
+	background-color: $blue;
 	font-size: 1.1rem;
+	border-radius: $borderRadius;
 }
 .list-group-item.active,
 .list-group-item.active:hover,
