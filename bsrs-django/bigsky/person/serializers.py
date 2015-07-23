@@ -8,6 +8,7 @@ Created on Jan 16, 2015
 '''
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import Group
+from django.contrib.auth import update_session_auth_hash
 
 from rest_framework import serializers
 
@@ -74,7 +75,7 @@ class PersonCreateSerializer(serializers.ModelSerializer):
         model = Person
         write_only_fields = ('password',)
         fields = (
-            'username', 'email', 'password', 'first_name', 'last_name', # user fields
+            'username', 'password', 'first_name', 'last_name', # user fields
             'role', 'status', # keys
             'location', 'phone_numbers', 'addresses',
         )
@@ -123,7 +124,20 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS + ('phone_numbers', 'addresses',)
+        write_only_fields = ('password',)
+        fields = PERSON_FIELDS + ('password', 'phone_numbers', 'addresses',)
+
+    # TODO: this will be a route for Password and the main Update
+    # will be separate
+    def update(self, instance, validated_data):
+        print validated_data
+
+        if 'password' in validated_data:
+            password = validated_data.pop('password')
+            instance.set_password(password)
+            instance.save()
+            update_session_auth_hash(self.context['request'], instance)
+        return super(PersonUpdateSerializer, self).update(instance, validated_data)
 
 
 class RoleDetailSerializer(serializers.ModelSerializer):

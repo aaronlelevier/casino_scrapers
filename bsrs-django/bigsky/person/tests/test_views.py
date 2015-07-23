@@ -23,7 +23,6 @@ PERSON_DATA = {
     "password":"one",
     "first_name":"foo",
     "last_name":"bar",
-    "email":"",
     "role":"",
     "status":"",
     "location":"",
@@ -186,6 +185,13 @@ class PersonPatchTests(APITestCase):
 
 
 class PersonPutTests(APITestCase):
+    '''
+    All required Model fields must be supplied in a PUT, so the PASSWORD is 
+    required if doing a PUT.
+
+    Resolution: For Password changes, PUT is ok, but for all other Person 
+    changes, a PATCH should be used, because User won't need to send Password.
+    '''
 
     def setUp(self):
         self.password = PASSWORD
@@ -194,20 +200,6 @@ class PersonPutTests(APITestCase):
 
     def tearDown(self):
         self.client.logout()
-
-    def test_put(self):
-        title = 'manager'
-        person = PersonUpdateSerializer(self.person).data # returns a python dict
-                                                           # serialized object
-        self.assertNotEqual(person['title'], title)
-        # change a field on the Person to see if the PUT works!
-        person.update({'title':title})
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # get back the same person, and confirm that their email is changed in the DB
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
-        person = json.loads(response.content)
-        self.assertEqual(person['title'], title)
 
     def test_put_password_change(self):
         # test the User is currently logged in
@@ -222,6 +214,19 @@ class PersonPutTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         # still logged in after PW change test
         self.assertIn('_auth_user_id', self.client.session)
+
+    def test_put_password_change_and_login(self):
+        password = 'new'
+        person = PersonUpdateSerializer(self.person).data
+        person.update({'password':password})
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.client.logout()
+        self.assertNotIn('_auth_user_id', self.client.session)
+        # Updated password works for logging in
+        self.client.login(username=self.person.username, password=password)
+        p = Person.objects.get(pk=self.person.pk)
+        self.assertEqual(int(self.client.session['_auth_user_id']), p.pk)
 
 
 class PersonDeleteTests(APITestCase):

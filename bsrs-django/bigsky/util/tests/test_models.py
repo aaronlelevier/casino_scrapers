@@ -5,10 +5,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from model_mommy import mommy
 
 from person.models import Person
-from person.permissions import perms_map
 from person.tests.factory import create_person
 from util import create
 from util.models import MainSetting, CustomSetting, Tester
+from util.permissions import perms_map
 
 
 class TesterTests(TestCase):

@@ -53,25 +53,6 @@ class PersonViewSet(BaseModelViewSet):
         else:
             return PersonListSerializer
 
-    # def list(self, request):
-    #     serializer = PersonListSerializer(self.queryset, many=True)
-    #     return Response(serializer.data)
-
-    def create(self, request, *args, **kwargs):
-        serializer = PersonCreateSerializer(data=request.DATA)
-        return super(PersonViewSet, self).create(request, *args, **kwargs)
-
-    # def retrieve(self, request, pk=None):
-    #     person = get_object_or_404(User, pk=pk)
-    #     serializer = PersonDetailSerializer(person)
-    #     return Response(serializer.data)
-
-    # def update(self, request, pk=None):
-    #     pass
-
-    # def partial_update(self, request, pk=None):
-    #     pass
-    
     # @detail_route(methods=['get'])
     # def perms(self, request, pk):
     #     '''
