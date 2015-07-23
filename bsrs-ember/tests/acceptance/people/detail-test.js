@@ -19,7 +19,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('Acceptance | detail test', {
+module('sco Acceptance | detail test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('store:main');

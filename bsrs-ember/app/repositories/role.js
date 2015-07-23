@@ -6,17 +6,11 @@ var PREFIX = config.APP.NAMESPACE;
 
 export default Ember.Object.extend({
     save(model) {
-        var endpoint = PREFIX + '/admin/roles/' + model.get('id') + '/';
-        var store = this.get('store');
-        var payload = {
+        var payload = {data: {
            'id': model.get('id'),
            'name': model.get('name')
-        };
-        return $.ajax({
-            url: endpoint,
-            data: payload,
-            method: 'PUT'
-        });
+        }};
+        return PromiseMixin.xhr(PREFIX + '/admin/roles/' + model.get('id') + '/', 'PUT', payload);
     },
     find() {
         var store = this.get('store');
@@ -25,18 +19,13 @@ export default Ember.Object.extend({
                 store.push('role', model);
             });
         });
-        return store.find("role");
+        return store.find('role');
     },
     findById(id) {
-        var endpoint = PREFIX + '/admin/roles/' + id + '/';
         var store = this.get('store');
-        $.ajax({
-            url: endpoint
-        }).then((response) => {
-            Ember.run(() => {
-                store.push("role", response);
-            });
+        PromiseMixin.xhr(PREFIX + '/admin/roles/' + id + '/', 'GET').then((response) => {
+            store.push('role', response);
         });
-        return store.find("role", id);
+        return store.find('role', id);
     }
 });

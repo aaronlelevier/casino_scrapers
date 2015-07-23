@@ -13,7 +13,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('Acceptance | people-new', {
+module('sco Acceptance | people-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -25,7 +25,7 @@ module('Acceptance | people-new', {
     }
 });
 
-test('visiting /people/new', function(assert) {
+test('visiting /people/new', (assert) => {
     visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {
