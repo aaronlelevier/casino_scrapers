@@ -10,20 +10,10 @@ export default Ember.Component.extend(ValidationMixin, {
     actions: {
         savePerson() {
             if (this.get('valid')) {
-                var store = this.get('store'); //TODO: move to repository ...soon
                 var model = this.get('model');
                 var repository = this.get('repository');
                 repository.save(model).then(() => {
-                    Ember.run(() => {
-                        model.save(); //TODO: move to repository soon
-
-                        var phone_numbers = store.find('phonenumber', {person_id: model.get('id')});
-                        phone_numbers.forEach((num) => {
-                            num.save();
-                        });
-
-                        this.sendAction('savePerson');
-                    });
+                    this.sendAction('savePerson');
                 });
             }
         },

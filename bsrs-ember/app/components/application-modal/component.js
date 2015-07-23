@@ -7,12 +7,7 @@ export default Ember.Component.extend({
             var transition = this.trx.attemptedTransition;
             var model = this.trx.attemptedTransitionModel;
             model.rollback();
-            var phone_numbers = this.store.find('phonenumber', {person_id: model.get('id')});
-            phone_numbers.forEach((num) => {
-                if (num.get('isDirty')) {
-                   num.rollback(); 
-                }
-            });
+            model.rollbackPhoneNumbers();
             transition.retry();
         },
         cancel_modal() {

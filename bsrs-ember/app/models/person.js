@@ -20,5 +20,19 @@ export default Model.extend({
         return phone_number_dirty;
     }).volatile(),
     phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty').volatile(),
-    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').volatile()
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty').volatile(),
+    savePhoneNumbers: function() {
+        var store = this.get('store');
+        var phone_numbers = store.find('phonenumber', {person_id: this.get('id')});
+        phone_numbers.forEach((num) => {
+            num.save();
+        });
+    },
+    rollbackPhoneNumbers: function() {
+        var store = this.get('store');
+        var phone_numbers = store.find('phonenumber', {person_id: this.get('id')});
+        phone_numbers.forEach((num) => {
+            num.rollback();
+        });
+    }
 });

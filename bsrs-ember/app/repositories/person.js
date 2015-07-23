@@ -79,7 +79,10 @@ export default Ember.Object.extend({
         var payload;
         if (model.get('id')) {
             payload = create_people_with_nested(model, store);
-            return PromiseMixin.xhr(PREFIX + '/admin/people/' + model.get('id') + '/', 'PUT', payload);
+            return PromiseMixin.xhr(PREFIX + '/admin/people/' + model.get('id') + '/', 'PUT', payload).then((response) => {
+                model.save();
+                model.savePhoneNumbers();
+            });
         } else {
             payload = {data: {
                 "username":model.get('username'),
