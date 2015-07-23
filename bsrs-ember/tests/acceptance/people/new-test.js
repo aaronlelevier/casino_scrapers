@@ -9,10 +9,11 @@ import config from 'bsrs-ember/config/environment';
 const PREFIX = config.APP.NAMESPACE;
 const PEOPLE_URL = "/admin/people";
 const PEOPLE_NEW_URL = PEOPLE_URL + '/new';
+const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('sco Acceptance | people-new', {
+module('Acceptance | people-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -37,7 +38,7 @@ test('visiting /people/new', function(assert) {
     var response = {id: 1, username: 'mgibson', password: '123'};
     var url = PREFIX + PEOPLE_NEW_URL + '/';
     xhr( url,'POST',payload,{},201,response );
-    click('.t-save-btn');
+    click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL); 
         assert.equal(store.find('person').length, 1);

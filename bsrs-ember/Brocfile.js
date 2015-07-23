@@ -15,6 +15,7 @@ var app = new EmberApp({
 //app.import('bower_components/ember/ember-template-compiler.js');
 app.import('bower_components/fauxjax/dist/fauxjax.min.js');
 app.import('vendor/people_fixtures.js');
+app.import('vendor/role_fixtures.js');
 app.import('vendor/address_fixtures.js');
 app.import('vendor/phone_number_fixtures.js');
 app.import('vendor/address-type.js');
