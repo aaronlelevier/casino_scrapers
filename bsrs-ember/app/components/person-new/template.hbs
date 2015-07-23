@@ -1,47 +1,51 @@
-<form class="form-horizontal" {{action "return false" this on="submit"}}>
+<form {{action "return false" this on="submit"}}>
 	<header>
 		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
-		  <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-			<span class="caret"></span>
-		  </button>
-		  <ul class="dropdown-menu">
-			<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
-  			<li><a href="#">{{fa-icon "print"}} Print</a></li>
-  			<li>{{delete-button delete="deletePerson"}}</li>
-		  </ul>
+			{{save-button save="savePerson"}}
+			{{cancel-button cancel="cancelPerson"}}
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
+				<li><a href="#">{{fa-icon "print"}} Print</a></li>
+				<li>{{delete-button delete="deletePerson"}}</li>
+			</ul>
 		</div>
 	</header>
-	<section class="docSection col-sm-12">
+	<section class="docSection container-fluid">
+		<section>
+			<div class="col-sm-6">
+				{{#form-group title="admin.person.label.username" for="username"}}
+			    	{{input type="text" value=model.username placeholder=(t "admin.person.label.username") class="form-control t-person-username" id="username" required="required"}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.person.label.password" for="password"}}
+			    	{{input type="text" value=model.password placeholder=(t "admin.person.label.password") class="form-control t-person-password" id="password" required="required"}}
+				{{/form-group}}
+			</div>
 
-		{{#form-group title="admin.person.label.username" for="username"}}
-	    {{input type="text" value=model.username placeholder=(t "admin.person.label.username") class="form-control t-person-username" id="username" required="required"}}
-		{{/form-group}}
-
-		{{#form-group title="admin.person.label.password" for="password"}}
-	    {{input type="text" value=model.password placeholder=(t "admin.person.label.password") class="form-control t-person-password" id="password" required="required"}}
-		{{/form-group}}
-
-		{{#form-group title="admin.person.label.email" for="email"}}
-	    {{input type="text" value=model.email placeholder=(t "admin.person.label.email") class="form-control t-person-email" id="email" required="required"}}
-		{{/form-group}}
-
-		{{#form-group title="admin.person.label.role" for="role"}}
-	    {{input type="text" value=model.role placeholder=(t "admin.person.label.role") class="form-control t-person-role" id="role"}}
-		{{/form-group}}
-
-		{{#form-group title="admin.person.label.first_name" for="first_name"}}
-	    {{input type="text" value=model.first_name placeholder=(t "admin.person.label.first_name") class="form-control t-person-first_name" id="first_name"}}
-		{{/form-group}}
-
-		{{#form-group title="admin.person.label.last_name" for="last_name"}}
-	    {{input type="text" value=model.last_name placeholder=(t "admin.person.label.last_name") class="form-control t-person-last_name" id="last_name"}}
-		{{/form-group}}
-
+			<div class="col-sm-12">
+				{{#form-group title="admin.person.label.role" for="role"}}
+			    	{{input type="text" value=model.role placeholder=(t "admin.person.label.role") class="form-control t-person-role" id="role"}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.person.label.first_name" for="first_name"}}
+			    	{{input type="text" value=model.first_name placeholder=(t "admin.person.label.first_name") class="form-control t-person-first_name" id="first_name"}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.person.label.last_name" for="last_name"}}
+			    	{{input type="text" value=model.last_name placeholder=(t "admin.person.label.last_name") class="form-control t-person-last_name" id="last_name"}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-12">
+				{{#form-group title="admin.person.label.email" for="email"}}
+			    	{{input type="text" value=model.email placeholder=(t "admin.person.label.email") class="form-control t-person-email" id="email" required="required"}}
+				{{/form-group}}
+			</div>
+		</section>
 	</section>
-	<footer>
-		<div class="btn-group btn-group-sm pull-right center-block">
-			{{cancel-button cancel="cancelPerson"}}
-			{{save-button save="savePerson"}}
-		</div>
-	</footer>
 </form>

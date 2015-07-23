@@ -19,37 +19,38 @@
 			<h2 class="col-sm-12">General Information</h2>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.first_name" for="first_name"}}
-			    {{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name" required="required"}}
+			    	{{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name" required="required"}}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.last_name" for="last_name"}}
-			    {{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name" required="required"}}
+			    	{{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name" required="required"}}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.title" for="title"}}
-			  	{{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
+			  		{{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.emp_number" for="emp_number"}}
-			    {{input type="text" placeholder=(t "admin.person.label.emp_number") value=model.emp_number class="form-control t-person-emp_number" id="emp_number"}}
+			    	{{input type="text" placeholder=(t "admin.person.label.emp_number") value=model.emp_number class="form-control t-person-emp_number" id="emp_number"}}
 				{{/form-group}}
 			</div>
-			<div class="col-sm-12">
+			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.role" for="role"}}
-			    {{input type="text" placeholder=(t "admin.person.label.role") value=(t model.role.name) class="form-control" id="role"}}
+			    	{{input type="text" placeholder=(t "admin.person.label.role") value=(t model.role.name) class="form-control" id="role"}}
 				{{/form-group}}
-
+			</div>
+			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
-		      	{{input-currency model=model}}
+		      		{{input-currency model=model field="auth_amount"}}
 				{{/form-group}}
 			</div>
 		</section>
 		<section>
 			<h2 class="col-sm-12">Credentials</h2>
-			<div class="col-sm-12">
+			<div class="col-sm-4">
 				{{#form-group title="admin.person.label.status"}}
 					<select class="form-control t-statuses-select">
 			        {{#each statuses as |status|}}
@@ -58,15 +59,15 @@
 					</select>
 				{{/form-group}}
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				{{#form-group title="admin.person.label.username" for="username"}}
 				    {{input type="text" placeholder=(t "admin.person.label.username") value=model.username class="form-control t-person-username" id="username" required="required"}}
 					{{#validation-error-field submitted=submitted field="username" className="t-username-validation-error" model=model validation=usernameValidation}}invalid username{{/validation-error-field}}
 				{{/form-group}}
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-4">
 				{{#form-group title="admin.person.label.password" for="password"}}
-				    <div><button class="btn btn-default btn-sm">{{t "admin.person.label.change_password"}}</button></div>
+				    <div><button class="btn btn-default btn-md">{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
 				{{/form-group}}
 			</div>
 		</section>
