@@ -140,7 +140,7 @@ class Person(User):
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True, null=True)
     # required
-    auth_amount = models.PositiveIntegerField(blank=True, default=0)
+    auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     auth_amount_currency = models.CharField(max_length=25,
                                             choices=choices.CURRENCY_CHOICES,
                                             default=choices.CURRENCY_CHOICES[0][0])
@@ -176,7 +176,7 @@ class Person(User):
 
     def save(self, *args, **kwargs):
         if not self.status:
-            self.status = Person.objects.default()
+            self.status = PersonStatus.objects.default()
         return super(Person, self).save(*args, **kwargs)
 
     def delete(self, override=False, *args, **kwargs):

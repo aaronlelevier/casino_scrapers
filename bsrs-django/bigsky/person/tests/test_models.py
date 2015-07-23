@@ -80,8 +80,3 @@ class PersonStatusTests(TestCase):
     def test_create(self):
         ps = mommy.make(PersonStatus)
         self.assertIsInstance(ps, PersonStatus)
-
-
-
-
-
