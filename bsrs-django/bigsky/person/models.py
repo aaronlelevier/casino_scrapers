@@ -147,6 +147,8 @@ class Person(User):
     deleted = models.BooleanField(blank=True, default=False) # TODO: make a DateTimeField, and check for NULL if not deleted
     # required
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
+    # TODO: currency will be a table with 5 columns, and this will 
+    # be a FK on that table
     auth_amount_currency = models.CharField(max_length=25,
                                             choices=choices.CURRENCY_CHOICES,
                                             default=choices.CURRENCY_CHOICES[0][0])

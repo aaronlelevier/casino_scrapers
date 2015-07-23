@@ -4,7 +4,6 @@ echo "DEPLOY STARTED!"
 
 function gitClone {
 	NEW_UUID=$(( ( RANDOM  )  + 1 ))
-	cd /www/django/releases
 	git clone git@github.com:bigskytech/bsrs.git $NEW_UUID
 	RESULT=$?
     if [ "$RESULT" == 1 ]; then
@@ -14,21 +13,24 @@ function gitClone {
 }
 
 function npmInstall {
-	cd $NEW_UUID
-	cd bsrs-ember/
 	npm install
 	RESULT=$?
+    if [ "$RESULT" == 1 ]; then
+      echo "npm install  failed"
+      exit $RESULT
+    fi
+}
+
+function stopUwsgi {
+UWSGI_PORT=$((8002))
+echo "KILL UWSGI PROCESSES ON PORT $UWSGI_PORT"
+fuser -k -n tcp $UWSGI_PORT
+RESULT=$?
     if [ "$RESULT" == 1 ]; then
       echo "git clone failed"
       exit $RESULT
     fi
 }
-
-function theRest {
-	UWSGI_PORT=$((8002))
-
-	echo "KILL UWSGI PROCESSES ON PORT $UWSGI_PORT"
-	lsof -i tcp:$UWSGI_PORT | awk 'NR!=1 {print $2}' | xargs kill
 
 	./node_modules/ember-cli/bin/ember build --env=production
 	cd ../
@@ -69,8 +71,12 @@ function theRest {
 	echo $UWSGI
 }
 
+cd /www/django/releases
 gitClone
+
+cd $NEW_UUID/bsrs-ember/
 npmInstall
+
 theRest
 
 echo "DEPLOY FINISHED!"
