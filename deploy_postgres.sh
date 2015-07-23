@@ -27,14 +27,20 @@ venv/bin/pip install -r bsrs-django/requirements.txt
 
 cd bsrs-django/bigsky
 
-echo "RUN DATABASE MIGRATIONS"
+
 DB_NAME="staging"
 echo "DB NAME TO DROP: $DB_NAME"
 export PGPASSWORD=tango
-dropdb $DB_NAME -U bsdev
-createdb $DB_NAME -U bsdev -O bsdev
 
+dropdb $DB_NAME -U bsdev
+echo "$DB_NAME dropped"
+
+createdb $DB_NAME -U bsdev -O bsdev
+echo "$DB_NAME created"
+
+echo "RUN DATABASE MIGRATIONS"
 export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
+../../venv/bin/python manage.py collectstatic --noinput
 ../../venv/bin/python manage.py makemigrations
 ../../venv/bin/python manage.py migrate
 ../../venv/bin/python manage.py loaddata fixtures/postgres.json
