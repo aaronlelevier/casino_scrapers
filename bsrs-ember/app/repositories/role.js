@@ -1,10 +1,11 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
+import PromiseMixin from 'ember-promise/mixins/promise';
 
 var PREFIX = config.APP.NAMESPACE;
 
 export default Ember.Object.extend({
-    save: function(model) {
+    save(model) {
         var endpoint = PREFIX + '/admin/roles/' + model.get('id') + '/';
         var store = this.get('store');
         var payload = {
@@ -19,23 +20,19 @@ export default Ember.Object.extend({
     },
     find() {
         var store = this.get('store');
-        $.ajax({
-            url: PREFIX + '/admin/roles/'
-        }).then(function(response) {
-            Ember.run(() => {
-                response.results.forEach(function(model) {
-                    store.push("role", model);
-                });
+        PromiseMixin.xhr(PREFIX + '/admin/roles/', 'GET').then((response) => {
+            response.results.forEach((model) => {
+                store.push('role', model);
             });
         });
         return store.find("role");
     },
-    findById: function(id) {
+    findById(id) {
         var endpoint = PREFIX + '/admin/roles/' + id + '/';
         var store = this.get('store');
         $.ajax({
             url: endpoint
-        }).then(function(response) {
+        }).then((response) => {
             Ember.run(() => {
                 store.push("role", response);
             });

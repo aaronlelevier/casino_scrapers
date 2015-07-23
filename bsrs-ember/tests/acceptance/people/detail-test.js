@@ -15,6 +15,7 @@ const PREFIX = config.APP.NAMESPACE;
 const PEOPLE_URL = '/admin/people';
 const DETAIL_URL = PEOPLE_URL + '/' + PERSON_PK;
 const SUBMIT_BTN = '.submit_btn';
+const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
@@ -104,7 +105,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-person-emp_number', '1122');
     fillIn('.t-person-auth_amount', '0.000');
 
-    click('.t-save-btn');
+    click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
     });
@@ -113,7 +114,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
 test('when editing username to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);    
     fillIn('.t-person-username', '');
-    click('.t-save-btn');
+    click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-username-validation-error').text().trim(), 'invalid username');
@@ -123,7 +124,7 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     var response = PEOPLE_FIXTURES.detail(PERSON_PK);
     var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, username: 'llcoolj'});
     xhr( url,'PUT',payload,{},200,response );
-    click('.t-save-btn');
+    click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
@@ -157,7 +158,7 @@ test('when you change a related phone numbers type it will be persisted correctl
     fillIn('.t-multi-phone-type:eq(0)', 2);
 
     xhr(url,'PUT',payload,{},200);
-    click('.t-save-btn');
+    click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
     });
@@ -170,7 +171,7 @@ test('when you change a related address type it will be persisted correctly', (a
     var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, addresses: addresses});
     xhr(url,'PUT',payload,{},200);
     fillIn('.t-address-type:eq(0)', 2);
-    click('.t-save-btn');
+    click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
     });
