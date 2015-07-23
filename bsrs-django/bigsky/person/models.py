@@ -15,8 +15,9 @@ from django.core.exceptions import ValidationError
 from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
 from util import choices, exceptions as excp
-from util.models import AbstractName, MainSetting, CustomSetting, BaseModel
-
+from util.models import (
+    AbstractName, MainSetting, CustomSetting, BaseModel, BaseManager
+)
 
 @python_2_unicode_compatible
 class Role(BaseModel):
@@ -114,9 +115,18 @@ class ProxyRole(BaseModel):
     role = models.ForeignKey(Role)
 
 
+class PersonStatusManager(BaseManager):
+
+    def default(self):
+        obj, created = self.get_or_create(description=choices.PERSON_STATUS_CHOICES[0][0])
+        return obj
+
+
 class PersonStatus(AbstractName):
     description = models.CharField(max_length=100, choices=choices.PERSON_STATUS_CHOICES,
         default=choices.PERSON_STATUS_CHOICES[0][0])
+
+    objects = PersonStatusManager()
 
 
 @python_2_unicode_compatible
@@ -127,21 +137,22 @@ class Person(User):
     '''
     # Keys
     role = models.ForeignKey(Role)
-    status = models.ForeignKey(PersonStatus) # will now be defaulted
+    status = models.ForeignKey(PersonStatus, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True, null=True)
     # required
-    auth_amount = models.PositiveIntegerField(blank=True, default=0)
+    auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     auth_amount_currency = models.CharField(max_length=25,
                                             choices=choices.CURRENCY_CHOICES,
                                             default=choices.CURRENCY_CHOICES[0][0])
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
     # optional
-    deleted = models.BooleanField(blank=True, default=False)
     emp_number = models.CharField(max_length=100, blank=True, null=True)
     middle_initial = models.CharField(max_length=30, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     password_expiration = models.DateField(blank=True, null=True)
+    # Deleted Flag
+    deleted = models.BooleanField(blank=True, default=False)
     # TODO: use django default 1x PW logic here?
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
@@ -164,8 +175,8 @@ class Person(User):
         return self.username
 
     def save(self, *args, **kwargs):
-        if not (self.first_name or self.last_name):
-            raise excp.PersonFLNameRequired
+        if not self.status:
+            self.status = PersonStatus.objects.default()
         return super(Person, self).save(*args, **kwargs)
 
     def delete(self, override=False, *args, **kwargs):
