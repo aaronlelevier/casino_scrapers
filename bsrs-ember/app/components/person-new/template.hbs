@@ -15,14 +15,17 @@
 
 		{{#form-group title="admin.person.label.username" for="username"}}
 	    {{input type="text" value=model.username placeholder=(t "admin.person.label.username") class="form-control t-person-username" id="username" required="required"}}
+      {{#validation-error-field submitted=submitted field="username" className="t-username-validation-error" model=model validation=usernameValidation}}invalid username{{/validation-error-field}}
 		{{/form-group}}
 
 		{{#form-group title="admin.person.label.password" for="password"}}
 	    {{input type="text" value=model.password placeholder=(t "admin.person.label.password") class="form-control t-person-password" id="password" required="required"}}
+      {{#validation-error-field submitted=submitted field="password" className="t-password-validation-error" model=model validation=passwordValidation}}invalid password{{/validation-error-field}}
 		{{/form-group}}
 
 		{{#form-group title="admin.person.label.email" for="email"}}
 	    {{input type="text" value=model.email placeholder=(t "admin.person.label.email") class="form-control t-person-email" id="email" required="required"}}
+      {{#validation-error-field submitted=submitted field="email" className="t-email-validation-error" model=model validation=emailValidation}}invalid email{{/validation-error-field}}
 		{{/form-group}}
 
 		{{#form-group title="admin.person.label.role" for="role"}}
@@ -30,11 +33,13 @@
 		{{/form-group}}
 
 		{{#form-group title="admin.person.label.first_name" for="first_name"}}
-	    {{input type="text" value=model.first_name placeholder=(t "admin.person.label.first_name") class="form-control t-person-first_name" id="first_name"}}
+	    {{input type="text" value=model.first_name placeholder=(t "admin.person.label.first_name") class="form-control t-person-first-name" id="first_name"}}
+      {{#validation-error-field submitted=submitted field="first_name" className="t-first-name-validation-error" model=model validation=firstNameValidation}}invalid first_name{{/validation-error-field}}
 		{{/form-group}}
 
 		{{#form-group title="admin.person.label.last_name" for="last_name"}}
-	    {{input type="text" value=model.last_name placeholder=(t "admin.person.label.last_name") class="form-control t-person-last_name" id="last_name"}}
+	    {{input type="text" value=model.last_name placeholder=(t "admin.person.label.last_name") class="form-control t-person-last-name" id="last_name"}}
+      {{#validation-error-field submitted=submitted field="last_name" className="t-last-name-validation-error" model=model validation=lastNameValidation}}invalid last_name{{/validation-error-field}}
 		{{/form-group}}
 
 	</section>

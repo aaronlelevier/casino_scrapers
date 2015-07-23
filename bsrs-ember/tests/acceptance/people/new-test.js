@@ -13,7 +13,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('sco Acceptance | people-new', {
+module('Acceptance | people-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -59,3 +59,4 @@ test('visiting /people/new', (assert) => {
         assert.equal(store.findOne('person').get('location'), '');
     });
 });
+
