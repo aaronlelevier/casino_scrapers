@@ -51,11 +51,15 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         password_input = self.driver.find_element_by_id("password")
         email_input = self.driver.find_element_by_id("email")
         role_input = self.driver.find_element_by_id("role")
+        first_name_input = self.driver.find_element_by_id("first_name")
+        last_name_input = self.driver.find_element_by_id("last_name")
 
         username_input.send_keys(str(uuid.uuid4())[0:29])
         password_input.send_keys("bobber1")
         email_input.send_keys("bobber1@gmail.com")
         role_input.send_keys(1)
+        first_name_input.send_keys(str(uuid.uuid4())[0:29])
+        last_name_input.send_keys('Gibson')
         self.driver.find_element_by_class_name('t-save-btn').click()
 
         self.wait_for_xhr_request("t-person-data")
