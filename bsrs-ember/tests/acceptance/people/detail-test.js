@@ -241,7 +241,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
     });
 });
 
-test('currency helper displays correct currency format', (assert) => {
+test('sco currency helper displays correct currency format', (assert) => {
     visit(DETAIL_URL);
     var symbol = '$';
     andThen(() => {
