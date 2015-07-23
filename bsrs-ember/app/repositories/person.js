@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
-import PromiseMixin from 'ember-promise/mixins/promise';
+import PromiseMixin from 'bsrs-ember/mixins/promise';
 
 var PREFIX = config.APP.NAMESPACE;
 
@@ -66,9 +66,9 @@ var create_people_with_nested = (model, store) => {
         'auth_amount': model.get('auth_amount'),
         'status': model.get('status').id,
         'role': model.get('role').id,
-        'acceptassign': model.get('acceptassign'),
         'phone_numbers': phoneNumbers,
         'addresses': addresses,
+        'acceptassign': model.get('acceptassign'),
         'emails': model.get('emails')
     }};
 };
@@ -81,8 +81,20 @@ export default Ember.Object.extend({
             payload = create_people_with_nested(model, store);
             return PromiseMixin.xhr(PREFIX + '/admin/people/' + model.get('id') + '/', 'PUT', payload);
         } else {
-            payload = {data: {username: model.get('username'), password: model.get('password')}}; 
-            return PromiseMixin.xhr(PREFIX + '/admin/people/new/', 'POST', payload).then((response) => {
+            payload = {data: {
+                "username":model.get('username'),
+                "password":model.get('password'),
+                "first_name":model.get('first_name'),
+                "last_name":model.get('last_name'),
+                "email":model.get('email'),
+                "role":1,
+                "status":1,
+                "location":"",
+                "phone_numbers":[],
+                "addresses":[],
+            }};
+            //payload = {data: {username: model.get('username'), password: model.get('password'), email: model.get('email'), role: parseInt(model.get('role'))}}; 
+            return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', payload).then((response) => {
                 store.push('person', response);
             });
         }

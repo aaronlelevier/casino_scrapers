@@ -13,7 +13,7 @@ const SUBMIT_BTN = ".submit_btn";
 const SAVE_BTN = '.t-save-btn';
 var application, store;
 
-module('sco Acceptance | role-detail', {
+module('Acceptance | role-detail', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('store:main');

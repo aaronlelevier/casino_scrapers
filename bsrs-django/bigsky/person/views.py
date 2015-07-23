@@ -59,9 +59,9 @@ class PersonViewSet(DestroyModelMixin, viewsets.ModelViewSet):
     #     serializer = PersonListSerializer(self.queryset, many=True)
     #     return Response(serializer.data)
 
-    # def create(self, request, *args, **kwargs):
-    #     serializer = PersonCreateSerializer(data=request.DATA)
-    #     return super(PersonViewSet, self).create(request, *args, **kwargs)
+    def create(self, request, *args, **kwargs):
+        serializer = PersonCreateSerializer(data=request.DATA)
+        return super(PersonViewSet, self).create(request, *args, **kwargs)
 
     # def retrieve(self, request, pk=None):
     #     person = get_object_or_404(User, pk=pk)

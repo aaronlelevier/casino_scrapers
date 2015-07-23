@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
-import PromiseMixin from 'ember-promise/mixins/promise';
+import PromiseMixin from 'bsrs-ember/mixins/promise';
 
 var PREFIX = config.APP.NAMESPACE;
 

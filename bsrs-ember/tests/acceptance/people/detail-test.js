@@ -19,7 +19,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('sco Acceptance | detail test', {
+module('Acceptance | detail test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('store:main');
@@ -48,7 +48,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     });
 });
 
-test('when you deep link to the person detail view you get bound attrs', (assert) => {
+test('toran when you deep link to the person detail view you get bound attrs', (assert) => {
 
     visit(DETAIL_URL);
 

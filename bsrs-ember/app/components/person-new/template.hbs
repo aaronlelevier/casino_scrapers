@@ -21,8 +21,20 @@
 	    {{input type="text" value=model.password placeholder=(t "admin.person.label.password") class="form-control t-person-password" id="password" required="required"}}
 		{{/form-group}}
 
+		{{#form-group title="admin.person.label.email" for="email"}}
+	    {{input type="text" value=model.email placeholder=(t "admin.person.label.email") class="form-control t-person-email" id="email" required="required"}}
+		{{/form-group}}
+
 		{{#form-group title="admin.person.label.role" for="role"}}
-	    {{input type="text" placeholder=(t "admin.person.label.role") class="form-control t-person-role" id="role"}}
+	    {{input type="text" value=model.role placeholder=(t "admin.person.label.role") class="form-control t-person-role" id="role"}}
+		{{/form-group}}
+
+		{{#form-group title="admin.person.label.first_name" for="first_name"}}
+	    {{input type="text" value=model.first_name placeholder=(t "admin.person.label.first_name") class="form-control t-person-first_name" id="first_name"}}
+		{{/form-group}}
+
+		{{#form-group title="admin.person.label.last_name" for="last_name"}}
+	    {{input type="text" value=model.last_name placeholder=(t "admin.person.label.last_name") class="form-control t-person-last_name" id="last_name"}}
 		{{/form-group}}
 
 	</section>
