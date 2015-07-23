@@ -52,5 +52,9 @@ cp -r ../../bsrs-ember/dist/index.html templates
 
 uwsgi --http :$UWSGI_PORT --wsgi-file bigsky_postgres.wsgi --virtualenv /www/django/releases/$NEW_UUID/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --static-map /fonts=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
 
+UWSGI=$(ps aux | grep $UWSGI_PORT)
+echo $UWSGI
+
 echo "DEPLOY FINISHED!"
 exit 0
+
