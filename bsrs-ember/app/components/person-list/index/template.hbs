@@ -2,7 +2,9 @@
 	<h1 class="t-people">{{t "admin.person" count="2"}}</h1>
 
 	<div class="btn-group btn-group-sm pull-right center-block">
-		{{add-button actionValue='admin.people.new'}}
+    {{#link-to 'admin.people.new' class="t-person-new add-btn btn btn-default"}}
+      {{t 'button.add'}}
+    {{/link-to}}
 	</div>
 
 </header>

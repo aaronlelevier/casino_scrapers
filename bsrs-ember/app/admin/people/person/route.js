@@ -6,6 +6,7 @@ import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 export default Ember.Route.extend({
     repository: inject('person'),
     state_repo: inject('state'),
+    status_repo: inject('status'),
     country_repo: inject('country'),
     phone_number_repo: inject('phonenumber'),
     phone_number_type_repo: inject('phone-number-type'),
@@ -19,6 +20,7 @@ export default Ember.Route.extend({
         var person_pk = parseInt(params.person_id, 10),
             country_repo = this.get('country_repo'),
             state_repo = this.get('state_repo'),
+            status_repo = this.get('status_repo'),
             repository = this.get('repository'),
             person = repository.findById(person_pk),
             phone_number_repo = this.get('phone_number_repo'),
@@ -28,7 +30,8 @@ export default Ember.Route.extend({
             address_repo = this.get('address_repo'),
             addresses = address_repo.findByPersonId(person_pk),
             address_type_repo = this.get('address_type_repo'),
-            address_types = address_type_repo.find();
+            address_types = address_type_repo.find(),
+            statuses = status_repo.find();
 
         return Ember.RSVP.hash({
             model: person,
@@ -37,7 +40,8 @@ export default Ember.Route.extend({
             countries: country_repo.find(),
             state_list: state_repo.find(),
             addresses: addresses,
-            address_types: address_types
+            address_types: address_types,
+            statuses: statuses
         });
     },
     setupController(controller, hash) {
@@ -48,6 +52,7 @@ export default Ember.Route.extend({
         controller.set('countries', hash.countries);
         controller.set('addresses', hash.addresses);
         controller.set('address_types', hash.address_types);
+        controller.set('statuses', hash.statuses);
     },
     actions: {
         willTransition(transition) {

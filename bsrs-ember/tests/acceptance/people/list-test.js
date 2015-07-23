@@ -3,7 +3,6 @@ import { test } from 'qunit';
 import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import PeopleFactory from 'bsrs-ember/tests/helpers/people';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import config from 'bsrs-ember/config/environment';
 

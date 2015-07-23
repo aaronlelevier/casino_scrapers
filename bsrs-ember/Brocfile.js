@@ -17,6 +17,12 @@ app.import('bower_components/fauxjax/dist/fauxjax.min.js');
 app.import('vendor/people_fixtures.js');
 app.import('vendor/address_fixtures.js');
 app.import('vendor/phone_number_fixtures.js');
+app.import('vendor/address-type.js');
+app.import('vendor/phone-number-type.js');
+app.import('vendor/country.js');
+app.import('vendor/state.js');
+app.import('vendor/status.js');
+app.import('vendor/currencies.js');
 // Use `app.import` to add additional libraries to the generated
 // output files.
 //

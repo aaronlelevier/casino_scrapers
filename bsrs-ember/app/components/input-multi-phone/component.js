@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
-import PhoneNumberDefaults from 'bsrs-ember/value-defaults/phone-number-type';
+import PhoneNumberDefaults from 'bsrs-ember/vendor/phone-number-type';
 
 export default Ember.Component.extend({
     tagName: 'div',

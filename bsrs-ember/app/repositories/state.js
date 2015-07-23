@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import config from 'bsrs-ember/config/environment';
 
 export default Ember.Object.extend({
     find() {

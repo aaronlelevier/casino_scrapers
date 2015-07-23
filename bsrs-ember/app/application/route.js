@@ -28,6 +28,11 @@ export default Ember.Route.extend({
         status_list.forEach((model) => {
             store.push('status', model);
         });
+        var currency_config = $('[data-preload-currencies]').html();
+        var currency_list = JSON.parse(currency_config);
+        for (var key in currency_list) {
+            store.push('currency', currency_list[key]);
+        }
     },
     actions: {
         cancel_modal() {
