@@ -1,21 +1,16 @@
-import {test, module} from 'qunit';
-import Person from 'bsrs-ember/models/person';
-import Store from 'ember-cli-simple-store/store';
-import PhoneNumber from 'bsrs-ember/models/phonenumber';
-import CurrencyService from 'bsrs-ember/services/currency';
 import Ember from 'ember';
+import {test, module} from 'qunit';
+import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
+import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var container, registry, store;
 
 module('unit: person test', {
     beforeEach() {
         registry = new Ember.Registry();
-        registry.register('model:person', Person);
-        registry.register('model:phonenumber', PhoneNumber);
-        registry.register('store:main', Store);
-        registry.register('service:currency', CurrencyService);
         container = registry.container();
-        store = container.lookup('store:main');
+        store = module_registry(container, registry, ['model:person', 'model:currency', 'model:phonenumber','service:currency']);
+        store.push('currency', CurrencyDefaults);
     },
     afterEach() {
         container = null;
@@ -108,16 +103,4 @@ test('person is dirty or related is dirty when model has been updated', (assert)
     assert.ok(!person.get('isNotDirtyOrRelatedNotDirty'));
     phone_number.set('type', 1);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-});
-
-test('formatted auth amount will show correctly for given countries currency', (assert) => {
-    var person = store.push('person', {id: 1, username: 'scott', auth_amount: '50000.0000'});
-    assert.equal(person.get('auth_amount'), '50000.0000');
-    assert.equal(person.get('formatted_auth_amount'), '50000.00');
-    person.set('auth_amount', '0.0000');
-    assert.equal(person.get('auth_amount'), '0.0000');
-    assert.equal(person.get('formatted_auth_amount'), '0.00');
-    person.set('formatted_auth_amount', '20');
-    assert.equal(person.get('auth_amount'), '20');
-    assert.equal(person.get('formatted_auth_amount'), '20.00');
 });

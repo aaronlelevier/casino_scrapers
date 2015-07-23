@@ -12,7 +12,7 @@ cd $NEW_UUID
 cd bsrs-ember/
 npm install
 
-UWSGI_PORT=$((8001))
+UWSGI_PORT=$((8002))
 
 echo "KILL UWSGI PROCESSES ON PORT $UWSGI_PORT"
 lsof -i tcp:$UWSGI_PORT | awk 'NR!=1 {print $2}' | xargs kill
@@ -30,11 +30,9 @@ cd bsrs-django/bigsky
 echo "RUN DATABASE MIGRATIONS"
 DB_NAME="staging"
 echo "DB NAME TO DROP: $DB_NAME"
-dropdb $DB_NAME
-createdb $DB_NAME -O tomcat
-psql staging -c "GRANT ALL ON ALL TABLES IN SCHEMA public to bsdev;"
-psql staging -c "GRANT ALL ON ALL SEQUENCES IN SCHEMA public to bsdev;"
-psql staging -c "GRANT ALL ON ALL FUNCTIONS IN SCHEMA public to bsdev;"
+export PGPASSWORD=tango
+dropdb $DB_NAME -U bsdev
+createdb $DB_NAME -U bsdev -O bsdev
 
 export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
 ../../venv/bin/python manage.py makemigrations

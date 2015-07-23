@@ -1,5 +1,5 @@
 import unittest
-
+import uuid 
 from selenium import webdriver
 from login import LoginMixin
 from javascript import JavascriptMixin
@@ -36,6 +36,29 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
 
         self.wait_for_xhr_request("t-person-data")
 
+
+    def test_navigate_to_people_list_and_create_new_person_record(self):
+        self.login()
+
+        self.driver.find_element_by_class_name("t-nav-admin").click()
+        nav_admin_people = self.wait_for_xhr_request("t-nav-admin-people")
+        nav_admin_people.click()
+
+        first_person = self.wait_for_xhr_request("t-person-new")
+        first_person.click()
+
+        username_input = self.driver.find_element_by_id("username")
+        password_input = self.driver.find_element_by_id("password")
+        email_input = self.driver.find_element_by_id("email")
+        role_input = self.driver.find_element_by_id("role")
+
+        username_input.send_keys(str(uuid.uuid4())[0:29])
+        password_input.send_keys("bobber1")
+        email_input.send_keys("bobber1@gmail.com")
+        role_input.send_keys(1)
+        self.driver.find_element_by_class_name('t-save-btn').click()
+
+        self.wait_for_xhr_request("t-person-data")
 
 if __name__ == "__main__":
     unittest.main()
