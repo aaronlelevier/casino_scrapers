@@ -24,6 +24,7 @@ app.import('vendor/country.js');
 app.import('vendor/state.js');
 app.import('vendor/status.js');
 app.import('vendor/currencies.js');
+app.import('vendor/defaults/person.js');
 // Use `app.import` to add additional libraries to the generated
 // output files.
 //
