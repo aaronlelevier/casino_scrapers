@@ -48,7 +48,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     });
 });
 
-test('toran when you deep link to the person detail view you get bound attrs', (assert) => {
+test('when you deep link to the person detail view you get bound attrs', (assert) => {
 
     visit(DETAIL_URL);
 
@@ -241,7 +241,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
     });
 });
 
-test('currency helper displays correct currency format', (assert) => {
+test('sco currency helper displays correct currency format', (assert) => {
     visit(DETAIL_URL);
     var symbol = '$';
     andThen(() => {

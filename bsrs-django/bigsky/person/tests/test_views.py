@@ -32,7 +32,7 @@ PERSON_DATA = {
 }
 
 
-class PersonCreateTests(APITestCase):
+class PersonCreateTests(APITransactionTestCase):
     # Test: create, update, partial_update
 
     def setUp(self):
@@ -64,29 +64,24 @@ class PersonCreateTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(len(Person.objects.all()), 2)
 
-    def test_create_with_phone_number(self):
-        self.assertEqual(Person.objects.count(), 1)
-        self.assertEqual(PhoneNumber.objects.exclude(person__isnull=True).count(), 0)
-        # simulate posting a Json Dict to create a new Person
-        self.data['phone_numbers'] = [model_to_dict(self.phone_number)]
+    def test_create_no_password_in_response(self):
         response = self.client.post('/api/admin/people/', self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Person.objects.count(), 2)
-        self.assertEqual(PhoneNumber.objects.exclude(person__isnull=True).count(), 1)
+        self.assertNotIn('password', response)
 
-    def test_create_with_phone_numbers(self):
-        # Tests the creation of more than one related nested object
-        self.assertEqual(Person.objects.count(), 1)
-        self.assertEqual(PhoneNumber.objects.exclude(person__isnull=True).count(), 0)
-        # simulate posting a Json Dict to create a new Person
-        self.data['phone_numbers'] = [
-            model_to_dict(self.phone_number),
-            model_to_dict(self.phone_number2)
-            ]
+    def test_create_login_with_new_user(self):
+        # Original User is logged In
+        self.assertEqual(int(self.client.session['_auth_user_id']), self.person.pk)
+        # Create
         response = self.client.post('/api/admin/people/', self.data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Person.objects.count(), 2)
-        self.assertEqual(PhoneNumber.objects.exclude(person__isnull=True).count(), 2)
+        self.client.logout()
+        with self.assertRaises(KeyError):
+            self.client.session['_auth_user_id']
+        # login with New User
+        self.client.login(username=self.data['username'], password=self.data['password'])
+        self.assertEqual(
+            int(self.client.session['_auth_user_id']),
+            Person.objects.get(username=self.data['username']).pk
+        )
 
     def test_two_related(self):
         # Test creating a single Person w/ PhoneNumber and Address
@@ -95,14 +90,19 @@ class PersonCreateTests(APITestCase):
         self.assertEqual(Address.objects.exclude(person__isnull=True).count(), 0)
         # simulate posting a Json Dict to create a new Person
         self.data.update({
-            'phone_numbers': [model_to_dict(self.phone_number)],
+            'phone_numbers': [
+                model_to_dict(self.phone_number),
+                model_to_dict(self.phone_number2)
+                ],
             'addresses': [model_to_dict(self.address)]
             })
         response = self.client.post('/api/admin/people/', self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Person.objects.count(), 2)
-        self.assertEqual(PhoneNumber.objects.exclude(person__isnull=True).count(), 1)
-        self.assertEqual(Address.objects.exclude(person__isnull=True).count(), 1)
+        # Last Person Created: check related objects
+        last_person = Person.objects.last()
+        self.assertEqual(PhoneNumber.objects.filter(person=last_person).count(), 2)
+        self.assertEqual(Address.objects.filter(person=last_person).count(), 1)
 
 
 class PersonListTests(TestCase):
@@ -225,7 +225,10 @@ class PersonPutTests(APITestCase):
 
 
 class PersonDeleteTests(APITestCase):
-
+    '''
+    Tests:
+    - DestroyModelMixin
+    '''
     def setUp(self):
         self.password = PASSWORD
         self.person = create_person()

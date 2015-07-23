@@ -76,7 +76,7 @@ var create_people_with_nested = (model, store) => {
 export default Ember.Object.extend({
     save(model) {
         var store = this.get('store');
-        var payload, endpoint;
+        var payload;
         if (model.get('id')) {
             payload = create_people_with_nested(model, store);
             return PromiseMixin.xhr(PREFIX + '/admin/people/' + model.get('id') + '/', 'PUT', payload);

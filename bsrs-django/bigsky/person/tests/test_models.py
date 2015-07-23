@@ -48,20 +48,31 @@ class PersonTests(TestCase):
 class PersonCreateTests(TestCase):
 
     def setUp(self):
-        # all required fields in order to create a person
-        self.role = mommy.make(Role)
-        self.person_status = mommy.make(PersonStatus)
-        self.location = mommy.make(Location)
+        self.person = create_person()
 
     def test_create(self):
-        with self.assertRaises(excp.PersonFLNameRequired):
-            Person.objects.create(
-                username='foo',
-                password='bar',
-                role=self.role,
-                status=self.person_status,
-                location=self.location
-                )
+        self.assertIsInstance(self.person, Person)
+
+    def test_no_first_or_last_names(self):
+        self.person.first_name = '' 
+        self.person.last_name = ''
+        self.person.save()
+        self.person = Person.objects.get(pk=self.person.pk)
+        self.assertIsInstance(self.person, Person)
+        self.assertEqual(self.person.first_name, '')
+
+    def test_delete(self):
+        self.assertFalse(self.person.deleted)
+        self.person.delete()
+        self.assertTrue(self.person.deleted)
+
+    def test_delete_override(self):
+        self.person.delete(override=True)
+        self.assertEqual(Person.objects.count(), 0)
+
+    def test_status(self):
+        # should create a PersonStatus and default it
+        self.assertEqual(self.person.status, PersonStatus.objects.default())
 
 
 class PersonStatusTests(TestCase):
@@ -69,8 +80,3 @@ class PersonStatusTests(TestCase):
     def test_create(self):
         ps = mommy.make(PersonStatus)
         self.assertIsInstance(ps, PersonStatus)
-
-
-
-
-

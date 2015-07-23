@@ -13,7 +13,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('sco Acceptance | people-new', {
+module('Acceptance | people-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -35,8 +35,8 @@ test('visiting /people/new', (assert) => {
     fillIn('.t-person-username', 'mgibson');
     fillIn('.t-person-password', '123');
     fillIn('.t-person-email', 'abc@gmail.com');
-    fillIn('.t-person-first_name', 'Mel');
-    fillIn('.t-person-last_name', 'Gibson');
+    fillIn('.t-person-first-name', 'Mel');
+    fillIn('.t-person-last-name', 'Gibson');
     fillIn('.t-person-role', 1);//TODO: make true select with multiple options
     var payload = {username: 'mgibson', password: '123', email: 'abc@gmail.com', role: 1, first_name:'Mel', last_name: 'Gibson', phone_numbers: [], addresses: [], location: '', status: 1 };
     var response = {id: 1, username: 'mgibson', password: '123', email: 'abc@gmail.com', role: 1, first_name:'Mel', last_name: 'Gibson', phone_numbers: [], addresses: [], location: '', status: 1 };
@@ -59,3 +59,4 @@ test('visiting /people/new', (assert) => {
         assert.equal(store.findOne('person').get('location'), '');
     });
 });
+

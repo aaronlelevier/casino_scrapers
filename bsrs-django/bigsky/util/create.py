@@ -1,7 +1,7 @@
 from django.db import IntegrityError
 from django.contrib.auth.models import ContentType, Group, Permission
 
-from person.permissions import perms_map
+from util.permissions import perms_map
 
 
 def _get_groups_and_perms():

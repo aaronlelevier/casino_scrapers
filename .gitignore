@@ -4,7 +4,7 @@
 *.pid
 .DS_Store
 .coverage
-static/
+/static/*
 /dist/assets/
 htmlcov/
 /__pycache__

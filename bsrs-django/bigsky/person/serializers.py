@@ -84,8 +84,10 @@ class PersonCreateSerializer(serializers.ModelSerializer):
         # `Person` create()
         phone_numbers = validated_data.pop('phone_numbers')
         addresses = validated_data.pop('addresses')
+        # Create User w/ Password
+        # need to use create_user to make sure password is encrypted
+        person = Person.objects.create_user(**validated_data)
         # PhoneNumbers
-        person = Person.objects.create(**validated_data)
         for ph in phone_numbers:
             PhoneNumber.objects.create(person=person, **ph)
         # Addresses
