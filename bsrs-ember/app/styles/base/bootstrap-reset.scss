@@ -32,6 +32,9 @@ input[type="text"]:disabled {
 .input-group-addon:last-child{
 	border-radius: $borderRadiusRight;
 }
+.btn{
+	border-radius: $borderRadius;
+}
 .btn-default,
 .input-group-addon{
 	border-color: $gray;

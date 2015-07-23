@@ -201,5 +201,9 @@ export default {
 			district: "District",
 			store: "Store"
 		}
+	},
+	validation: {
+		valid: "Valid",
+		invalid: "Invalid"
 	}
 };
