@@ -30,6 +30,7 @@ class Role(BaseModel):
     # required
     
     # optional
+    name = models.CharField(max_length=100, blank=True)
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
         help_text='Allow document creation for all locations')
@@ -96,9 +97,10 @@ class Role(BaseModel):
     class Meta:
         db_table = 'role_role'
         ordering = ('group__name',)
-        permissions = (
-            ('view_role', 'can view role'),
-        )
+
+    def save(self, *args, **kwargs):
+        self.name = self.group.name
+        return super(Role, self).save(*args, **kwargs)
 
     def __str__(self):
         return self.group.name
@@ -139,6 +141,10 @@ class Person(User):
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True, null=True)
+    # Base Fields
+    created = models.DateTimeField(auto_now_add=True)
+    modified = models.DateTimeField(auto_now=True)
+    deleted = models.BooleanField(blank=True, default=False) # TODO: make a DateTimeField, and check for NULL if not deleted
     # required
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     auth_amount_currency = models.CharField(max_length=25,
@@ -151,8 +157,6 @@ class Person(User):
     middle_initial = models.CharField(max_length=30, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     password_expiration = models.DateField(blank=True, null=True)
-    # Deleted Flag
-    deleted = models.BooleanField(blank=True, default=False)
     # TODO: use django default 1x PW logic here?
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
