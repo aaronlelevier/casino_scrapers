@@ -57,7 +57,7 @@ class PersonCreateTests(TestCase):
         self.person.first_name = '' 
         self.person.last_name = ''
         self.person.save()
-        self.person= Person.objects.get(pk=self.person.pk)
+        self.person = Person.objects.get(pk=self.person.pk)
         self.assertIsInstance(self.person, Person)
         self.assertEqual(self.person.first_name, '')
 
@@ -73,7 +73,7 @@ class PersonCreateTests(TestCase):
     def test_status(self):
         # should create a PersonStatus and default it
         self.assertEqual(self.person.status, PersonStatus.objects.default())
-        
+
 
 class PersonStatusTests(TestCase):
 
