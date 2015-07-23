@@ -1,13 +1,4 @@
 /*=================
-general form styles
-===================*/
-
-section.docSection{
-	padding: 6% 4%;
-
-}
-
-/*=================
 button group on form
 ===================*/
 select option[default]{
@@ -37,14 +28,12 @@ div.buttonGroup {
 		appearance: none;
 		margin-left: -1px;
 		margin-right: -1px;
-		font-weight: bold;
 	}
 }
 .input-multi-address{
 	.address-label{
 		min-width: 10em;
 		text-align: left;
-		font-weight: bold;
 		font-size: 0.9em;
 	}
 }
@@ -62,7 +51,6 @@ div.buttonGroup {
 		}
 		&:first-child select{
 			border-radius: 0 3px 0 0;
-			font-weight: bold;
 		}
 		&:last-child button{
 			border-radius: 0 0 3px 3px;

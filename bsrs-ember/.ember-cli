@@ -1,3 +1,5 @@
 {
-  "usePods": true
+    "usePods": true,
+    "liveReload": true,
+    "watcher": "polling"
 }

@@ -1,6 +1,6 @@
 header.main{
   font-size: 1.3rem;
-  position: absolute;
+  position: fixed;
   top: 0;
   right: 0;
   left: 0;
@@ -11,7 +11,7 @@ header.main{
   -webkit-box-shadow: 0 0 7px $darkGray;
   -moz-box-shadow: 0 0 7px $darkGray;
   box-shadow: 0 0 7px $darkGray;
-  z-index: 1;
+  z-index: 3;
 
   //float right and float lev nav's
   nav.modules,
