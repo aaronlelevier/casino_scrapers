@@ -191,11 +191,31 @@ class Person(BaseModel):
             self.auth_amount_currency = self.role.default_auth_amount_currency
         return super(Person, self).save(*args, **kwargs)
 
-            
-'''
-from person.models import Person
-from model_mommy import mommy
-p = mommy.make(Person, user__username='aaron')
-p.user.set_password('1234')
-p.user.save()
-'''
+
+### User / Person Signals ###
+
+@receiver(post_save, sender=User)
+def create_person(sender, instance=None, created=False, **kwargs):
+    if created:
+        Person.objects.get_or_create(user=instance)
+
+
+@receiver(pre_delete, sender=User)
+def delete_person(sender, instance=None, **kwargs):
+    if instance:
+        person = UserProfile.objects.get(user=instance)
+        person.delete()
+
+### Group / Role Signals ###
+
+@receiver(post_save, sender=User)
+def create_person(sender, instance=None, created=False, **kwargs):
+    if created:
+        Person.objects.get_or_create(user=instance)
+
+
+@receiver(pre_delete, sender=User)
+def delete_person(sender, instance=None, **kwargs):
+    if instance:
+        person = UserProfile.objects.get(user=instance)
+        person.delete()
