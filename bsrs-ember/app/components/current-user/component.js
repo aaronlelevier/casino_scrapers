@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import PromiseMixin from 'bsrs-ember/mixins/promise';
+import windowProxy from 'bsrs-ember/utilities/window-proxy';
 
 export default Ember.Component.extend({
     tagName: 'li',
@@ -16,7 +17,9 @@ export default Ember.Component.extend({
     },
     actions: {
         logout() {
-            PromiseMixin.xhr('api-auth/logout', 'POST');
+            PromiseMixin.xhr('/api-auth/logout/', 'GET').then(() => {
+                windowProxy.changeLocation('/login');
+            });
         }
     }
 });
