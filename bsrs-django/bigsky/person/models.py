@@ -12,6 +12,7 @@ from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 
+from accounting.models import Currency
 from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
 from util import choices, exceptions as excp
@@ -56,8 +57,9 @@ class Role(BaseModel):
     accept_assign = models.BooleanField(blank=True, default=False)
     default_accept_notify = models.BooleanField(blank=True, default=True)
     accept_notify = models.BooleanField(blank=True, default=False)
-    default_auth_amount = models.BooleanField(blank=True, default=True)
-    auth_amount = models.PositiveIntegerField(blank=True, null=True)
+    # Auth Amounts
+    default_auth_amount = models.DecimalField(max_digits=15, decimal_places=4)
+    default_auth_amount_currency = models.ForeignKey(Currency)
     # Approvals
     allow_approval = models.BooleanField(blank=True, default=False)
     proxy_approval_bypass = models.BooleanField(blank=True, default=False)
@@ -142,36 +144,31 @@ class Person(BaseModel):
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True, null=True)
-    # Base Fields
-#     created = models.DateTimeField(auto_now_add=True)
-#     modified = models.DateTimeField(auto_now=True)
-#     deleted = models.DateTimeField(blank=True, default=False, null=True,
-#         help_text="If NULL the record is not deleted, otherwise this is the timestamp \
-# of when the record was deleted.")
     # required
+    # Auth Amounts - can be defaulted by the Role
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
+    auth_amount_currency = models.ForeignKey(Currency, blank=True, null=True)
     # TODO: currency will be a table with 5 columns, and this will 
     # be a FK on that table
-    auth_amount_currency = models.CharField(max_length=25,
-                                            choices=choices.CURRENCY_CHOICES,
-                                            default=choices.CURRENCY_CHOICES[0][0])
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
     # optional
-    emp_number = models.CharField(max_length=100, blank=True, null=True)
-    middle_initial = models.CharField(max_length=30, blank=True, null=True)
+    employee_id = models.CharField(max_length=100, blank=True, null=True)
+    middle_initial = models.CharField(max_length=1, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
+    # Passwords
     password_expiration = models.DateField(blank=True, null=True)
     # TODO: use django default 1x PW logic here?
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
-    ooto_status = models.CharField("Out of the Office Status", max_length=100, blank=True, null=True)
-    ooto_start_date = models.DateField("Out of the Office Status Start Date", max_length=100, blank=True, null=True)
-    ooto_end_date = models.DateField("Out of the Office Status End Date", max_length=100, blank=True, null=True)
+    # Out-of-the-Office
+    proxy_status = models.CharField("Out of the Office Status", max_length=100, blank=True, null=True)
+    proxy_start_date = models.DateField("Out of the Office Status Start Date", max_length=100, blank=True, null=True)
+    proxy_end_date = models.DateField("Out of the Office Status End Date", max_length=100, blank=True, null=True)
+    proxy_user = models.ForeignKey("self", related_name='coveringuser', null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
     next_approver = models.ForeignKey("self", related_name='nextapprover', null=True)
-    covering_user = models.ForeignKey("self", related_name='coveringuser', null=True)
 
     # use as a normal Django Manager() to access related setting objects.
     main_settings = GenericRelation(MainSetting)
@@ -186,18 +183,12 @@ class Person(BaseModel):
     def save(self, *args, **kwargs):
         if not self.status:
             self.status = PersonStatus.objects.default()
+        if not self.auth_amount:
+            self.auth_amount = self.role.default_auth_amount
+        if not self.auth_amount_currency:
+            self.auth_amount_currency = self.role.default_auth_amount_currency
         return super(Person, self).save(*args, **kwargs)
 
-    # def delete(self, override=False, *args, **kwargs):
-    #     '''
-    #     Enforce only hiding objects and not deleting them unless explicitly 
-    #     overriden.
-    #     '''
-    #     if not override:
-    #         self.deleted=True
-    #         self.save()
-    #     else:
-    #         super(Person, self).delete(*args, **kwargs)
             
 '''
 from person.models import Person

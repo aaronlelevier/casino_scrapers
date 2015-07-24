@@ -24,6 +24,7 @@ DEFAULT_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.flatpages',
+    'django.contrib.postgres',
     )
 
 THIRD_PARTY_APPS = (
@@ -37,6 +38,7 @@ THIRD_PARTY_APPS = (
     )
 
 LOCAL_APPS = (
+    'accounting',
     'contact',
     'location',
     'person',
