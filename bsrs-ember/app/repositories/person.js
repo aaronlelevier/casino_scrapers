@@ -4,12 +4,13 @@ import PromiseMixin from 'bsrs-ember/mixins/promise';
 
 var PREFIX = config.APP.NAMESPACE;
 
-var extractPhoneNumbers = (phoneNumbers, store) => {
-    return phoneNumbers.map((phoneNumber) => {
-        var phone_number_model = store.find('phonenumber', phoneNumber),
-            number = phone_number_model.get('number'),
-            type = phone_number_model.get('type');
-        return {id: phoneNumber, number: number, type: type};
+var extractPhoneNumbers = (person_pk, store) => {
+    var phone_numbers = store.find('phonenumber', {person_id: person_pk});
+    return phone_numbers.map((phone_number) => {
+            var id = phone_number.get('id');
+            var number = phone_number.get('number');
+            var type = phone_number.get('type');
+        return {id: id, number: number, type: type};
     });
 };
 
@@ -27,16 +28,13 @@ var extractAddresses = (addresses, store) => {
 };
 
 var create_people_with_relationships = (response, store, id) => {
-    var phone_number_ids = [],
-        address_ids = [];
+        var address_ids = [];
     response.phone_numbers.forEach((phone_number) => {
         store.push('phone-number-type', phone_number.type);
         phone_number.type = phone_number.type.id;
         phone_number.person_id = id;
         store.push('phonenumber', phone_number);
-        phone_number_ids.push(phone_number.id);
     });
-    response.phone_numbers = phone_number_ids;
     response.addresses.forEach((address) => {
         store.push('address-type', address.type);
         // store.push('state', address.state);
@@ -54,7 +52,7 @@ var create_people_with_relationships = (response, store, id) => {
 };
 
 var create_people_with_nested = (model, store) => {
-    var phoneNumbers = extractPhoneNumbers(model.get('phone_numbers'), store);
+    var phoneNumbers = extractPhoneNumbers(model.get('id'), store);
     var addresses = extractAddresses(model.get('addresses'), store);
     return {data: {
         'id': model.get('id'),
@@ -99,6 +97,7 @@ export default Ember.Object.extend({
                 'addresses':[],
             }};
             return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', payload).then((response) => {
+                //TODO: what comes from DRF on post of person for phone numbers
                 store.push('person', response);
             });
         }
