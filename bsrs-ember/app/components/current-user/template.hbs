@@ -1,13 +1,13 @@
 <a>
-	<span class="user">{{fullName}}</span>
+	<span class="user t-current-user-fullname">{{fullName}}</span>
 	<span class="role">Role goes here</span>
 	<span class="caret"></span>
 </a>
 <ul class="submenu">
 	<li class="userOpt">
-		<a href="#" title="Log Out" id="logout">Logout</a>
+    <a href="#" title="Log Out" class="t-logout" id="logout" {{action 'logout'}}>Logout</a>
 	</li>
 	<li class="userOpt">
-		{{#link-to "admin.people.person" person_id title="Profile" id="profile"}}Profile{{/link-to}}
+		{{#link-to "admin.people.person" person_id title="Profile" class="t-person-profile-link" id="profile"}}Profile{{/link-to}}
 	</li>
 </ul>

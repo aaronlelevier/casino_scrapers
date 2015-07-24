@@ -30,26 +30,26 @@ var create_people_with_relationships = (response, store, id) => {
     var phone_number_ids = [],
         address_ids = [];
     response.phone_numbers.forEach((phone_number) => {
-        store.push("phone-number-type", phone_number.type);
+        store.push('phone-number-type', phone_number.type);
         phone_number.type = phone_number.type.id;
         phone_number.person_id = id;
-        store.push("phonenumber", phone_number);
+        store.push('phonenumber', phone_number);
         phone_number_ids.push(phone_number.id);
     });
     response.phone_numbers = phone_number_ids;
     response.addresses.forEach((address) => {
-        store.push("address-type", address.type);
-        // store.push("state", address.state);
-        // store.push("country", address.country);
+        store.push('address-type', address.type);
+        // store.push('state', address.state);
+        // store.push('country', address.country);
         address.type = address.type.id;
         address.person_id = id;
-        store.push("address", address);
+        store.push('address', address);
         address_ids.push(address.id);
     });
     response.addresses = address_ids;
     //discuss dirty attr for prop not included in the list
     //meaning ... if the user is dirty NOW what should do?
-    var originalPerson = store.push("person", response);
+    var originalPerson = store.push('person', response);
     originalPerson.save();
 };
 
@@ -85,18 +85,17 @@ export default Ember.Object.extend({
             });
         } else {
             payload = {data: {
-                "username":model.get('username'),
-                "password":model.get('password'),
-                "first_name":model.get('first_name'),
-                "last_name":model.get('last_name'),
-                "email":model.get('email'),
-                "role":1,
-                "status":1,
-                "location":"",
-                "phone_numbers":[],
-                "addresses":[],
+                'username':model.get('username'),
+                'password':model.get('password'),
+                'first_name':model.get('first_name'),
+                'last_name':model.get('last_name'),
+                'email':model.get('email'),
+                'role':1,
+                'status':1,
+                'location':'',
+                'phone_numbers':[],
+                'addresses':[],
             }};
-            //payload = {data: {username: model.get('username'), password: model.get('password'), email: model.get('email'), role: parseInt(model.get('role'))}}; 
             return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', payload).then((response) => {
                 store.push('person', response);
             });
@@ -106,16 +105,16 @@ export default Ember.Object.extend({
         var store = this.get('store');
         PromiseMixin.xhr(PREFIX + '/admin/people/', 'GET').then((response) => {
             response.results.forEach((model) => {
-                store.push("person", model);
+                store.push('person', model);
             });
         });
-        return store.find("person");
+        return store.find('person');
     },
     findById(id) {
         var store = this.get('store');
         PromiseMixin.xhr(PREFIX + '/admin/people/' + id + '/', 'GET').then((response) => {
             create_people_with_relationships(response, store, id);
         });
-        return store.find("person", id);
+        return store.find('person', id);
     }
 });

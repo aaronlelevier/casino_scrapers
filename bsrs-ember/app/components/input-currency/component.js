@@ -11,9 +11,9 @@ export default Ember.Component.extend({
         var currency_service = this.get('currency');
         return currency_service.format_code('USD');
     }),
-    initialize: Ember.on("init", function() {
-        var field = this.get("field");
-        Ember.Binding.from("model." + field).to("bound_field").connect(this);
+    initialize: Ember.on('init', function() {
+        var field = this.get('field');
+        Ember.Binding.from('model.' + field).to('bound_field').connect(this);
     }),
     formatted_auth_amount: Ember.computed('bound_field', {
         get(key){
