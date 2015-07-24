@@ -1,7 +1,7 @@
 import {test, module} from 'qunit';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
 
-module('sco unit: phone number attrs test');
+module('unit: phone number attrs test');
 
 test('phone number has type attr that is dirty tracked', (assert) => {
     var phone_number = PhoneNumber.create({id: 1, type: 1});

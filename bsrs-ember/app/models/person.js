@@ -31,8 +31,6 @@ export default Model.extend({
     },
     rollbackPhoneNumbers: function() {
         var phone_numbers = this.get('phone_numbers');
-        // var store = this.get('store');
-        // var phone_numbers = store.find('phonenumber', {person_id: this.get('id')});
         phone_numbers.forEach((num) => {
             num.rollback();
         });

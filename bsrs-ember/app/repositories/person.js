@@ -47,6 +47,7 @@ var create_people_with_relationships = (response, store, id) => {
     response.addresses = address_ids;
     //discuss dirty attr for prop not included in the list
     //meaning ... if the user is dirty NOW what should do?
+    delete response.phone_numbers;
     var originalPerson = store.push('person', response);
     originalPerson.save();
 };
