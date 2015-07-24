@@ -1,17 +1,27 @@
-<form class="form-horizontal" {{action "return false" this on="submit"}}>
+<form {{action "return false" this on="submit"}}>
 	<header>
 		<h1>{{model.name}}</h1>
 		<div class="btn-group btn-group-sm pull-right center-block">
 			{{save-button save="saveRole"}}
 			{{cancel-button cancel="cancelRole"}}
-			{{delete-button delete="deleteRole"}}
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
+				<li><a href="#">{{fa-icon "print"}} Print</a></li>
+				<li>{{delete-button delete="deleteRole"}}</li>
+			</ul>
 		</div>
 	</header>
-	<section class="docSection col-sm-12">
-
-			{{#form-group title="admin.role.label.name" for="name"}}
-		    {{input type="text" placeholder=(t "admin.role.label.name") value=model.name class="form-control t-role-name" id="name" required="required"}}
-			{{/form-group}}
-
+	<section class="docSection container-fluid">
+		<section>
+			<h2 class="col-sm-12">{{t "admin.role.label.general"}}</h2>
+			<div class="col-sm-12">
+				{{#form-group title="admin.role.label.name" for="name"}}
+			    	{{input type="text" placeholder=(t "admin.role.label.name") value=model.name class="form-control t-role-name" id="name" required="required"}}
+				{{/form-group}}
+			</div>
+		</section>
 	</section>
 </form>

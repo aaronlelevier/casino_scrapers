@@ -47,7 +47,7 @@ section.wrap{
       padding: 0;
       margin: 0;
       overflow: auto;
-      background-color: $white;
+      background-color: $light;
       section{
 
         h3{
@@ -76,11 +76,12 @@ section.wrap{
               &:hover{
                 cursor: pointer;
                 color: $dark;
-                background-color: $light;
+                background-color: $white;
               }
               &.active{
                 color: $activeColor;
-                background-color: $light;
+                font-weight: bold;
+                background-color: $white;
               }
               &.active:hover{
                 cursor: default;

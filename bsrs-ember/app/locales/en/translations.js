@@ -104,7 +104,8 @@ export default {
 			label: {
 				name: "Role Name",
 				location_org: "Location Org.",
-				number_users: "# of Users"
+				number_users: "# of Users",
+				general: "General Information"
 			},
             system_administrator: "Admin"
 		},

@@ -11,20 +11,11 @@ nav.userMenu{
     }//.menuIcon
 
     /* notification incrementer */
-    span.count{
+    span.badge{
         position: absolute;
         top: 4px;
         right: 0px;
-        background: #e67e22;
-        height: 16px;
-        min-width: 16px;
-    	border-radius: $borderRadius;
         font-size: 0.8em;
-        padding: 0.5px 5px;
-        margin: 0;
-        line-height: 14px;
-        text-align: center;
-        z-index: 1;
     }//.count
     @media screen and (max-width: $mobileDeviceWidth){
       min-height: $menuHeight;
