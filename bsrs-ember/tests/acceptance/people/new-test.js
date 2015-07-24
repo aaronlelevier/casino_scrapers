@@ -43,6 +43,8 @@ module('Acceptance | people-new', {
 test('visiting /people/new', (assert) => {
     payload.phone_numbers = [{cid: 'abc123', number: '999-999-9999', type: 1}];
     var response = Ember.$.extend(true, {id: 1}, payload);
+    response.phone_numbers[0].cid = 'abc123';
+    response.phone_numbers[0].id = 'def456';
     var url = PREFIX + PEOPLE_URL + '/';
     xhr( url,'POST',payload,{},201,response );
     visit(PEOPLE_URL);
@@ -50,6 +52,7 @@ test('visiting /people/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.equal(store.find('person').length, 1);
+        //assert.equal(store.find('phonenumber').length, 0);
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
@@ -72,8 +75,11 @@ test('visiting /people/new', (assert) => {
         assert.equal(store.findOne('person').get('first_name'), PEOPLE_DEFAULTS.first_name);
         assert.equal(store.findOne('person').get('middle_initial'), PEOPLE_DEFAULTS.middle_initial);
         assert.equal(store.findOne('person').get('last_name'), PEOPLE_DEFAULTS.last_name);
+        //assert.equal(store.find('phonenumber').length, 1); ?why is the store not updated
         assert.equal(store.findOne('person').get('phone_numbers').get('content.length'), 1);
         assert.equal(store.findOne('person').get('phone_numbers').objectAt(0).get('number'), '999-999-9999');
+        assert.equal(store.findOne('person').get('phone_numbers').objectAt(0).get('id'), 'def456');
+        assert.equal(store.findOne('person').get('phone_numbers').objectAt(0).get('type'), 1);
         assert.ok(store.findOne('person').get('isNotDirty'));
         assert.ok(store.findOne('person').get('phoneNumbersIsNotDirty'));
         // assert.equal(store.findOne('person').get('addresses'), PEOPLE_DEFAULTS.addresses);

@@ -8,7 +8,7 @@ import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/phone-number-type';
 import PEOPLE_FACTORY from 'bsrs-ember/vendor/people_fixtures';
 
-moduleForComponent('input-multi-phone', 'toran integration: input-multi-phone test', {
+moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
     integration: true,
     setup() {
         translation.initialize(this);

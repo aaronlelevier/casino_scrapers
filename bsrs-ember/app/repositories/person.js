@@ -85,6 +85,13 @@ export default Ember.Object.extend({
         return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', {data: model.serialize()}).then((response) => {
             model.set('id', response.id);
             model.save();
+            response.phone_numbers.forEach(function(django_response) {
+                model.get('phone_numbers').forEach(function(y) {
+                    if(django_response.cid === y.id) {
+                        y.set('id', django_response.id);
+                    }
+                });
+            });
             model.savePhoneNumbers();
         });
     },
