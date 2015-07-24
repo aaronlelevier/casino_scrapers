@@ -22,9 +22,8 @@ from util.models import (
 )
 
 @python_2_unicode_compatible
-class Role(BaseModel):
+class Role(BaseModel, Group):
     # keys
-    group = models.OneToOneField(Group) # each ``Group`` has a name
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29,
                                  choices=choices.ROLE_TYPE_CHOICES,
@@ -32,7 +31,6 @@ class Role(BaseModel):
     # required
     
     # optional
-    name = models.CharField(max_length=100, blank=True)
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
         help_text='Allow document creation for all locations')
@@ -45,7 +43,7 @@ class Role(BaseModel):
     password_char_types = models.CharField(max_length=100,
         help_text="Password characters allowed") # TODO: This field will need to be accessed when someone for 
                                                  # the role saves their PW to validate it.
-    password_expire = models.PositiveIntegerField(
+    password_expire = models.PositiveIntegerField(blank=True, null=True,
         help_text="Number of days after setting password that it will expire.")
     password_expire_alert = models.BooleanField(blank=True, default=True,
         help_text="Does the Person want to be alerted 'pre pw expiring'. Alerts start 3 days before password expires.")
@@ -99,14 +97,14 @@ class Role(BaseModel):
 
     class Meta:
         db_table = 'role_role'
-        ordering = ('group__name',)
+        ordering = ('name',)
 
     def save(self, *args, **kwargs):
-        self.name = self.group.name
+        self.name = self.name
         return super(Role, self).save(*args, **kwargs)
 
     def __str__(self):
-        return self.group.name
+        return self.name
 
     @property 
     def _name(self):
@@ -135,13 +133,12 @@ class PersonStatus(AbstractName):
 
 
 @python_2_unicode_compatible
-class Person(BaseModel):
+class Person(User, BaseModel):
     '''
     "pw" : password
     "ooto" : out-of-the-office
     '''
     # Keys
-    user = models.OneToOneField(User)
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True, null=True)
@@ -163,7 +160,7 @@ class Person(BaseModel):
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
     password_expire = models.DateField(blank=True, null=True)
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
-    password_change = HStoreField(help_text="Tuple of (datetime of PW change, old PW)")
+    password_change = models.TextField(help_text="Tuple of (datetime of PW change, old PW)") # was HStoreField, but not supported by model_mommy
     # Out-of-the-Office
     proxy_status = models.CharField("Out of the Office Status", max_length=100, blank=True, null=True)
     proxy_start_date = models.DateField("Out of the Office Status Start Date", max_length=100, blank=True, null=True)
@@ -180,7 +177,7 @@ class Person(BaseModel):
         db_table = 'person_person'
 
     def __str__(self):
-        return self.user.username
+        return self.username
 
     def save(self, *args, **kwargs):
         if not self.status:
@@ -190,32 +187,3 @@ class Person(BaseModel):
         if not self.auth_amount_currency:
             self.auth_amount_currency = self.role.default_auth_amount_currency
         return super(Person, self).save(*args, **kwargs)
-
-
-### User / Person Signals ###
-
-@receiver(post_save, sender=User)
-def create_person(sender, instance=None, created=False, **kwargs):
-    if created:
-        Person.objects.get_or_create(user=instance)
-
-
-@receiver(pre_delete, sender=User)
-def delete_person(sender, instance=None, **kwargs):
-    if instance:
-        person = UserProfile.objects.get(user=instance)
-        person.delete()
-
-### Group / Role Signals ###
-
-@receiver(post_save, sender=User)
-def create_person(sender, instance=None, created=False, **kwargs):
-    if created:
-        Person.objects.get_or_create(user=instance)
-
-
-@receiver(pre_delete, sender=User)
-def delete_person(sender, instance=None, **kwargs):
-    if instance:
-        person = UserProfile.objects.get(user=instance)
-        person.delete()
