@@ -12,11 +12,11 @@ const PEOPLE_URL = "/admin/people";
 const PEOPLE_NEW_URL = PEOPLE_URL + '/new';
 const SAVE_BTN = '.t-save-btn';
 
-var application, store;
+var application, store, payload;
 
-module('amk Acceptance | people-new', {
+module('Acceptance | people-new', {
     beforeEach() {
-        var payload = {
+        payload = {
             username: PEOPLE_DEFAULTS.username,
             password: PEOPLE_DEFAULTS.password,
             email: PEOPLE_DEFAULTS.email,
@@ -29,25 +29,27 @@ module('amk Acceptance | people-new', {
             location: PEOPLE_DEFAULTS.location,
             status: PEOPLE_DEFAULTS.status
         };
-        var response = Ember.$.extend(true, {id: 1}, payload);
-        var url = PREFIX + PEOPLE_URL + '/';
-        xhr( url,'POST',payload,{},201,response );
         application = startApp();
         store = application.__container__.lookup('store:main');
         var endpoint = PREFIX + PEOPLE_URL + "/";
         xhr( endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.empty() );
     },
     afterEach() {
+        payload = null;
         Ember.run(application, 'destroy');
     }
 });
 
 test('visiting /people/new', (assert) => {
+    payload.phone_numbers = [{cid: 'abc123', number: '999-999-9999', type: 1}];
+    var response = Ember.$.extend(true, {id: 1}, payload);
+    var url = PREFIX + PEOPLE_URL + '/';
+    xhr( url,'POST',payload,{},201,response );
     visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
-        assert.equal(store.find('person').length, 0);
+        assert.equal(store.find('person').length, 1);
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
@@ -56,6 +58,8 @@ test('visiting /people/new', (assert) => {
     fillIn('.t-person-middle-initial', PEOPLE_DEFAULTS.middle_initial);
     fillIn('.t-person-last-name', PEOPLE_DEFAULTS.last_name);
     fillIn('.t-person-role', PEOPLE_DEFAULTS.role);//TODO: make true select with multiple options
+    click('.t-add-btn:eq(0)');
+    fillIn('.t-new-entry', '999-999-9999');
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -68,14 +72,20 @@ test('visiting /people/new', (assert) => {
         assert.equal(store.findOne('person').get('first_name'), PEOPLE_DEFAULTS.first_name);
         assert.equal(store.findOne('person').get('middle_initial'), PEOPLE_DEFAULTS.middle_initial);
         assert.equal(store.findOne('person').get('last_name'), PEOPLE_DEFAULTS.last_name);
-        assert.deepEqual(store.findOne('person').get('phone_numbers'), PEOPLE_DEFAULTS.phone_numbers);
-        assert.deepEqual(store.findOne('person').get('addresses'), PEOPLE_DEFAULTS.addresses);
-        assert.equal(store.findOne('person').get('status'), PEOPLE_DEFAULTS.status);
-        assert.equal(store.findOne('person').get('location'), PEOPLE_DEFAULTS.location);
+        assert.equal(store.findOne('person').get('phone_numbers').get('content.length'), 1);
+        assert.equal(store.findOne('person').get('phone_numbers').objectAt(0).get('number'), '999-999-9999');
+        assert.ok(store.findOne('person').get('isNotDirty'));
+        assert.ok(store.findOne('person').get('phoneNumbersIsNotDirty'));
+        // assert.equal(store.findOne('person').get('addresses'), PEOPLE_DEFAULTS.addresses);
+        // assert.equal(store.findOne('person').get('status'), PEOPLE_DEFAULTS.status);
+        // assert.equal(store.findOne('person').get('location'), PEOPLE_DEFAULTS.location);
     });
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
+    var response = Ember.$.extend(true, {id: 1}, payload);
+    var url = PREFIX + PEOPLE_URL + '/';
+    xhr( url,'POST',payload,{},201,response );
     visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {

@@ -9,7 +9,7 @@ export default Model.extend({
         return store.find('phonenumber', {person_id: this.get('id')});
     }),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', function() {
-       return this.get('isDirty') || this.get('phoneNumbersIsDirty'); 
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty'); 
     }),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
         var phone_numbers = this.get('phone_numbers');
@@ -34,5 +34,23 @@ export default Model.extend({
         phone_numbers.forEach((num) => {
             num.rollback();
         });
+    },
+    serialize: function () {
+        var phone_numbers = this.get('phone_numbers').map(function(number) {
+            return number.serialize();
+        });
+        return {
+            'username':this.get('username'),
+            'password':this.get('password'),
+            'first_name':this.get('first_name'),
+            'middle_initial':this.get('middle_initial'),
+            'last_name':this.get('last_name'),
+            'email':this.get('email'),
+            'role':1,
+            'status':1,
+            'location':'',
+            'phone_numbers': phone_numbers,
+            'addresses':[]
+        };
     }
 });

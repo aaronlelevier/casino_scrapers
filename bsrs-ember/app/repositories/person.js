@@ -7,9 +7,9 @@ var PREFIX = config.APP.NAMESPACE;
 var extractPhoneNumbers = (person_pk, store) => {
     var phone_numbers = store.find('phonenumber', {person_id: person_pk});
     return phone_numbers.map((phone_number) => {
-            var id = phone_number.get('id');
-            var number = phone_number.get('number');
-            var type = phone_number.get('type');
+        var id = phone_number.get('id');
+        var number = phone_number.get('number');
+        var type = phone_number.get('type');
         return {id: id, number: number, type: type};
     });
 };
@@ -28,7 +28,7 @@ var extractAddresses = (addresses, store) => {
 };
 
 var create_people_with_relationships = (response, store, id) => {
-        var address_ids = [];
+    var address_ids = [];
     response.phone_numbers.forEach((phone_number) => {
         store.push('phone-number-type', phone_number.type);
         phone_number.type = phone_number.type.id;
@@ -75,33 +75,26 @@ var create_people_with_nested = (model, store) => {
 
 export default Ember.Object.extend({
     save(model) {
-        var store = this.get('store');
-        var payload;
         if (model.get('id')) {
-            payload = create_people_with_nested(model, store);
-            return PromiseMixin.xhr(PREFIX + '/admin/people/' + model.get('id') + '/', 'PUT', payload).then((response) => {
-                model.save();
-                model.savePhoneNumbers();
-            });
+            return this.update(model);
         } else {
-            payload = {data: {
-                'username':model.get('username'),
-                'password':model.get('password'),
-                'first_name':model.get('first_name'),
-                'middle_initial':model.get('middle_initial'),
-                'last_name':model.get('last_name'),
-                'email':model.get('email'),
-                'role':1,
-                'status':1,
-                'location':'',
-                'phone_numbers':[],
-                'addresses':[],
-            }};
-            return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', payload).then((response) => {
-                //TODO: what comes from DRF on post of person for phone numbers
-                store.push('person', response);
-            });
+            return this.insert(model);
         }
+    },
+    insert(model) {
+        return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', {data: model.serialize()}).then((response) => {
+            model.set('id', response.id);
+            model.save();
+            model.savePhoneNumbers();
+        });
+    },
+    update(model) {
+        var store = this.get('store');
+        var payload = create_people_with_nested(model, store);
+        return PromiseMixin.xhr(PREFIX + '/admin/people/' + model.get('id') + '/', 'PUT', payload).then((response) => {
+            model.save();
+            model.savePhoneNumbers();
+        });
     },
     find() {
         var store = this.get('store');
