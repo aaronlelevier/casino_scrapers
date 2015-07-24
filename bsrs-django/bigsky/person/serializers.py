@@ -106,8 +106,8 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        write_only_fields = ('password',)
-        fields = PERSON_FIELDS + ('password',) # 'phone_numbers', 'addresses',)
+        # write_only_fields = ('password',)
+        fields = PERSON_FIELDS # ('password',) # 'phone_numbers', 'addresses',)
 
     def update(self, instance, validated_data):
         # phone_numbers = validated_data.pop('phone_numbers')

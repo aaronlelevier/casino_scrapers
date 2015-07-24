@@ -54,7 +54,6 @@ function productionEmberBuild {
 function copyEmberAssetsToDjango {
     rm -rf -rf assets
     rm -rf -rf templates/index.html
-    rm -rf tests.db
 
     cp -r ../../bsrs-ember/dist/assets .
     COPY_EMBER_ASSETS=$?
@@ -72,6 +71,17 @@ function copyEmberAssetsToDjango {
 }
 
 function runSeleniumTests {
+
+    DB_NAME="ci"
+    echo "DB NAME TO DROP: $DB_NAME"
+    export PGPASSWORD=tango
+
+    dropdb $DB_NAME -U bsdev
+    echo "$DB_NAME dropped"
+
+    createdb $DB_NAME -U bsdev -O bsdev
+    echo "$DB_NAME created"
+
     python run_selenium.py
     SELENIUM_TEST=$?
     if [ "$SELENIUM_TEST" == 1 ]; then
