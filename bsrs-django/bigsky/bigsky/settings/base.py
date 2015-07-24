@@ -33,6 +33,7 @@ THIRD_PARTY_APPS = (
     # testing
     'django_nose',
     'debug_toolbar',
+    'django_extensions',
     )
 
 LOCAL_APPS = (

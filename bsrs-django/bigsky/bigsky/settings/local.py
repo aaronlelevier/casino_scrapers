@@ -4,21 +4,16 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
-        'NAME': 'local', # Either create this DB on your machine, or replace 
-        'USER': '',		 # this with the name of your Postgres Django Dev DB.
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-
-INSTALLED_APPS += (
-    'django_extensions',
-    )
-
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
+#         'NAME': 'local', # Either create this DB on your machine, or replace 
+#         'USER': '',		 # this with the name of your Postgres Django Dev DB.
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '5432',
+#     }
+# }
 
 if 'test' in sys.argv:
 	TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'

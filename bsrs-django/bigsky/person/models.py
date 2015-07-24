@@ -138,6 +138,7 @@ class Person(User):
     "ooto" : out-of-the-office
     '''
     # Keys
+    # user = models.OneToOneField(User)
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True, null=True)
@@ -196,3 +197,10 @@ class Person(User):
         else:
             super(Person, self).delete(*args, **kwargs)
             
+'''
+from person.models import Person
+from model_mommy import mommy
+p = mommy.make(Person, user__username='aaron')
+p.user.set_password('1234')
+p.user.save()
+'''

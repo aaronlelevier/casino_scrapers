@@ -74,8 +74,8 @@ class PersonCreateSerializer(serializers.ModelSerializer):
 
 
 PERSON_FIELDS = (
-    'id', 'username', 'first_name', 'middle_initial', 'last_name',
-    'title', 'emp_number', 'status', 'role', 
+    'deleted', 'id', 'username', 'first_name', 'middle_initial',
+    'last_name', 'title', 'emp_number', 'status', 'role', 
     )
 
 
