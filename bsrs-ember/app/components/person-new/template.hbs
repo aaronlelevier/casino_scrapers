@@ -15,6 +15,7 @@
 	</header>
 	<section class="docSection container-fluid">
 		<section>
+			<h2 class="col-sm-12">{{t "admin.person.label.credentials"}}</h2>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.username" for="username"}}
 					{{input type="text" value=model.username placeholder=(t "admin.person.label.username") class="form-control t-person-username" id="username" required="required"}}
@@ -32,6 +33,9 @@
 			    	{{input type="text" value=model.role placeholder=(t "admin.person.label.role") class="form-control t-person-role" id="role"}}
 				{{/form-group}}
 			</div>
+		</section>
+		<section>
+			<h2 class="col-sm-12">{{t "admin.person.label.general"}}</h2>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.first_name" for="first_name"}}
 					{{input type="text" value=model.first_name placeholder=(t "admin.person.label.first_name") class="form-control t-person-first-name" id="first_name"}}

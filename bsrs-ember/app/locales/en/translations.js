@@ -69,6 +69,7 @@ export default {
     },
   },
 	admin:{
+		title: "Admin",
 		general: {
 			one: "General Setting",
 			other: "General Settings"
@@ -130,7 +131,11 @@ export default {
 					one: "Phone Number",
 					other: "Phone Numbers"
 				},
-				address: "Address"
+				address: "Address",
+				email: "Email",
+				general: "General Information",
+				credentials: "Credentials",
+				contact: "Contact"
 			},
             status: {
                 active: "Active",

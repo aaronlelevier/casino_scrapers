@@ -16,7 +16,7 @@
 	</header>
 	<section class="docSection container-fluid">
 		<section>
-			<h2 class="col-sm-12">General Information</h2>
+			<h2 class="col-sm-12">{{t "admin.person.label.general"}}</h2>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.first_name" for="first_name"}}
 			    	{{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name" required="required"}}
@@ -49,7 +49,7 @@
 			</div>
 		</section>
 		<section>
-			<h2 class="col-sm-12">Credentials</h2>
+			<h2 class="col-sm-12">{{t "admin.person.label.credentials"}}</h2>
 			<div class="col-sm-4">
 				{{#form-group title="admin.person.label.status"}}
 					<select class="form-control t-statuses-select">
@@ -72,7 +72,7 @@
 			</div>
 		</section>
 		<section>
-			<h2 class="col-sm-12">Contact</h2>
+			<h2 class="col-sm-12">{{t "admin.person.label.contact"}}</h2>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.phone_number.other"}}
 					{{input-multi-phone placeholder=(t "admin.person.label.phone_number.one") model=phone_numbers types=phone_number_types}}
