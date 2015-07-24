@@ -132,20 +132,22 @@ class PersonStatus(AbstractName):
 
 
 @python_2_unicode_compatible
-class Person(User):
+class Person(BaseModel):
     '''
     "pw" : password
     "ooto" : out-of-the-office
     '''
     # Keys
-    # user = models.OneToOneField(User)
+    user = models.OneToOneField(User)
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True, null=True)
     # Base Fields
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-    deleted = models.BooleanField(blank=True, default=False) # TODO: make a DateTimeField, and check for NULL if not deleted
+#     created = models.DateTimeField(auto_now_add=True)
+#     modified = models.DateTimeField(auto_now=True)
+#     deleted = models.DateTimeField(blank=True, default=False, null=True,
+#         help_text="If NULL the record is not deleted, otherwise this is the timestamp \
+# of when the record was deleted.")
     # required
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     # TODO: currency will be a table with 5 columns, and this will 
@@ -179,23 +181,23 @@ class Person(User):
         db_table = 'person_person'
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
     def save(self, *args, **kwargs):
         if not self.status:
             self.status = PersonStatus.objects.default()
         return super(Person, self).save(*args, **kwargs)
 
-    def delete(self, override=False, *args, **kwargs):
-        '''
-        Enforce only hiding objects and not deleting them unless explicitly 
-        overriden.
-        '''
-        if not override:
-            self.deleted=True
-            self.save()
-        else:
-            super(Person, self).delete(*args, **kwargs)
+    # def delete(self, override=False, *args, **kwargs):
+    #     '''
+    #     Enforce only hiding objects and not deleting them unless explicitly 
+    #     overriden.
+    #     '''
+    #     if not override:
+    #         self.deleted=True
+    #         self.save()
+    #     else:
+    #         super(Person, self).delete(*args, **kwargs)
             
 '''
 from person.models import Person

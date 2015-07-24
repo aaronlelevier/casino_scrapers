@@ -9,21 +9,16 @@ from location.models import Location
 from person.models import Person, PersonStatus, Role
 
 
-USER_DICT = {
-    'password': 'torment',
-    'first_name': 'Test',
-    'last_name': 'User',
-    'email': 'tuser@bigskytech.com'
-    }
+USER_DICT = {}
 
 PASSWORD = '1234'
 
 
 def create_single_person(role, status, location, USER_DICT):
-    user = mommy.make(Person, role=role, status=status, location=location, **USER_DICT)
-    user.set_password(PASSWORD)
-    user.save()
-    return user
+    person = mommy.make(Person, role=role, status=status, location=location, **USER_DICT)
+    person.user.set_password(PASSWORD)
+    person.user.save()
+    return person
 
 
 def create_person(username=None, _many=1):
@@ -42,13 +37,13 @@ def create_person(username=None, _many=1):
         raise Exception("Can't specify more than 1 user with a specific username. \
 You specified {} user(s) with username: {}".format(_many, username))
     elif username:
-        USER_DICT['username'] = username
+        USER_DICT['user__username'] = username
         return create_single_person(role, status, location, USER_DICT)
         
     # Multiple User Create
     for i in range(_many):
         username = ''.join([random.choice(string.ascii_letters) for x in range(10)])
-        USER_DICT['username'] = username
+        USER_DICT['user__username'] = username
         user = create_single_person(role, status, location, USER_DICT)
     
     return user

@@ -1,4 +1,5 @@
 from django.test import TestCase, TransactionTestCase
+from django.utils import timezone
 from django.contrib.auth.models import ContentType, Group, Permission, User
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -11,20 +12,29 @@ from util.models import MainSetting, CustomSetting, Tester
 from util.permissions import perms_map
 
 
+class TesterManagerTests(TestCase):
+
+    def setUp(self):
+        # default ``objects`` model manager should only
+        # return non-deleted objects
+        self.t_del = mommy.make(Tester, deleted=timezone.now())
+        self.t_ok = mommy.make(Tester)
+
+    def test_managers(self):
+        self.assertEqual(Tester.objects.count(), 1)
+
+    def test_managers_all(self):
+        self.assertEqual(Tester.objects_all.count(), 2)
+
+
 class TesterTests(TestCase):
     # Empty Model to test Base Model Methods
 
     def setUp(self):
         # default ``objects`` model manager should only
         # return non-deleted objects
-        self.t_del = mommy.make(Tester, deleted=True)
+        self.t_del = mommy.make(Tester, deleted=timezone.now())
         self.t_ok = mommy.make(Tester)
-
-    def test_managers(self):
-        self.assertEqual(len(Tester.objects.all()), 1)
-
-    def test_managers_all(self):
-        self.assertEqual(len(Tester.objects_all.all()), 2)
 
     def test_delete(self):
         # can't hide already ``deleted=True`` object, so should have
