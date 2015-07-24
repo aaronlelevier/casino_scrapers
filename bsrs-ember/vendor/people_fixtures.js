@@ -4,7 +4,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             'id': i,
             'username': 'akrier',
             'first_name': 'Andy',
-            //TODO: edit middle name in form? 'middle_initial':'J',
+            'middle_initial':'M',
             'last_name': 'Krier',
             'title': 'RVP',
             'emp_number': '5063',
@@ -50,7 +50,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         response.acceptassign= false;
         response.emails= [];
         for(var key in person) {
-           response[key] = person[key]; 
+           response[key] = person[key];
         }
         return response;
     };

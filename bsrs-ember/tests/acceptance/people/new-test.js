@@ -14,10 +14,22 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('Acceptance | people-new', {
+module('amk Acceptance | people-new', {
     beforeEach() {
-        var payload = {username: PEOPLE_DEFAULTS.username, password: PEOPLE_DEFAULTS.password, email: PEOPLE_DEFAULTS.email, role: PEOPLE_DEFAULTS.role, first_name: PEOPLE_DEFAULTS.first_name, last_name: PEOPLE_DEFAULTS.last_name, phone_numbers: PEOPLE_DEFAULTS.phone_numbers, addresses: PEOPLE_DEFAULTS.addresses, location: PEOPLE_DEFAULTS.location, status: PEOPLE_DEFAULTS.status };
-        var response = Ember.$.extend(true, {id: 1}, payload); 
+        var payload = {
+            username: PEOPLE_DEFAULTS.username,
+            password: PEOPLE_DEFAULTS.password,
+            email: PEOPLE_DEFAULTS.email,
+            role: PEOPLE_DEFAULTS.role,
+            first_name: PEOPLE_DEFAULTS.first_name,
+            middle_initial: PEOPLE_DEFAULTS.middle_initial,
+            last_name: PEOPLE_DEFAULTS.last_name,
+            phone_numbers: PEOPLE_DEFAULTS.phone_numbers,
+            addresses: PEOPLE_DEFAULTS.addresses,
+            location: PEOPLE_DEFAULTS.location,
+            status: PEOPLE_DEFAULTS.status
+        };
+        var response = Ember.$.extend(true, {id: 1}, payload);
         var url = PREFIX + PEOPLE_URL + '/';
         xhr( url,'POST',payload,{},201,response );
         application = startApp();
@@ -34,18 +46,19 @@ test('visiting /people/new', (assert) => {
     visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL); 
+        assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.equal(store.find('person').length, 0);
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
     fillIn('.t-person-email', PEOPLE_DEFAULTS.email);
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS.first_name);
+    fillIn('.t-person-middle-initial', PEOPLE_DEFAULTS.middle_initial);
     fillIn('.t-person-last-name', PEOPLE_DEFAULTS.last_name);
     fillIn('.t-person-role', PEOPLE_DEFAULTS.role);//TODO: make true select with multiple options
     click(SAVE_BTN);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL); 
+        assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(store.find('person').length, 1);
         assert.equal(store.findOne('person').get('id'), 1);
         assert.equal(store.findOne('person').get('username'), PEOPLE_DEFAULTS.username);
@@ -53,6 +66,7 @@ test('visiting /people/new', (assert) => {
         assert.equal(store.findOne('person').get('email'), PEOPLE_DEFAULTS.email);
         assert.equal(store.findOne('person').get('role'), PEOPLE_DEFAULTS.role);
         assert.equal(store.findOne('person').get('first_name'), PEOPLE_DEFAULTS.first_name);
+        assert.equal(store.findOne('person').get('middle_initial'), PEOPLE_DEFAULTS.middle_initial);
         assert.equal(store.findOne('person').get('last_name'), PEOPLE_DEFAULTS.last_name);
         assert.deepEqual(store.findOne('person').get('phone_numbers'), PEOPLE_DEFAULTS.phone_numbers);
         assert.deepEqual(store.findOne('person').get('addresses'), PEOPLE_DEFAULTS.addresses);
@@ -82,31 +96,32 @@ test('validation works and when hit save, we do same post', (assert) => {
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     click(SAVE_BTN);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL); 
+        assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.ok(find('.t-username-validation-error').is(':hidden'));
     });
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
     click(SAVE_BTN);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL); 
+        assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.ok(find('.t-password-validation-error').is(':hidden'));
     });
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS.first_name);
     click(SAVE_BTN);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL); 
+        assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.ok(find('.t-first-name-validation-error').is(':hidden'));
     });
     fillIn('.t-person-last-name', PEOPLE_DEFAULTS.last_name);
     click(SAVE_BTN);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL); 
+        assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.ok(find('.t-last-name-validation-error').is(':hidden'));
     });
+    fillIn('.t-person-middle-initial', PEOPLE_DEFAULTS.middle_initial);
     fillIn('.t-person-email', PEOPLE_DEFAULTS.email);
     fillIn('.t-person-role', PEOPLE_DEFAULTS.role);//TODO: make true select with multiple options
     click(SAVE_BTN);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL); 
+        assert.equal(currentURL(), PEOPLE_URL);
     });
 });

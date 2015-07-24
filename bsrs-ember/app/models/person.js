@@ -6,8 +6,8 @@ export default Model.extend({
     username: attr(''),
     phone_numbers: attr([]),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', function() {
-       return this.get('isDirty') || this.get('phoneNumbersIsDirty'); 
-    }).volatile(), 
+       return this.get('isDirty') || this.get('phoneNumbersIsDirty');
+    }).volatile(),
     phoneNumbersIsDirty: Ember.computed(function() {
         var store = this.get('store');
         var phone_numbers = store.find('phonenumber', {person_id: this.get('id')});

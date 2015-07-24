@@ -125,6 +125,7 @@ export default {
 				role: "Role",
 				auth_amount: "Auth. Amount",
 				first_name: "First Name",
+				middle_initial: "Middle",
 				last_name: "Last Name",
                 status: "Status",
 				phone_number: {

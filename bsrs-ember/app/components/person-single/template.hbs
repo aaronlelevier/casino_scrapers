@@ -1,6 +1,6 @@
 <form {{action "return false" this on="submit"}}>
 	<header>
-		<h1>{{model.first_name}} {{model.last_name}} <small>{{model.title}}</small></h1>
+		<h1>{{model.first_name}} {{model.middle_initial}} {{model.last_name}} <small>{{model.title}}</small></h1>
 		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
 			{{save-button save="savePerson"}}
 			{{cancel-button cancel="cancelPerson"}}
@@ -17,12 +17,17 @@
 	<section class="docSection container-fluid">
 		<section>
 			<h2 class="col-sm-12">{{t "admin.person.label.general"}}</h2>
-			<div class="col-sm-6">
+			<div class="col-sm-5">
 				{{#form-group title="admin.person.label.first_name" for="first_name"}}
 			    	{{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name" required="required"}}
 				{{/form-group}}
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-2">
+				{{#form-group title="admin.person.label.middle_initial" for="middle_initial"}}
+			    	{{input type="text" placeholder=(t "admin.person.label.middle_initial") value=model.middle_initial class="form-control t-person-middle-initial" id="middle_initial" required="required"}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-5">
 				{{#form-group title="admin.person.label.last_name" for="last_name"}}
 			    	{{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name" required="required"}}
 				{{/form-group}}

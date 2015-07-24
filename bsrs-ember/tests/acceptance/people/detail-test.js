@@ -57,6 +57,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(currentURL(),DETAIL_URL);
         assert.equal(find('.t-person-username').val(), 'akrier');
         assert.equal(find('.t-person-first-name').val(), 'Andy');
+        assert.equal(find('.t-person-middle-initial').val(), 'M');
         assert.equal(find('.t-person-last-name').val(), 'Krier');
         assert.equal(find('.t-person-title').val(), 'RVP');
         assert.equal(find('.t-person-emp_number').val(), '5063');
@@ -95,11 +96,12 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PERSON_PK);
     var addresses = ADDRESS_FIXTURES.put();
-    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, username: 'llcoolj', first_name: 'Ice', last_name: 'Cube', title: 'mastermind', emp_number: '1122', auth_amount: '0.000', addresses: addresses});
+    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, username: 'llcoolj', first_name: 'Ice', middle_initial: 'F\'in', last_name: 'Cube', title: 'mastermind', emp_number: '1122', auth_amount: '0.000', addresses: addresses});
     xhr( url,'PUT',payload,{},200,response );
 
     fillIn('.t-person-username', 'llcoolj');
     fillIn('.t-person-first-name', 'Ice');
+    fillIn('.t-person-middle-initial', 'F\'in');
     fillIn('.t-person-last-name', 'Cube');
     fillIn('.t-person-title', 'mastermind');
     fillIn('.t-person-emp_number', '1122');
@@ -112,7 +114,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
 });
 
 test('when editing username to invalid, it checks for validation', (assert) => {
-    visit(DETAIL_URL);    
+    visit(DETAIL_URL);
     fillIn('.t-person-username', '');
     click(SAVE_BTN);
     andThen(() => {
