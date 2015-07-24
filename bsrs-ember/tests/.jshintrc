@@ -18,7 +18,6 @@
     "find",
     "findWithAssert",
     "wait",
-    "DS",
     "andThen",
     "pauseTest",
     "currentURL",

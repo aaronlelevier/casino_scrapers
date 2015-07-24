@@ -1,12 +1,4 @@
-import DS from 'ember-data';
+import Ember from 'ember';
 
-var attr = DS.attr,
-    belongsTo = DS.belongsTo,
-    hasMany = DS.hasMany,
-    computed = Ember.computed;
-
-export default DS.Model.extend({
-  email: attr('string'),
-  type: attr('string'),
-  person: belongsTo('person')
+export default Ember.Object.extend({
 });

@@ -1,8 +1,10 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/uuid';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/phone-number-type';
 
 export default Ember.Component.extend({
+    uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi t-input-multi-phone'],
     fieldNames: 'number',
@@ -14,7 +16,13 @@ export default Ember.Component.extend({
             });
         },
         append() {
-            this.get('model').pushObject(PhoneNumber.create({type: PhoneNumberDefaults.officeType}));
+            var id = this.get('uuid').v4();
+            var type = PhoneNumberDefaults.officeType;
+            var related_field = this.get('related_field');
+            var related_pk = this.get('related_pk');
+            var model = {id: id, type: type};
+            model[related_field] = related_pk;
+            this.get('model').pushObject(PhoneNumber.create(model));
         },
         delete(entry) {
             this.get('model').removeObject(entry);

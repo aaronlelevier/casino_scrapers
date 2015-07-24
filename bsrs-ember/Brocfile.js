@@ -1,6 +1,12 @@
 /* global require, module */
 
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
+var funnel = require('broccoli-funnel');
+
+var es5Shim = funnel('node_modules/es5-shim', {
+    files: ['es5-shim.js'],
+    destDir: '/assets'
+});
 
 var app = new EmberApp({
   // sassOptions: {
@@ -38,4 +44,4 @@ app.import('vendor/defaults/person.js');
 // please specify an object with the list of modules as keys
 // along with the exports of each module as its value.
 
-module.exports = app.toTree();
+module.exports = app.toTree([es5Shim]);

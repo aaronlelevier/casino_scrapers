@@ -22,6 +22,7 @@
   "devDependencies": {
     "broccoli-asset-rev": "^2.1.0",
     "broccoli-clean-css": "1.0.0",
+    "broccoli-funnel": "^0.2.3",
     "bsrs-bootstrap-config": "git+ssh://git@github.com:bigskytech/bsrs-bootstrap-config.git#master",
     "ember-cli": "0.2.7",
     "ember-cli-app-version": "0.3.3",
@@ -44,6 +45,7 @@
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "^1.0.2",
     "ember-i18n": "4.1.1",
+    "es5-shim": "^4.1.10",
     "express": "^4.13.1",
     "glob": "^4.5.3",
     "morgan": "^1.6.1"

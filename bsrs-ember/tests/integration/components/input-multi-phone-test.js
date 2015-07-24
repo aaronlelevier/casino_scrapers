@@ -8,7 +8,7 @@ import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/phone-number-type';
 import PEOPLE_FACTORY from 'bsrs-ember/vendor/people_fixtures';
 
-moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
+moduleForComponent('input-multi-phone', 'toran integration: input-multi-phone test', {
     integration: true,
     setup() {
         translation.initialize(this);
@@ -24,13 +24,18 @@ moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
 test('defaults to use phone number model with field name of number', function(assert) {
     var model = [];
     this.set('model', model);
-    this.render(hbs`{{input-multi-phone model=model}}`);
+    this.set('related_pk', 1);
+    this.set('related_field', 'person_id');
+    this.render(hbs`{{input-multi-phone model=model related_pk=related_pk related_field=related_field}}`);
     var $component = this.$('.t-input-multi-phone');
     assert.equal(this.$('.t-new-entry').length, 0);
     var $first_btn = $component.find('.t-add-btn:eq(0)');
     $first_btn.trigger('click');
     assert.equal(this.$('.t-new-entry').length, 1);
     assert.equal(model.length, 1);
+    assert.equal(model.objectAt(0).get('type'), 1);
+    assert.equal(model.objectAt(0).get('person_id'), 1);
+    assert.equal(model.objectAt(0).get('id'), 'abc123'); //replace w/ default value
     assert.equal(model.objectAt(0).get('number'), undefined);
     this.$('.t-new-entry').val('888-888-8888').trigger('change');
     assert.equal(model.objectAt(0).get('number'), '888-888-8888');
