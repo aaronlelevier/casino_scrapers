@@ -11,6 +11,7 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
+from django.contrib.postgres.fields import HStoreField
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location
@@ -152,15 +153,17 @@ class Person(BaseModel):
     # be a FK on that table
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
+    next_approver = models.ForeignKey("self", related_name='nextapprover', null=True)
     # optional
     employee_id = models.CharField(max_length=100, blank=True, null=True)
     middle_initial = models.CharField(max_length=1, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     # Passwords
-    password_expiration = models.DateField(blank=True, null=True)
     # TODO: use django default 1x PW logic here?
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
+    password_expire = models.DateField(blank=True, null=True)
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
+    password_change = HStoreField(help_text="Tuple of (datetime of PW change, old PW)")
     # Out-of-the-Office
     proxy_status = models.CharField("Out of the Office Status", max_length=100, blank=True, null=True)
     proxy_start_date = models.DateField("Out of the Office Status Start Date", max_length=100, blank=True, null=True)
@@ -168,7 +171,6 @@ class Person(BaseModel):
     proxy_user = models.ForeignKey("self", related_name='coveringuser', null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
-    next_approver = models.ForeignKey("self", related_name='nextapprover', null=True)
 
     # use as a normal Django Manager() to access related setting objects.
     main_settings = GenericRelation(MainSetting)

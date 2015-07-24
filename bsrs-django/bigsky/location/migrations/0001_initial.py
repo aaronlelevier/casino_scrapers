@@ -7,50 +7,81 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='CustomSetting',
+            name='Location',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('settings', models.TextField(help_text=b'JSON Dict saved as a string in DB', blank=True)),
-                ('object_id', models.PositiveIntegerField()),
-                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('name', models.CharField(max_length=100)),
+                ('number', models.CharField(max_length=20)),
+            ],
+            options={
+                'ordering': ('number',),
+            },
+        ),
+        migrations.CreateModel(
+            name='LocationLevel',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('modified', models.DateTimeField(auto_now=True)),
+                ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
+                ('name', models.CharField(unique=True, max_length=100)),
+                ('children', models.ManyToManyField(related_name='parents', to='location.LocationLevel', blank=True)),
             ],
             options={
                 'abstract': False,
             },
         ),
         migrations.CreateModel(
-            name='MainSetting',
+            name='LocationStatus',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('settings', models.TextField(help_text=b'JSON Dict saved as a string in DB', blank=True)),
-                ('object_id', models.PositiveIntegerField()),
-                ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
+                ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
                 'abstract': False,
             },
         ),
         migrations.CreateModel(
-            name='Tester',
+            name='LocationType',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
+                ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
                 'abstract': False,
             },
+        ),
+        migrations.AddField(
+            model_name='location',
+            name='level',
+            field=models.ForeignKey(related_name='locations', to='location.LocationLevel'),
+        ),
+        migrations.AddField(
+            model_name='location',
+            name='relations',
+            field=models.ManyToManyField(related_name='relations_rel_+', to='location.Location'),
+        ),
+        migrations.AddField(
+            model_name='location',
+            name='status',
+            field=models.ForeignKey(related_name='locations', to='location.LocationStatus'),
+        ),
+        migrations.AddField(
+            model_name='location',
+            name='type',
+            field=models.ForeignKey(related_name='locations', to='location.LocationType'),
         ),
     ]
