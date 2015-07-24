@@ -185,22 +185,6 @@
 },
 {
   "fields": {
-    "model": "nextapprover",
-    "app_label": "person"
-  },
-  "model": "contenttypes.contenttype",
-  "pk": 24
-},
-{
-  "fields": {
-    "model": "coveringuser",
-    "app_label": "person"
-  },
-  "model": "contenttypes.contenttype",
-  "pk": 25
-},
-{
-  "fields": {
     "model": "category",
     "app_label": "role"
   },
@@ -249,19 +233,11 @@
 },
 {
   "fields": {
-    "expire_date": "2015-07-31T17:49:42.254Z",
-    "session_data": "MDI4ODQ3MzQxMzA0NDE1YzJhNGRhMTE0MTI0ZjRjM2Y2YTI2Y2Y3YTp7Il9hdXRoX3VzZXJfaGFzaCI6ImE4NTNjYmZiNTkxZDIzYmE0NjAzN2FlZjg1ZTI4NDMxZjMzM2NlNTciLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIxIn0="
+    "expire_date": "2015-08-05T00:03:54.084Z",
+    "session_data": "OTQ4NjhiOGMwNGY1ZmQ0NWZlODc5NjRjM2U1NzAwZGY5NjEwZDhmODp7Il9hdXRoX3VzZXJfaGFzaCI6ImFlZjRhZDE2ZDY0MmYyMDlhNTE2YjhmODBhMTA1NzE3OTM1MjFiYTciLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIyIn0="
   },
   "model": "sessions.session",
-  "pk": "1phv0k6pg5dbdfh81623af4a1rnjio4m"
-},
-{
-  "fields": {
-    "expire_date": "2015-07-31T18:28:19.371Z",
-    "session_data": "MmYwNGYwZjFjYjRhZTYxZGJjOWQ3MzA3MDYxN2MzMzgzYWQ5YTNlODp7Il9hdXRoX3VzZXJfaGFzaCI6ImRiNDk3ZTcwNjVmYzQ1YzZhNWUwYzJlNmYyZTU2OGVkZGQzN2Y3NzAiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiIxIn0="
-  },
-  "model": "sessions.session",
-  "pk": "m2q9pct8f0h501wfx7gj09cu0w0qfb4o"
+  "pk": "cnrpcjkltyphfrwrjplbwm9rxay9v03o"
 },
 {
   "fields": {
@@ -274,65 +250,56 @@
 {
   "fields": {
     "deleted": false,
-    "order": 2599,
-    "modified": "2015-07-17T18:41:01.252Z",
-    "name": "admin.phonenumbertype.office",
-    "created": "2015-07-17T18:32:17.582Z"
+    "children": [],
+    "modified": "2015-07-21T22:59:23.929Z",
+    "name": "FTPWEylrVTSLtMjkmuuXLZqsDkucgVkuTSsJaLjxaBAUCChlUUJGDuZfDGbiAeLgleAvSOoJyPVflxeUoExKfAabLhxpygdmHILP",
+    "created": "2015-07-21T22:59:23.929Z"
   },
-  "model": "contact.phonenumbertype",
+  "model": "location.locationlevel",
   "pk": 1
 },
 {
   "fields": {
     "deleted": false,
-    "order": 0,
-    "modified": "2015-07-17T18:42:44.095Z",
-    "name": "admin.phonenumbertype.mobile",
-    "created": "2015-07-17T18:42:44.095Z"
+    "modified": "2015-07-21T22:59:23.930Z",
+    "name": "EUzdadmnoxXCCcmGRhaySUAQEMWyfTFEFixlMOuKHPyXsrdKJCanHHwwjJZQatoLUEWZIzBMhltXTLGBprffFOgFTKyksUwazdbi",
+    "created": "2015-07-21T22:59:23.930Z"
   },
-  "model": "contact.phonenumbertype",
-  "pk": 2
-},
-{
-  "fields": {
-    "deleted": false,
-    "order": 2947,
-    "modified": "2015-07-17T18:47:09.973Z",
-    "name": "admin.address_type.office",
-    "created": "2015-07-17T18:32:17.589Z"
-  },
-  "model": "contact.addresstype",
+  "model": "location.locationstatus",
   "pk": 1
 },
 {
   "fields": {
     "deleted": false,
-    "order": 0,
-    "modified": "2015-07-17T18:47:44.920Z",
-    "name": "admin.address_type.shipping",
-    "created": "2015-07-17T18:47:44.920Z"
+    "modified": "2015-07-21T22:59:23.931Z",
+    "name": "uHKiREOfyiXzovljDLWyzoLPiRvEckPlXIqbUQPoCIwEgPKkEoVbljUnyYzgyiiYAGqzaZesohtRXjGQiWKnXPhdzdCINgrJvIQj",
+    "created": "2015-07-21T22:59:23.931Z"
   },
-  "model": "contact.addresstype",
-  "pk": 2
+  "model": "location.locationtype",
+  "pk": 1
 },
 {
   "fields": {
+    "status": 1,
+    "name": "PVZOKdiTSQPpdhhKlGXGBwCVsPetZmWbnTWJOanmxllXgcijlYcpymzUnKyJEhASvQxyKJgeFRsmlOWQdbIXNZRLmiDNpaWOTnDs",
+    "level": 1,
     "deleted": false,
-    "order": -966,
-    "modified": "2015-07-17T18:32:17.587Z",
-    "name": "tiHphzuOuJSkZfeVsvFaCjEyHEloITpjEOpWtNbZJmXXmvHGNuvFMUzmRrRCfMortKGmevHwAqXQTrPfMusPRJEPekZJnSedAyCv",
-    "created": "2015-07-17T18:32:17.587Z"
+    "created": "2015-07-21T22:59:23.932Z",
+    "modified": "2015-07-21T22:59:23.932Z",
+    "relations": [],
+    "number": "sCzEeYcbxdQVtxUZbXXE",
+    "type": 1
   },
-  "model": "contact.emailtype",
+  "model": "location.location",
   "pk": 1
 },
 {
   "fields": {
     "deleted": false,
-    "description": "one",
-    "modified": "2015-07-17T18:46:06.391Z",
-    "name": "admin.person.status.active",
-    "created": "2015-07-17T17:47:45.585Z"
+    "description": "active",
+    "modified": "2015-07-21T22:59:23.927Z",
+    "name": "PkDojgEpynYXqTTknpyyKzNtjYTJGJwSAIUKpZGVzVQIdDBOPDfZhLioJIiMbyUgFECNSdHOVFrfiJlYsEVeythdvtmujKMqlGId",
+    "created": "2015-07-21T22:59:23.927Z"
   },
   "model": "person.personstatus",
   "pk": 1
@@ -969,60 +936,6 @@
 },
 {
   "fields": {
-    "codename": "add_nextapprover",
-    "name": "Can add next approver",
-    "content_type": 24
-  },
-  "model": "auth.permission",
-  "pk": 71
-},
-{
-  "fields": {
-    "codename": "change_nextapprover",
-    "name": "Can change next approver",
-    "content_type": 24
-  },
-  "model": "auth.permission",
-  "pk": 72
-},
-{
-  "fields": {
-    "codename": "delete_nextapprover",
-    "name": "Can delete next approver",
-    "content_type": 24
-  },
-  "model": "auth.permission",
-  "pk": 73
-},
-{
-  "fields": {
-    "codename": "add_coveringuser",
-    "name": "Can add covering user",
-    "content_type": 25
-  },
-  "model": "auth.permission",
-  "pk": 74
-},
-{
-  "fields": {
-    "codename": "change_coveringuser",
-    "name": "Can change covering user",
-    "content_type": 25
-  },
-  "model": "auth.permission",
-  "pk": 75
-},
-{
-  "fields": {
-    "codename": "delete_coveringuser",
-    "name": "Can delete covering user",
-    "content_type": 25
-  },
-  "model": "auth.permission",
-  "pk": 76
-},
-{
-  "fields": {
     "codename": "add_category",
     "name": "Can add Category",
     "content_type": 26
@@ -1185,7 +1098,7 @@
 },
 {
   "fields": {
-    "name": "admin.role.system_administrator",
+    "name": "MbrFhgTOjKqiMEbYAPnHqAsJLdLbFjRyKEhyfBobNrNJRSXEnlxQHRSSdWFYfIryhZwrgbzbxgMkFZZS",
     "permissions": []
   },
   "model": "auth.group",
@@ -1199,15 +1112,33 @@
     "is_active": true,
     "is_superuser": false,
     "is_staff": false,
-    "last_login": "2015-07-17T18:28:19.369Z",
+    "last_login": "2015-07-22T00:03:15Z",
     "groups": [],
     "user_permissions": [],
-    "password": "md5$nIgV5SLrZo49$bba67ea2e608e7d7fb7215de47ade195",
+    "password": "pbkdf2_sha256$20000$yy8WcVp2e0d0$+i020LkeXuLfFakCCDw1rMe3TbCEDDmihxrRhEUCZAI=",
     "email": "tuser@bigskytech.com",
-    "date_joined": "2015-07-17T17:47:45.586Z"
+    "date_joined": "2015-07-21T22:59:23Z"
   },
   "model": "auth.user",
   "pk": 1
+},
+{
+  "fields": {
+    "username": "bob",
+    "first_name": "",
+    "last_name": "",
+    "is_active": true,
+    "is_superuser": true,
+    "is_staff": true,
+    "last_login": "2015-07-22T00:03:54.081Z",
+    "groups": [],
+    "user_permissions": [],
+    "password": "pbkdf2_sha256$20000$dO1oVjjaS072$PH0+Km+jmMgSrJvv88VieWqzS280E9kO64u4yIX7vJI=",
+    "email": "bob@mail.com",
+    "date_joined": "2015-07-22T00:03:43.658Z"
+  },
+  "model": "auth.user",
+  "pk": 2
 },
 {
   "fields": {
@@ -1230,9 +1161,9 @@
     "password_history_length": null,
     "inv_wo_status": null,
     "proxy_approval_bypass": false,
-    "password_char_types": "TKKermzZcKYXJexIkrPSWuKltKKPRGIOlDmvcPdHTXztrxTNkgbzVLJwTfopeEozYIEphTZRBXGkbJXVLiWcmnHZZDHCNFaBcyss",
+    "password_char_types": "xCNoXVSjYyMlIUSbklEEQykgqbUifBZQVEihKKXyFfvKOetmYoeKzkSfJSVxybKTqheVzvWyvEoTfhgtbHTZqXWXAvHfQtCMoqyJ",
     "dashboad_text": "",
-    "password_expire": 872,
+    "password_expire": 7984,
     "inv_max_approval_currency": "usd",
     "wo_show_tkt_attach": false,
     "wo_show_inactive": false,
@@ -1245,10 +1176,11 @@
     "accept_notify": false,
     "role_type": "contractor",
     "inv_close_wo": "Do not display",
-    "created": "2015-07-17T17:47:45.584Z",
+    "name": "",
+    "created": "2015-07-21T22:59:23.924Z",
     "wo_edit_closeout": false,
     "modules": "",
-    "modified": "2015-07-17T18:51:09.477Z",
+    "modified": "2015-07-21T22:59:23.924Z",
     "inv_req_attach": true,
     "wo_allow_backdate": false,
     "default_auth_amount": true,
@@ -1262,68 +1194,43 @@
 },
 {
   "fields": {
-    "status": 1,
-    "middle_initial": null,
-    "ooto_start_date": null,
     "auth_amount_currency": "usd",
-    "auth_amount": 0,
-    "title": null,
-    "emp_number": null,
-    "password_one_time": null,
+    "next_approver": 1,
     "password_expiration": null,
-    "role": 1,
-    "location": null,
-    "ooto_status": null,
-    "accept_notify": true,
     "user_permissions": [],
-    "accept_assign": true,
+    "middle_initial": "",
+    "auth_amount": "0.0000",
+    "title": "",
+    "emp_number": "",
+    "role": 1,
+    "location": 1,
+    "ooto_status": "",
+    "status": 1,
+    "ooto_start_date": null,
+    "deleted": false,
+    "password_one_time": "",
     "groups": [],
-    "ooto_end_date": null
+    "accept_notify": true,
+    "covering_user": 1,
+    "created": "2015-07-23T21:10:06.290Z",
+    "ooto_end_date": null,
+    "modified": "2015-07-23T21:26:59.713Z",
+    "accept_assign": true
   },
   "model": "person.person",
   "pk": 1
 },
 {
   "fields": {
-    "created": "2015-07-17T18:32:17.588Z",
-    "deleted": false,
-    "modified": "2015-07-17T18:32:17.588Z",
-    "person": 1,
-    "location": null,
-    "type": 1,
-    "email": "HgdHLKyJTA@example.com"
+    "action_flag": 2,
+    "action_time": "2015-07-22T00:05:51.308Z",
+    "object_repr": "aaron",
+    "object_id": "1",
+    "change_message": "Changed next_approver and covering_user.",
+    "user": 2,
+    "content_type": 23
   },
-  "model": "contact.email",
-  "pk": 1
-},
-{
-  "fields": {
-    "city": null,
-    "created": "2015-07-17T18:32:17.590Z",
-    "deleted": false,
-    "country": null,
-    "modified": "2015-07-17T18:32:17.590Z",
-    "person": 1,
-    "state": null,
-    "postal_code": null,
-    "location": null,
-    "address": null,
-    "type": 1
-  },
-  "model": "contact.address",
-  "pk": 1
-},
-{
-  "fields": {
-    "created": "2015-07-17T18:32:17.586Z",
-    "deleted": false,
-    "modified": "2015-07-17T18:32:17.586Z",
-    "number": "EQteVmGEcESioOLzYjKaHBDCkGKNugZa",
-    "person": 1,
-    "location": null,
-    "type": 1
-  },
-  "model": "contact.phonenumber",
+  "model": "admin.logentry",
   "pk": 1
 }
 ]

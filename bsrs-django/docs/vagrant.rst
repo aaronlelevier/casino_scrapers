@@ -21,3 +21,11 @@ Startup
 	# get fresh copy of the repo
 	rm -rf bsrs
 	git clone git@github.com:bigskytech/bsrs.git
+
+
+Stop
+
+.. code-block::
+
+	# from outside of vagrant (normal Bash)
+	vagrant halt -f

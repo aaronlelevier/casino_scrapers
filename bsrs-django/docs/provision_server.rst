@@ -106,6 +106,8 @@ Posgres Configuration
     CREATE USER bsdev WITH PASSWORD 'tango';
     GRANT ALL PRIVILEGES ON DATABASE "staging" TO bsdev;
     ALTER ROLE bsdev CREATEDB;
+    # HStore required extension
+    CREATE EXTENSION hstore
     \q
 
 **Web User Configuration**
@@ -125,9 +127,5 @@ and they will fail when running `/.manage.py migrate`
     pip install psycopg2
     
     # run migrations
-    ./manage.py makemigrations contact location order person role session util
+    ./manage.py makemigrations accounting contact location order person role session util
     ./manage.py migrate
-
-
-
-

@@ -24,6 +24,7 @@ DEFAULT_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.sitemaps',
     'django.contrib.flatpages',
+    'django.contrib.postgres',
     )
 
 THIRD_PARTY_APPS = (
@@ -33,9 +34,11 @@ THIRD_PARTY_APPS = (
     # testing
     'django_nose',
     'debug_toolbar',
+    'django_extensions',
     )
 
 LOCAL_APPS = (
+    'accounting',
     'contact',
     'location',
     'person',
@@ -81,13 +84,8 @@ TEMPLATES = [
 WSGI_APPLICATION = 'bigsky.wsgi.application'
 
 # Must Override!
-# DATABASES = {}
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'sqlite3.db',
-    }
-}
+DATABASES = {}
+
 
 LANGUAGE_CODE = 'en-us'
 

@@ -21,7 +21,7 @@ class PersonTests(TestCase):
         self.person = create_person()
 
     def test_person_is_user_subclass(self):
-        self.assertIsInstance(self.person, User)
+        self.assertIsInstance(self.person, Person)
 
     def test_person_defaults(self):
         self.assertTrue(self.person.accept_assign)
@@ -29,20 +29,6 @@ class PersonTests(TestCase):
     def test_foreignkeys(self):
         self.assertIsInstance(self.person.status, PersonStatus)
         self.assertIsInstance(self.person.role, Role)
-
-    # delete()
-
-    def test_delete(self):
-        self.assertEqual(Person.objects.filter(deleted=False).count(),
-            Person.objects.count())
-        self.person.delete()
-        self.assertEqual(Person.objects.count(), 1)
-        self.assertEqual(Person.objects.filter(deleted=True).count(), 1)
-
-    def test_delete_override(self):
-        self.assertEqual(Person.objects.count(), 1)
-        self.person.delete(override=True)
-        self.assertEqual(Person.objects.count(), 0)
 
 
 class PersonCreateTests(TestCase):
@@ -59,7 +45,7 @@ class PersonCreateTests(TestCase):
         self.person.save()
         self.person = Person.objects.get(pk=self.person.pk)
         self.assertIsInstance(self.person, Person)
-        self.assertEqual(self.person.first_name, '')
+        self.assertEqual(self.person.user.first_name, '')
 
     def test_delete(self):
         self.assertFalse(self.person.deleted)

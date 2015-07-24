@@ -15,7 +15,7 @@ class FactoryTests(TestCase):
         new_person_name = 'new_person'
         person = factory.create_person(username=new_person_name)
         self.assertIsInstance(person, Person)
-        self.assertEqual(person.username, new_person_name)
+        self.assertEqual(person.user.username, new_person_name)
 
     def test_multiple_person_create(self):
         people = 10

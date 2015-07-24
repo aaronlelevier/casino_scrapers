@@ -1,6 +1,5 @@
-import uuid
-
 from django.db import models
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -16,16 +15,12 @@ from. This will enforce not deleting, but just hiding records.
 class BaseQuerySet(models.query.QuerySet):
     pass
 
-
 class BaseManager(models.Manager):
     '''
     Auto exclude deleted records
     '''
     def get_queryset(self):
-        return BaseQuerySet(self.model, using=self._db).filter(deleted=False)
-
-    def delete(self, override=False):
-        return self.get_queryset().delete(override=override)
+        return BaseQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
 
 
 @python_2_unicode_compatible
@@ -36,7 +31,9 @@ class BaseModel(models.Model):
     '''
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
-    deleted = models.BooleanField(blank=True, default=False)
+    deleted = models.DateTimeField(blank=True, null=True,
+        help_text="If NULL the record is not deleted, otherwise this is the \
+timestamp of when the record was deleted.")
 
     objects = BaseManager()
     objects_all = models.Manager()
@@ -54,15 +51,14 @@ class BaseModel(models.Model):
         overriden.
         '''
         if not override:
-            self.deleted=True
+            self.deleted = timezone.now()
             self.save()
         else:
             super(BaseModel, self).delete(*args, **kwargs)
 
 
 class Tester(BaseModel):
-    "Auto-gen UUID Primary Keys."
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    pass
     
 
 @python_2_unicode_compatible

@@ -11,7 +11,9 @@ from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
+from django.contrib.postgres.fields import HStoreField
 
+from accounting.models import Currency
 from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
 from util import choices, exceptions as excp
@@ -56,8 +58,9 @@ class Role(BaseModel):
     accept_assign = models.BooleanField(blank=True, default=False)
     default_accept_notify = models.BooleanField(blank=True, default=True)
     accept_notify = models.BooleanField(blank=True, default=False)
-    default_auth_amount = models.BooleanField(blank=True, default=True)
-    auth_amount = models.PositiveIntegerField(blank=True, null=True)
+    # Auth Amounts
+    default_auth_amount = models.DecimalField(max_digits=15, decimal_places=4)
+    default_auth_amount_currency = models.ForeignKey(Currency)
     # Approvals
     allow_approval = models.BooleanField(blank=True, default=False)
     proxy_approval_bypass = models.BooleanField(blank=True, default=False)
@@ -132,41 +135,42 @@ class PersonStatus(AbstractName):
 
 
 @python_2_unicode_compatible
-class Person(User):
+class Person(BaseModel):
     '''
     "pw" : password
     "ooto" : out-of-the-office
     '''
     # Keys
+    user = models.OneToOneField(User)
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
     location = models.ForeignKey(Location, blank=True, null=True)
-    # Base Fields
-    created = models.DateTimeField(auto_now_add=True)
-    modified = models.DateTimeField(auto_now=True)
-    deleted = models.BooleanField(blank=True, default=False) # TODO: make a DateTimeField, and check for NULL if not deleted
     # required
+    # Auth Amounts - can be defaulted by the Role
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
-    auth_amount_currency = models.CharField(max_length=25,
-                                            choices=choices.CURRENCY_CHOICES,
-                                            default=choices.CURRENCY_CHOICES[0][0])
+    auth_amount_currency = models.ForeignKey(Currency, blank=True, null=True)
+    # TODO: currency will be a table with 5 columns, and this will 
+    # be a FK on that table
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
+    next_approver = models.ForeignKey("self", related_name='nextapprover', null=True)
     # optional
-    emp_number = models.CharField(max_length=100, blank=True, null=True)
-    middle_initial = models.CharField(max_length=30, blank=True, null=True)
+    employee_id = models.CharField(max_length=100, blank=True, null=True)
+    middle_initial = models.CharField(max_length=1, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
-    password_expiration = models.DateField(blank=True, null=True)
+    # Passwords
     # TODO: use django default 1x PW logic here?
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
+    password_expire = models.DateField(blank=True, null=True)
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
-    ooto_status = models.CharField("Out of the Office Status", max_length=100, blank=True, null=True)
-    ooto_start_date = models.DateField("Out of the Office Status Start Date", max_length=100, blank=True, null=True)
-    ooto_end_date = models.DateField("Out of the Office Status End Date", max_length=100, blank=True, null=True)
+    password_change = HStoreField(help_text="Tuple of (datetime of PW change, old PW)")
+    # Out-of-the-Office
+    proxy_status = models.CharField("Out of the Office Status", max_length=100, blank=True, null=True)
+    proxy_start_date = models.DateField("Out of the Office Status Start Date", max_length=100, blank=True, null=True)
+    proxy_end_date = models.DateField("Out of the Office Status End Date", max_length=100, blank=True, null=True)
+    proxy_user = models.ForeignKey("self", related_name='coveringuser', null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
-    next_approver = models.ForeignKey("self", related_name='nextapprover', null=True)
-    covering_user = models.ForeignKey("self", related_name='coveringuser', null=True)
 
     # use as a normal Django Manager() to access related setting objects.
     main_settings = GenericRelation(MainSetting)
@@ -176,21 +180,42 @@ class Person(User):
         db_table = 'person_person'
 
     def __str__(self):
-        return self.username
+        return self.user.username
 
     def save(self, *args, **kwargs):
         if not self.status:
             self.status = PersonStatus.objects.default()
+        if not self.auth_amount:
+            self.auth_amount = self.role.default_auth_amount
+        if not self.auth_amount_currency:
+            self.auth_amount_currency = self.role.default_auth_amount_currency
         return super(Person, self).save(*args, **kwargs)
 
-    def delete(self, override=False, *args, **kwargs):
-        '''
-        Enforce only hiding objects and not deleting them unless explicitly 
-        overriden.
-        '''
-        if not override:
-            self.deleted=True
-            self.save()
-        else:
-            super(Person, self).delete(*args, **kwargs)
-            
+
+### User / Person Signals ###
+
+@receiver(post_save, sender=User)
+def create_person(sender, instance=None, created=False, **kwargs):
+    if created:
+        Person.objects.get_or_create(user=instance)
+
+
+@receiver(pre_delete, sender=User)
+def delete_person(sender, instance=None, **kwargs):
+    if instance:
+        person = UserProfile.objects.get(user=instance)
+        person.delete()
+
+### Group / Role Signals ###
+
+@receiver(post_save, sender=User)
+def create_person(sender, instance=None, created=False, **kwargs):
+    if created:
+        Person.objects.get_or_create(user=instance)
+
+
+@receiver(pre_delete, sender=User)
+def delete_person(sender, instance=None, **kwargs):
+    if instance:
+        person = UserProfile.objects.get(user=instance)
+        person.delete()

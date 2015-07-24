@@ -59,42 +59,24 @@ class PersonStatusSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-PERSON_FIELDS = (
-    'deleted', 'id', 'username', 'first_name', 'middle_initial',
-    'last_name', 'title', 'emp_number', 'auth_amount', 'role', 'status'
-    )
-
-
 class PersonCreateSerializer(serializers.ModelSerializer):
-
-    # optional contact info
-    phone_numbers = PhoneNumberShortFKSerializer(many=True)
-    addresses = AddressShortFKSerializer(many=True)
+    "Base create fields for form wizard"
 
     class Meta:
         model = Person
         write_only_fields = ('password',)
         fields = (
-            'username', 'password', 'first_name', 'last_name', # user fields
-            'role', 'status', # keys
-            'location', 'phone_numbers', 'addresses',
+            'username', 'password', 'role',
         )
 
     def create(self, validated_data):
-        # first pop off related models or else they will be sent to 
-        # `Person` create()
-        phone_numbers = validated_data.pop('phone_numbers')
-        addresses = validated_data.pop('addresses')
-        # Create User w/ Password
-        # need to use create_user to make sure password is encrypted
-        person = Person.objects.create_user(**validated_data)
-        # PhoneNumbers
-        for ph in phone_numbers:
-            PhoneNumber.objects.create(person=person, **ph)
-        # Addresses
-        for ad in addresses:
-            Address.objects.create(person=person, **ad)
-        return person
+        return Person.objects.create_user(**validated_data)
+
+
+PERSON_FIELDS = (
+    'deleted', 'id', 'username', 'first_name', 'middle_initial',
+    'last_name', 'title', 'emp_number', 'status', 'role', 
+    )
 
 
 class PersonListSerializer(serializers.ModelSerializer):
@@ -127,11 +109,25 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         write_only_fields = ('password',)
         fields = PERSON_FIELDS + ('password', 'phone_numbers', 'addresses',)
 
+    def create(self, validated_data):
+        # first pop off related models or else they will be sent to 
+        # `Person` create()
+        phone_numbers = validated_data.pop('phone_numbers')
+        addresses = validated_data.pop('addresses')
+        # Create User w/ Password
+        # need to use create_user to make sure password is encrypted
+        person = Person.objects.create_user(**validated_data)
+        # PhoneNumbers
+        for ph in phone_numbers:
+            PhoneNumber.objects.create(person=person, **ph)
+        # Addresses
+        for ad in addresses:
+            Address.objects.create(person=person, **ad)
+        return person
+
     # TODO: this will be a route for Password and the main Update
     # will be separate
     def update(self, instance, validated_data):
-        print validated_data
-
         if 'password' in validated_data:
             password = validated_data.pop('password')
             instance.set_password(password)
