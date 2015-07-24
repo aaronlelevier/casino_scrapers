@@ -45,8 +45,6 @@ Special care needed when updating passwords and creating new users.
 
 class RoleSerializer(serializers.ModelSerializer):
 
-    name = serializers.CharField(source='group.name')
-
     class Meta:
         model = Role
         fields = ('id', 'name',)
@@ -70,12 +68,14 @@ class PersonCreateSerializer(serializers.ModelSerializer):
         )
 
     def create(self, validated_data):
-        return Person.objects.create_user(**validated_data)
+        person = Person.objects.create_user(**validated_data)
+        person.role.user_set.add(person)
+        return person
 
 
 PERSON_FIELDS = (
     'deleted', 'id', 'username', 'first_name', 'middle_initial',
-    'last_name', 'title', 'emp_number', 'status', 'role', 
+    'last_name', 'title', 'employee_id', 'status', 'role', 
     )
 
 
@@ -101,39 +101,51 @@ class PersonDetailSerializer(PersonListSerializer):
 
 class PersonUpdateSerializer(serializers.ModelSerializer):
 
-    phone_numbers = PhoneNumberShortFKSerializer(many=True, read_only=True)
-    addresses = AddressShortFKSerializer(many=True, read_only=True)
+    # phone_numbers = PhoneNumberShortFKSerializer(many=True, read_only=True)
+    # addresses = AddressShortFKSerializer(many=True, read_only=True)
 
     class Meta:
         model = Person
         write_only_fields = ('password',)
-        fields = PERSON_FIELDS + ('password', 'phone_numbers', 'addresses',)
+        fields = PERSON_FIELDS + ('password',) # 'phone_numbers', 'addresses',)
 
-    def create(self, validated_data):
-        # first pop off related models or else they will be sent to 
-        # `Person` create()
-        phone_numbers = validated_data.pop('phone_numbers')
-        addresses = validated_data.pop('addresses')
-        # Create User w/ Password
-        # need to use create_user to make sure password is encrypted
-        person = Person.objects.create_user(**validated_data)
-        # PhoneNumbers
-        for ph in phone_numbers:
-            PhoneNumber.objects.create(person=person, **ph)
-        # Addresses
-        for ad in addresses:
-            Address.objects.create(person=person, **ad)
-        return person
-
-    # TODO: this will be a route for Password and the main Update
-    # will be separate
     def update(self, instance, validated_data):
-        if 'password' in validated_data:
-            password = validated_data.pop('password')
-            instance.set_password(password)
-            instance.save()
-            update_session_auth_hash(self.context['request'], instance)
-        return super(PersonUpdateSerializer, self).update(instance, validated_data)
+        # phone_numbers = validated_data.pop('phone_numbers')
+        # addresses = validated_data.pop('addresses')
+
+        # Role
+        if not instance.role:
+            role_changed = True
+        elif 'role' in validated_data and validated_data['role'].id != instance.role.id:
+            role_changed = True
+            instance.role.user_set.remove(instance)
+        else:
+            role_changed = False
+
+        super(PersonUpdateSerializer, self).update(instance, validated_data)
+
+        # PhoneNumbers
+        # for ph in phone_numbers:
+        #     PhoneNumber.objects.create(person=person, **ph)
+        # # Addresses
+        # for ad in addresses:
+        #     Address.objects.create(person=person, **ad)
+
+        if role_changed:
+            instance.role.user_set.add(instance)
+        return instance
+
+
+# TODO: this will be a route for Password and the main Update
+# will be separate
+
+# class PasswordSerializer(serializers.Serializer):
+
+#         if 'password' in validated_data:
+#             password = validated_data.pop('password')
+#             instance.set_password(password)
+#             instance.save()
+#             update_session_auth_hash(self.context['request'], instance)
 
 
 class RoleDetailSerializer(serializers.ModelSerializer):

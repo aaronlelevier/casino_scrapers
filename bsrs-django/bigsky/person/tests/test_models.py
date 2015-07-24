@@ -21,7 +21,7 @@ class PersonTests(TestCase):
         self.person = create_person()
 
     def test_person_is_user_subclass(self):
-        self.assertIsInstance(self.person, Person)
+        self.assertIsInstance(self.person, User)
 
     def test_person_defaults(self):
         self.assertTrue(self.person.accept_assign)
@@ -40,12 +40,13 @@ class PersonCreateTests(TestCase):
         self.assertIsInstance(self.person, Person)
 
     def test_no_first_or_last_names(self):
+        # We're not going to require `first_name` or `last_name` and that's fine.
         self.person.first_name = '' 
         self.person.last_name = ''
         self.person.save()
         self.person = Person.objects.get(pk=self.person.pk)
         self.assertIsInstance(self.person, Person)
-        self.assertEqual(self.person.user.first_name, '')
+        self.assertEqual(self.person.first_name, '')
 
     def test_delete(self):
         self.assertFalse(self.person.deleted)
