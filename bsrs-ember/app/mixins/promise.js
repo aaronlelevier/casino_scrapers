@@ -8,11 +8,11 @@ var PromiseMixin = Ember.Object.create({
         hash.method = method || "GET";
         hash.dataType = "json";
         hash.cache = false;
-        return new Ember.RSVP.Promise(function(resolve, reject) {
-            hash.success = function(json) {
+        return new Ember.RSVP.Promise((resolve, reject) => {
+            hash.success = (json) => {
                 return Ember.run(null, resolve, json);
             };
-            hash.error = function(json, textStatus, errorThrown) {
+            hash.error = (json, textStatus, errorThrown) => {
                 if (json && json.then) {
                     json.then = null;
                 }

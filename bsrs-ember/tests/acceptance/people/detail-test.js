@@ -95,8 +95,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
 
     var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PERSON_PK);
-    var addresses = ADDRESS_FIXTURES.put();
-    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, username: 'llcoolj', first_name: 'Ice', middle_initial: 'F\'in', last_name: 'Cube', title: 'mastermind', emp_number: '1122', auth_amount: '0.000', addresses: addresses});
+    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, username: 'llcoolj', first_name: 'Ice', middle_initial: 'F\'in', last_name: 'Cube', title: 'mastermind', emp_number: '1122', auth_amount: '0.000'});
     xhr( url,'PUT',payload,{},200,response );
 
     fillIn('.t-person-username', 'llcoolj');

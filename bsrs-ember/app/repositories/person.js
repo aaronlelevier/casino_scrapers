@@ -7,28 +7,28 @@ var PREFIX = config.APP.NAMESPACE;
 var extractPhoneNumbers = (person_pk, store) => {
     var phone_numbers = store.find('phonenumber', {person_id: person_pk});
     return phone_numbers.map((phone_number) => {
-        var id = phone_number.get('id');
-        var number = phone_number.get('number');
-        var type = phone_number.get('type');
+        var id = phone_number.get('id'),
+            number = phone_number.get('number'),
+            type = phone_number.get('type');
         return {id: id, number: number, type: type};
     });
 };
 
-var extractAddresses = (addresses, store) => {
+var extractAddresses = (person_pk, store) => {
+    var addresses = store.find('address', {person_id: person_pk});
     return addresses.map((address) => {
-        var address_model = store.find('address', address),
-            type = address_model.get('type'),
-            addressLoc = address_model.get('address'),
-            city = address_model.get('city'),
-            state = address_model.get('state'),
-            postal_code = address_model.get('postal_code'),
-            country = address_model.get('country');
-        return {id: address, type:type, address: addressLoc, city: city, state: state, postal_code: postal_code, country: country};
+        var id = address.get('id'),
+            type = address.get('type'),
+            addressLoc = address.get('address'),
+            city = address.get('city'),
+            state = address.get('state'),
+            postal_code = address.get('postal_code'),
+            country = address.get('country');
+        return {id: id, type:type, address: addressLoc, city: city, state: state, postal_code: postal_code, country: country};
     });
 };
 
 var create_people_with_relationships = (response, store, id) => {
-    var address_ids = [];
     response.phone_numbers.forEach((phone_number) => {
         store.push('phone-number-type', phone_number.type);
         phone_number.type = phone_number.type.id;
@@ -42,19 +42,18 @@ var create_people_with_relationships = (response, store, id) => {
         address.type = address.type.id;
         address.person_id = id;
         store.push('address', address);
-        address_ids.push(address.id);
     });
-    response.addresses = address_ids;
     //discuss dirty attr for prop not included in the list
     //meaning ... if the user is dirty NOW what should do?
     delete response.phone_numbers;
+    delete response.addresses;
     var originalPerson = store.push('person', response);
     originalPerson.save();
 };
 
 var create_people_with_nested = (model, store) => {
     var phoneNumbers = extractPhoneNumbers(model.get('id'), store);
-    var addresses = extractAddresses(model.get('addresses'), store);
+    var addresses = extractAddresses(model.get('id'), store);
     return {data: {
         'id': model.get('id'),
         'username': model.get('username'),
