@@ -64,7 +64,7 @@ class PersonCreateSerializer(serializers.ModelSerializer):
         model = Person
         write_only_fields = ('password',)
         fields = (
-            'username', 'password', 'role',
+            'id', 'username', 'password', 'role',
         )
 
     def create(self, validated_data):
