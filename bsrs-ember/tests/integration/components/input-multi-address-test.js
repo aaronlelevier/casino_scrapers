@@ -5,7 +5,7 @@ import Person from 'bsrs-ember/models/person';
 import AddressType from 'bsrs-ember/models/address-type';
 import StateSingle from 'bsrs-ember/models/state'; // weird name because State is a reserved word
 import Country from 'bsrs-ember/models/country';
-import AddressDefaults from 'bsrs-ember/vendor/address-type';
+import AddressDefaults from 'bsrs-ember/vendor/defaults/address-type';
 import Ember from 'ember';
 
 function createAddress(id) {

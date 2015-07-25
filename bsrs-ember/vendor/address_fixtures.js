@@ -58,7 +58,7 @@ if (typeof window === 'undefined') {
     var address_type_defaults = require('./address-type');
     module.exports = new BSRS_ADDRESS_FACTORY(address_type_defaults, country_list, state_list);
 } else {
-    define('bsrs-ember/vendor/address_fixtures', ['exports', 'bsrs-ember/vendor/address-type', 'bsrs-ember/vendor/country', 'bsrs-ember/vendor/state'], function (exports, address_type_defaults, country_list, state_list) {
+    define('bsrs-ember/vendor/address_fixtures', ['exports', 'bsrs-ember/vendor/defaults/address-type', 'bsrs-ember/vendor/defaults/country', 'bsrs-ember/vendor/defaults/state'], function (exports, address_type_defaults, country_list, state_list) {
         'use strict';
         return new BSRS_ADDRESS_FACTORY(address_type_defaults, country_list, state_list);
     });

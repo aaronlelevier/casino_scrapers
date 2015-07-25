@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import Address from 'bsrs-ember/models/address';
-import AddressDefaults from 'bsrs-ember/vendor/address-type';
+import AddressDefaults from 'bsrs-ember/vendor/defaults/address-type';
 
 export default Ember.Component.extend({
   tagName: 'div',

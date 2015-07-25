@@ -5,7 +5,7 @@ import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import Person from 'bsrs-ember/models/person';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
-import PhoneNumberDefaults from 'bsrs-ember/vendor/phone-number-type';
+import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 import PEOPLE_FACTORY from 'bsrs-ember/vendor/people_fixtures';
 
 moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {

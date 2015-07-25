@@ -8,7 +8,7 @@ var phone_number_type_defaults = {officeType: OFFICE_PHONE_TYPE, officeName: OFF
 if (typeof window === 'undefined') {
     module.exports = phone_number_type_defaults;
 } else {
-    define('bsrs-ember/vendor/phone-number-type', ['exports'], function (exports) {
+    define('bsrs-ember/vendor/defaults/phone-number-type', ['exports'], function (exports) {
         'use strict';
         return phone_number_type_defaults;
     });

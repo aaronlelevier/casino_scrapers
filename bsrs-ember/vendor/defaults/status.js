@@ -12,7 +12,7 @@ var status_list = {activeId: ACTIVE_ID, activeName: ACTIVE_NAME, inactiveId: INA
 if (typeof window === 'undefined') {
     module.exports = status_list
 } else {
-    define('bsrs-ember/vendor/status', ['exports'], function (exports) {
+    define('bsrs-ember/vendor/defaults/status', ['exports'], function (exports) {
         'use strict';
         return status_list;
     });

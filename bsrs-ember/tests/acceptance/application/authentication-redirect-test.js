@@ -31,7 +31,7 @@ module('Acceptance | application redirect test', {
     }
 });
 
-test('sco 403 response code will redirect to login page', (assert) => {
+test('403 response code will redirect to login page', (assert) => {
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(windowProxy.locationUrl, '/login');

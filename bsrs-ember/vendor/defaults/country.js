@@ -6,7 +6,7 @@ var country_defaults = {firstId: FIRST_ID_COUNTRY, firstName: FIRST_NAME_COUNTRY
 if (typeof window === 'undefined') {
     module.exports = country_defaults;
 } else {
-    define('bsrs-ember/vendor/country', ['exports'], function (exports) {
+    define('bsrs-ember/vendor/defaults/country', ['exports'], function (exports) {
         'use strict';
         return country_defaults;
     });

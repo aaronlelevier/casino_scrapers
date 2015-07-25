@@ -3,11 +3,11 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
-import StatusDefaults from 'bsrs-ember/vendor/status';
-import StateDefaults from 'bsrs-ember/vendor/state';
-import CountryDefaults from 'bsrs-ember/vendor/country';
-import AddressTypeDefaults from 'bsrs-ember/vendor/address-type';
-import PhoneNumberDefaults from 'bsrs-ember/vendor/phone-number-type';
+import StatusDefaults from 'bsrs-ember/vendor/defaults/status';
+import StateDefaults from 'bsrs-ember/vendor/defaults/state';
+import CountryDefaults from 'bsrs-ember/vendor/defaults/country';
+import AddressTypeDefaults from 'bsrs-ember/vendor/defaults/address-type';
+import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
 
 const HOME_URL = '/';

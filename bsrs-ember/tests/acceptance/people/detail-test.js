@@ -4,7 +4,7 @@ import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
-import StatusDefaults from 'bsrs-ember/vendor/status';
+import StatusDefaults from 'bsrs-ember/vendor/defaults/status';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PHONE_NUMBER_FIXTURES from 'bsrs-ember/vendor/phone_number_fixtures';
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';

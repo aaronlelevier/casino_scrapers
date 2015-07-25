@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
-import PhoneNumberDefaults from 'bsrs-ember/vendor/phone-number-type';
+import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 
 export default Ember.Component.extend({
     uuid: inject('uuid'),

@@ -8,7 +8,7 @@ var address_type_defaults = {officeType: OFFICE_ADDRESS_TYPE, officeName: OFFICE
 if (typeof window === 'undefined') {
     module.exports = address_type_defaults;
 } else {
-    define('bsrs-ember/vendor/address-type', ['exports'], function (exports) {
+    define('bsrs-ember/vendor/defaults/address-type', ['exports'], function (exports) {
         'use strict';
         return address_type_defaults;
     });
