@@ -94,21 +94,19 @@ CREATE DATABASE ci OWNER bsdev;
 \q
 ```
 
-#### Postgres miscellaneous Commands
+#### Misc. Commands Using `psql`
 
-How to drop role and database
+How to drop database and role.  (Must drop database first if owned by the role)
 
 ```
-psql
 DROP DATABASE ci;
 DROP ROLE bsdev;
-\q
 ```
 
-List of Postgres Roles (from w/i psql)
+List of Postgres Roles
 
 `\du`
 
-List of Postgres Databases (from w/i psql)
+List of Postgres Databases
 
-'\l'
+`\l`
