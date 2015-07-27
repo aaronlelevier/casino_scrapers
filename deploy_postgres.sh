@@ -104,6 +104,7 @@ function startUwsgi {
     uwsgi --http :$UWSGI_PORT --wsgi-file bigsky_postgres.wsgi --virtualenv /www/django/releases/$NEW_UUID/bsrs-django/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --static-map /fonts=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
     UWSGI=$(ps aux | grep $UWSGI_PORT)
     echo $UWSGI
+    lsof -i :8000
     RESULT=$?
     if [ "$RESULT" == 1 ]; then
       echo "uWSGI failed"
