@@ -19,6 +19,24 @@ var BSRS_PEOPLE_FACTORY = (function() {
             }
         }
     };
+    var GeneratePerson = function (i) {
+        this.id = i;
+        this.username = 'akrier';
+        this.first_name = 'Andy';
+        this.middle_initial ='M';
+        this.last_name = 'Krier';
+        this.title = 'RVP';
+        this.emp_number = '5063';
+        this.auth_amount = '50000.0000';
+        this.status = {
+            'id': 1,
+            'name': 'admin.person.status.active'
+        };
+        this.role = {
+            'id': 2,
+            'name': 'admin.role.system_administrator',
+        };
+    }
     var factory = function(address_fixtures, phone_number_fixtures) {
         this.address_fixtures = address_fixtures;
         this.phone_number_fixtures = phone_number_fixtures;
@@ -26,7 +44,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
     factory.prototype.list = function() {
         var response = [];
         for (var i=1; i <= 5; i++) {
-            response.push(generatePerson(i));
+            response.push(new GeneratePerson(i));
         }
         return {'count':3,'next':null,'previous':null,'results': response};
     };
@@ -34,7 +52,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         return {'count':3,'next':null,'previous':null,'results': []};
     };
     factory.prototype.detail = function(i) {
-        var person = generatePerson(i);
+        var person = new GeneratePerson(i);
         person.acceptassign = false;
         person.phone_numbers = this.phone_number_fixtures.get();
         person.addresses = this.address_fixtures.get();
@@ -50,7 +68,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         response.acceptassign= false;
         response.emails= [];
         for(var key in person) {
-           response[key] = person[key];
+            response[key] = person[key];
         }
         return response;
     };
