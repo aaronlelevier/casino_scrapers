@@ -1,3 +1,5 @@
+import random
+
 from django.db import IntegrityError
 from django.contrib.auth.models import ContentType, Group, Permission
 
@@ -35,3 +37,10 @@ def _create_model_view_permissions():
                     Permission.objects.create(name=name, codename=codename, content_type=ct)
                 except IntegrityError:
                     pass
+
+
+def _generate_ph():
+    n = ''
+    for i in range(10):
+        n += str(random.randrange(0,10))
+    return n

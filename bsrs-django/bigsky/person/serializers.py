@@ -79,6 +79,23 @@ PERSON_FIELDS = (
     )
 
 
+class PersonNestedCreateSerializer(serializers.ModelSerializer):
+
+    phone_numbers = PhoneNumberShortFKSerializer(many=True)
+
+    class Meta:
+        model = Person
+        write_only_fields = ('password',)
+        fields = PERSON_FIELDS  + ('password', 'phone_numbers',)
+
+    def create(self, validated_data):
+        phone_numbers = validated_data.pop('phone_numbers', [])
+        person = Person.objects.create_user(**validated_data)
+        for ph in phone_numbers:
+            PhoneNumber.objects.create(person=person, **ph)
+        return person
+
+
 class PersonListSerializer(serializers.ModelSerializer):
 
     role = RoleSerializer(read_only=True)
@@ -101,8 +118,8 @@ class PersonDetailSerializer(PersonListSerializer):
 
 class PersonUpdateSerializer(serializers.ModelSerializer):
 
-    # phone_numbers = PhoneNumberShortFKSerializer(many=True, read_only=True)
-    # addresses = AddressShortFKSerializer(many=True, read_only=True)
+    # phone_numbers = PhoneNumberShortFKSerializer(many=True)
+    # addresses = AddressShortFKSerializer(many=True)
 
     class Meta:
         model = Person

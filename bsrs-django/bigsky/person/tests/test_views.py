@@ -9,11 +9,12 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
-from contact.models import Address, PhoneNumber, Email
+from contact.models import Address, PhoneNumber, Email, PhoneNumberType
 from location.models import Location
 from person.models import Person, Role, PersonStatus
 from person.tests.factory import PASSWORD, create_person
 from person.serializers import PersonUpdateSerializer
+from util import create
 
 
 class PersonCreateTests(APITransactionTestCase):
@@ -23,29 +24,47 @@ class PersonCreateTests(APITransactionTestCase):
         self.password = PASSWORD
         self.person = create_person()
         self.client.login(username=self.person.username, password=self.password)
-        
+
+        self.ph_num_type = mommy.make(PhoneNumberType)
+
         # update for mock data
         self.data = {
             "username":"one",
             "password":"one",
-            "role" : self.person.role.pk
-            }
+            "first_name":"foo",
+            "last_name":"bar",
+            "role": self.person.role.pk,
+            "status":"",
+            "location":"",
+            "phone_numbers":[
+                {
+                "type": self.ph_num_type.pk,
+                "location": "",
+                "person": "",
+                "number": create._generate_ph()
+                }
+            ],
+        }
 
     def tearDown(self):
         self.client.logout()
 
     def test_create(self):
-        self.assertEqual(len(Person.objects.all()), 1)
+        self.assertEqual(PhoneNumber.objects.count(), 0)
+        self.assertEqual(Person.objects.count(), 1)
         # simulate posting a Json Dict to create a new Person
         response = self.client.post('/api/admin/people/', self.data, format='json')
+        print response
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(len(Person.objects.all()), 2)
+        self.assertEqual(Person.objects.count(), 2)
+        self.assertEqual(PhoneNumber.objects.count(), 1)
 
     def test_create_login_with_new_user(self):
         # Original User is logged In
         self.assertEqual(int(self.client.session['_auth_user_id']), self.person.pk)
         # Create
         response = self.client.post('/api/admin/people/', self.data, format='json')
+        # Confirm all Users Logged out
         self.client.logout()
         with self.assertRaises(KeyError):
             self.client.session['_auth_user_id']

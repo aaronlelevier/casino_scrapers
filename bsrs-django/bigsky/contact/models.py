@@ -22,13 +22,13 @@ class ContactBaseModel(BaseModel):
     class Meta:
         abstract = True
 
-    def save(self, *args, **kwargs):
-        self._valid_person_or_location()
-        return super(ContactBaseModel, self).save(*args, **kwargs)
+    # def save(self, *args, **kwargs):
+    #     self._valid_person_or_location()
+    #     return super(ContactBaseModel, self).save(*args, **kwargs)
 
-    def _valid_person_or_location(self):
-        if not (self.person or self.location):
-            raise excp.PersonOrLocationRequired("Must have either a Person or Location FK.")
+    # def _valid_person_or_location(self):
+    #     if not (self.person or self.location):
+    #         raise excp.PersonOrLocationRequired("Must have either a Person or Location FK.")
 
 
 class PhoneNumberType(AbstractNameOrder):

@@ -14,7 +14,7 @@ from rest_framework.decorators import detail_route
 
 from person.serializers import (PersonStatusSerializer, PersonDetailSerializer,
     PersonListSerializer, PersonCreateSerializer, PersonUpdateSerializer,
-    PersonDetailSerializer, RoleSerializer
+    PersonDetailSerializer, RoleSerializer, PersonNestedCreateSerializer
     )
 from person.models import Person, PersonStatus, Role
 from util.permissions import BSModelPermissions
@@ -49,7 +49,7 @@ class PersonViewSet(BaseModelViewSet):
         elif self.action == ('update' or 'partial_update'):
             return PersonUpdateSerializer
         elif self.action == 'create':
-            return PersonCreateSerializer
+            return PersonNestedCreateSerializer
         else:
             return PersonListSerializer
 
