@@ -5,7 +5,6 @@
 .idea
 .DS_Store
 .coverage
-/static/*
 /dist/assets/
 htmlcov/
 /__pycache__
@@ -35,7 +34,6 @@ coverage/
 
 # ci script
 bsrs-django/venv/
-bsrs-django/bigsky/assets/
 bsrs-django/bigsky/templates/index.html
 
 .ctags

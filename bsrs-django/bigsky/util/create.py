@@ -40,7 +40,4 @@ def _create_model_view_permissions():
 
 
 def _generate_ph():
-    n = ''
-    for i in range(10):
-        n += str(random.randrange(0,10))
-    return n
+    return ''.join([str(random.randrange(0,10)) for x in range(10)])

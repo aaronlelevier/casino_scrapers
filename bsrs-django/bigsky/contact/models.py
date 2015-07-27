@@ -12,15 +12,19 @@ from util.models import AbstractNameOrder, BaseModel
 from util import exceptions as excp
 
 
-class ContactBaseModel(BaseModel):
-    '''
-    `Person` and/or `Location` FK must be defined on all classes 
-    this model because the contact obj must belong to something.
-    '''
-    pass
 
-    class Meta:
-        abstract = True
+# NOTE: Can't do a nested save and enforce that a Person or Location 
+#   exist for the address, if the Person isn't created yet!
+
+# class ContactBaseModel(BaseModel):
+#     '''
+#     `Person` and/or `Location` FK must be defined on all classes 
+#     this model because the contact obj must belong to something.
+#     '''
+#     pass
+
+#     class Meta:
+#         abstract = True
 
     # def save(self, *args, **kwargs):
     #     self._valid_person_or_location()
@@ -39,7 +43,7 @@ class PhoneNumberType(AbstractNameOrder):
 
 
 @python_2_unicode_compatible
-class PhoneNumber(ContactBaseModel):
+class PhoneNumber(BaseModel):
     '''
     TODO: Will use this "phone number lib" for validation:
 
@@ -64,7 +68,7 @@ class AddressType(AbstractNameOrder):
 
 
 @python_2_unicode_compatible
-class Address(ContactBaseModel):
+class Address(BaseModel):
     '''
     Not every field is required to be a valid address, but at 
     least one "non-foreign-key" field must be populated.
@@ -98,7 +102,7 @@ class EmailType(AbstractNameOrder):
 
 
 @python_2_unicode_compatible
-class Email(ContactBaseModel):
+class Email(BaseModel):
     # keys
     type = models.ForeignKey(EmailType)
     location = models.ForeignKey(Location, related_name='emails', null=True, blank=True)

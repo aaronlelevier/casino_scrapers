@@ -39,15 +39,20 @@ function buildEmber {
 
 function buildVirtualenv {
     echo "CREATE VIRTUALENV AND PIP DEPENDENCIES"
-    easy_install -U pip
+    DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+    echo $DIR
     rm -rf venv
     virtualenv venv
-    venv/bin/pip install -r bsrs-django/requirements.txt
+    venv/bin/pip install -r requirements.txt
     RESULT=$?
     if [ "$RESULT" == 1 ]; then
       echo "uWSGI failed"
       exit $RESULT
     fi
+    echo "CURRENT FILES:"
+    ls -a
+    echo "PIP FREEZE:"
+    pip freeze
 }
 
 function dropCreateDB {
@@ -68,10 +73,10 @@ function dropCreateDB {
 function runMigrations {
     echo "RUN DATABASE MIGRATIONS"
     export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
-    ../../venv/bin/python manage.py collectstatic --noinput
-    ../../venv/bin/python manage.py makemigrations
-    ../../venv/bin/python manage.py migrate
-    ../../venv/bin/python manage.py loaddata fixtures/postgres.json
+    ../venv/bin/python manage.py collectstatic --noinput
+    ../venv/bin/python manage.py makemigrations
+    ../venv/bin/python manage.py migrate
+    ../venv/bin/python manage.py loaddata fixtures/postgres.json
     RESULT=$?
     if [ "$RESULT" == 1 ]; then
       echo "uWSGI failed"
@@ -102,22 +107,24 @@ function startUwsgi {
     fi
 }
 
+
 cd /www/django/releases
 gitClone
 
-cd $NEW_UUID/bsrs-ember/
+cd $NEW_UUID/
+cd bsrs-ember/
 npmInstall
 
 stopUwsgi
 
 buildEmber
-cd ../
 
+cd ../bsrs-django
 buildVirtualenv
-cd bsrs-django/bigsky
 
 dropCreateDB
 
+cd bigsky/
 runMigrations
 
 copyStatic
