@@ -3,7 +3,7 @@
 echo "DEPLOY STARTED!"
 
 echo "GLOBAL VARIABLES"
-UWSGI_PORT=$((8002))
+UWSGI_PORT=$((8000))
 echo "UWSGI_PORT: $UWSGI_PORT"
 NEW_UUID=$(( ( RANDOM  )  + 1 ))
 echo "NEW_UUID: $NEW_UUID"
@@ -101,7 +101,7 @@ function copyStatic {
 }
 
 function startUwsgi {
-    uwsgi --http :$UWSGI_PORT --wsgi-file bigsky_postgres.wsgi --virtualenv /www/django/releases/$NEW_UUID/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --static-map /fonts=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
+    uwsgi --http :$UWSGI_PORT --wsgi-file bigsky_postgres.wsgi --virtualenv /www/django/releases/$NEW_UUID/bsrs-django/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --static-map /fonts=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
     UWSGI=$(ps aux | grep $UWSGI_PORT)
     echo $UWSGI
     RESULT=$?
