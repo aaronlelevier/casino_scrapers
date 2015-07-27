@@ -2,8 +2,13 @@
 
 echo "DEPLOY STARTED!"
 
+echo "GLOBAL VARIABLES"
+UWSGI_PORT=$((8002))
+echo "UWSGI_PORT: $UWSGI_PORT"
+NEW_UUID=$(( ( RANDOM  )  + 1 ))
+echo "NEW_UUID: $NEW_UUID"
+
 function gitClone {
-    NEW_UUID=$(( ( RANDOM  )  + 1 ))
     git clone git@github.com:bigskytech/bsrs.git $NEW_UUID
     RESULT=$?
     if [ "$RESULT" == 1 ]; then
@@ -22,9 +27,8 @@ function npmInstall {
 }
 
 function stopUwsgi {
-    UWSGI_PORT=$((8002))
     echo "KILL UWSGI PROCESSES ON PORT $UWSGI_PORT"
-    fuser -k -n tcp $UWSGI_PORT
+    killall -s INT uwsgi
 }
 
 function buildEmber {
@@ -133,4 +137,3 @@ startUwsgi
 
 echo "DEPLOY FINISHED!"
 exit 0
-

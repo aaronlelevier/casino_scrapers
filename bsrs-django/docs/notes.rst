@@ -29,3 +29,13 @@ Stack overflow answer on `advantages <http://stackoverflow.com/a/45479/1913888>`
 `Probability <https://en.wikipedia.org/wiki/Universally_unique_identifier#Random%5FUUID%5Fprobability%5Fof%5Fduplicates>`_ of UUID duplicates.
 
 Auto-generate for UUID's for `Django <https://docs.djangoproject.com/en/1.8/ref/models/fields/#django.db.models.UUIDField>`_
+
+
+uWSGI
+-----
+.. code-block::
+    # kill all
+    killall -s INT uwsgi
+
+    # kill by port #
+    fuser -k -n tcp $UWSGI_PORT
