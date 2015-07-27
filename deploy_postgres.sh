@@ -52,7 +52,7 @@ function buildVirtualenv {
     echo "CURRENT FILES:"
     ls -a
     echo "PIP FREEZE:"
-    pip freeze
+    venv/bin/pip freeze
 }
 
 function dropCreateDB {
