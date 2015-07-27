@@ -22,6 +22,7 @@ function emberTest {
 }
 
 function pipInstall {
+    easy_install -U pip
     rm -rf venv
     virtualenv venv
     source venv/bin/activate

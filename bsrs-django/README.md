@@ -83,3 +83,32 @@ rm -rf */migrations
 ./manage.py migrate
 ```
 
+#### CI Postgres Database Setup
+
+Login to `psql` then run commands
+
+```
+psql
+CREATE ROLE bsdev WITH PASSWORD 'tango' CREATEDB SUPERUSER LOGIN;
+CREATE DATABASE ci OWNER bsdev;
+\q
+```
+
+#### Postgres miscellaneous Commands
+
+How to drop role and database
+
+```
+psql
+DROP DATABASE ci;
+DROP ROLE bsdev;
+\q
+```
+
+List of Postgres Roles (from w/i psql)
+
+`\du`
+
+List of Postgres Databases (from w/i psql)
+
+'\l'
