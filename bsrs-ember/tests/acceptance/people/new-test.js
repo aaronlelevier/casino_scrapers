@@ -5,6 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 import config from 'bsrs-ember/config/environment';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -41,8 +42,8 @@ module('Acceptance | people-new', {
 });
 
 test('visiting /people/new', (assert) => {
-    payload.phone_numbers = [{cid: 'abc123', number: '999-999-9999', type: 1}];
-    var response = Ember.$.extend(true, {id: 1}, payload);
+    payload.phone_numbers = [{cid: 'abc123', number: '999-999-9999', type: PhoneNumberDefaults.officeType}];
+    var response = Ember.$.extend(true, {id: PEOPLE_DEFAULTS.id}, payload);
     response.phone_numbers[0].cid = 'abc123';
     response.phone_numbers[0].id = 'def456';
     var url = PREFIX + PEOPLE_URL + '/';
@@ -52,7 +53,7 @@ test('visiting /people/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.equal(store.find('person').length, 1);
-        //assert.equal(store.find('phonenumber').length, 0);
+        assert.equal(store.find('phonenumber').length, 0);
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
@@ -67,24 +68,28 @@ test('visiting /people/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(store.find('person').length, 1);
-        assert.equal(store.findOne('person').get('id'), 1);
-        assert.equal(store.findOne('person').get('username'), PEOPLE_DEFAULTS.username);
-        assert.equal(store.findOne('person').get('password'), PEOPLE_DEFAULTS.password);
-        assert.equal(store.findOne('person').get('email'), PEOPLE_DEFAULTS.email);
-        assert.equal(store.findOne('person').get('role'), PEOPLE_DEFAULTS.role);
-        assert.equal(store.findOne('person').get('first_name'), PEOPLE_DEFAULTS.first_name);
-        assert.equal(store.findOne('person').get('middle_initial'), PEOPLE_DEFAULTS.middle_initial);
-        assert.equal(store.findOne('person').get('last_name'), PEOPLE_DEFAULTS.last_name);
-        //assert.equal(store.find('phonenumber').length, 1); ?why is the store not updated
-        assert.equal(store.findOne('person').get('phone_numbers').get('content.length'), 1);
-        assert.equal(store.findOne('person').get('phone_numbers').objectAt(0).get('number'), '999-999-9999');
-        assert.equal(store.findOne('person').get('phone_numbers').objectAt(0).get('id'), 'def456');
-        assert.equal(store.findOne('person').get('phone_numbers').objectAt(0).get('type'), 1);
-        assert.ok(store.findOne('person').get('isNotDirty'));
-        assert.ok(store.findOne('person').get('phoneNumbersIsNotDirty'));
-        // assert.equal(store.findOne('person').get('addresses'), PEOPLE_DEFAULTS.addresses);
-        // assert.equal(store.findOne('person').get('status'), PEOPLE_DEFAULTS.status);
-        // assert.equal(store.findOne('person').get('location'), PEOPLE_DEFAULTS.location);
+        var person = store.find('person').objectAt(0);
+        assert.equal(person.get('id'), PEOPLE_DEFAULTS.id);
+        assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
+        assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
+        assert.equal(person.get('email'), PEOPLE_DEFAULTS.email);
+        assert.equal(person.get('role'), PEOPLE_DEFAULTS.role);
+        assert.equal(person.get('first_name'), PEOPLE_DEFAULTS.first_name);
+        assert.equal(person.get('middle_initial'), PEOPLE_DEFAULTS.middle_initial);
+        assert.equal(person.get('last_name'), PEOPLE_DEFAULTS.last_name);
+        assert.equal(store.find('phonenumber').length, 1);
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('phoneNumbersIsNotDirty'));
+        var phonenumber = person.get('phone_numbers').objectAt(0);
+        assert.equal(phonenumber.get('number'), '999-999-9999');
+        assert.equal(phonenumber.get('id'), 'def456');
+        assert.equal(phonenumber.get('type'), PhoneNumberDefaults.officeType);
+        assert.equal(phonenumber.get('person_id'), PEOPLE_DEFAULTS.id);
+        var phonenumber_from_store = store.find('phonenumber').objectAt(0);
+        assert.equal(phonenumber_from_store.get('number'), '999-999-9999');
+        assert.equal(phonenumber_from_store.get('id'), 'def456');
+        assert.equal(phonenumber_from_store.get('type'), PhoneNumberDefaults.officeType);
+        assert.equal(phonenumber_from_store.get('person_id'), PEOPLE_DEFAULTS.id);
     });
 });
 

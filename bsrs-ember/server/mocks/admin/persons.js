@@ -1,3 +1,7 @@
+function randomInt (low, high) {
+    return Math.floor(Math.random() * (high - low) + low);
+}
+
 var PEOPLE_FIXTURES = require('../../../vendor/people_fixtures.js');
 
 module.exports = function(app) {
@@ -9,7 +13,13 @@ module.exports = function(app) {
   });
 
   adminPersonsRouter.post('/', function(req, res) {
-    res.status(201).end();
+    var actualPayload = req.body;
+    actualPayload.phone_numbers.forEach(function(phone_number) {
+        phone_number.id = randomInt(0, 99999);
+    });
+    actualPayload.id = randomInt(0, 99999);
+    res.status(201);
+    res.send(actualPayload);
   });
 
   adminPersonsRouter.get('/:id', function(req, res) {
