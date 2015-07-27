@@ -4,7 +4,7 @@ import inject from 'bsrs-ember/utilities/store';
 export default Model.extend({
     store: inject('main'),
     username: attr(''),
-    phone_numbers: Ember.computed(function() {
+    phone_numbers: Ember.computed('id', function() {
         var store = this.get('store');
         return store.find('phonenumber', {person_id: this.get('id')});
     }),

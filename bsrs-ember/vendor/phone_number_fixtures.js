@@ -44,7 +44,7 @@ var BSRS_PHONE_NUMBER_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    var phone_number_type_defaults = require('./phone-number-type');
+    var phone_number_type_defaults = require('./defaults/phone-number-type');
     module.exports = new BSRS_PHONE_NUMBER_FACTORY(phone_number_type_defaults);
 } else {
     define('bsrs-ember/vendor/phone_number_fixtures', ['exports', 'bsrs-ember/vendor/defaults/phone-number-type'], function (exports, phone_number_type_defaults) {

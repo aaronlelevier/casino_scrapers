@@ -8,7 +8,7 @@ export default Ember.Route.extend({
         var phone_number_type_repo = this.get('phone_number_type_repo');
         var phone_number_types = phone_number_type_repo.find();
         return Ember.RSVP.hash({
-            model: this.get('store').push('person', {}),
+            model: this.get('store').push('person', {id: "xxyyzz"}), //random uuid
             phone_number_types: phone_number_types
         });
     },
