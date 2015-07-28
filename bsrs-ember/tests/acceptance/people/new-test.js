@@ -94,7 +94,7 @@ test('visiting /people/new', (assert) => {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-    var response = Ember.$.extend(true, {id: 1}, payload);
+    var response = Ember.$.extend(true, {id: PEOPLE_DEFAULTS.id}, payload);
     var url = PREFIX + PEOPLE_URL + '/';
     xhr( url,'POST',payload,{},201,response );
     visit(PEOPLE_URL);

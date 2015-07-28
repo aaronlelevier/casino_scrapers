@@ -25,6 +25,7 @@ app.import('vendor/role_fixtures.js');
 app.import('vendor/address_fixtures.js');
 app.import('vendor/phone_number_fixtures.js');
 app.import('vendor/defaults/address-type.js');
+app.import('vendor/defaults/phone-number.js');
 app.import('vendor/defaults/phone-number-type.js');
 app.import('vendor/defaults/country.js');
 app.import('vendor/defaults/state.js');

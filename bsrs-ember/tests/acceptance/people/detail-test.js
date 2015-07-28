@@ -6,7 +6,10 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
 import StatusDefaults from 'bsrs-ember/vendor/defaults/status';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
+import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PHONE_NUMBER_FIXTURES from 'bsrs-ember/vendor/phone_number_fixtures';
+import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
+import PHONE_NUMBER_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
@@ -55,19 +58,19 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
         //TODO: verify ALL the other dynamic bits
         assert.equal(currentURL(),DETAIL_URL);
-        assert.equal(find('.t-person-username').val(), 'akrier');
-        assert.equal(find('.t-person-first-name').val(), 'Andy');
-        assert.equal(find('.t-person-middle-initial').val(), 'M');
-        assert.equal(find('.t-person-last-name').val(), 'Krier');
-        assert.equal(find('.t-person-title').val(), 'RVP');
-        assert.equal(find('.t-person-emp_number').val(), '5063');
-        assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), '1');
-        assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), '2');
+        assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-person-first-name').val(), PEOPLE_DEFAULTS.first_name);
+        assert.equal(find('.t-person-middle-initial').val(), PEOPLE_DEFAULTS.middle_initial);
+        assert.equal(find('.t-person-last-name').val(), PEOPLE_DEFAULTS.last_name);
+        assert.equal(find('.t-person-title').val(), PEOPLE_DEFAULTS.title);
+        assert.equal(find('.t-person-emp_number').val(), PEOPLE_DEFAULTS.emp_number);
+        assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), PHONE_NUMBER_TYPES_DEFAULTS.officeType);
+        assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), PHONE_NUMBER_TYPES_DEFAULTS.mobileType);
         assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), 'Office');
         assert.equal(find('.t-input-multi-phone').find('select:eq(1) option:selected').text(), 'Mobile');
         assert.equal(find('.t-input-multi-phone').find('input').length, 2);
-        assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), '858-715-5026');
-        assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), '858-715-5056');
+        assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), PHONE_NUMBER_DEFAULTS.numberOne);
+        assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PHONE_NUMBER_DEFAULTS.numberTwo);
 
         assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), '1');
@@ -90,7 +93,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), StatusDefaults.inactiveName);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), StatusDefaults.expiredName);
 
-        assert.equal(find('.t-person-auth_amount').val(), '50000.00');
+        assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
     });
 
     var url = PREFIX + DETAIL_URL + '/';
@@ -133,19 +136,14 @@ test('when editing username to invalid, it checks for validation', (assert) => {
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
     visit(PEOPLE_URL);
-
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
     });
-
     click('.t-person-data:eq(0)');
-
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
     });
-
     click('.t-cancel-btn');
-
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
@@ -215,14 +213,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), PEOPLE_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PERSON_PK);
-            assert.equal(person.get('username'), 'akrier');
+            assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         });
     });
 });
 
 test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-multi-phone-type:eq(0)', 2);
+    fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileType);
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {
@@ -237,7 +235,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PERSON_PK);
             var phone_numbers = store.find('phonenumber', PERSON_PK);
-            assert.equal(phone_numbers.source[0].get('type'), 1);
+            assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeType);
         });
     });
 });
@@ -246,6 +244,6 @@ test('currency helper displays correct currency format', (assert) => {
     visit(DETAIL_URL);
     var symbol = '$';
     andThen(() => {
-        assert.equal(find('.t-person-auth_amount').val(), `50000.00`);
+        assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
     });
 });
