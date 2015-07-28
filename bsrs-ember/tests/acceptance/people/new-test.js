@@ -22,15 +22,15 @@ module('Acceptance | people-new', {
             id: UUID.value,
             username: PEOPLE_DEFAULTS.username,
             password: PEOPLE_DEFAULTS.password,
-            email: PEOPLE_DEFAULTS.email,
-            role: PEOPLE_DEFAULTS.role,
             first_name: PEOPLE_DEFAULTS.first_name,
             middle_initial: PEOPLE_DEFAULTS.middle_initial,
             last_name: PEOPLE_DEFAULTS.last_name,
-            phone_numbers: PEOPLE_DEFAULTS.phone_numbers,
-            addresses: PEOPLE_DEFAULTS.addresses,
+            email: PEOPLE_DEFAULTS.email,
+            role: PEOPLE_DEFAULTS.role,
+            status: PEOPLE_DEFAULTS.status,
             location: PEOPLE_DEFAULTS.location,
-            status: PEOPLE_DEFAULTS.status
+            phone_numbers: PEOPLE_DEFAULTS.phone_numbers,
+            addresses: PEOPLE_DEFAULTS.addresses
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -47,7 +47,7 @@ test('visiting /people/new', (assert) => {
     payload.phone_numbers = [{id: UUID.value, number: '999-999-9999', type: PhoneNumberDefaults.officeType}];
     var url = PREFIX + PEOPLE_URL + '/';
     var response = Ember.$.extend(true, {}, payload);
-    xhr( url,'POST',payload,{},201,response );
+    xhr( url,'POST',JSON.stringify(payload),{},201,response );
     visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {
@@ -96,7 +96,7 @@ test('visiting /people/new', (assert) => {
 test('validation works and when hit save, we do same post', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     var url = PREFIX + PEOPLE_URL + '/';
-    xhr( url,'POST',payload,{},201,response );
+    xhr( url,'POST',JSON.stringify(payload),{},201,response );
     visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {

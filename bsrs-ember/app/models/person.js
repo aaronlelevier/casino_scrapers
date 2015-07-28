@@ -42,7 +42,7 @@ export default Model.extend({
         // var addresses = this.get('addresses').map(function(address) {
         //     return address.serialize();
         // });
-        return {
+        return JSON.stringify({
             'id':this.get('id'),
             'username':this.get('username'),
             'password':this.get('password'),
@@ -55,6 +55,6 @@ export default Model.extend({
             'location':'',
             'phone_numbers': phone_numbers,
             'addresses': []
-        };
+        });
     }
 });

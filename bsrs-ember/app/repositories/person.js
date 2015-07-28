@@ -54,7 +54,7 @@ var create_people_with_relationships = (response, store, id) => {
 var create_people_with_nested = (model, store) => {
     var phoneNumbers = extractPhoneNumbers(model.get('id'), store);
     var addresses = extractAddresses(model.get('id'), store);
-    return {data: {
+    return {data: JSON.stringify({
         'id': model.get('id'),
         'username': model.get('username'),
         'first_name': model.get('first_name'),
@@ -69,7 +69,7 @@ var create_people_with_nested = (model, store) => {
         'addresses': addresses,
         'acceptassign': model.get('acceptassign'),
         'emails': model.get('emails')
-    }};
+    })};
 };
 
 export default Ember.Object.extend({

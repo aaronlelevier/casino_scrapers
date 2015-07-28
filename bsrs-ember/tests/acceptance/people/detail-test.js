@@ -101,7 +101,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title, emp_number: PEOPLE_DEFAULTS_PUT.emp_number, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
-    xhr( url,'PUT',payload,{},200,response );
+    xhr( url,'PUT',JSON.stringify(payload),{},200,response );
 
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.first_name);
@@ -129,7 +129,7 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     var url = PREFIX + DETAIL_URL + "/";
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username});
-    xhr( url,'PUT',payload,{},200,response );
+    xhr( url,'PUT',JSON.stringify(payload),{},200,response );
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -157,8 +157,7 @@ test('when you change a related phone numbers type it will be persisted correctl
     var phone_numbers = PHONE_NUMBER_FIXTURES.put({id: PHONE_NUMBER_DEFAULTS.idPut, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileType});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
     fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileType);
-
-    xhr(url,'PUT',payload,{},200);
+    xhr(url,'PUT',JSON.stringify(payload),{},200);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
@@ -170,7 +169,7 @@ test('when you change a related address type it will be persisted correctly', (a
     var url = PREFIX + DETAIL_URL + "/";
     var addresses = ADDRESS_FIXTURES.put({id: ADDRESS_DEFAULTS.id, type: ADDRESS_TYPES_DEFAULTS.shippingType});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
-    xhr(url,'PUT',payload,{},200);
+    xhr(url,'PUT',JSON.stringify(payload),{},200);
     fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingType);
     click(SAVE_BTN);
     andThen(() => {
