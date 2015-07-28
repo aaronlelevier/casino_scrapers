@@ -73,13 +73,6 @@ var create_people_with_nested = (model, store) => {
 };
 
 export default Ember.Object.extend({
-    save(model) {
-        if (typeof model.get('id') === 'number') {
-            return this.update(model);
-        } else {
-            return this.insert(model);
-        }
-    },
     insert(model) {
         return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', {data: model.serialize()}).then((response) => {
             var django_person_id = response.id;

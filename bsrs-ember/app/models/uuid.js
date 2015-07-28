@@ -1,9 +1,8 @@
 import Ember from 'ember';
+import random from 'bsrs-ember/models/random';
 
-var uuid = Ember.Object.extend({
+export default Ember.Object.extend({
     v4: function() {
-        return Ember.uuid();
+        return random.uuid();
     }
 });
-
-export default uuid;

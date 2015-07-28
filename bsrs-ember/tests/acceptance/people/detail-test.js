@@ -13,24 +13,23 @@ import PHONE_NUMBER_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
-const PERSON_PK = 1; //TODO update to be a uuid
 const PREFIX = config.APP.NAMESPACE;
 const PEOPLE_URL = '/admin/people';
-const DETAIL_URL = PEOPLE_URL + '/' + PERSON_PK;
+const DETAIL_URL = PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('Acceptance | detail test', {
+module('toran Acceptance | detail test', {
   beforeEach() {
     application = startApp();
     store = application.__container__.lookup('store:main');
     var people_list_data = PEOPLE_FIXTURES.list();
-    var people_detail_data = PEOPLE_FIXTURES.detail(PERSON_PK);
+    var people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var endpoint = PREFIX + PEOPLE_URL + '/';
     xhr(endpoint ,'GET',null,{},200,people_list_data);
-    xhr(endpoint + PERSON_PK + '/','GET',null,{},200,people_detail_data);
+    xhr(endpoint + PEOPLE_DEFAULTS.id + '/','GET',null,{},200,people_detail_data);
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -97,8 +96,8 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     });
 
     var url = PREFIX + DETAIL_URL + '/';
-    var response = PEOPLE_FIXTURES.detail(PERSON_PK);
-    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, username: 'llcoolj', first_name: 'Ice', middle_initial: 'F\'in', last_name: 'Cube', title: 'mastermind', emp_number: '1122', auth_amount: '0.000'});
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: 'llcoolj', first_name: 'Ice', middle_initial: 'F\'in', last_name: 'Cube', title: 'mastermind', emp_number: '1122', auth_amount: '0.000'});
     xhr( url,'PUT',payload,{},200,response );
 
     fillIn('.t-person-username', 'llcoolj');
@@ -125,8 +124,8 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     });
     fillIn('.t-person-username', 'llcoolj');
     var url = PREFIX + DETAIL_URL + "/";
-    var response = PEOPLE_FIXTURES.detail(PERSON_PK);
-    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, username: 'llcoolj'});
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: 'llcoolj'});
     xhr( url,'PUT',payload,{},200,response );
     click(SAVE_BTN);
     andThen(() => {
@@ -153,7 +152,7 @@ test('when you change a related phone numbers type it will be persisted correctl
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
     var phone_numbers = PHONE_NUMBER_FIXTURES.put({id: 3, type: 2});
-    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, phone_numbers: phone_numbers});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
     fillIn('.t-multi-phone-type:eq(0)', 2);
 
     xhr(url,'PUT',payload,{},200);
@@ -167,7 +166,7 @@ test('when you change a related address type it will be persisted correctly', (a
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
     var addresses = ADDRESS_FIXTURES.put({id: 1, type: 2});
-    var payload = PEOPLE_FIXTURES.put({id: PERSON_PK, addresses: addresses});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(url,'PUT',payload,{},200);
     fillIn('.t-address-type:eq(0)', 2);
     click(SAVE_BTN);
@@ -212,7 +211,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
-            var person = store.find('person', PERSON_PK);
+            var person = store.find('person', PEOPLE_DEFAULTS.id);
             assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         });
     });
@@ -233,8 +232,8 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
-            var person = store.find('person', PERSON_PK);
-            var phone_numbers = store.find('phonenumber', PERSON_PK);
+            var person = store.find('person', PEOPLE_DEFAULTS.id);
+            var phone_numbers = store.find('phonenumber', PEOPLE_DEFAULTS.id);
             assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeType);
         });
     });

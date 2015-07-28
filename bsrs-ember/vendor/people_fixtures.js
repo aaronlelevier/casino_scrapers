@@ -47,7 +47,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
     factory.prototype.list = function() {
         var response = [];
         for (var i=1; i <= 5; i++) {
-            response.push(this.generate(i));
+            var uuid = '139543cf-8fea-426a-8bc3-09778cd7995';
+            response.push(this.generate(uuid + i));
         }
         return {'count':3,'next':null,'previous':null,'results': response};
     };
