@@ -34,6 +34,7 @@ Auto-generate for UUID's for `Django <https://docs.djangoproject.com/en/1.8/ref/
 uWSGI
 -----
 .. code-block::
+
     # kill all
     killall -s INT uwsgi
 

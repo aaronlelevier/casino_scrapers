@@ -8,7 +8,7 @@ import django.contrib.auth.models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('person', '0005_auto_20150724_1434'),
+        ('person', '0001_initial'),
     ]
 
     operations = [

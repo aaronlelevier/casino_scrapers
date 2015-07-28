@@ -78,7 +78,8 @@ function runMigrations {
     echo "RUN DATABASE MIGRATIONS"
     export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
     ../venv/bin/python manage.py collectstatic --noinput
-    ../venv/bin/python manage.py makemigrations
+    rm -rf */migrations
+    ../venv/bin/python manage.py makemigrations accounting contact location order person role session util
     ../venv/bin/python manage.py migrate
     ../venv/bin/python manage.py loaddata fixtures/postgres.json
     RESULT=$?

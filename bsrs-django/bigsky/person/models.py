@@ -18,11 +18,13 @@ from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
 from util import choices, exceptions as excp
 from util.models import (
-    AbstractName, MainSetting, CustomSetting, BaseModel, BaseManager
+    AbstractName, MainSetting, CustomSetting, BaseModel,
+    BaseModelDates, BaseManager,
 )
 
+
 @python_2_unicode_compatible
-class Role(BaseModel, Group):
+class Role(BaseModelDates, Group):
     # keys
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29,
@@ -133,7 +135,7 @@ class PersonStatus(AbstractName):
 
 
 @python_2_unicode_compatible
-class Person(User, BaseModel):
+class Person(User, BaseModelDates):
     '''
     "pw" : password
     "ooto" : out-of-the-office

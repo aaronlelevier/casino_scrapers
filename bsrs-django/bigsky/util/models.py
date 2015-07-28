@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
@@ -15,6 +17,7 @@ from. This will enforce not deleting, but just hiding records.
 class BaseQuerySet(models.query.QuerySet):
     pass
 
+
 class BaseManager(models.Manager):
     '''
     Auto exclude deleted records
@@ -24,7 +27,7 @@ class BaseManager(models.Manager):
 
 
 @python_2_unicode_compatible
-class BaseModel(models.Model):
+class BaseModelDates(models.Model):
     '''
     All Model inheritance will start with this model.  It uses 
     time stamps, and defaults for `deleted=False` for querysets
@@ -54,7 +57,14 @@ timestamp of when the record was deleted.")
             self.deleted = timezone.now()
             self.save()
         else:
-            super(BaseModel, self).delete(*args, **kwargs)
+            super(BaseModelDates, self).delete(*args, **kwargs)
+
+
+class BaseModel(BaseModelDates):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+
+    class Meta:
+        abstract = True
 
 
 class Tester(BaseModel):

@@ -9,7 +9,7 @@ class Migration(migrations.Migration):
     dependencies = [
         ('contact', '0001_initial'),
         ('location', '0001_initial'),
-        ('person', '0002_auto_20150724_1314'),
+        ('person', '0001_initial'),
     ]
 
     operations = [

@@ -38,3 +38,7 @@ bsrs-django/bigsky/templates/index.html
 
 .ctags
 _todo.rst
+
+# static
+bsrs-django/bigsky/assets/
+bsrs-django/bigsky/fonts/

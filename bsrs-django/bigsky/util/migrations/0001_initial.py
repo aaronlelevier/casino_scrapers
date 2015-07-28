@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import uuid
 
 
 class Migration(migrations.Migration):
@@ -14,10 +15,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CustomSetting',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
+                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
                 ('settings', models.TextField(help_text=b'JSON Dict saved as a string in DB', blank=True)),
                 ('object_id', models.PositiveIntegerField()),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
@@ -29,10 +30,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MainSetting',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
+                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
                 ('settings', models.TextField(help_text=b'JSON Dict saved as a string in DB', blank=True)),
                 ('object_id', models.PositiveIntegerField()),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
@@ -44,10 +45,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Tester',
             fields=[
-                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
+                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
             ],
             options={
                 'abstract': False,
