@@ -14,7 +14,7 @@ var BSRS_ADDRESS_FACTORY = (function() {
                 },
                 'address': 'Sky Park',
                 'city': 'San Diego',
-                'state': this.state_list.firstId,
+                'state': this.state_list.id,
                 'postal_code': '92123',
                 'country': this.country_list.firstId
             },
@@ -26,7 +26,7 @@ var BSRS_ADDRESS_FACTORY = (function() {
                 },
                 'address': '123 PB',
                 'city': 'San Diego',
-                'state': this.state_list.firstId,
+                'state': this.state_list.id,
                 'postal_code': '92100',
                 'country': this.country_list.firstId
             }
@@ -34,8 +34,8 @@ var BSRS_ADDRESS_FACTORY = (function() {
     };
     factory.prototype.put = function(address) {
         var addresses = [
-            {id: 1, type: this.address_type_defaults.officeType, address: 'Sky Park', city: 'San Diego', state: this.state_list.firstId, postal_code: '92123', country: this.country_list.firstId},
-            {id: 2, type: this.address_type_defaults.shippingType, address: '123 PB', city: 'San Diego', state: this.state_list.firstId, postal_code: '92100', country: this.country_list.firstId}
+            {id: 1, type: this.address_type_defaults.officeType, address: 'Sky Park', city: 'San Diego', state: this.state_list.id, postal_code: '92123', country: this.country_list.firstId},
+            {id: 2, type: this.address_type_defaults.shippingType, address: '123 PB', city: 'San Diego', state: this.state_list.id, postal_code: '92100', country: this.country_list.firstId}
         ];
         if (!address) {
             return addresses;

@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import initializer from "bsrs-ember/instance-initializers/ember-i18n";
@@ -6,7 +7,8 @@ import AddressType from 'bsrs-ember/models/address-type';
 import StateSingle from 'bsrs-ember/models/state'; // weird name because State is a reserved word
 import Country from 'bsrs-ember/models/country';
 import AddressDefaults from 'bsrs-ember/vendor/defaults/address-type';
-import Ember from 'ember';
+import StateDefaults from 'bsrs-ember/vendor/defaults/state';
+import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
 function createAddress(id) {
   return Ember.Object.create({
@@ -20,7 +22,7 @@ function createAddress(id) {
   });
 }//createAddress
 
-var STATE_LIST = [StateSingle.create({ id: 1, name: "Alabama" }), StateSingle.create({ id: 2, name: "California" })];
+var STATE_LIST = [StateSingle.create({ id: StateDefaults.idTwo, name: StateDefaults.nameTwo }), StateSingle.create({ id: StateDefaults.id, name: StateDefaults.name })];
 var ADDRESS_TYPES = [AddressType.create({ id: AddressDefaults.officeType, name: AddressDefaults.officeName }), AddressType.create({ id: AddressDefaults.shippingType, name: AddressDefaults.shippingName })];
 var COUNTRIES = [Country.create({ id: 1, name: 'United States' }), Country.create({ id: 2, name: 'Canada' })];
 
@@ -32,15 +34,12 @@ moduleForComponent('input-multi-address', 'integration: input-multi-address test
 });
 
 test('renders a single button with a class of t-add-btn', function(assert){
-
     this.render(hbs`{{input-multi-address model=addresses}}`);
     var $component = this.$('.t-input-multi-address');
     assert.equal($component.find('.t-add-btn').length, 1);
-
 });
 
 test('click add btn will append blank entry to list of entries and binds value to model', function(assert) {
-
     var model = Person.create({ addresses: []});
     this.set('model', model);
     this.set('state_list', STATE_LIST);
@@ -80,10 +79,10 @@ test('click add btn will append blank entry to list of entries and binds value t
     assert.equal(model.get('addresses').objectAt(0).get('postal_code'), '');
 
     //Update all fields and make sure that the model is updated
-    this.$('.t-address').val('andier').trigger('change');
+    this.$('.t-address').val(PEOPLE_DEFAULTS.username).trigger('change');
 
     //assert.equal(model.get('addresses').objectAt(0).get('type'), 2);
-    assert.equal(model.get('addresses').objectAt(0).get('address'), 'andier');
+    assert.equal(model.get('addresses').objectAt(0).get('address'), PEOPLE_DEFAULTS.username);
 
 });
 
@@ -131,14 +130,14 @@ test('model with existing array of entries is shown at render and bound to model
     var $component = this.$('.t-input-multi-address');
     assert.equal($component.find('.t-del-btn').length, 3);
     $component.find('.t-address-type:eq(0)').val(2).trigger('change');
-    $component.find('.t-address:eq(0)').val('andier').trigger('change');
+    $component.find('.t-address:eq(0)').val(PEOPLE_DEFAULTS.username).trigger('change');
     $component.find('.t-address-city:eq(0)').val('San Jose').trigger('change');
     $component.find('.t-address-state:eq(0)').val(2).trigger('change');
     $component.find('.t-address-postal-code:eq(0)').val('12345').trigger('change');
     $component.find('.t-address-country:eq(0)').val(2).trigger('change');
 
     assert.equal(model.get('addresses').objectAt(0).get('type'), 2);
-    assert.equal(model.get('addresses').objectAt(0).get('address'), 'andier');
+    assert.equal(model.get('addresses').objectAt(0).get('address'), PEOPLE_DEFAULTS.username);
     assert.equal(model.get('addresses').objectAt(0).get('city'), 'San Jose');
     assert.equal(model.get('addresses').objectAt(0).get('state'), 2);
     assert.equal(model.get('addresses').objectAt(0).get('country'), 2);

@@ -44,6 +44,7 @@ module('Acceptance | people-new', {
 test('visiting /people/new', (assert) => {
     payload.phone_numbers = [{cid: 'abc123', number: '999-999-9999', type: PhoneNumberDefaults.officeType}];
     var response = Ember.$.extend(true, {id: PEOPLE_DEFAULTS.id}, payload);
+    //TODO: update these values to be a valid uuid
     response.phone_numbers[0].cid = 'abc123';
     response.phone_numbers[0].id = 'def456';
     var url = PREFIX + PEOPLE_URL + '/';

@@ -32,6 +32,7 @@ app.import('vendor/defaults/state.js');
 app.import('vendor/defaults/status.js');
 app.import('vendor/defaults/currencies.js');
 app.import('vendor/defaults/person.js');
+app.import('vendor/defaults/uuid.js');
 // Use `app.import` to add additional libraries to the generated
 // output files.
 //

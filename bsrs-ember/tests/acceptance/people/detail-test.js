@@ -13,7 +13,7 @@ import PHONE_NUMBER_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
-const PERSON_PK = 1;
+const PERSON_PK = 1; //TODO update to be a uuid
 const PREFIX = config.APP.NAMESPACE;
 const PEOPLE_URL = '/admin/people';
 const DETAIL_URL = PEOPLE_URL + '/' + PERSON_PK;

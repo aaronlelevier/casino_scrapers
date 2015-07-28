@@ -1,7 +1,5 @@
 const OFFICE_PHONE_TYPE = 1;
 const MOBILE_PHONE_TYPE = 2;
-// const MOBILE_PHONE_NAME = 'admin.phonenumbertype.mobile';
-// const OFFICE_PHONE_NAME = 'admin.phonenumbertype.office';
 const MOBILE_PHONE_NAME = 'admin.phonenumbertype.mobile';
 const OFFICE_PHONE_NAME = 'admin.phonenumbertype.office';
 

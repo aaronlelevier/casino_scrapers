@@ -15,7 +15,7 @@ test('phone number has type attr that is dirty tracked', (assert) => {
 });
 
 test('phone number has number attr that is dirty tracked', (assert) => {
-    var phone_number = PhoneNumber.create({id: PHONE_NUMBER_TYPES_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeType});
+    var phone_number = PhoneNumber.create({id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeType});
     assert.ok(phone_number.get('isNotDirty'));
     phone_number.set('number', '123-123-1234');
     assert.ok(phone_number.get('isDirty'));
