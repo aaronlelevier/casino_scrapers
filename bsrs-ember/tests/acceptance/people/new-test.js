@@ -25,10 +25,10 @@ module('Acceptance | people-new', {
             first_name: PEOPLE_DEFAULTS.first_name,
             middle_initial: PEOPLE_DEFAULTS.middle_initial,
             last_name: PEOPLE_DEFAULTS.last_name,
-            email: PEOPLE_DEFAULTS.email,
-            role: PEOPLE_DEFAULTS.role,
-            status: PEOPLE_DEFAULTS.status,
             location: PEOPLE_DEFAULTS.location,
+            status: PEOPLE_DEFAULTS.status,
+            role: PEOPLE_DEFAULTS.role,
+            email: PEOPLE_DEFAULTS.email,
             phone_numbers: PEOPLE_DEFAULTS.phone_numbers,
             addresses: PEOPLE_DEFAULTS.addresses
         };

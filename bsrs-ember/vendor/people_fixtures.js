@@ -13,6 +13,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             last_name : this.person_defaults.last_name,
             title : this.person_defaults.title,
             emp_number : this.person_defaults.emp_number,
+            location : '',
             auth_amount : this.person_defaults.auth_amount,
             status : {
                 'id': 1,
@@ -47,10 +48,11 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var response = this.generate(person.id);
         response.phone_numbers = this.phone_number_fixtures.put();
         response.addresses = this.address_fixtures.put();
-        response.role = response.role.id;
         response.status = response.status.id;
-        response.acceptassign= false;
-        response.emails= [];
+        response.role = 1; //response.role.id;
+
+        // response.acceptassign= false;
+        // response.emails= [];
         for(var key in person) {
             response[key] = person[key];
         }
