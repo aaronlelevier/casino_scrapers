@@ -2,9 +2,11 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.contrib.auth.models
 import django.utils.timezone
 from django.conf import settings
 import django.core.validators
+import person.models
 import uuid
 
 
@@ -55,7 +57,13 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
             },
+            managers=[
+                ('objects', person.models.PersonManager()),
+                ('objects_all', django.contrib.auth.models.UserManager()),
+            ],
         ),
         migrations.CreateModel(
             name='PersonStatus',
@@ -91,7 +99,7 @@ class Migration(migrations.Migration):
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
                 ('role_type', models.CharField(default=b'contractor', max_length=29, choices=[(b'contractor', b'contractor'), (b'location', b'location')])),
-                ('name', models.CharField(help_text=b'Denormalized field of the Group.name', max_length=100, blank=True)),
+                ('name', models.CharField(help_text=b'Will be set to the Group Name', max_length=100)),
                 ('dashboad_text', models.CharField(max_length=255, blank=True)),
                 ('create_all', models.BooleanField(default=False, help_text=b'Allow document creation for all locations')),
                 ('modules', models.TextField(blank=True)),
@@ -130,7 +138,7 @@ class Migration(migrations.Migration):
                 ('msg_copy_default', models.BooleanField(default=False)),
                 ('msg_stored_link', models.BooleanField(default=False)),
                 ('default_auth_amount_currency', models.ForeignKey(to='accounting.Currency')),
-                ('group', models.OneToOneField(to='auth.Group')),
+                ('group', models.OneToOneField(null=True, blank=True, to='auth.Group')),
                 ('inv_wo_status', models.ForeignKey(blank=True, to='order.WorkOrderStatus', null=True)),
                 ('location_level', models.ForeignKey(blank=True, to='location.LocationLevel', null=True)),
             ],
