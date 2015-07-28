@@ -7,10 +7,13 @@ import config from 'bsrs-ember/config/environment';
 import StatusDefaults from 'bsrs-ember/vendor/defaults/status';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import PEOPLE_DEFAULTS_PUT from 'bsrs-ember/vendor/defaults/person-put';
 import PHONE_NUMBER_FIXTURES from 'bsrs-ember/vendor/phone_number_fixtures';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
 import PHONE_NUMBER_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
+import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
+import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -72,21 +75,21 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PHONE_NUMBER_DEFAULTS.numberTwo);
 
         assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), '1');
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.officeType);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), 'Office');
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address').val(), 'Sky Park');
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), 'San Diego');
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), 5);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), '92123');
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), 1);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address').val(), ADDRESS_DEFAULTS.streetOne);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), ADDRESS_DEFAULTS.cityOne);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipOne);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), ADDRESS_DEFAULTS.countryOne);
 
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), '2');
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.shippingType);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), 'Shipping');
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address').val(), '123 PB');
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), 'San Diego');
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), 5);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), '92100');
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), 1);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address').val(), ADDRESS_DEFAULTS.streetTwo);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), ADDRESS_DEFAULTS.cityTwo);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipTwo);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), ADDRESS_DEFAULTS.countryTwo);
 
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), StatusDefaults.activeName);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), StatusDefaults.inactiveName);
@@ -97,16 +100,16 @@ test('when you deep link to the person detail view you get bound attrs', (assert
 
     var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: 'llcoolj', first_name: 'Ice', middle_initial: 'F\'in', last_name: 'Cube', title: 'mastermind', emp_number: '1122', auth_amount: '0.000'});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title, emp_number: PEOPLE_DEFAULTS_PUT.emp_number, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
     xhr( url,'PUT',payload,{},200,response );
 
-    fillIn('.t-person-username', 'llcoolj');
-    fillIn('.t-person-first-name', 'Ice');
-    fillIn('.t-person-middle-initial', 'F\'in');
-    fillIn('.t-person-last-name', 'Cube');
-    fillIn('.t-person-title', 'mastermind');
-    fillIn('.t-person-emp_number', '1122');
-    fillIn('.t-person-auth_amount', '0.000');
+    fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
+    fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.first_name);
+    fillIn('.t-person-middle-initial', PEOPLE_DEFAULTS_PUT.middle_initial );
+    fillIn('.t-person-last-name', PEOPLE_DEFAULTS_PUT.last_name);
+    fillIn('.t-person-title', PEOPLE_DEFAULTS_PUT.title);
+    fillIn('.t-person-emp_number', PEOPLE_DEFAULTS_PUT.emp_number);
+    fillIn('.t-person-auth_amount', PEOPLE_DEFAULTS_PUT.auth_amount);
 
     click(SAVE_BTN);
     andThen(() => {
@@ -122,10 +125,10 @@ test('when editing username to invalid, it checks for validation', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-username-validation-error').text().trim(), 'invalid username');
     });
-    fillIn('.t-person-username', 'llcoolj');
+    fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     var url = PREFIX + DETAIL_URL + "/";
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: 'llcoolj'});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username});
     xhr( url,'PUT',payload,{},200,response );
     click(SAVE_BTN);
     andThen(() => {
@@ -151,9 +154,9 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
-    var phone_numbers = PHONE_NUMBER_FIXTURES.put({id: 3, type: 2});
+    var phone_numbers = PHONE_NUMBER_FIXTURES.put({id: PHONE_NUMBER_DEFAULTS.idPut, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileType});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
-    fillIn('.t-multi-phone-type:eq(0)', 2);
+    fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileType);
 
     xhr(url,'PUT',payload,{},200);
     click(SAVE_BTN);
@@ -165,10 +168,10 @@ test('when you change a related phone numbers type it will be persisted correctl
 test('when you change a related address type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
-    var addresses = ADDRESS_FIXTURES.put({id: 1, type: 2});
+    var addresses = ADDRESS_FIXTURES.put({id: ADDRESS_DEFAULTS.id, type: ADDRESS_TYPES_DEFAULTS.shippingType});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(url,'PUT',payload,{},200);
-    fillIn('.t-address-type:eq(0)', 2);
+    fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingType);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
@@ -177,7 +180,7 @@ test('when you change a related address type it will be persisted correctly', (a
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-person-username', 'llcoolj');
+    fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {
@@ -190,7 +193,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-person-username').val(), 'llcoolj');
+            assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS_PUT.username);
             assert.equal(find('.t-modal').is(':hidden'), true);
         });
     });
@@ -198,7 +201,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-person-username', 'llcoolj');
+    fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {
