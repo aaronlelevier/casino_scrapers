@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from django.test import TestCase, TransactionTestCase
 from django.http import JsonResponse
@@ -50,14 +51,18 @@ class PersonCreateTests(APITransactionTestCase):
         self.client.logout()
 
     def test_create(self):
+        # Accepts a pre-created UUID, which is what Ember will do
         self.assertEqual(PhoneNumber.objects.count(), 0)
         self.assertEqual(Person.objects.count(), 1)
         # simulate posting a Json Dict to create a new Person
+        _uuid = uuid.uuid4()
+        self.data['id'] = _uuid
         response = self.client.post('/api/admin/people/', self.data, format='json')
-        print response
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Person.objects.count(), 2)
         self.assertEqual(PhoneNumber.objects.count(), 1)
+        person = Person.objects.get(username=self.data["username"])
+        self.assertEqual(str(_uuid), str(person.id))
 
     def test_create_login_with_new_user(self):
         # Original User is logged In
