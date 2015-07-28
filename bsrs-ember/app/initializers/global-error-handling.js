@@ -1,4 +1,4 @@
-import PromiseMixin from 'bsrs-ember/mixins/promise';
+import PromiseMixin from 'ember-promise/mixins/promise';
 import errorFunction from 'bsrs-ember/utilities/error-function';
 
 export function initialize() {

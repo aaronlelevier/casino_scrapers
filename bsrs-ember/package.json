@@ -46,6 +46,7 @@
     "ember-disable-proxy-controllers": "^1.0.0",
     "ember-export-application-global": "^1.0.2",
     "ember-i18n": "4.1.1",
+    "ember-promise": "^1.1.1",
     "es5-shim": "^4.1.10",
     "express": "^4.13.1",
     "glob": "^4.5.3",
