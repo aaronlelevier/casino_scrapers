@@ -75,13 +75,12 @@ section.wrap{
               display: block;
               &:hover{
                 cursor: pointer;
-                color: $dark;
-                background-color: $white;
+                color: $white;
+                background-color: $hoverColor;
               }
               &.active{
-                color: $activeColor;
-                font-weight: bold;
-                background-color: $white;
+                color: $white;
+                background-color: $activeColor;
               }
               &.active:hover{
                 cursor: default;
