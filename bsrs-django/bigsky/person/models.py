@@ -118,10 +118,10 @@ class Role(BaseModel):
         return self.__name__.lower()
 
 
-@receiver(pre_save, sender=Role)
-def create_group(sender, instance=None, created=False, **kwargs):
-    if created:
-        Group.objects.get_or_create(name=instance.name)
+# @receiver(pre_save, sender=Role)
+# def create_group(sender, instance=None, created=False, **kwargs):
+#     if created:
+#         Group.objects.get_or_create(name=instance.name)
 
 
 class ProxyRole(BaseModel):
