@@ -18,10 +18,7 @@ def create_role():
 
 
 def create_single_person(username, role):
-    person = mommy.make(Person, username=username, role=role)
-    person.set_password(PASSWORD)
-    person.save()
-    return person
+    return Person.objects.create_user(username, 'myemail@mail.com', PASSWORD, role=role)
 
 
 def create_person(username=None, _many=1):

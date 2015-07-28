@@ -90,6 +90,7 @@ class PersonNestedCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         phone_numbers = validated_data.pop('phone_numbers', [])
+        print 'validated_data:', validated_data, '\n'
         person = Person.objects.create_user(**validated_data)
         for ph in phone_numbers:
             PhoneNumber.objects.create(person=person, **ph)

@@ -5,6 +5,7 @@ Created on Jan 30, 2014
 '''
 from django.db import models, IntegrityError
 from django.conf import settings
+from django.utils import timezone
 from django.contrib.auth.models import AbstractUser, User, UserManager, Group
 from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import pre_save, post_save
@@ -213,3 +214,14 @@ class Person(AbstractUser, BaseModel):
         if not self.auth_amount_currency:
             self.auth_amount_currency = self.role.default_auth_amount_currency
         return super(Person, self).save(*args, **kwargs)
+
+    def delete(self, override=False, *args, **kwargs):
+        '''
+        Enforce only hiding objects and not deleting them unless explicitly 
+        overriden.
+        '''
+        if not override:
+            self.deleted = timezone.now()
+            self.save()
+        else:
+            super(Person, self).delete(*args, **kwargs)

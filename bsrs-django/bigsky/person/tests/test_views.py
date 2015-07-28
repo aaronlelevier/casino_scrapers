@@ -13,9 +13,47 @@ from model_mommy import mommy
 from contact.models import Address, PhoneNumber, Email, PhoneNumberType
 from location.models import Location
 from person.models import Person, Role, PersonStatus
-from person.tests.factory import PASSWORD, create_person
+from person.tests.factory import PASSWORD, create_person, create_role
 from person.serializers import PersonUpdateSerializer
 from util import create
+
+
+class PersonAuthTests(TestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=self.password)
+
+    def test_login(self):
+        self.assertIn('_auth_user_id', self.client.session)
+
+    def tearDown(self):
+        self.client.logout()
+
+
+class PersonAccessTests(TestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+
+    def test_access_user(self):
+        """
+        verify we can access user records correctly as a super user
+        """
+        self.client.login(username=self.person.username, password=self.password)
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.client.session['_auth_user_id'], str(self.person.id))
+
+    def test_noaccess_user(self):
+        """
+        verify we can't acccess users as a normal user
+        """
+        self.client.login(username='noaccess_user', password='noaccess_password')
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
+        self.assertEqual(response.status_code, 403)
 
 
 class PersonCreateTests(APITransactionTestCase):
@@ -39,6 +77,7 @@ class PersonCreateTests(APITransactionTestCase):
             "location":"",
             "phone_numbers":[
                 {
+                "id": uuid.uuid4(),
                 "type": self.ph_num_type.pk,
                 "location": "",
                 "person": "",
@@ -56,7 +95,8 @@ class PersonCreateTests(APITransactionTestCase):
         self.assertEqual(Person.objects.count(), 1)
         # simulate posting a Json Dict to create a new Person
         _uuid = uuid.uuid4()
-        self.data['id'] = _uuid
+        self.data['id'] = str(_uuid)
+        print 'DATA:', self.data, '\n'
         response = self.client.post('/api/admin/people/', self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Person.objects.count(), 2)
@@ -66,7 +106,7 @@ class PersonCreateTests(APITransactionTestCase):
 
     def test_create_login_with_new_user(self):
         # Original User is logged In
-        self.assertEqual(int(self.client.session['_auth_user_id']), self.person.pk)
+        self.assertEqual(self.client.session['_auth_user_id'], str(self.person.pk))
         # Create
         response = self.client.post('/api/admin/people/', self.data, format='json')
         # Confirm all Users Logged out
@@ -76,8 +116,8 @@ class PersonCreateTests(APITransactionTestCase):
         # login with New User
         self.client.login(username=self.data['username'], password=self.data['password'])
         self.assertEqual(
-            int(self.client.session['_auth_user_id']),
-            Person.objects.get(username=self.data['username']).pk
+            self.client.session['_auth_user_id'],
+            str(Person.objects.get(username=self.data['username']).pk)
         )
 
     def test_create_no_password_in_response(self):
@@ -140,7 +180,7 @@ class PersonPatchTests(APITestCase):
         self.person = create_person()
         self.client.login(username=self.person.username, password=self.password)
         # all required fields in order to create a person
-        self.role = mommy.make(Role)
+        self.role = create_role()
         self.person_status = mommy.make(PersonStatus)
         self.location = mommy.make(Location)
 
@@ -257,58 +297,37 @@ class PersonDeleteTests(APITestCase):
     - DestroyModelMixin
     '''
     def setUp(self):
-        self.password = PASSWORD
         self.person = create_person()
-        self.client.login(username=self.person.username, password=self.password)
+        self.person2 = create_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
 
     def test_delete(self):
-        self.assertFalse(self.person.deleted)
-        response = self.client.delete('/api/admin/people/{}/'.format(self.person.pk))
+        self.assertIsNone(self.person2.deleted)
+        self.assertEqual(self.client.session['_auth_user_id'], str(self.person.id))
+        response = self.client.delete('/api/admin/people/{}/'.format(self.person2.pk))
+        print 'response:', response
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         # get the Person Back, and check their deleted flag
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
+        response = self.client.get('/api/admin/people/{}/'.format(self.person2.pk))
         person = json.loads(response.content)
-        self.assertIsNotNone(person['deleted'])
+        print 'person:', person
+        assert 1 == 2
 
     def test_delete_override(self):
-        self.assertEqual(Person.objects.count(), 1)
+        init_count = Person.objects.count()
         response = self.client.delete('/api/admin/people/{}/'.format(self.person.pk),
             {'override':True}, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Person.objects.count(), 0)
-
-
-class PersonAccessTests(TestCase):
-
-    def setUp(self):
-        self.password = PASSWORD
-        self.person = create_person()
-
-    def test_access_user(self):
-        """
-        verify we can access user records correctly as a super user
-        """
-        self.client.login(username=self.person.username, password=self.password)
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(int(self.client.session['_auth_user_id']), self.person.pk)
-
-    def test_noaccess_user(self):
-        """
-        verify we can't acccess users as a normal user
-        """
-        self.client.login(username='noaccess_user', password='noaccess_password')
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
-        self.assertEqual(response.status_code, 403)
+        self.assertEqual(Person.objects.count(), init_count-1)
         
 
 class RoleViewSetTests(TestCase):
 
     def setUp(self):
-        self.role = mommy.make(Role)
+        self.role = create_role()
         self.password = PASSWORD
         self.person = create_person()
         # perms
