@@ -43,6 +43,7 @@ export default Model.extend({
         //     return address.serialize();
         // });
         return {
+            'id':this.get('id'),
             'username':this.get('username'),
             'password':this.get('password'),
             'first_name':this.get('first_name'),

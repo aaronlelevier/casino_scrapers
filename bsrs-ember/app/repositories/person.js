@@ -75,19 +75,7 @@ var create_people_with_nested = (model, store) => {
 export default Ember.Object.extend({
     insert(model) {
         return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', {data: model.serialize()}).then((response) => {
-            var django_person_id = response.id;
-            model.get('phone_numbers').forEach(function(phone_number) {
-                phone_number.set('person_id', django_person_id);
-            });
-            model.set('id', django_person_id);
             model.save();
-            response.phone_numbers.forEach(function(django_response) {
-                model.get('phone_numbers').forEach(function(phone_number) {
-                    if(django_response.cid === phone_number.id) {
-                        phone_number.set('id', django_response.id);
-                    }
-                });
-            });
             model.savePhoneNumbers();
         });
     },
