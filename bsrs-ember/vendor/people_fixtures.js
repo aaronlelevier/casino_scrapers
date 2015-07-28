@@ -4,26 +4,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
         this.person_defaults = person_defaults;
         this.phone_number_fixtures = phone_number_fixtures;
     };
-    factory.prototype.generatePerson = function(i) {
-        return {
-            id: i,
-            username : this.person_defaults.username,
-            first_name : this.person_defaults.first_name,
-            middle_initial : this.person_defaults.middle_initial,
-            last_name : this.person_defaults.last_name,
-            title : this.person_defaults.title,
-            emp_number : this.person_defaults.emp_number,
-            auth_amount : this.person_defaults.auth_amount,
-            'status': {
-                'id': 1,
-                'name': 'admin.person.status.active'
-            },
-            'role': {
-                'id': 2,
-                'name': 'admin.role.system_administrator',
-            }
-        }
-    },
     factory.prototype.generate = function(i) {
         return {
             id: i,
@@ -64,7 +44,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         return person;
     };
     factory.prototype.put = function(person) {
-        var response = this.generatePerson(person.id);
+        var response = this.generate(person.id);
         response.phone_numbers = this.phone_number_fixtures.put();
         response.addresses = this.address_fixtures.put();
         response.role = response.role.id;
