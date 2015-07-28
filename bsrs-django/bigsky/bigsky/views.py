@@ -1,6 +1,18 @@
+import json
+
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
+from django.shortcuts import render
+from django.forms.models import model_to_dict
+from contact.models import PhoneNumberType
+
+
+def generate_phone_number_type_configuration(configuration=[]):
+    data = PhoneNumberType.objects.all()
+    for item in data:
+        configuration.append(item.to_dict())
+    return json.dumps(configuration)
 
 
 class IndexView(TemplateView):
@@ -15,4 +27,6 @@ class IndexView(TemplateView):
         if not request.user.is_authenticated():
             return HttpResponseRedirect(reverse('login'))
         else:
-            return super(IndexView, self).dispatch(request, *args, **kwargs)
+            return render(request, 'index.html', {
+                'phone_number_types_config': generate_phone_number_type_configuration()
+                })
