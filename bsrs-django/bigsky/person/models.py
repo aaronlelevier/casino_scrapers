@@ -3,9 +3,9 @@ Created on Jan 30, 2014
 
 @author: tkrier
 '''
-from django.db import models
+from django.db import models, IntegrityError
 from django.conf import settings
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import AbstractUser, User, UserManager, Group
 from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
@@ -18,21 +18,21 @@ from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
 from util import choices, exceptions as excp
 from util.models import (
-    AbstractName, MainSetting, CustomSetting, BaseModel,
-    BaseModelDates, BaseManager,
+    AbstractName, MainSetting, CustomSetting, BaseModel, BaseManager,
 )
 
 
 @python_2_unicode_compatible
-class Role(BaseModelDates, Group):
+class Role(BaseModel):
     # keys
+    group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29,
                                  choices=choices.ROLE_TYPE_CHOICES,
                                  default=choices.ROLE_TYPE_CHOICES[0][0])
-    # required
-    
-    # optional
+    # Required
+    name = models.CharField(max_length=100, help_text="Will be set to the Group Name")
+    # Optional
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
         help_text='Allow document creation for all locations')
@@ -98,11 +98,16 @@ class Role(BaseModelDates, Group):
     custom_settings = GenericRelation(CustomSetting)
 
     class Meta:
-        db_table = 'role_role'
         ordering = ('name',)
 
     def save(self, *args, **kwargs):
-        self.name = self.name
+
+        if not self.group:
+            try:
+                self.group, created = Group.objects.get_or_create(name=self.name)
+            except IntegrityError:
+                raise
+
         return super(Role, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -111,6 +116,12 @@ class Role(BaseModelDates, Group):
     @property 
     def _name(self):
         return self.__name__.lower()
+
+
+@receiver(pre_save, sender=Role)
+def create_group(sender, instance=None, created=False, **kwargs):
+    if created:
+        Group.objects.get_or_create(name=instance.name)
 
 
 class ProxyRole(BaseModel):
@@ -134,8 +145,20 @@ class PersonStatus(AbstractName):
     objects = PersonStatusManager()
 
 
+class PersonQuerySet(models.query.QuerySet):
+    pass
+
+
+class PersonManager(UserManager):
+    '''
+    Auto exclude deleted records
+    '''
+    def get_queryset(self):
+        return PersonQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
+
+
 @python_2_unicode_compatible
-class Person(User, BaseModelDates):
+class Person(AbstractUser, BaseModel):
     '''
     "pw" : password
     "ooto" : out-of-the-office
@@ -175,8 +198,9 @@ class Person(User, BaseModelDates):
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
 
-    class Meta:
-        db_table = 'person_person'
+    # Managers
+    objects = PersonManager()
+    objects_all = UserManager()
 
     def __str__(self):
         return self.username

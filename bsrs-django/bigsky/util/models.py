@@ -27,11 +27,12 @@ class BaseManager(models.Manager):
 
 
 @python_2_unicode_compatible
-class BaseModelDates(models.Model):
+class BaseModel(models.Model):
     '''
     All Model inheritance will start with this model.  It uses 
     time stamps, and defaults for `deleted=False` for querysets
     '''
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
     modified = models.DateTimeField(auto_now=True)
     deleted = models.DateTimeField(blank=True, null=True,
@@ -57,14 +58,7 @@ timestamp of when the record was deleted.")
             self.deleted = timezone.now()
             self.save()
         else:
-            super(BaseModelDates, self).delete(*args, **kwargs)
-
-
-class BaseModel(BaseModelDates):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-
-    class Meta:
-        abstract = True
+            super(BaseModel, self).delete(*args, **kwargs)
 
 
 class Tester(BaseModel):

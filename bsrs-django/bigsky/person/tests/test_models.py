@@ -14,6 +14,10 @@ from person.tests.factory import PASSWORD, create_person
 from util import exceptions as excp
 
 
+class RoleTests(TestCase):
+    pass
+
+
 class PersonTests(TestCase):
 
     def setUp(self):
