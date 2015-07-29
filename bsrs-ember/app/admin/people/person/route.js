@@ -30,7 +30,8 @@ export default Ember.Route.extend({
             address_repo = this.get('address_repo'),
             address_type_repo = this.get('address_type_repo'),
             address_types = address_type_repo.find(),
-            statuses = status_repo.find();
+            statuses = status_repo.find(),
+            default_phone_number_type = phone_number_type_repo.get_default();
 
         return Ember.RSVP.hash({
             model: person,
@@ -39,7 +40,8 @@ export default Ember.Route.extend({
             countries: country_repo.find(),
             state_list: state_repo.find(),
             address_types: address_types,
-            statuses: statuses
+            statuses: statuses,
+            default_phone_number_type: default_phone_number_type
         });
     },
     setupController(controller, hash) {
@@ -50,6 +52,7 @@ export default Ember.Route.extend({
         controller.set('countries', hash.countries);
         controller.set('address_types', hash.address_types);
         controller.set('statuses', hash.statuses);
+        controller.set('default_phone_number_type', hash.default_phone_number_type);
     },
     actions: {
         willTransition(transition) {

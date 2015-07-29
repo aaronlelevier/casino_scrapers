@@ -18,7 +18,7 @@ export default Ember.Component.extend({
         },
         append() {
             var id = this.get('uuid').v4();
-            var type = PhoneNumberDefaults.officeType;
+            var type = this.get('default_type').get('id');
             var related_field = this.get('related_field');
             var related_pk = this.get('related_pk');
             var model = {id: id, type: type};
