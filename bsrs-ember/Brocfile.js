@@ -24,6 +24,7 @@ app.import('vendor/people_fixtures.js');
 app.import('vendor/role_fixtures.js');
 app.import('vendor/address_fixtures.js');
 app.import('vendor/phone_number_fixtures.js');
+app.import('vendor/category_fixtures.js');
 app.import('vendor/defaults/address-type.js');
 app.import('vendor/defaults/address.js');
 app.import('vendor/defaults/phone-number.js');
@@ -32,7 +33,9 @@ app.import('vendor/defaults/country.js');
 app.import('vendor/defaults/state.js');
 app.import('vendor/defaults/status.js');
 app.import('vendor/defaults/currencies.js');
+app.import('vendor/defaults/category.js');
 app.import('vendor/defaults/person.js');
+app.import('vendor/defaults/role.js');
 app.import('vendor/defaults/person-put.js');
 app.import('vendor/defaults/uuid.js');
 // Use `app.import` to add additional libraries to the generated

@@ -7,15 +7,15 @@ var BSRS_PEOPLE_FACTORY = (function() {
     factory.prototype.generate = function(i) {
         return {
             id: i,
-            username : this.person_defaults.username,
-            first_name : this.person_defaults.first_name,
-            middle_initial : this.person_defaults.middle_initial,
-            last_name : this.person_defaults.last_name,
-            title : this.person_defaults.title,
-            emp_number : this.person_defaults.emp_number,
-            location : '',
-            auth_amount : this.person_defaults.auth_amount,
-            status : {
+            username: this.person_defaults.username,
+            first_name: this.person_defaults.first_name,
+            middle_initial: this.person_defaults.middle_initial,
+            last_name: this.person_defaults.last_name,
+            title: this.person_defaults.title,
+            emp_number: this.person_defaults.emp_number,
+            location: '',
+            auth_amount: this.person_defaults.auth_amount,
+            status: {
                 'id': 1,
                 'name': 'admin.person.status.active'
             },
@@ -64,7 +64,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
 if (typeof window === 'undefined') {
     var address_fixtures = require('../vendor/address_fixtures');
     var phone_number_fixtures = require('../vendor/phone_number_fixtures');
-    module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures);
+    var person_defaults = require('../vendor/defaults/person');
+    module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults);
 } else {
     define('bsrs-ember/vendor/people_fixtures', ['exports', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/phone_number_fixtures', 'bsrs-ember/vendor/defaults/person' ], function (exports, address_fixtures, phone_number_fixtures, person_defaults) {
         'use strict';

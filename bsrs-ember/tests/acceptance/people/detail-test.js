@@ -41,13 +41,10 @@ module('Acceptance | detail test', {
 
 test('clicking a persons name will redirect to the given detail view', (assert) => {
     visit(PEOPLE_URL);
-
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
     });
-
     click('.t-person-data:eq(0)');
-
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
     });
@@ -129,7 +126,7 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     var url = PREFIX + DETAIL_URL + "/";
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username});
-    xhr( url,'PUT',JSON.stringify(payload),{},200,response );
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -157,7 +154,7 @@ test('when you change a related phone numbers type it will be persisted correctl
     var phone_numbers = PHONE_NUMBER_FIXTURES.put({id: PHONE_NUMBER_DEFAULTS.idPut, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileType});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
     fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileType);
-    xhr(url,'PUT',JSON.stringify(payload),{},200);
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);

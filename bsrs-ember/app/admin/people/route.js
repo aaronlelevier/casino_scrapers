@@ -3,7 +3,7 @@ import inject from 'bsrs-ember/utilities/inject';
 
 export default Ember.Route.extend({
   repository: inject('person'),
-  model: function(params) {
+  model(params) {
     var repository = this.get('repository');
     return repository.find();
   },

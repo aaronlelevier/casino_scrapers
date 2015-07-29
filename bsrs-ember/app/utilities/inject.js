@@ -1,3 +1,3 @@
-import inject from "ember-cli-injection/inject";
+import inject from 'ember-cli-injection/inject';
 
-export default inject("repositories");
+export default inject('repositories');
