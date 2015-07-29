@@ -11,7 +11,7 @@ from contact.models import PhoneNumberType
 def generate_phone_number_type_configuration(configuration=[]):
     data = PhoneNumberType.objects.all()
     for item in data:
-        configuration.append(item.to_dict())
+        configuration.append(model_to_dict(item))
     return json.dumps(configuration)
 
 

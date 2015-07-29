@@ -1,4 +1,5 @@
 import json
+import uuid
 
 from django.test import TestCase, LiveServerTestCase
 from django.contrib.auth.models import User
@@ -49,9 +50,9 @@ class ConfigurationTests(TestCase):
         self.person = create_person()
 
     def test_should_add_phone_number_type_configuration_to_the_index_html(self):
-        office_phone_pk = 1
+        office_phone_pk = str(uuid.uuid4())
         office_phone_name = 'admin.phonenumbertype.office'
-        mobile_phone_pk = 5
+        mobile_phone_pk = str(uuid.uuid4())
         mobile_phone_name = 'admin.phonenumbertype.mobile'
         PhoneNumberType.objects.create(pk=office_phone_pk, name=office_phone_name)
         PhoneNumberType.objects.create(pk=mobile_phone_pk, name=mobile_phone_name)
