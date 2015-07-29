@@ -9,6 +9,7 @@ import CountryDefaults from 'bsrs-ember/vendor/defaults/country';
 import AddressTypeDefaults from 'bsrs-ember/vendor/defaults/address-type';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
+import RoleDefaults from 'bsrs-ember/vendor/defaults/role';
 
 const HOME_URL = '/';
 
@@ -92,5 +93,15 @@ test('on boot we should fetch and load the currency configuration', function(ass
         assert.equal(currency_models.objectAt(0).get('rounding'), CurrencyDefaults.rounding);
         assert.equal(currency_models.objectAt(0).get('name_plural'), CurrencyDefaults.name_plural);
         assert.equal(currency_models.objectAt(0).get('name'), CurrencyDefaults.name);
+    });
+});
+
+test('on boot we should fetch and load the role configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        var role_models = store.find('role');
+        assert.equal(role_models.length, 2);
+        assert.equal(role_models.objectAt(0).get('id'), RoleDefaults.id);
+        assert.equal(role_models.objectAt(0).get('name'), RoleDefaults.name);
     });
 });

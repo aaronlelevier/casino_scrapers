@@ -33,6 +33,11 @@ export default Ember.Route.extend({
         for (var key in currency_list) {
             store.push('currency', currency_list[key]);
         }
+        var role_config = $('[data-preload-roles]').html();
+        var role_list = JSON.parse(role_config);
+        role_list.forEach((model) => {
+            store.push('role', model);
+        });
     },
     actions: {
         cancel_modal() {
