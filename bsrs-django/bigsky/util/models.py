@@ -59,6 +59,9 @@ timestamp of when the record was deleted.")
             self.save()
         else:
             super(BaseModel, self).delete(*args, **kwargs)
+            
+    def to_dict(self):
+        return {"id": str(self.pk), "name": self.name}
 
 
 class Tester(BaseModel):

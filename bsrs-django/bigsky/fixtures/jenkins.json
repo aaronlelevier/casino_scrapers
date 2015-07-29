@@ -233,6 +233,14 @@
 },
 {
   "fields": {
+    "expire_date": "2015-08-12T16:52:07.222Z",
+    "session_data": "YzRhOWE3NGE1OTIyNjc4NTRkMjkxYmYwMzZhYmNkNGJjZGNkODA1NDp7Il9hdXRoX3VzZXJfaGFzaCI6IjA4YWUyNGFmN2QyYTBhMDFiZjU1ZmZhYmVmYTBlMGE5ZTdjMjVlNzgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiJjNjY3N2JmMC03ZTE5LTRiNDYtYWYyNi1kMDFkMjM3YzgyYjAifQ=="
+  },
+  "model": "sessions.session",
+  "pk": "p7ppgsf6ns2i494fk6rgeub1scb3ypv2"
+},
+{
+  "fields": {
     "domain": "example.com",
     "name": "example.com"
   },
@@ -1122,7 +1130,7 @@
     "auth_amount": "42437325620.8307",
     "title": null,
     "is_superuser": false,
-    "last_login": null,
+    "last_login": "2015-07-29T16:52:07.217Z",
     "location": null,
     "password_expire": null,
     "role": "35a51e17-8bea-4ef2-9917-646d71660b42",
@@ -1133,11 +1141,11 @@
     "is_active": true,
     "groups": [],
     "accept_notify": true,
-    "password": "pbkdf2_sha256$20000$ra9nSY9P2Vf8$kSbpRoIfzfo+uYXx//feqv5yULzTPC7hBVckOWnV9vQ=",
+    "password": "md5$iwy4LZgnXqKV$41eab96d52babab5de8dd0c6baa37b00",
     "proxy_status": null,
     "proxy_user": null,
     "created": "2015-07-29T01:02:04.309Z",
-    "modified": "2015-07-29T01:02:04.309Z",
+    "modified": "2015-07-29T16:50:41.796Z",
     "proxy_end_date": null,
     "accept_assign": true,
     "password_change": ""
