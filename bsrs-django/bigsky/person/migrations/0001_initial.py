@@ -57,8 +57,6 @@ class Migration(migrations.Migration):
             ],
             options={
                 'abstract': False,
-                'verbose_name': 'user',
-                'verbose_name_plural': 'users',
             },
             managers=[
                 ('objects', person.models.PersonManager()),

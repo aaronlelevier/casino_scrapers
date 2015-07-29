@@ -80,7 +80,8 @@ PERSON_FIELDS = (
 
 
 class PersonNestedCreateSerializer(serializers.ModelSerializer):
-
+    
+    id = serializers.UUIDField(read_only=False)
     phone_numbers = PhoneNumberShortFKSerializer(many=True)
 
     class Meta:

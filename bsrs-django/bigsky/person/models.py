@@ -159,7 +159,7 @@ class PersonManager(UserManager):
 
 
 @python_2_unicode_compatible
-class Person(AbstractUser, BaseModel):
+class Person(BaseModel, AbstractUser):
     '''
     "pw" : password
     "ooto" : out-of-the-office
@@ -214,14 +214,3 @@ class Person(AbstractUser, BaseModel):
         if not self.auth_amount_currency:
             self.auth_amount_currency = self.role.default_auth_amount_currency
         return super(Person, self).save(*args, **kwargs)
-
-    def delete(self, override=False, *args, **kwargs):
-        '''
-        Enforce only hiding objects and not deleting them unless explicitly 
-        overriden.
-        '''
-        if not override:
-            self.deleted = timezone.now()
-            self.save()
-        else:
-            super(Person, self).delete(*args, **kwargs)

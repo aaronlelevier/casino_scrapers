@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
                 ('settings', models.TextField(help_text=b'JSON Dict saved as a string in DB', blank=True)),
-                ('object_id', models.PositiveIntegerField()),
+                ('object_id', models.UUIDField()),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
             ],
             options={
@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
                 ('settings', models.TextField(help_text=b'JSON Dict saved as a string in DB', blank=True)),
-                ('object_id', models.PositiveIntegerField()),
+                ('object_id', models.UUIDField()),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
             ],
             options={

@@ -68,6 +68,7 @@ class PersonCreateTests(APITransactionTestCase):
 
         # update for mock data
         self.data = {
+            "id": uuid.uuid4(),
             "username":"one",
             "password":"one",
             "first_name":"foo",
@@ -305,16 +306,15 @@ class PersonDeleteTests(APITestCase):
         self.client.logout()
 
     def test_delete(self):
+        people = Person.objects_all.count()
+        # Init Person2
         self.assertIsNone(self.person2.deleted)
         self.assertEqual(self.client.session['_auth_user_id'], str(self.person.id))
         response = self.client.delete('/api/admin/people/{}/'.format(self.person2.pk))
-        print 'response:', response
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         # get the Person Back, and check their deleted flag
-        response = self.client.get('/api/admin/people/{}/'.format(self.person2.pk))
-        person = json.loads(response.content)
-        print 'person:', person
-        assert 1 == 2
+        self.assertEqual(Person.objects_all.count(), people)
+        self.assertEqual(Person.objects.count(), people-1)
 
     def test_delete_override(self):
         init_count = Person.objects.count()

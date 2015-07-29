@@ -100,7 +100,7 @@ class BaseSetting(BaseModel):
     # Generic ForeignKey Settings, so ``Setting`` can be set 
     # for any Django Model
     content_type = models.ForeignKey(ContentType)
-    object_id = models.PositiveIntegerField()
+    object_id = models.UUIDField()
     content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:

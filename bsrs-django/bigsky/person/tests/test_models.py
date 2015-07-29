@@ -91,9 +91,12 @@ class PersonTests(TestCase):
         self.assertEqual(self.person.first_name, '')
 
     def test_delete(self):
+        self.assertEqual(Person.objects_all.count(), 1)
         self.assertFalse(self.person.deleted)
         self.person.delete()
         self.assertTrue(self.person.deleted)
+        self.assertEqual(Person.objects_all.count(), 1)
+        self.assertEqual(Person.objects.count(), 0)
 
     def test_delete_override(self):
         self.person.delete(override=True)
