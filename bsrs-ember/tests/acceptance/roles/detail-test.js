@@ -17,7 +17,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('Acceptance | role-detail', {
+module('sco Acceptance | role-detail', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -53,10 +53,10 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     var url = PREFIX + DETAIL_URL + '/';
     var response = ROLE_FIXTURES.detail(ROLE_DEFAULTS.id);
     var categories = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.id, name: CATEGORY_DEFAULTS.name});
-    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.id, name: ROLE_DEFAULTS.namePut, categories: categories});
+    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.id, name: ROLE_DEFAULTS.namePut, role_type:ROLE_DEFAULTS.role_type_contractor, categories: categories});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-role-name', ROLE_DEFAULTS.namePut);
-    fillIn('.t-role-name', ROLE_DEFAULTS.namePut);
+    fillIn('.t-role-role-type', ROLE_DEFAULTS.role_type_contractor);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

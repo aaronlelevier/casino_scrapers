@@ -15,11 +15,11 @@ moduleForComponent('input-read-only', 'integration: input-read-only', {
     }
 });
 
-test('sco component has form-control-static bootstrap class', function(assert) {
+test('component has form-control-static bootstrap class', function(assert) {
     var role = store.push('role', {id: ROLE_DEFAULTS.id, role_type: ROLE_DEFAULTS.role_type_general});
     this.set('model', role);
     this.render(hbs`{{input-read-only model=model}}`);
-    var $component = this.$('.t-input-read-only');
+    var $component = this.$('.form-control-static');
     assert.equal($component.length, 1);
-//    assert.equal(this.$('.t-val'), 'General');
+    //assert.equal(this.$('.t-val'), 'General');
 });
