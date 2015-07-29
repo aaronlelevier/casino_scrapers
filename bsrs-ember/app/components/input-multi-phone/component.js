@@ -12,9 +12,8 @@ export default Ember.Component.extend({
     fieldNames: 'number',
     actions: {
         changed(phonenumber, val) {
-            var phonenumber_type = parseInt(val, 10);
             Ember.run(() => {
-                phonenumber.set('type', phonenumber_type);
+                phonenumber.set('type', val);
             });
         },
         append() {

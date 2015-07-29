@@ -4,9 +4,5 @@ export default Ember.Object.extend({
     find() {
         var store = this.get('store');
         return store.find('address');
-    },
-    findByPersonId: function(person_id) {
-        var store = this.get('store'); 
-        return store.find('address', {person_id: person_id});
     }
 });

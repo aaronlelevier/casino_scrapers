@@ -32,6 +32,7 @@ app.import('vendor/defaults/country.js');
 app.import('vendor/defaults/state.js');
 app.import('vendor/defaults/status.js');
 app.import('vendor/defaults/currencies.js');
+app.import('vendor/defaults/role.js');
 app.import('vendor/defaults/person.js');
 app.import('vendor/defaults/person-put.js');
 app.import('vendor/defaults/uuid.js');

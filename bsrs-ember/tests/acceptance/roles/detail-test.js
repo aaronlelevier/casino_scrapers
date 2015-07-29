@@ -4,11 +4,12 @@ import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
+import RoleDefaults from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
 
 const PREFIX = config.APP.NAMESPACE;
 const ROLE_URL = "/admin/roles";
-const DETAIL_URL = "/admin/roles/3";
+const DETAIL_URL = "/admin/roles/" + RoleDefaults.id;
 const SUBMIT_BTN = ".submit_btn";
 const SAVE_BTN = '.t-save-btn';
 var application, store;
@@ -19,7 +20,7 @@ module('Acceptance | role-detail', {
     store = application.__container__.lookup('store:main');
     var endpoint = PREFIX + ROLE_URL + "/";
     xhr( endpoint ,"GET",null,{},200,ROLE_FIXTURES.list() );
-    xhr( endpoint + "3/","GET",null,{},200,ROLE_FIXTURES.detail() );
+    xhr( endpoint + RoleDefaults.id + "/","GET",null,{},200,ROLE_FIXTURES.detail() );
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -46,7 +47,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
   andThen(() => {
     //TODO: verify ALL the other dynamic bits
     assert.equal(currentURL(),DETAIL_URL);
-    assert.equal(find('.t-role-name').val(), 'System Administrator');
+    assert.equal(find('.t-role-name').val(), RoleDefaults.name);
   });
 
   var url = PREFIX + DETAIL_URL + "/";

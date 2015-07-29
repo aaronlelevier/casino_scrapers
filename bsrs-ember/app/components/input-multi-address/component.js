@@ -15,8 +15,7 @@ export default Ember.Component.extend({
     },
     changeType(address, val) {
         Ember.run(() => {
-            var address_type = parseInt(val, 10);
-            address.set("type", address_type);
+            address.set("type", val);
         });
         //this.get('target').send('changeType', val); //?? when is this used?
     },
@@ -29,8 +28,7 @@ export default Ember.Component.extend({
     },
     changeCountry(country, val) {
         Ember.run(() => {
-            var country_id = parseInt(val, 10);
-            country.set("country", country_id);
+            country.set("country", val);
         });
         //this.get('target').send('changeState', val); //?? when is this used?
     }

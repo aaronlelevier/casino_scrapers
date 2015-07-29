@@ -8,8 +8,8 @@ import StateDefaults from 'bsrs-ember/vendor/defaults/state';
 import CountryDefaults from 'bsrs-ember/vendor/defaults/country';
 import AddressTypeDefaults from 'bsrs-ember/vendor/defaults/address-type';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
-import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
 import RoleDefaults from 'bsrs-ember/vendor/defaults/role';
+import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
 
 const HOME_URL = '/';
 
@@ -51,9 +51,11 @@ test('on boot we should fetch and load the address configuration', function(asse
 test('on boot we should fetch and load the country configuration', function(assert) {
     visit(HOME_URL);
     andThen(() => {
-        assert.equal(store.find('country').length, 1);
-        assert.equal(store.find('country').objectAt(0).get('id'), CountryDefaults.firstId);
-        assert.equal(store.find('country').objectAt(0).get('name'), CountryDefaults.firstName);
+        assert.equal(store.find('country').length, 2);
+        assert.equal(store.find('country').objectAt(0).get('id'), CountryDefaults.id);
+        assert.equal(store.find('country').objectAt(0).get('name'), CountryDefaults.name);
+        assert.equal(store.find('country').objectAt(1).get('id'), CountryDefaults.idTwo);
+        assert.equal(store.find('country').objectAt(1).get('name'), CountryDefaults.nameTwo);
     });
 });
 

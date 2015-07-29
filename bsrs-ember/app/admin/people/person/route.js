@@ -28,7 +28,6 @@ export default Ember.Route.extend({
             phone_number_type_repo = this.get('phone_number_type_repo'),
             phone_number_types = phone_number_type_repo.find(),
             address_repo = this.get('address_repo'),
-            addresses = address_repo.findByPersonId(person_pk),
             address_type_repo = this.get('address_type_repo'),
             address_types = address_type_repo.find(),
             statuses = status_repo.find();
@@ -39,7 +38,6 @@ export default Ember.Route.extend({
             phone_numbers: phone_numbers,
             countries: country_repo.find(),
             state_list: state_repo.find(),
-            addresses: addresses,
             address_types: address_types,
             statuses: statuses
         });
@@ -50,7 +48,6 @@ export default Ember.Route.extend({
         controller.set('phone_numbers', hash.phone_numbers);
         controller.set('state_list', hash.state_list);
         controller.set('countries', hash.countries);
-        controller.set('addresses', hash.addresses);
         controller.set('address_types', hash.address_types);
         controller.set('statuses', hash.statuses);
     },
