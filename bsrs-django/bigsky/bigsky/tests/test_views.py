@@ -66,7 +66,16 @@ class ConfigurationTests(TestCase):
         # the model id shows in the context
         self.assertIn(str(self.phone_number_types.id), [c.values()[0] for c in configuration])
 
-    def test_context(self):
+    def test_roles(self):
         response = self.client.get(reverse('index'))
-        self.assertIsNotNone(response.context['phone_number_types_config'])
-        
+        configuration = json.loads(response.context['role_config'])
+        self.assertTrue(len(configuration) > 0)
+        # the model id shows in the context
+        self.assertIn(str(self.person.role.id), [c.values()[0] for c in configuration])
+
+    def test_person_statuses(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['person_status_config'])
+        self.assertTrue(len(configuration) > 0)
+        # the model id shows in the context
+        self.assertIn(str(self.person_status.id), [c.values()[0] for c in configuration])
