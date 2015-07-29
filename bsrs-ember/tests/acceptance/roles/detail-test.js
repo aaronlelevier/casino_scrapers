@@ -46,6 +46,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
         assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.name);
+        assert.equal(find('.t-role-role-type').val(), ROLE_DEFAULTS.role_type_general);
         // assert.equal(find('.t-role-category').val(), CATEGORY_DEFAULTS.category);
         // assert.equal(find('.t-role-location_level').val(), ROLE_DEFAULTS.location_level);
     });
@@ -55,6 +56,19 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.id, name: ROLE_DEFAULTS.namePut, categories: categories});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-role-name', ROLE_DEFAULTS.namePut);
+    fillIn('.t-role-name', ROLE_DEFAULTS.namePut);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
+
+test('when you change a related category name it will be persisted correctly', (assert) => {
+    visit(DETAIL_URL);
+    var url = PREFIX + DETAIL_URL + "/";
+    var categories = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.id, name: CATEGORY_DEFAULTS.nameTwo});
+    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.id, categories});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

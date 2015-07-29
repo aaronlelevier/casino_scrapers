@@ -14,6 +14,7 @@ export default Model.extend({
         return JSON.stringify({
             'id': this.get('id'),
             'name': this.get('name'),
+            'role_type': this.get('role_type'),
             'categories': categories
         });
     }
