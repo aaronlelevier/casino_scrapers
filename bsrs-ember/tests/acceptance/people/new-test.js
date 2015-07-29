@@ -5,6 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 import config from 'bsrs-ember/config/environment';
 
@@ -18,17 +19,18 @@ var application, store, payload;
 module('Acceptance | people-new', {
     beforeEach() {
         payload = {
+            id: UUID.value,
             username: PEOPLE_DEFAULTS.username,
             password: PEOPLE_DEFAULTS.password,
-            email: PEOPLE_DEFAULTS.email,
-            role: PEOPLE_DEFAULTS.role,
             first_name: PEOPLE_DEFAULTS.first_name,
             middle_initial: PEOPLE_DEFAULTS.middle_initial,
             last_name: PEOPLE_DEFAULTS.last_name,
-            phone_numbers: PEOPLE_DEFAULTS.phone_numbers,
-            addresses: PEOPLE_DEFAULTS.addresses,
             location: PEOPLE_DEFAULTS.location,
-            status: PEOPLE_DEFAULTS.status
+            status: PEOPLE_DEFAULTS.status,
+            role: PEOPLE_DEFAULTS.role,
+            email: PEOPLE_DEFAULTS.email,
+            phone_numbers: PEOPLE_DEFAULTS.phone_numbers,
+            addresses: PEOPLE_DEFAULTS.addresses
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -42,12 +44,10 @@ module('Acceptance | people-new', {
 });
 
 test('visiting /people/new', (assert) => {
-    payload.phone_numbers = [{cid: 'abc123', number: '999-999-9999', type: PhoneNumberDefaults.officeType}];
-    var response = Ember.$.extend(true, {id: PEOPLE_DEFAULTS.id}, payload);
-    response.phone_numbers[0].cid = 'abc123';
-    response.phone_numbers[0].id = 'def456';
+    payload.phone_numbers = [{id: UUID.value, number: '999-999-9999', type: PhoneNumberDefaults.officeType}];
     var url = PREFIX + PEOPLE_URL + '/';
-    xhr( url,'POST',payload,{},201,response );
+    var response = Ember.$.extend(true, {}, payload);
+    xhr( url,'POST',JSON.stringify(payload),{},201,response );
     visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {
@@ -69,7 +69,7 @@ test('visiting /people/new', (assert) => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(store.find('person').length, 1);
         var person = store.find('person').objectAt(0);
-        assert.equal(person.get('id'), PEOPLE_DEFAULTS.id);
+        assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
         assert.equal(person.get('email'), PEOPLE_DEFAULTS.email);
@@ -82,21 +82,21 @@ test('visiting /people/new', (assert) => {
         assert.ok(person.get('phoneNumbersIsNotDirty'));
         var phonenumber = person.get('phone_numbers').objectAt(0);
         assert.equal(phonenumber.get('number'), '999-999-9999');
-        assert.equal(phonenumber.get('id'), 'def456');
+        assert.equal(phonenumber.get('id'), UUID.value);
         assert.equal(phonenumber.get('type'), PhoneNumberDefaults.officeType);
-        assert.equal(phonenumber.get('person_id'), PEOPLE_DEFAULTS.id);
+        assert.equal(phonenumber.get('person_id'), UUID.value);
         var phonenumber_from_store = store.find('phonenumber').objectAt(0);
         assert.equal(phonenumber_from_store.get('number'), '999-999-9999');
-        assert.equal(phonenumber_from_store.get('id'), 'def456');
+        assert.equal(phonenumber_from_store.get('id'), UUID.value);
         assert.equal(phonenumber_from_store.get('type'), PhoneNumberDefaults.officeType);
-        assert.equal(phonenumber_from_store.get('person_id'), PEOPLE_DEFAULTS.id);
+        assert.equal(phonenumber_from_store.get('person_id'), UUID.value);
     });
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-    var response = Ember.$.extend(true, {id: 1}, payload);
+    var response = Ember.$.extend(true, {}, payload);
     var url = PREFIX + PEOPLE_URL + '/';
-    xhr( url,'POST',payload,{},201,response );
+    xhr( url,'POST',JSON.stringify(payload),{},201,response );
     visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {

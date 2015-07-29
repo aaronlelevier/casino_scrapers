@@ -17,7 +17,7 @@ export default Ember.Route.extend({
         this.set('editPrivilege', true);
     },
     model(params) {
-        var person_pk = parseInt(params.person_id, 10),
+        var person_pk = params.person_id,
             country_repo = this.get('country_repo'),
             state_repo = this.get('state_repo'),
             status_repo = this.get('status_repo'),

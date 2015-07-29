@@ -1,32 +1,8 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
-import PromiseMixin from 'bsrs-ember/mixins/promise';
+import PromiseMixin from 'ember-promise/mixins/promise';
 
 var PREFIX = config.APP.NAMESPACE;
-
-var extractPhoneNumbers = (person_pk, store) => {
-    var phone_numbers = store.find('phonenumber', {person_id: person_pk});
-    return phone_numbers.map((phone_number) => {
-        var id = phone_number.get('id'),
-            number = phone_number.get('number'),
-            type = phone_number.get('type');
-        return {id: id, number: number, type: type};
-    });
-};
-
-var extractAddresses = (person_pk, store) => {
-    var addresses = store.find('address', {person_id: person_pk});
-    return addresses.map((address) => {
-        var id = address.get('id'),
-            type = address.get('type'),
-            addressLoc = address.get('address'),
-            city = address.get('city'),
-            state = address.get('state'),
-            postal_code = address.get('postal_code'),
-            country = address.get('country');
-        return {id: id, type:type, address: addressLoc, city: city, state: state, postal_code: postal_code, country: country};
-    });
-};
 
 var create_people_with_relationships = (response, store, id) => {
     response.phone_numbers.forEach((phone_number) => {
@@ -51,57 +27,15 @@ var create_people_with_relationships = (response, store, id) => {
     originalPerson.save();
 };
 
-var create_people_with_nested = (model, store) => {
-    var phoneNumbers = extractPhoneNumbers(model.get('id'), store);
-    var addresses = extractAddresses(model.get('id'), store);
-    return {data: {
-        'id': model.get('id'),
-        'username': model.get('username'),
-        'first_name': model.get('first_name'),
-        'middle_initial': model.get('middle_initial'),
-        'last_name': model.get('last_name'),
-        'title': model.get('title'),
-        'emp_number': model.get('emp_number'),
-        'auth_amount': model.get('auth_amount'),
-        'status': model.get('status').id,
-        'role': model.get('role').id,
-        'phone_numbers': phoneNumbers,
-        'addresses': addresses,
-        'acceptassign': model.get('acceptassign'),
-        'emails': model.get('emails')
-    }};
-};
-
 export default Ember.Object.extend({
-    save(model) {
-        if (typeof model.get('id') === 'number') {
-            return this.update(model);
-        } else {
-            return this.insert(model);
-        }
-    },
     insert(model) {
-        return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', {data: model.serialize()}).then((response) => {
-            var django_person_id = response.id;
-            model.get('phone_numbers').forEach(function(phone_number) {
-                phone_number.set('person_id', django_person_id);
-            });
-            model.set('id', django_person_id);
+        return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', {data: model.serialize()}).then(() => {
             model.save();
-            response.phone_numbers.forEach(function(django_response) {
-                model.get('phone_numbers').forEach(function(phone_number) {
-                    if(django_response.cid === phone_number.id) {
-                        phone_number.set('id', django_response.id);
-                    }
-                });
-            });
             model.savePhoneNumbers();
         });
     },
     update(model) {
-        var store = this.get('store');
-        var payload = create_people_with_nested(model, store);
-        return PromiseMixin.xhr(PREFIX + '/admin/people/' + model.get('id') + '/', 'PUT', payload).then((response) => {
+        return PromiseMixin.xhr(PREFIX + '/admin/people/' + model.get('id') + '/', 'PUT', {data: model.serialize()}).then(() => {
             model.save();
             model.savePhoneNumbers();
         });

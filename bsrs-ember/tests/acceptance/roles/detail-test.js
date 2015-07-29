@@ -52,7 +52,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
   var url = PREFIX + DETAIL_URL + "/";
   var response = ROLE_FIXTURES.detail();
   var payload = ROLE_FIXTURES.put({name: 'Broom Pusher'});
-  xhr( url,'PUT',payload,{},200,response );
+  xhr( url,'PUT',JSON.stringify(payload),{},200,response );
   fillIn('.t-role-name', 'Broom Pusher');
   click(SAVE_BTN);
   andThen(() => {

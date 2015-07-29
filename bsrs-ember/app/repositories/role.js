@@ -1,15 +1,15 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
-import PromiseMixin from 'bsrs-ember/mixins/promise';
+import PromiseMixin from 'ember-promise/mixins/promise';
 
 var PREFIX = config.APP.NAMESPACE;
 
 export default Ember.Object.extend({
     save(model) {
-        var payload = {data: {
+        var payload = {data: JSON.stringify({
            'id': model.get('id'),
            'name': model.get('name')
-        }};
+        })};
         return PromiseMixin.xhr(PREFIX + '/admin/roles/' + model.get('id') + '/', 'PUT', payload);
     },
     find() {

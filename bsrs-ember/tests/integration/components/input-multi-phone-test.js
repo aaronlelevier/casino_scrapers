@@ -5,8 +5,10 @@ import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import Person from 'bsrs-ember/models/person';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
-import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
-import PEOPLE_FACTORY from 'bsrs-ember/vendor/people_fixtures';
+import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number';
+import PhoneNumberTypeDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
+import UUID from 'bsrs-ember/vendor/defaults/uuid';
+import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var store;
@@ -26,10 +28,10 @@ moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
 // });
 
 test('defaults to use phone number model with field name of number', function(assert) {
-    var person = store.push('person', {id: 1});
-    var model = store.find('phonenumber', {person_id: 1});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var model = store.find('phonenumber', {person_id: PEOPLE_DEFAULTS.id});
     this.set('model', model);
-    this.set('related_pk', 1);
+    this.set('related_pk', PEOPLE_DEFAULTS.id);
     this.set('related_field', 'person_id');
     this.render(hbs`{{input-multi-phone model=model related_pk=related_pk related_field=related_field}}`);
     assert.equal(model.get('content.length'), 0);
@@ -39,9 +41,9 @@ test('defaults to use phone number model with field name of number', function(as
     $first_btn.trigger('click').trigger('change');
     assert.equal(this.$('.t-new-entry').length, 1);
     assert.equal(model.get('content.length'), 1);
-    assert.equal(model.objectAt(0).get('person_id'), 1);
-    assert.equal(model.objectAt(0).get('type'), 1);
-    assert.equal(model.objectAt(0).get('id'), 'abc123'); //replace w/ default value (plus test a multi situation)
+    assert.equal(model.objectAt(0).get('person_id'), PEOPLE_DEFAULTS.id);
+    assert.equal(model.objectAt(0).get('type'), PhoneNumberTypeDefaults.officeType);
+    assert.equal(model.objectAt(0).get('id'), UUID.value);
     assert.equal(model.objectAt(0).get('number'), undefined);
     this.$('.t-new-entry').val('888-888-8888').trigger('change');
     assert.equal(model.objectAt(0).get('number'), '888-888-8888');
@@ -49,10 +51,10 @@ test('defaults to use phone number model with field name of number', function(as
 
 test('once added a button for phone number type appears with a button to delete it', function(assert) {
     //currently in General Settings Route
-    var model = store.find('phonenumber', {person_id: 1});
-    var phone_number_types = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
+    var model = store.find('phonenumber', {person_id: PEOPLE_DEFAULTS.id});
+    var phone_number_types = [PhoneNumberType.create({id: PhoneNumberTypeDefaults.officeType, name: PhoneNumberTypeDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberTypeDefaults.mobileType, name: PhoneNumberTypeDefaults.mobileName})];
     this.set('model', model);
-    this.set('related_pk', 1);
+    this.set('related_pk', PEOPLE_DEFAULTS.id);
     this.set('related_field', 'person_id');
     this.set('phone_number_types', phone_number_types);
     this.render(hbs`{{input-multi-phone model=model types=phone_number_types related_pk=related_pk related_field=related_field}}`);
@@ -71,14 +73,14 @@ test('once added a button for phone number type appears with a button to delete 
     assert.equal($first_type_select.find('option').length, 2);
     assert.equal($first_type_select.find('option:eq(0)').text(), 'Office');
     assert.equal($first_type_select.find('option:eq(1)').text(), 'Mobile');
-    assert.equal(model.objectAt(0).get("type"), PhoneNumberDefaults.officeType);
+    assert.equal(model.objectAt(0).get("type"), PhoneNumberTypeDefaults.officeType);
 });
 
 test('changing the phone number type will alter the bound value', function(assert) {
-    var phone_number_types = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
-    var model = store.find('phonenumber', {person_id: 1});
+    var phone_number_types = [PhoneNumberType.create({ id: PhoneNumberTypeDefaults.officeType, name: PhoneNumberTypeDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberTypeDefaults.mobileType, name: PhoneNumberTypeDefaults.mobileName })];
+    var model = store.find('phonenumber', {person_id: PEOPLE_DEFAULTS.id});
     this.set('model', model);
-    this.set('related_pk', 1);
+    this.set('related_pk', PEOPLE_DEFAULTS.id);
     this.set('related_field', 'person_id');
     this.set('phone_number_types', phone_number_types);
     this.render(hbs`{{input-multi-phone model=model types=phone_number_types related_pk=related_pk related_field=related_field}}`);
@@ -88,42 +90,40 @@ test('changing the phone number type will alter the bound value', function(asser
     assert.equal($first_type_select.length, 0);
     $first_btn.trigger('click');
     $first_type_select = $component.find('.t-multi-phone-type');
-    assert.equal(model.objectAt(0).get("type"), PhoneNumberDefaults.officeType);
-    $first_type_select.val(PhoneNumberDefaults.mobileType).trigger("change");
-    assert.equal(model.objectAt(0).get("type"), PhoneNumberDefaults.mobileType);
-    assert.equal($first_type_select.val(), PhoneNumberDefaults.mobileType);
+    assert.equal(model.objectAt(0).get("type"), PhoneNumberTypeDefaults.officeType);
+    $first_type_select.val(PhoneNumberTypeDefaults.mobileType).trigger("change");
+    assert.equal(model.objectAt(0).get("type"), PhoneNumberTypeDefaults.mobileType);
+    assert.equal($first_type_select.val(), PhoneNumberTypeDefaults.mobileType);
 });
 
 test('changing existing phone number type will alter the model regardless of the primary key value', function(assert) {
-    var officePhoneNumber = 9;
-    var mobilePhoneNumber = 8;
-    store.push('phonenumber', { id: 1, number: '888-888-8888', type: officePhoneNumber, person_id: 1 });
-    store.push('phonenumber', { id: 2, number: '999-999-9999', type: mobilePhoneNumber, person_id: 1 });
-    var model = store.find('phonenumber', {person_id: 1});
+    store.push('phonenumber', {id: PhoneNumberDefaults.id, number: PhoneNumberDefaults.numberOne, type: PhoneNumberTypeDefaults.officeType, person_id: PEOPLE_DEFAULTS.id});
+    store.push('phonenumber', {id: PhoneNumberDefaults.idTwo, number: PhoneNumberDefaults.numberTwo, type: PhoneNumberTypeDefaults.mobileType, person_id: PEOPLE_DEFAULTS.id});
+    var model = store.find('phonenumber', {person_id: PEOPLE_DEFAULTS.id});
     this.set('model', model);
-    this.set('related_pk', 1);
+    this.set('related_pk', PEOPLE_DEFAULTS.id);
     this.set('related_field', 'person_id');
-    var phone_number_types = [PhoneNumberType.create({ id: officePhoneNumber, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: mobilePhoneNumber, name: PhoneNumberDefaults.mobileName })];
+    var phone_number_types = [PhoneNumberType.create({id: PhoneNumberTypeDefaults.officeType, name: PhoneNumberTypeDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberTypeDefaults.mobileType, name: PhoneNumberTypeDefaults.mobileName})];
     this.set('phone_number_types', phone_number_types);
     this.render(hbs`{{input-multi-phone model=model types=phone_number_types related_pk=related_pk related_field=related_field}}`);
     var $component = this.$('.t-input-multi-phone');
     var $first_type_select = $component.find('.t-multi-phone-type');
     assert.equal($first_type_select.length, 2);
     $first_type_select = $component.find('.t-multi-phone-type');
-    assert.equal(model.objectAt(0).get('type'), officePhoneNumber);
-    $first_type_select.val(mobilePhoneNumber).trigger("change");
-    assert.equal(model.objectAt(0).get("type"), mobilePhoneNumber);
-    assert.equal($first_type_select.val(), mobilePhoneNumber);
+    assert.equal(model.objectAt(0).get('type'), PhoneNumberTypeDefaults.officeType);
+    $first_type_select.val(PhoneNumberTypeDefaults.mobileType).trigger("change");
+    assert.equal(model.objectAt(0).get("type"), PhoneNumberTypeDefaults.mobileType);
+    assert.equal($first_type_select.val(), PhoneNumberTypeDefaults.mobileType);
 });
 
 test('click delete btn will remove input', function(assert) {
     //todo: reduce the duplication on phone_number_types
-    var phone_number_types = [PhoneNumberType.create({ id: PhoneNumberDefaults.officeType, name: PhoneNumberDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberDefaults.mobileType, name: PhoneNumberDefaults.mobileName })];
-    store.push('phonenumber', { id: 1, number: '888-888-8888', type: PhoneNumberDefaults.officeType, person_id: 1 });
-    store.push('phonenumber', { id: 2, number: '999-999-9999', type: PhoneNumberDefaults.mobileType, person_id: 1 });
-    var model = store.find('phonenumber', {person_id: 1});
+    var phone_number_types = [PhoneNumberType.create({ id: PhoneNumberTypeDefaults.officeType, name: PhoneNumberTypeDefaults.officeName }), PhoneNumberType.create({ id: PhoneNumberTypeDefaults.mobileType, name: PhoneNumberTypeDefaults.mobileName})];
+    store.push('phonenumber', {id: PhoneNumberDefaults.id, number: PhoneNumberDefaults.numberOne, type: PhoneNumberTypeDefaults.officeType, person_id: PEOPLE_DEFAULTS.id});
+    store.push('phonenumber', {id: PhoneNumberDefaults.idTwo, number: PhoneNumberDefaults.numberTwo, type: PhoneNumberTypeDefaults.mobileType, person_id: PEOPLE_DEFAULTS.id});
+    var model = store.find('phonenumber', {person_id: PEOPLE_DEFAULTS.id});
     this.set('model', model);
-    this.set('related_pk', 1);
+    this.set('related_pk', PEOPLE_DEFAULTS.id);
     this.set('related_field', 'person_id');
     this.set('phone_number_types', phone_number_types);
     this.render(hbs`{{input-multi-phone model=model types=phone_number_types related_pk=related_pk related_field=related_field}}`);

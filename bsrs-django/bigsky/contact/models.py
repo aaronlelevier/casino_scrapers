@@ -39,7 +39,8 @@ class PhoneNumberType(AbstractNameOrder):
     '''
     Ex- mobile, cell, home, fax.
     '''
-    pass
+    def to_dict(self):
+        return {"id": self.pk, "name": self.name}
 
 
 @python_2_unicode_compatible

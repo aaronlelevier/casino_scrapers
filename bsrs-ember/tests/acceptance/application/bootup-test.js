@@ -60,9 +60,9 @@ test('on boot we should fetch and load the state configuration', function(assert
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('state').length, 51);
-        assert.equal(store.find('state').objectAt(4).get('id'), StateDefaults.firstId);
-        assert.equal(store.find('state').objectAt(4).get('name'), StateDefaults.firstName);
-        assert.equal(store.find('state').objectAt(4).get('abbr'), StateDefaults.firstAbbr);
+        assert.equal(store.find('state').objectAt(4).get('id'), StateDefaults.id);
+        assert.equal(store.find('state').objectAt(4).get('name'), StateDefaults.name);
+        assert.equal(store.find('state').objectAt(4).get('abbr'), StateDefaults.abbr);
     });
 });
 

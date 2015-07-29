@@ -15,7 +15,7 @@ export default Ember.Component.extend(ValidationMixin, {
             if (this.get('valid')) {
                 var model = this.get('model');
                 var repository = this.get('repository');
-                repository.save(model).then(() => {
+                repository.insert(model).then(() => {
                     this.sendAction('savePerson');
                 });
             }

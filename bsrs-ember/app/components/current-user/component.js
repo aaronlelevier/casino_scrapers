@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import PromiseMixin from 'bsrs-ember/mixins/promise';
+import PromiseMixin from 'ember-promise/mixins/promise';
 import windowProxy from 'bsrs-ember/utilities/window-proxy';
 
 export default Ember.Component.extend({

@@ -4,18 +4,12 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': 'sqlite3.db',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
-        'NAME': 'local', # Either create this DB on your machine, or replace 
-        'USER': '',		 # this with the name of your Postgres Django Dev DB.
-        'PASSWORD': '',
+        'NAME': 'ci',
+        'USER': 'bsdev',
+        'PASSWORD': 'tango',
         'HOST': 'localhost',
         'PORT': '5432',
     }

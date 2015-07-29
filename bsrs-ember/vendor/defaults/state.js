@@ -1,8 +1,11 @@
-const FIRST_ID_STATE = 5;
-const FIRST_NAME_STATE = 'California';
-const FIRST_ABBR = 'CA';
+const BSRS_STATE_ID_ONE = 5;
+const BSRS_STATE_NAME_ONE = 'California';
+const BSRS_STATE_ABBR_ONE = 'CA';
+const BSRS_STATE_ID_TWO = 2;
+const BSRS_STATE_NAME_TWO = 'Alabama';
+const BSRS_STATE_ABBR_TWO = 'AL';
 
-var state_list = {firstId: FIRST_ID_STATE, firstName: FIRST_NAME_STATE, firstAbbr: FIRST_ABBR};
+var state_list = {id: BSRS_STATE_ID_ONE, name: BSRS_STATE_NAME_ONE, abbr: BSRS_STATE_ABBR_ONE, idTwo: BSRS_STATE_ID_TWO, nameTwo: BSRS_STATE_NAME_TWO, abbrTwo: BSRS_STATE_ABBR_TWO};
 
 if (typeof window === 'undefined') {
     module.exports = state_list;
