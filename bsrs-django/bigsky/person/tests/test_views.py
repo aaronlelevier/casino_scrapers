@@ -97,7 +97,6 @@ class PersonCreateTests(APITransactionTestCase):
         # simulate posting a Json Dict to create a new Person
         _uuid = uuid.uuid4()
         self.data['id'] = str(_uuid)
-        print 'DATA:', self.data, '\n'
         response = self.client.post('/api/admin/people/', self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Person.objects.count(), 2)

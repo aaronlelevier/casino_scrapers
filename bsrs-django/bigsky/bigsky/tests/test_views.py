@@ -62,12 +62,11 @@ class ConfigurationTests(TestCase):
     def test_phone_number_types(self):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['phone_number_types_config'])
-        print len(configuration)
-        print configuration
         self.assertTrue(len(configuration) > 0)
         # the model id shows in the context
-        self.assertIn(configuration[0]['id'], [c.values()[0] for c in configuration])
+        self.assertIn(str(self.phone_number_types.id), [c.values()[0] for c in configuration])
 
     def test_context(self):
         response = self.client.get(reverse('index'))
         self.assertIsNotNone(response.context['phone_number_types_config'])
+        

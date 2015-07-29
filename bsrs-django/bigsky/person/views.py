@@ -53,16 +53,6 @@ class PersonViewSet(BaseModelViewSet):
         else:
             return PersonListSerializer
 
-    def create(self, request, *args, **kwargs):
-        print 'view: request.data:', request.data, '\n'
-        serializer = self.get_serializer(data=request.data)
-        print 'serializer:', serializer.__dict__, '\n'
-        serializer.is_valid(raise_exception=True)
-        # print 'serializer.is_valid:', serializer.__dict__, '\n' # too long, so comment out
-        self.perform_create(serializer)
-        print 'serializer.perform_create:', serializer.data, '\n'
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     ## TODO:
     # @detail_route(methods=['post'])

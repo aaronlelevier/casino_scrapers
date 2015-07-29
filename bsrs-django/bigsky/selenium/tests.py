@@ -3,8 +3,18 @@ import uuid
 from time import sleep
 
 from selenium import webdriver
+
 from login import LoginMixin
 from javascript import JavascriptMixin
+
+
+def get_text_excluding_children(driver, element):
+    return driver.execute_script("""
+    return jQuery(arguments[0]).contents().filter(function() {
+        return this.nodeType == Node.TEXT_NODE;
+    }).text();
+    """, element)
+
 
 class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
 
@@ -48,6 +58,8 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         first_person = self.wait_for_xhr_request("t-person-new")
         first_person.click()
 
+        print self.driver.find_element_by_name('p')
+
         username_input = self.driver.find_element_by_id("username")
         password_input = self.driver.find_element_by_id("password")
         email_input = self.driver.find_element_by_id("email")
@@ -57,7 +69,7 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
 
         username_input.send_keys(str(uuid.uuid4())[0:29])
         password_input.send_keys("bobber1")
-        role_input.send_keys(1)
+        role_input.send_keys("35a51e17-8bea-4ef2-9917-646d71660b42")
         email_input.send_keys("bobber1@gmail.com")
         first_name_input.send_keys(str(uuid.uuid4())[0:29])
         last_name_input.send_keys('Gibson')
