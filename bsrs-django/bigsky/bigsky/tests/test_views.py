@@ -65,6 +65,7 @@ class ConfigurationTests(TestCase):
         self.assertTrue(len(configuration) > 0)
         # the model id shows in the context
         self.assertIn(str(self.phone_number_types.id), [c.values()[0] for c in configuration])
+        self.assertIn(str(self.phone_number_types.name), [c.values()[1] for c in configuration])
 
     def test_roles(self):
         response = self.client.get(reverse('index'))
@@ -72,6 +73,7 @@ class ConfigurationTests(TestCase):
         self.assertTrue(len(configuration) > 0)
         # the model id shows in the context
         self.assertIn(str(self.person.role.id), [c.values()[0] for c in configuration])
+        self.assertIn(str(self.person.role.name), [c.values()[1] for c in configuration])
 
     def test_person_statuses(self):
         response = self.client.get(reverse('index'))
@@ -79,3 +81,4 @@ class ConfigurationTests(TestCase):
         self.assertTrue(len(configuration) > 0)
         # the model id shows in the context
         self.assertIn(str(self.person_status.id), [c.values()[0] for c in configuration])
+        self.assertIn(str(self.person_status.name), [c.values()[1] for c in configuration])
