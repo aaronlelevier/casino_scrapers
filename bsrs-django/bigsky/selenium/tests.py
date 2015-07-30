@@ -58,8 +58,6 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         first_person = self.wait_for_xhr_request("t-person-new")
         first_person.click()
 
-        print self.driver.find_element_by_name('p')
-
         username_input = self.driver.find_element_by_id("username")
         password_input = self.driver.find_element_by_id("password")
         email_input = self.driver.find_element_by_id("email")
