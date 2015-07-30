@@ -7,7 +7,7 @@ export default Model.extend({
     state: '',
     postal_code: '',
     country: '',
-    serialize: function () {
+    serialize() {
         return {id: this.get('id'), type: this.get('type'), address: this.get('address'), city: this.get('city'), state: this.get('state'), postal_code: this.get('postal_code'), country: this.get('country')};
     }
 });

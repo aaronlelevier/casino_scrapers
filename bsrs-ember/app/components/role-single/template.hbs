@@ -21,6 +21,19 @@
 				{{#form-group title="admin.role.label.name" for="name"}}
 			    	{{input type="text" placeholder=(t "admin.role.label.name") value=model.name class="form-control t-role-name" id="name" required="required"}}
 				{{/form-group}}
+
+				{{#form-group title="admin.role.label.role_type" for="role_type"}}
+			    	{{input type="text" placeholder=(t "admin.role.label.role_type") value=model.role_type class="form-control t-role-role-type" id="role_type" required="required"}}
+				{{/form-group}}
+
+				{{#form-group title="admin.role.label.location_level" for="location_level"}}
+			    	{{input type="text" placeholder=(t "admin.role.label.location_level") value=model.location_level class="form-control t-role-location_level" id="location_level" required="required"}}
+				{{/form-group}}
+        {{#each model.categories as |category|}}
+				{{#form-group title="admin.role.label.category" for="category"}}
+			    	{{input type="text" placeholder=(t "admin.role.label.category") value=category.name class="form-control t-role-category" required="required"}}
+				{{/form-group}}
+        {{/each}}
 			</div>
 		</section>
 	</section>

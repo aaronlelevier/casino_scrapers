@@ -33,13 +33,13 @@ export default Model.extend({
             num.save();
         });
     },
-    rollbackPhoneNumbers: function() {
+    rollbackPhoneNumbers() {
         var phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
             num.rollback();
         });
     },
-    serialize: function () {
+    serialize() {
         //TODO: remove this hard reference to get the first role/status in favor of
         //a truly dynamic lookup via the new/update forms
         var store = this.get('store');
@@ -53,19 +53,19 @@ export default Model.extend({
             return address.serialize();
         });
         return JSON.stringify({
-            'id':this.get('id'),
-            'username':this.get('username'),
-            'password':this.get('password'),
-            'first_name':this.get('first_name'),
-            'middle_initial':this.get('middle_initial'),
-            'last_name':this.get('last_name'),
+            'id': this.get('id'),
+            'username': this.get('username'),
+            'password': this.get('password'),
+            'first_name': this.get('first_name'),
+            'middle_initial': this.get('middle_initial'),
+            'last_name': this.get('last_name'),
             'title': this.get('title'),
             'emp_number': this.get('emp_number'),
             'location':'',
             'auth_amount': this.get('auth_amount'),
             'status': status_id,
             'role': role_id,
-            'email':this.get('email'),
+            'email': this.get('email'),
             'phone_numbers': phone_numbers,
             'addresses': addresses
         });

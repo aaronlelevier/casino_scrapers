@@ -63,9 +63,10 @@ var BSRS_PEOPLE_FACTORY = (function() {
 if (typeof window === 'undefined') {
     var address_fixtures = require('../vendor/address_fixtures');
     var phone_number_fixtures = require('../vendor/phone_number_fixtures');
+    var person_defaults = require('../vendor/defaults/person');
     var role_defaults = require('../vendor/defaults/role');
     var status_defaults = require('../vendor/defaults/status');
-    module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, role_defaults, status_defaults);
+    module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults);
 } else {
     define('bsrs-ember/vendor/people_fixtures', ['exports', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/phone_number_fixtures', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/status'], function (exports, address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults) {
         'use strict';

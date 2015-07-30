@@ -1,25 +1,32 @@
 var BSRS_ROLE_FACTORY = (function() {
-    var factory = function(role_defaults) {
+    var factory = function(role_defaults, category_fixtures) {
         this.role_defaults = role_defaults;
-    }
-    factory.prototype.generate = function() {
+        this.category_fixtures = category_fixtures;
+    };
+    factory.prototype.generate = function(i) {
         return {
-            "id": this.role_defaults.id,
-            "name": this.role_defaults.name
-        };
+            id: this.role_defaults.id,
+            name: this.role_defaults.name,
+            role_type: this.role_defaults.role_type_general,
+            //location_level: this.role_defaults.location_level
+        }
     };
     factory.prototype.list = function() {
         var response = [];
         for (var i=1; i <= 5; i++) {
-            response.push(this.generate());
+            var uuid = '929563yf-6fea-423y-8bc3-19788cd7995';
+            response.push(this.generate(uuid + i));
         }
         return {'count':3,'next':null,'previous':null,'results': response};
     };
-    factory.prototype.detail = function() {
-        return this.generate();
+    factory.prototype.detail = function(i) {
+        var role = this.generate(i);
+        role.categories = this.category_fixtures.get();
+        return role;
     };
     factory.prototype.put = function(role) {
-        var response = this.generate();
+        var response = this.generate(role.id);
+        role.categories = this.category_fixtures.put();
         for (var key in role) {
             response[key] = role[key];
         }
@@ -30,10 +37,11 @@ var BSRS_ROLE_FACTORY = (function() {
 
 if (typeof window === 'undefined') {
     var role_defaults = require('../vendor/defaults/role');
+    var category_fixtures = require('../vendor/category_fixtures');
     module.exports = new BSRS_ROLE_FACTORY(role_defaults);
 } else {
-    define('bsrs-ember/vendor/role_fixtures', ['exports', 'bsrs-ember/vendor/defaults/role'], function (exports, role_defaults) {
+    define('bsrs-ember/vendor/role_fixtures', ['exports','bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/category_fixtures'], function (exports, role_defaults, category_fixtures) {
         'use strict';
-        return new BSRS_ROLE_FACTORY(role_defaults);
+        return new BSRS_ROLE_FACTORY(role_defaults, category_fixtures);
     });
 }

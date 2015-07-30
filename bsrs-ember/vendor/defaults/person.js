@@ -42,8 +42,8 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    var role_defaults = require('../vendor/defaults/role');
-    var status_defaults = require('../vendor/defaults/status');
+    var role_defaults = require('./role');
+    var status_defaults = require('./status');
     module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults).defaults();
 } else {
     define('bsrs-ember/vendor/defaults/person', ['exports', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/status'], function (exports, role_defaults, status_defaults) {
