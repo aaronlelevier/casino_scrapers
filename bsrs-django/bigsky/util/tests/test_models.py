@@ -1,3 +1,5 @@
+import uuid
+
 from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
 from django.contrib.auth.models import ContentType, Group, Permission, User
@@ -35,6 +37,12 @@ class TesterTests(TestCase):
         # return non-deleted objects
         self.t_del = mommy.make(Tester, deleted=timezone.now())
         self.t_ok = mommy.make(Tester)
+
+    def test_create(self):
+        # Confirm can pass in the ``uuid`` instead of only auto-generating it
+        id = uuid.uuid4()
+        tester = mommy.make(Tester, id=id)
+        self.assertEqual(str(id), str(tester.id))
 
     def test_delete(self):
         # can't hide already ``deleted=True`` object, so should have

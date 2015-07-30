@@ -249,73 +249,73 @@
 },
 {
   "fields": {
-    "code": "JsU",
-    "name": "xqqmIpVNRBNVanLyxFnEJHZwTilfLrGRUjUlalUcoeLlYRNTSH",
-    "created": "2015-07-27T21:27:17.664Z",
+    "code": "XEq",
+    "name": "yfdqiYboQKMuKxVcevOjXkIWdBZWSIuvriHvcsdOYpzTLHfAPy",
+    "created": "2015-07-28T00:25:02.689Z",
     "deleted": null,
     "symbol": "n",
-    "format": "oVRSplBIrE",
-    "modified": "2015-07-27T21:27:17.664Z"
+    "format": "lXXtaIBLcS",
+    "modified": "2015-07-28T00:25:02.689Z"
   },
   "model": "accounting.currency",
-  "pk": 1
+  "pk": "f719e181-c3a8-4d9f-8f39-e9873da5745a"
 },
 {
   "fields": {
     "deleted": null,
     "children": [],
-    "modified": "2015-07-27T21:27:17.676Z",
-    "name": "SxwLxqjkBBLDeSvVzoVGyYNXDPcXzzTbLyqVCJrczeQVQfKOWRSUUNCEiYBajkyAFozpdUKqbweEToIIHQBLpcYnYFuJuPmzsLrR",
-    "created": "2015-07-27T21:27:17.676Z"
+    "modified": "2015-07-28T00:25:02.701Z",
+    "name": "psjpPbojDxzfmEzLuTnhcglQTpySCmbSXTIyEaiZVcKfsxNGsaGMNuIVkgqSdOlQCGViQrwDvkpZGziadXOQiKiUrRFMEQwrIDFP",
+    "created": "2015-07-28T00:25:02.701Z"
   },
   "model": "location.locationlevel",
-  "pk": 1
+  "pk": "f000daa1-296d-4022-b96f-2dcb2cf51006"
 },
 {
   "fields": {
     "deleted": null,
-    "modified": "2015-07-27T21:27:17.677Z",
-    "name": "MoBqnAcemFSRoVGeNYgHCzJshWmOEuvCPacWpwiKFzqJkKsrUTvwJBqoEXpmvbSgruLksLnocDTZsWOzjxjNVUvdPVjdSGxTTDvb",
-    "created": "2015-07-27T21:27:17.677Z"
+    "modified": "2015-07-28T00:25:02.703Z",
+    "name": "eGjSSboAhFsxEOvWrkcVDipiGTMPlcXyCJRTQZknpYHXlKmzJFCQqAYwivYEtfyaDjPOudoAeoxnYiGGLSVBDTJmSOdJvkUsdbxy",
+    "created": "2015-07-28T00:25:02.703Z"
   },
   "model": "location.locationstatus",
-  "pk": 1
+  "pk": "257aeedf-a7bc-4638-b395-add10dbf7082"
 },
 {
   "fields": {
     "deleted": null,
-    "modified": "2015-07-27T21:27:17.679Z",
-    "name": "VwAcfrdhJRQMBHqLURChuRFjFFuQaHiKRYgwXaLKEyIdRNUxNcbumoYrlhGLSKWofWCfyHfRXHPizXmLOAzZfyGsoShQqOinNbfD",
-    "created": "2015-07-27T21:27:17.679Z"
+    "modified": "2015-07-28T00:25:02.705Z",
+    "name": "zZWLBIOSCiXrtTMCHeGlSthQAhIrbpZKFUEtpiLoIkmcvkYEEnNUsnhSqhCqARYHNnjcLFXIVGVYLvPlhwBmCHVddWUramCybdFG",
+    "created": "2015-07-28T00:25:02.705Z"
   },
   "model": "location.locationtype",
-  "pk": 1
+  "pk": "1e751218-b5f2-4172-b34a-23e95dccb3ea"
 },
 {
   "fields": {
-    "status": 1,
-    "name": "IXnTQspVWbKRaZSPTcTKGGQSzuQfMQWxjyhnbEUMNTLRHxHzmFFtClnyJiEcYpItxKuhyIQKaNoWKEtoSAirRcXuUdtgUneJKLFg",
-    "level": 1,
+    "status": "257aeedf-a7bc-4638-b395-add10dbf7082",
+    "name": "GmKxZNfyUTchQDtGfZtiLfTLrwSSFcyYnTSwrKrCuUbdZToWVvfjNDALojCKDCypObKUoSmDWxrZuQEqaBCpoAptlEcPtiwXIppD",
+    "level": "f000daa1-296d-4022-b96f-2dcb2cf51006",
     "deleted": null,
-    "created": "2015-07-27T21:27:17.680Z",
-    "modified": "2015-07-27T21:27:17.680Z",
+    "created": "2015-07-28T00:25:02.708Z",
+    "modified": "2015-07-28T00:25:02.708Z",
     "relations": [],
-    "number": "YCVhIoeOeMgeZnTXgVwz",
-    "type": 1
+    "number": "kUVQuswmHqihCiUeMQog",
+    "type": "1e751218-b5f2-4172-b34a-23e95dccb3ea"
   },
   "model": "location.location",
-  "pk": 1
+  "pk": "12ba389d-9222-43ba-a839-a2af643c81c2"
 },
 {
   "fields": {
     "deleted": null,
     "description": "active",
-    "modified": "2015-07-27T21:27:17.674Z",
-    "name": "rfWtXVjYiBFzYiIcTltAwLrKKbkJoIIjmnWHsfmWfcUkEExBBhdjbEwLkgdssVSQpzmDMpUSTMMcTgTmdYzSIvuGihbHyJxazhLw",
-    "created": "2015-07-27T21:27:17.674Z"
+    "modified": "2015-07-28T00:25:02.699Z",
+    "name": "iVLJMFNvtBZJdEORLmazyQnqcMpSDFfVEVEnjceJwYrrxRUlxNZishjoGfTZCXqxeMAgcoRVtULdZfEkqySShKCdViQwnbpEBJqp",
+    "created": "2015-07-28T00:25:02.699Z"
   },
   "model": "person.personstatus",
-  "pk": 1
+  "pk": "103fd8f9-f9ca-4cf0-af27-40b9dbe3412a"
 },
 {
   "fields": {
@@ -1129,7 +1129,7 @@
 },
 {
   "fields": {
-    "name": "uzsjkihugDORdyzmiBiUPTozHzwuNmrufGNUrhbSPTjgtFgiupCZhSGDpHioHnlwgXksvLVVOwhJGynX",
+    "name": "pxfoaAFIIqVUWFgcfgOZkTCigRjKgRRbChdxZrfmPEzyXyDpoAiFiXlLEsHveeuHLwwgOSmzdFXMTdmM",
     "permissions": []
   },
   "model": "auth.group",
@@ -1146,9 +1146,9 @@
     "last_login": null,
     "groups": [],
     "user_permissions": [],
-    "password": "pbkdf2_sha256$20000$QBGRU1G4cV9R$uCOLV4OW8+kcoNW3CPxkoIFYxjQTilD11a0bG+ru23k=",
+    "password": "pbkdf2_sha256$20000$lvS8KlBdZVxy$BmwUeLtzzxW3I6b2sqzVqhKJehLGc3H7VuUy5y/q688=",
     "email": "",
-    "date_joined": "2015-07-27T21:27:17.682Z"
+    "date_joined": "2015-07-28T00:25:02.710Z"
   },
   "model": "auth.user",
   "pk": 1
@@ -1172,7 +1172,7 @@
     "password_history_length": null,
     "inv_wo_status": null,
     "proxy_approval_bypass": false,
-    "password_char_types": "CwYQrypcyqDIhYbgCEAjBQObLUYRfuavGTIpTYVDCYYdaSZBysXTJQggfYUcFEapQivqeNEMvSIzCccZSzdqraoiPcRuMbnhrpGl",
+    "password_char_types": "UAGNmdgReooDRNphtTnshIqqcdIguDEBJmcgnNAOTyoAleSajuxHBmEiSnVnNShRukRcfLmUhthxEbTZhsZvrPlUdEEmjtiARJgB",
     "dashboad_text": "",
     "password_expire": null,
     "inv_max_approval_currency": "usd",
@@ -1185,17 +1185,17 @@
     "default_accept_assign": true,
     "location_level": null,
     "accept_notify": false,
-    "default_auth_amount_currency": 1,
+    "default_auth_amount_currency": "f719e181-c3a8-4d9f-8f39-e9873da5745a",
     "role_type": "contractor",
     "permissions": [],
     "inv_close_wo": "Do not display",
-    "created": "2015-07-27T21:27:17.671Z",
+    "created": "2015-07-28T00:25:02.694Z",
     "wo_edit_closeout": false,
     "modules": "",
-    "modified": "2015-07-27T21:27:17.671Z",
+    "modified": "2015-07-28T00:25:02.694Z",
     "inv_req_attach": true,
     "wo_allow_backdate": false,
-    "default_auth_amount": "87237862701.8999",
+    "default_auth_amount": "58724746665.3340",
     "inv_wait": null,
     "wo_notes": false,
     "accept_assign": false,
@@ -1207,28 +1207,28 @@
 {
   "fields": {
     "proxy_start_date": null,
-    "auth_amount_currency": 1,
+    "auth_amount_currency": "f719e181-c3a8-4d9f-8f39-e9873da5745a",
     "next_approver": null,
     "user_permissions": [],
     "middle_initial": null,
     "employee_id": null,
-    "auth_amount": "87237862701.8999",
+    "auth_amount": "58724746665.3340",
     "title": null,
     "role": 1,
-    "location": 1,
+    "location": "12ba389d-9222-43ba-a839-a2af643c81c2",
     "password_expire": null,
-    "status": 1,
+    "status": "103fd8f9-f9ca-4cf0-af27-40b9dbe3412a",
     "deleted": null,
     "password_one_time": null,
     "groups": [],
     "accept_notify": true,
     "proxy_status": null,
     "proxy_user": null,
-    "created": "2015-07-27T21:27:17.685Z",
-    "modified": "2015-07-27T21:27:17.769Z",
+    "created": "2015-07-28T00:25:02.712Z",
+    "modified": "2015-07-28T00:25:02.799Z",
     "proxy_end_date": null,
     "accept_assign": true,
-    "password_change": "uvNfnuuIypgonXMqDOrOTovkkerklLNRUUniUDqYkydcRXAqfUDbhNYokTdSwjpKlPqYsyxxBwbMqcOMcuzdDKcnCHbQDChNwytxRYLBLHoVXfpZYpIkFnCzBhUNiNsXZdgVJRtyYYcgHfpMHNHFiqxrEhAVSUIbwwAHoIZhQUueYvxogxyvXSIIzKnVmReDZsfbkWOPjwKuTpVDTREzvMZFGqFWpeIbgdNhlTiXAIkfkseKdbOykGPBEgavHkPZTirkVvilnQGeLOUseqiHBnZgFjffTDcmevilWjWvRMQX"
+    "password_change": "tfBGgiFmlEpITiWJIGlBBtxkKFRisHvevDahKaGKdrUFvysaMcNxYiIPMvVDBlxAQEivwRBVtWUoYJFeVUxuWDAilyVFRanAyaWPISULuJkwltYktmMsFoGwbxGvYXxPVUQoOCmYisLDSZbvqMQkUUAseGaGDZMztROFVMuspxjAmEBAkvfLQihsescgEHSxVBDjDGqGKJlcLLFJaPxzjIusDGvDtimwqYgCpMyHomhFzPNrLBOzyXSXxvLlvBnbCrEcpheQBegccVoikAKdaIcXZItuQEAuHHnPpwmRIUvh"
   },
   "model": "person.person",
   "pk": 1

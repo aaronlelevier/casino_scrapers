@@ -64,7 +64,8 @@
 			<h2 class="col-sm-12">{{t "admin.person.label.contact"}}</h2>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.phone_number.other"}}
-					{{input-multi-phone placeholder=(t "admin.person.label.phone_number.one") model=model.phone_numbers types=phone_number_types related_field='person_id' related_pk=model.id}}
+					{{input-multi-phone placeholder=(t "admin.person.label.phone_number.one") model=model.phone_numbers types=phone_number_types related_field='person_id' related_pk=model.id default_type=default_phone_number_type}}
+
 				{{/form-group}}
 			</div>
 		</section>

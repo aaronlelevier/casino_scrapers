@@ -80,7 +80,8 @@ PERSON_FIELDS = (
 
 
 class PersonNestedCreateSerializer(serializers.ModelSerializer):
-
+    
+    id = serializers.UUIDField(read_only=False)
     phone_numbers = PhoneNumberShortFKSerializer(many=True)
 
     class Meta:
@@ -153,16 +154,22 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         return instance
 
 
-# TODO: this will be a route for Password and the main Update
-# will be separate
+class PasswordSerializer(serializers.Serializer):
+    '''
+    TODO: 
+    this will be a route for Password and the main Update will be separate
+    '''
+    class Meta:
+        model = Person
+        write_only_fields = ('password',)
+        fields = ('password',)
 
-# class PasswordSerializer(serializers.Serializer):
-
-#         if 'password' in validated_data:
-#             password = validated_data.pop('password')
-#             instance.set_password(password)
-#             instance.save()
-#             update_session_auth_hash(self.context['request'], instance)
+        def update(self, instance, validated_data):
+            password = validated_data.pop('password')
+            instance.set_password(password)
+            instance.save()
+            update_session_auth_hash(self.context['request'], instance)
+            return super(PasswordSerializer, self).update(instance, validated_data)            
 
 
 class RoleDetailSerializer(serializers.ModelSerializer):

@@ -1,4 +1,5 @@
 import random
+import string
 
 from django.db import IntegrityError
 from django.contrib.auth.models import ContentType, Group, Permission
@@ -41,3 +42,7 @@ def _create_model_view_permissions():
 
 def _generate_ph():
     return ''.join([str(random.randrange(0,10)) for x in range(10)])
+
+
+def _generate_chars():
+    return ''.join([str(random.choice(string.ascii_letters)) for x in range(10)])

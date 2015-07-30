@@ -7,6 +7,10 @@ from person.tests import factory
 
 class FactoryTests(TestCase):
 
+    def test_create_role(self):
+        role = factory.create_role()
+        self.assertIsInstance(role, Role)
+
     def test_create_person(self):
         person = factory.create_person()
         self.assertIsInstance(person, Person)
@@ -29,5 +33,3 @@ class FactoryTests(TestCase):
     def test_related_obj_creates(self):
         person = factory.create_person()
         self.assertIsInstance(person.role, Role)
-        self.assertIsInstance(person.status, PersonStatus)
-        self.assertIsInstance(person.location, Location)

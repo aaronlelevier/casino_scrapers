@@ -1,5 +1,5 @@
-const OFFICE_ADDRESS_TYPE = 1;
-const SHIPPING_ADDRESS_TYPE = 2;
+const OFFICE_ADDRESS_TYPE = '8e16a68c-fda6-4c30-ba7d-fee98257e92d';
+const SHIPPING_ADDRESS_TYPE = 'f7e55e71-1ff2-4cc2-8700-139802738bd0';
 const OFFICE_ADDRESS_NAME = 'admin.address_type.office';
 const SHIPPING_ADDRESS_NAME = 'admin.address_type.shipping';
 

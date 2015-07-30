@@ -7,18 +7,18 @@ from model_mommy import mommy
 
 from location.models import Location
 from person.models import Person, PersonStatus, Role
+from util import create
 
-
-USER_DICT = {}
 
 PASSWORD = '1234'
 
 
-def create_single_person(role, status, location, USER_DICT):
-    person = mommy.make(Person, role=role, status=status, location=location, **USER_DICT)
-    person.set_password(PASSWORD)
-    person.save()
-    return person
+def create_role():
+    return mommy.make(Role, name=create._generate_chars())
+
+
+def create_single_person(username, role):
+    return Person.objects.create_user(username, 'myemail@mail.com', PASSWORD, role=role)
 
 
 def create_person(username=None, _many=1):
@@ -27,23 +27,18 @@ def create_person(username=None, _many=1):
 
     Return: the last user created from the `forloop`
     '''
-    # Single Related Objects
-    role = mommy.make(Role)
-    status = mommy.make(PersonStatus)
-    location = mommy.make(Location)
+    role = create_role()
 
     # Single User Create
     if username and _many != 1:
         raise Exception("Can't specify more than 1 user with a specific username. \
 You specified {} user(s) with username: {}".format(_many, username))
     elif username:
-        USER_DICT['username'] = username
-        return create_single_person(role, status, location, USER_DICT)
+        return create_single_person(username, role)
         
     # Multiple User Create
     for i in range(_many):
         username = ''.join([random.choice(string.ascii_letters) for x in range(10)])
-        USER_DICT['username'] = username
-        user = create_single_person(role, status, location, USER_DICT)
+        user = create_single_person(username, role)
     
     return user

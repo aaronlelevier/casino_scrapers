@@ -40,6 +40,12 @@ export default Model.extend({
         });
     },
     serialize: function () {
+        //TODO: remove this hard reference to get the first role/status in favor of
+        //a truly dynamic lookup via the new/update forms
+        var store = this.get('store');
+        var role_id = store.findOne('role').get('id');
+        var status_id = store.findOne('status').get('id');
+
         var phone_numbers = this.get('phone_numbers').map(function(number) {
             return number.serialize();
         });
@@ -57,9 +63,9 @@ export default Model.extend({
             'emp_number': this.get('emp_number'),
             'location':'',
             'auth_amount': this.get('auth_amount'),
-            'status': 1,
-            'role': 1,
             'email': this.get('email'),
+            'status': status_id,
+            'role': role_id,
             'phone_numbers': phone_numbers,
             'addresses': addresses
         });

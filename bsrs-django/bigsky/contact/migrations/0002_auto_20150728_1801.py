@@ -2,21 +2,22 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.conf import settings
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         ('contact', '0001_initial'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('location', '0001_initial'),
-        ('person', '0001_initial'),
     ]
 
     operations = [
         migrations.AddField(
             model_name='phonenumber',
             name='person',
-            field=models.ForeignKey(related_name='phone_numbers', blank=True, to='person.Person', null=True),
+            field=models.ForeignKey(related_name='phone_numbers', blank=True, to=settings.AUTH_USER_MODEL, null=True),
         ),
         migrations.AddField(
             model_name='phonenumber',
@@ -31,7 +32,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='email',
             name='person',
-            field=models.ForeignKey(related_name='emails', blank=True, to='person.Person', null=True),
+            field=models.ForeignKey(related_name='emails', blank=True, to=settings.AUTH_USER_MODEL, null=True),
         ),
         migrations.AddField(
             model_name='email',
@@ -46,7 +47,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='address',
             name='person',
-            field=models.ForeignKey(related_name='addresses', blank=True, to='person.Person', null=True),
+            field=models.ForeignKey(related_name='addresses', blank=True, to=settings.AUTH_USER_MODEL, null=True),
         ),
         migrations.AddField(
             model_name='address',

@@ -4,14 +4,62 @@ Created on Feb 17, 2015
 @author: tkrier
 """
 from django.test import TestCase
-from django.contrib.auth.models import User
+from django.contrib.auth.models import AbstractUser, User, Group
 
 from model_mommy import mommy
 
 from location.models import Location
 from person.models import Person, PersonStatus, Role
-from person.tests.factory import PASSWORD, create_person
+from person.tests.factory import PASSWORD, create_person, create_role
 from util import exceptions as excp
+
+
+class RoleTests(TestCase):
+
+    def setUp(self):
+        self.role = create_role()
+
+    def test_group(self):
+        self.assertIsInstance(self.role.group, Group)
+
+    def test_name(self):
+        self.assertEqual(self.role.group.name, self.role.name)
+
+
+class PersonStatusManagerTests(TestCase):
+
+    def test_default(self):
+        default = PersonStatus.objects.default()
+        self.assertIsInstance(default, PersonStatus)
+
+
+class PersonStatusTests(TestCase):
+
+    def test_create(self):
+        ps = mommy.make(PersonStatus)
+        self.assertIsInstance(ps, PersonStatus)
+
+
+class PersonManagerTests(TestCase):
+
+    def setUp(self):
+        self.person = create_person()
+        self.person_del = create_person()
+        self.person_del.delete()
+
+    def test_objects(self):
+        # filter out deleted records by default
+        self.assertEqual(Person.objects.count(), 1)
+
+    def test_objects_all(self):
+        self.assertEqual(Person.objects_all.count(), 2)
+
+    def test_create_user(self):
+        people_count = Person.objects.count()
+        role = create_role()
+        person = Person.objects.create_user('myusername', 'myemail@mail.com',
+            'password', role=role)
+        self.assertEqual(Person.objects.count(), people_count+1)
 
 
 class PersonTests(TestCase):
@@ -21,7 +69,7 @@ class PersonTests(TestCase):
         self.person = create_person()
 
     def test_person_is_user_subclass(self):
-        self.assertIsInstance(self.person, User)
+        self.assertIsInstance(self.person, AbstractUser)
 
     def test_person_defaults(self):
         self.assertTrue(self.person.accept_assign)
@@ -29,12 +77,6 @@ class PersonTests(TestCase):
     def test_foreignkeys(self):
         self.assertIsInstance(self.person.status, PersonStatus)
         self.assertIsInstance(self.person.role, Role)
-
-
-class PersonCreateTests(TestCase):
-
-    def setUp(self):
-        self.person = create_person()
 
     def test_create(self):
         self.assertIsInstance(self.person, Person)
@@ -49,9 +91,12 @@ class PersonCreateTests(TestCase):
         self.assertEqual(self.person.first_name, '')
 
     def test_delete(self):
+        self.assertEqual(Person.objects_all.count(), 1)
         self.assertFalse(self.person.deleted)
         self.person.delete()
         self.assertTrue(self.person.deleted)
+        self.assertEqual(Person.objects_all.count(), 1)
+        self.assertEqual(Person.objects.count(), 0)
 
     def test_delete_override(self):
         self.person.delete(override=True)
@@ -60,10 +105,3 @@ class PersonCreateTests(TestCase):
     def test_status(self):
         # should create a PersonStatus and default it
         self.assertEqual(self.person.status, PersonStatus.objects.default())
-
-
-class PersonStatusTests(TestCase):
-
-    def test_create(self):
-        ps = mommy.make(PersonStatus)
-        self.assertIsInstance(ps, PersonStatus)

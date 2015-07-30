@@ -5,6 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
 import StatusDefaults from 'bsrs-ember/vendor/defaults/status';
+import CountryDefaults from 'bsrs-ember/vendor/defaults/country';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_DEFAULTS_PUT from 'bsrs-ember/vendor/defaults/person-put';

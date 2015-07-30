@@ -53,6 +53,7 @@ class PersonViewSet(BaseModelViewSet):
         else:
             return PersonListSerializer
 
+
     ## TODO:
     # @detail_route(methods=['post'])
     # def change_password(self, request, pk):

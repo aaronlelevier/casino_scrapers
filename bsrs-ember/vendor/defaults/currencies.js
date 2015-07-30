@@ -1,4 +1,4 @@
-const USD_ID = 1;
+const USD_ID = '2e92dc64-8646-4ef4-823f-407b5a3a2853';
 const USD_SYMBOL = '$';
 const USD_NAME = 'US Dollar';
 const USD_DECIMAL_DIGITS = 2;

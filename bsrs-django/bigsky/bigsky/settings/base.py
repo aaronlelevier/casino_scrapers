@@ -86,6 +86,8 @@ WSGI_APPLICATION = 'bigsky.wsgi.application'
 # Must Override!
 DATABASES = {}
 
+# AbstractUser Config
+AUTH_USER_MODEL = 'person.Person'
 
 LANGUAGE_CODE = 'en-us'
 

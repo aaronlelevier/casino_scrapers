@@ -43,7 +43,7 @@ module('Acceptance | people-new', {
     }
 });
 
-test('visiting /people/new', (assert) => {
+test('toran visiting /people/new', (assert) => {
     payload.phone_numbers = [{id: UUID.value, number: '999-999-9999', type: PhoneNumberDefaults.officeType}];
     var url = PREFIX + PEOPLE_URL + '/';
     var response = Ember.$.extend(true, {}, payload);
