@@ -8,7 +8,7 @@ const ADMIN_URL = '/admin';
 var application;
 const ADMINPANEL = '.t-side-menu';
 
-module('sco Acceptance | admin layout test', {
+module('Acceptance | admin layout test', {
     beforeEach() {
         application = startApp();
     },

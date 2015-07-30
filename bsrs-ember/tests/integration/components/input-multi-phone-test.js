@@ -13,7 +13,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var store, default_type;
 
-moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
+moduleForComponent('input-multi-phone', 'sco integration: input-multi-phone test', {
     integration: true,
     setup() {
         default_type = PhoneNumberType.create({id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName});
@@ -42,6 +42,7 @@ test('defaults to use phone number model with field name of number', function(as
     var $first_btn = $component.find('.t-add-btn:eq(0)');
     $first_btn.trigger('click').trigger('change');
     assert.equal(this.$('.t-new-entry').length, 1);
+    // assert.equal(store.find('phonenumber').length, 1);
     assert.equal(model.get('content.length'), 1);
     assert.equal(model.objectAt(0).get('person_id'), PEOPLE_DEFAULTS.id);
     assert.equal(model.objectAt(0).get('type'), PHONE_NUMBER_TYPE_DEFAULTS.officeId);
