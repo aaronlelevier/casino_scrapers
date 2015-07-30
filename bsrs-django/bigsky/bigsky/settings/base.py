@@ -134,3 +134,15 @@ CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:80
 
 # get w/ Aaron to understand what settings people run for local dev
 # CORS_ORIGIN_REGEX_WHITELIST = ('^https?://localhost:\d{4}$', '^https?://192\.168\.\d{1,3}\.\d{1,3}:\d{4}$', )
+
+
+################
+# APP SETTINGS #
+################
+
+### LOCATION ###
+
+DEFAULT_LOCATION_STATUS = 'active'
+
+DEFAULT_LOCATION_TYPE = 'big_store'
+

@@ -1,15 +1,15 @@
 from django.db import models
+from django.conf import settings
 from django.test import TestCase
 
 from model_mommy import mommy
 
-from location.models import (LocationLevel, LocationStatus, LocationType,
-    Location, DEFAULT_LOCATION_STATUS)
+from location.models import LocationLevel, LocationStatus, LocationType, Location
 
 
-class LocationLevelManagerTests(TestCase):
+class SelfRefrencingManagerTests(TestCase):
     '''
-    Traverse relationships tests.
+    ``LocationLevel`` Model used for testing of: ``SelfRefrencingManager``
     '''
 
     def setUp(self):
@@ -37,7 +37,7 @@ class LocationLevelManagerTests(TestCase):
         self.assertIsInstance(all_parents, models.query.QuerySet)
 
 
-class LocationLevelTests(TestCase):
+class LocationLevelManagerTests(TestCase):
     '''
     Test default M2M Manager methods which don't traverse relationships.
     '''
@@ -69,12 +69,22 @@ class LocationLevelTests(TestCase):
         self.assertEqual(self.district.parents.count(), 1)
 
 
+class LocationLevelTests(TestCase):
+
+    def setUp(self):
+        self.location = mommy.make(Location)
+
+    def test_name(self):
+        # confirm that the "mixin-inheritance" worked for the ``name`` field
+        self.assertTrue(hasattr(self.location, 'name'))
+
+
 class LocationStatusManagerTests(TestCase):
 
     def test_default(self):
         d = LocationStatus.objects.default()
         self.assertIsInstance(d, LocationStatus)
-        self.assertEqual(d.name, DEFAULT_LOCATION_STATUS)
+        self.assertEqual(d.name, settings.DEFAULT_LOCATION_STATUS)
 
 
 class LocationTests(TestCase):
@@ -85,3 +95,5 @@ class LocationTests(TestCase):
         self.assertIsInstance(l.level, LocationLevel)
         self.assertIsInstance(l.status, LocationStatus)
         self.assertIsInstance(l.type, LocationType)
+
+
