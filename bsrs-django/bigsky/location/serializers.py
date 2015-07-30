@@ -5,7 +5,16 @@ from contact.serializers import (PhoneNumberShortSerializer, AddressShortSeriali
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 
 
+class BaseSerializer(serializers.ModelSerializer):
+    '''
+    Base Serializer for all ModelSerializer ID Fields.
+    '''
+    id = serializers.UUIDField(read_only=False)
+
+
 class LocationLevelSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(read_only=False)
+
     class Meta:
         model = LocationLevel
         fields = ('id', 'name',)

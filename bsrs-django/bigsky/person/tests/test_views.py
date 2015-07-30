@@ -11,11 +11,11 @@ from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
 from contact.models import Address, PhoneNumber, Email, PhoneNumberType
-from location.models import Location
+from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
 from person.tests.factory import PASSWORD, create_person, create_role
 from person.serializers import PersonUpdateSerializer
-from util import create
+from util import create, choices
 
 
 class PersonAuthTests(TestCase):
@@ -323,23 +323,46 @@ class PersonDeleteTests(APITestCase):
         self.assertEqual(Person.objects.count(), init_count-1)
         
 
-class RoleViewSetTests(TestCase):
+class RoleViewSetTests(APITransactionTestCase):
 
     def setUp(self):
-        self.role = create_role()
         self.password = PASSWORD
         self.person = create_person()
-        # perms
-        ct = ContentType.objects.get(app_label='person', model='role')
-        perms = Permission.objects.filter(content_type=ct)
-        for p in perms:
-            self.person.user_permissions.add(p)
-        self.person.save()
+        # LocationLevel
+        self.location = mommy.make(Location)
+        # Role
+        self.role = self.person.role
+        self.role.location_level = self.location.level
+        self.role.save()
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
 
-    def test_access_user(self):
-        """
-        verify we can access user records correctly as a super user
-        """
-        self.client.login(username=self.person.username, password=self.password)
-        response = self.client.get('/api/admin/roles/{}/'.format(self.person.role.pk))
-        self.assertEqual(response.status_code, 200)
+    def tearDown(self):
+        self.client.logout()
+
+    def test_list(self):
+        response = self.client.get('/api/admin/roles/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        roles = data['results']
+        self.assertEqual(roles[0]['id'], str(self.role.pk))
+
+    def test_detail(self):
+        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(data['id'], str(self.role.pk))
+        self.assertTrue(data['location_level'])
+
+    def test_create_role(self):
+        role_data = {
+            "id": str(uuid.uuid4()),
+            "name": "Admin",
+            "role_type": choices.ROLE_TYPE_CHOICES[0][0],
+            "location_level": self.location.level.to_dict()
+        }
+        response = self.client.post('/api/admin/roles/', role_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = json.loads(response.content)
+        self.assertEqual(data['id'], role_data['id'])
+        self.assertIsInstance(Role.objects.get(id=role_data['id']), Role)
