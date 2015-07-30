@@ -8,9 +8,7 @@ export default Ember.Route.extend({
     state_repo: inject('state'),
     status_repo: inject('status'),
     country_repo: inject('country'),
-    phone_number_repo: inject('phonenumber'),
     phone_number_type_repo: inject('phone-number-type'),
-    address_repo: inject('address'),
     address_type_repo: inject('address-type'),
     init() {
         var comp = this.get("tabDoc");
@@ -23,11 +21,8 @@ export default Ember.Route.extend({
             status_repo = this.get('status_repo'),
             repository = this.get('repository'),
             person = repository.findById(person_pk),
-            phone_number_repo = this.get('phone_number_repo'),
-            phone_numbers = phone_number_repo.findByPersonId(person_pk),
             phone_number_type_repo = this.get('phone_number_type_repo'),
             phone_number_types = phone_number_type_repo.find(),
-            address_repo = this.get('address_repo'),
             address_type_repo = this.get('address_type_repo'),
             address_types = address_type_repo.find(),
             statuses = status_repo.find(),
@@ -36,7 +31,6 @@ export default Ember.Route.extend({
         return Ember.RSVP.hash({
             model: person,
             phone_number_types: phone_number_types,
-            phone_numbers: phone_numbers,
             countries: country_repo.find(),
             state_list: state_repo.find(),
             address_types: address_types,
@@ -47,7 +41,6 @@ export default Ember.Route.extend({
     setupController(controller, hash) {
         controller.set('model', hash.model);
         controller.set('phone_number_types', hash.phone_number_types);
-        controller.set('phone_numbers', hash.phone_numbers);
         controller.set('state_list', hash.state_list);
         controller.set('countries', hash.countries);
         controller.set('address_types', hash.address_types);

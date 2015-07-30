@@ -33,13 +33,13 @@ export default Model.extend({
             num.save();
         });
     },
-    rollbackPhoneNumbers: function() {
+    rollbackPhoneNumbers() {
         var phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
             num.rollback();
         });
     },
-    serialize: function () {
+    serialize() {
         //TODO: remove this hard reference to get the first role/status in favor of
         //a truly dynamic lookup via the new/update forms
         var store = this.get('store');

@@ -3,16 +3,12 @@ import inject from 'bsrs-ember/utilities/inject';
 
 export default Ember.Route.extend({
     repository: inject('role'),
-    category_repo: inject('category'),
     model(params) {
         var role_pk = params.role_id,
             repository = this.get('repository'),
-            role = repository.findById(role_pk),
-            categories = this.get('category_repo').find();
-
+            role = repository.findById(role_pk);
         return Ember.RSVP.hash({
-            model: role,
-            categories: categories
+            model: role
         });
     },
     setupController(controller, hash) {
