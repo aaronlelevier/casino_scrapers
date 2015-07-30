@@ -7,11 +7,11 @@ from location import views
 
 router = routers.DefaultRouter()
 router.register(r'locations', views.LocationViewSet)
-router.register(r'locationlevels', views.LocationLevelViewSet)
-router.register(r'locationstatus', views.LocationStatusViewSet)
-router.register(r'locationtypes', views.LocationTypeViewSet)
+router.register(r'location_levels', views.LocationLevelViewSet)
+router.register(r'location_statuses', views.LocationStatusViewSet)
+router.register(r'location_types', views.LocationTypeViewSet)
 
 
 urlpatterns = patterns('',
-    url(r'^api/location/', include(router.urls)),
+    url(r'^api/admin/location/', include(router.urls)),
     )

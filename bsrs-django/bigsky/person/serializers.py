@@ -13,6 +13,7 @@ from django.contrib.auth import update_session_auth_hash
 from rest_framework import serializers
 
 from location.models import LocationLevel, Location
+from location.serializers import LocationLevelSerializer
 from person.models import PersonStatus, Person, Role
 from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (
@@ -45,9 +46,11 @@ Special care needed when updating passwords and creating new users.
 
 class RoleSerializer(serializers.ModelSerializer):
 
+    location_level = LocationLevelSerializer()
+
     class Meta:
         model = Role
-        fields = ('id', 'name',)
+        fields = ('id', 'name', 'role_type', 'location_level')
 
 
 class PersonStatusSerializer(serializers.ModelSerializer):

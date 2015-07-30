@@ -3,8 +3,8 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from location.models import (LocationLevel, LocationStatus,
-    LocationType, Location)
+from location.models import (LocationLevel, LocationStatus, LocationType,
+    Location, DEFAULT_LOCATION_STATUS)
 
 
 class LocationLevelManagerTests(TestCase):
@@ -48,9 +48,18 @@ class LocationLevelTests(TestCase):
         self.assertEqual(region.children.count(), 1)
 
 
+class LocationStatusManagerTests(TestCase):
+
+    def test_default(self):
+        d = LocationStatus.objects.default()
+        self.assertIsInstance(d, LocationStatus)
+        self.assertEqual(d.name, DEFAULT_LOCATION_STATUS)
+
+
 class LocationTests(TestCase):
 
     def test_joins_n_create(self):
         l = mommy.make(Location)
         self.assertIsInstance(l, Location)
         self.assertIsInstance(l.level, LocationLevel)
+        self.assertIsInstance(l.status, LocationStatus)
