@@ -10,7 +10,7 @@ Created on Jan 21, 2015
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
-from util.models import AbstractName, BaseModel
+from util.models import AbstractName, BaseModel, BaseManager
 
 
 class LocationLevelQuerySet(models.query.QuerySet):
@@ -88,20 +88,42 @@ class LocationLevel(AbstractName):
     objects = LocationLevelManager()
 
 
+# Global default, so tests can access it
+DEFAULT_LOCATION_STATUS = 'active'
+
+class LocationStatusManager(BaseManager):
+
+    def default(self):
+        obj, created = self.get_or_create(name=DEFAULT_LOCATION_STATUS)
+        return obj
+
+
 class LocationStatus(AbstractName):
-    pass
+    
+    objects = LocationStatusManager()
 
     
+DEFAULT_LOCATION_TYPE = 'big_store'
+
+class LocationTypeManager(BaseManager):
+
+    def default(self):
+        obj, created = self.get_or_create(name=DEFAULT_LOCATION_TYPE)
+        return obj
+
+
 class LocationType(AbstractName):
-    pass
+    
+    objects = LocationTypeManager()
     
 
 @python_2_unicode_compatible
 class Location(BaseModel):
     # keys
     level = models.ForeignKey(LocationLevel, related_name='locations')
-    status = models.ForeignKey(LocationStatus, related_name='locations')
-    type = models.ForeignKey(LocationType, related_name='locations')
+    status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True,
+        help_text="If not provided, will be the default 'LocationStatus'.")
+    type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
     relations = models.ManyToManyField('self')
     # fields
     name = models.CharField(max_length=100)
@@ -112,3 +134,12 @@ class Location(BaseModel):
     
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.status:
+            self.status = LocationStatus.objects.default()
+        if not self.type:
+            self.type = LocationType.objects.default()
+
+        return super(Location, self).save(*args, **kwargs)
+

@@ -8,7 +8,23 @@ from rest_framework.permissions import DjangoModelPermissions
 
 class BSModelPermissions(DjangoModelPermissions):
     """
-    Overrdide DjangoModelPermissions to include the view options
+    Overrdide DjangoModelPermissions to include the view options.
+
+    To use this ``perms_map``:
+
+    - Globlally create these permissions on the Model objects using:
+        
+        - ``util.create._create_model_view_permissions``
+
+    - Enroll the User in each permission for the Model:
+
+    ```
+    ct = ContentType.objects.get(app_label='person', model='role')
+    perms = Permission.objects.filter(content_type=ct)
+    for p in perms:
+        person.user_permissions.add(p)
+    person.save()
+    ```
     """
 
 perms_map = {

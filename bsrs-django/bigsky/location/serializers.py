@@ -1,26 +1,23 @@
-'''
-Big Sky Retail Systems Framework
-Location serializers
-
-Created on Jan 21, 2015
-
-@author: tkrier
-'''
 from rest_framework import serializers
 
-from contact.serializers import (
-    PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer,
-    )
-from location.models import (
-    LocationLevel, LocationStatus, LocationType, Location, 
-    )
-from person.serializers import PersonListSerializer
+from contact.serializers import (PhoneNumberShortSerializer, AddressShortSerializer,
+    EmailShortSerializer)
+from location.models import LocationLevel, LocationStatus, LocationType, Location
+
+
+class BaseSerializer(serializers.ModelSerializer):
+    '''
+    Base Serializer for all ModelSerializer ID Fields.
+    '''
+    id = serializers.UUIDField(read_only=False)
 
 
 class LocationLevelSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(read_only=False)
+
     class Meta:
         model = LocationLevel
-        fields = ('id', 'name', 'children')
+        fields = ('id', 'name',)
         
 
 class LocationStatusSerializer(serializers.ModelSerializer):
@@ -51,9 +48,9 @@ class LocationGridSerializer(LocationSerializer):
         model = Location
         fields = ('id', 'name', 'number', 'level_name', 'status_name', 'type_name')
 
+
 class LocationFullSerializer(LocationGridSerializer):
     
-    people = PersonListSerializer(many=True, read_only=True)
     phone_numbers = PhoneNumberShortSerializer(many=True, read_only=True)
     addresses = AddressShortSerializer(many=True, read_only=True)
     emails = EmailShortSerializer(many=True, read_only=True)
@@ -61,5 +58,5 @@ class LocationFullSerializer(LocationGridSerializer):
     class Meta:
         model = Location
         fields = ('id', 'name', 'number', 'level', 'level_name', 'status',
-                  'status_name', 'type', 'type_name', 'people', 'relations',
+                  'status_name', 'type', 'type_name', 'relations',
                   'phone_numbers', 'addresses', 'emails')

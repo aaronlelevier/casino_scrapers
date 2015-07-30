@@ -3,11 +3,14 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
-from location.models import (LocationLevel, LocationStatus,
-    LocationType, Location)
+from location.models import (LocationLevel, LocationStatus, LocationType,
+    Location, DEFAULT_LOCATION_STATUS)
 
 
 class LocationLevelManagerTests(TestCase):
+    '''
+    Traverse relationships tests.
+    '''
 
     def setUp(self):
         self.region = mommy.make(LocationLevel, name='region')
@@ -35,17 +38,32 @@ class LocationLevelManagerTests(TestCase):
 
 
 class LocationLevelTests(TestCase):
+    '''
+    Test default M2M Manager methods which don't traverse relationships.
+    '''
 
     def test_children(self):
         district = mommy.make(LocationLevel, name='district')
         region = mommy.make(LocationLevel, name='region')
+        store1 = mommy.make(LocationLevel, name='store1')
+        store2 = mommy.make(LocationLevel, name='store2')
 
         # no children levels
         self.assertEqual(region.children.count(), 0)
 
         # add a child level
         region.children.add(district)
+        district.children.add(store1)
+        district.children.add(store2)
         self.assertEqual(region.children.count(), 1)
+
+
+class LocationStatusManagerTests(TestCase):
+
+    def test_default(self):
+        d = LocationStatus.objects.default()
+        self.assertIsInstance(d, LocationStatus)
+        self.assertEqual(d.name, DEFAULT_LOCATION_STATUS)
 
 
 class LocationTests(TestCase):
@@ -54,3 +72,5 @@ class LocationTests(TestCase):
         l = mommy.make(Location)
         self.assertIsInstance(l, Location)
         self.assertIsInstance(l.level, LocationLevel)
+        self.assertIsInstance(l.status, LocationStatus)
+        self.assertIsInstance(l.type, LocationType)

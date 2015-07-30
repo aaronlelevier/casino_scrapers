@@ -18,9 +18,8 @@ from accounting.models import Currency
 from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
 from util import choices, exceptions as excp
-from util.models import (
-    AbstractName, MainSetting, CustomSetting, BaseModel, BaseManager,
-)
+from util.models import (AbstractName, MainSetting, CustomSetting,
+    BaseModel, BaseManager)
 
 
 @python_2_unicode_compatible
@@ -28,11 +27,11 @@ class Role(BaseModel):
     # keys
     group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
-    role_type = models.CharField(max_length=29,
+    role_type = models.CharField(max_length=29, blank=True,
                                  choices=choices.ROLE_TYPE_CHOICES,
                                  default=choices.ROLE_TYPE_CHOICES[0][0])
     # Required
-    name = models.CharField(max_length=100, help_text="Will be set to the Group Name")
+    name = models.CharField(max_length=100, unique=True, help_text="Will be set to the Group Name")
     # Optional
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
@@ -60,8 +59,10 @@ class Role(BaseModel):
     default_accept_notify = models.BooleanField(blank=True, default=True)
     accept_notify = models.BooleanField(blank=True, default=False)
     # Auth Amounts
-    default_auth_amount = models.DecimalField(max_digits=15, decimal_places=4)
-    default_auth_amount_currency = models.ForeignKey(Currency)
+    default_auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0,
+        help_text="The default amount here will be eventually set by system settings.")
+    default_auth_amount_currency = models.ForeignKey(Currency, blank=True, null=True,
+        help_text="The default currency is 'usd'.")
     # Approvals
     allow_approval = models.BooleanField(blank=True, default=False)
     proxy_approval_bypass = models.BooleanField(blank=True, default=False)
@@ -109,6 +110,9 @@ class Role(BaseModel):
             except IntegrityError:
                 raise
 
+        if not self.default_auth_amount_currency:
+            self.default_auth_amount_currency = Currency.objects.default()
+
         return super(Role, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -117,12 +121,6 @@ class Role(BaseModel):
     @property 
     def _name(self):
         return self.__name__.lower()
-
-
-# @receiver(pre_save, sender=Role)
-# def create_group(sender, instance=None, created=False, **kwargs):
-#     if created:
-#         Group.objects.get_or_create(name=instance.name)
 
 
 class ProxyRole(BaseModel):

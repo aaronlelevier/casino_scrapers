@@ -9,16 +9,14 @@ Created on Jan 16, 2015
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
-
 from rest_framework import serializers
 
-from location.models import LocationLevel, Location
-from person.models import PersonStatus, Person, Role
 from contact.models import PhoneNumber, Address, Email
-from contact.serializers import (
-    PhoneNumberShortSerializer, AddressShortSerializer, EmailShortSerializer,
-    AddressShortFKSerializer, PhoneNumberShortFKSerializer,
-)
+from contact.serializers import (PhoneNumberShortSerializer, AddressShortSerializer,
+    EmailShortSerializer,AddressShortFKSerializer, PhoneNumberShortFKSerializer,)
+from location.models import LocationLevel, Location
+from location.serializers import LocationLevelSerializer
+from person.models import PersonStatus, Person, Role
 
 
 '''
@@ -45,9 +43,12 @@ Special care needed when updating passwords and creating new users.
 
 class RoleSerializer(serializers.ModelSerializer):
 
+    id = serializers.UUIDField(read_only=False)
+    location_level = LocationLevelSerializer(read_only=True)
+
     class Meta:
         model = Role
-        fields = ('id', 'name',)
+        fields = ('id', 'name', 'role_type', 'location_level')
 
 
 class PersonStatusSerializer(serializers.ModelSerializer):
