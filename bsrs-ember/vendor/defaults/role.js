@@ -1,8 +1,8 @@
-const BSRS_ROLE_ID = '929562yf-6fea-423y-8bc3-19788cd79951';
+const BSRS_ROLE_ID = 'af34ee9b-833c-4f3e-a584-b6851d1e04b7';
 const BSRS_ROLE_ID_TWO = 'fc258447-ebc2-499f-a304-d8cf98e32ba8';
 const BSRS_ROLE_TYPE_CONTRACTOR = 'Contractor';
 const BSRS_ROLE_TYPE_GENERAL = 'General';
-const BSRS_ROLE_NAME = 'System Administrator';
+const BSRS_ROLE_NAME = 'Admin';
 const BSRS_ROLE_NAME_PUT = 'Broom Pusher';
 const BSRS_ROLE_LOCATION_LEVEL = 1;
 const BSRS_ROLE_CATEGORY = 1;

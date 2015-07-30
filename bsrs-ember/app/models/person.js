@@ -63,9 +63,9 @@ export default Model.extend({
             'emp_number': this.get('emp_number'),
             'location':'',
             'auth_amount': this.get('auth_amount'),
-            'email': this.get('email'),
             'status': status_id,
             'role': role_id,
+            'email': this.get('email'),
             'phone_numbers': phone_numbers,
             'addresses': addresses
         });
