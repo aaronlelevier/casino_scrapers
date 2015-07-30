@@ -103,8 +103,18 @@ class LocationStatus(AbstractName):
     objects = LocationStatusManager()
 
     
+DEFAULT_LOCATION_TYPE = 'big_store'
+
+class LocationTypeManager(BaseManager):
+
+    def default(self):
+        obj, created = self.get_or_create(name=DEFAULT_LOCATION_TYPE)
+        return obj
+
+
 class LocationType(AbstractName):
-    pass
+    
+    objects = LocationTypeManager()
     
 
 @python_2_unicode_compatible
@@ -128,5 +138,8 @@ class Location(BaseModel):
     def save(self, *args, **kwargs):
         if not self.status:
             self.status = LocationStatus.objects.default()
+        if not self.type:
+            self.type = LocationType.objects.default()
+
         return super(Location, self).save(*args, **kwargs)
 
