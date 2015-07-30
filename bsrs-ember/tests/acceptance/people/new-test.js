@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
+import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import config from 'bsrs-ember/config/environment';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -44,7 +44,7 @@ module('Acceptance | people-new', {
 });
 
 test('toran visiting /people/new', (assert) => {
-    payload.phone_numbers = [{id: UUID.value, number: '999-999-9999', type: PhoneNumberDefaults.officeType}];
+    payload.phone_numbers = [{id: UUID.value, number: '999-999-9999', type: PHONE_NUMBER_DEFAULTS.officeId}];
     var url = PREFIX + PEOPLE_URL + '/';
     var response = Ember.$.extend(true, {}, payload);
     xhr( url,'POST',JSON.stringify(payload),{},201,response );
@@ -83,12 +83,12 @@ test('toran visiting /people/new', (assert) => {
         var phonenumber = person.get('phone_numbers').objectAt(0);
         assert.equal(phonenumber.get('number'), '999-999-9999');
         assert.equal(phonenumber.get('id'), UUID.value);
-        assert.equal(phonenumber.get('type'), PhoneNumberDefaults.officeType);
+        assert.equal(phonenumber.get('type'), PHONE_NUMBER_DEFAULTS.officeId);
         assert.equal(phonenumber.get('person_id'), UUID.value);
         var phonenumber_from_store = store.find('phonenumber').objectAt(0);
         assert.equal(phonenumber_from_store.get('number'), '999-999-9999');
         assert.equal(phonenumber_from_store.get('id'), UUID.value);
-        assert.equal(phonenumber_from_store.get('type'), PhoneNumberDefaults.officeType);
+        assert.equal(phonenumber_from_store.get('type'), PHONE_NUMBER_DEFAULTS.officeId);
         assert.equal(phonenumber_from_store.get('person_id'), UUID.value);
     });
 });

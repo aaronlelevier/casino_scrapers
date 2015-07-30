@@ -8,7 +8,7 @@ export default Ember.Component.extend({
   classNames: ['input-multi-address t-input-multi-address'],
   actions: {
     append() {
-      this.get('model').pushObject(Address.create({type: AddressDefaults.officeType}));
+      this.get('model').pushObject(Address.create({type: AddressDefaults.officeId}));
     },
     delete(entry) {
       this.get('model').removeObject(entry);

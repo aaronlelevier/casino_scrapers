@@ -4,8 +4,8 @@ import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import config from 'bsrs-ember/config/environment';
-import StatusDefaults from 'bsrs-ember/vendor/defaults/status';
-import CountryDefaults from 'bsrs-ember/vendor/defaults/country';
+import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
+import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_DEFAULTS_PUT from 'bsrs-ember/vendor/defaults/person-put';
@@ -64,8 +64,8 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-person-last-name').val(), PEOPLE_DEFAULTS.last_name);
         assert.equal(find('.t-person-title').val(), PEOPLE_DEFAULTS.title);
         assert.equal(find('.t-person-emp_number').val(), PEOPLE_DEFAULTS.emp_number);
-        assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), PHONE_NUMBER_TYPES_DEFAULTS.officeType);
-        assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), PHONE_NUMBER_TYPES_DEFAULTS.mobileType);
+        assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+        assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
         assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), 'Office');
         assert.equal(find('.t-input-multi-phone').find('select:eq(1) option:selected').text(), 'Mobile');
         assert.equal(find('.t-input-multi-phone').find('input').length, 2);
@@ -73,7 +73,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PHONE_NUMBER_DEFAULTS.numberTwo);
 
         assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.officeType);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.officeId);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), 'Office');
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address').val(), ADDRESS_DEFAULTS.streetOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), ADDRESS_DEFAULTS.cityOne);
@@ -81,7 +81,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), ADDRESS_DEFAULTS.countryOne);
 
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.shippingType);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.shippingId);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), 'Shipping');
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address').val(), ADDRESS_DEFAULTS.streetTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), ADDRESS_DEFAULTS.cityTwo);
@@ -89,9 +89,9 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), ADDRESS_DEFAULTS.countryTwo);
 
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), StatusDefaults.activeName);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), StatusDefaults.inactiveName);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), StatusDefaults.expiredName);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeName);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveName);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredName);
 
         assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
     });
@@ -152,9 +152,9 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
-    var phone_numbers = PHONE_NUMBER_FIXTURES.put({id: PHONE_NUMBER_DEFAULTS.idPut, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileType});
+    var phone_numbers = PHONE_NUMBER_FIXTURES.put({id: PHONE_NUMBER_DEFAULTS.idPut, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
-    fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileType);
+    fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     click(SAVE_BTN);
     andThen(() => {
@@ -165,10 +165,10 @@ test('when you change a related phone numbers type it will be persisted correctl
 test('when you change a related address type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
-    var addresses = ADDRESS_FIXTURES.put({id: ADDRESS_DEFAULTS.id, type: ADDRESS_TYPES_DEFAULTS.shippingType});
+    var addresses = ADDRESS_FIXTURES.put({id: ADDRESS_DEFAULTS.id, type: ADDRESS_TYPES_DEFAULTS.shippingId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
-    fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingType);
+    fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
@@ -219,7 +219,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileType);
+    fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {
@@ -234,7 +234,7 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             var phone_numbers = store.find('phonenumber', PEOPLE_DEFAULTS.id);
-            assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeType);
+            assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
         });
     });
 });

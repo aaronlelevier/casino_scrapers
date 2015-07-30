@@ -6,26 +6,26 @@ import Person from 'bsrs-ember/models/person';
 import AddressType from 'bsrs-ember/models/address-type';
 import StateSingle from 'bsrs-ember/models/state'; // weird name because State is a reserved word
 import Country from 'bsrs-ember/models/country';
-import AddressDefaults from 'bsrs-ember/vendor/defaults/address-type';
-import CountryDefaults from 'bsrs-ember/vendor/defaults/country';
-import StateDefaults from 'bsrs-ember/vendor/defaults/state';
+import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
+import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
+import STATE_DEFAULTS from 'bsrs-ember/vendor/defaults/state';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
 function createAddress(id) {
   return Ember.Object.create({
     id: id,
-    type: AddressDefaults.officeType,
+    type: ADDRESS_DEFAULTS.officeId,
     address: '9325 Sky Park Ct\nSuite 120',
     city: 'San Diego',
-    state: StateDefaults.id,
+    state: STATE_DEFAULTS.id,
     zip: '92123',
-    country: CountryDefaults.id
+    country: COUNTRY_DEFAULTS.id
   });
 }//createAddress
 
-var STATE_LIST = [StateSingle.create({ id: StateDefaults.idTwo, name: StateDefaults.nameTwo }), StateSingle.create({ id: StateDefaults.id, name: StateDefaults.name })];
-var ADDRESS_TYPES = [AddressType.create({ id: AddressDefaults.officeType, name: AddressDefaults.officeName }), AddressType.create({ id: AddressDefaults.shippingType, name: AddressDefaults.shippingName })];
-var COUNTRIES = [Country.create({ id: CountryDefaults.id, name: CountryDefaults.name }), Country.create({ id: CountryDefaults.idTwo, name: CountryDefaults.nameTwo })];
+var STATE_LIST = [StateSingle.create({ id: STATE_DEFAULTS.idTwo, name: STATE_DEFAULTS.nameTwo }), StateSingle.create({ id: STATE_DEFAULTS.id, name: STATE_DEFAULTS.name })];
+var ADDRESS_TYPES = [AddressType.create({ id: ADDRESS_DEFAULTS.officeId, name: ADDRESS_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_DEFAULTS.shippingId, name: ADDRESS_DEFAULTS.shippingName })];
+var COUNTRIES = [Country.create({ id: COUNTRY_DEFAULTS.id, name: COUNTRY_DEFAULTS.name }), Country.create({ id: COUNTRY_DEFAULTS.idTwo, name: COUNTRY_DEFAULTS.nameTwo })];
 
 moduleForComponent('input-multi-address', 'integration: input-multi-address test', {
     integration: true,
@@ -73,7 +73,7 @@ test('click add btn will append blank entry to list of entries and binds value t
     assert.equal(model.get('addresses').length, 1);
     //
     // //make sure that the record is blank
-    assert.equal(model.get('addresses').objectAt(0).get('type'), AddressDefaults.officeType);
+    assert.equal(model.get('addresses').objectAt(0).get('type'), ADDRESS_DEFAULTS.officeId);
     assert.equal(model.get('addresses').objectAt(0).get('address'), '');
     assert.equal(model.get('addresses').objectAt(0).get('city'), '');
     assert.equal(model.get('addresses').objectAt(0).get('state'), '');
@@ -130,16 +130,16 @@ test('model with existing array of entries is shown at render and bound to model
 
     var $component = this.$('.t-input-multi-address');
     assert.equal($component.find('.t-del-btn').length, 3);
-    $component.find('.t-address-type:eq(0)').val(AddressDefaults.officeType).trigger('change');
+    $component.find('.t-address-type:eq(0)').val(ADDRESS_DEFAULTS.officeId).trigger('change');
     $component.find('.t-address:eq(0)').val(PEOPLE_DEFAULTS.username).trigger('change');
     $component.find('.t-address-city:eq(0)').val('San Jose').trigger('change');
-    $component.find('.t-address-state:eq(0)').val(StateDefaults.idTwo).trigger('change');
+    $component.find('.t-address-state:eq(0)').val(STATE_DEFAULTS.idTwo).trigger('change');
     $component.find('.t-address-postal-code:eq(0)').val('12345').trigger('change');
-    $component.find('.t-address-country:eq(0)').val(CountryDefaults.idTwo).trigger('change');
+    $component.find('.t-address-country:eq(0)').val(COUNTRY_DEFAULTS.idTwo).trigger('change');
 
-    assert.equal(model.get('addresses').objectAt(0).get('type'), AddressDefaults.officeType);
+    assert.equal(model.get('addresses').objectAt(0).get('type'), ADDRESS_DEFAULTS.officeId);
     assert.equal(model.get('addresses').objectAt(0).get('address'), PEOPLE_DEFAULTS.username);
     assert.equal(model.get('addresses').objectAt(0).get('city'), 'San Jose');
-    assert.equal(model.get('addresses').objectAt(0).get('state'), StateDefaults.idTwo);
-    assert.equal(model.get('addresses').objectAt(0).get('country'), CountryDefaults.idTwo);
+    assert.equal(model.get('addresses').objectAt(0).get('state'), STATE_DEFAULTS.idTwo);
+    assert.equal(model.get('addresses').objectAt(0).get('country'), COUNTRY_DEFAULTS.idTwo);
 });

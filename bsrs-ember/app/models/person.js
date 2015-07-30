@@ -52,22 +52,22 @@ export default Model.extend({
         var addresses = this.get('addresses').map(function(address) {
             return address.serialize();
         });
-        return JSON.stringify({
-            'id': this.get('id'),
-            'username': this.get('username'),
-            'password': this.get('password'),
-            'first_name': this.get('first_name'),
-            'middle_initial': this.get('middle_initial'),
-            'last_name': this.get('last_name'),
-            'title': this.get('title'),
-            'emp_number': this.get('emp_number'),
-            'location':'',
-            'auth_amount': this.get('auth_amount'),
-            'status': status_id,
-            'role': role_id,
-            'email': this.get('email'),
-            'phone_numbers': phone_numbers,
-            'addresses': addresses
-        });
+        return {
+            id: this.get('id'),
+            username: this.get('username'),
+            password: this.get('password'),
+            first_name: this.get('first_name'),
+            middle_initial: this.get('middle_initial'),
+            last_name: this.get('last_name'),
+            title: this.get('title'),
+            emp_number: this.get('emp_number'),
+            location:'',
+            auth_amount: this.get('auth_amount'),
+            status: status_id,
+            role: role_id,
+            email: this.get('email'),
+            phone_numbers: phone_numbers,
+            addresses: addresses
+        };
     }
 });

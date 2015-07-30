@@ -1,17 +1,25 @@
-const BSRS_STATE_ID_ONE = 5;
-const BSRS_STATE_NAME_ONE = 'California';
-const BSRS_STATE_ABBR_ONE = 'CA';
-const BSRS_STATE_ID_TWO = 2;
-const BSRS_STATE_NAME_TWO = 'Alabama';
-const BSRS_STATE_ABBR_TWO = 'AL';
+var BSRS_STATE_DEFAULTS_OBJECT = (function() {
+    var factory = function() {
+    };
+    factory.prototype.defaults = function() {
+        return {
+            id: 5,
+            name: 'California',
+            abbr: 'CA',
+            idTwo: 2,
+            nameTwo: 'Alabama',
+            abbrTwo: 'AL',
 
-var state_list = {id: BSRS_STATE_ID_ONE, name: BSRS_STATE_NAME_ONE, abbr: BSRS_STATE_ABBR_ONE, idTwo: BSRS_STATE_ID_TWO, nameTwo: BSRS_STATE_NAME_TWO, abbrTwo: BSRS_STATE_ABBR_TWO};
+        }
+    };
+    return factory;
+})();
 
 if (typeof window === 'undefined') {
-    module.exports = state_list;
+    module.exports = new BSRS_STATE_DEFAULTS_OBJECT().defaults();
 } else {
     define('bsrs-ember/vendor/defaults/state', ['exports'], function (exports) {
         'use strict';
-        return state_list;
+        return new BSRS_STATE_DEFAULTS_OBJECT().defaults();
     });
 }

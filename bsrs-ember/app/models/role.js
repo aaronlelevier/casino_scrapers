@@ -11,11 +11,11 @@ export default Model.extend({
         var categories = this.get('categories').map((category) => {
             return category.serialize();
         });
-        return JSON.stringify({
-            'id': this.get('id'),
-            'name': this.get('name'),
-            'role_type': this.get('role_type'),
-            'categories': categories
-        });
+        return {
+            id: this.get('id'),
+            name: this.get('name'),
+            role_type: this.get('role_type'),
+            categories: categories
+        };
     }
 });

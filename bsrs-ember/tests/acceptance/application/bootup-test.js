@@ -3,13 +3,13 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
-import StatusDefaults from 'bsrs-ember/vendor/defaults/status';
-import StateDefaults from 'bsrs-ember/vendor/defaults/state';
-import CountryDefaults from 'bsrs-ember/vendor/defaults/country';
-import AddressTypeDefaults from 'bsrs-ember/vendor/defaults/address-type';
-import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
-import RoleDefaults from 'bsrs-ember/vendor/defaults/role';
-import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
+import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
+import STATE_DEFAULTS from 'bsrs-ember/vendor/defaults/state';
+import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
+import ADDRESSTYPEDEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
+import PHONE_NUMBER_DEFAULT from 'bsrs-ember/vendor/defaults/phone-number-type';
+import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/currencies';
 
 const HOME_URL = '/';
 
@@ -30,10 +30,10 @@ test('on boot we should fetch and load the phone number configuration', function
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('phone-number-type').length, 2);
-        assert.equal(store.find('phone-number-type').objectAt(0).get('id'), PhoneNumberDefaults.officeType);
-        assert.equal(store.find('phone-number-type').objectAt(0).get('name'), PhoneNumberDefaults.officeName);
-        assert.equal(store.find('phone-number-type').objectAt(1).get('id'), PhoneNumberDefaults.mobileType);
-        assert.equal(store.find('phone-number-type').objectAt(1).get('name'), PhoneNumberDefaults.mobileName);
+        assert.equal(store.find('phone-number-type').objectAt(0).get('id'), PHONE_NUMBER_DEFAULT.officeId);
+        assert.equal(store.find('phone-number-type').objectAt(0).get('name'), PHONE_NUMBER_DEFAULT.officeName);
+        assert.equal(store.find('phone-number-type').objectAt(1).get('id'), PHONE_NUMBER_DEFAULT.mobileId);
+        assert.equal(store.find('phone-number-type').objectAt(1).get('name'), PHONE_NUMBER_DEFAULT.mobileName);
     });
 });
 
@@ -41,10 +41,10 @@ test('on boot we should fetch and load the address configuration', function(asse
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('address-type').length, 2);
-        assert.equal(store.find('address-type').objectAt(0).get('id'), AddressTypeDefaults.officeType);
-        assert.equal(store.find('address-type').objectAt(0).get('name'), AddressTypeDefaults.officeName);
-        assert.equal(store.find('address-type').objectAt(1).get('id'), AddressTypeDefaults.shippingType);
-        assert.equal(store.find('address-type').objectAt(1).get('name'), AddressTypeDefaults.shippingName);
+        assert.equal(store.find('address-type').objectAt(0).get('id'), ADDRESSTYPEDEFAULTS.officeId);
+        assert.equal(store.find('address-type').objectAt(0).get('name'), ADDRESSTYPEDEFAULTS.officeName);
+        assert.equal(store.find('address-type').objectAt(1).get('id'), ADDRESSTYPEDEFAULTS.shippingId);
+        assert.equal(store.find('address-type').objectAt(1).get('name'), ADDRESSTYPEDEFAULTS.shippingName);
     });
 });
 
@@ -52,10 +52,10 @@ test('on boot we should fetch and load the country configuration', function(asse
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('country').length, 2);
-        assert.equal(store.find('country').objectAt(0).get('id'), CountryDefaults.id);
-        assert.equal(store.find('country').objectAt(0).get('name'), CountryDefaults.name);
-        assert.equal(store.find('country').objectAt(1).get('id'), CountryDefaults.idTwo);
-        assert.equal(store.find('country').objectAt(1).get('name'), CountryDefaults.nameTwo);
+        assert.equal(store.find('country').objectAt(0).get('id'), COUNTRY_DEFAULTS.id);
+        assert.equal(store.find('country').objectAt(0).get('name'), COUNTRY_DEFAULTS.name);
+        assert.equal(store.find('country').objectAt(1).get('id'), COUNTRY_DEFAULTS.idTwo);
+        assert.equal(store.find('country').objectAt(1).get('name'), COUNTRY_DEFAULTS.nameTwo);
     });
 });
 
@@ -63,9 +63,9 @@ test('on boot we should fetch and load the state configuration', function(assert
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('state').length, 51);
-        assert.equal(store.find('state').objectAt(4).get('id'), StateDefaults.id);
-        assert.equal(store.find('state').objectAt(4).get('name'), StateDefaults.name);
-        assert.equal(store.find('state').objectAt(4).get('abbr'), StateDefaults.abbr);
+        assert.equal(store.find('state').objectAt(4).get('id'), STATE_DEFAULTS.id);
+        assert.equal(store.find('state').objectAt(4).get('name'), STATE_DEFAULTS.name);
+        assert.equal(store.find('state').objectAt(4).get('abbr'), STATE_DEFAULTS.abbr);
     });
 });
 
@@ -73,12 +73,12 @@ test('on boot we should fetch and load the status configuration', function(asser
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('status').length, 3);
-        assert.equal(store.find('status').objectAt(0).get('id'), StatusDefaults.activeId);
-        assert.equal(store.find('status').objectAt(0).get('name'), StatusDefaults.activeName);
-        assert.equal(store.find('status').objectAt(1).get('id'), StatusDefaults.inactiveId);
-        assert.equal(store.find('status').objectAt(1).get('name'), StatusDefaults.inactiveName);
-        assert.equal(store.find('status').objectAt(2).get('id'), StatusDefaults.expiredId);
-        assert.equal(store.find('status').objectAt(2).get('name'), StatusDefaults.expiredName);
+        assert.equal(store.find('status').objectAt(0).get('id'), STATUS_DEFAULTS.activeId);
+        assert.equal(store.find('status').objectAt(0).get('name'), STATUS_DEFAULTS.activeName);
+        assert.equal(store.find('status').objectAt(1).get('id'), STATUS_DEFAULTS.inactiveId);
+        assert.equal(store.find('status').objectAt(1).get('name'), STATUS_DEFAULTS.inactiveName);
+        assert.equal(store.find('status').objectAt(2).get('id'), STATUS_DEFAULTS.expiredId);
+        assert.equal(store.find('status').objectAt(2).get('name'), STATUS_DEFAULTS.expiredName);
     });
 });
 
@@ -87,14 +87,14 @@ test('on boot we should fetch and load the currency configuration', function(ass
     andThen(() => {
         var currency_models = store.find('currency');
         assert.equal(currency_models.length, 4);
-        assert.equal(currency_models.objectAt(0).get('id'), CurrencyDefaults.id);
-        assert.equal(currency_models.objectAt(0).get('symbol'), CurrencyDefaults.symbol);
-        assert.equal(currency_models.objectAt(0).get('decimal_digits'), CurrencyDefaults.decimal_digits);
-        assert.equal(currency_models.objectAt(0).get('code'), CurrencyDefaults.code);
-        assert.equal(currency_models.objectAt(0).get('symbol_native'), CurrencyDefaults.symbol_native);
-        assert.equal(currency_models.objectAt(0).get('rounding'), CurrencyDefaults.rounding);
-        assert.equal(currency_models.objectAt(0).get('name_plural'), CurrencyDefaults.name_plural);
-        assert.equal(currency_models.objectAt(0).get('name'), CurrencyDefaults.name);
+        assert.equal(currency_models.objectAt(0).get('id'), CURRENCY_DEFAULTS.id);
+        assert.equal(currency_models.objectAt(0).get('symbol'), CURRENCY_DEFAULTS.symbol);
+        assert.equal(currency_models.objectAt(0).get('decimal_digits'), CURRENCY_DEFAULTS.decimal_digits);
+        assert.equal(currency_models.objectAt(0).get('code'), CURRENCY_DEFAULTS.code);
+        assert.equal(currency_models.objectAt(0).get('symbol_native'), CURRENCY_DEFAULTS.symbol_native);
+        assert.equal(currency_models.objectAt(0).get('rounding'), CURRENCY_DEFAULTS.rounding);
+        assert.equal(currency_models.objectAt(0).get('name_plural'), CURRENCY_DEFAULTS.name_plural);
+        assert.equal(currency_models.objectAt(0).get('name'), CURRENCY_DEFAULTS.name);
     });
 });
 
@@ -103,7 +103,7 @@ test('on boot we should fetch and load the role configuration', function(assert)
     andThen(() => {
         var role_models = store.find('role');
         assert.equal(role_models.length, 2);
-        assert.equal(role_models.objectAt(0).get('id'), RoleDefaults.id);
-        assert.equal(role_models.objectAt(0).get('name'), RoleDefaults.name);
+        assert.equal(role_models.objectAt(0).get('id'), ROLE_DEFAULTS.id);
+        assert.equal(role_models.objectAt(0).get('name'), ROLE_DEFAULTS.name);
     });
 });

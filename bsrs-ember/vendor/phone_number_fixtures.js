@@ -12,7 +12,7 @@ var BSRS_PHONE_NUMBER_FACTORY = (function() {
             'id':this.first_pk,
             'number':this.first_number,
             'type':{
-                'id': this.phone_number_type_defaults.officeType,
+                'id': this.phone_number_type_defaults.officeId,
                 'name': this.phone_number_type_defaults.officeName
             }
         },
@@ -20,14 +20,14 @@ var BSRS_PHONE_NUMBER_FACTORY = (function() {
             'id':this.second_pk,
             'number':this.second_number,
             'type':{
-                'id':this.phone_number_type_defaults.mobileType,
+                'id':this.phone_number_type_defaults.mobileId,
                 'name': this.phone_number_type_defaults.mobileName
             }
         }];
     };
     factory.prototype.put = function(phone_number) {
         var phone_numbers = [
-            {id: this.first_pk, number: this.first_number, type: this.phone_number_type_defaults.officeType}, {id: this.second_pk, number: this.second_number, type: this.phone_number_type_defaults.mobileType}
+            {id: this.first_pk, number: this.first_number, type: this.phone_number_type_defaults.officeId}, {id: this.second_pk, number: this.second_number, type: this.phone_number_type_defaults.mobileId}
         ];
         if(!phone_number) {
             return phone_numbers;

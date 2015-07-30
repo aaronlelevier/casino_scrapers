@@ -1,15 +1,22 @@
-const OFFICE_ADDRESS_TYPE = '8e16a68c-fda6-4c30-ba7d-fee98257e92d';
-const SHIPPING_ADDRESS_TYPE = 'f7e55e71-1ff2-4cc2-8700-139802738bd0';
-const OFFICE_ADDRESS_NAME = 'admin.address_type.office';
-const SHIPPING_ADDRESS_NAME = 'admin.address_type.shipping';
-
-var address_type_defaults = {officeType: OFFICE_ADDRESS_TYPE, officeName: OFFICE_ADDRESS_NAME, shippingType: SHIPPING_ADDRESS_TYPE, shippingName: SHIPPING_ADDRESS_NAME };
+var BSRS_ADDRESS_TYPE_DEFAULTS_OBJECT = (function() {
+    var factory = function() {
+    };
+    factory.prototype.defaults = function() {
+        return {
+            officeId: '8e16a68c-fda6-4c30-ba7d-fee98257e92d',
+            shippingId: 'f7e55e71-1ff2-4cc2-8700-139802738bd0',
+            officeName: 'admin.address_type.office',
+            shippingName: 'admin.address_type.shipping',
+        };
+    };
+    return factory;
+})();
 
 if (typeof window === 'undefined') {
-    module.exports = address_type_defaults;
+    module.exports = new BSRS_ADDRESS_TYPE_DEFAULTS_OBJECT().defaults();
 } else {
     define('bsrs-ember/vendor/defaults/address-type', ['exports'], function (exports) {
         'use strict';
-        return address_type_defaults;
+        return new BSRS_ADDRESS_TYPE_DEFAULTS_OBJECT().defaults();
     });
 }
