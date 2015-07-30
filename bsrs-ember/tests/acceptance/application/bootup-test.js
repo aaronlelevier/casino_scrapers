@@ -6,7 +6,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
 import STATE_DEFAULTS from 'bsrs-ember/vendor/defaults/state';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
-import ADDRESSTYPEDEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
+import ADDRESS_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import PHONE_NUMBER_DEFAULT from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/currencies';
@@ -41,10 +41,10 @@ test('on boot we should fetch and load the address configuration', function(asse
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('address-type').length, 2);
-        assert.equal(store.find('address-type').objectAt(0).get('id'), ADDRESSTYPEDEFAULTS.officeId);
-        assert.equal(store.find('address-type').objectAt(0).get('name'), ADDRESSTYPEDEFAULTS.officeName);
-        assert.equal(store.find('address-type').objectAt(1).get('id'), ADDRESSTYPEDEFAULTS.shippingId);
-        assert.equal(store.find('address-type').objectAt(1).get('name'), ADDRESSTYPEDEFAULTS.shippingName);
+        assert.equal(store.find('address-type').objectAt(0).get('id'), ADDRESS_TYPE_DEFAULTS.officeId);
+        assert.equal(store.find('address-type').objectAt(0).get('name'), ADDRESS_TYPE_DEFAULTS.officeName);
+        assert.equal(store.find('address-type').objectAt(1).get('id'), ADDRESS_TYPE_DEFAULTS.shippingId);
+        assert.equal(store.find('address-type').objectAt(1).get('name'), ADDRESS_TYPE_DEFAULTS.shippingName);
     });
 });
 

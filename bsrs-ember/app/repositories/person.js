@@ -1,11 +1,12 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
-import Deserialize from 'bsrs-ember/deserializers/person';
+import inject from 'bsrs-ember/utilities/deserializer';
 
 var PREFIX = config.APP.NAMESPACE;
 
 export default Ember.Object.extend({
+    deserializer: inject('person'),
     insert(model) {
         return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
@@ -19,19 +20,15 @@ export default Ember.Object.extend({
         });
     },
     find() {
-        var store = this.get('store');
         PromiseMixin.xhr(PREFIX + '/admin/people/', 'GET').then((response) => {
-            response.results.forEach((model) => {
-                store.push('person', model);
-            });
+            this.get('deserializer').deserialize(response);
         });
-        return store.find('person');
+        return this.get('store').find('person');
     },
     findById(id) {
-        var store = this.get('store');
         PromiseMixin.xhr(PREFIX + '/admin/people/' + id + '/', 'GET').then((response) => {
-            Deserialize(response, store, id);
+            this.get('deserializer').deserialize(response, id);
         });
-        return store.find('person', id);
+        return this.get('store').find('person', id);
     }
 });
