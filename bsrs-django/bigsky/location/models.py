@@ -124,7 +124,7 @@ class Location(BaseModel):
     status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True,
         help_text="If not provided, will be the default 'LocationStatus'.")
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
-    relations = models.ManyToManyField('self')
+    children = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='parents')
     # fields
     name = models.CharField(max_length=100)
     number = models.CharField(max_length=20)

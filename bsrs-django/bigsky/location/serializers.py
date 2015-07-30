@@ -36,7 +36,7 @@ class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         fields = ('id', 'name', 'number', 'level', 'status', 'type',
-                  'people', 'relations')
+                  'people', 'children')
         
 class LocationGridSerializer(LocationSerializer):
     
@@ -58,5 +58,5 @@ class LocationFullSerializer(LocationGridSerializer):
     class Meta:
         model = Location
         fields = ('id', 'name', 'number', 'level', 'level_name', 'status',
-                  'status_name', 'type', 'type_name', 'relations',
+                  'status_name', 'type', 'type_name', 'children',
                   'phone_numbers', 'addresses', 'emails')
