@@ -6,7 +6,7 @@ import inject from 'bsrs-ember/utilities/deserializer';
 var PREFIX = config.APP.NAMESPACE;
 
 export default Ember.Object.extend({
-    deserializer: inject('person'),
+    PersonDeserializer: inject('person'),
     insert(model) {
         return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
@@ -21,13 +21,13 @@ export default Ember.Object.extend({
     },
     find() {
         PromiseMixin.xhr(PREFIX + '/admin/people/', 'GET').then((response) => {
-            this.get('deserializer').deserialize(response);
+            this.get('PersonDeserializer').deserialize(response);
         });
         return this.get('store').find('person');
     },
     findById(id) {
         PromiseMixin.xhr(PREFIX + '/admin/people/' + id + '/', 'GET').then((response) => {
-            this.get('deserializer').deserialize(response, id);
+            this.get('PersonDeserializer').deserialize(response, id);
         });
         return this.get('store').find('person', id);
     }

@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-export default Ember.Object.extend({
+var PersonDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
@@ -37,3 +37,5 @@ export default Ember.Object.extend({
         });
     }
 });
+
+export default PersonDeserializer;
