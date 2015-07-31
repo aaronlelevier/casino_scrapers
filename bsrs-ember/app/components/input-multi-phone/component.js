@@ -6,7 +6,6 @@ import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 
 export default Ember.Component.extend({
     uuid: inject('uuid'),
-    store: injectStore('main'),
     tagName: 'div',
     classNames: ['input-multi t-input-multi-phone'],
     fieldNames: 'number',
@@ -23,7 +22,7 @@ export default Ember.Component.extend({
             var related_pk = this.get('related_pk');
             var model = {id: id, type: type};
             model[related_field] = related_pk;
-            this.get('store').push('phonenumber', model);
+            this.get('model').push(model);
         },
         delete(entry) {
             this.get('model').removeObject(entry);
