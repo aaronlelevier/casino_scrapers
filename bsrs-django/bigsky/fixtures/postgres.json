@@ -25,19 +25,11 @@
 },
 {
   "fields": {
-    "model": "user",
-    "app_label": "auth"
-  },
-  "model": "contenttypes.contenttype",
-  "pk": 4
-},
-{
-  "fields": {
     "model": "contenttype",
     "app_label": "contenttypes"
   },
   "model": "contenttypes.contenttype",
-  "pk": 5
+  "pk": 4
 },
 {
   "fields": {
@@ -45,7 +37,7 @@
     "app_label": "sessions"
   },
   "model": "contenttypes.contenttype",
-  "pk": 6
+  "pk": 5
 },
 {
   "fields": {
@@ -53,7 +45,7 @@
     "app_label": "sites"
   },
   "model": "contenttypes.contenttype",
-  "pk": 7
+  "pk": 6
 },
 {
   "fields": {
@@ -61,7 +53,7 @@
     "app_label": "flatpages"
   },
   "model": "contenttypes.contenttype",
-  "pk": 8
+  "pk": 7
 },
 {
   "fields": {
@@ -69,7 +61,7 @@
     "app_label": "corsheaders"
   },
   "model": "contenttypes.contenttype",
-  "pk": 9
+  "pk": 8
 },
 {
   "fields": {
@@ -77,7 +69,7 @@
     "app_label": "accounting"
   },
   "model": "contenttypes.contenttype",
-  "pk": 10
+  "pk": 9
 },
 {
   "fields": {
@@ -85,7 +77,7 @@
     "app_label": "contact"
   },
   "model": "contenttypes.contenttype",
-  "pk": 11
+  "pk": 10
 },
 {
   "fields": {
@@ -93,7 +85,7 @@
     "app_label": "contact"
   },
   "model": "contenttypes.contenttype",
-  "pk": 12
+  "pk": 11
 },
 {
   "fields": {
@@ -101,7 +93,7 @@
     "app_label": "contact"
   },
   "model": "contenttypes.contenttype",
-  "pk": 13
+  "pk": 12
 },
 {
   "fields": {
@@ -109,7 +101,7 @@
     "app_label": "contact"
   },
   "model": "contenttypes.contenttype",
-  "pk": 14
+  "pk": 13
 },
 {
   "fields": {
@@ -117,7 +109,7 @@
     "app_label": "contact"
   },
   "model": "contenttypes.contenttype",
-  "pk": 15
+  "pk": 14
 },
 {
   "fields": {
@@ -125,7 +117,7 @@
     "app_label": "contact"
   },
   "model": "contenttypes.contenttype",
-  "pk": 16
+  "pk": 15
 },
 {
   "fields": {
@@ -133,7 +125,7 @@
     "app_label": "location"
   },
   "model": "contenttypes.contenttype",
-  "pk": 17
+  "pk": 16
 },
 {
   "fields": {
@@ -141,7 +133,7 @@
     "app_label": "location"
   },
   "model": "contenttypes.contenttype",
-  "pk": 18
+  "pk": 17
 },
 {
   "fields": {
@@ -149,7 +141,7 @@
     "app_label": "location"
   },
   "model": "contenttypes.contenttype",
-  "pk": 19
+  "pk": 18
 },
 {
   "fields": {
@@ -157,7 +149,7 @@
     "app_label": "location"
   },
   "model": "contenttypes.contenttype",
-  "pk": 20
+  "pk": 19
 },
 {
   "fields": {
@@ -165,7 +157,7 @@
     "app_label": "person"
   },
   "model": "contenttypes.contenttype",
-  "pk": 21
+  "pk": 20
 },
 {
   "fields": {
@@ -173,7 +165,7 @@
     "app_label": "person"
   },
   "model": "contenttypes.contenttype",
-  "pk": 22
+  "pk": 21
 },
 {
   "fields": {
@@ -181,7 +173,7 @@
     "app_label": "person"
   },
   "model": "contenttypes.contenttype",
-  "pk": 23
+  "pk": 22
 },
 {
   "fields": {
@@ -189,7 +181,7 @@
     "app_label": "person"
   },
   "model": "contenttypes.contenttype",
-  "pk": 24
+  "pk": 23
 },
 {
   "fields": {
@@ -197,7 +189,7 @@
     "app_label": "role"
   },
   "model": "contenttypes.contenttype",
-  "pk": 25
+  "pk": 24
 },
 {
   "fields": {
@@ -205,7 +197,7 @@
     "app_label": "util"
   },
   "model": "contenttypes.contenttype",
-  "pk": 26
+  "pk": 25
 },
 {
   "fields": {
@@ -213,7 +205,7 @@
     "app_label": "util"
   },
   "model": "contenttypes.contenttype",
-  "pk": 27
+  "pk": 26
 },
 {
   "fields": {
@@ -221,7 +213,7 @@
     "app_label": "util"
   },
   "model": "contenttypes.contenttype",
-  "pk": 28
+  "pk": 27
 },
 {
   "fields": {
@@ -229,7 +221,7 @@
     "app_label": "order"
   },
   "model": "contenttypes.contenttype",
-  "pk": 29
+  "pk": 28
 },
 {
   "fields": {
@@ -237,7 +229,15 @@
     "app_label": "order"
   },
   "model": "contenttypes.contenttype",
-  "pk": 30
+  "pk": 29
+},
+{
+  "fields": {
+    "expire_date": "2015-08-12T16:52:07.222Z",
+    "session_data": "YzRhOWE3NGE1OTIyNjc4NTRkMjkxYmYwMzZhYmNkNGJjZGNkODA1NDp7Il9hdXRoX3VzZXJfaGFzaCI6IjA4YWUyNGFmN2QyYTBhMDFiZjU1ZmZhYmVmYTBlMGE5ZTdjMjVlNzgiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiJjNjY3N2JmMC03ZTE5LTRiNDYtYWYyNi1kMDFkMjM3YzgyYjAifQ=="
+  },
+  "model": "sessions.session",
+  "pk": "p7ppgsf6ns2i494fk6rgeub1scb3ypv2"
 },
 {
   "fields": {
@@ -249,73 +249,27 @@
 },
 {
   "fields": {
-    "code": "XEq",
-    "name": "yfdqiYboQKMuKxVcevOjXkIWdBZWSIuvriHvcsdOYpzTLHfAPy",
-    "created": "2015-07-28T00:25:02.689Z",
+    "code": "qGi",
+    "name": "zBRutTjsgUHnGRoBHdqlbxzJdszoVdGIAbxFydBPyObDjPJLHj",
+    "created": "2015-07-29T01:02:04.212Z",
     "deleted": null,
-    "symbol": "n",
-    "format": "lXXtaIBLcS",
-    "modified": "2015-07-28T00:25:02.689Z"
+    "symbol": "C",
+    "format": "VEUwUgIMBR",
+    "modified": "2015-07-29T01:02:04.212Z"
   },
   "model": "accounting.currency",
-  "pk": "f719e181-c3a8-4d9f-8f39-e9873da5745a"
-},
-{
-  "fields": {
-    "deleted": null,
-    "children": [],
-    "modified": "2015-07-28T00:25:02.701Z",
-    "name": "psjpPbojDxzfmEzLuTnhcglQTpySCmbSXTIyEaiZVcKfsxNGsaGMNuIVkgqSdOlQCGViQrwDvkpZGziadXOQiKiUrRFMEQwrIDFP",
-    "created": "2015-07-28T00:25:02.701Z"
-  },
-  "model": "location.locationlevel",
-  "pk": "f000daa1-296d-4022-b96f-2dcb2cf51006"
-},
-{
-  "fields": {
-    "deleted": null,
-    "modified": "2015-07-28T00:25:02.703Z",
-    "name": "eGjSSboAhFsxEOvWrkcVDipiGTMPlcXyCJRTQZknpYHXlKmzJFCQqAYwivYEtfyaDjPOudoAeoxnYiGGLSVBDTJmSOdJvkUsdbxy",
-    "created": "2015-07-28T00:25:02.703Z"
-  },
-  "model": "location.locationstatus",
-  "pk": "257aeedf-a7bc-4638-b395-add10dbf7082"
-},
-{
-  "fields": {
-    "deleted": null,
-    "modified": "2015-07-28T00:25:02.705Z",
-    "name": "zZWLBIOSCiXrtTMCHeGlSthQAhIrbpZKFUEtpiLoIkmcvkYEEnNUsnhSqhCqARYHNnjcLFXIVGVYLvPlhwBmCHVddWUramCybdFG",
-    "created": "2015-07-28T00:25:02.705Z"
-  },
-  "model": "location.locationtype",
-  "pk": "1e751218-b5f2-4172-b34a-23e95dccb3ea"
-},
-{
-  "fields": {
-    "status": "257aeedf-a7bc-4638-b395-add10dbf7082",
-    "name": "GmKxZNfyUTchQDtGfZtiLfTLrwSSFcyYnTSwrKrCuUbdZToWVvfjNDALojCKDCypObKUoSmDWxrZuQEqaBCpoAptlEcPtiwXIppD",
-    "level": "f000daa1-296d-4022-b96f-2dcb2cf51006",
-    "deleted": null,
-    "created": "2015-07-28T00:25:02.708Z",
-    "modified": "2015-07-28T00:25:02.708Z",
-    "relations": [],
-    "number": "kUVQuswmHqihCiUeMQog",
-    "type": "1e751218-b5f2-4172-b34a-23e95dccb3ea"
-  },
-  "model": "location.location",
-  "pk": "12ba389d-9222-43ba-a839-a2af643c81c2"
+  "pk": "f8716abf-65f1-4d85-ac8c-55afffb2f7dd"
 },
 {
   "fields": {
     "deleted": null,
     "description": "active",
-    "modified": "2015-07-28T00:25:02.699Z",
-    "name": "iVLJMFNvtBZJdEORLmazyQnqcMpSDFfVEVEnjceJwYrrxRUlxNZishjoGfTZCXqxeMAgcoRVtULdZfEkqySShKCdViQwnbpEBJqp",
-    "created": "2015-07-28T00:25:02.699Z"
+    "modified": "2015-07-29T01:02:04.304Z",
+    "name": "",
+    "created": "2015-07-29T01:02:04.304Z"
   },
   "model": "person.personstatus",
-  "pk": "103fd8f9-f9ca-4cf0-af27-40b9dbe3412a"
+  "pk": "a2413603-44ea-4433-9f61-7fc4cc5439ff"
 },
 {
   "fields": {
@@ -400,8 +354,8 @@
 },
 {
   "fields": {
-    "codename": "add_user",
-    "name": "Can add user",
+    "codename": "add_contenttype",
+    "name": "Can add content type",
     "content_type": 4
   },
   "model": "auth.permission",
@@ -409,8 +363,8 @@
 },
 {
   "fields": {
-    "codename": "change_user",
-    "name": "Can change user",
+    "codename": "change_contenttype",
+    "name": "Can change content type",
     "content_type": 4
   },
   "model": "auth.permission",
@@ -418,8 +372,8 @@
 },
 {
   "fields": {
-    "codename": "delete_user",
-    "name": "Can delete user",
+    "codename": "delete_contenttype",
+    "name": "Can delete content type",
     "content_type": 4
   },
   "model": "auth.permission",
@@ -427,8 +381,8 @@
 },
 {
   "fields": {
-    "codename": "add_contenttype",
-    "name": "Can add content type",
+    "codename": "add_session",
+    "name": "Can add session",
     "content_type": 5
   },
   "model": "auth.permission",
@@ -436,8 +390,8 @@
 },
 {
   "fields": {
-    "codename": "change_contenttype",
-    "name": "Can change content type",
+    "codename": "change_session",
+    "name": "Can change session",
     "content_type": 5
   },
   "model": "auth.permission",
@@ -445,8 +399,8 @@
 },
 {
   "fields": {
-    "codename": "delete_contenttype",
-    "name": "Can delete content type",
+    "codename": "delete_session",
+    "name": "Can delete session",
     "content_type": 5
   },
   "model": "auth.permission",
@@ -454,8 +408,8 @@
 },
 {
   "fields": {
-    "codename": "add_session",
-    "name": "Can add session",
+    "codename": "add_site",
+    "name": "Can add site",
     "content_type": 6
   },
   "model": "auth.permission",
@@ -463,8 +417,8 @@
 },
 {
   "fields": {
-    "codename": "change_session",
-    "name": "Can change session",
+    "codename": "change_site",
+    "name": "Can change site",
     "content_type": 6
   },
   "model": "auth.permission",
@@ -472,8 +426,8 @@
 },
 {
   "fields": {
-    "codename": "delete_session",
-    "name": "Can delete session",
+    "codename": "delete_site",
+    "name": "Can delete site",
     "content_type": 6
   },
   "model": "auth.permission",
@@ -481,8 +435,8 @@
 },
 {
   "fields": {
-    "codename": "add_site",
-    "name": "Can add site",
+    "codename": "add_flatpage",
+    "name": "Can add flat page",
     "content_type": 7
   },
   "model": "auth.permission",
@@ -490,8 +444,8 @@
 },
 {
   "fields": {
-    "codename": "change_site",
-    "name": "Can change site",
+    "codename": "change_flatpage",
+    "name": "Can change flat page",
     "content_type": 7
   },
   "model": "auth.permission",
@@ -499,8 +453,8 @@
 },
 {
   "fields": {
-    "codename": "delete_site",
-    "name": "Can delete site",
+    "codename": "delete_flatpage",
+    "name": "Can delete flat page",
     "content_type": 7
   },
   "model": "auth.permission",
@@ -508,8 +462,8 @@
 },
 {
   "fields": {
-    "codename": "add_flatpage",
-    "name": "Can add flat page",
+    "codename": "add_corsmodel",
+    "name": "Can add cors model",
     "content_type": 8
   },
   "model": "auth.permission",
@@ -517,8 +471,8 @@
 },
 {
   "fields": {
-    "codename": "change_flatpage",
-    "name": "Can change flat page",
+    "codename": "change_corsmodel",
+    "name": "Can change cors model",
     "content_type": 8
   },
   "model": "auth.permission",
@@ -526,8 +480,8 @@
 },
 {
   "fields": {
-    "codename": "delete_flatpage",
-    "name": "Can delete flat page",
+    "codename": "delete_corsmodel",
+    "name": "Can delete cors model",
     "content_type": 8
   },
   "model": "auth.permission",
@@ -535,8 +489,8 @@
 },
 {
   "fields": {
-    "codename": "add_corsmodel",
-    "name": "Can add cors model",
+    "codename": "add_currency",
+    "name": "Can add currency",
     "content_type": 9
   },
   "model": "auth.permission",
@@ -544,8 +498,8 @@
 },
 {
   "fields": {
-    "codename": "change_corsmodel",
-    "name": "Can change cors model",
+    "codename": "change_currency",
+    "name": "Can change currency",
     "content_type": 9
   },
   "model": "auth.permission",
@@ -553,8 +507,8 @@
 },
 {
   "fields": {
-    "codename": "delete_corsmodel",
-    "name": "Can delete cors model",
+    "codename": "delete_currency",
+    "name": "Can delete currency",
     "content_type": 9
   },
   "model": "auth.permission",
@@ -562,8 +516,8 @@
 },
 {
   "fields": {
-    "codename": "add_currency",
-    "name": "Can add currency",
+    "codename": "add_phonenumbertype",
+    "name": "Can add phone number type",
     "content_type": 10
   },
   "model": "auth.permission",
@@ -571,8 +525,8 @@
 },
 {
   "fields": {
-    "codename": "change_currency",
-    "name": "Can change currency",
+    "codename": "change_phonenumbertype",
+    "name": "Can change phone number type",
     "content_type": 10
   },
   "model": "auth.permission",
@@ -580,8 +534,8 @@
 },
 {
   "fields": {
-    "codename": "delete_currency",
-    "name": "Can delete currency",
+    "codename": "delete_phonenumbertype",
+    "name": "Can delete phone number type",
     "content_type": 10
   },
   "model": "auth.permission",
@@ -589,8 +543,8 @@
 },
 {
   "fields": {
-    "codename": "add_phonenumbertype",
-    "name": "Can add phone number type",
+    "codename": "add_phonenumber",
+    "name": "Can add phone number",
     "content_type": 11
   },
   "model": "auth.permission",
@@ -598,8 +552,8 @@
 },
 {
   "fields": {
-    "codename": "change_phonenumbertype",
-    "name": "Can change phone number type",
+    "codename": "change_phonenumber",
+    "name": "Can change phone number",
     "content_type": 11
   },
   "model": "auth.permission",
@@ -607,8 +561,8 @@
 },
 {
   "fields": {
-    "codename": "delete_phonenumbertype",
-    "name": "Can delete phone number type",
+    "codename": "delete_phonenumber",
+    "name": "Can delete phone number",
     "content_type": 11
   },
   "model": "auth.permission",
@@ -616,8 +570,8 @@
 },
 {
   "fields": {
-    "codename": "add_phonenumber",
-    "name": "Can add phone number",
+    "codename": "add_addresstype",
+    "name": "Can add address type",
     "content_type": 12
   },
   "model": "auth.permission",
@@ -625,8 +579,8 @@
 },
 {
   "fields": {
-    "codename": "change_phonenumber",
-    "name": "Can change phone number",
+    "codename": "change_addresstype",
+    "name": "Can change address type",
     "content_type": 12
   },
   "model": "auth.permission",
@@ -634,8 +588,8 @@
 },
 {
   "fields": {
-    "codename": "delete_phonenumber",
-    "name": "Can delete phone number",
+    "codename": "delete_addresstype",
+    "name": "Can delete address type",
     "content_type": 12
   },
   "model": "auth.permission",
@@ -643,8 +597,8 @@
 },
 {
   "fields": {
-    "codename": "add_addresstype",
-    "name": "Can add address type",
+    "codename": "add_address",
+    "name": "Can add address",
     "content_type": 13
   },
   "model": "auth.permission",
@@ -652,8 +606,8 @@
 },
 {
   "fields": {
-    "codename": "change_addresstype",
-    "name": "Can change address type",
+    "codename": "change_address",
+    "name": "Can change address",
     "content_type": 13
   },
   "model": "auth.permission",
@@ -661,8 +615,8 @@
 },
 {
   "fields": {
-    "codename": "delete_addresstype",
-    "name": "Can delete address type",
+    "codename": "delete_address",
+    "name": "Can delete address",
     "content_type": 13
   },
   "model": "auth.permission",
@@ -670,8 +624,8 @@
 },
 {
   "fields": {
-    "codename": "add_address",
-    "name": "Can add address",
+    "codename": "add_emailtype",
+    "name": "Can add email type",
     "content_type": 14
   },
   "model": "auth.permission",
@@ -679,8 +633,8 @@
 },
 {
   "fields": {
-    "codename": "change_address",
-    "name": "Can change address",
+    "codename": "change_emailtype",
+    "name": "Can change email type",
     "content_type": 14
   },
   "model": "auth.permission",
@@ -688,8 +642,8 @@
 },
 {
   "fields": {
-    "codename": "delete_address",
-    "name": "Can delete address",
+    "codename": "delete_emailtype",
+    "name": "Can delete email type",
     "content_type": 14
   },
   "model": "auth.permission",
@@ -697,8 +651,8 @@
 },
 {
   "fields": {
-    "codename": "add_emailtype",
-    "name": "Can add email type",
+    "codename": "add_email",
+    "name": "Can add email",
     "content_type": 15
   },
   "model": "auth.permission",
@@ -706,8 +660,8 @@
 },
 {
   "fields": {
-    "codename": "change_emailtype",
-    "name": "Can change email type",
+    "codename": "change_email",
+    "name": "Can change email",
     "content_type": 15
   },
   "model": "auth.permission",
@@ -715,8 +669,8 @@
 },
 {
   "fields": {
-    "codename": "delete_emailtype",
-    "name": "Can delete email type",
+    "codename": "delete_email",
+    "name": "Can delete email",
     "content_type": 15
   },
   "model": "auth.permission",
@@ -724,8 +678,8 @@
 },
 {
   "fields": {
-    "codename": "add_email",
-    "name": "Can add email",
+    "codename": "add_locationlevel",
+    "name": "Can add location level",
     "content_type": 16
   },
   "model": "auth.permission",
@@ -733,8 +687,8 @@
 },
 {
   "fields": {
-    "codename": "change_email",
-    "name": "Can change email",
+    "codename": "change_locationlevel",
+    "name": "Can change location level",
     "content_type": 16
   },
   "model": "auth.permission",
@@ -742,8 +696,8 @@
 },
 {
   "fields": {
-    "codename": "delete_email",
-    "name": "Can delete email",
+    "codename": "delete_locationlevel",
+    "name": "Can delete location level",
     "content_type": 16
   },
   "model": "auth.permission",
@@ -751,8 +705,8 @@
 },
 {
   "fields": {
-    "codename": "add_locationlevel",
-    "name": "Can add location level",
+    "codename": "add_locationstatus",
+    "name": "Can add location status",
     "content_type": 17
   },
   "model": "auth.permission",
@@ -760,8 +714,8 @@
 },
 {
   "fields": {
-    "codename": "change_locationlevel",
-    "name": "Can change location level",
+    "codename": "change_locationstatus",
+    "name": "Can change location status",
     "content_type": 17
   },
   "model": "auth.permission",
@@ -769,8 +723,8 @@
 },
 {
   "fields": {
-    "codename": "delete_locationlevel",
-    "name": "Can delete location level",
+    "codename": "delete_locationstatus",
+    "name": "Can delete location status",
     "content_type": 17
   },
   "model": "auth.permission",
@@ -778,8 +732,8 @@
 },
 {
   "fields": {
-    "codename": "add_locationstatus",
-    "name": "Can add location status",
+    "codename": "add_locationtype",
+    "name": "Can add location type",
     "content_type": 18
   },
   "model": "auth.permission",
@@ -787,8 +741,8 @@
 },
 {
   "fields": {
-    "codename": "change_locationstatus",
-    "name": "Can change location status",
+    "codename": "change_locationtype",
+    "name": "Can change location type",
     "content_type": 18
   },
   "model": "auth.permission",
@@ -796,8 +750,8 @@
 },
 {
   "fields": {
-    "codename": "delete_locationstatus",
-    "name": "Can delete location status",
+    "codename": "delete_locationtype",
+    "name": "Can delete location type",
     "content_type": 18
   },
   "model": "auth.permission",
@@ -805,8 +759,8 @@
 },
 {
   "fields": {
-    "codename": "add_locationtype",
-    "name": "Can add location type",
+    "codename": "add_location",
+    "name": "Can add location",
     "content_type": 19
   },
   "model": "auth.permission",
@@ -814,8 +768,8 @@
 },
 {
   "fields": {
-    "codename": "change_locationtype",
-    "name": "Can change location type",
+    "codename": "change_location",
+    "name": "Can change location",
     "content_type": 19
   },
   "model": "auth.permission",
@@ -823,8 +777,8 @@
 },
 {
   "fields": {
-    "codename": "delete_locationtype",
-    "name": "Can delete location type",
+    "codename": "delete_location",
+    "name": "Can delete location",
     "content_type": 19
   },
   "model": "auth.permission",
@@ -832,8 +786,8 @@
 },
 {
   "fields": {
-    "codename": "add_location",
-    "name": "Can add location",
+    "codename": "add_role",
+    "name": "Can add role",
     "content_type": 20
   },
   "model": "auth.permission",
@@ -841,8 +795,8 @@
 },
 {
   "fields": {
-    "codename": "change_location",
-    "name": "Can change location",
+    "codename": "change_role",
+    "name": "Can change role",
     "content_type": 20
   },
   "model": "auth.permission",
@@ -850,8 +804,8 @@
 },
 {
   "fields": {
-    "codename": "delete_location",
-    "name": "Can delete location",
+    "codename": "delete_role",
+    "name": "Can delete role",
     "content_type": 20
   },
   "model": "auth.permission",
@@ -859,8 +813,8 @@
 },
 {
   "fields": {
-    "codename": "add_role",
-    "name": "Can add role",
+    "codename": "add_proxyrole",
+    "name": "Can add proxy role",
     "content_type": 21
   },
   "model": "auth.permission",
@@ -868,8 +822,8 @@
 },
 {
   "fields": {
-    "codename": "change_role",
-    "name": "Can change role",
+    "codename": "change_proxyrole",
+    "name": "Can change proxy role",
     "content_type": 21
   },
   "model": "auth.permission",
@@ -877,8 +831,8 @@
 },
 {
   "fields": {
-    "codename": "delete_role",
-    "name": "Can delete role",
+    "codename": "delete_proxyrole",
+    "name": "Can delete proxy role",
     "content_type": 21
   },
   "model": "auth.permission",
@@ -886,8 +840,8 @@
 },
 {
   "fields": {
-    "codename": "add_proxyrole",
-    "name": "Can add proxy role",
+    "codename": "add_personstatus",
+    "name": "Can add person status",
     "content_type": 22
   },
   "model": "auth.permission",
@@ -895,8 +849,8 @@
 },
 {
   "fields": {
-    "codename": "change_proxyrole",
-    "name": "Can change proxy role",
+    "codename": "change_personstatus",
+    "name": "Can change person status",
     "content_type": 22
   },
   "model": "auth.permission",
@@ -904,8 +858,8 @@
 },
 {
   "fields": {
-    "codename": "delete_proxyrole",
-    "name": "Can delete proxy role",
+    "codename": "delete_personstatus",
+    "name": "Can delete person status",
     "content_type": 22
   },
   "model": "auth.permission",
@@ -913,8 +867,8 @@
 },
 {
   "fields": {
-    "codename": "add_personstatus",
-    "name": "Can add person status",
+    "codename": "add_person",
+    "name": "Can add person",
     "content_type": 23
   },
   "model": "auth.permission",
@@ -922,8 +876,8 @@
 },
 {
   "fields": {
-    "codename": "change_personstatus",
-    "name": "Can change person status",
+    "codename": "change_person",
+    "name": "Can change person",
     "content_type": 23
   },
   "model": "auth.permission",
@@ -931,8 +885,8 @@
 },
 {
   "fields": {
-    "codename": "delete_personstatus",
-    "name": "Can delete person status",
+    "codename": "delete_person",
+    "name": "Can delete person",
     "content_type": 23
   },
   "model": "auth.permission",
@@ -940,8 +894,8 @@
 },
 {
   "fields": {
-    "codename": "add_person",
-    "name": "Can add person",
+    "codename": "add_category",
+    "name": "Can add Category",
     "content_type": 24
   },
   "model": "auth.permission",
@@ -949,8 +903,8 @@
 },
 {
   "fields": {
-    "codename": "change_person",
-    "name": "Can change person",
+    "codename": "change_category",
+    "name": "Can change Category",
     "content_type": 24
   },
   "model": "auth.permission",
@@ -958,8 +912,8 @@
 },
 {
   "fields": {
-    "codename": "delete_person",
-    "name": "Can delete person",
+    "codename": "delete_category",
+    "name": "Can delete Category",
     "content_type": 24
   },
   "model": "auth.permission",
@@ -967,8 +921,8 @@
 },
 {
   "fields": {
-    "codename": "add_category",
-    "name": "Can add Category",
+    "codename": "add_tester",
+    "name": "Can add tester",
     "content_type": 25
   },
   "model": "auth.permission",
@@ -976,8 +930,8 @@
 },
 {
   "fields": {
-    "codename": "change_category",
-    "name": "Can change Category",
+    "codename": "change_tester",
+    "name": "Can change tester",
     "content_type": 25
   },
   "model": "auth.permission",
@@ -985,8 +939,8 @@
 },
 {
   "fields": {
-    "codename": "delete_category",
-    "name": "Can delete Category",
+    "codename": "delete_tester",
+    "name": "Can delete tester",
     "content_type": 25
   },
   "model": "auth.permission",
@@ -994,8 +948,8 @@
 },
 {
   "fields": {
-    "codename": "add_tester",
-    "name": "Can add tester",
+    "codename": "add_mainsetting",
+    "name": "Can add main setting",
     "content_type": 26
   },
   "model": "auth.permission",
@@ -1003,8 +957,8 @@
 },
 {
   "fields": {
-    "codename": "change_tester",
-    "name": "Can change tester",
+    "codename": "change_mainsetting",
+    "name": "Can change main setting",
     "content_type": 26
   },
   "model": "auth.permission",
@@ -1012,8 +966,8 @@
 },
 {
   "fields": {
-    "codename": "delete_tester",
-    "name": "Can delete tester",
+    "codename": "delete_mainsetting",
+    "name": "Can delete main setting",
     "content_type": 26
   },
   "model": "auth.permission",
@@ -1021,8 +975,8 @@
 },
 {
   "fields": {
-    "codename": "add_mainsetting",
-    "name": "Can add main setting",
+    "codename": "add_customsetting",
+    "name": "Can add custom setting",
     "content_type": 27
   },
   "model": "auth.permission",
@@ -1030,8 +984,8 @@
 },
 {
   "fields": {
-    "codename": "change_mainsetting",
-    "name": "Can change main setting",
+    "codename": "change_customsetting",
+    "name": "Can change custom setting",
     "content_type": 27
   },
   "model": "auth.permission",
@@ -1039,8 +993,8 @@
 },
 {
   "fields": {
-    "codename": "delete_mainsetting",
-    "name": "Can delete main setting",
+    "codename": "delete_customsetting",
+    "name": "Can delete custom setting",
     "content_type": 27
   },
   "model": "auth.permission",
@@ -1048,8 +1002,8 @@
 },
 {
   "fields": {
-    "codename": "add_customsetting",
-    "name": "Can add custom setting",
+    "codename": "add_workorderstatus",
+    "name": "Can add work order status",
     "content_type": 28
   },
   "model": "auth.permission",
@@ -1057,8 +1011,8 @@
 },
 {
   "fields": {
-    "codename": "change_customsetting",
-    "name": "Can change custom setting",
+    "codename": "change_workorderstatus",
+    "name": "Can change work order status",
     "content_type": 28
   },
   "model": "auth.permission",
@@ -1066,8 +1020,8 @@
 },
 {
   "fields": {
-    "codename": "delete_customsetting",
-    "name": "Can delete custom setting",
+    "codename": "delete_workorderstatus",
+    "name": "Can delete work order status",
     "content_type": 28
   },
   "model": "auth.permission",
@@ -1075,8 +1029,8 @@
 },
 {
   "fields": {
-    "codename": "add_workorderstatus",
-    "name": "Can add work order status",
+    "codename": "add_workorder",
+    "name": "Can add work order",
     "content_type": 29
   },
   "model": "auth.permission",
@@ -1084,8 +1038,8 @@
 },
 {
   "fields": {
-    "codename": "change_workorderstatus",
-    "name": "Can change work order status",
+    "codename": "change_workorder",
+    "name": "Can change work order",
     "content_type": 29
   },
   "model": "auth.permission",
@@ -1093,8 +1047,8 @@
 },
 {
   "fields": {
-    "codename": "delete_workorderstatus",
-    "name": "Can delete work order status",
+    "codename": "delete_workorder",
+    "name": "Can delete work order",
     "content_type": 29
   },
   "model": "auth.permission",
@@ -1102,55 +1056,10 @@
 },
 {
   "fields": {
-    "codename": "add_workorder",
-    "name": "Can add work order",
-    "content_type": 30
-  },
-  "model": "auth.permission",
-  "pk": 88
-},
-{
-  "fields": {
-    "codename": "change_workorder",
-    "name": "Can change work order",
-    "content_type": 30
-  },
-  "model": "auth.permission",
-  "pk": 89
-},
-{
-  "fields": {
-    "codename": "delete_workorder",
-    "name": "Can delete work order",
-    "content_type": 30
-  },
-  "model": "auth.permission",
-  "pk": 90
-},
-{
-  "fields": {
-    "name": "pxfoaAFIIqVUWFgcfgOZkTCigRjKgRRbChdxZrfmPEzyXyDpoAiFiXlLEsHveeuHLwwgOSmzdFXMTdmM",
+    "name": "ZmDJijVdex",
     "permissions": []
   },
   "model": "auth.group",
-  "pk": 1
-},
-{
-  "fields": {
-    "username": "aaron",
-    "first_name": "",
-    "last_name": "",
-    "is_active": true,
-    "is_superuser": false,
-    "is_staff": false,
-    "last_login": null,
-    "groups": [],
-    "user_permissions": [],
-    "password": "pbkdf2_sha256$20000$lvS8KlBdZVxy$BmwUeLtzzxW3I6b2sqzVqhKJehLGc3H7VuUy5y/q688=",
-    "email": "",
-    "date_joined": "2015-07-28T00:25:02.710Z"
-  },
-  "model": "auth.user",
   "pk": 1
 },
 {
@@ -1168,11 +1077,12 @@
     "proxy_set": false,
     "password_expire_alert": true,
     "password_min_length": 6,
+    "group": 1,
     "default_accept_notify": true,
     "password_history_length": null,
     "inv_wo_status": null,
     "proxy_approval_bypass": false,
-    "password_char_types": "UAGNmdgReooDRNphtTnshIqqcdIguDEBJmcgnNAOTyoAleSajuxHBmEiSnVnNShRukRcfLmUhthxEbTZhsZvrPlUdEEmjtiARJgB",
+    "password_char_types": "rLvdrGgKhFtBfBgKDsHVaBBYgfMmtsVoUFwWPHDidawygWwMRkiGRLuypmFqPQzcMYGVwsRnErFKdHFbpwdCpUPklTVktFvqiTbY",
     "dashboad_text": "",
     "password_expire": null,
     "inv_max_approval_currency": "usd",
@@ -1185,74 +1095,62 @@
     "default_accept_assign": true,
     "location_level": null,
     "accept_notify": false,
-    "default_auth_amount_currency": "f719e181-c3a8-4d9f-8f39-e9873da5745a",
+    "default_auth_amount_currency": "f8716abf-65f1-4d85-ac8c-55afffb2f7dd",
     "role_type": "contractor",
-    "permissions": [],
     "inv_close_wo": "Do not display",
-    "created": "2015-07-28T00:25:02.694Z",
+    "name": "ZmDJijVdex",
+    "created": "2015-07-29T01:02:04.219Z",
     "wo_edit_closeout": false,
     "modules": "",
-    "modified": "2015-07-28T00:25:02.694Z",
+    "modified": "2015-07-29T01:02:04.219Z",
     "inv_req_attach": true,
     "wo_allow_backdate": false,
-    "default_auth_amount": "58724746665.3340",
+    "default_auth_amount": "42437325620.8307",
     "inv_wait": null,
     "wo_notes": false,
     "accept_assign": false,
     "inv_options": "new"
   },
   "model": "person.role",
-  "pk": 1
+  "pk": "35a51e17-8bea-4ef2-9917-646d71660b42"
 },
 {
   "fields": {
+    "status": "a2413603-44ea-4433-9f61-7fc4cc5439ff",
+    "last_name": "",
     "proxy_start_date": null,
-    "auth_amount_currency": "f719e181-c3a8-4d9f-8f39-e9873da5745a",
+    "auth_amount_currency": "f8716abf-65f1-4d85-ac8c-55afffb2f7dd",
     "next_approver": null,
+    "is_staff": false,
     "user_permissions": [],
+    "date_joined": "2015-07-29T01:02:04.221Z",
     "middle_initial": null,
+    "first_name": "",
     "employee_id": null,
-    "auth_amount": "58724746665.3340",
+    "auth_amount": "42437325620.8307",
     "title": null,
-    "role": 1,
-    "location": "12ba389d-9222-43ba-a839-a2af643c81c2",
+    "is_superuser": false,
+    "last_login": "2015-07-29T16:52:07.217Z",
+    "location": null,
     "password_expire": null,
-    "status": "103fd8f9-f9ca-4cf0-af27-40b9dbe3412a",
+    "role": "35a51e17-8bea-4ef2-9917-646d71660b42",
+    "email": "myemail@mail.com",
+    "username": "aaron",
     "deleted": null,
     "password_one_time": null,
+    "is_active": true,
     "groups": [],
     "accept_notify": true,
+    "password": "md5$iwy4LZgnXqKV$41eab96d52babab5de8dd0c6baa37b00",
     "proxy_status": null,
     "proxy_user": null,
-    "created": "2015-07-28T00:25:02.712Z",
-    "modified": "2015-07-28T00:25:02.799Z",
+    "created": "2015-07-29T01:02:04.309Z",
+    "modified": "2015-07-29T16:50:41.796Z",
     "proxy_end_date": null,
     "accept_assign": true,
-    "password_change": "tfBGgiFmlEpITiWJIGlBBtxkKFRisHvevDahKaGKdrUFvysaMcNxYiIPMvVDBlxAQEivwRBVtWUoYJFeVUxuWDAilyVFRanAyaWPISULuJkwltYktmMsFoGwbxGvYXxPVUQoOCmYisLDSZbvqMQkUUAseGaGDZMztROFVMuspxjAmEBAkvfLQihsescgEHSxVBDjDGqGKJlcLLFJaPxzjIusDGvDtimwqYgCpMyHomhFzPNrLBOzyXSXxvLlvBnbCrEcpheQBegccVoikAKdaIcXZItuQEAuHHnPpwmRIUvh"
+    "password_change": ""
   },
   "model": "person.person",
-  "pk": 1
-},
-{
-  "fields": {
-    "deleted": null,
-    "order": 0,
-    "modified": "2015-07-28T21:58:23.843Z",
-    "name": "admin.phonenumbertype.office",
-    "created": "2015-07-28T21:58:23.843Z"
-  },
-  "model": "contact.phonenumbertype",
-  "pk": 1
-},
-{
-  "fields": {
-    "deleted": null,
-    "order": 1,
-    "modified": "2015-07-28T21:59:23.843Z",
-    "name": "admin.phonenumbertype.mobile",
-    "created": "2015-07-28T21:59:23.843Z"
-  },
-  "model": "contact.phonenumbertype",
-  "pk": 2
+  "pk": "c6677bf0-7e19-4b46-af26-d01d237c82b0"
 }
 ]
