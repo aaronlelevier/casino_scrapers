@@ -2,7 +2,6 @@
   "predef": [
     "document",
     "window",
-    "require",
     "location",
     "setTimeout",
     "$",
@@ -19,15 +18,17 @@
     "findWithAssert",
     "wait",
     "andThen",
-    "pauseTest",
     "currentURL",
     "currentPath",
     "currentRouteName"
   ],
+  "globals": {
+    "$": false
+  },
   "node": false,
   "browser": false,
   "boss": true,
-  "curly": false,
+  "curly": true,
   "debug": false,
   "devel": false,
   "eqeqeq": true,
@@ -43,10 +44,11 @@
   "onevar": false,
   "plusplus": false,
   "regexp": false,
-  "undef": true,
+  "undef": false,
   "sub": true,
   "strict": false,
   "white": false,
   "eqnull": true,
-  "esnext": true
+  "esnext": true,
+  "unused": false
 }

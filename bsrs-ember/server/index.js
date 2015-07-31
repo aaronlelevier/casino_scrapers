@@ -15,7 +15,7 @@ module.exports = function(app) {
 
   // Log proxy requests
   var morgan  = require('morgan');
-  app.use(bodyParser.urlencoded());
+  app.use(bodyParser.urlencoded({extended: true}));
   app.use(morgan('dev'));
 
   function usingProxy() {

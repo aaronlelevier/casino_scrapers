@@ -1,4 +1,3 @@
-import Ember from 'ember';
 import resolver from './helpers/resolver';
 import random from 'bsrs-ember/models/random';
 import {
