@@ -75,12 +75,11 @@ function runSeleniumTests {
 
     DB_NAME="ci"
     export PGPASSWORD=tango
-    echo "DB NAME TO DROP: $DB_NAME"
 
-    dropdb $DB_NAME
+    dropdb $DB_NAME -U bsdev
     echo "$DB_NAME dropped"
 
-    createdb $DB_NAME
+    createdb $DB_NAME -U bsdev -O bsdev
     echo "$DB_NAME created"
 
     python run_selenium.py
