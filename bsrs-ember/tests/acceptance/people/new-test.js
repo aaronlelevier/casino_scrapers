@@ -8,6 +8,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import config from 'bsrs-ember/config/environment';
+import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
 const PREFIX = config.APP.NAMESPACE;
 const PEOPLE_URL = "/admin/people";
@@ -146,3 +147,48 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
 });
+
+test('when user clicks cancel we prompt them with a modal and they cancel (cancel_modal())', (assert) => {
+    visit(PEOPLE_NEW_URL);
+    fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_NEW_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
+        });
+    });
+    click('.t-modal-footer .t-modal-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_NEW_URL);
+            assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+        });
+    });
+});
+
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+    visit(PEOPLE_NEW_URL);
+    fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_NEW_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+            var person = store.find('person', {id: UUID.value});
+            assert.equal(person.get('length'), 1);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            var person = store.find('person', {id: UUID.value});
+            assert.equal(person.get('length'), 0);
+        });
+    });
+});
+

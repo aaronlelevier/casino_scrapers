@@ -62,7 +62,7 @@ export default Ember.Route.extend({
         savePerson() {
             this.transitionTo('admin.people');
         },
-        cancelPerson() {
+        redirectUser() {
             this.transitionTo('admin.people');
         }
     }

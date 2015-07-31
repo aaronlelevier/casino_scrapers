@@ -250,3 +250,12 @@ test('currency helper displays correct currency format', (assert) => {
         assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
     });
 });
+
+test('when click delete, person is deleted and removed from store', (assert) => {
+    visit(DETAIL_URL);
+    xhr(PREFIX + PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id + '/', 'DELETE', null, {}, 204, {});
+    click('.t-delete-btn');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+});

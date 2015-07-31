@@ -19,6 +19,9 @@ export default Ember.Component.extend(ValidationMixin, {
                     this.sendAction('savePerson');
                 });
             }
+        },
+        cancelPerson() {
+            this.sendAction('redirectUser');
         }
     }
 });

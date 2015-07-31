@@ -18,13 +18,13 @@ export default Ember.Component.extend(ValidationMixin, {
             }
         },
         cancelPerson() {
-            var model = this.get('model');
             this.sendAction('cancelPerson');
         },
         deletePerson() {            
-            //TODO: Add Delete Person here... FYI - delete will not actually delete.
             var model = this.get('model');
-            this.sendAction('cancelPerson', model);
+            var repository = this.get('repository');
+            repository.delete(model.get('id'));
+            this.sendAction('redirectUser');
         }
     }
 });

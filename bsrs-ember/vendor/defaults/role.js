@@ -1,5 +1,6 @@
 var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
-    var factory = function() {
+    var factory = function(location_level) {
+        this.location_level = location_level;
     };
     factory.prototype.defaults = function(location_level) {
         return {
@@ -9,7 +10,7 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
             roleTypeGeneral: 'Internal',
             name: 'Admin',
             namePut: 'Broom Pusher',
-            locationLevel: location_level.get(),
+            locationLevel: location_level.get().id,
             categories: []
         };
     };
@@ -17,7 +18,8 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    module.exports = new BSRS_ROLE_DEFAULTS_OBJECT().defaults();
+    var location_level = require('../../vendor/location_level_fixtures.js');
+    module.exports = new BSRS_ROLE_DEFAULTS_OBJECT().defaults(location_level);
 } else {
     define('bsrs-ember/vendor/defaults/role', ['exports', 'bsrs-ember/vendor/location_level_fixtures'], function (exports, location_level) {
         'use strict';

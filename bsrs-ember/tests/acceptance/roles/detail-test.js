@@ -43,7 +43,7 @@ test('clicking a role name will redirect to the given detail view', (assert) => 
     });
 });
 
-test('sco when you deep link to the role detail view you get bound attrs', (assert) => {
+test('when you deep link to the role detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
@@ -89,7 +89,7 @@ test('when you change a related location level it will be persisted correctly', 
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
     var location_level = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.id, name: LOCATION_LEVEL_DEFAULTS.nameRegion});
-    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.id, location_level: location_level});
+    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.id, location_level: location_level.id});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     click(SAVE_BTN);
     andThen(() => {
