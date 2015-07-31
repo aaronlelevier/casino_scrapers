@@ -13,7 +13,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var store, default_type;
 
-moduleForComponent('input-multi-phone', 'sco integration: input-multi-phone test', {
+moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
     integration: true,
     setup() {
         default_type = PhoneNumberType.create({id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName});

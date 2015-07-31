@@ -47,7 +47,7 @@ test('visiting /people/new', (assert) => {
     payload.phone_numbers = [{id: UUID.value, number: '999-999-9999', type: PHONE_NUMBER_DEFAULTS.officeId}];
     var url = PREFIX + PEOPLE_URL + '/';
     var response = Ember.$.extend(true, {}, payload);
-    xhr( url,'POST',JSON.stringify(payload),{},201,response );
+    xhr(url, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {

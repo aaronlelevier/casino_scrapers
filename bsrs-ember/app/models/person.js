@@ -5,6 +5,13 @@ import inject from 'bsrs-ember/utilities/store';
 export default Model.extend({
     store: inject('main'),
     username: attr(''),
+    first_name: attr(''),
+    middle_initial: attr(''),
+    last_name: attr(''),
+    title: attr(''),
+    emp_number: attr(''),
+    auth_amount: attr(''),
+    email: attr(''),
     phone_numbers: Ember.computed('id', function() {
         var store = this.get('store');
         return store.find('phonenumber', {person_id: this.get('id')});

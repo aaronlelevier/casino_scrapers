@@ -26,18 +26,18 @@ const SAVE_BTN = '.t-save-btn';
 var application, store;
 
 module('Acceptance | detail test', {
-  beforeEach() {
-    application = startApp();
-    store = application.__container__.lookup('store:main');
-    var people_list_data = PEOPLE_FIXTURES.list();
-    var people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    var endpoint = PREFIX + PEOPLE_URL + '/';
-    xhr(endpoint ,'GET',null,{},200,people_list_data);
-    xhr(endpoint + PEOPLE_DEFAULTS.id + '/','GET',null,{},200,people_detail_data);
-  },
-  afterEach() {
-    Ember.run(application, 'destroy');
-  }
+    beforeEach() {
+        application = startApp();
+        store = application.__container__.lookup('store:main');
+        var people_list_data = PEOPLE_FIXTURES.list();
+        var people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+        var endpoint = PREFIX + PEOPLE_URL + '/';
+        xhr(endpoint ,'GET',null,{},200,people_list_data);
+        xhr(endpoint + PEOPLE_DEFAULTS.id + '/','GET',null,{},200,people_detail_data);
+    },
+    afterEach() {
+        Ember.run(application, 'destroy');
+    }
 });
 
 test('clicking a persons name will redirect to the given detail view', (assert) => {
@@ -51,13 +51,13 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     });
 });
 
-test('when you deep link to the person detail view you get bound attrs', (assert) => {
-
+test('sco when you deep link to the person detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
-
     andThen(() => {
         //TODO: verify ALL the other dynamic bits
-        assert.equal(currentURL(),DETAIL_URL);
+        assert.equal(currentURL(), DETAIL_URL);
+        var person = store.find('person').objectAt(0);
+        assert.ok(person.get('isNotDirty'));
         assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
         assert.equal(find('.t-person-first-name').val(), PEOPLE_DEFAULTS.first_name);
         assert.equal(find('.t-person-middle-initial').val(), PEOPLE_DEFAULTS.middle_initial);
@@ -71,7 +71,6 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-phone').find('input').length, 2);
         assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), PHONE_NUMBER_DEFAULTS.numberOne);
         assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PHONE_NUMBER_DEFAULTS.numberTwo);
-
         assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.officeId);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), 'Office');
@@ -80,7 +79,6 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), ADDRESS_DEFAULTS.countryOne);
-
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.shippingId);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), 'Shipping');
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address').val(), ADDRESS_DEFAULTS.streetTwo);
@@ -88,18 +86,16 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), ADDRESS_DEFAULTS.countryTwo);
-
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeName);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveName);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredName);
-
         assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
     });
 
     var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title, emp_number: PEOPLE_DEFAULTS_PUT.emp_number, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
-    xhr( url,'PUT',JSON.stringify(payload),{},200,response );
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
 
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.first_name);
@@ -108,10 +104,16 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-person-title', PEOPLE_DEFAULTS_PUT.title);
     fillIn('.t-person-emp_number', PEOPLE_DEFAULTS_PUT.emp_number);
     fillIn('.t-person-auth_amount', PEOPLE_DEFAULTS_PUT.auth_amount);
-
+    andThen(() => {
+        var person = store.find('person').objectAt(0);
+        assert.ok(person.get('isDirty'));
+    });
     click(SAVE_BTN);
     andThen(() => {
+        var person = store.find('person').objectAt(0);
         assert.equal(currentURL(),PEOPLE_URL);
+        assert.equal(store.find('person').length, 5);
+        assert.ok(person.get('isNotDirty'));
     });
 });
 
