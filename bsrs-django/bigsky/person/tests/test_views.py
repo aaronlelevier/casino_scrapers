@@ -23,9 +23,8 @@ from util import create, choices
 class PersonAuthTests(TestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         self.person = create_person()
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
 
     def test_login(self):
         self.assertIn('_auth_user_id', self.client.session)
@@ -37,14 +36,13 @@ class PersonAuthTests(TestCase):
 class PersonAccessTests(TestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         self.person = create_person()
 
     def test_access_user(self):
         """
         verify we can access user records correctly as a super user
         """
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.client.session['_auth_user_id'], str(self.person.id))
@@ -58,13 +56,12 @@ class PersonAccessTests(TestCase):
         self.assertEqual(response.status_code, 403)
 
 
-class PersonCreateTests(APITransactionTestCase):
+class PersonCreateTests(APITestCase):
     # Test: create, update, partial_update
 
     def setUp(self):
-        self.password = PASSWORD
         self.person = create_person()
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
 
         self.ph_num_type = mommy.make(PhoneNumberType)
 
@@ -109,12 +106,19 @@ class PersonCreateTests(APITransactionTestCase):
         response = self.client.post('/api/admin/people/', self.data, format='json')
         self.assertNotIn('password', response)
 
+    def test_role_and_group(self):
+        response = self.client.post('/api/admin/people/', self.data, format='json')
+        person = Person.objects.last()
+        self.assertIsInstance(person.role, Role)
+        group = Group.objects.get(name=person.role.name)
+        self.assertIn(group, person.groups.all())
+
 
 class PersonListTests(TestCase):
 
     def setUp(self):
         self.people = 10
-        create_person(_many=self.people)
+        self.person = create_person(_many=self.people)
         # Login
         self.person1 = Person.objects.first()
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -133,12 +137,8 @@ class PersonDetailTests(TestCase):
 
     def setUp(self):
         self.person = create_person()
-
         # contact info
-        self.address = mommy.make(Address, person=self.person)
         self.phone_number = mommy.make(PhoneNumber, person=self.person)
-        self.email = mommy.make(Email, person=self.person)
-
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -146,7 +146,7 @@ class PersonDetailTests(TestCase):
         self.client.logout()
 
     def test_create(self):
-        self.assertEqual(self.address.person, self.person)
+        self.assertEqual(self.phone_number.person, self.person)
 
     def test_retrieve(self):
         response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
@@ -174,8 +174,9 @@ class PersonPutTests(APITestCase):
 
         # PhoneNumber: create a `phone_number` which can be joined on the person
         # for a test nested create Person w/ PhoneNumber
-        self.location = mommy.make(Location)
-        self.phone_number = mommy.make(PhoneNumber, location=self.location)
+        self.phone_number = mommy.make(PhoneNumber)
+        self.email = mommy.make(Email)
+        self.address = mommy.make(Email)
 
         self.data = {
             "id": str(self.person.id),
@@ -204,13 +205,12 @@ class PersonPutTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_no_change(self):
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
-        self.assertEqual(response.status_code, 200)
+    # def test_no_change(self):
+    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+    #     self.assertEqual(response.status_code, 200)
 
-    def test_update_person(self):
-
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+    # def test_update_person(self):
+    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
 
 
 class PersonDeleteTests(APITestCase):

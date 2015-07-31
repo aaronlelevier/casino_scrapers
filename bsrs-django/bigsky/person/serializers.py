@@ -78,7 +78,7 @@ class PersonCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         person = Person.objects.create_user(**validated_data)
-        person.role.user_set.add(person)
+        person.groups.add(person.role.group)
         return person
 
 
