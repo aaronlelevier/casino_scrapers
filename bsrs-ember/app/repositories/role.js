@@ -14,14 +14,8 @@ var create_role_with_relationships = (response, store, id) => {
     originalRole.save();
 };
 
-export default Ember.Object.extend({
+var RoleRepo = Ember.Object.extend({
     update(model) {
-        // var payload = {data: JSON.stringify({
-        //    id: model.get('id'),
-        //    name: model.get('name'),
-        //    location_level: model.get('location_level'),
-        //    category: model.get('category')
-        // })};
         return PromiseMixin.xhr(PREFIX + '/admin/roles/' + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())} ).then(() => {
             model.save();
         });
@@ -43,3 +37,5 @@ export default Ember.Object.extend({
         return store.find('role', id);
     }
 });
+
+export default RoleRepo;

@@ -7,6 +7,7 @@ export default Ember.Route.extend({
         var role_pk = params.role_id,
             repository = this.get('repository'),
             role = repository.findById(role_pk);
+
         return Ember.RSVP.hash({
             model: role
         });

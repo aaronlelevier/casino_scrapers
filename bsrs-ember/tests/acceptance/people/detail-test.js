@@ -107,6 +107,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
         var person = store.find('person').objectAt(0);
         assert.ok(person.get('isDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     click(SAVE_BTN);
     andThen(() => {
@@ -114,6 +115,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(store.find('person').get('length'), 5);
         assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
