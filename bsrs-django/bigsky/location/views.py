@@ -42,10 +42,10 @@ class LocationFilter(filters.FilterSet):
     class Meta:
         model = Location
         fields = ['number', 'name', 'level', 'status', 'type', 'state', 
-                  'relations', 'relations__type']
+                  'children', 'children__type']
         order_by = ['number', 'name', '-number', '-name', 'level', '-level',
                     'status', '-status', 'type', '-type', 'addresses__state', 
-                    '-addresses__state', 'relations__name', '-relations__name']
+                    '-addresses__state', 'children__name', '-children__name']
         
 
 class LocationLevelViewSet(viewsets.ModelViewSet):
@@ -86,14 +86,14 @@ class LocationViewSet(viewsets.ModelViewSet):
         '''
         get related locations of parent_loc...
         when used with level filter can get direct children or parents
-        todo: use level to get list from any level through relationships
-        todo: move this to a detail route for the parent e.g. /locations/6/relations?level=2
+        todo: use level to get list from any level through childrenhips
+        todo: move this to a detail route for the parent e.g. /locations/6/children?level=2
         '''
         parent_loc_id = self.request.QUERY_PARAMS.get('parent_loc')
         if parent_loc_id:
             parent_loc = Location.objects.get(id=parent_loc_id)
             if parent_loc:
-                queryset = queryset.filter(relations=parent_loc)
+                queryset = queryset.filter(children=parent_loc)
 
         return queryset
     
@@ -111,7 +111,7 @@ class LocationViewSet(viewsets.ModelViewSet):
         return self.serializer_class
 
     @detail_route(methods=['get'])
-    def relations(self, request, pk):
+    def children(self, request, pk):
         '''
         Get locations that are related and at the specified level
         '''
@@ -139,9 +139,9 @@ class LocationViewSet(viewsets.ModelViewSet):
                     return Response(respObj, status=status.HTTP_400_BAD_REQUEST)
                 
                 # build the query based on levels
-                # recurse through relations until at least one is found with the right level
+                # recurse through children until at least one is found with the right level
                 respObj['code'] = 400
-                respObj['message'] = 'no relations for level id ' + level_id + ' found'
+                respObj['message'] = 'no children for level id ' + level_id + ' found'
                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)
 
             

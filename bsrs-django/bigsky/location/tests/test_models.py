@@ -1,15 +1,15 @@
 from django.db import models
+from django.conf import settings
 from django.test import TestCase
 
 from model_mommy import mommy
 
-from location.models import (LocationLevel, LocationStatus, LocationType,
-    Location, DEFAULT_LOCATION_STATUS)
+from location.models import LocationLevel, LocationStatus, LocationType, Location
 
 
-class LocationLevelManagerTests(TestCase):
+class SelfRefrencingManagerTests(TestCase):
     '''
-    Traverse relationships tests.
+    ``LocationLevel`` Model used for testing of: ``SelfRefrencingManager``
     '''
 
     def setUp(self):
@@ -37,25 +37,46 @@ class LocationLevelManagerTests(TestCase):
         self.assertIsInstance(all_parents, models.query.QuerySet)
 
 
-class LocationLevelTests(TestCase):
+class LocationLevelManagerTests(TestCase):
     '''
     Test default M2M Manager methods which don't traverse relationships.
     '''
+    def setUp(self):
+        self.district = mommy.make(LocationLevel, name='district')
+        self.region = mommy.make(LocationLevel, name='region')
+        self.store1 = mommy.make(LocationLevel, name='store1')
+        self.store2 = mommy.make(LocationLevel, name='store2')
 
     def test_children(self):
-        district = mommy.make(LocationLevel, name='district')
-        region = mommy.make(LocationLevel, name='region')
-        store1 = mommy.make(LocationLevel, name='store1')
-        store2 = mommy.make(LocationLevel, name='store2')
-
         # no children levels
-        self.assertEqual(region.children.count(), 0)
+        self.assertEqual(self.region.children.count(), 0)
+        # Direct child increments
+        self.region.children.add(self.district)
+        self.assertEqual(self.region.children.count(), 1)
+        # Indirect childrent do not increment
+        self.district.children.add(self.store1)
+        self.district.children.add(self.store2)
+        self.assertEqual(self.region.children.count(), 1)
 
-        # add a child level
-        region.children.add(district)
-        district.children.add(store1)
-        district.children.add(store2)
-        self.assertEqual(region.children.count(), 1)
+    def test_parents(self):
+        self.assertEqual(self.store1.parents.count(), 0)
+        # Direct parent increments
+        self.region.children.add(self.district)
+        self.assertEqual(self.district.parents.count(), 1)
+        # Indirect parents do no increment
+        self.district.children.add(self.store1)
+        self.district.children.add(self.store2)
+        self.assertEqual(self.district.parents.count(), 1)
+
+
+class LocationLevelTests(TestCase):
+
+    def setUp(self):
+        self.location = mommy.make(Location)
+
+    def test_name(self):
+        # confirm that the "mixin-inheritance" worked for the ``name`` field
+        self.assertTrue(hasattr(self.location, 'name'))
 
 
 class LocationStatusManagerTests(TestCase):
@@ -63,7 +84,7 @@ class LocationStatusManagerTests(TestCase):
     def test_default(self):
         d = LocationStatus.objects.default()
         self.assertIsInstance(d, LocationStatus)
-        self.assertEqual(d.name, DEFAULT_LOCATION_STATUS)
+        self.assertEqual(d.name, settings.DEFAULT_LOCATION_STATUS)
 
 
 class LocationTests(TestCase):
@@ -74,3 +95,5 @@ class LocationTests(TestCase):
         self.assertIsInstance(l.level, LocationLevel)
         self.assertIsInstance(l.status, LocationStatus)
         self.assertIsInstance(l.type, LocationType)
+
+

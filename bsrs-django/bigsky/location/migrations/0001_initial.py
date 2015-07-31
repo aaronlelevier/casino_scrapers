@@ -20,6 +20,7 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
                 ('name', models.CharField(max_length=100)),
                 ('number', models.CharField(max_length=20)),
+                ('children', models.ManyToManyField(related_name='parents', to='location.Location', blank=True)),
             ],
             options={
                 'ordering': ('number',),
@@ -72,17 +73,12 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='location',
-            name='relations',
-            field=models.ManyToManyField(related_name='relations_rel_+', to='location.Location'),
-        ),
-        migrations.AddField(
-            model_name='location',
             name='status',
-            field=models.ForeignKey(related_name='locations', to='location.LocationStatus'),
+            field=models.ForeignKey(related_name='locations', blank=True, to='location.LocationStatus', help_text=b"If not provided, will be the default 'LocationStatus'.", null=True),
         ),
         migrations.AddField(
             model_name='location',
             name='type',
-            field=models.ForeignKey(related_name='locations', to='location.LocationType'),
+            field=models.ForeignKey(related_name='locations', blank=True, to='location.LocationType', null=True),
         ),
     ]
