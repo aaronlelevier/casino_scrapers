@@ -3,6 +3,7 @@ from django.db import models
 from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 
+from util import choices
 from util.models import AbstractName, BaseModel, BaseManager
 
 
@@ -85,7 +86,11 @@ class SelfRefrencingBaseModel(models.Model):
 
 
 class LocationLevel(SelfRefrencingBaseModel, AbstractName):
-    pass
+    '''
+    LocationLevel records must be unique by: name, role_type
+    '''
+    role_type = models.CharField(max_length=29, blank=True,
+        choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
 
 
 class LocationStatusManager(BaseManager):

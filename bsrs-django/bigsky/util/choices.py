@@ -10,8 +10,8 @@ PERSON_STATUS_CHOICES = (
 )
 
 ROLE_TYPE_CHOICES = (
-    ('contractor', 'contractor'),
-    ('location', 'location'),
+    ('Internal', 'Internal'),
+    ('Third Party', 'Third Party'),
 )
 
 INVOICE_CHOICES = (

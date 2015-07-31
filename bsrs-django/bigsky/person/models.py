@@ -28,8 +28,7 @@ class Role(BaseModel):
     group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29, blank=True,
-                                 choices=choices.ROLE_TYPE_CHOICES,
-                                 default=choices.ROLE_TYPE_CHOICES[0][0])
+        choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
     # Required
     name = models.CharField(max_length=100, unique=True, help_text="Will be set to the Group Name")
     # Optional

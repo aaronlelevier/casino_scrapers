@@ -41,6 +41,8 @@ class PhoneNumberSerializer(serializers.ModelSerializer):
 
 
 class PhoneNumberShortFKSerializer(serializers.ModelSerializer):
+    
+    id = serializers.UUIDField(read_only=False)
 
     class Meta:
         model = PhoneNumber

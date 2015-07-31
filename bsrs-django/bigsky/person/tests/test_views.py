@@ -18,6 +18,8 @@ from person.serializers import PersonUpdateSerializer
 from util import create, choices
 
 
+### PERSON ###
+
 class PersonAuthTests(TestCase):
 
     def setUp(self):
@@ -224,7 +226,6 @@ class PersonPutTests(APITestCase):
         self.location = mommy.make(Location)
         self.phone_number = mommy.make(PhoneNumber, location=self.location)
         self.phone_number2 = mommy.make(PhoneNumber, location=self.location)
-        self.address = mommy.make(Address, location=self.location)
 
         self.data = {
             "username":"one",
@@ -234,43 +235,14 @@ class PersonPutTests(APITestCase):
             "role": self.person.role.pk,
             "status":"",
             "location":"",
-            "phone_numbers":[],
-            'addresses': []
+            "phone_numbers":[]
         }
 
     def tearDown(self):
         self.client.logout()
 
-    # def test_put_password_change(self):
-    #     # test the User is currently logged in
-    #     self.assertIn('_auth_user_id', self.client.session)
-    #     # update their PW and see if they are still logged in
-    #     password = 'new-password'
-    #     person = PersonUpdateSerializer(self.person).data # returns a python dict
-    #                                                        # serialized object
-    #     # change a field on the Person to see if the PUT works!
-    #     person.update({'password':password})
-    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # still logged in after PW change test
-    #     self.assertIn('_auth_user_id', self.client.session)
-
-    # def test_put_password_change_and_login(self):
-    #     password = 'new'
-    #     person = PersonUpdateSerializer(self.person).data
-    #     person.update({'password':password})
-    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.client.logout()
-    #     self.assertNotIn('_auth_user_id', self.client.session)
-    #     # Updated password works for logging in
-    #     self.client.login(username=self.person.username, password=password)
-    #     p = Person.objects.get(pk=self.person.pk)
-    #     self.assertEqual(int(self.client.session['_auth_user_id']), p.pk)
-
     # def test_two_related(self):
-    #     # Test creating a single Person w/ PhoneNumber and Address
-    #     # nested creates
+    #     # Test creating a single Person w/ PhoneNumber nested creates
     #     self.assertEqual(Person.objects.count(), 1)
     #     self.assertEqual(Address.objects.exclude(person__isnull=True).count(), 0)
     #     # simulate posting a Json Dict to create a new Person
@@ -278,8 +250,7 @@ class PersonPutTests(APITestCase):
     #         'phone_numbers': [
     #             model_to_dict(self.phone_number),
     #             model_to_dict(self.phone_number2)
-    #             ],
-    #         'addresses': [model_to_dict(self.address)]
+    #             ]
     #         })
     #     print self.data
     #     response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
@@ -305,23 +276,25 @@ class PersonDeleteTests(APITestCase):
         self.client.logout()
 
     def test_delete(self):
-        people = Person.objects_all.count()
+        people_all = Person.objects_all.count()
         # Init Person2
         self.assertIsNone(self.person2.deleted)
         self.assertEqual(self.client.session['_auth_user_id'], str(self.person.id))
         response = self.client.delete('/api/admin/people/{}/'.format(self.person2.pk))
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         # get the Person Back, and check their deleted flag
-        self.assertEqual(Person.objects_all.count(), people)
-        self.assertEqual(Person.objects.count(), people-1)
+        self.assertEqual(Person.objects_all.count(), people_all)
+        self.assertEqual(Person.objects.count(), people_all-1)
 
     def test_delete_override(self):
-        init_count = Person.objects.count()
+        people = Person.objects.count()
         response = self.client.delete('/api/admin/people/{}/'.format(self.person.pk),
             {'override':True}, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Person.objects.count(), init_count-1)
-        
+        self.assertEqual(Person.objects.count(), people-1)
+
+
+### ROLE ###
 
 class RoleViewSetTests(APITransactionTestCase):
 
@@ -354,15 +327,57 @@ class RoleViewSetTests(APITransactionTestCase):
         self.assertEqual(data['id'], str(self.role.pk))
         self.assertTrue(data['location_level'])
 
-    def test_create_role(self):
+    def test_create(self):
         role_data = {
             "id": str(uuid.uuid4()),
             "name": "Admin",
             "role_type": choices.ROLE_TYPE_CHOICES[0][0],
-            "location_level": self.location.level.to_dict()
+            "location_level": self.location.level.id
         }
         response = self.client.post('/api/admin/roles/', role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = json.loads(response.content)
         self.assertEqual(data['id'], role_data['id'])
         self.assertIsInstance(Role.objects.get(id=role_data['id']), Role)
+
+    def test_update(self):
+        role_data = {
+            "id": self.role.id,
+            "name": "New Role Name",
+            "role_type": self.role.role_type,
+            "location_level": self.role.location_level.id
+        }
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id), role_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        new_role_data = json.loads(response.content)
+        self.assertNotEqual(self.role.name, new_role_data['name'])
+
+
+# Password Tests to use later
+
+    # def test_put_password_change(self):
+    #     # test the User is currently logged in
+    #     self.assertIn('_auth_user_id', self.client.session)
+    #     # update their PW and see if they are still logged in
+    #     password = 'new-password'
+    #     person = PersonUpdateSerializer(self.person).data # returns a python dict
+    #                                                        # serialized object
+    #     # change a field on the Person to see if the PUT works!
+    #     person.update({'password':password})
+    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     # still logged in after PW change test
+    #     self.assertIn('_auth_user_id', self.client.session)
+
+    # def test_put_password_change_and_login(self):
+    #     password = 'new'
+    #     person = PersonUpdateSerializer(self.person).data
+    #     person.update({'password':password})
+    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.client.logout()
+    #     self.assertNotIn('_auth_user_id', self.client.session)
+    #     # Updated password works for logging in
+    #     self.client.login(username=self.person.username, password=password)
+    #     p = Person.objects.get(pk=self.person.pk)
+    #     self.assertEqual(int(self.client.session['_auth_user_id']), p.pk)

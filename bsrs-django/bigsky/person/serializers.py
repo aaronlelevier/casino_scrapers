@@ -1,11 +1,3 @@
-'''
-Big Sky Retail Systems Framework
-Person serializers
-
-Created on Jan 16, 2015
-
-@author: tkrier
-'''
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
@@ -17,7 +9,7 @@ from contact.serializers import (PhoneNumberShortSerializer, AddressShortSeriali
 from location.models import LocationLevel, Location
 from location.serializers import LocationLevelSerializer
 from person.models import PersonStatus, Person, Role
-
+from util import create
 
 '''
 Users consist of the standard Django User model plus the ``Person`` model
@@ -45,6 +37,16 @@ class RoleSerializer(serializers.ModelSerializer):
 
     id = serializers.UUIDField(read_only=False)
     location_level = LocationLevelSerializer(read_only=True)
+
+    class Meta:
+        model = Role
+        fields = ('id', 'name', 'role_type', 'location_level')
+
+
+
+class RoleCreateSerializer(serializers.ModelSerializer):
+
+    id = serializers.UUIDField(read_only=False)
 
     class Meta:
         model = Role
@@ -119,40 +121,28 @@ class PersonDetailSerializer(PersonListSerializer):
 
 
 class PersonUpdateSerializer(serializers.ModelSerializer):
-
-    # phone_numbers = PhoneNumberShortFKSerializer(many=True)
-    # addresses = AddressShortFKSerializer(many=True)
+    '''
+    Currently, you can Add/Update PhoneNumber's when Updating a Person, 
+    but, you cannot delete PhoneNumber's Yet.
+    '''
+    phone_numbers = PhoneNumberShortFKSerializer(many=True)
 
     class Meta:
         model = Person
-        # write_only_fields = ('password',)
-        fields = PERSON_FIELDS # ('password',) # 'phone_numbers', 'addresses',)
+        fields = PERSON_FIELDS + ('phone_numbers',)
 
     def update(self, instance, validated_data):
-        # phone_numbers = validated_data.pop('phone_numbers')
-        # addresses = validated_data.pop('addresses')
-
-        # Role
-        if not instance.role:
-            role_changed = True
-        elif 'role' in validated_data and validated_data['role'].id != instance.role.id:
-            role_changed = True
-            instance.role.user_set.remove(instance)
-        else:
-            role_changed = False
-
-        super(PersonUpdateSerializer, self).update(instance, validated_data)
-
-        # PhoneNumbers
-        # for ph in phone_numbers:
-        #     PhoneNumber.objects.create(person=person, **ph)
-        # # Addresses
-        # for ad in addresses:
-        #     Address.objects.create(person=person, **ad)
-
-        if role_changed:
-            instance.role.user_set.add(instance)
-        return instance
+        phone_numbers = validated_data.pop('phone_numbers', [])
+        # Update Person
+        instance = create.update_model(instance, validated_data)
+        # Create/Update PhoneNumbers
+        for ph in phone_numbers:
+            try:
+                phone = PhoneNumber.objects.get(id=ph['id'])
+                create.update_model(phone, ph)
+            except PhoneNumber.DoesNotExist:
+                PhoneNumber.objects.create(person=person, **ph)
+        return person
 
 
 class PasswordSerializer(serializers.Serializer):

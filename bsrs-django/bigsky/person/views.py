@@ -12,10 +12,7 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 
-from person.serializers import (PersonStatusSerializer, PersonDetailSerializer,
-    PersonListSerializer, PersonCreateSerializer, PersonUpdateSerializer,
-    PersonDetailSerializer, RoleSerializer, PersonNestedCreateSerializer
-    )
+from person import serializers as ps
 from person.models import Person, PersonStatus, Role
 from util.permissions import BSModelPermissions
 from util.views import BaseModelViewSet
@@ -26,13 +23,26 @@ class RoleViewSet(viewsets.ModelViewSet):
     API endpoint that allows roles to be viewed or edited.
     """
     queryset = Role.objects.all()
-    serializer_class = RoleSerializer
     permission_classes = (permissions.IsAuthenticated,)
+
+    def get_serializer_class(self):
+        """
+        set the serializer based on the method
+        """
+        if self.action == 'retrieve':
+            return ps.RoleSerializer
+        elif self.action == ('update' or 'partial_update'):
+            return ps.RoleCreateSerializer
+        elif self.action == 'create':
+            return ps.RoleCreateSerializer
+        else:
+            return ps.RoleSerializer
+
 
 class PersonStatusViewSet(viewsets.ModelViewSet):
 
     queryset = PersonStatus.objects.all()
-    serializer_class = PersonStatusSerializer
+    serializer_class = ps.PersonStatusSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
 
@@ -50,13 +60,13 @@ class PersonViewSet(BaseModelViewSet):
         set the serializer based on the method
         """
         if self.action == 'retrieve':
-            return PersonDetailSerializer
+            return ps.PersonDetailSerializer
         elif self.action == ('update' or 'partial_update'):
-            return PersonUpdateSerializer
+            return ps.PersonUpdateSerializer
         elif self.action == 'create':
-            return PersonNestedCreateSerializer
+            return ps.PersonNestedCreateSerializer
         else:
-            return PersonListSerializer
+            return ps.PersonListSerializer
 
 
 ### PERSON ###

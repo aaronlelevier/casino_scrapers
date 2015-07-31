@@ -12,29 +12,6 @@ from util.models import AbstractNameOrder, BaseModel
 from util import exceptions as excp
 
 
-
-# NOTE: Can't do a nested save and enforce that a Person or Location 
-#   exist for the address, if the Person isn't created yet!
-
-# class ContactBaseModel(BaseModel):
-#     '''
-#     `Person` and/or `Location` FK must be defined on all classes 
-#     this model because the contact obj must belong to something.
-#     '''
-#     pass
-
-#     class Meta:
-#         abstract = True
-
-    # def save(self, *args, **kwargs):
-    #     self._valid_person_or_location()
-    #     return super(ContactBaseModel, self).save(*args, **kwargs)
-
-    # def _valid_person_or_location(self):
-    #     if not (self.person or self.location):
-    #         raise excp.PersonOrLocationRequired("Must have either a Person or Location FK.")
-
-
 class PhoneNumberType(AbstractNameOrder):
     '''
     Ex- mobile, cell, home, fax.

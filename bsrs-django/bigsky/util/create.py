@@ -46,3 +46,15 @@ def _generate_ph():
 
 def _generate_chars():
     return ''.join([str(random.choice(string.ascii_letters)) for x in range(10)])
+
+
+def update_model(model, dict_):
+    "Update a Model Object with all attrs from the dict_."
+    for k,v in dict_.iteritems():
+        setattr(model, k, v)
+    model.save()
+    return model
+
+
+def model_to_simple_dict(model):
+    return {'id':model.id, 'name':model.name}
