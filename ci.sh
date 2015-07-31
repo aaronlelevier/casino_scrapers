@@ -74,6 +74,7 @@ function copyEmberAssetsToDjango {
 function runSeleniumTests {
 
     DB_NAME="ci"
+    export PGPASSWORD=tango
     echo "DB NAME TO DROP: $DB_NAME"
 
     dropdb $DB_NAME
