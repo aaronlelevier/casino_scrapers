@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
-from contact.serializers import (PhoneNumberShortSerializer, AddressShortSerializer,
-    EmailShortSerializer)
+from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
+    EmailSerializer)
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 
 
@@ -51,9 +51,9 @@ class LocationGridSerializer(LocationSerializer):
 
 class LocationFullSerializer(LocationGridSerializer):
     
-    phone_numbers = PhoneNumberShortSerializer(many=True, read_only=True)
-    addresses = AddressShortSerializer(many=True, read_only=True)
-    emails = EmailShortSerializer(many=True, read_only=True)
+    phone_numbers = PhoneNumberSerializer(many=True, read_only=True)
+    addresses = AddressSerializer(many=True, read_only=True)
+    emails = EmailSerializer(many=True, read_only=True)
     
     class Meta:
         model = Location

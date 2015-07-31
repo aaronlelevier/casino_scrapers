@@ -70,23 +70,10 @@ class PersonCreateTests(APITransactionTestCase):
 
         # update for mock data
         self.data = {
-            "id": uuid.uuid4(),
+            "id": str(uuid.uuid4()),
             "username":"one",
             "password":"one",
-            "first_name":"foo",
-            "last_name":"bar",
-            "role": self.person.role.pk,
-            "status":"",
-            "location":"",
-            "phone_numbers":[
-                {
-                "id": uuid.uuid4(),
-                "type": self.ph_num_type.pk,
-                "location": "",
-                "person": "",
-                "number": create._generate_ph()
-                }
-            ],
+            "role": self.person.role.pk
         }
 
     def tearDown(self):
@@ -94,17 +81,13 @@ class PersonCreateTests(APITransactionTestCase):
 
     def test_create(self):
         # Accepts a pre-created UUID, which is what Ember will do
-        self.assertEqual(PhoneNumber.objects.count(), 0)
         self.assertEqual(Person.objects.count(), 1)
         # simulate posting a Json Dict to create a new Person
-        _uuid = uuid.uuid4()
-        self.data['id'] = str(_uuid)
         response = self.client.post('/api/admin/people/', self.data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Person.objects.count(), 2)
-        self.assertEqual(PhoneNumber.objects.count(), 1)
         person = Person.objects.get(username=self.data["username"])
-        self.assertEqual(str(_uuid), str(person.id))
+        self.assertEqual(self.data['id'], str(person.id))
 
     def test_create_login_with_new_user(self):
         # Original User is logged In
@@ -130,12 +113,11 @@ class PersonCreateTests(APITransactionTestCase):
 class PersonListTests(TestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         self.people = 10
         create_person(_many=self.people)
         # Login
         self.person1 = Person.objects.first()
-        self.client.login(username=self.person1.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
@@ -150,7 +132,6 @@ class PersonListTests(TestCase):
 class PersonDetailTests(TestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         self.person = create_person()
 
         # contact info
@@ -159,7 +140,7 @@ class PersonDetailTests(TestCase):
         self.email = mommy.make(Email, person=self.person)
 
         # Login
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
@@ -175,38 +156,6 @@ class PersonDetailTests(TestCase):
         self.assertIsNotNone(person['phone_numbers'])
 
 
-class PersonPatchTests(APITestCase):
-
-    def setUp(self):
-        self.password = PASSWORD
-        self.person = create_person()
-        self.client.login(username=self.person.username, password=self.password)
-        # all required fields in order to create a person
-        self.role = create_role()
-        self.person_status = mommy.make(PersonStatus)
-        self.location = mommy.make(Location)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_patch(self):
-        # email pre check before test
-        title = 'manager'
-        # get a person
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        person = json.loads(response.content)
-        self.assertNotEqual(person['title'], title)
-        # change email and send update
-        person.update({'title': title})
-        response = self.client.patch('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        # get back the same person, and confirm that their email is changed in the DB
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
-        person = json.loads(response.content)
-        self.assertEqual(person['title'], title)
-
-
 class PersonPutTests(APITestCase):
     '''
     All required Model fields must be supplied in a PUT, so the PASSWORD is 
@@ -214,6 +163,8 @@ class PersonPutTests(APITestCase):
 
     Resolution: For Password changes, PUT is ok, but for all other Person 
     changes, a PATCH should be used, because User won't need to send Password.
+
+    Note: For tests, use empty fields if not required for simplicity.
     '''
 
     def setUp(self):
@@ -225,41 +176,41 @@ class PersonPutTests(APITestCase):
         # for a test nested create Person w/ PhoneNumber
         self.location = mommy.make(Location)
         self.phone_number = mommy.make(PhoneNumber, location=self.location)
-        self.phone_number2 = mommy.make(PhoneNumber, location=self.location)
 
         self.data = {
-            "username":"one",
-            "password":"one",
-            "first_name":"foo",
-            "last_name":"bar",
-            "role": self.person.role.pk,
-            "status":"",
+            "id": str(self.person.id),
+            "username": self.person.username,
+            "first_name": "",
+            "middle_initial": "",
+            "last_name": "",
+            "title": "",
+            "employee_id": "",
+            "auth_amount": self.person.auth_amount,
+            "auth_amount": str(self.person.auth_amount_currency.id),
+            "role": str(self.person.role.id),
+            "status": str(self.person.status.id),
             "location":"",
-            "phone_numbers":[]
+            "phone_numbers":[
+                {
+                "id": str(self.phone_number.id),
+                "type": str(self.phone_number.type.id),
+                "location": "",
+                "person": str(self.person.id),
+                "number": self.phone_number.number
+                }
+            ]
         }
 
     def tearDown(self):
         self.client.logout()
 
-    # def test_two_related(self):
-    #     # Test creating a single Person w/ PhoneNumber nested creates
-    #     self.assertEqual(Person.objects.count(), 1)
-    #     self.assertEqual(Address.objects.exclude(person__isnull=True).count(), 0)
-    #     # simulate posting a Json Dict to create a new Person
-    #     self.data.update({
-    #         'phone_numbers': [
-    #             model_to_dict(self.phone_number),
-    #             model_to_dict(self.phone_number2)
-    #             ]
-    #         })
-    #     print self.data
-    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-    #     self.assertEqual(Person.objects.count(), 2)
-    #     # Last Person Created: check related objects
-    #     last_person = Person.objects.last()
-    #     self.assertEqual(PhoneNumber.objects.filter(person=last_person).count(), 2)
-    #     self.assertEqual(Address.objects.filter(person=last_person).count(), 1)
+    def test_no_change(self):
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        self.assertEqual(response.status_code, 200)
+
+    def test_update_person(self):
+
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
 
 
 class PersonDeleteTests(APITestCase):

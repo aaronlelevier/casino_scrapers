@@ -10,15 +10,10 @@ Created on Jan 21, 2015
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from contact.serializers import (
-    PhoneNumberTypeSerializer, PhoneNumberSerializer, PhoneNumberShortSerializer,
-    AddressTypeSerializer, AddressSerializer, AddressShortSerializer,
-    EmailTypeSerializer, EmailSerializer, EmailShortSerializer,
-)
-from contact.models import (
-    PhoneNumber, PhoneNumberType, Address, AddressType,
-    Email, EmailType
-)
+from contact.serializers import (PhoneNumberTypeSerializer, PhoneNumberSerializer,
+    AddressTypeSerializer, AddressSerializer, EmailTypeSerializer, EmailSerializer)
+from contact.models import (PhoneNumber, PhoneNumberType, Address, AddressType,
+    Email, EmailType)
 
 
 class PhoneNumberTypeViewSet(viewsets.ModelViewSet):

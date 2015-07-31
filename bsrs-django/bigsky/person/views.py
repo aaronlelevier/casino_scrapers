@@ -60,11 +60,11 @@ class PersonViewSet(BaseModelViewSet):
         set the serializer based on the method
         """
         if self.action == 'retrieve':
-            return ps.PersonDetailSerializer
+            return ps.PersonUpdateSerializer
         elif self.action == ('update' or 'partial_update'):
             return ps.PersonUpdateSerializer
         elif self.action == 'create':
-            return ps.PersonNestedCreateSerializer
+            return ps.PersonCreateSerializer
         else:
             return ps.PersonListSerializer
 

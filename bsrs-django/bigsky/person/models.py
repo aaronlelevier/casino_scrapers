@@ -209,5 +209,5 @@ class Person(BaseModel, AbstractUser):
         if not self.auth_amount:
             self.auth_amount = self.role.default_auth_amount
         if not self.auth_amount_currency:
-            self.auth_amount_currency = self.role.default_auth_amount_currency
+            self.auth_amount_currency = Currency.objects.default()
         return super(Person, self).save(*args, **kwargs)

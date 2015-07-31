@@ -8,7 +8,8 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 from model_mommy import mommy
 
-from contact.models import Address, PhoneNumber, Email
+from contact.models import (PhoneNumberType, PhoneNumber, AddressType, Address,
+    EmailType, Email)
 from location.models import Location
 from person.models import Person, Role, PersonStatus
 from person.tests.factory import PASSWORD, create_person
@@ -56,7 +57,7 @@ class PhoneNumberTypeViewSetTests(APITestCase):
         response = self.client.get('/api/contact/phone_numbers/{}/'.format(self.phone_number.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
-        self.assertEqual(data['type'], str(self.type.pk))
+        self.assertEqual(data['type']['id'], str(self.type.pk))
 
     def test_list(self):
         # have 2 ph #'s total
@@ -68,3 +69,37 @@ class PhoneNumberTypeViewSetTests(APITestCase):
         data = json.loads(response.content)
         numbers = data['results']
         self.assertEqual(len(numbers), 2)
+
+
+class AddressTests(APITestCase):
+
+    def setUp(self):
+        self.person = create_person()
+        self.address = mommy.make(Address, person=self.person)
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_get(self):
+        response = self.client.get('/api/contact/addresses/{}/'.format(self.address.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(data['id'], str(self.address.pk))
+
+
+class EmailTests(APITestCase):
+
+    def setUp(self):
+        self.person = create_person()
+        self.email = mommy.make(Email, person=self.person)
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_get(self):
+        response = self.client.get('/api/contact/emails/{}/'.format(self.email.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(data['id'], str(self.email.pk))
