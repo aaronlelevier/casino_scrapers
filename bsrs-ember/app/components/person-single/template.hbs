@@ -57,11 +57,12 @@
 			<h2 class="col-sm-12">{{t "admin.person.label.credentials"}}</h2>
 			<div class="col-sm-4">
 				{{#form-group title="admin.person.label.status"}}
-					<select class="form-control t-statuses-select">
-			        {{#each statuses as |status|}}
-			            <option class="t-status-option">{{status.name}}</option>
-			        {{/each}}
-					</select>
+          {{select-2
+              content=statuses
+              optionValuePath="id"
+              optionLabelPath="name"
+              cssClass="form-control t-statuses-select"
+          }}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-4">
