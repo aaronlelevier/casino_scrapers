@@ -52,8 +52,8 @@ test('visiting /people/new', (assert) => {
     click('.t-person-new');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
-        assert.equal(store.find('person').length, 1);
-        assert.equal(store.find('phonenumber').length, 0);
+        assert.equal(store.find('person').get('length'), 1);
+        assert.equal(store.find('phonenumber').get('length'), 0);
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
@@ -67,7 +67,7 @@ test('visiting /people/new', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
-        assert.equal(store.find('person').length, 1);
+        assert.equal(store.find('person').get('length'), 1);
         var person = store.find('person').objectAt(0);
         assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
@@ -77,7 +77,7 @@ test('visiting /people/new', (assert) => {
         assert.equal(person.get('first_name'), PEOPLE_DEFAULTS.first_name);
         assert.equal(person.get('middle_initial'), PEOPLE_DEFAULTS.middle_initial);
         assert.equal(person.get('last_name'), PEOPLE_DEFAULTS.last_name);
-        assert.equal(store.find('phonenumber').length, 1);
+        assert.equal(store.find('phonenumber').get('length'), 1);
         assert.ok(person.get('isNotDirty'));
         assert.ok(person.get('phoneNumbersIsNotDirty'));
         var phonenumber = person.get('phone_numbers').objectAt(0);
