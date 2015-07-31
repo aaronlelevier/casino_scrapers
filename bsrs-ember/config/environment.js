@@ -22,30 +22,39 @@ module.exports = function(environment) {
             // when it is created
         }
     };
-
+    ENV.APP.NAMESPACE = '/api';
     if (environment === 'development') {
         // ENV.APP.LOG_RESOLVER = true;
         // ENV.APP.LOG_ACTIVE_GENERATION = true;
         // ENV.APP.LOG_TRANSITIONS = true;
         // ENV.APP.LOG_TRANSITIONS_INTERNAL = true;
         // ENV.APP.LOG_VIEW_LOOKUPS = true;
-    }
+        ENV.contentSecurityPolicy = {
+            // 'default-src': "'none'",
+            'script-src': "'self' 'unsafe-inline'",
+            // 'font-src': "'self'",
+            'connect-src': "'self' http://bs-webdev03.bigskytech.com http://127.0.0.1:8000",
+            //'connect-src': "'self' http://10.1.6.160:8000 http://127.0.0.1:8000",
+            'img-src': "'self' data:",
+            'style-src': "'self' 'unsafe-inline'"
+            // 'media-src': "'self'"
+        };     }
 
-    if (environment === 'test') {
-        // Testem prefers this...
-        ENV.baseURL = '/';
-        ENV.locationType = 'none';
+        if (environment === 'test') {
+            // Testem prefers this...
+            ENV.baseURL = '/';
+            ENV.locationType = 'none';
 
-        // keep test console output quieter
-        ENV.APP.LOG_ACTIVE_GENERATION = false;
-        ENV.APP.LOG_VIEW_LOOKUPS = false;
+            // keep test console output quieter
+            ENV.APP.LOG_ACTIVE_GENERATION = false;
+            ENV.APP.LOG_VIEW_LOOKUPS = false;
 
-        ENV.APP.rootElement = '#ember-testing';
-    }
+            ENV.APP.rootElement = '#ember-testing';
+        }
 
-    if (environment === 'production') {
+        if (environment === 'production') {
 
-    }
+        }
 
-    return ENV;
+        return ENV;
 };
