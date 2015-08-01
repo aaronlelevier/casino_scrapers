@@ -2,8 +2,8 @@
 	<header>
 		<h1>{{model.first_name}} {{model.middle_initial}} {{model.last_name}} <small>{{model.title}}</small></h1>
 		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
-			{{save-button save="savePerson"}}
-			{{cancel-button cancel="cancelPerson"}}
+      {{button-generic save="savePerson" type="save"}}
+      {{button-generic cancel="cancelPerson" type="cancel"}}
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<span class="caret"></span>
 			</button>

@@ -1,0 +1,5 @@
+{{#if (eq type "save")}}
+<i class="fa fa-check-circle">&nbsp;</i> {{yield}} 
+{{else if (eq type "cancel")}}
+  <i class="fa fa-times-circle">&nbsp;</i> {{yield}}
+{{/if}}
