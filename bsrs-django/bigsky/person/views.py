@@ -12,7 +12,7 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 
-from person import serializers as ps
+from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
 from util.permissions import BSModelPermissions
 from util.views import BaseModelViewSet
@@ -68,6 +68,20 @@ class PersonViewSet(BaseModelViewSet):
         else:
             return ps.PersonListSerializer
 
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            # Add ``auth_amount`` to dict
+            serializer = helpers.update_auth_amount(serializer)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        # Add ``auth_amount`` to dict
+        serializer = helpers.update_auth_amount(serializer)
+        return Response(serializer.data)
 
 ### PERSON ###
 

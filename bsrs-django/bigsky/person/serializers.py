@@ -63,7 +63,8 @@ class PersonStatusSerializer(serializers.ModelSerializer):
 
 PERSON_FIELDS = (
     'id', 'username', 'first_name', 'middle_initial',
-    'last_name', 'status', 'role', 
+    'last_name', 'status', 'role', 'title', 'employee_id',
+    'auth_amount', 'auth_amount_currency',
 )
 
 
@@ -103,8 +104,7 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS + ('title', 'employee_id', 'auth_amount',
-            'auth_amount_currency', 'emails', 'phone_numbers', 'addresses',)
+        fields = PERSON_FIELDS + ('emails', 'phone_numbers', 'addresses',)
 
     def update(self, instance, validated_data):
         phone_numbers = validated_data.pop('phone_numbers', [])

@@ -111,7 +111,8 @@ class PersonCreateTests(APITestCase):
         person = Person.objects.last()
         self.assertIsInstance(person.role, Role)
         group = Group.objects.get(name=person.role.name)
-        self.assertIn(group, person.groups.all())
+        person_groups = person.groups.all()
+        self.assertIn(group, person_groups)
 
 
 class PersonListTests(TestCase):
@@ -131,6 +132,17 @@ class PersonListTests(TestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(data['count'], self.people)
+
+    def test_auth_amount(self):
+        # make sure the custom key in ``person.helpers.update_auth_amount``
+        # shows in the list data
+        response = self.client.get('/api/admin/people/')
+        data = json.loads(response.content)
+        # First Result
+        results = data['results'][0]
+        self.assertIsNotNone(results['auth_amount'])
+        # self.assertEqual(results['auth_amount']['amount'], self.person.auth_amount)
+        self.assertEqual(results['auth_amount']['currency'], str(self.person.auth_amount_currency.id))
 
 
 class PersonDetailTests(TestCase):

@@ -211,3 +211,24 @@ class Person(BaseModel, AbstractUser):
         if not self.auth_amount_currency:
             self.auth_amount_currency = Currency.objects.default()
         return super(Person, self).save(*args, **kwargs)
+
+
+# class MyUser(models.Model):
+#     name = models.CharField(max_length=100)
+#     amount = models.PositiveIntegerField()
+#     amount_currency = models.CharField(max_length=3,
+#         help_text="Currency Abbreviation. i.e. 'usd' or 'jpy'.")
+
+# normal_json = {
+#     "name": "bob",
+#     "amount": 100,
+#     "amount_currency": "usd"
+# }
+
+# desired_json = {
+#     "name": "bob",
+#     "auth_amount": {
+#         "amount": 100,
+#         "amount_currency": "usd"
+#     }
+# }
