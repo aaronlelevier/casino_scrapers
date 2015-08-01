@@ -83,6 +83,21 @@ class PersonViewSet(BaseModelViewSet):
         serializer = helpers.update_auth_amount(serializer)
         return Response(serializer.data)
 
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        serializer = serializer.data
+        # Add ``auth_amount`` to dict
+        auth_amount = serializer.pop('auth_amount', '')
+        auth_amount_currency = serializer.pop('auth_amount_currency', '')
+        serializer.update({'auth_amount': {
+                'amount': auth_amount,
+                'currency': auth_amount_currency
+            }
+        })
+        return Response(serializer)
+
+
 ### PERSON ###
 
     ## TODO:
