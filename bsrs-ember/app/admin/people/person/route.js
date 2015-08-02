@@ -22,19 +22,16 @@ export default Ember.Route.extend({
             repository = this.get('repository'),
             person = repository.findById(person_pk),
             phone_number_type_repo = this.get('phone_number_type_repo'),
-            phone_number_types = phone_number_type_repo.find(),
             address_type_repo = this.get('address_type_repo'),
-            address_types = address_type_repo.find(),
-            statuses = status_repo.find(),
             default_phone_number_type = phone_number_type_repo.get_default();
 
         return Ember.RSVP.hash({
             model: person,
-            phone_number_types: phone_number_types,
+            phone_number_types: phone_number_type_repo.find(),
             countries: country_repo.find(),
             state_list: state_repo.find(),
-            address_types: address_types,
-            statuses: statuses,
+            address_types: address_type_repo.find(),
+            statuses: status_repo.find(),
             default_phone_number_type: default_phone_number_type
         });
     },

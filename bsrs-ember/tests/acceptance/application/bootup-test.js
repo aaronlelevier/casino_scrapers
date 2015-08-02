@@ -101,7 +101,7 @@ test('on boot we should fetch and load the currency configuration', function(ass
 test('on boot we should fetch and load the role configuration', function(assert) {
     visit(HOME_URL);
     andThen(() => {
-        var role_models = store.find('role');
+        var role_models = store.find('role-type');
         assert.equal(role_models.get('length'), 2);
         assert.equal(role_models.objectAt(0).get('id'), ROLE_DEFAULTS.id);
         assert.equal(role_models.objectAt(0).get('name'), ROLE_DEFAULTS.name);

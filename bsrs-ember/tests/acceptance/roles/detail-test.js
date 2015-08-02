@@ -46,7 +46,7 @@ test('clicking a role name will redirect to the given detail view', (assert) => 
 test('when you deep link to the role detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
-        assert.equal(currentURL(),DETAIL_URL);
+        assert.equal(currentURL(), DETAIL_URL);
         var role = store.find('role').objectAt(0);  
         assert.ok(role.get('isNotDirty'));
         assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.name);

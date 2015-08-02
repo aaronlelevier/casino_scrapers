@@ -1,0 +1,40 @@
+<form {{action "return false" this on="submit"}}>
+	<header>
+		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
+      {{button-generic save="saveRole" type="save"}}
+      {{button-generic cancel="cancelRole" type="cancel"}}
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
+				<li><a href="#">{{fa-icon "print"}} Print</a></li>
+				<li>{{delete-button delete="deleterole"}}</li>
+			</ul>
+		</div>
+	</header>
+	<section class="docSection container-fluid">
+		<section>
+			<h2 class="col-sm-12">{{t "admin.role.label.credentials"}}</h2>
+			<div class="col-sm-6">
+				{{#form-group title="admin.role.label.name" for="name"}}
+					{{input type="text" value=model.name placeholder=(t "admin.role.label.name") class="form-control t-role-name" id="name" required="required"}}
+					{{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.role.label.name"}}{{/validation-error-field}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.role.label.role_type" for="role_type"}}
+					{{input type="text" value=model.role_type placeholder=(t "admin.role.label.role_type") class="form-control t-role-role_type" id="role_type" required="required"}}
+					{{#validation-error-field submitted=submitted field="role_type" className="validation validation-under t-role_type-validation-error" model=model validation=roleTypeValidation}}{{t "validation.invalid"}} {{t "admin.role.label.role_type"}}{{/validation-error-field}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.role.label.location_level" for="location_level"}}
+					{{input type="text" value=model.location_level placeholder=(t "admin.role.label.location_level") class="form-control t-role-location_level" id="location_level" required="required"}}
+					{{#validation-error-field submitted=submitted field="location_level" className="validation validation-under t-location_level-validation-error" model=model validation=locationLevelValidation}}{{t "validation.invalid"}} {{t "admin.role.label.role_type"}}{{/validation-error-field}}
+				{{/form-group}}
+			</div>
+        </section>
+    </section>
+</form>
+

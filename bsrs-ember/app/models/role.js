@@ -10,6 +10,10 @@ export default Model.extend({
         var store = this.get('store');
         return store.find('category', {role_id: this.get('id')});
     }),
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
+        return this.get('isDirty'); 
+    }),
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     serialize() {
         var categories = this.get('categories').map((category) => {
             return category.serialize();

@@ -36,7 +36,7 @@ export default Ember.Route.extend({
         var role_config = $('[data-preload-roles]').html();
         var role_list = JSON.parse(role_config);
         role_list.forEach((model) => {
-            store.push('role', model);
+            store.push('role-type', model);
         });
     },
     actions: {

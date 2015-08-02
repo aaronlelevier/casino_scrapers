@@ -10,12 +10,10 @@ export default Ember.Component.extend({
             var model = this.trx.attemptedTransitionModel;
             var newModel = this.trx.newModel;
             if (newModel) {
-                model.rollback();
                 this.get('store').remove('person', model.get('id'));
-            } else {
-                model.rollback();
-                model.rollbackPhoneNumbers();
             }
+            model.rollback();
+            model.rollbackPhoneNumbers();
             transition.retry();
         },
         cancel_modal() {

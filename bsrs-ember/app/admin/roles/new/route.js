@@ -1,25 +1,16 @@
 import Ember from 'ember';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import inject from 'bsrs-ember/utilities/inject';
 
 export default Ember.Route.extend({
     uuid: injectUUID('uuid'),
-    phone_number_type_repo: inject('phone-number-type'),
     model() {
         var pk = this.get('uuid').v4();
-        var phone_number_type_repo = this.get('phone_number_type_repo');
-        var phone_number_types = phone_number_type_repo.find();
-        var default_phone_number_type = phone_number_type_repo.get_default();
         return Ember.RSVP.hash({
-            model: this.get('store').push('person', {id: pk}),
-            phone_number_types: phone_number_types,
-            default_phone_number_type: default_phone_number_type
+            model: this.get('store').push('role', {id: pk}),
         });
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('phone_number_types', hash.phone_number_types);
-        controller.set('default_phone_number_type', hash.default_phone_number_type);
     },
     actions: {
         willTransition(transition) {
@@ -34,11 +25,11 @@ export default Ember.Route.extend({
                 $('.t-modal').modal('hide');
             }
         },
-        savePerson() {
-            this.transitionTo('admin.people');
+        saveRole() {
+            this.transitionTo('admin.roles');
         },
         redirectUser() {
-            this.transitionTo('admin.people');
+            this.transitionTo('admin.roles');
         }
     }
 });

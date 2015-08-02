@@ -24,6 +24,9 @@ var BSRS_ROLE_FACTORY = (function() {
         role.categories = this.category_fixtures.get();
         return role;
     };
+    factory.prototype.empty = function() {
+        return {'count':3,'next':null,'previous':null,'results': []};
+    };
     factory.prototype.put = function(role) {
         var response = this.generate(role.id);
         role.categories = this.category_fixtures.put();
