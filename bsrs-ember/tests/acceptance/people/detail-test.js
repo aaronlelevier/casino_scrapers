@@ -221,7 +221,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('sco when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     click('.t-cancel-btn');

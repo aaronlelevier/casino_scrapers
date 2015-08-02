@@ -20,6 +20,7 @@ export default Ember.Route.extend({
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;
                 this.trx.newModel = true;
+                this.trx.storeType = 'role';
                 transition.abort();
             } else {
                 $('.t-modal').modal('hide');

@@ -116,25 +116,25 @@ test('sco when user clicks cancel we prompt them with a modal and they cancel to
     });
 });
 
-// test('sco when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
-//     visit(ROLE_NEW_URL);
-//     fillIn('.t-role-name', ROLE_DEFAULTS.name);
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), ROLE_NEW_URL);
-//             assert.equal(find('.t-modal').is(':visible'), true);
-//             var role = store.find('role', {id: UUID.value});
-//             assert.equal(role.get('length'), 1);
-//         });
-//     });
-//     click('.t-modal-footer .t-modal-rollback-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), ROLE_URL);
-//             assert.equal(find('.t-modal').is(':hidden'), true);
-//             var role = store.find('role', {id: UUID.value});
-//             assert.equal(role.get('length'), 0);
-//         });
-//     });
-// });
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+    visit(ROLE_NEW_URL);
+    fillIn('.t-role-name', ROLE_DEFAULTS.name);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), ROLE_NEW_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+            var role = store.find('role', {id: UUID.value});
+            assert.equal(role.get('length'), 1);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), ROLE_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            var role = store.find('role', {id: UUID.value});
+            assert.equal(role.get('length'), 0);
+        });
+    });
+});

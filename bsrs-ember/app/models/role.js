@@ -14,6 +14,8 @@ export default Model.extend({
         return this.get('isDirty'); 
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    rollbackRelated() {
+    },
     serialize() {
         var categories = this.get('categories').map((category) => {
             return category.serialize();
