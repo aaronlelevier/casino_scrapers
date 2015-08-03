@@ -205,20 +205,19 @@ class Person(BaseModel, AbstractUser):
         return self.username
 
     def save(self, *args, **kwargs):
-        # Defaults
         if not self.status:
             self.status = PersonStatus.objects.default()
         if not self.auth_amount:
             self.auth_amount = self.role.default_auth_amount
         if not self.auth_amount_currency:
             self.auth_amount_currency = Currency.objects.default()
-
-        # Person is only in 1 Group at a time Logic
-        helpers.update_group(person=self, group=self.role.group)
-
         return super(Person, self).save(*args, **kwargs)
 
 
+@receiver(post_save, sender=Person)
+def update_group(sender, instance=None, created=False, **kwargs):
+    "Post-save hook for maintaing single Group enrollment."
+    helpers.update_group(person=instance, group=instance.role.group)
 
 
 

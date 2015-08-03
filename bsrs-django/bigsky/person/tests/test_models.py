@@ -105,3 +105,10 @@ class PersonTests(TestCase):
     def test_status(self):
         # should create a PersonStatus and default it
         self.assertEqual(self.person.status, PersonStatus.objects.default())
+
+    def test_group(self):
+        role = Role.objects.first()
+        person = mommy.make(Person, role=role)
+        self.assertEqual(person.groups.count(), 1)
+
+
