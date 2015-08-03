@@ -1,6 +1,5 @@
 import unittest
 import uuid 
-from time import sleep
 
 from selenium import webdriver
 
@@ -38,15 +37,14 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         nav_admin_people = self.wait_for_xhr_request("t-nav-admin-people")
         nav_admin_people.click()
 
-        first_person = self.wait_for_xhr_request("t-person-data")
-        first_person.click()
+        people_list = self.wait_for_xhr_request("t-person-data", plural=True)
+        people_list[0].click()
 
         username_input = self.wait_for_xhr_request("t-person-username")
         assert username_input.get_attribute("value")
 
         self.driver.find_element_by_class_name('t-save-btn').click()
-        self.wait_for_xhr_request("t-person-data")
-
+        self.wait_for_xhr_request("t-person-data", plural=True)
 
     def test_navigate_to_people_list_and_create_new_person_record(self):
         self.login()
@@ -64,6 +62,7 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         role_input = self.driver.find_element_by_id("role")
         first_name_input = self.driver.find_element_by_id("first_name")
         last_name_input = self.driver.find_element_by_id("last_name")
+        add_phone_number_btn = self.driver.find_element_by_class_name("t-add-btn")
 
         username_input.send_keys(str(uuid.uuid4())[0:29])
         password_input.send_keys("bobber1")
@@ -71,9 +70,27 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         email_input.send_keys("bobber1@gmail.com")
         first_name_input.send_keys(str(uuid.uuid4())[0:29])
         last_name_input.send_keys('Gibson')
-        self.driver.find_element_by_class_name('t-save-btn').click()
-        self.wait_for_xhr_request("t-person-data")
 
+        add_phone_number_btn.click()
+        first_phone_number_input = self.driver.find_element_by_class_name("t-new-entry")
+        first_phone_number_input.send_keys('888-999-7878')
+
+        add_phone_number_btn.click()
+        all_phone_number_inputs = self.driver.find_elements_by_class_name("t-new-entry")
+        last_phone_number_input = all_phone_number_inputs[1]
+        last_phone_number_input.send_keys('999-777-7878')
+
+        self.driver.find_element_by_class_name('t-save-btn').click()
+
+        all_people = self.wait_for_xhr_request("t-person-data", plural=True)
+        new_person = all_people[len(all_people) - 1]
+        new_person.click()
+
+        phone_number_inputs = self.wait_for_xhr_request("t-new-entry", plural=True)
+        assert len(phone_number_inputs) == 2
+        assert phone_number_inputs[0].get_attribute("value") == '888-999-7878'
+        assert phone_number_inputs[1].get_attribute("value") == '999-777-7878'
+        
 
 if __name__ == "__main__":
     unittest.main()
