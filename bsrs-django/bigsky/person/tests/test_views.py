@@ -1,6 +1,5 @@
 import json
 import uuid
-import time
 import sys
 if sys.version_info > (2,7):
     str = unicode
@@ -15,6 +14,7 @@ from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
 from contact.models import Address, PhoneNumber, Email, PhoneNumberType
+from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
 from person.tests.factory import PASSWORD, create_person, create_role
@@ -24,7 +24,7 @@ from util import create, choices
 
 ### ROLE ###
 
-class RoleViewSetTests(APITransactionTestCase):
+class RoleViewSetTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
@@ -170,15 +170,6 @@ class PersonCreateTests(APITestCase):
         response = self.client.post('/api/admin/people/', self.data, format='json')
         self.assertNotIn('password', response)
 
-    def test_role_and_group(self):
-        response = self.client.post('/api/admin/people/', self.data, format='json')
-        person = Person.objects.last()
-        self.assertIsInstance(person.role, Role)
-        group = Group.objects.get(name=person.role.name)
-        person_groups = person.groups.all()
-        time.sleep(2) # needs this in order to no "falsley-fail" here
-        self.assertIn(group, person_groups)
-
 
 class PersonListTests(TestCase):
 
@@ -188,23 +179,27 @@ class PersonListTests(TestCase):
         # Login
         self.person1 = Person.objects.first()
         self.client.login(username=self.person.username, password=PASSWORD)
+        # List GET data
+        self.response = self.client.get('/api/admin/people/')
+        self.data = json.loads(self.response.content)
 
     def tearDown(self):
         self.client.logout()
 
-    def test_list(self):
-        response = self.client.get('/api/admin/people/')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
-        self.assertEqual(data['count'], self.people)
+    def test_response(self):
+        self.assertEqual(self.response.status_code, 200)
+
+    def test_count(self):
+        self.assertEqual(self.data['count'], self.people)
+
+    def test_status(self):
+        self.assertTrue(self.data['results'][0]['status']['id'])
+
+    def test_role(self):
+        self.assertTrue(self.data['results'][0]['role']['id'])
 
     def test_auth_amount(self):
-        # make sure the custom key in ``person.helpers.update_auth_amount``
-        # shows in the list data
-        response = self.client.get('/api/admin/people/')
-        data = json.loads(response.content)
-        # First Result
-        results = data['results'][0]
+        results = self.data['results'][0]
         self.assertIsNotNone(results['auth_amount'])
         self.assertEqual(results['auth_amount']['amount'], "{0:.4f}".format(self.person.auth_amount))
         self.assertEqual(results['auth_amount']['currency'], str(self.person.auth_amount_currency.id))
@@ -215,22 +210,38 @@ class PersonDetailTests(TestCase):
     def setUp(self):
         self.person = create_person()
         # contact info
-        self.phone_number = mommy.make(PhoneNumber, person=self.person)
+        create_person_and_contacts(self.person)
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
+        # GET data
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
+        self.data = json.loads(response.content)
 
     def tearDown(self):
         self.client.logout()
 
-    def test_create(self):
-        self.assertEqual(self.phone_number.person, self.person)
-
     def test_retrieve(self):
-        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        person = json.loads(response.content)
-        self.assertEqual(person['username'], self.person.username)
-        self.assertIsNotNone(person['phone_numbers'])
+        self.assertEqual(self.data['username'], self.person.username)
+
+    def test_emails(self):
+        self.assertTrue(self.data['emails'])
+        email = Email.objects.get(id=self.data['emails'][0]['id'])
+        self.assertIsInstance(email, Email)
+
+    def test_phone_numbers(self):
+        self.assertTrue(self.data['phone_numbers'])
+        ph = PhoneNumber.objects.get(id=self.data['phone_numbers'][0]['id'])
+        self.assertIsInstance(ph, PhoneNumber)
+
+    def test_addresses(self):
+        self.assertTrue(self.data['addresses'])
+        address = Address.objects.get(id=self.data['addresses'][0]['id'])
+        self.assertIsInstance(address, Address)
+
+    def test_auth_amount(self):
+        self.assertIsNotNone(self.data['auth_amount'])
+        self.assertEqual(self.data['auth_amount']['amount'], "{0:.4f}".format(self.person.auth_amount))
+        self.assertEqual(self.data['auth_amount']['currency'], str(self.person.auth_amount_currency.id))
 
 
 class PersonPutTests(APITestCase):

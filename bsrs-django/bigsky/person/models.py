@@ -16,6 +16,7 @@ from django.contrib.postgres.fields import HStoreField
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location
+from person import helpers
 from order.models import WorkOrderStatus
 from util import choices, create, exceptions as excp
 from util.models import (AbstractName, MainSetting, CustomSetting,
@@ -213,7 +214,7 @@ class Person(BaseModel, AbstractUser):
             self.auth_amount_currency = Currency.objects.default()
 
         # Person is only in 1 Group at a time Logic
-        create.update_group(person=self, group=self.role.group)
+        helpers.update_group(person=self, group=self.role.group)
 
         return super(Person, self).save(*args, **kwargs)
 

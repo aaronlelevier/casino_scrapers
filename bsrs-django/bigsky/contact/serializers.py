@@ -16,11 +16,10 @@ class PhoneNumberTypeSerializer(serializers.ModelSerializer):
 class PhoneNumberSerializer(serializers.ModelSerializer):
     
     id = serializers.UUIDField(read_only=False)
-    type = PhoneNumberTypeSerializer()
 
     class Meta:
         model = PhoneNumber
-        fields = ('id', 'type', 'location', 'person', 'number',)
+        fields = ('id', 'type', 'number',)
 
 
 ### ADDRESS ###
@@ -35,12 +34,11 @@ class AddressTypeSerializer(serializers.ModelSerializer):
 class AddressSerializer(serializers.ModelSerializer):
     
     id = serializers.UUIDField(read_only=False)
-    type = AddressTypeSerializer()
 
     class Meta:
         model = Address
-        fields = ('id', 'type', 'location', 'person',
-            'address', 'city', 'state', 'country', 'postal_code',)
+        fields = ('id', 'type', 'address', 'city', 'state',
+            'country', 'postal_code',)
 
 ### EMAIL ###
 
@@ -54,8 +52,7 @@ class EmailTypeSerializer(serializers.ModelSerializer):
 class EmailSerializer(serializers.ModelSerializer):
     
     id = serializers.UUIDField(read_only=False)
-    type = EmailTypeSerializer()
 
     class Meta:
         model = Email
-        fields = ('id', 'type', 'location', 'person', 'email',)
+        fields = ('id', 'type', 'email',)

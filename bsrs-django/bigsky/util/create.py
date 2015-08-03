@@ -56,13 +56,5 @@ def update_model(model, dict_):
     return model
 
 
-def update_group(person, group):
-    "Will make sure the ``person`` is in one, and only one group."
-    for g in person.groups.all():
-        person.groups.remove(g)
-    person.groups.add(group)
-    return person
-
-
 def model_to_simple_dict(model):
     return {'id':model.id, 'name':model.name}

@@ -24,6 +24,13 @@ class RoleSerializer(serializers.ModelSerializer):
         fields = ('id', 'name', 'role_type', 'location_level')
 
 
+class RoleIdNameSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Role
+        fields = ('id', 'name',)
+
+
 class RoleCreateSerializer(serializers.ModelSerializer):
 
     id = serializers.UUIDField(read_only=False)
@@ -85,12 +92,25 @@ class PersonCreateSerializer(serializers.ModelSerializer):
 
 class PersonListSerializer(serializers.ModelSerializer):
 
-    role = RoleSerializer(read_only=True)
+    role = RoleIdNameSerializer(read_only=True)
     status = PersonStatusSerializer(read_only=True)
 
     class Meta:
         model = Person
         fields = PERSON_FIELDS
+
+
+class PersonDetailSerializer(serializers.ModelSerializer):
+
+    status = PersonStatusSerializer()
+    role = RoleSerializer()
+    phone_numbers = PhoneNumberSerializer(many=True)
+    addresses = AddressSerializer(many=True)
+    emails = EmailSerializer(many=True)
+
+    class Meta:
+        model = Person
+        fields = PERSON_FIELDS + ('emails', 'phone_numbers', 'addresses',)
 
 
 class PersonUpdateSerializer(serializers.ModelSerializer):
