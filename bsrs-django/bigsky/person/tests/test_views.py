@@ -273,32 +273,42 @@ class PersonPutTests(APITestCase):
             "last_name": "",
             "title": "",
             "employee_id": "",
-            "auth_amount": self.person.auth_amount,
-            "auth_amount": str(self.person.auth_amount_currency.id),
+            "auth_amount": "{0:.4f}".format(self.person.auth_amount),
+            "auth_amount_currency": str(self.person.auth_amount_currency.id),
             "role": str(self.person.role.id),
             "status": str(self.person.status.id),
             "location":"",
-            "phone_numbers":[
-                {
-                "id": str(self.phone_number.id),
-                "type": str(self.phone_number.type.id),
-                "location": "",
-                "person": str(self.person.id),
-                "number": self.phone_number.number
-                }
-            ]
+            "emails":[],
+            "phone_numbers":[],
+            "addresses":[]
         }
 
     def tearDown(self):
         self.client.logout()
 
-    # def test_no_change(self):
+    def test_no_change(self):
         # Confirm the ``self.data`` structure is correct
-        # response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
-        # self.assertEqual(response.status_code, 200)
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        self.assertEqual(response.status_code, 200)
 
-    # def test_update_person(self):
-    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+    def test_update_person(self):
+        new_title = "new_title"
+        self.assertNotEqual(new_title, self.data['title'])
+        self.data['title'] = new_title
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        data = json.loads(response.content)
+        self.assertEqual(new_title, data['title'])
+
+    def test_update_email(self):
+        self.assertFalse(self.data['emails'])
+        self.data['emails'] = [{
+            'id': str(self.email.id),
+            'type': str(self.email.type.id),
+            'email': self.email.email
+        }]
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        data = json.loads(response.content)
+        self.assertTrue(data['emails'])
 
 
 class PersonDeleteTests(APITestCase):
