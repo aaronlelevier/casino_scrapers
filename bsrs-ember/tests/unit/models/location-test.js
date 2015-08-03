@@ -18,7 +18,7 @@ module('unit: location test', {
     }
 });
 
-test('sco location is dirty or related is dirty when model has been updated', (assert) => {
+test('location is dirty or related is dirty when model has been updated', (assert) => {
     var location = store.push('location', {id: LOCATION_DEFAULTS.id, name: LOCATION_DEFAULTS.storeName});
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));

@@ -2,7 +2,7 @@ import {test, module} from 'qunit';
 import Location from 'bsrs-ember/models/location';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 
-module('sco unit: location attrs test');
+module('unit: location attrs test');
 
 test('default state for name on location model is undefined', (assert) => {
     var location = Location.create({id: LOCATION_DEFAULTS.id, name: undefined});

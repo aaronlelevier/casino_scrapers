@@ -42,14 +42,14 @@ export default Model.extend({
         });
     },
     rollbackRelated() {
-        this.get('rollbackPhoneNumbers');
+        this.rollbackPhoneNumbers();
     },
-    rollbackPhoneNumbers: Ember.computed(function() {
+    rollbackPhoneNumbers() {
         var phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
             num.rollback();
         });
-    }),
+    },
     serialize() {
         //TODO: remove this hard reference to get the first role/status in favor of
         //a truly dynamic lookup via the new/update forms

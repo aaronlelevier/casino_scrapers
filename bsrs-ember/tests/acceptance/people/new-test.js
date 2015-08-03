@@ -168,7 +168,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('sco when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     visit(PEOPLE_NEW_URL);
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     click('.t-cancel-btn');
@@ -187,6 +187,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', {id: UUID.value});
             assert.equal(person.get('length'), 0);
+            assert.equal(find('tr.t-person-data').length, 0);
         });
     });
 });
