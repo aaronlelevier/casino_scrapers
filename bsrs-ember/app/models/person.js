@@ -79,5 +79,8 @@ export default Model.extend({
             phone_numbers: phone_numbers,
             addresses: addresses
         };
+    },
+    removeRecord(id) {
+        this.get('store').remove('person', id);
     }
 });

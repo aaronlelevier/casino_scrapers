@@ -29,9 +29,6 @@ export default Ember.Route.extend({
                 $('.t-modal').modal('hide');
             }
         },
-        saveRole() {
-            this.transitionTo('admin.roles');
-        },
         deleteRole() {
             var model = this.modelFor('admin.roles.role');
             // model.destroyRecord().then(() => {

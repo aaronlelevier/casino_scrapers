@@ -35,9 +35,6 @@ export default Ember.Route.extend({
                 $('.t-modal').modal('hide');
             }
         },
-        savePerson() {
-            this.transitionTo('admin.people');
-        },
         redirectUser() {
             this.transitionTo('admin.people');
         }
