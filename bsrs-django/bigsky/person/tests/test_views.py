@@ -1,5 +1,9 @@
 import json
 import uuid
+import time
+import sys
+if sys.version_info > (2,7):
+    str = unicode
 
 from django.test import TestCase, TransactionTestCase
 from django.http import JsonResponse
@@ -16,6 +20,66 @@ from person.models import Person, Role, PersonStatus
 from person.tests.factory import PASSWORD, create_person, create_role
 from person.serializers import PersonUpdateSerializer
 from util import create, choices
+
+
+### ROLE ###
+
+class RoleViewSetTests(APITransactionTestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+        # LocationLevel
+        self.location = mommy.make(Location)
+        # Role
+        self.role = self.person.role
+        self.role.location_level = self.location.level
+        self.role.save()
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_list(self):
+        response = self.client.get('/api/admin/roles/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        roles = data['results']
+        self.assertEqual(roles[0]['id'], str(self.role.pk))
+        self.assertEqual(roles[0]['location_level']['id'], str(self.location.level.id))
+
+    def test_detail(self):
+        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = json.loads(response.content)
+        self.assertEqual(data['id'], str(self.role.pk))
+        self.assertEqual(data['location_level']['id'], str(self.location.level.id))
+
+    def test_create(self):
+        role_data = {
+            "id": str(uuid.uuid4()),
+            "name": "Admin",
+            "role_type": choices.ROLE_TYPE_CHOICES[0][0],
+            "location_level": self.location.level.id
+        }
+        response = self.client.post('/api/admin/roles/', role_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        data = json.loads(response.content)
+        self.assertEqual(data['id'], role_data['id'])
+        self.assertIsInstance(Role.objects.get(id=role_data['id']), Role)
+
+    def test_update(self):
+        role_data = {
+            "id": self.role.id,
+            "name": "New Role Name",
+            "role_type": self.role.role_type,
+            "location_level": self.role.location_level.id
+        }
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id), role_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        new_role_data = json.loads(response.content)
+        self.assertNotEqual(self.role.name, new_role_data['name'])
 
 
 ### PERSON ###
@@ -112,6 +176,7 @@ class PersonCreateTests(APITestCase):
         self.assertIsInstance(person.role, Role)
         group = Group.objects.get(name=person.role.name)
         person_groups = person.groups.all()
+        time.sleep(2) # needs this in order to no "falsley-fail" here
         self.assertIn(group, person_groups)
 
 
@@ -141,7 +206,7 @@ class PersonListTests(TestCase):
         # First Result
         results = data['results'][0]
         self.assertIsNotNone(results['auth_amount'])
-        # self.assertEqual(results['auth_amount']['amount'], self.person.auth_amount)
+        self.assertEqual(results['auth_amount']['amount'], "{0:.4f}".format(self.person.auth_amount))
         self.assertEqual(results['auth_amount']['currency'], str(self.person.auth_amount_currency.id))
 
 
@@ -255,65 +320,6 @@ class PersonDeleteTests(APITestCase):
             {'override':True}, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Person.objects.count(), people-1)
-
-
-### ROLE ###
-
-class RoleViewSetTests(APITransactionTestCase):
-
-    def setUp(self):
-        self.password = PASSWORD
-        self.person = create_person()
-        # LocationLevel
-        self.location = mommy.make(Location)
-        # Role
-        self.role = self.person.role
-        self.role.location_level = self.location.level
-        self.role.save()
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_list(self):
-        response = self.client.get('/api/admin/roles/')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        roles = data['results']
-        self.assertEqual(roles[0]['id'], str(self.role.pk))
-
-    def test_detail(self):
-        response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
-        self.assertEqual(data['id'], str(self.role.pk))
-        self.assertTrue(data['location_level'])
-
-    def test_create(self):
-        role_data = {
-            "id": str(uuid.uuid4()),
-            "name": "Admin",
-            "role_type": choices.ROLE_TYPE_CHOICES[0][0],
-            "location_level": self.location.level.id
-        }
-        response = self.client.post('/api/admin/roles/', role_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
-        self.assertEqual(data['id'], role_data['id'])
-        self.assertIsInstance(Role.objects.get(id=role_data['id']), Role)
-
-    def test_update(self):
-        role_data = {
-            "id": self.role.id,
-            "name": "New Role Name",
-            "role_type": self.role.role_type,
-            "location_level": self.role.location_level.id
-        }
-        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id), role_data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        new_role_data = json.loads(response.content)
-        self.assertNotEqual(self.role.name, new_role_data['name'])
 
 
 # Password Tests to use later

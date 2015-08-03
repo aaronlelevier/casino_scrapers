@@ -17,7 +17,7 @@ from django.contrib.postgres.fields import HStoreField
 from accounting.models import Currency
 from location.models import LocationLevel, Location
 from order.models import WorkOrderStatus
-from util import choices, exceptions as excp
+from util import choices, create, exceptions as excp
 from util.models import (AbstractName, MainSetting, CustomSetting,
     BaseModel, BaseManager)
 
@@ -204,13 +204,21 @@ class Person(BaseModel, AbstractUser):
         return self.username
 
     def save(self, *args, **kwargs):
+        # Defaults
         if not self.status:
             self.status = PersonStatus.objects.default()
         if not self.auth_amount:
             self.auth_amount = self.role.default_auth_amount
         if not self.auth_amount_currency:
             self.auth_amount_currency = Currency.objects.default()
+
+        # Person is only in 1 Group at a time Logic
+        create.update_group(person=self, group=self.role.group)
+
         return super(Person, self).save(*args, **kwargs)
+
+
+
 
 
 # class MyUser(models.Model):

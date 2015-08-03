@@ -8,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from model_mommy import mommy
 
 from person.models import Person
-from person.tests.factory import create_person
+from person.tests.factory import create_person, create_role
 from util import create
 from util.models import MainSetting, CustomSetting, Tester
 from util.permissions import perms_map
@@ -114,3 +114,31 @@ class MainSettingTests(TestCase):
             content_object=self.person
             )
         self.assertEqual(s.content_object, self.person)
+
+
+class UpdateTests(TestCase):
+
+    def setUp(self):
+        self.person = create_person()
+        self.role1 = create_role()
+        self.role2 = create_role()
+
+    def test_update_model(self):
+        new_username = "new_username"
+        self.assertNotEqual(self.person.username, new_username)
+        self.person = create.update_model(model=self.person, dict_={'username':new_username})
+        self.assertEqual(self.person.username, new_username)
+
+    def test_update_group(self):
+        init_count = self.person.groups.count() # ``init_count`` == 1 ; b/c when a Role is created, the
+                                                # Person is auto-enrolled in the Group for that Role.
+        self.assertIsInstance(self.person.groups.first(), Group)
+        # Add to initial Group
+        create.update_group(person=self.person, group=self.role1.group)
+        self.assertEqual(self.person.groups.count(), init_count)
+        orig_group = self.person.groups.first()
+        # Adding to a New Group will remove them from the original
+        create.update_group(person=self.person, group=self.role2.group)
+        self.assertEqual(self.person.groups.count(), init_count)
+        new_group = self.person.groups.first()
+        self.assertNotEqual(orig_group, new_group)
