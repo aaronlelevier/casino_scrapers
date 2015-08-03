@@ -292,7 +292,7 @@ class PersonPutTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_no_change(self):
+    # def test_no_change(self):
         # Confirm the ``self.data`` structure is correct
         # response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
         # self.assertEqual(response.status_code, 200)
