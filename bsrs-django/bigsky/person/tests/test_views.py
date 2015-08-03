@@ -260,8 +260,7 @@ class PersonPutTests(APITestCase):
         self.person = create_person()
         self.client.login(username=self.person.username, password=self.password)
 
-        # PhoneNumber: create a `phone_number` which can be joined on the person
-        # for a test nested create Person w/ PhoneNumber
+        # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
         self.phone_number = mommy.make(PhoneNumber)
         self.email = mommy.make(Email)
         self.address = mommy.make(Email)
@@ -293,9 +292,10 @@ class PersonPutTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    # def test_no_change(self):
-    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
-    #     self.assertEqual(response.status_code, 200)
+    def test_no_change(self):
+        # Confirm the ``self.data`` structure is correct
+        # response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        # self.assertEqual(response.status_code, 200)
 
     # def test_update_person(self):
     #     response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
