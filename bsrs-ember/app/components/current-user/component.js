@@ -10,7 +10,7 @@ export default Ember.Component.extend({
         var firstName = 'Andier';
         var lastName = 'Krier';
         var person_id = 3;
-        var name = firstName + ' ' + lastName;
+        var name =`${firstName} ${lastName}`;
         this.set('fullName', name);
         this.set('person_id', person_id);
         this._super();

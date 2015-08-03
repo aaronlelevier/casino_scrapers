@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import Person from 'bsrs-ember/models/person';
 import inject from 'bsrs-ember/utilities/inject';
 
 export default Ember.Route.extend({
@@ -23,7 +22,23 @@ export default Ember.Route.extend({
         controller.set('default_phone_number_type', hash.default_phone_number_type);
     },
     actions: {
+        willTransition(transition) {
+            var model = this.currentModel.model;
+            if (model.get('isDirtyOrRelatedDirty')) {
+                $('.t-modal').modal('show');
+                this.trx.attemptedTransition = transition;
+                this.trx.attemptedTransitionModel = model;
+                this.trx.newModel = true;
+                this.trx.storeType = 'person';
+                transition.abort();
+            } else {
+                $('.t-modal').modal('hide');
+            }
+        },
         savePerson() {
+            this.transitionTo('admin.people');
+        },
+        redirectUser() {
             this.transitionTo('admin.people');
         }
     }

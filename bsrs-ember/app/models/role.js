@@ -4,10 +4,18 @@ import inject from 'bsrs-ember/utilities/store';
 
 export default Model.extend({
     store: inject('main'),
+    name: attr(''),
+    role_type: attr('Location'),
     categories: Ember.computed('id', function() {
         var store = this.get('store');
         return store.find('category', {role_id: this.get('id')});
     }),
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
+        return this.get('isDirty'); 
+    }),
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    rollbackRelated() {
+    },
     serialize() {
         var categories = this.get('categories').map((category) => {
             return category.serialize();
@@ -16,6 +24,7 @@ export default Model.extend({
             id: this.get('id'),
             name: this.get('name'),
             role_type: this.get('role_type'),
+            location_level: this.get('location_level'),
             categories: categories
         };
     }

@@ -3,6 +3,7 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
+import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
@@ -15,7 +16,6 @@ import PHONE_NUMBER_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
 import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
-import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
 const PREFIX = config.APP.NAMESPACE;
 const PEOPLE_URL = '/admin/people';
@@ -32,8 +32,8 @@ module('Acceptance | detail test', {
         var people_list_data = PEOPLE_FIXTURES.list();
         var people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
         var endpoint = PREFIX + PEOPLE_URL + '/';
-        xhr(endpoint ,'GET',null,{},200,people_list_data);
-        xhr(endpoint + PEOPLE_DEFAULTS.id + '/','GET',null,{},200,people_detail_data);
+        xhr(endpoint, 'GET', null, {}, 200, people_list_data);
+        xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -43,11 +43,11 @@ module('Acceptance | detail test', {
 test('clicking a persons name will redirect to the given detail view', (assert) => {
     visit(PEOPLE_URL);
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_URL);
     });
     click('.t-person-data:eq(0)');
     andThen(() => {
-        assert.equal(currentURL(),DETAIL_URL);
+        assert.equal(currentURL(), DETAIL_URL);
     });
 });
 
@@ -96,7 +96,6 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title, emp_number: PEOPLE_DEFAULTS_PUT.emp_number, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.first_name);
     fillIn('.t-person-middle-initial', PEOPLE_DEFAULTS_PUT.middle_initial );
@@ -107,6 +106,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
         var person = store.find('person').objectAt(0);
         assert.ok(person.get('isDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     click(SAVE_BTN);
     andThen(() => {
@@ -114,6 +114,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(store.find('person').get('length'), 5);
         assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
@@ -139,11 +140,11 @@ test('when editing username to invalid, it checks for validation', (assert) => {
 test('clicking cancel button will take from detail view to list view', (assert) => {
     visit(PEOPLE_URL);
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_URL);
     });
     click('.t-person-data:eq(0)');
     andThen(() => {
-        assert.equal(currentURL(),DETAIL_URL);
+        assert.equal(currentURL(), DETAIL_URL);
     });
     click('.t-cancel-btn');
     andThen(() => {
@@ -246,5 +247,14 @@ test('currency helper displays correct currency format', (assert) => {
     var symbol = '$';
     andThen(() => {
         assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
+    });
+});
+
+test('when click delete, person is deleted and removed from store', (assert) => {
+    visit(DETAIL_URL);
+    xhr(PREFIX + PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id + '/', 'DELETE', null, {}, 204, {});
+    click('.t-delete-btn');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
     });
 });

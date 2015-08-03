@@ -30,5 +30,9 @@ export default Ember.Object.extend({
             this.get('PersonDeserializer').deserialize(response, id);
         });
         return this.get('store').find('person', id);
+    },
+    delete(id) {
+        PromiseMixin.xhr(PREFIX + '/admin/people/' + id + '/', 'DELETE');
+        this.get('store').remove('person', id);
     }
 });

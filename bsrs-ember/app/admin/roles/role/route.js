@@ -7,6 +7,7 @@ export default Ember.Route.extend({
         var role_pk = params.role_id,
             repository = this.get('repository'),
             role = repository.findById(role_pk);
+
         return Ember.RSVP.hash({
             model: role
         });
@@ -16,6 +17,18 @@ export default Ember.Route.extend({
         controller.set('categories', hash.categories);
     },
     actions: {
+        willTransition(transition) {
+            var model = this.currentModel.model;
+            if (model.get('isDirtyOrRelatedDirty')) {
+                $('.t-modal').modal('show');
+                this.trx.attemptedTransition = transition;
+                this.trx.attemptedTransitionModel = model;
+                this.trx.storeType = 'role';
+                transition.abort();
+            } else {
+                $('.t-modal').modal('hide');
+            }
+        },
         saveRole() {
             this.transitionTo('admin.roles');
         },
@@ -26,7 +39,7 @@ export default Ember.Route.extend({
             // });
             this.transitionTo('admin.roles');
         },
-        cancelRole() {
+        redirectUser() {
             this.transitionTo('admin.roles');
         }
     }

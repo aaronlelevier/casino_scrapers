@@ -41,19 +41,21 @@ export default Model.extend({
             num.save();
         });
     },
-    rollbackPhoneNumbers() {
+    rollbackRelated() {
+        this.get('rollbackPhoneNumbers');
+    },
+    rollbackPhoneNumbers: Ember.computed(function() {
         var phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
             num.rollback();
         });
-    },
+    }),
     serialize() {
         //TODO: remove this hard reference to get the first role/status in favor of
         //a truly dynamic lookup via the new/update forms
         var store = this.get('store');
-        var role_id = store.findOne('role').get('id');
+        var role_id = store.findOne('role-type').get('id');
         var status_id = store.findOne('status').get('id');
-
         var phone_numbers = this.get('phone_numbers').map(function(number) {
             return number.serialize();
         });
