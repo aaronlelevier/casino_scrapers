@@ -299,7 +299,7 @@ class PersonPutTests(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(new_title, data['title'])
 
-    def test_update_email(self):
+    def test_update_email_add_to_person(self):
         self.assertFalse(self.data['emails'])
         self.data['emails'] = [{
             'id': str(self.email.id),
@@ -309,6 +309,25 @@ class PersonPutTests(APITestCase):
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
         data = json.loads(response.content)
         self.assertTrue(data['emails'])
+        self.assertEqual(
+            self.person,
+            Email.objects.get(id=data['emails'][0]['id']).person
+        )
+
+    def test_update_person_and_create_phone_number(self):
+        self.assertFalse(self.data['phone_numbers'])
+        self.data['phone_numbers'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.phone_number.type.id),
+            'number': create._generate_ph()
+        }]
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        data = json.loads(response.content)
+        self.assertTrue(data['phone_numbers'])
+        self.assertEqual(
+            self.person,
+            PhoneNumber.objects.get(id=data['phone_numbers'][0]['id']).person
+        )
 
 
 class PersonDeleteTests(APITestCase):

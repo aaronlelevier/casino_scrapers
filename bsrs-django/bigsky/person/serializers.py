@@ -133,13 +133,26 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         # Update Person
         instance = create.update_model(instance, validated_data)
         # Create/Update PhoneNumbers
-        for ph in phone_numbers:
-            try:
-                phone = PhoneNumber.objects.get(id=ph['id'])
-                create.update_model(phone, ph)
-            except PhoneNumber.DoesNotExist:
-                PhoneNumber.objects.create(person=instance, **ph)
+        for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address), (emails, Email)]:
+            for c in contacts:
+                try:
+                    contact = model.objects.get(id=c['id'])
+                    # Add back ``Person`` and update Contact
+                    c.update({'person': instance})
+                    create.update_model(contact, c)
+                except model.DoesNotExist:
+                    new_contact = model.objects.create(person=instance, **c)
         return instance
+
+'''
+
+        {
+            "id": "8af42b98-440f-4b55-ad69-e0c8c97eabae",
+            "type": "013d4932-f0ad-4b5d-9ead-94fb9788da5c",
+            "email": "vaNrdlTlbN@example.com"
+        }
+
+'''
 
 
 ### PASSWORD ###
