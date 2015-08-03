@@ -51,6 +51,7 @@ export default Ember.Route.extend({
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;
+                this.trx.storeType = 'person';
                 transition.abort();
             } else {
                 $('.t-modal').modal('hide');

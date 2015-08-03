@@ -2,26 +2,25 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-export default Ember.Component.extend(ValidationMixin, {
-    repository: inject('person'),
+var LocationSingle = Ember.Component.extend(ValidationMixin, {
+    repository: inject('location'),
     classNames: ['wrapper', 'form'],
-    attemptedTransition: '',
-    usernameValidation: validate('model.username'),
+    nameValidation: validate('model.name'),
     actions: {
-        savePerson() {
+        saveLocation() {
             this.set('submitted', true);
             if (this.get('valid')) {
                 var model = this.get('model');
                 var repository = this.get('repository');
                 repository.update(model).then(() => {
-                    this.sendAction('savePerson');
+                    this.sendAction('saveLocation');
                 });
             }
         },
-        cancelPerson() {
-            this.sendAction('cancelPerson');
+        cancelLocation() {
+            this.sendAction('redirectUser');
         },
-        deletePerson() {            
+        deleteLocation() {            
             var model = this.get('model');
             var repository = this.get('repository');
             repository.delete(model.get('id'));
@@ -29,3 +28,5 @@ export default Ember.Component.extend(ValidationMixin, {
         }
     }
 });
+
+export default LocationSingle;

@@ -17,7 +17,7 @@ var BSRS_LOCATION_LEVEL_DEFAULTS_OBJECT = (function() {
 if (typeof window === 'undefined') {
     module.exports = new BSRS_LOCATION_LEVEL_DEFAULTS_OBJECT().defaults();
 } else {
-    define('bsrs-ember/vendor/defaults/location_level', ['exports'], function (exports) {
+    define('bsrs-ember/vendor/defaults/location-level', ['exports'], function (exports) {
         'use strict';
         return new BSRS_LOCATION_LEVEL_DEFAULTS_OBJECT().defaults();
     });

@@ -4,10 +4,6 @@ import inject from 'bsrs-ember/utilities/inject';
 export default Ember.Component.extend({
     classNames: ['wrapper', 'form'],
     repository: inject('role'),
-        // init(){
-        // 	var comp = this.get("tabDoc");
-        //   this.set('editPrivilege', true);
-        // },
     actions: {
         saveRole() {
             var model = this.get('model'); 
@@ -24,7 +20,7 @@ export default Ember.Component.extend({
             this.transitionTo('admin.roles');
         },
         cancelRole() {
-            this.sendAction('cancelRole');
+            this.sendAction('redirectUser');
         }
     }
 });

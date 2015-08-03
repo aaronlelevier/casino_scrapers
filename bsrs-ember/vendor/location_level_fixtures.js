@@ -27,7 +27,7 @@ if (typeof window === 'undefined') {
     var location_level_defaults = require('./defaults/location_level');
     module.exports = new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults);
 } else {
-    define('bsrs-ember/vendor/location_level_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location_level'], function (exports, location_level_defaults) {
+    define('bsrs-ember/vendor/location_level_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location-level'], function (exports, location_level_defaults) {
         'use strict';
         return new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults);
     });

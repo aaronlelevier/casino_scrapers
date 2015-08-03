@@ -13,7 +13,10 @@ Router.map(function() {
     this.route('contractors');
     this.route('general');
     this.route('contractor-assignments');
-    this.route('locations');
+    this.route('locations', function() {
+        this.route('location', {path: '/:location_id'});
+        this.route('new');
+    });
     this.route('categories');
     this.route('notifications');
     this.route('assignments');
@@ -43,7 +46,6 @@ Router.map(function() {
   this.route('pms');
   this.route('invoices');
   this.route('reports');
-
   this.route('phone-number');
   this.route('dashboard');
 });

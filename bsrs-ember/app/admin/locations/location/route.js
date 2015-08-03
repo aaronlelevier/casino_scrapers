@@ -2,19 +2,18 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 
 export default Ember.Route.extend({
-    repository: inject('role'),
+    repository: inject('location'),
     model(params) {
-        var role_pk = params.role_id,
+        var location_pk = params.location_id,
             repository = this.get('repository'),
-            role = repository.findById(role_pk);
+            location = repository.findById(location_pk);
 
         return Ember.RSVP.hash({
-            model: role
+            model: location
         });
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('categories', hash.categories);
     },
     actions: {
         willTransition(transition) {
@@ -23,24 +22,25 @@ export default Ember.Route.extend({
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;
-                this.trx.storeType = 'role';
+                this.trx.storeType = 'location';
                 transition.abort();
             } else {
                 $('.t-modal').modal('hide');
             }
         },
-        saveRole() {
-            this.transitionTo('admin.roles');
+        saveLocation() {
+            this.transitionTo('admin.locations');
         },
-        deleteRole() {
-            var model = this.modelFor('admin.roles.role');
+        deleteLocation() {
+            var model = this.modelFor('admin.locations.location');
             // model.destroyRecord().then(() => {
             //   this.transitionTo('admin.people');
             // });
-            this.transitionTo('admin.roles');
+            this.transitionTo('admin.locations');
         },
         redirectUser() {
-            this.transitionTo('admin.roles');
+            this.transitionTo('admin.locations');
         }
     }
 });
+

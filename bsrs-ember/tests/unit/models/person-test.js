@@ -89,7 +89,7 @@ test('save related will iterate over each phone number and save that model', (as
     assert.ok(person.get('phoneNumbersIsNotDirty'));
 });
 
-test('sco rollback related will iterate over each phone number and rollback that model', (assert) => {
+test('rollback related will iterate over each phone number and rollback that model', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_id: PEOPLE_DEFAULTS.id});
     var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person_id: PEOPLE_DEFAULTS.id});

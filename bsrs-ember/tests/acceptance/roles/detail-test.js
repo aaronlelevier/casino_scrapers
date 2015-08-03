@@ -3,10 +3,11 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
+import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location_level_fixtures';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location_level';
+import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import config from 'bsrs-ember/config/environment';
@@ -19,7 +20,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('Acceptance | role-detail', {
+module('sco Acceptance | role-detail', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -112,3 +113,44 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     });
 });
 
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-role-name', ROLE_DEFAULTS.namePut);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
+        });
+    });
+    click('.t-modal-footer .t-modal-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.namePut);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+        });
+    });
+});
+
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-role-name', ROLE_DEFAULTS.nameTwo);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), ROLE_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            var role = store.find('role', ROLE_DEFAULTS.id);
+            assert.equal(role.get('name'), ROLE_DEFAULTS.name);
+        });
+    });
+});

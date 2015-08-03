@@ -95,7 +95,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-test('sco when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
     visit(ROLE_NEW_URL);
     fillIn('.t-role-name', ROLE_DEFAULTS.name);
     click('.t-cancel-btn');

@@ -169,7 +169,10 @@ export default {
 
 		location: {
 			one: "Location",
-			other: "Locations"
+			other: "Locations",
+            label: {
+                name: "name" 
+            }
 		},
 		locationOrg:{
 			one: "Location Organization",
