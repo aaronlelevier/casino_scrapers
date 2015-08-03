@@ -41,7 +41,7 @@ var BSRS_ROLE_FACTORY = (function() {
 if (typeof window === 'undefined') {
     var role_defaults = require('../vendor/defaults/role');
     var category_fixtures = require('../vendor/category_fixtures');
-    module.exports = new BSRS_ROLE_FACTORY(role_defaults);
+    module.exports = new BSRS_ROLE_FACTORY(role_defaults, category_fixtures);
 } else {
     define('bsrs-ember/vendor/role_fixtures', ['exports','bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/category_fixtures'], function (exports, role_defaults, category_fixtures) {
         'use strict';
