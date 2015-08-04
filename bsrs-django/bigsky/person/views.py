@@ -15,7 +15,7 @@ from util.permissions import BSModelPermissions
 from util.views import BaseModelViewSet
 
 
-class RoleViewSet(viewsets.ModelViewSet):
+class RoleViewSet(BaseModelViewSet):
     """
     API endpoint that allows roles to be viewed or edited.
     """
@@ -36,7 +36,7 @@ class RoleViewSet(viewsets.ModelViewSet):
             return ps.RoleSerializer
 
 
-class PersonStatusViewSet(viewsets.ModelViewSet):
+class PersonStatusViewSet(BaseModelViewSet):
 
     queryset = PersonStatus.objects.all()
     serializer_class = ps.PersonStatusSerializer

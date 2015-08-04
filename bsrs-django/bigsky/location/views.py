@@ -18,9 +18,10 @@ import rest_framework_filters as filters
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
+from util.views import BaseModelViewSet
 
 
-class LocationLevelViewSet(viewsets.ModelViewSet):
+class LocationLevelViewSet(BaseModelViewSet):
 
     permission_classes = (IsAuthenticated,)
     queryset = LocationLevel.objects.all()
@@ -36,21 +37,21 @@ class LocationLevelViewSet(viewsets.ModelViewSet):
             raise MethodNotAllowed(method=self.action)
     
 
-class LocationStatusViewSet(viewsets.ModelViewSet):
+class LocationStatusViewSet(BaseModelViewSet):
 
     permission_classes = (IsAuthenticated,)
     serializer_class = ls.LocationStatusSerializer
     queryset = LocationStatus.objects.all()
 
 
-class LocationTypeViewSet(viewsets.ModelViewSet):
+class LocationTypeViewSet(BaseModelViewSet):
 
     permission_classes = (IsAuthenticated,)
     serializer_class = ls.LocationTypeSerializer
     queryset = LocationType.objects.all()
 
 
-class LocationViewSet(viewsets.ModelViewSet):
+class LocationViewSet(BaseModelViewSet):
    
     permission_classes = (IsAuthenticated,)
     queryset = Location.objects.all()
