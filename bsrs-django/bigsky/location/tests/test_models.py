@@ -92,7 +92,7 @@ class LocationTests(TestCase):
     def test_joins_n_create(self):
         l = mommy.make(Location)
         self.assertIsInstance(l, Location)
-        self.assertIsInstance(l.level, LocationLevel)
+        self.assertIsInstance(l.location_level, LocationLevel)
         self.assertIsInstance(l.status, LocationStatus)
         self.assertIsInstance(l.type, LocationType)
 

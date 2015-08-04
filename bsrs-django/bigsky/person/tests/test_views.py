@@ -33,7 +33,7 @@ class RoleViewSetTests(APITestCase):
         self.location = mommy.make(Location)
         # Role
         self.role = self.person.role
-        self.role.location_level = self.location.level
+        self.role.location_level = self.location.location_level
         self.role.save()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -47,21 +47,21 @@ class RoleViewSetTests(APITestCase):
         data = json.loads(response.content)
         roles = data['results']
         self.assertEqual(roles[0]['id'], str(self.role.pk))
-        self.assertEqual(roles[0]['location_level']['id'], str(self.location.level.id))
+        self.assertEqual(roles[0]['location_level']['id'], str(self.location.location_level.id))
 
     def test_detail(self):
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
         self.assertEqual(data['id'], str(self.role.pk))
-        self.assertEqual(data['location_level']['id'], str(self.location.level.id))
+        self.assertEqual(data['location_level']['id'], str(self.location.location_level.id))
 
     def test_create(self):
         role_data = {
             "id": str(uuid.uuid4()),
             "name": "Admin",
             "role_type": choices.ROLE_TYPE_CHOICES[0][0],
-            "location_level": self.location.level.id
+            "location_level": self.location.location_level.id
         }
         response = self.client.post('/api/admin/roles/', role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)

@@ -48,6 +48,12 @@ class PersonViewSet(BaseModelViewSet):
     API endpoint that allows users to be viewed or edited.
     
     includes model level permissions, not user level yet
+
+    TODO
+    ----
+    Try this to alter ``auth_amount`` structure:
+
+    http://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
     """
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
