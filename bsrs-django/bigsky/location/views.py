@@ -60,8 +60,12 @@ class LocationViewSet(viewsets.ModelViewSet):
             return ls.LocationListSerializer
         elif self.action == 'retrieve':
             return ls.LocationDetailSerializer
+        elif self.action == 'create': 
+            return ls.LocationCreateSerializer
+        elif self.action in ('update', 'partial_update'):
+            return ls.LocationUpdateSerializer
         else:
-            return ls.LocationListSerializer
+            raise MethodNotAllowed(method=self.action)
 
 
 # class CoalesceFilterBackend(filters.backends.DjangoFilterBackend):
