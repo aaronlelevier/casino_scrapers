@@ -1,3 +1,6 @@
+import json
+
+
 def update_auth_amount(serializer):
     '''
     List Add 'auth_amount' Key
@@ -11,6 +14,27 @@ def update_auth_amount(serializer):
             }
         })
     return serializer
+
+
+def update_auth_amount_single(data):
+    # Add ``auth_amount`` to dict
+    auth_amount = data.pop('auth_amount', '')
+    auth_amount_currency = data.pop('auth_amount_currency', '')
+    data.update({'auth_amount': {
+            'amount': auth_amount,
+            'currency': auth_amount_currency
+        }
+    })
+    return data
+
+
+def deserialize_auth_mount(data):
+    auth_amount = data.pop("auth_amount", {})
+    data.update({
+        "auth_amount": auth_amount.get("amount",""),
+        "auth_amount_currency": auth_amount.get("currency","")
+    })
+    return data
 
 
 def update_group(person, group):

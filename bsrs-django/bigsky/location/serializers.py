@@ -32,6 +32,14 @@ class LocationTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+### Location
+
+class LocationIdNameSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Location
+        fields = ('id', 'name')
+
+
 class LocationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location

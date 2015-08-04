@@ -1,3 +1,5 @@
+import copy
+
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
@@ -7,7 +9,7 @@ from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
     EmailSerializer, AddressSerializer)
 from location.models import LocationLevel, Location
-from location.serializers import LocationLevelSerializer
+from location.serializers import LocationLevelSerializer, LocationIdNameSerializer
 from person.models import PersonStatus, Person, Role
 from util import create
 
@@ -107,10 +109,11 @@ class PersonDetailSerializer(serializers.ModelSerializer):
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)
+    location = LocationIdNameSerializer()
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS + ('emails', 'phone_numbers', 'addresses',)
+        fields = PERSON_FIELDS + ('location', 'emails', 'phone_numbers', 'addresses',)
 
 
 class PersonUpdateSerializer(serializers.ModelSerializer):
@@ -124,7 +127,7 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS + ('emails', 'phone_numbers', 'addresses',)
+        fields = PERSON_FIELDS + ('location', 'emails', 'phone_numbers', 'addresses',)
 
     def update(self, instance, validated_data):
         phone_numbers = validated_data.pop('phone_numbers', [])
@@ -135,6 +138,8 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         # Create/Update PhoneNumbers
         for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address), (emails, Email)]:
             for c in contacts:
+                import copy
+                c = copy.copy(c)
                 try:
                     contact = model.objects.get(id=c['id'])
                     # Add back ``Person`` and update Contact
@@ -143,16 +148,6 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
                 except model.DoesNotExist:
                     new_contact = model.objects.create(person=instance, **c)
         return instance
-
-'''
-
-        {
-            "id": "8af42b98-440f-4b55-ad69-e0c8c97eabae",
-            "type": "013d4932-f0ad-4b5d-9ead-94fb9788da5c",
-            "email": "vaNrdlTlbN@example.com"
-        }
-
-'''
 
 
 ### PASSWORD ###
