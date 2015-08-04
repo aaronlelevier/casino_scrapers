@@ -25,6 +25,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
                 'id': this.role_defaults.id,
                 'name': 'admin.role.system_administrator',
             },
+            emails: this.person_defaults.emails
         }
     },
     factory.prototype.list = function() {

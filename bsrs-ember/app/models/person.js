@@ -11,7 +11,6 @@ export default Model.extend({
     title: attr(''),
     emp_number: attr(''),
     auth_amount: attr(''),
-    email: attr(''),
     phone_numbers: Ember.computed('id', function() {
         var store = this.get('store');
         return store.find('phonenumber', {person_id: this.get('id')});
@@ -110,7 +109,7 @@ export default Model.extend({
             auth_amount: this.get('auth_amount'),
             status: status_id,
             role: role_id,
-            email: this.get('email'),
+            emails: [],
             phone_numbers: phone_numbers,
             addresses: addresses
         };
