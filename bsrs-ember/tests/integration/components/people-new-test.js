@@ -38,46 +38,15 @@ test('filling in invalid password reveal validation messages', function(assert) 
     assert.ok(this.$('.t-password-validation-error').is(':hidden'));
 });
 
-test('filling in invalid first name reveal validation messages', function(assert) {
+test('filling in invalid role reveal validation messages', function(assert) {
     this.set('model', store.push('person', {}));
     this.render(hbs`{{person-new model=model}}`);
-    var $component = this.$('.t-first-name-validation-error');
-    assert.ok(this.$('.t-first-name-validation-error').is(':hidden'));
+    var $component = this.$('.t-role-validation-error');
+    assert.ok(this.$('.t-role-validation-error').is(':hidden'));
     var save_btn = this.$('.t-save-btn');
     save_btn.trigger('click').trigger('change');
-    assert.ok(this.$('.t-first-name-validation-error').is(':visible'));
-    this.$('.t-person-first-name').val('a').trigger('change');
-    assert.ok(this.$('.t-first-name-validation-error').is(':hidden'));
+    assert.ok(this.$('.t-role-validation-error').is(':visible'));
+    this.$('.t-person-role').val('a').trigger('change');
+    assert.ok(this.$('.t-role-validation-error').is(':hidden'));
 });
 
-test('filling in invalid last name reveal validation messages', function(assert) {
-    this.set('model', store.push('person', {}));
-    this.render(hbs`{{person-new model=model}}`);
-    var $component = this.$('.t-last-name-validation-error');
-    assert.ok(this.$('.t-last-name-validation-error').is(':hidden'));
-    var save_btn = this.$('.t-save-btn');
-    save_btn.trigger('click').trigger('change');
-    assert.ok(this.$('.t-last-name-validation-error').is(':visible'));
-    this.$('.t-person-last-name').val('a').trigger('change');
-    assert.ok(this.$('.t-last-name-validation-error').is(':hidden'));
-});
-
-test('filling in invalid email reveal validation messages', function(assert) {
-    this.set('model', store.push('person', {}));
-    this.render(hbs`{{person-new model=model}}`);
-    var $component = this.$('.t-email-validation-error');
-    assert.ok(this.$('.t-email-validation-error').is(':hidden'));
-    var save_btn = this.$('.t-save-btn');
-    save_btn.trigger('click').trigger('change');
-    assert.ok(this.$('.t-email-validation-error').is(':visible'));
-    this.$('.t-person-email').val('a').trigger('change');
-    assert.ok(this.$('.t-email-validation-error').is(':visible'));
-    this.$('.t-person-email').val('a@').trigger('change');
-    assert.ok(this.$('.t-email-validation-error').is(':visible'));
-    this.$('.t-person-email').val('a@b').trigger('change');
-    assert.ok(this.$('.t-email-validation-error').is(':visible'));
-    this.$('.t-person-email').val('a@b.').trigger('change');
-    assert.ok(this.$('.t-email-validation-error').is(':visible'));
-    this.$('.t-person-email').val('a@b.c').trigger('change');
-    assert.ok(this.$('.t-email-validation-error').is(':hidden'));
-});

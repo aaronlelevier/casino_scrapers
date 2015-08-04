@@ -6,9 +6,7 @@ export default Ember.Component.extend(ValidationMixin, {
     repository: inject('person'),
     usernameValidation: validate('model.username'),
     passwordValidation: validate('model.password'),
-    firstNameValidation: validate('model.first_name'),
-    lastNameValidation: validate('model.last_name'),
-    emailValidation: validate('model.email', /\S+@\S+\.\S+/),
+    roleValidation: validate('model.role'),
     actions: {
         savePerson() {
             this.set('submitted', true);

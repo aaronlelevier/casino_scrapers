@@ -75,6 +75,16 @@ export default Model.extend({
             address.rollback();
         });
     },
+    createSerialize() {
+        var store = this.get('store');
+        var role_id = store.findOne('role-type').get('id');
+        return {
+            id: this.get('id'),
+            username: this.get('username'),
+            password: this.get('password'),
+            role: role_id
+        };
+    },
     serialize() {
         //TODO: remove this hard reference to get the first role/status in favor of
         //a truly dynamic lookup via the new/update forms
