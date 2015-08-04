@@ -24,6 +24,7 @@
     "broccoli-asset-rev": "^2.0.2",
     "broccoli-clean-css": "1.0.0",
     "broccoli-funnel": "^0.2.3",
+    "broccoli-leasot": "^1.0.7",
     "bsrs-bootstrap-config": "git+ssh://git@github.com:bigskytech/bsrs-bootstrap-config.git#master",
     "ember-cli": "1.13.6",
     "ember-cli-app-version": "0.4.0",

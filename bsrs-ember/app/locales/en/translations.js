@@ -202,6 +202,10 @@ export default {
 			office: "Office",
 			mobile: "Mobile"
 		},
+		addresstype: {
+			office: "Office",
+			mobile: "Shipping"
+		},
 		locationlevel:{
 			department: "Department",
 			company: "Company",

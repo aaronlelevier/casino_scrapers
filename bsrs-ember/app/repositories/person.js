@@ -11,12 +11,14 @@ export default Ember.Object.extend({
         return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
             model.savePhoneNumbers();
+            model.saveAddresses();
         });
     },
     update(model) {
         return PromiseMixin.xhr(PREFIX + '/admin/people/' + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
             model.savePhoneNumbers();
+            model.saveAddresses();
         });
     },
     find() {

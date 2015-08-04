@@ -9,6 +9,7 @@ var BSRS_ADDRESS_DEFAULTS_OBJECT = (function() {
             streetTwo: '123 PB',
             cityOne: 'San Diego',
             cityTwo: 'San Diego',
+            cityThree: 'Melbourne',
             stateOne: 1,
             stateTwo: 5,
             zipOne: '92123',
