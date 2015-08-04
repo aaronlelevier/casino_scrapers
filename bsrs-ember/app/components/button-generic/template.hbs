@@ -1,5 +1,5 @@
-{{#if (eq type "save")}}
+{{#if (is-equal type "save")}}
 <i class="fa fa-check-circle">&nbsp;</i> {{t 'crud.save.button'}}
-{{else if (eq type "cancel")}}
+{{else if (is-equal type "cancel")}}
   <i class="fa fa-times-circle">&nbsp;</i> {{t 'crud.cancel.button'}}
 {{/if}}
