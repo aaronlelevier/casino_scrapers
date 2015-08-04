@@ -10,7 +10,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             //location_level: this.location_defaults.locationLevel,
             status: this.location_defaults.status,
         }
-    },
+    };
     factory.prototype.list = function() {
         var response = [];
         for (var i=1; i <= 5; i++) {

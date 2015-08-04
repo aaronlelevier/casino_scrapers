@@ -207,13 +207,18 @@ export default {
 			mobile: "Shipping"
 		},
 		locationlevel:{
+			one: "Location Level",
+			other: "Location Levels",
 			department: "Department",
 			company: "Company",
 			fmd: "Facility Management District",
 			fmu: "Facility Management Region",
 			region: "Region",
 			district: "District",
-			store: "Store"
+			store: "Store",
+            label: {
+                name: "name" 
+            }
 		}
 	},
 	validation: {

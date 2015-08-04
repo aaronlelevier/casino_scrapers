@@ -29,8 +29,10 @@ Router.map(function() {
       this.route('new');
       this.route('role', {path: '/:role_id'});
     });
-    this.route('locationlevels');
-    this.route('locationlevel', {path: '/locationlevels/:loc_id'}, function() {});
+    this.route('location-levels', function() {
+      this.route('new');
+      this.route('location-level', {path: '/:location_level_id'});
+    });
   });
   this.route('tickets');
 
