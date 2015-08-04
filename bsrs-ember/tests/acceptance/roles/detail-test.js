@@ -89,7 +89,7 @@ test('when you change a related category name it will be persisted correctly', (
 test('when you change a related location level it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
-    var location_level = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.id, name: LOCATION_LEVEL_DEFAULTS.nameRegion});
+    var location_level = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameRegion});
     var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.id, location_level: location_level.id});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     click(SAVE_BTN);

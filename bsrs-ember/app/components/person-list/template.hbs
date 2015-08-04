@@ -1,1 +1,39 @@
-{{person-list/index model=model}}
+<header>
+	<h1 class="t-people">{{t "admin.person" count="2"}}</h1>
+
+	<div class="btn-group btn-group-sm pull-right center-block">
+    {{#link-to 'admin.people.new' class="t-person-new add-btn btn btn-default"}}
+      {{fa-icon "plus-circle"}} {{t 'button.add'}}
+    {{/link-to}}
+	</div>
+
+</header>
+<section class="docSection rowTable">
+	<table class="table table-striped table-hover">
+		<thead>
+			<tr class="head">
+				<th></th>
+				<th>{{t "admin.person.label.name"}} {{fa-icon "sort"}}</th>
+				<th>{{t "admin.person.label.title"}}</th>
+				<th>{{t "admin.person.label.role"}}</th>
+				<th>{{t "admin.person.label.emp_number"}}</th>
+				<th>{{t "admin.person.label.status"}} {{fa-icon "sort"}}</th>
+				<th class="text-right">{{t "admin.person.label.auth_amount"}} {{fa-icon "sort"}}</th>
+			</tr>
+		</thead>
+		<tbody>
+			{{#each model as |person|}}
+				{{#link-to 'admin.people.person' person.id tagName="tr" class="t-person-data"}}
+					<td><input type="checkbox" /></td>
+					<td>{{person.first_name}} {{person.last_name}}</td>
+					<td>{{person.title}}</td>
+					<td>{{t person.role.name}}</td>
+					<td>{{person.emp_number}}</td>
+					<td>{{t person.status.name}}</td>
+					<td class="text-right">{{person.auth_amount}}</td>
+				{{/link-to}}
+			{{/each}}
+		</tbody>
+	</table>
+</section>
+

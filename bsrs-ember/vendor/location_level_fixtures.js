@@ -1,22 +1,28 @@
 var BSRS_LOCATION_LEVEL_FACTORY = (function() {
     var factory = function(location_level_defaults) {
-        this.id = location_level_defaults.id;
+        this.idOne = location_level_defaults.idOne;
         this.idTwo = location_level_defaults.idTwo;
+        this.idThree = location_level_defaults.idThree;
         this.nameCompany = location_level_defaults.nameCompany;
         this.nameRegion = location_level_defaults.nameRegion;
-        this.nameStore = location_level_defaults.nameStore;
+        // this.nameStore = location_level_defaults.nameStore;
         this.nameDistrict = location_level_defaults.nameDistrict;
     };
-    factory.prototype.get = function() {
-        return {
-            id: this.id,
-            name: this.nameCompany
-        }
+    factory.prototype.detail = function(i) {
+        var location_level = { id: this.idOne, name : this.nameCompany };
+        return location_level;
     };
-    factory.prototype.put = function(location_level) {
-        var location_levels = {id: this.id, name: this.nameCompany};
-        if(!location_level) {
-            return location_levels;
+    factory.prototype.list = function() {
+        response = [ { id: this.idOne, name : this.nameCompany }, { id: this.idTwo, name : this.nameDistrict}, { id: this.idThree, name : this.nameRegion} ];
+        return {'count':3,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.empty = function() {
+        return {'count':3,'next':null,'previous':null,'results': []};
+    };
+    factory.prototype.put = function(level) {
+        var location_levels = this.detail();
+        for(var key in level) {
+            location_levels[key] = level[key];
         }
         return location_levels;
     };
