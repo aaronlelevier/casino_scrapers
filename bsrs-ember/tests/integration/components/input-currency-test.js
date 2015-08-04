@@ -19,6 +19,14 @@ moduleForComponent('input-currency', 'integration: input-currency test', {
     }
 });
 
+test('renders a component with no value when bound attr is undefined', function(assert) {
+    var model = store.push('person', {id: PEOPLE_DEFAULTS.id, auth_amount: undefined});
+    this.set('model', model);
+    this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
+    var $component = this.$('.t-input-currency');
+    assert.equal($component.find('.t-person-auth_amount').val(), '');
+});
+
 test('renders a component with currency and label', function(assert) {
     var model = store.push('person', {id: PEOPLE_DEFAULTS.id, auth_amount: LONG_AUTH_AMOUNT});
     this.set('model', model);

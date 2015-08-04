@@ -6,7 +6,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var store;
 
-moduleForComponent('person-new', 'sco integration: person-new test', {
+moduleForComponent('person-new', 'integration: person-new test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:phonenumber']);

@@ -7,7 +7,8 @@ var CurrencyService = Ember.Service.extend({
         //TODO: currency store should only have one currency (or multiple) based on config passed from Django
         var store = this.get('store');
         var currency_found = store.find('currency').objectAt(0);
-        return parseInt(val).toFixed(currency_found[attr]);
+        var formatted_value = parseInt(val);
+        return formatted_value ? formatted_value.toFixed(currency_found[attr]) : '';
     },
     format_symbol(currency) {
         var store = this.get('store');

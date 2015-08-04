@@ -1,7 +1,7 @@
 const BSRS_PERSON_ID = '139543cf-8fea-426a-8bc3-09778cd79951';
 const BSRS_PERSON_USERNAME = 'mgibson';
 const BSRS_PERSON_PASSWORD = '1!';
-const BSRS_PERSON_EMAIL = 'abc@gmail.com';
+const BSRS_PERSON_EMAIL = [];
 const BSRS_PERSON_FIRST_NAME = 'Mel';
 const BSRS_PERSON_MIDDLE_INITIAL = 'B';
 const BSRS_PERSON_LAST_NAME = 'Gibson';
@@ -23,7 +23,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             id: BSRS_PERSON_ID,
             username: BSRS_PERSON_USERNAME,
             password: BSRS_PERSON_PASSWORD,
-            email: BSRS_PERSON_EMAIL,
+            emails: BSRS_PERSON_EMAIL,
             first_name: BSRS_PERSON_FIRST_NAME,
             middle_initial: BSRS_PERSON_MIDDLE_INITIAL,
             last_name: BSRS_PERSON_LAST_NAME,

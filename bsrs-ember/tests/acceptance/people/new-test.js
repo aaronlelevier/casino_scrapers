@@ -12,35 +12,33 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 
 const PREFIX = config.APP.NAMESPACE;
 const PEOPLE_URL = "/admin/people";
+const DETAIL_URL = PEOPLE_URL + '/' + UUID.value;
 const PEOPLE_NEW_URL = PEOPLE_URL + '/new';
 const SAVE_BTN = '.t-save-btn';
 
-var application, store, payload;
+var application, store, payload, detail_xhr;
 
-module('sco Acceptance | people-new', {
+module('Acceptance | people-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
             username: PEOPLE_DEFAULTS.username,
             password: PEOPLE_DEFAULTS.password,
-            // first_name: PEOPLE_DEFAULTS.first_name,
-            // middle_initial: PEOPLE_DEFAULTS.middle_initial,
-            // last_name: PEOPLE_DEFAULTS.last_name,
-            // location: PEOPLE_DEFAULTS.location,
-            // status: PEOPLE_DEFAULTS.status,
             role: PEOPLE_DEFAULTS.role,
-            // email: PEOPLE_DEFAULTS.email,
-            // phone_numbers: PEOPLE_DEFAULTS.phone_numbers,
-            // addresses: PEOPLE_DEFAULTS.addresses
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
         var endpoint = PREFIX + PEOPLE_URL + "/";
         xhr(endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.empty());
+        var detailEndpoint = PREFIX + PEOPLE_URL + '/';
+        var people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
+            role: PEOPLE_DEFAULTS.role, phone_numbers:[], addresses: []};
+        detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
     },
     afterEach() {
         payload = null;
         Ember.run(application, 'destroy');
+        detail_xhr = null;
     }
 });
 
@@ -58,7 +56,7 @@ test('visiting /people/new', (assert) => {
     fillIn('.t-person-role', PEOPLE_DEFAULTS.role);
     click(SAVE_BTN);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), DETAIL_URL);
         assert.equal(store.find('person').get('length'), 1);
         var person = store.find('person').objectAt(0);
         assert.equal(person.get('id'), UUID.value);
@@ -94,11 +92,12 @@ test('validation works and when hit save, we do same post', (assert) => {
     fillIn('.t-person-role', PEOPLE_DEFAULTS.role);
     click(SAVE_BTN);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), DETAIL_URL);
     });
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+    clearxhr(detail_xhr);
     visit(PEOPLE_NEW_URL);
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     click('.t-cancel-btn');
@@ -120,6 +119,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+    clearxhr(detail_xhr);
     visit(PEOPLE_NEW_URL);
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     click('.t-cancel-btn');

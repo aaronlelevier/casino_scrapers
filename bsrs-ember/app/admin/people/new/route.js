@@ -32,6 +32,9 @@ export default Ember.Route.extend({
                 $('.t-modal').modal('hide');
             }
         },
+        editPerson() {
+           this.transitionTo('admin.people.person', this.currentModel.model.get('id')); 
+        },
         redirectUser() {
             this.transitionTo('admin.people');
         }
