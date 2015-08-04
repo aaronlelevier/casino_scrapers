@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import injectStore from 'bsrs-ember/utilities/store';
 import inject from 'bsrs-ember/utilities/uuid';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';

@@ -28,9 +28,6 @@ export default Ember.Route.extend({
                 $('.t-modal').modal('hide');
             }
         },
-        saveLocation() {
-            this.transitionTo('admin.locations');
-        },
         deleteLocation() {
             var model = this.modelFor('admin.locations.location');
             // model.destroyRecord().then(() => {

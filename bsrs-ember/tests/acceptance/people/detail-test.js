@@ -243,6 +243,27 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
     });
 });
 
+test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            var person = store.find('person', PEOPLE_DEFAULTS.id);
+            var addresses = store.find('address', PEOPLE_DEFAULTS.id);
+            assert.equal(addresses.source[0].get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
+        });
+    });
+});
 test('currency helper displays correct currency format', (assert) => {
     visit(DETAIL_URL);
     var symbol = '$';

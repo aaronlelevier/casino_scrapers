@@ -27,5 +27,8 @@ export default Model.extend({
             location_level: this.get('location_level'),
             categories: categories
         };
+    },
+    removeRecord(id) {
+        this.get('store').remove('role', id);
     }
 });

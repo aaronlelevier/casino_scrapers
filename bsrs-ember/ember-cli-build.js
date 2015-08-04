@@ -2,6 +2,7 @@
 
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var funnel = require('broccoli-funnel');
+var broccoliLeasot = require('broccoli-leasot');
 
 var es5Shim = funnel('node_modules/es5-shim', {
     files: ['es5-shim.js'],
@@ -10,6 +11,10 @@ var es5Shim = funnel('node_modules/es5-shim', {
 
 module.exports = function(defaults) {
     var app = new EmberApp(defaults, {
+        markers: {
+            enabled: true,
+            markers: ['TODO']
+        }
     });
 
     //app.import('bower_components/ember/ember-template-compiler.js');

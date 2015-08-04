@@ -30,42 +30,11 @@
 			</div>
 			<div class="col-sm-12">
 				{{#form-group title="admin.person.label.role" for="role"}}
-			    	{{input type="text" value=model.role placeholder=(t "admin.person.label.role") class="form-control t-person-role" id="role"}}
-				{{/form-group}}
-			</div>
-		</section>
-		<section>
-			<h2 class="col-sm-12">{{t "admin.person.label.general"}}</h2>
-			<div class="col-sm-5">
-				{{#form-group title="admin.person.label.first_name" for="first_name"}}
-					{{input type="text" value=model.first_name placeholder=(t "admin.person.label.first_name") class="form-control t-person-first-name" id="first_name"}}
-					{{#validation-error-field submitted=submitted field="first_name" className="validation validation-under t-first-name-validation-error" model=model validation=firstNameValidation}}{{t "validation.invalid"}} {{t "admin.person.label.first_name"}}{{/validation-error-field}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-2">
-				{{#form-group title="admin.person.label.middle_initial" for="middle_initial"}}
-			    	{{input type="text" placeholder=(t "admin.person.label.middle_initial") value=model.middle_initial class="form-control t-person-middle-initial" id="middle_initial" required="required"}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-5">
-				{{#form-group title="admin.person.label.last_name" for="last_name"}}
-					{{input type="text" value=model.last_name placeholder=(t "admin.person.label.last_name") class="form-control t-person-last-name" id="last_name"}}
-					{{#validation-error-field submitted=submitted field="last_name" className="validation validation-under t-last-name-validation-error" model=model validation=lastNameValidation}}{{t "validation.invalid"}} {{t "admin.person.label.last_name"}}{{/validation-error-field}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-12">
-				{{#form-group title="admin.person.label.email" for="email"}}
-					{{input type="text" value=model.email placeholder=(t "admin.person.label.email") class="form-control t-person-email" id="email" required="required"}}
-					{{#validation-error-field submitted=submitted field="email" className="validation validation-under t-email-validation-error" model=model validation=emailValidation}}{{t "validation.invalid"}} {{t "admin.person.label.email"}}{{/validation-error-field}}
-				{{/form-group}}
-			</div>
-		</section>
-		<section>
-			<h2 class="col-sm-12">{{t "admin.person.label.contact"}}</h2>
-			<div class="col-sm-6">
-				{{#form-group title="admin.person.label.phone_number.other"}}
-					{{input-multi-phone placeholder=(t "admin.person.label.phone_number.one") model=model.phone_numbers types=phone_number_types related_field='person_id' related_pk=model.id default_type=default_phone_number_type}}
-
+          <select class="t-person-role form-control role" id="role" onchange={{action "changed" value="target.value"}}>
+            {{#each roles as |role|}}
+            <option value={{role.id}}>{{role.name}}</option>
+            {{/each}}
+          </select>
 				{{/form-group}}
 			</div>
 		</section>

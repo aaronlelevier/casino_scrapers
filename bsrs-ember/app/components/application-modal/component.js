@@ -13,7 +13,7 @@ export default Ember.Component.extend({
             model.rollback();
             model.rollbackRelated();
             if (newModel) {
-                this.get('store').remove(storeType, model.get('id'));
+                model.removeRecord(model.get('id'));
             }
             transition.retry();
         },

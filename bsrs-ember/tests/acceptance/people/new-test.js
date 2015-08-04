@@ -17,21 +17,21 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store, payload;
 
-module('Acceptance | people-new', {
+module('sco Acceptance | people-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
             username: PEOPLE_DEFAULTS.username,
             password: PEOPLE_DEFAULTS.password,
-            first_name: PEOPLE_DEFAULTS.first_name,
-            middle_initial: PEOPLE_DEFAULTS.middle_initial,
-            last_name: PEOPLE_DEFAULTS.last_name,
-            location: PEOPLE_DEFAULTS.location,
-            status: PEOPLE_DEFAULTS.status,
+            // first_name: PEOPLE_DEFAULTS.first_name,
+            // middle_initial: PEOPLE_DEFAULTS.middle_initial,
+            // last_name: PEOPLE_DEFAULTS.last_name,
+            // location: PEOPLE_DEFAULTS.location,
+            // status: PEOPLE_DEFAULTS.status,
             role: PEOPLE_DEFAULTS.role,
-            email: PEOPLE_DEFAULTS.email,
-            phone_numbers: PEOPLE_DEFAULTS.phone_numbers,
-            addresses: PEOPLE_DEFAULTS.addresses
+            // email: PEOPLE_DEFAULTS.email,
+            // phone_numbers: PEOPLE_DEFAULTS.phone_numbers,
+            // addresses: PEOPLE_DEFAULTS.addresses
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -45,7 +45,6 @@ module('Acceptance | people-new', {
 });
 
 test('visiting /people/new', (assert) => {
-    payload.phone_numbers = [{id: UUID.value, number: '999-999-9999', type: PHONE_NUMBER_DEFAULTS.officeId}];
     var response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(PEOPLE_URL);
@@ -53,17 +52,10 @@ test('visiting /people/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.equal(store.find('person').get('length'), 1);
-        assert.equal(store.find('phonenumber').get('length'), 0);
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
-    fillIn('.t-person-email', PEOPLE_DEFAULTS.email);
-    fillIn('.t-person-first-name', PEOPLE_DEFAULTS.first_name);
-    fillIn('.t-person-middle-initial', PEOPLE_DEFAULTS.middle_initial);
-    fillIn('.t-person-last-name', PEOPLE_DEFAULTS.last_name);
-    fillIn('.t-person-role', PEOPLE_DEFAULTS.role);//TODO: make true select with multiple options
-    click('.t-add-btn:eq(0)');
-    fillIn('.t-new-entry', '999-999-9999');
+    fillIn('.t-person-role', PEOPLE_DEFAULTS.role);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -72,24 +64,8 @@ test('visiting /people/new', (assert) => {
         assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
-        assert.equal(person.get('email'), PEOPLE_DEFAULTS.email);
         assert.equal(person.get('role'), PEOPLE_DEFAULTS.role);
-        assert.equal(person.get('first_name'), PEOPLE_DEFAULTS.first_name);
-        assert.equal(person.get('middle_initial'), PEOPLE_DEFAULTS.middle_initial);
-        assert.equal(person.get('last_name'), PEOPLE_DEFAULTS.last_name);
-        assert.equal(store.find('phonenumber').get('length'), 1);
         assert.ok(person.get('isNotDirty'));
-        assert.ok(person.get('phoneNumbersIsNotDirty'));
-        var phonenumber = person.get('phone_numbers').objectAt(0);
-        assert.equal(phonenumber.get('number'), '999-999-9999');
-        assert.equal(phonenumber.get('id'), UUID.value);
-        assert.equal(phonenumber.get('type'), PHONE_NUMBER_DEFAULTS.officeId);
-        assert.equal(phonenumber.get('person_id'), UUID.value);
-        var phonenumber_from_store = store.find('phonenumber').objectAt(0);
-        assert.equal(phonenumber_from_store.get('number'), '999-999-9999');
-        assert.equal(phonenumber_from_store.get('id'), UUID.value);
-        assert.equal(phonenumber_from_store.get('type'), PHONE_NUMBER_DEFAULTS.officeId);
-        assert.equal(phonenumber_from_store.get('person_id'), UUID.value);
     });
 });
 
@@ -102,17 +78,11 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.ok(find('.t-username-validation-error').is(':hidden'));
         assert.ok(find('.t-password-validation-error').is(':hidden'));
-        assert.ok(find('.t-first-name-validation-error').is(':hidden'));
-        assert.ok(find('.t-last-name-validation-error').is(':hidden'));
-        assert.ok(find('.t-email-validation-error').is(':hidden'));
     });
     click(SAVE_BTN);
     andThen(() => {
         assert.ok(find('.t-username-validation-error').is(':visible'));
         assert.ok(find('.t-password-validation-error').is(':visible'));
-        assert.ok(find('.t-first-name-validation-error').is(':visible'));
-        assert.ok(find('.t-last-name-validation-error').is(':visible'));
-        assert.ok(find('.t-email-validation-error').is(':visible'));
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     click(SAVE_BTN);
@@ -121,26 +91,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-username-validation-error').is(':hidden'));
     });
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL);
-        assert.ok(find('.t-password-validation-error').is(':hidden'));
-    });
-    fillIn('.t-person-first-name', PEOPLE_DEFAULTS.first_name);
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL);
-        assert.ok(find('.t-first-name-validation-error').is(':hidden'));
-    });
-    fillIn('.t-person-last-name', PEOPLE_DEFAULTS.last_name);
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL);
-        assert.ok(find('.t-last-name-validation-error').is(':hidden'));
-    });
-    fillIn('.t-person-middle-initial', PEOPLE_DEFAULTS.middle_initial);
-    fillIn('.t-person-email', PEOPLE_DEFAULTS.email);
-    fillIn('.t-person-role', PEOPLE_DEFAULTS.role);//TODO: make true select with multiple options
+    fillIn('.t-person-role', PEOPLE_DEFAULTS.role);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -168,7 +119,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     });
 });
 
-test('sco when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     visit(PEOPLE_NEW_URL);
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     click('.t-cancel-btn');

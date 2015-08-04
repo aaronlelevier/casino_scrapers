@@ -20,8 +20,8 @@ export default Model.extend({
         var store = this.get('store');
         return store.find('address', {person_id: this.get('id')});
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty'); 
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty'); 
     }),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
         var phone_numbers = this.get('phone_numbers');
@@ -34,6 +34,18 @@ export default Model.extend({
         return phone_number_dirty;
     }),
     phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty'),
+    addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state', 
+                                     'addresses.@each.postal_code', 'addresses.@each.country', 'addresses.@each.type', function() {
+        var addresses = this.get('addresses');
+        var address_dirty = false;
+        addresses.forEach((address) => {
+            if (address.get('isDirty')) {
+                address_dirty = true;
+            }
+        });
+        return address_dirty;
+    }),
+    addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     savePhoneNumbers: function() {
         var phone_numbers = this.get('phone_numbers');
@@ -41,14 +53,37 @@ export default Model.extend({
             num.save();
         });
     },
+    saveAddresses: function() {
+        var addresses = this.get('addresses');
+        addresses.forEach((address) => {
+            address.save();
+        });
+    },
     rollbackRelated() {
         this.rollbackPhoneNumbers();
+        this.rollbackAddresses();
     },
     rollbackPhoneNumbers() {
         var phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
             num.rollback();
         });
+    },
+    rollbackAddresses() {
+        var addresses = this.get('addresses');
+        addresses.forEach((address) => {
+            address.rollback();
+        });
+    },
+    createSerialize() {
+        var store = this.get('store');
+        var role_id = store.findOne('role-type').get('id');
+        return {
+            id: this.get('id'),
+            username: this.get('username'),
+            password: this.get('password'),
+            role: role_id
+        };
     },
     serialize() {
         //TODO: remove this hard reference to get the first role/status in favor of
@@ -79,5 +114,8 @@ export default Model.extend({
             phone_numbers: phone_numbers,
             addresses: addresses
         };
+    },
+    removeRecord(id) {
+        this.get('store').remove('person', id);
     }
 });

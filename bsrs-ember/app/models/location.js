@@ -19,6 +19,9 @@ var LocationModel = Model.extend({
             number: this.get('number'),
             status: this.get('status')
         };
+    },
+    removeRecord(id) {
+        this.get('store').remove('location', id);
     }
 });
 

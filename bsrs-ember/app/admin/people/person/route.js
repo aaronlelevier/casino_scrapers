@@ -22,8 +22,9 @@ export default Ember.Route.extend({
             repository = this.get('repository'),
             person = repository.findById(person_pk),
             phone_number_type_repo = this.get('phone_number_type_repo'),
+            default_phone_number_type = phone_number_type_repo.get_default(),
             address_type_repo = this.get('address_type_repo'),
-            default_phone_number_type = phone_number_type_repo.get_default();
+            default_address_type = address_type_repo.get_default();
 
         return Ember.RSVP.hash({
             model: person,
@@ -32,17 +33,19 @@ export default Ember.Route.extend({
             state_list: state_repo.find(),
             address_types: address_type_repo.find(),
             statuses: status_repo.find(),
-            default_phone_number_type: default_phone_number_type
+            default_phone_number_type: default_phone_number_type,
+            default_address_type: default_address_type
         });
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);
         controller.set('phone_number_types', hash.phone_number_types);
+        controller.set('default_phone_number_type', hash.default_phone_number_type);
+        controller.set('address_types', hash.address_types);
+        controller.set('default_address_type', hash.default_address_type);
         controller.set('state_list', hash.state_list);
         controller.set('countries', hash.countries);
-        controller.set('address_types', hash.address_types);
         controller.set('statuses', hash.statuses);
-        controller.set('default_phone_number_type', hash.default_phone_number_type);
     },
     actions: {
         willTransition(transition) {
@@ -56,9 +59,6 @@ export default Ember.Route.extend({
             } else {
                 $('.t-modal').modal('hide');
             }
-        },
-        savePerson() {
-            this.transitionTo('admin.people');
         },
         redirectUser() {
             this.transitionTo('admin.people');

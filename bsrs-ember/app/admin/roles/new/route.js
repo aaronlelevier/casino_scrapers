@@ -26,9 +26,6 @@ export default Ember.Route.extend({
                 $('.t-modal').modal('hide');
             }
         },
-        saveRole() {
-            this.transitionTo('admin.roles');
-        },
         redirectUser() {
             this.transitionTo('admin.roles');
         }

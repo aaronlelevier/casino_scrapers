@@ -1,17 +1,17 @@
 {{#each model as |phonenumber|}}
-  <div class="input-group">
-    <span class="input-group-btn">
-      <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' phonenumber}}>{{fa-icon "minus"}}</button>
-    </span>
-    <span class="input-group-btn">
-      <select class="t-multi-phone-type form-control phonenumber-type" onchange={{action (action "changed" phonenumber) value="target.value"}}>
-        {{#each types as |phoneNumberType|}}
-          <option value={{phoneNumberType.id}} selected={{is-equal phonenumber.type phoneNumberType.id}}>{{t phoneNumberType.name}}</option>
-        {{/each}}
-      </select>
-    </span>
+<div class="input-group">
+  <span class="input-group-btn">
+    <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' phonenumber}}>{{fa-icon "minus"}}</button>
+  </span>
+  <span class="input-group-btn">
+    <select class="t-multi-phone-type form-control phonenumber-type" onchange={{action (action "changed" phonenumber) value="target.value"}}>
+      {{#each types as |phoneNumberType|}}
+      <option value={{phoneNumberType.id}} selected={{is-equal phonenumber.type phoneNumberType.id}}>{{t phoneNumberType.name}}</option>
+      {{/each}}
+    </select>
+  </span>
 
-    {{input-dynamic obj=phonenumber prop=fieldNames placeholder=placeholder}}
-  </div>
+  {{input-dynamic obj=phonenumber prop=fieldNames placeholder=placeholder}}
+</div>
 {{/each}}
 <button class="t-add-btn add-btn btn btn-default btn-sm" type="button" {{action 'append'}}><span class="btn-label">{{fa-icon "plus"}} {{t "admin.phone.add"}}</span></button>

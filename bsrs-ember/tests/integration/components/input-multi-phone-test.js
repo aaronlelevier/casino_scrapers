@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import Person from 'bsrs-ember/models/person';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
@@ -9,16 +10,15 @@ import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
 import PHONE_NUMBER_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
-import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var store, default_type;
 
 moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
     integration: true,
     setup() {
+        translation.initialize(this);
         default_type = PhoneNumberType.create({id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName});
         store = module_registry(this.container, this.registry, ['model:person', 'model:phonenumber']);
-        translation.initialize(this);
     }
 });
 
