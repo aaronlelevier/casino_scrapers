@@ -19,8 +19,8 @@ class CurrencyManager(BaseManager):
 @python_2_unicode_compatible
 class Currency(BaseModel):
     "Accepted Currencies"
-    name = models.CharField(max_length=50)
-    code = models.CharField(max_length=3)
+    name = models.CharField(max_length=50, help_text="US Dollar")
+    code = models.CharField(max_length=3, help_text="i.e. 'usd'")
     symbol = models.CharField(max_length=1, help_text="$, ")
     format = models.CharField(max_length=10, help_text="$00.00 for 'USD' for example")
 
