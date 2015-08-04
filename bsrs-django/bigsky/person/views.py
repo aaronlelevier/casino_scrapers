@@ -1,9 +1,5 @@
-'''
-Created on Jan 16, 2015
+import copy
 
-@author: tkrier
-'''
-# from django.contrib.auth.models import User
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission, User
 from django.shortcuts import get_object_or_404
@@ -84,23 +80,43 @@ class PersonViewSet(BaseModelViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
+        # TODO: need to return ``serializer.data``, but won't let me override .data attr ??
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        serializer = serializer.data
+        print serializer.data
         # Add ``auth_amount`` to dict
-        auth_amount = serializer.pop('auth_amount', '')
-        auth_amount_currency = serializer.pop('auth_amount_currency', '')
-        serializer.update({'auth_amount': {
-                'amount': auth_amount,
-                'currency': auth_amount_currency
-            }
+        data = copy.copy(serializer.data)
+        helpers.update_auth_amount_single(data)
+        # setattr(serializer, 'data', data)
+        return Response(data)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        # custom: start
+        auth_amount = serializer.initial_data.pop("auth_amount", {})
+        serializer.initial_data.update({
+            "auth_amount": auth_amount.get("amount",""),
+            "auth_amount_currency": auth_amount.get("currency","")
         })
-        return Response(serializer)
+        # custom: end
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        # Add ``auth_amount`` to dict
+        serializer.data = copy.copy(serializer.data)
+        helpers.update_auth_amount_single(data)
+        return Response(data)
+
+'''
+"auth_amount": {
+    "amount": 1000.1234,
+    "currency": "f8716abf-65f1-4d85-ac8c-55afffb2f7dd"
+},
+'''
 
 
-### PERSON ###
-
-    ## TODO:
+### TODO: ###
     # @detail_route(methods=['post'])
     # def change_password(self, request, pk):
 

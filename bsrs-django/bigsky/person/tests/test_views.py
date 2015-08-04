@@ -282,8 +282,10 @@ class PersonPutTests(APITestCase):
             "last_name": "",
             "title": "",
             "employee_id": "",
-            "auth_amount": "{0:.4f}".format(self.person.auth_amount),
-            "auth_amount_currency": str(self.person.auth_amount_currency.id),
+            "auth_amount": {
+                "amount": "{0:.4f}".format(self.person.auth_amount),
+                "currency": str(self.person.auth_amount_currency.id)
+            },
             "role": str(self.person.role.id),
             "status": str(self.person.status.id),
             "location":"",
@@ -294,6 +296,13 @@ class PersonPutTests(APITestCase):
 
     def tearDown(self):
         self.client.logout()
+
+    def test_auth_amount(self):
+        new_auth_amount = '1234.1010'
+        self.data['auth_amount']['amount'] = new_auth_amount
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        data = json.loads(response.content)
+        self.assertEqual(new_auth_amount, data['auth_amount']['amount'])
 
     def test_no_change(self):
         # Confirm the ``self.data`` structure is correct

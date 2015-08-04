@@ -1,3 +1,5 @@
+import copy
+
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
@@ -136,6 +138,8 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         # Create/Update PhoneNumbers
         for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address), (emails, Email)]:
             for c in contacts:
+                import copy
+                c = copy.copy(c)
                 try:
                     contact = model.objects.get(id=c['id'])
                     # Add back ``Person`` and update Contact
