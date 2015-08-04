@@ -11,18 +11,12 @@ var BSRS_PHONE_NUMBER_FACTORY = (function() {
         return [{
             'id':this.first_pk,
             'number':this.first_number,
-            'type':{
-                'id': this.phone_number_type_defaults.officeId,
-                'name': this.phone_number_type_defaults.officeName
-            }
+            'type': this.phone_number_type_defaults.officeId
         },
         {
             'id':this.second_pk,
             'number':this.second_number,
-            'type':{
-                'id':this.phone_number_type_defaults.mobileId,
-                'name': this.phone_number_type_defaults.mobileName
-            }
+            'type': this.phone_number_type_defaults.mobileId
         }];
     };
     factory.prototype.put = function(phone_number) {

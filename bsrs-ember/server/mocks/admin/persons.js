@@ -13,13 +13,9 @@ module.exports = function(app) {
   });
 
   adminPersonsRouter.post('/', function(req, res) {
-    var actualPayload = req.body;
-    actualPayload.phone_numbers.forEach(function(phone_number) {
-        phone_number.id = randomInt(0, 99999);
-    });
-    actualPayload.id = randomInt(0, 99999);
     res.status(201);
-    res.send(actualPayload);
+    console.log(req.body);
+    res.send(req.body);
   });
 
   adminPersonsRouter.get('/:id', function(req, res) {

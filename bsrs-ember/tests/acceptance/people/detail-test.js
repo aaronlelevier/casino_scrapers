@@ -52,7 +52,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     });
 });
 
-test('when you deep link to the person detail view you get bound attrs', (assert) => {
+test('sco when you deep link to the person detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         //TODO: verify ALL the other dynamic bits
