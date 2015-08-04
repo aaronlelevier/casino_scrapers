@@ -7,6 +7,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
+from rest_framework.utils.serializer_helpers import ReturnDict
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
@@ -80,14 +81,14 @@ class PersonViewSet(BaseModelViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, *args, **kwargs):
-        # TODO: need to return ``serializer.data``, but won't let me override .data attr ??
+        # TODO: need to return ``serializer.data``, but won't let me override .data attr
         instance = self.get_object()
         serializer = self.get_serializer(instance)
         print serializer.data
         # Add ``auth_amount`` to dict
         data = copy.copy(serializer.data)
         helpers.update_auth_amount_single(data)
-        # setattr(serializer, 'data', data)
+        # setattr(serializer, 'data', ReturnDict(data, serializer=serializer))
         return Response(data)
 
     def update(self, request, *args, **kwargs):
@@ -104,7 +105,7 @@ class PersonViewSet(BaseModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         # Add ``auth_amount`` to dict
-        serializer.data = copy.copy(serializer.data)
+        data = copy.copy(serializer.data)
         helpers.update_auth_amount_single(data)
         return Response(data)
 
