@@ -84,7 +84,6 @@ class PersonViewSet(BaseModelViewSet):
         # TODO: need to return ``serializer.data``, but won't let me override .data attr
         instance = self.get_object()
         serializer = self.get_serializer(instance)
-        print serializer.data
         # Add ``auth_amount`` to dict
         data = copy.copy(serializer.data)
         helpers.update_auth_amount_single(data)

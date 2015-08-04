@@ -48,7 +48,6 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         new_last_name = 'McGavine'
         new_emp_number = '1234'
         new_title = 'myTitle'
-        new_auth_amount = '5'
         new_phone_one = '888-999-7878'
         new_phone_two = '888-999-7899'
 
@@ -65,14 +64,12 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         last_name_input = self.driver.find_element_by_id("last_name")
         emp_number_input = self.driver.find_element_by_id("emp_number")
         title_input = self.driver.find_element_by_id("title")
-        auth_amount_input = self.driver.find_element_by_id("auth_amount")
 
         first_name_input.send_keys(new_first_name)
         middle_initial_input.send_keys(new_middle_initial)
         last_name_input.send_keys(new_last_name)
         emp_number_input.send_keys(new_emp_number)
         title_input.send_keys(new_title)
-        auth_amount_input.send_keys(new_auth_amount)
         
         add_phone_number_btn = self.driver.find_element_by_class_name('t-add-btn')
         add_phone_number_btn.click()
@@ -100,14 +97,12 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         last_name_input = self.driver.find_element_by_id("last_name")
         emp_number_input = self.driver.find_element_by_id("emp_number")
         title_input = self.driver.find_element_by_id("title")
-        auth_amount_input = self.driver.find_element_by_id("auth_amount")
         assert username_input.get_attribute('value') == new_username
         assert first_name_input.get_attribute('value') == new_first_name
         assert middle_initial_input.get_attribute('value') == new_middle_initial
         assert last_name_input.get_attribute('value') == new_last_name
         assert emp_number_input.get_attribute('value') == new_emp_number
         assert title_input.get_attribute('value') == new_title
-        assert auth_amount_input.get_attribute('value') == new_auth_amount + '.00'
 
 
 if __name__ == "__main__":

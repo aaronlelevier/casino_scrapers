@@ -9,7 +9,7 @@ var BSRS_PERSON_PUT_DEFAULTS_OBJECT = (function() {
             middle_initial: 'F\'in',
             last_name: 'Cube',
             emp_number: '1122',
-            auth_amount: '0.000',
+            auth_amount: {currency: '535543wf-80ea-426a-8cc3-09728cd74952', amount: '0.000'},
             title: 'mastermind',
         };
     };
