@@ -55,7 +55,7 @@ test('visiting /people/new', (assert) => {
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
-    fillIn('.t-person-role', PEOPLE_DEFAULTS.role);//TODO: make true select with multiple options
+    fillIn('.t-person-role', PEOPLE_DEFAULTS.role);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -78,7 +78,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.ok(find('.t-username-validation-error').is(':hidden'));
         assert.ok(find('.t-password-validation-error').is(':hidden'));
-        assert.ok(find('.t-role-validation-error').is(':hidden'));
     });
     click(SAVE_BTN);
     andThen(() => {
@@ -92,12 +91,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-username-validation-error').is(':hidden'));
     });
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL);
-        assert.ok(find('.t-password-validation-error').is(':hidden'));
-    });
-    fillIn('.t-person-role', PEOPLE_DEFAULTS.role);//TODO: make true select with multiple options
+    fillIn('.t-person-role', PEOPLE_DEFAULTS.role);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);

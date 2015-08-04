@@ -6,7 +6,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var store;
 
-moduleForComponent('person-new', 'integration: person-new test', {
+moduleForComponent('person-new', 'sco integration: person-new test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:phonenumber']);
@@ -38,15 +38,4 @@ test('filling in invalid password reveal validation messages', function(assert) 
     assert.ok(this.$('.t-password-validation-error').is(':hidden'));
 });
 
-test('filling in invalid role reveal validation messages', function(assert) {
-    this.set('model', store.push('person', {}));
-    this.render(hbs`{{person-new model=model}}`);
-    var $component = this.$('.t-role-validation-error');
-    assert.ok(this.$('.t-role-validation-error').is(':hidden'));
-    var save_btn = this.$('.t-save-btn');
-    save_btn.trigger('click').trigger('change');
-    assert.ok(this.$('.t-role-validation-error').is(':visible'));
-    this.$('.t-person-role').val('a').trigger('change');
-    assert.ok(this.$('.t-role-validation-error').is(':hidden'));
-});
 

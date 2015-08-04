@@ -30,8 +30,11 @@
 			</div>
 			<div class="col-sm-12">
 				{{#form-group title="admin.person.label.role" for="role"}}
-			    	{{input type="text" value=model.role placeholder=(t "admin.person.label.role") class="form-control t-person-role" id="role"}}
-            {{#validation-error-field submitted=submitted field="role" className="validation validation-under t-role-validation-error" model=model validation=roleValidation}}{{t "validation.invalid"}} {{t "admin.person.label.role"}}{{/validation-error-field}}
+          <select class="t-person-role form-control role" id="role" onchange={{action "changed" value="target.value"}}>
+            {{#each roles as |role|}}
+            <option value={{role.id}}>{{role.name}}</option>
+            {{/each}}
+          </select>
 				{{/form-group}}
 			</div>
 		</section>
