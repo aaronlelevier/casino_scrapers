@@ -104,7 +104,6 @@ class LocationStatus(AbstractName):
     
     objects = LocationStatusManager()
 
-    
 
 class LocationTypeManager(BaseManager):
 
@@ -121,7 +120,7 @@ class LocationType(AbstractName):
 @python_2_unicode_compatible
 class Location(SelfRefrencingBaseModel, BaseModel):
     # keys
-    level = models.ForeignKey(LocationLevel, related_name='locations')
+    location_level = models.ForeignKey(LocationLevel, related_name='locations')
     status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True,
         help_text="If not provided, will be the default 'LocationStatus'.")
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)

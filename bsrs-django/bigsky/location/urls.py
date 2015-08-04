@@ -13,5 +13,5 @@ router.register(r'location_types', views.LocationTypeViewSet)
 
 
 urlpatterns = patterns('',
-    url(r'^api/admin/location/', include(router.urls)),
+    url(r'^api/admin/', include(router.urls)),
     )
