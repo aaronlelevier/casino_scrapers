@@ -5,6 +5,8 @@ from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 
 
+### BASE
+
 class BaseSerializer(serializers.ModelSerializer):
     '''
     Base Serializer for all ModelSerializer ID Fields.
@@ -12,59 +14,98 @@ class BaseSerializer(serializers.ModelSerializer):
     id = serializers.UUIDField(read_only=False)
 
 
+### LOCATION LEVEL
+
 class LocationLevelSerializer(serializers.ModelSerializer):
+
     id = serializers.UUIDField(read_only=False)
 
     class Meta:
         model = LocationLevel
         fields = ('id', 'name',)
-        
+
+
+class LocationLevelDetailSerializer(serializers.ModelSerializer):
+
+    children = LocationLevelSerializer(many=True)
+    parents = LocationLevelSerializer(many=True)
+
+    class Meta:
+        model = LocationLevel
+        fields = ('id', 'name', 'children', 'parents',)
+
+
+class LocationLevelCreateSerializer(serializers.ModelSerializer):
+    '''
+    TODO: Nested Create/Update of ``children``
+    '''
+
+    id = serializers.UUIDField(read_only=False)
+
+    class Meta:
+        model = LocationLevel
+        fields = ('id', 'name', 'children',)
+
+
+### LOCATION STATUS
 
 class LocationStatusSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = LocationStatus
         fields = ('id', 'name')
 
 
+### LOCATION TYPE
+
 class LocationTypeSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = LocationType
         fields = ('id', 'name')
 
 
-### Location
+### LOCATION
 
 class LocationIdNameSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Location
         fields = ('id', 'name')
 
 
-class LocationSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Location
-        fields = ('id', 'name', 'number', 'level', 'status', 'type',
-                  'people', 'children')
+# class LocationSerializer(serializers.ModelSerializer):
+
+#     class Meta:
+#         model = Location
+#         fields = ('id', 'name', 'number', 'location_level', 'status', 'type',
+#                   'people', 'children')
+
         
-class LocationGridSerializer(LocationSerializer):
+class LocationListSerializer(serializers.ModelSerializer):
     
-    level_name = serializers.CharField(source='level.name', read_only=True)
-    status_name = serializers.CharField(source='status.name', read_only=True)
-    type_name = serializers.CharField(source='type.name', read_only=True)
-    
-    class Meta:
-        model = Location
-        fields = ('id', 'name', 'number', 'level_name', 'status_name', 'type_name')
-
-
-class LocationFullSerializer(LocationGridSerializer):
-    
-    phone_numbers = PhoneNumberSerializer(many=True, read_only=True)
-    addresses = AddressSerializer(many=True, read_only=True)
-    emails = EmailSerializer(many=True, read_only=True)
+    status = LocationStatusSerializer()
+    location_level = LocationLevelSerializer()
     
     class Meta:
         model = Location
-        fields = ('id', 'name', 'number', 'level', 'level_name', 'status',
-                  'status_name', 'type', 'type_name', 'children',
-                  'phone_numbers', 'addresses', 'emails')
+        fields = ('id', 'name', 'number', 'status', 'location_level',)
+
+
+class LocationDetailSerializer(serializers.ModelSerializer):
+    
+    location_level = LocationLevelDetailSerializer()
+
+    class Meta:
+        model = Location
+        fields = ('id', 'name', 'number', 'location_level',)
+
+
+
+
+
+
+
+
+
+
