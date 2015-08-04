@@ -20,4 +20,20 @@ def create_location_levels():
     store.children.add(department)
 
 def create_locations():
-    pass
+    create_location_levels()
+    # Region
+    region_ll = LocationLevel.objects.get(name='region')
+    west = mommy.make(Location, location_level=region_ll, name='east')
+    # District
+    district_ll = LocationLevel.objects.get(name='district')
+    ca = mommy.make(Location, location_level=district_ll, name='ca')
+    nv = mommy.make(Location, location_level=district_ll, name='nv')
+    # Stores
+    store_ll = LocationLevel.objects.get(name='store')
+    san_diego = mommy.make(Location, location_level=district_ll, name='san_diego')
+    los_angeles = mommy.make(Location, location_level=district_ll, name='los_angeles')
+    # JOIN's
+    west.children.add(ca)
+    west.children.add(nv)
+    ca.children.add(san_diego)
+    ca.children.add(los_angeles)

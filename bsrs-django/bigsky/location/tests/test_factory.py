@@ -13,3 +13,12 @@ class LocationLevelTests(TestCase):
         # Region
         region = LocationLevel.objects.get(name='region')
         self.assertEqual(region.children.count(), 2)
+
+
+class LocationTests(TestCase):
+
+    def test_create_locations(self):
+        factory.create_locations()
+        # District
+        ca = Location.objects.get(name='ca')
+        self.assertEqual(ca.parents.count(), 1)
