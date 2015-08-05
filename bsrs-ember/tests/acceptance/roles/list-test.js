@@ -28,7 +28,7 @@ test('visiting /role', function(assert) {
   andThen(() => {
     assert.equal(currentURL(),ROLE_URL);
     assert.equal(find('h1.t-roles').text(), 'Roles');
-    assert.equal(find('tr.t-role-data').length, 1);
+    assert.equal(find('tr.t-role-data').length, 2);
   });
 });
 

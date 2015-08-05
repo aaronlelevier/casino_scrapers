@@ -1,40 +1,42 @@
 <form {{action "return false" this on="submit"}}>
-	<header>
-		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
+  <header>
+    <div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
       {{button-generic save="saveRole" type="save"}}
       {{button-generic cancel="cancelRole" type="cancel"}}
-			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
-				<li><a href="#">{{fa-icon "print"}} Print</a></li>
-				<li>{{delete-button delete="deleterole"}}</li>
-			</ul>
-		</div>
-	</header>
-	<section class="docSection container-fluid">
-		<section>
-			<h2 class="col-sm-12">{{t "admin.role.label.credentials"}}</h2>
-			<div class="col-sm-6">
-				{{#form-group title="admin.role.label.name" for="name"}}
-					{{input type="text" value=model.name placeholder=(t "admin.role.label.name") class="form-control t-role-name" id="name" required="required"}}
-					{{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.role.label.name"}}{{/validation-error-field}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-6">
-				{{#form-group title="admin.role.label.role_type" for="role_type"}}
-					{{input type="text" value=model.role_type placeholder=(t "admin.role.label.role_type") class="form-control t-role-role_type" id="role_type" required="required"}}
-					{{#validation-error-field submitted=submitted field="role_type" className="validation validation-under t-role_type-validation-error" model=model validation=roleTypeValidation}}{{t "validation.invalid"}} {{t "admin.role.label.role_type"}}{{/validation-error-field}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-6">
-				{{#form-group title="admin.role.label.location_level" for="location_level"}}
-					{{input type="text" value=model.location_level placeholder=(t "admin.role.label.location_level") class="form-control t-role-location_level" id="location_level" required="required"}}
-					{{#validation-error-field submitted=submitted field="location_level" className="validation validation-under t-location_level-validation-error" model=model validation=locationLevelValidation}}{{t "validation.invalid"}} {{t "admin.role.label.role_type"}}{{/validation-error-field}}
-				{{/form-group}}
-			</div>
-        </section>
+      <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <span class="caret"></span>
+      </button>
+      <ul class="dropdown-menu">
+        <li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
+        <li><a href="#">{{fa-icon "print"}} Print</a></li>
+        <li>{{delete-button delete="deleterole"}}</li>
+      </ul>
+    </div>
+  </header>
+  <section class="docSection container-fluid">
+    <section>
+      <h2 class="col-sm-12">{{t "admin.role.label.credentials"}}</h2>
+      <div class="col-sm-6">
+        {{#form-group title="admin.role.label.name" for="name"}}
+        {{input type="text" value=model.name placeholder=(t "admin.role.label.name") class="form-control t-role-name" id="name" required="required"}}
+        {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.role.label.name"}}{{/validation-error-field}}
+        {{/form-group}}
+      </div>
+      <span class="input-group-btn">
+        <select class="t-role-type form-control roletype-type" onchange={{action (action "changed" model) value="target.value"}}>
+          {{#each all_role_types as |role_type|}}
+          <option value={{role_type.name}} selected={{is-equal model.role_type role_type.name}}>{{role_type.name}}</option>
+          {{/each}}
+        </select>
+      </span>
+      <span class="input-group-btn">
+        <select class="t-location-level form-control location_level" onchange={{action (action "changedLocLevel" model) value="target.value"}}>
+          {{#each all_location_levels as |location_level|}}
+          <option value={{location_level.id}} selected={{is-equal model.location_level location_level.id}}>{{location_level.name}}</option>
+          {{/each}}
+        </select>
+      </span>
     </section>
+  </section>
 </form>
 

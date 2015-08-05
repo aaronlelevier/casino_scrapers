@@ -5,7 +5,7 @@ import inject from 'bsrs-ember/utilities/store';
 export default Model.extend({
     store: inject('main'),
     name: attr(''),
-    role_type: attr('Location'),
+    role_type: attr(''),
     location_levels: Ember.computed(function() {
         var store = this.get('store');
         return store.find('location-level', {role_id: this.get('id')});

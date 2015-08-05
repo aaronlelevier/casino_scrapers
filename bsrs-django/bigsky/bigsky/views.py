@@ -4,14 +4,18 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 from django.shortcuts import render
-from django.forms.models import model_to_dict
 
 from contact.models import PhoneNumberType
 from person.models import Role, PersonStatus
+from location.models import LocationLevel
 
+from util import choices
 
 def model_to_json(model):
     return json.dumps([m.to_dict() for m in model.objects.all()])
+
+def choices_to_json(model):
+    return json.dumps([m[0] for m in model])
 
 
 class IndexView(TemplateView):
@@ -33,6 +37,8 @@ class IndexView(TemplateView):
         context.update({
             'phone_number_types_config': model_to_json(PhoneNumberType),
             'role_config': model_to_json(Role),
-            'person_status_config': model_to_json(PersonStatus)
+            'role_types_config': choices_to_json(choices.ROLE_TYPE_CHOICES),
+            'person_status_config': model_to_json(PersonStatus),
+            'location_level_config': model_to_json(LocationLevel)
             })
         return context

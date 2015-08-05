@@ -5,9 +5,17 @@ import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/vali
 var RoleNew = Ember.Component.extend(ValidationMixin, {
     repository: inject('role'),
     nameValidation: validate('model.name'),
-    roleTypeValidation: validate('model.role_type'),
-    locationLevelValidation: validate('model.location_level'),
     actions: {
+        changed(model, val) {
+            Ember.run(() => {
+                model.set('role_type', val);
+            });
+        },
+        changedLocLevel(model, val) {
+            Ember.run(() => {
+                model.set('location_level', val);
+            });
+        },
         saveRole() {
             this.set('submitted', true);
             if (this.get('valid')) {

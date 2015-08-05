@@ -30,6 +30,30 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         current_user = self.driver.find_element_by_class_name("current-user")
         assert current_user.is_displayed()
 
+
+    def test_navigate_to_role_list_and_create_new_role_record(self):
+        self.login()
+        self.driver.find_element_by_class_name("t-nav-admin").click()
+        nav_admin_role = self.wait_for_xhr_request("t-nav-admin-role")
+        nav_admin_role.click()
+        new_role = self.wait_for_xhr_request("t-role-new")
+        new_role.click()
+        new_name = str(uuid.uuid4())[0:29]
+        role_type = str(uuid.uuid4()) 
+        location_level = str(uuid.uuid4()) 
+        name_input = self.driver.find_element_by_id("name")
+        role_type_input = self.driver.find_element_by_id("role_type")
+        location_level_input = self.driver.find_element_by_id("location_level")
+        name_input.send_keys(new_name) 
+        role_type_input.send_keys(role_type) 
+        location_level_input.send_keys(location_level) 
+        self.driver.find_element_by_class_name("t-save-btn").click()
+        all_roles = self.wait_for_xhr_request("t-role-data", plural=True)
+        new_role = all_roles[len(all_roles) - 1]
+        new_role.click()
+        name_input = self.wait_for_xhr_request("t-role-name")
+        assert name_input.get_attribute("value") == new_name
+
     def test_navigate_to_location_list_and_create_new_location_level_record(self):
         self.login()
         self.driver.find_element_by_class_name("t-nav-admin").click()

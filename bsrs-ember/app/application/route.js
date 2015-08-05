@@ -36,7 +36,17 @@ export default Ember.Route.extend({
         var role_config = $('[data-preload-roles]').html();
         var role_list = JSON.parse(role_config);
         role_list.forEach((model) => {
-            store.push('role-type', model);
+            store.push('role', model);
+        });
+        var role_types_config = $('[data-preload-role-types]').html();
+        var role_type_list = JSON.parse(role_types_config);
+        role_type_list.forEach((model, index) => {
+            store.push('role-type', {id: index+1, name: model});
+        });
+        var location_level_config = $('[data-preload-location-levels]').html();
+        var location_level_list = JSON.parse(location_level_config);
+        location_level_list.forEach((model) => {
+            store.push('location-level', model);
         });
     },
     actions: {

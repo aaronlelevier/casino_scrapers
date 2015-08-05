@@ -11,6 +11,7 @@ from selenium.webdriver.common.keys import Keys
 
 from person.models import Person, PersonStatus
 from contact.models import PhoneNumberType
+from location.models import LocationLevel
 from person.tests.factory import PASSWORD, create_person, create_role
 
 
@@ -49,6 +50,7 @@ class ConfigurationTests(TestCase):
         self.password = PASSWORD
         self.person = create_person()
         self.phone_number_types = mommy.make(PhoneNumberType)
+        self.location_levels = mommy.make(LocationLevel)
         self.person_status = mommy.make(PersonStatus)
         self.client.login(username=self.person.username, password=self.password)
 
@@ -75,6 +77,14 @@ class ConfigurationTests(TestCase):
         self.assertIn(str(self.person.role.id), [c.values()[0] for c in configuration])
         self.assertIn(str(self.person.role.name), [c.values()[1] for c in configuration])
 
+    def test_role_types(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['role_types_config'])
+        self.assertTrue(len(configuration) > 0)
+        # the model id shows in the context
+        self.assertEqual("Internal", configuration[0])
+        self.assertEqual("Third Party", configuration[1])
+
     def test_person_statuses(self):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['person_status_config'])
@@ -82,3 +92,11 @@ class ConfigurationTests(TestCase):
         # the model id shows in the context
         self.assertIn(str(self.person_status.id), [c.values()[0] for c in configuration])
         self.assertIn(str(self.person_status.name), [c.values()[1] for c in configuration])
+
+    def test_location_level(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['location_level_config'])
+        self.assertTrue(len(configuration) > 0)
+        # the model id shows in the context
+        self.assertIn(str(self.location_levels.id), [c.values()[0] for c in configuration])
+        self.assertIn(str(self.location_levels.name), [c.values()[1] for c in configuration])

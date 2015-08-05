@@ -20,7 +20,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('Acceptance | role-detail', {
+module('sco Acceptance | role-detail', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -53,7 +53,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.name);
         assert.equal(find('.t-role-role-type').val(), ROLE_DEFAULTS.roleTypeGeneral);
         // assert.equal(find('.t-role-category').val(), CATEGORY_DEFAULTS.category);
-        // assert.equal(find('.t-role-location_level').val(), ROLE_DEFAULTS.location_level);
+        // assert.equal(find('.t-location-level').val(), ROLE_DEFAULTS.location_level);
     });
     var url = PREFIX + DETAIL_URL + '/';
     var response = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);

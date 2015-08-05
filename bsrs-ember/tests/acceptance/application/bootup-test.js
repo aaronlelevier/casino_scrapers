@@ -9,6 +9,7 @@ import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import ADDRESS_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import PHONE_NUMBER_DEFAULT from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
+import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/currencies';
 
 const HOME_URL = '/';
@@ -101,9 +102,29 @@ test('on boot we should fetch and load the currency configuration', function(ass
 test('on boot we should fetch and load the role configuration', function(assert) {
     visit(HOME_URL);
     andThen(() => {
-        var role_models = store.find('role-type');
+        var role_models = store.find('role');
         assert.equal(role_models.get('length'), 2);
         assert.equal(role_models.objectAt(0).get('id'), ROLE_DEFAULTS.idOne);
         assert.equal(role_models.objectAt(0).get('name'), ROLE_DEFAULTS.name);
+    });
+});
+
+test('on boot we should fetch and load the role types configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        var role_types_models = store.find('role-type');
+        assert.equal(role_types_models.get('length'), 2);
+        assert.ok(role_types_models.objectAt(0).get('id') > 0);
+        assert.equal(role_types_models.objectAt(0).get('name'), ROLE_DEFAULTS.roleTypeGeneral);
+    });
+});
+
+test('on boot we should fetch and load the location level configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        var location_level_models = store.find('location-level');
+        assert.equal(location_level_models.get('length'), 2);
+        assert.equal(location_level_models.objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
+        assert.equal(location_level_models.objectAt(0).get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
     });
 });
