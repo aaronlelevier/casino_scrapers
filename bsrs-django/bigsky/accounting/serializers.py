@@ -20,10 +20,3 @@ class AuthAmountSerializer(BaseCreateSerializer):
     class Meta:
         model = AuthAmount
         fields = ('id', 'amount', 'currency')
-
-
-class AuthAmountNoIDSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = AuthAmount
-        fields = ('amount', 'currency')

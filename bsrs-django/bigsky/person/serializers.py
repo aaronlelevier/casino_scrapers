@@ -3,9 +3,12 @@ import copy
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
+from django.forms.models import model_to_dict
+
 from rest_framework import serializers
 
-from accounting.serializers import AuthAmountNoIDSerializer
+from accounting.models import AuthAmount
+from accounting.serializers import AuthAmountSerializer
 from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
     EmailSerializer, AddressSerializer)
@@ -93,7 +96,7 @@ class PersonListSerializer(serializers.ModelSerializer):
 
     role = RoleIdNameSerializer()
     status = PersonStatusSerializer()
-    auth_amount = AuthAmountNoIDSerializer()
+    auth_amount = AuthAmountSerializer()
 
     class Meta:
         model = Person
@@ -104,7 +107,7 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 
     status = PersonStatusSerializer()
     role = RoleSerializer()
-    auth_amount = AuthAmountNoIDSerializer()
+    auth_amount = AuthAmountSerializer()
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)
@@ -120,7 +123,7 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
     Currently, you can Add/Update PhoneNumber's when Updating a Person, 
     but, you cannot delete PhoneNumber's Yet.
     '''
-    auth_amount = AuthAmountNoIDSerializer()
+    auth_amount = AuthAmountSerializer()
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)
@@ -133,12 +136,19 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         phone_numbers = validated_data.pop('phone_numbers', [])
         addresses = validated_data.pop('addresses', [])
         emails = validated_data.pop('emails', [])
+        # Single Model
+        auth_amount = validated_data.pop('auth_amount', '')
+        if auth_amount:
+            aa = AuthAmount.objects.get(id=auth_amount['id'])
+            aa = create.update_model(aa, auth_amount)
+            # instance['auth_amount'] = {'id': aa.id, 'amount': aa.amount, 'currency': aa.currency}
+
         # Update Person
         instance = create.update_model(instance, validated_data)
         # Create/Update PhoneNumbers
-        for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address), (emails, Email)]:
+        for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address),
+            (emails, Email)]:
             for c in contacts:
-                import copy
                 c = copy.copy(c)
                 try:
                     contact = model.objects.get(id=c['id'])

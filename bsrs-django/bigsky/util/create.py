@@ -48,6 +48,10 @@ def _generate_chars():
     return ''.join([str(random.choice(string.ascii_letters)) for x in range(10)])
 
 
+def model_to_simple_dict(model):
+    return {'id':model.id, 'name':model.name}
+
+
 def update_model(model, dict_):
     "Update a Model Object with all attrs from the dict_."
     for k,v in dict_.iteritems():
@@ -56,5 +60,16 @@ def update_model(model, dict_):
     return model
 
 
-def model_to_simple_dict(model):
-    return {'id':model.id, 'name':model.name}
+def update_models(model, dict_):
+    "Update a Model Object with all attrs from the dict_."
+    for k,v in dict_.iteritems():
+        setattr(model, k, v)
+    model.save()
+    return model
+
+
+
+
+
+
+

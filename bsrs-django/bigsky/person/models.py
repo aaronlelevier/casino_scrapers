@@ -108,8 +108,7 @@ class Role(BaseModel):
                 raise
 
         if not self.default_auth_amount:
-            currency = Currency.objects.default()
-            self.default_auth_amount, _ = AuthAmount.objects.get_or_create(currency)
+            self.default_auth_amount = AuthAmount.objects.default()
 
         return super(Role, self).save(*args, **kwargs)
 

@@ -7,12 +7,8 @@ from util.models import BaseModel, BaseManager
 class CurrencyManager(BaseManager):
 
     def default(self):
-        obj, created = Currency.objects.get_or_create(
-            name="US Dollar",
-            code="usd",
-            symbol="$",
-            format="$00.00"
-        )
+        obj, created = self.get_or_create(name="US Dollar", code="usd",
+            symbol="$", format="$00.00")
         return obj
 
 
@@ -30,10 +26,20 @@ class Currency(BaseModel):
         return self.name
 
 
+class AuthAmountManager(BaseManager):
+    
+    def default(self):
+        default_currency = Currency.objects.default()
+        obj, created = self.get_or_create(amount=0, currency=default_currency)
+        return obj
+
+
 @python_2_unicode_compatible
 class AuthAmount(BaseModel):
     amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     currency = models.ForeignKey(Currency, blank=True, null=True)
 
+    objects = AuthAmountManager()
+
     def __str__(self):
-        return self.amount
+        return "{0:.4f}".format(self.amount)
