@@ -4,9 +4,9 @@ import inject from 'bsrs-ember/utilities/inject';
 export default Ember.Route.extend({
     repository: inject('role'),
     model(params) {
-        var role_pk = params.role_id,
-            repository = this.get('repository'),
-            return repository.findById(role_pk);
+        var role_pk = params.role_id;
+        var repository = this.get('repository');
+        return repository.findById(role_pk);
     },
     actions: {
         willTransition(transition) {

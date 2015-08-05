@@ -4,9 +4,9 @@ import inject from 'bsrs-ember/utilities/inject';
 export default Ember.Route.extend({
     repository: inject('location'),
     model(params) {
-        var location_pk = params.location_id,
-            repository = this.get('repository'),
-            return repository.findById(location_pk);
+        var location_pk = params.location_id;
+        var repository = this.get('repository');
+        return repository.findById(location_pk);
 
     },
     actions: {

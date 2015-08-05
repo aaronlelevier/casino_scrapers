@@ -5,7 +5,7 @@ export default Ember.Route.extend({
     uuid: injectUUID('uuid'),
     model() {
         var pk = this.get('uuid').v4();
-        return this.get('store').push('role', {id: pk}),
+        return this.get('store').push('role', {id: pk});
     },
     actions: {
         willTransition(transition) {
