@@ -108,8 +108,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
-            var person = store.find('location-level', {id: UUID.value});
-            assert.equal(person.get('length'), 1);
+            var location_level = store.find('location-level', {id: UUID.value});
+            assert.equal(location_level.get('length'), 1);
         });
     });
     click('.t-modal-footer .t-modal-rollback-btn');
@@ -117,11 +117,9 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_LEVEL_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
-            var person = store.find('location-level', {id: UUID.value});
-            assert.equal(person.get('length'), 0);
+            var location_level = store.find('location-level', {id: UUID.value});
+            assert.equal(location_level.get('length'), 0);
             assert.equal(find('tr.t-location-level-data').length, 0);
         });
     });
 });
-
-
