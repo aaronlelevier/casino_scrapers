@@ -12,19 +12,37 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
+            name='AuthAmount',
+            fields=[
+                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
+                ('created', models.DateTimeField(auto_now_add=True)),
+                ('modified', models.DateTimeField(auto_now=True)),
+                ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
+                ('amount', models.DecimalField(default=0, max_digits=15, decimal_places=4, blank=True)),
+            ],
+            options={
+                'abstract': False,
+            },
+        ),
+        migrations.CreateModel(
             name='Currency',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('name', models.CharField(max_length=50)),
-                ('code', models.CharField(max_length=3)),
-                ('symbol', models.CharField(help_text=b'$, ', max_length=1)),
-                ('format', models.CharField(help_text=b"$00.00 for 'USD' for example", max_length=10)),
+                ('name', models.CharField(help_text=b'US Dollar', max_length=50)),
+                ('code', models.CharField(help_text=b'usd', max_length=3)),
+                ('symbol', models.CharField(help_text=b'$', max_length=1)),
+                ('format', models.CharField(help_text=b"$00.00 for 'usd' for example", max_length=10)),
             ],
             options={
                 'abstract': False,
             },
+        ),
+        migrations.AddField(
+            model_name='authamount',
+            name='currency',
+            field=models.ForeignKey(blank=True, to='accounting.Currency', null=True),
         ),
     ]

@@ -29,15 +29,15 @@ class HelperTests(TestCase):
         new_group = self.person.groups.first()
         self.assertNotEqual(orig_group, new_group)
 
-    def test_deserialize_auth_mount(self):
-        data = {
-            "auth_amount": {
-                "amount": 1000.1234,
-                "currency": "usd"
-            }
-        }
-        old_data = copy.copy(data)
-        new_data = helpers.deserialize_auth_mount(data)
-        self.assertEqual(len(new_data),2)
-        self.assertEqual(new_data['auth_amount'], old_data['auth_amount']['amount'])
-        self.assertEqual(new_data['auth_amount_currency'], old_data['auth_amount']['currency'])
+    # def test_deserialize_auth_mount(self):
+    #     data = {
+    #         "auth_amount": {
+    #             "amount": 1000.1234,
+    #             "currency": "usd"
+    #         }
+    #     }
+    #     old_data = copy.copy(data)
+    #     new_data = helpers.deserialize_auth_mount(data)
+    #     self.assertEqual(len(new_data),2)
+    #     self.assertEqual(new_data['auth_amount'], old_data['auth_amount']['amount'])
+    #     self.assertEqual(new_data['auth_amount_currency'], old_data['auth_amount']['currency'])

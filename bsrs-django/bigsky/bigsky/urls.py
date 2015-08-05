@@ -21,6 +21,7 @@ urlpatterns = patterns('',
     # API
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     # My APIs
+    url(r'', include('accounting.urls')),
     url(r'', include('contact.urls')),
     url(r'', include('location.urls')),
     url(r'', include('person.urls')),

@@ -34,6 +34,7 @@ class Migration(migrations.Migration):
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
+                ('role_type', models.CharField(default=b'Internal', max_length=29, blank=True, choices=[(b'Internal', b'Internal'), (b'Third Party', b'Third Party')])),
                 ('children', models.ManyToManyField(related_name='parents', to='location.LocationLevel', blank=True)),
             ],
             options={
@@ -68,7 +69,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='location',
-            name='level',
+            name='location_level',
             field=models.ForeignKey(related_name='locations', to='location.LocationLevel'),
         ),
         migrations.AddField(

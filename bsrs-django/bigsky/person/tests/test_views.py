@@ -4,6 +4,7 @@ import sys
 if sys.version_info > (2,7):
     str = unicode
 
+from django.conf import settings
 from django.test import TestCase, TransactionTestCase
 from django.http import JsonResponse
 from django.contrib.auth.models import User, ContentType, Group, Permission
@@ -13,6 +14,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
+from accounting.models import Currency, AuthAmount
 from contact.models import Address, PhoneNumber, Email, PhoneNumberType
 from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
@@ -31,6 +33,8 @@ class RoleViewSetTests(APITestCase):
         self.person = create_person()
         # LocationLevel
         self.location = mommy.make(Location)
+        # Currency
+        self.currency = Currency.objects.default()
         # Role
         self.role = self.person.role
         self.role.location_level = self.location.location_level
@@ -61,7 +65,7 @@ class RoleViewSetTests(APITestCase):
             "id": str(uuid.uuid4()),
             "name": "Admin",
             "role_type": choices.ROLE_TYPE_CHOICES[0][0],
-            "location_level": self.location.location_level.id
+            "location_level": str(self.location.location_level.id)
         }
         response = self.client.post('/api/admin/roles/', role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -200,9 +204,8 @@ class PersonListTests(TestCase):
 
     def test_auth_amount(self):
         results = self.data['results'][0]
-        self.assertIsNotNone(results['auth_amount'])
-        self.assertEqual(results['auth_amount']['amount'], "{0:.4f}".format(self.person.auth_amount))
-        self.assertEqual(results['auth_amount']['currency'], str(self.person.auth_amount_currency.id))
+        self.assertEqual(results['auth_amount']['amount'], "{0:.4f}".format(self.person.auth_amount.amount))
+        self.assertEqual(results['auth_amount']['currency'], str(self.person.auth_amount.currency.id))
 
 
 class PersonDetailTests(TestCase):
@@ -248,9 +251,8 @@ class PersonDetailTests(TestCase):
         self.assertIsInstance(address, Address)
 
     def test_auth_amount(self):
-        self.assertIsNotNone(self.data['auth_amount'])
-        self.assertEqual(self.data['auth_amount']['amount'], "{0:.4f}".format(self.person.auth_amount))
-        self.assertEqual(self.data['auth_amount']['currency'], str(self.person.auth_amount_currency.id))
+        self.assertEqual(self.data['auth_amount']['amount'], "{0:.4f}".format(self.person.auth_amount.amount))
+        self.assertEqual(self.data['auth_amount']['currency'], str(self.person.auth_amount.currency.id))
 
 
 class PersonPutTests(APITestCase):
@@ -268,7 +270,8 @@ class PersonPutTests(APITestCase):
         self.password = PASSWORD
         self.person = create_person()
         self.client.login(username=self.person.username, password=self.password)
-
+        # AuthAmount
+        self.auth_amount = AuthAmount.objects.default()
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
         self.phone_number = mommy.make(PhoneNumber)
         self.email = mommy.make(Email)
@@ -283,8 +286,9 @@ class PersonPutTests(APITestCase):
             "title": "",
             "employee_id": "",
             "auth_amount": {
-                "amount": "{0:.4f}".format(self.person.auth_amount),
-                "currency": str(self.person.auth_amount_currency.id)
+                "id": str(self.auth_amount.id),
+                "amount": "{0:.4f}".format(self.person.auth_amount.amount),
+                "currency": str(self.person.auth_amount.currency.id)
             },
             "role": str(self.person.role.id),
             "status": str(self.person.status.id),
@@ -386,6 +390,62 @@ class PersonDeleteTests(APITestCase):
             {'override':True}, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Person.objects.count(), people-1)
+
+
+class PersonFilterTests(TestCase):
+
+    def setUp(self):
+        # Role
+        self.role = create_role()
+        self.person = create_person(_many=15)
+        self.people = Person.objects.count()
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_sort_first_name(self):
+        response = self.client.get('/api/admin/people/?sort=first_name')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['results'][0]['first_name'],
+            Person.objects.order_by('first_name').first().first_name
+            )
+        # Reverse Order: ``-first_name``
+        response = self.client.get('/api/admin/people/?sort=-first_name')
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['results'][0]['first_name'],
+            Person.objects.order_by('-first_name').first().first_name
+            )
+
+    def test_sort_first_name_page(self):
+        response = self.client.get('/api/admin/people/?page=2&sort=first_name')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        paginate_by = settings.REST_FRAMEWORK['PAGINATE_BY']
+        self.assertEqual(len(data['results']), self.people - paginate_by)
+
+    def test_sort_first_name_page_filter(self):
+        # setup
+        auth_amount = AuthAmount.objects.first()
+        role = mommy.make(Role, default_auth_amount=auth_amount, name='toran')
+        people = 15
+        for i in range(people):
+            Person.objects.create_user(create._generate_chars(), 'myemail@mail.com',
+                PASSWORD, first_name=create._generate_chars(), role=role)
+        # Test
+        response = self.client.get('/api/admin/people/?page=2&sort=first_name&filter=toran')
+        data = json.loads(response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            len(data['results']),
+            people - settings.REST_FRAMEWORK['PAGINATE_BY']
+            )
+
+
 
 
 # Password Tests to use later

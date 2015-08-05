@@ -119,13 +119,16 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 REST_FRAMEWORK = {
     'PAGINATE_BY': 10,
     'PAGINATE_BY_PARAM': 'page_size',
-    'MAX_PAGINATE_BY': 100,
+    'MAX_PAGINATE_BY': 10,
+    # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
     ),
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_filters.backends.DjangoFilterBackend',
     ),
+    'ORDERING_PARAM': 'sort',
+    'SEARCH_PARAM': 'filter'
 }
 
 CORS_ALLOW_CREDENTIALS = True

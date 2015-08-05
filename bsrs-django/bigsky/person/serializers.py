@@ -3,8 +3,12 @@ import copy
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
+from django.forms.models import model_to_dict
+
 from rest_framework import serializers
 
+from accounting.models import AuthAmount
+from accounting.serializers import AuthAmountSerializer
 from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
     EmailSerializer, AddressSerializer)
@@ -12,13 +16,13 @@ from location.models import LocationLevel, Location
 from location.serializers import LocationLevelSerializer, LocationIdNameSerializer
 from person.models import PersonStatus, Person, Role
 from util import create
+from util.serializers import BaseCreateSerializer
 
 
 ### ROLE ###
 
-class RoleSerializer(serializers.ModelSerializer):
+class RoleSerializer(BaseCreateSerializer):
 
-    id = serializers.UUIDField(read_only=False)
     location_level = LocationLevelSerializer(read_only=True)
 
     class Meta:
@@ -33,9 +37,7 @@ class RoleIdNameSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-class RoleCreateSerializer(serializers.ModelSerializer):
-
-    id = serializers.UUIDField(read_only=False)
+class RoleCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
@@ -73,13 +75,11 @@ class PersonStatusSerializer(serializers.ModelSerializer):
 PERSON_FIELDS = (
     'id', 'username', 'first_name', 'middle_initial',
     'last_name', 'status', 'role', 'title', 'employee_id',
-    'auth_amount', 'auth_amount_currency',
+    'auth_amount',
 )
 
 
-class PersonCreateSerializer(serializers.ModelSerializer):
-    
-    id = serializers.UUIDField(read_only=False)
+class PersonCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Person
@@ -94,8 +94,9 @@ class PersonCreateSerializer(serializers.ModelSerializer):
 
 class PersonListSerializer(serializers.ModelSerializer):
 
-    role = RoleIdNameSerializer(read_only=True)
-    status = PersonStatusSerializer(read_only=True)
+    role = RoleIdNameSerializer()
+    status = PersonStatusSerializer()
+    auth_amount = AuthAmountSerializer()
 
     class Meta:
         model = Person
@@ -106,6 +107,7 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 
     status = PersonStatusSerializer()
     role = RoleSerializer()
+    auth_amount = AuthAmountSerializer()
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)
@@ -121,6 +123,7 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
     Currently, you can Add/Update PhoneNumber's when Updating a Person, 
     but, you cannot delete PhoneNumber's Yet.
     '''
+    auth_amount = AuthAmountSerializer()
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)
@@ -133,12 +136,15 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         phone_numbers = validated_data.pop('phone_numbers', [])
         addresses = validated_data.pop('addresses', [])
         emails = validated_data.pop('emails', [])
+        # Single Model
+        auth_amount = validated_data.pop('auth_amount', '')
+        create.update_or_create_single_model(auth_amount, AuthAmount)
         # Update Person
         instance = create.update_model(instance, validated_data)
         # Create/Update PhoneNumbers
-        for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address), (emails, Email)]:
+        for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address),
+            (emails, Email)]:
             for c in contacts:
-                import copy
                 c = copy.copy(c)
                 try:
                     contact = model.objects.get(id=c['id'])
