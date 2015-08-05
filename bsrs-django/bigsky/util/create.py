@@ -1,5 +1,6 @@
 import random
 import string
+import copy
 
 from django.db import IntegrityError
 from django.contrib.auth.models import ContentType, Group, Permission
@@ -48,27 +49,27 @@ def _generate_chars():
     return ''.join([str(random.choice(string.ascii_letters)) for x in range(10)])
 
 
-def model_to_simple_dict(model):
-    return {'id':model.id, 'name':model.name}
+def model_to_simple_dict(instance):
+    return {'id':instance.id, 'name':instance.name}
 
 
-def update_model(model, dict_):
+def update_model(instance, dict_):
     "Update a Model Object with all attrs from the dict_."
     for k,v in dict_.iteritems():
-        setattr(model, k, v)
-    model.save()
-    return model
+        setattr(instance, k, v)
+    instance.save()
+    return instance
 
 
-def update_models(model, dict_):
-    "Update a Model Object with all attrs from the dict_."
-    for k,v in dict_.iteritems():
-        setattr(model, k, v)
-    model.save()
-    return model
-
-
-
+def update_or_create_single_model(dict_, model):
+    "Update or Create a single Model."
+    try:
+        instance = model.objects.get(id=dict_['id'])
+    except model.DoesNotExist:
+        instance = model.objects.create(**dict_)
+    else:
+        instance = update_model(instance, dict_)
+    return instance
 
 
 
