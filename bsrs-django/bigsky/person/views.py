@@ -4,7 +4,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission, User
 from django.shortcuts import get_object_or_404
 
-from rest_framework import viewsets, permissions, status
+from rest_framework import viewsets, permissions, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 from rest_framework.utils.serializer_helpers import ReturnDict
@@ -46,17 +46,11 @@ class PersonStatusViewSet(BaseModelViewSet):
 class PersonViewSet(BaseModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
-    
-    includes model level permissions, not user level yet
-
-    TODO
-    ----
-    Try this to alter ``auth_amount`` structure:
-
-    http://www.django-rest-framework.org/api-guide/serializers/#overriding-serialization-and-deserialization-behavior
     """
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = (filters.OrderingFilter,)
+    ordering_fields = ('username', 'first_name',)
 
     def get_serializer_class(self):
         """

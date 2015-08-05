@@ -21,3 +21,7 @@ if 'test' in sys.argv:
 
 	PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher', )
 	DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'
+
+    # DRF
+REST_FRAMEWORK['PAGINATE_BY'] = 9
+REST_FRAMEWORK['MAX_PAGINATE_BY'] = 9

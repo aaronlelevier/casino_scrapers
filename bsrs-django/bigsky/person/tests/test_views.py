@@ -4,6 +4,7 @@ import sys
 if sys.version_info > (2,7):
     str = unicode
 
+from django.conf import settings
 from django.test import TestCase, TransactionTestCase
 from django.http import JsonResponse
 from django.contrib.auth.models import User, ContentType, Group, Permission
@@ -389,6 +390,46 @@ class PersonDeleteTests(APITestCase):
             {'override':True}, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Person.objects.count(), people-1)
+
+
+class PersonFilterTests(TestCase):
+
+    def setUp(self):
+        # Role
+        self.role = create_role()
+        self.person = create_person(_many=15)
+        self.people = Person.objects.count()
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_sort_first_name(self):
+        response = self.client.get('/api/admin/people/?sort=first_name')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['results'][0]['first_name'],
+            Person.objects.order_by('first_name').first().first_name
+            )
+        # Reverse Order: ``-first_name``
+        response = self.client.get('/api/admin/people/?sort=-first_name')
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['results'][0]['first_name'],
+            Person.objects.order_by('-first_name').first().first_name
+            )
+
+    def test_sort_first_name_page(self):
+        response = self.client.get('/api/admin/people/?page=2&sort=first_name')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        paginate_by = settings.REST_FRAMEWORK['PAGINATE_BY']
+        self.assertEqual(len(data['results']), self.people - paginate_by)
+
+
+
 
 
 # Password Tests to use later

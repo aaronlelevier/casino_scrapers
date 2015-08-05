@@ -21,7 +21,8 @@ def create_role():
 
 
 def create_single_person(username, role):
-    return Person.objects.create_user(username, 'myemail@mail.com', PASSWORD, role=role)
+    return Person.objects.create_user(username, 'myemail@mail.com', PASSWORD,
+        first_name=create._generate_chars(), role=role)
 
 
 def create_person(username=None, _many=1):
