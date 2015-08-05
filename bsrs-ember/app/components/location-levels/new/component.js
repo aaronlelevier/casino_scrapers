@@ -16,7 +16,7 @@ export default Ember.Component.extend(ValidationMixin, {
                 });
             }
         },
-        cancelPerson() {
+        cancelLocationLevel() {
             this.sendAction('redirectUser');
         }
     }

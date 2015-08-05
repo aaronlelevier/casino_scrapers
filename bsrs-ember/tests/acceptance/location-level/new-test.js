@@ -17,6 +17,7 @@ const DETAIL_URL = LOCATION_LEVEL_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_LEVEL_URL + LOCATION_LEVEL_DEFAULTS.idOne + '/';
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
+const CANCEL_BTN = '.t-cancel-btn';
 
 var application, store, payload;
 
@@ -27,7 +28,8 @@ module('Acceptance | location-level-new', {
         xhr(DJANGO_LOCATION_LEVEL_URL, "GET", null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
         payload = {
             id: UUID.value,
-            name: LOCATION_LEVEL_DEFAULTS.nameCompany
+            name: LOCATION_LEVEL_DEFAULTS.nameCompany,
+            children: []
         };
     },
     afterEach() {
@@ -77,50 +79,49 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-// test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
-//     visit(LOCATION_LEVEL_NEW_URL);
-//     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
-//             assert.equal(find('.t-modal').is(':visible'), true);
-//             assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
-//         });
-//     });
-//     click('.t-modal-footer .t-modal-cancel-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
-//             assert.equal(find('.t-location-level-name').val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
-//             assert.equal(find('.t-modal').is(':hidden'), true);
-//         });
-//     });
-// });
+test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+    visit(LOCATION_LEVEL_NEW_URL);
+    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+    click(CANCEL_BTN);
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
+        });
+    });
+    click('.t-modal-footer .t-modal-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
+            assert.equal(find('.t-location-level-name').val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+        });
+    });
+});
 
-// test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
-//     clearxhr(detail_xhr);
-//     visit(LOCATION_LEVEL_NEW_URL);
-//     fillIn('.t-person-username', LOCATION_LEVEL_DEFAULTS.username);
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
-//             assert.equal(find('.t-modal').is(':visible'), true);
-//             var person = store.find('person', {id: UUID.value});
-//             assert.equal(person.get('length'), 1);
-//         });
-//     });
-//     click('.t-modal-footer .t-modal-rollback-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_LEVEL_URL);
-//             assert.equal(find('.t-modal').is(':hidden'), true);
-//             var person = store.find('person', {id: UUID.value});
-//             assert.equal(person.get('length'), 0);
-//             assert.equal(find('tr.t-person-data').length, 0);
-//         });
-//     });
-// });
+test('sco when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+    visit(LOCATION_LEVEL_NEW_URL);
+    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+    click(CANCEL_BTN);
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+            var person = store.find('location-level', {id: UUID.value});
+            assert.equal(person.get('length'), 1);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), LOCATION_LEVEL_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            var person = store.find('location-level', {id: UUID.value});
+            assert.equal(person.get('length'), 0);
+            assert.equal(find('tr.t-location-level-data').length, 0);
+        });
+    });
+});
 
 

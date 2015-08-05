@@ -21,6 +21,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
     };
     factory.prototype.put = function(level) {
         var location_levels = this.detail();
+        level.children = [];
         for(var key in level) {
             location_levels[key] = level[key];
         }

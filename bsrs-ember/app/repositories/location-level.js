@@ -33,9 +33,9 @@ export default Ember.Object.extend({
         });
         return this.get('store').find('location-level', id);
     },
-    // delete(id) {
-    //     PromiseMixin.xhr(LOCATION_LEVEL_URL + id + '/', 'DELETE');
-    //     this.get('store').remove('location', id);
-    // }
+    delete(id) {
+        PromiseMixin.xhr(LOCATION_LEVEL_URL + id + '/', 'DELETE');
+        this.get('store').remove('location-level', id);
+    }
 });
 

@@ -15,6 +15,7 @@ const DETAIL_URL = LOCATION_LEVEL_URL + '/' + LOCATION_DEFAULTS.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_LEVEL_URL + LOCATION_DEFAULTS.idOne + '/';
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
+const CANCEL_BTN = '.t-cancel-btn';
 
 var application, store;
 
@@ -85,60 +86,60 @@ test('when editing name to invalid, it checks for validation', (assert) => {
     });
 });
 
-// test('clicking cancel button will take from detail view to list view', (assert) => {
-//     visit(LOCATION_LEVEL_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), LOCATION_LEVEL_URL);
-//     });
-//     click('.t-location-data:eq(0)');
-//     andThen(() => {
-//         assert.equal(currentURL(),DETAIL_URL);
-//     });
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         assert.equal(currentURL(), LOCATION_LEVEL_URL);
-//     });
-// });
+test('clicking cancel button will take from detail view to list view', (assert) => {
+    visit(LOCATION_LEVEL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_LEVEL_URL);
+    });
+    click('.t-location-level-data:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    click(CANCEL_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_LEVEL_URL);
+    });
+});
 
-// test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
-//     visit(DETAIL_URL);
-//     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.equal(find('.t-modal').is(':visible'), true);
-//             assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
-//         });
-//     });
-//     click('.t-modal-footer .t-modal-cancel-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.storeNameTwo);
-//             assert.equal(find('.t-modal').is(':hidden'), true);
-//         });
-//     });
-// });
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-location-level-name', LOCATION_DEFAULTS.nameRegion);
+    click(CANCEL_BTN);
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
+        });
+    });
+    click('.t-modal-footer .t-modal-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.storeNameTwo);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+        });
+    });
+});
 
-// test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
-//     visit(DETAIL_URL);
-//     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.equal(find('.t-modal').is(':visible'), true);
-//         });
-//     });
-//     click('.t-modal-footer .t-modal-rollback-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), LOCATION_LEVEL_URL);
-//             assert.equal(find('.t-modal').is(':hidden'), true);
-//             var location = store.find('location', LOCATION_DEFAULTS.id);
-//             assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
-//         });
-//     });
-// });
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-location-level-name', LOCATION_DEFAULTS.nameRegion);
+    click(CANCEL_BTN);
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), LOCATION_LEVEL_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            var location_level = store.find('location-level', LOCATION_DEFAULTS.idOne);
+            assert.equal(location_level.get('name'), LOCATION_DEFAULTS.nameCompany);
+        });
+    });
+});
 

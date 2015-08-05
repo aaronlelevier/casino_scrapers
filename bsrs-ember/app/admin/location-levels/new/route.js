@@ -8,19 +8,19 @@ var LocationLevelNew = Ember.Route.extend({
         return this.get('store').push('location-level', {id: pk});
     },
     actions: {
-        // willTransition(transition) {
-        //     var model = this.currentModel.model;
-        //     if (model.get('isDirtyOrRelatedDirty')) {
-        //         $('.t-modal').modal('show');
-        //         this.trx.attemptedTransition = transition;
-        //         this.trx.attemptedTransitionModel = model;
-        //         this.trx.newModel = true;
-        //         this.trx.storeType = 'location-level';
-        //         transition.abort();
-        //     } else {
-        //         $('.t-modal').modal('hide');
-        //     }
-        // },
+        willTransition(transition) {
+            var model = this.currentModel;
+            if (model.get('isDirtyOrRelatedDirty')) {
+                $('.t-modal').modal('show');
+                this.trx.attemptedTransition = transition;
+                this.trx.attemptedTransitionModel = model;
+                this.trx.newModel = true;
+                this.trx.storeType = 'location-level';
+                transition.abort();
+            } else {
+                $('.t-modal').modal('hide');
+            }
+        },
         redirectUser() {
             this.transitionTo('admin.location-levels');
         }
