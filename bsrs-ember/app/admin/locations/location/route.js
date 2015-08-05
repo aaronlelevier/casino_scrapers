@@ -6,18 +6,12 @@ export default Ember.Route.extend({
     model(params) {
         var location_pk = params.location_id,
             repository = this.get('repository'),
-            location = repository.findById(location_pk);
+            return repository.findById(location_pk);
 
-        return Ember.RSVP.hash({
-            model: location
-        });
-    },
-    setupController(controller, hash) {
-        controller.set('model', hash.model);
     },
     actions: {
         willTransition(transition) {
-            var model = this.currentModel.model;
+            var model = this.currentModel;
             if (model.get('isDirtyOrRelatedDirty')) {
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;

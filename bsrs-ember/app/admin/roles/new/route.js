@@ -5,16 +5,11 @@ export default Ember.Route.extend({
     uuid: injectUUID('uuid'),
     model() {
         var pk = this.get('uuid').v4();
-        return Ember.RSVP.hash({
-            model: this.get('store').push('role', {id: pk}),
-        });
-    },
-    setupController(controller, hash) {
-        controller.set('model', hash.model);
+        return this.get('store').push('role', {id: pk}),
     },
     actions: {
         willTransition(transition) {
-            var model = this.currentModel.model;
+            var model = this.currentModel;
             if (model.get('isDirtyOrRelatedDirty')) {
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;

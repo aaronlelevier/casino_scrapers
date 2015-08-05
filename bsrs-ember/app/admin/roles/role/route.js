@@ -6,19 +6,11 @@ export default Ember.Route.extend({
     model(params) {
         var role_pk = params.role_id,
             repository = this.get('repository'),
-            role = repository.findById(role_pk);
-
-        return Ember.RSVP.hash({
-            model: role
-        });
-    },
-    setupController(controller, hash) {
-        controller.set('model', hash.model);
-        controller.set('categories', hash.categories);
+            return repository.findById(role_pk);
     },
     actions: {
         willTransition(transition) {
-            var model = this.currentModel.model;
+            var model = this.currentModel;
             if (model.get('isDirtyOrRelatedDirty')) {
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
