@@ -28,12 +28,12 @@ export default Ember.Component.extend({
         changeState(state, val) {
             Ember.run(() => {
                 var state_id = parseInt(val, 10);
-                state.set("state", state_id);
+                state.set('state', state_id);
             });
         },
         changeCountry(country, val) {
             Ember.run(() => {
-                country.set("country", val);
+                country.set('country', val);
             });
         }
     }

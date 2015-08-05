@@ -3,6 +3,6 @@ export function initialize(i) {
 }
 
 export default {
-    name: "lookup",
+    name: 'lookup',
     initialize: initialize
 };

@@ -11,7 +11,7 @@ export default Ember.Route.extend({
     phone_number_type_repo: inject('phone-number-type'),
     address_type_repo: inject('address-type'),
     init() {
-        var comp = this.get("tabDoc");
+        var comp = this.get('tabDoc');
         this.set('editPrivilege', true);
     },
     model(params) {

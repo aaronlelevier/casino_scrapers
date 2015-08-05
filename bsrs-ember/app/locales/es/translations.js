@@ -4,31 +4,31 @@ export default {
 	},
 	modules:{
 		tickets:{
-			titleShort: "Entradas"
+			titleShort: 'Entradas'
 		},
 		workOrders:{
-			titleShort: "Ordenes de Trabajo"
+			titleShort: 'Ordenes de Trabajo'
 		},
 		purchaseOrders:{
-			titleShort: "Ordenes De Compra"
+			titleShort: 'Ordenes De Compra'
 		},
 		tasks:{
-			titleShort: "Tareas"
+			titleShort: 'Tareas'
 		},
 		projects:{
-			titleShort: "Proyectos"
+			titleShort: 'Proyectos'
 		},
 		rfqs:{
-			titleShort: "RFQs"
+			titleShort: 'RFQs'
 		},
 		pms:{
-			titleShort: "Mantenimiento Preventivo"
+			titleShort: 'Mantenimiento Preventivo'
 		},
 		assets:{
-			titleShort: "Bienes"
+			titleShort: 'Bienes'
 		},
 		invoices:{
-			titleShort: "Facturas"
+			titleShort: 'Facturas'
 		}
 	},
 	login: {
@@ -76,68 +76,68 @@ export default {
   },
 	admin:{
 		general: {
-			one: "Ajustes Generales",
-			other: "Configuración General"
+			one: 'Ajustes Generales',
+			other: 'Configuración General'
 		},
 		setting: {
-			one: "Ajuste",
-			other: "Ajustes"
+			one: 'Ajuste',
+			other: 'Ajustes'
 		},
 		notification: {
-			one: "Notificación Perfil",
-			other: "Perfiles de Notificación"
+			one: 'Notificación Perfil',
+			other: 'Perfiles de Notificación'
 		},
 		assignment: {
-			one: "Assignment Profile",
-			other: "Assignment Profiles"
+			one: 'Assignment Profile',
+			other: 'Assignment Profiles'
 		},
 		approval: {
-			one: "Asignación Perfil",
-			other: "Homologaciones"
+			one: 'Asignación Perfil',
+			other: 'Homologaciones'
 		},
 		template: {
-			one: "Plantilla",
-			other: "Plantillas"
+			one: 'Plantilla',
+			other: 'Plantillas'
 		},
 		users: {
-			one: "Usuario",
-			other: "Usuarios"
+			one: 'Usuario',
+			other: 'Usuarios'
 		},
 		role: {
-			one: "Papel",
-			other: "Roles"
+			one: 'Papel',
+			other: 'Roles'
 		},
 		person: {
-			one: "Persona",
-			other: "Gente"
+			one: 'Persona',
+			other: 'Gente'
 		},
 		location: {
-			one: "Ubicación",
-			other: "Ubicaciones"
+			one: 'Ubicación',
+			other: 'Ubicaciones'
 		},
 		locationType:{
-			one: "Tipo de Ubicación",
-			other: "Ubicación Tipos"
+			one: 'Tipo de Ubicación',
+			other: 'Ubicación Tipos'
 		},
 		category: {
-			one: "Categoría",
-			other: "Categorías"
+			one: 'Categoría',
+			other: 'Categorías'
 		},
 		categoryType:{
-			one: "Categoría Tipo",
-			other: "Categoría Tipos"
+			one: 'Categoría Tipo',
+			other: 'Categoría Tipos'
 		},
 		contractor: {
-			one: "Contratista",
-			other: "Contratistas"
+			one: 'Contratista',
+			other: 'Contratistas'
 		},
 		company: {
-			one: "Empresa",
-			other: "Empresas"
+			one: 'Empresa',
+			other: 'Empresas'
 		},
 		contractorAssignment: {
-			one: "Asignación Contratista",
-			other: "De Misiones"
+			one: 'Asignación Contratista',
+			other: 'De Misiones'
 		}
 	}
 };
