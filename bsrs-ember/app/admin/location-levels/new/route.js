@@ -1,8 +1,8 @@
 import Ember from 'ember';
-import injectUUID from 'bsrs-ember/utilities/uuid';
+import inject from 'bsrs-ember/utilities/uuid';
 
 var LocationLevelNew = Ember.Route.extend({
-    uuid: injectUUID('uuid'),
+    uuid: inject('uuid'),
     model() {
         var pk = this.get('uuid').v4();
         return this.get('store').push('location-level', {id: pk});
