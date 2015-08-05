@@ -428,6 +428,22 @@ class PersonFilterTests(TestCase):
         paginate_by = settings.REST_FRAMEWORK['PAGINATE_BY']
         self.assertEqual(len(data['results']), self.people - paginate_by)
 
+    def test_sort_first_name_page_filter(self):
+        # setup
+        auth_amount = AuthAmount.objects.first()
+        role = mommy.make(Role, default_auth_amount=auth_amount, name='toran')
+        people = 15
+        for i in range(people):
+            Person.objects.create_user(create._generate_chars(), 'myemail@mail.com',
+                PASSWORD, first_name=create._generate_chars(), role=role)
+        # Test
+        response = self.client.get('/api/admin/people/?page=2&sort=first_name&filter=toran')
+        data = json.loads(response.content)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(
+            len(data['results']),
+            people - settings.REST_FRAMEWORK['PAGINATE_BY']
+            )
 
 
 

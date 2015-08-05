@@ -127,7 +127,8 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': (
         'rest_framework_filters.backends.DjangoFilterBackend',
     ),
-    'ORDERING_PARAM': 'sort'
+    'ORDERING_PARAM': 'sort',
+    'SEARCH_PARAM': 'filter'
 }
 
 CORS_ALLOW_CREDENTIALS = True

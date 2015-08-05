@@ -49,8 +49,9 @@ class PersonViewSet(BaseModelViewSet):
     """
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
-    filter_backends = (filters.OrderingFilter,)
+    filter_backends = (filters.OrderingFilter, filters.SearchFilter,)
     ordering_fields = ('username', 'first_name',)
+    search_fields = ('username', 'email', 'role__name',)
 
     def get_serializer_class(self):
         """
