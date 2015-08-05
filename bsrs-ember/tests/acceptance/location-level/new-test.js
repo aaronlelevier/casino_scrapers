@@ -100,7 +100,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     });
 });
 
-test('sco when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     visit(LOCATION_LEVEL_NEW_URL);
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
     click(CANCEL_BTN);
