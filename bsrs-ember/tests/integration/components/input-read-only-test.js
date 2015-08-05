@@ -16,7 +16,7 @@ moduleForComponent('input-read-only', 'integration: input-read-only', {
 });
 
 test('component has form-control-static bootstrap class', function(assert) {
-    var role = store.push('role', {id: ROLE_DEFAULTS.id, role_type: ROLE_DEFAULTS.role_type_general});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_type: ROLE_DEFAULTS.role_type_general});
     this.set('model', role);
     this.render(hbs`{{input-read-only model=model}}`);
     var $component = this.$('.form-control-static');

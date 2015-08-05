@@ -97,11 +97,11 @@ test('rollback related will iterate over each phone number and rollback that mod
     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     assert.ok(person.get('phoneNumbersIsDirty'));
     person.rollbackRelated();
-    // assert.ok(person.get('phoneNumbersIsNotDirty'));
-    // second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
-    // assert.ok(person.get('phoneNumbersIsDirty'));
-    // person.rollbackRelated();
-    // assert.ok(person.get('phoneNumbersIsNotDirty'));
+    assert.ok(person.get('phoneNumbersIsNotDirty'));
+    second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+    assert.ok(person.get('phoneNumbersIsDirty'));
+    person.rollbackRelated();
+    assert.ok(person.get('phoneNumbersIsNotDirty'));
 });
 
 test('when new phone number is added, the person model is not dirty unless number is altered', (assert) => {

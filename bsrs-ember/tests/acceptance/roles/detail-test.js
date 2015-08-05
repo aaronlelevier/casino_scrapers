@@ -14,7 +14,7 @@ import config from 'bsrs-ember/config/environment';
 
 const PREFIX = config.APP.NAMESPACE;
 const ROLE_URL = '/admin/roles';
-const DETAIL_URL = ROLE_URL + '/' + ROLE_DEFAULTS.id;
+const DETAIL_URL = ROLE_URL + '/' + ROLE_DEFAULTS.idOne;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 
@@ -26,7 +26,7 @@ module('Acceptance | role-detail', {
         store = application.__container__.lookup('store:main');
         var endpoint = PREFIX + ROLE_URL + '/';
         xhr(endpoint, 'GET', null, {}, 200, ROLE_FIXTURES.list());
-        xhr(endpoint + ROLE_DEFAULTS.id + '/', 'GET', null, {}, 200, ROLE_FIXTURES.detail(ROLE_DEFAULTS.id));
+        xhr(endpoint + ROLE_DEFAULTS.idOne + '/', 'GET', null, {}, 200, ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne));
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -56,9 +56,9 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         // assert.equal(find('.t-role-location_level').val(), ROLE_DEFAULTS.location_level);
     });
     var url = PREFIX + DETAIL_URL + '/';
-    var response = ROLE_FIXTURES.detail(ROLE_DEFAULTS.id);
+    var response = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);
     var categories = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.id, name: CATEGORY_DEFAULTS.name});
-    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.id, name: ROLE_DEFAULTS.namePut, role_type:ROLE_DEFAULTS.roleTypeContractor, categories: categories});
+    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut, role_type:ROLE_DEFAULTS.roleTypeContractor, categories: categories});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-role-name', ROLE_DEFAULTS.namePut);
     fillIn('.t-role-role-type', ROLE_DEFAULTS.roleTypeContractor);
@@ -78,7 +78,7 @@ test('when you change a related category name it will be persisted correctly', (
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
     var categories = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.id, name: CATEGORY_DEFAULTS.nameTwo});
-    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.id, categories: categories});
+    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: categories});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     click(SAVE_BTN);
     andThen(() => {
@@ -90,7 +90,7 @@ test('when you change a related location level it will be persisted correctly', 
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
     var location_level = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameRegion});
-    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.id, location_level: location_level.id});
+    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, location_level: location_level.id});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     click(SAVE_BTN);
     andThen(() => {
@@ -149,7 +149,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), ROLE_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
-            var role = store.find('role', ROLE_DEFAULTS.id);
+            var role = store.find('role', ROLE_DEFAULTS.idOne);
             assert.equal(role.get('name'), ROLE_DEFAULTS.name);
         });
     });

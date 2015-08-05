@@ -5,7 +5,7 @@ var BSRS_ROLE_FACTORY = (function() {
     };
     factory.prototype.generate = function(i) {
         return {
-            id: this.role_defaults.id,
+            id: this.role_defaults.idOne,
             name: this.role_defaults.name,
             role_type: this.role_defaults.roleTypeGeneral,
             location_level: this.role_defaults.locationLevel

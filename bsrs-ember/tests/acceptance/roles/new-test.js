@@ -49,6 +49,10 @@ test('visiting role/new', (assert) => {
     fillIn('.t-role-name', ROLE_DEFAULTS.name);
     fillIn('.t-role-role_type', ROLE_DEFAULTS.roleTypeGeneral);
     fillIn('.t-role-location_level', ROLE_DEFAULTS.locationLevel);
+    andThen(() => {
+        var role = store.find('role').objectAt(0);
+        assert.ok(role.get('isDirty'));
+    });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

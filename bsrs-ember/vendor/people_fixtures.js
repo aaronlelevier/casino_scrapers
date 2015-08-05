@@ -22,7 +22,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
                 'name': 'admin.person.status.active'
             },
             role : {
-                'id': this.role_defaults.id,
+                'id': this.role_defaults.idOne,
                 'name': 'admin.role.system_administrator',
             },
             emails: this.person_defaults.emails
@@ -52,7 +52,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         response.phone_numbers = this.phone_number_fixtures.put();
         response.addresses = this.address_fixtures.put();
         response.status = this.status_defaults.activeId;
-        response.role = this.role_defaults.id;
+        response.role = this.role_defaults.idOne;
         for(var key in person) {
             response[key] = person[key];
         }

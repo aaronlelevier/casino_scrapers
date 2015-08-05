@@ -14,6 +14,10 @@ var RoleDeserializer = Ember.Object.extend({
             category.role_id = id;
             store.push('category', category);
         });
+        // response.location_levels.forEach((level) => {
+        //     level.role_id = id;
+        //     store.push('location-level', level);
+        // });
         delete response.categories;
         var originalRole = store.push('role', response);
         originalRole.save();

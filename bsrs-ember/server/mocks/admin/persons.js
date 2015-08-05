@@ -1,7 +1,3 @@
-function randomInt (low, high) {
-    return Math.floor(Math.random() * (high - low) + low);
-}
-
 var PEOPLE_FIXTURES = require('../../../vendor/people_fixtures.js');
 
 module.exports = function(app) {
@@ -14,7 +10,6 @@ module.exports = function(app) {
 
   adminPersonsRouter.post('/', function(req, res) {
     res.status(201);
-    console.log(req.body);
     res.send(req.body);
   });
 
