@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from contact.models import (PhoneNumberType, PhoneNumber, AddressType,
     Address, EmailType, Email)
-
+from util.serializers import BaseCreateSerializer
 
 ### PHONE NUMBER ###
 
@@ -13,13 +13,11 @@ class PhoneNumberTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class PhoneNumberSerializer(serializers.ModelSerializer):
-    
-    id = serializers.UUIDField(read_only=False)
+class PhoneNumberSerializer(BaseCreateSerializer):
 
     class Meta:
         model = PhoneNumber
-        fields = ('id', 'type', 'number',)
+        fields = ('id', 'type', 'number', 'person',)
 
 
 ### ADDRESS ###
@@ -31,14 +29,12 @@ class AddressTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-class AddressSerializer(serializers.ModelSerializer):
+class AddressSerializer(BaseCreateSerializer):
     
-    id = serializers.UUIDField(read_only=False)
-
     class Meta:
         model = Address
         fields = ('id', 'type', 'address', 'city', 'state',
-            'country', 'postal_code',)
+            'country', 'postal_code', 'person',)
 
 ### EMAIL ###
 
@@ -49,10 +45,8 @@ class EmailTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
         
 
-class EmailSerializer(serializers.ModelSerializer):
+class EmailSerializer(BaseCreateSerializer):
     
-    id = serializers.UUIDField(read_only=False)
-
     class Meta:
         model = Email
-        fields = ('id', 'type', 'email',)
+        fields = ('id', 'type', 'email', 'person',)

@@ -1,12 +1,3 @@
-'''
-Big Sky Retail Systems Framework
-Location views
-
-Created on Jan 21, 2015
-
-@author: tkrier
-
-'''
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response

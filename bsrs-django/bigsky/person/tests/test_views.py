@@ -254,6 +254,12 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['auth_amount']['amount'], "{0:.4f}".format(self.person.auth_amount.amount))
         self.assertEqual(self.data['auth_amount']['currency'], str(self.person.auth_amount.currency.id))
 
+    def test_person_fk(self):
+        # Person FK should be in the nested contact records, so
+        # Ember can more easily push it into the Ember Store
+        person = Person.objects.get(id=self.data['phone_numbers'][0]['person'])
+        self.assertIsInstance(person, Person)
+
 
 class PersonPutTests(APITestCase):
     '''
