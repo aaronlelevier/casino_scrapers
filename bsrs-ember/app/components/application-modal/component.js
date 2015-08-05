@@ -1,9 +1,7 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/store';
 
 export default Ember.Component.extend({
     classNames: ['application-modal'],
-    store: inject('main'),
     actions: {
         rollback_model() {
             var transition = this.trx.attemptedTransition;
