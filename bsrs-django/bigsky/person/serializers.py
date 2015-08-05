@@ -139,11 +139,6 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         # Single Model
         auth_amount = validated_data.pop('auth_amount', '')
         create.update_or_create_single_model(auth_amount, AuthAmount)
-        # if auth_amount:
-        #     aa = AuthAmount.objects.get(id=auth_amount['id'])
-        #     aa = create.update_model(aa, auth_amount)
-            # instance['auth_amount'] = {'id': aa.id, 'amount': aa.amount, 'currency': aa.currency}
-
         # Update Person
         instance = create.update_model(instance, validated_data)
         # Create/Update PhoneNumbers

@@ -212,25 +212,3 @@ class Person(BaseModel, AbstractUser):
 def update_group(sender, instance=None, created=False, **kwargs):
     "Post-save hook for maintaing single Group enrollment."
     helpers.update_group(person=instance, group=instance.role.group)
-
-
-
-# class MyUser(models.Model):
-#     name = models.CharField(max_length=100)
-#     amount = models.PositiveIntegerField()
-#     amount_currency = models.CharField(max_length=3,
-#         help_text="Currency Abbreviation. i.e. 'usd' or 'jpy'.")
-
-# normal_json = {
-#     "name": "bob",
-#     "amount": 100,
-#     "amount_currency": "usd"
-# }
-
-# desired_json = {
-#     "name": "bob",
-#     "auth_amount": {
-#         "amount": 100,
-#         "amount_currency": "usd"
-#     }
-# }
