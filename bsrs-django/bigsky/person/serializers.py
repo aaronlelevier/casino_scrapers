@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
 from rest_framework import serializers
 
+from accounting.serializers import AuthAmountNoIDSerializer
 from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
     EmailSerializer, AddressSerializer)
@@ -90,8 +91,9 @@ class PersonCreateSerializer(BaseCreateSerializer):
 
 class PersonListSerializer(serializers.ModelSerializer):
 
-    role = RoleIdNameSerializer(read_only=True)
-    status = PersonStatusSerializer(read_only=True)
+    role = RoleIdNameSerializer()
+    status = PersonStatusSerializer()
+    auth_amount = AuthAmountNoIDSerializer()
 
     class Meta:
         model = Person
@@ -102,6 +104,7 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 
     status = PersonStatusSerializer()
     role = RoleSerializer()
+    auth_amount = AuthAmountNoIDSerializer()
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)
@@ -117,6 +120,7 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
     Currently, you can Add/Update PhoneNumber's when Updating a Person, 
     but, you cannot delete PhoneNumber's Yet.
     '''
+    auth_amount = AuthAmountNoIDSerializer()
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)

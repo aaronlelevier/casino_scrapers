@@ -283,8 +283,8 @@ class PersonPutTests(APITestCase):
             "title": "",
             "employee_id": "",
             "auth_amount": {
-                "amount": "{0:.4f}".format(self.person.auth_amount),
-                "currency": str(self.person.auth_amount_currency.id)
+                "amount": "{0:.4f}".format(self.person.auth_amount.amount),
+                "currency": str(self.person.auth_amount.currency.id)
             },
             "role": str(self.person.role.id),
             "status": str(self.person.status.id),
