@@ -12,13 +12,13 @@ from location.models import LocationLevel, Location
 from location.serializers import LocationLevelSerializer, LocationIdNameSerializer
 from person.models import PersonStatus, Person, Role
 from util import create
+from util.serializers import BaseCreateSerializer
 
 
 ### ROLE ###
 
-class RoleSerializer(serializers.ModelSerializer):
+class RoleSerializer(BaseCreateSerializer):
 
-    id = serializers.UUIDField(read_only=False)
     location_level = LocationLevelSerializer(read_only=True)
 
     class Meta:
@@ -33,9 +33,7 @@ class RoleIdNameSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-class RoleCreateSerializer(serializers.ModelSerializer):
-
-    id = serializers.UUIDField(read_only=False)
+class RoleCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
@@ -73,13 +71,11 @@ class PersonStatusSerializer(serializers.ModelSerializer):
 PERSON_FIELDS = (
     'id', 'username', 'first_name', 'middle_initial',
     'last_name', 'status', 'role', 'title', 'employee_id',
-    'auth_amount', 'auth_amount_currency',
+    'auth_amount',
 )
 
 
-class PersonCreateSerializer(serializers.ModelSerializer):
-    
-    id = serializers.UUIDField(read_only=False)
+class PersonCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Person

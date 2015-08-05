@@ -11,7 +11,7 @@ class CurrencyManager(BaseManager):
             name="US Dollar",
             code="usd",
             symbol="$",
-            format="00.00"
+            format="$00.00"
         )
         return obj
 
@@ -20,11 +20,20 @@ class CurrencyManager(BaseManager):
 class Currency(BaseModel):
     "Accepted Currencies"
     name = models.CharField(max_length=50, help_text="US Dollar")
-    code = models.CharField(max_length=3, help_text="i.e. 'usd'")
-    symbol = models.CharField(max_length=1, help_text="$, ")
-    format = models.CharField(max_length=10, help_text="$00.00 for 'USD' for example")
+    code = models.CharField(max_length=3, help_text="usd")
+    symbol = models.CharField(max_length=1, help_text="$")
+    format = models.CharField(max_length=10, help_text="$00.00 for 'usd' for example")
 
     objects = CurrencyManager()
 
     def __str__(self):
         return self.name
+
+
+@python_2_unicode_compatible
+class AuthAmount(BaseModel):
+    amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
+    currency = models.ForeignKey(Currency, blank=True, null=True)
+
+    def __str__(self):
+        return self.amount

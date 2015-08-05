@@ -71,48 +71,48 @@ class PersonViewSet(BaseModelViewSet):
         else:
             return ps.PersonListSerializer
 
-    def list(self, request, *args, **kwargs):
-        queryset = self.filter_queryset(self.get_queryset())
+    # def list(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
 
-        page = self.paginate_queryset(queryset)
-        if page is not None:
-            serializer = self.get_serializer(page, many=True)
-            # Add ``auth_amount`` to dict
-            serializer = helpers.update_auth_amount(serializer)
-            return self.get_paginated_response(serializer.data)
+    #     page = self.paginate_queryset(queryset)
+    #     if page is not None:
+    #         serializer = self.get_serializer(page, many=True)
+    #         # Add ``auth_amount`` to dict
+    #         serializer = helpers.update_auth_amount(serializer)
+    #         return self.get_paginated_response(serializer.data)
 
-        serializer = self.get_serializer(queryset, many=True)
-        # Add ``auth_amount`` to dict
-        serializer = helpers.update_auth_amount(serializer)
-        return Response(serializer.data)
+    #     serializer = self.get_serializer(queryset, many=True)
+    #     # Add ``auth_amount`` to dict
+    #     serializer = helpers.update_auth_amount(serializer)
+    #     return Response(serializer.data)
 
-    def retrieve(self, request, *args, **kwargs):
-        # TODO: need to return ``serializer.data``, but won't let me override .data attr
-        instance = self.get_object()
-        serializer = self.get_serializer(instance)
-        # Add ``auth_amount`` to dict
-        data = copy.copy(serializer.data)
-        helpers.update_auth_amount_single(data)
-        # setattr(serializer, 'data', ReturnDict(data, serializer=serializer))
-        return Response(data)
+    # def retrieve(self, request, *args, **kwargs):
+    #     # TODO: need to return ``serializer.data``, but won't let me override .data attr
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance)
+    #     # Add ``auth_amount`` to dict
+    #     data = copy.copy(serializer.data)
+    #     helpers.update_auth_amount_single(data)
+    #     # setattr(serializer, 'data', ReturnDict(data, serializer=serializer))
+    #     return Response(data)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        # custom: start
-        auth_amount = serializer.initial_data.pop("auth_amount", {})
-        serializer.initial_data.update({
-            "auth_amount": auth_amount.get("amount",""),
-            "auth_amount_currency": auth_amount.get("currency","")
-        })
-        # custom: end
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        # Add ``auth_amount`` to dict
-        data = copy.copy(serializer.data)
-        helpers.update_auth_amount_single(data)
-        return Response(data)
+    # def update(self, request, *args, **kwargs):
+    #     partial = kwargs.pop('partial', False)
+    #     instance = self.get_object()
+    #     serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    #     # custom: start
+    #     auth_amount = serializer.initial_data.pop("auth_amount", {})
+    #     serializer.initial_data.update({
+    #         "auth_amount": auth_amount.get("amount",""),
+    #         "auth_amount_currency": auth_amount.get("currency","")
+    #     })
+    #     # custom: end
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_update(serializer)
+    #     # Add ``auth_amount`` to dict
+    #     data = copy.copy(serializer.data)
+    #     helpers.update_auth_amount_single(data)
+    #     return Response(data)
 
 '''
 "auth_amount": {

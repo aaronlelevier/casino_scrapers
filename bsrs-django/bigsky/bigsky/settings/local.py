@@ -1,8 +1,5 @@
 from .base import *
 
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
 
 DATABASES = {
     'default': {
@@ -19,7 +16,7 @@ if 'test' in sys.argv:
 	TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 	NOSE_ARGS = [
-	    '--cover-package=contact,location,order,person,role,session,util',
+	    '--cover-package=accounting,contact,location,order,person,role,session,util',
 	]
 
 	PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher', )
