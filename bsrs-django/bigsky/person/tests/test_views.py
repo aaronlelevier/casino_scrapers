@@ -403,12 +403,13 @@ class PersonsearchTests(TestCase):
     def setUp(self):
         # Role
         self.role = create_role()
+        self.person = create_person()
         # Person Records w/ specific Username
         for i in range(15):
-            Person.objects.create_user(username, 'myemail@mail.com', PASSWORD,
-                first_name=create._generate_chars(), role=role)
+            name = "wat"+create._generate_chars()
+            Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
+                first_name=name, role=self.role)
             
-        self.person = create_person(_many=15)
         self.people = Person.objects.count()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)

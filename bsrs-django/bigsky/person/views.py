@@ -1,9 +1,11 @@
 import copy
 
+from django.db import models
+from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission, User
-from django.shortcuts import get_object_or_404
 
+import django_filters
 from rest_framework import viewsets, permissions, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
@@ -43,6 +45,17 @@ class PersonStatusViewSet(BaseModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
 
+### PERSON
+
+class PersonFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = Person
+        fields = ('first_name', 'username',)
+        order_by = ('first_name', 'username',)
+        lookup_type = 'icontains'
+
+
 class PersonViewSet(BaseModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -51,7 +64,7 @@ class PersonViewSet(BaseModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (filters.OrderingFilter, filters.SearchFilter,)
     ordering_fields = ('username', 'first_name',)
-    search_fields = ('username', 'email', 'role__name',)
+    search_fields = ('username', 'first_name', 'role__name',)
 
     def get_serializer_class(self):
         """
