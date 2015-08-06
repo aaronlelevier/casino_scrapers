@@ -1,8 +1,7 @@
 import json
 import uuid
 import sys
-if sys.version_info > (2,7):
-    str = unicode
+import codecs
 
 from django.conf import settings
 from django.test import TestCase, TransactionTestCase
@@ -22,6 +21,9 @@ from person.models import Person, Role, PersonStatus
 from person.tests.factory import PASSWORD, create_person, create_role
 from person.serializers import PersonUpdateSerializer
 from util import create, choices
+
+
+reader = codecs.getreader("utf-8")
 
 
 ### ROLE ###
@@ -48,7 +50,7 @@ class RoleViewSetTests(APITestCase):
     def test_list(self):
         response = self.client.get('/api/admin/roles/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         roles = data['results']
         self.assertEqual(roles[0]['id'], str(self.role.pk))
         self.assertEqual(roles[0]['location_level']['id'], str(self.location.location_level.id))
@@ -56,7 +58,7 @@ class RoleViewSetTests(APITestCase):
     def test_detail(self):
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.role.pk))
         self.assertEqual(data['location_level']['id'], str(self.location.location_level.id))
 
@@ -69,7 +71,7 @@ class RoleViewSetTests(APITestCase):
         }
         response = self.client.post('/api/admin/roles/', role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], role_data['id'])
         self.assertIsInstance(Role.objects.get(id=role_data['id']), Role)
 
@@ -82,7 +84,7 @@ class RoleViewSetTests(APITestCase):
         }
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id), role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        new_role_data = json.loads(response.content)
+        new_role_data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(self.role.name, new_role_data['name'])
 
 
@@ -185,7 +187,7 @@ class PersonListTests(TestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
         # List GET data
         self.response = self.client.get('/api/admin/people/')
-        self.data = json.loads(self.response.content)
+        self.data = json.loads(self.response.content.decode('utf8'))
 
     def tearDown(self):
         self.client.logout()
@@ -222,7 +224,7 @@ class PersonDetailTests(TestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
         # GET data
         response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
-        self.data = json.loads(response.content)
+        self.data = json.loads(response.content.decode('utf8'))
 
     def tearDown(self):
         self.client.logout()
@@ -311,7 +313,7 @@ class PersonPutTests(APITestCase):
         new_auth_amount = '1234.1010'
         self.data['auth_amount']['amount'] = new_auth_amount
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(new_auth_amount, data['auth_amount']['amount'])
 
     def test_no_change(self):
@@ -324,14 +326,14 @@ class PersonPutTests(APITestCase):
         self.assertNotEqual(new_title, self.data['title'])
         self.data['title'] = new_title
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(new_title, data['title'])
 
     def test_location(self):
         location = mommy.make(Location)
         self.data['location'] = str(location.id)
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['location'])
         self.assertEqual(Person.objects.get(id=self.data['id']).location, location)
 
@@ -343,7 +345,7 @@ class PersonPutTests(APITestCase):
             'email': self.email.email
         }]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['emails'])
         self.assertEqual(
             self.person,
@@ -358,7 +360,7 @@ class PersonPutTests(APITestCase):
             'number': create._generate_ph()
         }]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['phone_numbers'])
         self.assertEqual(
             self.person,
@@ -414,14 +416,14 @@ class PersonFilterTests(TestCase):
     def test_sort_first_name(self):
         response = self.client.get('/api/admin/people/?sort=first_name')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['first_name'],
             Person.objects.order_by('first_name').first().first_name
             )
         # Reverse Order: ``-first_name``
         response = self.client.get('/api/admin/people/?sort=-first_name')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['first_name'],
             Person.objects.order_by('-first_name').first().first_name
@@ -430,7 +432,7 @@ class PersonFilterTests(TestCase):
     def test_sort_first_name_page(self):
         response = self.client.get('/api/admin/people/?page=2&sort=first_name')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         paginate_by = settings.REST_FRAMEWORK['PAGINATE_BY']
         self.assertEqual(len(data['results']), self.people - paginate_by)
 
@@ -444,7 +446,7 @@ class PersonFilterTests(TestCase):
                 PASSWORD, first_name=create._generate_chars(), role=role)
         # Test
         response = self.client.get('/api/admin/people/?page=2&sort=first_name&filter=toran')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             len(data['results']),

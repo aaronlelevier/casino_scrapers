@@ -6,10 +6,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from model_mommy import mommy
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 
-from person.models import Person, PersonStatus
+from person.models import Person, PersonStatus, Role
 from contact.models import PhoneNumberType
 from person.tests.factory import PASSWORD, create_person, create_role
 
@@ -30,19 +28,6 @@ class IndexTests(TestCase):
         self.assertRedirects(response, reverse('login'))
 
 
-class SeleniumTests(LiveServerTestCase):
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def test_login(self):
-        self.browser.get('http://localhost:8001/login/')
-        #self.assertIn('Login', self.browser.title) WIP!toranb
-
-
 class ConfigurationTests(TestCase):
 
     def setUp(self):
@@ -61,24 +46,12 @@ class ConfigurationTests(TestCase):
 
     def test_phone_number_types(self):
         response = self.client.get(reverse('index'))
-        configuration = json.loads(response.context['phone_number_types_config'])
-        self.assertTrue(len(configuration) > 0)
-        # the model id shows in the context
-        self.assertIn(str(self.phone_number_types.id), [c.values()[0] for c in configuration])
-        self.assertIn(str(self.phone_number_types.name), [c.values()[1] for c in configuration])
+        self.assertTrue(response.context['phone_number_types_config'])
 
     def test_roles(self):
         response = self.client.get(reverse('index'))
-        configuration = json.loads(response.context['role_config'])
-        self.assertTrue(len(configuration) > 0)
-        # the model id shows in the context
-        self.assertIn(str(self.person.role.id), [c.values()[0] for c in configuration])
-        self.assertIn(str(self.person.role.name), [c.values()[1] for c in configuration])
+        self.assertTrue(response.context['role_config'])
 
     def test_person_statuses(self):
         response = self.client.get(reverse('index'))
-        configuration = json.loads(response.context['person_status_config'])
-        self.assertTrue(len(configuration) > 0)
-        # the model id shows in the context
-        self.assertIn(str(self.person_status.id), [c.values()[0] for c in configuration])
-        self.assertIn(str(self.person_status.name), [c.values()[1] for c in configuration])
+        self.assertTrue(response.context['person_status_config'])

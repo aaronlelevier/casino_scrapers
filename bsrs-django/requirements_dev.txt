@@ -1,8 +1,6 @@
 -r requirements.txt
 backports.ssl-match-hostname==3.4.0.2
 certifi==2015.4.28
-django-extensions==1.5.5
-functools32==3.2.3.post1
 gnureadline==6.3.3
 ipython==3.2.0
 Jinja2==2.7.3

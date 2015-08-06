@@ -28,7 +28,7 @@ class PhoneNumberViewSetTests(APITestCase):
     def test_get(self):
         response = self.client.get('/api/contact/phone_numbers/{}/'.format(self.phone_number.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['number'], self.phone_number.number)
 
     def test_list(self):
@@ -36,7 +36,7 @@ class PhoneNumberViewSetTests(APITestCase):
         mommy.make(PhoneNumber, person=self.person)
         response = self.client.get('/api/contact/phone_numbers/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         numbers = data['results']
         self.assertEqual(len(numbers), 2)
 
@@ -55,7 +55,7 @@ class PhoneNumberTypeViewSetTests(APITestCase):
     def test_get(self):
         response = self.client.get('/api/contact/phone_numbers/{}/'.format(self.phone_number.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['type'], str(self.type.pk))
 
     def test_list(self):
@@ -65,7 +65,7 @@ class PhoneNumberTypeViewSetTests(APITestCase):
 
         response = self.client.get('/api/contact/phone_number_types/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         numbers = data['results']
         self.assertEqual(len(numbers), 2)
 
@@ -83,7 +83,7 @@ class AddressTests(APITestCase):
     def test_get(self):
         response = self.client.get('/api/contact/addresses/{}/'.format(self.address.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.address.pk))
 
 
@@ -100,5 +100,5 @@ class EmailTests(APITestCase):
     def test_get(self):
         response = self.client.get('/api/contact/emails/{}/'.format(self.email.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.email.pk))

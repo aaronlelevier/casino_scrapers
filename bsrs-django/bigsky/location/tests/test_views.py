@@ -28,7 +28,7 @@ class LocationLevelTests(APITestCase):
     def test_list(self):
         response = self.client.get('/api/admin/location_levels/')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(
             LocationLevel.objects.get(id=data['results'][0]['id']),
             LocationLevel
@@ -40,7 +40,7 @@ class LocationLevelTests(APITestCase):
 
     def test_get_parents(self):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIn(
             LocationLevel.objects.get(id=data['parents'][0]['id']),
             self.district.parents.all()
@@ -48,7 +48,7 @@ class LocationLevelTests(APITestCase):
 
     def test_get_children(self):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIn(
             LocationLevel.objects.get(id=data['children'][0]['id']),
             self.district.children.all()
@@ -63,7 +63,7 @@ class LocationLevelTests(APITestCase):
         }
         response = self.client.post('/api/admin/location_levels/', data, format='json')
         self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(LocationLevel.objects.get(id=data['id']), LocationLevel)
 
     def test_update(self):
@@ -75,7 +75,7 @@ class LocationLevelTests(APITestCase):
             'children': [str(r.id) for r in region.children.all()]
         }
         response = self.client.put('/api/admin/location_levels/{}/'.format(region.id), data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(data['name'], old_name)
 
 
@@ -97,7 +97,7 @@ class LocationListTests(APITestCase):
 
     def test_list_status(self):
         response = self.client.get('/api/admin/locations/')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(
             LocationStatus.objects.get(id=data['results'][0]['status']['id']),
             LocationStatus
@@ -105,7 +105,7 @@ class LocationListTests(APITestCase):
 
     def test_list_location_level(self):
         response = self.client.get('/api/admin/locations/')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(
             LocationLevel.objects.get(id=data['results'][0]['location_level']['id']),
             LocationLevel
@@ -130,7 +130,7 @@ class LocationGetTests(APITestCase):
 
     def test_get_location_level(self):
         response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(
             LocationLevel.objects.get(id=data['location_level']['id']),
             LocationLevel
@@ -138,7 +138,7 @@ class LocationGetTests(APITestCase):
 
     def test_get_status(self):
         response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(
             LocationStatus.objects.get(id=data['status']['id']),
             LocationStatus
@@ -146,7 +146,7 @@ class LocationGetTests(APITestCase):
 
     def test_get_parents(self):
         response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIn(
             Location.objects.get(id=data['parents'][0]['id']),
             self.location.parents.all()
@@ -154,7 +154,7 @@ class LocationGetTests(APITestCase):
 
     def test_get_children(self):
         response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIn(
             Location.objects.get(id=data['children'][0]['id']),
             self.location.children.all()
@@ -184,7 +184,7 @@ class LocationCreateTests(APITestCase):
         }
         response = self.client.post('/api/admin/locations/', data, format='json')
         self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(
             Location.objects.get(id=new_uuid),
             Location
@@ -224,7 +224,7 @@ class LocationUpdateTests(APITestCase):
         self.data['name'] = new_name
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
             self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['name'], new_name)
 
     def test_update_status(self):
@@ -232,7 +232,7 @@ class LocationUpdateTests(APITestCase):
         self.data['status'] = str(new_status.id)
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
             self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['status'], str(new_status.id))
 
 

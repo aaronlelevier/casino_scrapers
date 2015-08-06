@@ -20,8 +20,8 @@ class CurrencyTests(APITestCase):
         response = self.client.get('/api/admin/currencies/')
         self.assertEqual(response.status_code, 200)
         # Content
-        data = json.loads(response.content)
-        self.assertTrue(data['results'] > 0)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(len(data['results']) > 0)
 
 
 class AuthAmountTests(APITestCase):
@@ -38,5 +38,5 @@ class AuthAmountTests(APITestCase):
         response = self.client.get('/api/admin/auth_amounts/')
         self.assertEqual(response.status_code, 200)
         # Content
-        data = json.loads(response.content)
-        self.assertTrue(data['results'] > 0)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(len(data['results']) > 0)
