@@ -365,6 +365,32 @@ class PersonPutTests(APITestCase):
             PhoneNumber.objects.get(id=data['phone_numbers'][0]['id']).person
         )
 
+    def test_missing_contact_models(self):
+        # If a nested Contact Model is no longer present, then delete 
+        # Person FK on Contact Nested Model
+        create_person_and_contacts(self.person)
+        # Post standard data w/o contacts
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        self.assertEqual(response.status_code, 200)
+        # Nested Contacts should be empty!
+        self.assertFalse(self.person.emails.all())
+
+    def test_missing_contact_models_partial(self):
+        # Test delete only one
+        self.data['phone_numbers'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.phone_number.type.id),
+            'number': create._generate_ph()
+        }]
+        # Post standard data w/o contacts
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(data['phone_numbers'])
+        # Nested Contacts should be empty!
+        self.assertTrue(self.person.phone_numbers.all())
+        self.assertFalse(self.person.emails.all())
+
 
 class PersonDeleteTests(APITestCase):
     '''
