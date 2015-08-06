@@ -12,7 +12,7 @@ const DJANGO_LOCATION_URL = "/admin/locations/";
 
 var application;
 
-module('sco Acceptance | location-list', {
+module('Acceptance | location-list', {
   beforeEach() {
     application = startApp();
     var endpoint = PREFIX + DJANGO_LOCATION_URL;
