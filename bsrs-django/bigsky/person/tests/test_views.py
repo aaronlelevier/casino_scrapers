@@ -398,11 +398,16 @@ class PersonDeleteTests(APITestCase):
         self.assertEqual(Person.objects.count(), people-1)
 
 
-class PersonFilterTests(TestCase):
+class PersonsearchTests(TestCase):
 
     def setUp(self):
         # Role
         self.role = create_role()
+        # Person Records w/ specific Username
+        for i in range(15):
+            Person.objects.create_user(username, 'myemail@mail.com', PASSWORD,
+                first_name=create._generate_chars(), role=role)
+            
         self.person = create_person(_many=15)
         self.people = Person.objects.count()
         # Login
@@ -411,30 +416,29 @@ class PersonFilterTests(TestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_sort_first_name(self):
-        response = self.client.get('/api/admin/people/?sort=first_name')
+    def test_ordering_first_name(self):
+        response = self.client.get('/api/admin/people/?ordering=first_name')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(
             data['results'][0]['first_name'],
             Person.objects.order_by('first_name').first().first_name
             )
-        # Reverse Order: ``-first_name``
-        response = self.client.get('/api/admin/people/?sort=-first_name')
-        data = json.loads(response.content)
+        # Reverse Order: ``-first_name``('/api/admin/people/?ordering=-first_name')
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['first_name'],
             Person.objects.order_by('-first_name').first().first_name
             )
 
-    def test_sort_first_name_page(self):
-        response = self.client.get('/api/admin/people/?page=2&sort=first_name')
+    def test_ordering_first_name_page(self):
+        response = self.client.get('/api/admin/people/?page=2&ordering=first_name')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         paginate_by = settings.REST_FRAMEWORK['PAGINATE_BY']
         self.assertEqual(len(data['results']), self.people - paginate_by)
 
-    def test_sort_first_name_page_filter(self):
+    def test_ordering_first_name_page_search(self):
         # setup
         auth_amount = AuthAmount.objects.first()
         role = mommy.make(Role, default_auth_amount=auth_amount, name='toran')
@@ -443,8 +447,8 @@ class PersonFilterTests(TestCase):
             Person.objects.create_user(create._generate_chars(), 'myemail@mail.com',
                 PASSWORD, first_name=create._generate_chars(), role=role)
         # Test
-        response = self.client.get('/api/admin/people/?page=2&sort=first_name&filter=toran')
-        data = json.loads(response.content)
+        response = self.client.get('/api/admin/people/?page=2&ordering=first_name&search=toran')
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             len(data['results']),
