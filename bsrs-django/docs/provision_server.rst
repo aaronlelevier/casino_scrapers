@@ -129,3 +129,8 @@ and they will fail when running `/.manage.py migrate`
     # run migrations
     ./manage.py makemigrations accounting contact location order person role session util
     ./manage.py migrate
+
+
+Centos
+------
+

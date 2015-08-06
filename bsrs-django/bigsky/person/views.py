@@ -53,9 +53,6 @@ class PersonViewSet(BaseModelViewSet):
     """
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
-    filter_backends = (filters.OrderingFilter, filters.SearchFilter,)
-    ordering_fields = ('username', 'first_name',)
-    search_fields = ('username', 'first_name', 'role__name',)
 
     def get_serializer_class(self):
         """
@@ -69,6 +66,18 @@ class PersonViewSet(BaseModelViewSet):
             return ps.PersonCreateSerializer
         else:
             return ps.PersonListSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering is not None:
+            from django.db.models.functions import Lower
+            if ordering.startswith('-'):
+                queryset = queryset.order_by(Lower(ordering[1:])).reverse()
+            else:
+                queryset = queryset.order_by(Lower(ordering))
+        return queryset
+
 
 
 ### TODO: 

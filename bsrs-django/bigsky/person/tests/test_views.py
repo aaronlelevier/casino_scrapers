@@ -9,6 +9,7 @@ from django.test import TestCase, TransactionTestCase
 from django.http import JsonResponse
 from django.contrib.auth.models import User, ContentType, Group, Permission
 from django.forms.models import model_to_dict
+from django.db.models.functions import Lower
 
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
@@ -449,36 +450,31 @@ class PersonsearchTests(TestCase):
         data = json.loads(response.content)
         self.assertEqual(
             data['results'][0]['first_name'],
-            Person.objects.order_by('first_name').first().first_name
+            Person.objects.order_by(Lower('first_name')).first().first_name
             )
         # Reverse Order: ``-first_name``
         response = self.client.get('/api/admin/people/?ordering=-first_name')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['first_name'],
-            Person.objects.order_by('-first_name').first().first_name
+            Person.objects.order_by(Lower('first_name')).reverse().first().first_name
             )
 
     def test_ordering_first_name_page(self):
         response = self.client.get('/api/admin/people/?ordering=first_name&page=2')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
-        paginate_by = settings.REST_FRAMEWORK['PAGINATE_BY']
-        self.assertEqual(len(data['results']), self.people - paginate_by)
         # 11th Person, should be the 1st Person on Page=2
         self.assertEqual(
             Person.objects.get(id=data['results'][0]['id']),
-            Person.objects.order_by('first_name')[10]
+            Person.objects.order_by(Lower('first_name'))[10]
         )
 
     def test_ordering_first_name_page_search(self):
         # setup
         auth_amount = AuthAmount.objects.first()
         role = mommy.make(Role, default_auth_amount=auth_amount, name='toran')
-        people = 15
-        for i in range(people):
-            Person.objects.create_user(create._generate_chars(), 'myemail@mail.com',
-                PASSWORD, first_name=create._generate_chars(), role=role)
+        people = Person.objects.count()
         # Test
         response = self.client.get('/api/admin/people/?page=2&ordering=first_name&search=toran')
         data = json.loads(response.content.decode('utf8'))
