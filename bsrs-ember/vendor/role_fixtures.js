@@ -8,7 +8,7 @@ var BSRS_ROLE_FACTORY = (function() {
             id: this.role_defaults.idOne,
             name: this.role_defaults.name,
             role_type: this.role_defaults.roleTypeGeneral,
-            location_level: this.role_defaults.locationLevel
+            location_level: this.role_defaults.locationLevelOne
         }
     };
     factory.prototype.list = function() {

@@ -45,14 +45,14 @@ test('visiting /location-level/new', (assert) => {
     click('.t-location-level-new');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
-        assert.equal(store.find('location-level').get('length'), 1);
+        assert.equal(store.find('location-level').get('length'), 3);
     });
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
-        assert.equal(store.find('location-level').get('length'), 1);
-        var locationLevel = store.find('location-level').objectAt(0);
+        assert.equal(store.find('location-level').get('length'), 3);
+        var locationLevel = store.find('location-level', UUID.value);
         assert.equal(locationLevel.get('id'), UUID.value);
         assert.equal(locationLevel.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
         assert.ok(locationLevel.get('isNotDirty'));
@@ -119,7 +119,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(find('.t-modal').is(':hidden'), true);
             var location_level = store.find('location-level', {id: UUID.value});
             assert.equal(location_level.get('length'), 0);
-            assert.equal(find('tr.t-location-level-data').length, 0);
+            assert.equal(find('tr.t-location-level-data').length, 2);
         });
     });
 });

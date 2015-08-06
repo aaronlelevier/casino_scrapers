@@ -8,6 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
+import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
 const PREFIX = config.APP.NAMESPACE;
 const ROLE_URL = '/admin/roles';
@@ -22,7 +23,7 @@ module('Acceptance | role-new', {
             id: UUID.value,
             name: ROLE_DEFAULTS.name,
             role_type: ROLE_DEFAULTS.roleTypeGeneral,
-            location_level: ROLE_DEFAULTS.locationLevel,
+            location_level: ROLE_DEFAULTS.locationLevelOne,
             categories: []
         };
         application = startApp();
@@ -42,25 +43,32 @@ test('visiting role/new', (assert) => {
     click('.t-role-new');
     andThen(() => {
         assert.equal(currentURL(), ROLE_NEW_URL);
-        assert.equal(store.find('role').get('length'), 1);
+        assert.equal(store.find('role').get('length'), 3);
         assert.equal(store.find('role-type').get('length'), 2);
+        assert.equal(store.find('location-level').get('length'), 2);
+        assert.equal(find('.t-location-level option:selected').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(find('.t-location-level option:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(find('.t-location-level option:eq(1)').text(), LOCATION_LEVEL_DEFAULTS.nameDepartment);
+        assert.equal(find('.t-role-type option:selected').text(), ROLE_DEFAULTS.roleTypeGeneral);
+        assert.equal(find('.t-role-type option:eq(0)').text(), ROLE_DEFAULTS.roleTypeGeneral);
+        assert.equal(find('.t-role-type option:eq(1)').text(), ROLE_DEFAULTS.roleTypeContractor);
         assert.ok(store.find('role').objectAt(0).get('isNotDirty'));
     });
     fillIn('.t-role-name', ROLE_DEFAULTS.name);
-    fillIn('.t-role-role_type', ROLE_DEFAULTS.roleTypeGeneral);
-    fillIn('.t-role-location_level', ROLE_DEFAULTS.locationLevel);
+    fillIn('.t-role-type', ROLE_DEFAULTS.roleTypeGeneral);
+    fillIn('.t-location-level', ROLE_DEFAULTS.locationLevelOne);
     andThen(() => {
-        var role = store.find('role').objectAt(0);
+        var role = store.find('role', UUID.value);
         assert.ok(role.get('isDirty'));
     });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
-        assert.equal(store.find('role').get('length'), 1);
-        var role = store.find('role').objectAt(0);
+        assert.equal(store.find('role').get('length'), 3);
+        var role = store.find('role', UUID.value);
         assert.equal(role.get('name'), ROLE_DEFAULTS.name);
         assert.equal(role.get('role_type'), ROLE_DEFAULTS.roleTypeGeneral);
-        assert.equal(role.get('location_level'), ROLE_DEFAULTS.locationLevel);
+        assert.equal(role.get('location_level'), ROLE_DEFAULTS.locationLevelOne);
         assert.ok(role.get('isNotDirty'));
     });
 });
@@ -72,27 +80,8 @@ test('validation works and when hit save, we do same post', (assert) => {
     click('.t-role-new');
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
-        assert.ok(find('.t-role_type-validation-error').is(':hidden'));
-    });
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-role_type-validation-error').is(':visible'));
     });
     fillIn('.t-role-name', ROLE_DEFAULTS.name);
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_NEW_URL);
-        assert.ok(find('.t-name-validation-error').is(':hidden'));
-    });
-    fillIn('.t-role-role_type', ROLE_DEFAULTS.roleTypeGeneral);
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_NEW_URL);
-        assert.ok(find('.t-role_type-validation-error').is(':hidden'));
-        assert.ok(find('.t-location_level-validation-error').is(':visible'));
-    });
-    fillIn('.t-role-location_level', ROLE_DEFAULTS.locationLevel);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

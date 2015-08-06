@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-export default Ember.Component.extend({
+var ApplicationModalComponent = Ember.Component.extend({
     classNames: ['application-modal'],
     actions: {
         rollback_model() {
@@ -20,3 +20,5 @@ export default Ember.Component.extend({
         }
     }
 });
+
+export default ApplicationModalComponent;

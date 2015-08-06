@@ -8,7 +8,7 @@ export default Ember.Route.extend({
     model() {
         var pk = this.get('uuid').v4();
         var role_repo = this.get('role_repo');
-        var roles = this.get('store').find('role-type');
+        var roles = this.get('store').find('role');
         return Ember.RSVP.hash({
             model: this.get('store').push('person', {id: pk}),
             roles: roles

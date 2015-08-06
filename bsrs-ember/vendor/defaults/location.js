@@ -5,13 +5,14 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            id: '232z46cf-9fbb-456z-4hc3-59728vu309901',
+            idOne: '232z46cf-9fbb-456z-4hc3-59728vu309901',
             idTwo: '232543cf-cfby-129a-3fc9-1t771c372509',
             storeName: 'ABC123',
             storeNameTwo: 'DEF456',
             storeNumber: '123zz',
             storeNumberTwo: '456zz',
             status: this.store_status.activeId,
+            location_level: this.location_level.idOne
         };
     };
     return factory;

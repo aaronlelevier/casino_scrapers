@@ -6,6 +6,10 @@ var LocationModel = Model.extend({
     store: inject('main'),
     name: attr(''),
     number: attr(''),
+    location_levels: Ember.computed(function() {
+        var store = this.get('store');
+        return store.findOne('location-level', {location_id: this.get('id')});
+    }),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty'); 
     }),
@@ -17,7 +21,8 @@ var LocationModel = Model.extend({
             id: this.get('id'),
             name: this.get('name'),
             number: this.get('number'),
-            status: this.get('status')
+            status: this.get('status'),
+            location_level: this.get('location_levels').get('id'),
         };
     },
     removeRecord(id) {
