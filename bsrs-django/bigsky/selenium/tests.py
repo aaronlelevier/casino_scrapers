@@ -2,6 +2,7 @@ import unittest
 import uuid 
 
 from selenium import webdriver
+from selenium.webdriver.support.ui import Select
 
 from login import LoginMixin
 from javascript import JavascriptMixin
@@ -39,14 +40,12 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         new_role = self.wait_for_xhr_request("t-role-new")
         new_role.click()
         new_name = str(uuid.uuid4())[0:29]
-        role_type = str(uuid.uuid4()) 
-        location_level = str(uuid.uuid4()) 
         name_input = self.driver.find_element_by_id("name")
-        role_type_input = self.driver.find_element_by_id("role_type")
-        location_level_input = self.driver.find_element_by_id("location_level")
+        role_type_input = Select(self.driver.find_element_by_id("role_type_select"))
+        location_level_input = Select(self.driver.find_element_by_id("location_level_select"))
         name_input.send_keys(new_name) 
-        role_type_input.send_keys(role_type) 
-        location_level_input.send_keys(location_level) 
+        role_type_input.select_by_index(0)
+        location_level_input.select_by_index(0)
         self.driver.find_element_by_class_name("t-save-btn").click()
         all_roles = self.wait_for_xhr_request("t-role-data", plural=True)
         new_role = all_roles[len(all_roles) - 1]
