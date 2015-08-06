@@ -365,6 +365,32 @@ class PersonPutTests(APITestCase):
             PhoneNumber.objects.get(id=data['phone_numbers'][0]['id']).person
         )
 
+    def test_missing_contact_models(self):
+        # If a nested Contact Model is no longer present, then delete 
+        # Person FK on Contact Nested Model
+        create_person_and_contacts(self.person)
+        # Post standard data w/o contacts
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        self.assertEqual(response.status_code, 200)
+        # Nested Contacts should be empty!
+        self.assertFalse(self.person.emails.all())
+
+    def test_missing_contact_models_partial(self):
+        # Test delete only one
+        self.data['phone_numbers'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.phone_number.type.id),
+            'number': create._generate_ph()
+        }]
+        # Post standard data w/o contacts
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertTrue(data['phone_numbers'])
+        # Nested Contacts should be empty!
+        self.assertTrue(self.person.phone_numbers.all())
+        self.assertFalse(self.person.emails.all())
+
 
 class PersonDeleteTests(APITestCase):
     '''
@@ -398,12 +424,18 @@ class PersonDeleteTests(APITestCase):
         self.assertEqual(Person.objects.count(), people-1)
 
 
-class PersonFilterTests(TestCase):
+class PersonsearchTests(TestCase):
 
     def setUp(self):
         # Role
         self.role = create_role()
-        self.person = create_person(_many=15)
+        self.person = create_person()
+        # Person Records w/ specific Username
+        for i in range(15):
+            name = "wat"+create._generate_chars()
+            Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
+                first_name=name, role=self.role)
+            
         self.people = Person.objects.count()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -411,8 +443,8 @@ class PersonFilterTests(TestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_sort_first_name(self):
-        response = self.client.get('/api/admin/people/?sort=first_name')
+    def test_ordering_first_name(self):
+        response = self.client.get('/api/admin/people/?ordering=first_name')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(
@@ -420,21 +452,26 @@ class PersonFilterTests(TestCase):
             Person.objects.order_by('first_name').first().first_name
             )
         # Reverse Order: ``-first_name``
-        response = self.client.get('/api/admin/people/?sort=-first_name')
-        data = json.loads(response.content)
+        response = self.client.get('/api/admin/people/?ordering=-first_name')
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['first_name'],
             Person.objects.order_by('-first_name').first().first_name
             )
 
-    def test_sort_first_name_page(self):
-        response = self.client.get('/api/admin/people/?page=2&sort=first_name')
+    def test_ordering_first_name_page(self):
+        response = self.client.get('/api/admin/people/?ordering=first_name&page=2')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         paginate_by = settings.REST_FRAMEWORK['PAGINATE_BY']
         self.assertEqual(len(data['results']), self.people - paginate_by)
+        # 11th Person, should be the 1st Person on Page=2
+        self.assertEqual(
+            Person.objects.get(id=data['results'][0]['id']),
+            Person.objects.order_by('first_name')[10]
+        )
 
-    def test_sort_first_name_page_filter(self):
+    def test_ordering_first_name_page_search(self):
         # setup
         auth_amount = AuthAmount.objects.first()
         role = mommy.make(Role, default_auth_amount=auth_amount, name='toran')
@@ -443,8 +480,8 @@ class PersonFilterTests(TestCase):
             Person.objects.create_user(create._generate_chars(), 'myemail@mail.com',
                 PASSWORD, first_name=create._generate_chars(), role=role)
         # Test
-        response = self.client.get('/api/admin/people/?page=2&sort=first_name&filter=toran')
-        data = json.loads(response.content)
+        response = self.client.get('/api/admin/people/?page=2&ordering=first_name&search=toran')
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(
             len(data['results']),

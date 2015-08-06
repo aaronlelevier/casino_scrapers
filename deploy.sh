@@ -30,6 +30,9 @@ cd bigsky/
 export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
 ../venv/bin/python manage.py makemigrations
 ../venv/bin/python manage.py migrate
+
+cp fixtures/jenkins.json fixtures/postgres.json
+cp fixtures/jenkins_custom.json fixtures/postgres_custom.json
 ../venv/bin/python manage.py loaddata fixtures/postgres.json
 ../venv/bin/python manage.py loaddata fixtures/postgres_custom.json
 
@@ -37,7 +40,7 @@ cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/fonts .
 cp -r ../../bsrs-ember/dist/index.html templates
 
-uwsgi --http :8000 --wsgi-file bigsky_postgres.wsgi --virtualenv /www/django/releases/$NEW_UUID/bsrs-django/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --static-map /fonts=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
+uwsgi --http :8000 --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/bsrs-django/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --static-map /fonts=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
 
 echo "DEPLOY FINISHED!"
 exit 0

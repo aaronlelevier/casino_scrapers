@@ -144,8 +144,12 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         # Create/Update PhoneNumbers
         for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address),
             (emails, Email)]:
+            # Set of all Contact Id's for the Person.  If not in the set() sent 
+            # over, will remove the FK reference from the Contact Model of that type.
+            contact_ids = set()
             for c in contacts:
                 c = copy.copy(c)
+                contact_ids.update([c['id']])
                 try:
                     contact = model.objects.get(id=c['id'])
                     # Add back ``Person`` and update Contact
@@ -153,6 +157,10 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
                     create.update_model(contact, c)
                 except model.DoesNotExist:
                     new_contact = model.objects.create(person=instance, **c)
+            # Remove FK Reference if not in Nested Contact Payload
+            for m in model.objects.exclude(id__in=[x for x in contact_ids]):
+                m.person = None
+                m.save()
         return instance
 
 
