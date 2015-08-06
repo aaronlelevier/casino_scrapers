@@ -47,15 +47,6 @@ class PersonStatusViewSet(BaseModelViewSet):
 
 ### PERSON
 
-class PersonFilter(django_filters.FilterSet):
-
-    class Meta:
-        model = Person
-        fields = ('first_name', 'username',)
-        order_by = ('first_name', 'username',)
-        lookup_type = 'icontains'
-
-
 class PersonViewSet(BaseModelViewSet):
     """
     API endpoint that allows users to be viewed or edited.
@@ -78,7 +69,6 @@ class PersonViewSet(BaseModelViewSet):
             return ps.PersonCreateSerializer
         else:
             return ps.PersonListSerializer
-
 
 
 ### TODO: 

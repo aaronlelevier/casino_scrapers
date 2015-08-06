@@ -425,7 +425,8 @@ class PersonsearchTests(TestCase):
             data['results'][0]['first_name'],
             Person.objects.order_by('first_name').first().first_name
             )
-        # Reverse Order: ``-first_name``('/api/admin/people/?ordering=-first_name')
+        # Reverse Order: ``-first_name``
+        response = self.client.get('/api/admin/people/?ordering=-first_name')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['first_name'],
