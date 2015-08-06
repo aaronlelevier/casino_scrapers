@@ -25,7 +25,12 @@ var LocationSingle = Ember.Component.extend(ValidationMixin, {
             var repository = this.get('repository');
             repository.delete(model.get('id'));
             this.sendAction('redirectUser');
-        }
+        },
+        changed(model, val) {
+            Ember.run(() => {
+                model.set('location_level', val);
+            });
+        },
     }
 });
 

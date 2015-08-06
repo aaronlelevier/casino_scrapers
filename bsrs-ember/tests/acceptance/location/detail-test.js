@@ -16,7 +16,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('sco Acceptance | detail-test', {
+module('Acceptance | detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -66,13 +66,13 @@ test('visiting admin/location', (assert) => {
     });
 });
 
-test('when editing name to invalid, it checks for validation', (assert) => {
+test('sco when editing name to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-location-name', '');
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid name');
+        assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
     });
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
     var url = PREFIX + DETAIL_URL + "/";

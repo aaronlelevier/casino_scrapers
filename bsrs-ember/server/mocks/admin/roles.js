@@ -1,7 +1,3 @@
-function randomInt (low, high) {
-    return Math.floor(Math.random() * (high - low) + low);
-}
-
 var ROLE_FIXTURES = require('../../../vendor/role_fixtures.js');
 
 module.exports = function(app) {
@@ -13,10 +9,8 @@ module.exports = function(app) {
   });
 
   adminRolesRouter.post('/', function(req, res) {
-    var actualPayload = req.body;
-    actualPayload.id = randomInt(0, 99999);
     res.status(201);
-    res.send(actualPayload);
+    res.send(req.body);
   });
 
   adminRolesRouter.get('/:id', function(req, res) {

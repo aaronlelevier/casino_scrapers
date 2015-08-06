@@ -23,8 +23,6 @@ from util.serializers import BaseCreateSerializer
 
 class RoleSerializer(BaseCreateSerializer):
 
-    location_level = LocationLevelSerializer(read_only=True)
-
     class Meta:
         model = Role
         fields = ('id', 'name', 'role_type', 'location_level')

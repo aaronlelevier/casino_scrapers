@@ -103,7 +103,9 @@ export default {
 			other: 'Roles',
 			label: {
 				name: 'Role Name',
-				location_org: 'Location Org.',
+                role_type: 'Role Type',
+				location_org: 'Location Organization',
+                category: 'Category',
 				number_users: '# of Users',
 				general: 'General Information'
 			},
@@ -171,7 +173,11 @@ export default {
 			one: 'Location',
 			other: 'Locations',
             label: {
-                name: 'name' 
+                name: 'Name',
+                number: 'Number',
+                location_level: 'Location Level',
+                status: 'Status',
+                general: 'General'
             }
 		},
 		locationOrg:{
