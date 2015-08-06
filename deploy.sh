@@ -7,9 +7,9 @@ NEW_UUID=$(( ( RANDOM  )  + 1 ))
 kill -9 `ps aux | grep uwsgi | awk '{print $2}'`
 
 cd /www/django/releases
-git clone git@github.com:bigskytech/bsrs.git $NEW_UUID
-
 rm -rf ./*/
+
+git clone git@github.com:bigskytech/bsrs.git $NEW_UUID
 
 cd $NEW_UUID
 cd bsrs-ember
