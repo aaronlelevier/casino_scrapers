@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 
 from model_mommy import mommy
 
+from accounting.models import Currency, AuthAmount
 from location.models import Location
 from person.models import Person, PersonStatus, Role
 from util import create
@@ -14,11 +15,14 @@ PASSWORD = '1234'
 
 
 def create_role():
-    return mommy.make(Role, name=create._generate_chars())
+    currency = Currency.objects.default()
+    auth_amount = mommy.make(AuthAmount, currency=currency)
+    return mommy.make(Role, default_auth_amount=auth_amount, name=create._generate_chars())
 
 
 def create_single_person(username, role):
-    return Person.objects.create_user(username, 'myemail@mail.com', PASSWORD, role=role)
+    return Person.objects.create_user(username, 'myemail@mail.com', PASSWORD,
+        first_name=create._generate_chars(), role=role)
 
 
 def create_person(username=None, _many=1):

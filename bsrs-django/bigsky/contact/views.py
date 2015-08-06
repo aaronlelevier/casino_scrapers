@@ -1,12 +1,3 @@
-'''
-Big Sky Retail Systems Framework
-Contact views
-
-Created on Jan 21, 2015
-
-@author: tkrier
-
-'''
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 

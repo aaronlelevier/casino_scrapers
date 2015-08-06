@@ -7,6 +7,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from model_mommy import mommy
 
+from accounting.models import AuthAmount
 from person.models import Person
 from person.tests.factory import create_person, create_role
 from util import create
@@ -126,5 +127,25 @@ class UpdateTests(TestCase):
     def test_update_model(self):
         new_username = "new_username"
         self.assertNotEqual(self.person.username, new_username)
-        self.person = create.update_model(model=self.person, dict_={'username':new_username})
+        self.person = create.update_model(instance=self.person, dict_={'username':new_username})
         self.assertEqual(self.person.username, new_username)
+
+    def test_update_single_model_get(self):
+        auth_amount = AuthAmount.objects.first()
+        dict_ = {
+            'id': str(auth_amount.id),
+            'amount': auth_amount.amount,
+            'currency': auth_amount.currency
+        }
+        ret = create.update_or_create_single_model(dict_, AuthAmount)
+        self.assertIsInstance(ret, AuthAmount)
+
+    def test_update_single_model_create(self):
+        auth_amount = AuthAmount.objects.first()
+        dict_ = {
+            'id': str(uuid.uuid4()),
+            'amount': '1234.1100',
+            'currency': auth_amount.currency
+        }
+        ret = create.update_or_create_single_model(dict_, AuthAmount)
+        self.assertIsInstance(ret, AuthAmount)

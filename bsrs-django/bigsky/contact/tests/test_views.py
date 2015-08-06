@@ -34,7 +34,6 @@ class PhoneNumberViewSetTests(APITestCase):
     def test_list(self):
         # have 2 ph #'s total
         mommy.make(PhoneNumber, person=self.person)
-
         response = self.client.get('/api/contact/phone_numbers/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content)
