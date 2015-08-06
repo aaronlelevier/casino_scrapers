@@ -1,15 +1,15 @@
 <form {{action "return false" this on="submit"}}>
 	<header>
 		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
-      {{button-generic save="saveLocationLevel" type="save"}}
-      {{button-generic cancel="cancelLocationLevel" type="cancel"}}
+      {{button-generic save="saveLocation" type="save"}}
+      {{button-generic cancel="cancelLocation" type="cancel"}}
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<span class="caret"></span>
 			</button>
 			<ul class="dropdown-menu">
 				<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
 				<li><a href="#">{{fa-icon "print"}} Print</a></li>
-				<li>{{delete-button delete="deleteLocationLevel"}}</li>
+				<li>{{delete-button delete="deleteLocation"}}</li>
 			</ul>
 		</div>
 	</header>
@@ -17,11 +17,18 @@
 		<section>
 			<h2 class="col-sm-12">{{t "admin.location-level.label.credentials"}}</h2>
 			<div class="col-sm-6">
-				{{#form-group title="admin.location-level.label.name" for="name"}}
-					{{input type="text" value=model.name placeholder=(t "admin.locationlevel.label.name") class="form-control t-location-level-name" id="name" required="required"}}
+				{{#form-group title="admin.location.label.name" for="name"}}
+					{{input type="text" value=model.name placeholder=(t "admin.location.label.name") class="form-control t-location-name" id="name" required="required"}}
 					{{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.location-level.label.name"}}{{/validation-error-field}}
 				{{/form-group}}
 			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.location.label.number" for="number"}}
+					{{input type="text" value=model.number placeholder=(t "admin.location.label.number") class="form-control t-location-number" id="number" required="required"}}
+					{{#validation-error-field submitted=submitted field="number" className="validation validation-under t-number-validation-error" model=model validation=numberValidation}}{{t "validation.invalid"}} {{t "admin.location-level.label.number"}}{{/validation-error-field}}
+				{{/form-group}}
+      </div>
 		</section>
 	</section>
 </form>
+

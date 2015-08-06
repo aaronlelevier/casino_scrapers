@@ -17,7 +17,7 @@ const SAVE_BTN = '.t-save-btn' ;
 
 var application, store, payload;
 
-module('sco Acceptance | role-new', {
+module('Acceptance | role-new', {
     beforeEach() {
         payload = {
             id: UUID.value,

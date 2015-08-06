@@ -10,7 +10,7 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 
 const PREFIX = config.APP.NAMESPACE;
 const LOCATION_URL = '/admin/locations';
-const DETAIL_URL = LOCATION_URL + '/' + LOCATION_DEFAULTS.id;
+const DETAIL_URL = LOCATION_URL + '/' + LOCATION_DEFAULTS.idOne;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 
@@ -24,7 +24,7 @@ module('Acceptance | detail-test', {
         var location_list_data = LOCATION_FIXTURES.list(); 
         var location_detail_data = LOCATION_FIXTURES.detail(); 
         xhr(endpoint, 'GET', null, {}, 200, location_list_data);
-        xhr(endpoint + LOCATION_DEFAULTS.id + '/', 'GET', null, {}, 200, location_detail_data);
+        xhr(endpoint + LOCATION_DEFAULTS.idOne + '/', 'GET', null, {}, 200, location_detail_data);
     },
     afterEach() {
        Ember.run(application, 'destroy'); 
@@ -51,8 +51,8 @@ test('visiting admin/location', (assert) => {
         assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.storeName);
         assert.equal(find('.t-location-number').val(), LOCATION_DEFAULTS.storeNumber);
     });
-    var response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.id);
-    var payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.id, name: LOCATION_DEFAULTS.storeNameTwo});
+    var response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
+    var payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
     andThen(() => {
@@ -76,8 +76,8 @@ test('when editing name to invalid, it checks for validation', (assert) => {
     });
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
     var url = PREFIX + DETAIL_URL + "/";
-    var response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.id);
-    var payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.id, name: LOCATION_DEFAULTS.storeNameTwo});
+    var response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
+    var payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
     andThen(() => {
@@ -136,7 +136,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
-            var location = store.find('location', LOCATION_DEFAULTS.id);
+            var location = store.find('location', LOCATION_DEFAULTS.idOne);
             assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
         });
     });
