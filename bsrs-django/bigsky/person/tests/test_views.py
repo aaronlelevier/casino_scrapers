@@ -434,11 +434,16 @@ class PersonsearchTests(TestCase):
             )
 
     def test_ordering_first_name_page(self):
-        response = self.client.get('/api/admin/people/?page=2&ordering=first_name')
+        response = self.client.get('/api/admin/people/?ordering=first_name&page=2')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         paginate_by = settings.REST_FRAMEWORK['PAGINATE_BY']
         self.assertEqual(len(data['results']), self.people - paginate_by)
+        # 11th Person, should be the 1st Person on Page=2
+        self.assertEqual(
+            Person.objects.get(id=data['results'][0]['id']),
+            Person.objects.order_by('first_name')[10]
+        )
 
     def test_ordering_first_name_page_search(self):
         # setup
