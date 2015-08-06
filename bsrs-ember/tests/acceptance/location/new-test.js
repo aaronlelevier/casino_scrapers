@@ -30,7 +30,7 @@ module('Acceptance | location-new', {
             id: UUID.value,
             name: LOCATION_DEFAULTS.storeName,
             number: LOCATION_DEFAULTS.storeNumber,
-            children: []
+            location_level: LOCATION_DEFAULTS.location_level
         };
     },
     afterEach() {
@@ -39,7 +39,7 @@ module('Acceptance | location-new', {
     }
 });
 
-test('visiting /location/new', (assert) => {
+test('sco visiting /location/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_URL);
@@ -50,6 +50,7 @@ test('visiting /location/new', (assert) => {
     });
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeName);
     fillIn('.t-location-number', LOCATION_DEFAULTS.storeNumber);
+    fillIn('.t-location-level', LOCATION_DEFAULTS.location_level);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
@@ -57,6 +58,8 @@ test('visiting /location/new', (assert) => {
         var location = store.find('location', UUID.value);
         assert.equal(location.get('id'), UUID.value);
         assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
+        assert.equal(location.get('number'), LOCATION_DEFAULTS.storeNumber);
+        assert.equal(location.get('location_level'), LOCATION_DEFAULTS.location_level);
         assert.ok(location.get('isNotDirty'));
     });
 });

@@ -18,14 +18,20 @@
 			<h2 class="col-sm-12">{{t "admin.location-level.label.credentials"}}</h2>
 			<div class="col-sm-6">
 				{{#form-group title="admin.location.label.name" for="name"}}
-					{{input type="text" value=model.name placeholder=(t "admin.location.label.name") class="form-control t-location-name" id="name" required="required"}}
+					{{input type="text" value=model.name placeholder=(t "admin.location.label.name") class="form-control t-location-name" id="location_name" required="required"}}
 					{{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.location-level.label.name"}}{{/validation-error-field}}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-6">
 				{{#form-group title="admin.location.label.number" for="number"}}
-					{{input type="text" value=model.number placeholder=(t "admin.location.label.number") class="form-control t-location-number" id="number" required="required"}}
+					{{input type="text" value=model.number placeholder=(t "admin.location.label.number") class="form-control t-location-number" id="location_number" required="required"}}
 					{{#validation-error-field submitted=submitted field="number" className="validation validation-under t-number-validation-error" model=model validation=numberValidation}}{{t "validation.invalid"}} {{t "admin.location-level.label.number"}}{{/validation-error-field}}
+				{{/form-group}}
+      </div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.location.label.location_level" for="location_level"}}
+					{{input type="text" value=model.location_level placeholder=(t "admin.location.label.location_level") class="form-control t-location-level" id="location_location_level" required="required"}}
+					{{#validation-error-field submitted=submitted field="location_level" className="validation validation-under t-location_level-validation-error" model=model validation=locationLevelValidation}}{{t "validation.invalid"}} {{t "admin.location-level.label.location_level"}}{{/validation-error-field}}
 				{{/form-group}}
       </div>
 		</section>

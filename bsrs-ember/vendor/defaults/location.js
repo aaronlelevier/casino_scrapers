@@ -12,6 +12,7 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
             storeNumber: '123zz',
             storeNumberTwo: '456zz',
             status: this.store_status.activeId,
+            location_level: this.location_level.idOne
         };
     };
     return factory;
