@@ -31,6 +31,11 @@ var LocationSingle = Ember.Component.extend(ValidationMixin, {
                 model.set('location_level', val);
             });
         },
+        changedStatus(model, val) {
+            Ember.run(() => {
+                model.set('status', val);
+            });
+        },
     }
 });
 

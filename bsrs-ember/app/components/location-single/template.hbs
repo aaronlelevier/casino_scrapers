@@ -35,6 +35,13 @@
             {{/each}}
           </select>
         </span>
+        <span class="input-group-btn">
+          <select class="t-location_status form-control location_status" onchange={{action (action "changedStatus" model) value="target.value"}} id="location_status">
+            {{#each all_statuses as |location_status|}}
+            <option value={{location_status.id}} selected={{is-equal model.location_status location_status.id}}>{{t location_status.name}}</option>
+            {{/each}}
+          </select>
+        </span>
     </section>
   </section>
 </form>

@@ -178,7 +178,12 @@ export default {
                 location_level: 'Location Level',
                 status: 'Status',
                 general: 'General'
-            }
+            },
+            status: {
+                active: 'Active',
+                inactive: 'Inactive',
+                expired: 'Expired'
+            },
 		},
 		locationOrg:{
 			one: 'Location Organization',
@@ -223,7 +228,8 @@ export default {
 			district: 'District',
 			store: 'Store',
             label: {
-                name: 'name' 
+                name: 'name', 
+                general: 'General'
             }
 		}
 	},

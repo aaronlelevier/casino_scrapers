@@ -5,13 +5,25 @@ export default Ember.Route.extend({
     repository: inject('location'),
     model(params) {
         var location_pk = params.location_id;
+        var all_location_levels = this.get('store').find('location-level');
+        var all_statuses = this.get('store').find('status');
         var repository = this.get('repository');
-        return repository.findById(location_pk);
+        var model = repository.findById(location_pk);
+        return Ember.RSVP.hash({
+            model: model,
+            all_location_levels: all_location_levels,
+            all_statuses: all_statuses
+        });
 
+    },
+    setupController: function(controller, hash) {
+        controller.set('model', hash.model);
+        controller.set('all_location_levels', hash.all_location_levels);
+        controller.set('all_statuses', hash.all_statuses);
     },
     actions: {
         willTransition(transition) {
-            var model = this.currentModel;
+            var model = this.currentModel.model;
             if (model.get('isDirtyOrRelatedDirty')) {
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;

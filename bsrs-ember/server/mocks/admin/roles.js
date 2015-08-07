@@ -18,11 +18,7 @@ module.exports = function(app) {
   });
 
   adminRolesRouter.put('/:id', function(req, res) {
-    res.send({
-      'admin/roles': {
-        id: req.params.id
-      }
-    });
+    res.send(ROLE_FIXTURES.put(req.params.id));
   });
 
   adminRolesRouter.delete('/:id', function(req, res) {

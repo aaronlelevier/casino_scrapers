@@ -6,7 +6,7 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
 var container, registry, store;
 
-module('sco unit: role test', {
+module('unit: role test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();

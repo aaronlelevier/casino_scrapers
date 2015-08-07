@@ -66,7 +66,7 @@ test('visiting admin/location', (assert) => {
     });
 });
 
-test('sco when editing name to invalid, it checks for validation', (assert) => {
+test('when editing name to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-location-name', '');
     click(SAVE_BTN);

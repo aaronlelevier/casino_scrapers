@@ -21,7 +21,7 @@ const CANCEL_BTN = '.t-cancel-btn';
 
 var application, store, payload;
 
-module('Acceptance | location-level-new', {
+module('sco Acceptance | location-level-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -46,6 +46,7 @@ test('visiting /location-level/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
         assert.equal(store.find('location-level').get('length'), 3);
+        assert.equal(find('.t-location-level > option').length, 3);
     });
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
     click(SAVE_BTN);
