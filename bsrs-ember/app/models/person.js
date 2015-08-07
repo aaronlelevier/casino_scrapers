@@ -13,7 +13,7 @@ export default Model.extend({
     auth_amount: attr(''),
     phone_numbers: Ember.computed('id', function() {
         var store = this.get('store');
-        return store.find('phonenumber', {person_id: this.get('id')});
+        return store.find('phonenumber', {person: this.get('id')});
     }),
     addresses: Ember.computed('id', function() {
         var store = this.get('store');

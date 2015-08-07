@@ -4,12 +4,14 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            idOne: 'af34ee9b-833c-4f3e-a584-b6851d1e04b7',
-            idTwo: 'fc258447-ebc2-499f-a304-d8cf98e32ba8', 
+            idOne: 'af34ee9b-833c-4f3e-a584-b6851d1e04b1',
+            idTwo: 'af34ee9b-833c-4f3e-a584-b6851d1e04b2', 
             roleTypeContractor: 'Third Party', 
             roleTypeGeneral: 'Internal',
             name: 'Admin',
             namePut: 'Broom Pusher',
+            locationLevelNameOne: this.location_level.nameCompany,
+            locationLevelNameTwo: this.location_level.nameRegion,
             locationLevelOne: this.location_level.idOne,
             locationLevelTwo: this.location_level.idTwo,
             categories: []

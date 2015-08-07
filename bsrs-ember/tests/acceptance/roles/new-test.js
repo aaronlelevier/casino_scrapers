@@ -24,7 +24,6 @@ module('Acceptance | role-new', {
             name: ROLE_DEFAULTS.name,
             role_type: ROLE_DEFAULTS.roleTypeGeneral,
             location_level: ROLE_DEFAULTS.locationLevelOne,
-            categories: []
         };
         application = startApp();
         store = application.__container__.lookup('store:main');

@@ -11,13 +11,11 @@ var PersonDeserializer = Ember.Object.extend({
     deserialize_single(response, id) {
         var store = this.get('store');
         response.phone_numbers.forEach((phone_number) => {
-            phone_number.person_id = id;
             store.push('phonenumber', phone_number);
         });
         response.addresses.forEach((address) => {
             store.push('address-type', address.type);
             address.type = address.type.id;
-            address.person_id = id;
             store.push('address', address);
         });
         //discuss dirty attr for prop not included in the list

@@ -21,6 +21,16 @@ export default Ember.Component.extend({
         },
         cancelRole() {
             this.sendAction('redirectUser');
-        }
+        },
+        changed(model, val) {
+            Ember.run(() => {
+                model.set('role_type', val);
+            });
+        },
+        changedLocLevel(model, val) {
+            Ember.run(() => {
+                model.set('location_level', val);
+            });
+        },
     }
 });

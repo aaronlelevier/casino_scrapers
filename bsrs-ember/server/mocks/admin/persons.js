@@ -18,11 +18,7 @@ module.exports = function(app) {
   });
 
   adminPersonsRouter.put('/:id', function(req, res) {
-    res.send({
-      'admin/persons': {
-        id: req.params.id
-      }
-    });
+    res.send(PEOPLE_FIXTURES.put(req.params.id));
   });
 
   adminPersonsRouter.delete('/:id', function(req, res) {
