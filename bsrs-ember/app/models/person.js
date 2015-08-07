@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 export default Model.extend({
     store: inject('main'),
@@ -116,5 +117,15 @@ export default Model.extend({
     },
     removeRecord(id) {
         this.get('store').remove('person', id);
-    }
+    },
+    isNew: Ember.computed(function() {
+        let attributes = loopAttrs(this);
+        let all_undefined = true;
+        attributes.forEach((attribute) => {
+           if (this.get(attribute) !== undefined) {
+            all_undefined = false;
+           } 
+        });
+        return all_undefined;
+    })
 });

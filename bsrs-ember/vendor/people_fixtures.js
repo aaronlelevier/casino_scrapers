@@ -58,9 +58,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var person = this.generate(i);
         person.acceptassign = false;
         person.phone_numbers = this.phone_number_fixtures.get();
-        person.phone_numbers.forEach(function(num) {
-            num.person = i;
-        });
         person.addresses = this.address_fixtures.get();
         person.addresses.forEach(function(add) {
             add.person_id = i;

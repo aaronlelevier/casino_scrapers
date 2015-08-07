@@ -21,7 +21,7 @@ const CANCEL_BTN = '.t-cancel-btn';
 
 var application, store, payload;
 
-module('sco Acceptance | location-level-new', {
+module('Acceptance | location-level-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

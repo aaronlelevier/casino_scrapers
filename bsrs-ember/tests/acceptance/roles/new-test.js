@@ -15,7 +15,7 @@ const ROLE_URL = '/admin/roles';
 const ROLE_NEW_URL = ROLE_URL + '/new';
 const SAVE_BTN = '.t-save-btn' ;
 
-var application, store, payload;
+var application, store, payload, detail_xhr;
 
 module('Acceptance | role-new', {
     beforeEach() {
@@ -45,9 +45,9 @@ test('visiting role/new', (assert) => {
         assert.equal(store.find('role').get('length'), 3);
         assert.equal(store.find('role-type').get('length'), 2);
         assert.equal(store.find('location-level').get('length'), 2);
-        assert.equal(find('.t-location-level option:selected').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
-        assert.equal(find('.t-location-level option:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
-        assert.equal(find('.t-location-level option:eq(1)').text(), LOCATION_LEVEL_DEFAULTS.nameDepartment);
+        assert.equal(find('.t-location-level option:selected').text(), t(LOCATION_LEVEL_DEFAULTS.nameCompany));
+        assert.equal(find('.t-location-level option:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.nameCompanyTranslated);
+        assert.equal(find('.t-location-level option:eq(1)').text(), LOCATION_LEVEL_DEFAULTS.nameDepartmentTranslated);
         assert.equal(find('.t-role-type option:selected').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(0)').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(1)').text(), ROLE_DEFAULTS.roleTypeContractor);
@@ -128,5 +128,13 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             var role = store.find('role', {id: UUID.value});
             assert.equal(role.get('length'), 0);
         });
+    });
+});
+
+test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+    visit(ROLE_NEW_URL);
+    click('.t-cancel-btn');
+    andThen(() => {
+        assert.equal(store.find('role').get('length'), 2);
     });
 });

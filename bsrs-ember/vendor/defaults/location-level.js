@@ -9,6 +9,9 @@ var BSRS_LOCATION_LEVEL_DEFAULTS_OBJECT = (function() {
             nameCompany: 'admin.locationlevel.company',
             nameDistrict: 'admin.locationlevel.district',
             nameDepartment: 'admin.locationlevel.department',
+            nameCompanyTranslated: 'Company',
+            nameDistrictTranslated: 'District',
+            nameDepartmentTranslated: 'Department',
             nameStore: 'Store',
             nameRegion: 'Region',
             unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b052138'

@@ -263,6 +263,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
         });
     });
 });
+
 test('currency helper displays correct currency format', (assert) => {
     visit(DETAIL_URL);
     var symbol = '$';
@@ -298,7 +299,7 @@ test('when you deep link to the person detail view you can add a new phone numbe
     });
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    phone_numbers.push({id: UUID.value, type:PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
@@ -307,5 +308,26 @@ test('when you deep link to the person detail view you can add a new phone numbe
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isNotDirty'));
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when you deep link to the person detail view you can change the phone number type', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-input-multi-phone select:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+    click('.t-add-btn:eq(0)');
+    var phone_numbers = PHONE_NUMBER_FIXTURES.put();
+    phone_numbers[0].type = PHONE_NUMBER_TYPES_DEFAULTS.mobileId;
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        var phone_numbers = store.find('phonenumber', {person: PEOPLE_DEFAULTS.id});
+        assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+        assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
     });
 });
