@@ -446,8 +446,12 @@ class PersonFilterTests(TestCase):
 
     @staticmethod
     def _get_name(record):
-        # Generate name/username function for "ordering" tests
-        return "wat{}".format(chr(65+record))
+        # Generate regarless of letter case name/username function 
+        # for "ordering" tests
+        if record % 2 == 0:
+            return "wat{}".format(chr(65+record))
+        else:
+            return "Wat{}".format(chr(65+record))
 
     def test_default_ordering(self):
         # Should start with ID Ascending order
