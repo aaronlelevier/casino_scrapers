@@ -69,6 +69,10 @@ Build Node
     # global install bower
     sudo npm install -g bower
 
+    # PhaontomJs
+    sudo npm install -g phantomjs
+    vagrant reload
+
 
 Nginx
 -----
@@ -187,6 +191,10 @@ Postgres
     create database ci owner bsdev;
     \q
 
+
+Node
+
+`DO tutorial <https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-a-centos-7-server>`_
 
 
 
