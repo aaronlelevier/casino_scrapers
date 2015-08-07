@@ -1,13 +1,11 @@
 import json
 import uuid
 
-from django.test import TestCase, LiveServerTestCase, TransactionTestCase
+from django.test import TestCase, TransactionTestCase
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from model_mommy import mommy
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
 
 from person.models import Person, PersonStatus
 from contact.models import PhoneNumberType
@@ -29,19 +27,6 @@ class IndexTests(TestCase):
     def test_logged_out(self):
         response = self.client.get(reverse('index'))
         self.assertRedirects(response, reverse('login'))
-
-
-class SeleniumTests(LiveServerTestCase):
-
-    def setUp(self):
-        self.browser = webdriver.Firefox()
-
-    def tearDown(self):
-        self.browser.quit()
-
-    def test_login(self):
-        self.browser.get('http://localhost:8001/login/')
-        #self.assertIn('Login', self.browser.title) WIP!toranb
 
 
 class ConfigurationTests(TestCase):

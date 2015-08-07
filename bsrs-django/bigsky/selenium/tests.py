@@ -87,6 +87,8 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         name_input.send_keys(new_name) 
         role_type_input.select_by_index(0)
         location_level_input.select_by_index(0)
+        import time
+        time.sleep(300)
         self.driver.find_element_by_class_name("t-save-btn").click()
         all_roles = self.wait_for_xhr_request("t-role-data", plural=True)
         new_role = all_roles[len(all_roles) - 1]

@@ -159,7 +159,8 @@ Set up Centos w/ Python
     sudo make
     sudo make install
 
-# Virtualenv
+Virtualenv
+
 `this SO answer <http://stackoverflow.com/a/15013895/1913888>`_
 
 .. code-block::

@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
 
 from util.models import BaseModel, BaseManager
@@ -30,8 +31,13 @@ class AuthAmountManager(BaseManager):
     
     def default(self):
         default_currency = Currency.objects.default()
-        obj, created = self.get_or_create(amount=0, currency=default_currency)
-        return obj
+        defaults = {'amount':0, 'currency':default_currency}
+        try:
+            return self.get(**defaults)
+        except MultipleObjectsReturned:
+            return self.filter(**defaults).first()
+        except ObjectDoesNotExist:
+            return self.create(**defaults)            
 
 
 @python_2_unicode_compatible
