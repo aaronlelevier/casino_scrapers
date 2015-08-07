@@ -18,11 +18,7 @@ module.exports = function(app) {
   });
 
   adminLocationLevelsRouter.put('/:id', function(req, res) {
-    res.send({
-      'admin/locations': {
-        id: req.params.id
-      }
-    });
+    res.send(LOCATION_FIXTURES.put(req.params.id));
   });
 
   adminLocationLevelsRouter.delete('/:id', function(req, res) {

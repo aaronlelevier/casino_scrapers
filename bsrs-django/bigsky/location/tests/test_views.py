@@ -140,7 +140,7 @@ class LocationGetTests(APITestCase):
         response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
         data = json.loads(response.content)
         self.assertIsInstance(
-            LocationStatus.objects.get(id=data['status']['id']),
+            LocationStatus.objects.get(id=data['status']),
             LocationStatus
         )
 

@@ -6,6 +6,7 @@ var LocationModel = Model.extend({
     store: inject('main'),
     name: attr(''),
     number: attr(''),
+    status: attr(),
     location_levels: Ember.computed(function() {
         var store = this.get('store');
         return store.findOne('location-level', {location_id: this.get('id')});

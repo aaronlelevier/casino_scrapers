@@ -19,7 +19,7 @@
 			<h2 class="col-sm-12">{{t "admin.locationlevel.label.general"}}</h2>
 			<div class="col-sm-12">
 				{{#form-group title="admin.locationlevel.label.name" for="name"}}
-			    	{{input type="text" placeholder=(t "admin.locationlevel.label.name") value=model.name class="form-control t-location-level-name" id="name" required="required"}}
+			    	{{input type="text" placeholder=(t "admin.locationlevel.label.name") value=model.name class="form-control t-location-level-name" id="location_level_name" required="required"}}
             {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.locationlevel.label.name"}}{{/validation-error-field}}
 				{{/form-group}}
       </div>
