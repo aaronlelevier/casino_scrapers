@@ -26,7 +26,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('sco Acceptance | detail test', {
+module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -55,7 +55,6 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
 test('when you deep link to the person detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
-        //TODO: verify ALL the other dynamic bits
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person').objectAt(0);
         assert.ok(person.get('isNotDirty'));
@@ -113,7 +112,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
         var person = store.find('person').objectAt(0);
         assert.equal(currentURL(),PEOPLE_URL);
-        assert.equal(store.find('person').get('length'), 5);
+        assert.equal(store.find('person').get('length'), 10);
         assert.ok(person.get('isNotDirty'));
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
