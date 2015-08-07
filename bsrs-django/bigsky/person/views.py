@@ -1,6 +1,7 @@
 import copy
 
 from django.db import models
+from django.db.models.functions import Lower
 from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission, User
@@ -53,6 +54,8 @@ class PersonViewSet(BaseModelViewSet):
     """
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('first_name',)
 
     def get_serializer_class(self):
         """
@@ -70,8 +73,7 @@ class PersonViewSet(BaseModelViewSet):
     def get_queryset(self):
         queryset = self.queryset
         ordering = self.request.query_params.get('ordering', None)
-        if ordering is not None:
-            from django.db.models.functions import Lower
+        if ordering:
             if ordering.startswith('-'):
                 queryset = queryset.order_by(Lower(ordering[1:])).reverse()
             else:

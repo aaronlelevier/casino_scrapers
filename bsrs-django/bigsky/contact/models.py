@@ -33,9 +33,6 @@ class PhoneNumber(BaseModel):
     # fields
     number = models.CharField(max_length=32)
     
-    class Meta:
-        ordering = ('type', 'number',)
-
     def __str__(self):
         return self.number
 
@@ -64,9 +61,6 @@ class Address(BaseModel):
     postal_code = models.CharField(max_length=32, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
 
-    class Meta:
-        ordering = ('type',)
-        
     def __str__(self):
         if self.address:
             return self.address
@@ -87,8 +81,5 @@ class Email(BaseModel):
     # fields
     email = models.EmailField(max_length=255)
     
-    class Meta:
-        ordering = ('type', 'email',)
-
     def __str__(self):
         return self.email

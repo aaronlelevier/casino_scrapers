@@ -128,9 +128,6 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     name = models.CharField(max_length=100)
     number = models.CharField(max_length=20)
 
-    class Meta:
-        ordering = ('number',)
-    
     def __str__(self):
         return self.name
 

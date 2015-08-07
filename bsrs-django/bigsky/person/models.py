@@ -96,9 +96,6 @@ class Role(BaseModel):
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
 
-    class Meta:
-        ordering = ('name',)
-
     def save(self, *args, **kwargs):
 
         if not self.group:

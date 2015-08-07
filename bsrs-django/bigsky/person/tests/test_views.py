@@ -425,34 +425,48 @@ class PersonDeleteTests(APITestCase):
         self.assertEqual(Person.objects.count(), people-1)
 
 
-class PersonsearchTests(TestCase):
+class PersonFilterTests(TestCase):
 
     def setUp(self):
         # Role
         self.role = create_role()
-        self.person = create_person()
         # Person Records w/ specific Username
         for i in range(15):
-            name = "wat"+create._generate_chars()
+            name = self._get_name(i)
             Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
                 first_name=name, role=self.role)
             
         self.people = Person.objects.count()
         # Login
+        self.person = Person.objects.first()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
 
-    def test_ordering_first_name(self):
-        response = self.client.get('/api/admin/people/?ordering=first_name')
+    @staticmethod
+    def _get_name(record):
+        # Generate name/username function for "ordering" tests
+        return "wat{}".format(chr(65+record))
+
+    def test_default_ordering(self):
+        # Should start with ID Ascending order
+        response = self.client.get('/api/admin/people/')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(
-            data['results'][0]['first_name'],
-            Person.objects.order_by(Lower('first_name')).first().first_name
+            data['results'][0]['id'],
+            str(Person.objects.order_by('id').first().id)
             )
-        # Reverse Order: ``-first_name``
+
+    def test_ordering_first_name_data(self):
+        response = self.client.get('/api/admin/people/?ordering=first_name')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        record = 0
+        self.assertEqual(data['results'][record]['first_name'], self._get_name(record))
+
+    def test_ordering_first_name_data_reverse(self):
         response = self.client.get('/api/admin/people/?ordering=-first_name')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
@@ -460,31 +474,32 @@ class PersonsearchTests(TestCase):
             Person.objects.order_by(Lower('first_name')).reverse().first().first_name
             )
 
-    def test_ordering_first_name_page(self):
-        response = self.client.get('/api/admin/people/?ordering=first_name&page=2')
+    def test_second_page(self):
+        response = self.client.get('/api/admin/people/?page=2')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
+        self.assertEqual(len(data['results']), 5)
+
+    def test_ordering_second_page_ordering(self):
         # 11th Person, should be the 1st Person on Page=2
-        self.assertEqual(
-            Person.objects.get(id=data['results'][0]['id']),
-            Person.objects.order_by(Lower('first_name'))[10]
-        )
+        response = self.client.get('/api/admin/people/?page=2&ordering=first_name')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
+
+    def test_ordering_first_page_ordering_reverse(self):
+        # The last name on the last page in descending order should
+        # be the first record in normal ascending order
+        response = self.client.get('/api/admin/people/?ordering=-first_name&page=2')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data['results'][-1]['first_name'], self._get_name(0))
 
     def test_ordering_first_name_page_search(self):
-        # setup
-        auth_amount = AuthAmount.objects.first()
-        role = mommy.make(Role, default_auth_amount=auth_amount, name='toran')
-        people = Person.objects.count()
-        # Test
-        response = self.client.get('/api/admin/people/?page=2&ordering=first_name&search=toran')
+        response = self.client.get('/api/admin/people/?page=2&ordering=first_name&search=wat')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(
-            len(data['results']),
-            people - settings.REST_FRAMEWORK['PAGINATE_BY']
-            )
-
-
+        self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
 
 
 # Password Tests to use later
