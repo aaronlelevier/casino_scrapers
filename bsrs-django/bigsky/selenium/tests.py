@@ -31,53 +31,47 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         current_user = self.driver.find_element_by_class_name("current-user")
         assert current_user.is_displayed()
 
-    # def test_navigate_to_location_list_and_create_new_location_record(self):
-    #     self.login()
-    #     self.driver.find_element_by_class_name("t-nav-admin").click()
-    #     nav_admin_location = self.wait_for_xhr_request("t-nav-admin-location")
-    #     nav_admin_location.click()
-    #     new_location = self.wait_for_xhr_request("t-location-new")
-    #     new_location.click()
-    #     new_location_name = "ABC STORE" 
-    #     new_location_number = "1234" 
-    #     new_location_level = str(uuid.uuid4())[0:29]
-    #     location_name_input = self.driver.find_element_by_id("location_name")
-    #     location_number_input = self.driver.find_element_by_id("location_number")
-    #     location_level_input = self.driver.find_element_by_id("location_location_level")
-    #     location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
-    #     location_name_input.send_keys(new_location_name) 
-    #     location_number_input.send_keys(new_location_number) 
-    #     location_level_input.select_by_index(0)
-    #     self.driver.find_element_by_class_name("t-save-btn").click()
-    #     all_locations = self.wait_for_xhr_request("t-location-data", plural=True)
-    #     new_location = all_locations[len(all_locations) - 1]
-    #     new_location.click()
-    #     location_name_input = self.wait_for_xhr_request("t-location-name")
-    #     location_number_input = self.wait_for_xhr_request("t-location-number")
-    #     location_level_input = self.wait_for_xhr_request("t-location-level")
-    #     assert location_name_input.get_attribute("value") == new_location_name
-    #     assert location_number_input.get_attribute("value") == new_location_number
-    #     updated_location_name = "DEF STORE"
-    #     updated_location_number = "5678" 
-    #     self.driver.find_element_by_id("location_name").clear()
-    #     self.driver.find_element_by_id("location_number").clear()
-    #     self.driver.find_element_by_id("location_location_level").clear()
-    #     location_name_input = self.driver.find_element_by_id("location_name")
-    #     location_name_input.send_keys(updated_location_name) 
-    #     location_number_input = self.driver.find_element_by_id("location_number")
-    #     location_number_input.send_keys(updated_location_number) 
-    #     location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
-    #     location_level_input.select_by_index(1)
-    #     import time; time.sleep(25)
-    #     self.driver.find_element_by_class_name("t-save-btn").click()
-    #     all_locations = self.wait_for_xhr_request("t-location-data", plural=True)
-    #     new_location = all_locations[len(all_locations) - 1]
-    #     new_location.click()
-    #     updated_name_input = self.wait_for_xhr_request("t-location-name")
-    #     updated_number_input = self.wait_for_xhr_request("t-location-number")
-    #     updated_location_level_input = self.wait_for_xhr_request("t-location-level")
-    #     assert updated_name_input.get_attribute("value") == updated_location_name
-    #     assert updated_number_input.get_attribute("value") == updated_location_number
+    def test_navigate_to_location_list_and_create_new_location_record(self):
+        self.login()
+        self.driver.find_element_by_class_name("t-nav-admin").click()
+        nav_admin_location = self.wait_for_xhr_request("t-nav-admin-location")
+        nav_admin_location.click()
+        new_location = self.wait_for_xhr_request("t-location-new")
+        new_location.click()
+        new_location_name = "ABC STORE" 
+        new_location_number = "1234" 
+        new_location_level = str(uuid.uuid4())[0:29]
+        location_name_input = self.driver.find_element_by_id("location_name")
+        location_number_input = self.driver.find_element_by_id("location_number")
+        location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
+        location_name_input.send_keys(new_location_name) 
+        location_number_input.send_keys(new_location_number) 
+        location_level_input.select_by_index(0)
+        self.driver.find_element_by_class_name("t-save-btn").click()
+        all_locations = self.wait_for_xhr_request("t-location-data", plural=True)
+        new_location = all_locations[len(all_locations) - 1]
+        new_location.click()
+        location_name_input = self.wait_for_xhr_request("t-location-name")
+        location_number_input = self.wait_for_xhr_request("t-location-number")
+        location_level_input = self.wait_for_xhr_request("t-location-level")
+        assert location_name_input.get_attribute("value") == new_location_name
+        assert location_number_input.get_attribute("value") == new_location_number
+        # updated_location_name = "DEF STORE"
+        # updated_location_number = "5678" 
+        # self.driver.find_element_by_id("location_name").clear()
+        # self.driver.find_element_by_id("location_number").clear()
+        # location_name_input = self.driver.find_element_by_id("location_name")
+        # location_name_input.send_keys(updated_location_name) 
+        # location_number_input = self.driver.find_element_by_id("location_number")
+        # location_number_input.send_keys(updated_location_number) 
+        # self.driver.find_element_by_class_name("t-save-btn").click()
+        # all_locations = self.wait_for_xhr_request("t-location-data", plural=True)
+        # new_location = all_locations[len(all_locations) - 1]
+        # new_location.click()
+        # updated_name_input = self.wait_for_xhr_request("t-location-name")
+        # updated_number_input = self.wait_for_xhr_request("t-location-number")
+        # assert updated_name_input.get_attribute("value") == updated_location_name
+        # assert updated_number_input.get_attribute("value") == updated_location_number
 
     def test_navigate_to_role_list_and_create_new_role_record(self):
         self.login()
@@ -118,7 +112,7 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         new_location = self.wait_for_xhr_request("t-location-level-new")
         new_location.click()
         new_name = str(uuid.uuid4())[0:29]
-        name_input = self.driver.find_element_by_id("name")
+        name_input = self.driver.find_element_by_id("location_level_name")
         name_input.send_keys(new_name) 
         self.driver.find_element_by_class_name("t-save-btn").click()
         all_locations = self.wait_for_xhr_request("t-location-level-data", plural=True)
@@ -127,8 +121,8 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         name_input = self.wait_for_xhr_request("t-location-level-name")
         assert name_input.get_attribute("value") == new_name
         updated_name = str(uuid.uuid4())[0:29]
-        self.driver.find_element_by_id("name").clear()
-        name_input = self.driver.find_element_by_id("name")
+        self.driver.find_element_by_id("location_level_name").clear()
+        name_input = self.driver.find_element_by_id("location_level_name")
         name_input.send_keys(updated_name) 
         self.driver.find_element_by_class_name("t-save-btn").click()
         all_locations = self.wait_for_xhr_request("t-location-level-data", plural=True)

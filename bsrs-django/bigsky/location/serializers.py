@@ -84,7 +84,6 @@ class LocationListSerializer(serializers.ModelSerializer):
 class LocationDetailSerializer(serializers.ModelSerializer):
     
     location_level = LocationLevelDetailSerializer()
-    status = LocationStatusSerializer()
     parents = LocationSerializer(many=True)
     children = LocationSerializer(many=True)
 
