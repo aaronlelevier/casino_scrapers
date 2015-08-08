@@ -26,15 +26,6 @@ export default Model.extend({
     rollbackRelated() {
     },
     isNew: Ember.computed(function() {
-        var attributes = loopAttrs(this);
-        var all_undefined = true;
-        attributes.forEach((attribute) => {
-            if (attribute === 'role_type' || attribute === 'location_level') {
-                return;
-            } else if (this.get(attribute) !== undefined) {
-                all_undefined = false;
-            } 
-        });
-        return all_undefined;
+        return loopAttrs(this, 'role_type', 'location_level');
     })
 });

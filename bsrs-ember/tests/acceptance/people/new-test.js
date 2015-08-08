@@ -18,7 +18,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store, payload, detail_xhr;
 
-module('Acceptance | people-new', {
+module('sco Acceptance | people-new', {
     beforeEach() {
         payload = {
             id: UUID.value,

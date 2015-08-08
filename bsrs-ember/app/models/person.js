@@ -119,13 +119,14 @@ export default Model.extend({
         this.get('store').remove('person', id);
     },
     isNew: Ember.computed(function() {
-        let attributes = loopAttrs(this);
-        let all_undefined = true;
-        attributes.forEach((attribute) => {
-           if (this.get(attribute) !== undefined) {
-            all_undefined = false;
-           } 
-        });
-        return all_undefined;
+        return loopAttrs(this);
+        // let attributes = loopAttrs(this);
+        // let all_undefined = true;
+        // attributes.forEach((attribute) => {
+        //    if (this.get(attribute) !== undefined) {
+        //     all_undefined = false;
+        //    } 
+        // });
+        // return all_undefined;
     })
 });
