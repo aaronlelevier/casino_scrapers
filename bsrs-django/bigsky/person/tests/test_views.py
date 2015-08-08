@@ -16,7 +16,8 @@ from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
 from accounting.models import Currency, AuthAmount
-from contact.models import Address, PhoneNumber, Email, PhoneNumberType
+from contact.models import (Address, AddressType, Email, EmailType,
+    PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
@@ -280,9 +281,13 @@ class PersonPutTests(APITestCase):
         # AuthAmount
         self.auth_amount = AuthAmount.objects.default()
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
-        self.phone_number = mommy.make(PhoneNumber)
-        self.email = mommy.make(Email)
-        self.address = mommy.make(Email)
+        self.phone_number_type = mommy.make(PhoneNumberType)
+        self.email_type = mommy.make(EmailType)
+
+        # Person2 w/ some contact info doesn't affect Person1's Contact
+        # counts / updates / deletes
+        self.person2 = create_person()
+        create_person_and_contacts(self.person2)
 
         self.data = {
             "id": str(self.person.id),
@@ -339,9 +344,9 @@ class PersonPutTests(APITestCase):
     def test_update_email_add_to_person(self):
         self.assertFalse(self.data['emails'])
         self.data['emails'] = [{
-            'id': str(self.email.id),
-            'type': str(self.email.type.id),
-            'email': self.email.email
+            'id': str(uuid.uuid4()),
+            'type': str(self.email_type.id),
+            'email': 'mail@mail.com'
         }]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
         data = json.loads(response.content)
@@ -355,7 +360,7 @@ class PersonPutTests(APITestCase):
         self.assertFalse(self.data['phone_numbers'])
         self.data['phone_numbers'] = [{
             'id': str(uuid.uuid4()),
-            'type': str(self.phone_number.type.id),
+            'type': str(self.phone_number_type.id),
             'number': create._generate_ph()
         }]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
@@ -380,7 +385,7 @@ class PersonPutTests(APITestCase):
         # Test delete only one
         self.data['phone_numbers'] = [{
             'id': str(uuid.uuid4()),
-            'type': str(self.phone_number.type.id),
+            'type': str(self.phone_number_type.id),
             'number': create._generate_ph()
         }]
         # Post standard data w/o contacts

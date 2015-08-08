@@ -12,6 +12,24 @@ from util.models import AbstractNameOrder, BaseModel
 from util import exceptions as excp
 
 
+class ContactBaseModel(BaseModel):
+    pass
+
+    class Meta:
+        abstract = True
+
+    def save(self, *args, **kwargs):
+        self._valid_person_or_location()
+        return super(ContactBaseModel, self).save(*args, **kwargs)
+
+    def _valid_person_or_location(self):
+        if not (self.person or self.location):
+            raise excp.PersonOrLocationRequiredExcp("Must have either a Person\
+ or Location FK.")
+        if self.person and self.location:
+            raise excp.PersonAndLocationKeysExcp("Can't have both a Person and Location.")
+
+
 class PhoneNumberType(AbstractNameOrder):
     '''
     Ex- mobile, cell, home, fax.
@@ -20,7 +38,7 @@ class PhoneNumberType(AbstractNameOrder):
 
 
 @python_2_unicode_compatible
-class PhoneNumber(BaseModel):
+class PhoneNumber(ContactBaseModel):
     '''
     TODO: Will use this "phone number lib" for validation:
 
@@ -42,7 +60,7 @@ class AddressType(AbstractNameOrder):
 
 
 @python_2_unicode_compatible
-class Address(BaseModel):
+class Address(ContactBaseModel):
     '''
     Not every field is required to be a valid address, but at 
     least one "non-foreign-key" field must be populated.
@@ -73,7 +91,7 @@ class EmailType(AbstractNameOrder):
 
 
 @python_2_unicode_compatible
-class Email(BaseModel):
+class Email(ContactBaseModel):
     # keys
     type = models.ForeignKey(EmailType)
     location = models.ForeignKey(Location, related_name='emails', null=True, blank=True)
