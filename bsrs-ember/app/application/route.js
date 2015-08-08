@@ -23,7 +23,7 @@ export default Ember.Route.extend({
         state_list.forEach((model) => {
             store.push('state', model);
         });
-        var status_config = $('[data-preload-statuses]').html();
+        var status_config = $('[data-preload-person-statuses]').html();
         var status_list = JSON.parse(status_config);
         status_list.forEach((model) => {
             store.push('status', model);

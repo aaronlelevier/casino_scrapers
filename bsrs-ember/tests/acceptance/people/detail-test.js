@@ -86,9 +86,9 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), ADDRESS_DEFAULTS.countryTwo);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeName);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveName);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredName);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeId);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveId);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredId);
         assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount.amount);
     });
 
