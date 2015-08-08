@@ -4,13 +4,11 @@
     <span class="input-group-btn">
       <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' address}}>{{fa-icon "minus"}}</button>
     </span>
-    <span class="input-group-btn">
-      <select class="t-address-type form-control address-type" onchange={{action (action "changed" address) value="target.value"}}>
-        {{#each types as |addressType|}}
-        <option value={{addressType.id}} selected={{is-equal address.type addressType.id}}>{{t addressType.name}}</option>
-        {{/each}}
-      </select>
-    </span>
+    <select class="t-address-type form-control address-type" onchange={{action (action "changed" address) value="target.value"}}>
+    {{#each types as |addressType|}}
+    <option value={{addressType.id}} selected={{is-equal address.type addressType.id}}>{{t addressType.name}}</option>
+    {{/each}}
+    </select>
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.address"}}</span>
