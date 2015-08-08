@@ -4,5 +4,8 @@ Create custom Exceptions that accept parameters here:
 https://docs.python.org/2/tutorial/errors.html
 '''
 
-class PersonOrLocationRequired(Exception):
+class PersonOrLocationRequiredExcp(Exception):
+    pass
+
+class PersonAndLocationKeysExcp(Exception):
     pass
