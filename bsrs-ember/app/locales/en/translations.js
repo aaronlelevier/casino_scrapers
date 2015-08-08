@@ -124,7 +124,7 @@ export default {
 				password: 'Password',
 				change_password: 'Change',
 				title: 'Title',
-				emp_number: 'Employee No.',
+				employee_id: 'Employee No.',
 				role: 'Role',
 				auth_amount: 'Auth. Amount',
 				first_name: 'First Name',

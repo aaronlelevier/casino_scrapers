@@ -10,7 +10,7 @@ export default Model.extend({
     middle_initial: attr(''),
     last_name: attr(''),
     title: attr(''),
-    emp_number: attr(''),
+    employee_id: attr(''),
     auth_amount: attr(''),
     phone_numbers: Ember.computed('id', function() {
         var store = this.get('store');
@@ -105,7 +105,7 @@ export default Model.extend({
             middle_initial: this.get('middle_initial'),
             last_name: this.get('last_name'),
             title: this.get('title'),
-            emp_number: this.get('emp_number'),
+            employee_id: this.get('employee_id'),
             location:'',
             auth_amount: this.get('auth_amount'),
             status: status_id,

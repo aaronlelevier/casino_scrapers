@@ -63,7 +63,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-person-middle-initial').val(), PEOPLE_DEFAULTS.middle_initial);
         assert.equal(find('.t-person-last-name').val(), PEOPLE_DEFAULTS.last_name);
         assert.equal(find('.t-person-title').val(), PEOPLE_DEFAULTS.title);
-        assert.equal(find('.t-person-emp_number').val(), PEOPLE_DEFAULTS.emp_number);
+        assert.equal(find('.t-person-employee_id').val(), PEOPLE_DEFAULTS.employee_id);
         assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
         assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
         assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), t(PHONE_NUMBER_TYPES_DEFAULTS.officeName));
@@ -94,14 +94,14 @@ test('when you deep link to the person detail view you get bound attrs', (assert
 
     var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title, emp_number: PEOPLE_DEFAULTS_PUT.emp_number, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title, employee_id: PEOPLE_DEFAULTS_PUT.employee_id, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.first_name);
     fillIn('.t-person-middle-initial', PEOPLE_DEFAULTS_PUT.middle_initial );
     fillIn('.t-person-last-name', PEOPLE_DEFAULTS_PUT.last_name);
     fillIn('.t-person-title', PEOPLE_DEFAULTS_PUT.title);
-    fillIn('.t-person-emp_number', PEOPLE_DEFAULTS_PUT.emp_number);
+    fillIn('.t-person-employee_id', PEOPLE_DEFAULTS_PUT.employee_id);
     fillIn('.t-person-auth_amount', PEOPLE_DEFAULTS_PUT.auth_amount.amount);
     andThen(() => {
         var person = store.find('person').objectAt(0);

@@ -14,7 +14,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             middle_initial : this.person_defaults.middle_initial,
             last_name : this.person_defaults.last_name,
             title : this.person_defaults.title,
-            emp_number : this.person_defaults.emp_number,
+            employee_id : this.person_defaults.employee_id,
             location : '',
             auth_amount : this.person_defaults.auth_amount,
             status : {
