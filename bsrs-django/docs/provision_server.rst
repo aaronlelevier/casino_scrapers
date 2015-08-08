@@ -178,9 +178,10 @@ Postgres
 
 .. code-block::
 
-    yum localinstall http://yum.postgresql.org/9.4/redhat/rhel-6-x86_64/pgdg-centos94-9.4-1.noarch.rpm
+    sudo yum install postgresql-server
+    sudo yum install postgresql-devel
 
-    postgresql-setup initdb
+    sudo service postgresql initdb
     sudo service postgresql start
 
     sudo su postgres
@@ -191,12 +192,23 @@ Postgres
     create database ci owner bsdev;
     \q
 
+    # change to peer auth to md5 
+    sudo vi /var/lib/pgsql/data/pg_hba.conf
+
 
 Node
 
 `DO tutorial <https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-a-centos-7-server>`_
 
+.. code-block::
 
+    # also needed
+    sudo npm install - g bower
+    sudo npm install - g phantomjs
+
+    # w/ Py3 SSL didn't work so did this:
+    sudo yum install python-{requests,urllib3,six}
+    sudo yum in stall openssl-devel
 
 
 
