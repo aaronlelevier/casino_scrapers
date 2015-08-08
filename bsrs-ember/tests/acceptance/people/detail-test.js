@@ -66,21 +66,21 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-person-emp_number').val(), PEOPLE_DEFAULTS.emp_number);
         assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
         assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
-        assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), 'Office');
-        assert.equal(find('.t-input-multi-phone').find('select:eq(1) option:selected').text(), 'Mobile');
+        assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), t(PHONE_NUMBER_TYPES_DEFAULTS.officeName));
+        assert.equal(find('.t-input-multi-phone').find('select:eq(1) option:selected').text(), t(PHONE_NUMBER_TYPES_DEFAULTS.mobileName));
         assert.equal(find('.t-input-multi-phone').find('input').length, 2);
         assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), PHONE_NUMBER_DEFAULTS.numberOne);
         assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PHONE_NUMBER_DEFAULTS.numberTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.officeId);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), 'Office');
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), t(ADDRESS_TYPES_DEFAULTS.officeName));
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address').val(), ADDRESS_DEFAULTS.streetOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), ADDRESS_DEFAULTS.cityOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), ADDRESS_DEFAULTS.countryOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.shippingId);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), 'Shipping');
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), t(ADDRESS_TYPES_DEFAULTS.shippingName));
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address').val(), ADDRESS_DEFAULTS.streetTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), ADDRESS_DEFAULTS.cityTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
@@ -168,7 +168,7 @@ test('when you change a related phone numbers type it will be persisted correctl
 test('when you change a related address type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
-    var addresses = ADDRESS_FIXTURES.put({id: ADDRESS_DEFAULTS.id, type: ADDRESS_TYPES_DEFAULTS.shippingId});
+    var addresses = ADDRESS_FIXTURES.put({id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPES_DEFAULTS.shippingId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
     fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
@@ -311,7 +311,7 @@ test('when you deep link to the person detail view you can add a new phone numbe
     });
 });
 
-test('when you deep link to the person detail view you can change the phone number type', (assert) => {
+test('when you deep link to the person detail view you can change the phone number type and add a new phone number', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-input-multi-phone select:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     click('.t-add-btn:eq(0)');
@@ -326,8 +326,30 @@ test('when you deep link to the person detail view you can change the phone numb
         assert.equal(currentURL(),PEOPLE_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isNotDirty'));
-        var phone_numbers = store.find('phonenumber', {person: PEOPLE_DEFAULTS.id});
         assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+        assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
         assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
+
+    });
+});
+
+test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    click('.t-add-address-btn:eq(0)');
+    var addresses = ADDRESS_FIXTURES.put();
+    addresses[0].type = ADDRESS_TYPES_DEFAULTS.shippingId;
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    // addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, person: PEOPLE_DEFAULTS.id});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.equal(person.get('addresses').objectAt(0).get('type'), ADDRESS_TYPES_DEFAULTS.shippingId);
+        // assert.equal(person.get('addresses').objectAt(2).get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
+        assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
     });
 });

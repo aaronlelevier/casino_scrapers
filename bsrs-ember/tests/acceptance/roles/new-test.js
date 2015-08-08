@@ -17,7 +17,7 @@ const SAVE_BTN = '.t-save-btn' ;
 
 var application, store, payload, detail_xhr;
 
-module('sco Acceptance | role-new', {
+module('Acceptance | role-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
@@ -46,8 +46,8 @@ test('visiting role/new', (assert) => {
         assert.equal(store.find('role-type').get('length'), 2);
         assert.equal(store.find('location-level').get('length'), 2);
         assert.equal(find('.t-location-level option:selected').text(), t(LOCATION_LEVEL_DEFAULTS.nameCompany));
-        assert.equal(find('.t-location-level option:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.nameCompanyTranslated);
-        assert.equal(find('.t-location-level option:eq(1)').text(), LOCATION_LEVEL_DEFAULTS.nameDepartmentTranslated);
+        assert.equal(find('.t-location-level option:eq(0)').text(), t(LOCATION_LEVEL_DEFAULTS.nameCompany));
+        assert.equal(find('.t-location-level option:eq(1)').text(), t(LOCATION_LEVEL_DEFAULTS.nameDepartment));
         assert.equal(find('.t-role-type option:selected').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(0)').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(1)').text(), ROLE_DEFAULTS.roleTypeContractor);

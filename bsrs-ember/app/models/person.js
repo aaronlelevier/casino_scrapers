@@ -18,7 +18,7 @@ export default Model.extend({
     }),
     addresses: Ember.computed('id', function() {
         var store = this.get('store');
-        return store.find('address', {person_id: this.get('id')});
+        return store.find('address', {person: this.get('id')});
     }),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', function() {
         return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty'); 
