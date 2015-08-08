@@ -143,3 +143,11 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
+test('when click delete, location level is deleted and removed from store', (assert) => {
+    visit(DETAIL_URL);
+    xhr(DJANGO_DETAIL_URL, 'DELETE', null, {}, 204, {});
+    click('.t-delete-btn');
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_LEVEL_URL);
+    });
+});
