@@ -30,7 +30,9 @@ module('Acceptance | location-new', {
             id: UUID.value,
             name: LOCATION_DEFAULTS.storeName,
             number: LOCATION_DEFAULTS.storeNumber,
-            location_level: LOCATION_DEFAULTS.location_level
+            location_level: LOCATION_DEFAULTS.location_level,
+            children: [],
+            parents: []
         };
     },
     afterEach() {

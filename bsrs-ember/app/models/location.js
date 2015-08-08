@@ -25,6 +25,8 @@ var LocationModel = Model.extend({
             number: this.get('number'),
             status: this.get('status'),
             location_level: this.get('location_levels').get('id'),
+            children: [],
+            parents: []
         };
     },
     removeRecord(id) {
