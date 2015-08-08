@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 var LocationLevel = Model.extend({
     store: inject('main'),
@@ -30,6 +31,9 @@ var LocationLevel = Model.extend({
             return parent_id === pk && pk !== id;
         };
         return this.get('store').find('location-level', filter.bind(this), ['id', 'parent_id']);
+    }),
+    isNew: Ember.computed(function() {
+        return loopAttrs(this, 'location_level');
     })
 });
 

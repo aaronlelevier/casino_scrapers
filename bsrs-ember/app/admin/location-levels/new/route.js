@@ -20,7 +20,9 @@ var LocationLevelNew = Ember.Route.extend({
     actions: {
         willTransition(transition) {
             var model = this.currentModel.model;
-            if (model.get('isDirtyOrRelatedDirty')) {
+            if (model.get('isNew')) {
+                model.removeRecord(model.get('id'));
+            } else if (model.get('isDirtyOrRelatedDirty')) {
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;

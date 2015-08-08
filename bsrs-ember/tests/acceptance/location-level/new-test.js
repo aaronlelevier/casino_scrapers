@@ -124,3 +124,11 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         });
     });
 });
+
+test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+    visit(LOCATION_LEVEL_NEW_URL);
+    click('.t-cancel-btn');
+    andThen(() => {
+        assert.equal(store.find('location-level').get('length'), 2);
+    });
+});
