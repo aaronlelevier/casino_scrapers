@@ -346,7 +346,8 @@ class PersonPutTests(APITestCase):
         self.data['emails'] = [{
             'id': str(uuid.uuid4()),
             'type': str(self.email_type.id),
-            'email': 'mail@mail.com'
+            'email': 'mail@mail.com',
+            'person': str(self.person.id)
         }]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
         data = json.loads(response.content)
@@ -361,7 +362,8 @@ class PersonPutTests(APITestCase):
         self.data['phone_numbers'] = [{
             'id': str(uuid.uuid4()),
             'type': str(self.phone_number_type.id),
-            'number': create._generate_ph()
+            'number': create._generate_ph(),
+            'person': str(self.person.id)
         }]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
         data = json.loads(response.content)
@@ -386,7 +388,8 @@ class PersonPutTests(APITestCase):
         self.data['phone_numbers'] = [{
             'id': str(uuid.uuid4()),
             'type': str(self.phone_number_type.id),
-            'number': create._generate_ph()
+            'number': create._generate_ph(),
+            'person': str(self.person.id)
         }]
         # Post standard data w/o contacts
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
