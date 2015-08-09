@@ -21,7 +21,7 @@
 				{{#form-group title="admin.role.label.name" for="name"}}
 			    	{{input type="text" placeholder=(t "admin.role.label.name") value=model.name class="form-control t-role-name" id="name" required="required"}}
 				{{/form-group}}
-				{{#form-group title="admin.role.label.type" for="role_type"}}
+				{{#form-group title="admin.role.label.role_type" for="role_type"}}
 		          <select class="t-role-role-type form-control role-type" onchange={{action (action "changed" model) value="target.value"}} id="role_type_select">
 		            {{#each all_role_types as |role_type|}}
 		            <option value={{role_type.name}} selected={{is-equal model.role_type role_type.name}}>{{role_type.name}}</option>

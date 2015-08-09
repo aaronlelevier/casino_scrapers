@@ -103,36 +103,36 @@ export default {
 			'label': {
 				'name': 'Role Name',
                 'role_type': 'Role Type',
-				'location_org': 'Location Organization',
+				'location_level': 'Location Organization',
                 'category': 'Category',
 				'number_users': '# of Users',
 				'general': 'General Information'
 			},
-            system_administrator: 'Admin'
+            'system_administrator': 'Administrator'
 		},
-		address_type: {
-			office: 'Office',
-			shipping: 'Shipping'
+		'address_type': {
+			'office': 'Office',
+			'shipping': 'Shipping'
 		},
-		person: {
-			one: 'Person',
-			other: 'People',
-			label: {
-				name: 'Name',
-				username: 'Username',
-				password: 'Password',
-				change_password: 'Change',
-				title: 'Title',
-				employee_id: 'Employee No.',
-				role: 'Role',
-				auth_amount: 'Auth. Amount',
-				first_name: 'First Name',
-				middle_initial: 'Middle',
-				last_name: 'Last Name',
-                status: 'Status',
-				phone_number: {
-					one: 'Phone Number',
-					other: 'Phone Numbers'
+		'person': {
+			'one': 'Person',
+			'other': 'People',
+			'label': {
+				'name': 'Name',
+				'username': 'Username',
+				'password': 'Password',
+				'change_password': 'Change',
+				'title': 'Title',
+				'employee_id': 'Employee No.',
+				'role': 'Role',
+				'auth_amount': 'Auth. Amount',
+				'first_name': 'First Name',
+				'middle_initial': 'Middle',
+				'last_name': 'Last Name',
+                'status': 'Status',
+				'phone_number': {
+					'one': 'Phone Number',
+					'other': 'Phone Numbers'
 				},
 				'address': 'Address',
 				'email': 'Email',
@@ -169,20 +169,20 @@ export default {
 			'add': 'Add Address'
 		},
 
-		location: {
-			one: 'Location',
-			other: 'Locations',
-            label: {
-                name: 'Name',
-                number: 'Number',
-                location_level: 'Location Level',
-                status: 'Status',
-                general: 'General'
+		'location': {
+			'one': 'Location',
+			'other': 'Locations',
+            'label': {
+                'name': 'Name',
+                'number': 'Number',
+                'location_level': 'Organization',
+                'status': 'Status',
+                'general': 'General'
             },
-            status: {
-                active: 'Open',
-                inactive: 'Future',
-                expired: 'Closed'
+            'status': {
+                'open': 'Open',
+                'closed': 'Future',
+                'future': 'Closed'
             },
 		},
 		'locationOrg':{
@@ -228,8 +228,9 @@ export default {
 			'district': 'District',
 			'store': 'Store',
             'label': {
-                'name': 'name',
-                'general': 'General'
+                'name': 'Name',
+                'general': 'General',
+				'childOrg': 'Child Organization(s)'
             }
 		}
 	},
