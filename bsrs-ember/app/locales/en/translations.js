@@ -106,7 +106,7 @@ export default {
 				'location_level': 'Location Organization',
                 'category': 'Category',
 				'number_users': '# of Users',
-				'general': 'General Information'
+				'general': 'General'
 			},
             'system_administrator': 'Administrator'
 		},
@@ -136,7 +136,7 @@ export default {
 				},
 				'address': 'Address',
 				'email': 'Email',
-				'general': 'General Information',
+				'general': 'General',
 				'credentials': 'Credentials',
 				'contact': 'Contact'
 			},
