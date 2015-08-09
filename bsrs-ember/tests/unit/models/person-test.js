@@ -12,7 +12,7 @@ import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 
 var container, registry, store;
 
-module('sco unit: person test', {
+module('unit: person test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();

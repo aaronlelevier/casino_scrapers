@@ -74,7 +74,7 @@ test('when editing name to invalid, it checks for validation', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid name');
+        assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
     });
     fillIn('.t-location-level-name', LOCATION_DEFAULTS.nameCompany);
     var response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
