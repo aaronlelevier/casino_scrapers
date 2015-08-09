@@ -184,11 +184,6 @@ export default {
                 inactive: 'Future',
                 expired: 'Closed'
             },
-            'status': {
-                'open': 'Open',
-                'closed': 'Closed',
-                'future': 'Future'
-            }
 		},
 		'locationOrg':{
 			'one': 'Location Organization',
