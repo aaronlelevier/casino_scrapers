@@ -108,7 +108,6 @@ export default {
 				'number_users': '# of Users',
 				'general': 'General Information'
 			},
-<<<<<<< HEAD
             system_administrator: 'Admin'
 		},
 		address_type: {
@@ -134,33 +133,6 @@ export default {
 				phone_number: {
 					one: 'Phone Number',
 					other: 'Phone Numbers'
-=======
-            'system_administrator': 'Admin'
-		},
-		'address_type': {
-			'office': 'Office',
-			'shipping': 'Shipping'
-		},
-		'person': {
-			'one': 'Person',
-			'other': 'People',
-			'label': {
-				'name': 'Name',
-				'username': 'Username',
-				'password': 'Password',
-				'change_password': 'Change',
-				'title': 'Title',
-				'emp_number': 'Employee No.',
-				'role': 'Role',
-				'auth_amount': 'Auth. Amount',
-				'first_name': 'First Name',
-				'middle_initial': 'Middle',
-				'last_name': 'Last Name',
-                'status': 'Status',
-				'phone_number': {
-					'one': 'Phone Number',
-					'other': 'Phone Numbers'
->>>>>>> 0040a35451a323733104494d0dba6f788514770b
 				},
 				'address': 'Address',
 				'email': 'Email',
