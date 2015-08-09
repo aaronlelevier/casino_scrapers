@@ -180,9 +180,9 @@ export default {
                 general: 'General'
             },
             status: {
-                active: 'Active',
-                inactive: 'Inactive',
-                expired: 'Expired'
+                active: 'Open',
+                inactive: 'Future',
+                expired: 'Closed'
             },
 		},
 		locationOrg:{

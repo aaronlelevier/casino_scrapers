@@ -32,9 +32,9 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var response = [];
         for (var i=1; i <= 10; i++) {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
-            if(i < 10) {
+            if (i < 10) {
                 uuid = uuid + '0' + i;
-            }else{
+            } else{
                 uuid = uuid + i;
             }
             response.push(this.generate(uuid));

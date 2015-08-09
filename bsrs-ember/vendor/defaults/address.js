@@ -23,7 +23,7 @@ var BSRS_ADDRESS_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    var country_defaults = require('../vendor/defaults/country');
+    var country_defaults = require('./country');
     module.exports = new BSRS_ADDRESS_DEFAULTS_OBJECT(country_defaults).defaults();
 } else {
     define('bsrs-ember/vendor/defaults/address', ['exports', 'bsrs-ember/vendor/defaults/country'], function (exports, country_defaults) {
