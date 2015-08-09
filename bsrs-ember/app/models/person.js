@@ -120,13 +120,5 @@ export default Model.extend({
     },
     isNew: Ember.computed(function() {
         return loopAttrs(this);
-        // let attributes = loopAttrs(this);
-        // let all_undefined = true;
-        // attributes.forEach((attribute) => {
-        //    if (this.get(attribute) !== undefined) {
-        //     all_undefined = false;
-        //    } 
-        // });
-        // return all_undefined;
     })
 });

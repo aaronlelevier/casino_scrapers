@@ -281,6 +281,7 @@ test('when click delete, person is deleted and removed from store', (assert) => 
     });
 });
 
+
 test('when you deep link to the person detail view you can add a new phone number', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
@@ -333,6 +334,33 @@ test('when you deep link to the person detail view you can change the phone numb
     });
 });
 
+test('when you deep link to the person detail view you can add a new address', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-input-multi-address').find('input').length, 4);
+    });
+    click('.t-add-address-btn:eq(0)');
+    andThen(() => {
+        assert.equal(find('.t-input-multi-address').find('input').length, 6);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    var addresses = ADDRESS_FIXTURES.put();
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
 test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
@@ -340,7 +368,7 @@ test('when you deep link to the person detail view you can change the address ty
     var addresses = ADDRESS_FIXTURES.put();
     addresses[0].type = ADDRESS_TYPES_DEFAULTS.shippingId;
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    // addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, person: PEOPLE_DEFAULTS.id});
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
@@ -349,7 +377,7 @@ test('when you deep link to the person detail view you can change the address ty
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isNotDirty'));
         assert.equal(person.get('addresses').objectAt(0).get('type'), ADDRESS_TYPES_DEFAULTS.shippingId);
-        // assert.equal(person.get('addresses').objectAt(2).get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
+        assert.equal(person.get('addresses').objectAt(2).get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
         assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
     });
 });
