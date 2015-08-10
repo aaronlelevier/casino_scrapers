@@ -4,6 +4,7 @@ from django.test import TestCase
 
 from model_mommy import mommy
 
+from location.tests.factory import create_locations
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 
 
@@ -85,6 +86,20 @@ class LocationStatusManagerTests(TestCase):
         d = LocationStatus.objects.default()
         self.assertIsInstance(d, LocationStatus)
         self.assertEqual(d.name, settings.DEFAULT_LOCATION_STATUS)
+
+
+class LocationManagerTests(TestCase):
+
+    def setUp(self):
+        create_locations()
+        # Parent Location
+        self.location = Location.objects.get(name='east')
+        # Child LocationLevel
+        self.location_level = LocationLevel.objects.get(name='store')
+
+    def test_get_level_children(self):
+        children = Location.objects.get_level_children(self.location, self.location_level.id)
+        self.assertEqual(children.count(), 2)
 
 
 class LocationTests(TestCase):

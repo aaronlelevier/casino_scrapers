@@ -59,6 +59,12 @@ class LocationViewSet(BaseModelViewSet):
         else:
             raise MethodNotAllowed(method=self.action)
 
+    @detail_route(methods=['get'])
+    def get_all_children(self, request, level_id):
+        location = self.get_object()
+        child_locations = Location.objects.get_level_children(location, level_id)
+        return Response([child for child in child_locations])
+
 
 # class CoalesceFilterBackend(filters.backends.DjangoFilterBackend):
 
