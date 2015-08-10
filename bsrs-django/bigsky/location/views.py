@@ -1,5 +1,8 @@
-from rest_framework import viewsets
-from rest_framework import status
+import json
+
+from django.shortcuts import get_object_or_404
+
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import detail_route
@@ -59,11 +62,12 @@ class LocationViewSet(BaseModelViewSet):
         else:
             raise MethodNotAllowed(method=self.action)
 
-    @detail_route(methods=['get'])
-    def get_all_children(self, request, level_id):
-        location = self.get_object()
-        child_locations = Location.objects.get_level_children(location, level_id)
-        return Response([child for child in child_locations])
+    @detail_route(methods=['GET'], permission_classes=[IsAuthenticated], url_path=r'(?P<level_id>[\w\-]+)')
+    def get_level_children(self, request, pk=None, level_id=None):
+        instance = get_object_or_404(Location, pk=pk)
+        child_locations = Location.objects.get_level_children(instance, level_id)
+        serializer = ls.LocationListSerializer(child_locations, many=True)
+        return Response(serializer.data)
 
 
 # class CoalesceFilterBackend(filters.backends.DjangoFilterBackend):

@@ -43,8 +43,8 @@ class LocationLevelManagerTests(TestCase):
     Test default M2M Manager methods which don't traverse relationships.
     '''
     def setUp(self):
-        self.district = mommy.make(LocationLevel, name='district')
         self.region = mommy.make(LocationLevel, name='region')
+        self.district = mommy.make(LocationLevel, name='district')
         self.store1 = mommy.make(LocationLevel, name='store1')
         self.store2 = mommy.make(LocationLevel, name='store2')
 

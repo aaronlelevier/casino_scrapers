@@ -25,7 +25,7 @@ urlpatterns = patterns('',
     url(r'', include('contact.urls')),
     url(r'', include('location.urls')),
     url(r'', include('person.urls')),
-    url(r'^.*$', IndexView.as_view(), name='index'),
+    url(r'^$', IndexView.as_view(), name='index'),
 )
 
 if settings.DEBUG:
