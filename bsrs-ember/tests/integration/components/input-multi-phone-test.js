@@ -48,6 +48,7 @@ test('defaults to use phone number model with field name of number', function(as
     assert.equal(model.objectAt(0).get('type'), PHONE_NUMBER_TYPE_DEFAULTS.officeId);
     assert.equal(model.objectAt(0).get('id'), UUID.value);
     assert.equal(model.objectAt(0).get('number'), undefined);
+    assert.ok(model.objectAt(0).get('isDirty'));
     this.$('.t-new-entry').val('888-888-8888').trigger('change');
     assert.equal(model.objectAt(0).get('number'), '888-888-8888');
 });
