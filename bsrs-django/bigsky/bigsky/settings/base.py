@@ -143,7 +143,7 @@ CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:80
 
 ### LOCATION ###
 
-DEFAULT_LOCATION_STATUS = 'active'
+DEFAULT_LOCATION_STATUS = 'Open'
 
 DEFAULT_LOCATION_TYPE = 'big_store'
 
