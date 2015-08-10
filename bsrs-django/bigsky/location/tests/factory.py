@@ -37,3 +37,4 @@ def create_locations():
     west.children.add(nv)
     ca.children.add(san_diego)
     ca.children.add(los_angeles)
+    

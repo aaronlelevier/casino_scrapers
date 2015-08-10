@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                 ('children', models.ManyToManyField(related_name='parents', to='location.Location', blank=True)),
             ],
             options={
-                'ordering': ('number',),
+                'abstract': False,
             },
         ),
         migrations.CreateModel(

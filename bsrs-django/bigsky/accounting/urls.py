@@ -7,7 +7,6 @@ from accounting import views
 
 router = routers.DefaultRouter()
 router.register(r'currencies', views.CurrencyViewSet)
-router.register(r'auth_amounts', views.AuthAmountViewSet)
 
 
 urlpatterns = patterns('',
