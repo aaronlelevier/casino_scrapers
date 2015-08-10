@@ -25,27 +25,3 @@ class Currency(BaseModel):
 
     def __str__(self):
         return self.name
-
-
-class AuthAmountManager(BaseManager):
-    
-    def default(self):
-        default_currency = Currency.objects.default()
-        defaults = {'amount':0, 'currency':default_currency}
-        try:
-            return self.get(**defaults)
-        except MultipleObjectsReturned:
-            return self.filter(**defaults).first()
-        except ObjectDoesNotExist:
-            return self.create(**defaults)            
-
-
-@python_2_unicode_compatible
-class AuthAmount(BaseModel):
-    amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
-    currency = models.ForeignKey(Currency, blank=True, null=True)
-
-    objects = AuthAmountManager()
-
-    def __str__(self):
-        return "{0:.4f}".format(self.amount)

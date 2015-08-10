@@ -7,8 +7,6 @@ from django.forms.models import model_to_dict
 
 from rest_framework import serializers
 
-from accounting.models import AuthAmount
-from accounting.serializers import AuthAmountSerializer
 from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
     EmailSerializer, AddressSerializer)
@@ -73,7 +71,7 @@ class PersonStatusSerializer(serializers.ModelSerializer):
 PERSON_FIELDS = (
     'id', 'username', 'first_name', 'middle_initial',
     'last_name', 'status', 'role', 'title', 'employee_id',
-    'auth_amount',
+    'auth_amount', 'auth_currency',
 )
 
 
@@ -94,7 +92,6 @@ class PersonListSerializer(serializers.ModelSerializer):
 
     role = RoleIdNameSerializer()
     status = PersonStatusSerializer()
-    auth_amount = AuthAmountSerializer()
 
     class Meta:
         model = Person
@@ -105,7 +102,6 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 
     status = PersonStatusSerializer()
     role = RoleSerializer()
-    auth_amount = AuthAmountSerializer()
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)
@@ -121,7 +117,6 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
     Currently, you can Add/Update PhoneNumber's when Updating a Person, 
     but, you cannot delete PhoneNumber's Yet.
     '''
-    auth_amount = AuthAmountSerializer()
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)
@@ -134,9 +129,6 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         phone_numbers = validated_data.pop('phone_numbers', [])
         addresses = validated_data.pop('addresses', [])
         emails = validated_data.pop('emails', [])
-        # Single Model
-        auth_amount = validated_data.pop('auth_amount', '')
-        create.update_or_create_single_model(auth_amount, AuthAmount)
         # Update Person
         instance = create.update_model(instance, validated_data)
         # Create/Update PhoneNumbers
@@ -154,7 +146,8 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
                     c.update({'person': instance})
                     create.update_model(contact, c)
                 except model.DoesNotExist:
-                    new_contact = model.objects.create(**c)
+                    _ = c.pop('person', None)
+                    new_contact = model.objects.create(person=instance, **c)
             # Remove FK Reference if not in Nested Contact Payload
             for m in (model.objects.filter(person=instance)
                                    .exclude(id__in=[x for x in contact_ids])):
