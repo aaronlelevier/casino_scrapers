@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+from accounting.models import Currency
 from location.models import Location
 from person.models import Person, Role, PersonStatus
 from person.tests import factory
@@ -10,6 +11,7 @@ class FactoryTests(TestCase):
     def test_create_role(self):
         role = factory.create_role()
         self.assertIsInstance(role, Role)
+        self.assertIsInstance(role.default_auth_currency, Currency)
 
     def test_create_person(self):
         person = factory.create_person()
