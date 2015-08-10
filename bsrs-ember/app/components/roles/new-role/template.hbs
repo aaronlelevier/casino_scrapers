@@ -32,7 +32,7 @@
       <span class="input-group-btn">
         <select class="t-location-level form-control location_level" onchange={{action (action "changedLocLevel" model) value="target.value"}} id="location_level_select">
           {{#each all_location_levels as |location_level|}}
-          <option value={{location_level.id}} selected={{is-equal model.location_level location_level.id}}>{{location_level.name}}</option>
+          <option value={{location_level.id}} selected={{is-equal model.location_level location_level.id}}>{{t location_level.name}}</option>
           {{/each}}
         </select>
       </span>

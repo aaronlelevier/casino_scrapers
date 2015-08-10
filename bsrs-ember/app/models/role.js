@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 export default Model.extend({
     store: inject('main'),
@@ -24,4 +25,7 @@ export default Model.extend({
     },
     rollbackRelated() {
     },
+    isNew: Ember.computed(function() {
+        return loopAttrs(this, 'role_type', 'location_level');
+    })
 });

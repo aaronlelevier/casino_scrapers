@@ -20,12 +20,9 @@
 			{{#each model as |level|}}
 				{{#link-to 'admin.location-levels.location-level' level.id tagName="tr" class="t-location-level-data"}}
 					<td><input type="checkbox" /></td>
-					<td>{{level.name}}</td>
+					<td>{{t level.name}}</td>
 				{{/link-to}}
 			{{/each}}
 		</tbody>
 	</table>
 </section>
-
-
-

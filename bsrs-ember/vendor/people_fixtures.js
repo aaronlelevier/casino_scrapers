@@ -14,7 +14,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             middle_initial : this.person_defaults.middle_initial,
             last_name : this.person_defaults.last_name,
             title : this.person_defaults.title,
-            emp_number : this.person_defaults.emp_number,
+            employee_id : this.person_defaults.employee_id,
             location : '',
             auth_amount : this.person_defaults.auth_amount,
             status : {
@@ -30,11 +30,26 @@ var BSRS_PEOPLE_FACTORY = (function() {
     },
     factory.prototype.list = function() {
         var response = [];
-        for (var i=1; i <= 5; i++) {
-            var uuid = '139543cf-8fea-426a-8bc3-09778cd7995';
-            response.push(this.generate(uuid + i));
+        for (var i=1; i <= 10; i++) {
+            var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
+            if (i < 10) {
+                uuid = uuid + '0' + i;
+            } else{
+                uuid = uuid + i;
+            }
+            response.push(this.generate(uuid));
         }
         return {'count':3,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.list_two = function() {
+        var response = [];
+        for (var i=11; i <= 20; i++) {
+            var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
+            var person = this.generate(uuid + i);
+            person.first_name = 'Scott' + i;
+            response.push(person);
+        }
+        return {'count':9,'next':null,'previous':null,'results': response};
     };
     factory.prototype.empty = function() {
         return {'count':3,'next':null,'previous':null,'results': []};
@@ -43,13 +58,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var person = this.generate(i);
         person.acceptassign = false;
         person.phone_numbers = this.phone_number_fixtures.get();
-        person.phone_numbers.forEach(function(num) {
-            num.person = i;
-        });
         person.addresses = this.address_fixtures.get();
-        person.addresses.forEach(function(add) {
-            add.person_id = i;
-        });
         person.emails = []
         return person;
     };

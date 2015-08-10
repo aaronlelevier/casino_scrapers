@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 export default Model.extend({
     store: inject('main'),
@@ -9,7 +10,7 @@ export default Model.extend({
     middle_initial: attr(''),
     last_name: attr(''),
     title: attr(''),
-    emp_number: attr(''),
+    employee_id: attr(''),
     auth_amount: attr(''),
     phone_numbers: Ember.computed('id', function() {
         var store = this.get('store');
@@ -17,7 +18,7 @@ export default Model.extend({
     }),
     addresses: Ember.computed('id', function() {
         var store = this.get('store');
-        return store.find('address', {person_id: this.get('id')});
+        return store.find('address', {person: this.get('id')});
     }),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', function() {
         return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty'); 
@@ -104,7 +105,7 @@ export default Model.extend({
             middle_initial: this.get('middle_initial'),
             last_name: this.get('last_name'),
             title: this.get('title'),
-            emp_number: this.get('emp_number'),
+            employee_id: this.get('employee_id'),
             location:'',
             auth_amount: this.get('auth_amount'),
             status: status_id,
@@ -116,5 +117,8 @@ export default Model.extend({
     },
     removeRecord(id) {
         this.get('store').remove('person', id);
-    }
+    },
+    isNew: Ember.computed(function() {
+        return loopAttrs(this);
+    })
 });

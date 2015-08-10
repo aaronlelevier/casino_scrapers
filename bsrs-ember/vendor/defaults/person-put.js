@@ -8,7 +8,7 @@ var BSRS_PERSON_PUT_DEFAULTS_OBJECT = (function() {
             first_name: 'Ice',
             middle_initial: 'F\'in',
             last_name: 'Cube',
-            emp_number: '1122',
+            employee_id: '1122',
             auth_amount: {currency: '535543wf-80ea-426a-8cc3-09728cd74952', amount: '0.000'},
             title: 'mastermind',
         };

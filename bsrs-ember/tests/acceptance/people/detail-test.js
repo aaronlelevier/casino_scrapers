@@ -26,7 +26,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('sco Acceptance | detail test', {
+module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -55,7 +55,6 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
 test('when you deep link to the person detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
-        //TODO: verify ALL the other dynamic bits
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person').objectAt(0);
         assert.ok(person.get('isNotDirty'));
@@ -64,45 +63,45 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-person-middle-initial').val(), PEOPLE_DEFAULTS.middle_initial);
         assert.equal(find('.t-person-last-name').val(), PEOPLE_DEFAULTS.last_name);
         assert.equal(find('.t-person-title').val(), PEOPLE_DEFAULTS.title);
-        assert.equal(find('.t-person-emp_number').val(), PEOPLE_DEFAULTS.emp_number);
+        assert.equal(find('.t-person-employee_id').val(), PEOPLE_DEFAULTS.employee_id);
         assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
         assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
-        assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), 'Office');
-        assert.equal(find('.t-input-multi-phone').find('select:eq(1) option:selected').text(), 'Mobile');
+        assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), t(PHONE_NUMBER_TYPES_DEFAULTS.officeName));
+        assert.equal(find('.t-input-multi-phone').find('select:eq(1) option:selected').text(), t(PHONE_NUMBER_TYPES_DEFAULTS.mobileName));
         assert.equal(find('.t-input-multi-phone').find('input').length, 2);
         assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), PHONE_NUMBER_DEFAULTS.numberOne);
         assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PHONE_NUMBER_DEFAULTS.numberTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.officeId);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), 'Office');
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), t(ADDRESS_TYPES_DEFAULTS.officeName));
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address').val(), ADDRESS_DEFAULTS.streetOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), ADDRESS_DEFAULTS.cityOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), ADDRESS_DEFAULTS.countryOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.shippingId);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), 'Shipping');
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), t(ADDRESS_TYPES_DEFAULTS.shippingName));
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address').val(), ADDRESS_DEFAULTS.streetTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), ADDRESS_DEFAULTS.cityTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), ADDRESS_DEFAULTS.countryTwo);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeName);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveName);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredName);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeId);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveId);
+        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredId);
         assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount.amount);
     });
 
     var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title, emp_number: PEOPLE_DEFAULTS_PUT.emp_number, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title, employee_id: PEOPLE_DEFAULTS_PUT.employee_id, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.first_name);
     fillIn('.t-person-middle-initial', PEOPLE_DEFAULTS_PUT.middle_initial );
     fillIn('.t-person-last-name', PEOPLE_DEFAULTS_PUT.last_name);
     fillIn('.t-person-title', PEOPLE_DEFAULTS_PUT.title);
-    fillIn('.t-person-emp_number', PEOPLE_DEFAULTS_PUT.emp_number);
+    fillIn('.t-person-employee_id', PEOPLE_DEFAULTS_PUT.employee_id);
     fillIn('.t-person-auth_amount', PEOPLE_DEFAULTS_PUT.auth_amount.amount);
     andThen(() => {
         var person = store.find('person').objectAt(0);
@@ -113,7 +112,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
         var person = store.find('person').objectAt(0);
         assert.equal(currentURL(),PEOPLE_URL);
-        assert.equal(store.find('person').get('length'), 5);
+        assert.equal(store.find('person').get('length'), 10);
         assert.ok(person.get('isNotDirty'));
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
@@ -169,7 +168,7 @@ test('when you change a related phone numbers type it will be persisted correctl
 test('when you change a related address type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
-    var addresses = ADDRESS_FIXTURES.put({id: ADDRESS_DEFAULTS.id, type: ADDRESS_TYPES_DEFAULTS.shippingId});
+    var addresses = ADDRESS_FIXTURES.put({id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPES_DEFAULTS.shippingId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
     fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
@@ -264,6 +263,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
         });
     });
 });
+
 test('currency helper displays correct currency format', (assert) => {
     visit(DETAIL_URL);
     var symbol = '$';
@@ -280,6 +280,7 @@ test('when click delete, person is deleted and removed from store', (assert) => 
         assert.equal(currentURL(), PEOPLE_URL);
     });
 });
+
 
 test('when you deep link to the person detail view you can add a new phone number', (assert) => {
     visit(DETAIL_URL);
@@ -299,7 +300,7 @@ test('when you deep link to the person detail view you can add a new phone numbe
     });
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    phone_numbers.push({id: UUID.value, type:PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
@@ -308,5 +309,75 @@ test('when you deep link to the person detail view you can add a new phone numbe
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isNotDirty'));
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when you deep link to the person detail view you can change the phone number type and add a new phone number', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-input-multi-phone select:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+    click('.t-add-btn:eq(0)');
+    var phone_numbers = PHONE_NUMBER_FIXTURES.put();
+    phone_numbers[0].type = PHONE_NUMBER_TYPES_DEFAULTS.mobileId;
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+        assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+        assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
+
+    });
+});
+
+test('when you deep link to the person detail view you can add a new address', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-input-multi-address').find('input').length, 4);
+    });
+    click('.t-add-address-btn:eq(0)');
+    andThen(() => {
+        assert.equal(find('.t-input-multi-address').find('input').length, 6);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    var addresses = ADDRESS_FIXTURES.put();
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    click('.t-add-address-btn:eq(0)');
+    var addresses = ADDRESS_FIXTURES.put();
+    addresses[0].type = ADDRESS_TYPES_DEFAULTS.shippingId;
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.equal(person.get('addresses').objectAt(0).get('type'), ADDRESS_TYPES_DEFAULTS.shippingId);
+        assert.equal(person.get('addresses').objectAt(2).get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
+        assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
     });
 });

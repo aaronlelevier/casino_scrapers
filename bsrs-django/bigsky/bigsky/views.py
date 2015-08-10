@@ -7,7 +7,7 @@ from django.shortcuts import render
 
 from contact.models import PhoneNumberType
 from person.models import Role, PersonStatus
-from location.models import LocationLevel
+from location.models import LocationLevel, LocationStatus
 
 from util import choices
 
@@ -39,6 +39,7 @@ class IndexView(TemplateView):
             'role_config': model_to_json(Role),
             'role_types_config': choices_to_json(choices.ROLE_TYPE_CHOICES),
             'person_status_config': model_to_json(PersonStatus),
-            'location_level_config': model_to_json(LocationLevel)
+            'location_level_config': model_to_json(LocationLevel),
+            'location_status_config': model_to_json(LocationStatus)
             })
         return context

@@ -21,7 +21,7 @@ const CANCEL_BTN = '.t-cancel-btn';
 
 var application, store, payload;
 
-module('sco Acceptance | location-level-new', {
+module('Acceptance | location-level-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -122,5 +122,13 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(location_level.get('length'), 0);
             assert.equal(find('tr.t-location-level-data').length, 2);
         });
+    });
+});
+
+test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+    visit(LOCATION_LEVEL_NEW_URL);
+    click('.t-cancel-btn');
+    andThen(() => {
+        assert.equal(store.find('location-level').get('length'), 2);
     });
 });

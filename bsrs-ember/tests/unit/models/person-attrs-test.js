@@ -31,11 +31,11 @@ test('default state for first name, middle initial, and last name on person mode
 });
 
 test('default state for employee number, and title on person model is undefined', (assert) => {
-    var person = Person.create({id: PEOPLE_DEFAULTS.id, emp_number: undefined, title: undefined});
+    var person = Person.create({id: PEOPLE_DEFAULTS.id, employee_id: undefined, title: undefined});
     assert.ok(person.get('isNotDirty'));
-    person.set('emp_number', '1222');
+    person.set('employee_id', '1222');
     assert.ok(person.get('isDirty'));
-    person.set('emp_number', '');
+    person.set('employee_id', '');
     assert.ok(person.get('isNotDirty'));
     person.set('title', 'mastermind');
     assert.ok(person.get('isDirty'));

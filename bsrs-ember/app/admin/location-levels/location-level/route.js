@@ -6,11 +6,20 @@ var LocationLevelSingle =  Ember.Route.extend({
     model(params) {
         var location_pk = params.location_level_id;
         var repository = this.get('repository');
-        return repository.findById(location_pk);
+        var all_location_levels = this.get('store').find('location-level');
+        var model = repository.findById(location_pk);
+        return Ember.RSVP.hash({
+            model: model,
+            all_location_levels: all_location_levels
+        });
+    },
+    setupController: function(controller, hash) {
+        controller.set('model', hash.model);
+        controller.set('all_location_levels', hash.all_location_levels);
     },
     actions: {
         willTransition(transition) {
-            var model = this.currentModel;
+            var model = this.currentModel.model;
             if (model.get('isDirtyOrRelatedDirty')) {
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
@@ -21,13 +30,6 @@ var LocationLevelSingle =  Ember.Route.extend({
                 $('.t-modal').modal('hide');
             }
         },
-        // deleteLocation() {
-        //     var model = this.modelFor('admin.locations.location');
-        //     // model.destroyRecord().then(() => {
-        //     //   this.transitionTo('admin.people');
-        //     // });
-        //     this.transitionTo('admin.location-levels');
-        // },
         redirectUser() {
             this.transitionTo('admin.location-levels');
         }
