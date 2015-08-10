@@ -59,18 +59,3 @@ def update_model(instance, dict_):
         setattr(instance, k, v)
     instance.save()
     return instance
-
-
-def update_or_create_single_model(dict_, model):
-    "Update or Create a single Model."
-    try:
-        instance = model.objects.get(id=dict_['id'])
-    except model.DoesNotExist:
-        instance = model.objects.create(**dict_)
-    else:
-        instance = update_model(instance, dict_)
-    return instance
-
-
-
-

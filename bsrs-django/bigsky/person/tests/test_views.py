@@ -15,7 +15,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
-from accounting.models import Currency, AuthAmount
+from accounting.models import Currency
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_person_and_contacts
@@ -206,8 +206,8 @@ class PersonListTests(TestCase):
 
     def test_auth_amount(self):
         results = self.data['results'][0]
-        self.assertEqual(results['auth_amount']['amount'], "{0:.4f}".format(self.person.auth_amount.amount))
-        self.assertEqual(results['auth_amount']['currency'], str(self.person.auth_amount.currency.id))
+        self.assertEqual(results['auth_amount'], "{0:.4f}".format(self.person.auth_amount))
+        self.assertEqual(results['auth_currency'], str(self.person.auth_currency.id))
 
 
 class PersonDetailTests(TestCase):
@@ -253,8 +253,8 @@ class PersonDetailTests(TestCase):
         self.assertIsInstance(address, Address)
 
     def test_auth_amount(self):
-        self.assertEqual(self.data['auth_amount']['amount'], "{0:.4f}".format(self.person.auth_amount.amount))
-        self.assertEqual(self.data['auth_amount']['currency'], str(self.person.auth_amount.currency.id))
+        self.assertEqual(self.data['auth_amount'], "{0:.4f}".format(self.person.auth_amount))
+        self.assertEqual(self.data['auth_currency'], str(self.person.auth_currency.id))
 
     def test_person_fk(self):
         # Person FK should be in the nested contact records, so
@@ -278,8 +278,6 @@ class PersonPutTests(APITestCase):
         self.password = PASSWORD
         self.person = create_person()
         self.client.login(username=self.person.username, password=self.password)
-        # AuthAmount
-        self.auth_amount = AuthAmount.objects.default()
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
         self.phone_number_type = mommy.make(PhoneNumberType)
         self.email_type = mommy.make(EmailType)
@@ -297,11 +295,8 @@ class PersonPutTests(APITestCase):
             "last_name": "",
             "title": "",
             "employee_id": "",
-            "auth_amount": {
-                "id": str(self.auth_amount.id),
-                "amount": "{0:.4f}".format(self.person.auth_amount.amount),
-                "currency": str(self.person.auth_amount.currency.id)
-            },
+            "auth_amount": "{0:.4f}".format(self.person.auth_amount),
+            "auth_currency": str(self.person.auth_currency.id),
             "role": str(self.person.role.id),
             "status": str(self.person.status.id),
             "location":"",
@@ -315,10 +310,10 @@ class PersonPutTests(APITestCase):
 
     def test_auth_amount(self):
         new_auth_amount = '1234.1010'
-        self.data['auth_amount']['amount'] = new_auth_amount
+        self.data['auth_amount'] = new_auth_amount
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
         data = json.loads(response.content)
-        self.assertEqual(new_auth_amount, data['auth_amount']['amount'])
+        self.assertEqual(new_auth_amount, data['auth_amount'])
 
     def test_no_change(self):
         # Confirm the ``self.data`` structure is correct

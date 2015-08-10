@@ -7,12 +7,13 @@ from django.db import models, migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('location', '0001_initial'),
+        ('person', '0001_initial'),
     ]
 
     operations = [
-        migrations.AlterModelOptions(
-            name='location',
-            options={},
+        migrations.RenameField(
+            model_name='person',
+            old_name='auth_amount_currency',
+            new_name='auth_currency',
         ),
     ]

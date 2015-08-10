@@ -53,6 +53,7 @@ class Migration(migrations.Migration):
                 ('abbrev', models.CharField(max_length=2)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
@@ -65,6 +66,7 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
