@@ -156,3 +156,12 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         });
     });
 });
+
+test('when click delete, role is deleted and removed from store', (assert) => {
+    visit(DETAIL_URL);
+    xhr(PREFIX + ROLE_URL + '/' + ROLE_DEFAULTS.idOne + '/', 'DELETE', null, {}, 204, {});
+    click('.t-delete-btn');
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});

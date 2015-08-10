@@ -10,6 +10,8 @@ var BSRS_LOCATION_FACTORY = (function() {
             number : this.location_defaults.storeNumber,
             status: this.location_defaults.status,
             location_level: this.location_level_defaults.idOne,
+            children: [],
+            parents: []
         }
     };
     factory.prototype.list = function() {

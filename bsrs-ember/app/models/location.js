@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 var LocationModel = Model.extend({
     store: inject('main'),
@@ -24,11 +25,16 @@ var LocationModel = Model.extend({
             number: this.get('number'),
             status: this.get('status'),
             location_level: this.get('location_levels').get('id'),
+            children: [],
+            parents: []
         };
     },
     removeRecord(id) {
         this.get('store').remove('location', id);
-    }
+    },
+    isNew: Ember.computed(function() {
+        return loopAttrs(this);
+    })
 });
 
 export default LocationModel; 

@@ -6,7 +6,7 @@ export default Ember.Route.extend({
     model(params) {
         var location_pk = params.location_id;
         var all_location_levels = this.get('store').find('location-level');
-        var all_statuses = this.get('store').find('status');
+        var all_statuses = this.get('store').find('location-status');
         var repository = this.get('repository');
         var model = repository.findById(location_pk);
         return Ember.RSVP.hash({

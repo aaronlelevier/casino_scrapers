@@ -156,7 +156,7 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         first_name_input = self.driver.find_element_by_id("first_name")
         middle_initial_input = self.driver.find_element_by_id("middle_initial")
         last_name_input = self.driver.find_element_by_id("last_name")
-        emp_number_input = self.driver.find_element_by_id("emp_number")
+        emp_number_input = self.driver.find_element_by_id("employee_id")
         title_input = self.driver.find_element_by_id("title")
         first_name_input.send_keys(new_first_name)
         middle_initial_input.send_keys(new_middle_initial)
@@ -182,7 +182,7 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin):
         first_name_input = self.driver.find_element_by_id("first_name")
         middle_initial_input = self.driver.find_element_by_id("middle_initial")
         last_name_input = self.driver.find_element_by_id("last_name")
-        emp_number_input = self.driver.find_element_by_id("emp_number")
+        emp_number_input = self.driver.find_element_by_id("employee_id")
         title_input = self.driver.find_element_by_id("title")
         assert username_input.get_attribute("value") == new_username
         assert first_name_input.get_attribute("value") == new_first_name

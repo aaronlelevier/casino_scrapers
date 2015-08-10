@@ -10,7 +10,7 @@ var BSRS_LOCATION_LEVEL_DEFAULTS_OBJECT = (function() {
             nameDistrict: 'admin.locationlevel.district',
             nameDepartment: 'admin.locationlevel.department',
             nameStore: 'Store',
-            nameRegion: 'Region',
+            nameRegion: 'admin.locationlevel.region',
             unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b052138'
         };
     };

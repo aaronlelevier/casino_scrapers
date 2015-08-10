@@ -38,8 +38,8 @@
 				{{/form-group}}
 			</div>
 			<div class="col-sm-6">
-				{{#form-group title="admin.person.label.emp_number" for="emp_number"}}
-			    	{{input type="text" placeholder=(t "admin.person.label.emp_number") value=model.emp_number class="form-control t-person-emp_number" id="emp_number"}}
+				{{#form-group title="admin.person.label.employee_id" for="employee_id"}}
+			    	{{input type="text" placeholder=(t "admin.person.label.employee_id") value=model.employee_id class="form-control t-person-employee_id" id="employee_id"}}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-6">
@@ -59,7 +59,7 @@
 				{{#form-group title="admin.person.label.status"}}
 					<select class="form-control t-statuses-select">
 			        {{#each statuses as |status|}}
-			            <option class="t-status-option">{{status.name}}</option>
+			            <option class="t-status-option" value="{{status.id}}">{{t status.name}}</option>
 			        {{/each}}
 					</select>
 				{{/form-group}}
@@ -80,13 +80,13 @@
 			<h2 class="col-sm-12">{{t "admin.person.label.contact"}}</h2>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.phone_number.other"}}
-          {{input-multi-phone placeholder=(t "admin.person.label.phone_number.one") 
-            model=model.phone_numbers 
-            types=phone_number_types 
-            default_type=default_phone_number_type 
-            related_field="person"
-            related_pk=model.id
-          }}
+					{{input-multi-phone placeholder=(t "admin.person.label.phone_number.one")
+						model=model.phone_numbers
+						types=phone_number_types
+						default_type=default_phone_number_type
+						related_field="person"
+						related_pk=model.id
+					}}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-6">
@@ -96,8 +96,8 @@
 						state_list=state_list
 						countries=countries
 						types=address_types
-            default_type=default_address_type 
-            related_field="person_id"
+            default_type=default_address_type
+            related_field="person"
             related_pk=model.id
 					}}
 				{{/form-group}}
