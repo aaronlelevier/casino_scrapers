@@ -140,4 +140,5 @@ test('click delete btn will remove input', function(assert) {
     assert.equal($first_del_btn.length, 1);
     $first_del_btn.trigger('click');
     assert.equal(this.$('.t-new-entry').length, 1);
+    assert.equal(store.find('phonenumber').get('length'), 1);
 });

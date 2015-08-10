@@ -24,7 +24,7 @@ export default Ember.Component.extend({
             this.get('model').push(model);
         },
         delete(entry) {
-            this.get('model').removeObject(entry);
+            this.get('model').remove(entry.id);
         }
     }
 }); 
