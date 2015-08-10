@@ -24,7 +24,7 @@ var BSRS_PHONE_NUMBER_FACTORY = (function() {
     };
     factory.prototype.put = function(phone_number) {
         var phone_numbers = [
-            {id: this.first_pk, number: this.first_number, type: this.phone_number_type_defaults.officeId, person: this.person.id}, {id: this.second_pk, number: this.second_number, type: this.phone_number_type_defaults.mobileId, person: this.person.id}
+            {id: this.first_pk, number: this.first_number, type: this.phone_number_type_defaults.officeId}, {id: this.second_pk, number: this.second_number, type: this.phone_number_type_defaults.mobileId}
         ];
         if(!phone_number) {
             return phone_numbers;

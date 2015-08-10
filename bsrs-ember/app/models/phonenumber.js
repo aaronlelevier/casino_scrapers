@@ -4,6 +4,6 @@ export default Model.extend({
     type: attr(),
     number: attr(),
     serialize() {
-        return {id: this.get('id'), number: this.get('number'), type: this.get('type'), person: this.get('person')};
+        return {id: this.get('id'), number: this.get('number'), type: this.get('type')};
     }
 });

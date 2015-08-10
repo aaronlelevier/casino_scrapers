@@ -300,7 +300,7 @@ test('when you deep link to the person detail view you can add a new phone numbe
     });
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
@@ -319,7 +319,7 @@ test('when you deep link to the person detail view you can change the phone numb
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     phone_numbers[0].type = PHONE_NUMBER_TYPES_DEFAULTS.mobileId;
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);

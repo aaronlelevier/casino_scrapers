@@ -154,7 +154,7 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
                     c.update({'person': instance})
                     create.update_model(contact, c)
                 except model.DoesNotExist:
-                    new_contact = model.objects.create(**c)
+                    new_contact = model.objects.create(person=instance, **c)
             # Remove FK Reference if not in Nested Contact Payload
             for m in model.objects.exclude(id__in=[x for x in contact_ids]):
                 m.person = None
