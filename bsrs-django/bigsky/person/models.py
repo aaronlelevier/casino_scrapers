@@ -1,24 +1,15 @@
-'''
-Created on Jan 30, 2014
-
-@author: tkrier
-'''
 from django.db import models, IntegrityError
-from django.conf import settings
-from django.utils import timezone
-from django.contrib.auth.models import AbstractUser, User, UserManager, Group
+from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.utils.encoding import python_2_unicode_compatible
-from django.db.models.signals import pre_save, post_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericRelation
-from django.core.exceptions import ValidationError
-from django.contrib.postgres.fields import HStoreField
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location
 from person import helpers
 from order.models import WorkOrderStatus
-from util import choices, create, exceptions as excp
+from util import choices, create
 from util.models import (AbstractName, MainSetting, CustomSetting,
     BaseModel, BaseManager)
 
@@ -165,8 +156,6 @@ class Person(BaseModel, AbstractUser):
     # Auth Amounts - can be defaulted by the Role
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
-    # TODO: currency will be a table with 5 columns, and this will 
-    # be a FK on that table
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
     next_approver = models.ForeignKey("self", related_name='nextapprover', null=True)
