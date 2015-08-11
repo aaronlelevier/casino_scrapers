@@ -1,17 +1,10 @@
-"""
-Created on Feb 17, 2015
-
-@author: tkrier
-"""
 from django.test import TestCase
-from django.contrib.auth.models import AbstractUser, User, Group
+from django.contrib.auth.models import AbstractUser, Group
 
 from model_mommy import mommy
 
-from location.models import Location
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role
-from util import exceptions as excp
 
 
 class RoleTests(TestCase):
@@ -83,7 +76,7 @@ class PersonTests(TestCase):
 
     def test_no_first_or_last_names(self):
         # We're not going to require `first_name` or `last_name` and that's fine.
-        self.person.first_name = '' 
+        self.person.first_name = ''
         self.person.last_name = ''
         self.person.save()
         self.person = Person.objects.get(pk=self.person.pk)
@@ -110,5 +103,3 @@ class PersonTests(TestCase):
         role = Role.objects.first()
         person = mommy.make(Person, role=role)
         self.assertEqual(person.groups.count(), 1)
-
-
