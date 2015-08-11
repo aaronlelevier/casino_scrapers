@@ -1,5 +1,3 @@
-from rest_framework import serializers
-
 from accounting.models import Currency
 from util.serializers import BaseCreateSerializer
 
