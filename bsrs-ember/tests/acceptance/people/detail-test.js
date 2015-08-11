@@ -57,7 +57,7 @@ test('sco when you deep link to the person detail view you get bound attrs', (as
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        var person = store.find('person').objectAt(0);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isNotDirty'));
         assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
         assert.equal(find('.t-person-first-name').val(), PEOPLE_DEFAULTS.first_name);
@@ -106,13 +106,13 @@ test('sco when you deep link to the person detail view you get bound attrs', (as
     fillIn('.t-person-employee_id', PEOPLE_DEFAULTS_PUT.employee_id);
     fillIn('.t-person-auth_amount', PEOPLE_DEFAULTS_PUT.auth_amount);
     andThen(() => {
-        var person = store.find('person').objectAt(0);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isDirty'));
         assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     click(SAVE_BTN);
     andThen(() => {
-        var person = store.find('person').objectAt(0);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(store.find('person').get('length'), 10);
         assert.ok(person.get('isNotDirty'));

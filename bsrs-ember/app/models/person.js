@@ -22,6 +22,11 @@ export default Model.extend({
             return this.get('isModelDirty');
         }
     }),
+    full_name: Ember.computed('first_name', 'last_name', function() {
+        var first_name = this.get('first_name');
+        var last_name = this.get('last_name');
+        return first_name + ' ' + last_name;
+    }),
     phone_numbers: Ember.computed('id', function() {
         var store = this.get('store');
         return store.find('phonenumber', {person: this.get('id')});
