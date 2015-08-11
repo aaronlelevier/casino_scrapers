@@ -11,6 +11,7 @@ from location.models import LocationLevel, LocationStatus
 
 from util import choices
 
+
 def model_to_json(model):
     return json.dumps([m.to_dict() for m in model.objects.all()])
 
