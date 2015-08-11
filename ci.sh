@@ -24,7 +24,7 @@ function emberTest {
 function pipInstall {
     easy_install -U pip
     rm -rf venv
-    virtualenv venv
+    virtualenv -p /usr/local/bin/python3 venv
     source venv/bin/activate
     pip install -r requirements.txt
     PIP_INSTALL=$?
