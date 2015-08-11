@@ -2,7 +2,7 @@
 <div class="input-group-vertical t-address-group">
   <div class="input-group">
     <span class="input-group-btn">
-      <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' address}}>{{fa-icon "minus"}}</button>
+      <button class="t-del-address-btn btn btn-default btn-sm delete" type="button" {{action 'delete' address}}>{{fa-icon "minus"}}</button>
     </span>
     <select class="t-address-type form-control address-type" onchange={{action (action "changed" address) value="target.value"}}>
     {{#each types as |addressType|}}
