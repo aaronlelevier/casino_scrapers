@@ -15,7 +15,7 @@ export default Model.extend({
     isModelDirty: false,
     dirtyModel: Ember.computed('isModelDirty', {
         get(key) {
-            return this.get('isModelDirty');
+            return this.isModelDirty;
         },
         set(key, value) {
             this.set('isModelDirty', value);
