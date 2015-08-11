@@ -324,7 +324,7 @@ test('sco when you deep link to the person detail view you can remove a new phon
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-input-multi-phone').find('input').length, 1);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        // assert.ok(person.get('isDirtyOrRelatedDirty'));TODO: fix this
+        assert.ok(person.get('isDirtyOrRelatedDirty'));//TODO: fix this
     });
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);

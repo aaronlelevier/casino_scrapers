@@ -222,7 +222,7 @@ test('when new phone number is added, the person model is not dirty unless type 
     assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
-test('sco when new phone number is added after render, the person model is dirty when new phone number is appended to the array of phone numbers', (assert) => {
+test('when new phone number is added after render, the person model is dirty when new phone number is appended to the array of phone numbers', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('isNotDirty'));
@@ -231,6 +231,17 @@ test('sco when new phone number is added after render, the person model is dirty
     added_phone_num.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
+test('sco when phone number is removed after render, the person model is dirty', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(person.get('isNotDirty'));
+    var phonenumbers = person.get('phone_numbers');
+    phonenumbers.remove(PHONE_NUMBER_DEFAULTS.id);
+    assert.ok(person.get('isNotDirty'));
+    // assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
 test('when no phone number and new phone number is added and updated, expect isDirty or Related to be true', (assert) => {

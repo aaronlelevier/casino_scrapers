@@ -28,6 +28,7 @@ export default Ember.Component.extend(ValidationMixin, {
         },
         delete(entry) {
             this.get('model').remove(entry.id);
+            this.sendAction('delete');
         }
     }
 }); 
