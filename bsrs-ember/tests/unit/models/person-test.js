@@ -233,7 +233,7 @@ test('when new phone number is added after render, the person model is dirty whe
     assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
-test('sco when phone number is removed after render, the person model is dirty', (assert) => {
+test('when phone number is removed after render, the person model is dirty', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));

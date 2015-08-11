@@ -12,7 +12,16 @@ export default Model.extend({
     title: attr(''),
     employee_id: attr(''),
     auth_amount: attr(''),
-    dirtyModel: false,
+    isModelDirty: false,
+    dirtyModel: Ember.computed('isModelDirty', {
+        get(key) {
+            return this.get('isModelDirty');
+        },
+        set(key, value) {
+            this.set('isModelDirty', value);
+            return this.get('isModelDirty');
+        }
+    }),
     phone_numbers: Ember.computed('id', function() {
         var store = this.get('store');
         return store.find('phonenumber', {person: this.get('id')});
@@ -21,7 +30,7 @@ export default Model.extend({
         var store = this.get('store');
         return store.find('address', {person: this.get('id')});
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', function() {
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', function() {
         return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel'); 
     }),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
