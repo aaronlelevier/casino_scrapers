@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import {test, module} from 'qunit';
-import CurrencyDefaults from 'bsrs-ember/vendor/currencies';
+import CurrencyDefaults from 'bsrs-ember/vendor/defaults/currencies';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PHONE_NUMBER_FIXTURES from 'bsrs-ember/vendor/phone_number_fixtures';
