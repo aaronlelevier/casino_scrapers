@@ -46,6 +46,14 @@ class LocationTypeViewSet(BaseModelViewSet):
 
 
 class LocationViewSet(BaseModelViewSet):
+    '''
+    ## Detail Routes
+
+    #### Will return all Child Locations for a single LocationLevel
+
+    `/api/admin/locations/{pk}/{level_id}/`
+    
+    '''
    
     permission_classes = (IsAuthenticated,)
     queryset = Location.objects.all()

@@ -48,9 +48,7 @@ class PersonStatusViewSet(BaseModelViewSet):
 ### PERSON
 
 class PersonViewSet(BaseModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
+
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)
