@@ -26,6 +26,6 @@ if __name__ == '__main__':
     p = multiprocessing.Process(target=django_app)
     p.daemon = True
     p.start()
-    time.sleep(20)
+    time.sleep(2)
     run_selenium_tests()
     os.kill(int(p.pid), signal.SIGTERM)
