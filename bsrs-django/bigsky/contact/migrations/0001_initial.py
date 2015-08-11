@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
                 ('country', models.CharField(max_length=100, null=True, blank=True)),
             ],
             options={
-                'ordering': ('type',),
+                'abstract': False,
             },
         ),
         migrations.CreateModel(
@@ -40,7 +40,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
-                'ordering': ('order', 'name'),
                 'abstract': False,
             },
         ),
@@ -54,7 +53,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=255)),
             ],
             options={
-                'ordering': ('type', 'email'),
+                'abstract': False,
             },
         ),
         migrations.CreateModel(
@@ -68,7 +67,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
-                'ordering': ('order', 'name'),
                 'abstract': False,
             },
         ),
@@ -83,7 +81,7 @@ class Migration(migrations.Migration):
                 ('location', models.ForeignKey(related_name='phone_numbers', blank=True, to='location.Location', null=True)),
             ],
             options={
-                'ordering': ('type', 'number'),
+                'abstract': False,
             },
         ),
         migrations.CreateModel(
@@ -97,7 +95,6 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
-                'ordering': ('order', 'name'),
                 'abstract': False,
             },
         ),

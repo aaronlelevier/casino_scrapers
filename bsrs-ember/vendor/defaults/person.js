@@ -1,11 +1,11 @@
-const BSRS_PERSON_ID = '139543cf-8fea-426a-8bc3-09778cd79951';
+const BSRS_PERSON_ID = '139543cf-8fea-426a-8bc3-09778cd79901';
 const BSRS_PERSON_USERNAME = 'mgibson';
 const BSRS_PERSON_PASSWORD = '1!';
 const BSRS_PERSON_EMAIL = [];
 const BSRS_PERSON_FIRST_NAME = 'Mel';
 const BSRS_PERSON_MIDDLE_INITIAL = 'B';
 const BSRS_PERSON_LAST_NAME = 'Gibson';
-const BSRS_PERSON_EMP_NUMBER = '5063';
+const BSRS_PERSON_employee_id = '5063';
 const BSRS_PERSON_AUTH_AMOUNT = {currency: '535543wf-80ea-426a-8cc3-09728cd74952', amount: '50000.00'};
 const BSRS_PERSON_TITLE = 'RVP';
 const BSRS_PERSON_LOCATION = '';
@@ -32,7 +32,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             phone_numbers: BSRS_PERSON_PHONE_NUMBERS,
             addresses: BSRS_PERSON_ADDRESSES,
             location: BSRS_PERSON_LOCATION,
-            emp_number: BSRS_PERSON_EMP_NUMBER,
+            employee_id: BSRS_PERSON_employee_id,
             title: BSRS_PERSON_TITLE,
             auth_amount: BSRS_PERSON_AUTH_AMOUNT,
             unusedId: BSRS_PERSON_UNUSED_ID

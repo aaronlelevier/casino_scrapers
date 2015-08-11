@@ -13,14 +13,23 @@ export default Ember.Component.extend({
             });
         },
         deleteRole() {
-            var model = this.modelFor('admin.roles.role');
-            // model.destroyRecord().then(() => {
-            //   this.transitionTo('admin.people');
-            // });
-            this.transitionTo('admin.roles');
+            var model = this.get('model');
+            var repository = this.get('repository');
+            repository.delete(model.get('id'));
+            this.sendAction('redirectUser');
         },
         cancelRole() {
             this.sendAction('redirectUser');
-        }
+        },
+        changed(model, val) {
+            Ember.run(() => {
+                model.set('role_type', val);
+            });
+        },
+        changedLocLevel(model, val) {
+            Ember.run(() => {
+                model.set('location_level', val);
+            });
+        },
     }
 });

@@ -1,11 +1,17 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 var LocationModel = Model.extend({
     store: inject('main'),
     name: attr(''),
     number: attr(''),
+    status: attr(),
+    location_levels: Ember.computed(function() {
+        var store = this.get('store');
+        return store.findOne('location-level', {location_id: this.get('id')});
+    }),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty'); 
     }),
@@ -17,12 +23,18 @@ var LocationModel = Model.extend({
             id: this.get('id'),
             name: this.get('name'),
             number: this.get('number'),
-            status: this.get('status')
+            status: this.get('status'),
+            location_level: this.get('location_levels').get('id'),
+            children: [],
+            parents: []
         };
     },
     removeRecord(id) {
         this.get('store').remove('location', id);
-    }
+    },
+    isNew: Ember.computed(function() {
+        return loopAttrs(this);
+    })
 });
 
 export default LocationModel; 

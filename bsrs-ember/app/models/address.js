@@ -1,6 +1,6 @@
 import { attr, Model } from 'ember-cli-simple-store/model';
 
-export default Model.extend({
+var AddressModel = Model.extend({
     type: attr(),
     address: attr(),
     city: attr(),
@@ -9,6 +9,8 @@ export default Model.extend({
     country: attr(),
     serialize() {
         return {id: this.get('id'), type: this.get('type'), address: this.get('address'), city: this.get('city'), state: this.get('state'), 
-            postal_code: this.get('postal_code'), country: this.get('country')};
+            postal_code: this.get('postal_code'), country: this.get('country'), person: this.get('person')};
     }
 });
+
+export default AddressModel;

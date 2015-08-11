@@ -1,30 +1,37 @@
 <form {{action "return false" this on="submit"}}>
-	<header>
-		<h1>{{model.name}}</h1>
-		<div class="btn-group btn-group-sm pull-right center-block">
-      {{button-generic save="saveLocationLevel" type="save"}}
-      {{button-generic cancel="cancelLocationLevel" type="cancel"}}
-			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
-				<li><a href="#">{{fa-icon "print"}} Print</a></li>
-				<li>{{delete-button delete="deletelocation"}}</li>
-			</ul>
-		</div>
-	</header>
-	<section class="docSection container-fluid">
-		<section>
-			<h2 class="col-sm-12">{{t "admin.locationlevel.label.general"}}</h2>
-			<div class="col-sm-12">
-				{{#form-group title="admin.locationlevel.label.name" for="name"}}
-			    	{{input type="text" placeholder=(t "admin.locationlevel.label.name") value=model.name class="form-control t-location-level-name" id="name" required="required"}}
-            {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.locationlevel.label.name"}}{{/validation-error-field}}
-				{{/form-group}}
-      </div>
+    <header>
+        <h1>{{model.name}}</h1>
+        <div class="btn-group btn-group-sm pull-right center-block">
+            {{button-generic save="saveLocationLevel" type="save"}}
+            {{button-generic cancel="cancelLocationLevel" type="cancel"}}
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
+                <li><a href="#">{{fa-icon "print"}} Print</a></li>
+                <li>{{delete-button delete="deleteLocationLevel"}}</li>
+            </ul>
+        </div>
+    </header>
+    <section class="docSection container-fluid">
+        <section>
+            <h2 class="col-sm-12">{{t "admin.locationlevel.label.general"}}</h2>
+            <div class="col-sm-12">
+                {{#form-group title="admin.locationlevel.label.name" for="name"}}
+                    {{input type="text" placeholder=(t "admin.locationlevel.label.name") value=model.name class="form-control t-location-level-name" id="location_level_name" required="required"}}
+                    {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.locationlevel.label.name"}}{{/validation-error-field}}
+                {{/form-group}}
+            </div>
+            <div class="col-sm-12">
+                {{#form-group title="admin.locationlevel.label.childOrg" for="location_level_select"}}
+                    <select class="t-location-level form-control location_level" id="location_level_select" multiple>
+                        {{#each all_location_levels as |location_level|}}
+                            <option value={{location_level.id}}>{{t location_level.name}}</option>
+                        {{/each}}
+                    </select>
+                {{/form-group}}
+            </div>
+        </section>
     </section>
-  </section>
 </form>
-
-

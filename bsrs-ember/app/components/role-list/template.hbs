@@ -13,6 +13,7 @@
 				<th></th>
 				<th>{{t "admin.role.label.name"}} {{fa-icon "sort"}}</th>
 				<th>{{t "admin.role.label.location_org"}} {{fa-icon "sort"}}</th>
+				<th>{{t "admin.role.label.role_type"}} {{fa-icon "sort"}}</th>
 				<th>{{t "admin.role.label.number_users"}}</th>
 			</tr>
 		</thead>
@@ -21,7 +22,9 @@
 				{{#link-to 'admin.roles.role' role.id tagName="tr" class="t-role-data"}}
 					<td><input type="checkbox" /></td>
 					<td>{{role.name}}</td>
-					<td>{{role.location_level}}</td>
+					<td>{{role.location_level.name}}</td>
+					<td>{{role.role_type}}</td>
+					<td></td>
 				{{/link-to}}
 			{{/each}}
 		</tbody>

@@ -8,7 +8,7 @@ export default Ember.Route.extend({
     model() {
         var pk = this.get('uuid').v4();
         var role_repo = this.get('role_repo');
-        var roles = this.get('store').find('role-type');
+        var roles = this.get('store').find('role');
         return Ember.RSVP.hash({
             model: this.get('store').push('person', {id: pk}),
             roles: roles
@@ -21,7 +21,9 @@ export default Ember.Route.extend({
     actions: {
         willTransition(transition) {
             var model = this.currentModel.model;
-            if (model.get('isDirtyOrRelatedDirty')) {
+            if (model.get('isNew')) {
+                model.removeRecord(model.get('id'));
+            } else if (model.get('isDirtyOrRelatedDirty')) {
                 $('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;

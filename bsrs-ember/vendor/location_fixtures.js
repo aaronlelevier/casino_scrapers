@@ -1,14 +1,17 @@
 var BSRS_LOCATION_FACTORY = (function() {
-    var factory = function(location_defaults) {
+    var factory = function(location_defaults, location_level_defaults) {
         this.location_defaults = location_defaults;
+        this.location_level_defaults = location_level_defaults;
     };
     factory.prototype.generate = function(i) {
         return {
             id: i,
             name : this.location_defaults.storeName,
             number : this.location_defaults.storeNumber,
-            //location_level: this.location_defaults.locationLevel,
             status: this.location_defaults.status,
+            location_level: this.location_level_defaults.idOne,
+            children: [],
+            parents: []
         }
     };
     factory.prototype.list = function() {
@@ -38,11 +41,12 @@ var BSRS_LOCATION_FACTORY = (function() {
 
 if (typeof window === 'undefined') {
     var location_defaults = require('../vendor/defaults/location');
-    module.exports = new BSRS_LOCATION_FACTORY(location_defaults);
+    var location_level_defaults = require('../vendor/defaults/location-level');
+    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults);
 } else {
-    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location'], function (exports, location_defaults) {
+    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-level'], function (exports, location_defaults, location_level_defaults) {
         'use strict';
-        return new BSRS_LOCATION_FACTORY(location_defaults);
+        return new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults);
     });
 }
 

@@ -43,6 +43,7 @@ timestamp of when the record was deleted.")
     objects_all = models.Manager()
 
     class Meta:
+        ordering = ('id',)
         abstract = True
 
     def __str__(self):
@@ -86,7 +87,6 @@ class AbstractNameOrder(BaseModel):
     
     class Meta:
         abstract = True
-        ordering = ('order', 'name',)
 
     def __str__(self):
         return self.name

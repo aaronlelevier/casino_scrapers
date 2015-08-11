@@ -74,7 +74,7 @@ test('when editing name to invalid, it checks for validation', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid name');
+        assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
     });
     fillIn('.t-location-level-name', LOCATION_DEFAULTS.nameCompany);
     var response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
@@ -143,3 +143,11 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
+test('when click delete, location level is deleted and removed from store', (assert) => {
+    visit(DETAIL_URL);
+    xhr(DJANGO_DETAIL_URL, 'DELETE', null, {}, 204, {});
+    click('.t-delete-btn');
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_LEVEL_URL);
+    });
+});

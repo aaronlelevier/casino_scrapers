@@ -11,10 +11,11 @@ How to provision?
     sudo pip install virtualenv
 
     # special User to run the webserver process
-    sudo useradd web         
+    sudo useradd web   
+    sudo groupadd www-data
     sudo usermod -a -G www-data web
-    sudo passwd web #pw=vagrant
-    sudo adduser web sudo #adds user to sudoers group
+    sudo passwd web 
+    sudo adduser web sudo 
     sudo deluser web sudo
 
     # make User's Dir
@@ -67,6 +68,10 @@ Build Node
 
     # global install bower
     sudo npm install -g bower
+
+    # PhaontomJs
+    sudo npm install -g phantomjs
+    vagrant reload
 
 
 Nginx

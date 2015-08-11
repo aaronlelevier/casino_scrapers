@@ -36,11 +36,11 @@ module('Acceptance | role-detail', {
 test('clicking a role name will redirect to the given detail view', (assert) => {
     visit(ROLE_URL);
     andThen(() => {
-        assert.equal(currentURL(),ROLE_URL);
+        assert.equal(currentURL(), ROLE_URL);
     });
     click('.t-role-data:eq(0)');
     andThen(() => {
-        assert.equal(currentURL(),DETAIL_URL);
+        assert.equal(currentURL(), DETAIL_URL);
     });
 });
 
@@ -52,16 +52,18 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         assert.ok(role.get('isNotDirty'));
         assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.name);
         assert.equal(find('.t-role-role-type').val(), ROLE_DEFAULTS.roleTypeGeneral);
-        // assert.equal(find('.t-role-category').val(), CATEGORY_DEFAULTS.category);
-        // assert.equal(find('.t-role-location_level').val(), ROLE_DEFAULTS.location_level);
+        // assert.equal(find('.t-role-category:eq(0)').val(), CATEGORY_DEFAULTS.name);
+        assert.equal(find('.t-role-location-level').val(), ROLE_DEFAULTS.locationLevelOne);
     });
     var url = PREFIX + DETAIL_URL + '/';
     var response = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);
-    var categories = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.id, name: CATEGORY_DEFAULTS.name});
-    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut, role_type:ROLE_DEFAULTS.roleTypeContractor, categories: categories});
+    // var categories = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.id, name: CATEGORY_DEFAULTS.name});
+    var location_level = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idTwo, name: LOCATION_LEVEL_DEFAULTS.nameRegion});
+    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut, role_type: ROLE_DEFAULTS.roleTypeContractor, location_level: location_level.id});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-role-name', ROLE_DEFAULTS.namePut);
     fillIn('.t-role-role-type', ROLE_DEFAULTS.roleTypeContractor);
+    fillIn('.t-role-location-level', ROLE_DEFAULTS.locationLevelTwo);
     andThen(() => {
         var role = store.find('role').objectAt(0);  
         assert.ok(role.get('isDirty'));
@@ -74,17 +76,17 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     });
 });
 
-test('when you change a related category name it will be persisted correctly', (assert) => {
-    visit(DETAIL_URL);
-    var url = PREFIX + DETAIL_URL + "/";
-    var categories = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.id, name: CATEGORY_DEFAULTS.nameTwo});
-    var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: categories});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-    });
-});
+// test('when you change a related category name it will be persisted correctly', (assert) => {
+//     visit(DETAIL_URL);
+//     var url = PREFIX + DETAIL_URL + "/";
+//     var categories = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.id, name: CATEGORY_DEFAULTS.nameTwo});
+//     var payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: categories});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+//     click(SAVE_BTN);
+//     andThen(() => {
+//         assert.equal(currentURL(), ROLE_URL);
+//     });
+// });
 
 test('when you change a related location level it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
@@ -152,5 +154,14 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             var role = store.find('role', ROLE_DEFAULTS.idOne);
             assert.equal(role.get('name'), ROLE_DEFAULTS.name);
         });
+    });
+});
+
+test('when click delete, role is deleted and removed from store', (assert) => {
+    visit(DETAIL_URL);
+    xhr(PREFIX + ROLE_URL + '/' + ROLE_DEFAULTS.idOne + '/', 'DELETE', null, {}, 204, {});
+    click('.t-delete-btn');
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
     });
 });

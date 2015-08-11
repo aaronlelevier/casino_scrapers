@@ -2,6 +2,7 @@ import Ember from 'ember';
 import Application from '../../app';
 import config from 'bsrs-ember/config/environment'; 
 import windowProxy from 'bsrs-ember/utilities/window-proxy';
+import t from './t';
 
 export default function startApp(attrs) {
     var application;

@@ -23,10 +23,15 @@ export default Ember.Route.extend({
         state_list.forEach((model) => {
             store.push('state', model);
         });
-        var status_config = $('[data-preload-statuses]').html();
+        var status_config = $('[data-preload-person-statuses]').html();
         var status_list = JSON.parse(status_config);
         status_list.forEach((model) => {
             store.push('status', model);
+        });
+        var loc_status_config = $('[data-preload-location-statuses]').html();
+        var loc_status_list = JSON.parse(loc_status_config);
+        loc_status_list.forEach((model) => {
+            store.push('location-status', model);
         });
         var currency_config = $('[data-preload-currencies]').html();
         var currency_list = JSON.parse(currency_config);
@@ -36,7 +41,17 @@ export default Ember.Route.extend({
         var role_config = $('[data-preload-roles]').html();
         var role_list = JSON.parse(role_config);
         role_list.forEach((model) => {
-            store.push('role-type', model);
+            store.push('role', model);
+        });
+        var role_types_config = $('[data-preload-role-types]').html();
+        var role_type_list = JSON.parse(role_types_config);
+        role_type_list.forEach((model, index) => {
+            store.push('role-type', {id: index+1, name: model});
+        });
+        var location_level_config = $('[data-preload-location-levels]').html();
+        var location_level_list = JSON.parse(location_level_config);
+        location_level_list.forEach((model) => {
+            store.push('location-level', model);
         });
     },
     actions: {

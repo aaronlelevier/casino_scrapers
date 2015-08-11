@@ -20,12 +20,12 @@ var LocationLevelComponent = Ember.Component.extend(ValidationMixin, {
         cancelLocationLevel() {
             this.sendAction('redirectUser');
         },
-        // deleteLocation() {            
-        //     var model = this.get('model');
-        //     var repository = this.get('repository');
-        //     repository.delete(model.get('id'));
-        //     this.sendAction('redirectUser');
-        // }
+        deleteLocationLevel() {            
+            var model = this.get('model');
+            var repository = this.get('repository');
+            repository.delete(model.get('id'));
+            this.sendAction('redirectUser');
+        }
     }
 });
 

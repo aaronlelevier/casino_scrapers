@@ -3,13 +3,14 @@ var BSRS_LOCATION_LEVEL_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            idOne: '232543cf-cfby-129a-3fc9-17771cd70009',
-            idTwo: '232543cf-cfby-129a-3fc9-17771cd70010',
-            idThree: '232543cf-cfby-129a-3fc9-17771cd70011',
-            nameCompany: 'Company',
-            nameDistrict: 'District',
+            idOne: '85c18266-dfca-4499-9cff-7c5c6970af7e',
+            idTwo: 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f',
+            idThree: 'c42bd2fc-d959-4896-9b89-aa2b2136ab9a',
+            nameCompany: 'admin.locationlevel.company',
+            nameDistrict: 'admin.locationlevel.district',
+            nameDepartment: 'admin.locationlevel.department',
             nameStore: 'Store',
-            nameRegion: 'Region',
+            nameRegion: 'admin.locationlevel.region',
             unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b052138'
         };
     };

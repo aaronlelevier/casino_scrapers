@@ -1,11 +1,13 @@
-
 from django.db import models
 from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
 
 from util import choices
 from util.models import AbstractName, BaseModel, BaseManager
 
+
+### SELF REFERENCING BASE
 
 class SelfRefrencingQuerySet(models.query.QuerySet):
 
@@ -85,6 +87,8 @@ class SelfRefrencingBaseModel(models.Model):
         abstract = True
 
 
+### LOCATION LEVEL
+
 class LocationLevel(SelfRefrencingBaseModel, AbstractName):
     '''
     LocationLevel records must be unique by: name, role_type
@@ -92,6 +96,8 @@ class LocationLevel(SelfRefrencingBaseModel, AbstractName):
     role_type = models.CharField(max_length=29, blank=True,
         choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
 
+
+### LOCATION STATUS
 
 class LocationStatusManager(BaseManager):
 
@@ -105,6 +111,8 @@ class LocationStatus(AbstractName):
     objects = LocationStatusManager()
 
 
+### LOCATION TYPE
+
 class LocationTypeManager(BaseManager):
 
     def default(self):
@@ -115,7 +123,33 @@ class LocationTypeManager(BaseManager):
 class LocationType(AbstractName):
     
     objects = LocationTypeManager()
+
+
+### LOCATION
+
+class LocationQuerySet(SelfRefrencingQuerySet):
+
+    def get_level_children(self, location, level_id):
+        try:
+            child_levels = LocationLevel.objects.get_all_children(location.location_level)
+            location_level = LocationLevel.objects.filter(
+                id__in=child_levels.values_list('id', flat=True)).get(id=level_id)
+        except ObjectDoesNotExist:
+            raise
+        return self.filter(location_level=location_level)
+
+
+class LocationManager(SelfRefrencingManager):
     
+    def get_queryset(self):
+        return LocationQuerySet(self.model, self._db)
+        
+    def get_level_children(self, location, level_id):
+        '''
+        Get all child Locations at a specific LocationLevel.
+        '''
+        return self.get_queryset().get_level_children(location, level_id)
+
 
 @python_2_unicode_compatible
 class Location(SelfRefrencingBaseModel, BaseModel):
@@ -128,9 +162,8 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     name = models.CharField(max_length=100)
     number = models.CharField(max_length=20)
 
-    class Meta:
-        ordering = ('number',)
-    
+    objects = LocationManager()
+
     def __str__(self):
         return self.name
 

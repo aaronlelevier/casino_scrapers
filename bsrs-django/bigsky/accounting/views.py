@@ -8,8 +8,8 @@ from rest_framework import viewsets, permissions, status
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
 
-from accounting.models import Currency, AuthAmount
-from accounting.serializers import CurrencySerializer, AuthAmountSerializer
+from accounting.models import Currency
+from accounting.serializers import CurrencySerializer
 from util.views import BaseModelViewSet
 
 
@@ -17,11 +17,4 @@ class CurrencyViewSet(BaseModelViewSet):
 
     queryset = Currency.objects.all()
     serializer_class = CurrencySerializer
-    permission_classes = (permissions.IsAuthenticated,)
-
-
-class AuthAmountViewSet(BaseModelViewSet):
-
-    queryset = AuthAmount.objects.all()
-    serializer_class = AuthAmountSerializer
     permission_classes = (permissions.IsAuthenticated,)

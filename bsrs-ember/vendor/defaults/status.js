@@ -4,11 +4,11 @@ var BSRS_STATUS_DEFAULTS_OBJECT = (function() {
     factory.prototype.defaults = function() {
         return {
             activeId: '88b54767-fa08-4960-abbb-4fc28cd7908b',
-            activeName: 'Active',
+            activeName: 'admin.person.status.active',
             inactiveId: 'fba38ad1-ff6b-4f2d-8264-c0a4d7670927',
-            inactiveName: 'Inactive',
+            inactiveName: 'admin.person.status.inactive',
             expiredId: '1a19181d-5a00-419f-940e-809e72b8a4e5',
-            expiredName: 'Expired'
+            expiredName: 'admin.person.status.expired'
         };
     };
     return factory;

@@ -14,7 +14,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.core.exceptions import ValidationError
 from django.contrib.postgres.fields import HStoreField
 
-from accounting.models import Currency, AuthAmount
+from accounting.models import Currency
 from location.models import LocationLevel, Location
 from person import helpers
 from order.models import WorkOrderStatus
@@ -59,7 +59,8 @@ class Role(BaseModel):
     default_accept_notify = models.BooleanField(blank=True, default=True)
     accept_notify = models.BooleanField(blank=True, default=False)
     # Auth Amounts
-    default_auth_amount = models.ForeignKey(AuthAmount, blank=True, null=True)
+    default_auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
+    default_auth_currency = models.ForeignKey(Currency, blank=True, null=True)
     # Approvals
     allow_approval = models.BooleanField(blank=True, default=False)
     proxy_approval_bypass = models.BooleanField(blank=True, default=False)
@@ -96,9 +97,6 @@ class Role(BaseModel):
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
 
-    class Meta:
-        ordering = ('name',)
-
     def save(self, *args, **kwargs):
 
         if not self.group:
@@ -107,8 +105,8 @@ class Role(BaseModel):
             except IntegrityError:
                 raise
 
-        if not self.default_auth_amount:
-            self.default_auth_amount = AuthAmount.objects.default()
+        if not self.default_auth_currency:
+            self.default_auth_currency = Currency.objects.default()
 
         return super(Role, self).save(*args, **kwargs)
 
@@ -165,7 +163,8 @@ class Person(BaseModel, AbstractUser):
     location = models.ForeignKey(Location, blank=True, null=True)
     # required
     # Auth Amounts - can be defaulted by the Role
-    auth_amount = models.ForeignKey(AuthAmount, blank=True, null=True)
+    auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
+    auth_currency = models.ForeignKey(Currency, blank=True, null=True)
     # TODO: currency will be a table with 5 columns, and this will 
     # be a FK on that table
     accept_assign = models.BooleanField(default=True, blank=True)
@@ -205,6 +204,8 @@ class Person(BaseModel, AbstractUser):
             self.status = PersonStatus.objects.default()
         if not self.auth_amount:
             self.auth_amount = self.role.default_auth_amount
+        if not self.auth_currency:
+            self.auth_currency = self.role.default_auth_currency
         return super(Person, self).save(*args, **kwargs)
 
 

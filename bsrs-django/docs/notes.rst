@@ -40,3 +40,11 @@ uWSGI
 
     # kill by port #
     fuser -k -n tcp $UWSGI_PORT
+
+
+Linux
+-----
+.. code-block::
+    
+    # find file
+    sudo find . -name "<filename>"

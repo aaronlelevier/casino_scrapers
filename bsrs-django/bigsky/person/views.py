@@ -1,8 +1,10 @@
 import copy
 
+from django.db import models
+from django.db.models.functions import Lower
+from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission, User
-from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets, permissions, status, filters
 from rest_framework.response import Response
@@ -43,15 +45,14 @@ class PersonStatusViewSet(BaseModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
 
 
+### PERSON
+
 class PersonViewSet(BaseModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
+
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
-    filter_backends = (filters.OrderingFilter, filters.SearchFilter,)
-    ordering_fields = ('username', 'first_name',)
-    search_fields = ('username', 'email', 'role__name',)
+    filter_backends = (filters.SearchFilter,)
+    search_fields = ('first_name',)
 
     def get_serializer_class(self):
         """
@@ -65,6 +66,16 @@ class PersonViewSet(BaseModelViewSet):
             return ps.PersonCreateSerializer
         else:
             return ps.PersonListSerializer
+
+    def get_queryset(self):
+        queryset = self.queryset
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering:
+            if ordering.startswith('-'):
+                queryset = queryset.order_by(Lower(ordering[1:])).reverse()
+            else:
+                queryset = queryset.order_by(Lower(ordering))
+        return queryset
 
 
 
