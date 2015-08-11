@@ -3,7 +3,6 @@ import json
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
-from django.shortcuts import render
 
 from contact.models import PhoneNumberType
 from person.models import Role, PersonStatus

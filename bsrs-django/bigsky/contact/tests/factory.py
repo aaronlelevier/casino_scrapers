@@ -1,7 +1,6 @@
 from model_mommy import mommy
 
 from contact.models import PhoneNumber, Address, Email
-from person.models import Person
 from person.tests.factory import create_person
 
 

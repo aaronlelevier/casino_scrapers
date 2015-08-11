@@ -1,7 +1,6 @@
 from model_mommy import mommy
 
-from location.models import (Location, LocationLevel, LocationStatus,
-    LocationType)
+from location.models import Location, LocationLevel
 
 
 def create_location_levels():

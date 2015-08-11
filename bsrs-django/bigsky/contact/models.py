@@ -1,8 +1,3 @@
-'''
-All contact Models: PhoneNumber, Address, and Email must have 
-a ForeignKey to ``location`` or ``person`` but not both.
-'''
-
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -13,6 +8,10 @@ from util import exceptions as excp
 
 
 class ContactBaseModel(BaseModel):
+    '''
+    All contact Models: PhoneNumber, Address, and Email must have
+    a ForeignKey to ``location`` or ``person`` but not both.
+    '''
     pass
 
     class Meta:

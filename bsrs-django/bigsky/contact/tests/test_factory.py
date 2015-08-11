@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from contact.tests import factory
-from contact.models import PhoneNumber, Address, Email
+from contact.models import Email
 from person.models import Person
 
 

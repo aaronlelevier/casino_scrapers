@@ -1,7 +1,5 @@
 from rest_framework import serializers
 
-from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
-    EmailSerializer)
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 from util.serializers import BaseCreateSerializer
 
