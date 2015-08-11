@@ -1,8 +1,3 @@
-'''
-Created on Apr 7, 2015
-
-@author: tkrier
-'''
 from rest_framework.permissions import DjangoModelPermissions
 
 

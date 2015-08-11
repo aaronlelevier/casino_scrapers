@@ -1,17 +1,10 @@
 import json
 
-from django.test import TestCase
-from django.http import JsonResponse
-from django.contrib.auth.models import User, ContentType, Group, Permission
-
 from rest_framework import status
 from rest_framework.test import APITestCase
 from model_mommy import mommy
 
-from contact.models import (PhoneNumberType, PhoneNumber, AddressType, Address,
-    EmailType, Email)
-from location.models import Location
-from person.models import Person, Role, PersonStatus
+from contact.models import PhoneNumber, Address, Email
 from person.tests.factory import PASSWORD, create_person
 
 

@@ -4,15 +4,11 @@ import sys
 if sys.version_info > (2,7):
     str = unicode
 
-from django.conf import settings
-from django.test import TestCase, TransactionTestCase
-from django.http import JsonResponse
-from django.contrib.auth.models import User, ContentType, Group, Permission
-from django.forms.models import model_to_dict
+from django.test import TestCase
 from django.db.models.functions import Lower
 
 from rest_framework import status
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 from model_mommy import mommy
 
 from accounting.models import Currency
@@ -22,7 +18,6 @@ from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
 from person.tests.factory import PASSWORD, create_person, create_role
-from person.serializers import PersonUpdateSerializer
 from util import create, choices
 
 

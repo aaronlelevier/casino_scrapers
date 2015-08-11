@@ -1,12 +1,9 @@
 import uuid
 import json
 
-from django.test import TestCase
-
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 from model_mommy import mommy
 
-from location import serializers as ls
 from location.tests.factory import create_location_levels, create_locations
 from location.models import (Location, LocationLevel, LocationStatus,
     LocationType)

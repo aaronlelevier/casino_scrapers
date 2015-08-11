@@ -1,9 +1,7 @@
 import copy
 
-from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
-from django.forms.models import model_to_dict
 
 from rest_framework import serializers
 
