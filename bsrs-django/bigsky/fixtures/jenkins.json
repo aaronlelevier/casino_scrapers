@@ -317,36 +317,6 @@
 {
   "fields": {
     "deleted": null,
-    "modified": "2015-08-10T16:45:15.896Z",
-    "name": "Open",
-    "created": "2015-08-10T16:45:15.896Z"
-  },
-  "model": "location.locationstatus",
-  "pk": "4d8e519e-b0a6-494e-9663-bbe9922035af"
-},
-{
-  "fields": {
-    "deleted": null,
-    "modified": "2015-08-10T16:45:21.246Z",
-    "name": "Future",
-    "created": "2015-08-10T16:45:21.246Z"
-  },
-  "model": "location.locationstatus",
-  "pk": "ae9e4ce8-4ed9-47c3-881c-4a8d052fae54"
-},
-{
-  "fields": {
-    "deleted": null,
-    "modified": "2015-08-10T16:45:26.525Z",
-    "name": "Closed",
-    "created": "2015-08-10T16:45:26.525Z"
-  },
-  "model": "location.locationstatus",
-  "pk": "e7315f98-5842-413c-8e4f-c51cae9515cd"
-},
-{
-  "fields": {
-    "deleted": null,
     "description": "active",
     "modified": "2015-08-11T16:11:45.419Z",
     "name": "",

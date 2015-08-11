@@ -4,7 +4,7 @@ import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-SECRET_KEY = '&8g%ple@(yc11&hb*k!zu2&e+wgaggk79_k(3=!w2ngv!5qh5&'
+SECRET_KEY = os.environ.get('BSRS_SECRET_KEY', '&8g%ple@(yc11&hb*k!zu2&e+wgaggk79_k(3=!w2ngv!5qh5&')
 
 SITE_ID = 1
 
@@ -42,7 +42,6 @@ LOCAL_APPS = (
     'contact',
     'location',
     'person',
-    'role',
     'session',
     'util',
     'order',

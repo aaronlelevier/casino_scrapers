@@ -208,10 +208,6 @@ class Person(BaseModel, AbstractUser):
             self.auth_currency = self.role.default_auth_currency
         return super(Person, self).save(*args, **kwargs)
 
-    @property
-    def first_name_lower(self):
-        return lower(self.first_name)
-
 
 @receiver(post_save, sender=Person)
 def update_group(sender, instance=None, created=False, **kwargs):
