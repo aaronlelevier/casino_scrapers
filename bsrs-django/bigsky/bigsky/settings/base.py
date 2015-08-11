@@ -42,7 +42,6 @@ LOCAL_APPS = (
     'contact',
     'location',
     'person',
-    'role',
     'session',
     'util',
     'order',
