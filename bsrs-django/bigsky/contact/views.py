@@ -29,7 +29,7 @@ class PhoneNumberViewSet(viewsets.ModelViewSet):
         Restricts locations to a given type
         """
         queryset = PhoneNumber.objects.all()
-        pn_type = self.request.QUERY_PARAMS.get('type', None)
+        pn_type = self.request.query_params.get('type', None)
         if pn_type is not None:
             queryset = queryset.filter(type__name__exact=pn_type)
         return queryset
@@ -48,7 +48,7 @@ class AddressViewSet(viewsets.ModelViewSet):
         Restricts locations to a given type
         """
         queryset = Address.objects.all()
-        address_type = self.request.QUERY_PARAMS.get('type', None)
+        address_type = self.request.query_params.get('type', None)
         if address_type is not None:
             queryset = queryset.filter(type__name__exact=address_type)
         return queryset
@@ -76,7 +76,7 @@ class EmailViewSet(viewsets.ModelViewSet):
         Restricts locations to a given type
         """
         queryset = Email.objects.all()
-        email_type = self.request.QUERY_PARAMS.get('type', None)
+        email_type = self.request.query_params.get('type', None)
         if email_type is not None:
             queryset = queryset.filter(type__name__exact=email_type)
         return queryset
