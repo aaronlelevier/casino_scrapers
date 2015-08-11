@@ -1,5 +1,6 @@
 var BSRS_PERSON_PUT_DEFAULTS_OBJECT = (function() {
-    var factory = function() {
+    var factory = function(currency_defaults) {
+        this.currency_defaults = currency_defaults
     };
     factory.prototype.defaults = function() {
         return {
@@ -9,7 +10,8 @@ var BSRS_PERSON_PUT_DEFAULTS_OBJECT = (function() {
             middle_initial: 'F\'in',
             last_name: 'Cube',
             employee_id: '1122',
-            auth_amount: {currency: '535543wf-80ea-426a-8cc3-09728cd74952', amount: '0.000'},
+            auth_amount: '0.000',
+            auth_currency: this.currency_defaults.id,
             title: 'mastermind',
         };
     };
@@ -18,10 +20,11 @@ var BSRS_PERSON_PUT_DEFAULTS_OBJECT = (function() {
 
 
 if (typeof window === 'undefined') {
-    module.exports = new BSRS_PERSON_PUT_DEFAULTS_OBJECT().defaults();
+    var currency_defaults = './currencies';
+    module.exports = new BSRS_PERSON_PUT_DEFAULTS_OBJECT(currency_defaults).defaults();
 } else {
-    define('bsrs-ember/vendor/defaults/person-put', ['exports'], function (exports) {
+    define('bsrs-ember/vendor/defaults/person-put', ['exports', 'bsrs-ember/vendor/defaults/currencies'], function (exports, currency_defaults) {
         'use strict';
-        return new BSRS_PERSON_PUT_DEFAULTS_OBJECT().defaults();
+        return new BSRS_PERSON_PUT_DEFAULTS_OBJECT(currency_defaults).defaults();
     });
 }

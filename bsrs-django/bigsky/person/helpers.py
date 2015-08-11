@@ -1,6 +1,3 @@
-import json
-
-
 def update_group(person, group):
     "Will make sure the ``person`` is in one, and only one group."
     for g in person.groups.all():

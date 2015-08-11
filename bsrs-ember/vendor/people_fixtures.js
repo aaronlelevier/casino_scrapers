@@ -37,22 +37,69 @@ var BSRS_PEOPLE_FACTORY = (function() {
             } else{
                 uuid = uuid + i;
             }
-            response.push(this.generate(uuid));
+            var person = this.generate(uuid);
+            //TODO: DRY this up
+            person.username = 'mgibson' + i;
+            person.first_name = 'Mel' + i;
+            person.last_name = 'Gibson' + i;
+            person.title = i + ' MVP';
+            response.push(person);
         }
-        return {'count':3,'next':null,'previous':null,'results': response};
+        //we do a reverse order sort here to verify a real sort occurs in the component
+        var sorted = response.sort(function(a,b) {
+            return b.id - a.id;
+        });
+        return {'count':19,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
         var response = [];
-        for (var i=11; i <= 20; i++) {
+        for (var i=11; i <= 19; i++) {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
             var person = this.generate(uuid + i);
+            person.username = 'scott' + i;
             person.first_name = 'Scott' + i;
+            person.last_name = 'Newcomer' + i;
+            person.title = i + ' WAT';
             response.push(person);
         }
-        return {'count':9,'next':null,'previous':null,'results': response};
+        return {'count':19,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.sorted = function(column, page) {
+        var response;
+        if(page && page === 2) {
+            response = this.list_two().results;
+        } else {
+            response = this.list().results;
+        }
+        //we do a reverse order sort here to verify a real sort occurs in the component
+        var sorted = response.sort(function(a,b) {
+            return b[column] - a[column];
+        });
+        return {'count':19,'next':null,'previous':null,'results': sorted};
+    };
+    factory.prototype.searched = function(search, column, page) {
+        var page1 = this.list_two().results;
+        var page2 = this.list().results;
+        var response = page1.concat(page2);
+        //we do a normal order sort here to slice correctly below
+        var sorted = response.sort(function(a,b) {
+            return a[column] - b[column];
+        });
+        var regex = new RegExp(search);
+        var searched = sorted.filter(function(object) {
+            var value = object.username;
+            return regex.test(value);
+        });
+        var paged;
+        if(page && page > 1) {
+            paged = searched.slice(10, 20);
+        } else {
+            paged = searched.slice(0, 10);
+        }
+        return {'count':searched.length,'next':null,'previous':null,'results': paged};
     };
     factory.prototype.empty = function() {
-        return {'count':3,'next':null,'previous':null,'results': []};
+        return {'count':0,'next':null,'previous':null,'results': []};
     };
     factory.prototype.detail = function(i) {
         var person = this.generate(i);

@@ -2,12 +2,11 @@ import uuid
 
 from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
-from django.contrib.auth.models import ContentType, Group, Permission, User
+from django.contrib.auth.models import ContentType, Permission
 from django.core.exceptions import ObjectDoesNotExist
 
 from model_mommy import mommy
 
-from person.models import Person
 from person.tests.factory import create_person, create_role
 from util import create
 from util.models import MainSetting, CustomSetting, Tester

@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
-from django.core.urlresolvers import reverse
 from django.contrib.auth import views as auth_views, forms
 
 from rest_framework import routers
@@ -40,6 +39,8 @@ router.register(r'roles', person_views.RoleViewSet)
 
 
 urlpatterns = patterns('',
+    # API
+    url(r'^api/admin/', include(router.urls)),
     # Admin
     url(r'^django-admin/', include(admin.site.urls)),
     # Bigsky Django Views
@@ -50,9 +51,7 @@ urlpatterns = patterns('',
         name='login'),
     # DRF AUTH
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^$', IndexView.as_view(), name='index'),
-    # API
-    url(r'^api/admin/', include(router.urls)),
+    url(r'^.*$', IndexView.as_view(), name='index'),
     )
 
 

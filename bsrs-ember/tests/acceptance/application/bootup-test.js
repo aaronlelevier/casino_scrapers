@@ -11,7 +11,7 @@ import ADDRESS_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import PHONE_NUMBER_DEFAULT from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
-import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/currencies';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 
 const HOME_URL = '/';
 

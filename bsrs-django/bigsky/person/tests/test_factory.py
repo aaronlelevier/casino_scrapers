@@ -1,7 +1,6 @@
 from django.test import TestCase
 
 from accounting.models import Currency
-from location.models import Location
 from person.models import Person, Role, PersonStatus
 from person.tests import factory
 

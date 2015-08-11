@@ -19,7 +19,7 @@ var BSRS_CURRENCY_DEFAULTS_OBJECT = (function() {
 if (typeof window === 'undefined') {
     module.exports = new BSRS_CURRENCY_DEFAULTS_OBJECT().defaults();
 } else {
-    define('bsrs-ember/vendor/currencies', ['exports'], function (exports) {
+    define('bsrs-ember/vendor/defaults/currencies', ['exports'], function (exports) {
         'use strict';
         return new BSRS_CURRENCY_DEFAULTS_OBJECT().defaults();
     });

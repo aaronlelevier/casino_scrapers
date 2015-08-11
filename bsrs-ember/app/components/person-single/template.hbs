@@ -49,7 +49,7 @@
 			</div>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
-		      		{{input-currency model=model field="auth_amount.amount"}}
+		      		{{input-currency model=model field="auth_amount"}}
 				{{/form-group}}
 			</div>
 		</section>
@@ -86,6 +86,7 @@
 						default_type=default_phone_number_type
 						related_field="person"
 						related_pk=model.id
+            delete="dirtyModel"
 					}}
 				{{/form-group}}
 			</div>

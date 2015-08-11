@@ -2,7 +2,6 @@ import json
 
 from rest_framework.test import APITestCase
 
-from accounting.models import Currency
 from person.tests.factory import create_person, PASSWORD
 
 

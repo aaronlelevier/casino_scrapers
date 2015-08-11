@@ -1,8 +1,7 @@
 from django.test import TestCase
 
 from location.tests import factory
-from location.models import (Location, LocationLevel, LocationStatus,
-    LocationType)
+from location.models import Location, LocationLevel
 
 
 class LocationLevelTests(TestCase):

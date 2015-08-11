@@ -9,6 +9,7 @@ export default Ember.Component.extend(ValidationMixin, {
     usernameValidation: validate('model.username'),
     actions: {
         savePerson() {
+            this.get('model').set('dirtyModel', false);
             this.set('submitted', true);
             if (this.get('valid')) {
                 var model = this.get('model');
@@ -26,6 +27,9 @@ export default Ember.Component.extend(ValidationMixin, {
             var repository = this.get('repository');
             repository.delete(model.get('id'));
             this.sendAction('redirectUser');
+        },
+        dirtyModel() {
+            this.get('model').set('dirtyModel', true);
         }
     }
 });
