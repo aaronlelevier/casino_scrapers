@@ -22,7 +22,22 @@ export default Ember.Object.extend({
         });
     },
     find() {
+        var all = this.get('store').find('person');
         PromiseMixin.xhr(PREFIX + '/admin/people/', 'GET').then((response) => {
+            all.set('count', response.count);
+            this.get('PersonDeserializer').deserialize(response);
+        });
+        return all;
+    },
+    findWithQuery(page, sort, search) {
+        var endpoint = PREFIX + '/admin/people/?page=' + page;
+        if (sort && sort !== 'id') {
+            endpoint = endpoint + '&ordering=' + sort;
+        }
+        if (search && search !== '') {
+            endpoint = endpoint + '&search=' + encodeURIComponent(search);
+        }
+        PromiseMixin.xhr(endpoint).then((response) => {
             this.get('PersonDeserializer').deserialize(response);
         });
         return this.get('store').find('person');

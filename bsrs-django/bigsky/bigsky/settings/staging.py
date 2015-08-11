@@ -14,15 +14,12 @@ NOSE_ARGS = [
 
 DEBUG = True
 
-# TODO
-# Database connection strings needed to be added.
-# python example environmental variable syntax below.
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
-        'NAME': 'staging',          # os.environ['DB_NAME']
-        'USER': 'bsdev',         # os.environ['DB_USER']
-        'PASSWORD': 'tango',     # os.environ['DB_PASSWORD']
+        'NAME': os.environ.get('BSRS_DB_STAGING_NAME', 'ci'),
+        'USER': os.environ.get('BSRS_DB_STAGING_USER', 'bsdev'),
+        'PASSWORD': os.environ.get('BSRS_DB_STAGING_NAME', 'tango'),
         'HOST': 'localhost',
         'PORT': '5432',
     }

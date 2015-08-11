@@ -1,4 +1,4 @@
-{{#each model as |phonenumber|}}
+{{#each model as |phonenumber index|}}
 <div class="input-group">
   <span class="input-group-btn">
     <button class="t-del-btn btn btn-default btn-sm delete" type="button" {{action 'delete' phonenumber}}>{{fa-icon "minus"}}</button>
@@ -12,6 +12,7 @@
   </span>
 
   {{input-dynamic obj=phonenumber prop=fieldNames placeholder=placeholder}}
+  {{#validation-error-field submitted=submitted field="number" model=phonenumber index=index validation="number"}}invalid number{{/validation-error-field}}
 </div>
 {{/each}}
 <button class="t-add-btn add-btn btn btn-default btn-sm" type="button" {{action 'append'}}><span class="btn-label">{{fa-icon "plus"}} {{t "admin.phone.add"}}</span></button>

@@ -4,10 +4,40 @@ from django.contrib import admin
 from django.core.urlresolvers import reverse
 from django.contrib.auth import views as auth_views, forms
 
-from .views import IndexView
+from rest_framework import routers
+
+from accounting import views as accounting_views
+from bigsky.views import IndexView
+from contact import views as contact_views
+from location import views as location_views
+from person import views as person_views
 
 
 admin.autodiscover()
+
+router = routers.DefaultRouter()
+
+# ACCOUNTING
+router.register(r'currencies', accounting_views.CurrencyViewSet)
+
+# CONTACT
+router.register(r'phone_number_types', contact_views.PhoneNumberTypeViewSet)
+router.register(r'phone_numbers', contact_views.PhoneNumberViewSet)
+router.register(r'addresses', contact_views.AddressViewSet)
+router.register(r'address_types', contact_views.AddressTypeViewSet)
+router.register(r'emails', contact_views.EmailViewSet)
+router.register(r'email_types', contact_views.EmailTypeViewSet)
+
+# LOCATION
+router.register(r'locations', location_views.LocationViewSet)
+router.register(r'location_levels', location_views.LocationLevelViewSet)
+router.register(r'location_statuses', location_views.LocationStatusViewSet)
+router.register(r'location_types', location_views.LocationTypeViewSet)
+
+# PERSON
+router.register(r'people', person_views.PersonViewSet)
+router.register(r'roles', person_views.RoleViewSet)
+
 
 urlpatterns = patterns('',
     # Admin
@@ -18,15 +48,13 @@ urlpatterns = patterns('',
         'authentication_form': forms.AuthenticationForm
         },
         name='login'),
-    # API
+    # DRF AUTH
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    # My APIs
-    url(r'', include('accounting.urls')),
-    url(r'', include('contact.urls')),
-    url(r'', include('location.urls')),
-    url(r'', include('person.urls')),
-    url(r'^.*$', IndexView.as_view(), name='index'),
-)
+    url(r'^$', IndexView.as_view(), name='index'),
+    # API
+    url(r'^api/admin/', include(router.urls)),
+    )
+
 
 if settings.DEBUG:
     import debug_toolbar

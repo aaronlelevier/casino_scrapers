@@ -8,7 +8,7 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
             idTwo: 'af34ee9b-833c-4f3e-a584-b6851d1e04b2', 
             roleTypeContractor: 'Third Party', 
             roleTypeGeneral: 'Internal',
-            name: 'Admin',
+            name: 'Administrator',
             namePut: 'Broom Pusher',
             locationLevelNameOne: this.location_level.nameCompany,
             locationLevelNameTwo: this.location_level.nameRegion,

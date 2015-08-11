@@ -6,7 +6,6 @@ from django.shortcuts import get_object_or_404
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import Permission, User
 
-import django_filters
 from rest_framework import viewsets, permissions, status, filters
 from rest_framework.response import Response
 from rest_framework.decorators import detail_route
@@ -49,9 +48,7 @@ class PersonStatusViewSet(BaseModelViewSet):
 ### PERSON
 
 class PersonViewSet(BaseModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
+
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     filter_backends = (filters.SearchFilter,)

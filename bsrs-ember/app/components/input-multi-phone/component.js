@@ -2,12 +2,14 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
+import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
 
-export default Ember.Component.extend({
+export default Ember.Component.extend(ValidationMixin, {
     uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi t-input-multi-phone'],
     fieldNames: 'number',
+    // number: validateEach('number'),
     actions: {
         changed(phonenumber, val) {
             Ember.run(() => {
@@ -19,12 +21,14 @@ export default Ember.Component.extend({
             var type = this.get('default_type').get('id');
             var related_field = this.get('related_field');
             var related_pk = this.get('related_pk');
-            var model = {id: id, type: type};
+            var model = {id: id};
             model[related_field] = related_pk;
-            this.get('model').push(model);
+            var phone_number = this.get('model').push(model);
+            phone_number.set('type', type);
         },
         delete(entry) {
-            this.get('model').removeObject(entry);
+            this.get('model').remove(entry.id);
+            this.sendAction('delete');
         }
     }
 }); 

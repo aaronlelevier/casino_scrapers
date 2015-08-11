@@ -112,7 +112,7 @@ class LocationListTests(APITestCase):
         )
 
 
-class LocationGetTests(APITestCase):
+class LocationDetailTests(APITestCase):
 
     def setUp(self):
         create_locations()
@@ -159,6 +159,19 @@ class LocationGetTests(APITestCase):
             Location.objects.get(id=data['children'][0]['id']),
             self.location.children.all()
         )
+
+    ### DETAIL ROUTES
+
+    def test_get_level_children(self):
+        # SetUp
+        east = Location.objects.get(name='east')
+        store_ll = LocationLevel.objects.get(name='store')
+        # Test
+        response = self.client.get('/api/admin/locations/{pk}/{level_id}/'.format(
+            pk=east.id, level_id=store_ll.id))
+        data = json.loads(response.content)
+        store1 = Location.objects.filter(location_level=store_ll).first()
+        self.assertIn(str(store1.id), response.content)
 
 
 class LocationCreateTests(APITestCase):

@@ -1,22 +1,27 @@
 const BSRS_PERSON_ID = '139543cf-8fea-426a-8bc3-09778cd79901';
-const BSRS_PERSON_USERNAME = 'mgibson';
+const BSRS_PERSON_ORIG_USERNAME = 'mgibson';
+const BSRS_PERSON_USERNAME = BSRS_PERSON_ORIG_USERNAME + '1';
 const BSRS_PERSON_PASSWORD = '1!';
 const BSRS_PERSON_EMAIL = [];
-const BSRS_PERSON_FIRST_NAME = 'Mel';
+const BSRS_PERSON_ORIG_FIRST_NAME = 'Mel';
+const BSRS_PERSON_FIRST_NAME = BSRS_PERSON_ORIG_FIRST_NAME + '1';
 const BSRS_PERSON_MIDDLE_INITIAL = 'B';
-const BSRS_PERSON_LAST_NAME = 'Gibson';
+const BSRS_PERSON_ORIG_LAST_NAME = 'Gibson';
+const BSRS_PERSON_LAST_NAME = BSRS_PERSON_ORIG_LAST_NAME + '1';
 const BSRS_PERSON_employee_id = '5063';
-const BSRS_PERSON_AUTH_AMOUNT = {currency: '535543wf-80ea-426a-8cc3-09728cd74952', amount: '50000.00'};
-const BSRS_PERSON_TITLE = 'RVP';
+const BSRS_PERSON_AUTH_AMOUNT = '50000.00';
+const BSRS_PERSON_ORIG_TITLE = 'MVP';
+const BSRS_PERSON_TITLE = '1 ' + BSRS_PERSON_ORIG_TITLE;
 const BSRS_PERSON_LOCATION = '';
 const BSRS_PERSON_PHONE_NUMBERS = [];
 const BSRS_PERSON_ADDRESSES = [];
 const BSRS_PERSON_UNUSED_ID = 'cadba3ba-a533-44e0-ab1f-57cc1b052138';
 
 var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
-    var factory = function(role_defaults, status_defaults) {
+    var factory = function(role_defaults, status_defaults, currency_defaults) {
         this.role_defaults = role_defaults;
-        this.status_defaults = status_defaults
+        this.status_defaults = status_defaults;
+        this.currency_defaults = currency_defaults;
     };
     factory.prototype.defaults = function() {
         return {
@@ -35,6 +40,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             employee_id: BSRS_PERSON_employee_id,
             title: BSRS_PERSON_TITLE,
             auth_amount: BSRS_PERSON_AUTH_AMOUNT,
+            auth_currency: this.currency_defaults.id,
             unusedId: BSRS_PERSON_UNUSED_ID
         };
     };
@@ -44,10 +50,14 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
 if (typeof window === 'undefined') {
     var role_defaults = require('./role');
     var status_defaults = require('./status');
-    module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults).defaults();
+    var currency_defaults = require('./currencies');
+    module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults).defaults();
 } else {
-    define('bsrs-ember/vendor/defaults/person', ['exports', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/status'], function (exports, role_defaults, status_defaults) {
+    define('bsrs-ember/vendor/defaults/person', ['exports', 'bsrs-ember/vendor/defaults/role', 
+                                                'bsrs-ember/vendor/defaults/status', 
+                                                'bsrs-ember/vendor/defaults/currencies'], 
+    function (exports, role_defaults, status_defaults, currency_defaults) {
         'use strict';
-        return new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults).defaults();
+        return new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults).defaults();
     });
 }

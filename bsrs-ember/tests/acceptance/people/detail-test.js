@@ -8,6 +8,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
+import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_DEFAULTS_PUT from 'bsrs-ember/vendor/defaults/person-put';
@@ -52,11 +53,11 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     });
 });
 
-test('when you deep link to the person detail view you get bound attrs', (assert) => {
+test('sco when you deep link to the person detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        var person = store.find('person').objectAt(0);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isNotDirty'));
         assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
         assert.equal(find('.t-person-first-name').val(), PEOPLE_DEFAULTS.first_name);
@@ -89,7 +90,8 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeId);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveId);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredId);
-        assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount.amount);
+        assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
+        assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
     });
 
     var url = PREFIX + DETAIL_URL + '/';
@@ -102,15 +104,15 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-person-last-name', PEOPLE_DEFAULTS_PUT.last_name);
     fillIn('.t-person-title', PEOPLE_DEFAULTS_PUT.title);
     fillIn('.t-person-employee_id', PEOPLE_DEFAULTS_PUT.employee_id);
-    fillIn('.t-person-auth_amount', PEOPLE_DEFAULTS_PUT.auth_amount.amount);
+    fillIn('.t-person-auth_amount', PEOPLE_DEFAULTS_PUT.auth_amount);
     andThen(() => {
-        var person = store.find('person').objectAt(0);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isDirty'));
         assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     click(SAVE_BTN);
     andThen(() => {
-        var person = store.find('person').objectAt(0);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(store.find('person').get('length'), 10);
         assert.ok(person.get('isNotDirty'));
@@ -268,7 +270,7 @@ test('currency helper displays correct currency format', (assert) => {
     visit(DETAIL_URL);
     var symbol = '$';
     andThen(() => {
-        assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount.amount);
+        assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
     });
 });
 
@@ -295,13 +297,40 @@ test('when you deep link to the person detail view you can add a new phone numbe
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-input-multi-phone').find('input').length, 3);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); //TODO: assert this bug/fix it using a unit test for person
-        //assert.ok(person.get('isDirtyOrRelatedDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when you deep link to the person detail view you can remove a new phone number', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-input-multi-phone').find('input').length, 2);
+    });
+    click('.t-del-btn:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-input-multi-phone').find('input').length, 1);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
+    });
+    var phone_numbers = PHONE_NUMBER_FIXTURES.put();
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: [phone_numbers[1]]});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
     andThen(() => {
@@ -330,9 +359,41 @@ test('when you deep link to the person detail view you can change the phone numb
         assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
         assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
         assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
-
     });
 });
+
+// test('when you deep link to the person detail view you can add and save a new phone number with validation', (assert) => {
+//     visit(DETAIL_URL);
+//     click('.t-add-btn:eq(0)');
+//     andThen(() => {
+//         assert.equal(currentURL(), DETAIL_URL);
+//     });
+//     // var phone_numbers = PHONE_NUMBER_FIXTURES.put();
+//     // phone_numbers[0].type = PHONE_NUMBER_TYPES_DEFAULTS.mobileId;
+//     // var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+//     // phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+//     // var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
+//     // xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+//     click(SAVE_BTN);
+//     andThen(() => {
+//         assert.equal(currentURL(), DETAIL_URL);
+//         var person = store.find('person', PEOPLE_DEFAULTS.id);
+//         assert.ok(person.get('isNotDirty'));
+//         assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+//         assert.equal(person.get('phone_numbers').objectAt(0).get('number'), undefined);
+//         // assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
+//     });
+//     // fillIn('.t-input-multi-phone select:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+//     // click(SAVE_BTN);
+//     // andThen(() => {
+//     //     assert.equal(currentURL(), PEOPLE_URL);
+//     //     var person = store.find('person', PEOPLE_DEFAULTS.id);
+//     //     assert.ok(person.get('isNotDirty'));
+//     //     assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+//     //     assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+//     //     assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
+//     // });
+// });
 
 test('when you deep link to the person detail view you can add a new address', (assert) => {
     visit(DETAIL_URL);
