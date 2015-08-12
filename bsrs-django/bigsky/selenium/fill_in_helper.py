@@ -1,7 +1,11 @@
 class FillInHelper(object):
-    def _fill_in(self, person):
-        print person
-        for k, v in person.__dict__.iteritems():
+    '''
+    This Helper will loop through model's attributes and find the element on the page
+    and fill in input with the attributes' values
+    Ensure model has attrs (k) equal to id on template 
+    '''
+    def _fill_in(self, model):
+        for k, v in model.__dict__.iteritems():
             setattr(self, k + '_input', self.find_id_element(k))
             inputrr = getattr(self, k + '_input')
             inputrr.send_keys(v)
