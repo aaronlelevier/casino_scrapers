@@ -30,7 +30,7 @@ function pipInstall {
     rm -rf venv
     virtualenv venv
     source venv/bin/activate
-    pip install -r requirements.txt --no-use-wheel
+    pip install -r requirements.txt
     PIP_INSTALL=$?
     if [ "$PIP_INSTALL" == 1 ]; then
       echo "pip install failed"
