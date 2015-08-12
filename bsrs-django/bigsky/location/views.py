@@ -44,9 +44,9 @@ class LocationViewSet(BaseModelViewSet):
     '''
     ## Detail Routes
 
-    #### Will return all Child Locations for a single LocationLevel
+    1. Will return all Child Locations for a single LocationLevel
 
-    `/api/admin/locations/{pk}/{level_id}/`
+        -`/api/admin/locations/{pk}/level/{level_id}/`
     
     '''
    
@@ -65,7 +65,7 @@ class LocationViewSet(BaseModelViewSet):
         else:
             raise MethodNotAllowed(method=self.action)
 
-    @detail_route(methods=['GET'], permission_classes=[IsAuthenticated], url_path=r'(?P<level_id>[\w\-]+)')
+    @detail_route(methods=['GET'], url_path=r'level/(?P<level_id>[\w\-]+)')
     def get_level_children(self, request, pk=None, level_id=None):
         instance = get_object_or_404(Location, pk=pk)
         child_locations = Location.objects.get_level_children(instance, level_id)
