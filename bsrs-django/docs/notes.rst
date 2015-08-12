@@ -48,3 +48,9 @@ Linux
     
     # find file
     sudo find . -name "<filename>"
+
+
+Translation
+-----------
+``django.middleware.locale.LocaleMiddleware`` to specify Location that Django searches
+for to do translations.

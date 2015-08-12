@@ -48,11 +48,11 @@ Build Node
     mkdir /home/web/node_modules/
     cd /home/web/node_modules/
 
-    wget 'https://nodejs.org/dist/v0.12.7/node-v0.12.7-linux-x86.tar.gz'
-    tar xvzf node-v0.12.7-linux-x86.tar.gz
+    wget 'https://nodejs.org/dist/v0.12.7/node-v0.12.7.tar.gz'
+    tar xvzf node-v0.12.7.tar.gz
 
     # move the extracted tarball into a folder called 'node'
-    mv node-v0.12.7-linux-x86 node
+    mv node-v0.12.7 node
 
     # now link node/npm
     ls -s /home/vagrant/node_modules/node /usr/bin/node
