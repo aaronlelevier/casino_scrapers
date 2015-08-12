@@ -1,7 +1,3 @@
-import unittest
-from selenium import webdriver
-from selenium.webdriver.support.ui import Select
-
 class MethodHelpers(object):
 
     def wait_xhr(self, class_name):

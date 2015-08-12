@@ -28,7 +28,8 @@ class LoginTests(unittest.TestCase, PersonHelper, LoginMixin, JavascriptMixin, F
 
     def test_navigate_to_location_list_and_create_new_location_record(self):
         self.login()
-        self.driver.find_element_by_class_name("t-nav-admin").click()
+        nav_admin = self.wait_for_xhr_request("t-nav-admin")
+        nav_admin.click()
         nav_admin_location = self.wait_for_xhr_request("t-nav-admin-location")
         nav_admin_location.click()
         new_location = self.wait_for_xhr_request("t-location-new")
@@ -70,7 +71,8 @@ class LoginTests(unittest.TestCase, PersonHelper, LoginMixin, JavascriptMixin, F
 
     def test_navigate_to_role_list_and_create_new_role_record(self):
         self.login()
-        self.driver.find_element_by_class_name("t-nav-admin").click()
+        nav_admin = self.wait_for_xhr_request("t-nav-admin")
+        nav_admin.click()
         nav_admin_role = self.wait_for_xhr_request("t-nav-admin-role")
         nav_admin_role.click()
         new_role = self.wait_for_xhr_request("t-role-new")
@@ -101,7 +103,8 @@ class LoginTests(unittest.TestCase, PersonHelper, LoginMixin, JavascriptMixin, F
 
     def test_navigate_to_location_list_and_create_new_location_level_record(self):
         self.login()
-        self.driver.find_element_by_class_name("t-nav-admin").click()
+        nav_admin = self.wait_for_xhr_request("t-nav-admin")
+        nav_admin.click()
         nav_admin_locationOrg = self.wait_for_xhr_request("t-nav-admin-locationOrg")
         nav_admin_locationOrg.click()
         new_location = self.wait_for_xhr_request("t-location-level-new")
@@ -128,11 +131,11 @@ class LoginTests(unittest.TestCase, PersonHelper, LoginMixin, JavascriptMixin, F
 
     def test_navigate_to_people_list_and_create_new_person_record(self):
         self.login()
-
-        self.find_class_element("t-nav-admin").click()
-        nav_admin_people = self.wait_xhr("t-nav-admin-people")
+        nav_admin = self.wait_for_xhr_request("t-nav-admin")
+        nav_admin.click()
+        nav_admin_people = self.wait_for_xhr_request("t-nav-admin-people")
         nav_admin_people.click()
-        first_person = self.wait_xhr("t-person-new")
+        first_person = self.wait_for_xhr_request("t-person-new")
         first_person.click()
 
         username = str(uuid.uuid4())[0:29]
@@ -141,7 +144,7 @@ class LoginTests(unittest.TestCase, PersonHelper, LoginMixin, JavascriptMixin, F
         self._fill_in(person)
 
         self.find_class_element("t-save-btn").click()
-        username_input = self.wait_xhr("t-person-username")
+        username_input = self.wait_for_xhr_request("t-person-username")
         assert username_input.get_attribute("value") == username
 
         first_name = "scooter"
@@ -209,6 +212,7 @@ class LoginTests(unittest.TestCase, PersonHelper, LoginMixin, JavascriptMixin, F
         assert last_name_input.get_attribute("value") == last_name
         assert emp_number_input.get_attribute("value") == employee_id
         assert title_input.get_attribute("value") == title
+
 
 if __name__ == "__main__":
     unittest.main()
