@@ -242,6 +242,17 @@ test('when new phone number is added after render, the person model is dirty whe
     assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
+test('when new address is added after render, the person model is dirty when new address is appended to the array of addresses', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(person.get('isNotDirty'));
+    var addresses = person.get('addresses');
+    var added_address = addresses.push({id: ADDRESS_DEFAULTS.idOne, person: PEOPLE_DEFAULTS.id});
+    added_address.set('type', ADDRESS_TYPES_DEFAULTS.officeId);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
 test('when phone number is removed after render, the person model is dirty', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
@@ -250,7 +261,21 @@ test('when phone number is removed after render, the person model is dirty', (as
     var phonenumbers = person.get('phone_numbers');
     phonenumbers.remove(PHONE_NUMBER_DEFAULTS.id);
     assert.ok(person.get('isNotDirty'));
-    // assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.set('dirtyModel', true);
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
+test('when address is removed after render, the person model is dirty', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var address = store.push('address', {id: ADDRESS_DEFAULTS.idOne, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne,
+                             type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(person.get('isNotDirty'));
+    var addresses = person.get('addresses');
+    addresses.remove(ADDRESS_DEFAULTS.idOne);
+    assert.ok(person.get('isNotDirty'));
+    person.set('dirtyModel', true);
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
 test('when no phone number and new phone number is added and updated, expect isDirty or Related to be true', (assert) => {

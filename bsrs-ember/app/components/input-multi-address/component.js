@@ -18,12 +18,14 @@ export default Ember.Component.extend({
             var type = this.get('default_type').get('id');
             var related_field = this.get('related_field');
             var related_pk = this.get('related_pk');
-            var model = {id: id, type: type};
+            var model = {id: id};
             model[related_field] = related_pk;
-            this.get('model').push(model);
+            var address = this.get('model').push(model);
+            address.set('type', type);
         },
         delete(entry) {
-            this.get('model').removeObject(entry);
+            this.get('model').remove(entry.id);
+            this.sendAction('delete');
         },
         changeState(state, val) {
             Ember.run(() => {

@@ -77,11 +77,11 @@ test('once added a button for address type appears with a button to delete it', 
     var $component = this.$('.t-input-multi-address');
     var $first_btn = $component.find('.t-add-address-btn:eq(0)');
     var $first_type_select = $component.find('.t-address-type');
-    var $first_del = $component.find('.t-del-btn:eq(0)');
+    var $first_del = $component.find('.t-del-address-btn:eq(0)');
     assert.equal($first_type_select.length, 0);
     assert.equal($first_del.length, 0);
     $first_btn.trigger('click');
-    $first_del = $component.find('.t-del-btn:eq(0)');
+    $first_del = $component.find('.t-del-address-btn:eq(0)');
     $first_type_select = $component.find('.t-address-type');
     assert.equal($first_del.length, 1);
     assert.equal($first_type_select.length, 1);
@@ -100,10 +100,10 @@ test('click delete btn will remove input', function(assert) {
     this.render(hbs`{{input-multi-address model=model}}`);
     var $component = this.$('.t-input-multi-address');
     assert.equal(this.$('.t-address-city').length, 2);
-    assert.equal($component.find('.t-del-btn').length, 2);
-    var $first_del_btn = $component.find('.t-del-btn:eq(0)');
+    assert.equal($component.find('.t-del-address-btn').length, 2);
+    var $first_del_btn = $component.find('.t-del-address-btn:eq(0)');
     $first_del_btn.trigger('click');
-    assert.equal($component.find('.t-del-btn').length, 1);
+    assert.equal($component.find('.t-del-address-btn').length, 1);
 });
 
 test('model with existing array of entries is shown at render and bound to model', function(assert) {
