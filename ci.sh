@@ -13,7 +13,11 @@ function npmInstall {
 }
 
 function emberTest {
-    ./node_modules/ember-cli/bin/ember test
+    if [ "{$OS}" == "darwin" ]; then
+      ./node_modules/ember-cli/bin/ember test
+    else
+      xvfb-run ./node_modules/ember-cli/bin/ember test
+    fi
     EMBER_TEST=$?
     if [ "$EMBER_TEST" == 1 ]; then
       echo "ember test failed"
