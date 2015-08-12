@@ -5,7 +5,9 @@ from rest_framework.test import APITestCase
 from model_mommy import mommy
 
 from contact.models import PhoneNumber, Address, Email
-from person.tests.factory import PASSWORD, create_person
+from contact.tests.factory import create_person_and_contacts
+from person.models import Person
+from person.tests.factory import PASSWORD, create_person, create_role
 
 
 class PhoneNumberViewSetTests(APITestCase):
@@ -32,6 +34,48 @@ class PhoneNumberViewSetTests(APITestCase):
         data = json.loads(response.content)
         numbers = data['results']
         self.assertEqual(len(numbers), 2)
+
+
+class PhoneNumberFilterTests(APITestCase):
+
+    def setUp(self):
+        # Role
+        self.role = create_role()
+        # Person Records w/ specific Username
+        for i in range(15):
+            name = self._get_name(i)
+            person = Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
+                first_name=name, role=self.role)
+            # Contact Info
+            create_person_and_contacts(person)
+
+        self.people = Person.objects.count()
+        # Login
+        self.person = create_person(username='aaron')
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    @staticmethod
+    def _get_name(record):
+        # Generate regarless of letter case name/username function 
+        # for "ordering" tests
+        if record % 2 == 0:
+            return "wat{}".format(chr(65+record))
+        else:
+            return "waT{}".format(chr(65+record))
+
+    def test_related_filter(self):
+        response = self.client.get('/api/admin/phone_numbers/?person__username={}'
+            .format(self.person.username))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['count'],
+            PhoneNumber.objects.filter(person__username=self.person.username).count()
+        )
+
 
 
 class PhoneNumberTypeViewSetTests(APITestCase):

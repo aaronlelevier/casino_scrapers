@@ -1,10 +1,12 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
+import rest_framework_filters as filters
 
 from contact.serializers import (PhoneNumberTypeSerializer, PhoneNumberSerializer,
     AddressTypeSerializer, AddressSerializer, EmailTypeSerializer, EmailSerializer)
 from contact.models import (PhoneNumber, PhoneNumberType, Address, AddressType,
     Email, EmailType)
+from person.views import PersonFilterSet
 
 
 class PhoneNumberTypeViewSet(viewsets.ModelViewSet):
@@ -16,6 +18,17 @@ class PhoneNumberTypeViewSet(viewsets.ModelViewSet):
     queryset = PhoneNumberType.objects.all()
 
 
+### PHONE NUMBER
+
+class PhoneNumberFilter(filters.FilterSet):
+    number = filters.AllLookupsFilter(name='number')
+    person = filters.RelatedFilter(PersonFilterSet, name='person')
+
+    class Meta:
+        model= PhoneNumber
+        fields = ['number']
+
+
 class PhoneNumberViewSet(viewsets.ModelViewSet):
     """
     API endpoint that allows locations to be viewed or edited.
@@ -23,6 +36,7 @@ class PhoneNumberViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = PhoneNumberSerializer
     queryset = PhoneNumber.objects.all()
+    filter_class = PhoneNumberFilter
     
     def get_queryset(self):
         """
@@ -33,7 +47,9 @@ class PhoneNumberViewSet(viewsets.ModelViewSet):
         if pn_type is not None:
             queryset = queryset.filter(type__name__exact=pn_type)
         return queryset
-    
+
+
+### ADDRESS
 
 class AddressViewSet(viewsets.ModelViewSet):
     """
