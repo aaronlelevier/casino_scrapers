@@ -18,7 +18,6 @@ The following dependencies are required to run the build script
   nodejs v0.12+
   npm v2.10+
   bower v1.4+
-  phantomjs v2.0+
   postgresql
   python v2.7.6+
   pip

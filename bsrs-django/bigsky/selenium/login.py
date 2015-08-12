@@ -1,3 +1,5 @@
+import time
+
 from selenium.webdriver.common.keys import Keys
 
 
@@ -6,8 +8,8 @@ class LoginMixin(object):
     def login(self, username="aaron", password="1234"):
         self.driver.get("http://127.0.0.1:8001/login/")
 
-        username_input = self.driver.find_element_by_id("id_username")
-        password_input = self.driver.find_element_by_id("id_password")
+        username_input = self.wait_for_xhr_request_id("id_username")
+        password_input = self.wait_for_xhr_request_id("id_password")
 
         assert username_input.is_displayed()
         assert password_input.is_displayed()
@@ -16,4 +18,3 @@ class LoginMixin(object):
         password_input.send_keys(password)
         password_input.send_keys(Keys.RETURN)
 
-        self.wait.until(lambda browser: browser.title.lower().startswith('bsrs-ember'))
