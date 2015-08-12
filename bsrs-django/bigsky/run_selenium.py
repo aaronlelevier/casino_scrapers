@@ -1,5 +1,6 @@
 import sys
 import os
+import platform
 from os.path import join, abspath, dirname
 import time
 import signal
@@ -21,11 +22,17 @@ def run_selenium_tests():
     if run_result > 0:
         raise Exception("{} selenium test(s) failed".format(run_result))
 
+def sleep_based_on_platform():
+    if platform.system() == "Darwin":
+        time.sleep(2)
+    else:
+        time.sleep(20)
+
 if __name__ == '__main__':
     sys.path.append(abspath(join(dirname(__file__))))
     p = multiprocessing.Process(target=django_app)
     p.daemon = True
     p.start()
-    time.sleep(2)
+    sleep_based_on_platform()
     run_selenium_tests()
     os.kill(int(p.pid), signal.SIGTERM)
