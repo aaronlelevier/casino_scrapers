@@ -94,8 +94,8 @@ function runSeleniumTests {
 }
 
 cd bsrs-ember
-npmInstall
-emberTest
+# npmInstall
+# emberTest
 
 cd ../bsrs-django
 pipInstall
