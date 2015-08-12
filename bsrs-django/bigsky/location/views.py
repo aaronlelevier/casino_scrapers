@@ -46,7 +46,7 @@ class LocationViewSet(BaseModelViewSet):
 
     1. Will return all Child Locations for a single LocationLevel
 
-        -`/api/admin/locations/{pk}/level/{level_id}/`
+        **URL:** `/api/admin/locations/{pk}/level/{level_id}/`
     
     '''
    
