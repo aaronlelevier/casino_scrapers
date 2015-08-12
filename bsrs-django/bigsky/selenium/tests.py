@@ -26,11 +26,6 @@ class LoginTests(unittest.TestCase, PersonHelper, LoginMixin, JavascriptMixin, F
     def tearDown(self):
         self.driver.close()
 
-    def test_login_page_rendered_with_inputs(self):
-        self.login()
-        current_user = self.driver.find_element_by_class_name("current-user")
-        assert current_user.is_displayed()
-
     def test_navigate_to_location_list_and_create_new_location_record(self):
         self.login()
         self.driver.find_element_by_class_name("t-nav-admin").click()
