@@ -60,6 +60,8 @@ MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
+    # Translation Req
+    'django.middleware.locale.LocaleMiddleware',
 )
 
 ROOT_URLCONF = 'bigsky.urls'
