@@ -2896,7 +2896,7 @@
     "auth_amount": "0.0000",
     "title": "MVP",
     "is_superuser": false,
-    "last_login": "2015-08-11T16:14:06.301Z",
+    "last_login": "2015-08-12T17:31:13.845Z",
     "location": null,
     "password_expire": null,
     "role": "ecbb47a0-9774-49b4-9d28-d94f8691a334",
@@ -2909,11 +2909,11 @@
       1
     ],
     "accept_notify": true,
-    "password": "md5$MBEVX3NG2nlk$96fddb5c50665230821aefda2f90bea5",
+    "password": "md5$pUJn5WtquTNJ$963c603c1ff76520f6c509d7c526cb54",
     "proxy_status": null,
     "proxy_user": null,
     "created": "2015-08-11T16:11:45.424Z",
-    "modified": "2015-08-11T16:13:51.801Z",
+    "modified": "2015-08-12T17:30:49.144Z",
     "email": "myemail@mail.com",
     "accept_assign": true,
     "password_change": ""
