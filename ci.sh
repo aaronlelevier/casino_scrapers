@@ -13,7 +13,11 @@ function npmInstall {
 }
 
 function emberTest {
-    ./node_modules/ember-cli/bin/ember test
+    if [ "$(uname)" == "Darwin" ]; then
+      ./node_modules/ember-cli/bin/ember test
+    else
+      xvfb-run ./node_modules/ember-cli/bin/ember test
+    fi
     EMBER_TEST=$?
     if [ "$EMBER_TEST" == 1 ]; then
       echo "ember test failed"
@@ -73,7 +77,7 @@ function copyEmberAssetsToDjango {
 
 function runSeleniumTests {
 
-    DB_NAME="ci"
+    DB_NAME="ci3"
     export PGPASSWORD=tango
 
     dropdb $DB_NAME -U bsdev

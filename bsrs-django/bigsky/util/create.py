@@ -8,6 +8,15 @@ from django.contrib.auth.models import ContentType, Group, Permission
 from util.permissions import perms_map
 
 
+LOREM_IPSUM = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+
+def random_lorem(words=5):
+    msg = []
+    for w in range(words):
+        msg.append(random.choice(LOREM_IPSUM.split()))
+    return ' '.join(msg)
+
+
 def _get_groups_and_perms():
     "contenttypes and sites must be added to installed_apps to use."
     ct = ContentType.objects.get(app_label='person', model='role')

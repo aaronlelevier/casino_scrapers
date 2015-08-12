@@ -53,7 +53,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     });
 });
 
-test('sco when you deep link to the person detail view you get bound attrs', (assert) => {
+test('when you deep link to the person detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -406,7 +406,7 @@ test('when you deep link to the person detail view you can add a new address', (
     andThen(() => {
         assert.equal(find('.t-input-multi-address').find('input').length, 6);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     var addresses = ADDRESS_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
@@ -440,5 +440,33 @@ test('when you deep link to the person detail view you can change the address ty
         assert.equal(person.get('addresses').objectAt(0).get('type'), ADDRESS_TYPES_DEFAULTS.shippingId);
         assert.equal(person.get('addresses').objectAt(2).get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
         assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
+    });
+});
+
+test('when you deep link to the person detail view you can remove a new address', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-input-multi-address').find('input').length, 4);
+    });
+    click('.t-del-address-btn:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-input-multi-address').find('input').length, 2);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
+    });
+    var addresses = ADDRESS_FIXTURES.put();
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: [addresses[1]]});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
