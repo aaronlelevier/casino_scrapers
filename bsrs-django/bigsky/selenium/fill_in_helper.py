@@ -5,7 +5,7 @@ class FillInHelper(object):
     Ensure model has attrs (k) equal to id on template 
     '''
     def _fill_in(self, model):
-        for k, v in model.__dict__.iteritems():
+        for k, v in model.__dict__.items():
             setattr(self, k + '_input', self.wait_for_xhr_request_id(k))
             inputrr = getattr(self, k + '_input')
             inputrr.send_keys(v)
@@ -18,7 +18,7 @@ class FillInDictHelper(object):
     Ensure model has attrs (k) equal to id on template 
     '''
     def _fill_in_dict(self, dict_):
-        for k, v in dict_.iteritems():
+        for k, v in dict_.items():
             setattr(self, k + '_input', self.wait_for_xhr_request_id(k))
             inputrr = getattr(self, k + '_input')
             inputrr.send_keys(v)
