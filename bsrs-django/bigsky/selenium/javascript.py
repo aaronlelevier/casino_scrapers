@@ -15,3 +15,11 @@ class JavascriptMixin(object):
                     assert element.is_displayed()
                 return element
             time.sleep(1)
+
+    def wait_for_xhr_request_id(self, selector):
+        for w in range(1, 10):
+            print "waiting for xhr callback..."
+            element = self.driver.find_element_by_id(selector)
+            if element.is_displayed():
+                return element
+            time.sleep(1)
