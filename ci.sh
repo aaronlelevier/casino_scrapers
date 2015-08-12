@@ -29,6 +29,11 @@ function pipInstall {
     rm -rf venv
     virtualenv -p /usr/local/bin/python3 venv
     source venv/bin/activate
+    
+    ls
+    echo ""
+    ls venv/bin
+
     pip install -r requirements.txt
     PIP_INSTALL=$?
     if [ "$PIP_INSTALL" == 1 ]; then
