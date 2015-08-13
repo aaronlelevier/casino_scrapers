@@ -103,12 +103,11 @@ export default Model.extend({
     },
     createSerialize() {
         var store = this.get('store');
-        var role_id = store.findOne('role').get('id');
         return {
             id: this.get('id'),
             username: this.get('username'),
             password: this.get('password'),
-            role: role_id
+            role: this.get('role')
         };
     },
     serialize() {

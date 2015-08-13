@@ -18,7 +18,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store, payload, detail_xhr;
 
-module('Acceptance | people-new', {
+module('sco Acceptance | people-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
@@ -42,7 +42,7 @@ module('Acceptance | people-new', {
     }
 });
 
-test('sco visiting /people/new', (assert) => {
+test('visiting /people/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(PEOPLE_URL);
@@ -61,13 +61,15 @@ test('sco visiting /people/new', (assert) => {
         var person = store.find('person').objectAt(0);
         assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
         assert.equal(person.get('role'), PEOPLE_DEFAULTS.role);
+        // assert.equal(find('.t-person-role').val(), PEOPLE_DEFAULTS.role);
         assert.ok(person.get('isNotDirty'));
     });
 });
 
-test('sco validation works and when hit save, we do same post', (assert) => {
+test('validation works and when hit save, we do same post', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     var url = PREFIX + PEOPLE_URL + '/';
     xhr( url,'POST',JSON.stringify(payload),{},201,response );
@@ -93,8 +95,6 @@ test('sco validation works and when hit save, we do same post', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
-        // assert.equal(find('.t-person-role').val(), PEOPLE_DEFAULTS.role);
     });
 });
 

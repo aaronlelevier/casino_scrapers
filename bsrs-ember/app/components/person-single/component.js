@@ -8,6 +8,12 @@ export default Ember.Component.extend(ValidationMixin, {
     attemptedTransition: '',
     usernameValidation: validate('model.username'),
     actions: {
+        changed(val) {
+            var that = this;
+            Ember.run(() => {
+                that.get('model').set('role', val);
+            });
+        },
         savePerson() {
             this.get('model').set('dirtyModel', false);
             this.set('submitted', true);
