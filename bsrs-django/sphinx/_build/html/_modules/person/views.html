@@ -53,22 +53,10 @@
 <span class="sd">    API endpoint that allows roles to be viewed or edited.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">Role</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">RoleSerializer</span>
     <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
 
-<div class="viewcode-block" id="RoleViewSet.get_serializer_class"><a class="viewcode-back" href="../../modules/models.html#person.views.RoleViewSet.get_serializer_class">[docs]</a>    <span class="k">def</span> <span class="nf">get_serializer_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        set the serializer based on the method</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s">&#39;retrieve&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ps</span><span class="o">.</span><span class="n">RoleSerializer</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="p">(</span><span class="s">&#39;update&#39;</span> <span class="ow">or</span> <span class="s">&#39;partial_update&#39;</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">ps</span><span class="o">.</span><span class="n">RoleCreateSerializer</span>
-        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s">&#39;create&#39;</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ps</span><span class="o">.</span><span class="n">RoleCreateSerializer</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">ps</span><span class="o">.</span><span class="n">RoleSerializer</span>
-
-</div></div>
+</div>
 <span class="k">class</span> <span class="nc">PersonStatusViewSet</span><span class="p">(</span><span class="n">BaseModelViewSet</span><span class="p">):</span>
     <span class="n">queryset</span> <span class="o">=</span> <span class="n">PersonStatus</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
     <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">PersonStatusSerializer</span>

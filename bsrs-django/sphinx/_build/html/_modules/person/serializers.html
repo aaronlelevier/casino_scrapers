@@ -57,46 +57,24 @@
 
 <span class="c">### ROLE ###</span>
 
-<span class="k">class</span> <span class="nc">RoleSerializer</span><span class="p">(</span><span class="n">BaseCreateSerializer</span><span class="p">):</span>
+<div class="viewcode-block" id="RoleSerializer"><a class="viewcode-back" href="../../modules/models.html#person.serializers.RoleSerializer">[docs]</a><span class="k">class</span> <span class="nc">RoleSerializer</span><span class="p">(</span><span class="n">BaseCreateSerializer</span><span class="p">):</span>
+    <span class="s">&quot;Serializer used for all ``Role`` API Endpoint operations.&quot;</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Role</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;role_type&#39;</span><span class="p">,</span> <span class="s">&#39;location_level&#39;</span><span class="p">)</span>
 
-
-<span class="k">class</span> <span class="nc">RoleIdNameSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+</div>
+<div class="viewcode-block" id="RoleIdNameSerializer"><a class="viewcode-back" href="../../modules/models.html#person.serializers.RoleIdNameSerializer">[docs]</a><span class="k">class</span> <span class="nc">RoleIdNameSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
+    <span class="s">&quot;Used for nested serializer data for other serializers.&quot;</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Role</span>
         <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">,)</span>
 
 
-<span class="k">class</span> <span class="nc">RoleCreateSerializer</span><span class="p">(</span><span class="n">BaseCreateSerializer</span><span class="p">):</span>
-
-    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Role</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;role_type&#39;</span><span class="p">,</span> <span class="s">&#39;location_level&#39;</span><span class="p">)</span>
-
-
-<span class="k">class</span> <span class="nc">RoleDetailSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
-
-    <span class="n">group</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span>
-        <span class="n">queryset</span><span class="o">=</span><span class="n">Group</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
-        <span class="n">required</span><span class="o">=</span><span class="bp">False</span>
-        <span class="p">)</span>
-    <span class="n">location_level</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">PrimaryKeyRelatedField</span><span class="p">(</span>
-        <span class="n">queryset</span><span class="o">=</span><span class="n">LocationLevel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">(),</span>
-        <span class="n">required</span><span class="o">=</span><span class="bp">False</span>
-        <span class="p">)</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">serializers</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s">&#39;group.name&#39;</span><span class="p">)</span>
-
-    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
-        <span class="n">model</span> <span class="o">=</span> <span class="n">Role</span>
-        <span class="n">fields</span> <span class="o">=</span> <span class="p">(</span><span class="s">&#39;id&#39;</span><span class="p">,</span> <span class="s">&#39;group&#39;</span><span class="p">,</span> <span class="s">&#39;name&#39;</span><span class="p">,</span> <span class="s">&#39;location_level&#39;</span><span class="p">,</span> <span class="s">&#39;role_type&#39;</span><span class="p">,)</span>
-
-
 <span class="c">### PERSON STATUS ###</span>
-
+</div>
 <span class="k">class</span> <span class="nc">PersonStatusSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
     
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
@@ -113,7 +91,11 @@
 <span class="p">)</span>
 
 
-<span class="k">class</span> <span class="nc">PersonCreateSerializer</span><span class="p">(</span><span class="n">BaseCreateSerializer</span><span class="p">):</span>
+<div class="viewcode-block" id="PersonCreateSerializer"><a class="viewcode-back" href="../../modules/models.html#person.serializers.PersonCreateSerializer">[docs]</a><span class="k">class</span> <span class="nc">PersonCreateSerializer</span><span class="p">(</span><span class="n">BaseCreateSerializer</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Base Create serializer because ``Role`` needed before second step </span>
+<span class="sd">    of configuration for the ``Person``.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Person</span>
@@ -125,7 +107,7 @@
         <span class="n">person</span><span class="o">.</span><span class="n">groups</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">person</span><span class="o">.</span><span class="n">role</span><span class="o">.</span><span class="n">group</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">person</span>
 
-
+</div>
 <span class="k">class</span> <span class="nc">PersonListSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
 
     <span class="n">role</span> <span class="o">=</span> <span class="n">RoleIdNameSerializer</span><span class="p">()</span>
@@ -152,8 +134,7 @@
 
 <div class="viewcode-block" id="PersonUpdateSerializer"><a class="viewcode-back" href="../../modules/models.html#person.serializers.PersonUpdateSerializer">[docs]</a><span class="k">class</span> <span class="nc">PersonUpdateSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">ModelSerializer</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    Currently, you can Add/Update PhoneNumber&#39;s when Updating a Person, </span>
-<span class="sd">    but, you cannot delete PhoneNumber&#39;s Yet.</span>
+<span class="sd">    Update a ``Person`` and all nested related ``Contact`` Models.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="n">phone_numbers</span> <span class="o">=</span> <span class="n">PhoneNumberSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
     <span class="n">addresses</span> <span class="o">=</span> <span class="n">AddressSerializer</span><span class="p">(</span><span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
@@ -197,8 +178,8 @@
 </div>
 <div class="viewcode-block" id="PasswordSerializer"><a class="viewcode-back" href="../../modules/models.html#person.serializers.PasswordSerializer">[docs]</a><span class="k">class</span> <span class="nc">PasswordSerializer</span><span class="p">(</span><span class="n">serializers</span><span class="o">.</span><span class="n">Serializer</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
-<span class="sd">    TODO: </span>
-<span class="sd">    this will be a route for Password and the main Update will be separate</span>
+<span class="sd">    **TODO:** this will be a route for Password and the main ``Person </span>
+<span class="sd">    Update`` will be separate</span>
 <span class="sd">    &#39;&#39;&#39;</span>
     <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
         <span class="n">model</span> <span class="o">=</span> <span class="n">Person</span>

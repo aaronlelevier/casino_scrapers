@@ -55,6 +55,183 @@
 <span id="views"></span><h2>Views<a class="headerlink" href="#module-accounting.views" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
+<div class="section" id="bigsky">
+<h1>Bigsky<a class="headerlink" href="#bigsky" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id1">
+<h2>Views<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-bigsky.views"></span><dl class="class">
+<dt id="bigsky.views.IndexView">
+<em class="property">class </em><code class="descclassname">bigsky.views.</code><code class="descname">IndexView</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/bigsky/views.html#IndexView"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#bigsky.views.IndexView" title="Permalink to this definition">¶</a></dt>
+<dd><p>Only Authenticated Users can get to the Home page 
+where the Ember Authenticated App lives.  Else, they
+get redirected to the Login Page.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="location">
+<h1>Location<a class="headerlink" href="#location" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="id2">
+<h2>Models<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-location.models"></span><dl class="class">
+<dt id="location.models.Location">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">Location</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#Location"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.Location" title="Permalink to this definition">¶</a></dt>
+<dd><p>Physical Store <code class="docutils literal"><span class="pre">Locations</span></code> that have a <code class="docutils literal"><span class="pre">LocationLevel</span></code>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Ex:</th><td class="field-body">At the <em>Region</em> <code class="docutils literal"><span class="pre">LocationLevel</span></code> there is a 
+<em>East</em> <code class="docutils literal"><span class="pre">Location</span></code>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="class">
+<dt id="location.models.LocationLevel">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">LocationLevel</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#LocationLevel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.LocationLevel" title="Permalink to this definition">¶</a></dt>
+<dd><p>LocationLevel records must be unique by: name, role_type</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="location.models.LocationManager">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">LocationManager</code><a class="reference internal" href="../_modules/location/models.html#LocationManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.LocationManager" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="location.models.LocationManager.get_level_children">
+<code class="descname">get_level_children</code><span class="sig-paren">(</span><em>location</em>, <em>level_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#LocationManager.get_level_children"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.LocationManager.get_level_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get all child Locations at a specific LocationLevel.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="location.models.LocationQuerySet">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">LocationQuerySet</code><span class="sig-paren">(</span><em>model=None</em>, <em>query=None</em>, <em>using=None</em>, <em>hints=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#LocationQuerySet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.LocationQuerySet" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="method">
+<dt id="location.models.LocationQuerySet.get_level_children">
+<code class="descname">get_level_children</code><span class="sig-paren">(</span><em>location</em>, <em>level_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#LocationQuerySet.get_level_children"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.LocationQuerySet.get_level_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns all Child <code class="docutils literal"><span class="pre">Locations</span></code> for a single <code class="docutils literal"><span class="pre">LocationLevel</span></code></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Location:</th><td class="field-body">Parent <code class="docutils literal"><span class="pre">Location</span></code></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Level_id:</th><td class="field-body"><code class="docutils literal"><span class="pre">LocationLevel.id</span></code> of the <code class="docutils literal"><span class="pre">Child</span> <span class="pre">Locations</span></code> 
+to return.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="location.models.LocationStatus">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">LocationStatus</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#LocationStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.LocationStatus" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tells whether the store is: <em>Open, Closed, Future, etc...</em></p>
+<p>Single <em>name</em> field, with more configuration on this 
+model planned.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="location.models.LocationStatusManager">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">LocationStatusManager</code><a class="reference internal" href="../_modules/location/models.html#LocationStatusManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.LocationStatusManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the <strong>default</strong> status for the initial Location 
+<code class="docutils literal"><span class="pre">.create()</span></code> if one isn&#8217;t specified.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="location.models.LocationType">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">LocationType</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#LocationType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.LocationType" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="location.models.LocationTypeManager">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">LocationTypeManager</code><a class="reference internal" href="../_modules/location/models.html#LocationTypeManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.LocationTypeManager" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="location.models.SelfRefrencingBaseModel">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">SelfRefrencingBaseModel</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#SelfRefrencingBaseModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.SelfRefrencingBaseModel" title="Permalink to this definition">¶</a></dt>
+<dd><p><code class="docutils literal"><span class="pre">symmetrical</span> <span class="pre">=</span> <span class="pre">false</span></code>: to indicate one way relationship</p>
+<p><a class="reference external" href="https://docs.djangoproject.com/en/1.8/ref/models/fields/#django.db.models.ManyToManyField.symmetrical">Symetrical Documentation Here</a></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="location.models.SelfRefrencingManager">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">SelfRefrencingManager</code><a class="reference internal" href="../_modules/location/models.html#SelfRefrencingManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.SelfRefrencingManager" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="location.models.SelfRefrencingQuerySet">
+<em class="property">class </em><code class="descclassname">location.models.</code><code class="descname">SelfRefrencingQuerySet</code><span class="sig-paren">(</span><em>model=None</em>, <em>query=None</em>, <em>using=None</em>, <em>hints=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#SelfRefrencingQuerySet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.SelfRefrencingQuerySet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Query Parent / Child relationships for all SelfRefrencing Objects.</p>
+<dl class="method">
+<dt id="location.models.SelfRefrencingQuerySet.get_all_children">
+<code class="descname">get_all_children</code><span class="sig-paren">(</span><em>parent</em>, <em>all_children=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#SelfRefrencingQuerySet.get_all_children"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.SelfRefrencingQuerySet.get_all_children" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all Child Objects regardless of distance in the Tree.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parent:</th><td class="field-body">Getting all children for this Object.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">All_children:</th><td class="field-body">default to None always until recursively called</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="location.models.SelfRefrencingQuerySet.get_all_parents">
+<code class="descname">get_all_parents</code><span class="sig-paren">(</span><em>child</em>, <em>first_child_id=None</em>, <em>all_parents=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/models.html#SelfRefrencingQuerySet.get_all_parents"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.models.SelfRefrencingQuerySet.get_all_parents" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all Parent Objects regardless of distance in the Tree.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Child:</th><td class="field-body">getting all parents for this Object</td>
+</tr>
+<tr class="field-even field"><th class="field-name">First_child_id:</th><td class="field-body">the <code class="docutils literal"><span class="pre">child_id</span></code> that we are looking up all parents for,
+and will be excluded from the output</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">All_parents:</th><td class="field-body">default to None always until recursively called</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="id3">
+<h2>Serializers<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-location.serializers"></span><dl class="class">
+<dt id="location.serializers.LocationLevelCreateSerializer">
+<em class="property">class </em><code class="descclassname">location.serializers.</code><code class="descname">LocationLevelCreateSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/serializers.html#LocationLevelCreateSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.serializers.LocationLevelCreateSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: Nested Create/Update of <code class="docutils literal"><span class="pre">children</span></code></p>
+</dd></dl>
+
+</div>
+<div class="section" id="id4">
+<h2>Views<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-location.views"></span><dl class="class">
+<dt id="location.views.LocationViewSet">
+<em class="property">class </em><code class="descclassname">location.views.</code><code class="descname">LocationViewSet</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/location/views.html#LocationViewSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#location.views.LocationViewSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>## Detail Routes</p>
+<ol class="arabic">
+<li><p class="first">Will return all Child Locations for a single LocationLevel</p>
+<blockquote>
+<div><p><strong>URL:</strong> <cite>/api/admin/locations/{pk}/level/{level_id}/</cite></p>
+</div></blockquote>
+</li>
+</ol>
+</dd></dl>
+
+</div>
+</div>
 <div class="section" id="person">
 <h1>Person<a class="headerlink" href="#person" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="module-person.helpers">
@@ -66,8 +243,8 @@
 </dd></dl>
 
 </div>
-<div class="section" id="id1">
-<h2>Models<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id5">
+<h2>Models<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-person.models"></span><dl class="class">
 <dt id="person.models.Person">
 <em class="property">class </em><code class="descclassname">person.models.</code><code class="descname">Person</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/models.html#Person"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.models.Person" title="Permalink to this definition">¶</a></dt>
@@ -104,33 +281,51 @@
 </dd></dl>
 
 </div>
-<div class="section" id="id2">
-<h2>Serializers<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id6">
+<h2>Serializers<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-person.serializers"></span><dl class="class">
 <dt id="person.serializers.PasswordSerializer">
 <em class="property">class </em><code class="descclassname">person.serializers.</code><code class="descname">PasswordSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/serializers.html#PasswordSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.serializers.PasswordSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>TODO: 
-this will be a route for Password and the main Update will be separate</p>
+<dd><p><strong>TODO:</strong> this will be a route for Password and the main <code class="docutils literal"><span class="pre">Person</span> 
+<span class="pre">Update</span></code> will be separate</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="person.serializers.PersonCreateSerializer">
+<em class="property">class </em><code class="descclassname">person.serializers.</code><code class="descname">PersonCreateSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/serializers.html#PersonCreateSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.serializers.PersonCreateSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Base Create serializer because <code class="docutils literal"><span class="pre">Role</span></code> needed before second step 
+of configuration for the <code class="docutils literal"><span class="pre">Person</span></code>.</p>
 </dd></dl>
 
 <dl class="class">
 <dt id="person.serializers.PersonUpdateSerializer">
 <em class="property">class </em><code class="descclassname">person.serializers.</code><code class="descname">PersonUpdateSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/serializers.html#PersonUpdateSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.serializers.PersonUpdateSerializer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Currently, you can Add/Update PhoneNumber&#8217;s when Updating a Person, 
-but, you cannot delete PhoneNumber&#8217;s Yet.</p>
+<dd><p>Update a <code class="docutils literal"><span class="pre">Person</span></code> and all nested related <code class="docutils literal"><span class="pre">Contact</span></code> Models.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="person.serializers.RoleIdNameSerializer">
+<em class="property">class </em><code class="descclassname">person.serializers.</code><code class="descname">RoleIdNameSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/serializers.html#RoleIdNameSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.serializers.RoleIdNameSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Used for nested serializer data for other serializers.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="person.serializers.RoleSerializer">
+<em class="property">class </em><code class="descclassname">person.serializers.</code><code class="descname">RoleSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/serializers.html#RoleSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.serializers.RoleSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Serializer used for all <code class="docutils literal"><span class="pre">Role</span></code> API Endpoint operations.</p>
 </dd></dl>
 
 </div>
-<div class="section" id="id3">
-<h2>Views<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id7">
+<h2>Views<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-person.views"></span><dl class="class">
 <dt id="person.views.RoleViewSet">
 <em class="property">class </em><code class="descclassname">person.views.</code><code class="descname">RoleViewSet</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/views.html#RoleViewSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.views.RoleViewSet" title="Permalink to this definition">¶</a></dt>
 <dd><p>API endpoint that allows roles to be viewed or edited.</p>
-<dl class="method">
-<dt id="person.views.RoleViewSet.get_serializer_class">
-<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/views.html#RoleViewSet.get_serializer_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.views.RoleViewSet.get_serializer_class" title="Permalink to this definition">¶</a></dt>
-<dd><p>set the serializer based on the method</p>
+<dl class="attribute">
+<dt id="person.views.RoleViewSet.serializer_class">
+<code class="descname">serializer_class</code><a class="headerlink" href="#person.views.RoleViewSet.serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal"><span class="pre">RoleSerializer</span></code></p>
 </dd></dl>
 
 </dd></dl>
@@ -152,11 +347,21 @@ but, you cannot delete PhoneNumber&#8217;s Yet.</p>
 <li><a class="reference internal" href="#module-accounting.views">Views</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#bigsky">Bigsky</a><ul>
+<li><a class="reference internal" href="#id1">Views</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#location">Location</a><ul>
+<li><a class="reference internal" href="#id2">Models</a></li>
+<li><a class="reference internal" href="#id3">Serializers</a></li>
+<li><a class="reference internal" href="#id4">Views</a></li>
+</ul>
+</li>
 <li><a class="reference internal" href="#person">Person</a><ul>
 <li><a class="reference internal" href="#module-person.helpers">Helpers</a></li>
-<li><a class="reference internal" href="#id1">Models</a></li>
-<li><a class="reference internal" href="#id2">Serializers</a></li>
-<li><a class="reference internal" href="#id3">Views</a></li>
+<li><a class="reference internal" href="#id5">Models</a></li>
+<li><a class="reference internal" href="#id6">Serializers</a></li>
+<li><a class="reference internal" href="#id7">Views</a></li>
 </ul>
 </li>
 </ul>

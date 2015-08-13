@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>location.views &mdash; BSRS 1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="BSRS 1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for location.views</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">django.shortcuts</span> <span class="kn">import</span> <span class="n">get_object_or_404</span>
+
+<span class="kn">from</span> <span class="nn">rest_framework.response</span> <span class="kn">import</span> <span class="n">Response</span>
+<span class="kn">from</span> <span class="nn">rest_framework.permissions</span> <span class="kn">import</span> <span class="n">IsAuthenticated</span>
+<span class="kn">from</span> <span class="nn">rest_framework.decorators</span> <span class="kn">import</span> <span class="n">detail_route</span>
+<span class="kn">from</span> <span class="nn">rest_framework.exceptions</span> <span class="kn">import</span> <span class="n">MethodNotAllowed</span>
+
+<span class="kn">from</span> <span class="nn">location.models</span> <span class="kn">import</span> <span class="n">Location</span><span class="p">,</span> <span class="n">LocationLevel</span><span class="p">,</span> <span class="n">LocationStatus</span><span class="p">,</span> <span class="n">LocationType</span>
+<span class="kn">from</span> <span class="nn">location</span> <span class="kn">import</span> <span class="n">serializers</span> <span class="k">as</span> <span class="n">ls</span>
+<span class="kn">from</span> <span class="nn">util.views</span> <span class="kn">import</span> <span class="n">BaseModelViewSet</span>
+
+
+<span class="k">class</span> <span class="nc">LocationLevelViewSet</span><span class="p">(</span><span class="n">BaseModelViewSet</span><span class="p">):</span>
+
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">LocationLevel</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">get_serializer_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s">&#39;list&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ls</span><span class="o">.</span><span class="n">LocationLevelSerializer</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s">&#39;retrieve&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ls</span><span class="o">.</span><span class="n">LocationLevelDetailSerializer</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;create&#39;</span><span class="p">,</span> <span class="s">&#39;update&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ls</span><span class="o">.</span><span class="n">LocationLevelCreateSerializer</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MethodNotAllowed</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">)</span>
+    
+
+<span class="k">class</span> <span class="nc">LocationStatusViewSet</span><span class="p">(</span><span class="n">BaseModelViewSet</span><span class="p">):</span>
+
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">LocationStatusSerializer</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">LocationStatus</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+
+<span class="k">class</span> <span class="nc">LocationTypeViewSet</span><span class="p">(</span><span class="n">BaseModelViewSet</span><span class="p">):</span>
+
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">LocationTypeSerializer</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">LocationType</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="LocationViewSet"><a class="viewcode-back" href="../../modules/models.html#location.views.LocationViewSet">[docs]</a><span class="k">class</span> <span class="nc">LocationViewSet</span><span class="p">(</span><span class="n">BaseModelViewSet</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    ## Detail Routes</span>
+
+<span class="sd">    1. Will return all Child Locations for a single LocationLevel</span>
+
+<span class="sd">        **URL:** `/api/admin/locations/{pk}/level/{level_id}/`</span>
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
+   
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    
+    <span class="k">def</span> <span class="nf">get_serializer_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s">&#39;list&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ls</span><span class="o">.</span><span class="n">LocationListSerializer</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s">&#39;retrieve&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ls</span><span class="o">.</span><span class="n">LocationDetailSerializer</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s">&#39;create&#39;</span><span class="p">:</span> 
+            <span class="k">return</span> <span class="n">ls</span><span class="o">.</span><span class="n">LocationCreateSerializer</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="ow">in</span> <span class="p">(</span><span class="s">&#39;update&#39;</span><span class="p">,</span> <span class="s">&#39;partial_update&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ls</span><span class="o">.</span><span class="n">LocationUpdateSerializer</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">MethodNotAllowed</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">action</span><span class="p">)</span>
+
+    <span class="nd">@detail_route</span><span class="p">(</span><span class="n">methods</span><span class="o">=</span><span class="p">[</span><span class="s">&#39;GET&#39;</span><span class="p">],</span> <span class="n">url_path</span><span class="o">=</span><span class="s">r&#39;level/(?P&lt;level_id&gt;[\w\-]+)&#39;</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">get_level_children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">level_id</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+        <span class="n">instance</span> <span class="o">=</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">Location</span><span class="p">,</span> <span class="n">pk</span><span class="o">=</span><span class="n">pk</span><span class="p">)</span>
+        <span class="n">child_locations</span> <span class="o">=</span> <span class="n">Location</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_level_children</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">level_id</span><span class="p">)</span>
+        <span class="n">serializer</span> <span class="o">=</span> <span class="n">ls</span><span class="o">.</span><span class="n">LocationListSerializer</span><span class="p">(</span><span class="n">child_locations</span><span class="p">,</span> <span class="n">many</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">serializer</span><span class="o">.</span><span class="n">data</span><span class="p">)</span>
+
+
+<span class="c"># class CoalesceFilterBackend(filters.backends.DjangoFilterBackend):</span>
+
+<span class="c">#     &quot;&quot;&quot;</span>
+<span class="c">#     Support Ember Data coalesceFindRequests.</span>
+
+<span class="c">#     &quot;&quot;&quot;</span>
+<span class="c">#     def filter_queryset(self, request, queryset, view):</span>
+<span class="c">#         id_list = request.QUERY_PARAMS.getlist(&#39;ids[]&#39;)</span>
+<span class="c">#         if id_list:</span>
+<span class="c">#             queryset = queryset.filter(id__in=id_list)</span>
+<span class="c">#         return queryset</span>
+    
+
+<span class="c"># class LocationFilter(filters.FilterSet):</span>
+    
+<span class="c">#     state = filters.CharFilter(name=&#39;addresses__state&#39;)</span>
+    
+<span class="c">#     class Meta:</span>
+<span class="c">#         model = Location</span>
+<span class="c">#         fields = [&#39;number&#39;, &#39;name&#39;, &#39;level&#39;, &#39;status&#39;, &#39;type&#39;, &#39;state&#39;, </span>
+<span class="c">#                   &#39;children&#39;, &#39;children__type&#39;]</span>
+<span class="c">#         order_by = [&#39;number&#39;, &#39;name&#39;, &#39;-number&#39;, &#39;-name&#39;, &#39;level&#39;, &#39;-level&#39;,</span>
+<span class="c">#                     &#39;status&#39;, &#39;-status&#39;, &#39;type&#39;, &#39;-type&#39;, &#39;addresses__state&#39;, </span>
+<span class="c">#                     &#39;-addresses__state&#39;, &#39;children__name&#39;, &#39;-children__name&#39;]</span>
+
+
+<span class="c">### LocationViewSet other code =&gt;</span>
+
+    <span class="c"># filter_class = LocationFilter</span>
+    
+    <span class="c"># def get_queryset(self):</span>
+    <span class="c">#     queryset = self.queryset</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     local version of coalesce</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     id_list = self.request.QUERY_PARAMS.getlist(&#39;ids[]&#39;)</span>
+    <span class="c">#     if id_list:</span>
+    <span class="c">#         queryset = queryset.filter(id__in=id_list)</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     get related locations of parent_loc...</span>
+    <span class="c">#     when used with level filter can get direct children or parents</span>
+    <span class="c">#     todo: use level to get list from any level through childrenhips</span>
+    <span class="c">#     todo: move this to a detail route for the parent e.g. /locations/6/children?level=2</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     parent_loc_id = self.request.QUERY_PARAMS.get(&#39;parent_loc&#39;)</span>
+    <span class="c">#     if parent_loc_id:</span>
+    <span class="c">#         parent_loc = Location.objects.get(id=parent_loc_id)</span>
+    <span class="c">#         if parent_loc:</span>
+    <span class="c">#             queryset = queryset.filter(children=parent_loc)</span>
+    <span class="c">#     return queryset</span>
+
+
+    <span class="c"># @detail_route(methods=[&#39;get&#39;])</span>
+    <span class="c"># def children(self, request, pk):</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     Get locations that are related and at the specified level</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     respObj = {}</span>
+    <span class="c">#     locs = []</span>
+        
+    <span class="c">#     if request.method == &#39;GET&#39;:</span>
+    <span class="c">#         if not request.query_params.has_key(&#39;level&#39;):</span>
+    <span class="c">#             #no level specified</span>
+    <span class="c">#             respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#             respObj[&#39;message&#39;] = &#39;no level specified&#39;</span>
+    <span class="c">#             return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+    <span class="c">#         else:</span>
+    <span class="c">#             level_id = request.query_params[&#39;level&#39;]</span>
+    <span class="c">#             level = LocationLevel.objects.filter(id=level_id)</span>
+    <span class="c">#             if level.count() != 1:</span>
+    <span class="c">#                 respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#                 respObj[&#39;message&#39;] = &#39;level id &#39; + level_id + &#39; does not exist&#39;</span>
+    <span class="c">#                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+                
+    <span class="c">#             locs = Location.objects.filter(id=pk)</span>
+    <span class="c">#             if locs.count() != 1:</span>
+    <span class="c">#                 respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#                 respObj[&#39;message&#39;] = &#39;location &#39; + pk + &#39; does not exist&#39;</span>
+    <span class="c">#                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+                
+    <span class="c">#             # build the query based on levels</span>
+    <span class="c">#             # recurse through children until at least one is found with the right level</span>
+    <span class="c">#             respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#             respObj[&#39;message&#39;] = &#39;no children for level id &#39; + level_id + &#39; found&#39;</span>
+    <span class="c">#             return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+
+            
+    <span class="c">#     else:</span>
+    <span class="c">#         respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#         respObj[&#39;message&#39;] = &#39;Method not supported - &#39; + request.method</span>
+    <span class="c">#         return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+    <span class="c">#     </span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Aaron, Scott, Andy, Tom, Toran.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
