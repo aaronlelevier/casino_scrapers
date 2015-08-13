@@ -18,6 +18,7 @@ from util.serializers import BaseCreateSerializer
 ### ROLE ###
 
 class RoleSerializer(BaseCreateSerializer):
+    "Serializer used for all ``Role`` API Endpoint operations."
 
     class Meta:
         model = Role
@@ -25,34 +26,11 @@ class RoleSerializer(BaseCreateSerializer):
 
 
 class RoleIdNameSerializer(serializers.ModelSerializer):
+    "Used for nested serializer data for other serializers."
 
     class Meta:
         model = Role
         fields = ('id', 'name',)
-
-
-class RoleCreateSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = Role
-        fields = ('id', 'name', 'role_type', 'location_level')
-
-
-class RoleDetailSerializer(serializers.ModelSerializer):
-
-    group = serializers.PrimaryKeyRelatedField(
-        queryset=Group.objects.all(),
-        required=False
-        )
-    location_level = serializers.PrimaryKeyRelatedField(
-        queryset=LocationLevel.objects.all(),
-        required=False
-        )
-    name = serializers.CharField(source='group.name')
-
-    class Meta:
-        model = Role
-        fields = ('id', 'group', 'name', 'location_level', 'role_type',)
 
 
 ### PERSON STATUS ###
@@ -112,8 +90,7 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 
 class PersonUpdateSerializer(serializers.ModelSerializer):
     '''
-    Currently, you can Add/Update PhoneNumber's when Updating a Person, 
-    but, you cannot delete PhoneNumber's Yet.
+    Update a ``Person`` and all nested related ``Contact`` Models.
     '''
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)

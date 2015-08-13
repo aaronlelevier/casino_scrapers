@@ -48,6 +48,12 @@
 </dd></dl>
 
 </div>
+<div class="section" id="module-accounting.serializers">
+<span id="serializers"></span><h2>Serializers<a class="headerlink" href="#module-accounting.serializers" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-accounting.views">
+<span id="views"></span><h2>Views<a class="headerlink" href="#module-accounting.views" title="Permalink to this headline">¶</a></h2>
+</div>
 </div>
 <div class="section" id="person">
 <h1>Person<a class="headerlink" href="#person" title="Permalink to this headline">¶</a></h1>
@@ -98,6 +104,38 @@
 </dd></dl>
 
 </div>
+<div class="section" id="id2">
+<h2>Serializers<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-person.serializers"></span><dl class="class">
+<dt id="person.serializers.PasswordSerializer">
+<em class="property">class </em><code class="descclassname">person.serializers.</code><code class="descname">PasswordSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/serializers.html#PasswordSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.serializers.PasswordSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>TODO: 
+this will be a route for Password and the main Update will be separate</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="person.serializers.PersonUpdateSerializer">
+<em class="property">class </em><code class="descclassname">person.serializers.</code><code class="descname">PersonUpdateSerializer</code><span class="sig-paren">(</span><em>instance=None</em>, <em>data=&lt;class rest_framework.fields.empty&gt;</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/serializers.html#PersonUpdateSerializer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.serializers.PersonUpdateSerializer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Currently, you can Add/Update PhoneNumber&#8217;s when Updating a Person, 
+but, you cannot delete PhoneNumber&#8217;s Yet.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="id3">
+<h2>Views<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<span class="target" id="module-person.views"></span><dl class="class">
+<dt id="person.views.RoleViewSet">
+<em class="property">class </em><code class="descclassname">person.views.</code><code class="descname">RoleViewSet</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/views.html#RoleViewSet"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.views.RoleViewSet" title="Permalink to this definition">¶</a></dt>
+<dd><p>API endpoint that allows roles to be viewed or edited.</p>
+<dl class="method">
+<dt id="person.views.RoleViewSet.get_serializer_class">
+<code class="descname">get_serializer_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/views.html#RoleViewSet.get_serializer_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.views.RoleViewSet.get_serializer_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>set the serializer based on the method</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
 </div>
 
 
@@ -110,11 +148,15 @@
   <ul>
 <li><a class="reference internal" href="#">Accounting</a><ul>
 <li><a class="reference internal" href="#module-accounting.models">Models</a></li>
+<li><a class="reference internal" href="#module-accounting.serializers">Serializers</a></li>
+<li><a class="reference internal" href="#module-accounting.views">Views</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#person">Person</a><ul>
 <li><a class="reference internal" href="#module-person.helpers">Helpers</a></li>
 <li><a class="reference internal" href="#id1">Models</a></li>
+<li><a class="reference internal" href="#id2">Serializers</a></li>
+<li><a class="reference internal" href="#id3">Views</a></li>
 </ul>
 </li>
 </ul>
