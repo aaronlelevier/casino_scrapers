@@ -147,7 +147,7 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin, FillInHelper, M
         self._fill_in(person)
         gen_elem_page = GeneralElementsPage(self.driver, self.wait)
         gen_elem_page.click_save_btn()
-        person_page.find_and_assert_username(username) 
+        person_page.find_wait_and_assert_elem("t-person-username", username) 
         first_name = "scooter"
         middle_initial = "B"
         last_name = "McGavine"
@@ -182,7 +182,7 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin, FillInHelper, M
         while count < element_list_len:
             try:
                 all_people = self.wait_for_xhr_request("t-person-data", plural=True)
-            except:
+            except AssertionError:
                 pass
             people_list_view = self.driver.find_elements_by_class_name("t-person-username")
             for row in people_list_view:
@@ -195,34 +195,15 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin, FillInHelper, M
             element_list = pagination.find_elements_by_tag_name("li")
             next_elem = element_list[count]
             next_elem.click()
-        if str(new_person) == 'None':
-            raise AssertionError("new person not found")
-        new_person.click()
-        username_input = self.wait_for_xhr_request("t-person-username")
-        first_name_input = self.driver.find_element_by_id("first_name")
-        middle_initial_input = self.driver.find_element_by_id("middle_initial")
-        last_name_input = self.driver.find_element_by_id("last_name")
-        emp_number_input = self.driver.find_element_by_id("employee_id")
-        title_input = self.driver.find_element_by_id("title")
-        assert username_input.get_attribute("value") == username
-        assert first_name_input.get_attribute("value") == first_name
-        assert middle_initial_input.get_attribute("value") == middle_initial
-        assert last_name_input.get_attribute("value") == last_name
-        assert emp_number_input.get_attribute("value") == employee_id
-        assert title_input.get_attribute("value") == title
+        try:
+            new_person.click()
+        except AttributeError as e:
+            raise e("new person not found")
+        person_page.find_wait_and_assert_elem("t-person-username", username) 
+        person_page.find_and_assert_elems(username=username, first_name=first_name, middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
         self.driver.refresh()
-        username_input = self.wait_for_xhr_request("t-person-username")
-        first_name_input = self.driver.find_element_by_id("first_name")
-        middle_initial_input = self.driver.find_element_by_id("middle_initial")
-        last_name_input = self.driver.find_element_by_id("last_name")
-        emp_number_input = self.driver.find_element_by_id("employee_id")
-        title_input = self.driver.find_element_by_id("title")
-        assert username_input.get_attribute("value") == username
-        assert first_name_input.get_attribute("value") == first_name
-        assert middle_initial_input.get_attribute("value") == middle_initial
-        assert last_name_input.get_attribute("value") == last_name
-        assert emp_number_input.get_attribute("value") == employee_id
-        assert title_input.get_attribute("value") == title
+        person_page.find_wait_and_assert_elem("t-person-username", username) 
+        person_page.find_and_assert_elems(username=username, first_name=first_name, middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
 
 if __name__ == "__main__":
     unittest.main()
