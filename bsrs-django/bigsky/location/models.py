@@ -148,7 +148,7 @@ class LocationQuerySet(SelfRefrencingQuerySet):
 
     def get_level_children(self, location, level_id):
         '''
-        Returns all Child ``Locations`` for a single ``LocationLevel``
+        Includes error handling that the level_id is valid.
 
         :location: Parent ``Location``
         :level_id: 
@@ -159,6 +159,23 @@ class LocationQuerySet(SelfRefrencingQuerySet):
             child_levels = LocationLevel.objects.get_all_children(location.location_level)
             location_level = LocationLevel.objects.filter(
                 id__in=child_levels.values_list('id', flat=True)).get(id=level_id)
+        except ObjectDoesNotExist:
+            raise
+        return self.filter(location_level=location_level)
+
+    def get_level_parents(self, location, level_id):
+        '''
+        Includes error handling that the level_id is valid.
+        
+        :location: Child ``Location``
+        :level_id: 
+            ``LocationLevel.id`` of the ``Parent Locations`` 
+            to return.
+        '''
+        try:
+            parent_levels = LocationLevel.objects.get_all_parents(location.location_level)
+            location_level = LocationLevel.objects.filter(
+                id__in=parent_levels.values_list('id', flat=True)).get(id=level_id)
         except ObjectDoesNotExist:
             raise
         return self.filter(location_level=location_level)
@@ -175,6 +192,12 @@ class LocationManager(SelfRefrencingManager):
         Get all child Locations at a specific LocationLevel.
         '''
         return self.get_queryset().get_level_children(location, level_id)
+
+    def get_level_parents(self, location, level_id):
+        '''
+        Get all Parent Locations at a specific LocationLevel.
+        '''
+        return self.get_queryset().get_level_parents(location, level_id)
 
 
 @python_2_unicode_compatible
