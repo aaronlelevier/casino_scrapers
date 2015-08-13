@@ -1,4 +1,4 @@
-Models
-======
-.. automodule:: person.models
-    :members:
+Accounting
+==========
+.. automodule:: accounting
+    :members: models, serializers, views
