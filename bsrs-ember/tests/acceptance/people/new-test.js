@@ -42,7 +42,7 @@ module('Acceptance | people-new', {
     }
 });
 
-test('visiting /people/new', (assert) => {
+test('sco visiting /people/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(PEOPLE_URL);

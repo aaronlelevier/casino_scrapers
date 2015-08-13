@@ -27,6 +27,10 @@ export default Model.extend({
         var last_name = this.get('last_name');
         return first_name + ' ' + last_name;
     }),
+    role_person: Ember.computed('id', function() {
+        var store = this.get('store');
+        return store.find('role-person', {person: this.get('id')}).objectAt(0);
+    }),
     phone_numbers: Ember.computed('id', function() {
         var store = this.get('store');
         return store.find('phonenumber', {person: this.get('id')});
@@ -35,9 +39,16 @@ export default Model.extend({
         var store = this.get('store');
         return store.find('address', {person: this.get('id')});
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel'); 
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'roleIsDirty', 'addressesIsDirty', 'dirtyModel', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('dirtyModel');
     }),
+    roleIsDirty: Ember.computed('role_person.isDirty', function() {
+        let role_dirty = false;
+        let role = this.get('role_person');
+        if (role && role.get('isDirty')) { role_dirty = true; }
+        return role_dirty;
+    }),
+    roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
         var phone_numbers = this.get('phone_numbers');
         var phone_number_dirty = false;
@@ -124,7 +135,7 @@ export default Model.extend({
             location:'',
             auth_amount: this.get('auth_amount'),
             status: status_id,
-            role: role_id,
+            role: this.get('role_person').get('id'),
             emails: [],
             phone_numbers: phone_numbers,
             addresses: addresses

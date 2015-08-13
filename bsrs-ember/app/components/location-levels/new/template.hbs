@@ -24,9 +24,9 @@
 			</div>
 
         <span class="input-group-btn">
-          <select class="t-location-level form-control location_level" id="location_level_select" multiple>
+          <select class="t-location-level form-control location_level" id="location_level_select" onchange={{action (action "changed" model) value="target.value"}} multiple>
             {{#each all_location_levels as |location_level|}}
-            <option value={{location_level.id}}>{{t location_level.name}}</option>
+            <option value={{location_level.id}} selected={{is-equal phonenumber.type phoneNumberType.id}}>{{t location_level.name}}</option>
             {{/each}}
           </select>
         </span>

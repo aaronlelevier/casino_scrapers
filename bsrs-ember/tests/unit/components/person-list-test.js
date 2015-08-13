@@ -6,7 +6,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
 var registry, container, store;
 
-module('sco unit: person-list', {
+module('unit: person-list', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();
