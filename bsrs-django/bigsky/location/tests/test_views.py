@@ -24,6 +24,8 @@ class LocationLevelTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
+    ### LIST
+
     def test_list(self):
         response = self.client.get('/api/admin/location_levels/')
         self.assertEqual(response.status_code, 200)
@@ -32,6 +34,8 @@ class LocationLevelTests(APITestCase):
             LocationLevel.objects.get(id=data['results'][0]['id']),
             LocationLevel
         )
+
+    ### GET
 
     def test_get(self):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
@@ -53,6 +57,8 @@ class LocationLevelTests(APITestCase):
             self.district.children.all()
         )
 
+    ### CREATE
+
     def test_create(self):
         new_name = 'region_lp'
         data = {
@@ -64,6 +70,8 @@ class LocationLevelTests(APITestCase):
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content)
         self.assertIsInstance(LocationLevel.objects.get(id=data['id']), LocationLevel)
+
+    ### UPDATE
 
     def test_update(self):
         region = LocationLevel.objects.get(name='region')
@@ -79,7 +87,23 @@ class LocationLevelTests(APITestCase):
 
         ### DETAIL ROUTES
 
-    # def test_
+    def test_get_all_children(self):
+        region = LocationLevel.objects.get(name='region')
+        response = self.client.get('/api/admin/location_levels/{}/get-all-children/'.format(region.id), format='json')
+        data = json.loads(response.content)
+        self.assertEqual(
+            len(data),
+            LocationLevel.objects.get_all_children(region).count()
+        )
+
+    def test_get_all_parents(self):
+        department = LocationLevel.objects.get(name='department')
+        response = self.client.get('/api/admin/location_levels/{}/get-all-parents/'.format(department.id), format='json')
+        data = json.loads(response.content)
+        self.assertEqual(
+            len(data),
+            LocationLevel.objects.get_all_parents(department).count()
+        )        
 
 
 ### LOCATION

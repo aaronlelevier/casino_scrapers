@@ -10,11 +10,28 @@ from location import serializers as ls
 from util.views import BaseModelViewSet
 
 
-class LocationLevelViewSet(BaseModelViewSet):
+class SelfReferencingRouteMixin(object):
+
+    @detail_route(methods=['GET'], url_path=r'get-all-children')
+    def get_all_children(self, request, pk=None):
+        instance = get_object_or_404(self.model, pk=pk)
+        related_instances = self.queryset.get_all_children(instance)
+        serializer = self._all_related_serializer(related_instances, many=True)
+        return Response(serializer.data)
+
+    @detail_route(methods=['GET'], url_path=r'get-all-parents')
+    def get_all_parents(self, request, pk=None):
+        instance = get_object_or_404(self.model, pk=pk)
+        related_instances = self.queryset.get_all_parents(instance)
+        serializer = self._all_related_serializer(related_instances, many=True)
+        return Response(serializer.data)
+
+
+class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
     permission_classes = (IsAuthenticated,)
-    model = LocationLevel
     queryset = LocationLevel.objects.all()
+    model = LocationLevel
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -26,19 +43,9 @@ class LocationLevelViewSet(BaseModelViewSet):
         else:
             raise MethodNotAllowed(method=self.action)
 
-    @detail_route(methods=['GET'], url_path=r'get-all-children')
-    def get_all_children(self, request, pk=None):
-        instance = get_object_or_404(LocationLevel, pk=pk)
-        related_instances = self.queryset.get_all_children(instance)
-        serializer = ls.LocationLevelDetailSerializer(related_instances, many=True)
-        return Response(serializer.data)
-
-    @detail_route(methods=['GET'], url_path=r'get-all-parents')
-    def get_all_parents(self, request, pk=None):
-        instance = get_object_or_404(self.model, pk=pk)
-        related_instances = self.queryset.get_all_parents(instance)
-        serializer = ls.LocationLevelDetailSerializer(related_instances, many=True)
-        return Response(serializer.data)
+    @property
+    def _all_related_serializer(self):
+        return ls.LocationLevelDetailSerializer
     
 
 class LocationStatusViewSet(BaseModelViewSet):
@@ -55,19 +62,20 @@ class LocationTypeViewSet(BaseModelViewSet):
     queryset = LocationType.objects.all()
 
 
-class LocationViewSet(BaseModelViewSet):
+class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     '''
     ## Detail Routes
 
-    1. Will return all Child Locations for a single LocationLevel
+    :get_level_children: 
+        Will return all ``Child Locations`` for a single ``LocationLevel``
 
         **URL:** `/api/admin/locations/{pk}/level/{level_id}/`
     
     '''
-   
     permission_classes = (IsAuthenticated,)
     queryset = Location.objects.all()
-    
+    model = Location
+
     def get_serializer_class(self):
         if self.action == 'list':
             return ls.LocationListSerializer
@@ -80,11 +88,15 @@ class LocationViewSet(BaseModelViewSet):
         else:
             raise MethodNotAllowed(method=self.action)
 
+    @property
+    def _all_related_serializer(self):
+        return ls.LocationDetailSerializer
+
     @detail_route(methods=['GET'], url_path=r'level/(?P<level_id>[\w\-]+)')
     def get_level_children(self, request, pk=None, level_id=None):
-        instance = get_object_or_404(Location, pk=pk)
-        child_locations = Location.objects.get_level_children(instance, level_id)
-        serializer = ls.LocationListSerializer(child_locations, many=True)
+        instance = get_object_or_404(self.model, pk=pk)
+        related_instances = Location.objects.get_level_children(instance, level_id)
+        serializer = self._all_related_serializer(related_instances, many=True)
         return Response(serializer.data)
 
 
