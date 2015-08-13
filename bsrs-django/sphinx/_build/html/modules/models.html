@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Models &mdash; BSRS 1 documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="top" title="BSRS 1 documentation" href="../index.html" />
+    <link rel="prev" title="Welcome to BSRS’s documentation!" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-person.models">
+<span id="models"></span><h1>Models<a class="headerlink" href="#module-person.models" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="person.models.Person">
+<em class="property">class </em><code class="descclassname">person.models.</code><code class="descname">Person</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/models.html#Person"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.models.Person" title="Permalink to this definition">¶</a></dt>
+<dd><p>&#8220;pw&#8221; : password
+&#8220;ooto&#8221; : out-of-the-office</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="person.models.PersonManager">
+<em class="property">class </em><code class="descclassname">person.models.</code><code class="descname">PersonManager</code><a class="reference internal" href="../_modules/person/models.html#PersonManager"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.models.PersonManager" title="Permalink to this definition">¶</a></dt>
+<dd><p>Auto exclude deleted records</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="person.models.PersonStatus">
+<em class="property">class </em><code class="descclassname">person.models.</code><code class="descname">PersonStatus</code><span class="sig-paren">(</span><em>id</em>, <em>created</em>, <em>modified</em>, <em>deleted</em>, <em>name</em>, <em>description</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/models.html#PersonStatus"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.models.PersonStatus" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="class">
+<dt id="person.models.ProxyRole">
+<em class="property">class </em><code class="descclassname">person.models.</code><code class="descname">ProxyRole</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/models.html#ProxyRole"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.models.ProxyRole" title="Permalink to this definition">¶</a></dt>
+<dd><p>A <cite>Role</cite> that can proxy for, or act on the behalf of, another <cite>Role</cite></p>
+</dd></dl>
+
+<dl class="class">
+<dt id="person.models.Role">
+<em class="property">class </em><code class="descclassname">person.models.</code><code class="descname">Role</code><span class="sig-paren">(</span><em>id</em>, <em>created</em>, <em>modified</em>, <em>deleted</em>, <em>group</em>, <em>location_level</em>, <em>role_type</em>, <em>name</em>, <em>dashboad_text</em>, <em>create_all</em>, <em>modules</em>, <em>dashboad_links</em>, <em>tabs</em>, <em>password_min_length</em>, <em>password_history_length</em>, <em>password_char_types</em>, <em>password_expire</em>, <em>password_expire_alert</em>, <em>proxy_set</em>, <em>default_accept_assign</em>, <em>accept_assign</em>, <em>default_accept_notify</em>, <em>accept_notify</em>, <em>default_auth_amount</em>, <em>default_auth_currency</em>, <em>allow_approval</em>, <em>proxy_approval_bypass</em>, <em>wo_notes</em>, <em>wo_edit_closeout</em>, <em>wo_show_inactive</em>, <em>wo_show_tkt_attach</em>, <em>wo_allow_backdate</em>, <em>wo_days_backdate</em>, <em>inv_options</em>, <em>inv_wo_status</em>, <em>inv_wait</em>, <em>inv_select_assign</em>, <em>inv_autoapprove</em>, <em>inv_max_approval_amount</em>, <em>inv_max_approval_currency</em>, <em>inv_req_attach</em>, <em>inv_close_wo</em>, <em>msg_address</em>, <em>msg_viewall</em>, <em>msg_copy_email</em>, <em>msg_copy_default</em>, <em>msg_stored_link</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/models.html#Role"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.models.Role" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="person.models.update_group">
+<code class="descclassname">person.models.</code><code class="descname">update_group</code><span class="sig-paren">(</span><em>sender</em>, <em>instance=None</em>, <em>created=False</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/person/models.html#update_group"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#person.models.update_group" title="Permalink to this definition">¶</a></dt>
+<dd><p>Post-save hook for maintaing single Group enrollment.</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to BSRS&#8217;s documentation!</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/modules/models.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Aaron, Scott, Andy, Tom, Toran.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+      |
+      <a href="../_sources/modules/models.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
