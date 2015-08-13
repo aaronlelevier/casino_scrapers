@@ -129,41 +129,42 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin, FillInHelper, M
         name_input = self.wait_for_xhr_request("t-location-level-name")
         assert name_input.get_attribute("value") == updated_name
 
-    def test_navigate_to_people_list_and_create_new_person_record(self):
-        self.at(self.driver.current_url, LoginPage.url())
-        nav_page = NavPage(self.driver, self.wait)
-        nav_page.click_admin()
-        nav_admin_people = nav_page.find_people_link()
-        nav_admin_people.click()
-        person_page = PersonPage(self.driver, self.wait)
-        person_new_link = person_page.find_new_link()
-        person_new_link.click()
-        username = str(uuid.uuid4())[0:29]
-        password = "bobber1" 
-        person = PersonHelper(username=username, password=password)
-        self._fill_in(person)
-        gen_elem_page = GeneralElementsPage(self.driver, self.wait)
-        gen_elem_page.click_save_btn()
-        person_page.find_and_assert_username(username) 
-        first_name = "scooter"
-        middle_initial = "B"
-        last_name = "McGavine"
-        employee_id = "1234"
-        title = "myTitle"
-        new_phone_one = "888-999-7878"
-        new_phone_two = "888-999-7899"
-        person = PersonHelper(first_name=first_name, middle_initial=middle_initial, 
-                last_name=last_name, employee_id=employee_id,
-                title=title)
-        self._fill_in(person)
-        add_phone_number_btn = gen_elem_page.find_add_btn() 
-        add_phone_number_btn.click()
-        person_page.find_ph_new_entry_send_keys(new_phone_one)
-        add_phone_number_btn.click()
-        all_phone_number_inputs = person_page.find_all_ph_new_entries()
-        last_phone_number_input = all_phone_number_inputs[1]
-        last_phone_number_input.send_keys(new_phone_two)
-        person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
+    # def test_navigate_to_people_list_and_create_new_person_record(self):
+    #     self.at(self.driver.current_url, LoginPage.url())
+    #     nav_page = NavPage(self.driver, self.wait)
+    #     nav_page.click_admin()
+    #     nav_admin_people = nav_page.find_people_link()
+    #     nav_admin_people.click()
+    #     person_page = PersonPage(self.driver, self.wait)
+    #     person_new_link = person_page.find_new_link()
+    #     person_new_link.click()
+    #     username = str(uuid.uuid4())[0:29]
+    #     password = "bobber1" 
+    #     person = PersonHelper(username=username, password=password)
+    #     self._fill_in(person)
+    #     gen_elem_page = GeneralElementsPage(self.driver, self.wait)
+    #     gen_elem_page.click_save_btn()
+    #     person_page.find_and_assert_username(username) 
+    #     first_name = "scooter"
+    #     middle_initial = "B"
+    #     last_name = "McGavine"
+    #     employee_id = "1234"
+    #     title = "myTitle"
+    #     role = "448e12c6-9c2a-44a5-b1ac-cc36f56b6641"
+    #     new_phone_one = "888-999-7878"
+    #     new_phone_two = "888-999-7899"
+    #     person = PersonHelper(first_name=first_name, middle_initial=middle_initial, 
+    #             last_name=last_name, employee_id=employee_id,
+    #             title=title, role=role)
+    #     self._fill_in(person)
+    #     add_phone_number_btn = gen_elem_page.find_add_btn() 
+    #     add_phone_number_btn.click()
+    #     person_page.find_ph_new_entry_send_keys(new_phone_one)
+    #     add_phone_number_btn.click()
+    #     all_phone_number_inputs = person_page.find_all_ph_new_entries()
+    #     last_phone_number_input = all_phone_number_inputs[1]
+    #     last_phone_number_input.send_keys(new_phone_two)
+    #     person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
 
         # self.driver.find_element_by_class_name("t-save-btn").click()
         # all_people = self.wait_for_xhr_request("t-person-data", plural=True)
