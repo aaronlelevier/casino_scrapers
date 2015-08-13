@@ -9,6 +9,8 @@ import config from 'bsrs-ember/config/environment';
 import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
+import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
+import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_DEFAULTS_PUT from 'bsrs-ember/vendor/defaults/person-put';
@@ -27,7 +29,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('Acceptance | detail test', {
+module('sco Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -90,10 +92,11 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeId);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveId);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredId);
+        assert.equal(find('.t-person-role-select').find('.t-person-role-option:eq(0)').val(), ROLE_DEFAULTS.idOne);
+        assert.equal(find('.t-person-role-select').find('.t-person-role-option:eq(1)').val(), ROLE_DEFAULTS.idTwo);
         assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
         assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
     });
-
     var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, 
@@ -176,6 +179,19 @@ test('when you change a related address type it will be persisted correctly', (a
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
     fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+    });
+});
+
+test('when you change a related role it will be persisted correctly', (assert) => {
+    visit(DETAIL_URL);
+    var url = PREFIX + DETAIL_URL + "/";
+    var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
+    xhr(url,'PUT',JSON.stringify(payload),{},200);
+    fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);

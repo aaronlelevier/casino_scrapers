@@ -50,11 +50,11 @@ test('visiting /people/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.equal(store.find('person').get('length'), 1);
-        assert.equal(find('.t-person-role option:eq(0)').text(), 'Select One');
+        assert.equal(find('.t-person-role-select option:eq(0)').text(), 'Select One');
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
-    fillIn('.t-person-role', PEOPLE_DEFAULTS.role);
+    fillIn('.t-person-role-select', PEOPLE_DEFAULTS.role);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -90,7 +90,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-username-validation-error').is(':hidden'));
     });
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
-    fillIn('.t-person-role', PEOPLE_DEFAULTS.role);
+    fillIn('.t-person-role-select', PEOPLE_DEFAULTS.role);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
