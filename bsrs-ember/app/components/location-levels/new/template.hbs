@@ -15,22 +15,23 @@
 	</header>
 	<section class="docSection container-fluid">
 		<section>
-			<h2 class="col-sm-12">{{t "admin.location-level.label.credentials"}}</h2>
-			<div class="col-sm-6">
-				{{#form-group title="admin.location-level.label.name" for="name"}}
+			<h2 class="col-sm-12">{{t "admin.locationlevel.label.credentials"}}</h2>
+			<div class="col-sm-12">
+				{{#form-group title="admin.locationlevel.label.name" for="name"}}
 					{{input type="text" value=model.name placeholder=(t "admin.locationlevel.label.name") class="form-control t-location-level-name" id="location_level_name" required="required"}}
-					{{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.location-level.label.name"}}{{/validation-error-field}}
+					{{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.locationlevel.label.name"}}{{/validation-error-field}}
 				{{/form-group}}
 			</div>
 
-        <span class="input-group-btn">
-          <select class="t-location-level form-control location_level" id="location_level_select" multiple>
-            {{#each all_location_levels as |location_level|}}
-            <option value={{location_level.id}}>{{t location_level.name}}</option>
-            {{/each}}
-          </select>
-        </span>
-
+			<div class="col-sm-12">
+				{{#form-group title="admin.locationlevel.label.childOrg" for="location_level_select"}}
+					<select class="t-location-level form-control location_level" id="location_level_select" multiple>
+						{{#each all_location_levels as |location_level|}}
+							<option value={{location_level.id}}>{{t location_level.name}}</option>
+						{{/each}}
+					</select>
+				{{/form-group}}
+			</div>
 		</section>
 	</section>
 </form>
