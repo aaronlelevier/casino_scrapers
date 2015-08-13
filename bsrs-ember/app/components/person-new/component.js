@@ -8,9 +8,8 @@ export default Ember.Component.extend(ValidationMixin, {
     passwordValidation: validate('model.password'),
     actions: {
         changed(val) {
-            var that = this;
             Ember.run(() => {
-                that.get('model').set('role', val);
+                this.get('model').set('role', val);
             });
         },
         savePerson() {

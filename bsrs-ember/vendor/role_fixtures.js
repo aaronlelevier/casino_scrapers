@@ -7,7 +7,7 @@ var BSRS_ROLE_FACTORY = (function() {
     factory.prototype.generate = function(i) {
         return {
             id: i,  
-            name: this.role_defaults.name,
+            name: this.role_defaults.nameOne,
             role_type: this.role_defaults.roleTypeGeneral,
             location_level: this.location_level_fixtures.detail().id
         }
@@ -33,6 +33,12 @@ var BSRS_ROLE_FACTORY = (function() {
             response[key] = role[key];
         }
         return response;
+    };
+    factory.prototype.get = function() {
+        return {
+            'id': this.role_defaults.idOne,
+            'name': this.role_defaults.nameOne 
+        }
     };
     return factory
 })();

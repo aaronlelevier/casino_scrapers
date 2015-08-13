@@ -18,7 +18,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store, payload, detail_xhr;
 
-module('sco Acceptance | people-new', {
+module('Acceptance | people-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
@@ -50,6 +50,7 @@ test('visiting /people/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.equal(store.find('person').get('length'), 1);
+        assert.equal(find('.t-person-role option:eq(0)').text(), 'Select One');
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
@@ -61,10 +62,8 @@ test('visiting /people/new', (assert) => {
         var person = store.find('person').objectAt(0);
         assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
-        assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
         assert.equal(person.get('role'), PEOPLE_DEFAULTS.role);
-        // assert.equal(find('.t-person-role').val(), PEOPLE_DEFAULTS.role);
         assert.ok(person.get('isNotDirty'));
     });
 });

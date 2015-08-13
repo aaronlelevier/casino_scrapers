@@ -108,7 +108,8 @@ export default {
 				'number_users': '# of Users',
 				'general': 'General'
 			},
-            'system_administrator': 'Administrator'
+            'system_administrator': 'Administrator',
+            'guest': 'Guest'
 		},
 		'address_type': {
 			'office': 'Office',

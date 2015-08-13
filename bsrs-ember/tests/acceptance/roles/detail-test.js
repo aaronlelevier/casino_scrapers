@@ -33,7 +33,7 @@ module('Acceptance | role-detail', {
     }
 });
 
-test('sco clicking a role name will redirect to the given detail view', (assert) => {
+test('clicking a role name will redirect to the given detail view', (assert) => {
     visit(ROLE_URL);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
@@ -50,7 +50,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         assert.equal(currentURL(), DETAIL_URL);
         var role = store.find('role').objectAt(0);  
         assert.ok(role.get('isNotDirty'));
-        assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.name);
+        assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.nameOne);
         assert.equal(find('.t-role-role-type').val(), ROLE_DEFAULTS.roleTypeGeneral);
         // assert.equal(find('.t-role-category:eq(0)').val(), CATEGORY_DEFAULTS.name);
         assert.equal(find('.t-role-location-level').val(), ROLE_DEFAULTS.locationLevelOne);
@@ -152,7 +152,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), ROLE_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
             var role = store.find('role', ROLE_DEFAULTS.idOne);
-            assert.equal(role.get('name'), ROLE_DEFAULTS.name);
+            assert.equal(role.get('name'), ROLE_DEFAULTS.nameOne);
         });
     });
 });

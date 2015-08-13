@@ -32,7 +32,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             first_name: BSRS_PERSON_FIRST_NAME,
             middle_initial: BSRS_PERSON_MIDDLE_INITIAL,
             last_name: BSRS_PERSON_LAST_NAME,
-            role: this.role_defaults.idOne,
+            role: this.role_defaults.idTwo,
             status: this.status_defaults.activeId,
             phone_numbers: BSRS_PERSON_PHONE_NUMBERS,
             addresses: BSRS_PERSON_ADDRESSES,
