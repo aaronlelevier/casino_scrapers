@@ -26,9 +26,6 @@ class LocationLevelDetailSerializer(serializers.ModelSerializer):
 
 
 class LocationLevelCreateSerializer(BaseCreateSerializer):
-    '''
-    TODO: Nested Create/Update of ``children``
-    '''
 
     class Meta:
         model = LocationLevel

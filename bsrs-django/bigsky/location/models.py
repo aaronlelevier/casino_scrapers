@@ -98,9 +98,8 @@ class LocationLevel(SelfRefrencingBaseModel, AbstractName):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
-    role_type = models.CharField(max_length=29, blank=True,
-        choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
-
+    pass
+    
 
 ### LOCATION STATUS
 

@@ -13,17 +13,32 @@ from util.views import BaseModelViewSet
 class LocationLevelViewSet(BaseModelViewSet):
 
     permission_classes = (IsAuthenticated,)
+    model = LocationLevel
     queryset = LocationLevel.objects.all()
-    
+
     def get_serializer_class(self):
         if self.action == 'list':
             return ls.LocationLevelSerializer
         elif self.action == 'retrieve':
             return ls.LocationLevelDetailSerializer
-        elif self.action in ('create', 'update'):
+        elif self.action in ('create', 'update', 'partial_update'):
             return ls.LocationLevelCreateSerializer
         else:
             raise MethodNotAllowed(method=self.action)
+
+    @detail_route(methods=['GET'], url_path=r'get-all-children')
+    def get_all_children(self, request, pk=None):
+        instance = get_object_or_404(LocationLevel, pk=pk)
+        related_instances = self.queryset.get_all_children(instance)
+        serializer = ls.LocationLevelDetailSerializer(related_instances, many=True)
+        return Response(serializer.data)
+
+    @detail_route(methods=['GET'], url_path=r'get-all-parents')
+    def get_all_parents(self, request, pk=None):
+        instance = get_object_or_404(self.model, pk=pk)
+        related_instances = self.queryset.get_all_parents(instance)
+        serializer = ls.LocationLevelDetailSerializer(related_instances, many=True)
+        return Response(serializer.data)
     
 
 class LocationStatusViewSet(BaseModelViewSet):

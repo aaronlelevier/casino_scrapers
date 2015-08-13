@@ -10,6 +10,8 @@ from location.models import (Location, LocationLevel, LocationStatus,
 from person.tests.factory import create_person, PASSWORD
 
 
+### LOCATION LEVEL
+
 class LocationLevelTests(APITestCase):
 
     def setUp(self):
@@ -75,6 +77,12 @@ class LocationLevelTests(APITestCase):
         data = json.loads(response.content)
         self.assertNotEqual(data['name'], old_name)
 
+        ### DETAIL ROUTES
+
+    # def test_
+
+
+### LOCATION
 
 class LocationListTests(APITestCase):
 
@@ -244,17 +252,3 @@ class LocationUpdateTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content)
         self.assertEqual(data['status'], str(new_status.id))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
