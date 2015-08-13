@@ -67,7 +67,7 @@ test('sco visiting /people/new', (assert) => {
     });
 });
 
-test('validation works and when hit save, we do same post', (assert) => {
+test('sco validation works and when hit save, we do same post', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     var url = PREFIX + PEOPLE_URL + '/';
     xhr( url,'POST',JSON.stringify(payload),{},201,response );
@@ -93,6 +93,8 @@ test('validation works and when hit save, we do same post', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
+        // assert.equal(find('.t-person-role').val(), PEOPLE_DEFAULTS.role);
     });
 });
 

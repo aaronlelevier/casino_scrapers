@@ -1,7 +1,10 @@
+from url_helper import URLHelper
+
 class MethodHelpers(object):
-    @staticmethod
-    def at():
-        pass
+
+    def at(self, current_url, target_url):
+        assert URLHelper.find_url(current_url, target_url) == target_url
+
     def wait_xhr(self, class_name):
         return self.wait_for_xhr_request(class_name)
 
