@@ -18,9 +18,13 @@ var PersonDeserializer = Ember.Object.extend({
             address.type = address.type.id;
             store.push('address', address);
         });
+        if (typeof response.role === 'object') {
+            store.push('role-person', response.role);
+        } else { store.push('role-person', {id: response.role, person: response.id}); }
         //discuss dirty attr for prop not included in the list
         //meaning ... if the user is dirty NOW what should do?
         delete response.phone_numbers;
+        delete response.role;
         delete response.addresses;
         var originalPerson = store.push('person', response);
         originalPerson.save();

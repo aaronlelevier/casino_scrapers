@@ -14,10 +14,14 @@ var LocationLevel = Model.extend({
     rollbackRelated() {
     },
     serialize() {
+        var levels = [];
+        this.get('children').forEach(function(model) {
+            levels.push(model.get('id'));
+        });
         return {
             id: this.get('id'),
             name: this.get('name'),
-            children: []
+            children: levels
         };
     },
     removeRecord(id) {

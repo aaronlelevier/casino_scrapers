@@ -42,9 +42,13 @@
 			    	{{input type="text" placeholder=(t "admin.person.label.employee_id") value=model.employee_id class="form-control t-person-employee_id" id="employee_id"}}
 				{{/form-group}}
 			</div>
-			<div class="col-sm-6">
+			<div class="col-sm-12">
 				{{#form-group title="admin.person.label.role" for="role"}}
-			    	{{input type="text" placeholder=(t "admin.person.label.role") value=(t model.role.name) class="form-control" id="role"}}
+          <select class="t-person-role form-control role" id="role" onchange={{action (action "changed" model.role_person) value="target.value"}}>
+            {{#each roles as |role|}}
+            <option value={{role.id}} selected={{is-equal role.id model.role_person.id}}>{{role.name}}</option>
+            {{/each}}
+          </select>
 				{{/form-group}}
 			</div>
 			<div class="col-sm-6">
