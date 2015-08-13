@@ -193,14 +193,30 @@ class LocationDetailTests(APITestCase):
 
     def test_get_level_children(self):
         # SetUp
-        east = Location.objects.get(name='east')
-        store_ll = LocationLevel.objects.get(name='store')
+        location = Location.objects.get(name='east')
+        location_level = LocationLevel.objects.get(name='store')
         # Test
-        response = self.client.get('/api/admin/locations/{pk}/level/{level_id}/'.format(
-            pk=east.id, level_id=store_ll.id))
+        response = self.client.get('/api/admin/locations/{pk}/get-level-children/{level_id}/'.format(
+            pk=location.id, level_id=location_level.id))
         data = json.loads(response.content)
-        store1 = Location.objects.filter(location_level=store_ll).first()
+        store1 = Location.objects.filter(location_level=location_level).first()
         self.assertIn(str(store1.id), response.content)
+        self.assertEqual(len(data), 2)
+
+    def test_get_level_parents(self):
+        # SetUp
+        location = Location.objects.get(name='ca')
+        location_level = LocationLevel.objects.get(name='region')
+        # New Parent Location at "region" Level
+        east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
+        east_lp.children.add(location)
+        # Test
+        response = self.client.get('/api/admin/locations/{pk}/get-level-parents/{level_id}/'.format(
+            pk=location.id, level_id=location_level.id))
+        data = json.loads(response.content)
+        region1 = Location.objects.filter(location_level=location_level).first()
+        self.assertIn(str(region1.id), response.content)
+        self.assertEqual(len(data), 2)
 
 
 class LocationCreateTests(APITestCase):
