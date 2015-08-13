@@ -9,7 +9,6 @@
 htmlcov/
 /__pycache__
 *.ipynb*
-config.rst
 dump.rdb
 **/environ/init.sls
 *id_rsa*
@@ -38,7 +37,7 @@ bsrs-django/bigsky/assets/
 bsrs-django/bigsky/templates/index.html
 
 .ctags
-_todo.rst
+_*.rst
 
 # static
 bsrs-django/bigsky/assets/

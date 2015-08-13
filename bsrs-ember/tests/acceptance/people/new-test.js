@@ -18,7 +18,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store, payload, detail_xhr;
 
-module('Acceptance | people-new', {
+module('sco Acceptance | people-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
@@ -61,8 +61,10 @@ test('visiting /people/new', (assert) => {
         var person = store.find('person').objectAt(0);
         assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
         assert.equal(person.get('role'), PEOPLE_DEFAULTS.role);
+        // assert.equal(find('.t-person-role').val(), PEOPLE_DEFAULTS.role);
         assert.ok(person.get('isNotDirty'));
     });
 });

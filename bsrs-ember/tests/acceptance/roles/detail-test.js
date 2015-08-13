@@ -33,7 +33,7 @@ module('Acceptance | role-detail', {
     }
 });
 
-test('clicking a role name will redirect to the given detail view', (assert) => {
+test('sco clicking a role name will redirect to the given detail view', (assert) => {
     visit(ROLE_URL);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

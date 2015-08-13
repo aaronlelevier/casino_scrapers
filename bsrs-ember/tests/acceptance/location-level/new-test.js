@@ -40,6 +40,7 @@ module('Acceptance | location-level-new', {
 
 test('visiting /location-level/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
+    payload.children = ['85c18266-dfca-4499-9cff-7c5c6970af7e', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f'];
     xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);
     click('.t-location-level-new');
@@ -49,6 +50,8 @@ test('visiting /location-level/new', (assert) => {
         assert.equal(find('.t-location-level > option').length, 3);
     });
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+    fillIn('.t-location-level', '85c18266-dfca-4499-9cff-7c5c6970af7e'); //DRY this up ...
+    fillIn('.t-location-level', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f'); //DRY this up ...
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);

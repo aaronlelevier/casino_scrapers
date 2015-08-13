@@ -18,6 +18,7 @@ npm install
 ./node_modules/ember-cli/bin/ember build --env=production
 
 cd ../bsrs-django
+rm -rf venv
 virtualenv venv
 venv/bin/pip install -r requirements.txt
 
@@ -31,10 +32,8 @@ export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
 ../venv/bin/python manage.py makemigrations
 ../venv/bin/python manage.py migrate
 
-cp fixtures/jenkins.json fixtures/postgres.json
-cp fixtures/jenkins_custom.json fixtures/postgres_custom.json
-../venv/bin/python manage.py loaddata fixtures/postgres.json
-../venv/bin/python manage.py loaddata fixtures/postgres_custom.json
+../venv/bin/python manage.py loaddata fixtures/jenkins.json
+../venv/bin/python manage.py loaddata fixtures/jenkins_custom.json
 
 cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/fonts .

@@ -4,8 +4,8 @@ import time
 class JavascriptMixin(object):
 
     def wait_for_xhr_request(self, selector, plural=False):
-        for w in range(1, 10):
-            print "waiting for xhr callback..."
+        for w in range(10):
+            print "waiting for xhr callback...{}".format(selector)
             if(self.driver.execute_script("return $.active") == 0):
                 if(plural):
                     element = self.driver.find_elements_by_class_name(selector)

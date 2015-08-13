@@ -1,8 +1,10 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import injectStore from 'bsrs-ember/utilities/store';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
 export default Ember.Component.extend(ValidationMixin, {
+    store: injectStore('main'),
     repository: inject('location-level'),
     nameValidation: validate('model.name'),
     filtered_location_levels: Ember.computed('all_location_levels.@each', function() { //TODO: test model.@each is needed or not?
@@ -12,6 +14,13 @@ export default Ember.Component.extend(ValidationMixin, {
         }); 
     }),
     actions: {
+        changed(model, val) {
+            Ember.run(() => {
+                var adding = this.get('store').find('location-level', val);
+                adding.set('parent_id', this.get('model.id'));
+                //how does the above work with dirty tracking?
+            });
+        },
         saveLocationLevel() {
             this.set('submitted', true);
             if (this.get('valid')) {

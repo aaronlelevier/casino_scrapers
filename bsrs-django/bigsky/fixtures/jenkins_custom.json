@@ -44,8 +44,8 @@
 {
   "fields": {
     "deleted": null,
-    "modified": "2015-08-10T16:45:15.896Z",
-    "name": "Open",
+    "modified": "2015-08-11T17:01:15.979Z",
+    "name": "admin.location.status.open",
     "created": "2015-08-10T16:45:15.896Z"
   },
   "model": "location.locationstatus",
@@ -54,8 +54,8 @@
 {
   "fields": {
     "deleted": null,
-    "modified": "2015-08-10T16:45:21.246Z",
-    "name": "Future",
+    "modified": "2015-08-11T17:00:56.731Z",
+    "name": "admin.location.status.future",
     "created": "2015-08-10T16:45:21.246Z"
   },
   "model": "location.locationstatus",
@@ -64,8 +64,8 @@
 {
   "fields": {
     "deleted": null,
-    "modified": "2015-08-10T16:45:26.525Z",
-    "name": "Closed",
+    "modified": "2015-08-11T17:01:27.226Z",
+    "name": "admin.location.status.closed",
     "created": "2015-08-10T16:45:26.525Z"
   },
   "model": "location.locationstatus",
