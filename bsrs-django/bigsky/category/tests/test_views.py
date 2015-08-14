@@ -8,6 +8,7 @@ from category import serializers
 from category.models import CategoryType, Category
 from category.tests.factory import create_category_types, create_categories
 from person.tests.factory import PASSWORD, create_person
+from util import create
 
 
 ### CATEGORY TYPE
@@ -216,7 +217,7 @@ class CategoryDetailTests(APITestCase):
     def test_subcategories(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.category.id))
         data = json.loads(response.content)
-        self.assertTrue(len(data['subcategories']) > 1)
+        self.assertTrue(len(data['children']) > 1)
 
 
 class CategoryUpdateTests(APITestCase):
@@ -226,19 +227,20 @@ class CategoryUpdateTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.category_type = CategoryType.objects.get(name='trade')
-        self.category = Category.objects.filter(type=self.category_type).first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
+        # Test Category
+        self.category_type = CategoryType.objects.get(name='trade')
+        self.category = Category.objects.filter(type=self.category_type).first()
+        self.data = serializers.CategorySerializer(self.category).data
 
     def tearDown(self):
         self.client.logout()
 
     def test_no_change(self):
-        response = self.client.get('/api/admin/categories/{}/'.format(self.category.id))
-        data = json.loads(response.content)
+        print self.data
         response = self.client.put('/api/admin/categories/{}/'.format(self.category.id),
-            data, format='json')
+            self.data, format='json')
         self.assertEqual(response.status_code, 200)
 
     def test_change_name(self):

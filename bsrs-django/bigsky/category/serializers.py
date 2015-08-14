@@ -66,14 +66,23 @@ class CategoryListSerializer(BaseCreateSerializer):
         fields = CATEGORY_FIELDS
 
 
+class CategoryDetailSerializer(BaseCreateSerializer):
+
+    parent = CategoryIDNameSerializer(read_only=True)
+    children = CategoryIDNameSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Category
+        fields = CATEGORY_FIELDS + ('parent', 'children',)
+
+
 class CategorySerializer(BaseCreateSerializer):
 
     parent = serializers.PrimaryKeyRelatedField(
         queryset=Category.objects.all(),
         allow_null=True
         )
-    subcategories = CategoryIDNameSerializer(many=True, read_only=True, source='children')
 
     class Meta:
         model = Category
-        fields = CATEGORY_FIELDS + ('parent', 'subcategories',)
+        fields = CATEGORY_FIELDS + ('parent', 'children',)

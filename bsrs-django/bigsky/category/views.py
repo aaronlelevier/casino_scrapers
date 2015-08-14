@@ -33,5 +33,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
         """
         if self.action == 'list':
             return cs.CategoryListSerializer
+        elif self.action == 'retrieve':
+            return cs.CategoryDetailSerializer
         else:
             return cs.CategorySerializer
