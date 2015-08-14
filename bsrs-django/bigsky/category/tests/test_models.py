@@ -39,13 +39,30 @@ class CategoryTests(TestCase):
 
         # Category
         # Type
-        [mommy.make(Category, type=self.issue) for i in range(2)]
-        # Trade
-        for c in Category.objects.filter(type=self.issue):
+        [mommy.make(Category, type=self.type) for i in range(2)]
+        # Trades
+        for type in Category.objects.filter(type=self.type):
             for i in range(2):
-                mommy.make(Category, type=self.trade, parent=c)
-        # Issue
+                mommy.make(Category, type=self.trade, parent=type)
+        # Issues
+        for trade in Category.objects.filter(type=self.trade):
+            for i in range(2):
+                mommy.make(Category, type=self.issue, parent=trade)
 
     def test_create(self):
         self.assertEqual(Category.objects.filter(type=self.issue).count(), 2)
+
+    def test_create(self):
+        self.assertEqual(Category.objects.filter(type=self.type).count(), 2)
+        self.assertEqual(Category.objects.filter(type=self.trade).count(), 4)
+        self.assertEqual(Category.objects.filter(type=self.issue).count(), 8)
+
+    def test_children(self):
+        trade = Category.objects.filter(type=self.trade).first()
+        self.assertEqual(trade.children.all().count(), 2)
+
+    def test_parent(self):
+        trade = Category.objects.filter(type=self.trade).first()
+        self.assertIsInstance(trade.parent, Category)
+        self.assertEqual(trade.parent.type, self.type)
 
