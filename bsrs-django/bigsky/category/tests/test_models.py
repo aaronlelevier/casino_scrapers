@@ -3,7 +3,8 @@ from django.db import IntegrityError
 
 from model_mommy import mommy
 
-from category.models import CategoryType
+from category.models import CategoryType, Category
+from category.tests.factory import create_category_types
 
 
 class CategoryTypeTests(TestCase):
@@ -28,4 +29,23 @@ class CategoryTypeTests(TestCase):
             trade_other = mommy.make(CategoryType, child=self.issue)
 
 
-# class CategoryTests()
+class CategoryTests(TestCase):
+
+    def setUp(self):
+        # CategoryType
+        self.issue = mommy.make(CategoryType, name='issue')
+        self.trade = mommy.make(CategoryType, name='trade', child=self.issue)
+        self.type = mommy.make(CategoryType, name='type', child=self.trade)
+
+        # Category
+        # Type
+        [mommy.make(Category, type=self.issue) for i in range(2)]
+        # Trade
+        for c in Category.objects.filter(type=self.issue):
+            for i in range(2):
+                mommy.make(Category, type=self.trade, parent=c)
+        # Issue
+
+    def test_create(self):
+        self.assertEqual(Category.objects.filter(type=self.issue).count(), 2)
+
