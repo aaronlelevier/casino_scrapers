@@ -13,7 +13,7 @@ class CategoryTypeViewSet(viewsets.ModelViewSet):
     queryset = CategoryType.objects.all()
 
 
-class CategoryViewSet(viewsets, ModelViewSet):
+class CategoryViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticated,)
     queryset = Category.objects.all()

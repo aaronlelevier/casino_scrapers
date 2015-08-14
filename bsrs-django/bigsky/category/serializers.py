@@ -8,6 +8,12 @@ from util.serializers import BaseCreateSerializer
 
 class CategoryTypeSerializer(BaseCreateSerializer):
 
+    parent = serializers.PrimaryKeyRelatedField(
+        queryset=CategoryType.objects.all(),
+        allow_null=True
+        )
+    child = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = CategoryType
         fields = ('id', 'name', 'parent', 'child',)
@@ -37,7 +43,7 @@ class CategoryListSerializer(BaseCreateSerializer):
 
 class CategorySerializer(BaseCreateSerializer):
 
-    subcategories = CategoryIDNameSerializer
+    subcategories = CategoryIDNameSerializer()
 
     class Meta:
         model = Category
