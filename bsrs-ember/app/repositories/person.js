@@ -12,6 +12,7 @@ export default Ember.Object.extend({
             model.save();
             model.savePhoneNumbers();
             model.saveAddresses();
+            model.saveRole();
         });
     },
     update(model) {
@@ -19,6 +20,7 @@ export default Ember.Object.extend({
             model.save();
             model.savePhoneNumbers();
             model.saveAddresses();
+            model.saveRole();
         });
     },
     find() {

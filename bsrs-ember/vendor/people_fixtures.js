@@ -23,7 +23,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
                 'id': this.status_defaults.activeId,
                 'name': 'admin.person.status.active'
             },
-            role: this.role_fixtures.get(), 
+            role: this.role_fixtures.get(),
             emails: this.person_defaults.emails
         }
     },
@@ -106,8 +106,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
         person.phone_numbers = this.phone_number_fixtures.get();
         person.addresses = this.address_fixtures.get();
         person.emails = [];
-        person.role['location_level'] = this.location_level_defaults.idOne;
-        person.role['person'] = i;
         return person;
     };
     factory.prototype.put = function(person) {

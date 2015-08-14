@@ -20,3 +20,11 @@ test('default state for role type on role model is location', (assert) => {
     role.set('role_type', 'Location');
     assert.ok(role.get('isNotDirty'));
 });
+
+test('default state for people on role model is undefined', (assert) => {
+    var role = Role.create({id: ROLE_DEFAULTS.idOne, people: undefined});
+    role.set('people', [1, 2, 3]);
+    assert.ok(role.get('isDirty'));
+    role.set('people', []);
+    assert.ok(role.get('isNotDirty'));
+});

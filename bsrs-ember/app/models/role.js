@@ -6,6 +6,7 @@ import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 export default Model.extend({
     store: inject('main'),
     name: attr(''),
+    people: attr([]),
     role_type: attr(),
     location_level: attr(),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
