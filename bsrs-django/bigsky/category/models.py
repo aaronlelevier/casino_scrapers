@@ -27,7 +27,7 @@ class Category(AbstractName):
     """
     Multiple ``Categories`` will exist for each ``CategoryType``.
     """
-    description = models.CharField(max_length=100)
+    description = models.CharField(max_length=100, blank=True, null=True)
     type = models.ForeignKey(CategoryType, blank=True, null=True)
     cost_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     cost_currency = models.ForeignKey(Currency, blank=True, null=True)
