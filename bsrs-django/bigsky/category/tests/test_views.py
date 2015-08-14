@@ -4,6 +4,7 @@ import uuid
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
+from category import serializers
 from category.models import CategoryType, Category
 from category.tests.factory import create_category_types, create_categories
 from person.tests.factory import PASSWORD, create_person
@@ -32,6 +33,12 @@ class CategoryTypeListTests(APITestCase):
         response = self.client.get('/api/admin/category_types/')
         data = json.loads(response.content)
         self.assertTrue(len(data['results']), 0)
+
+    def test_fields(self):
+        response = self.client.get('/api/admin/category_types/')
+        data = json.loads(response.content)
+        for field in serializers.CategoryTypeListSerializer.Meta.fields:
+            self.assertIn(field, data['results'][0].keys())
 
 
 class CategoryTypeDetailTests(APITestCase):
@@ -69,51 +76,45 @@ class CategoryTypeUpdateTests(APITestCase):
         create_category_types()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
+        # Test CategoryType
+        self.category_type = CategoryType.objects.get(name='trade')
+        self.data = {
+            'id': str(self.category_type.id),
+            'name': self.category_type.name,
+            'parent': str(self.category_type.parent.id)
+        }
 
     def tearDown(self):
         self.client.logout()
 
     def test_no_change(self):
-        ct = CategoryType.objects.get(name='trade')
-        response = self.client.get('/api/admin/category_types/{}/'.format(ct.id))
-        data = json.loads(response.content)
-        response = self.client.put('/api/admin/category_types/{}/'.format(ct.id), data, format='json')
+        response = self.client.put('/api/admin/category_types/{}/'.format(
+            self.category_type.id), self.data, format='json')
         self.assertEqual(response.status_code, 200)
 
     def test_change(self):
         # Replace CategoryType 'name', and test that update worked
-        ct = CategoryType.objects.get(name='trade')
-        response = self.client.get('/api/admin/category_types/{}/'.format(ct.id))
-        data = json.loads(response.content)
-        data['name'] = 'some new name'
-        response = self.client.put('/api/admin/category_types/{}/'.format(ct.id), data, format='json')
+        self.data['name'] = 'some new name'
+        response = self.client.put('/api/admin/category_types/{}/'.format(
+            self.category_type.id), self.data, format='json')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
-        self.assertNotEqual(ct.name, data['name'])
+        self.assertNotEqual(self.category_type.name, self.data['name'])
 
     def test_parent(self):
         # Change 'issue' parent from 'trade' to 'trade_other'
-        trade_other = CategoryType.objects.create(name='trade_other')
-        issue = CategoryType.objects.get(name='issue')
-        response = self.client.get('/api/admin/category_types/{}/'.format(issue.id))
-        data = json.loads(response.content)
-        data['parent'] = str(trade_other.id)
-        response = self.client.put('/api/admin/category_types/{}/'.format(issue.id), data, format='json')
+        trade_other = mommy.make(CategoryType, name='trade_other')
+        self.assertIsInstance(
+            CategoryType.objects.get(id=trade_other.id),
+            CategoryType
+        )
+        self.data['parent'] = str(trade_other.id)
+        self.assertNotEqual(str(self.category_type.parent.id), self.data['parent'])
+        response = self.client.put('/api/admin/category_types/{}/'.format(
+            self.category_type.id), self.data, format='json')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
-        self.assertNotEqual(str(issue.parent.id), data['parent'])
-
-    def test_child(self):
-        # Should raise an Error b/c 'child' is a read_only field.
-        sub_issue = CategoryType.objects.create(name='sub_issue')
-        issue = CategoryType.objects.get(name='issue')
-        response = self.client.get('/api/admin/category_types/{}/'.format(issue.id))
-        data = json.loads(response.content)
-        data['child'] = str(sub_issue.id)
-        response = self.client.put('/api/admin/category_types/{}/'.format(issue.id), data, format='json')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
-        self.assertNotEqual(data['child'], str(sub_issue.id))
+        self.assertEqual(str(trade_other.id), self.data['parent'])
 
 
 class CategoryTypeCreateTests(APITestCase):
@@ -156,23 +157,6 @@ class CategoryTypeCreateTests(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(data['name'], ct_name)
         self.assertEqual(data['parent'], str(issue.id))
-
-
-    def test_create_child(self):
-        # Child ``CategoryType`` not added b/c 'child' is a read_only field
-        sub_sub_issue = CategoryType.objects.create(name='sub_sub_issue')
-        ct_name = 'sub_issue'
-        data = {
-            'id': str(uuid.uuid4()),
-            'name': ct_name,
-            'parent': None,
-            'child': str(sub_sub_issue.id)
-        }
-        response = self.client.post('/api/admin/category_types/', data, format='json')
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content)
-        self.assertEqual(data['name'], ct_name)
-        self.assertNotEqual(data['child'], str(sub_sub_issue.id))
 
 
 ### CATEGORY
