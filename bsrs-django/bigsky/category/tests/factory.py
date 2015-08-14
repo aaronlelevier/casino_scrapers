@@ -4,6 +4,6 @@ from category.models import CategoryType
 
 
 def create_category_types():
-    issue = mommy.make(CategoryType, name='issue')
-    trade = mommy.make(CategoryType, name='trade', child=issue)
-    type = mommy.make(CategoryType, name='type', child=trade)
+    type = mommy.make(CategoryType, name='type')
+    trade = mommy.make(CategoryType, name='trade', parent=type)
+    issue = mommy.make(CategoryType, name='issue', parent=trade)

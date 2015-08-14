@@ -10,9 +10,9 @@ from category.tests.factory import create_category_types
 class CategoryTypeTests(TestCase):
 
     def setUp(self):
-        self.issue = mommy.make(CategoryType, name='issue')
-        self.trade = mommy.make(CategoryType, name='trade', child=self.issue)
-        self.type = mommy.make(CategoryType, name='type', child=self.trade)
+        self.type = mommy.make(CategoryType, name='type')
+        self.trade = mommy.make(CategoryType, name='trade', parent=self.type)
+        self.issue = mommy.make(CategoryType, name='issue', parent=self.trade)
 
     def test_create(self):
         self.assertEqual(CategoryType.objects.count(), 3)
@@ -26,16 +26,16 @@ class CategoryTypeTests(TestCase):
     def test_one_to_one_hierarchy(self):
         # Two CategoryType's can't have the same Child
         with self.assertRaises(IntegrityError):
-            trade_other = mommy.make(CategoryType, child=self.issue)
+            trade_other = mommy.make(CategoryType, parent=self.type)
 
 
 class CategoryTests(TestCase):
 
     def setUp(self):
         # CategoryType
-        self.issue = mommy.make(CategoryType, name='issue')
-        self.trade = mommy.make(CategoryType, name='trade', child=self.issue)
-        self.type = mommy.make(CategoryType, name='type', child=self.trade)
+        self.type = mommy.make(CategoryType, name='type')
+        self.trade = mommy.make(CategoryType, name='trade', parent=self.type)
+        self.issue = mommy.make(CategoryType, name='issue', parent=self.trade)
 
         # Category
         # Type

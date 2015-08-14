@@ -16,7 +16,7 @@ class CategoryTypeManager(BaseManager):
 
 class CategoryType(AbstractName):
     """Single Parent / Child Hierarchical Structure."""
-    child = models.OneToOneField("self", related_name="parent", blank=True, null=True)
+    parent = models.OneToOneField("self", related_name="child", blank=True, null=True)
 
     objects = CategoryTypeManager()
 
