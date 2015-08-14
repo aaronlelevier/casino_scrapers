@@ -7,6 +7,7 @@ from rest_framework import routers
 
 from accounting import views as accounting_views
 from bigsky.views import IndexView
+from category import views as category_views
 from contact import views as contact_views
 from location import views as location_views
 from person import views as person_views
@@ -18,6 +19,10 @@ router = routers.DefaultRouter()
 
 # ACCOUNTING
 router.register(r'currencies', accounting_views.CurrencyViewSet)
+
+# CATEGORY
+router.register(r'category_types', category_views.CategoryTypeViewSet)
+router.register(r'categories', category_views.CategoryViewSet)
 
 # CONTACT
 router.register(r'phone_number_types', contact_views.PhoneNumberTypeViewSet)
