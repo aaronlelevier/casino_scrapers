@@ -27,14 +27,14 @@ export default Ember.Route.extend({
             if (model.get('isNew')) {
                 model.removeRecord(model.get('id'));
             } else if (model.get('isDirtyOrRelatedDirty')) {
-                $('.t-modal').modal('show');
+                Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;
                 this.trx.newModel = true;
                 this.trx.storeType = 'role';
                 transition.abort();
             } else {
-                $('.t-modal').modal('hide');
+                Ember.$('.t-modal').modal('hide');
             }
         },
         redirectUser() {
