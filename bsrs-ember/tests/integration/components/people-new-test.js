@@ -40,7 +40,7 @@ test('filling in invalid password reveal validation messages', function(assert) 
     assert.ok($component.is(':hidden'));
 });
 
-test('default role data is loaded', function(assert) {
+test('sco default role data is loaded', function(assert) {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     this.set('model', person);
     store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne});
@@ -51,6 +51,6 @@ test('default role data is loaded', function(assert) {
     assert.equal(this.$('.t-person-role-select option:eq(1)').text(), ROLE_DEFAULTS.nameOne);//TODO: translate this
     assert.equal(person.get('role').get('length'), 0);
     this.$('.t-person-role-select').val(ROLE_DEFAULTS.idOne).trigger('change');
-    assert.equal(person.get('role').get('length'), 1);
+    assert.equal(person.get('role').get('people'), PEOPLE_DEFAULTS.id);
 });
 

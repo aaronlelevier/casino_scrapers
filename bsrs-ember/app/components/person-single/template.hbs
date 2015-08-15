@@ -43,8 +43,6 @@
 				{{/form-group}}
 			</div>
 			<div class="col-sm-12">
-          {{!-- TODO fix this w/ a single (alias) --}}
-          {{#each model.role as |possible|}}
 				{{#form-group title="admin.person.label.role" for="role"}}
           <select class="t-person-role-select form-control role" id="person-role" onchange={{action (action "changed" model) value="target.value"}}>
             <option>Select One</option>
@@ -53,7 +51,6 @@
             {{/each}}
           </select>
 				{{/form-group}}
-          {{/each}}
 			</div>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}

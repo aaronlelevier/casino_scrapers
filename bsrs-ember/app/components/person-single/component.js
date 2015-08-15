@@ -13,14 +13,14 @@ export default Ember.Component.extend(ValidationMixin, {
         changed(model, val) {
             var person_id = this.get('model.id');
             var new_role = this.get('store').find('role', val);
-            var old_role = this.get('model').get('role').objectAt(0); //TODO: create alias on the model ... this sucks
+            var old_role = this.get('model').get('role'); //TODO: create alias on the model ... this sucks
 
             var new_role_people = new_role.get('people') || [];
             var old_role_people = old_role.get('people') || [];
 
             Ember.run(function() {
                 new_role.set('people', new_role_people.concat([person_id]));
-                old_role.set('people', old_role_people.filter(function(old_role_person_pk) {
+                old_role.set('people', old_role_people.filter((old_role_person_pk) => {
                     return old_role_person_pk !== person_id;
                 }));
             });

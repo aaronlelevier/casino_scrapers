@@ -27,20 +27,28 @@ export default Model.extend({
         var last_name = this.get('last_name');
         return first_name + ' ' + last_name;
     }),
-    role: Ember.computed(function() {
+    role: Ember.computed('role_property.[]', function() {
+        if (this.get('role_property').get('length') > 0) {
+            var x = this.get('role_property').objectAt(0);
+            return x;
+        } else {
+            return [];
+        }
+    }),
+    role_property: Ember.computed(function() {
         var store = this.get('store');
         var filter = function(role) {
             var person_pk = this.get('id');
-            var z = false;
+            var match = false;
             var people_pks = role.get('people') || [];
             //TODO: tweak the above to be an alias if possible
             //TODO: use this instead $.inArray(person_pk, role.get('people')) > -1;
             people_pks.forEach(function(fk) {
                 if(fk === person_pk) {
-                    z = true;
+                    match = true;
                 }
             });
-            return z; //in the future look at z
+            return match; //in the future look at z
         };
         return store.find('role', filter.bind(this), ['people']);
     }),
@@ -57,7 +65,7 @@ export default Model.extend({
     }),
     roleIsDirty: Ember.computed('role.@each.isDirty', function() {
         let role = this.get('role');
-        return role.objectAt(0) ? role.objectAt(0).get('isDirty') : undefined;
+        return role ? role.get('isDirty') : undefined;
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
@@ -97,10 +105,8 @@ export default Model.extend({
         });
     },
     saveRole: function() {
-        var roles = this.get('role') || [];
-        roles.forEach((role) => {
-            role.save();
-        });
+        var role = this.get('role');
+        role.save();
     },
     rollbackRelated() {
         this.rollbackPhoneNumbers();
@@ -124,7 +130,7 @@ export default Model.extend({
             id: this.get('id'),
             username: this.get('username'),
             password: this.get('password'),
-            role: this.get('role').objectAt(0).get('id')
+            role: this.get('role').get('id')
         };
     },
     serialize() {
@@ -150,7 +156,7 @@ export default Model.extend({
             location:'',
             auth_amount: this.get('auth_amount'),
             status: status_id,
-            role: this.get('role').objectAt(0).get('id'), //TODO: is this tested/used at all?
+            role: this.get('role').get('id'), //TODO: is this tested/used at all?
             emails: [],
             phone_numbers: phone_numbers,
             addresses: addresses

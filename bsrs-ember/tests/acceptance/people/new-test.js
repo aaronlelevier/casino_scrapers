@@ -43,7 +43,7 @@ module('Acceptance | people-new', {
     }
 });
 
-test('visiting /people/new', (assert) => {
+test('sco visiting /people/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(PEOPLE_URL);
@@ -64,7 +64,7 @@ test('visiting /people/new', (assert) => {
         assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
-        assert.equal(person.get('role').objectAt(0).get('id'), PEOPLE_DEFAULTS.role);
+        assert.equal(person.get('role').get('id'), PEOPLE_DEFAULTS.role);
         assert.ok(person.get('isNotDirty'));
     });
 });
