@@ -13,6 +13,8 @@ echo "UWSGI KILL:"
 fuser -k $PORT/tcp
 
 cd /www/django/releases
+mkdir python2
+cd python2
 rm -rf ./*/
 
 git clone git@github.com:bigskytech/bsrs.git $NEW_UUID
