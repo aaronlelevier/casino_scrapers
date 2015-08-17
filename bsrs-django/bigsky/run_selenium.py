@@ -24,7 +24,7 @@ def run_selenium_tests():
 
 def sleep_based_on_platform():
     if platform.system() == "Darwin":
-        time.sleep(2)
+        time.sleep(5)
     else:
         time.sleep(20)
 

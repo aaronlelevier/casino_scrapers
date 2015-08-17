@@ -12,5 +12,12 @@ DATABASES = {
     }
 }
 
+# Disable Caching for Local Dev
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+   }
+}
+
 if 'test' in sys.argv:
     from .ci import *

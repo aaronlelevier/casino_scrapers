@@ -7,6 +7,8 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from model_mommy import mommy
 
+from category.models import CategoryType
+from category.serializers import CategoryTypeListSerializer
 from person.tests.factory import create_person, create_role
 from util import create
 from util.models import MainSetting, CustomSetting, Tester
@@ -127,3 +129,13 @@ class UpdateTests(TestCase):
         self.assertNotEqual(self.person.username, new_username)
         self.person = create.update_model(instance=self.person, dict_={'username':new_username})
         self.assertEqual(self.person.username, new_username)
+
+    def test_serialize_model_to_dict(self):
+        ct = mommy.make(CategoryType)
+        dict_ = create.serialize_model_to_dict(ct, CategoryTypeListSerializer)
+        for k,v in dict_.items():
+            self.assertIn(k, CategoryTypeListSerializer.Meta.fields)
+            if isinstance(getattr(ct, k), uuid.UUID):
+                self.assertEqual(str(getattr(ct, k)), v)
+            else:
+                self.assertEqual(getattr(ct, k), v)

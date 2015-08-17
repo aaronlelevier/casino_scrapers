@@ -39,6 +39,7 @@ THIRD_PARTY_APPS = (
 
 LOCAL_APPS = (
     'accounting',
+    'category',
     'contact',
     'location',
     'person',
@@ -142,9 +143,12 @@ CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:80
 # APP SETTINGS #
 ################
 
-### LOCATION ###
+### CATEGORY
+
+DEFAULT_CATEGORY_TYPE = 'Type'
+
+### LOCATION
 
 DEFAULT_LOCATION_STATUS = 'Open'
 
 DEFAULT_LOCATION_TYPE = 'big_store'
-

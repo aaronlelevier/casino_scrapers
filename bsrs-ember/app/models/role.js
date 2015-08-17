@@ -6,10 +6,11 @@ import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 export default Model.extend({
     store: inject('main'),
     name: attr(''),
+    people: attr([]),
     role_type: attr(),
     location_level: attr(),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
-        return this.get('isDirty'); 
+        return this.get('isDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     serialize() {
@@ -20,8 +21,8 @@ export default Model.extend({
             location_level: this.get('location_level'),
         };
     },
-    removeRecord(id) {
-        this.get('store').remove('role', id);
+    removeRecord() {
+        this.get('store').remove('role', this.get('id'));
     },
     rollbackRelated() {
     },

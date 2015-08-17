@@ -1,0 +1,300 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>person.views &mdash; BSRS 1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="BSRS 1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for person.views</h1><div class="highlight"><pre>
+<span class="kn">from</span> <span class="nn">django.db.models.functions</span> <span class="kn">import</span> <span class="n">Lower</span>
+
+<span class="kn">from</span> <span class="nn">rest_framework</span> <span class="kn">import</span> <span class="n">permissions</span><span class="p">,</span> <span class="n">filters</span>
+<span class="kn">import</span> <span class="nn">rest_framework_filters</span> <span class="kn">as</span> <span class="nn">filters</span>
+
+<span class="kn">from</span> <span class="nn">person</span> <span class="kn">import</span> <span class="n">helpers</span><span class="p">,</span> <span class="n">serializers</span> <span class="k">as</span> <span class="n">ps</span>
+<span class="kn">from</span> <span class="nn">person.models</span> <span class="kn">import</span> <span class="n">Person</span><span class="p">,</span> <span class="n">PersonStatus</span><span class="p">,</span> <span class="n">Role</span>
+<span class="kn">from</span> <span class="nn">util.views</span> <span class="kn">import</span> <span class="n">BaseModelViewSet</span>
+
+
+<div class="viewcode-block" id="RoleViewSet"><a class="viewcode-back" href="../../modules/models.html#person.views.RoleViewSet">[docs]</a><span class="k">class</span> <span class="nc">RoleViewSet</span><span class="p">(</span><span class="n">BaseModelViewSet</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    API endpoint that allows roles to be viewed or edited.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Role</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">RoleSerializer</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
+
+</div>
+<span class="k">class</span> <span class="nc">PersonStatusViewSet</span><span class="p">(</span><span class="n">BaseModelViewSet</span><span class="p">):</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">PersonStatus</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">serializer_class</span> <span class="o">=</span> <span class="n">ps</span><span class="o">.</span><span class="n">PersonStatusSerializer</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
+
+
+<span class="c">### PERSON</span>
+
+<span class="k">class</span> <span class="nc">PersonFilterSet</span><span class="p">(</span><span class="n">filters</span><span class="o">.</span><span class="n">FilterSet</span><span class="p">):</span>
+    <span class="n">first_name</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">AllLookupsFilter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;first_name&#39;</span><span class="p">)</span>
+    <span class="n">username</span> <span class="o">=</span> <span class="n">filters</span><span class="o">.</span><span class="n">AllLookupsFilter</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;username&#39;</span><span class="p">)</span>
+    
+    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">=</span> <span class="n">Person</span>
+        <span class="n">fields</span> <span class="o">=</span> <span class="p">[</span><span class="s">&#39;first_name&#39;</span><span class="p">,</span> <span class="s">&#39;username&#39;</span><span class="p">]</span>
+
+
+<span class="k">class</span> <span class="nc">PersonViewSet</span><span class="p">(</span><span class="n">BaseModelViewSet</span><span class="p">):</span>
+    <span class="n">queryset</span> <span class="o">=</span> <span class="n">Person</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="n">permission_classes</span> <span class="o">=</span> <span class="p">(</span><span class="n">permissions</span><span class="o">.</span><span class="n">IsAuthenticated</span><span class="p">,)</span>
+    <span class="n">filter_class</span> <span class="o">=</span> <span class="n">PersonFilterSet</span>
+
+    <span class="k">def</span> <span class="nf">get_serializer_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set the serializer based on the method</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s">&#39;retrieve&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ps</span><span class="o">.</span><span class="n">PersonDetailSerializer</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="p">(</span><span class="s">&#39;update&#39;</span> <span class="ow">or</span> <span class="s">&#39;partial_update&#39;</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">ps</span><span class="o">.</span><span class="n">PersonUpdateSerializer</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">action</span> <span class="o">==</span> <span class="s">&#39;create&#39;</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ps</span><span class="o">.</span><span class="n">PersonCreateSerializer</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">ps</span><span class="o">.</span><span class="n">PersonListSerializer</span>
+
+    <span class="k">def</span> <span class="nf">get_queryset</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">queryset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">queryset</span>
+        <span class="n">ordering</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="o">.</span><span class="n">query_params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s">&#39;ordering&#39;</span><span class="p">,</span> <span class="bp">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ordering</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ordering</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">&#39;-&#39;</span><span class="p">):</span>
+                <span class="n">queryset</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Lower</span><span class="p">(</span><span class="n">ordering</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span><span class="o">.</span><span class="n">reverse</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">queryset</span> <span class="o">=</span> <span class="n">queryset</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">Lower</span><span class="p">(</span><span class="n">ordering</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">queryset</span>
+
+    <span class="c">### TODO:</span>
+    <span class="c">### Change Password logic --------------------------------------------------------------------------</span>
+
+    <span class="c"># @detail_route(methods=[&#39;post&#39;])</span>
+    <span class="c"># def change_password(self, request, pk):</span>
+
+    <span class="c"># @detail_route(methods=[&#39;get&#39;])</span>
+    <span class="c"># def perms(self, request, pk):</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     Get permissions for the current user and a model. Permissions must be set on a role.</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     respObj = {}</span>
+    <span class="c">#     perms = {}</span>
+
+    <span class="c">#     if request.method == &#39;GET&#39;:</span>
+    <span class="c">#         user = self.get_object()</span>
+    <span class="c">#         if not request.query_params.has_key(&#39;model&#39;):</span>
+    <span class="c">#             # no model specified</span>
+    <span class="c">#             respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#             respObj[&#39;message&#39;] = &#39;Please specify a model&#39;</span>
+    <span class="c">#             return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+    <span class="c">#         else:</span>
+    <span class="c">#             model = request.query_params[&#39;model&#39;]</span>
+    <span class="c">#             ctype = ContentType.objects.filter(model=model)</span>
+    <span class="c">#             if ctype.count() == 0:</span>
+    <span class="c">#                 respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#                 respObj[&#39;message&#39;] = &#39;Model (&#39; + model + &#39;) is not valid&#39;</span>
+    <span class="c">#                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+
+    <span class="c">#             perms = self._getPersonPerms(user, model)</span>
+    <span class="c">#             return Response(perms)</span>
+    <span class="c">#     else:</span>
+    <span class="c">#         # should never get here</span>
+    <span class="c">#         respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#         respObj[&#39;message&#39;] = &#39;Method not supported - &#39; + request.method</span>
+    <span class="c">#         return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+
+    <span class="c"># def _getPersonPerms(self, person, model):</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     Helper function to get the current permissions of the user</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     perms = {}</span>
+
+    <span class="c">#     ctype = ContentType.objects.filter(model=model)</span>
+    <span class="c">#     availPerms = Permission.objects.filter(content_type=ctype)</span>
+
+    <span class="c">#     for aperm in availPerms:</span>
+    <span class="c">#         perms[aperm.codename] = False</span>
+    <span class="c">#         if person.has_perm(&#39;person.&#39; + aperm.codename):</span>
+    <span class="c">#             perms[aperm.codename] = True</span>
+
+    <span class="c">#     return perms</span>
+
+
+    <span class="c">### ROLE ###</span>
+
+    <span class="c"># @detail_route(methods=[&#39;get&#39;, &#39;put&#39;])</span>
+    <span class="c"># def perms(self, request, pk):</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     get or set permissions for a role and a model</span>
+
+    <span class="c">#     e.g. /roles/1/perms/?model=location</span>
+
+    <span class="c">#     returns object with all available permissions for that model set to true or false</span>
+
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     respObj = {}</span>
+    <span class="c">#     perms = {}</span>
+
+    <span class="c">#     if request.method == &#39;GET&#39;:</span>
+    <span class="c">#         role = self.get_object()</span>
+    <span class="c">#         if not request.query_params.has_key(&#39;model&#39;):</span>
+    <span class="c">#             #no model specified</span>
+    <span class="c">#             respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#             respObj[&#39;message&#39;] = &#39;Please specify a model&#39;</span>
+    <span class="c">#             return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+    <span class="c">#         else:</span>
+    <span class="c">#             model = request.query_params[&#39;model&#39;]</span>
+    <span class="c">#             ctype = ContentType.objects.filter(model=model)</span>
+    <span class="c">#             if ctype.count() == 0:</span>
+    <span class="c">#                 respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#                 respObj[&#39;message&#39;] = &#39;Model (&#39; + model + &#39;) is not valid&#39;</span>
+    <span class="c">#                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+
+    <span class="c">#             perms = self._getRolePerms(role, model)</span>
+    <span class="c">#             return Response(perms)</span>
+
+    <span class="c">#     elif request.method == &#39;PUT&#39;:</span>
+    <span class="c">#         role = self.get_object()</span>
+    <span class="c">#         if not request.query_params.has_key(&#39;model&#39;):</span>
+    <span class="c">#             #no model specified</span>
+    <span class="c">#             respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#             respObj[&#39;message&#39;] = &#39;Please specify a model&#39;</span>
+    <span class="c">#             return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+
+    <span class="c">#         else:</span>
+    <span class="c">#             model = request.query_params[&#39;model&#39;]</span>
+    <span class="c">#             ctype = ContentType.objects.filter(model=model)</span>
+    <span class="c">#             if ctype.count() == 0:</span>
+    <span class="c">#                 respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#                 respObj[&#39;message&#39;] = &#39;Model (&#39; + model + &#39;) is not valid&#39;</span>
+    <span class="c">#                 return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+
+    <span class="c">#             permobj = request.DATA</span>
+    <span class="c">#             for perm, value in permobj.items():</span>
+    <span class="c">#                 rperm = role.group.permissions.filter(codename=perm)</span>
+    <span class="c">#                 aperm = Permission.objects.filter(codename=perm)</span>
+    <span class="c">#                 if aperm.count() &gt; 0:</span>
+    <span class="c">#                     aperm = aperm[0]</span>
+
+    <span class="c">#                     if value == True:</span>
+    <span class="c">#                         if not rperm:</span>
+    <span class="c">#                             role.group.permissions.add(aperm)</span>
+
+    <span class="c">#                     if value == False:</span>
+    <span class="c">#                         if rperm:</span>
+    <span class="c">#                             role.group.permissions.remove(aperm)</span>
+
+    <span class="c">#                 else:</span>
+    <span class="c">#                     respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#                     respObj[&#39;message&#39;] = &#39;Permission does not exist - &#39; + perm</span>
+    <span class="c">#                     return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+
+    <span class="c">#             perms = self._getRolePerms(role, model)    </span>
+    <span class="c">#             return Response(perms)</span>
+
+    <span class="c">#     else:</span>
+    <span class="c">#         respObj[&#39;code&#39;] = 400</span>
+    <span class="c">#         respObj[&#39;message&#39;] = &#39;Method not supported - &#39; + request.method</span>
+    <span class="c">#         return Response(respObj, status=status.HTTP_400_BAD_REQUEST)</span>
+
+
+    <span class="c"># def _getRolePerms(self, role, model):</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     Helper function to get the current permissions</span>
+    <span class="c">#     &#39;&#39;&#39;</span>
+    <span class="c">#     perms = {}</span>
+
+    <span class="c">#     ctype = ContentType.objects.filter(model=model)</span>
+    <span class="c">#     rolePerms = role.group.permissions.filter(content_type=ctype)</span>
+    <span class="c">#     availPerms = Permission.objects.filter(content_type=ctype)</span>
+
+    <span class="c">#     for aperm in availPerms:</span>
+    <span class="c">#         perms[aperm.codename] = False</span>
+    <span class="c">#         for rperm in rolePerms:</span>
+    <span class="c">#             if rperm.id == aperm.id:</span>
+    <span class="c">#                 perms[aperm.codename] = True</span>
+    <span class="c">#                 break            </span>
+
+    <span class="c">#     return perms</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Aaron, Scott, Andy, Tom, Toran.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

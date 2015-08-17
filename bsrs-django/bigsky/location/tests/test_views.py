@@ -10,6 +10,8 @@ from location.models import (Location, LocationLevel, LocationStatus,
 from person.tests.factory import create_person, PASSWORD
 
 
+### LOCATION LEVEL
+
 class LocationLevelTests(APITestCase):
 
     def setUp(self):
@@ -22,6 +24,8 @@ class LocationLevelTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
+    ### LIST
+
     def test_list(self):
         response = self.client.get('/api/admin/location_levels/')
         self.assertEqual(response.status_code, 200)
@@ -30,6 +34,8 @@ class LocationLevelTests(APITestCase):
             LocationLevel.objects.get(id=data['results'][0]['id']),
             LocationLevel
         )
+
+    ### GET
 
     def test_get(self):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
@@ -51,6 +57,8 @@ class LocationLevelTests(APITestCase):
             self.district.children.all()
         )
 
+    ### CREATE
+
     def test_create(self):
         new_name = 'region_lp'
         data = {
@@ -62,6 +70,8 @@ class LocationLevelTests(APITestCase):
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(LocationLevel.objects.get(id=data['id']), LocationLevel)
+
+    ### UPDATE
 
     def test_update(self):
         region = LocationLevel.objects.get(name='region')
@@ -75,6 +85,28 @@ class LocationLevelTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(data['name'], old_name)
 
+        ### DETAIL ROUTES
+
+    def test_get_all_children(self):
+        region = LocationLevel.objects.get(name='region')
+        response = self.client.get('/api/admin/location_levels/{}/get-all-children/'.format(region.id), format='json')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            len(data),
+            LocationLevel.objects.get_all_children(region).count()
+        )
+
+    def test_get_all_parents(self):
+        department = LocationLevel.objects.get(name='department')
+        response = self.client.get('/api/admin/location_levels/{}/get-all-parents/'.format(department.id), format='json')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            len(data),
+            LocationLevel.objects.get_all_parents(department).count()
+        )        
+
+
+### LOCATION
 
 class LocationListTests(APITestCase):
 
@@ -161,14 +193,30 @@ class LocationDetailTests(APITestCase):
 
     def test_get_level_children(self):
         # SetUp
-        east = Location.objects.get(name='east')
-        store_ll = LocationLevel.objects.get(name='store')
+        location = Location.objects.get(name='east')
+        location_level = LocationLevel.objects.get(name='store')
         # Test
-        response = self.client.get('/api/admin/locations/{pk}/level/{level_id}/'.format(
-            pk=east.id, level_id=store_ll.id))
+        response = self.client.get('/api/admin/locations/{pk}/get-level-children/{level_id}/'.format(
+            pk=location.id, level_id=location_level.id))
         data = json.loads(response.content.decode('utf8'))
-        store1 = Location.objects.filter(location_level=store_ll).first()
-        self.assertIn(str(store1.id), [d['id'] for d in data])
+        store1 = Location.objects.filter(location_level=location_level).first()
+        self.assertIn(str(store1.id), data)
+        self.assertEqual(len(data), 2)
+
+    def test_get_level_parents(self):
+        # SetUp
+        location = Location.objects.get(name='ca')
+        location_level = LocationLevel.objects.get(name='region')
+        # New Parent Location at "region" Level
+        east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
+        east_lp.children.add(location)
+        # Test
+        response = self.client.get('/api/admin/locations/{pk}/get-level-parents/{level_id}/'.format(
+            pk=location.id, level_id=location_level.id))
+        data = json.loads(response.content.decode('utf8'))
+        region1 = Location.objects.filter(location_level=location_level).first()
+        self.assertIn(str(region1.id), data)
+        self.assertEqual(len(data), 2)
 
 
 class LocationCreateTests(APITestCase):

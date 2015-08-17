@@ -119,7 +119,9 @@ test('on boot we should fetch and load the role configuration', function(assert)
         var role_models = store.find('role');
         assert.equal(role_models.get('length'), 2);
         assert.equal(role_models.objectAt(0).get('id'), ROLE_DEFAULTS.idOne);
-        assert.equal(role_models.objectAt(0).get('name'), ROLE_DEFAULTS.name);
+        assert.equal(role_models.objectAt(0).get('name'), t(ROLE_DEFAULTS.nameOne));
+        assert.equal(role_models.objectAt(0).get('location_level'), LOCATION_LEVEL_DEFAULTS.idOne);
+        assert.equal(role_models.objectAt(0).get('role_type'), ROLE_DEFAULTS.roleTypeGeneral);
     });
 });
 

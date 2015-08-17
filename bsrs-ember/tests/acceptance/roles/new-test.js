@@ -21,7 +21,7 @@ module('Acceptance | role-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
-            name: ROLE_DEFAULTS.name,
+            name: ROLE_DEFAULTS.nameOne,
             role_type: ROLE_DEFAULTS.roleTypeGeneral,
             location_level: ROLE_DEFAULTS.locationLevelOne,
         };
@@ -53,7 +53,7 @@ test('visiting role/new', (assert) => {
         assert.equal(find('.t-role-type option:eq(1)').text(), ROLE_DEFAULTS.roleTypeContractor);
         assert.ok(store.find('role').objectAt(0).get('isNotDirty'));
     });
-    fillIn('.t-role-name', ROLE_DEFAULTS.name);
+    fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
     fillIn('.t-role-type', ROLE_DEFAULTS.roleTypeGeneral);
     fillIn('.t-location-level', ROLE_DEFAULTS.locationLevelOne);
     andThen(() => {
@@ -65,7 +65,7 @@ test('visiting role/new', (assert) => {
         assert.equal(currentURL(), ROLE_URL);
         assert.equal(store.find('role').get('length'), 3);
         var role = store.find('role', UUID.value);
-        assert.equal(role.get('name'), ROLE_DEFAULTS.name);
+        assert.equal(role.get('name'), ROLE_DEFAULTS.nameOne);
         assert.equal(role.get('role_type'), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(role.get('location_level'), ROLE_DEFAULTS.locationLevelOne);
         assert.ok(role.get('isNotDirty'));
@@ -80,7 +80,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
     });
-    fillIn('.t-role-name', ROLE_DEFAULTS.name);
+    fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
@@ -89,7 +89,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
     visit(ROLE_NEW_URL);
-    fillIn('.t-role-name', ROLE_DEFAULTS.name);
+    fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {
@@ -102,7 +102,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), ROLE_NEW_URL);
-            assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.name);
+            assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.nameOne);
             assert.equal(find('.t-modal').is(':hidden'), true);
         });
     });
@@ -110,7 +110,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     visit(ROLE_NEW_URL);
-    fillIn('.t-role-name', ROLE_DEFAULTS.name);
+    fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {

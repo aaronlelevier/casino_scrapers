@@ -8,6 +8,7 @@ export default Ember.Route.extend({
     state_repo: inject('state'),
     status_repo: inject('status'),
     country_repo: inject('country'),
+    role_repo: inject('role'),
     phone_number_type_repo: inject('phone-number-type'),
     address_type_repo: inject('address-type'),
     init() {
@@ -19,12 +20,14 @@ export default Ember.Route.extend({
             country_repo = this.get('country_repo'),
             state_repo = this.get('state_repo'),
             status_repo = this.get('status_repo'),
+            role_repo = this.get('role_repo'),
             repository = this.get('repository'),
             person = repository.findById(person_pk),
             phone_number_type_repo = this.get('phone_number_type_repo'),
             default_phone_number_type = phone_number_type_repo.get_default(),
             address_type_repo = this.get('address_type_repo'),
-            default_address_type = address_type_repo.get_default();
+            default_address_type = address_type_repo.get_default(),
+            roles = role_repo.get_default();
 
         return Ember.RSVP.hash({
             model: person,
@@ -34,7 +37,8 @@ export default Ember.Route.extend({
             address_types: address_type_repo.find(),
             statuses: status_repo.find(),
             default_phone_number_type: default_phone_number_type,
-            default_address_type: default_address_type
+            default_address_type: default_address_type,
+            roles: roles
         });
     },
     setupController(controller, hash) {
@@ -46,18 +50,19 @@ export default Ember.Route.extend({
         controller.set('state_list', hash.state_list);
         controller.set('countries', hash.countries);
         controller.set('statuses', hash.statuses);
+        controller.set('roles', hash.roles);
     },
     actions: {
         willTransition(transition) {
             var model = this.currentModel.model;
             if (model.get('isDirtyOrRelatedDirty')) {
-                $('.t-modal').modal('show');
+                Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;
                 this.trx.storeType = 'person';
                 transition.abort();
             } else {
-                $('.t-modal').modal('hide');
+                Ember.$('.t-modal').modal('hide');
             }
         },
         redirectUser() {
