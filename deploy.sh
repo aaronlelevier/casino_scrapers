@@ -21,7 +21,7 @@ npm install
 
 cd ../bsrs-django
 rm -rf venv
-virtualenv venv
+virtualenv -p /usr/local/bin/python3 venv
 venv/bin/pip install -r requirements.txt
 
 DB_NAME="staging"
