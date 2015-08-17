@@ -6,7 +6,9 @@ NEW_UUID=$(( ( RANDOM  )  + 1 ))
 
 PORT=$((8000))
 
-kill `lsof -t -i:$PORT`
+lsof -i | grep uwsgi
+
+kill -9 $(lsof -i:$PORT -t)
 
 cd /www/django/releases
 rm -rf ./*/
