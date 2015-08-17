@@ -4,7 +4,7 @@ echo "DEPLOY STARTED!"
 
 NEW_UUID=$(( ( RANDOM  )  + 1 ))
 
-PORT="8003"
+PORT=$((8003))
 
 kill `lsof -t -i:$PORT`
 
