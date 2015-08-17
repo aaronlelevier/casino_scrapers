@@ -29,11 +29,13 @@ test('selecting a role will append the persons id to the new role but remove it 
     assert.equal(this.$('.t-person-role-select option:eq(0)').text(), 'Select One');
     assert.equal(this.$('.t-person-role-select option:eq(1)').text(), ROLE_DEFAULTS.nameOne);//TODO: translate this
     assert.equal(person.get('role').get('people'), PEOPLE_DEFAULTS.id);
+    assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
     this.$('.t-person-role-select').val(ROLE_DEFAULTS.idTwo).trigger('change');
     assert.equal(role_two.get('people.length'), 2);
     assert.deepEqual(role_two.get('people'), [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
     assert.equal(role_one.get('people.length'), 0);
     assert.deepEqual(role_one.get('people'), []);
     assert.deepEqual(person.get('role').get('people')[1], PEOPLE_DEFAULTS.id);
+    assert.deepEqual(person.get('role.id'), ROLE_DEFAULTS.idTwo);
 });
 

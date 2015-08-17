@@ -49,7 +49,7 @@ test('related addresses are not dirty when no addresses present', (assert) => {
     assert.ok(person.get('addressesIsNotDirty'));
 });
 
-test('role should return first role or empty array', (assert) => {
+test('related role should return first role or empty array', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, people: [PEOPLE_DEFAULTS.id]});
     var role = person.get('role');
@@ -58,53 +58,49 @@ test('role should return first role or empty array', (assert) => {
     assert.deepEqual(person.get('role'), []);
 });
 
-// test('related role is not dirty when no role present', (assert) => {
-//     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-//     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.unusedId]});
-//     assert.ok(person.get('roleIsNotDirty'));
-//     var related = person.get('role');
-//     assert.equal(related.get('length'), 0);
-// });
+test('related role is not dirty when no role present', (assert) => {
+    store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.unusedId]});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    assert.ok(person.get('roleIsNotDirty'));
+    assert.deepEqual(person.get('role'), []);
+});
 
-// test('related role is not dirty with original role model', (assert) => {
-//     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-//     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
-//     //assert.ok(person.get('isDirty')); ?or person related dirty?
-//     assert.ok(person.get('roleIsNotDirty'));
-//     role.set('name', ROLE_DEFAULTS.namePut);
-//     assert.ok(role.get('isDirty'));
-//     assert.ok(person.get('roleIsDirty'));
-//     var related = person.get('role');
-//     assert.equal(related.get('length'), 1);
-// });
+test('related role is not dirty with original role model', (assert) => {
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    assert.ok(person.get('roleIsNotDirty'));
+    role.set('name', ROLE_DEFAULTS.namePut);
+    assert.ok(role.get('isDirty'));
+    assert.ok(person.get('roleIsDirty'));
+    var related = person.get('role');
+    assert.equal(person.get('role.name'), ROLE_DEFAULTS.namePut);
+});
 
-// test('related role only returns the single matching item even when multiple roles exist', (assert) => {
-//     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-//     store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id, PEOPLE_DEFAULTS.unusedId]});
-//     store.push('role', {id: ROLE_DEFAULTS.idTwo, people: ['123-abc-defg']});
-//     var related = person.get('role');
-//     assert.equal(related.get('length'), 1);
-// });
+test('related role only returns the single matching item even when multiple roles exist', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id, PEOPLE_DEFAULTS.unusedId]});
+    store.push('role', {id: ROLE_DEFAULTS.idTwo, people: ['123-abc-defg']});
+    var role = person.get('role');
+    assert.equal(role.get('id'), ROLE_DEFAULTS.idOne);
+});
 
-// test('related role will update when the roles people array suddenly has the person pk', (assert) => {
-//     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-//     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.unusedId]});
-//     var related = person.get('role');
-//     assert.equal(related.get('length'), 0);
-//     role.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
-//     related = person.get('role');
-//     assert.equal(related.get('length'), 1);
-// });
+test('related role will update when the roles people array suddenly has the person pk', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.unusedId]});
+    assert.deepEqual(person.get('role'), []);
+    role.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
+    assert.ok(person.get('role'));
+    assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
+});
 
-// test('related role will update when the roles people array suddenly removes the person', (assert) => {
-//     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-//     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
-//     var related = person.get('role');
-//     assert.equal(related.get('length'), 1);
-//     role.set('people', [PEOPLE_DEFAULTS.unusedId]);
-//     related = person.get('role');
-//     assert.equal(related.get('length'), 0);
-// });
+test('related role will update when the roles people array suddenly removes the person', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
+    assert.ok(person.get('role'));
+    assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
+    role.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    assert.deepEqual(person.get('role'), []);
+});
 
 test('related phone numbers are not dirty with original phone number model', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
@@ -367,32 +363,63 @@ test('when no address and new address is added and updated, expect isDirty or Re
     assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
-// //TODO: update DRF to have a person on the role detail that would point back to the person id val
-// test('when person role is changed, Related model on person is updated', (assert) => {
-//     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-//     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
-//     role.set('name', ROLE_DEFAULTS.namePut);
-//     assert.ok(role);
-//     assert.equal(role.get('id'), ROLE_DEFAULTS.idOne);
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isDirtyOrRelatedDirty'));
-//     role.rollback();
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//     role.set('location_level', LOCATION_LEVEL_DEFAULTS.idOne);
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isDirtyOrRelatedDirty'));
-//     role.rollback();
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-// });
+test('when person role is changed dirty tracking works as expected', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    role.set('name', ROLE_DEFAULTS.namePut);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    role.rollback();
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    role.set('location_level', LOCATION_LEVEL_DEFAULTS.idOne);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    role.rollback();
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+});
 
-// test('when person has role suddently assigned it shows as a dirty relationship', (assert) => {
-//     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-//     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut});
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//     role.set('people', [PEOPLE_DEFAULTS.id]);
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isDirtyOrRelatedDirty'));
-// });
+test('when person has role suddently assigned it shows as a dirty relationship (starting undefined)', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut, people: undefined});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    role.set('people', [PEOPLE_DEFAULTS.id]);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
+test('when person has role suddently assigned it shows as a dirty relationship (starting empty array)', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut, people: []});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    role.set('people', [PEOPLE_DEFAULTS.id]);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
+test('when person has role suddently assigned it shows as a dirty relationship (starting with legit value)', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut, people: [PEOPLE_DEFAULTS.unusedId]});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    role.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
+test('when person has role suddently removed it shows as a dirty relationship', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    role.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    assert.deepEqual(person.get('role'), []);
+    // will not fail currently because role_property.objectAt(0) isn't something we can "ask" if its dirty :(
+    // assert.ok(person.get('isNotDirty'));
+    // assert.ok(person.get('isDirtyOrRelatedDirty'));
+});

@@ -55,9 +55,9 @@ export default Model.extend({
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', function() {
         return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty');
     }),
-    roleIsDirty: Ember.computed('role.@each.isDirty', function() {
-        let role = this.get('role');
-        return role ? role.get('isDirty') : undefined;
+    roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
+        let role = this.get('role_property');
+        return role.objectAt(0) ? role.objectAt(0).get('isDirty') : undefined;
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
