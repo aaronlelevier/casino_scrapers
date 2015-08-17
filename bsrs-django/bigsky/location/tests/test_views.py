@@ -200,7 +200,7 @@ class LocationDetailTests(APITestCase):
             pk=location.id, level_id=location_level.id))
         data = json.loads(response.content.decode('utf8'))
         store1 = Location.objects.filter(location_level=location_level).first()
-        self.assertIn(str(store1.id), data)
+        self.assertIn(str(store1.id), response.content.decode('utf8'))
         self.assertEqual(len(data), 2)
 
     def test_get_level_parents(self):
@@ -215,7 +215,7 @@ class LocationDetailTests(APITestCase):
             pk=location.id, level_id=location_level.id))
         data = json.loads(response.content.decode('utf8'))
         region1 = Location.objects.filter(location_level=location_level).first()
-        self.assertIn(str(region1.id), data)
+        self.assertIn(str(region1.id), response.content.decode('utf8'))
         self.assertEqual(len(data), 2)
 
 
