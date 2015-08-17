@@ -4,11 +4,17 @@ echo "DEPLOY STARTED!"
 
 NEW_UUID=$(( ( RANDOM  )  + 1 ))
 
-PORT="8000"
+PORT=$((8000))
 
-kill `lsof -t -i:$PORT`
+echo "UWSGI PROCESS RUNNING BEFORE KILL:"
+fuser $PORT/tcp
+
+echo "UWSGI KILL:"
+fuser -k $PORT/tcp
 
 cd /www/django/releases
+mkdir python2
+cd python2
 rm -rf ./*/
 
 git clone git@github.com:bigskytech/bsrs.git $NEW_UUID
