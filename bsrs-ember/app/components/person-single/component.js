@@ -13,7 +13,7 @@ export default Ember.Component.extend(ValidationMixin, {
         changed(model, val) {
             var person_id = this.get('model.id');
             var new_role = this.get('store').find('role', val);
-            var old_role = this.get('model').get('role'); //TODO: create alias on the model ... this sucks
+            var old_role = this.get('model').get('role');
 
             var new_role_people = new_role.get('people') || [];
             var old_role_people = old_role.get('people') || [];
@@ -39,7 +39,7 @@ export default Ember.Component.extend(ValidationMixin, {
         cancelPerson() {
             this.sendAction('cancelPerson');
         },
-        deletePerson() {            
+        deletePerson() {
             var model = this.get('model');
             var repository = this.get('repository');
             repository.delete(model.get('id'));

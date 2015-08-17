@@ -55,7 +55,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     });
 });
 
-test('when you deep link to the person detail view you get bound attrs', (assert) => {
+test('toran when you deep link to the person detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -92,15 +92,17 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeId);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveId);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredId);
-        // assert.equal(find('.t-person-role-select').find('.t-person-role-option:eq(0)').val(), ROLE_DEFAULTS.idOne);
-        // assert.equal(find('.t-person-role-select').find('.t-person-role-option:eq(1)').val(), ROLE_DEFAULTS.idTwo);
+        assert.equal(find('.t-person-role-select option:eq(0)').val(), 'Select One');
+        assert.equal(find('.t-person-role-select option:eq(1)').val(), ROLE_DEFAULTS.idOne);
+        assert.equal(find('.t-person-role-select option:eq(2)').val(), ROLE_DEFAULTS.idTwo);
+        assert.equal(find(".t-person-role-select option:selected").val(), ROLE_DEFAULTS.idOne);
         assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
         assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
     });
     var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, 
-                                      middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title, 
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name,
+                                      middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title,
                                         employee_id: PEOPLE_DEFAULTS_PUT.employee_id, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
