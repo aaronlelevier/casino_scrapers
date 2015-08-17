@@ -4,14 +4,14 @@ echo "DEPLOY STARTED!"
 
 NEW_UUID=$(( ( RANDOM  )  + 1 ))
 
-PORT="8000"
+PORT="8003"
 
 kill `lsof -t -i:$PORT`
 
 cd /www/django/releases
 rm -rf ./*/
 
-git clone git@github.com:bigskytech/bsrs.git $NEW_UUID
+git clone -b python3 git@github.com:bigskytech/bsrs.git $NEW_UUID
 
 cd $NEW_UUID
 cd bsrs-ember
