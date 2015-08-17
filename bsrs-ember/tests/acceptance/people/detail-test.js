@@ -146,7 +146,6 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     });
 });
 
-//TODO: in this test when the "role" is dirty we don't seem to prompt the user? WTF
 test('clicking cancel button will take from detail view to list view', (assert) => {
     visit(PEOPLE_URL);
     andThen(() => {

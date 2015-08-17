@@ -1,5 +1,13 @@
 import Ember from 'ember';
 
+var extract_role = function(model, store) {
+    var role = store.push('role', model.role);
+    var existing_people = role.get('people') || [];
+    role.set('people', existing_people.concat([model.id]));
+    role.save();
+    delete model.role;
+};
+
 var PersonDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
@@ -8,42 +16,29 @@ var PersonDeserializer = Ember.Object.extend({
             this.deserialize_single(response, options);
         }
     },
-    deserialize_single(response, id) {
+    deserialize_single(model, id) {
         var store = this.get('store');
-        response.phone_numbers.forEach((phone_number) => {
+        model.phone_numbers.forEach((phone_number) => {
             store.push('phonenumber', phone_number);
         });
-        response.addresses.forEach((address) => {
+        model.addresses.forEach((address) => {
             store.push('address-type', address.type);
             address.type = address.type.id;
             store.push('address', address);
         });
-        response.role.people = [id];
-        var role = store.push('role', response.role);
-        role.save();
+        extract_role(model, store);
         //discuss dirty attr for prop not included in the list
         //meaning ... if the user is dirty NOW what should do?
-        delete response.phone_numbers;
-        delete response.addresses;
-        delete response.role;
-        var originalPerson = store.push('person', response);
+        delete model.phone_numbers;
+        delete model.addresses;
+        var originalPerson = store.push('person', model);
         originalPerson.save();
     },
     deserialize_list(response) {
         var store = this.get('store');
         response.results.forEach((model) => {
-            //var role = store.find('role', model.role); //assuming role is FK
-            //var related = role.get('people') || [];
-            //var all_people = related.contact([model.id]);
-            //model.role.people = all_people
-            //store.push('role', model.role);
-            //delete model.role;
-            
-            model.role.people = [model.id];
-            var role = store.push('role', model.role);
-            role.save();
-            delete model.role;
-            this.get('store').push('person', model);
+            extract_role(model, store);
+            store.push('person', model);
         });
     }
 });
