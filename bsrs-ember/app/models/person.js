@@ -38,17 +38,11 @@ export default Model.extend({
     role_property: Ember.computed(function() {
         var store = this.get('store');
         var filter = function(role) {
-            var person_pk = this.get('id');
-            var match = false;
             var people_pks = role.get('people') || [];
-            //TODO: tweak the above to be an alias if possible
-            //TODO: use this instead $.inArray(person_pk, role.get('people')) > -1;
-            people_pks.forEach(function(fk) {
-                if(fk === person_pk) {
-                    match = true;
-                }
-            });
-            return match; //in the future look at z
+            if(Ember.$.inArray(this.get('id'), people_pks) > -1) {
+                return true;
+            }
+            return false;
         };
         return store.find('role', filter.bind(this), ['people']);
     }),
@@ -79,7 +73,7 @@ export default Model.extend({
         return phone_number_dirty;
     }),
     phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty'),
-    addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state', 
+    addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state',
                                      'addresses.@each.postal_code', 'addresses.@each.country', 'addresses.@each.type', function() {
         var addresses = this.get('addresses');
         var address_dirty = false;

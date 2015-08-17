@@ -55,7 +55,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     });
 });
 
-test('toran when you deep link to the person detail view you get bound attrs', (assert) => {
+test('when you deep link to the person detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
