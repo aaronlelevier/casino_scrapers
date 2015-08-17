@@ -9,7 +9,7 @@ PORT=$((8000))
 echo "UWSGI PROCESS RUNNING BEFORE KILL:"
 fuser $PORT/tcp
 
-echo "UWSGI PROCESS RUNNING AFTER KILL:"
+echo "UWSGI KILL:"
 fuser -k $PORT/tcp
 
 cd /www/django/releases
