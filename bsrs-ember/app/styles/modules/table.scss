@@ -1,11 +1,29 @@
-section.rowTable {
-  padding: 2%;
+div.rowTable {
+    section.docSection{
+        padding: 2%;
 
-  table.table-hover {
-    tr:hover td{
-      cursor: pointer;
+        table.table-hover {
+          tr:hover td{
+            cursor: pointer;
+          }
+        }//table
     }
-  }//table
+
+  footer nav{
+      @include vertical-align;
+      float: left;
+      ul.pagination{
+          display: block;
+          margin: 0;
+          li{
+              a.active{
+                  background: $activeColor;
+                  border-color: $activeColor;
+                  color: $white;
+              }
+          }
+      }
+  }
 }//section#userTable
 
 .tableSearch {
