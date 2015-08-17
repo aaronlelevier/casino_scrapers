@@ -28,7 +28,25 @@ class SelfReferencingRouteMixin(object):
 
 
 class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
+    '''
+    ## Detail Routes
 
+    **1. get_all_children:**
+
+       Will return all *Child LocationsLevels*
+       
+       URL: `/api/admin/location_levels/{pk}/get-all-children/`
+
+       LocationLevel ID: `{pk}`
+
+    **2. get_all_parents:**
+
+       Will return all *Parent LocationsLevels*
+       
+       URL: `/api/admin/location_levels/{pk}/get-all-parents/`
+
+       LocationLevel ID: `{pk}`
+    '''
     permission_classes = (IsAuthenticated,)
     queryset = LocationLevel.objects.all()
     model = LocationLevel
@@ -66,10 +84,41 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     '''
     ## Detail Routes
 
-    :get_level_children: 
-        Will return all ``Child Locations`` for a single ``LocationLevel``
+    **1. get_all_children:**
 
-        **URL:** `/api/admin/locations/{pk}/level/{level_id}/`
+       Will return all *Child Locations*
+       
+       URL: `/api/admin/locations/{pk}/get-all-children/`
+
+       Location ID: `{pk}`
+
+    **2. get_all_parents:**
+
+       Will return all *Parent Locations*
+       
+       URL: `/api/admin/locations/{pk}/get-all-parents/`
+
+       Location ID: `{pk}`
+
+    **3. get_level_children:**
+
+       Will return all *Child Locations* for a given *LocationLevel*
+       
+       URL: `/api/admin/locations/{pk}/get-level-children/{level_id}/`
+
+       Location ID: `{pk}`
+
+       LocationLevel ID of the given *LocationLevel* to filter: `{level_id}`
+
+    **2. get_level_parents:**
+
+       Will return all *Parent Locations* `{pk}` for a given *LocationLevel* `{level_id}`
+       
+       URL: `/api/admin/locations/{pk}/get-level-parents/{level_id}/`
+
+       Location ID: `{pk}`
+
+       LocationLevel ID of the given *LocationLevel* to filter: `{level_id}`
     
     '''
     permission_classes = (IsAuthenticated,)

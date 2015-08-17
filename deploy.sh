@@ -4,7 +4,9 @@ echo "DEPLOY STARTED!"
 
 NEW_UUID=$(( ( RANDOM  )  + 1 ))
 
-kill -9 `ps aux | grep uwsgi | awk '{print $2}'`
+PORT="8000"
+
+kill `lsof -t -i:$PORT`
 
 cd /www/django/releases
 rm -rf ./*/
@@ -39,7 +41,7 @@ cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/fonts .
 cp -r ../../bsrs-ember/dist/index.html templates
 
-uwsgi --http :8000 --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/bsrs-django/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --static-map /fonts=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
+uwsgi --http :$PORT --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/bsrs-django/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --static-map /fonts=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
 
 echo "DEPLOY FINISHED!"
 exit 0

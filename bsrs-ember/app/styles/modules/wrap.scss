@@ -107,7 +107,7 @@ section.wrap{
     right: 0;
     bottom: 0;
     top: 0;
-    overflow: auto;
+    overflow: hidden;
 
     header,
     footer{
@@ -162,7 +162,9 @@ section.wrap{
         left: 0;
         background: $white;
         overflow: auto;
-
+        &.docSectionWithFooter{
+            margin-bottom: $documentFooterHeight;
+        }
         section{
             overflow: auto;
             margin: 20px 0;
