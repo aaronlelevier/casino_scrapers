@@ -11,7 +11,7 @@ var ApplicationModalComponent = Ember.Component.extend({
             model.rollback();
             model.rollbackRelated();
             if (newModel) {
-                model.removeRecord(model.get('id'));
+                model.removeRecord();
             }
             transition.retry();
         },

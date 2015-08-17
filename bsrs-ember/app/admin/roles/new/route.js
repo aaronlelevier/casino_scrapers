@@ -25,7 +25,7 @@ export default Ember.Route.extend({
         willTransition(transition) {
             var model = this.currentModel.model;
             if (model.get('isNew')) {
-                model.removeRecord(model.get('id'));
+                model.removeRecord();
             } else if (model.get('isDirtyOrRelatedDirty')) {
                 Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;

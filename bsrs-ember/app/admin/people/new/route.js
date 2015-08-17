@@ -22,7 +22,7 @@ export default Ember.Route.extend({
         willTransition(transition) {
             var model = this.currentModel.model;
             if (model.get('isNew')) {
-                model.removeRecord(model.get('id'));
+                model.removeRecord();
             } else if (model.get('isDirtyOrRelatedDirty')) {
                 Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
@@ -35,7 +35,7 @@ export default Ember.Route.extend({
             }
         },
         editPerson() {
-           this.transitionTo('admin.people.person', this.currentModel.model.get('id')); 
+           this.transitionTo('admin.people.person', this.currentModel.model.get('id'));
         },
         redirectUser() {
             this.transitionTo('admin.people');

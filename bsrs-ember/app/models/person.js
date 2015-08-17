@@ -29,11 +29,9 @@ export default Model.extend({
     }),
     role: Ember.computed('role_property.[]', function() {
         if (this.get('role_property').get('length') > 0) {
-            var x = this.get('role_property').objectAt(0);
-            return x;
-        } else {
-            return [];
+            return this.get('role_property').objectAt(0);
         }
+        return [];
     }),
     role_property: Ember.computed(function() {
         var store = this.get('store');
@@ -119,7 +117,6 @@ export default Model.extend({
         });
     },
     createSerialize() {
-        var store = this.get('store');
         return {
             id: this.get('id'),
             username: this.get('username'),
@@ -128,8 +125,7 @@ export default Model.extend({
         };
     },
     serialize() {
-        //TODO: remove this hard reference to get the first role/status in favor of
-        //a truly dynamic lookup via the new/update forms
+        //TODO: remove this hard reference to get the first status
         var store = this.get('store');
         var status_id = store.findOne('status').get('id');
         var phone_numbers = this.get('phone_numbers').map(function(number) {
@@ -156,8 +152,8 @@ export default Model.extend({
             addresses: addresses
         };
     },
-    removeRecord(id) {
-        this.get('store').remove('person', id);
+    removeRecord() {
+        this.get('store').remove('person', this.get('id'));
     },
     isNew: Ember.computed(function() {
         return loopAttrs(this);
