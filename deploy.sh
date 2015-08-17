@@ -12,9 +12,7 @@ fuser $PORT/tcp
 echo "UWSGI KILL:"
 fuser -k $PORT/tcp
 
-cd /www/django/releases
-mkdir python2
-cd python2
+cd /www/django/releases/python2
 rm -rf ./*/
 
 git clone git@github.com:bigskytech/bsrs.git $NEW_UUID
@@ -47,7 +45,13 @@ cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/fonts .
 cp -r ../../bsrs-ember/dist/index.html templates
 
-uwsgi --http :$PORT --wsgi-file bigsky.wsgi --virtualenv /www/django/releases/$NEW_UUID/bsrs-django/venv --daemonize /tmp/bigsky.log --static-map /assets=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --static-map /fonts=/www/django/releases/$NEW_UUID/bsrs-django/bigsky --check-static /www/django/releases/$NEW_UUID/bsrs-django/bigsky
+uwsgi --http :$PORT \
+    --wsgi-file bigsky.wsgi \
+    --virtualenv /www/django/releases/python2/$NEW_UUID/bsrs-django/venv \
+    --daemonize /tmp/bigsky.log \
+    --static-map /assets=/www/django/releases/python2/$NEW_UUID/bsrs-django/bigsky \
+    --static-map /fonts=/www/django/releases/python2/$NEW_UUID/bsrs-django/bigsky \
+    --check-static /www/django/releases/python2/$NEW_UUID/bsrs-django/bigsky
 
 echo "DEPLOY FINISHED!"
 exit 0
