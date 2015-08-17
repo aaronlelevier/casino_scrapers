@@ -6,7 +6,11 @@ NEW_UUID=$(( ( RANDOM  )  + 1 ))
 
 PORT=$((8003))
 
-kill `lsof -t -i:$PORT`
+echo "UWSGI PROCESS RUNNING BEFORE KILL:"
+fuser $PORT/tcp
+
+echo "UWSGI PROCESS RUNNING AFTER KILL:"
+fuser -k $PORT/tcp
 
 cd /www/django/releases
 rm -rf ./*/
