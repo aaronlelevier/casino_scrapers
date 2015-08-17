@@ -1,6 +1,6 @@
 from django.db.models.functions import Lower
 
-from rest_framework import permissions, filters
+from rest_framework import permissions
 import rest_framework_filters as filters
 
 from person import helpers, serializers as ps

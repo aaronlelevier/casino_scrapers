@@ -4,7 +4,6 @@ from django.db import IntegrityError
 from model_mommy import mommy
 
 from category.models import CategoryType, Category
-from category.tests.factory import create_category_types
 
 
 class CategoryTypeTests(TestCase):

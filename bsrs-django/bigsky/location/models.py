@@ -3,7 +3,6 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
 
-from util import choices
 from util.models import AbstractName, BaseModel, BaseManager
 
 
