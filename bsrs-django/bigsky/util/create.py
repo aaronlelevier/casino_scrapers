@@ -1,7 +1,6 @@
 import uuid
 import random
 import string
-import copy
 
 from django.db import IntegrityError
 from django.contrib.auth.models import ContentType, Group, Permission

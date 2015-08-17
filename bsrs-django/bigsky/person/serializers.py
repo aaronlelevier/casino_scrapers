@@ -1,6 +1,5 @@
 import copy
 
-from django.contrib.auth.models import Group
 from django.contrib.auth import update_session_auth_hash
 
 from rest_framework import serializers
@@ -8,7 +7,6 @@ from rest_framework import serializers
 from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
     EmailSerializer, AddressSerializer)
-from location.models import LocationLevel, Location
 from location.serializers import LocationLevelSerializer, LocationIdNameSerializer
 from person.models import PersonStatus, Person, Role
 from util import create
