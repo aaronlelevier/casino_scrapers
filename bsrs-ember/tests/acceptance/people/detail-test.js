@@ -29,7 +29,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('sco Acceptance | detail test', {
+module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -92,15 +92,17 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeId);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveId);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredId);
-        assert.equal(find('.t-person-role-select').find('.t-person-role-option:eq(0)').val(), ROLE_DEFAULTS.idOne);
-        assert.equal(find('.t-person-role-select').find('.t-person-role-option:eq(1)').val(), ROLE_DEFAULTS.idTwo);
+        assert.equal(find('.t-person-role-select option:eq(0)').val(), 'Select One');
+        assert.equal(find('.t-person-role-select option:eq(1)').val(), ROLE_DEFAULTS.idOne);
+        assert.equal(find('.t-person-role-select option:eq(2)').val(), ROLE_DEFAULTS.idTwo);
+        assert.equal(find(".t-person-role-select option:selected").val(), ROLE_DEFAULTS.idOne);
         assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
         assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
     });
     var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name, 
-                                      middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title, 
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name,
+                                      middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title,
                                         employee_id: PEOPLE_DEFAULTS_PUT.employee_id, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
@@ -144,6 +146,7 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     });
 });
 
+//TODO: in this test when the "role" is dirty we don't seem to prompt the user? WTF
 test('clicking cancel button will take from detail view to list view', (assert) => {
     visit(PEOPLE_URL);
     andThen(() => {
@@ -188,7 +191,7 @@ test('when you change a related address type it will be persisted correctly', (a
 test('when you change a related role it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
-    var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo});
+    var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
     fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);

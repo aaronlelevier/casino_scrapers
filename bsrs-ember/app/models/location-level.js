@@ -8,7 +8,7 @@ var LocationLevel = Model.extend({
     name: attr(''),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         //for children eventually
-        return this.get('isDirty'); 
+        return this.get('isDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     rollbackRelated() {
@@ -24,8 +24,8 @@ var LocationLevel = Model.extend({
             children: levels
         };
     },
-    removeRecord(id) {
-        this.get('store').remove('location-level', id);
+    removeRecord() {
+        this.get('store').remove('location-level', this.get('id'));
     },
     children: Ember.computed(function() {
         var filter = function(level) {

@@ -13,7 +13,7 @@ var LocationModel = Model.extend({
         return store.findOne('location-level', {location_id: this.get('id')});
     }),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
-        return this.get('isDirty'); 
+        return this.get('isDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     rollbackRelated() {
@@ -29,12 +29,12 @@ var LocationModel = Model.extend({
             parents: []
         };
     },
-    removeRecord(id) {
-        this.get('store').remove('location', id);
+    removeRecord() {
+        this.get('store').remove('location', this.get('id'));
     },
     isNew: Ember.computed(function() {
         return loopAttrs(this);
     })
 });
 
-export default LocationModel; 
+export default LocationModel;

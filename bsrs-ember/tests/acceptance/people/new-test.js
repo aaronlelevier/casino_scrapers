@@ -4,6 +4,7 @@ import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
+import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
@@ -32,7 +33,7 @@ module('Acceptance | people-new', {
         xhr(endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.empty());
         var detailEndpoint = PREFIX + PEOPLE_URL + '/';
         var people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
-            role: PEOPLE_DEFAULTS.role, phone_numbers:[], addresses: []};
+            role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: []};
         detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
     },
     afterEach() {
@@ -42,7 +43,7 @@ module('Acceptance | people-new', {
     }
 });
 
-test('visiting /people/new', (assert) => {
+test('sco visiting /people/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(PEOPLE_URL);
@@ -63,7 +64,7 @@ test('visiting /people/new', (assert) => {
         assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
-        assert.equal(person.get('role'), PEOPLE_DEFAULTS.role);
+        assert.equal(person.get('role').get('id'), PEOPLE_DEFAULTS.role);
         assert.ok(person.get('isNotDirty'));
     });
 });
