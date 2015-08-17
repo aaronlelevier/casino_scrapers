@@ -6,7 +6,7 @@ export default Ember.Component.extend({
   actions: {
     addInput() {
       //not working
-      $('.input-multi').append(Ember.Handlebars.compile('{{input-field}}'));
+      Ember.$('.input-multi').append(Ember.Handlebars.compile('{{input-field}}'));
     }
   }
 });

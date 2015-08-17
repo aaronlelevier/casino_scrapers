@@ -100,6 +100,13 @@ class PersonTests(TestCase):
         self.assertEqual(self.person.status, PersonStatus.objects.default())
 
     def test_group(self):
+        # The Person is still in one Group even after changing Roles
         role = Role.objects.first()
+        role2 = create_role()
         person = mommy.make(Person, role=role)
+        self.assertEqual(person.groups.count(), 1)
+        # Change Role
+        person.role = role2
+        person.save()
+        person = Person.objects.get(id=person.id)
         self.assertEqual(person.groups.count(), 1)

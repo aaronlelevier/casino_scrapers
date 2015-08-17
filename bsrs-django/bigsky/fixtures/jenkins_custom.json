@@ -80,8 +80,7 @@
     "children": [
       "7a71d387-1866-49fe-aad4-77c980cbf853",
       "dfca5b2e-fea5-4dda-9941-97bcf5ba42ee"
-    ],
-    "role_type": "Internal"
+    ]
   },
   "model": "location.locationlevel",
   "pk": "444d3f0e-f920-48ae-92a9-0dbaab5729ca"
@@ -94,8 +93,7 @@
     "modified": "2015-08-10T18:26:34.754Z",
     "children": [
       "a01948b3-e8b2-416e-a5b0-e56f6fc77f43"
-    ],
-    "role_type": "Internal"
+    ]
   },
   "model": "location.locationlevel",
   "pk": "7a71d387-1866-49fe-aad4-77c980cbf853"
@@ -108,8 +106,7 @@
     "modified": "2015-08-10T18:26:34.758Z",
     "children": [
       "aad1b2f5-ea33-468e-8907-ed1fe14c5172"
-    ],
-    "role_type": "Internal"
+    ]
   },
   "model": "location.locationlevel",
   "pk": "a01948b3-e8b2-416e-a5b0-e56f6fc77f43"
@@ -120,8 +117,7 @@
     "created": "2015-08-10T18:26:34.759Z",
     "deleted": null,
     "modified": "2015-08-10T18:26:34.759Z",
-    "children": [],
-    "role_type": "Internal"
+    "children": []
   },
   "model": "location.locationlevel",
   "pk": "aad1b2f5-ea33-468e-8907-ed1fe14c5172"
@@ -132,8 +128,7 @@
     "created": "2015-08-10T18:26:34.756Z",
     "deleted": null,
     "modified": "2015-08-10T18:26:34.756Z",
-    "children": [],
-    "role_type": "Internal"
+    "children": []
   },
   "model": "location.locationlevel",
   "pk": "dfca5b2e-fea5-4dda-9941-97bcf5ba42ee"

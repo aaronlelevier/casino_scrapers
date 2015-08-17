@@ -1,8 +1,9 @@
 var BSRS_PEOPLE_FACTORY = (function() {
-    var factory = function(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults) {
+    var factory = function(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures) {
         this.address_fixtures = address_fixtures;
         this.person_defaults = person_defaults;
         this.phone_number_fixtures = phone_number_fixtures;
+        this.role_fixtures = role_fixtures;
         this.role_defaults = role_defaults;
         this.status_defaults = status_defaults;
         this.location_level_defaults = location_level_defaults;
@@ -22,10 +23,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
                 'id': this.status_defaults.activeId,
                 'name': 'admin.person.status.active'
             },
-            role : {
-                'id': this.role_defaults.idOne,
-                'name': 'admin.role.system_administrator'
-            },
+            role: this.role_fixtures.get(),
             emails: this.person_defaults.emails
         }
     },
@@ -108,8 +106,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
         person.phone_numbers = this.phone_number_fixtures.get();
         person.addresses = this.address_fixtures.get();
         person.emails = [];
-        person.role['location_level'] = this.location_level_defaults.idOne;
-        person.role['person'] = i;
         return person;
     };
     factory.prototype.put = function(person) {
@@ -129,16 +125,17 @@ var BSRS_PEOPLE_FACTORY = (function() {
 if (typeof window === 'undefined') {
     var address_fixtures = require('../vendor/address_fixtures');
     var phone_number_fixtures = require('../vendor/phone_number_fixtures');
+    var role_fixtures = require('../vendor/role_fixtures');
     var person_defaults = require('../vendor/defaults/person');
     var role_defaults = require('../vendor/defaults/role');
     var status_defaults = require('../vendor/defaults/status');
     var location_level_defaults = require('../vendor/defaults/location-level');
-    module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults);
+    module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures);
 } else {
     define('bsrs-ember/vendor/people_fixtures', ['exports', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/phone_number_fixtures', 
-           'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/status', 'bsrs-ember/vendor/defaults/location-level'], 
-           function (exports, address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults) {
+           'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/role_fixtures'], 
+           function (exports, address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures) {
         'use strict';
-        return new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults);
+        return new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures);
     });
 }

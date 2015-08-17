@@ -25,13 +25,13 @@ export default Ember.Route.extend({
         willTransition(transition) {
             var model = this.currentModel.model;
             if (model.get('isDirtyOrRelatedDirty')) {
-                $('.t-modal').modal('show');
+                Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;
                 this.trx.storeType = 'location';
                 transition.abort();
             } else {
-                $('.t-modal').modal('hide');
+                Ember.$('.t-modal').modal('hide');
             }
         },
         deleteLocation() {

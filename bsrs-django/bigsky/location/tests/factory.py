@@ -22,7 +22,7 @@ def create_locations():
     create_location_levels()
     # Region
     region_ll = LocationLevel.objects.get(name='region')
-    west = mommy.make(Location, location_level=region_ll, name='east')
+    east = mommy.make(Location, location_level=region_ll, name='east')
     # District
     district_ll = LocationLevel.objects.get(name='district')
     ca = mommy.make(Location, location_level=district_ll, name='ca')
@@ -32,8 +32,8 @@ def create_locations():
     san_diego = mommy.make(Location, location_level=store_ll, name='san_diego')
     los_angeles = mommy.make(Location, location_level=store_ll, name='los_angeles')
     # JOIN's
-    west.children.add(ca)
-    west.children.add(nv)
+    east.children.add(ca)
+    east.children.add(nv)
     ca.children.add(san_diego)
     ca.children.add(los_angeles)
     

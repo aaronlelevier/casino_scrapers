@@ -21,16 +21,16 @@ var LocationLevelNew = Ember.Route.extend({
         willTransition(transition) {
             var model = this.currentModel.model;
             if (model.get('isNew')) {
-                model.removeRecord(model.get('id'));
+                model.removeRecord();
             } else if (model.get('isDirtyOrRelatedDirty')) {
-                $('.t-modal').modal('show');
+                Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;
                 this.trx.newModel = true;
                 this.trx.storeType = 'location-level';
                 transition.abort();
             } else {
-                $('.t-modal').modal('hide');
+                Ember.$('.t-modal').modal('hide');
             }
         },
         redirectUser() {

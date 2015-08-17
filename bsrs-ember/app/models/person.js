@@ -27,9 +27,22 @@ export default Model.extend({
         var last_name = this.get('last_name');
         return first_name + ' ' + last_name;
     }),
-    role_person: Ember.computed('id', function() {
+    role: Ember.computed('role_property.[]', function() {
+        if (this.get('role_property').get('length') > 0) {
+            return this.get('role_property').objectAt(0);
+        }
+        return [];
+    }),
+    role_property: Ember.computed(function() {
         var store = this.get('store');
-        return store.find('role-person', {person: this.get('id')}).objectAt(0);
+        var filter = function(role) {
+            var people_pks = role.get('people') || [];
+            if(Ember.$.inArray(this.get('id'), people_pks) > -1) {
+                return true;
+            }
+            return false;
+        };
+        return store.find('role', filter.bind(this), ['people']);
     }),
     phone_numbers: Ember.computed('id', function() {
         var store = this.get('store');
@@ -39,14 +52,12 @@ export default Model.extend({
         var store = this.get('store');
         return store.find('address', {person: this.get('id')});
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'roleIsDirty', 'addressesIsDirty', 'dirtyModel', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('dirtyModel');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty');
     }),
-    roleIsDirty: Ember.computed('role_person.isDirty', function() {
-        let role_dirty = false;
-        let role = this.get('role_person');
-        if (role && role.get('isDirty')) { role_dirty = true; }
-        return role_dirty;
+    roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
+        let role = this.get('role_property');
+        return role.objectAt(0) ? role.objectAt(0).get('isDirty') : undefined;
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
@@ -60,7 +71,7 @@ export default Model.extend({
         return phone_number_dirty;
     }),
     phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty'),
-    addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state', 
+    addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state',
                                      'addresses.@each.postal_code', 'addresses.@each.country', 'addresses.@each.type', function() {
         var addresses = this.get('addresses');
         var address_dirty = false;
@@ -85,6 +96,10 @@ export default Model.extend({
             address.save();
         });
     },
+    saveRole: function() {
+        var role = this.get('role');
+        role.save();
+    },
     rollbackRelated() {
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
@@ -102,19 +117,16 @@ export default Model.extend({
         });
     },
     createSerialize() {
-        var store = this.get('store');
         return {
             id: this.get('id'),
             username: this.get('username'),
             password: this.get('password'),
-            role: this.get('role')
+            role: this.get('role').get('id')
         };
     },
     serialize() {
-        //TODO: remove this hard reference to get the first role/status in favor of
-        //a truly dynamic lookup via the new/update forms
+        //TODO: remove this hard reference to get the first status
         var store = this.get('store');
-        var role_id = store.findOne('role').get('id');
         var status_id = store.findOne('status').get('id');
         var phone_numbers = this.get('phone_numbers').map(function(number) {
             return number.serialize();
@@ -134,14 +146,14 @@ export default Model.extend({
             location:'',
             auth_amount: this.get('auth_amount'),
             status: status_id,
-            role: this.get('role_person').get('id'),
+            role: this.get('role').get('id'), //TODO: is this tested/used at all?
             emails: [],
             phone_numbers: phone_numbers,
             addresses: addresses
         };
     },
-    removeRecord(id) {
-        this.get('store').remove('person', id);
+    removeRecord() {
+        this.get('store').remove('person', this.get('id'));
     },
     isNew: Ember.computed(function() {
         return loopAttrs(this);

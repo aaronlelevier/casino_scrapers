@@ -129,82 +129,81 @@ class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin, FillInHelper, M
         name_input = self.wait_for_xhr_request("t-location-level-name")
         assert name_input.get_attribute("value") == updated_name
 
-    # def test_navigate_to_people_list_and_create_new_person_record(self):
-    #     self.at(self.driver.current_url, LoginPage.url())
-    #     nav_page = NavPage(self.driver, self.wait)
-    #     nav_page.click_admin()
-    #     nav_admin_people = nav_page.find_people_link()
-    #     nav_admin_people.click()
-    #     person_page = PersonPage(self.driver, self.wait)
-    #     person_new_link = person_page.find_new_link()
-    #     person_new_link.click()
-    #     username = str(uuid.uuid4())[0:29]
-    #     password = "bobber1" 
-    #     person = PersonHelper(username=username, password=password)
-    #     self._fill_in(person)
-    #     gen_elem_page = GeneralElementsPage(self.driver, self.wait)
-    #     gen_elem_page.click_save_btn()
-    #     person_page.find_and_assert_username(username) 
-    #     first_name = "scooter"
-    #     middle_initial = "B"
-    #     last_name = "McGavine"
-    #     employee_id = "1234"
-    #     title = "myTitle"
-    #     role = "448e12c6-9c2a-44a5-b1ac-cc36f56b6641"
-    #     new_phone_one = "888-999-7878"
-    #     new_phone_two = "888-999-7899"
-    #     person = PersonHelper(first_name=first_name, middle_initial=middle_initial, 
-    #             last_name=last_name, employee_id=employee_id,
-    #             title=title, role=role)
-    #     self._fill_in(person)
-    #     add_phone_number_btn = gen_elem_page.find_add_btn() 
-    #     add_phone_number_btn.click()
-    #     person_page.find_ph_new_entry_send_keys(new_phone_one)
-    #     add_phone_number_btn.click()
-    #     all_phone_number_inputs = person_page.find_all_ph_new_entries()
-    #     last_phone_number_input = all_phone_number_inputs[1]
-    #     last_phone_number_input.send_keys(new_phone_two)
-    #     person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
+    def test_navigate_to_people_list_and_create_new_person_record(self):
+        self.at(self.driver.current_url, LoginPage.url())
+        nav_page = NavPage(self.driver, self.wait)
+        nav_page.click_admin()
+        nav_admin_people = nav_page.find_people_link()
+        nav_admin_people.click()
+        person_page = PersonPage(self.driver, self.wait)
+        person_new_link = person_page.find_new_link()
+        person_new_link.click()
+        username = str(uuid.uuid4())[0:29]
+        password = "bobber1" 
+        role = "RNfkmZFxsz"
+        person = PersonHelper(username=username, password=password)
+        role_input = Select(self.driver.find_element_by_id("person-role"))
+        role_input.select_by_index(1)
+        self._fill_in(person)
+        gen_elem_page = GeneralElementsPage(self.driver, self.wait)
+        gen_elem_page.click_save_btn()
+        person_page.find_wait_and_assert_elem("t-person-username", username) 
+        first_name = "scooter"
+        middle_initial = "B"
+        last_name = "McGavine"
+        employee_id = "1234"
+        title = "myTitle"
+        new_phone_one = "888-999-7878"
+        new_phone_two = "888-999-7899"
+        person = PersonHelper(first_name=first_name, middle_initial=middle_initial, 
+                last_name=last_name, employee_id=employee_id,
+                title=title)
+        self._fill_in(person)
+        add_phone_number_btn = gen_elem_page.find_add_btn() 
+        add_phone_number_btn.click()
+        person_page.find_ph_new_entry_send_keys(new_phone_one)
+        add_phone_number_btn.click()
+        all_phone_number_inputs = person_page.find_all_ph_new_entries()
+        last_phone_number_input = all_phone_number_inputs[1]
+        last_phone_number_input.send_keys(new_phone_two)
+        person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
 
-        # self.driver.find_element_by_class_name("t-save-btn").click()
-        # all_people = self.wait_for_xhr_request("t-person-data", plural=True)
-        # #TODO: verify before the refresh that the person was added using a count ?
-        # self.driver.refresh()
-        # all_people = self.wait_for_xhr_request("t-person-data", plural=True)
-        # #TODO: verify after the refresh that the person was added using a count ?
-        # people_list_view = self.driver.find_elements_by_class_name("t-person-username")
-        # new_person = None
-        # for row in people_list_view:
-        #     if row.text == username:
-        #         new_person = row
-        #         break
-        # if str(new_person) == 'None':
-        #     raise AssertionError("new person not found")
-        # new_person.click()
-        # username_input = self.wait_for_xhr_request("t-person-username")
-        # first_name_input = self.driver.find_element_by_id("first_name")
-        # middle_initial_input = self.driver.find_element_by_id("middle_initial")
-        # last_name_input = self.driver.find_element_by_id("last_name")
-        # emp_number_input = self.driver.find_element_by_id("employee_id")
-        # title_input = self.driver.find_element_by_id("title")
-        # assert username_input.get_attribute("value") == username
-        # assert first_name_input.get_attribute("value") == first_name
-        # assert middle_initial_input.get_attribute("value") == middle_initial
-        # assert last_name_input.get_attribute("value") == last_name
-        # assert emp_number_input.get_attribute("value") == employee_id
-        # assert title_input.get_attribute("value") == title
-        # self.driver.refresh()
-        # username_input = self.wait_for_xhr_request("t-person-username")
-        # first_name_input = self.driver.find_element_by_id("first_name")
-        # middle_initial_input = self.driver.find_element_by_id("middle_initial")
-        # last_name_input = self.driver.find_element_by_id("last_name")
-        # emp_number_input = self.driver.find_element_by_id("employee_id")
-        # title_input = self.driver.find_element_by_id("title")
-        # assert username_input.get_attribute("value") == username
-        # assert first_name_input.get_attribute("value") == first_name
-        # assert middle_initial_input.get_attribute("value") == middle_initial
-        # assert last_name_input.get_attribute("value") == last_name
-        # assert emp_number_input.get_attribute("value") == employee_id
-        # assert title_input.get_attribute("value") == title
+        self.driver.find_element_by_class_name("t-save-btn").click()
+        all_people = self.wait_for_xhr_request("t-person-data", plural=True)
+        #TODO: verify before the refresh that the person was added using a count ?
+        self.driver.refresh()
+        all_people = self.wait_for_xhr_request("t-person-data", plural=True)
+        #TODO: verify after the refresh that the person was added using a count ?
+        pagination = self.driver.find_element_by_class_name("t-pages")
+        element_list = pagination.find_elements_by_tag_name("li")
+        element_list_len = len(element_list)
+        new_person = None
+        count = 0
+        while count < element_list_len:
+            try:
+                all_people = self.wait_for_xhr_request("t-person-data", plural=True)
+            except AssertionError:
+                pass
+            people_list_view = self.driver.find_elements_by_class_name("t-person-username")
+            for row in people_list_view:
+                if row.text and row.text == username:
+                    new_person = row
+            if new_person:
+                break
+            count += 1
+            pagination = self.driver.find_element_by_class_name("t-pages")
+            element_list = pagination.find_elements_by_tag_name("li")
+            next_elem = element_list[count]
+            next_elem.click()
+        try:
+            new_person.click()
+        except AttributeError as e:
+            raise e("new person not found")
+        person_page.find_wait_and_assert_elem("t-person-username", username) 
+        person_page.find_and_assert_elems(username=username, first_name=first_name, middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
+        self.driver.refresh()
+        person_page.find_wait_and_assert_elem("t-person-username", username) 
+        person_page.find_and_assert_elems(username=username, first_name=first_name, middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
+
 if __name__ == "__main__":
     unittest.main()

@@ -10,14 +10,15 @@ from util.models import AbstractName, BaseModel, BaseManager
 ### SELF REFERENCING BASE
 
 class SelfRefrencingQuerySet(models.query.QuerySet):
+    "Query Parent / Child relationships for all SelfRefrencing Objects."
 
     def get_all_children(self, parent, all_children=None):
         '''
+        Return all Child Objects regardless of distance in the Tree.
+
         :parent: Getting all children for this Object.
 
         :all_children: default to None always until recursively called
-
-        Returns all Childen for a single Parent ``LocationLevel`` regardless of Level.
         '''
         if not all_children:
             all_children = set()
@@ -35,10 +36,13 @@ class SelfRefrencingQuerySet(models.query.QuerySet):
 
     def get_all_parents(self, child, first_child_id=None, all_parents=None):
         '''
+        Return all Parent Objects regardless of distance in the Tree.
+
         :child: getting all parents for this Object
 
-        :first_child_id: the ``child_id`` that we are looking up all parents for, 
-        and will be excluded from the output
+        :first_child_id: 
+            the ``child_id`` that we are looking up all parents for,
+            and will be excluded from the output
 
         :all_parents: default to None always until recursively called
         '''
@@ -61,6 +65,7 @@ class SelfRefrencingQuerySet(models.query.QuerySet):
 
 
 class SelfRefrencingManager(BaseManager):
+    """ """
     
     def get_queryset(self):
         return SelfRefrencingQuerySet(self.model, self._db)
@@ -74,9 +79,9 @@ class SelfRefrencingManager(BaseManager):
 
 class SelfRefrencingBaseModel(models.Model):
     '''
-    Use symmetrical = false to indicate one way relationship
+    ``symmetrical = false``: to indicate one way relationship
 
-    :docs: https://docs.djangoproject.com/en/1.8/ref/models/fields/#django.db.models.ManyToManyField.symmetrical
+    `Symetrical Documentation Here <https://docs.djangoproject.com/en/1.8/ref/models/fields/#django.db.models.ManyToManyField.symmetrical>`_
     '''
     children = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='parents')
 
@@ -93,13 +98,16 @@ class LocationLevel(SelfRefrencingBaseModel, AbstractName):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
-    role_type = models.CharField(max_length=29, blank=True,
-        choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
-
+    pass
+    
 
 ### LOCATION STATUS
 
 class LocationStatusManager(BaseManager):
+    '''
+    Return the **default** status for the initial Location 
+    ``.create()`` if one isn't specified.
+    '''
 
     def default(self):
         obj, created = self.get_or_create(name=settings.DEFAULT_LOCATION_STATUS)
@@ -107,6 +115,12 @@ class LocationStatusManager(BaseManager):
 
 
 class LocationStatus(AbstractName):
+    """
+    Tells whether the store is: *Open, Closed, Future, etc...*
+
+    Single *name* field, with more configuration on this 
+    model planned.
+    """
     
     objects = LocationStatusManager()
 
@@ -114,6 +128,7 @@ class LocationStatus(AbstractName):
 ### LOCATION TYPE
 
 class LocationTypeManager(BaseManager):
+    """ """
 
     def default(self):
         obj, created = self.get_or_create(name=settings.DEFAULT_LOCATION_TYPE)
@@ -121,6 +136,7 @@ class LocationTypeManager(BaseManager):
 
 
 class LocationType(AbstractName):
+    """ """
     
     objects = LocationTypeManager()
 
@@ -128,8 +144,17 @@ class LocationType(AbstractName):
 ### LOCATION
 
 class LocationQuerySet(SelfRefrencingQuerySet):
+    """ """
 
     def get_level_children(self, location, level_id):
+        '''
+        Includes error handling that the level_id is valid.
+
+        :location: Parent ``Location``
+        :level_id: 
+            ``LocationLevel.id`` of the ``Child Locations`` 
+            to return.
+        '''
         try:
             child_levels = LocationLevel.objects.get_all_children(location.location_level)
             location_level = LocationLevel.objects.filter(
@@ -138,8 +163,26 @@ class LocationQuerySet(SelfRefrencingQuerySet):
             raise
         return self.filter(location_level=location_level)
 
+    def get_level_parents(self, location, level_id):
+        '''
+        Includes error handling that the level_id is valid.
+        
+        :location: Child ``Location``
+        :level_id: 
+            ``LocationLevel.id`` of the ``Parent Locations`` 
+            to return.
+        '''
+        try:
+            parent_levels = LocationLevel.objects.get_all_parents(location.location_level)
+            location_level = LocationLevel.objects.filter(
+                id__in=parent_levels.values_list('id', flat=True)).get(id=level_id)
+        except ObjectDoesNotExist:
+            raise
+        return self.filter(location_level=location_level)
+
 
 class LocationManager(SelfRefrencingManager):
+    """ """
     
     def get_queryset(self):
         return LocationQuerySet(self.model, self._db)
@@ -150,9 +193,22 @@ class LocationManager(SelfRefrencingManager):
         '''
         return self.get_queryset().get_level_children(location, level_id)
 
+    def get_level_parents(self, location, level_id):
+        '''
+        Get all Parent Locations at a specific LocationLevel.
+        '''
+        return self.get_queryset().get_level_parents(location, level_id)
+
 
 @python_2_unicode_compatible
 class Location(SelfRefrencingBaseModel, BaseModel):
+    '''
+    Physical Store ``Locations`` that have a ``LocationLevel``.
+
+    :ex:
+        At the *Region* ``LocationLevel`` there is a 
+        *East* ``Location``.
+    '''
     # keys
     location_level = models.ForeignKey(LocationLevel, related_name='locations')
     status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True,
@@ -174,4 +230,3 @@ class Location(SelfRefrencingBaseModel, BaseModel):
             self.type = LocationType.objects.default()
 
         return super(Location, self).save(*args, **kwargs)
-

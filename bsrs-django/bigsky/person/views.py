@@ -1,6 +1,7 @@
 from django.db.models.functions import Lower
 
 from rest_framework import permissions, filters
+import rest_framework_filters as filters
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
@@ -12,20 +13,8 @@ class RoleViewSet(BaseModelViewSet):
     API endpoint that allows roles to be viewed or edited.
     """
     queryset = Role.objects.all()
+    serializer_class = ps.RoleSerializer
     permission_classes = (permissions.IsAuthenticated,)
-
-    def get_serializer_class(self):
-        """
-        set the serializer based on the method
-        """
-        if self.action == 'retrieve':
-            return ps.RoleSerializer
-        elif self.action == ('update' or 'partial_update'):
-            return ps.RoleCreateSerializer
-        elif self.action == 'create':
-            return ps.RoleCreateSerializer
-        else:
-            return ps.RoleSerializer
 
 
 class PersonStatusViewSet(BaseModelViewSet):
@@ -36,11 +25,19 @@ class PersonStatusViewSet(BaseModelViewSet):
 
 ### PERSON
 
+class PersonFilterSet(filters.FilterSet):
+    first_name = filters.AllLookupsFilter(name='first_name')
+    username = filters.AllLookupsFilter(name='username')
+    
+    class Meta:
+        model= Person
+        fields = ['first_name', 'username']
+
+
 class PersonViewSet(BaseModelViewSet):
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
-    filter_backends = (filters.SearchFilter,)
-    search_fields = ('first_name',)
+    filter_class = PersonFilterSet
 
     def get_serializer_class(self):
         """

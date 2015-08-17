@@ -44,9 +44,10 @@
 			</div>
 			<div class="col-sm-12">
 				{{#form-group title="admin.person.label.role" for="role"}}
-          <select class="t-person-role form-control role" id="role" onchange={{action "changed" value="target.value"}}>
+          <select class="t-person-role-select form-control role" id="person-role" onchange={{action (action "changed" model) value="target.value"}}>
+            <option>Select One</option>
             {{#each roles as |role|}}
-            <option value={{role.id}}>{{role.name}}</option>
+              <option value={{role.id}} selected={{is-equal model.role.id role.id}}>{{role.name}}</option>
             {{/each}}
           </select>
 				{{/form-group}}

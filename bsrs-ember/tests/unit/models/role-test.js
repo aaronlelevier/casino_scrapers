@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import {test, module} from 'qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
@@ -42,3 +43,13 @@ test('role is dirty or related is dirty when model has been updated', (assert) =
     assert.ok(role.get('isNotDirty'));
 });
 
+test('role can be related to one or many people', (assert) => {
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.name, location_level: LOCATION_LEVEL_DEFAULTS.idOne, role_type: ROLE_DEFAULTS.roleTypeGeneral, people: []});
+    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    var related = role.get('people');
+    role.set('people', related.concat([PEOPLE_DEFAULTS.idOne]));
+    assert.deepEqual(role.get('people'), [PEOPLE_DEFAULTS.idOne]);
+    assert.ok(role.get('isDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+});
