@@ -3,38 +3,16 @@ from django.db import IntegrityError
 
 from model_mommy import mommy
 
-from category.models import CategoryType, Category
-
-
-class CategoryTypeTests(TestCase):
-
-    def setUp(self):
-        self.type = mommy.make(CategoryType, name='type')
-        self.trade = mommy.make(CategoryType, name='trade', parent=self.type)
-        self.issue = mommy.make(CategoryType, name='issue', parent=self.trade)
-
-    def test_create(self):
-        self.assertEqual(CategoryType.objects.count(), 3)
-
-    def test_child(self):
-        self.assertEqual(self.trade.child, self.issue)
-
-    def test_parent(self):
-        self.assertEqual(self.trade.parent, self.type)
-
-    def test_one_to_one_hierarchy(self):
-        # Two CategoryType's can't have the same Child
-        with self.assertRaises(IntegrityError):
-            trade_other = mommy.make(CategoryType, parent=self.type)
+from category.models import Category
 
 
 class CategoryTests(TestCase):
 
     def setUp(self):
-        # CategoryType
-        self.type = mommy.make(CategoryType, name='type')
-        self.trade = mommy.make(CategoryType, name='trade', parent=self.type)
-        self.issue = mommy.make(CategoryType, name='issue', parent=self.trade)
+        # Parent Categories
+        type = Category.objects.get(name='type')
+        trade = Category.objects.get(name='trade')
+        issue = Category.objects.get(name='issue')
 
         # Category
         # Type

@@ -1,47 +1,7 @@
 from rest_framework import serializers
 
-from category.models import CategoryType, Category
+from category.models import Category
 from util.serializers import BaseCreateSerializer
-
-
-### CATEGORY TYPE
-
-class CategoryTypeListSerializer(BaseCreateSerializer):
-    '''
-    List and Leaf Node Serializer for Parent and 
-    Child RelatedFieds.
-    '''
-    class Meta:
-        model = CategoryType
-        fields = ('id', 'name',)
-
-
-class CategoryTypeDetailSerializer(BaseCreateSerializer):
-    '''
-    Detail. For Knowing who the Parent and Child 
-    CategoryType are, and not just their FK.
-    '''
-    parent = CategoryTypeListSerializer(read_only=True)
-    child = CategoryTypeListSerializer(read_only=True)
-
-    class Meta:
-        model = CategoryType
-        fields = ('id', 'name', 'parent', 'child',)
-
-
-class CategoryTypeSerializer(BaseCreateSerializer):
-    '''
-    Update / Create. Child is read_only
-    '''
-
-    parent = serializers.PrimaryKeyRelatedField(
-        queryset=CategoryType.objects.all(),
-        allow_null=True
-        )
-
-    class Meta:
-        model = CategoryType
-        fields = ('id', 'name', 'parent',)
 
 
 ### CATEGORY

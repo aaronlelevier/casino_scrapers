@@ -1,19 +1,14 @@
 from model_mommy import mommy
 
-from category.models import CategoryType, Category
+from category.models import Category
 
-
-def create_category_types():
-    type = mommy.make(CategoryType, name='type')
-    trade = mommy.make(CategoryType, name='trade', parent=type)
-    issue = mommy.make(CategoryType, name='issue', parent=trade)
 
 def create_categories():
-    create_category_types()
-    # CategoryTypes
-    type = CategoryType.objects.get(name='type')
-    trade = CategoryType.objects.get(name='trade')
-    issue = CategoryType.objects.get(name='issue')
+
+    # Parent Categories
+    type = Category.objects.get(name='type')
+    trade = Category.objects.get(name='trade')
+    issue = Category.objects.get(name='issue')
 
     [mommy.make(Category, type=type) for i in range(2)]
     # Trades
