@@ -41,10 +41,10 @@ test('initial load should only show first 10 records ordered by id with correct 
         assert.equal(find('.t-person-data:eq(0) .t-person-employee-id').text(), PEOPLE_DEFAULTS.employee_id);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('li').length, 2);
-        assert.equal(pagination.find('li:eq(0)').text(), '1');
-        assert.equal(pagination.find('li:eq(1)').text(), '2');
+        assert.equal(pagination.find('a:eq(0)').text(), '1');
+        assert.equal(pagination.find('a:eq(1)').text(), '2');
         //assert.ok(pagination.find('li:eq(0)').hasClass('active')); //TODO: page 1 should be active
-        assert.ok(!pagination.find('li:eq(1)').hasClass('active'));
+        assert.ok(!pagination.find('a:eq(1)').hasClass('active'));
     });
 });
 
@@ -54,29 +54,29 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     var page_one = PREFIX + PEOPLE_URL + '/?page=1';
     xhr(page_one ,"GET",null,{},200,PEOPLE_FIXTURES.list());
     visit(PEOPLE_URL);
-    click('.t-pages li:eq(1)');
+    click('.t-pages a:eq(1)');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?page=2');
         assert.equal(find('.t-person-data').length, 9);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'scott11');
         var pagination = find('.t-pages');
         assert.equal(pagination.find('li').length, 2);
-        assert.equal(pagination.find('li:eq(0)').text(), '1');
-        assert.equal(pagination.find('li:eq(1)').text(), '2');
-        assert.ok(!pagination.find('li:eq(0)').hasClass('active'));
-        assert.ok(pagination.find('li:eq(1)').hasClass('active'));
+        assert.equal(pagination.find('a:eq(0)').text(), '1');
+        assert.equal(pagination.find('a:eq(1)').text(), '2');
+        assert.ok(!pagination.find('a:eq(0)').hasClass('active'));
+        assert.ok(pagination.find('a:eq(1)').hasClass('active'));
     });
-    click('.t-pages li:eq(0)');
+    click('.t-pages a:eq(0)');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?page=1');
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('li').length, 2);
-        assert.equal(pagination.find('li:eq(0)').text(), '1');
-        assert.equal(pagination.find('li:eq(1)').text(), '2');
-        assert.ok(pagination.find('li:eq(0)').hasClass('active'));
-        assert.ok(!pagination.find('li:eq(1)').hasClass('active'));
+        assert.equal(pagination.find('a:eq(0)').text(), '1');
+        assert.equal(pagination.find('a:eq(1)').text(), '2');
+        assert.ok(pagination.find('a:eq(0)').hasClass('active'));
+        assert.ok(!pagination.find('a:eq(1)').hasClass('active'));
     });
 });
 
@@ -99,7 +99,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-pages li:eq(1)');
+    click('.t-pages a:eq(1)');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?page=2&sort=username');
         assert.equal(find('.t-person-data').length, 9);
@@ -152,7 +152,7 @@ test('typing a search will reset page to 1 and require an additional xhr', funct
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-pages li:eq(1)');
+    click('.t-pages a:eq(1)');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?page=2&search=&sort=title');
         assert.equal(find('.t-person-data').length, 9);
