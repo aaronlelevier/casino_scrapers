@@ -28,6 +28,10 @@ rm -rf venv
 virtualenv -p /usr/local/bin/python3 venv
 venv/bin/pip install -r requirements.txt
 
+source venv/bin/activate
+echo "PYTHONPATH:"
+python -c "import sys; print(sys.path)"
+
 DB_NAME="staging"
 export PGPASSWORD=tango
 dropdb $DB_NAME -U bsdev
