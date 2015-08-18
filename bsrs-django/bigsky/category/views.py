@@ -27,7 +27,5 @@ class CategoryViewSet(viewsets.ModelViewSet):
             return cs.CategoryListSerializer
         elif self.action == 'retrieve':
             return cs.CategoryDetailSerializer
-        # elif self.action in ('create', 'update', 'partial_update'):
-        #     return cs.CategoryCreateSerializer
         else:
             return cs.CategorySerializer

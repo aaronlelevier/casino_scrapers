@@ -34,13 +34,6 @@ class CategoryDetailSerializer(BaseCreateSerializer):
         fields = CATEGORY_FIELDS + ('subcategory_label', 'parent', 'children',)
 
 
-# class CategoryCreateSerializer(BaseCreateSerializer):
-
-#     class Meta:
-#         model = Category
-#         fields = CATEGORY_FIELDS + ('subcategory_label', 'parent',)
-
-
 class CategorySerializer(BaseCreateSerializer):
 
     class Meta:
