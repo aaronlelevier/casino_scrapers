@@ -112,6 +112,7 @@ export default Model.extend({
     rollbackRelated() {
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
+        this.rollbackRole();
     },
     rollbackRole() {
         var store = this.get('store');

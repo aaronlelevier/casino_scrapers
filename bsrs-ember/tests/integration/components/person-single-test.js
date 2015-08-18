@@ -21,7 +21,7 @@ moduleForComponent('person-single', 'integration: person-single test', {
 test('selecting a role will append the persons id to the new role but remove it from the previous role', function(assert) {
     var role_two = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameOne, people: [PEOPLE_DEFAULTS.unusedId]});
     var role_one = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
     this.set('model', person);
     this.set('roles', store.find('role'));
     this.render(hbs`{{person-single model=model roles=roles}}`);
@@ -46,7 +46,7 @@ test('selecting a role will append the persons id to the new role but remove it 
 test('selecting a placeholder instead of legit role will not append the persons id to anything but still remove it from the previous role', function(assert) {
     var role_two = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameOne, people: [PEOPLE_DEFAULTS.unusedId]});
     var role_one = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
     this.set('model', person);
     this.set('roles', store.find('role'));
     this.render(hbs`{{person-single model=model roles=roles}}`);
