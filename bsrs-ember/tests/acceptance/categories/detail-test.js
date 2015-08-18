@@ -17,14 +17,13 @@ const DETAIL_URL = BASE_URL + '/' + CATEGORY_DEFAULTS.idOne;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 
-var application, store, list_xhr, endpoint;
+var application, store, endpoint;
 
-module('sco Acceptance | detail test', {
+module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + CATEGORIES_URL + '/';
-        list_xhr = xhr(endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
         xhr(PREFIX + BASE_URL + '/' + CATEGORY_DEFAULTS.idOne + '/', 'GET', null, {}, 200, CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne));
     },
     afterEach() {
@@ -32,7 +31,8 @@ module('sco Acceptance | detail test', {
     }
 });
 
-test('clicking a categories name will redirect to the given detail view', (assert) => {
+test('sco clicking a categories name will redirect to the given detail view', (assert) => {
+    xhr(endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
     visit(CATEGORIES_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
@@ -43,7 +43,7 @@ test('clicking a categories name will redirect to the given detail view', (asser
     });
 });
 
-test('when you deep link to the category detail view you get bound attrs', (assert) => {
+test('sco when you deep link to the category detail view you get bound attrs', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -60,18 +60,17 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     andThen(() => {
         var category = store.find('category', CATEGORY_DEFAULTS.idOne);
         assert.ok(category.get('isDirty'));
-        clearxhr(list_xhr);
-        var list = CATEGORY_FIXTURES.list();
-        list.results[0].name = CATEGORY_DEFAULTS.nameTwo;
-        xhr(endpoint, 'GET', null, {}, 200, list);
-        click(SAVE_BTN);
-        andThen(() => {
-            assert.equal(currentURL(), CATEGORIES_URL);
-            assert.equal(store.find('category').get('length'), 5);
-            var category = store.find('category', CATEGORY_DEFAULTS.idOne);
-            assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameTwo);
-            assert.ok(category.get('isNotDirty'));
-        });
+    });
+    var list = CATEGORY_FIXTURES.list();
+    list.results[0].name = CATEGORY_DEFAULTS.nameTwo;
+    xhr(endpoint, 'GET', null, {}, 200, list);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+        assert.equal(store.find('category').get('length'), 5);
+        var category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameTwo);
+        assert.ok(category.get('isNotDirty'));
     });
 });
 
