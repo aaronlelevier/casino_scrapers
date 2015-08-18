@@ -1,5 +1,6 @@
 import unittest
 import uuid
+import time
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
@@ -27,6 +28,7 @@ class LoginTests(unittest.TestCase, JavascriptMixin, LoginMixin, FillInHelper, M
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
+        time.sleep(5)
         self.login()
 
     def tearDown(self):
