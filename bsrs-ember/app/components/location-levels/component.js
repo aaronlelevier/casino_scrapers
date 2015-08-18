@@ -1,8 +1,8 @@
 import Ember from 'ember';
 
-var LocationLevelsComponent = Ember.Component.extend({
-
+var LocationLevelListComponent = Ember.Component.extend({
+  classNames: ['wrapper']
 });
 
-export default LocationLevelsComponent;
+export default LocationLevelListComponent;
 

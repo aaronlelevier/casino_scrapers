@@ -19,10 +19,13 @@ export default Ember.Component.extend(ValidationMixin, {
             var old_role_people = old_role.get('people') || [];
 
             Ember.run(function() {
-                new_role.set('people', new_role_people.concat([person_id]));
+                if(new_role.get('content')) {
+                    new_role.set('people', new_role_people.concat([person_id]));
+                }
                 old_role.set('people', old_role_people.filter((old_role_person_pk) => {
                     return old_role_person_pk !== person_id;
                 }));
+                old_role.save();
             });
         },
         savePerson() {

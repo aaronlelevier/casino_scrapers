@@ -10,8 +10,10 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
+const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = "/admin/people";
 const DETAIL_URL = PEOPLE_URL + '/' + UUID.value;
 const PEOPLE_NEW_URL = PEOPLE_URL + '/new';
@@ -30,7 +32,7 @@ module('Acceptance | people-new', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         var endpoint = PREFIX + PEOPLE_URL + "/";
-        xhr(endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.empty());
+        xhr(endpoint,"GET",null,{},200,PEOPLE_FIXTURES.empty());
         var detailEndpoint = PREFIX + PEOPLE_URL + '/';
         var people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
             role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: []};
@@ -43,10 +45,10 @@ module('Acceptance | people-new', {
     }
 });
 
-test('sco visiting /people/new', (assert) => {
+test('visiting /people/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
-    visit(PEOPLE_URL);
+    visit(BASE_PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
@@ -73,7 +75,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     var url = PREFIX + PEOPLE_URL + '/';
     xhr( url,'POST',JSON.stringify(payload),{},201,response );
-    visit(PEOPLE_URL);
+    visit(BASE_PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {
         assert.ok(find('.t-username-validation-error').is(':hidden'));
