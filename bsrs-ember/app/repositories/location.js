@@ -6,7 +6,7 @@ import inject from 'bsrs-ember/utilities/deserializer';
 var PREFIX = config.APP.NAMESPACE;
 var LOCATION_URL = PREFIX + '/admin/locations/';
 
-export default Ember.Object.extend({
+var LocationRepo = Ember.Object.extend({
     locationDeserializer: inject('location'),
     insert(model) {
         return PromiseMixin.xhr(LOCATION_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
@@ -35,3 +35,5 @@ export default Ember.Object.extend({
         this.get('store').remove('location', id);
     }
 });
+
+export default LocationRepo;

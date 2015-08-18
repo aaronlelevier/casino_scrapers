@@ -56,13 +56,15 @@ test('visiting admin/location', (assert) => {
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
     andThen(() => {
-        var location = store.find('location').objectAt(0);
+        var location = store.find('location', LOCATION_DEFAULTS.idOne);
         assert.ok(location.get('isDirty'));
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
+        var location = store.find('location', LOCATION_DEFAULTS.idOne);
+        assert.ok(location.get('isNotDirty'));
     });
 });
 

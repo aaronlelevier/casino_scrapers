@@ -14,7 +14,7 @@ var xhr = (url, verb, data, headers, status, response) => {
 };
 
 var clearxhr = (id) => {
-    if (id) {
+    if (typeof id !== 'undefined') {
         Ember.$.fauxjax.remove(id);
     } else {
         Ember.$.fauxjax.clear();
