@@ -438,9 +438,7 @@ test('rollback role will reset the previously used role when switching from vali
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     person.save();
-    person.savePhoneNumbers();
-    person.saveAddresses();
-    person.saveRole();
+    person.saveRelated();
     admin_role.set('people', [PEOPLE_DEFAULTS.unusedId]);
     admin_role.save();
     assert.equal(person.get('role'), undefined);
@@ -468,9 +466,7 @@ test('rollback role will reset the previously used role when switching from one 
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     person.save();
-    person.savePhoneNumbers();
-    person.saveAddresses();
-    person.saveRole();
+    person.saveRelated();
     admin_role.set('people', [PEOPLE_DEFAULTS.unusedId]);
     admin_role.save();
     another_role.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);

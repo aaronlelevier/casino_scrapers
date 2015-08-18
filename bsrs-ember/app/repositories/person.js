@@ -10,17 +10,13 @@ export default Ember.Object.extend({
     insert(model) {
         return PromiseMixin.xhr(PREFIX + '/admin/people/', 'POST', {data: JSON.stringify(model.createSerialize())}).then(() => {
             model.save();
-            model.savePhoneNumbers();
-            model.saveAddresses();
-            model.saveRole();
+            model.saveRelated();
         });
     },
     update(model) {
         return PromiseMixin.xhr(PREFIX + '/admin/people/' + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
-            model.savePhoneNumbers();
-            model.saveAddresses();
-            model.saveRole();
+            model.saveRelated();
         });
     },
     find() {

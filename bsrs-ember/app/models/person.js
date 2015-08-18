@@ -109,6 +109,11 @@ export default Model.extend({
         var role = this.get('role');
         role.save();
     },
+    saveRelated() {
+        this.savePhoneNumbers();
+        this.saveAddresses();
+        this.saveRole();
+    },
     rollbackRelated() {
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
