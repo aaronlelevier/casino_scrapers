@@ -4,12 +4,10 @@ import uuid
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from category import serializers
 from category.models import Category
 from category.serializers import CategorySerializer
 from category.tests.factory import  create_categories
 from person.tests.factory import PASSWORD, create_person
-from util import create
 
 
 ### CATEGORY

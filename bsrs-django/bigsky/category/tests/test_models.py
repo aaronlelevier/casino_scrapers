@@ -1,8 +1,5 @@
 from django.test import TestCase
 from django.conf import settings
-from django.db import IntegrityError
-
-from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category
