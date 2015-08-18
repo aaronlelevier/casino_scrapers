@@ -116,7 +116,7 @@ export default Model.extend({
     },
     rollbackRole() {
         var store = this.get('store');
-        var previous_role = this.get('_prevState.role_fk');
+        var previous_role_fk = this.get('_prevState.role_fk');
 
         var current_role = this.get('role');
         if(current_role) {
@@ -124,13 +124,14 @@ export default Model.extend({
             current_role.set('people', current_role_people.filter((old_role_person_pk) => {
                 return old_role_person_pk !== this.get('id');
             }));
-            //current_role.save(); ?
         }
 
-        var role = store.find('role', previous_role);
-        var role_people = role.get('people') || [];
-        role.set('people', role_people.concat([this.get('id')]));
-        role.save();
+        var new_role = store.find('role', previous_role_fk);
+        if(new_role.get('id')) {
+            var role_people = role.get('people') || [];
+            new_role.set('people', role_people.concat([this.get('id')]));
+            new_role.save();
+        }
     },
     rollbackPhoneNumbers() {
         var phone_numbers = this.get('phone_numbers');
