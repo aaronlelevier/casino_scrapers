@@ -128,7 +128,7 @@ export default Model.extend({
 
         var new_role = store.find('role', previous_role_fk);
         if(new_role.get('id')) {
-            var role_people = role.get('people') || [];
+            var role_people = new_role.get('people') || [];
             new_role.set('people', role_people.concat([this.get('id')]));
             new_role.save();
         }
