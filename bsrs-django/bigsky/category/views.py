@@ -6,6 +6,15 @@ from category import serializers as cs
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
+    '''
+    ### Create
+    Can add a single Parent and multiple Children Categories.
+
+    ### Update
+    Can add and/or remove a single Parent and multiple Children Categories.
+
+    Must send the Parent/Children on every Update.
+    '''
 
     permission_classes = (IsAuthenticated,)
     queryset = Category.objects.all()
@@ -18,5 +27,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
             return cs.CategoryListSerializer
         elif self.action == 'retrieve':
             return cs.CategoryDetailSerializer
+        # elif self.action in ('create', 'update', 'partial_update'):
+        #     return cs.CategoryCreateSerializer
         else:
             return cs.CategorySerializer
