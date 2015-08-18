@@ -1,11 +1,13 @@
 import Ember from 'ember';
 
 var extract_role = function(model, store) {
+    var role_pk = model.role.id;
     var role = store.push('role', model.role);
     var existing_people = role.get('people') || [];
     role.set('people', existing_people.concat([model.id]));
     role.save();
     delete model.role;
+    return role_pk;
 };
 
 var PersonDeserializer = Ember.Object.extend({
@@ -26,7 +28,7 @@ var PersonDeserializer = Ember.Object.extend({
             address.type = address.type.id;
             store.push('address', address);
         });
-        extract_role(model, store);
+        model.role_fk = extract_role(model, store);
         //discuss dirty attr for prop not included in the list
         //meaning ... if the user is dirty NOW what should do?
         delete model.phone_numbers;
@@ -37,7 +39,7 @@ var PersonDeserializer = Ember.Object.extend({
     deserialize_list(response) {
         var store = this.get('store');
         response.results.forEach((model) => {
-            extract_role(model, store);
+            model.role_fk = extract_role(model, store);
             store.push('person', model);
         });
     }

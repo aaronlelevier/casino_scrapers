@@ -2,6 +2,7 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
+import previous from 'bsrs-ember/utilities/previous';
 
 export default Model.extend({
     store: inject('main'),
@@ -12,6 +13,7 @@ export default Model.extend({
     title: attr(''),
     employee_id: attr(''),
     auth_amount: attr(''),
+    role_fk: previous(),
     isModelDirty: false,
     dirtyModel: Ember.computed('isModelDirty', {
         get(key) {
@@ -28,10 +30,13 @@ export default Model.extend({
         return first_name + ' ' + last_name;
     }),
     role: Ember.computed('role_property.[]', function() {
-        if (this.get('role_property').get('length') > 0) {
-            return this.get('role_property').objectAt(0);
+        var roles = this.get('role_property');
+        var has_role = roles.get('length') > 0;
+        var foreign_key = has_role ? roles.objectAt(0).get('id') : undefined;
+        this.set('role_fk', foreign_key);
+        if (has_role) {
+            return roles.objectAt(0);
         }
-        return [];
     }),
     role_property: Ember.computed(function() {
         var store = this.get('store');
@@ -44,11 +49,11 @@ export default Model.extend({
         };
         return store.find('role', filter.bind(this), ['people']);
     }),
-    phone_numbers: Ember.computed('id', function() {
+    phone_numbers: Ember.computed(function() {
         var store = this.get('store');
         return store.find('phonenumber', {person: this.get('id')});
     }),
-    addresses: Ember.computed('id', function() {
+    addresses: Ember.computed(function() {
         var store = this.get('store');
         return store.find('address', {person: this.get('id')});
     }),
@@ -56,8 +61,12 @@ export default Model.extend({
         return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty');
     }),
     roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
-        let role = this.get('role_property');
-        return role.objectAt(0) ? role.objectAt(0).get('isDirty') : undefined;
+        let roles = this.get('role_property');
+        var role = roles.objectAt(0);
+        if(role) {
+            return role.get('isDirty');
+        }
+        return this.get('_prevState.role_fk') ? true : false;
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
@@ -103,6 +112,24 @@ export default Model.extend({
     rollbackRelated() {
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
+    },
+    rollbackRole() {
+        var store = this.get('store');
+        var previous_role = this.get('_prevState.role_fk');
+
+        var current_role = this.get('role');
+        if(current_role) {
+            var current_role_people = current_role.get('people') || [];
+            current_role.set('people', current_role_people.filter((old_role_person_pk) => {
+                return old_role_person_pk !== this.get('id');
+            }));
+            //current_role.save(); ?
+        }
+
+        var role = store.find('role', previous_role);
+        var role_people = role.get('people') || [];
+        role.set('people', role_people.concat([this.get('id')]));
+        role.save();
     },
     rollbackPhoneNumbers() {
         var phone_numbers = this.get('phone_numbers');

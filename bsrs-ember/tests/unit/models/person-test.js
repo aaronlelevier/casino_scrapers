@@ -55,14 +55,14 @@ test('related role should return first role or empty array', (assert) => {
     var role = person.get('role');
     assert.equal(role.get('name'), ROLE_DEFAULTS.nameOne);
     role.set('people', [PEOPLE_DEFAULTS.unused]);
-    assert.deepEqual(person.get('role'), []);
+    assert.equal(person.get('role'), undefined);
 });
 
 test('related role is not dirty when no role present', (assert) => {
     store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.unusedId]});
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('roleIsNotDirty'));
-    assert.deepEqual(person.get('role'), []);
+    assert.equal(person.get('role'), undefined);
 });
 
 test('related role is not dirty with original role model', (assert) => {
@@ -87,7 +87,7 @@ test('related role only returns the single matching item even when multiple role
 test('related role will update when the roles people array suddenly has the person pk', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.unusedId]});
-    assert.deepEqual(person.get('role'), []);
+    assert.equal(person.get('role'), undefined);
     role.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
     assert.ok(person.get('role'));
     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
@@ -99,7 +99,7 @@ test('related role will update when the roles people array suddenly removes the 
     assert.ok(person.get('role'));
     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
     role.set('people', [PEOPLE_DEFAULTS.unusedId]);
-    assert.deepEqual(person.get('role'), []);
+    assert.equal(person.get('role'), undefined);
 });
 
 test('related phone numbers are not dirty with original phone number model', (assert) => {
@@ -413,13 +413,76 @@ test('when person has role suddently assigned it shows as a dirty relationship (
 });
 
 test('when person has role suddently removed it shows as a dirty relationship', (assert) => {
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     role.set('people', [PEOPLE_DEFAULTS.unusedId]);
-    assert.deepEqual(person.get('role'), []);
-    // will not fail currently because role_property.objectAt(0) isn't something we can "ask" if its dirty :(
-    // assert.ok(person.get('isNotDirty'));
-    // assert.ok(person.get('isDirtyOrRelatedDirty'));
+    role.save();
+    assert.equal(person.get('role'), undefined);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
+test('rollback role will reset the previously used role when switching from valid role to nothing', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idTwo});
+    var guest_role = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
+    var admin_role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, people: [PEOPLE_DEFAULTS.unusedId]});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(person.get('role.name'), ROLE_DEFAULTS.nameTwo);
+    guest_role.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    guest_role.save();
+    admin_role.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
+    assert.equal(person.get('role.name'), ROLE_DEFAULTS.nameOne);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.save();
+    person.savePhoneNumbers();
+    person.saveAddresses();
+    person.saveRole();
+    admin_role.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    admin_role.save();
+    assert.equal(person.get('role'), undefined);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.rollback();
+    person.rollbackRole();
+    assert.equal(person.get('role.name'), ROLE_DEFAULTS.nameOne);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('rollback role will reset the previously used role when switching from one role to another', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idTwo});
+    var guest_role = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
+    var admin_role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, people: [PEOPLE_DEFAULTS.unusedId]});
+    var another_role = store.push('role', {id: 'af34ee9b-833c-4f3e-a584-b6851d1e04b3', name: 'another', people: [PEOPLE_DEFAULTS.unusedId]});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(person.get('role.name'), ROLE_DEFAULTS.nameTwo);
+    guest_role.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    guest_role.save();
+    admin_role.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
+    assert.equal(person.get('role.name'), ROLE_DEFAULTS.nameOne);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.save();
+    person.savePhoneNumbers();
+    person.saveAddresses();
+    person.saveRole();
+    admin_role.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    admin_role.save();
+    another_role.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
+    assert.equal(person.get('role.name'), 'another');
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.rollback();
+    person.rollbackRole();
+    assert.equal(person.get('role.name'), ROLE_DEFAULTS.nameOne);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.deepEqual(another_role.get('people'), [PEOPLE_DEFAULTS.unusedId]);
+    assert.ok(another_role.get('isNotDirty'));
+    assert.ok(admin_role.get('isNotDirty'));
 });

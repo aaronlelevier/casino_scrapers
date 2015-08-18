@@ -49,7 +49,7 @@ test('default role data is loaded', function(assert) {
     var $component = this.$('.t-person-role-select');
     assert.equal(this.$('.t-person-role-select option:eq(0)').text(), 'Select One');
     assert.equal(this.$('.t-person-role-select option:eq(1)').text(), ROLE_DEFAULTS.nameOne);//TODO: translate this
-    assert.equal(person.get('role').get('length'), 0);
+    assert.equal(person.get('role'), undefined);
     this.$('.t-person-role-select').val(ROLE_DEFAULTS.idOne).trigger('change');
     assert.equal(person.get('role').get('people'), PEOPLE_DEFAULTS.id);
     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
