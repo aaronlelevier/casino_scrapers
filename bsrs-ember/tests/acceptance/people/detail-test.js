@@ -20,8 +20,10 @@ import PHONE_NUMBER_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
 import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
+const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = '/admin/people';
 const DETAIL_URL = PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const SUBMIT_BTN = '.submit_btn';
@@ -45,9 +47,9 @@ module('Acceptance | detail test', {
 });
 
 test('clicking a persons name will redirect to the given detail view', (assert) => {
-    visit(PEOPLE_URL);
+    visit(BASE_PEOPLE_URL);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), BASE_PEOPLE_URL);
     });
     click('.t-person-data:eq(0)');
     andThen(() => {
@@ -147,9 +149,9 @@ test('when editing username to invalid, it checks for validation', (assert) => {
 });
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
-    visit(PEOPLE_URL);
+    visit(BASE_PEOPLE_URL);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), BASE_PEOPLE_URL);
     });
     click('.t-person-data:eq(0)');
     andThen(() => {

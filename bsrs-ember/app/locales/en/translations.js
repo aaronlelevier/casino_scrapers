@@ -192,7 +192,14 @@ export default {
 		},
 		'category': {
 			'one': 'Category',
-			'other': 'Categories'
+			'other': 'Categories',
+            'label': {
+                'name': 'Name',
+                'description': 'Description',
+                'cost_currency': 'Cost Currency',
+                'cost_amount': 'Cost Amount',
+                'cost_code': 'Cost Code'
+            }
 		},
 		'categoryType':{
 			'one': 'Category Type',

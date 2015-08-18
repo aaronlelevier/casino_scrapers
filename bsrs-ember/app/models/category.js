@@ -1,6 +1,6 @@
 import { attr, Model } from 'ember-cli-simple-store/model';
 
-export default Model.extend({
+var CategoryModel = Model.extend({
     name: attr(),
     status: attr(),
     serialize() {
@@ -10,3 +10,5 @@ export default Model.extend({
         };
     }
 });
+
+export default CategoryModel;
