@@ -21,7 +21,6 @@ router = routers.DefaultRouter()
 router.register(r'currencies', accounting_views.CurrencyViewSet)
 
 # CATEGORY
-router.register(r'category_types', category_views.CategoryTypeViewSet)
 router.register(r'categories', category_views.CategoryViewSet)
 
 # CONTACT

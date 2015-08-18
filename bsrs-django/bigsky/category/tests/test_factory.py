@@ -8,12 +8,17 @@ from category.models import Category
 class CategoryTests(TestCase):
 
     def setUp(self):
-        # Parent Categories
-        type = Category.objects.get(name='type')
-        trade = Category.objects.get(name='trade')
-        issue = Category.objects.get(name='issue')
+        factory.create_categories()
+        self.type = Category.objects.get(name='repair')
+        self.trade = Category.objects.get(name='electric')
+        self.issue = Category.objects.get(name='outlets')
+        self.issue2 = Category.objects.get(name='fans')
 
-    def test_create(self):
-        self.assertEqual(Category.objects.filter(type=self.type).count(), 2)
-        self.assertEqual(Category.objects.filter(type=self.trade).count(), 4)
-        self.assertEqual(Category.objects.filter(type=self.issue).count(), 8)
+    def test_count(self):
+        self.assertEqual(Category.objects.count(), 4)
+
+    def test_parents(self):
+        self.assertEqual(self.trade.parent, self.type)
+
+    def test_children(self):
+        self.assertEqual(self.trade.children.count(), 2)

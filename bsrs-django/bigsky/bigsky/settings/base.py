@@ -145,7 +145,7 @@ CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:80
 
 ### CATEGORY
 
-DEFAULT_CATEGORY_TYPE = 'Type'
+TOP_LEVEL_CATEGORY_LABEL = 'type'
 
 ### LOCATION
 
