@@ -24,11 +24,11 @@ npm install
 ./node_modules/ember-cli/bin/ember build --env=production
 
 cd ../bsrs-django
-rm -rf venv
-virtualenv -p /usr/local/bin/python3 venv
-venv/bin/pip install -r requirements.txt
+rm -rf venv*
+virtualenv -p /usr/local/bin/python3 venv3
+venv3/bin/pip install -r requirements.txt
 
-source venv/bin/activate
+source venv3/bin/activate
 echo "PYTHONPATH:"
 python -c "import sys; print(sys.path)"
 
@@ -39,11 +39,11 @@ createdb $DB_NAME -U bsdev -O bsdev
 
 cd bigsky/
 export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
-../venv/bin/python manage.py makemigrations
-../venv/bin/python manage.py migrate
+../venv3/bin/python manage.py makemigrations
+../venv3/bin/python manage.py migrate
 
-../venv/bin/python manage.py loaddata fixtures/jenkins.json
-../venv/bin/python manage.py loaddata fixtures/jenkins_custom.json
+../venv3/bin/python manage.py loaddata fixtures/jenkins.json
+../venv3/bin/python manage.py loaddata fixtures/jenkins_custom.json
 
 cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/fonts .
@@ -51,7 +51,7 @@ cp -r ../../bsrs-ember/dist/index.html templates
 
 uwsgi --http :$PORT \
     --wsgi-file bigsky.wsgi \
-    --virtualenv /www/django/releases/python3/$NEW_UUID/bsrs-django/venv \
+    --virtualenv /www/django/releases/python3/$NEW_UUID/bsrs-django/venv3 \
     --daemonize /tmp/bigsky.log \
     --static-map /assets=/www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky \
     --static-map /fonts=/www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky \
