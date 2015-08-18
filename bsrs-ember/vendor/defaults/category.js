@@ -10,7 +10,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             nameTwo: 'Maintenance',
             nameThree: 'Loss Prevention', 
             status: 'Active',
-            descriptionRepair: 'Interior and Exterior Store Report',
+            descriptionRepair: 'Interior and Exterior Store Repair',
             descriptionMaintenance: 'Preventive Maintenance',
             costAmountOne: '10.00',
             costAmountTwo: '20.00',

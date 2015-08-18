@@ -20,7 +20,7 @@
 			{{#each model as |category|}}
 				{{#link-to 'admin.categories.category' category.id tagName="tr" class="t-categories-data"}}
 					<td><input type="checkbox" /></td>
-					<td>{{t category.name}}</td>
+					<td>{{category.name}}</td>
 				{{/link-to}}
 			{{/each}}
 		</tbody>

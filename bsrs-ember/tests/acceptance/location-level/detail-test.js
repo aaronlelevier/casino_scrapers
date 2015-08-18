@@ -57,13 +57,13 @@ test('visiting admin/location', (assert) => {
     xhr(DJANGO_DETAIL_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-location-level-name', LOCATION_DEFAULTS.nameRegion);
     andThen(() => {
-        var location = store.find('location-level').objectAt(0);
+        var location = store.find('location-level', LOCATION_DEFAULTS.idOne);
         assert.ok(location.get('isDirty'));
     });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
-        var location = store.find('location-level').objectAt(0);
+        var location = store.find('location-level', LOCATION_DEFAULTS.idOne);
         assert.ok(location.get('isNotDirty'));
     });
 });

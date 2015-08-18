@@ -4,7 +4,7 @@ module.exports = function(app) {
   var express = require('express');
   var adminCategoriesRouter = express.Router();
 
-  adminCategoriesRouter.get('/', function(req, res) {
+  adminCategoriesRouter.get('/index/', function(req, res) {
     res.send(CATEGORY_FIXTURES.list());
   });
 
@@ -13,19 +13,11 @@ module.exports = function(app) {
   });
 
   adminCategoriesRouter.get('/:id', function(req, res) {
-    res.send({
-      'admin/categories': {
-        id: req.params.id
-      }
-    });
+    res.send(CATEGORY_FIXTURES.detail(req.params.id));
   });
 
   adminCategoriesRouter.put('/:id', function(req, res) {
-    res.send({
-      'admin/categories': {
-        id: req.params.id
-      }
-    });
+    res.send(CATEGORY_FIXTURES.put(req.params.id));
   });
 
   adminCategoriesRouter.delete('/:id', function(req, res) {

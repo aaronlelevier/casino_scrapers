@@ -2,24 +2,6 @@ var BSRS_CATEGORY_FACTORY = (function() {
     var factory = function(category_defaults) {
         this.category_defaults = category_defaults
     };
-    // factory.prototype.get = function() {
-    //     return [{
-    //         'id':this.id,
-    //         'name':this.name, 
-    //         // 'status':{
-    //         //     'id': this.category_type_defaults.officeType,
-    //         //     'name': this.category_type_defaults.officeName
-    //         // }
-    //     },
-    //     {
-    //         'id':this.idTwo,
-    //         'name':this.nameTwo,
-    //         // 'status':{
-    //         //     'id':this.category_type_defaults.mobileType,
-    //         //     'name': this.category_type_defaults.mobileName
-    //         // }
-    //     }];
-    // };
     factory.prototype.generate = function(i) {
         return {
             id: i,
@@ -32,8 +14,8 @@ var BSRS_CATEGORY_FACTORY = (function() {
     },
     factory.prototype.list = function() {
         var response = [];
-        for (var i=1; i <= 5; i++) {
-            var uuid = 'bd5c471a-518b-4333-bcbd-b46672b24c74';
+        for (var i=0; i < 5; i++) {
+            var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
             response.push(this.generate(uuid + i));
         }
         return {'count':3,'next':null,'previous':null,'results': response};
@@ -43,22 +25,14 @@ var BSRS_CATEGORY_FACTORY = (function() {
         category.label = this.category_defaults.labelOne;
         category.sub_category_label = this.category_defaults.subCatLabelOne;
         category.parent = this.category_defaults.parent;
+        return category;
     },
     factory.prototype.put = function(category) {
-        var categories = [
-            {id: this.id, name: this.name}, {id: this.idTwo, name: this.nameTwo}
-        ];
-        if(!category) {
-            return categories;
+        var response = this.generate(category.id)
+        for (var key in category) {
+            response[key] = category[key];
         }
-        categories.forEach(function(model) {
-            if(model.id === category.id) {
-                for (var attr in category) {
-                    model[attr] = category[attr];
-                }
-            }
-        });
-        return categories;
+        return response;
     };
     return factory;
 })();

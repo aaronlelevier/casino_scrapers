@@ -12,7 +12,7 @@ const CATEGORIES_URL = BASEURLS.base_categories_url + '/index';
 
 var application;
 
-module('sco Acceptance | category-list', {
+module('Acceptance | category-list', {
     beforeEach() {
         application = startApp();
         var endpoint = PREFIX + CATEGORIES_URL + "/";
