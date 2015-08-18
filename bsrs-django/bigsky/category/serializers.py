@@ -6,7 +6,7 @@ from util.serializers import BaseCreateSerializer
 
 ### CATEGORY
 
-CATEGORY_FIELDS = ('id', 'name', 'description', 'type',
+CATEGORY_FIELDS = ('id', 'name', 'description', 'label',
     'cost_amount', 'cost_currency', 'cost_code',)
 
 
@@ -33,7 +33,7 @@ class CategoryDetailSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
-        fields = CATEGORY_FIELDS + ('parent', 'children',)
+        fields = CATEGORY_FIELDS + ('subcategory_label', 'parent', 'children',)
 
 
 class CategorySerializer(BaseCreateSerializer):
