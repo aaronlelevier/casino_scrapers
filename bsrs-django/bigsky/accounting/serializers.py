@@ -1,7 +1,6 @@
 from accounting.models import Currency
 from util.serializers import BaseCreateSerializer
 
-
 ### CURRENCY
 
 class CurrencySerializer(BaseCreateSerializer):
