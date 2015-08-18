@@ -23,7 +23,7 @@ def get_text_excluding_children(driver, element):
     """, element)
 
 
-class LoginTests(unittest.TestCase, LoginMixin, JavascriptMixin, FillInHelper, MethodHelpers):
+class LoginTests(unittest.TestCase, JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers):
     def setUp(self):
         self.driver = webdriver.Firefox()
         self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)

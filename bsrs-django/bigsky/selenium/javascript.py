@@ -15,3 +15,13 @@ class JavascriptMixin(object):
                     assert element.is_displayed()
                 return element
             time.sleep(1)
+
+    def wait_for_element_by_id(self, selector):
+        for i in range(10):
+            print "waiting for element_by_id"
+            element = self.driver.find_element_by_id(selector)
+            if element:
+                return element
+            else:
+                time.sleep(1)
+
