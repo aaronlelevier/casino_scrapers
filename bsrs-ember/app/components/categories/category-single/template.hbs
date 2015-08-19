@@ -25,6 +25,7 @@
 			<div class="col-sm-5">
 				{{#form-group title="admin.category.label.description" for="description"}}
 			    	{{input type="text" placeholder=(t "admin.category.label.description") value=model.description class="form-control t-category-description" id="category_description"}}
+            {{#validation-error-field submitted=submitted field="name" className="t-name-validation-error" model=model validation=nameValidation}}invalid name{{/validation-error-field}}
 				{{/form-group}}
 			</div>
     </section>

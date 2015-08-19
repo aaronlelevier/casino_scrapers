@@ -193,12 +193,27 @@ export default {
 		'category': {
 			'one': 'Category',
 			'other': 'Categories',
+            'name': {
+                'repair': 'Repair',
+                'maintenance': 'Maintenance',
+                'loss_prevention': 'Loss Prevention',
+            },
+            'status': {
+                'active': 'Active'
+            },
             'label': {
                 'name': 'Name',
                 'description': 'Description',
                 'cost_currency': 'Cost Currency',
                 'cost_amount': 'Cost Amount',
-                'cost_code': 'Cost Code'
+                'cost_code': 'Cost Code',
+                'general': 'General',
+                'label': 'Label'
+            },
+            'labelCat': {
+                'type': 'Type',
+                'trade': 'Trade',
+                'issue': 'Issue'
             }
 		},
 		'categoryType':{

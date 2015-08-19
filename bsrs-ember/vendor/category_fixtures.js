@@ -9,20 +9,20 @@ var BSRS_CATEGORY_FACTORY = (function() {
             description: this.category_defaults.descriptionRepair,
             cost_amount: this.category_defaults.costAmountOne,
             cost_currency: this.category_defaults.currency,
-            cost_code: this.category_defaults.costCodeOne
+            cost_code: this.category_defaults.costCodeOne,
+            label: this.category_defaults.labelOne
         }
     },
     factory.prototype.list = function() {
         var response = [];
-        for (var i=0; i < 5; i++) {
+        for (var i=0; i < 23; i++) {
             var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
             response.push(this.generate(uuid + i));
         }
-        return {'count':3,'next':null,'previous':null,'results': response};
+        return {'count':23,'next':null,'previous':null,'results': response};
     },
     factory.prototype.detail = function(i) {
         var category = this.generate(i);
-        category.label = this.category_defaults.labelOne;
         category.sub_category_label = this.category_defaults.subCatLabelOne;
         category.parent = this.category_defaults.parent;
         return category;

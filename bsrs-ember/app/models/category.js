@@ -1,7 +1,11 @@
 import { attr, Model } from 'ember-cli-simple-store/model';
 
 var CategoryModel = Model.extend({
-    name: attr(),
+    name: attr(''),
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
+        return this.get('isDirty');
+    }),
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     serialize() {
         return {
             id: this.get('id'),
@@ -10,6 +14,7 @@ var CategoryModel = Model.extend({
             cost_amount: this.get('cost_amount'),
             cost_currency: this.get('cost_currency'),
             cost_code: this.get('cost_code'),
+            label: this.get('label'),
         };
     }
 });

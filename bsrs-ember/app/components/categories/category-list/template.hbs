@@ -14,13 +14,21 @@
 			<tr class="head">
 				<th></th>
 				<th>{{t "admin.category.label.name"}} {{fa-icon "sort"}}</th>
+				<th>{{t "admin.category.label.description"}} {{fa-icon "sort"}}</th>
+				<th>{{t "admin.category.label.label"}} {{fa-icon "sort"}}</th>
+				<th>{{t "admin.category.label.cost_amount"}} {{fa-icon "sort"}}</th>
+				<th>{{t "admin.category.label.cost_code"}} {{fa-icon "sort"}}</th>
 			</tr>
 		</thead>
 		<tbody>
 			{{#each model as |category|}}
-				{{#link-to 'admin.categories.category' category.id tagName="tr" class="t-categories-data"}}
+ 				{{#link-to 'admin.categories.category' category.id tagName="tr" class="t-categories-data"}}
 					<td><input type="checkbox" /></td>
-					<td>{{category.name}}</td>
+					<td>{{t category.name}}</td>
+					<td>{{t category.description}}</td>
+					<td>{{t category.label}}</td>
+					<td>{{category.cost_amount}}</td>
+					<td>{{category.cost_code}}</td>
 				{{/link-to}}
 			{{/each}}
 		</tbody>

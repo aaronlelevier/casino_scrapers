@@ -15,7 +15,6 @@ var CategoryRepo = Ember.Object.extend({
     find() {
         PromiseMixin.xhr(CATEGORY_URL + 'index/', 'GET').then((response) => {
             response.results.forEach((category) => {
-                console.warn(category.name);
                 var cat = this.get('store').push('category', category);
                 cat.save();
             });

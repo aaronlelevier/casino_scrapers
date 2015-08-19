@@ -6,10 +6,10 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
         return {
             idOne: 'ec62006b-6275-4aa9-abfa-38b146383d30',
             idTwo: 'ec62006b-6275-4aa9-abfa-38b146383d31',
-            nameOne: 'Repair',
-            nameTwo: 'Maintenance',
-            nameThree: 'Loss Prevention', 
-            status: 'Active',
+            nameOne: 'admin.category.name.repair',
+            nameTwo: 'admin.category.name.maintenance',
+            nameThree: 'admin.category.name.loss_prevention', 
+            status: 'admin.category.status.active',
             descriptionRepair: 'Interior and Exterior Store Repair',
             descriptionMaintenance: 'Preventive Maintenance',
             costAmountOne: '10.00',
@@ -17,9 +17,9 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             currency: this.currency.id,
             costCodeOne: '12584',
             costCodeTwo: '12585',
-            labelOne: 'Type',
-            labelOne: 'Trade',
-            labelOne: 'Issue',
+            labelOne: 'admin.category.labelCat.type',
+            labelTwo: 'admin.category.labelCat.trade',
+            labelThree: 'admin.category.labelCat.issue',
             subCatLabelOne: 'Trade',
             parent: []
         };
