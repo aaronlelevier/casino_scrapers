@@ -1,4 +1,5 @@
 import { attr, Model } from 'ember-cli-simple-store/model';
+import Ember from 'ember';
 
 var CategoryModel = Model.extend({
     name: attr(''),
