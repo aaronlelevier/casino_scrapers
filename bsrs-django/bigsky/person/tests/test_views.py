@@ -104,18 +104,14 @@ class PersonAccessTests(TestCase):
         self.person = create_person()
 
     def test_access_user(self):
-        """
-        verify we can access user records correctly as a super user
-        """
+        # verify we can access user records correctly as a super user
         self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.client.session['_auth_user_id'], str(self.person.id))
 
     def test_noaccess_user(self):
-        """
-        verify we can't acccess users as a normal user
-        """
+        # verify we can't acccess users as a normal user
         self.client.login(username='noaccess_user', password='noaccess_password')
         response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         self.assertEqual(response.status_code, 403)
