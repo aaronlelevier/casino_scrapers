@@ -398,11 +398,17 @@ class PersonDeleteTests(APITestCase):
         self.assertEqual(Person.objects.count(), people_all-1)
 
     def test_delete_override(self):
-        people = Person.objects.count()
-        response = self.client.delete('/api/admin/people/{}/'.format(self.person.pk),
+        # initial
+        people = Person.objects_all.count()
+        self.assertIsInstance(Person.objects_all.get(id=self.person2.id), Person)
+        # delete
+        response = self.client.delete('/api/admin/people/{}/'.format(self.person2.pk),
             {'override':True}, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Person.objects.count(), people-1)
+        self.assertEqual(Person.objects_all.count(), people-1)
+        # DB Fails
+        with self.assertRaises(Person.DoesNotExist):
+            Person.objects_all.get(id=self.person2.id)
 
 
 class PersonFilterTests(TestCase):
