@@ -1,7 +1,5 @@
 import time
 
-from selenium.common.exceptions import NoSuchElementException
-
 
 class JavascriptMixin(object):
 
@@ -17,13 +15,3 @@ class JavascriptMixin(object):
                     assert element.is_displayed()
                 return element
             time.sleep(1)
-
-    def wait_for_element_by_id(self, selector):
-        for i in range(10):
-            print "waiting for element_by_id"
-            try:
-                element = self.driver.find_element_by_id(selector)
-            except NoSuchElementException:
-                time.sleep(1)
-            else:
-                return element
