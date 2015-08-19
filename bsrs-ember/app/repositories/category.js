@@ -7,6 +7,11 @@ var PREFIX = config.APP.NAMESPACE;
 var CATEGORY_URL = PREFIX + '/admin/categories/';
 
 var CategoryRepo = Ember.Object.extend({
+    insert(model) {
+        return PromiseMixin.xhr(CATEGORY_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
+            model.save();
+        });
+    },
     update(model) {
         return PromiseMixin.xhr(CATEGORY_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();

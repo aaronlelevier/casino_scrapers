@@ -19,9 +19,9 @@ const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 const CANCEL_BTN = '.t-cancel-btn';
 
-var application, store, endpoint;
+let application, store, endpoint;
 
-module('Acceptance | detail test', {
+module('sco Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -49,32 +49,47 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        var category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
         assert.ok(category.get('isNotDirty'));
         assert.equal(find('.t-category-name').val(), CATEGORY_DEFAULTS.nameOne);
         assert.equal(find('.t-category-description').val(), CATEGORY_DEFAULTS.descriptionRepair);
+        assert.equal(find('.t-category-label').val(), CATEGORY_DEFAULTS.labelOne);
+        assert.equal(find('.t-amount').val(), CATEGORY_DEFAULTS.costAmountOne);
+        assert.equal(find('.t-category-cost-code').val(), CATEGORY_DEFAULTS.costCodeOne);
     });
-    var url = PREFIX + DETAIL_URL + '/';
-    var response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-    var payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo, description: CATEGORY_DEFAULTS.descriptionMaintenance});
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
+    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo, description: CATEGORY_DEFAULTS.descriptionMaintenance, 
+    label: CATEGORY_DEFAULTS.labelTwo, cost_amount: CATEGORY_DEFAULTS.costAmountTwo, cost_code: CATEGORY_DEFAULTS.costCodeTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
     fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
+    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelTwo);
+    fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountTwo);
+    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeTwo);
     andThen(() => {
-        var category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
         assert.ok(category.get('isDirty'));
     });
-    var list = CATEGORY_FIXTURES.list();
+    let list = CATEGORY_FIXTURES.list();
     list.results[0].name = CATEGORY_DEFAULTS.nameTwo;
     list.results[0].description = CATEGORY_DEFAULTS.descriptionMaintenance;
+    list.results[0].label = CATEGORY_DEFAULTS.labelTwo;
+    list.results[0].cost_amount = CATEGORY_DEFAULTS.costAmountTwo;
+    list.results[0].cost_code = CATEGORY_DEFAULTS.costCodeTwo;
+    // let results = list.results[0];
+    // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CATEGORY_DEFAULTS);
     xhr(endpoint, 'GET', null, {}, 200, list);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
         assert.equal(store.find('category').get('length'), 23);
-        var category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
         assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameTwo);
         assert.equal(category.get('description'), CATEGORY_DEFAULTS.descriptionMaintenance);
+        assert.equal(category.get('label'), CATEGORY_DEFAULTS.labelTwo);
+        assert.equal(category.get('cost_amount'), CATEGORY_DEFAULTS.costAmountTwo);
+        assert.equal(category.get('cost_code'), CATEGORY_DEFAULTS.costCodeTwo);
         assert.ok(category.get('isNotDirty'));
     });
 });
@@ -97,9 +112,9 @@ test('when editing the category name to invalid, it checks for validation', (ass
         assert.equal(find('.t-name-validation-error').text().trim(), 'invalid name');
     });
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
-    var url = PREFIX + DETAIL_URL + "/";
-    var response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-    var payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo});
+    let url = PREFIX + DETAIL_URL + "/";
+    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
+    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     xhr(endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
     click(SAVE_BTN);

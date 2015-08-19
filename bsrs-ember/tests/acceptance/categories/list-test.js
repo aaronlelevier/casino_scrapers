@@ -11,12 +11,12 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 const PREFIX = config.APP.NAMESPACE;
 const CATEGORIES_URL = BASEURLS.base_categories_url + '/index';
 
-var application;
+let application;
 
 module('Acceptance | category-list', {
     beforeEach() {
         application = startApp();
-        var endpoint = PREFIX + CATEGORIES_URL + "/";
+        let endpoint = PREFIX + CATEGORIES_URL + "/";
         xhr(endpoint, "GET", null, {}, 200, CATEGORY_FIXTURES.list());
     },
     afterEach() {

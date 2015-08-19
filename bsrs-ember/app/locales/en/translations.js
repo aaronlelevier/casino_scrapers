@@ -69,6 +69,7 @@ export default {
 	},
 	'admin':{
 		'title': 'Admin',
+        'amount': 'Amount',
 		'general': {
 			'one': 'General Setting',
 			'other': 'General Settings'

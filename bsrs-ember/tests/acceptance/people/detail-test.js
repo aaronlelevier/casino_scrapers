@@ -99,7 +99,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-person-role-select option:eq(1)').val(), ROLE_DEFAULTS.idOne);
         assert.equal(find('.t-person-role-select option:eq(2)').val(), ROLE_DEFAULTS.idTwo);
         assert.equal(find(".t-person-role-select option:selected").val(), ROLE_DEFAULTS.idOne);
-        assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
+        assert.equal(find('.t-amount').val(), PEOPLE_DEFAULTS.auth_amount);
         assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
     });
     var url = PREFIX + DETAIL_URL + '/';
@@ -114,7 +114,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-person-last-name', PEOPLE_DEFAULTS_PUT.last_name);
     fillIn('.t-person-title', PEOPLE_DEFAULTS_PUT.title);
     fillIn('.t-person-employee_id', PEOPLE_DEFAULTS_PUT.employee_id);
-    fillIn('.t-person-auth_amount', PEOPLE_DEFAULTS_PUT.auth_amount);
+    fillIn('.t-amount', PEOPLE_DEFAULTS_PUT.auth_amount);
     andThen(() => {
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isDirty'));
@@ -293,7 +293,7 @@ test('currency helper displays correct currency format', (assert) => {
     visit(DETAIL_URL);
     var symbol = '$';
     andThen(() => {
-        assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
+        assert.equal(find('.t-amount').val(), PEOPLE_DEFAULTS.auth_amount);
     });
 });
 

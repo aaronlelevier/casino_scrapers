@@ -27,6 +27,9 @@ var BSRS_CATEGORY_FACTORY = (function() {
         category.parent = this.category_defaults.parent;
         return category;
     },
+    factory.prototype.empty = function() {
+        return {'count':0,'next':null,'previous':null,'results': []};
+    };
     factory.prototype.put = function(category) {
         var response = this.generate(category.id)
         for (var key in category) {

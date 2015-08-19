@@ -1,8 +1,12 @@
 import { attr, Model } from 'ember-cli-simple-store/model';
 import Ember from 'ember';
 
-var CategoryModel = Model.extend({
+let CategoryModel = Model.extend({
     name: attr(''),
+    description: attr(''),
+    label: attr(''),
+    cost_amount: attr(''),
+    cost_code: attr(''),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty');
     }),
