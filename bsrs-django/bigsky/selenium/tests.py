@@ -4,15 +4,9 @@ import uuid
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select
 
-from login import LoginMixin
-from fill_in_helper import FillInHelper
-from method_helpers import MethodHelpers
-from javascript import JavascriptMixin
-from person_helper import PersonHelper
-from login_page import LoginPage
-from person_page import PersonPage
-from nav_page import NavPage
-from general_elements_page import GeneralElementsPage
+from helpers import (LoginMixin, FillInHelper, MethodHelpers,
+    JavascriptMixin, PersonHelper, LoginPage, PersonPage,
+    NavPage, GeneralElementsPage)
 
 
 def get_text_excluding_children(driver, element):
