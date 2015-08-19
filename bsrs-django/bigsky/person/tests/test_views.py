@@ -17,6 +17,7 @@ from contact.models import (Address, AddressType, Email, EmailType,
 from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
+from person.serializers import PersonUpdateSerializer
 from person.tests.factory import PASSWORD, create_person, create_role
 from util import create, choices
 
@@ -278,23 +279,8 @@ class PersonPutTests(APITestCase):
         self.person2 = create_person()
         create_person_and_contacts(self.person2)
 
-        self.data = {
-            "id": str(self.person.id),
-            "username": self.person.username,
-            "first_name": "",
-            "middle_initial": "",
-            "last_name": "",
-            "title": "",
-            "employee_id": "",
-            "auth_amount": "{0:.4f}".format(self.person.auth_amount),
-            "auth_currency": str(self.person.auth_currency.id),
-            "role": str(self.person.role.id),
-            "status": str(self.person.status.id),
-            "location":"",
-            "emails":[],
-            "phone_numbers":[],
-            "addresses":[]
-        }
+        serializer = PersonUpdateSerializer(self.person)
+        self.data = serializer.data
 
     def tearDown(self):
         self.client.logout()
