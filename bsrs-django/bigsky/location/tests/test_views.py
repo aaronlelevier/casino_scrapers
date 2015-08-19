@@ -238,7 +238,10 @@ class LocationCreateTests(APITestCase):
         serializer = LocationCreateSerializer(self.location)
         data = serializer.data
         new_uuid = str(uuid.uuid4())
-        data.update({'id': new_uuid})
+        data.update({
+            'id': new_uuid,
+            'number': 'new store number'
+        })
         # Test
         response = self.client.post('/api/admin/locations/', data, format='json')
         self.assertEqual(response.status_code, 201)

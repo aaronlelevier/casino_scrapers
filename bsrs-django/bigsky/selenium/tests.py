@@ -8,7 +8,6 @@ from helpers import (LoginMixin, FillInHelper, MethodHelpers,
     JavascriptMixin, PersonHelper, LoginPage, PersonPage,
     NavPage, GeneralElementsPage)
 
-
 def get_text_excluding_children(driver, element):
     return driver.execute_script("""
     return jQuery(arguments[0]).contents().filter(function() {
@@ -33,7 +32,7 @@ class LoginTests(unittest.TestCase, JavascriptMixin, LoginMixin, FillInHelper, M
         new_location = self.wait_for_xhr_request("t-location-new")
         new_location.click()
         new_location_name = "ABC STORE"
-        new_location_number = "1234"
+        new_location_number = "new store 2"
         new_location_level = str(uuid.uuid4())[0:29]
         location_name_input = self.driver.find_element_by_id("location_name")
         location_number_input = self.driver.find_element_by_id("location_number")
