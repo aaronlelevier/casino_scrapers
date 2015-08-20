@@ -7,6 +7,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
+import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
 const PREFIX = config.APP.NAMESPACE;
 const LOCATION_URL = '/admin/locations';
@@ -21,13 +22,13 @@ module('Acceptance | detail-test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         var endpoint = PREFIX + LOCATION_URL + '/';
-        var location_list_data = LOCATION_FIXTURES.list(); 
-        var location_detail_data = LOCATION_FIXTURES.detail(); 
+        var location_list_data = LOCATION_FIXTURES.list();
+        var location_detail_data = LOCATION_FIXTURES.detail();
         xhr(endpoint, 'GET', null, {}, 200, location_list_data);
         xhr(endpoint + LOCATION_DEFAULTS.idOne + '/', 'GET', null, {}, 200, location_detail_data);
     },
     afterEach() {
-       Ember.run(application, 'destroy'); 
+       Ember.run(application, 'destroy');
     }
 });
 
@@ -48,6 +49,7 @@ test('visiting admin/location', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         var location = store.find('location').objectAt(0);
         assert.ok(location.get('isNotDirty'));
+        assert.equal(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
         assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.storeName);
         assert.equal(find('.t-location-number').val(), LOCATION_DEFAULTS.storeNumber);
     });
@@ -152,3 +154,25 @@ test('when click delete, location is deleted and removed from store', (assert) =
         assert.equal(currentURL(), LOCATION_URL);
     });
 });
+
+// test('FINISH changing the location_level will persist correctly', (assert) => {
+//     // var response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
+//     // var payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo});
+//     // xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         var location = store.find('location', LOCATION_DEFAULTS.idOne);
+//         assert.equal(location.get('location_levels').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
+//     });
+//     fillIn('.t-location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
+//     andThen(() => {
+//         var location = store.find('location', LOCATION_DEFAULTS.idOne);
+//         assert.equal(location.get('location_levels').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
+//     });
+//     // click(SAVE_BTN);
+//     // andThen(() => {
+//     //     assert.equal(currentURL(), LOCATION_URL);
+//     //     var location = store.find('location', LOCATION_DEFAULTS.idOne);
+//     //     assert.equal(location.get('location_levels').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
+//     // });
+// });

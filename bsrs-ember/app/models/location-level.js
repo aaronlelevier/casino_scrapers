@@ -6,6 +6,7 @@ import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 var LocationLevel = Model.extend({
     store: inject('main'),
     name: attr(''),
+    locations: attr([]),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         //for children eventually
         return this.get('isDirty');
