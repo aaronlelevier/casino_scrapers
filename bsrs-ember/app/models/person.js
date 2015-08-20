@@ -234,11 +234,11 @@ export default Model.extend({
             last_name: this.get('last_name'),
             title: this.get('title'),
             employee_id: this.get('employee_id'),
-            location:'',
             auth_amount: this.get('auth_amount'),
             status: status_id,
             role: this.get('role').get('id'), //TODO: is this tested/used at all?
             emails: [],
+            locations: [],
             phone_numbers: phone_numbers,
             addresses: addresses
         };
