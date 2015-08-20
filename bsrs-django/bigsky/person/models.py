@@ -151,7 +151,7 @@ class Person(BaseModel, AbstractUser):
     # Keys
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
-    location = models.ForeignKey(Location, blank=True, null=True)
+    locations = models.ManyToManyField(Location, related_name='people', blank=True)
     # required
     # Auth Amounts - can be defaulted by the Role
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
