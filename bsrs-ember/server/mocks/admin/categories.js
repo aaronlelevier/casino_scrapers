@@ -4,12 +4,13 @@ module.exports = function(app) {
   var express = require('express');
   var adminCategoriesRouter = express.Router();
 
-  adminCategoriesRouter.get('/index/', function(req, res) {
+  adminCategoriesRouter.get('/', function(req, res) {
     res.send(CATEGORY_FIXTURES.list());
   });
 
   adminCategoriesRouter.post('/', function(req, res) {
-    res.status(201).end();
+    res.status(201);
+    res.send(req.body);
   });
 
   adminCategoriesRouter.get('/:id', function(req, res) {

@@ -209,7 +209,8 @@ export default {
                 'cost_amount': 'Cost Amount',
                 'cost_code': 'Cost Code',
                 'general': 'General',
-                'label': 'Label'
+                'label': 'Label',
+                'subcategory_label': 'Sub Category Label'
             },
             'labelCat': {
                 'type': 'Type',

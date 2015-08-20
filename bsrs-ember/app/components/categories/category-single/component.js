@@ -17,10 +17,13 @@ let CategorySingleComponent = Ember.Component.extend(ValidationMixin, {
             }
         },
         cancel() {
-            this.sendAction('cancel');
+            this.sendAction('redirectUser');
         },
         delete() {
-
+            var model = this.get('model');
+            var repository = this.get('repository');
+            repository.delete(model.get('id'));
+            this.sendAction('redirectUser');
         }
     } 
 });

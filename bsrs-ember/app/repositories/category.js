@@ -18,7 +18,7 @@ var CategoryRepo = Ember.Object.extend({
         });   
     },
     find() {
-        PromiseMixin.xhr(CATEGORY_URL + 'index/', 'GET').then((response) => {
+        PromiseMixin.xhr(CATEGORY_URL, 'GET').then((response) => {
             response.results.forEach((category) => {
                 var cat = this.get('store').push('category', category);
                 cat.save();
@@ -31,7 +31,11 @@ var CategoryRepo = Ember.Object.extend({
             this.get('store').push('category', response);
         });
         return this.get('store').find('category', id);
-    }
+    },
+    delete(id) {
+       PromiseMixin.xhr(CATEGORY_URL + id + '/', 'DELETE');
+       this.get('store').remove('category', id);
+    },
 });
 
 export default CategoryRepo;

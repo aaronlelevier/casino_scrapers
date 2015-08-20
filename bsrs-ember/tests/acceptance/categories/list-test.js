@@ -9,14 +9,15 @@ import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
-const CATEGORIES_URL = BASEURLS.base_categories_url + '/index';
+const BASE_URL = BASEURLS.base_categories_url;
+const CATEGORIES_URL = BASE_URL + '/index';
 
 let application;
 
 module('Acceptance | category-list', {
     beforeEach() {
         application = startApp();
-        let endpoint = PREFIX + CATEGORIES_URL + "/";
+        let endpoint = PREFIX + BASE_URL + "/";
         xhr(endpoint, "GET", null, {}, 200, CATEGORY_FIXTURES.list());
     },
     afterEach() {

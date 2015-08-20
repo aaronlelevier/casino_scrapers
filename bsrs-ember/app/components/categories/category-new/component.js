@@ -6,6 +6,9 @@ let CategoryNewComponent = Ember.Component.extend(ValidationMixin, {
     repository: inject('category'),
     nameValidation: validate('model.name'),
     descriptionValidation: validate('model.description'),
+    costCodeValidation: validate('model.cost_code'),
+    labelValidation: validate('model.label'),
+    subCategoryLabelValidation: validate('model.subcategory_label'),
     actions: {
         save() {
             this.set('submitted', true);
@@ -19,7 +22,7 @@ let CategoryNewComponent = Ember.Component.extend(ValidationMixin, {
         },
         cancel() {
             this.sendAction('redirectUser');
-        }
+        },
     }
 });
 

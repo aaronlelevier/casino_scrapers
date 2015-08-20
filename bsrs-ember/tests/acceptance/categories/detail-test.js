@@ -19,14 +19,15 @@ const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 const CANCEL_BTN = '.t-cancel-btn';
 
-let application, store, endpoint;
+let application, store, endpoint, list_xhr;
 
-module('sco Acceptance | detail test', {
+module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        endpoint = PREFIX + CATEGORIES_URL + '/';
-        xhr(PREFIX + BASE_URL + '/' + CATEGORY_DEFAULTS.idOne + '/', 'GET', null, {}, 200, CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne));
+        endpoint = PREFIX + BASE_URL + '/';
+        list_xhr = xhr(endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
+        xhr(endpoint + CATEGORY_DEFAULTS.idOne + '/', 'GET', null, {}, 200, CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne));
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -34,7 +35,6 @@ module('sco Acceptance | detail test', {
 });
 
 test('clicking a categories name will redirect to the given detail view', (assert) => {
-    xhr(endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
     visit(CATEGORIES_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
@@ -46,6 +46,7 @@ test('clicking a categories name will redirect to the given detail view', (asser
 });
 
 test('when you deep link to the category detail view you get bound attrs', (assert) => {
+    clearxhr(list_xhr);
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -77,6 +78,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     list.results[0].label = CATEGORY_DEFAULTS.labelTwo;
     list.results[0].cost_amount = CATEGORY_DEFAULTS.costAmountTwo;
     list.results[0].cost_code = CATEGORY_DEFAULTS.costCodeTwo;
+    //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me. 
     // let results = list.results[0];
     // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CATEGORY_DEFAULTS);
     xhr(endpoint, 'GET', null, {}, 200, list);
@@ -96,7 +98,6 @@ test('when you deep link to the category detail view you get bound attrs', (asse
 
 test('when you click cancel, you are redirected to the category list view', (assert) => {
     visit(DETAIL_URL);
-    xhr(endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
     click(CANCEL_BTN);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
@@ -116,7 +117,6 @@ test('when editing the category name to invalid, it checks for validation', (ass
     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    xhr(endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
@@ -124,6 +124,7 @@ test('when editing the category name to invalid, it checks for validation', (ass
 });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
+    clearxhr(list_xhr);
     visit(DETAIL_URL);
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
     click(CANCEL_BTN);
@@ -141,5 +142,14 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
             assert.equal(find('.t-category-name').val(), CATEGORY_DEFAULTS.nameTwo);
             assert.equal(find('.t-modal').is(':hidden'), true);
         });
+    });
+});
+
+test('when click delete, category is deleted and removed from store', (assert) => {
+    visit(DETAIL_URL);
+    xhr(PREFIX + BASE_URL + '/' + CATEGORY_DEFAULTS.idOne + '/', 'DELETE', null, {}, 204, {});
+    click('.t-delete-btn');
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
     });
 });

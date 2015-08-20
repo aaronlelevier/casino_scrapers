@@ -8,6 +8,21 @@ var CategoryNewRoute = Ember.Route.extend({
         return this.get('store').push('category', {id: pk});
     },
     actions: {
+        willTransition(transition) {
+            var model = this.currentModel;
+            if (model.get('isNew')) {
+                model.removeRecord();
+            } else if (model.get('isDirtyOrRelatedDirty')) {
+                Ember.$('.t-modal').modal('show');
+                this.trx.attemptedTransition = transition;
+                this.trx.attemptedTransitionModel = model;
+                this.trx.newModel = true;
+                this.trx.storeType = 'category';
+                transition.abort();
+            } else {
+                Ember.$('.t-modal').modal('hide');
+            }
+        },
         redirectUser() {
            this.transitionTo('admin.categories.index'); 
         }

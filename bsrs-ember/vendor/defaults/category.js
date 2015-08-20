@@ -21,6 +21,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             labelTwo: 'admin.category.labelCat.trade',
             labelThree: 'admin.category.labelCat.issue',
             subCatLabelOne: 'Trade',
+            subCatLabelTwo: 'Issue',
             parent: []
         };
     };
