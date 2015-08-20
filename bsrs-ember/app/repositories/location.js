@@ -11,11 +11,13 @@ var LocationRepo = Ember.Object.extend({
     insert(model) {
         return PromiseMixin.xhr(LOCATION_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });
     },
     update(model) {
         return PromiseMixin.xhr(LOCATION_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });
     },
     find() {

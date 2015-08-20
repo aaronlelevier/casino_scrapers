@@ -14,6 +14,7 @@ export default Model.extend({
     employee_id: attr(''),
     auth_amount: attr(''),
     role_fk: previous(),
+    location_fk: previous(),
     isModelDirty: false,
     dirtyModel: Ember.computed('isModelDirty', {
         get(key) {
@@ -57,8 +58,8 @@ export default Model.extend({
         var store = this.get('store');
         return store.find('address', {person: this.get('id')});
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', 'locationIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty') || this.get('locationIsDirty');
     }),
     roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
         let roles = this.get('role_property');
@@ -105,9 +106,17 @@ export default Model.extend({
             address.save();
         });
     },
+    saveLocation: function() {
+        var location = this.get('location');
+        if(location) {
+            location.save();
+        }
+    },
     saveRole: function() {
         var role = this.get('role');
-        role.save();
+        if(role) {
+            role.save();
+        }
     },
     saveRelated() {
         this.savePhoneNumbers();
@@ -138,6 +147,25 @@ export default Model.extend({
             new_role.save();
         }
     },
+    rollbackLocation() {
+        var store = this.get('store');
+        var previous_location_fk = this.get('_prevState.location_fk');
+
+        var current_location = this.get('location');
+        if(current_location) {
+            var current_location_people = current_location.get('people') || [];
+            current_location.set('people', current_location_people.filter((old_location_person_pk) => {
+                return old_location_person_pk !== this.get('id');
+            }));
+        }
+
+        var new_location = store.find('location', previous_location_fk);
+        if(new_location.get('id')) {
+            var location_people = new_location.get('people') || [];
+            new_location.set('people', location_people.concat([this.get('id')]));
+            new_location.save();
+        }
+    },
     rollbackPhoneNumbers() {
         var phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
@@ -150,6 +178,35 @@ export default Model.extend({
             address.rollback();
         });
     },
+    locationIsDirty: Ember.computed('locations.@each.isDirty', function() {
+        let locations = this.get('locations');
+        var location = locations.objectAt(0);
+        if(location) {
+            return location.get('isDirty');
+        }
+        return this.get('_prevState.location_fk') ? true : false;
+    }),
+    locationIsNotDirty: Ember.computed.not('locationIsDirty'),
+    location: Ember.computed('locations.[]', function() {
+        var locations = this.get('locations');
+        var has_location = locations.get('length') > 0;
+        var foreign_key = has_location ? locations.objectAt(0).get('id') : undefined;
+        this.set('location_fk', foreign_key);
+        if(has_location) {
+            return locations.objectAt(0);
+        }
+    }),
+    locations: Ember.computed(function() {
+        var store = this.get('store');
+        var filter = function(location) {
+            var people_pks = location.get('people') || [];
+            if(Ember.$.inArray(this.get('id'), people_pks) > -1) {
+                return true;
+            }
+            return false;
+        };
+        return store.find('location', filter.bind(this), ['people']);
+    }),
     createSerialize() {
         return {
             id: this.get('id'),

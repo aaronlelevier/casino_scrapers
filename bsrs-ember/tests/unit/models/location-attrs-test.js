@@ -1,11 +1,37 @@
+import Ember from 'ember';
 import {test, module} from 'qunit';
-import Location from 'bsrs-ember/models/location';
+import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 
-module('unit: location attrs test');
+var container, registry, store;
+
+module('unit: location attrs test', {
+    beforeEach() {
+        registry = new Ember.Registry();
+        container = registry.container();
+        store = module_registry(container, registry, ['model:location', 'model:location-level']);
+    },
+    afterEach() {
+        container = null;
+        registry = null;
+        store = null;
+    }
+});
+
+test('location is dirty or related is dirty when name has been updated', (assert) => {
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName});
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    location.set('name', LOCATION_DEFAULTS.storeNameTwo);
+    assert.ok(location.get('isDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    location.set('name', LOCATION_DEFAULTS.storeName);
+    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+});
 
 test('default state for name on location model is undefined', (assert) => {
-    var location = Location.create({id: LOCATION_DEFAULTS.idOne, name: undefined});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: undefined});
     assert.ok(location.get('isNotDirty'));
     location.set('name', 'ABC124');
     assert.ok(location.get('isDirty'));
@@ -13,12 +39,11 @@ test('default state for name on location model is undefined', (assert) => {
     assert.ok(location.get('isNotDirty'));
 });
 
-test('default state for number on location model is undefined', (assert) => {
-    var location = Location.create({id: LOCATION_DEFAULTS.idOne, number: undefined});
+test('default state for people on location model', (assert) => {
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, people: undefined});
     assert.ok(location.get('isNotDirty'));
-    location.set('number', 'ZZZ124');
+    location.set('people', [1, 2, 3]);
     assert.ok(location.get('isDirty'));
-    location.set('number', '');
+    location.set('people', []);
     assert.ok(location.get('isNotDirty'));
 });
-

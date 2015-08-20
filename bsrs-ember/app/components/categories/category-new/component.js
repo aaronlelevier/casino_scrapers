@@ -2,25 +2,28 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var LocationsNewComponent = Ember.Component.extend(ValidationMixin, {
-    repository: inject('location'),
+let CategoryNewComponent = Ember.Component.extend(ValidationMixin, {
+    repository: inject('category'),
     nameValidation: validate('model.name'),
-    numberValidation: validate('model.number'),
+    descriptionValidation: validate('model.description'),
+    costCodeValidation: validate('model.cost_code'),
+    labelValidation: validate('model.label'),
+    subCategoryLabelValidation: validate('model.subcategory_label'),
     actions: {
-        saveLocation() {
+        save() {
             this.set('submitted', true);
             if (this.get('valid')) {
                 var model = this.get('model');
                 var repository = this.get('repository');
                 repository.insert(model).then(() => {
-                    this.sendAction('saveLocation');
+                    this.sendAction('save');
                 });
             }
         },
-        cancelLocation() {
+        cancel() {
             this.sendAction('redirectUser');
-        }
+        },
     }
 });
 
-export default LocationsNewComponent;
+export default CategoryNewComponent;

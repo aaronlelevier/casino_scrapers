@@ -24,7 +24,7 @@ test('renders a component with no value when bound attr is undefined', function(
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
     var $component = this.$('.t-input-currency');
-    assert.equal($component.find('.t-person-auth_amount').val(), '');
+    assert.equal($component.find('.t-amount').val(), '');
 });
 
 test('renders a component with currency and label', function(assert) {
@@ -34,7 +34,7 @@ test('renders a component with currency and label', function(assert) {
     var $component = this.$('.t-input-currency');
     assert.equal($component.find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol_native);
     assert.equal($component.find('.t-currency-code').text().trim(), CURRENCY_DEFAULTS.code);
-    assert.equal($component.find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
+    assert.equal($component.find('.t-amount').val(), PEOPLE_DEFAULTS.auth_amount);
 });
 
 test('the models bound field will update both the formatted input value and the model itself', function(assert) {
@@ -42,9 +42,9 @@ test('the models bound field will update both the formatted input value and the 
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
     var $component = this.$('.t-input-currency');
-    $component.find('.t-person-auth_amount').val('30').trigger('change');
+    $component.find('.t-amount').val('30').trigger('change');
     assert.equal($component.find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol_native);
     assert.equal($component.find('.t-currency-code').text().trim(), CURRENCY_DEFAULTS.code);
-    assert.equal($component.find('.t-person-auth_amount').val(), '30.00');
+    assert.equal($component.find('.t-amount').val(), '30.00');
     assert.equal(model.get('auth_amount'), '30');
 });

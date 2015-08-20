@@ -2,25 +2,32 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var CategorySingleComponent = Ember.Component.extend(ValidationMixin, {
+let CategorySingleComponent = Ember.Component.extend(ValidationMixin, {
     repository: inject('category'),
     nameValidation: validate('model.name'),
+    descriptionValidation: validate('model.description'),
+    costCodeValidation: validate('model.cost_code'),
+    labelValidation: validate('model.label'),
+    subCategoryLabelValidation: validate('model.subcategory_label'),
     actions: {
         save() {
             this.set('submitted', true);
             if (this.get('valid')) {
-                var model = this.get('model');
-                var repository = this.get('repository');
+                let model = this.get('model');
+                let repository = this.get('repository');
                 repository.update(model).then(() => {
                     this.sendAction('save');
                 });
             }
         },
         cancel() {
-            this.sendAction('cancel');
+            this.sendAction('redirectUser');
         },
         delete() {
-
+            var model = this.get('model');
+            var repository = this.get('repository');
+            repository.delete(model.get('id'));
+            this.sendAction('redirectUser');
         }
     } 
 });

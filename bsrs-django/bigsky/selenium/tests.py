@@ -39,7 +39,7 @@ class LoginTests(unittest.TestCase, JavascriptMixin, LoginMixin, FillInHelper, M
         location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
         location_name_input.send_keys(new_location_name)
         location_number_input.send_keys(new_location_number)
-        location_level_input.select_by_index(0)
+        location_level_input.select_by_index(1)
         self.driver.find_element_by_class_name("t-save-btn").click()
         all_locations = self.wait_for_xhr_request("t-location-data", plural=True)
         new_location = all_locations[len(all_locations) - 1]
@@ -78,7 +78,7 @@ class LoginTests(unittest.TestCase, JavascriptMixin, LoginMixin, FillInHelper, M
         location_level_input = Select(self.driver.find_element_by_id("location_level_select"))
         name_input.send_keys(new_name)
         role_type_input.select_by_index(0)
-        location_level_input.select_by_index(0)
+        location_level_input.select_by_index(1)
         self.driver.find_element_by_class_name("t-save-btn").click()
         all_roles = self.wait_for_xhr_request("t-role-data", plural=True)
         new_role = all_roles[len(all_roles) - 1]

@@ -10,6 +10,7 @@ import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
 import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
+import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
 var container, registry, store;
@@ -18,7 +19,7 @@ module('unit: person test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();
-        store = module_registry(container, registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address','service:currency']);
+        store = module_registry(container, registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'service:currency']);
         store.push('currency', CurrencyDefaults);
     },
     afterEach() {
@@ -49,7 +50,7 @@ test('related addresses are not dirty when no addresses present', (assert) => {
     assert.ok(person.get('addressesIsNotDirty'));
 });
 
-test('related role should return first role or empty array', (assert) => {
+test('related role should return first role or undefined', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, people: [PEOPLE_DEFAULTS.id]});
     var role = person.get('role');
@@ -481,4 +482,177 @@ test('rollback role will reset the previously used role when switching from one 
     assert.deepEqual(another_role.get('people'), [PEOPLE_DEFAULTS.unusedId]);
     assert.ok(another_role.get('isNotDirty'));
     assert.ok(admin_role.get('isNotDirty'));
+});
+
+test('related location should return first location or undefined', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, people: [PEOPLE_DEFAULTS.id]});
+    var location = person.get('location');
+    assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
+    location.set('people', [PEOPLE_DEFAULTS.unused]);
+    assert.equal(person.get('location'), undefined);
+});
+
+test('related location is not dirty when no location present', (assert) => {
+    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, people: [PEOPLE_DEFAULTS.unusedId]});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    assert.ok(person.get('locationIsNotDirty'));
+    assert.equal(person.get('location'), undefined);
+});
+
+test('related location is not dirty with original location model', (assert) => {
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, people: [PEOPLE_DEFAULTS.id]});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    assert.ok(person.get('locationIsNotDirty'));
+    location.set('name', LOCATION_DEFAULTS.storeNameTwo);
+    assert.ok(location.get('isDirty'));
+    assert.ok(person.get('locationIsDirty'));
+    assert.equal(person.get('location.name'), LOCATION_DEFAULTS.storeNameTwo);
+});
+
+test('related location only returns the single matching item even when multiple locations exist', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    store.push('location', {id: LOCATION_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id, PEOPLE_DEFAULTS.unusedId]});
+    store.push('location', {id: LOCATION_DEFAULTS.idTwo, people: ['123-abc-defg']});
+    var location = person.get('location');
+    assert.equal(location.get('id'), LOCATION_DEFAULTS.idOne);
+});
+
+test('related location will update when the locations people array suddenly has the person pk', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.unusedId]});
+    assert.equal(person.get('location'), undefined);
+    location.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
+    assert.ok(person.get('location'));
+    assert.equal(person.get('location.id'), LOCATION_DEFAULTS.idOne);
+});
+
+test('related location will update when the locations people array suddenly removes the person', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
+    assert.ok(person.get('location'));
+    assert.equal(person.get('location.id'), LOCATION_DEFAULTS.idOne);
+    location.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    assert.equal(person.get('location'), undefined);
+});
+
+test('when location is changed dirty tracking works as expected', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    location.set('name', LOCATION_DEFAULTS.storeName);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    location.rollback();
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    location.set('name', LOCATION_DEFAULTS.storeNameTwo);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    location.rollback();
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('when location is suddently assigned it shows as a dirty relationship (starting undefined)', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, people: undefined});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    location.set('people', [PEOPLE_DEFAULTS.id]);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
+test('when location is suddently assigned it shows as a dirty relationship (starting empty array)', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, people: []});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    location.set('people', [PEOPLE_DEFAULTS.id]);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
+test('when location is suddently assigned it shows as a dirty relationship (starting with legit value)', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, people: [PEOPLE_DEFAULTS.unusedId]});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    location.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
+//TODO: add location_fk to the deserializer when we get back to the acceptance tests
+test('when location is suddently removed it shows as a dirty relationship', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, location_fk: LOCATION_DEFAULTS.idOne});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    location.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    location.save();
+    assert.equal(person.get('location'), undefined);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+});
+
+test('rollback location will reset the previously used location when switching from valid location to nothing', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, location_fk: LOCATION_DEFAULTS.idTwo});
+    var first_location = store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeName, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
+    var second_location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo, people: [PEOPLE_DEFAULTS.unusedId]});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(person.get('location.name'), LOCATION_DEFAULTS.storeName);
+    first_location.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    first_location.save();
+    second_location.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
+    assert.equal(person.get('location.name'), LOCATION_DEFAULTS.storeNameTwo);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.save();
+    person.saveRelated();
+    second_location.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    second_location.save();
+    assert.equal(person.get('location'), undefined);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.rollback();
+    person.rollbackLocation();
+    assert.equal(person.get('location.name'), LOCATION_DEFAULTS.storeNameTwo);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('rollback location will reset the previously used location when switching from one location to another', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, location_fk: LOCATION_DEFAULTS.idTwo});
+    var first_location = store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeName, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
+    var second_location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo, people: [PEOPLE_DEFAULTS.unusedId]});
+    var another_location = store.push('location', {id: 'af34ee9b-833c-4f3e-a584-b6851d1e12c4', name: 'another', people: [PEOPLE_DEFAULTS.unusedId]});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(person.get('location.name'), LOCATION_DEFAULTS.storeName);
+    first_location.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    first_location.save();
+    second_location.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
+    assert.equal(person.get('location.name'), LOCATION_DEFAULTS.storeNameTwo);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.save();
+    person.saveRelated();
+    second_location.set('people', [PEOPLE_DEFAULTS.unusedId]);
+    second_location.save();
+    another_location.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
+    assert.equal(person.get('location.name'), 'another');
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.rollback();
+    person.rollbackLocation();
+    assert.equal(person.get('location.name'), LOCATION_DEFAULTS.storeNameTwo);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.deepEqual(another_location.get('people'), [PEOPLE_DEFAULTS.unusedId]);
+    assert.ok(another_location.get('isNotDirty'));
+    assert.ok(second_location.get('isNotDirty'));
 });

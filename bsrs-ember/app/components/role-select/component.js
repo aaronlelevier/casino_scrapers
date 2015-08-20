@@ -11,7 +11,7 @@ export default Ember.Component.extend({
 
             var new_role_people = new_role.get('people') || [];
 
-            Ember.run(function() {
+            Ember.run(() => {
                 if(new_role.get('content')) {
                     new_role.set('people', new_role_people.concat([person_id]));
                 }
