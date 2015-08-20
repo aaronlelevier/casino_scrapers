@@ -17,14 +17,14 @@ var BSRS_PEOPLE_FACTORY = (function() {
             last_name : this.person_defaults.last_name,
             title : this.person_defaults.title,
             employee_id : this.person_defaults.employee_id,
-            location : '',
             auth_amount : this.person_defaults.auth_amount,
             status : {
                 'id': this.status_defaults.activeId,
                 'name': 'admin.person.status.active'
             },
             role: this.role_fixtures.get(),
-            emails: this.person_defaults.emails
+            emails: this.person_defaults.emails,
+            locations: []
         }
     },
     factory.prototype.list = function() {
@@ -132,8 +132,8 @@ if (typeof window === 'undefined') {
     var location_level_defaults = require('../vendor/defaults/location-level');
     module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures);
 } else {
-    define('bsrs-ember/vendor/people_fixtures', ['exports', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/phone_number_fixtures', 
-           'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/role_fixtures'], 
+    define('bsrs-ember/vendor/people_fixtures', ['exports', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/phone_number_fixtures',
+           'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/role_fixtures'],
            function (exports, address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures) {
         'use strict';
         return new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures);
