@@ -10,6 +10,7 @@ from location.models import (Location, LocationLevel, LocationStatus,
 from location.serializers import (LocationCreateSerializer,
     LocationUpdateSerializer)
 from person.tests.factory import create_person, PASSWORD
+from util import create
 
 
 ### LOCATION LEVEL
@@ -240,7 +241,7 @@ class LocationCreateTests(APITestCase):
         new_uuid = str(uuid.uuid4())
         data.update({
             'id': new_uuid,
-            'number': 'new store number'
+            'number': create._generate_chars()
         })
         # Test
         response = self.client.post('/api/admin/locations/', data, format='json')

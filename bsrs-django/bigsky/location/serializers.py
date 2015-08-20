@@ -101,11 +101,3 @@ class LocationUpdateSerializer(serializers.ModelSerializer):
         model = Location
         fields = ('id', 'name', 'number', 'status', 'location_level',
             'parents', 'children',)
-
-
-
-
-
-
-
-
