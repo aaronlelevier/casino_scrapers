@@ -153,3 +153,79 @@ test('when click delete, category is deleted and removed from store', (assert) =
         assert.equal(currentURL(), CATEGORIES_URL);
     });
 });
+
+test('sco validation works and when hit save, we do same post', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-description-validation-error').is(':hidden'));
+        assert.ok(find('.t-cost-code-validation-error').is(':hidden'));
+        assert.ok(find('.t-label-validation-error').is(':hidden'));
+        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
+    });
+    fillIn('.t-category-name', '');
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.ok(find('.t-name-validation-error').is(':visible'));
+        assert.ok(find('.t-description-validation-error').is(':hidden'));
+        assert.ok(find('.t-cost-code-validation-error').is(':hidden'));
+        assert.ok(find('.t-label-validation-error').is(':hidden'));
+        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
+    });
+    fillIn('.t-category-description', '');
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.ok(find('.t-name-validation-error').is(':visible'));
+        assert.ok(find('.t-description-validation-error').is(':visible'));
+        assert.ok(find('.t-cost-code-validation-error').is(':hidden'));
+        assert.ok(find('.t-label-validation-error').is(':hidden'));
+        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
+    });
+    fillIn('.t-category-cost-code', '');
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.ok(find('.t-name-validation-error').is(':visible'));
+        assert.ok(find('.t-description-validation-error').is(':visible'));
+        assert.ok(find('.t-cost-code-validation-error').is(':visible'));
+        assert.ok(find('.t-label-validation-error').is(':hidden'));
+        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
+    });
+    fillIn('.t-category-label', '');
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.ok(find('.t-name-validation-error').is(':visible'));
+        assert.ok(find('.t-description-validation-error').is(':visible'));
+        assert.ok(find('.t-cost-code-validation-error').is(':visible'));
+        assert.ok(find('.t-label-validation-error').is(':visible'));
+        assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
+    });
+    fillIn('.t-category-subcategory-label', '');
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.ok(find('.t-name-validation-error').is(':visible'));
+        assert.ok(find('.t-description-validation-error').is(':visible'));
+        assert.ok(find('.t-cost-code-validation-error').is(':visible'));
+        assert.ok(find('.t-label-validation-error').is(':visible'));
+        assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
+    });
+    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
+    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
+    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
+    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
+    fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
+    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, description: CATEGORY_DEFAULTS.descriptionMaintenance, 
+    label: CATEGORY_DEFAULTS.labelOne, subcategory_label: CATEGORY_DEFAULTS.subCatLabelTwo, cost_amount: CATEGORY_DEFAULTS.costAmountOne, cost_code: CATEGORY_DEFAULTS.costCodeOne});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
