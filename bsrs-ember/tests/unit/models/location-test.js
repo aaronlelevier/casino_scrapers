@@ -120,7 +120,6 @@ test('when location has location-level suddently assigned it shows as a dirty re
     assert.ok(location.get('isDirtyOrRelatedDirty'));
 });
 
-//TODO: add location_level_fk to the deserializer when we get back to the acceptance tests
 test('when location has location-level suddently removed it shows as a dirty relationship', (assert) => {
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, locations: [LOCATION_DEFAULTS.unusedId, LOCATION_DEFAULTS.idOne]});
