@@ -52,7 +52,7 @@ class LocationTypeSerializer(BaseCreateSerializer):
 
 ### LOCATION
 
-class LocationIdNameSerializer(serializers.ModelSerializer):
+class LocationIdNameSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Location

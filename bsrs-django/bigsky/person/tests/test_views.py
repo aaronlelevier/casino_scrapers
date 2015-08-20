@@ -210,8 +210,7 @@ class PersonDetailTests(TestCase):
         create_person_and_contacts(self.person)
         # Location
         self.location = mommy.make(Location)
-        self.person.location = self.location
-        self.person.save()
+        self.person.locations.add(self.location)
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
         # GET data
@@ -225,8 +224,8 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['username'], self.person.username)
 
     def test_location(self):
-        self.assertTrue(self.data['location'])
-        location = Location.objects.get(id=self.data['location']['id'])
+        self.assertTrue(self.data['locations'])
+        location = Location.objects.get(id=self.data['locations'][0]['id'])
         self.assertIsInstance(location, Location)
 
     def test_emails(self):
@@ -307,11 +306,14 @@ class PersonPutTests(APITestCase):
 
     def test_location(self):
         location = mommy.make(Location)
-        self.data['location'] = str(location.id)
+        self.data['locations'].append(str(location.id))
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
         data = json.loads(response.content)
-        self.assertTrue(data['location'])
-        self.assertEqual(Person.objects.get(id=self.data['id']).location, location)
+        self.assertTrue(data['locations'])
+        self.assertIn(
+            location.id,
+            Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
+            )
 
     def test_update_email_add_to_person(self):
         self.assertFalse(self.data['emails'])

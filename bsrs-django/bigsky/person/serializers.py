@@ -83,11 +83,11 @@ class PersonDetailSerializer(serializers.ModelSerializer):
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)
-    location = LocationIdNameSerializer()
+    locations = LocationIdNameSerializer(many=True)
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS + ('location', 'emails', 'phone_numbers', 'addresses',)
+        fields = PERSON_FIELDS + ('locations', 'emails', 'phone_numbers', 'addresses',)
 
 
 class PersonUpdateSerializer(serializers.ModelSerializer):
@@ -100,7 +100,7 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS + ('location', 'emails', 'phone_numbers', 'addresses',)
+        fields = PERSON_FIELDS + ('locations', 'emails', 'phone_numbers', 'addresses',)
 
     def update(self, instance, validated_data):
         phone_numbers = validated_data.pop('phone_numbers', [])
