@@ -19,7 +19,7 @@ module('unit: location test', {
     }
 });
 
-test('related location-level should return first location-level or empty array', (assert) => {
+test('related location-level should return first location-level or undefined', (assert) => {
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne});
     store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, locations: [LOCATION_DEFAULTS.idOne]});
     var location_level = location.get('location_level');

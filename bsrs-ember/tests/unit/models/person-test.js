@@ -50,7 +50,7 @@ test('related addresses are not dirty when no addresses present', (assert) => {
     assert.ok(person.get('addressesIsNotDirty'));
 });
 
-test('related role should return first role or empty array', (assert) => {
+test('related role should return first role or undefined', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, people: [PEOPLE_DEFAULTS.id]});
     var role = person.get('role');
@@ -484,7 +484,7 @@ test('rollback role will reset the previously used role when switching from one 
     assert.ok(admin_role.get('isNotDirty'));
 });
 
-test('related location should return first location or empty array', (assert) => {
+test('related location should return first location or undefined', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, people: [PEOPLE_DEFAULTS.id]});
     var location = person.get('location');
