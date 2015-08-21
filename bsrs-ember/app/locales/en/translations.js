@@ -187,10 +187,6 @@ export default {
                 'future': 'Closed'
             },
 		},
-		'locationOrg':{
-			'one': 'Location Organization',
-			'other': 'Location Organization'
-		},
 		'category': {
 			'one': 'Category',
 			'other': 'Categories',
