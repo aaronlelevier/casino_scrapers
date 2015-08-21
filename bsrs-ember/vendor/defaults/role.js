@@ -15,7 +15,8 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
             locationLevelNameTwo: this.location_level.nameRegion,
             locationLevelOne: this.location_level.idOne,
             locationLevelTwo: this.location_level.idTwo,
-            categories: []
+            categories: [],
+            unusedId: 'af34ee9b-833c-4f3e-a584-b6851d1e04b3', 
         };
     };
     return factory;
