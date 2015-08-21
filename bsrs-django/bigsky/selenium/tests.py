@@ -57,20 +57,23 @@ class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unitte
         self.assertIn(new_role_name, [r.find_elements_by_tag_name('td')[1].text for r in all_roles])
 
     def test_role_update(self):
+        # click on Role to Update it
         all_roles = self.wait_for_xhr_request("t-role-data", plural=True)
+        new_role_name = '- updated'
+        final_new_role_name = all_roles[0].find_elements_by_tag_name('td')[1].text + new_role_name
         all_roles[0].click()
-        new_role_name = 'my updated role name'
-
+        # update name
         name_input = WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.ID, "name"))
         )
-        name_input.clear() # not sure why have to call ``clear()`` 2x here, but in
-        name_input.clear() # browser manual tests 1x call works?!
-
         name_input.send_keys(new_role_name)
         self.driver.find_element_by_class_name("t-save-btn").click()
+        # check name change
         all_roles = self.wait_for_xhr_request("t-role-data", plural=True)
-        self.assertIn(new_role_name, [r.find_elements_by_tag_name('td')[1].text for r in all_roles])
+        self.assertIn(
+            final_new_role_name,
+            [r.find_elements_by_tag_name('td')[1].text for r in all_roles]
+        )
 
 
 class LocationTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
@@ -176,19 +179,21 @@ class LocationLevelTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelper
         self.assertIn("Missing translation: "+new_name, [e.find_elements_by_tag_name('td')[1].text for e in all_locations])
 
     def test_location_level_update(self):
-        updated_name = "my new name"
         # go to Detail view
-        self.wait_for_xhr_request("t-location-level-data", plural=True)[0].click()
+        all_levels = self.wait_for_xhr_request("t-location-level-data", plural=True)
+        updated_name = "- updated"
+        final_updated_name = all_levels[0].find_elements_by_tag_name('td')[1].text + updated_name
+        all_levels[0].click()
         # update name
         name_input = self.driver.find_element_by_id("location_level_name")
-        name_input.clear()
-        name_input.clear()
         name_input.send_keys(updated_name)
         self.driver.find_element_by_class_name("t-save-btn").click()
         # updated name shows in List view
-        time.sleep(10)
-        all_locations = self.wait_for_xhr_request("t-location-level-data", plural=True)
-        self.assertIn("Missing translation: "+updated_name, [e.find_elements_by_tag_name('td')[1].text for e in all_locations])
+        all_levels = self.wait_for_xhr_request("t-location-level-data", plural=True)
+        self.assertIn(
+            final_updated_name,
+            [r.find_elements_by_tag_name('td')[1].text for r in all_levels]
+        )
 
 
 class PersonTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
