@@ -32,3 +32,6 @@ from .person_page import (
 from .url_helper import (
     URLHelper
 )
+from .wait_helpers import (
+    Wait
+)
