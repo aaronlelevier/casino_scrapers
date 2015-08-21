@@ -289,3 +289,26 @@ class LocationUpdateTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content)
         self.assertEqual(data['status'], str(new_status.id))
+
+
+class DRFFiltersTests(APITestCase):
+
+    def setUp(self):
+        create_locations()
+        self.location = Location.objects.get(name='ca')
+        self.location_level = self.location.location_level
+        # Login
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_location_level_filter(self):
+        response = self.client.get('/api/admin/locations/?location_level={}'
+            .format(self.location_level.id))
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['count'],
+            Location.objects.filter(location_level=self.location_level).count()
+        )

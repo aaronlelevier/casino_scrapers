@@ -78,7 +78,8 @@ class RoleViewSetTests(APITestCase):
             "role_type": self.role.role_type,
             "location_level": self.role.location_level.id
         }
-        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id), role_data, format='json')
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         new_role_data = json.loads(response.content)
         self.assertNotEqual(self.role.name, new_role_data['name'])
@@ -287,27 +288,31 @@ class PersonPutTests(APITestCase):
     def test_auth_amount(self):
         new_auth_amount = '1234.1010'
         self.data['auth_amount'] = new_auth_amount
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         data = json.loads(response.content)
         self.assertEqual(new_auth_amount, data['auth_amount'])
 
     def test_no_change(self):
         # Confirm the ``self.data`` structure is correct
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         self.assertEqual(response.status_code, 200)
 
     def test_update_person(self):
         new_title = "new_title"
         self.assertNotEqual(new_title, self.data['title'])
         self.data['title'] = new_title
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         data = json.loads(response.content)
         self.assertEqual(new_title, data['title'])
 
     def test_location(self):
         location = mommy.make(Location)
         self.data['locations'].append(str(location.id))
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         data = json.loads(response.content)
         self.assertTrue(data['locations'])
         self.assertIn(
@@ -323,7 +328,8 @@ class PersonPutTests(APITestCase):
             'email': 'mail@mail.com',
             'person': str(self.person.id)
         }]
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         data = json.loads(response.content)
         self.assertTrue(data['emails'])
         self.assertEqual(
@@ -339,7 +345,8 @@ class PersonPutTests(APITestCase):
             'number': create._generate_ph(),
             'person': str(self.person.id)
         }]
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         data = json.loads(response.content)
         self.assertTrue(data['phone_numbers'])
         self.assertEqual(
@@ -352,7 +359,8 @@ class PersonPutTests(APITestCase):
         # Person FK on Contact Nested Model
         create_person_and_contacts(self.person)
         # Post standard data w/o contacts
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         self.assertEqual(response.status_code, 200)
         # Nested Contacts should be empty!
         self.assertFalse(self.person.emails.all())
@@ -366,7 +374,8 @@ class PersonPutTests(APITestCase):
             'person': str(self.person.id)
         }]
         # Post standard data w/o contacts
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertTrue(data['phone_numbers'])
