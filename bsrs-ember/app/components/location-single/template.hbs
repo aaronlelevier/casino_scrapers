@@ -1,7 +1,7 @@
 <form {{action "return false" this on="submit"}}>
 	<header>
 		<h1>{{model.name}}</h1>
-		<div class="btn-group btn-group-sm pull-right center-block">
+		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
 			{{button-generic save="saveLocation" type="save"}}
 			{{button-generic cancel="cancelLocation" type="cancel"}}
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -20,7 +20,68 @@ def get_text_excluding_children(driver, element):
     """, element)
 
 
-class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
+# class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
+
+#     def setUp(self):
+#         self.driver = webdriver.Firefox()
+#         self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
+#         self.login()
+#         # Wait
+#         self.driver_wait = Wait(self.driver)
+#         # Go to Role Area
+#         self.driver_wait.find_element_by_class_name("t-nav-admin").click()
+#         self.driver_wait.find_element_by_class_name("t-nav-admin-role").click()
+
+#     def tearDown(self):
+#         self.driver.close()
+
+#     def test_role_create(self):
+#         # the "new_role_name" is the 2nd <td> in the <table>, so loop thro
+#         # the <table> and confirm the newly created Role is there.
+#         self.driver_wait.find_element_by_class_name("t-role-new").click()
+#         # New Role Data
+#         new_role_name = str(uuid.uuid4())[0:10]
+#         name_input = self.driver_wait.find_element_by_id("name")
+#         name_input.send_keys(new_role_name)
+#         self.driver_wait.find_element_by_class_name("t-save-btn").click()
+#         # new Role in List view
+#         all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
+#         self.assertIn(new_role_name, [r.find_elements_by_tag_name('td')[1].text for r in all_roles])
+
+#     def test_role_update(self):
+#         # Go to the first Role's Detail view
+#         all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
+#         new_role_name = '- updated'
+#         final_new_role_name = all_roles[0].find_elements_by_tag_name('td')[1].text + new_role_name
+#         all_roles[0].click()
+#         # click 'save' on Role to Update it
+#         name_input = self.driver_wait.find_element_by_id("name")
+#         name_input.send_keys(new_role_name)
+#         self.driver_wait.find_element_by_class_name("t-save-btn").click()
+#         # check name change
+#         all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
+#         self.assertIn(
+#             final_new_role_name,
+#             [r.find_elements_by_tag_name('td')[1].text for r in all_roles]
+#         )
+
+#     def test_role_delete(self):
+#         # Go to the first Role's Detail view
+#         all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
+#         role_name = all_roles[0].find_elements_by_tag_name('td')[1].text
+#         all_roles[0].click()
+#         # click Delete
+#         self.driver_wait.find_element_by_class_name("dropdown-toggle").click()
+#         self.driver_wait.find_element_by_class_name("t-delete-btn").click()
+#         # check Role is deleted
+#         all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
+#         self.assertNotIn(
+#             role_name,
+#             [r.find_elements_by_tag_name('td')[1].text for r in all_roles]
+#         )
+
+
+class LocationTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
 
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -30,110 +91,54 @@ class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unitte
         self.driver_wait = Wait(self.driver)
         # Go to Role Area
         self.driver_wait.find_element_by_class_name("t-nav-admin").click()
-        self.driver_wait.find_element_by_class_name("t-nav-admin-role").click()
+        self.driver_wait.find_element_by_class_name("t-nav-admin-location").click()
 
     def tearDown(self):
         self.driver.close()
 
-    def test_role_create(self):
-        # the "new_role_name" is the 2nd <td> in the <table>, so loop thro
-        # the <table> and confirm the newly created Role is there.
-        self.driver_wait.find_element_by_class_name("t-role-new").click()
-        # New Role Data
-        new_role_name = str(uuid.uuid4())[0:10]
-        name_input = self.driver_wait.find_element_by_id("name")
-        name_input.send_keys(new_role_name)
-        self.driver_wait.find_element_by_class_name("t-save-btn").click()
-        # new Role in List view
-        all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
-        self.assertIn(new_role_name, [r.find_elements_by_tag_name('td')[1].text for r in all_roles])
+    # def test_create(self):
+    #     # Get to "Location create view"
+    #     new_location = self.driver_wait.find_element_by_class_name("t-location-new").click()
+    #     # Enter info and hit "save"
+    #     new_location_name = str(uuid.uuid4())[0:10]
+    #     new_location_number = str(uuid.uuid4())[0:8]
+    #     new_location_level = str(uuid.uuid4())[0:29]
+    #     location_name_input = self.driver_wait.find_element_by_id("location_name")
+    #     location_number_input = self.driver_wait.find_element_by_id("location_number")
+    #     location_level_input = Select(self.driver_wait.find_element_by_id("location_location_level_select"))
+    #     location_name_input.send_keys(new_location_name)
+    #     location_number_input.send_keys(new_location_number)
+    #     location_level_input.select_by_index(1)
+    #     self.driver_wait.find_element_by_class_name("t-save-btn").click()
+    #     # Go to newly created Location's Detail view
+    #     locations = self.driver_wait.find_elements_by_class_name("t-location-data")
+    #     self.driver.find_element_by_xpath("//*[text()='{0}']".format(new_location_name)).click()
+    #     # Verify info
+    #     location_name_input = self.driver_wait.find_element_by_class_name("t-location-name")
+    #     location_number_input = self.driver_wait.find_element_by_class_name("t-location-number")
+    #     self.assertEqual(location_name_input.get_attribute("value"), new_location_name)
+    #     self.assertEqual(location_number_input.get_attribute("value"), new_location_number)
 
-    def test_role_update(self):
-        # Go to the first Role's Detail view
-        all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
-        new_role_name = '- updated'
-        final_new_role_name = all_roles[0].find_elements_by_tag_name('td')[1].text + new_role_name
-        all_roles[0].click()
-        # click 'save' on Role to Update it
-        name_input = self.driver_wait.find_element_by_id("name")
-        name_input.send_keys(new_role_name)
+    def test_update(self):
+        # Go to Location Detail view
+        location = self.driver_wait.find_elements_by_class_name("t-location-data")[0].click()
+        # Change name and hit "save"
+        updated_location_name = "DEF STORE"
+        location_name_input = self.driver_wait.find_element_by_id("location_name")
+        location_name_input.clear()
+        location_name_input.clear()
+        location_name_input.send_keys(updated_location_name)
         self.driver_wait.find_element_by_class_name("t-save-btn").click()
-        # check name change
-        all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
+        # List view contains new name
+        all_locations = self.driver_wait.find_elements_by_class_name("t-location-data")
         self.assertIn(
-            final_new_role_name,
-            [r.find_elements_by_tag_name('td')[1].text for r in all_roles]
+            updated_location_name,
+            [r.find_elements_by_tag_name('td')[1].text for r in all_locations]
         )
 
-    def test_role_delete(self):
-        # Go to the first Role's Detail view
-        all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
-        role_name = all_roles[0].find_elements_by_tag_name('td')[1].text
-        all_roles[0].click()
-        # click Delete
-        self.driver_wait.find_element_by_class_name("dropdown-toggle").click()
-        self.driver_wait.find_element_by_class_name("t-delete-btn").click()
-        # check Role is deleted
-        all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
-        self.assertNotIn(
-            role_name,
-            [r.find_elements_by_tag_name('td')[1].text for r in all_roles]
-        )
+    def test_delete(self):
+        pass
 
-
-
-# class LocationTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
-
-#     def setUp(self):
-#         self.driver = webdriver.Firefox()
-#         self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
-#         self.login()
-#         # Go to Role Area
-#         self.driver.find_element_by_class_name("t-nav-admin").click()
-#         self.wait_for_xhr_request("t-nav-admin-location").click()
-
-#     def tearDown(self):
-#         self.driver.close()
-
-#     def test_location_create(self):
-#         # Get to "Location create view"
-#         new_location = self.wait_for_xhr_request("t-location-new").click()
-#         # Enter info and hit "save"
-#         new_location_name = str(uuid.uuid4())[0:10]
-#         new_location_number = str(uuid.uuid4())[0:8]
-#         new_location_level = str(uuid.uuid4())[0:29]
-#         location_name_input = self.driver.find_element_by_id("location_name")
-#         location_number_input = self.driver.find_element_by_id("location_number")
-#         location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
-#         location_name_input.send_keys(new_location_name)
-#         location_number_input.send_keys(new_location_number)
-#         location_level_input.select_by_index(1)
-#         self.driver.find_element_by_class_name("t-save-btn").click()
-#         # Go to newly created Location's Detail view
-#         locations = self.wait_for_xhr_request("t-location-data", plural=True)
-#         for location in locations:
-#             if location.find_elements_by_tag_name('td')[2].text == new_location_number:
-#                 location.click()
-#         # Verify info
-#         location_name_input = self.wait_for_xhr_request("t-location-name")
-#         location_number_input = self.wait_for_xhr_request("t-location-number")
-#         location_level_input = self.wait_for_xhr_request("t-location-level")
-#         self.assertEqual(location_name_input.get_attribute("value"), new_location_name)
-#         self.assertEqual(location_number_input.get_attribute("value"), new_location_number)
-
-#     def test_location_update(self):
-#         # Go to Location Detail view
-#         location = self.wait_for_xhr_request("t-location-data", plural=True)[0].click()
-#         # Change name and hit "save"
-#         updated_location_name = "DEF STORE"
-#         location_name_input = self.driver.find_element_by_id("location_name")
-#         location_name_input.clear()
-#         location_name_input.clear()
-#         location_name_input.send_keys(updated_location_name)
-#         self.driver.find_element_by_class_name("t-save-btn").click()
-#         # List view contains new name
-#         all_locations = self.wait_for_xhr_request("t-location-data", plural=True)
-#         self.assertIn(updated_location_name, [r.find_elements_by_tag_name('td')[1].text for r in all_locations])
 
 
 # class LocationLevelTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
