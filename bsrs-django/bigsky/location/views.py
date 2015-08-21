@@ -86,6 +86,7 @@ class LocationTypeViewSet(BaseModelViewSet):
 ### LOCATION
 
 class LocationFilterSet(filters.FilterSet):
+
     location_level = filters.AllLookupsFilter(name='location_level')
     
     class Meta:
@@ -123,7 +124,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        LocationLevel ID of the given *LocationLevel* to filter: `{level_id}`
 
-    **2. get_level_parents:**
+    **4. get_level_parents:**
 
        Will return all *Parent Locations* `{pk}` for a given *LocationLevel* `{level_id}`
        
@@ -132,6 +133,14 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
        Location ID: `{pk}`
 
        LocationLevel ID of the given *LocationLevel* to filter: `{level_id}`
+
+    **5. Filter for location_level:**
+
+       Filter for available Locations based on the Role's LocationLevel
+
+       URL: `/api/admin/locations/?location_level={level_id}`
+
+       LocationLevel ID where: `person.role.location_level == location.location_level`
     
     '''
     permission_classes = (IsAuthenticated,)
