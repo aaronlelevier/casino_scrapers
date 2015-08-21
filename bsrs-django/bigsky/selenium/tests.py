@@ -185,8 +185,13 @@ class LocationLevelTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelper
         final_updated_name = all_levels[0].find_elements_by_tag_name('td')[1].text + updated_name
         all_levels[0].click()
         # update name
-        name_input = self.driver.find_element_by_id("location_level_name")
+        name_input = WebDriverWait(self.driver, 10).until(
+            EC.presence_of_element_located((By.ID, "location_level_name"))
+        )
         name_input.send_keys(updated_name)
+        time.sleep(5)
+        self.driver.find_element_by_class_name("t-save-btn").click()
+        time.sleep(5)
         self.driver.find_element_by_class_name("t-save-btn").click()
         # updated name shows in List view
         all_levels = self.wait_for_xhr_request("t-location-level-data", plural=True)
@@ -233,12 +238,10 @@ class PersonTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unit
         role_input.select_by_index(1)
         self.driver.find_element_by_class_name("t-save-btn").click()
         # Redirected to Person Detail view
-        WebDriverWait(self.driver, 10).until(
-            EC.presence_of_element_located((By.CLASS_NAME, "t-save-btn"))
-        )
+        time.sleep(5)
         self.driver.find_element_by_class_name("t-save-btn").click()
-        self.driver.find_element_by_class_name("t-save-btn").click()
-        # Now at the Person List view
+        # now at List view
+        time.sleep(5)
         self.wait_for_xhr_request("t-person-data", plural=True)
 
         # Now confirm that the newly created Person is in the List View
