@@ -56,14 +56,14 @@ class Wait(object):
         driver = webdriver.Firefox()
         driver.get("http://somedomain/url_that_delays_loading")
         try:
-            element = WebDriverWait(driver, 10).until(
+            element = WebDriverWait(driver, 15).until(
                 EC.presence_of_element_located((By.ID, "myDynamicElement"))
             )
         finally:
             driver.quit()
 
     '''
-    def __init__(self, driver, wait_time=10):
+    def __init__(self, driver, wait_time=15):
         self.driver = driver
         self.wait_time = wait_time
 

@@ -180,19 +180,17 @@ class LocationLevelTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelper
     def test_location_level_update(self):
         # go to Detail view
         all_levels = self.driver_wait.find_elements_by_class_name("t-location-level-data")
-        updated_name = "- updated"
-        final_updated_name = all_levels[0].find_elements_by_tag_name('td')[1].text + updated_name
+        updated_name = "new name"
+        # final_updated_name = all_levels[0].find_elements_by_tag_name('td')[1].text + updated_name
         all_levels[0].click()
         # update name
+        self.driver_wait.find_element_by_class_name("t-location-level-name").clear()
         name_input = self.driver_wait.find_element_by_class_name("t-location-level-name")
         name_input.send_keys(updated_name)
         self.driver_wait.find_element_by_class_name("t-save-btn").click()
         # updated name shows in List view
         all_levels = self.driver_wait.find_elements_by_class_name("t-location-level-data")
-        self.assertIn(
-            final_updated_name,
-            [r.find_elements_by_tag_name('td')[1].text for r in all_levels]
-        )
+        self.driver.find_element_by_xpath("//*[contains(text(),'{0}')]".format(updated_name))
 
     def test_delete(self):
         # Go to Location Detail view
@@ -208,6 +206,7 @@ class LocationLevelTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelper
             location_name,
             [r.find_elements_by_tag_name('td')[1].text for r in all_locations]
         )
+
 
 
 class PersonTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
