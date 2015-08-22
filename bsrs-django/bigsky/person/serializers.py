@@ -7,6 +7,7 @@ from rest_framework import serializers
 from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
     EmailSerializer, AddressSerializer)
+from location.models import Location
 from location.serializers import LocationLevelSerializer, LocationIdNameSerializer
 from person.models import PersonStatus, Person, Role
 from util import create
@@ -150,4 +151,3 @@ class PasswordSerializer(serializers.Serializer):
             instance.save()
             update_session_auth_hash(self.context['request'], instance)
             return super(PasswordSerializer, self).update(instance, validated_data)
-    

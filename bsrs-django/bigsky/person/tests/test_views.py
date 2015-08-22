@@ -6,6 +6,7 @@ if sys.version_info > (2,7):
 
 from django.test import TestCase
 from django.db.models.functions import Lower
+from django.core.exceptions import ValidationError
 
 from rest_framework import status
 from rest_framework.test import APITestCase
@@ -210,7 +211,7 @@ class PersonDetailTests(TestCase):
         # Contact info
         create_person_and_contacts(self.person)
         # Location
-        self.location = mommy.make(Location)
+        self.location = mommy.make(Location, location_level=self.person.role.location_level)
         self.person.locations.add(self.location)
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -309,11 +310,12 @@ class PersonPutTests(APITestCase):
         self.assertEqual(new_title, data['title'])
 
     def test_location(self):
-        location = mommy.make(Location)
+        location = mommy.make(Location, location_level=self.person.role.location_level)
         self.data['locations'].append(str(location.id))
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         data = json.loads(response.content)
+        print data
         self.assertTrue(data['locations'])
         self.assertIn(
             location.id,
