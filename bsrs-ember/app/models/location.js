@@ -12,8 +12,7 @@ var LocationModel = Model.extend({
     status: attr(),
     location_level_fk: previous(),
     locationLevelIsDirty: Ember.computed('location_levels.@each.isDirty', function() {
-        let location_levels = this.get('location_levels');
-        var location_level = location_levels.objectAt(0);
+        let location_level = this.get('location_level');
         if(location_level) {
             return location_level.get('isDirty');
         }

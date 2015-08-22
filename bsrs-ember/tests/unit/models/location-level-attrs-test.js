@@ -21,3 +21,12 @@ test('default state for locations on location level model', (assert) => {
     location_level.set('locations', []);
     assert.ok(location_level.get('isNotDirty'));
 });
+
+test('default state for roles on location level model', (assert) => {
+    var location_level = LocationLevel.create({id: LOCATION_LEVEL_DEFAULTS.idOne, roles: undefined});
+    assert.ok(location_level.get('isNotDirty'));
+    location_level.set('roles', [1, 2, 3]);
+    assert.ok(location_level.get('isDirty'));
+    location_level.set('roles', []);
+    assert.ok(location_level.get('isNotDirty'));
+});

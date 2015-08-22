@@ -154,7 +154,7 @@ test('when click delete, category is deleted and removed from store', (assert) =
     });
 });
 
-test('sco validation works and when hit save, we do same post', (assert) => {
+test('validation works and when hit save, we do same post', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
