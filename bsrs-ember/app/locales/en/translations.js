@@ -3,7 +3,7 @@ export default {
     	'home': 'Home'
 	},
 	'button': {
-		'add': 'Add'
+		'add': 'Add new {{model}}'
 	},
 	'modules':{
 		'tickets':{
@@ -119,6 +119,7 @@ export default {
 		'person': {
 			'one': 'Person',
 			'other': 'People',
+			'search': 'Search People',
 			'label': {
 				'name': 'Name',
 				'username': 'Username',
@@ -142,11 +143,11 @@ export default {
 				'credentials': 'Credentials',
 				'contact': 'Contact'
 			},
-            'status': {
-                'active': 'Active',
-                'inactive': 'Inactive',
-                'expired': 'Expired'
-            }
+      'status': {
+          'active': 'Active',
+          'inactive': 'Inactive',
+          'expired': 'Expired'
+      }
 		},
 		'phone':{
 			'number': 'Phone Number',
