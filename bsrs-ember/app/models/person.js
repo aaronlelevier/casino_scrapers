@@ -14,7 +14,7 @@ export default Model.extend({
     employee_id: attr(''),
     auth_amount: attr(''),
     role_fk: previous(),
-    location_fk: previous(),
+    person_location_fks: previous(),
     isModelDirty: false,
     dirtyModel: Ember.computed('isModelDirty', {
         get(key) {
@@ -58,8 +58,8 @@ export default Model.extend({
         var store = this.get('store');
         return store.find('address', {person: this.get('id')});
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', 'locationIsDirty', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty') || this.get('locationIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', 'locationsIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty') || this.get('locationsIsDirty');
     }),
     roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
         let roles = this.get('role_property');
@@ -106,12 +106,12 @@ export default Model.extend({
             address.save();
         });
     },
-    saveLocation: function() {
-        var location = this.get('location');
-        if(location) {
-            location.save();
-        }
-    },
+    // saveLocation: function() {
+    //     var location = this.get('location');
+    //     if(location) {
+    //         location.save();
+    //     }
+    // },
     saveRole: function() {
         var role = this.get('role');
         if(role) {
@@ -127,6 +127,15 @@ export default Model.extend({
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
         this.rollbackRole();
+    },
+    rollbackLocations() {
+        let pk = Ember.uuid();
+        let store = this.get('store');
+        let previous_m2m_fks = this.get('_prevState.person_location_fks');
+        //diff this prev m2m and find the missing location(s)
+        let location_pk = '232z46cf-9fbb-456z-4hc3-59728vu309901';
+        let person_location = store.push('person-location', {id: pk, person_pk: this.get('id'), location_pk: location_pk});
+        //might need to alter the fks array also or save or ?
     },
     rollbackRole() {
         var store = this.get('store');
@@ -147,25 +156,6 @@ export default Model.extend({
             new_role.save();
         }
     },
-    rollbackLocation() {
-        var store = this.get('store');
-        var previous_location_fk = this.get('_prevState.location_fk');
-
-        var current_location = this.get('location');
-        if(current_location) {
-            var current_location_people = current_location.get('people') || [];
-            current_location.set('people', current_location_people.filter((old_location_person_pk) => {
-                return old_location_person_pk !== this.get('id');
-            }));
-        }
-
-        var new_location = store.find('location', previous_location_fk);
-        if(new_location.get('id')) {
-            var location_people = new_location.get('people') || [];
-            new_location.set('people', location_people.concat([this.get('id')]));
-            new_location.save();
-        }
-    },
     rollbackPhoneNumbers() {
         var phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
@@ -178,34 +168,44 @@ export default Model.extend({
             address.rollback();
         });
     },
-    locationIsDirty: Ember.computed('locations.@each.isDirty', function() {
+    locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
+    locationsIsDirty: Ember.computed('person_locations', 'locations.@each.isDirty', function() {
         let locations = this.get('locations');
-        var location = locations.objectAt(0);
-        if(location) {
-            return location.get('isDirty');
-        }
-        return this.get('_prevState.location_fk') ? true : false;
-    }),
-    locationIsNotDirty: Ember.computed.not('locationIsDirty'),
-    location: Ember.computed('locations.[]', function() {
-        var locations = this.get('locations');
-        var has_location = locations.get('length') > 0;
-        var foreign_key = has_location ? locations.objectAt(0).get('id') : undefined;
-        this.set('location_fk', foreign_key);
-        if(has_location) {
-            return locations.objectAt(0);
-        }
-    }),
-    locations: Ember.computed(function() {
-        var store = this.get('store');
-        var filter = function(location) {
-            var people_pks = location.get('people') || [];
-            if(Ember.$.inArray(this.get('id'), people_pks) > -1) {
+        let previous_m2m_fks = this.get('_prevState.person_location_fks');
+        if(locations.get('length') > 0) {
+            if(!previous_m2m_fks || previous_m2m_fks.get('length') !== locations.get('length')) {
                 return true;
             }
-            return false;
+
+            let dirty_locations = locations.filter(function(location) {
+                return location.get('isDirty') === true;
+            });
+            return dirty_locations.length > 0;
+        }
+        //from 1 to zero -left with [1]
+        //with nothing from the start "undefined"
+        //return data === prev && data instanceof Array && prev instanceof Array;
+        if(previous_m2m_fks && previous_m2m_fks.get('length') > 0) {
+            return true;
+        }
+    }),
+    person_locations: Ember.computed(function() {
+        let store = this.get('store');
+        let filter = function(join_model) {
+            return join_model.get('person_pk') === this.get('id');
         };
-        return store.find('location', filter.bind(this), ['people']);
+        return store.find('person-location', filter.bind(this), ['person_pk']);
+    }),
+    locations: Ember.computed('person_locations.[]', function() {
+        let store = this.get('store');
+        let person_locations = this.get('person_locations');
+        let filter = function(location) {
+            let location_pks = this.map(function(join_model) {
+                return join_model.get('location_pk');
+            });
+            return Ember.$.inArray(location.get('id'), location_pks) > -1;
+        };
+        return store.find('location', filter.bind(person_locations), ['id']);
     }),
     createSerialize() {
         return {

@@ -8,7 +8,6 @@ var LocationModel = Model.extend({
     store: inject('main'),
     name: attr(''),
     number: attr(''),
-    people: attr([]),
     status: attr(),
     location_level_fk: previous(),
     locationLevelIsDirty: Ember.computed('location_levels.@each.isDirty', function() {
