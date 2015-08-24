@@ -108,11 +108,7 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        validators = [
-            LocationValidator(
-                'locations'
-            )
-        ]
+        validators = [LocationValidator('locations')]
         fields = PERSON_FIELDS + ('locations', 'emails', 'phone_numbers', 'addresses',)
 
     def update(self, instance, validated_data):

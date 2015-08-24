@@ -60,6 +60,7 @@ class LocationValidator(object):
 
 
     def filter_queryset(self, queryset):
+        "Validate Role.id of the Person."
         try: 
             return queryset.get(id=self.instance.role.id)
         except Role.DoesNotExist:
