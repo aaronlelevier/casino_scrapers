@@ -44,6 +44,7 @@ LOCAL_APPS = (
     'location',
     'person',
     'session',
+    'translation',
     'util',
     'order',
     )
