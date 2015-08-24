@@ -38,12 +38,3 @@ test('default state for name on location model is undefined', (assert) => {
     location.set('name', '');
     assert.ok(location.get('isNotDirty'));
 });
-
-test('default state for people on location model', (assert) => {
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, people: undefined});
-    assert.ok(location.get('isNotDirty'));
-    location.set('people', [1, 2, 3]);
-    assert.ok(location.get('isDirty'));
-    location.set('people', []);
-    assert.ok(location.get('isNotDirty'));
-});
