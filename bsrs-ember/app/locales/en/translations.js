@@ -3,7 +3,7 @@ export default {
     	'home': 'Home'
 	},
 	'button': {
-		'add': 'Add'
+		'add': 'Add new {{model}}'
 	},
 	'modules':{
 		'tickets':{
@@ -69,6 +69,7 @@ export default {
 	},
 	'admin':{
 		'title': 'Admin',
+        'amount': 'Amount',
 		'general': {
 			'one': 'General Setting',
 			'other': 'General Settings'
@@ -118,6 +119,7 @@ export default {
 		'person': {
 			'one': 'Person',
 			'other': 'People',
+			'search': 'Search People',
 			'label': {
 				'name': 'Name',
 				'username': 'Username',
@@ -141,11 +143,11 @@ export default {
 				'credentials': 'Credentials',
 				'contact': 'Contact'
 			},
-            'status': {
-                'active': 'Active',
-                'inactive': 'Inactive',
-                'expired': 'Expired'
-            }
+      'status': {
+          'active': 'Active',
+          'inactive': 'Inactive',
+          'expired': 'Expired'
+      }
 		},
 		'phone':{
 			'number': 'Phone Number',
@@ -186,13 +188,32 @@ export default {
                 'future': 'Closed'
             },
 		},
-		'locationOrg':{
-			'one': 'Location Organization',
-			'other': 'Location Organization'
-		},
 		'category': {
 			'one': 'Category',
-			'other': 'Categories'
+			'other': 'Categories',
+            'name': {
+                'repair': 'Repair',
+                'maintenance': 'Maintenance',
+                'loss_prevention': 'Loss Prevention',
+            },
+            'status': {
+                'active': 'Active'
+            },
+            'label': {
+                'name': 'Name',
+                'description': 'Description',
+                'cost_currency': 'Cost Currency',
+                'cost_amount': 'Cost Amount',
+                'cost_code': 'Cost Code',
+                'general': 'General',
+                'label': 'Label',
+                'subcategory_label': 'Sub Category Label'
+            },
+            'labelCat': {
+                'type': 'Type',
+                'trade': 'Trade',
+                'issue': 'Issue'
+            }
 		},
 		'categoryType':{
 			'one': 'Category Type',

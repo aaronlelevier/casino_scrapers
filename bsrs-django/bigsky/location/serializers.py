@@ -52,7 +52,7 @@ class LocationTypeSerializer(BaseCreateSerializer):
 
 ### LOCATION
 
-class LocationIdNameSerializer(serializers.ModelSerializer):
+class LocationIdNameSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Location
@@ -101,11 +101,3 @@ class LocationUpdateSerializer(serializers.ModelSerializer):
         model = Location
         fields = ('id', 'name', 'number', 'status', 'location_level',
             'parents', 'children',)
-
-
-
-
-
-
-
-

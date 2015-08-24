@@ -7,7 +7,10 @@ from model_mommy import mommy
 from location.tests.factory import create_location_levels, create_locations
 from location.models import (Location, LocationLevel, LocationStatus,
     LocationType)
+from location.serializers import (LocationCreateSerializer,
+    LocationUpdateSerializer)
 from person.tests.factory import create_person, PASSWORD
+from util import create
 
 
 ### LOCATION LEVEL
@@ -232,14 +235,15 @@ class LocationCreateTests(APITestCase):
         self.client.logout()
 
     def test_create(self):
+        # setup
+        serializer = LocationCreateSerializer(self.location)
+        data = serializer.data
         new_uuid = str(uuid.uuid4())
-        data = {
+        data.update({
             'id': new_uuid,
-            'name': 'tx',
-            'number': '123',
-            'status': str(LocationStatus.objects.first().id),
-            'location_level': str(LocationLevel.objects.first().id)
-        }
+            'number': create._generate_chars()
+        })
+        # Test
         response = self.client.post('/api/admin/locations/', data, format='json')
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
@@ -258,15 +262,8 @@ class LocationUpdateTests(APITestCase):
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         # Data
-        self.data = {
-            'id': str(self.location.id),
-            'name': self.location.name,
-            'number': self.location.number,
-            'location_level': str(self.location.location_level.id),
-            'status': str(self.location.status.id),
-            'parents': [],
-            'children': []
-        }
+        serializer = LocationUpdateSerializer(self.location)
+        self.data = serializer.data
 
     def tearDown(self):
         self.client.logout()
@@ -292,3 +289,26 @@ class LocationUpdateTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['status'], str(new_status.id))
+
+
+class DRFFiltersTests(APITestCase):
+
+    def setUp(self):
+        create_locations()
+        self.location = Location.objects.get(name='ca')
+        self.location_level = self.location.location_level
+        # Login
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_location_level_filter(self):
+        response = self.client.get('/api/admin/locations/?location_level={}'
+            .format(self.location_level.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['count'],
+            Location.objects.filter(location_level=self.location_level).count()
+        )

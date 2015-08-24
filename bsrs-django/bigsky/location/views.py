@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import detail_route
 from rest_framework.exceptions import MethodNotAllowed
+import rest_framework_filters as filters
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
@@ -26,6 +27,8 @@ class SelfReferencingRouteMixin(object):
         serializer = self._all_related_serializer(related_instances, many=True)
         return Response(serializer.data)
 
+
+### LOCATION LEVEL
 
 class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     '''
@@ -80,6 +83,17 @@ class LocationTypeViewSet(BaseModelViewSet):
     queryset = LocationType.objects.all()
 
 
+### LOCATION
+
+class LocationFilterSet(filters.FilterSet):
+
+    location_level = filters.AllLookupsFilter(name='location_level')
+    
+    class Meta:
+        model= Location
+        fields = ['location_level']
+
+
 class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     '''
     ## Detail Routes
@@ -110,7 +124,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        LocationLevel ID of the given *LocationLevel* to filter: `{level_id}`
 
-    **2. get_level_parents:**
+    **4. get_level_parents:**
 
        Will return all *Parent Locations* `{pk}` for a given *LocationLevel* `{level_id}`
        
@@ -119,11 +133,20 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
        Location ID: `{pk}`
 
        LocationLevel ID of the given *LocationLevel* to filter: `{level_id}`
+
+    **5. Filter for location_level:**
+
+       Filter for available Locations based on the Role's LocationLevel
+
+       URL: `/api/admin/locations/?location_level={level_id}`
+
+       LocationLevel ID where: `person.role.location_level == location.location_level`
     
     '''
     permission_classes = (IsAuthenticated,)
     queryset = Location.objects.all()
     model = Location
+    filter_class = LocationFilterSet
 
     def get_serializer_class(self):
         if self.action == 'list':

@@ -5,6 +5,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericRelation
 
+from django.core.exceptions import ValidationError
+
 from accounting.models import Currency
 from location.models import LocationLevel, Location
 from person import helpers
@@ -34,12 +36,13 @@ class Role(BaseModel):
     password_history_length = models.PositiveIntegerField(blank=True, null=True,
         help_text="Will be NULL if password length has never been changed.")
     password_char_types = models.CharField(max_length=100,
-        help_text="Password characters allowed") # TODO: This field will need to be accessed when someone for 
-                                                 # the role saves their PW to validate it.
+        help_text="Password characters allowed") # TODO: This field will need to be accessed when 
+                                                 # someone for the role saves their PW to validate it.
     password_expire = models.PositiveIntegerField(blank=True, null=True,
         help_text="Number of days after setting password that it will expire.")
     password_expire_alert = models.BooleanField(blank=True, default=True,
-        help_text="Does the Person want to be alerted 'pre pw expiring'. Alerts start 3 days before password expires.")
+        help_text="Does the Person want to be alerted 'pre pw expiring'. " \
+                  "Alerts start 3 days before password expires.")
     proxy_set = models.BooleanField(blank=True, default=False,
         help_text="Users in this Role can set their own proxy")
     # Default Settings
@@ -151,7 +154,7 @@ class Person(BaseModel, AbstractUser):
     # Keys
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
-    location = models.ForeignKey(Location, blank=True, null=True)
+    locations = models.ManyToManyField(Location, related_name='people', blank=True)
     # required
     # Auth Amounts - can be defaulted by the Role
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
@@ -168,11 +171,14 @@ class Person(BaseModel, AbstractUser):
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
     password_expire = models.DateField(blank=True, null=True)
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
-    password_change = models.TextField(help_text="Tuple of (datetime of PW change, old PW)") # was HStoreField, but not supported by model_mommy
+    password_change = models.TextField(help_text="Tuple of (datetime of PW change, old PW)") 
     # Out-of-the-Office
-    proxy_status = models.CharField("Out of the Office Status", max_length=100, blank=True, null=True)
-    proxy_start_date = models.DateField("Out of the Office Status Start Date", max_length=100, blank=True, null=True)
-    proxy_end_date = models.DateField("Out of the Office Status End Date", max_length=100, blank=True, null=True)
+    proxy_status = models.CharField("Out of the Office Status", max_length=100,
+        blank=True, null=True)
+    proxy_start_date = models.DateField("Out of the Office Status Start Date",
+        max_length=100, blank=True, null=True)
+    proxy_end_date = models.DateField("Out of the Office Status End Date", max_length=100,
+        blank=True, null=True)
     proxy_user = models.ForeignKey("self", related_name='coveringuser', null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
@@ -195,6 +201,9 @@ class Person(BaseModel, AbstractUser):
             self.auth_amount = self.role.default_auth_amount
         if not self.auth_currency:
             self.auth_currency = self.role.default_auth_currency
+
+        # self.validate_locations()
+        
         return super(Person, self).save(*args, **kwargs)
 
 

@@ -4,7 +4,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
 module('unit: person attrs test');
 
-test('default state for username on person model is an empty array', (assert) => {
+test('default state for username on person model is undefined', (assert) => {
     var person = Person.create({id: PEOPLE_DEFAULTS.id, username: undefined});
     assert.ok(person.get('isNotDirty'));
     person.set('username', 'scott');

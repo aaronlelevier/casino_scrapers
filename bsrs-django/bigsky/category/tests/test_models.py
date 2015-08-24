@@ -1,67 +1,27 @@
 from django.test import TestCase
-from django.db import IntegrityError
+from django.conf import settings
 
-from model_mommy import mommy
-
-from category.models import CategoryType, Category
-
-
-class CategoryTypeTests(TestCase):
-
-    def setUp(self):
-        self.type = mommy.make(CategoryType, name='type')
-        self.trade = mommy.make(CategoryType, name='trade', parent=self.type)
-        self.issue = mommy.make(CategoryType, name='issue', parent=self.trade)
-
-    def test_create(self):
-        self.assertEqual(CategoryType.objects.count(), 3)
-
-    def test_child(self):
-        self.assertEqual(self.trade.child, self.issue)
-
-    def test_parent(self):
-        self.assertEqual(self.trade.parent, self.type)
-
-    def test_one_to_one_hierarchy(self):
-        # Two CategoryType's can't have the same Child
-        with self.assertRaises(IntegrityError):
-            trade_other = mommy.make(CategoryType, parent=self.type)
+from accounting.models import Currency
+from category.models import Category
+from category.tests import factory
 
 
 class CategoryTests(TestCase):
 
     def setUp(self):
-        # CategoryType
-        self.type = mommy.make(CategoryType, name='type')
-        self.trade = mommy.make(CategoryType, name='trade', parent=self.type)
-        self.issue = mommy.make(CategoryType, name='issue', parent=self.trade)
+        factory.create_categories()
+        self.type = Category.objects.get(name='repair')
+        self.trade = Category.objects.get(name='electric')
+        self.issue = Category.objects.get(name='outlets')
+        self.issue2 = Category.objects.get(name='fans')
 
-        # Category
-        # Type
-        [mommy.make(Category, type=self.type) for i in range(2)]
-        # Trades
-        for type in Category.objects.filter(type=self.type):
-            for i in range(2):
-                mommy.make(Category, type=self.trade, parent=type)
-        # Issues
-        for trade in Category.objects.filter(type=self.trade):
-            for i in range(2):
-                mommy.make(Category, type=self.issue, parent=trade)
+    def test_label_top_level(self):
+        self.assertIsNone(self.type.parent)
+        self.assertEqual(self.type.label, settings.TOP_LEVEL_CATEGORY_LABEL)
 
-    def test_create(self):
-        self.assertEqual(Category.objects.filter(type=self.issue).count(), 2)
+    def test_label_none_top_level(self):
+        self.assertIsNotNone(self.trade.parent)
+        self.assertEqual(self.trade.label, self.trade.parent.subcategory_label)
 
-    def test_create(self):
-        self.assertEqual(Category.objects.filter(type=self.type).count(), 2)
-        self.assertEqual(Category.objects.filter(type=self.trade).count(), 4)
-        self.assertEqual(Category.objects.filter(type=self.issue).count(), 8)
-
-    def test_children(self):
-        trade = Category.objects.filter(type=self.trade).first()
-        self.assertEqual(trade.children.all().count(), 2)
-
-    def test_parent(self):
-        trade = Category.objects.filter(type=self.trade).first()
-        self.assertIsInstance(trade.parent, Category)
-        self.assertEqual(trade.parent.type, self.type)
-
+    def test_currency(self):
+        self.assertIsInstance(self.trade.cost_currency, Currency)

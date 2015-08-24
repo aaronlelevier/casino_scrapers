@@ -17,11 +17,14 @@ import PEOPLE_DEFAULTS_PUT from 'bsrs-ember/vendor/defaults/person-put';
 import PHONE_NUMBER_FIXTURES from 'bsrs-ember/vendor/phone_number_fixtures';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
 import PHONE_NUMBER_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
+import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
 import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
+const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = '/admin/people';
 const DETAIL_URL = PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const SUBMIT_BTN = '.submit_btn';
@@ -45,9 +48,9 @@ module('Acceptance | detail test', {
 });
 
 test('clicking a persons name will redirect to the given detail view', (assert) => {
-    visit(PEOPLE_URL);
+    visit(BASE_PEOPLE_URL);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), BASE_PEOPLE_URL);
     });
     click('.t-person-data:eq(0)');
     andThen(() => {
@@ -96,7 +99,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-person-role-select option:eq(1)').val(), ROLE_DEFAULTS.idOne);
         assert.equal(find('.t-person-role-select option:eq(2)').val(), ROLE_DEFAULTS.idTwo);
         assert.equal(find(".t-person-role-select option:selected").val(), ROLE_DEFAULTS.idOne);
-        assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
+        assert.equal(find('.t-amount').val(), PEOPLE_DEFAULTS.auth_amount);
         assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
     });
     var url = PREFIX + DETAIL_URL + '/';
@@ -111,7 +114,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-person-last-name', PEOPLE_DEFAULTS_PUT.last_name);
     fillIn('.t-person-title', PEOPLE_DEFAULTS_PUT.title);
     fillIn('.t-person-employee_id', PEOPLE_DEFAULTS_PUT.employee_id);
-    fillIn('.t-person-auth_amount', PEOPLE_DEFAULTS_PUT.auth_amount);
+    fillIn('.t-amount', PEOPLE_DEFAULTS_PUT.auth_amount);
     andThen(() => {
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isDirty'));
@@ -147,9 +150,9 @@ test('when editing username to invalid, it checks for validation', (assert) => {
 });
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
-    visit(PEOPLE_URL);
+    visit(BASE_PEOPLE_URL);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(currentURL(), BASE_PEOPLE_URL);
     });
     click('.t-person-data:eq(0)');
     andThen(() => {
@@ -290,7 +293,7 @@ test('currency helper displays correct currency format', (assert) => {
     visit(DETAIL_URL);
     var symbol = '$';
     andThen(() => {
-        assert.equal(find('.t-person-auth_amount').val(), PEOPLE_DEFAULTS.auth_amount);
+        assert.equal(find('.t-amount').val(), PEOPLE_DEFAULTS.auth_amount);
     });
 });
 
@@ -488,5 +491,47 @@ test('when you deep link to the person detail view you can remove a new address'
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isNotDirty'));
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when you deep link to the person detail view you can alter the roll and rolling back will reset it', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idOne);
+        assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
+    });
+    fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idTwo);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
+        assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
+    });
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            var person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
+            var actual_role = store.find('role', ROLE_DEFAULTS.idOne);
+            assert.ok(actual_role.get('isNotDirty'));
+            assert.ok(person.get('isNotDirty'));
+            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+            var previous_role = store.find('role', ROLE_DEFAULTS.idTwo);
+            assert.ok(Ember.$.inArray(person.get('id'), previous_role.get('people')) === -1);
+            assert.ok(previous_role.get('isNotDirty'));
+        });
     });
 });

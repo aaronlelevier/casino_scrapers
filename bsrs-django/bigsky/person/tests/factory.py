@@ -4,6 +4,7 @@ import random
 from model_mommy import mommy
 
 from accounting.models import Currency
+from location.models import LocationLevel
 from person.models import Person, PersonStatus, Role
 from util import create
 
@@ -13,7 +14,8 @@ PASSWORD = '1234'
 
 def create_role():
     currency = Currency.objects.default()
-    return mommy.make(Role, name=create._generate_chars())
+    location_level = mommy.make(LocationLevel)
+    return mommy.make(Role, name=create._generate_chars(), location_level=location_level)
 
 
 def create_single_person(username, role):

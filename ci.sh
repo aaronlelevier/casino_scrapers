@@ -74,7 +74,7 @@ function copyEmberAssetsToDjango {
     fi
 }
 
-function runSeleniumTests {
+function dropAndCreateDB {
 
     DB_NAME="ci3"
     export PGPASSWORD=tango
@@ -85,6 +85,28 @@ function runSeleniumTests {
     createdb $DB_NAME -U bsdev -O bsdev
     echo "$DB_NAME created"
 
+    DROP_AND_CREATE_DB=$?
+    if [ "$DROP_AND_CREATE_DB" == 1 ]; then
+      echo "selenium test failed"
+      exit $DROP_AND_CREATE_DB
+    fi
+}
+
+function migrateData {
+    export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'
+    ./manage.py migrate
+    ./manage.py loaddata fixtures/jenkins.json
+    ./manage.py loaddata fixtures/jenkins_custom.json
+
+    MIGRATE_DATA=$?
+    if [ "$MIGRATE_DATA" == 1 ]; then
+      echo "selenium test failed"
+      exit $MIGRATE_DATA
+    fi
+}
+
+
+function runSeleniumTests {
     python run_selenium.py
     SELENIUM_TEST=$?
     if [ "$SELENIUM_TEST" == 1 ]; then
@@ -110,6 +132,14 @@ cd ../bsrs-django
 cd bigsky
 
 copyEmberAssetsToDjango
+
+dropAndCreateDB
+
+wait
+
+migrateData
+
+wait
 
 runSeleniumTests
 

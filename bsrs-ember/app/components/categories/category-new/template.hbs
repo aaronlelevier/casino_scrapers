@@ -1,0 +1,56 @@
+<form {{action "return false" this on="submit"}}>
+	<header>
+		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
+      {{button-generic save="save" type="save"}}
+      {{button-generic cancel="cancel" type="cancel"}}
+			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+				<span class="caret"></span>
+			</button>
+			<ul class="dropdown-menu">
+				<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
+				<li><a href="#">{{fa-icon "print"}} Print</a></li>
+			</ul>
+		</div>
+	</header>
+	<section class="docSection container-fluid">
+		<section>
+			<h2 class="col-sm-12">{{t "admin.category.label.name"}}</h2>
+			<div class="col-sm-6">
+				{{#form-group title="admin.category.label.name" for="name"}}
+					{{input type="text" value=model.name placeholder=(t "admin.category.label.name") class="form-control t-category-name" id="name"}}
+					{{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.category.label.name"}}{{/validation-error-field}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.category.label.description" for="description"}}
+					{{input type="text" value=model.description placeholder=(t "admin.category.label.description") class="form-control t-category-description" id="description"}}
+					{{#validation-error-field submitted=submitted field="description" className="validation validation-under t-description-validation-error" model=model validation=descriptionValidation}}{{t "validation.invalid"}} {{t "admin.category.label.description"}}{{/validation-error-field}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.category.label.cost_amount" for="cost_amount"}}
+            {{input-currency model=model field="cost_amount"}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.category.label.cost_code" for="cost_code"}}
+					{{input type="text" value=model.cost_code placeholder=(t "admin.category.label.cost_code") class="form-control t-category-cost-code" id="cost_code"}}
+					{{#validation-error-field submitted=submitted field="cost_code" className="validation validation-under t-cost-code-validation-error" model=model validation=costCodeValidation}}{{t "validation.invalid"}} {{t "admin.category.label.cost_code"}}{{/validation-error-field}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.category.label.label" for="label"}}
+					{{input type="text" value=model.label placeholder=(t "admin.category.label.label") class="form-control t-category-label" id="label"}}
+					{{#validation-error-field submitted=submitted field="label" className="validation validation-under t-label-validation-error" model=model validation=labelValidation}}{{t "validation.invalid"}} {{t "admin.category.label.label"}}{{/validation-error-field}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.category.label.subcategory_label" for="subcategory_label"}}
+					{{input type="text" value=model.subcategory_label placeholder=(t "admin.category.label.subcategory_label") class="form-control t-category-subcategory-label" id="subcategory_label"}}
+					{{#validation-error-field submitted=submitted field="subcategory_label" className="validation validation-under t-subcategory-label-validation-error" model=model validation=subCategoryLabelValidation}}{{t "validation.invalid"}} {{t "admin.category.label.subcategory_label"}}{{/validation-error-field}}
+				{{/form-group}}
+			</div>
+		</section>
+	</section>
+</form>
+

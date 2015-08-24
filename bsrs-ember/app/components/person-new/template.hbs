@@ -9,7 +9,6 @@
 			<ul class="dropdown-menu">
 				<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
 				<li><a href="#">{{fa-icon "print"}} Print</a></li>
-				<li>{{delete-button delete="deletePerson"}}</li>
 			</ul>
 		</div>
 	</header>
@@ -30,12 +29,7 @@
 			</div>
 			<div class="col-sm-12">
 				{{#form-group title="admin.person.label.role" for="role"}}
-          <select class="t-person-role-select form-control role" id="person-role" onchange={{action (action "changed" model) value="target.value"}}>
-            <option>Select One</option>
-            {{#each roles as |role|}}
-            <option value={{role.id}}>{{role.name}}</option>
-            {{/each}}
-          </select>
+          {{role-select model=model.role options=roles person=model}}
 				{{/form-group}}
 			</div>
 		</section>

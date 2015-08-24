@@ -1,6 +1,7 @@
 import json
 
 from django.test import TestCase
+from django.conf import settings
 from django.core.urlresolvers import reverse
 
 from model_mommy import mommy
@@ -24,7 +25,23 @@ class IndexTests(TestCase):
 
     def test_logged_out(self):
         response = self.client.get(reverse('index'))
-        self.assertRedirects(response, reverse('login'))
+        self.assertRedirects(response, reverse('login')+'?next='+reverse('index'))
+
+
+class LoginTests(TestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+
+    def test_login_unauthenticated(self):
+        response = self.client.get(reverse('login'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_login_authenticated(self):
+        self.client.login(username=self.person.username, password=self.password)
+        response = self.client.get(reverse('login'))
+        self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
 
 
 class ConfigurationTests(TestCase):

@@ -5,9 +5,11 @@ import codecs
 
 from django.test import TestCase
 from django.db.models.functions import Lower
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework.exceptions import ValidationError
 from model_mommy import mommy
 
 from accounting.models import Currency
@@ -16,6 +18,7 @@ from contact.models import (Address, AddressType, Email, EmailType,
 from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
+from person.serializers import PersonUpdateSerializer
 from person.tests.factory import PASSWORD, create_person, create_role
 from util import create, choices
 
@@ -79,7 +82,8 @@ class RoleViewSetTests(APITestCase):
             "role_type": self.role.role_type,
             "location_level": self.role.location_level.id
         }
-        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id), role_data, format='json')
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         new_role_data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(self.role.name, new_role_data['name'])
@@ -106,18 +110,14 @@ class PersonAccessTests(TestCase):
         self.person = create_person()
 
     def test_access_user(self):
-        """
-        verify we can access user records correctly as a super user
-        """
+        # verify we can access user records correctly as a super user
         self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.client.session['_auth_user_id'], str(self.person.id))
 
     def test_noaccess_user(self):
-        """
-        verify we can't acccess users as a normal user
-        """
+        # verify we can't acccess users as a normal user
         self.client.login(username='noaccess_user', password='noaccess_password')
         response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
         self.assertEqual(response.status_code, 403)
@@ -214,9 +214,8 @@ class PersonDetailTests(TestCase):
         # Contact info
         create_person_and_contacts(self.person)
         # Location
-        self.location = mommy.make(Location)
-        self.person.location = self.location
-        self.person.save()
+        self.location = mommy.make(Location, location_level=self.person.role.location_level)
+        self.person.locations.add(self.location)
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
         # GET data
@@ -230,8 +229,8 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['username'], self.person.username)
 
     def test_location(self):
-        self.assertTrue(self.data['location'])
-        location = Location.objects.get(id=self.data['location']['id'])
+        self.assertTrue(self.data['locations'])
+        location = Location.objects.get(id=self.data['locations'][0]['id'])
         self.assertIsInstance(location, Location)
 
     def test_emails(self):
@@ -284,23 +283,8 @@ class PersonPutTests(APITestCase):
         self.person2 = create_person()
         create_person_and_contacts(self.person2)
 
-        self.data = {
-            "id": str(self.person.id),
-            "username": self.person.username,
-            "first_name": "",
-            "middle_initial": "",
-            "last_name": "",
-            "title": "",
-            "employee_id": "",
-            "auth_amount": "{0:.4f}".format(self.person.auth_amount),
-            "auth_currency": str(self.person.auth_currency.id),
-            "role": str(self.person.role.id),
-            "status": str(self.person.status.id),
-            "location":"",
-            "emails":[],
-            "phone_numbers":[],
-            "addresses":[]
-        }
+        serializer = PersonUpdateSerializer(self.person)
+        self.data = serializer.data
 
     def tearDown(self):
         self.client.logout()
@@ -308,30 +292,52 @@ class PersonPutTests(APITestCase):
     def test_auth_amount(self):
         new_auth_amount = '1234.1010'
         self.data['auth_amount'] = new_auth_amount
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(new_auth_amount, data['auth_amount'])
 
     def test_no_change(self):
         # Confirm the ``self.data`` structure is correct
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         self.assertEqual(response.status_code, 200)
 
     def test_update_person(self):
         new_title = "new_title"
         self.assertNotEqual(new_title, self.data['title'])
         self.data['title'] = new_title
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(new_title, data['title'])
 
-    def test_location(self):
-        location = mommy.make(Location)
-        self.data['location'] = str(location.id)
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+    ### LOCATIONS
+
+    def test_locations(self):
+        location = mommy.make(Location, location_level=self.person.role.location_level)
+        self.data['locations'].append(str(location.id))
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
-        self.assertTrue(data['location'])
-        self.assertEqual(Person.objects.get(id=self.data['id']).location, location)
+        self.assertIn(str(location.id), [l for l in data['locations']])
+
+    def test_locations_fail(self):
+        # create separate LocationLevel
+        location_level = mommy.make(LocationLevel)
+        location = mommy.make(Location, location_level=location_level)
+        self.assertNotEqual(self.person.role.location_level, location_level)
+        # Adding a non authorized LocationLevel Location raises an error
+        self.data['locations'].append(str(location.id))
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 400)
+        self.assertNotIn(
+            location.id,
+            Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
+            )
+
+    ### RELATED CONTACT MODELS
 
     def test_update_email_add_to_person(self):
         self.assertFalse(self.data['emails'])
@@ -341,7 +347,8 @@ class PersonPutTests(APITestCase):
             'email': 'mail@mail.com',
             'person': str(self.person.id)
         }]
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['emails'])
         self.assertEqual(
@@ -357,7 +364,8 @@ class PersonPutTests(APITestCase):
             'number': create._generate_ph(),
             'person': str(self.person.id)
         }]
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['phone_numbers'])
         self.assertEqual(
@@ -370,7 +378,8 @@ class PersonPutTests(APITestCase):
         # Person FK on Contact Nested Model
         create_person_and_contacts(self.person)
         # Post standard data w/o contacts
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         self.assertEqual(response.status_code, 200)
         # Nested Contacts should be empty!
         self.assertFalse(self.person.emails.all())
@@ -384,13 +393,22 @@ class PersonPutTests(APITestCase):
             'person': str(self.person.id)
         }]
         # Post standard data w/o contacts
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id), self.data, format='json')
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['phone_numbers'])
         # Nested Contacts should be empty!
         self.assertTrue(self.person.phone_numbers.all())
         self.assertFalse(self.person.emails.all())
+
+    def test_update_middle_initial(self):
+        self.assertFalse(self.data['middle_initial'])
+        self.data['middle_initial'] = 'Y'
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(self.data['middle_initial'], data['middle_initial'])
 
 
 class PersonDeleteTests(APITestCase):
@@ -418,11 +436,17 @@ class PersonDeleteTests(APITestCase):
         self.assertEqual(Person.objects.count(), people_all-1)
 
     def test_delete_override(self):
-        people = Person.objects.count()
-        response = self.client.delete('/api/admin/people/{}/'.format(self.person.pk),
+        # initial
+        people = Person.objects_all.count()
+        self.assertIsInstance(Person.objects_all.get(id=self.person2.id), Person)
+        # delete
+        response = self.client.delete('/api/admin/people/{}/'.format(self.person2.pk),
             {'override':True}, format='json')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Person.objects.count(), people-1)
+        self.assertEqual(Person.objects_all.count(), people-1)
+        # DB Fails
+        with self.assertRaises(Person.DoesNotExist):
+            Person.objects_all.get(id=self.person2.id)
 
 
 class PersonFilterTests(TestCase):

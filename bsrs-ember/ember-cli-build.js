@@ -42,6 +42,7 @@ module.exports = function(defaults) {
     app.import('vendor/defaults/state.js');
     app.import('vendor/defaults/status.js');
     app.import('vendor/defaults/uuid.js');
+    app.import('vendor/defaults/global-message.js');
     // Use `app.import` to add additional libraries to the generated
     // output files.
     //

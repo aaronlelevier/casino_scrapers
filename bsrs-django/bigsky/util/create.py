@@ -68,15 +68,3 @@ def update_model(instance, dict_):
         setattr(instance, k, v)
     instance.save()
     return instance
-
-
-def serialize_model_to_dict(instance, serializer):
-    """Correctly serialize an instance as the ``Dict`` 
-    for the serializer."""
-    d = {}
-    for field in serializer.Meta.fields:
-        val = getattr(instance, field)
-        if isinstance(val, uuid.UUID):
-            val = str(val)
-        d.update({field:val})
-    return d

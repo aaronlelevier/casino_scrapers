@@ -64,7 +64,7 @@ class SelfRefrencingQuerySet(models.query.QuerySet):
 
 
 class SelfRefrencingManager(BaseManager):
-    """ """
+    ''' '''
     
     def get_queryset(self):
         return SelfRefrencingQuerySet(self.model, self._db)
@@ -114,12 +114,12 @@ class LocationStatusManager(BaseManager):
 
 
 class LocationStatus(AbstractName):
-    """
+    '''
     Tells whether the store is: *Open, Closed, Future, etc...*
 
     Single *name* field, with more configuration on this 
     model planned.
-    """
+    '''
     
     objects = LocationStatusManager()
 
@@ -127,7 +127,7 @@ class LocationStatus(AbstractName):
 ### LOCATION TYPE
 
 class LocationTypeManager(BaseManager):
-    """ """
+    ''' '''
 
     def default(self):
         obj, created = self.get_or_create(name=settings.DEFAULT_LOCATION_TYPE)
@@ -135,7 +135,7 @@ class LocationTypeManager(BaseManager):
 
 
 class LocationType(AbstractName):
-    """ """
+    ''' '''
     
     objects = LocationTypeManager()
 
@@ -143,7 +143,7 @@ class LocationType(AbstractName):
 ### LOCATION
 
 class LocationQuerySet(SelfRefrencingQuerySet):
-    """ """
+    ''' '''
 
     def get_level_children(self, location, level_id):
         '''
@@ -181,7 +181,7 @@ class LocationQuerySet(SelfRefrencingQuerySet):
 
 
 class LocationManager(SelfRefrencingManager):
-    """ """
+    ''' '''
     
     def get_queryset(self):
         return LocationQuerySet(self.model, self._db)
@@ -215,7 +215,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
     # fields
     name = models.CharField(max_length=100)
-    number = models.CharField(max_length=20)
+    number = models.CharField(max_length=100, unique=True)
 
     objects = LocationManager()
 

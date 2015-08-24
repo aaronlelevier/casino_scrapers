@@ -29,7 +29,7 @@ test('all location levels are filtered to not include self', (assert) => {
     assert.equal(subject.get('filtered_location_levels').get('length'), 2);
 });
 
-// test('sco all children are filtered out from the available location levels', (assert) => {
+// test('all children are filtered out from the available location levels', (assert) => {
 //     var subject = new LocationLevelNewComponent({});
 //     var model = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany}); 
 //     var location_level_two = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idTwo, name: LOCATION_LEVEL_DEFAULTS.nameRegion}); 

@@ -9,8 +9,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         this.nameDistrict = location_level_defaults.nameDistrict;
     };
     factory.prototype.detail = function(i) {
-        var location_level = { id: this.idOne, name : this.nameCompany };
-        return location_level;
+        return {id: this.idOne, name : this.nameCompany};
     };
     factory.prototype.list = function() {
         response = [ { id: this.idOne, name : this.nameCompany }, { id: this.idTwo, name : this.nameDistrict}, { id: this.idThree, name : this.nameRegion} ];

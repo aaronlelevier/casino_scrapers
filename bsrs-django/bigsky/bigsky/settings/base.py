@@ -111,6 +111,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 ### Native Configurations ###
 
+LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
 
@@ -145,7 +146,7 @@ CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:80
 
 ### CATEGORY
 
-DEFAULT_CATEGORY_TYPE = 'Type'
+TOP_LEVEL_CATEGORY_LABEL = 'type'
 
 ### LOCATION
 

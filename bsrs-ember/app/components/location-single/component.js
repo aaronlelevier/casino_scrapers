@@ -20,22 +20,17 @@ var LocationSingle = Ember.Component.extend(ValidationMixin, {
         cancelLocation() {
             this.sendAction('redirectUser');
         },
-        deleteLocation() {            
+        deleteLocation() {
             var model = this.get('model');
             var repository = this.get('repository');
             repository.delete(model.get('id'));
             this.sendAction('redirectUser');
         },
-        changed(model, val) {
-            Ember.run(() => {
-                model.set('location_level', val);
-            });
-        },
         changedStatus(model, val) {
             Ember.run(() => {
                 model.set('status', val);
             });
-        },
+        }
     }
 });
 

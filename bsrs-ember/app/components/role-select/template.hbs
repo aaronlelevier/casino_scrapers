@@ -1,0 +1,10 @@
+<select class="t-person-role-select form-control role" id="person-role" onchange={{action (action "changed" person) value="target.value"}}>
+  {{#if new}}
+    <option>Select One</option>
+  {{else}}
+    <option>Select One</option>
+  {{/if}}
+  {{#each options as |role|}}
+    <option value={{role.id}} selected={{is-equal model.id role.id}}>{{role.name}}</option>
+  {{/each}}
+</select>

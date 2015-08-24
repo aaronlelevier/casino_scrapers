@@ -1,7 +1,8 @@
 var BSRS_LOCATION_FACTORY = (function() {
-    var factory = function(location_defaults, location_level_defaults) {
+    var factory = function(location_defaults, location_level_defaults, location_level_fixtures) {
         this.location_defaults = location_defaults;
         this.location_level_defaults = location_level_defaults;
+        this.location_level_fixtures = location_level_fixtures;
     };
     factory.prototype.generate = function(i) {
         return {
@@ -9,7 +10,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             name : this.location_defaults.storeName,
             number : this.location_defaults.storeNumber,
             status: this.location_defaults.status,
-            location_level: this.location_level_defaults.idOne,
+            location_level: this.location_level_fixtures.detail(),
             children: [],
             parents: []
         }
@@ -26,11 +27,11 @@ var BSRS_LOCATION_FACTORY = (function() {
         return {'count':3,'next':null,'previous':null,'results': []};
     };
     factory.prototype.detail = function(i) {
-        var location = this.generate(i);
-        return location;
+        return this.generate(this.location_defaults.idOne);
     };
     factory.prototype.put = function(location) {
         var response = this.generate(location.id);
+        response.location_level = this.location_level_fixtures.detail().id;
         for(var key in location) {
             response[key] = location[key];
         }
@@ -41,12 +42,13 @@ var BSRS_LOCATION_FACTORY = (function() {
 
 if (typeof window === 'undefined') {
     var location_defaults = require('../vendor/defaults/location');
+    var location_level_fixtures = require('../vendor/location_level_fixtures');
     var location_level_defaults = require('../vendor/defaults/location-level');
-    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults);
+    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults, location_level_fixtures);
 } else {
-    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-level'], function (exports, location_defaults, location_level_defaults) {
+    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures'], function (exports, location_defaults, location_level_defaults, location_level_fixtures) {
         'use strict';
-        return new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults);
+        return new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults, location_level_fixtures);
     });
 }
 
