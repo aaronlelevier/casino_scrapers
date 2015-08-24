@@ -1,6 +1,8 @@
 import unittest
 import uuid
 import time
+import random
+import string
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -19,6 +21,9 @@ def get_text_excluding_children(driver, element):
     }).text();
     """, element)
 
+def rand_chars(number=10):
+    return ''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
+
 
 class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
 
@@ -28,30 +33,37 @@ class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unitte
         self.login()
         # Wait
         self.driver_wait = Wait(self.driver)
-        # Go to Role Area
-        self.driver_wait.find_element_by_class_name("t-nav-admin").click()
-        self.driver_wait.find_element_by_class_name("t-nav-admin-role").click()
 
     def tearDown(self):
         self.driver.close()
 
-    def test_role_create(self):
+    def test_role(self):
+
+        ### CREATE
+
+        # Go to Role Area
+        self.driver_wait.find_element_by_class_name("t-nav-admin").click()
+        self.driver_wait.find_element_by_class_name("t-nav-admin-role").click()
         # the "new_role_name" is the 2nd <td> in the <table>, so loop thro
         # the <table> and confirm the newly created Role is there.
         self.driver_wait.find_element_by_class_name("t-role-new").click()
         # New Role Data
-        new_role_name = str(uuid.uuid4())[0:10]
+        new_role_name = rand_chars(10)
         name_input = self.driver_wait.find_element_by_id("name")
         name_input.send_keys(new_role_name)
         self.driver_wait.find_element_by_class_name("t-save-btn").click()
         # new Role in List view
         all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
-        self.assertIn(new_role_name, [r.find_elements_by_tag_name('td')[1].text for r in all_roles])
+        self.assertIn(
+            new_role_name,
+            [r.find_elements_by_tag_name('td')[1].text for r in all_roles]
+        )
 
-    def test_role_update(self):
+        ### UPDATE
+
         # Go to the first Role's Detail view
         all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
-        new_role_name = '- updated'
+        new_role_name = rand_chars(10)
         final_new_role_name = all_roles[0].find_elements_by_tag_name('td')[1].text + new_role_name
         all_roles[0].click()
         # click 'save' on Role to Update it
@@ -65,7 +77,8 @@ class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unitte
             [r.find_elements_by_tag_name('td')[1].text for r in all_roles]
         )
 
-    def test_role_delete(self):
+        ### DELETE
+
         # Go to the first Role's Detail view
         all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
         role_name = all_roles[0].find_elements_by_tag_name('td')[1].text
@@ -80,29 +93,19 @@ class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unitte
             [r.find_elements_by_tag_name('td')[1].text for r in all_roles]
         )
 
+    def test_location(self):
 
-class LocationTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
+        ### CREATE
 
-    def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
-        self.login()
-        # Wait
-        self.driver_wait = Wait(self.driver)
         # Go to Role Area
         self.driver_wait.find_element_by_class_name("t-nav-admin").click()
         self.driver_wait.find_element_by_class_name("t-nav-admin-location").click()
-
-    def tearDown(self):
-        self.driver.close()
-
-    def test_create(self):
         # Get to "Location create view"
         new_location = self.driver_wait.find_element_by_class_name("t-location-new").click()
         # Enter info and hit "save"
-        new_location_name = str(uuid.uuid4())[0:10]
-        new_location_number = str(uuid.uuid4())[0:8]
-        new_location_level = str(uuid.uuid4())[0:29]
+        new_location_name = rand_chars(10)
+        new_location_number = rand_chars(10)
+        new_location_level = rand_chars(10)
         location_name_input = self.driver_wait.find_element_by_id("location_name")
         location_number_input = self.driver_wait.find_element_by_id("location_number")
         location_level_input = Select(self.driver_wait.find_element_by_id("location_location_level_select"))
@@ -115,11 +118,13 @@ class LocationTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         self.driver.refresh()
         self.driver.find_element_by_xpath("//*[text()='{0}']".format(new_location_name)).click()
 
-    def test_update(self):
+        ### UPDATE
+
         # Go to Location Detail view
+        self.driver_wait.find_element_by_class_name("t-nav-admin-location").click()
         location = self.driver_wait.find_elements_by_class_name("t-location-data")[0].click()
         # Change name and hit "save"
-        updated_location_name = "DEF STORE"
+        updated_location_name = rand_chars(10)
         location_name_input = self.driver_wait.find_element_by_id("location_name")
         location_name_input.clear()
         location_name_input.clear()
@@ -132,7 +137,8 @@ class LocationTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
             [r.find_elements_by_tag_name('td')[1].text for r in all_locations]
         )
 
-    def test_delete(self):
+        ### DELETE
+
         # Go to Location Detail view
         locations = self.driver_wait.find_elements_by_class_name("t-location-data")
         location_name = locations[0].find_elements_by_tag_name('td')[1].text
@@ -147,28 +153,17 @@ class LocationTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
             [r.find_elements_by_tag_name('td')[1].text for r in all_locations]
         )
 
+    def test_location_level(self):
 
+        ### CREATE
 
-class LocationLevelTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
-
-    def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
-        self.login()
-        # Wait
-        self.driver_wait = Wait(self.driver)
         # Go to Role Area
         self.driver_wait.find_element_by_class_name("t-nav-admin").click()
         self.driver_wait.find_element_by_class_name("t-nav-admin-location-level").click()
-
-    def tearDown(self):
-        self.driver.close()
-
-    def test_location_level_create(self):
         # Go to Create view
         self.driver_wait.find_element_by_class_name("t-location-level-new").click()
         # create new Location Level
-        new_name = str(uuid.uuid4())[0:29]
+        new_name = rand_chars(10)
         name_input = self.driver.find_element_by_id("location_level_name")
         name_input.send_keys(new_name)
         self.driver.find_element_by_class_name("t-save-btn").click()
@@ -177,25 +172,29 @@ class LocationLevelTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelper
         self.driver.refresh()
         self.driver.find_element_by_xpath("//*[contains(text(),'{0}')]".format(new_name))
 
-    def test_location_level_update(self):
+        ### UPDATE
+
         # go to Detail view
         all_levels = self.driver_wait.find_elements_by_class_name("t-location-level-data")
-        updated_name = "new name"
+        updated_name = rand_chars(10)
         # final_updated_name = all_levels[0].find_elements_by_tag_name('td')[1].text + updated_name
         all_levels[0].click()
         # update name
         self.driver_wait.find_element_by_class_name("t-location-level-name").clear()
         name_input = self.driver_wait.find_element_by_class_name("t-location-level-name")
         name_input.send_keys(updated_name)
-        self.driver_wait.find_element_by_class_name("t-save-btn").click()
+        save_btn = self.driver_wait.find_element_by_class_name("t-save-btn")
+        save_btn.click()
         # updated name shows in List view
         # TODO: Passes w/ ``python run_selenium.py`` but not ``bash ci.sh``.
         #   shows a timeout exception with the latter
         # all_levels = self.driver_wait.find_elements_by_class_name("t-location-level-data")
-        # self.driver.find_element_by_xpath("//*[contains(text(),'{0}')]".format(updated_name))
+        self.driver.find_element_by_xpath("//*[contains(text(),'{0}')]".format(updated_name))
 
-    def test_delete(self):
+        ### DELETE
+
         # Go to Location Detail view
+        self.driver_wait.find_element_by_class_name("t-nav-admin-location-level").click()
         locations = self.driver_wait.find_elements_by_class_name("t-location-level-data")
         location_name = locations[0].find_elements_by_tag_name('td')[1].text
         locations[0].click()
@@ -203,75 +202,18 @@ class LocationLevelTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelper
         self.driver_wait.find_element_by_class_name("dropdown-toggle").click()
         self.driver_wait.find_element_by_class_name("t-delete-btn").click()
         # check Role is deleted
+        self.driver_wait.find_element_by_class_name("t-nav-admin").click()
+        self.driver_wait.find_element_by_class_name("t-nav-admin-location-level").click()
         all_locations = self.driver_wait.find_elements_by_class_name("t-location-level-data")
         self.assertNotIn(
             location_name,
             [r.find_elements_by_tag_name('td')[1].text for r in all_locations]
         )
 
+    def test_person(self):
 
+        ### CREATE
 
-class PersonTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
-
-    def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
-        self.login()
-        # Go to Role Area
-        self.driver.find_element_by_class_name("t-nav-admin").click()
-        self.wait_for_xhr_request("t-nav-admin-people").click()
-
-    def tearDown(self):
-        self.driver.close()
-
-    def test_create(self):
-        # go to Create view
-        self.wait_for_xhr_request("t-person-new", plural=True)[0].click()
-        # fill in info and hit "save"
-        username = str(uuid.uuid4())[0:29]
-        password = "bobber1"
-        username_input = self.driver.find_element_by_class_name("t-person-username")
-        password_input = self.driver.find_element_by_class_name("t-person-password")
-        username_input.send_keys(username)
-        password_input.send_keys(password)
-        role_input = Select(self.driver.find_element_by_id("person-role"))
-        role_input.select_by_index(1)
-        self.driver.find_element_by_class_name("t-save-btn").click()
-        # Redirected to Person Detail view
-        time.sleep(5)
-        self.driver.find_element_by_class_name("t-save-btn").click()
-        # now at List view
-        time.sleep(5)
-        self.wait_for_xhr_request("t-person-data", plural=True)
-
-        # Now confirm that the newly created Person is in the List View
-        ret_username = None
-        element_list = (self.driver.find_element_by_class_name("t-pages")
-                                   .find_elements_by_tag_name("a"))
-        # Loop through pages in the Grid view looking for the new Person
-        # that was just created
-        for element in element_list:
-            print element_list
-            element.click()
-            people = self.wait_for_xhr_request("t-person-data", plural=True)
-            for p in people:
-                p_row_username = p.find_elements_by_tag_name('td')[1]
-                if username == p_row_username.text:
-                    ret_username = p_row_username.text
-        self.assertEqual(ret_username, username)
-
-
-class LoginTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
-
-    def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
-        self.login()
-
-    def tearDown(self):
-        self.driver.close()
-
-    def test_navigate_to_people_list_and_create_new_person_record(self):
         self.at(self.driver.current_url, LoginPage.url())
         nav_page = NavPage(self.driver, self.wait)
         nav_page.click_admin()
@@ -289,6 +231,9 @@ class LoginTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unitt
         self._fill_in(person)
         gen_elem_page = GeneralElementsPage(self.driver, self.wait)
         gen_elem_page.click_save_btn()
+
+        ### UPDATE
+
         person_page.find_wait_and_assert_elem("t-person-username", username)
         first_name = "scooter"
         middle_initial = "B"
