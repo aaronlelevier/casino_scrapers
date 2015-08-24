@@ -132,10 +132,10 @@ export default Model.extend({
         let pk = Ember.uuid();
         let store = this.get('store');
         let previous_m2m_fks = this.get('_prevState.person_location_fks');
-        //diff this prev m2m and find the missing location(s)
-        let location_pk = '232z46cf-9fbb-456z-4hc3-59728vu309901';
-        let person_location = store.push('person-location', {id: pk, person_pk: this.get('id'), location_pk: location_pk});
-        //might need to alter the fks array also or save or ?
+        previous_m2m_fks.forEach(function(pk) {
+            var m2m = store.find('person-location', pk);
+            m2m.set('removed', false);
+        });
     },
     rollbackRole() {
         var store = this.get('store');
@@ -182,9 +182,6 @@ export default Model.extend({
             });
             return dirty_locations.length > 0;
         }
-        //from 1 to zero -left with [1]
-        //with nothing from the start "undefined"
-        //return data === prev && data instanceof Array && prev instanceof Array;
         if(previous_m2m_fks && previous_m2m_fks.get('length') > 0) {
             return true;
         }
@@ -192,9 +189,9 @@ export default Model.extend({
     person_locations: Ember.computed(function() {
         let store = this.get('store');
         let filter = function(join_model) {
-            return join_model.get('person_pk') === this.get('id');
+            return join_model.get('person_pk') === this.get('id') && !join_model.get('removed');
         };
-        return store.find('person-location', filter.bind(this), ['person_pk']);
+        return store.find('person-location', filter.bind(this), ['removed']);
     }),
     locations: Ember.computed('person_locations.[]', function() {
         let store = this.get('store');
