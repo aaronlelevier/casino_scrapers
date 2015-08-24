@@ -12,6 +12,7 @@ from location.serializers import LocationLevelSerializer, LocationIdNameSerializ
 from person.models import PersonStatus, Person, Role
 from util import create
 from util.serializers import BaseCreateSerializer
+from util.validators import LocationValidator
 
 
 ### ROLE ###
@@ -94,6 +95,12 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 class PersonUpdateSerializer(serializers.ModelSerializer):
     '''
     Update a ``Person`` and all nested related ``Contact`` Models.
+
+    :Location constraint:
+        A Person's Location can only be:
+
+        `person.location.location_level == person.role.location.location_level`
+
     '''
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
@@ -101,6 +108,11 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
+        validators = [
+            LocationValidator(
+                'locations'
+            )
+        ]
         fields = PERSON_FIELDS + ('locations', 'emails', 'phone_numbers', 'addresses',)
 
     def update(self, instance, validated_data):
