@@ -183,6 +183,7 @@ class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unitte
         self.driver_wait.find_element_by_class_name("t-location-level-name").clear()
         name_input = self.driver_wait.find_element_by_class_name("t-location-level-name")
         name_input.send_keys(updated_name)
+        time.sleep(3)
         save_btn = self.driver_wait.find_element_by_class_name("t-save-btn")
         save_btn.click()
         # updated name shows in List view
@@ -194,7 +195,6 @@ class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unitte
         ### DELETE
 
         # Go to Location Detail view
-        self.driver_wait.find_element_by_class_name("t-nav-admin-location-level").click()
         locations = self.driver_wait.find_elements_by_class_name("t-location-level-data")
         location_name = locations[0].find_elements_by_tag_name('td')[1].text
         locations[0].click()

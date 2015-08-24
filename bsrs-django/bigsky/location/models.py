@@ -214,8 +214,8 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         help_text="If not provided, will be the default 'LocationStatus'.")
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
     # fields
-    name = models.CharField(max_length=100)
-    number = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=50)
+    number = models.CharField(max_length=50, unique=True)
 
     objects = LocationManager()
 
