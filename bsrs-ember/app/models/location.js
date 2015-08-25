@@ -2,27 +2,25 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
-import previous from 'bsrs-ember/utilities/previous';
 
 var LocationModel = Model.extend({
     store: inject('main'),
     name: attr(''),
     number: attr(''),
     status: attr(),
-    location_level_fk: previous(),
+    location_level_fk: undefined,
     locationLevelIsDirty: Ember.computed('location_levels.@each.isDirty', function() {
         let location_level = this.get('location_level');
         if(location_level) {
             return location_level.get('isDirty');
         }
-        return this.get('_prevState.location_level_fk') ? true : false;
+        return this.get('location_level_fk') ? true : false;
     }),
     locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
     location_level: Ember.computed('location_levels.[]', function() {
         var location_levels = this.get('location_levels');
         var has_location_level = location_levels.get('length') > 0;
         var foreign_key = has_location_level ? location_levels.objectAt(0).get('id') : undefined;
-        this.set('location_level_fk', foreign_key);
         if(has_location_level) {
             return location_levels.objectAt(0);
         }
@@ -45,10 +43,11 @@ var LocationModel = Model.extend({
     saveLocationLevel() {
         var location_level = this.get('location_level');
         location_level.save();
+        this.set('location_level_fk', this.get('location_level').get('id'));
     },
     rollbackLocationLevel() {
         var store = this.get('store');
-        var previous_location_level_fk = this.get('_prevState.location_level_fk');
+        var previous_location_level_fk = this.get('location_level_fk');
 
         var current_location_level = this.get('location_level');
         if(current_location_level) {
