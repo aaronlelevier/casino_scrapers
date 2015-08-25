@@ -5,6 +5,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
+import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import PersonDeserializer from 'bsrs-ember/deserializers/person';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import random from 'bsrs-ember/models/random';
@@ -56,14 +57,15 @@ test('role will keep appending when deserialize_single is invoked with many peop
     assert.ok(original.get('isNotDirty'));
 });
 
-test('sco person location many to many is set up correctly using deserialize list', (assert) => {
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: []});
-    var json = [PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id)];
-    var response = {'count':1,'next':null,'previous':null,'results': json};
-    var locations = person.get('locations');
+test('person location many to many is set up correctly using deserialize list', (assert) => {
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: []});
+    let json = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
+    json.locations = [LOCATION_FIXTURES.get()];
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    let locations = person.get('locations');
     assert.equal(locations.get('length'), 0);
     subject.deserialize(response);
-    var original = store.find('person', PEOPLE_DEFAULTS.id);
+    let original = store.find('person', PEOPLE_DEFAULTS.id);
     locations = original.get('locations');
     assert.equal(locations.get('length'), 1);
     assert.equal(store.find('person-location').get('length'), 1);
@@ -71,14 +73,14 @@ test('sco person location many to many is set up correctly using deserialize lis
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('sco person will have new m2m relationships added after deserialize list', (assert) => {
-    var m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+test('person will have new m2m relationships added after deserialize list', (assert) => {
+    let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations.length'), 1);
-    let json = [PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id)];
-    json[0].locations = json[0].locations.concat([{id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo}]);
-    let response = {'count':1,'next':null,'previous':null,'results': json};
+    let json = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
+    json.locations = [LOCATION_FIXTURES.get(), {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo}];
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
     subject.deserialize(response);
     let original = store.find('person', PEOPLE_DEFAULTS.id);
     let locations = original.get('locations');
@@ -89,14 +91,14 @@ test('sco person will have new m2m relationships added after deserialize list', 
     //var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idTwo]});
 });
 
-test('sco person will have remove m2m relationships that are not reflected on the server', (assert) => {
+test('person will have remove m2m relationships that are not reflected on the server', (assert) => {
     var m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations.length'), 1);
-    let json = [PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id)];
-    json[0].locations = [{id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo}, {id: LOCATION_DEFAULTS.idThree, name: LOCATION_DEFAULTS.storeNameThree}];
-    let response = {'count':1,'next':null,'previous':null,'results': json};
+    let json = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
+    json.locations = [{id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo}, {id: LOCATION_DEFAULTS.idThree, name: LOCATION_DEFAULTS.storeNameThree}];
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
     subject.deserialize(response);
     let original = store.find('person', PEOPLE_DEFAULTS.id);
     let locations = original.get('locations');
@@ -108,9 +110,10 @@ test('sco person will have remove m2m relationships that are not reflected on th
     assert.equal(store.find('person-location').get('length'), 3);
 });
 
-test('sco location m2m added even when person did not exist before the deserializer executes', (assert) => {
-    let json = [PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id)];
-    let response = {'count':1,'next':null,'previous':null,'results': json};
+test('location m2m added even when person did not exist before the deserializer executes', (assert) => {
+    let json = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
+    json.locations = [LOCATION_FIXTURES.get()];
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
     subject.deserialize(response);
     let person = store.find('person', PEOPLE_DEFAULTS.id);
     let locations = person.get('locations');

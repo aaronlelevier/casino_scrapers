@@ -25,7 +25,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             },
             role: this.role_fixtures.get(),
             emails: this.person_defaults.emails,
-            locations: [this.location_fixtures.get()]
+            locations: []
         }
     },
     factory.prototype.list = function() {
