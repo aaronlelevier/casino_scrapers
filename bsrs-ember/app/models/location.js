@@ -68,6 +68,7 @@ var LocationModel = Model.extend({
         this.saveLocationLevel();
     },
     rollbackRelated() {
+        this.rollbackLocationLevel();
     },
     serialize() {
         return {
