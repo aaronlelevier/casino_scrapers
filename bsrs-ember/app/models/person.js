@@ -107,24 +107,7 @@ export default Model.extend({
         });
     },
     saveLocations: function() {
-        let store = this.get('store');
-        let saved_m2m_pks = [];
-        let locations = this.get('locations');
-        locations.forEach((location) => {
-            location.save();
-            let filter = function(location_model, join_model) {
-                let removed = join_model.get('removed');
-                let person_pk = join_model.get('person_pk');
-                let location_pk = join_model.get('location_pk');
-                return person_pk === this.get('id') &&
-                    location_pk === location_model.get('id') && !removed;
-            };
-            let m2m = store.find('person-location', filter.bind(this, location), ['removed']);
-            m2m.forEach(function(join_model) {
-                saved_m2m_pks.push(join_model.get('id'));
-            });
-        });
-        this.set('_prevState.person_location_fks', saved_m2m_pks);
+        this.resetPersonLocationFks({save: true});
     },
     saveRole: function() {
         var role = this.get('role');
@@ -148,24 +131,30 @@ export default Model.extend({
         let store = this.get('store');
         let locations = this.get('locations');
         let previous_m2m_fks = this.get('_prevState.person_location_fks') || [];
-        let filter = function(prev_m2m_fks, join_model) {
-            //TODO: how does this.get('id') factor in exactly?
-            return Ember.$.inArray(join_model.get('id'), prev_m2m_fks) < 0 && !join_model.get('removed');
-        };
 
-        let m2m = store.find('person-location', filter.bind(this, previous_m2m_fks), ['removed']);
-        m2m.forEach(function(join_model) {
+        let m2m_to_throw_out = store.find('person-location', function(join_model) {
+            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
+        }, ['removed']);
+
+        m2m_to_throw_out.forEach(function(join_model) {
             join_model.set('removed', true);
         });
 
         previous_m2m_fks.forEach(function(pk) {
-            var should_rollback = store.find('person-location', pk);
-            should_rollback.set('removed', undefined);
+            var m2m_to_keep = store.find('person-location', pk);
+            m2m_to_keep.set('removed', undefined);
         });
 
-        locations = this.get('locations');
+        this.resetPersonLocationFks();
+    },
+    resetPersonLocationFks(options) {
         let saved_m2m_pks = [];
+        let store = this.get('store');
+        let locations = this.get('locations');
         locations.forEach((location) => {
+            if(options && options.save === true) {
+                location.save();
+            }
             let filter = function(location_model, join_model) {
                 let removed = join_model.get('removed');
                 let person_pk = join_model.get('person_pk');

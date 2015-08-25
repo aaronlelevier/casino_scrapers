@@ -13,10 +13,9 @@ import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
-//TODO: move person_location_pk to a defaults file?
 var container, registry, store, person_location_pk = 1, person_location_pk_two = 2, person_location_unused = 99, person_location_another = 98;
 
-module('toran unit: person test', {
+module('unit: person test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();
