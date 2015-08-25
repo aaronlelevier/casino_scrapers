@@ -11,11 +11,12 @@ import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
 import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
+import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
-var container, registry, store, person_location_pk = 1, person_location_pk_two = 2, person_location_unused = 99, person_location_another = 98;
+var container, registry, store;
 
-module('unit: person test', {
+module('toran unit: person test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();
@@ -487,9 +488,9 @@ test('rollback role will reset the previously used role when switching from one 
 //TODO: deserializer should create a joining model for each location found on person
 //TODO: test drive how this works on location if/when it's required
 test('locations property should return all associated locations or empty array', (assert) => {
-    var m2m = store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [person_location_pk]});
+    var m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     var locations = person.get('locations');
     assert.equal(locations.get('length'), 1);
     assert.equal(locations.objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
@@ -512,9 +513,9 @@ test('locations property is not dirty when no location present (empty array)', (
 });
 
 test('locations property is not dirty with original location model', (assert) => {
-    store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [person_location_pk]});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk]});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('locationsIsNotDirty'));
     location.set('name', LOCATION_DEFAULTS.storeNameTwo);
@@ -525,22 +526,22 @@ test('locations property is not dirty with original location model', (assert) =>
 });
 
 test('locations property only returns the single matching item even when multiple locations exist', (assert) => {
-    store.push('person-location', {id: person_location_unused, person_pk: PEOPLE_DEFAULTS.unusedId, location_pk: LOCATION_DEFAULTS.idOne});
-    store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk]});
-    store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, person_location_fks: [person_location_pk]});
-    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [person_location_unused]});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idThree, person_pk: PEOPLE_DEFAULTS.unusedId, location_pk: LOCATION_DEFAULTS.idOne});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idThree]});
     var locations = person.get('locations');
     assert.equal(locations.get('length'), 1);
     assert.equal(locations.objectAt(0).get('id'), LOCATION_DEFAULTS.idTwo);
 });
 
 test('locations property returns multiple matching items when multiple locations exist', (assert) => {
-    store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
-    store.push('person-location', {id: person_location_pk_two, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk, person_location_pk_two]});
-    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [person_location_pk_two]});
-    store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, person_location_fks: [person_location_pk]});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idTwo, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne, PERSON_LOCATION_DEFAULTS.idTwo]});
+    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idTwo]});
+    store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     var locations = person.get('locations');
     assert.equal(locations.get('length'), 2);
     assert.equal(locations.objectAt(0).get('id'), LOCATION_DEFAULTS.idOne);
@@ -552,36 +553,36 @@ test('locations property will update when the m2m array suddenly has the person 
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: []});
     store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: []});
     assert.equal(person.get('locations').get('length'), 0);
-    store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
     assert.equal(person.get('locations').get('length'), 1);
     assert.equal(person.get('locations').objectAt(0).get('id'), LOCATION_DEFAULTS.idOne);
 });
 
 test('locations property will update when the m2m array suddenly has the person pk', (assert) => {
-    store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [person_location_pk]});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: []});
     assert.equal(person.get('locations').get('length'), 1);
-    store.push('person-location', {id: person_location_pk_two, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idTwo, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
     assert.equal(person.get('locations').get('length'), 2);
     assert.equal(person.get('locations').objectAt(0).get('id'), LOCATION_DEFAULTS.idOne);
     assert.equal(person.get('locations').objectAt(1).get('id'), LOCATION_DEFAULTS.idTwo);
 });
 
 test('locations property will update when the m2m array suddenly removes the person', (assert) => {
-    var m2m = store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [person_location_pk]});
+    var m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations').get('length'), 1);
     store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
     assert.equal(person.get('locations').get('length'), 0);
 });
 
 test('when location is changed dirty tracking works as expected', (assert) => {
-    store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [person_location_pk]});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -607,7 +608,7 @@ test('when location is suddently assigned it shows as a dirty relationship (star
     assert.ok(person.get('locationsIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -620,31 +621,31 @@ test('when location is suddently assigned it shows as a dirty relationship (star
     assert.ok(person.get('locationsIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
 test('when location is suddently assigned it shows as a dirty relationship (starting with legit value)', (assert) => {
-    store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [person_location_pk]});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: []});
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('locationsIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    store.push('person-location', {id: person_location_pk_two, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idTwo, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
 test('when location is suddently removed it shows as a dirty relationship', (assert) => {
-    var m2m = store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [person_location_pk]});
+    var m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -655,11 +656,11 @@ test('when location is suddently removed it shows as a dirty relationship', (ass
 });
 
 test('when location is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
-    var m2m = store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    store.push('person-location', {id: person_location_pk_two, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk, person_location_pk_two]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [person_location_pk]});
-    var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: [person_location_pk_two]});
+    var m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idTwo, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne, PERSON_LOCATION_DEFAULTS.idTwo]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idTwo]});
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -670,11 +671,11 @@ test('when location is suddently removed it shows as a dirty relationship (when 
 });
 
 test('rollback location will reset the previously used locations when switching from valid locations to nothing', (assert) => {
-    var m2m = store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var m2m_two = store.push('person-location', {id: person_location_pk_two, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk, person_location_pk_two]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [person_location_pk]});
-    var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: [person_location_pk_two]});
+    var m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var m2m_two = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idTwo, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne, PERSON_LOCATION_DEFAULTS.idTwo]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idTwo]});
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -700,13 +701,13 @@ test('rollback location will reset the previously used locations when switching 
 });
 
 test('rollback location will reset the previous locations when switching from one location to another and saving in between each step', (assert) => {
-    var m2m = store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var m2m_two = store.push('person-location', {id: person_location_pk_two, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk, person_location_pk_two]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [person_location_pk]});
-    var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: [person_location_pk_two]});
-    var location_three = store.push('location', {id: LOCATION_DEFAULTS.unusedId, person_location_fks: [person_location_unused]});
-    var location_four = store.push('location', {id: LOCATION_DEFAULTS.anotherId, person_location_fks: [person_location_another]});
+    var m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var m2m_two = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idTwo, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne, PERSON_LOCATION_DEFAULTS.idTwo]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idTwo]});
+    var location_three = store.push('location', {id: LOCATION_DEFAULTS.unusedId, person_location_fks: [PERSON_LOCATION_DEFAULTS.idThree]});
+    var location_four = store.push('location', {id: LOCATION_DEFAULTS.anotherId, person_location_fks: [PERSON_LOCATION_DEFAULTS.idFour]});
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -724,7 +725,7 @@ test('rollback location will reset the previous locations when switching from on
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    var m2m_three = store.push('person-location', {id: person_location_unused, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.unusedId});
+    var m2m_three = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idThree, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.unusedId});
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     person.save();
@@ -741,7 +742,7 @@ test('rollback location will reset the previous locations when switching from on
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('locations').get('length'), 1);
-    var m2m_four = store.push('person-location', {id: person_location_another, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.anotherId});
+    var m2m_four = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idFour, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.anotherId});
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
