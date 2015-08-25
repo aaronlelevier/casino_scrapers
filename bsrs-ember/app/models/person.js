@@ -2,7 +2,6 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
-import previous from 'bsrs-ember/utilities/previous';
 
 export default Model.extend({
     store: inject('main'),
@@ -13,8 +12,8 @@ export default Model.extend({
     title: attr(''),
     employee_id: attr(''),
     auth_amount: attr(''),
-    role_fk: previous(),
-    person_location_fks: previous(),
+    role_fk: undefined,
+    person_location_fks: [],
     isModelDirty: false,
     dirtyModel: Ember.computed('isModelDirty', {
         get(key) {
@@ -34,7 +33,6 @@ export default Model.extend({
         var roles = this.get('role_property');
         var has_role = roles.get('length') > 0;
         var foreign_key = has_role ? roles.objectAt(0).get('id') : undefined;
-        this.set('role_fk', foreign_key);
         if (has_role) {
             return roles.objectAt(0);
         }
@@ -67,7 +65,7 @@ export default Model.extend({
         if(role) {
             return role.get('isDirty');
         }
-        return this.get('_prevState.role_fk') ? true : false;
+        return this.get('role_fk') ? true : false;
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
@@ -113,6 +111,7 @@ export default Model.extend({
         var role = this.get('role');
         if(role) {
             role.save();
+            this.set('role_fk', role.get('id'));
         }
     },
     saveRelated() {
@@ -130,7 +129,7 @@ export default Model.extend({
     rollbackLocations() {
         let store = this.get('store');
         let locations = this.get('locations');
-        let previous_m2m_fks = this.get('_prevState.person_location_fks') || [];
+        let previous_m2m_fks = this.get('person_location_fks');
 
         let m2m_to_throw_out = store.find('person-location', function(join_model) {
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
@@ -167,11 +166,11 @@ export default Model.extend({
                 saved_m2m_pks.push(join_model.get('id'));
             });
         });
-        this.set('_prevState.person_location_fks', saved_m2m_pks);
+        this.set('person_location_fks', saved_m2m_pks);
     },
     rollbackRole() {
         var store = this.get('store');
-        var previous_role_fk = this.get('_prevState.role_fk');
+        var previous_role_fk = this.get('role_fk');
 
         var current_role = this.get('role');
         if(current_role) {
@@ -203,7 +202,7 @@ export default Model.extend({
     locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
     locationsIsDirty: Ember.computed('person_locations', 'locations.@each.isDirty', function() {
         let locations = this.get('locations');
-        let previous_m2m_fks = this.get('_prevState.person_location_fks');
+        let previous_m2m_fks = this.get('person_location_fks');
         if(locations.get('length') > 0) {
             if(!previous_m2m_fks || previous_m2m_fks.get('length') !== locations.get('length')) {
                 return true;
