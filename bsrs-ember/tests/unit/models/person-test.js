@@ -14,9 +14,9 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
 //TODO: move person_location_pk to a defaults file?
-var container, registry, store, person_location_pk = 1, person_location_pk_two = 2, person_location_unused = 99;
+var container, registry, store, person_location_pk = 1, person_location_pk_two = 2, person_location_unused = 99, person_location_another = 98;
 
-module('unit: person test', {
+module('toran unit: person test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();
@@ -696,36 +696,59 @@ test('rollback location will reset the previously used locations when switching 
     person.rollback();
     person.rollbackLocations();
     assert.equal(person.get('locations').get('length'), 2);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-// test('rollback location will reset the previously used location when switching from one location to another', (assert) => {
-//     var person = store.push('person', {id: PEOPLE_DEFAULTS.id, location_fk: LOCATION_DEFAULTS.idTwo});
-//     var first_location = store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeName, people: [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]});
-//     var second_location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo, people: [PEOPLE_DEFAULTS.unusedId]});
-//     var another_location = store.push('location', {id: 'af34ee9b-833c-4f3e-a584-b6851d1e12c4', name: 'another', people: [PEOPLE_DEFAULTS.unusedId]});
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//     assert.equal(person.get('location.name'), LOCATION_DEFAULTS.storeName);
-//     first_location.set('people', [PEOPLE_DEFAULTS.unusedId]);
-//     first_location.save();
-//     second_location.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
-//     assert.equal(person.get('location.name'), LOCATION_DEFAULTS.storeNameTwo);
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isDirtyOrRelatedDirty'));
-//     person.save();
-//     person.saveRelated();
-//     second_location.set('people', [PEOPLE_DEFAULTS.unusedId]);
-//     second_location.save();
-//     another_location.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
-//     assert.equal(person.get('location.name'), 'another');
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isDirtyOrRelatedDirty'));
-//     person.rollback();
-//     person.rollbackLocation();
-//     assert.equal(person.get('location.name'), LOCATION_DEFAULTS.storeNameTwo);
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//     assert.deepEqual(another_location.get('people'), [PEOPLE_DEFAULTS.unusedId]);
-//     assert.ok(another_location.get('isNotDirty'));
-//     assert.ok(second_location.get('isNotDirty'));
-// });
+test('rollback location will reset the previous locations when switching from one location to another and saving in between each step', (assert) => {
+    var m2m = store.push('person-location', {id: person_location_pk, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var m2m_two = store.push('person-location', {id: person_location_pk_two, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [person_location_pk, person_location_pk_two]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [person_location_pk]});
+    var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: [person_location_pk_two]});
+    var location_three = store.push('location', {id: LOCATION_DEFAULTS.unusedId, person_location_fks: [person_location_unused]});
+    var location_four = store.push('location', {id: LOCATION_DEFAULTS.anotherId, person_location_fks: [person_location_another]});
+    assert.equal(person.get('locations').get('length'), 2);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    location.set('name', 'watwat');
+    person.save();
+    person.saveRelated();
+    assert.equal(person.get('locations').get('length'), 2);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.save();
+    person.saveRelated();
+    assert.equal(person.get('locations').get('length'), 1);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    var m2m_three = store.push('person-location', {id: person_location_unused, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.unusedId});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.save();
+    person.saveRelated();
+    assert.equal(person.get('locations').get('length'), 2);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    store.push('person-location', {id: m2m_two.get('id'), removed: true, person_pk: m2m_two.get('person_pk'), location_pk: m2m_two.get('location_pk')});
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    assert.equal(person.get('locations').get('length'), 1);
+    person.save();
+    person.saveRelated();
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(person.get('locations').get('length'), 1);
+    var m2m_four = store.push('person-location', {id: person_location_another, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.anotherId});
+    assert.equal(person.get('locations').get('length'), 2);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.rollback();
+    person.rollbackRelated();
+    assert.equal(person.get('locations').get('length'), 1);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+});

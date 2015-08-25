@@ -106,12 +106,26 @@ export default Model.extend({
             address.save();
         });
     },
-    // saveLocation: function() {
-    //     var location = this.get('location');
-    //     if(location) {
-    //         location.save();
-    //     }
-    // },
+    saveLocations: function() {
+        let store = this.get('store');
+        let saved_m2m_pks = [];
+        let locations = this.get('locations');
+        locations.forEach((location) => {
+            location.save();
+            let filter = function(location_model, join_model) {
+                let removed = join_model.get('removed');
+                let person_pk = join_model.get('person_pk');
+                let location_pk = join_model.get('location_pk');
+                return person_pk === this.get('id') &&
+                    location_pk === location_model.get('id') && !removed;
+            };
+            let m2m = store.find('person-location', filter.bind(this, location), ['removed']);
+            m2m.forEach(function(join_model) {
+                saved_m2m_pks.push(join_model.get('id'));
+            });
+        });
+        this.set('_prevState.person_location_fks', saved_m2m_pks);
+    },
     saveRole: function() {
         var role = this.get('role');
         if(role) {
@@ -122,20 +136,49 @@ export default Model.extend({
         this.savePhoneNumbers();
         this.saveAddresses();
         this.saveRole();
+        this.saveLocations();
     },
     rollbackRelated() {
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
         this.rollbackRole();
+        this.rollbackLocations();
     },
     rollbackLocations() {
-        let pk = Ember.uuid();
         let store = this.get('store');
-        let previous_m2m_fks = this.get('_prevState.person_location_fks');
-        previous_m2m_fks.forEach(function(pk) {
-            var m2m = store.find('person-location', pk);
-            m2m.set('removed', false);
+        let locations = this.get('locations');
+        let previous_m2m_fks = this.get('_prevState.person_location_fks') || [];
+        let filter = function(prev_m2m_fks, join_model) {
+            //TODO: how does this.get('id') factor in exactly?
+            return Ember.$.inArray(join_model.get('id'), prev_m2m_fks) < 0 && !join_model.get('removed');
+        };
+
+        let m2m = store.find('person-location', filter.bind(this, previous_m2m_fks), ['removed']);
+        m2m.forEach(function(join_model) {
+            join_model.set('removed', true);
         });
+
+        previous_m2m_fks.forEach(function(pk) {
+            var should_rollback = store.find('person-location', pk);
+            should_rollback.set('removed', undefined);
+        });
+
+        locations = this.get('locations');
+        let saved_m2m_pks = [];
+        locations.forEach((location) => {
+            let filter = function(location_model, join_model) {
+                let removed = join_model.get('removed');
+                let person_pk = join_model.get('person_pk');
+                let location_pk = join_model.get('location_pk');
+                return person_pk === this.get('id') &&
+                    location_pk === location_model.get('id') && !removed;
+            };
+            let m2m = store.find('person-location', filter.bind(this, location), ['removed']);
+            m2m.forEach(function(join_model) {
+                saved_m2m_pks.push(join_model.get('id'));
+            });
+        });
+        this.set('_prevState.person_location_fks', saved_m2m_pks);
     },
     rollbackRole() {
         var store = this.get('store');
