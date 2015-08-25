@@ -3,6 +3,7 @@ import json
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
+from django.views.decorators.cache import never_cache
 
 from contact.models import PhoneNumberType
 from person.models import Role, PersonStatus
@@ -26,6 +27,7 @@ class IndexView(TemplateView):
     '''
     template_name = 'index.html'
 
+    @never_cache
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated():
             return HttpResponseRedirect(reverse('login'))
