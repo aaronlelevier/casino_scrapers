@@ -183,7 +183,7 @@ test('rollback location level will reset the previously used location level when
     assert.ok(location_level_two.get('isNotDirty'));
 });
 
-test('saving an undefined location level on a previously dirty role will clean the role model', (assert) => {
+test('sco saving an undefined location level on a previously dirty role will clean the role model', (assert) => {
     let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     let location_level_one = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameRegion, roles: [ROLE_DEFAULTS.idOne]});
     let location_level_two = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idTwo, name: LOCATION_LEVEL_DEFAULTS.nameDepartment, roles: [ROLE_DEFAULTS.unusedId]});
@@ -198,7 +198,7 @@ test('saving an undefined location level on a previously dirty role will clean t
     role.save();
     role.saveRelated();
     assert.ok(role.get('isNotDirty'));
-    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));//
     another_location_level.set('roles', [ROLE_DEFAULTS.idOne]);
     assert.equal(role.get('location_level.name'), LOCATION_LEVEL_DEFAULTS.nameDistrict);
     assert.ok(role.get('isNotDirty'));
