@@ -13,7 +13,15 @@ class Locale(BaseModel):
         return self.language
 
 
+@python_2_unicode_compatible
 class Definition(BaseModel):
+    '''
+    :values: contains all translations for the Locale
+
+    `Flatdict Helper library <https://pypi.python.org/pypi/flatdict>`_ may be useful
+    in flattening nested dictionaries for this Model.
+
+    '''
     language = models.ForeignKey(Locale)
     values = HStoreField()
 
