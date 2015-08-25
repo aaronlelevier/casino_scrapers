@@ -12,6 +12,7 @@ from category import views as category_views
 from contact import views as contact_views
 from location import views as location_views
 from person import views as person_views
+from translation import views as translation_views
 from util.decorators import required, logout_required
 
 
@@ -38,6 +39,9 @@ router.register(r'location_types', location_views.LocationTypeViewSet)
 # PERSON
 router.register(r'people', person_views.PersonViewSet)
 router.register(r'roles', person_views.RoleViewSet)
+# TRANSLATION
+router.register(r'locales', translation_views.LocaleViewSet)
+router.register(r'definitions', translation_views.DefinitionViewSet)
 
 # API
 urlpatterns = patterns('',
