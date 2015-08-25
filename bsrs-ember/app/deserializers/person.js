@@ -1,6 +1,22 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 
+var extract_phone_numbers = function(model, store) {
+    model.phone_numbers.forEach((phone_number) => {
+        store.push('phonenumber', phone_number);
+    });
+    delete model.phone_numbers;
+};
+
+var extract_addresses = function(model, store) {
+    model.addresses.forEach((address) => {
+        store.push('address-type', address.type);
+        address.type = address.type.id;
+        store.push('address', address);
+    });
+    delete model.addresses;
+};
+
 var extract_role = function(model, store) {
     var role_pk = model.role.id;
     var role = store.push('role', model.role);
@@ -53,33 +69,21 @@ var PersonDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(model, id) {
-        var store = this.get('store');
-        model.phone_numbers.forEach((phone_number) => {
-            store.push('phonenumber', phone_number);
-        });
-        model.addresses.forEach((address) => {
-            store.push('address-type', address.type);
-            address.type = address.type.id;
-            store.push('address', address);
-        });
+        let uuid = this.get('uuid');
+        let store = this.get('store');
+        extract_phone_numbers(model, store);
+        extract_addresses(model, store);
         model.role_fk = extract_role(model, store);
-        //discuss dirty attr for prop not included in the list
-        //meaning ... if the user is dirty NOW what should do?
-        delete model.phone_numbers;
-        delete model.addresses;
-        var originalPerson = store.push('person', model);
-        originalPerson.save();
+        model.person_location_fks = extract_person_location(model, store, uuid);
+        let person = store.push('person', model);
+        person.save();
     },
     deserialize_list(response) {
-        let uuid = this.get('uuid');
         let store = this.get('store');
         response.results.forEach((model) => {
             model.role_fk = extract_role(model, store);
-            model.person_location_fks = extract_person_location(model, store, uuid);
-
-            var person = store.push('person', model);
+            let person = store.push('person', model);
             person.save();
-            person.saveRelated();
         });
     }
 });

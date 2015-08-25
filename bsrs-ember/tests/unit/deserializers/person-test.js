@@ -57,14 +57,15 @@ test('role will keep appending when deserialize_single is invoked with many peop
     assert.ok(original.get('isNotDirty'));
 });
 
-test('person location many to many is set up correctly using deserialize list', (assert) => {
+test('person location many to many is set up correctly using deserialize single', (assert) => {
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: []});
-    let json = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
-    json.locations = [LOCATION_FIXTURES.get()];
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
+    response.phone_numbers = [];
+    response.addresses = [];
+    response.locations = [LOCATION_FIXTURES.get()];
     let locations = person.get('locations');
     assert.equal(locations.get('length'), 0);
-    subject.deserialize(response);
+    subject.deserialize(response, PEOPLE_DEFAULTS.id);
     let original = store.find('person', PEOPLE_DEFAULTS.id);
     locations = original.get('locations');
     assert.equal(locations.get('length'), 1);
@@ -78,10 +79,11 @@ test('person will have new m2m relationships added after deserialize list', (ass
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations.length'), 1);
-    let json = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
-    json.locations = [LOCATION_FIXTURES.get(), {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo}];
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    subject.deserialize(response);
+    let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
+    response.phone_numbers = [];
+    response.addresses = [];
+    response.locations = [LOCATION_FIXTURES.get(), {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo}];
+    subject.deserialize(response, PEOPLE_DEFAULTS.id);
     let original = store.find('person', PEOPLE_DEFAULTS.id);
     let locations = original.get('locations');
     assert.equal(locations.get('length'), 2);
@@ -96,10 +98,11 @@ test('person will have remove m2m relationships that are not reflected on the se
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations.length'), 1);
-    let json = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
-    json.locations = [{id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo}, {id: LOCATION_DEFAULTS.idThree, name: LOCATION_DEFAULTS.storeNameThree}];
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    subject.deserialize(response);
+    let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
+    response.phone_numbers = [];
+    response.addresses = [];
+    response.locations = [{id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo}, {id: LOCATION_DEFAULTS.idThree, name: LOCATION_DEFAULTS.storeNameThree}];
+    subject.deserialize(response, PEOPLE_DEFAULTS.id);
     let original = store.find('person', PEOPLE_DEFAULTS.id);
     let locations = original.get('locations');
     assert.equal(locations.get('length'), 2);
@@ -111,10 +114,11 @@ test('person will have remove m2m relationships that are not reflected on the se
 });
 
 test('location m2m added even when person did not exist before the deserializer executes', (assert) => {
-    let json = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
-    json.locations = [LOCATION_FIXTURES.get()];
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    subject.deserialize(response);
+    let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
+    response.phone_numbers = [];
+    response.addresses = [];
+    response.locations = [LOCATION_FIXTURES.get()];
+    subject.deserialize(response, PEOPLE_DEFAULTS.id);
     let person = store.find('person', PEOPLE_DEFAULTS.id);
     let locations = person.get('locations');
     assert.equal(locations.get('length'), 1);
