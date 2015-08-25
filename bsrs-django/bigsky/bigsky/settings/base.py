@@ -93,6 +93,7 @@ DATABASES = {}
 AUTH_USER_MODEL = 'person.Person'
 
 LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE_NAME = 'English'
 
 TIME_ZONE = 'America/Los_Angeles'
 

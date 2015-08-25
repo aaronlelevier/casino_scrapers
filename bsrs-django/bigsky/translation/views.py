@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
-from translation.models import Locale, Definition
-from translation.serializers import LocaleSerializer, DefinitionSerializer
+from translation.models import Locale, Translation
+from translation.serializers import LocaleSerializer, TranslationSerializer
 
 
 class LocaleViewSet(viewsets.ModelViewSet):
@@ -12,8 +12,8 @@ class LocaleViewSet(viewsets.ModelViewSet):
     queryset = Locale.objects.all()
 
 
-class DefinitionViewSet(viewsets.ModelViewSet):
+class TranslationViewSet(viewsets.ModelViewSet):
 
     permission_classes = (IsAuthenticated,)
-    serializer_class = DefinitionSerializer
-    queryset = Definition.objects.all()
+    serializer_class = TranslationSerializer
+    queryset = Translation.objects.all()

@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from translation.models import Locale, Definition
+from translation.models import Locale, Translation
 from translation.tests import factory
 
 
@@ -28,10 +28,10 @@ class LocaleTests(TestCase):
         self.assertEqual(Locale.objects.count(), 3)
 
 
-class DefinitionTests(TestCase):
+class TranslationTests(TestCase):
 
     def setUp(self):
         factory.create_definitions()
 
     def test_create(self):
-        self.assertEqual(Definition.objects.count(), 3)
+        self.assertEqual(Translation.objects.count(), 3)

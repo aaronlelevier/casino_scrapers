@@ -41,7 +41,7 @@ router.register(r'people', person_views.PersonViewSet)
 router.register(r'roles', person_views.RoleViewSet)
 # TRANSLATION
 router.register(r'locales', translation_views.LocaleViewSet)
-router.register(r'definitions', translation_views.DefinitionViewSet)
+router.register(r'definitions', translation_views.TranslationViewSet)
 
 # API
 urlpatterns = patterns('',

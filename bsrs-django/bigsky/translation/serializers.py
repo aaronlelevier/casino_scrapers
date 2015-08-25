@@ -1,4 +1,4 @@
-from translation.models import Locale, Definition
+from translation.models import Locale, Translation
 from util.serializers import BaseCreateSerializer
 
 
@@ -9,8 +9,8 @@ class LocaleSerializer(BaseCreateSerializer):
         fields = ('id', 'language',)
 
 
-class DefinitionSerializer(BaseCreateSerializer):
+class TranslationSerializer(BaseCreateSerializer):
 
     class Meta:
-        model = Definition
+        model = Translation
         fields = ('id', 'language', 'values',)

@@ -3,7 +3,7 @@ import json
 from rest_framework.test import APITestCase
 
 from person.tests.factory import create_person, PASSWORD
-from translation.models import Locale, Definition
+from translation.models import Locale, Translation
 from translation.tests.factory import create_locales, create_definitions
 
 
@@ -25,7 +25,7 @@ class LocaleTests(APITestCase):
         self.assertEqual(data['count'], Locale.objects.count())
 
 
-class DefinitionTests(APITestCase):
+class TranslationTests(APITestCase):
 
     def setUp(self):
         create_definitions()
@@ -40,5 +40,5 @@ class DefinitionTests(APITestCase):
         response = self.client.get('/api/admin/definitions/')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
-        self.assertEqual(data['count'], Definition.objects.count())
+        self.assertEqual(data['count'], Translation.objects.count())
 
