@@ -75,8 +75,8 @@ class ConfigurationTests(TestCase):
         configuration = json.loads(response.context['role_config'])
         self.assertTrue(len(configuration) > 0)
         # the model id shows in the context
-        self.assertIn(str(self.person.role.id), [c.values()[0] for c in configuration])
-        self.assertIn(str(self.person.role.name), [c.values()[1] for c in configuration])
+        self.assertIn(str(self.person.role.id), [c["id"] for c in configuration])
+        self.assertIn(str(self.person.role.name), [c["name"] for c in configuration])
 
     def test_role_types(self):
         response = self.client.get(reverse('index'))

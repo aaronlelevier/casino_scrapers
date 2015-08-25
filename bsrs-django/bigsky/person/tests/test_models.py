@@ -18,6 +18,8 @@ class RoleTests(TestCase):
     def test_name(self):
         self.assertEqual(self.role.group.name, self.role.name)
 
+    def test_to_dict(self):
+        self.assertEqual(self.role.to_dict()["location_level"], str(self.role.location_level.id))
 
 class PersonStatusManagerTests(TestCase):
 
