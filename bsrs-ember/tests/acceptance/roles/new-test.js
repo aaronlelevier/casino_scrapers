@@ -42,7 +42,7 @@ test('visiting role/new', (assert) => {
     click('.t-role-new');
     andThen(() => {
         assert.equal(currentURL(), ROLE_NEW_URL);
-        assert.equal(store.find('role').get('length'), 3);
+        assert.equal(store.find('role').get('length'), 4);
         assert.equal(store.find('role-type').get('length'), 2);
         assert.equal(store.find('location-level').get('length'), 2);
         assert.equal(find('.t-location-level option:selected').text(), 'Select One');
@@ -63,7 +63,7 @@ test('visiting role/new', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
-        assert.equal(store.find('role').get('length'), 3);
+        assert.equal(store.find('role').get('length'), 4);
         var role = store.find('role', UUID.value);
         assert.equal(role.get('name'), ROLE_DEFAULTS.nameOne);
         assert.equal(role.get('role_type'), ROLE_DEFAULTS.roleTypeGeneral);
@@ -136,6 +136,6 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     visit(ROLE_NEW_URL);
     click('.t-cancel-btn');
     andThen(() => {
-        assert.equal(store.find('role').get('length'), 2);
+        assert.equal(store.find('role').get('length'), 3);
     });
 });
