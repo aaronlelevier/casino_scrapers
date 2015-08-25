@@ -8,7 +8,7 @@ import LocationDeserializer from 'bsrs-ember/deserializers/location';
 
 let container, store, registry;
 
-module('sco unit: location deserializer test', {
+module('unit: location deserializer test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();
