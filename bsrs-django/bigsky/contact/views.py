@@ -20,13 +20,13 @@ class PhoneNumberTypeViewSet(viewsets.ModelViewSet):
 
 ### PHONE NUMBER
 
-class PhoneNumberFilter(filters.FilterSet):
+class PhoneNumberFilterSet(filters.FilterSet):
     number = filters.AllLookupsFilter(name='number')
     person = filters.RelatedFilter(PersonFilterSet, name='person')
 
     class Meta:
-        model= PhoneNumber
-        fields = ['number']
+        model = PhoneNumber
+        fields = ['number', 'person']
 
 
 class PhoneNumberViewSet(viewsets.ModelViewSet):
@@ -36,7 +36,7 @@ class PhoneNumberViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = PhoneNumberSerializer
     queryset = PhoneNumber.objects.all()
-    filter_class = PhoneNumberFilter
+    filter_class = PhoneNumberFilterSet
     
     def get_queryset(self):
         """
@@ -50,6 +50,20 @@ class PhoneNumberViewSet(viewsets.ModelViewSet):
 
 
 ### ADDRESS
+
+class AddressFilterSet(filters.FilterSet):
+    '''
+    TODO: this filter will be used by a LocationList API View that is a 
+    detail route and searches Locations by Address Filters.
+
+    (Not Implemented yet)
+    '''
+    city = filters.AllLookupsFilter(name='city')
+
+    class Meta:
+        model = Address
+        fields = ['city']
+
 
 class AddressViewSet(viewsets.ModelViewSet):
     """
