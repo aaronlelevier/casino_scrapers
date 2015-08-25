@@ -9,11 +9,11 @@ var es5Shim = funnel('node_modules/es5-shim', {
     destDir: '/assets'
 });
 
-module.exports = function(defaults) {
-    var app = new EmberApp(defaults, {
+module.exports = function() {
+    var app = new EmberApp({
         markers: {
             enabled: true,
-            markers: ['TODO']
+            kinds: ['TODO']
         }
     });
 
