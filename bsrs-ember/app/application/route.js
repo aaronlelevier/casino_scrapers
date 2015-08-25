@@ -46,11 +46,13 @@ export default Ember.Route.extend({
         var role_config = Ember.$('[data-preload-roles]').html();
         var role_list = JSON.parse(role_config);
         role_list.forEach((model) => {
-            var loc_level = store.find('location-level', model.location_level);
-            var existing_roles = loc_level.get('roles') || [];
-            loc_level.set('roles', existing_roles.concat([model.id])); 
-            loc_level.save();
-            delete model.location_level;
+            if (model.location_level) {
+                var loc_level = store.find('location-level', model.location_level);
+                var existing_roles = loc_level.get('roles') || [];
+                loc_level.set('roles', existing_roles.concat([model.id])); 
+                loc_level.save();
+                delete model.location_level;
+            }
             store.push('role', model);
         });
         var role_types_config = Ember.$('[data-preload-role-types]').html();
