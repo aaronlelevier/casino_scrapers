@@ -6,7 +6,7 @@ from django.core.urlresolvers import reverse
 
 from model_mommy import mommy
 
-from person.models import Person, PersonStatus
+from person.models import Person, PersonStatus, Role
 from contact.models import PhoneNumberType
 from location.models import LocationLevel, LocationStatus
 from person.tests.factory import PASSWORD, create_person, create_role
@@ -77,7 +77,17 @@ class ConfigurationTests(TestCase):
         # the model id shows in the context
         self.assertIn(str(self.person.role.id), [c["id"] for c in configuration])
         self.assertIn(str(self.person.role.name), [c["name"] for c in configuration])
-
+        self.assertIn(str(self.person.role.location_level.id), [c["location_level"] for c in configuration])
+        role = Role.objects.first()
+        role.location_level = None
+        role.save()
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['role_config'])
+        self.assertTrue(len(configuration) > 0)
+        self.assertIn(str(role.id), [c["id"] for c in configuration])
+        with self.assertRaises(KeyError):
+            configuration[0]["location_level"]
+        
     def test_role_types(self):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['role_types_config'])
