@@ -245,7 +245,7 @@ export default Model.extend({
         };
     },
     serialize() {
-        //TODO: remove this hard reference to get the first status
+        //FIXME: remove this hard reference to get the first status
         var store = this.get('store');
         var status_id = store.findOne('status').get('id');
         var phone_numbers = this.get('phone_numbers').map(function(number) {
