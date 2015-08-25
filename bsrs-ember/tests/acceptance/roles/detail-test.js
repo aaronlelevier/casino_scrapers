@@ -50,10 +50,11 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         assert.equal(currentURL(), DETAIL_URL);
         var role = store.find('role').objectAt(0);  
         assert.ok(role.get('isNotDirty'));
+        assert.equal(role.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
         assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.nameOne);
         assert.equal(find('.t-role-role-type').val(), ROLE_DEFAULTS.roleTypeGeneral);
         // assert.equal(find('.t-role-category:eq(0)').val(), CATEGORY_DEFAULTS.name);
-        assert.equal(find('.t-role-location-level').val(), ROLE_DEFAULTS.locationLevelOne);
+        assert.equal(find('.t-location-level').val(), LOCATION_LEVEL_FIXTURES.idOne);
     });
     var url = PREFIX + DETAIL_URL + '/';
     var response = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);
@@ -63,7 +64,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-role-name', ROLE_DEFAULTS.namePut);
     fillIn('.t-role-role-type', ROLE_DEFAULTS.roleTypeContractor);
-    fillIn('.t-role-location-level', ROLE_DEFAULTS.locationLevelTwo);
+    fillIn('.t-location-level', ROLE_DEFAULTS.locationLevelTwo);
     andThen(() => {
         var role = store.find('role').objectAt(0);  
         assert.ok(role.get('isDirty'));

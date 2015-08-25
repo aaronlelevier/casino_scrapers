@@ -38,20 +38,25 @@ export default Ember.Route.extend({
         for (var key in currency_list) {
             store.push('currency', currency_list[key]);
         }
+        var location_level_config = Ember.$('[data-preload-location-levels]').html();
+        var location_level_list = JSON.parse(location_level_config);
+        location_level_list.forEach((model) => {
+            store.push('location-level', model);
+        });
         var role_config = Ember.$('[data-preload-roles]').html();
         var role_list = JSON.parse(role_config);
         role_list.forEach((model) => {
+            var loc_level = store.find('location-level', model.location_level);
+            var existing_roles = loc_level.get('roles') || [];
+            loc_level.set('roles', existing_roles.concat([model.id])); 
+            loc_level.save();
+            delete model.location_level;
             store.push('role', model);
         });
         var role_types_config = Ember.$('[data-preload-role-types]').html();
         var role_type_list = JSON.parse(role_types_config);
         role_type_list.forEach((model, index) => {
             store.push('role-type', {id: index+1, name: model});
-        });
-        var location_level_config = Ember.$('[data-preload-location-levels]').html();
-        var location_level_list = JSON.parse(location_level_config);
-        location_level_list.forEach((model) => {
-            store.push('location-level', model);
         });
     },
     actions: {

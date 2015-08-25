@@ -8,7 +8,7 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
 var store;
 
-moduleForComponent('location-single', 'integration: location-single test', {
+    moduleForComponent('location-single', 'integration: location-single test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:location', 'model:location-level']);

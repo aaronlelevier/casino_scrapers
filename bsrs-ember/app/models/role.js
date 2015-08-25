@@ -9,7 +9,7 @@ export default Model.extend({
     name: attr(''),
     people: attr([]),
     role_type: attr(),
-    location_level_fk: previous(), 
+    location_level_fk: previous(), //SCOTT: put undefined in parens/required is false, saying this relationship can be null.  Relationship here is not required
     location_level: Ember.computed('location_levels.[]', function() {
         let location_levels = this.get('location_levels');
         let has_location_level = location_levels.get('length') > 0;
@@ -32,25 +32,30 @@ export default Model.extend({
         return this.get('isDirty') || this.get('locationLevelIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    locationLevelIsDirty: Ember.computed('location_levels.@each.isDirty','_prevState.cleanupLocation', function() {
+    locationLevelIsDirty: Ember.computed('location_levels.@each.isDirty', '_prevState', 'location_levels.[]', function() {
         let location_levels = this.get('location_levels');
         let location_level = location_levels.objectAt(0);
         if (location_level) { 
             return location_level.get('isDirty'); 
-        } else if (this.get('_prevState.cleanupLocation')) {
+        } 
+        if (this.get('_prevState.cleanupLocation')) {
+            this.set('_prevState.cleanupLocation', false);
             return false;
-        } else if (this.get('_prevState.location_level_fk')) {
-            return true; 
         }
-        return false;
+        return this.get('_prevState.location_level_fk') ? true : false;
     }),
     locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
     serialize() {
+        let location_level = this.get('location_level');
+        let location_level_id;
+        if (location_level) {
+            location_level_id = location_level.get('id');
+        }
         return {
             id: this.get('id'),
             name: this.get('name'),
             role_type: this.get('role_type'),
-            location_level: this.get('location_level'),
+            location_level: location_level_id || null
         };
     },
     removeRecord() {
@@ -66,12 +71,10 @@ export default Model.extend({
     },
     saveLocationLevel() {
         let location_level = this.get('location_level');
-        if (!location_level) {
-            //if saving undefined first_loc_fk, then set cleanupLocation to true
-            this.set('_prevState.cleanupLocation', true);                
-        } else if (location_level) { 
+        if (location_level) { 
             location_level.save(); 
         } 
+        this.set('_prevState', {});
     },
     rollbackLocationLevel() {
         let store = this.get('store');
@@ -84,10 +87,13 @@ export default Model.extend({
         }
         let location_level_fk = this.get('_prevState.location_level_fk');
         let new_location_level = store.find('location-level', location_level_fk);
+        this.set('_prevState', {});
         if (new_location_level.get('id')) {
             let loc_level_roles = new_location_level.get('roles') || [];
             new_location_level.set('roles', loc_level_roles.concat([this.get('id')]));
             new_location_level.save();
+        } else {
+            this.set('_prevState.cleanupLocation', true);  
         }
     }
 });
