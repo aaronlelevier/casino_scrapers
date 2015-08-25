@@ -25,7 +25,7 @@ def rand_chars(number=10):
     return ''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
 
 
-class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
+class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unittest.TestCase):
 
     def setUp(self):
         self.driver = webdriver.Firefox()
@@ -72,10 +72,7 @@ class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unitte
         self.driver_wait.find_element_by_class_name("t-save-btn").click()
         # check name change
         all_roles = self.driver_wait.find_elements_by_class_name("t-role-data")
-        self.assertIn(
-            final_new_role_name,
-            [r.find_elements_by_tag_name('td')[1].text for r in all_roles]
-        )
+        self.driver.find_element_by_xpath("//*[text()='{0}']".format(final_new_role_name))
 
         ### DELETE
 
@@ -202,8 +199,6 @@ class RoleTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, unitte
         self.driver_wait.find_element_by_class_name("dropdown-toggle").click()
         self.driver_wait.find_element_by_class_name("t-delete-btn").click()
         # check Role is deleted
-        self.driver_wait.find_element_by_class_name("t-nav-admin").click()
-        self.driver_wait.find_element_by_class_name("t-nav-admin-location-level").click()
         all_locations = self.driver_wait.find_elements_by_class_name("t-location-level-data")
         self.assertNotIn(
             location_name,
