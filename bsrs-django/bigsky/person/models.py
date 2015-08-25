@@ -112,10 +112,9 @@ class Role(BaseModel):
         return self.__name__.lower()
 
     def to_dict(self):
-        try:
-            return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
-        except AttributeError:
+        if not self.location_level:
             return {"id": str(self.pk), "name": self.name}
+        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
 
 class ProxyRole(BaseModel):
     '''
