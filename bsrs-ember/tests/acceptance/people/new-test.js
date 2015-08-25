@@ -35,7 +35,7 @@ module('Acceptance | people-new', {
         xhr(endpoint,"GET",null,{},200,PEOPLE_FIXTURES.empty());
         var detailEndpoint = PREFIX + PEOPLE_URL + '/';
         var people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
-            role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: []};
+            role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: [], locations: []};
         detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
     },
     afterEach() {
