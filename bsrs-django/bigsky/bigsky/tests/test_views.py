@@ -116,3 +116,13 @@ class ConfigurationTests(TestCase):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['location_status_config'])
         self.assertTrue(len(configuration) > 0)
+
+    def test_current_locale(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['current_locale'])
+        self.assertTrue(configuration)
+
+    def test_locales(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['locales'])
+        self.assertTrue(len(configuration) > 0)
