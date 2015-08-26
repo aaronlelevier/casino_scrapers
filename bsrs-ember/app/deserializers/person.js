@@ -45,7 +45,6 @@ var extract_person_location = function(model, store, uuid) {
             prevented_duplicate_m2m.push(person_locations[0].get('id'));
         }
     });
-
     let server_locations_sum = newly_added_m2m.concat(prevented_duplicate_m2m);
     let m2m_to_remove = all_person_locations.filter(function(m2m) {
         return Ember.$.inArray(m2m.get('id'), server_locations_sum) < 0;
