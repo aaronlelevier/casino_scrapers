@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-let extract_location_level = function(model, store) {
+let extract_location_level = (model, store) => {
     let location_level_pk = model.location_level.id;
     let location_level = store.push('location-level', model.location_level);
     let existing_locations = location_level.get('locations') || [];

@@ -22,7 +22,7 @@ const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 const CANCEL_BTN = '.t-cancel-btn';
 
-var application, store, payload, list_xhr;
+let application, store, payload, list_xhr;
 
 module('Acceptance | location-new', {
     beforeEach() {
@@ -45,7 +45,7 @@ module('Acceptance | location-new', {
 });
 
 test('visiting /location/new', (assert) => {
-    var response = Ember.$.extend(true, {}, payload);
+    let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_URL);
     click('.t-location-new');
@@ -60,7 +60,7 @@ test('visiting /location/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(store.find('location').get('length'), 1);
-        var location = store.find('location', UUID.value);
+        let location = store.find('location', UUID.value);
         assert.equal(location.get('id'), UUID.value);
         assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
         assert.equal(location.get('number'), LOCATION_DEFAULTS.storeNumber);
@@ -70,7 +70,7 @@ test('visiting /location/new', (assert) => {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-    var response = Ember.$.extend(true, {}, payload);
+    let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_URL);
     click('.t-location-new');
@@ -128,7 +128,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
-            var location = store.find('location', {id: UUID.value});
+            let location = store.find('location', {id: UUID.value});
             assert.equal(location.get('length'), 1);
         });
     });
@@ -137,7 +137,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
-            var location = store.find('location', {id: UUID.value});
+            let location = store.find('location', {id: UUID.value});
             assert.equal(location.get('length'), 0);
             assert.equal(find('tr.t-location-data').length, 0);
         });

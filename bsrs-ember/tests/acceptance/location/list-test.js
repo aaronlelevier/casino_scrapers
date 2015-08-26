@@ -11,12 +11,12 @@ const PREFIX = config.APP.NAMESPACE;
 const LOCATION_URL = BASEURLS.base_locations_url + '/index';
 const DJANGO_LOCATION_URL = '/admin/locations/';
 
-var application;
+let application;
 
 module('Acceptance | location-list', {
   beforeEach() {
     application = startApp();
-    var endpoint = PREFIX + DJANGO_LOCATION_URL;
+    let endpoint = PREFIX + DJANGO_LOCATION_URL;
     xhr(endpoint,'GET', null, {}, 200, LOCATION_FIXTURES.list() );
   },
   afterEach() {

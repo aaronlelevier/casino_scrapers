@@ -5,17 +5,18 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location_level_fixtures';
 import config from 'bsrs-ember/config/environment';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
-const LOCATION_LEVEL_URL = "/admin/location-levels";
+const LOCATION_LEVEL_URL = BASEURLS.base_location_levels_url + '/index';
 const DJANGO_LOCATION_LEVEL_URL = "/admin/location_levels/";
 
-var application;
+let application;
 
 module('Acceptance | location-level-list', {
   beforeEach() {
     application = startApp();
-    var endpoint = PREFIX + DJANGO_LOCATION_LEVEL_URL;
+    let endpoint = PREFIX + DJANGO_LOCATION_LEVEL_URL;
     xhr(endpoint ,"GET",null,{}, 200, LOCATION_LEVEL_FIXTURES.list() );
   },
   afterEach() {

@@ -37,6 +37,7 @@ Router.map(function() {
             this.route('role', {path: '/:role_id'});
         });
         this.route('location-levels', function() {
+            this.route('index');
             this.route('new');
             this.route('location-level', {path: '/:location_level_id'});
         });

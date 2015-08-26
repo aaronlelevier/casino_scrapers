@@ -7,14 +7,6 @@ var LocationIndexRoute = Ember.Route.extend({
     var repository = this.get('repository');
     return repository.find();
   },
-  // actions: {
-  //   cancel() {
-  //     this.transitionTo('admin.locations');
-  //   },
-  //   new() {
-  //     this.transitionTo('admin.locations.new');
-  //   }
-  // }
 });
 
 export default LocationIndexRoute;
