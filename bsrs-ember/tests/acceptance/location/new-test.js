@@ -9,24 +9,26 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
-const LOCATION_URL = '/admin/locations';
-const LOCATION_NEW_URL = LOCATION_URL + '/new';
+const BASE_URL = BASEURLS.base_locations_url;
+const LOCATION_URL = BASE_URL + '/index';
+const LOCATION_NEW_URL = BASE_URL + '/new';
 const DJANGO_LOCATION_URL = PREFIX + '/admin/locations/';
-const DETAIL_URL = LOCATION_URL + '/' + LOCATION_DEFAULTS.idOne;
+const DETAIL_URL = BASE_URL + '/' + LOCATION_DEFAULTS.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_URL + LOCATION_DEFAULTS.idOne + '/';
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 const CANCEL_BTN = '.t-cancel-btn';
 
-var application, store, payload;
+var application, store, payload, list_xhr;
 
 module('Acceptance | location-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        xhr(DJANGO_LOCATION_URL, "GET", null, {}, 200, LOCATION_FIXTURES.empty());
+        list_xhr = xhr(DJANGO_LOCATION_URL, "GET", null, {}, 200, LOCATION_FIXTURES.empty());
         payload = {
             id: UUID.value,
             name: LOCATION_DEFAULTS.storeName,
@@ -97,6 +99,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+    clearxhr(list_xhr);
     visit(LOCATION_NEW_URL);
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeName);
     click(CANCEL_BTN);

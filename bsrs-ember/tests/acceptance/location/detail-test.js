@@ -8,23 +8,25 @@ import config from 'bsrs-ember/config/environment';
 import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
-const LOCATION_URL = '/admin/locations';
-const DETAIL_URL = LOCATION_URL + '/' + LOCATION_DEFAULTS.idOne;
+const BASE_URL = BASEURLS.base_locations_url;
+const LOCATION_URL = BASE_URL + '/index';
+const DETAIL_URL = BASE_URL + '/' + LOCATION_DEFAULTS.idOne;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 
-var application, store;
+let application, store, endpoint, list_xhr;
 
 module('Acceptance | detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        var endpoint = PREFIX + LOCATION_URL + '/';
-        var location_list_data = LOCATION_FIXTURES.list();
-        var location_detail_data = LOCATION_FIXTURES.detail();
-        xhr(endpoint, 'GET', null, {}, 200, location_list_data);
+        endpoint = PREFIX + BASE_URL + '/';
+        let location_list_data = LOCATION_FIXTURES.list();
+        let location_detail_data = LOCATION_FIXTURES.detail();
+        list_xhr = xhr(endpoint, 'GET', null, {}, 200, location_list_data);
         xhr(endpoint + LOCATION_DEFAULTS.idOne + '/', 'GET', null, {}, 200, location_detail_data);
     },
     afterEach() {
@@ -44,28 +46,32 @@ test('clicking on a locations name will redirect them to the detail view', (asse
 });
 
 test('visiting admin/location', (assert) => {
+    clearxhr(list_xhr);
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        var location = store.find('location').objectAt(0);
+        let location = store.find('location').objectAt(0);
         assert.ok(location.get('isNotDirty'));
         assert.equal(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
         assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.storeName);
         assert.equal(find('.t-location-number').val(), LOCATION_DEFAULTS.storeNumber);
     });
-    var response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
-    var payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo});
+    let response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
+    let payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
     andThen(() => {
-        var location = store.find('location', LOCATION_DEFAULTS.idOne);
+        let location = store.find('location', LOCATION_DEFAULTS.idOne);
         assert.ok(location.get('isDirty'));
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
+    let list = LOCATION_FIXTURES.list();
+    list.results[0].name = LOCATION_DEFAULTS.storeNameTwo;
+    xhr(endpoint, 'GET', null, {}, 200, list);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
-        var location = store.find('location', LOCATION_DEFAULTS.idOne);
+        let location = store.find('location', LOCATION_DEFAULTS.idOne);
         assert.ok(location.get('isNotDirty'));
     });
 });
@@ -79,9 +85,9 @@ test('when editing name to invalid, it checks for validation', (assert) => {
         assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
     });
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
-    var url = PREFIX + DETAIL_URL + "/";
-    var response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
-    var payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo});
+    let url = PREFIX + DETAIL_URL + "/";
+    let response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
+    let payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
     andThen(() => {
@@ -105,6 +111,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+    clearxhr(list_xhr);
     visit(DETAIL_URL);
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
     click('.t-cancel-btn');
@@ -141,7 +148,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
-            var location = store.find('location', LOCATION_DEFAULTS.idOne);
+            let location = store.find('location', LOCATION_DEFAULTS.idOne);
             assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
         });
     });
@@ -149,7 +156,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when click delete, location is deleted and removed from store', (assert) => {
     visit(DETAIL_URL);
-    xhr(PREFIX + LOCATION_URL + '/' + LOCATION_DEFAULTS.idOne + '/', 'DELETE', null, {}, 204, {});
+    xhr(PREFIX + BASE_URL + '/' + LOCATION_DEFAULTS.idOne + '/', 'DELETE', null, {}, 204, {});
     click('.t-delete-btn');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);

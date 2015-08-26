@@ -14,8 +14,9 @@ Router.map(function() {
         this.route('general');
         this.route('contractor-assignments');
         this.route('locations', function() {
-            this.route('location', {path: '/:location_id'});
+            this.route('index');
             this.route('new');
+            this.route('location', {path: '/:location_id'});
         });
         this.route('categories', function() {
             this.route('index');
