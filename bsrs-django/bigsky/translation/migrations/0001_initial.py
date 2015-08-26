@@ -4,6 +4,7 @@ from __future__ import unicode_literals
 from django.db import models, migrations
 import translation.models
 import django.contrib.postgres.fields.hstore
+from django.contrib.postgres.operations import HStoreExtension
 import uuid
 
 
@@ -13,6 +14,7 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
+        HStoreExtension(),
         migrations.CreateModel(
             name='Locale',
             fields=[
