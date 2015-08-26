@@ -118,37 +118,37 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         ### UPDATE
 
         # # Go to Location Detail view
-        # self.driver_wait.find_element_by_class_name("t-nav-admin-location").click()
-        # location = self.driver_wait.find_elements_by_class_name("t-location-data")[0].click()
-        # # Change name and hit "save"
-        # updated_location_name = rand_chars(10)
-        # location_name_input = self.driver_wait.find_element_by_id("location_name")
-        # location_name_input.clear()
-        # location_name_input.clear()
-        # location_name_input.send_keys(updated_location_name)
-        # self.driver_wait.find_element_by_class_name("t-save-btn").click()
-        # # List view contains new name
-        # all_locations = self.driver_wait.find_elements_by_class_name("t-location-data")
-        # self.assertIn(
-        #     updated_location_name,
-        #     [r.find_elements_by_tag_name('td')[1].text for r in all_locations]
-        # )
+        self.driver_wait.find_element_by_class_name("t-nav-admin-location").click()
+        location = self.driver_wait.find_elements_by_class_name("t-location-data")[0].click()
+        # Change name and hit "save"
+        updated_location_name = rand_chars(10)
+        location_name_input = self.driver_wait.find_element_by_id("location_name")
+        location_name_input.clear()
+        location_name_input.clear()
+        location_name_input.send_keys(updated_location_name)
+        self.driver_wait.find_element_by_class_name("t-save-btn").click()
+        # List view contains new name
+        all_locations = self.driver_wait.find_elements_by_class_name("t-location-data")
+        self.assertIn(
+            updated_location_name,
+            [r.find_elements_by_tag_name('td')[1].text for r in all_locations]
+        )
 
         ### DELETE
 
         # # Go to Location Detail view
-        # locations = self.driver_wait.find_elements_by_class_name("t-location-data")
-        # location_name = locations[0].find_elements_by_tag_name('td')[1].text
-        # locations[0].click()
-        # # click Delete
-        # self.driver_wait.find_element_by_class_name("dropdown-toggle").click()
-        # self.driver_wait.find_element_by_class_name("t-delete-btn").click()
-        # # check Role is deleted
-        # all_locations = self.driver_wait.find_elements_by_class_name("t-location-data")
-        # self.assertNotIn(
-        #     location_name,
-        #     [r.find_elements_by_tag_name('td')[1].text for r in all_locations]
-        # )
+        locations = self.driver_wait.find_elements_by_class_name("t-location-data")
+        location_name = locations[0].find_elements_by_tag_name('td')[1].text
+        locations[0].click()
+        # click Delete
+        self.driver_wait.find_element_by_class_name("dropdown-toggle").click()
+        self.driver_wait.find_element_by_class_name("t-delete-btn").click()
+        # check Role is deleted
+        all_locations = self.driver_wait.find_elements_by_class_name("t-location-data")
+        self.assertNotIn(
+            location_name,
+            [r.find_elements_by_tag_name('td')[1].text for r in all_locations]
+        )
 
     def test_location_level(self):
 
