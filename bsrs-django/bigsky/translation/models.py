@@ -104,7 +104,10 @@ class TranslationManager(BaseManager):
             for k in t.values.keys():
                 writer.writerow([t.locale, k, t.values.pop(k, ''), t.context.pop(k,'')])
 
+
 '''
+# Boiler-plate code for creating a new `Translation` record
+
 from translation.models import Translation, Locale
 for model in [Translation, Locale]:
     for m in model.objects_all.all():
