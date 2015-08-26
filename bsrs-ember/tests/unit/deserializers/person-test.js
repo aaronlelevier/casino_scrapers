@@ -57,6 +57,20 @@ test('role will keep appending when deserialize_single is invoked with many peop
     assert.ok(original.get('isNotDirty'));
 });
 
+test('role will keep appending when deserialize_single and prevent duplicates with identical people', (assert) => {
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var original = store.find('role', ROLE_DEFAULTS.idOne);
+    assert.deepEqual(original.get('people'), [PEOPLE_DEFAULTS.id]);
+    var response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
+    response.phone_numbers = [];
+    response.addresses = [];
+    subject.deserialize(response, PEOPLE_DEFAULTS.id);
+    original = store.find('role', ROLE_DEFAULTS.idOne);
+    assert.deepEqual(original.get('people'), [PEOPLE_DEFAULTS.id]);
+    assert.ok(original.get('isNotDirty'));
+});
+
 test('person location many to many is set up correctly using deserialize single', (assert) => {
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: []});
     let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);

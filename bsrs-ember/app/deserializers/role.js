@@ -4,7 +4,9 @@ var extract_location_level = function(model, store) {
     var location_level_pk = model.location_level.id;
     var location_level = store.find('location-level', model.location_level);
     var existing_roles = location_level.get('roles') || [];
-    location_level.set('roles', existing_roles.concat([model.id]));
+    if (existing_roles.indexOf(model.id) === -1) {
+        location_level.set('roles', existing_roles.concat([model.id]));
+    }
     location_level.save();
     delete model.location_level;
     return location_level_pk;

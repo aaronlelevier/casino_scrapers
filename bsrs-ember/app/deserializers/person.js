@@ -21,7 +21,9 @@ var extract_role = function(model, store) {
     var role_pk = model.role.id;
     var role = store.push('role', model.role);
     var existing_people = role.get('people') || [];
-    role.set('people', existing_people.concat([model.id]));
+    if (existing_people.indexOf(model.id) === -1) {
+        role.set('people', existing_people.concat([model.id]));
+    }
     role.save();
     delete model.role;
     return role_pk;
