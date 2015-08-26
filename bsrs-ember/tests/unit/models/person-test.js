@@ -768,3 +768,18 @@ test('rollback location will reset the previous locations when switching from on
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
+
+test('location_ids computed returns a flat list of ids for each location', (assert) => {
+    var m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    var m2m_two = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idTwo, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne, PERSON_LOCATION_DEFAULTS.idTwo]});
+    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idTwo]});
+    var location_three = store.push('location', {id: LOCATION_DEFAULTS.unusedId, person_location_fks: [PERSON_LOCATION_DEFAULTS.idThree]});
+    var location_four = store.push('location', {id: LOCATION_DEFAULTS.anotherId, person_location_fks: [PERSON_LOCATION_DEFAULTS.idFour]});
+    assert.equal(person.get('locations').get('length'), 2);
+    assert.deepEqual(person.get('location_ids'), [LOCATION_DEFAULTS.idOne, LOCATION_DEFAULTS.idTwo]);
+    store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+    assert.equal(person.get('locations').get('length'), 1);
+    assert.deepEqual(person.get('location_ids'), [LOCATION_DEFAULTS.idTwo]);
+});
