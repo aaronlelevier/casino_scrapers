@@ -18,6 +18,7 @@ import PHONE_NUMBER_FIXTURES from 'bsrs-ember/vendor/phone_number_fixtures';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
 import PHONE_NUMBER_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
 import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
@@ -39,6 +40,8 @@ module('Acceptance | detail test', {
         var people_list_data = PEOPLE_FIXTURES.list();
         var people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
         var endpoint = PREFIX + PEOPLE_URL + '/';
+        var locations_endpoint = PREFIX + '/admin/locations/';
+        xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
         xhr(endpoint, 'GET', null, {}, 200, people_list_data);
         xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
     },
