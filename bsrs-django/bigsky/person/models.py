@@ -199,13 +199,6 @@ class Person(BaseModel, AbstractUser):
     def __str__(self):
         return self.username
 
-    def validate_locations(self):
-        for location in self.locations.all():
-            if location.location_level != self.role.location_level:
-                raise LocationAndRoleLevelExcp(
-                    "Location.location_level: {} and person.role.location_level: {} "
-                    "do not match.".format(location.location_level, self.role.location_level))
-
     def save(self, *args, **kwargs):
         if not self.status:
             self.status = PersonStatus.objects.default()
@@ -213,8 +206,6 @@ class Person(BaseModel, AbstractUser):
             self.auth_amount = self.role.default_auth_amount
         if not self.auth_currency:
             self.auth_currency = self.role.default_auth_currency
-
-        self.validate_locations()
         
         return super(Person, self).save(*args, **kwargs)
 

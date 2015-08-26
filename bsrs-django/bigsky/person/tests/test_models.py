@@ -1,9 +1,11 @@
 from django.test import TestCase
+from django.db import IntegrityError
 from django.contrib.auth.models import AbstractUser, Group
 
 from model_mommy import mommy
 
 from location.models import Location, LocationLevel
+from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role
 
@@ -39,6 +41,7 @@ class PersonStatusTests(TestCase):
 class PersonManagerTests(TestCase):
 
     def setUp(self):
+        create_locations()
         self.person = create_person()
         self.person_del = create_person()
         self.person_del.delete()
@@ -113,10 +116,3 @@ class PersonTests(TestCase):
         person.save()
         person = Person.objects.get(id=person.id)
         self.assertEqual(person.groups.count(), 1)
-
-    def test_validate_locations(self):
-        location = mommy.make(Location)
-        self.assertNotEqual(location.location_level, self.person.role.location_level)
-        from util.exceptions import LocationAndRoleLevelExcp
-        with self.assertRaises(LocationAndRoleLevelExcp):
-            self.person.locations.add(location)
