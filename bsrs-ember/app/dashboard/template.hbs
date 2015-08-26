@@ -1,6 +1,6 @@
 <aside class="side-panel">
     <header>
-        <h1>Home</h1>
+        <h1>{{t 'welcome'}}</h1>
     </header>
     <menu class="t-side-menu">
         <section>
@@ -13,6 +13,8 @@
                 <a href="#" class="list-group-item"><span class="badge">9</span>Rating Pending</a>
             </div>
         </section>
+
+        {{language-select}}
     </menu>
 </aside>
 <article class="main">{{outlet}}</article>

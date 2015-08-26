@@ -6,10 +6,11 @@ if sys.version_info > (2,7):
 
 from django.test import TestCase
 from django.db.models.functions import Lower
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError as DjangoValidationError
 
 from rest_framework import status
 from rest_framework.test import APITestCase
+from rest_framework.exceptions import ValidationError
 from model_mommy import mommy
 
 from accounting.models import Currency
@@ -309,18 +310,36 @@ class PersonPutTests(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(new_title, data['title'])
 
-    def test_location(self):
+    ### LOCATIONS
+
+    def test_locations(self):
         location = mommy.make(Location, location_level=self.person.role.location_level)
         self.data['locations'].append(str(location.id))
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         data = json.loads(response.content)
-        print data
         self.assertTrue(data['locations'])
         self.assertIn(
             location.id,
             Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
             )
+
+    def test_locations_fail(self):
+        # create separate LocationLevel
+        location_level = mommy.make(LocationLevel)
+        location = mommy.make(Location, location_level=location_level)
+        self.assertNotEqual(self.person.role.location_level, location_level)
+        # Adding a non authorized LocationLevel Location raises an error
+        self.data['locations'].append(str(location.id))
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 400)
+        self.assertNotIn(
+            location.id,
+            Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
+            )
+
+    ### RELATED CONTACT MODELS
 
     def test_update_email_add_to_person(self):
         self.assertFalse(self.data['emails'])
@@ -384,6 +403,14 @@ class PersonPutTests(APITestCase):
         # Nested Contacts should be empty!
         self.assertTrue(self.person.phone_numbers.all())
         self.assertFalse(self.person.emails.all())
+
+    def test_update_middle_initial(self):
+        self.assertFalse(self.data['middle_initial'])
+        self.data['middle_initial'] = 'Y'
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content)
+        self.assertEqual(self.data['middle_initial'], data['middle_initial'])
 
 
 class PersonDeleteTests(APITestCase):

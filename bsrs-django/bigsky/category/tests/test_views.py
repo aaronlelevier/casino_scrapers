@@ -184,3 +184,39 @@ class CategoryCreateTests(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(response.status_code, 201)
         self.assertIn(str(new_sub_category.id), data['children'])
+
+
+class CategoryFilterTests(APITestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+        # Category
+        create_categories()
+        self.type = Category.objects.get(name='repair')
+        self.trade = Category.objects.get(name='electric')
+        self.issue = Category.objects.get(name='outlets')
+        self.issue2 = Category.objects.get(name='fans')
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_filter_top_level(self):
+        response = self.client.get('/api/admin/categories/?parent__isnull=True')
+        data = json.loads(response.content)
+        self.assertEqual(data['count'], Category.objects.filter(parent__isnull=True).count())
+
+    def test_filter_by_parent(self):
+        response = self.client.get('/api/admin/categories/?parent={}'.format(self.trade.id))
+        data = json.loads(response.content)
+        self.assertEqual(data['count'], self.trade.children.count())
+
+
+
+
+
+
+
+

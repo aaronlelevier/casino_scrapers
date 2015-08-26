@@ -4,6 +4,12 @@ var BSRS_LOCATION_FACTORY = (function() {
         this.location_level_defaults = location_level_defaults;
         this.location_level_fixtures = location_level_fixtures;
     };
+    factory.prototype.get = function(i) {
+        return {
+            id: this.location_defaults.idOne,
+            name: this.location_defaults.storeName
+        }
+    },
     factory.prototype.generate = function(i) {
         return {
             id: i,

@@ -42,12 +42,12 @@ test('visiting role/new', (assert) => {
     click('.t-role-new');
     andThen(() => {
         assert.equal(currentURL(), ROLE_NEW_URL);
-        assert.equal(store.find('role').get('length'), 3);
+        assert.equal(store.find('role').get('length'), 4);
         assert.equal(store.find('role-type').get('length'), 2);
         assert.equal(store.find('location-level').get('length'), 2);
-        assert.equal(find('.t-location-level option:selected').text(), t(LOCATION_LEVEL_DEFAULTS.nameCompany));
-        assert.equal(find('.t-location-level option:eq(0)').text(), t(LOCATION_LEVEL_DEFAULTS.nameCompany));
-        assert.equal(find('.t-location-level option:eq(1)').text(), t(LOCATION_LEVEL_DEFAULTS.nameDepartment));
+        assert.equal(find('.t-location-level option:selected').text(), 'Select One');
+        assert.equal(find('.t-location-level option:eq(1)').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(find('.t-location-level option:eq(2)').text(), LOCATION_LEVEL_DEFAULTS.nameDepartment);
         assert.equal(find('.t-role-type option:selected').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(0)').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(1)').text(), ROLE_DEFAULTS.roleTypeContractor);
@@ -63,17 +63,18 @@ test('visiting role/new', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
-        assert.equal(store.find('role').get('length'), 3);
+        assert.equal(store.find('role').get('length'), 4);
         var role = store.find('role', UUID.value);
         assert.equal(role.get('name'), ROLE_DEFAULTS.nameOne);
         assert.equal(role.get('role_type'), ROLE_DEFAULTS.roleTypeGeneral);
-        assert.equal(role.get('location_level'), ROLE_DEFAULTS.locationLevelOne);
+        assert.equal(role.get('location_level.id'), ROLE_DEFAULTS.locationLevelOne);
         assert.ok(role.get('isNotDirty'));
     });
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
+    payload.location_level = null;
     xhr(PREFIX + ROLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(ROLE_URL);
     click('.t-role-new');
@@ -135,6 +136,6 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     visit(ROLE_NEW_URL);
     click('.t-cancel-btn');
     andThen(() => {
-        assert.equal(store.find('role').get('length'), 2);
+        assert.equal(store.find('role').get('length'), 3);
     });
 });

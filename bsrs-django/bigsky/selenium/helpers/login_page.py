@@ -4,4 +4,4 @@ class LoginPage(object):
     '''
     @staticmethod
     def url():
-        return 'dashboard'
+        return '.+/dashboard.+'
