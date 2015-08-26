@@ -257,6 +257,14 @@
 },
 {
   "fields": {
+    "expire_date": "2015-09-09T19:13:47.222Z",
+    "session_data": "YzMxODBlOWUxNzAwN2M5OTQzOTQzNjdjODQ3OWRiYzE4OTRjNGJlYjp7Il9hdXRoX3VzZXJfaGFzaCI6IjUyYjZjOGQxNGYzMTJhMDY4YjFjZGZmNjRkZTVjNDI0ZTFiNDljNzYiLCJfYXV0aF91c2VyX2JhY2tlbmQiOiJkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZCIsIl9hdXRoX3VzZXJfaWQiOiJjYzZmMzkxYi0yNDhhLTQ0YzYtYTNiYS02NGRjYjY3NjRlMGEifQ=="
+  },
+  "model": "sessions.session",
+  "pk": "2z4qc4cifgd3vc3kkme11eue2gc7t73k"
+},
+{
+  "fields": {
     "domain": "example.com",
     "name": "example.com"
   },
@@ -275,6 +283,28 @@
   },
   "model": "accounting.currency",
   "pk": "76584047-a8d9-4e88-985f-bfb4e163a1f4"
+},
+{
+  "fields": {
+    "deleted": null,
+    "order": 1,
+    "modified": "2015-07-28T21:59:23.843Z",
+    "name": "admin.phonenumbertype.mobile",
+    "created": "2015-07-28T21:59:23.843Z"
+  },
+  "model": "contact.phonenumbertype",
+  "pk": "3ab97a52-9623-44a9-a8a7-087ad2e2e9e2"
+},
+{
+  "fields": {
+    "deleted": null,
+    "order": 0,
+    "modified": "2015-07-28T21:58:23.843Z",
+    "name": "admin.phonenumbertype.office",
+    "created": "2015-07-28T21:58:23.843Z"
+  },
+  "model": "contact.phonenumbertype",
+  "pk": "44008afd-4c85-42e1-8754-a1f6d9fc9d05"
 },
 {
   "fields": {
@@ -369,8 +399,8 @@
     "location_level": "0f8b8e6f-6e72-4637-8d40-38ce2c7c1ab2",
     "type": "132aee41-38a8-470b-94bd-6160f52b7a7f",
     "children": [
-      "a7969307-aaf5-4a70-a6f2-7e12c92a97ec",
-      "3b231ba3-fdab-4428-838d-64ae136b2f9f"
+      "3b231ba3-fdab-4428-838d-64ae136b2f9f",
+      "a7969307-aaf5-4a70-a6f2-7e12c92a97ec"
     ]
   },
   "model": "location.location",
@@ -1621,8 +1651,8 @@
     "proxy_start_date": null,
     "next_approver": null,
     "locations": [
-      "a7969307-aaf5-4a70-a6f2-7e12c92a97ec",
-      "3b231ba3-fdab-4428-838d-64ae136b2f9f"
+      "3b231ba3-fdab-4428-838d-64ae136b2f9f",
+      "a7969307-aaf5-4a70-a6f2-7e12c92a97ec"
     ],
     "is_staff": false,
     "user_permissions": [],
@@ -2218,8 +2248,8 @@
     "proxy_start_date": null,
     "next_approver": null,
     "locations": [
-      "a7969307-aaf5-4a70-a6f2-7e12c92a97ec",
-      "3b231ba3-fdab-4428-838d-64ae136b2f9f"
+      "3b231ba3-fdab-4428-838d-64ae136b2f9f",
+      "a7969307-aaf5-4a70-a6f2-7e12c92a97ec"
     ],
     "is_staff": false,
     "user_permissions": [],
@@ -2441,7 +2471,7 @@
     "auth_amount": "0.0000",
     "title": null,
     "is_superuser": false,
-    "last_login": null,
+    "last_login": "2015-08-26T19:13:47.208Z",
     "password_expire": null,
     "role": "038a4232-9ec6-495d-923c-d8259e33fd71",
     "auth_currency": "76584047-a8d9-4e88-985f-bfb4e163a1f4",
@@ -2453,11 +2483,11 @@
       5
     ],
     "accept_notify": true,
-    "password": "pbkdf2_sha256$20000$5l8uWAwtyGZS$Tdu1mzN6eY2uBw2c67k3vHgHwMrogbuf78yiDuFiBPo=",
+    "password": "md5$Qb4T41oKBmYc$dcb9d045efd4a9b429dd522bdffc5174",
     "proxy_status": null,
     "proxy_user": null,
     "created": "2015-08-26T18:27:41.105Z",
-    "modified": "2015-08-26T18:27:41.189Z",
+    "modified": "2015-08-26T19:13:40.613Z",
     "email": "",
     "accept_assign": true,
     "password_change": "nlqekysaffNFOQZateSeLCWVzHZhkATaGYTdnKTokTpHnEmIoYGPVXAhLuXiiUlMrBKMryyDpywCoymMmoJaozbuftxmCaWVUorQbZIzZnuhPCveOJQfFVHPnCzKnWlkzhcAfVLNqzrLkzxqHXtmpoKAiLObayMBWETKhgSncMryCCSumlbojETMZgpORYhYDBxurywVHjYDZsjWMHYlfdZosJhXttItUXoVjaSMVAsGtNJKBWCDPcdpHXVhEnFLaNasTNCODfyZlUbBkeZcsQZoslZwDLYZekcRooiYfojg"
