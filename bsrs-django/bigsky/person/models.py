@@ -11,6 +11,7 @@ from accounting.models import Currency
 from location.models import LocationLevel, Location
 from person import helpers
 from order.models import WorkOrderStatus
+from translation.models import Locale
 from util import choices, create
 from util.exceptions import LocationAndRoleLevelExcp
 from util.models import (AbstractName, MainSetting, CustomSetting,
@@ -160,6 +161,9 @@ class Person(BaseModel, AbstractUser):
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
     locations = models.ManyToManyField(Location, related_name='people', blank=True)
+    locale = models.ForeignKey(Locale, blank=True, null=True,
+        help_text="If the Person has not 'Locale', the Accept-Language "
+                  "header will be used or the Site's system setting.")
     # required
     # Auth Amounts - can be defaulted by the Role
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)

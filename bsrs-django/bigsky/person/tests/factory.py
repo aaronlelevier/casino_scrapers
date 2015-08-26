@@ -48,6 +48,12 @@ def create_single_person(username, role):
         first_name=create._generate_chars(), role=role)
 
 
+def update_login_person():
+    aaron = Person.objects.get(username='aaron')
+    aaron.set_password('1234')
+    aaron.save()
+
+
 def create_person(username=None, _many=1):
     '''
     Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )

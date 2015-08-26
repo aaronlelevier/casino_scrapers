@@ -37,12 +37,31 @@ class Locale(BaseModel):
     default = models.BooleanField(blank=True, default=False)
     name = models.CharField(max_length=50, 
         help_text="Human readable name in forms. i.e. 'English'")
+    native_name = models.CharField(max_length=50, blank=True, null=True)
+    presentation_name = models.CharField(max_length=50, blank=True, null=True)
     rtl = models.BooleanField(blank=True, default=False)
 
     objects = LocaleManager()
 
     def __str__(self):
         return self.locale
+
+    def save(self, *args, **kwargs):
+        if not self.native_name:
+            self.native_name = self.name
+        if not self.presentation_name:
+            self.presentation_name = self.name
+        return super(Locale, self).save(*args, **kwargs)
+
+    def to_dict(self):
+        return {
+            'id':str(self.id),
+            'locale':self.locale,
+            'name':self.name,
+            'native_name':self.native_name,
+            'presentation_name':self.presentation_name,
+            'rtl':self.rtl
+            }
 
 
 @receiver(post_save, sender=Locale)
