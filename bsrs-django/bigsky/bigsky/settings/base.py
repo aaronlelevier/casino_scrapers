@@ -111,6 +111,9 @@ STATIC_URL = '/assets/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+MEDIA_ROOT = os.path.join(BASE_DIR, 'source')
+
+
 ### Native Configurations ###
 
 LOGIN_URL = '/login/'

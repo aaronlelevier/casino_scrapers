@@ -6,11 +6,11 @@ class LocaleSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Locale
-        fields = ('id', 'language',)
+        fields = ('id', 'default', 'name', 'rtl',)
 
 
 class TranslationSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Translation
-        fields = ('id', 'language', 'values',)
+        fields = ('id', 'locale', 'values', 'context', 'csv',)

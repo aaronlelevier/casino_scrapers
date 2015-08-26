@@ -1,8 +1,11 @@
+import csv
+
 from django.db import models
 from django.contrib.postgres.fields import HStoreField
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.forms.models import model_to_dict
 from django.utils.encoding import python_2_unicode_compatible
 
 from util.models import AbstractName, BaseModel, BaseManager, BaseQuerySet
@@ -49,6 +52,46 @@ def update_locale(sender, instance=None, created=False, **kwargs):
         Locale.objects.update_default(instance.id)
 
 
+class TranslationManager(BaseManager):
+    "CSV Model methods"
+
+    def import_csv(self):
+        with open('/Users/alelevier/Downloads/en.csv') as csvfile: # TODO: change to ``self.csv`` to make dynamic
+            reader = csv.DictReader(csvfile)
+            values = {}
+            context = {}
+            locale = None
+
+            for i, row in enumerate(reader):
+                if i == 0:
+                    locale = row['LOCALE']
+                if row['CONTEXT']:
+                    context.update({row['KEY']: row['CONTEXT']})
+                if row['VALUE']:
+                    values.update({row['KEY']: row['VALUE']})
+
+        _locale, _ = Locale.objects.get_or_create(locale=locale)
+
+        ret = Translation.objects.create(
+            locale = _locale,
+            values = values,
+            context = context
+        )
+        return ret
+
+    def export_csv(self, id):
+        t = self.get(id=id)
+        with open('/Users/alelevier/Desktop/{}.csv'.format(t.locale), 'wb') as csvfile: # TODO: change location of file output...
+            writer = csv.writer(csvfile, delimiter=',')
+            writer.writerow(['LOCALE', 'KEY', 'VALUE', 'CONTEXT'])
+            for k in t.values.keys():
+                writer.writerow([t.locale, k, t.values.pop(k, ''), t.context.pop(k,'')])
+
+
+def translation_file(instance, filename):
+    return '/'.join(['translations', filename])
+
+
 @python_2_unicode_compatible
 class Translation(BaseModel):
     '''
@@ -60,6 +103,10 @@ class Translation(BaseModel):
     '''
     locale = models.OneToOneField(Locale)
     values = HStoreField()
+    context = HStoreField(blank=True, null=True)
+    csv = models.FileField(upload_to=translation_file, blank=True, null=True)
+
+    objects = TranslationManager()
 
     def __str__(self):
-        return "{self.language}: {self.values}".format(self=self)
+        return "{self.locale}: {self.values}".format(self=self)

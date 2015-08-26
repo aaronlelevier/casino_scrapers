@@ -42,6 +42,15 @@ class LocaleTests(TestCase):
         self.assertTrue(d.default)
 
 
+class TranslationCSVTests(TestCase):
+
+    def test_create(self):
+        t = Translation.objects.import_csv()
+        self.assertIsInstance(t, Translation)
+        self.assertTrue(t.values)
+        self.assertTrue(t.context)
+
+
 class TranslationTests(TestCase):
 
     def setUp(self):
