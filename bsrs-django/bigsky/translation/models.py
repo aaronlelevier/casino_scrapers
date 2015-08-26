@@ -74,29 +74,27 @@ def update_locale(sender, instance=None, created=False, **kwargs):
 class TranslationManager(BaseManager):
     "CSV Model methods"
 
-    def import_csv(self):
-        with open('/Users/alelevier/Downloads/en.csv') as csvfile: # TODO: change to ``self.csv`` to make dynamic
+    def import_csv(self, language):
+        with open('/Users/alelevier/Downloads/{}.csv'.format(language)) as csvfile:
             reader = csv.DictReader(csvfile)
             values = {}
             context = {}
             locale = None
-
             for i, row in enumerate(reader):
-                if i == 0:
+                if row['LOCALE']:
                     locale = row['LOCALE']
                 if row['CONTEXT']:
                     context.update({row['KEY']: row['CONTEXT']})
                 if row['VALUE']:
                     values.update({row['KEY']: row['VALUE']})
-
-        _locale, _ = Locale.objects.get_or_create(locale=locale)
-
-        ret = Translation.objects.create(
-            locale = _locale,
-            values = values,
-            context = context
-        )
-        return ret
+            
+            locale, _ = Locale.objects.get_or_create(locale=language, name=language)
+            
+            ret, _ = Translation.objects.get_or_create(locale=locale, values={})
+            ret.values = values
+            ret.context = context
+            ret.save()
+            return ret
 
     def export_csv(self, id):
         t = self.get(id=id)
@@ -105,6 +103,15 @@ class TranslationManager(BaseManager):
             writer.writerow(['LOCALE', 'KEY', 'VALUE', 'CONTEXT'])
             for k in t.values.keys():
                 writer.writerow([t.locale, k, t.values.pop(k, ''), t.context.pop(k,'')])
+
+'''
+from translation.models import Translation, Locale
+for model in [Translation, Locale]:
+    for m in model.objects_all.all():
+        m.delete(override=True)
+Translation.objects.import_csv('en')
+
+'''
 
 
 def translation_file(instance, filename):
@@ -120,7 +127,7 @@ class Translation(BaseModel):
     may be useful in flattening nested dictionaries for this Model.
 
     '''
-    locale = models.OneToOneField(Locale)
+    locale = models.ForeignKey(Locale)
     values = HStoreField()
     context = HStoreField(blank=True, null=True)
     csv = models.FileField(upload_to=translation_file, blank=True, null=True)
