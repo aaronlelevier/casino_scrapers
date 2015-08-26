@@ -1,9 +1,9 @@
 import Ember from 'ember';
 
-var extract_location_level = function(model, store) {
-    var location_level_pk = model.location_level.id;
-    var location_level = store.find('location-level', model.location_level);
-    var existing_roles = location_level.get('roles') || [];
+let extract_location_level = (model, store) => {
+    let location_level_pk = model.location_level.id;
+    let location_level = store.find('location-level', model.location_level);
+    let existing_roles = location_level.get('roles') || [];
     if (existing_roles.indexOf(model.id) === -1) {
         location_level.set('roles', existing_roles.concat([model.id]));
     }
@@ -12,7 +12,7 @@ var extract_location_level = function(model, store) {
     return location_level_pk;
 };
 
-var RoleDeserializer = Ember.Object.extend({
+let RoleDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
@@ -21,14 +21,14 @@ var RoleDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(response, id) {
-        var store = this.get('store');
+        let store = this.get('store');
         response.location_level_fk = extract_location_level(response, store);
-        var originalRole = store.push('role', response);
+        let originalRole = store.push('role', response);
         originalRole.save();
     },
     deserialize_list(response) {
         response.results.forEach((model) => {
-            var store = this.get('store');
+            let store = this.get('store');
             model.location_level_fk = extract_location_level(model, store);
             this.get('store').push('role', model);
         });

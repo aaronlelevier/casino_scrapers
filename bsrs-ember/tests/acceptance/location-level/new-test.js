@@ -8,24 +8,26 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
-const LOCATION_LEVEL_URL = '/admin/location-levels';
-const LOCATION_LEVEL_NEW_URL = LOCATION_LEVEL_URL + '/new';
+const BASE_URL = BASEURLS.base_location_levels_url;
+const LOCATION_LEVEL_URL = BASE_URL + '/index';
+const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new';
 const DJANGO_LOCATION_LEVEL_URL = PREFIX + '/admin/location_levels/';
-const DETAIL_URL = LOCATION_LEVEL_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
+const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_LEVEL_URL + LOCATION_LEVEL_DEFAULTS.idOne + '/';
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 const CANCEL_BTN = '.t-cancel-btn';
 
-var application, store, payload;
+let application, store, payload, list_xhr;
 
 module('Acceptance | location-level-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        xhr(DJANGO_LOCATION_LEVEL_URL, "GET", null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
+        list_xhr = xhr(DJANGO_LOCATION_LEVEL_URL, "GET", null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
         payload = {
             id: UUID.value,
             name: LOCATION_LEVEL_DEFAULTS.nameCompany,
@@ -39,7 +41,7 @@ module('Acceptance | location-level-new', {
 });
 
 test('visiting /location-level/new', (assert) => {
-    var response = Ember.$.extend(true, {}, payload);
+    let response = Ember.$.extend(true, {}, payload);
     payload.children = ['85c18266-dfca-4499-9cff-7c5c6970af7e', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f'];
     xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);
@@ -56,7 +58,7 @@ test('visiting /location-level/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(store.find('location-level').get('length'), 3);
-        var locationLevel = store.find('location-level', UUID.value);
+        let locationLevel = store.find('location-level', UUID.value);
         assert.equal(locationLevel.get('id'), UUID.value);
         assert.equal(locationLevel.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
         assert.ok(locationLevel.get('isNotDirty'));
@@ -65,7 +67,7 @@ test('visiting /location-level/new', (assert) => {
 
 test('validation works and when hit save, we do same post', (assert) => {
     payload.name = LOCATION_LEVEL_DEFAULTS.nameRegion;
-    var response = Ember.$.extend(true, {}, payload);
+    let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);
     click('.t-location-level-new');
@@ -84,6 +86,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+    clearxhr(list_xhr);
     visit(LOCATION_LEVEL_NEW_URL);
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
     click(CANCEL_BTN);
@@ -112,7 +115,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
-            var location_level = store.find('location-level', {id: UUID.value});
+            let location_level = store.find('location-level', {id: UUID.value});
             assert.equal(location_level.get('length'), 1);
         });
     });
@@ -121,7 +124,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_LEVEL_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
-            var location_level = store.find('location-level', {id: UUID.value});
+            let location_level = store.find('location-level', {id: UUID.value});
             assert.equal(location_level.get('length'), 0);
             assert.equal(find('tr.t-location-level-data').length, 2);
         });

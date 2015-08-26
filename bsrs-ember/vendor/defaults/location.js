@@ -12,6 +12,7 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
             storeName: 'ABC123',
             storeNameTwo: 'DEF456',
             storeNameThree: 'GHI789',
+            storeNameFour: 'ZXY863',
             storeNumber: '123zz',
             storeNumberTwo: '456zz',
             status: this.location_status.openId,

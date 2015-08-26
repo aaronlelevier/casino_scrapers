@@ -217,12 +217,21 @@ export default Model.extend({
             return true;
         }
     }),
-    person_locations: Ember.computed(function() {
+    update_locations(location_pk) {
         let store = this.get('store');
-        let filter = function(join_model) {
-            return join_model.get('person_pk') === this.get('id') && !join_model.get('removed');
-        };
-        return store.find('person-location', filter.bind(this), ['removed']);
+        if(Ember.$.inArray(location_pk, this.get('location_ids')) > -1) {
+            let m2m_pk = this.get('person_locations').filter((m2m) => {
+                return m2m.get('location_pk') === location_pk;
+            }).objectAt(0).get('id');
+            store.push('person-location', {id: m2m_pk, removed: true});
+        }else{
+            store.push('person-location', {id: Ember.uuid(), person_pk: this.get('id'), location_pk: location_pk});
+        }
+    },
+    location_ids: Ember.computed('locations.[]', function() {
+        return this.get('locations').map((location) => {
+            return location.get('id');
+        });
     }),
     locations: Ember.computed('person_locations.[]', function() {
         let store = this.get('store');
@@ -234,6 +243,13 @@ export default Model.extend({
             return Ember.$.inArray(location.get('id'), location_pks) > -1;
         };
         return store.find('location', filter.bind(person_locations), ['id']);
+    }),
+    person_locations: Ember.computed(function() {
+        let store = this.get('store');
+        let filter = function(join_model) {
+            return join_model.get('person_pk') === this.get('id') && !join_model.get('removed');
+        };
+        return store.find('person-location', filter.bind(this), ['removed']);
     }),
     createSerialize() {
         return {

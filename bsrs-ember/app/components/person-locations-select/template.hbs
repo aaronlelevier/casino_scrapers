@@ -1,0 +1,5 @@
+<select class="t-person-locations-select form-control" onchange={{action (action "changed" person) value="target.value"}} multiple="multiple">
+  {{#each options as |location|}}
+    <option value={{location.id}} selected={{in-list location.id person.locations}}>{{location.name}}</option>
+  {{/each}}
+</select>
