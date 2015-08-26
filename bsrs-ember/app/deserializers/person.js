@@ -21,7 +21,9 @@ var extract_role = function(model, store) {
     var role_pk = model.role.id;
     var role = store.push('role', model.role);
     var existing_people = role.get('people') || [];
-    role.set('people', existing_people.concat([model.id]));
+    if (existing_people.indexOf(model.id) === -1) {
+        role.set('people', existing_people.concat([model.id]));
+    }
     role.save();
     delete model.role;
     return role_pk;
@@ -45,7 +47,6 @@ var extract_person_location = function(model, store, uuid) {
             prevented_duplicate_m2m.push(person_locations[0].get('id'));
         }
     });
-
     let server_locations_sum = newly_added_m2m.concat(prevented_duplicate_m2m);
     let m2m_to_remove = all_person_locations.filter(function(m2m) {
         return Ember.$.inArray(m2m.get('id'), server_locations_sum) < 0;

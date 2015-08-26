@@ -43,3 +43,14 @@ test('role location level will correctly be serialized into its own store with a
     assert.deepEqual(original.get('roles'), [ROLE_DEFAULTS.idOne, ROLE_DEFAULTS.unusedId]);
     assert.ok(original.get('isNotDirty'));
 });
+
+test('role location level will not be duplicated and correctly be serialized into its own store with a foreign key on role (single)', (assert) => {
+    var subject = RoleDeserializer.create({store: store});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
+    var response = ROLE_FIXTURES.generate(ROLE_DEFAULTS.idOne);
+    subject.deserialize(response, ROLE_DEFAULTS.idOne);
+    var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    assert.deepEqual(original.get('roles'), [ROLE_DEFAULTS.idOne]);
+    assert.ok(original.get('isNotDirty'));
+});

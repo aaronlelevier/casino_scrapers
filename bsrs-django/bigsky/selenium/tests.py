@@ -117,7 +117,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
 
         ### UPDATE
 
-        # Go to Location Detail view
+        # # Go to Location Detail view
         self.driver_wait.find_element_by_class_name("t-nav-admin-location").click()
         location = self.driver_wait.find_elements_by_class_name("t-location-data")[0].click()
         # Change name and hit "save"
@@ -136,7 +136,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
 
         ### DELETE
 
-        # Go to Location Detail view
+        # # Go to Location Detail view
         locations = self.driver_wait.find_elements_by_class_name("t-location-data")
         location_name = locations[0].find_elements_by_tag_name('td')[1].text
         locations[0].click()

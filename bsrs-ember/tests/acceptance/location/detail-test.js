@@ -128,6 +128,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
+    //fillIn('??', ); //scott - change the dropdown to prove rollbackRelated is req
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {
@@ -154,25 +155,3 @@ test('when click delete, location is deleted and removed from store', (assert) =
         assert.equal(currentURL(), LOCATION_URL);
     });
 });
-
-// test('FINISH changing the location_level will persist correctly', (assert) => {
-//     // var response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
-//     // var payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo});
-//     // xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         var location = store.find('location', LOCATION_DEFAULTS.idOne);
-//         assert.equal(location.get('location_levels').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
-//     });
-//     fillIn('.t-location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
-//     andThen(() => {
-//         var location = store.find('location', LOCATION_DEFAULTS.idOne);
-//         assert.equal(location.get('location_levels').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
-//     });
-//     // click(SAVE_BTN);
-//     // andThen(() => {
-//     //     assert.equal(currentURL(), LOCATION_URL);
-//     //     var location = store.find('location', LOCATION_DEFAULTS.idOne);
-//     //     assert.equal(location.get('location_levels').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
-//     // });
-// });
