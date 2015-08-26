@@ -32,27 +32,23 @@ module('unit: person deserializer test', {
 
 test('role will keep appending when deserialize_list is invoked with many people who play the same role', (assert) => {
     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    var original = store.find('role', ROLE_DEFAULTS.idOne);
-    assert.deepEqual(original.get('people'), [PEOPLE_DEFAULTS.id]);
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
     var json = [PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.unusedId)];
     var response = {'count':1,'next':null,'previous':null,'results': json};
     subject.deserialize(response);
-    original = store.find('role', ROLE_DEFAULTS.idOne);
+    var original = store.find('role', ROLE_DEFAULTS.idOne);
     assert.deepEqual(original.get('people'), [PEOPLE_DEFAULTS.id, PEOPLE_DEFAULTS.unusedId]);
     assert.ok(original.get('isNotDirty'));
 });
 
 test('role will keep appending when deserialize_single is invoked with many people who play the same role', (assert) => {
     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    var original = store.find('role', ROLE_DEFAULTS.idOne);
-    assert.deepEqual(original.get('people'), [PEOPLE_DEFAULTS.id]);
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
     var response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.unusedId);
     response.phone_numbers = [];
     response.addresses = [];
     subject.deserialize(response, PEOPLE_DEFAULTS.unusedId);
-    original = store.find('role', ROLE_DEFAULTS.idOne);
+    var original = store.find('role', ROLE_DEFAULTS.idOne);
     assert.deepEqual(original.get('people'), [PEOPLE_DEFAULTS.id, PEOPLE_DEFAULTS.unusedId]);
     assert.ok(original.get('isNotDirty'));
 });
@@ -71,7 +67,7 @@ test('role will keep appending when deserialize_single and prevent duplicates wi
     assert.ok(original.get('isNotDirty'));
 });
 
-test('person location many to many is set up correctly using deserialize single', (assert) => {
+test('person-location m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: []});
     let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
     response.phone_numbers = [];
@@ -83,12 +79,13 @@ test('person location many to many is set up correctly using deserialize single'
     let original = store.find('person', PEOPLE_DEFAULTS.id);
     locations = original.get('locations');
     assert.equal(locations.get('length'), 1);
+    assert.equal(locations.objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
     assert.equal(store.find('person-location').get('length'), 1);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('person will have new m2m relationships added after deserialize list', (assert) => {
+test('person-location m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
     let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
@@ -101,17 +98,18 @@ test('person will have new m2m relationships added after deserialize list', (ass
     let original = store.find('person', PEOPLE_DEFAULTS.id);
     let locations = original.get('locations');
     assert.equal(locations.get('length'), 2);
+    assert.equal(locations.objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
+    assert.equal(locations.objectAt(1).get('name'), LOCATION_DEFAULTS.storeNameTwo);
     assert.ok(original.get('isNotDirty'));
-    assert.equal(store.find('person-location').get('length'), 2);
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
-    //var location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idTwo]});
+    assert.equal(store.find('person-location').get('length'), 2);
 });
 
-test('person will have remove m2m relationships that are not reflected on the server', (assert) => {
-    var m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
-    assert.equal(person.get('locations.length'), 1);
+test('person-location m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
+    let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    assert.equal(person.get('locations').get('length'), 1);
     let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
     response.phone_numbers = [];
     response.addresses = [];
@@ -127,7 +125,7 @@ test('person will have remove m2m relationships that are not reflected on the se
     assert.equal(store.find('person-location').get('length'), 3);
 });
 
-test('location m2m added even when person did not exist before the deserializer executes', (assert) => {
+test('person-location m2m added even when person did not exist before the deserializer executes', (assert) => {
     let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
     response.phone_numbers = [];
     response.addresses = [];
