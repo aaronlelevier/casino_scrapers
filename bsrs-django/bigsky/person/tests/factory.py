@@ -1,6 +1,8 @@
 import string
 import random
 
+from django.db import IntegrityError
+
 from model_mommy import mommy
 
 from accounting.models import Currency
@@ -44,3 +46,19 @@ You specified {} user(s) with username: {}".format(_many, username))
         user = create_single_person(username, role)
     
     return user
+
+
+def create_23_people():
+    role = create_role()
+    aaron = mommy.make(Person, username='aaron', role=role)
+    aaron.set_password('1234')
+    aaron.save()
+
+    count = Person.objects.count()
+    while count < 23:
+        try:
+            username = create.random_lorem(words=1)
+            mommy.make(Person, username=username, first_name=username, role=role)
+        except IntegrityError:
+            pass
+        count = Person.objects.count()
