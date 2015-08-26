@@ -26,6 +26,7 @@ module.exports = function() {
     app.import('vendor/phone_number_fixtures.js');
     app.import('vendor/role_fixtures.js');
     app.import('vendor/category_fixtures.js');
+    app.import('vendor/translation_fixtures.js');
     app.import('vendor/defaults/address-type.js');
     app.import('vendor/defaults/address.js');
     app.import('vendor/defaults/country.js');

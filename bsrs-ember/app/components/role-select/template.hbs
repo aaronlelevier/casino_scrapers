@@ -5,6 +5,6 @@
     <option>Select One</option>
   {{/if}}
   {{#each options as |role|}}
-    <option value={{role.id}} selected={{is-equal model.id role.id}}>{{role.name}}</option>
+    <option value={{role.id}} selected={{is-equal model.id role.id}}>{{t role.name}}</option>
   {{/each}}
 </select>

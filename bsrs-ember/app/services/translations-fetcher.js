@@ -2,7 +2,7 @@
 import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import config from 'bsrs-ember/config/environment';
-const { Service, keys, inject } = Ember;
+const { Service, inject } = Ember;
 
 const PREFIX = config.APP.NAMESPACE;
 const LOCALE = config.i18n.currentLocale;
@@ -19,7 +19,7 @@ export default Service.extend({
   _addTranslations(json) {
     const i18n = this.get('i18n');
 
-    keys(json).forEach(function(locale) {
+    Object.keys(json).forEach(function(locale) {
       i18n.addTranslations(locale, json[locale]);
     });
   }

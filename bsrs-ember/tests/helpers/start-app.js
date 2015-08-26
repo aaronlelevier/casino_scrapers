@@ -1,7 +1,8 @@
 import Ember from 'ember';
 import Application from '../../app';
-import config from 'bsrs-ember/config/environment'; 
+import config from 'bsrs-ember/config/environment';
 import windowProxy from 'bsrs-ember/utilities/window-proxy';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
 import t from './t';
 
 export default function startApp(attrs) {
@@ -9,6 +10,17 @@ export default function startApp(attrs) {
 
     var attributes = Ember.merge({}, config.APP);
     attributes = Ember.merge(attributes, attrs); // use defaults, but you can override;
+
+    // Mock translations
+    var request = { url: '/api/translations/?locale=en' , method: 'GET' };
+    var response = translations.generate();
+    Ember.$.fauxjax.new({
+        request: request,
+        response: {
+            status: 200,
+            content: response
+        }
+    });
 
     Ember.run(() => {
         application = Application.create(attributes);

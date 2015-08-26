@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
+import translations from "bsrs-ember/vendor/translation_fixtures";
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
@@ -13,6 +15,9 @@ moduleForComponent('person-new', 'integration: person-new test', {
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role']);
         translation.initialize(this);
+        var service = this.container.lookup('service:i18n');
+        var json = translations.generate();
+        loadTranslations(service, json);
     }
 });
 
@@ -48,10 +53,9 @@ test('default role data is loaded', function(assert) {
     this.render(hbs`{{person-new model=model roles=roles}}`);
     var $component = this.$('.t-person-role-select');
     assert.equal(this.$('.t-person-role-select option:eq(0)').text(), 'Select One');
-    assert.equal(this.$('.t-person-role-select option:eq(1)').text(), ROLE_DEFAULTS.nameOne);//TODO: translate this
+    assert.equal(this.$('.t-person-role-select option:eq(1)').text(), 'Administrator');//TODO: translate this
     assert.equal(person.get('role'), undefined);
     this.$('.t-person-role-select').val(ROLE_DEFAULTS.idOne).trigger('change');
     assert.equal(person.get('role').get('people'), PEOPLE_DEFAULTS.id);
     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
 });
-

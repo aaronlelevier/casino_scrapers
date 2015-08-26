@@ -17,7 +17,7 @@ module('Acceptance | application layout test', {
     }
 });
 
-test('navbar and tray have correct items', function(assert) {
+test('amk navbar and tray have correct items', function(assert) {
     visit(HOME_URL);
     andThen(() => {
         assert.equal(find('.t-tray-items > li').length, 4);

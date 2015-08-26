@@ -65,7 +65,7 @@ export default Ember.Route.extend({
       store.push('role-type', {id: index+1, name: model});
     });
 
-    //return this.get('translationsFetcher').fetch();
+    return this.get('translationsFetcher').fetch();
 
   },
   actions: {
