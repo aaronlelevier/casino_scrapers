@@ -31,6 +31,7 @@ Router.map(function() {
             this.route('person', {path: '/:person_id'});
         });
         this.route('roles', function() {
+            this.route('index');
             this.route('new');
             this.route('role', {path: '/:role_id'});
         });

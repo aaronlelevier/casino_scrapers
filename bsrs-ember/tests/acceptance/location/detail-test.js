@@ -128,7 +128,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
-    //fillIn('??', ); //scott - change the dropdown to prove rollbackRelated is req
+    fillIn('.t-location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {
