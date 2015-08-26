@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
 const { Route, inject } = Ember;
 
 export default Ember.Route.extend({
@@ -63,6 +64,18 @@ export default Ember.Route.extend({
     var role_type_list = JSON.parse(role_types_config);
     role_type_list.forEach((model, index) => {
       store.push('role-type', {id: index+1, name: model});
+    });
+
+    var current_locale_config = Ember.$('[data-preload-current-locale]').html();
+    var current_locale = JSON.parse(current_locale_config);
+
+    config.i18n.currentLocale = current_locale.locale;
+
+    var locale_config = Ember.$('[data-preload-locales]').html();
+    var locale_list = JSON.parse(locale_config);
+
+    locale_list.forEach((model, index) => {
+      store.push('locale', model);
     });
 
     return this.get('translationsFetcher').fetch();
