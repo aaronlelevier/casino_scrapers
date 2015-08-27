@@ -39,5 +39,6 @@ test('current user is set from bootstrap data', function(assert) {
     visit(HOME_URL);
     andThen(() => {
         assert.equal(find('.t-current-user-fullname').text(), 'Donald Trump');
+        assert.equal(find('.t-current-user-role').text(), 'Administrator');
     });
 });

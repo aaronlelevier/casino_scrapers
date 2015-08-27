@@ -36,6 +36,7 @@ module.exports = function() {
     app.import('vendor/defaults/location-level.js');
     app.import('vendor/defaults/location-status.js');
     app.import('vendor/defaults/person.js');
+    app.import('vendor/defaults/person-current.js');
     app.import('vendor/defaults/person-location.js');
     app.import('vendor/defaults/person-put.js');
     app.import('vendor/defaults/phone-number.js');
