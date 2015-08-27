@@ -14,6 +14,7 @@ import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_DEFAULTS_PUT from 'bsrs-ember/vendor/defaults/person-put';
+import PERSON_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
 import PHONE_NUMBER_FIXTURES from 'bsrs-ember/vendor/phone_number_fixtures';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
 import PHONE_NUMBER_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
@@ -539,4 +540,24 @@ test('when you deep link to the person detail view you can alter the roll and ro
             assert.ok(previous_role.get('isNotDirty'));
         });
     });
+});
+test('amk when changing the locale for a user (not current user), the language is not updated on the site', (assert) => {
+  visit(DETAIL_URL);
+  andThen(() => {
+
+    assert.equal(currentURL(), DETAIL_URL);
+    var person = store.find('person', PEOPLE_DEFAULTS.id);
+
+    assert.ok(person.get('id') !== PERSON_CURRENT_DEFAULTS.id);
+
+    assert.equal(find('.t-person-first-name').val(), PEOPLE_DEFAULTS.first_name);
+    assert.equal(find('.t-locale-select option:selected').val(), PEOPLE_DEFAULTS.locale);
+    assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
+
+    fillIn('.t-locale-select', PEOPLE_DEFAULTS.locale2);
+    andThen(() => {
+      assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
+    });
+
+  });
 });

@@ -11,7 +11,7 @@ export default function startApp(attrs) {
     var attributes = Ember.merge({}, config.APP);
     attributes = Ember.merge(attributes, attrs); // use defaults, but you can override;
 
-    // Mock translations
+    // Mock english translations
     var request = { url: '/api/translations/?locale=en' , method: 'GET' };
     var response = translations.generate('en');
     Ember.$.fauxjax.new({

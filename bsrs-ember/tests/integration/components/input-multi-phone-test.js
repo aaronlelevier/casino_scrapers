@@ -22,7 +22,7 @@ moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
         default_type = PhoneNumberType.create({id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName});
         store = module_registry(this.container, this.registry, ['model:person', 'model:phonenumber']);
         var service = this.container.lookup('service:i18n');
-        var json = translations.generate();
+        var json = translations.generate('en');
         loadTranslations(service, json);
     }
 });

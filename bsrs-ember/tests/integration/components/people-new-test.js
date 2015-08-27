@@ -16,7 +16,7 @@ moduleForComponent('person-new', 'integration: person-new test', {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role']);
         translation.initialize(this);
         var service = this.container.lookup('service:i18n');
-        var json = translations.generate();
+        var json = translations.generate('en');
         loadTranslations(service, json);
     }
 });

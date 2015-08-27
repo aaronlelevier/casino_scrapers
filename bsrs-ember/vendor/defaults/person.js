@@ -41,7 +41,8 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             title: BSRS_PERSON_TITLE,
             auth_amount: BSRS_PERSON_AUTH_AMOUNT,
             auth_currency: this.currency_defaults.id,
-            locale: 'es',
+            locale: 'en',
+            locale2: 'es',
             unusedId: BSRS_PERSON_UNUSED_ID
         };
     };

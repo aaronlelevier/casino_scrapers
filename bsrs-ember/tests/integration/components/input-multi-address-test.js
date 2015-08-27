@@ -28,7 +28,7 @@ moduleForComponent('input-multi-address', 'integration: input-multi-address test
         store = module_registry(this.container, this.registry, ['model:person', 'model:address']);
         default_type = AddressType.create({id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName});
         var service = this.container.lookup('service:i18n');
-        var json = translations.generate();
+        var json = translations.generate('en');
         loadTranslations(service, json);
     }
 });

@@ -18,7 +18,7 @@ moduleForComponent('person-single', 'integration: person-single test', {
         store.push('currency', CURRENCY_DEFAULTS);
         translation.initialize(this);
         var service = this.container.lookup('service:i18n');
-        var json = translations.generate();
+        var json = translations.generate('en');
         loadTranslations(service, json);
     }
 });

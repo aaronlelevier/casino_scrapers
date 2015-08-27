@@ -12,7 +12,7 @@ var PersonCurrent = Model.extend({
   full_name: Ember.computed(function(){
     let first_name = this.get('first_name');
     let last_name = this.get('last_name');
-    return first_name + " " + last_name;
+    return first_name + ' ' + last_name;
   })
 
 });
