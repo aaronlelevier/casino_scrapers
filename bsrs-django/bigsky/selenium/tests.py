@@ -9,7 +9,7 @@ from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from helpers import (LoginMixin, FillInHelper, MethodHelpers,
-    JavascriptMixin, PersonHelper, InputHelper, LoginPage,
+    JavascriptMixin, InputHelper, LoginPage,
     NavPage, GeneralElementsPage, Wait, PersonPage, LocationPage, LocationLevelPage, RolePage)
 
 # from pages import (PersonPage, LocationPage)
@@ -221,7 +221,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         title = "myTitle"
         new_phone_one = "888-999-7878"
         new_phone_two = "888-999-7899"
-        person = PersonHelper(first_name=first_name, middle_initial=middle_initial,
+        person = InputHelper(first_name=first_name, middle_initial=middle_initial,
                 last_name=last_name, employee_id=employee_id,
                 title=title)
         self._fill_in(person)
