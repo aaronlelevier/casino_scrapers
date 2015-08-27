@@ -21,6 +21,7 @@ class LocationLevelTests(APITestCase):
         create_location_levels()
         self.region = LocationLevel.objects.get(name='region')
         self.district = LocationLevel.objects.get(name='district')
+        self.store = LocationLevel.objects.get(name='store')
         # Login
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -117,6 +118,12 @@ class LocationLevelTests(APITestCase):
         self.assertEqual(response.status_code, 204)
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
         self.assertEqual(response.status_code, 404)
+        response = self.client.get('/api/admin/location_levels/')
+        data = json.loads(response.content)
+        self.assertNotIn(
+            str(self.district.id),
+            [d['id'] for d in data['results']]
+        )
 
     def test_delete_children(self):
         response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id))
@@ -126,6 +133,16 @@ class LocationLevelTests(APITestCase):
         self.assertNotIn(
             str(self.district.id),
             [ea['id'] for ea in data['children']]
+        )
+
+    def test_delete_parent(self):
+        response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id))
+        self.assertTrue(LocationLevel.objects_all.get(id=self.district.id).deleted)
+        response = self.client.get('/api/admin/location_levels/{}/'.format(self.store.id))
+        data = json.loads(response.content)
+        self.assertNotIn(
+            str(self.district.id),
+            [ea['id'] for ea in data['parents']]
         )
 
     def test_delete_override(self):
@@ -316,6 +333,64 @@ class LocationUpdateTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content)
         self.assertEqual(data['status'], str(new_status.id))
+
+
+class LocationDeleteTests(APITestCase):
+
+    def setUp(self):
+        create_locations()
+        self.region_location = Location.objects.get(name='east')
+        self.district_location = Location.objects.get(name='ca')
+        self.store_location = Location.objects.get(name='san_diego')
+        # Login
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_delete(self):
+        response = self.client.delete('/api/admin/locations/{}/'.format(self.district_location.id))
+        self.assertEqual(response.status_code, 204)
+        # Not in Detail
+        response = self.client.get('/api/admin/locations/{}/'.format(self.district_location.id))
+        self.assertEqual(response.status_code, 404)
+        self.assertTrue(Location.objects_all.filter(id=self.district_location.id).exists())
+        # Not in List
+        response = self.client.get('/api/admin/locations/')
+        data = json.loads(response.content)
+        self.assertNotIn(
+            str(self.district_location.id),
+            [d['id'] for d in data['results']]
+        )
+
+    def test_delete_children(self):
+        response = self.client.delete('/api/admin/locations/{}/'.format(self.district_location.id))
+        self.assertTrue(Location.objects_all.get(id=self.district_location.id).deleted)
+        response = self.client.get('/api/admin/locations/{}/'.format(self.region_location.id))
+        data = json.loads(response.content)
+        self.assertNotIn(
+            str(self.district_location.id),
+            [ea['id'] for ea in data['children']]
+        )
+
+    def test_delete_parent(self):
+        response = self.client.delete('/api/admin/locations/{}/'.format(self.district_location.id))
+        self.assertTrue(Location.objects_all.get(id=self.district_location.id).deleted)
+        response = self.client.get('/api/admin/locations/{}/'.format(self.store_location.id))
+        data = json.loads(response.content)
+        self.assertNotIn(
+            str(self.district_location.id),
+            [ea['id'] for ea in data['parents']]
+        )
+
+    def test_delete_override(self):
+        response = self.client.delete('/api/admin/locations/{}/'.format(self.district_location.id),
+            {'override': True}, format='json')
+        self.assertEqual(response.status_code, 204)
+        response = self.client.get('/api/admin/locations/{}/'.format(self.district_location.id))
+        self.assertEqual(response.status_code, 404)
+        self.assertFalse(Location.objects_all.filter(id=self.district_location.id).exists())
 
 
 class DRFFiltersTests(APITestCase):
