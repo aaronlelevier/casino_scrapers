@@ -65,7 +65,7 @@ class TranslationManagerTests(TestCase):
 class TranslationTests(TestCase):
 
     def setUp(self):
-        factory.create_definitions()
+        factory.create_translations()
         self.definition = Translation.objects.first()
 
     def test_add(self):

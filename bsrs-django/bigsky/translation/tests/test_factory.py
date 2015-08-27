@@ -31,7 +31,7 @@ class LocaleTests(TestCase):
 class TranslationTests(TestCase):
 
     def setUp(self):
-        factory.create_definitions()
+        factory.create_translations()
 
     def test_create(self):
         self.assertEqual(Translation.objects.count(), 3)

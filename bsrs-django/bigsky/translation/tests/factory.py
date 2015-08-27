@@ -36,7 +36,7 @@ def create_locales():
         Locale.objects.create(locale=l)
 
 
-def create_definitions():
+def create_translations():
     create_locales()
 
     en = Locale.objects.get(locale='en')
