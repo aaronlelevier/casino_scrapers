@@ -48,10 +48,11 @@ def create_single_person(username, role):
         first_name=create._generate_chars(), role=role)
 
 
-def update_login_person():
-    aaron = Person.objects.get(username='aaron')
-    aaron.set_password('1234')
-    aaron.save()
+def update_login_person(person):
+    person.set_password('1234')
+    person.is_superuser = True
+    person.is_staff = True
+    person.save()
 
 
 def create_person(username=None, _many=1):
@@ -90,8 +91,7 @@ def create_23_people():
 
     # Person used to Login (so needs a 'password' set here)
     aaron = mommy.make(Person, username='aaron', role=roles[0])
-    aaron.set_password('1234')
-    aaron.save()
+    update_login_person(aaron)
 
     # other Persons for Grid View
     count = Person.objects.count()

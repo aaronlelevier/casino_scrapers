@@ -28,6 +28,11 @@ class FactoryTests(TransactionTestCase):
         person = factory.create_single_person('bob', role)
         self.assertIsInstance(person, Person)
 
+    def test_update_login_person(self):
+        person = factory.create_person()
+        factory.update_login_person(person)
+        self.assertTrue(person.is_staff)
+
     ### .create_person(): Start
 
     def test_create_person(self):
