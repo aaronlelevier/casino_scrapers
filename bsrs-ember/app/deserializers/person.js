@@ -17,8 +17,22 @@ var extract_addresses = function(model, store) {
     delete model.addresses;
 };
 
+var extract_role_location_level = function(model, store) {
+    let role_pk = model.role.id;
+    let location_level_pk = model.role.location_level;
+    let location_level = store.find('location-level', location_level_pk);
+    let existing_roles = location_level.get('roles') || [];
+    if (existing_roles.indexOf(role_pk) === -1) {
+        location_level.set('roles', existing_roles.concat([role_pk]));
+    }
+    location_level.save();
+    delete model.role.location_level;
+    return location_level_pk;
+};
+
 var extract_role = function(model, store) {
     var role_pk = model.role.id;
+    model.role.location_level_fk = extract_role_location_level(model, store);
     var role = store.push('role', model.role);
     var existing_people = role.get('people') || [];
     if (existing_people.indexOf(model.id) === -1) {

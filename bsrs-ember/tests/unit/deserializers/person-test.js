@@ -4,6 +4,7 @@ import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
+import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import PersonDeserializer from 'bsrs-ember/deserializers/person';
@@ -31,34 +32,65 @@ module('unit: person deserializer test', {
 });
 
 test('role will keep appending when deserialize_list is invoked with many people who play the same role', (assert) => {
-    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
-    var json = [PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.unusedId)];
-    var response = {'count':1,'next':null,'previous':null,'results': json};
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: []});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
+    let json = [PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.unusedId)];
+    let response = {'count':1,'next':null,'previous':null,'results': json};
     subject.deserialize(response);
-    var original = store.find('role', ROLE_DEFAULTS.idOne);
+    let original = store.find('role', ROLE_DEFAULTS.idOne);
     assert.deepEqual(original.get('people'), [PEOPLE_DEFAULTS.id, PEOPLE_DEFAULTS.unusedId]);
     assert.ok(original.get('isNotDirty'));
 });
 
+test('role will setup the correct relationship with location_level when deserialize_list is invoked', (assert) => {
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: []});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
+    let json = [PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.unusedId)];
+    let response = {'count':1,'next':null,'previous':null,'results': json};
+    subject.deserialize(response);
+    let updated_role = store.find('role', ROLE_DEFAULTS.idOne);
+    let updated_location_level = updated_role.get('location_level');
+    assert.ok(updated_location_level);
+    assert.equal(updated_location_level.get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
+    assert.ok(updated_location_level.get('isNotDirty'));
+    assert.equal(updated_role.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
+    assert.deepEqual(updated_location_level.get('roles'), [ROLE_DEFAULTS.idOne]);
+});
+
+test('location levels will keep appending roles in deserialize_list but prevent duplicate roles from showing up', (assert) => {
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
+    let json = [PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.unusedId)];
+    let response = {'count':1,'next':null,'previous':null,'results': json};
+    subject.deserialize(response);
+    let updated_role = store.find('role', ROLE_DEFAULTS.idOne);
+    let updated_location_level = updated_role.get('location_level');
+    assert.deepEqual(updated_location_level.get('roles'), [ROLE_DEFAULTS.idOne]);
+});
+
 test('role will keep appending when deserialize_single is invoked with many people who play the same role', (assert) => {
-    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
-    var response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.unusedId);
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: []});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne});
+    let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.unusedId);
     response.phone_numbers = [];
     response.addresses = [];
     subject.deserialize(response, PEOPLE_DEFAULTS.unusedId);
-    var original = store.find('role', ROLE_DEFAULTS.idOne);
+    let original = store.find('role', ROLE_DEFAULTS.idOne);
     assert.deepEqual(original.get('people'), [PEOPLE_DEFAULTS.id, PEOPLE_DEFAULTS.unusedId]);
     assert.ok(original.get('isNotDirty'));
 });
 
 test('role will keep appending when deserialize_single and prevent duplicates with identical people', (assert) => {
-    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    var original = store.find('role', ROLE_DEFAULTS.idOne);
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: []});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    let original = store.find('role', ROLE_DEFAULTS.idOne);
     assert.deepEqual(original.get('people'), [PEOPLE_DEFAULTS.id]);
-    var response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
+    let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
     response.phone_numbers = [];
     response.addresses = [];
     subject.deserialize(response, PEOPLE_DEFAULTS.id);
@@ -68,6 +100,7 @@ test('role will keep appending when deserialize_single and prevent duplicates wi
 });
 
 test('person-location m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: []});
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: []});
     let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
     response.phone_numbers = [];
@@ -86,6 +119,7 @@ test('person-location m2m is set up correctly using deserialize single (starting
 });
 
 test('person-location m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: []});
     let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
@@ -106,6 +140,7 @@ test('person-location m2m is added after deserialize single (starting with exist
 });
 
 test('person-location m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: []});
     let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
@@ -126,6 +161,7 @@ test('person-location m2m is removed when server payload no longer reflects what
 });
 
 test('person-location m2m added even when person did not exist before the deserializer executes', (assert) => {
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: []});
     let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
     response.phone_numbers = [];
     response.addresses = [];
