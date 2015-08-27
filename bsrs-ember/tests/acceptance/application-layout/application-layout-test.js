@@ -17,21 +17,27 @@ module('Acceptance | application layout test', {
     }
 });
 
-test('amk navbar and tray have correct items', function(assert) {
+test('navbar and tray have correct items', function(assert) {
     visit(HOME_URL);
     andThen(() => {
         assert.equal(find('.t-tray-items > li').length, 4);
 
         assert.equal(find(NAVBAR + ' > li').length, 10);
-        assert.equal(find(NAVBAR + ' > li:eq(0)').text(), 'Home');
-        assert.equal(find(NAVBAR + ' > li:eq(1)').text(), 'Tickets');
-        assert.equal(find(NAVBAR + ' > li:eq(2)').text(), 'Work Orders');
-        assert.equal(find(NAVBAR + ' > li:eq(3)').text(), 'Purchase Orders');
-        assert.equal(find(NAVBAR + ' > li:eq(4)').text(), 'Tasks');
-        assert.equal(find(NAVBAR + ' > li:eq(5)').text(), 'Projects');
-        assert.equal(find(NAVBAR + ' > li:eq(6)').text(), 'RFQs');
-        assert.equal(find(NAVBAR + ' > li:eq(7)').text(), 'PM');
-        assert.equal(find(NAVBAR + ' > li:eq(8)').text(), 'Assets');
-        assert.equal(find(NAVBAR + ' > li:eq(9)').text(), 'Invoices');
+        assert.equal(find(NAVBAR + ' > li:eq(0)').text(), t('menu.home'));
+        assert.equal(find(NAVBAR + ' > li:eq(1)').text(), t('modules.tickets.titleShort'));
+        assert.equal(find(NAVBAR + ' > li:eq(2)').text(), t('modules.workOrders.titleShort'));
+        assert.equal(find(NAVBAR + ' > li:eq(3)').text(), t('modules.purchaseOrders.titleShort'));
+        assert.equal(find(NAVBAR + ' > li:eq(4)').text(), t('modules.tasks.titleShort'));
+        assert.equal(find(NAVBAR + ' > li:eq(5)').text(), t('modules.projects.titleShort'));
+        assert.equal(find(NAVBAR + ' > li:eq(6)').text(), t('modules.rfqs.titleShort'));
+        assert.equal(find(NAVBAR + ' > li:eq(7)').text(), t('modules.pms.titleShort'));
+        assert.equal(find(NAVBAR + ' > li:eq(8)').text(), t('modules.assets.titleShort'));
+        assert.equal(find(NAVBAR + ' > li:eq(9)').text(), t('modules.invoices.titleShort'));
+    });
+});
+test('current user is set from bootstrap data', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        assert.equal(find('.t-current-user-fullname').text(), 'Donald Trump');
     });
 });

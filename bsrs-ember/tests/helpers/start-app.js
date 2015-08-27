@@ -13,7 +13,7 @@ export default function startApp(attrs) {
 
     // Mock translations
     var request = { url: '/api/translations/?locale=en' , method: 'GET' };
-    var response = translations.generate();
+    var response = translations.generate('en');
     Ember.$.fauxjax.new({
         request: request,
         response: {

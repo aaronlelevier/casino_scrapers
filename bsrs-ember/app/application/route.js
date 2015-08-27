@@ -66,17 +66,19 @@ export default Ember.Route.extend({
       store.push('role-type', {id: index+1, name: model});
     });
 
-    var current_locale_config = Ember.$('[data-preload-current-locale]').html();
-    var current_locale = JSON.parse(current_locale_config);
-
-    config.i18n.currentLocale = current_locale.locale;
-
     var locale_config = Ember.$('[data-preload-locales]').html();
     var locale_list = JSON.parse(locale_config);
 
     locale_list.forEach((model, index) => {
       store.push('locale', model);
     });
+
+    var person_current_config = Ember.$('[data-preload-person-current]').html();
+    var person_current = JSON.parse(person_current_config);
+    store.push('person-current', person_current);
+
+    var current_locale = store.find('locale', person_current.locale);
+    config.i18n.currentLocale = current_locale.get('locale');
 
     return this.get('translationsFetcher').fetch();
 

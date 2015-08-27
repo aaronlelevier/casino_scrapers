@@ -12,6 +12,7 @@ export default Model.extend({
     title: attr(''),
     employee_id: attr(''),
     auth_amount: attr(''),
+    locale: attr(''),
     role_fk: undefined,
     person_location_fks: [],
     isModelDirty: false,
@@ -267,7 +268,8 @@ export default Model.extend({
             emails: [],
             locations: [],
             phone_numbers: phone_numbers,
-            addresses: addresses
+            addresses: addresses,
+            locale: this.get('locale')
         };
     },
     removeRecord() {

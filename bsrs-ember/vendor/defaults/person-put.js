@@ -13,6 +13,7 @@ var BSRS_PERSON_PUT_DEFAULTS_OBJECT = (function() {
             auth_amount: '0.000',
             auth_currency: this.currency_defaults.id,
             title: 'mastermind',
+            locale: 'en'
         };
     };
     return factory;

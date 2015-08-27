@@ -146,3 +146,13 @@ test('on boot we should fetch and load the location level configuration', functi
         assert.equal(location_level_models.objectAt(0).get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
     });
 });
+
+test('amk on boot we should fetch and load the current person configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        var person_current_model = store.find('person-current');
+        assert.equal(person_current_model.get('length'), 1);
+        // assert.equal(location_level_models.objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
+        // assert.equal(location_level_models.objectAt(0).get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+    });
+});

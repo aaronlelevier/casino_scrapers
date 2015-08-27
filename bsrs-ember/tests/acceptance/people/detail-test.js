@@ -95,6 +95,10 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeId);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveId);
         assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredId);
+        assert.equal(find('.t-locale-select').find('.t-locale-option:eq(0)').val(), "");
+        assert.equal(find('.t-locale-select').find('.t-locale-option:eq(1)').val(), "en");
+        assert.equal(find('.t-locale-select').find('.t-locale-option:eq(2)').val(), "es");
+        assert.equal(find(".t-locale-select option:selected").val(), PEOPLE_DEFAULTS.locale);
         assert.equal(find('.t-person-role-select option:eq(0)').val(), 'Select One');
         assert.equal(find('.t-person-role-select option:eq(1)').val(), ROLE_DEFAULTS.idOne);
         assert.equal(find('.t-person-role-select option:eq(2)').val(), ROLE_DEFAULTS.idTwo);
@@ -106,7 +110,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name,
                                       middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title,
-                                        employee_id: PEOPLE_DEFAULTS_PUT.employee_id, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount});
+                                        employee_id: PEOPLE_DEFAULTS_PUT.employee_id, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount, locale: PEOPLE_DEFAULTS_PUT.locale });
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.first_name);
@@ -115,6 +119,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-person-title', PEOPLE_DEFAULTS_PUT.title);
     fillIn('.t-person-employee_id', PEOPLE_DEFAULTS_PUT.employee_id);
     fillIn('.t-amount', PEOPLE_DEFAULTS_PUT.auth_amount);
+    fillIn('.t-locale-select', PEOPLE_DEFAULTS_PUT.locale);
     andThen(() => {
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isDirty'));
