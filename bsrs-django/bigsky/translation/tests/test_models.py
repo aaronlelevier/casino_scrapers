@@ -57,6 +57,7 @@ class TranslationManagerTests(TestCase):
     def test_export_csv(self):
         mypath = Translation.objects.translation_dir
         t = Translation.objects.import_csv('en')
+        os.remove(os.path.join(mypath, '{}-out.csv'.format(t.locale)))
         Translation.objects.export_csv(t.id)
         os.path.isfile(os.path.join(mypath, '{}-out.csv'.format(t.locale)))
 
