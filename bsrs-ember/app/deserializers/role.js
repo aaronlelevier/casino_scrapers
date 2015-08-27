@@ -12,7 +12,7 @@ let extract_location_level = (model, store) => {
     return location_level_pk;
 };
 
-let RoleDeserializer = Ember.Object.extend({
+var RoleDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
             this.deserialize_list(response);

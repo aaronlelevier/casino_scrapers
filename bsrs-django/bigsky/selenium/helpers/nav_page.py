@@ -7,3 +7,9 @@ class NavPage(BasePage, MethodHelpers):
         self.find_class_element("t-nav-admin").click()
     def find_people_link(self):
         return self.wait_xhr("t-nav-admin-people")
+    def find_location_link(self):
+        return self.wait_xhr("t-nav-admin-location")
+    def find_location_level_link(self):
+        return self.wait_xhr("t-nav-admin-location-level")
+    def find_role_link(self):
+        return self.wait_xhr("t-nav-admin-role")

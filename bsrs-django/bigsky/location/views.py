@@ -4,12 +4,12 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import detail_route
 from rest_framework.exceptions import MethodNotAllowed
+from rest_framework import pagination
 import rest_framework_filters as filters
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
 from util.views import BaseModelViewSet
-
 
 class SelfReferencingRouteMixin(object):
 
@@ -147,6 +147,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     queryset = Location.objects.all()
     model = Location
     filter_class = LocationFilterSet
+    paginate_by = 1000
 
     def get_serializer_class(self):
         if self.action == 'list':
