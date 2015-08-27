@@ -3,11 +3,11 @@ import os
 from django.test import TestCase
 from django.conf import settings
 
-# from model_mommy import mommy
+from model_mommy import mommy
 
-# from translation.models import Locale, Translation
-# from translation.tests import factory
-# from util.create import _generate_chars
+from translation.models import Locale, Translation
+from translation.tests import factory
+from util.create import _generate_chars
 
 
 # class LocaleTests(TestCase):
