@@ -6,7 +6,7 @@ var BSRS_ROLE_FACTORY = (function() {
     };
     factory.prototype.generate = function(i) {
         return {
-            id: i,  
+            id: i,
             name: this.role_defaults.nameOne,
             role_type: this.role_defaults.roleTypeGeneral,
             location_level: this.location_level_fixtures.detail().id
@@ -15,8 +15,8 @@ var BSRS_ROLE_FACTORY = (function() {
     factory.prototype.list = function() {
         var response = [];
         var uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04b';
-        response.push({id: uuid + 1, name: this.role_defaults.nameOne, role_type: this.role_defaults.roleTypeGeneral, location_level: this.location_level_fixtures.detail().id}); 
-        response.push({id: uuid + 2, name: this.role_defaults.nameTwo, role_type: this.role_defaults.roleTypeGeneral, location_level: this.location_level_fixtures.detail().id}); 
+        response.push({id: uuid + 1, name: this.role_defaults.nameOne});
+        response.push({id: uuid + 2, name: this.role_defaults.nameTwo});
         return {'count':2,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i) {
