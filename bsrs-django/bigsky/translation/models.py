@@ -1,4 +1,8 @@
+import os
 import csv
+import sys
+if sys.version_info > (2,7):
+    str = unicode
 
 from django.db import models
 from django.contrib.postgres.fields import HStoreField
@@ -74,8 +78,24 @@ def update_locale(sender, instance=None, created=False, **kwargs):
 class TranslationManager(BaseManager):
     "CSV Model methods"
 
+    @property
+    def translation_dir(self):
+        "Directory to hold all Translation documents."
+        current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        return os.path.join(current_dir, 'source/translation')
+
+
     def import_csv(self, language):
-        with open('/Users/alelevier/Downloads/{}.csv'.format(language)) as csvfile:
+        '''
+        # Boiler-plate code for creating a new `Translation` record
+
+        from translation.models import Translation, Locale
+        for model in [Translation, Locale]:
+            for m in model.objects_all.all():
+                m.delete(override=True)
+        Translation.objects.import_csv('en')
+        '''
+        with open(os.path.join(self.translation_dir, '{}.csv'.format(language))) as csvfile:
             reader = csv.DictReader(csvfile)
             values = {}
             context = {}
@@ -97,24 +117,24 @@ class TranslationManager(BaseManager):
             return ret
 
     def export_csv(self, id):
+        '''
+        # Test `export_csv` Boiler-plate
+
+        from translation.models import Translation, Locale
+        a = Translation.objects.first()
+        Translation.objects.export_csv(a.id)
+        '''
         t = self.get(id=id)
-        with open('/Users/alelevier/Desktop/{}.csv'.format(t.locale), 'wb') as csvfile: # TODO: change location of file output...
+        with open(os.path.join(self.translation_dir, '{}-out.csv'.format(t.locale)), 'wb') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
             writer.writerow(['LOCALE', 'KEY', 'VALUE', 'CONTEXT'])
             for k in t.values.keys():
-                writer.writerow([t.locale, k, t.values.pop(k, ''), t.context.pop(k,'')])
-
-
-'''
-# Boiler-plate code for creating a new `Translation` record
-
-from translation.models import Translation, Locale
-for model in [Translation, Locale]:
-    for m in model.objects_all.all():
-        m.delete(override=True)
-Translation.objects.import_csv('en')
-
-'''
+                writer.writerow([
+                    str(t.locale).encode('utf-8').strip(),
+                    str(k).encode('utf-8').strip(),
+                    str(t.values.pop(k, '')).encode('utf-8').strip(),
+                    str(t.context.pop(k,'')).encode('utf-8').strip()
+                ])
 
 
 def translation_file(instance, filename):

@@ -1,3 +1,6 @@
+from os import listdir
+from os.path import isfile, join
+
 from django.test import TestCase
 from django.conf import settings
 
@@ -40,6 +43,25 @@ class LocaleTests(TestCase):
         d = mommy.make(Locale, default=True)
         self.assertEqual(Locale.objects.filter(default=True).count(), 1)
         self.assertTrue(d.default)
+
+
+class TranslationManagerTests(TestCase):
+
+    def test_translation_dir(self):
+        self.assertIn('translation', Translation.objects.translation_dir)
+
+    def test_import_csv(self):
+        self.assertEqual(Translation.objects.count(), 0)
+        t = Translation.objects.import_csv('en')
+        self.assertEqual(Translation.objects.count(), 1)
+
+    def test_export_csv(self):
+        mypath = Translation.objects.translation_dir
+        init_files = len([ f for f in listdir(mypath) if isfile(join(mypath,f)) ])
+        t = Translation.objects.import_csv('en')
+        Translation.objects.export_csv(t.id)
+        post_files = len([ f for f in listdir(mypath) if isfile(join(mypath,f)) ])
+        self.assertEqual(init_files+1, post_files)
 
 
 class TranslationTests(TestCase):
