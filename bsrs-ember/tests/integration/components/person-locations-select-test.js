@@ -50,6 +50,25 @@ test('select should show items selected correctly based on the model', function(
     assert.equal($component.find('option:selected:eq(2)').text(), LOCATION_DEFAULTS.storeNameFour);
 });
 
+test('selecting a location will update the model when person had no locations to begin with', function(assert) {
+    store.clear('person-location');
+    person.set('person_location_fks', []);
+    person.save();
+    person.saveRelated();
+    assert.equal(person.get('locations').get('length'), 0);
+    this.set('person', person);
+    this.set('model', person.get('locations'));
+    this.set('options', store.find('location'));
+    this.render(hbs`{{person-locations-select model=model person=person options=options}}`);
+    let $component = this.$('.t-person-locations-select');
+    assert.equal(person.get('locations').get('length'), 0);
+    assert.equal($component.find('option:selected').length, 0);
+    run(() => { this.$('.t-person-locations-select option[value="' + LOCATION_DEFAULTS.idOne + '"]').prop('selected',true).trigger('change'); });
+    assert.equal($component.find('option:selected').length, 1);
+    assert.equal(person.get('locations').get('length'), 1);
+    assert.equal($component.find('option:selected:eq(0)').text(), LOCATION_DEFAULTS.storeName);
+});
+
 test('adding a location will append it to the person-location m2m relationship', function(assert) {
     this.set('person', person);
     this.set('model', person.get('locations'));

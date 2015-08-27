@@ -38,6 +38,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
                 uuid = uuid + i;
             }
             var person = this.generate(uuid);
+            delete person.locations;
             //TODO: DRY this up
             person.username = 'mgibson' + i;
             person.first_name = 'Mel' + i;
