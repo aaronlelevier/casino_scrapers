@@ -167,7 +167,8 @@ class Person(BaseModel, AbstractUser):
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
-    next_approver = models.ForeignKey("self", related_name='nextapprover', null=True)
+    next_approver = models.ForeignKey("self", related_name='nextapprover',
+        blank=True, null=True)
     # optional
     employee_id = models.CharField(max_length=100, blank=True, null=True)
     middle_initial = models.CharField(max_length=1, blank=True, null=True)
@@ -185,7 +186,8 @@ class Person(BaseModel, AbstractUser):
         max_length=100, blank=True, null=True)
     proxy_end_date = models.DateField("Out of the Office Status End Date", max_length=100,
         blank=True, null=True)
-    proxy_user = models.ForeignKey("self", related_name='coveringuser', null=True)
+    proxy_user = models.ForeignKey("self", related_name='coveringuser',
+        blank=True, null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
 
@@ -200,14 +202,23 @@ class Person(BaseModel, AbstractUser):
     def __str__(self):
         return self.username
 
-    def save(self, *args, **kwargs):
+    def _update_defaults(self):
         if not self.status:
             self.status = PersonStatus.objects.default()
         if not self.auth_amount:
             self.auth_amount = self.role.default_auth_amount
         if not self.auth_currency:
             self.auth_currency = self.role.default_auth_currency
-        
+
+    def _validate_locations(self):
+        for l in self.locations.all():
+            if l.location_level != self.role.location_level:
+                raise Exception("{} is an invalid Location for this Role"
+                               .format(l.name))
+
+    def save(self, *args, **kwargs):
+        self._update_defaults()
+        self._validate_locations()
         return super(Person, self).save(*args, **kwargs)
 
 

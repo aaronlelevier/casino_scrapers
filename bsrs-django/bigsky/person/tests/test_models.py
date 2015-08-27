@@ -3,6 +3,7 @@ from django.contrib.auth.models import AbstractUser, Group
 
 from model_mommy import mommy
 
+from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role
@@ -62,6 +63,7 @@ class PersonManagerTests(TestCase):
 class PersonTests(TestCase):
 
     def setUp(self):
+        create_locations()
         self.password = PASSWORD
         self.person = create_person()
 
@@ -70,6 +72,21 @@ class PersonTests(TestCase):
 
     def test_person_defaults(self):
         self.assertTrue(self.person.accept_assign)
+
+    def test_update_defaults(self):
+        self.person.status = None
+        self.assertIsNone(self.person.status)
+        self.person._update_defaults()
+        self.assertIsNotNone(self.person.status)
+
+    def test_validate_locations(self):
+        self.person._validate_locations()
+        self.person.locations.add(
+            Location.objects.exclude(
+                location_level=self.person.role.location_level).first()
+        )
+        with self.assertRaises(Exception):
+            self.person.save()
 
     def test_foreignkeys(self):
         self.assertIsInstance(self.person.status, PersonStatus)

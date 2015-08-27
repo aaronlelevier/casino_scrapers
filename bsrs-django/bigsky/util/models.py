@@ -50,7 +50,7 @@ timestamp of when the record was deleted.")
         return "id: {self.id}; class: {self.__class__.__name__}; deleted: \
 {self.deleted}".format(self=self)
 
-    def delete(self, override=False, *args, **kwargs):
+    def delete(self, override=None, *args, **kwargs):
         '''
         Enforce only hiding objects and not deleting them unless explicitly 
         overriden.
