@@ -20,3 +20,20 @@ class RolePage(BasePage, MethodHelpers):
         for k,v in kwargs.iteritems():
             setattr(self, k + "_input", self.find_id_element(k))
             assert getattr(self, k + "_input").get_attribute("value") == v
+
+    def find_list_name(self):
+        return self.find_class_elements("t-role-name")
+
+    def find_list_data(self):
+        return self.wait_xhr("t-role-data")
+
+    def click_name_in_list(self, name, list_view_elements):
+        new_role = None
+        for row in list_view_elements:
+            if row.text and row.text == name:
+                new_role = row
+        if new_role:
+            try:
+                new_role.click()
+            except AttributeError as e:
+                raise e("new role not found")

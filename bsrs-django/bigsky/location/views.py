@@ -53,6 +53,7 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = LocationLevel.objects.all()
     model = LocationLevel
+    paginate_by = 1000
 
     def get_serializer_class(self):
         if self.action == 'list':
