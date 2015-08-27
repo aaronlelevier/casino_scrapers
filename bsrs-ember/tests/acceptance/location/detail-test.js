@@ -160,5 +160,6 @@ test('when click delete, location is deleted and removed from store', (assert) =
     click('.t-delete-btn');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
+        assert.notEqual(store.find('location', LOCATION_DEFAULTS.idOne));
     });
 });
