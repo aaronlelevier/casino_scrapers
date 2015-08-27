@@ -21,18 +21,22 @@ module('unit: location deserializer test', {
     }
 });
 
-test('location deserializer returns correct data with already present location_level (list)', (assert) => {
+test('toran location deserializer returns correct data with already present location_level (list)', (assert) => {
     let subject = LocationDeserializer.create({store: store});
-    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, number: '987', location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, locations: [LOCATION_DEFAULTS.idOne]});
-    let json = [LOCATION_FIXTURES.generate(LOCATION_DEFAULTS.unusedId)];
-    let response = {'count':1,'next':null,'previous':null,'results': json};
+    let json = [LOCATION_FIXTURES.generate(LOCATION_DEFAULTS.idOne), LOCATION_FIXTURES.generate(LOCATION_DEFAULTS.unusedId)];
+    let response = {'count':2,'next':null,'previous':null,'results': json};
     subject.deserialize(response);
-    let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.deepEqual(original.get('locations'), [LOCATION_DEFAULTS.idOne, LOCATION_DEFAULTS.unusedId]);
+    let original_location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    assert.deepEqual(original_location_level.get('locations'), [LOCATION_DEFAULTS.idOne, LOCATION_DEFAULTS.unusedId]);
     assert.equal(store.find('location', LOCATION_DEFAULTS.idOne).get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(original.get('isNotDirty'));
+    assert.ok(original_location_level.get('isNotDirty'));
     assert.equal(store.find('location', LOCATION_DEFAULTS.unusedId).get('location_level.name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+    let locations = store.find('location');
+    assert.equal(locations.get('length'), 2);
+    assert.ok(locations.objectAt(0).get('isNotDirty'), false);
+    assert.ok(locations.objectAt(1).get('isNotDirty'), false);
 });
 
 test('location deserializer returns correct data with no current location_level (list)', (assert) => {

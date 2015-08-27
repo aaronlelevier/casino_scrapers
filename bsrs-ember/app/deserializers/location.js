@@ -12,7 +12,7 @@ let extract_location_level = (model, store) => {
     return location_level_pk;
 };
 
-let LocationDeserializer = Ember.Object.extend({
+var LocationDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
@@ -23,14 +23,15 @@ let LocationDeserializer = Ember.Object.extend({
     deserialize_single(response, id) {
         let store = this.get('store');
         response.location_level_fk = extract_location_level(response, store);
-        let originalLocation = store.push('location', response);
-        originalLocation.save();
+        let location = store.push('location', response);
+        location.save();
     },
     deserialize_list(response) {
         response.results.forEach((model) => {
             let store = this.get('store');
             model.location_level_fk = extract_location_level(model, store);
-            this.get('store').push('location', model);
+            let location = this.get('store').push('location', model);
+            location.save();
         });
     }
 });
