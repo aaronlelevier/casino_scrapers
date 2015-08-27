@@ -82,6 +82,7 @@ class TranslationTests(APITestCase):
         # test
         response = self.client.put('/api/admin/translations/{}/'
             .format(self.translation.id), self.data, format='json')
+        print response
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(data['locale'], str(new_locale.id))

@@ -67,7 +67,7 @@ class SelfRefrencingManager(BaseManager):
     ''' '''
     
     def get_queryset(self):
-        return SelfRefrencingQuerySet(self.model, self._db)
+        return SelfRefrencingQuerySet(self.model, self._db).filter(deleted__isnull=True)
         
     def get_all_children(self, parent, all_children=None):
         return self.get_queryset().get_all_children(parent, all_children)
@@ -82,7 +82,8 @@ class SelfRefrencingBaseModel(models.Model):
 
     `Symetrical Documentation Here <https://docs.djangoproject.com/en/1.8/ref/models/fields/#django.db.models.ManyToManyField.symmetrical>`_
     '''
-    children = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='parents')
+    children = models.ManyToManyField('self', blank=True, symmetrical=False,
+        related_name='parents')
 
     # Manager
     objects = SelfRefrencingManager()

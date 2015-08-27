@@ -19,6 +19,7 @@ class LocationLevelTests(APITestCase):
 
     def setUp(self):
         create_location_levels()
+        self.region = LocationLevel.objects.get(name='region')
         self.district = LocationLevel.objects.get(name='district')
         # Login
         self.person = create_person()
@@ -88,7 +89,7 @@ class LocationLevelTests(APITestCase):
         data = json.loads(response.content)
         self.assertNotEqual(data['name'], old_name)
 
-        ### DETAIL ROUTES
+    ### DETAIL ROUTES
 
     def test_get_all_children(self):
         region = LocationLevel.objects.get(name='region')
@@ -106,7 +107,33 @@ class LocationLevelTests(APITestCase):
         self.assertEqual(
             len(data),
             LocationLevel.objects.get_all_parents(department).count()
-        )        
+        )
+
+    ### DELETE
+    # Do delete's behave differently because they are 'self-referencing'?
+
+    def test_delete(self):
+        response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id))
+        self.assertEqual(response.status_code, 204)
+        response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
+        self.assertEqual(response.status_code, 404)
+
+    def test_delete_children(self):
+        response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id))
+        self.assertTrue(LocationLevel.objects_all.get(id=self.district.id).deleted)
+        response = self.client.get('/api/admin/location_levels/{}/'.format(self.region.id))
+        data = json.loads(response.content)
+        self.assertNotIn(
+            str(self.district.id),
+            [ea['id'] for ea in data['children']]
+        )
+
+    def test_delete_override(self):
+        response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id),
+            {'override': True}, format='json')
+        self.assertEqual(response.status_code, 204)
+        response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
+        self.assertEqual(response.status_code, 404)
 
 
 ### LOCATION
