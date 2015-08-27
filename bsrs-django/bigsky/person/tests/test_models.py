@@ -1,10 +1,8 @@
 from django.test import TestCase
-from django.db import IntegrityError
 from django.contrib.auth.models import AbstractUser, Group
 
 from model_mommy import mommy
 
-from location.models import Location, LocationLevel
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role

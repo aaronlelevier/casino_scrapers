@@ -1,4 +1,3 @@
-import uuid
 import random
 import string
 

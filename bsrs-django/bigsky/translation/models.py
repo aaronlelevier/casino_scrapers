@@ -9,7 +9,6 @@ from django.contrib.postgres.fields import HStoreField
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.forms.models import model_to_dict
 from django.utils.encoding import python_2_unicode_compatible
 
 from util.models import AbstractName, BaseModel, BaseManager, BaseQuerySet

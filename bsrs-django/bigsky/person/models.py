@@ -5,15 +5,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericRelation
 
-from django.core.exceptions import ValidationError
-
 from accounting.models import Currency
 from location.models import LocationLevel, Location
 from person import helpers
 from order.models import WorkOrderStatus
 from translation.models import Locale
 from util import choices, create
-from util.exceptions import LocationAndRoleLevelExcp
 from util.models import (AbstractName, MainSetting, CustomSetting,
     BaseModel, BaseManager)
 

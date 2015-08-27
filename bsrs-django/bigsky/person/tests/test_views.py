@@ -7,11 +7,9 @@ if sys.version_info > (2,7):
 
 from django.test import TestCase
 from django.db.models.functions import Lower
-from django.core.exceptions import ValidationError as DjangoValidationError
 
 from rest_framework import status
 from rest_framework.test import APITestCase
-from rest_framework.exceptions import ValidationError
 from model_mommy import mommy
 
 from accounting.models import Currency

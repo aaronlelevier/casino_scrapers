@@ -1,8 +1,7 @@
-from django.test import TestCase, TransactionTestCase
+from django.test import TransactionTestCase
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location
-from location.tests.factory import create_locations
 from person.models import Person, Role, PersonStatus
 from person.tests import factory
 
@@ -64,4 +63,3 @@ class FactoryTests(TransactionTestCase):
         self.assertEqual(people.count(), 23)
         # At least some people are assigned to Location(s)
         self.assertTrue(Person.objects.exclude(locations__isnull=True))
-

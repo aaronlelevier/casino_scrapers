@@ -6,7 +6,6 @@ from rest_framework.decorators import detail_route
 from rest_framework.exceptions import MethodNotAllowed
 import rest_framework_filters as filters
 
-from contact.views import AddressFilterSet
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
 from util.views import BaseModelViewSet
