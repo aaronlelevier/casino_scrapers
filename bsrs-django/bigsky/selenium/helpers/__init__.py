@@ -26,8 +26,8 @@ from .nav_page import (
 from .person_helper import (
     PersonHelper
 )
-from .location_helper import (
-    LocationHelper
+from .input_helper import (
+    InputHelper
 )
 from .person_page import (
     PersonPage
