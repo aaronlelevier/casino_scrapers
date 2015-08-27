@@ -6,7 +6,8 @@ class LocaleSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Locale
-        fields = ('id', 'default', 'name', 'rtl',)
+        fields = ('id', 'default', 'locale', 'name', 'native_name',
+            'presentation_name', 'rtl',)
 
 
 class TranslationSerializer(BaseCreateSerializer):
