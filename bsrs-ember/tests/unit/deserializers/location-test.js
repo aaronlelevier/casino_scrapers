@@ -21,7 +21,7 @@ module('unit: location deserializer test', {
     }
 });
 
-test('toran location deserializer returns correct data with already present location_level (list)', (assert) => {
+test('location deserializer returns correct data with already present location_level (list)', (assert) => {
     let subject = LocationDeserializer.create({store: store});
     let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, number: '987', location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, locations: [LOCATION_DEFAULTS.idOne]});

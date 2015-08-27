@@ -510,7 +510,7 @@ test('locations property should return all associated locations or empty array',
     var locations = person.get('locations');
     assert.equal(locations.get('length'), 1);
     assert.equal(locations.objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
-    store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+    store.push('person-location', {id: m2m.get('id'), removed: true});
     assert.equal(person.get('locations').get('length'), 0);
 });
 
@@ -591,7 +591,7 @@ test('locations property will update when the m2m array suddenly removes the per
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations').get('length'), 1);
-    store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+    store.push('person-location', {id: m2m.get('id'), removed: true});
     assert.equal(person.get('locations').get('length'), 0);
 });
 
@@ -665,7 +665,7 @@ test('when location is suddently removed it shows as a dirty relationship', (ass
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+    store.push('person-location', {id: m2m.get('id'), removed: true});
     assert.equal(person.get('locations').get('length'), 0);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -680,7 +680,7 @@ test('when location is suddently removed it shows as a dirty relationship (when 
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+    store.push('person-location', {id: m2m.get('id'), removed: true});
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -695,7 +695,7 @@ test('rollback location will reset the previously used locations when switching 
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+    store.push('person-location', {id: m2m.get('id'), removed: true});
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -704,8 +704,8 @@ test('rollback location will reset the previously used locations when switching 
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
-    store.push('person-location', {id: m2m_two.get('id'), removed: true, person_pk: m2m_two.get('person_pk'), location_pk: m2m_two.get('location_pk')});
+    store.push('person-location', {id: m2m.get('id'), removed: true});
+    store.push('person-location', {id: m2m_two.get('id'), removed: true});
     assert.equal(person.get('locations').get('length'), 0);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -733,7 +733,7 @@ test('rollback location will reset the previous locations when switching from on
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+    store.push('person-location', {id: m2m.get('id'), removed: true});
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     person.save();
@@ -749,7 +749,7 @@ test('rollback location will reset the previous locations when switching from on
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    store.push('person-location', {id: m2m_two.get('id'), removed: true, person_pk: m2m_two.get('person_pk'), location_pk: m2m_two.get('location_pk')});
+    store.push('person-location', {id: m2m_two.get('id'), removed: true});
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.equal(person.get('locations').get('length'), 1);
@@ -779,7 +779,7 @@ test('location_ids computed returns a flat list of ids for each location', (asse
     var location_four = store.push('location', {id: LOCATION_DEFAULTS.anotherId, person_location_fks: [PERSON_LOCATION_DEFAULTS.idFour]});
     assert.equal(person.get('locations').get('length'), 2);
     assert.deepEqual(person.get('location_ids'), [LOCATION_DEFAULTS.idOne, LOCATION_DEFAULTS.idTwo]);
-    store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+    store.push('person-location', {id: m2m.get('id'), removed: true});
     assert.equal(person.get('locations').get('length'), 1);
     assert.deepEqual(person.get('location_ids'), [LOCATION_DEFAULTS.idTwo]);
 });
