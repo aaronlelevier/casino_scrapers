@@ -206,7 +206,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         username = str(uuid.uuid4())[0:29]
         password = "bobber1"
         role = "RNfkmZFxsz"
-        person = PersonHelper(username=username, password=password)
+        person = InputHelper(username=username, password=password)
         role_input = Select(self.driver.find_element_by_id("person-role"))
         role_input.select_by_index(1)
         self._fill_in(person)
