@@ -53,7 +53,7 @@ var extract_person_location = function(model, store, uuid) {
     });
 
     m2m_to_remove.forEach(function(m2m) {
-        store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+        store.push('person-location', {id: m2m.get('id'), removed: true});
     });
 
     delete model.locations;

@@ -1,9 +1,11 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 export default Model.extend({
+    uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
     first_name: attr(''),
@@ -225,7 +227,8 @@ export default Model.extend({
             }).objectAt(0).get('id');
             store.push('person-location', {id: m2m_pk, removed: true});
         }else{
-            store.push('person-location', {id: Ember.uuid(), person_pk: this.get('id'), location_pk: location_pk});
+            let uuid = this.get('uuid');
+            store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
         }
     },
     location_ids: Ember.computed('locations.[]', function() {
