@@ -281,7 +281,7 @@ export default Model.extend({
             status: status_id,
             role: this.get('role').get('id'), //TODO: is this tested/used at all?
             emails: [],
-            locations: [],
+            locations: this.get('location_ids'),
             phone_numbers: phone_numbers,
             addresses: addresses
         };

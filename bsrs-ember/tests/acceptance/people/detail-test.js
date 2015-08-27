@@ -23,6 +23,7 @@ import ADDRESS_FIXTURES from 'bsrs-ember/vendor/address_fixtures';
 import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
@@ -497,7 +498,7 @@ test('when you deep link to the person detail view you can remove a new address'
     });
 });
 
-test('when you deep link to the person detail view you can alter the roll and rolling back will reset it', (assert) => {
+test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -535,6 +536,54 @@ test('when you deep link to the person detail view you can alter the roll and ro
             var previous_role = store.find('role', ROLE_DEFAULTS.idTwo);
             assert.ok(Ember.$.inArray(person.get('id'), previous_role.get('people')) === -1);
             assert.ok(previous_role.get('isNotDirty'));
+        });
+    });
+});
+
+test('when you deep link to the person detail view you can add and save a location', (assert) => {
+    visit(DETAIL_URL);
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, locations: [LOCATION_DEFAULTS.idOne]});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    andThen(() => {
+        let person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.equal(person.get('locations').get('length'), 0);
+    });
+    fillIn('.t-person-locations-select', LOCATION_DEFAULTS.idOne);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        let person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.equal(person.get('locations').get('length'), 1);
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(person.get('locations').objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
+    });
+});
+
+test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-person-locations-select', LOCATION_DEFAULTS.idOne);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('locations').get('length'), 0);
+            assert.ok(person.get('isNotDirty'));
+            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+            var previous_location_m2m = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
+            assert.deepEqual(person.get('person_location_fks'), []);
+            assert.equal(previous_location_m2m.get('length'), 1);
+            assert.ok(previous_location_m2m.objectAt(0).get('removed'), true);
         });
     });
 });
