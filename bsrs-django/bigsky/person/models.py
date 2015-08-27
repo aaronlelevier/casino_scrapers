@@ -211,10 +211,11 @@ class Person(BaseModel, AbstractUser):
             self.auth_currency = self.role.default_auth_currency
 
     def _validate_locations(self):
+        """Remove invalid Locations from the Person based on 
+        their Role.location_level"""
         for l in self.locations.all():
             if l.location_level != self.role.location_level:
-                raise Exception("{} is an invalid Location for this Role"
-                               .format(l.name))
+                self.locations.remove(l)
 
     def save(self, *args, **kwargs):
         self._update_defaults()

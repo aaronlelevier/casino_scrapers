@@ -81,12 +81,14 @@ class PersonTests(TestCase):
 
     def test_validate_locations(self):
         self.person._validate_locations()
-        self.person.locations.add(
-            Location.objects.exclude(
+        invalid_location = Location.objects.exclude(
                 location_level=self.person.role.location_level).first()
+        self.person.locations.add(invalid_location)
+        self.person.save()
+        self.assertNotIn(
+            invalid_location,
+            self.person.locations.all()
         )
-        with self.assertRaises(Exception):
-            self.person.save()
 
     def test_foreignkeys(self):
         self.assertIsInstance(self.person.status, PersonStatus)
