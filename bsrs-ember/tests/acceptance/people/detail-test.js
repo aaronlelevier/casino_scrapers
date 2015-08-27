@@ -41,7 +41,7 @@ module('Acceptance | detail test', {
         var people_list_data = PEOPLE_FIXTURES.list();
         var people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
         var endpoint = PREFIX + PEOPLE_URL + '/';
-        var locations_endpoint = PREFIX + '/admin/locations/';
+        var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
         xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
         xhr(endpoint, 'GET', null, {}, 200, people_list_data);
         xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
@@ -195,6 +195,8 @@ test('when you change a related address type it will be persisted correctly', (a
 });
 
 test('when you change a related role it will be persisted correctly', (assert) => {
+    var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
     var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
@@ -499,6 +501,8 @@ test('when you deep link to the person detail view you can remove a new address'
 });
 
 test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
+    var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);

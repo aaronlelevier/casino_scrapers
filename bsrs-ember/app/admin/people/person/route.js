@@ -8,7 +8,6 @@ export default Ember.Route.extend({
     state_repo: inject('state'),
     status_repo: inject('status'),
     country_repo: inject('country'),
-    location_repo: inject('location'),
     role_repo: inject('role'),
     phone_number_type_repo: inject('phone-number-type'),
     address_type_repo: inject('address-type'),
@@ -20,7 +19,6 @@ export default Ember.Route.extend({
         var person_pk = params.person_id,
             country_repo = this.get('country_repo'),
             state_repo = this.get('state_repo'),
-            location_repo = this.get('location_repo'),
             status_repo = this.get('status_repo'),
             role_repo = this.get('role_repo'),
             repository = this.get('repository'),
@@ -29,8 +27,7 @@ export default Ember.Route.extend({
             default_phone_number_type = phone_number_type_repo.get_default(),
             address_type_repo = this.get('address_type_repo'),
             default_address_type = address_type_repo.get_default(),
-            roles = role_repo.get_default(),
-            locations = location_repo.find();
+            roles = role_repo.get_default();
 
         return Ember.RSVP.hash({
             model: person,
@@ -41,8 +38,7 @@ export default Ember.Route.extend({
             statuses: status_repo.find(),
             default_phone_number_type: default_phone_number_type,
             default_address_type: default_address_type,
-            roles: roles,
-            locations: locations
+            roles: roles
         });
     },
     setupController(controller, hash) {
@@ -55,7 +51,6 @@ export default Ember.Route.extend({
         controller.set('countries', hash.countries);
         controller.set('statuses', hash.statuses);
         controller.set('roles', hash.roles);
-        controller.set('locations', hash.locations);
     },
     actions: {
         willTransition(transition) {
