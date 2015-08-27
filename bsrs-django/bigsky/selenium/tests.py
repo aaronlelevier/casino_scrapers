@@ -116,7 +116,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         self.driver.refresh()
         location_list_view = location_page.find_list_name()
         location_page.click_name_in_list(location_name, location_list_view)
-        # UPDATE
+        ### UPDATE
         # # Go to Location Detail view
         # Change name and hit "save"
         location_page.find_wait_and_assert_elem("t-location-name", location_name)
@@ -128,20 +128,20 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         locations = location_page.find_list_data()
         location_list_view = location_page.find_list_name()
         location_page.click_name_in_list(location_name, location_list_view)
-        # DELETE
-        # # Go to Location Detail view
+        ### DELETE
+        # Go to Location Detail view
         # click Delete
-        # #TODO: debug why delete isn't working
-        # gen_elem_page.click_dropdown_delete()
-        # gen_elem_page.click_delete_btn()
-        # # check Role is deleted
-        # self.driver.refresh()
-        # locations = location_page.find_list_data()
-        # location_list_view = location_page.find_list_name()
-        # self.assertNotIn(
-        #     location_name,
-        #     [r.text for r in location_list_view]
-        # )
+        #TODO: debug why delete isn't working
+        gen_elem_page.click_dropdown_delete()
+        gen_elem_page.click_delete_btn()
+        # check Role is deleted
+        self.driver.refresh()
+        locations = location_page.find_list_data()
+        location_list_view = location_page.find_list_name()
+        self.assertNotIn(
+            location_name,
+            [r.text for r in location_list_view]
+        )
 
     def test_location_level(self):
         ### CREATE
@@ -173,25 +173,25 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         location_level = InputHelper(location_level_name=location_level_name)
         self._fill_in(location_level, True)
         gen_elem_page.click_save_btn()
-        ###List View
+        ### List View
         location_levels = location_level_page.find_list_data()
         self.driver.refresh()
         location_level_list_view = location_level_page.find_list_name()
         location_level_page.click_name_in_list(location_level_name, location_level_list_view)
-        # ### DELETE
-        # # Go to Location Detail view
-        # locations = self.find_class_elements("t-location-level-data")
-        # location_name = locations[0].find_elements_by_tag_name('td')[1].text
-        # locations[0].click()
-        # # click Delete
-        # self.driver_wait.find_element_by_class_name("dropdown-toggle").click()
-        # self.driver_wait.find_element_by_class_name("t-delete-btn").click()
-        # # check Role is deleted
-        # all_locations = self.driver_wait.find_elements_by_class_name("t-location-level-data")
-        # self.assertNotIn(
-        #     location_name,
-        #     [r.find_elements_by_tag_name('td')[1].text for r in all_locations]
-        # )
+        ### DELETE
+        # Go to the first Role's Detail view
+        location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
+        # click Delete
+        gen_elem_page.click_dropdown_delete()
+        gen_elem_page.click_delete_btn()
+        # check Role is deleted
+        self.driver.refresh()
+        location_level = location_level_page.find_list_data()
+        location_level_list_view = location_level_page.find_list_name()
+        self.assertNotIn(
+            location_level_name,
+            [r.text for r in location_level_list_view]
+        )
 
     def test_person(self):
         ### CREATE
@@ -206,7 +206,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         username = str(uuid.uuid4())[0:29]
         password = "bobber1"
         role = "RNfkmZFxsz"
-        person = PersonHelper(username=username, password=password)
+        person = InputHelper(username=username, password=password)
         role_input = Select(self.driver.find_element_by_id("person-role"))
         role_input.select_by_index(1)
         self._fill_in(person)
