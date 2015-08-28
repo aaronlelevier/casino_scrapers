@@ -69,7 +69,6 @@ class PersonCreateSerializer(BaseCreateSerializer):
 
 class PersonListSerializer(serializers.ModelSerializer):
 
-    role = RoleIdNameSerializer()
     status = PersonStatusSerializer()
 
     class Meta:
@@ -80,7 +79,6 @@ class PersonListSerializer(serializers.ModelSerializer):
 class PersonDetailSerializer(serializers.ModelSerializer):
 
     status = PersonStatusSerializer()
-    role = RoleSerializer()
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)

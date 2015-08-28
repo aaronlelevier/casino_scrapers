@@ -211,7 +211,8 @@ class PersonListTests(TestCase):
         self.assertTrue(self.data['results'][0]['status']['id'])
 
     def test_role(self):
-        self.assertTrue(self.data['results'][0]['role']['id'])
+        self.assertTrue(self.data['results'][0]['role'])
+        self.assertIsInstance(Role.objects.get(id=self.data['results'][0]['role']), Role)
 
     def test_auth_amount(self):
         results = self.data['results'][0]
@@ -239,6 +240,9 @@ class PersonDetailTests(TestCase):
 
     def test_retrieve(self):
         self.assertEqual(self.data['username'], self.person.username)
+
+    def test_role(self):
+        self.assertIsInstance(Role.objects.get(id=self.data['role']), Role)
 
     def test_location(self):
         self.assertTrue(self.data['locations'])
