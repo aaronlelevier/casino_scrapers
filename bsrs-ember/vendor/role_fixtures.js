@@ -12,6 +12,12 @@ var BSRS_ROLE_FACTORY = (function() {
             location_level: this.location_level_fixtures.detail().id
         }
     };
+    factory.prototype.generate_single_for_list = function(i) {
+        var role = this.generate(i);
+        delete role.location_level;
+        delete role.role_type;
+        return role;
+    };
     factory.prototype.list = function() {
         var response = [];
         var uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04b';
