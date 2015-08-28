@@ -21,6 +21,7 @@ rm -rf ./*/
 wait
 echo "CURRENT /www/django/releases/python3/ CONTENTS:"
 ls
+
 git clone -b python3 git@github.com:bigskytech/bsrs.git $NEW_UUID
 
 cd $NEW_UUID
@@ -30,7 +31,7 @@ npm install
 ./node_modules/ember-cli/bin/ember build --env=production
 
 cd ../bsrs-django
-rm -rf venv*
+rm -rf venv
 virtualenv -p /usr/local/bin/python3 venv3
 venv3/bin/pip install -r requirements.txt
 
@@ -62,6 +63,11 @@ uwsgi --http :$PORT \
     --static-map /assets=/www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky \
     --static-map /fonts=/www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky \
     --check-static /www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky
+
+
+wait
+echo "SHOW UWSGI PROCESSES:"
+ps ax | grep uwsgi
 
 echo "DEPLOY FINISHED!"
 exit 0
