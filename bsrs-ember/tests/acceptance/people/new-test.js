@@ -6,6 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import config from 'bsrs-ember/config/environment';
@@ -35,7 +36,7 @@ module('Acceptance | people-new', {
         xhr(endpoint,"GET",null,{},200,PEOPLE_FIXTURES.empty());
         var detailEndpoint = PREFIX + PEOPLE_URL + '/';
         var people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
-            role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: []};
+            role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: [], locations: []};
         detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
     },
     afterEach() {
@@ -48,6 +49,8 @@ module('Acceptance | people-new', {
 test('visiting /people/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
+    var locations_endpoint = PREFIX + '/admin/locations/';
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(BASE_PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {
@@ -75,6 +78,8 @@ test('validation works and when hit save, we do same post', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     var url = PREFIX + PEOPLE_URL + '/';
     xhr( url,'POST',JSON.stringify(payload),{},201,response );
+    var locations_endpoint = PREFIX + '/admin/locations/';
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(BASE_PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {

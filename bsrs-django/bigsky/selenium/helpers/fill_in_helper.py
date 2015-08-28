@@ -8,6 +8,8 @@ class FillInHelper(object):
         for k, v in model.__dict__.items():
             setattr(self, k + '_input', self.find_id_element(k))
             inputrr = getattr(self, k + '_input')
+            if clear == True:
+                inputrr.clear()
             inputrr.send_keys(v)
 
 

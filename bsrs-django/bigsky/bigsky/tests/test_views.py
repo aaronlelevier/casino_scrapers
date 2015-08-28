@@ -68,8 +68,22 @@ class ConfigurationTests(TestCase):
 
     def test_roles(self):
         response = self.client.get(reverse('index'))
-        self.assertTrue(response.context['role_config'])
-
+        configuration = json.loads(response.context['role_config'])
+        self.assertTrue(len(configuration) > 0)
+        # the model id shows in the context
+        self.assertIn(str(self.person.role.id), [c["id"] for c in configuration])
+        self.assertIn(str(self.person.role.name), [c["name"] for c in configuration])
+        self.assertIn(str(self.person.role.location_level.id), [c["location_level"] for c in configuration])
+        role = Role.objects.first()
+        role.location_level = None
+        role.save()
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['role_config'])
+        self.assertTrue(len(configuration) > 0)
+        self.assertIn(str(role.id), [c["id"] for c in configuration])
+        with self.assertRaises(KeyError):
+            configuration[0]["location_level"]
+        
     def test_role_types(self):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['role_types_config'])
@@ -97,4 +111,14 @@ class ConfigurationTests(TestCase):
     def test_location_status(self):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['location_status_config'])
+        self.assertTrue(len(configuration) > 0)
+
+    def test_current_locale(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['current_locale'])
+        self.assertTrue(configuration)
+
+    def test_locales(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['locales'])
         self.assertTrue(len(configuration) > 0)

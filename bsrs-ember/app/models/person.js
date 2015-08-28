@@ -1,10 +1,11 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
-import previous from 'bsrs-ember/utilities/previous';
 
 export default Model.extend({
+    uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
     first_name: attr(''),
@@ -13,8 +14,8 @@ export default Model.extend({
     title: attr(''),
     employee_id: attr(''),
     auth_amount: attr(''),
-    role_fk: previous(),
-    location_fk: previous(),
+    role_fk: undefined,
+    person_location_fks: [],
     isModelDirty: false,
     dirtyModel: Ember.computed('isModelDirty', {
         get(key) {
@@ -34,7 +35,6 @@ export default Model.extend({
         var roles = this.get('role_property');
         var has_role = roles.get('length') > 0;
         var foreign_key = has_role ? roles.objectAt(0).get('id') : undefined;
-        this.set('role_fk', foreign_key);
         if (has_role) {
             return roles.objectAt(0);
         }
@@ -58,8 +58,8 @@ export default Model.extend({
         var store = this.get('store');
         return store.find('address', {person: this.get('id')});
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', 'locationIsDirty', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty') || this.get('locationIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', 'locationsIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty') || this.get('locationsIsDirty');
     }),
     roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
         let roles = this.get('role_property');
@@ -67,7 +67,7 @@ export default Model.extend({
         if(role) {
             return role.get('isDirty');
         }
-        return this.get('_prevState.role_fk') ? true : false;
+        return this.get('role_fk') ? true : false;
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
@@ -106,31 +106,73 @@ export default Model.extend({
             address.save();
         });
     },
-    saveLocation: function() {
-        var location = this.get('location');
-        if(location) {
-            location.save();
-        }
+    saveLocations: function() {
+        this.resetPersonLocationFks({save: true});
     },
     saveRole: function() {
         var role = this.get('role');
         if(role) {
             role.save();
+            this.set('role_fk', role.get('id'));
         }
     },
     saveRelated() {
         this.savePhoneNumbers();
         this.saveAddresses();
         this.saveRole();
+        this.saveLocations();
     },
     rollbackRelated() {
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
         this.rollbackRole();
+        this.rollbackLocations();
+    },
+    rollbackLocations() {
+        let store = this.get('store');
+        let locations = this.get('locations');
+        let previous_m2m_fks = this.get('person_location_fks');
+
+        let m2m_to_throw_out = store.find('person-location', function(join_model) {
+            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
+        }, ['removed']);
+
+        m2m_to_throw_out.forEach(function(join_model) {
+            join_model.set('removed', true);
+        });
+
+        previous_m2m_fks.forEach(function(pk) {
+            var m2m_to_keep = store.find('person-location', pk);
+            m2m_to_keep.set('removed', undefined);
+        });
+
+        this.resetPersonLocationFks();
+    },
+    resetPersonLocationFks(options) {
+        let saved_m2m_pks = [];
+        let store = this.get('store');
+        let locations = this.get('locations');
+        locations.forEach((location) => {
+            if(options && options.save === true) {
+                location.save();
+            }
+            let filter = function(location_model, join_model) {
+                let removed = join_model.get('removed');
+                let person_pk = join_model.get('person_pk');
+                let location_pk = join_model.get('location_pk');
+                return person_pk === this.get('id') &&
+                    location_pk === location_model.get('id') && !removed;
+            };
+            let m2m = store.find('person-location', filter.bind(this, location), ['removed']);
+            m2m.forEach(function(join_model) {
+                saved_m2m_pks.push(join_model.get('id'));
+            });
+        });
+        this.set('person_location_fks', saved_m2m_pks);
     },
     rollbackRole() {
         var store = this.get('store');
-        var previous_role_fk = this.get('_prevState.role_fk');
+        var previous_role_fk = this.get('role_fk');
 
         var current_role = this.get('role');
         if(current_role) {
@@ -147,25 +189,6 @@ export default Model.extend({
             new_role.save();
         }
     },
-    rollbackLocation() {
-        var store = this.get('store');
-        var previous_location_fk = this.get('_prevState.location_fk');
-
-        var current_location = this.get('location');
-        if(current_location) {
-            var current_location_people = current_location.get('people') || [];
-            current_location.set('people', current_location_people.filter((old_location_person_pk) => {
-                return old_location_person_pk !== this.get('id');
-            }));
-        }
-
-        var new_location = store.find('location', previous_location_fk);
-        if(new_location.get('id')) {
-            var location_people = new_location.get('people') || [];
-            new_location.set('people', location_people.concat([this.get('id')]));
-            new_location.save();
-        }
-    },
     rollbackPhoneNumbers() {
         var phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
@@ -178,34 +201,58 @@ export default Model.extend({
             address.rollback();
         });
     },
-    locationIsDirty: Ember.computed('locations.@each.isDirty', function() {
+    locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
+    locationsIsDirty: Ember.computed('person_locations', 'locations.@each.isDirty', function() {
         let locations = this.get('locations');
-        var location = locations.objectAt(0);
-        if(location) {
-            return location.get('isDirty');
-        }
-        return this.get('_prevState.location_fk') ? true : false;
-    }),
-    locationIsNotDirty: Ember.computed.not('locationIsDirty'),
-    location: Ember.computed('locations.[]', function() {
-        var locations = this.get('locations');
-        var has_location = locations.get('length') > 0;
-        var foreign_key = has_location ? locations.objectAt(0).get('id') : undefined;
-        this.set('location_fk', foreign_key);
-        if(has_location) {
-            return locations.objectAt(0);
-        }
-    }),
-    locations: Ember.computed(function() {
-        var store = this.get('store');
-        var filter = function(location) {
-            var people_pks = location.get('people') || [];
-            if(Ember.$.inArray(this.get('id'), people_pks) > -1) {
+        let previous_m2m_fks = this.get('person_location_fks');
+        if(locations.get('length') > 0) {
+            if(!previous_m2m_fks || previous_m2m_fks.get('length') !== locations.get('length')) {
                 return true;
             }
-            return false;
+
+            let dirty_locations = locations.filter(function(location) {
+                return location.get('isDirty') === true;
+            });
+            return dirty_locations.length > 0;
+        }
+        if(previous_m2m_fks && previous_m2m_fks.get('length') > 0) {
+            return true;
+        }
+    }),
+    update_locations(location_pk) {
+        let store = this.get('store');
+        if(Ember.$.inArray(location_pk, this.get('location_ids')) > -1) {
+            let m2m_pk = this.get('person_locations').filter((m2m) => {
+                return m2m.get('location_pk') === location_pk;
+            }).objectAt(0).get('id');
+            store.push('person-location', {id: m2m_pk, removed: true});
+        }else{
+            let uuid = this.get('uuid');
+            store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
+        }
+    },
+    location_ids: Ember.computed('locations.[]', function() {
+        return this.get('locations').map((location) => {
+            return location.get('id');
+        });
+    }),
+    locations: Ember.computed('person_locations.[]', function() {
+        let store = this.get('store');
+        let person_locations = this.get('person_locations');
+        let filter = function(location) {
+            let location_pks = this.map(function(join_model) {
+                return join_model.get('location_pk');
+            });
+            return Ember.$.inArray(location.get('id'), location_pks) > -1;
         };
-        return store.find('location', filter.bind(this), ['people']);
+        return store.find('location', filter.bind(person_locations), ['id']);
+    }),
+    person_locations: Ember.computed(function() {
+        let store = this.get('store');
+        let filter = function(join_model) {
+            return join_model.get('person_pk') === this.get('id') && !join_model.get('removed');
+        };
+        return store.find('person-location', filter.bind(this), ['removed']);
     }),
     createSerialize() {
         return {
@@ -216,7 +263,6 @@ export default Model.extend({
         };
     },
     serialize() {
-        //TODO: remove this hard reference to get the first status
         var store = this.get('store');
         var status_id = store.findOne('status').get('id');
         var phone_numbers = this.get('phone_numbers').map(function(number) {
@@ -238,7 +284,7 @@ export default Model.extend({
             status: status_id,
             role: this.get('role').get('id'), //TODO: is this tested/used at all?
             emails: [],
-            locations: [],
+            locations: this.get('location_ids'),
             phone_numbers: phone_numbers,
             addresses: addresses
         };

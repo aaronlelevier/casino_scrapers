@@ -1,7 +1,6 @@
 from method_helpers import MethodHelpers
 from base_page import BasePage
 
-
 class PersonPage(BasePage, MethodHelpers):
     '''
     Person page containing all DOM nodes
@@ -20,20 +19,36 @@ class PersonPage(BasePage, MethodHelpers):
         for k,v in kwargs.items():
             setattr(self, k + "_input", self.find_id_element(k))
             assert getattr(self, k + "_input").get_attribute("value") == v
-             
-
-        # first_name_input = self.driver.find_element_by_id("first_name")
-        # middle_initial_input = self.driver.find_element_by_id("middle_initial")
-        # last_name_input = self.driver.find_element_by_id("last_name")
-        # emp_number_input = self.driver.find_element_by_id("employee_id")
-        # title_input = self.driver.find_element_by_id("title")
-        # assert username_input.get_attribute("value") == username
-        # assert first_name_input.get_attribute("value") == first_name
-        # assert middle_initial_input.get_attribute("value") == middle_initial
-        # assert last_name_input.get_attribute("value") == last_name
-        # assert emp_number_input.get_attribute("value") == employee_id
-        # assert title_input.get_attribute("value") == title
         
+    def find_list_name(self):
+        return self.find_class_elements("t-person-username")
+
+    def find_list_data(self):
+        return self.wait_xhr("t-person-data")
+
+    def click_name_in_list(self, name, new_person):
+        pagination = self.driver.find_element_by_class_name("t-pages")
+        element_list = pagination.find_elements_by_tag_name("li")
+        element_list_len = len(element_list)
+        count = 0
+        while count < element_list_len:
+            try:
+                all_people = self.find_list_data()
+            except AssertionError:
+                pass
+            list_view_elements = self.find_list_name()
+            for row in list_view_elements:
+                if row.text and row.text == name:
+                    new_person = row
+            if new_person:
+                break
+            count += 1
+            pagination = self.find_class_element("t-pages")
+            element_list = pagination.find_elements_by_tag_name("a")
+            next_elem = element_list[count]
+            next_elem.click()
+        return new_person
+
     def find_ph_new_entry_send_keys(self, phone_num):
         first_phone_number_input = self.find_class_element("t-new-entry")
         first_phone_number_input.send_keys(phone_num)
@@ -45,3 +60,26 @@ class PersonPage(BasePage, MethodHelpers):
         assert len(inputs) == 2
         assert inputs[0].get_attribute("value") == args[0]
         assert inputs[1].get_attribute("value") == args[1]
+
+    def assert_name_not_in_list(self, name, new_person):
+        pagination = self.find_class_element("t-pages")
+        element_list = pagination.find_elements_by_tag_name("li")
+        element_list_len = len(element_list)
+        count = 0
+        while count < element_list_len:
+            try:
+                all_people = self.find_list_data()
+            except AssertionError:
+                pass
+            list_view_elements = self.find_list_name()
+            for row in list_view_elements:
+                if row.text and row.text == name:
+                    new_person = row
+            count += 1
+            pagination = self.find_class_element("t-pages")
+            try:
+                element_list = pagination.find_elements_by_tag_name("a")
+                next_elem = element_list[count]
+                next_elem.click()
+            except:
+                assert new_person == None

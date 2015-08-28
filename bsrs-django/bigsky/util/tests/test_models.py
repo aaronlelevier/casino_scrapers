@@ -1,16 +1,60 @@
 import uuid
+import json
 
 from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
+from django.conf import settings
 from django.contrib.auth.models import ContentType, Permission
 from django.core.exceptions import ObjectDoesNotExist
 
 from model_mommy import mommy
 
+from person.models import Role
 from person.tests.factory import create_person, create_role
-from util import create
+from translation.models import Locale
+from util import create, choices, helpers
 from util.models import MainSetting, CustomSetting, Tester
 from util.permissions import perms_map
+
+
+class HelperTests(TestCase):
+
+    def test_model_to_json(self):
+        role = create_role()
+        role_json = helpers.model_to_json(Role)
+        role_python = json.loads(role_json)
+        self.assertEqual(role_python[0]['id'], str(role.id))
+
+    def test_choices_to_json(self):
+        ch_json = helpers.choices_to_json(choices.ROLE_TYPE_CHOICES)
+        ch_python = json.loads(ch_json)
+        self.assertTrue(ch_python)
+        self.assertIsInstance(ch_python, list)
+
+    def test_current_local_default(self):
+        self.assertEqual(Locale.objects.count(), 0)
+        user = create_person()
+        current_locale_json = helpers.current_locale(user)
+        current_locale_python = json.loads(current_locale_json)
+        self.assertEqual(
+            current_locale_python['locale'],
+            settings.LANGUAGE_CODE
+        )
+        self.assertEqual(Locale.objects.count(), 1)
+
+    def test_current_locale_user(self):
+        # setup
+        locale = Locale.objects.create_default()
+        user = create_person()
+        user.locale = locale
+        user.save()
+        # test
+        current_locale_json = helpers.current_locale(user)
+        current_locale_python = json.loads(current_locale_json)
+        self.assertEqual(
+            current_locale_python['locale'],
+            user.locale.locale
+        )
 
 
 class TesterManagerTests(TestCase):

@@ -23,7 +23,7 @@
 			{{#each model as |location|}}
 				{{#link-to 'admin.locations.location' location.id tagName="tr" class="t-location-data"}}
 					<td><input type="checkbox" /></td>
-					<td>{{location.name}}</td>
+					<td class="t-location-name">{{location.name}}</td>
 					<td>{{location.number}}</td>
 					<td></td>
 					<td></td>

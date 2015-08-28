@@ -21,7 +21,7 @@
 			{{#each model as |role|}}
 				{{#link-to 'admin.roles.role' role.id tagName="tr" class="t-role-data"}}
 					<td><input type="checkbox" /></td>
-					<td>{{role.name}}</td>
+					<td class="t-role-name">{{role.name}}</td>
 					<td>{{role.location_level.name}}</td>
 					<td>{{role.role_type}}</td>
 					<td></td>

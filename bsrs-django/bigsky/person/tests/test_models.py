@@ -3,6 +3,8 @@ from django.contrib.auth.models import AbstractUser, Group
 
 from model_mommy import mommy
 
+from location.models import Location
+from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role
 
@@ -18,6 +20,8 @@ class RoleTests(TestCase):
     def test_name(self):
         self.assertEqual(self.role.group.name, self.role.name)
 
+    def test_to_dict(self):
+        self.assertEqual(self.role.to_dict()["location_level"], str(self.role.location_level.id))
 
 class PersonStatusManagerTests(TestCase):
 
@@ -36,6 +40,7 @@ class PersonStatusTests(TestCase):
 class PersonManagerTests(TestCase):
 
     def setUp(self):
+        create_locations()
         self.person = create_person()
         self.person_del = create_person()
         self.person_del.delete()
@@ -58,6 +63,7 @@ class PersonManagerTests(TestCase):
 class PersonTests(TestCase):
 
     def setUp(self):
+        create_locations()
         self.password = PASSWORD
         self.person = create_person()
 
@@ -66,6 +72,23 @@ class PersonTests(TestCase):
 
     def test_person_defaults(self):
         self.assertTrue(self.person.accept_assign)
+
+    def test_update_defaults(self):
+        self.person.status = None
+        self.assertIsNone(self.person.status)
+        self.person._update_defaults()
+        self.assertIsNotNone(self.person.status)
+
+    def test_validate_locations(self):
+        self.person._validate_locations()
+        invalid_location = Location.objects.exclude(
+                location_level=self.person.role.location_level).first()
+        self.person.locations.add(invalid_location)
+        self.person.save()
+        self.assertNotIn(
+            invalid_location,
+            self.person.locations.all()
+        )
 
     def test_foreignkeys(self):
         self.assertIsInstance(self.person.status, PersonStatus)

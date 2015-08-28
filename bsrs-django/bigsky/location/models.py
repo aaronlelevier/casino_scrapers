@@ -67,7 +67,7 @@ class SelfRefrencingManager(BaseManager):
     ''' '''
     
     def get_queryset(self):
-        return SelfRefrencingQuerySet(self.model, self._db)
+        return SelfRefrencingQuerySet(self.model, self._db).filter(deleted__isnull=True)
         
     def get_all_children(self, parent, all_children=None):
         return self.get_queryset().get_all_children(parent, all_children)
@@ -184,7 +184,7 @@ class LocationManager(SelfRefrencingManager):
     ''' '''
     
     def get_queryset(self):
-        return LocationQuerySet(self.model, self._db)
+        return LocationQuerySet(self.model, self._db).filter(deleted__isnull=True)
         
     def get_level_children(self, location, level_id):
         '''
@@ -214,8 +214,8 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         help_text="If not provided, will be the default 'LocationStatus'.")
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
     # fields
-    name = models.CharField(max_length=100)
-    number = models.CharField(max_length=100, unique=True)
+    name = models.CharField(max_length=50)
+    number = models.CharField(max_length=50, unique=True)
 
     objects = LocationManager()
 

@@ -50,7 +50,7 @@ timestamp of when the record was deleted.")
         return "id: {self.id}; class: {self.__class__.__name__}; deleted: \
 {self.deleted}".format(self=self)
 
-    def delete(self, override=False, *args, **kwargs):
+    def delete(self, override=None, *args, **kwargs):
         '''
         Enforce only hiding objects and not deleting them unless explicitly 
         overriden.
@@ -60,9 +60,9 @@ timestamp of when the record was deleted.")
             self.save()
         else:
             super(BaseModel, self).delete(*args, **kwargs)
-            
+
     def to_dict(self):
-        return {"id": str(self.pk), "name": self.name}
+        return {"id": str(self.pk)}
 
 
 class Tester(BaseModel):
@@ -79,17 +79,15 @@ class AbstractName(BaseModel):
     def __str__(self):
         return self.name
 
+    def to_dict(self):
+        return {"id": str(self.pk), "name": self.name}
 
-@python_2_unicode_compatible
-class AbstractNameOrder(BaseModel):
+
+class AbstractNameOrder(AbstractName):
     order = models.IntegerField(blank=True, default=0)
-    name = models.CharField(max_length=100, unique=True)
-    
+
     class Meta:
         abstract = True
-
-    def __str__(self):
-        return self.name
 
 
 @python_2_unicode_compatible

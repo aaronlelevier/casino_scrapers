@@ -6,6 +6,7 @@ import rest_framework_filters as filters
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
 from util.views import BaseModelViewSet
+from rest_framework import pagination
 
 
 class RoleViewSet(BaseModelViewSet):
@@ -15,6 +16,7 @@ class RoleViewSet(BaseModelViewSet):
     queryset = Role.objects.all()
     serializer_class = ps.RoleSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    paginate_by = 1000
 
 
 class PersonStatusViewSet(BaseModelViewSet):

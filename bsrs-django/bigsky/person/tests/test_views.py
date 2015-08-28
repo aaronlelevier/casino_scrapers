@@ -1,15 +1,14 @@
 import json
 import uuid
+import copy
 import sys
 import codecs
 
 from django.test import TestCase
 from django.db.models.functions import Lower
-from django.core.exceptions import ValidationError as DjangoValidationError
 
 from rest_framework import status
 from rest_framework.test import APITestCase
-from rest_framework.exceptions import ValidationError
 from model_mommy import mommy
 
 from accounting.models import Currency
@@ -18,7 +17,7 @@ from contact.models import (Address, AddressType, Email, EmailType,
 from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
-from person.serializers import PersonUpdateSerializer
+from person.serializers import PersonUpdateSerializer, RoleSerializer
 from person.tests.factory import PASSWORD, create_person, create_role
 from util import create, choices
 
@@ -43,6 +42,9 @@ class RoleViewSetTests(APITestCase):
         self.role.save()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
+        # data
+        serializer = RoleSerializer(self.role)
+        self.data = serializer.data
 
     def tearDown(self):
         self.client.logout()
@@ -76,17 +78,29 @@ class RoleViewSetTests(APITestCase):
         self.assertIsInstance(Role.objects.get(id=role_data['id']), Role)
 
     def test_update(self):
-        role_data = {
-            "id": self.role.id,
-            "name": "New Role Name",
-            "role_type": self.role.role_type,
-            "location_level": self.role.location_level.id
-        }
+        role_data = self.data
+        role_data['name'] = 'new name here'
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         new_role_data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(self.role.name, new_role_data['name'])
+
+    def test_update_location_level(self):
+        role_data = copy.copy(self.data)
+        role_data['location_level'] = str(mommy.make(LocationLevel).id)
+        self.assertNotEqual(
+            self.data['location_level'],
+            role_data['location_level']
+        )
+        response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
+            role_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        new_role_data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            role_data['location_level'],
+            str(Role.objects.get(id=self.data['id']).location_level.id)
+        )
 
 
 ### PERSON ###

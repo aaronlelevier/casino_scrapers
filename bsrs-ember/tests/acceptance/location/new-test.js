@@ -9,24 +9,26 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
-const LOCATION_URL = '/admin/locations';
-const LOCATION_NEW_URL = LOCATION_URL + '/new';
+const BASE_URL = BASEURLS.base_locations_url;
+const LOCATION_URL = BASE_URL + '/index';
+const LOCATION_NEW_URL = BASE_URL + '/new';
 const DJANGO_LOCATION_URL = PREFIX + '/admin/locations/';
-const DETAIL_URL = LOCATION_URL + '/' + LOCATION_DEFAULTS.idOne;
+const DETAIL_URL = BASE_URL + '/' + LOCATION_DEFAULTS.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_URL + LOCATION_DEFAULTS.idOne + '/';
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 const CANCEL_BTN = '.t-cancel-btn';
 
-var application, store, payload;
+let application, store, payload, list_xhr;
 
 module('Acceptance | location-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        xhr(DJANGO_LOCATION_URL, "GET", null, {}, 200, LOCATION_FIXTURES.empty());
+        list_xhr = xhr(DJANGO_LOCATION_URL, "GET", null, {}, 200, LOCATION_FIXTURES.empty());
         payload = {
             id: UUID.value,
             name: LOCATION_DEFAULTS.storeName,
@@ -43,7 +45,7 @@ module('Acceptance | location-new', {
 });
 
 test('visiting /location/new', (assert) => {
-    var response = Ember.$.extend(true, {}, payload);
+    let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_URL);
     click('.t-location-new');
@@ -58,7 +60,7 @@ test('visiting /location/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(store.find('location').get('length'), 1);
-        var location = store.find('location', UUID.value);
+        let location = store.find('location', UUID.value);
         assert.equal(location.get('id'), UUID.value);
         assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
         assert.equal(location.get('number'), LOCATION_DEFAULTS.storeNumber);
@@ -68,7 +70,7 @@ test('visiting /location/new', (assert) => {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-    var response = Ember.$.extend(true, {}, payload);
+    let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_URL);
     click('.t-location-new');
@@ -97,6 +99,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+    clearxhr(list_xhr);
     visit(LOCATION_NEW_URL);
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeName);
     click(CANCEL_BTN);
@@ -125,7 +128,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
-            var location = store.find('location', {id: UUID.value});
+            let location = store.find('location', {id: UUID.value});
             assert.equal(location.get('length'), 1);
         });
     });
@@ -134,7 +137,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
-            var location = store.find('location', {id: UUID.value});
+            let location = store.find('location', {id: UUID.value});
             assert.equal(location.get('length'), 0);
             assert.equal(find('tr.t-location-data').length, 0);
         });

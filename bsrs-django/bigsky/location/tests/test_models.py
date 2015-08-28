@@ -37,6 +37,19 @@ class SelfRefrencingManagerTests(TestCase):
         self.assertEqual(len(all_parents), 2)
         self.assertIsInstance(all_parents, models.query.QuerySet)
 
+    def test_delete_child(self):
+        district_children = self.district.children.all()
+        init_count = district_children.count()
+        # Child
+        first_child = district_children.first()
+        first_child.delete()
+        self.assertIsNotNone(first_child.deleted)
+        # M2M test
+        self.assertEqual(
+            self.district.children.count(),
+            init_count-1
+        )
+
 
 class LocationLevelManagerTests(TestCase):
     '''

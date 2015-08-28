@@ -8,8 +8,7 @@ export default Ember.Route.extend({
         var all_role_types = this.get('store').find('role-type');
         var default_role_type = all_role_types.objectAt(0).get('name');
         var all_location_levels = this.get('store').find('location-level');
-        var default_location_level = all_location_levels.objectAt(0).get('id');
-        var model = this.get('store').push('role', {id: pk, role_type: default_role_type, location_level: default_location_level});
+        var model = this.get('store').push('role', {id: pk, role_type: default_role_type});
         return Ember.RSVP.hash({
             model: model,
             all_role_types: all_role_types,

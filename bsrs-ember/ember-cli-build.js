@@ -9,11 +9,11 @@ var es5Shim = funnel('node_modules/es5-shim', {
     destDir: '/assets'
 });
 
-module.exports = function(defaults) {
-    var app = new EmberApp(defaults, {
+module.exports = function() {
+    var app = new EmberApp({
         markers: {
             enabled: true,
-            markers: ['TODO']
+            kinds: ['TODO']
         }
     });
 
@@ -35,6 +35,7 @@ module.exports = function(defaults) {
     app.import('vendor/defaults/location-level.js');
     app.import('vendor/defaults/location-status.js');
     app.import('vendor/defaults/person.js');
+    app.import('vendor/defaults/person-location.js');
     app.import('vendor/defaults/person-put.js');
     app.import('vendor/defaults/phone-number.js');
     app.import('vendor/defaults/phone-number-type.js');

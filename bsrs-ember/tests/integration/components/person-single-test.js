@@ -6,6 +6,8 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
+import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
+import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
 
 var store;
 
@@ -68,4 +70,15 @@ test('selecting a placeholder instead of legit role will not append the persons 
     assert.ok(role_two.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.ok(person.get('isNotDirty'));
+});
+
+test('locations multi select is rendered in this component', function(assert) {
+    let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    let location_one = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    this.set('model', person);
+    this.set('locations', store.find('location'));
+    this.render(hbs`{{person-single model=model locations=locations}}`);
+    let $component = this.$('.t-person-locations-select');
+    assert.equal($component.find('option').length, 1);
 });
