@@ -1,5 +1,5 @@
 from selenium import webdriver
-from javascript import JavascriptMixin
+from .javascript import JavascriptMixin
 
 class BasePage(JavascriptMixin):
     def __init__(self, driver, wait):

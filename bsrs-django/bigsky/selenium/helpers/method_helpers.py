@@ -1,5 +1,5 @@
 import re
-from url_helper import URLHelper
+from .url_helper import URLHelper
 
 class MethodHelpers(object):
 

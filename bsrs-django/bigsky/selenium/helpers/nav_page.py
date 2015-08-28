@@ -1,5 +1,5 @@
-from method_helpers import MethodHelpers
-from base_page import BasePage
+from .method_helpers import MethodHelpers
+from .base_page import BasePage
 
 
 class NavPage(BasePage, MethodHelpers):
