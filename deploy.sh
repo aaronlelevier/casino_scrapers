@@ -1,5 +1,4 @@
 #!/bin/bash -lx
-
 echo "DEPLOY STARTED!"
 
 NEW_UUID=$(( ( RANDOM  )  + 1 ))
@@ -11,6 +10,10 @@ fuser $PORT/tcp
 
 echo "UWSGI KILL:"
 fuser -k $PORT/tcp
+
+wait
+echo "THERE SHOULD BE NO UWSGI HERE:"
+fuser $PORT/tcp
 
 cd /www/django/releases/python3
 rm -rf ./*/
