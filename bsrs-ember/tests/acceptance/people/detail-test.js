@@ -569,7 +569,7 @@ test('when changing the locale for a user (not current user), the language is no
     });
 
   });
-
+});
 test('when you deep link to the person detail view you can add and save a location', (assert) => {
     visit(DETAIL_URL);
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);

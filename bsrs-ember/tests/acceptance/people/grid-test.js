@@ -29,7 +29,7 @@ module('Acceptance | people-grid-list', {
     }
 });
 
-test('amk initial load should only show first 10 records ordered by id with correct pagination and no additional xhr', function(assert) {
+test('initial load should only show first 10 records ordered by id with correct pagination and no additional xhr', function(assert) {
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);

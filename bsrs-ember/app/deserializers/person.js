@@ -63,21 +63,13 @@ var extract_person_location = function(model, store, uuid) {
             prevented_duplicate_m2m.push(person_locations[0].get('id'));
         }
     });
-<<<<<<< HEAD
-
-=======
->>>>>>> master
     let server_locations_sum = newly_added_m2m.concat(prevented_duplicate_m2m);
     let m2m_to_remove = all_person_locations.filter(function(m2m) {
         return Ember.$.inArray(m2m.get('id'), server_locations_sum) < 0;
     });
 
     m2m_to_remove.forEach(function(m2m) {
-<<<<<<< HEAD
-        store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
-=======
         store.push('person-location', {id: m2m.get('id'), removed: true});
->>>>>>> master
     });
 
     delete model.locations;

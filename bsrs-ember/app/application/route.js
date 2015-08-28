@@ -91,13 +91,13 @@ export default Ember.Route.extend({
 
     return this.get('translationsFetcher').fetch();
 
-    },
-    actions: {
-        cancel_modal() {
-            Ember.$('.t-modal').modal('hide');
-        }
-    }
+  },
+  actions: {
+      cancel_modal() {
+          Ember.$('.t-modal').modal('hide');
+      }
   }
+
   //need to figure out how to output errors on screen
   //   //application error resource -- still not working; default route defined with wildcard in router
   //   error: function(error) {
