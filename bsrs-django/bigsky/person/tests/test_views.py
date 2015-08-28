@@ -270,6 +270,15 @@ class PersonDetailTests(TestCase):
         person = Person.objects.get(id=self.data['phone_numbers'][0]['person'])
         self.assertIsInstance(person, Person)
 
+    ### DETAIL ROUTES
+
+    def test_current(self):
+        # 'self.person' is the currently logged in 'Person'
+        response = self.client.get('/api/admin/people/current/'.format(self.person.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data['id'], str(self.person.id))
+
 
 class PersonPutTests(APITestCase):
     '''
