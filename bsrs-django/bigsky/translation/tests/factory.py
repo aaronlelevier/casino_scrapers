@@ -1,6 +1,6 @@
 import copy
 
-from translation.models import Locale, Definition
+from translation.models import Locale, Translation
 from util.create import random_lorem
 
 
@@ -33,27 +33,27 @@ def create_locales():
         'en-x-Sephora'
     ]
     for l in locales:
-        Locale.objects.create(language=l)
+        Locale.objects.create(locale=l)
 
 
-def create_definitions():
+def create_translations():
     create_locales()
 
-    en = Locale.objects.get(language='en')
-    en_us = Locale.objects.get(language='en-US')
-    en_x_sephora = Locale.objects.get(language='en-x-Sephora')
+    en = Locale.objects.get(locale='en')
+    en_us = Locale.objects.get(locale='en-US')
+    en_x_sephora = Locale.objects.get(locale='en-x-Sephora')
 
     dict_ = create_empty_dict()
 
-    def_en = Definition.objects.create(
-        language = en,
+    def_en = Translation.objects.create(
+        locale = en,
         values = update_dict_values(dict_)
     )
-    def_en_us = Definition.objects.create(
-        language = en_us,
+    def_en_us = Translation.objects.create(
+        locale = en_us,
         values = update_dict_values(dict_)
     )
-    def_en_x_sephora = Definition.objects.create(
-        language = en_x_sephora,
+    def_en_x_sephora = Translation.objects.create(
+        locale = en_x_sephora,
         values = update_dict_values(dict_)
     )

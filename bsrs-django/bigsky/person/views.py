@@ -1,11 +1,15 @@
+from django.shortcuts import get_object_or_404
 from django.db.models.functions import Lower
 
 from rest_framework import permissions
+from rest_framework.decorators import list_route
+from rest_framework.response import Response
 import rest_framework_filters as filters
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
 from util.views import BaseModelViewSet
+from rest_framework import pagination
 
 
 class RoleViewSet(BaseModelViewSet):
@@ -15,6 +19,7 @@ class RoleViewSet(BaseModelViewSet):
     queryset = Role.objects.all()
     serializer_class = ps.RoleSerializer
     permission_classes = (permissions.IsAuthenticated,)
+    paginate_by = 1000
 
 
 class PersonStatusViewSet(BaseModelViewSet):
@@ -35,6 +40,15 @@ class PersonFilterSet(filters.FilterSet):
 
 
 class PersonViewSet(BaseModelViewSet):
+    '''
+    ## Detail Routes
+
+    **1. current:**
+
+       Returns the *logged-in* Person's Detail Serializer
+
+       URL: `/api/admin/people/current/`
+    '''
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     filter_class = PersonFilterSet
@@ -61,6 +75,13 @@ class PersonViewSet(BaseModelViewSet):
             else:
                 queryset = queryset.order_by(Lower(ordering))
         return queryset
+
+    @list_route(methods=['GET'])
+    def current(self, request, pk=None):
+        instance = get_object_or_404(Person, id=request.user.id)
+        serializer = ps.PersonDetailSerializer(instance)
+        return Response(serializer.data)
+
 
     ### TODO:
     ### Change Password logic --------------------------------------------------------------------------

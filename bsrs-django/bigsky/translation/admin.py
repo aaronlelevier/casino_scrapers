@@ -8,6 +8,6 @@ class LocaleAdmin(admin.ModelAdmin):
     pass
 
 
-@admin.register(models.Definition)
-class DefinitionAdmin(admin.ModelAdmin):
+@admin.register(models.Translation)
+class TranslationAdmin(admin.ModelAdmin):
     pass

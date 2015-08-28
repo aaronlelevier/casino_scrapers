@@ -5,12 +5,11 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericRelation
 
-from django.core.exceptions import ValidationError
-
 from accounting.models import Currency
 from location.models import LocationLevel, Location
 from person import helpers
 from order.models import WorkOrderStatus
+from translation.models import Locale
 from util import choices, create
 from util.models import (AbstractName, MainSetting, CustomSetting,
     BaseModel, BaseManager)
@@ -159,13 +158,17 @@ class Person(BaseModel, AbstractUser):
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)
     locations = models.ManyToManyField(Location, related_name='people', blank=True)
+    locale = models.ForeignKey(Locale, blank=True, null=True,
+        help_text="If the Person has not 'Locale', the Accept-Language "
+                  "header will be used or the Site's system setting.")
     # required
     # Auth Amounts - can be defaulted by the Role
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
-    next_approver = models.ForeignKey("self", related_name='nextapprover', null=True)
+    next_approver = models.ForeignKey("self", related_name='nextapprover',
+        blank=True, null=True)
     # optional
     employee_id = models.CharField(max_length=100, blank=True, null=True)
     middle_initial = models.CharField(max_length=1, blank=True, null=True)
@@ -183,7 +186,8 @@ class Person(BaseModel, AbstractUser):
         max_length=100, blank=True, null=True)
     proxy_end_date = models.DateField("Out of the Office Status End Date", max_length=100,
         blank=True, null=True)
-    proxy_user = models.ForeignKey("self", related_name='coveringuser', null=True)
+    proxy_user = models.ForeignKey("self", related_name='coveringuser',
+        blank=True, null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
 
@@ -198,7 +202,7 @@ class Person(BaseModel, AbstractUser):
     def __str__(self):
         return self.username
 
-    def save(self, *args, **kwargs):
+    def _update_defaults(self):
         if not self.status:
             self.status = PersonStatus.objects.default()
         if not self.auth_amount:
@@ -206,8 +210,16 @@ class Person(BaseModel, AbstractUser):
         if not self.auth_currency:
             self.auth_currency = self.role.default_auth_currency
 
-        # self.validate_locations()
-        
+    def _validate_locations(self):
+        """Remove invalid Locations from the Person based on 
+        their Role.location_level"""
+        for l in self.locations.all():
+            if l.location_level != self.role.location_level:
+                self.locations.remove(l)
+
+    def save(self, *args, **kwargs):
+        self._update_defaults()
+        self._validate_locations()
         return super(Person, self).save(*args, **kwargs)
 
 

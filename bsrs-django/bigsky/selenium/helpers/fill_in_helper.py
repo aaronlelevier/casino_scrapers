@@ -4,10 +4,12 @@ class FillInHelper(object):
     and fill in input with the attributes' values
     Ensure model has attrs (k) equal to id on template 
     '''
-    def _fill_in(self, model):
+    def _fill_in(self, model, clear=False):
         for k, v in model.__dict__.iteritems():
             setattr(self, k + '_input', self.find_id_element(k))
             inputrr = getattr(self, k + '_input')
+            if clear == True:
+                inputrr.clear()
             inputrr.send_keys(v)
 
 

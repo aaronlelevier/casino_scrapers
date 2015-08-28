@@ -1,5 +1,3 @@
-import json
-
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
@@ -8,15 +6,9 @@ from django.views.decorators.cache import never_cache
 from contact.models import PhoneNumberType
 from person.models import Role, PersonStatus
 from location.models import LocationLevel, LocationStatus
-
+from translation.models import Locale
 from util import choices
-
-
-def model_to_json(model):
-    return json.dumps([m.to_dict() for m in model.objects.all()])
-
-def choices_to_json(model):
-    return json.dumps([m[0] for m in model])
+from util.helpers import model_to_json, choices_to_json, current_locale
 
 
 class IndexView(TemplateView):
@@ -42,6 +34,8 @@ class IndexView(TemplateView):
             'role_types_config': choices_to_json(choices.ROLE_TYPE_CHOICES),
             'person_status_config': model_to_json(PersonStatus),
             'location_level_config': model_to_json(LocationLevel),
-            'location_status_config': model_to_json(LocationStatus)
+            'location_status_config': model_to_json(LocationStatus),
+            'current_locale': current_locale(self.request.user),
+            'locales': model_to_json(Locale)
             })
         return context

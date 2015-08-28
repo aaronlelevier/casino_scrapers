@@ -93,6 +93,7 @@ DATABASES = {}
 AUTH_USER_MODEL = 'person.Person'
 
 LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE_NAME = 'English'
 
 TIME_ZONE = 'America/Los_Angeles'
 
@@ -109,6 +110,9 @@ STATICFILES_DIRS = (
 STATIC_URL = '/assets/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_ROOT = os.path.join(BASE_DIR, 'source')
+
 
 ### Native Configurations ###
 

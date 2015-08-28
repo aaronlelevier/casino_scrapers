@@ -15,7 +15,7 @@ DATABASES = {
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
-    '--cover-package=accounting,contact,location,order,person,role,session,util',
+    '--cover-package=accounting,contact,location,order,person,role,session,translation,util',
 ]
 
 PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher', )

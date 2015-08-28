@@ -12,3 +12,9 @@ class GeneralElementsPage(BasePage, MethodHelpers):
 
     def click_save_btn(self):
         self.find_class_element("t-save-btn").click()
+
+    def click_delete_btn(self):
+        self.find_class_element("t-delete-btn").click()
+
+    def click_dropdown_delete(self):
+        self.find_class_element("dropdown-toggle").click()
