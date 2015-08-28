@@ -12,11 +12,17 @@ var BSRS_ROLE_FACTORY = (function() {
             location_level: this.location_level_fixtures.detail().id
         }
     };
+    factory.prototype.generate_single_for_list = function(i) {
+        var role = this.generate(i);
+        delete role.location_level;
+        delete role.role_type;
+        return role;
+    };
     factory.prototype.list = function() {
         var response = [];
         var uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04b';
-        response.push({id: uuid + 1, name: 'Admin', role_type: this.role_defaults.roleTypeGeneral, location_level: this.location_level_fixtures.detail().id});
-        response.push({id: uuid + 2, name: 'Guest', role_type: this.role_defaults.roleTypeGeneral, location_level: this.location_level_fixtures.detail().id});
+        response.push({id: uuid + 1, name: this.role_defaults.nameOne});
+        response.push({id: uuid + 2, name: this.role_defaults.nameTwo});
         return {'count':2,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i) {

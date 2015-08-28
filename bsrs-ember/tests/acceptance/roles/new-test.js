@@ -9,13 +9,15 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
-const ROLE_URL = '/admin/roles';
-const ROLE_NEW_URL = ROLE_URL + '/new';
+const BASE_URL = BASEURLS.base_roles_url;
+const ROLE_URL = BASE_URL + '/index';
+const ROLE_NEW_URL = BASE_URL + '/new';
 const SAVE_BTN = '.t-save-btn' ;
 
-var application, store, payload, detail_xhr;
+let application, store, payload, list_xhr;
 
 module('Acceptance | role-new', {
     beforeEach() {
@@ -27,8 +29,8 @@ module('Acceptance | role-new', {
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
-        var endpoint = PREFIX + ROLE_URL + '/';
-        xhr(endpoint, 'GET', null, {}, 200, ROLE_FIXTURES.empty());
+        let endpoint = PREFIX + BASE_URL + '/';
+        list_xhr = xhr(endpoint, 'GET', null, {}, 200, ROLE_FIXTURES.empty());
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -37,8 +39,8 @@ module('Acceptance | role-new', {
 
 test('visiting role/new', (assert) => {
     visit(ROLE_URL);
-    var response = Ember.$.extend(true, {}, payload);
-    xhr(PREFIX + ROLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     click('.t-role-new');
     andThen(() => {
         assert.equal(currentURL(), ROLE_NEW_URL);
@@ -57,14 +59,14 @@ test('visiting role/new', (assert) => {
     fillIn('.t-role-type', ROLE_DEFAULTS.roleTypeGeneral);
     fillIn('.t-location-level', ROLE_DEFAULTS.locationLevelOne);
     andThen(() => {
-        var role = store.find('role', UUID.value);
+        let role = store.find('role', UUID.value);
         assert.ok(role.get('isDirty'));
     });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
         assert.equal(store.find('role').get('length'), 4);
-        var role = store.find('role', UUID.value);
+        let role = store.find('role', UUID.value);
         assert.equal(role.get('name'), ROLE_DEFAULTS.nameOne);
         assert.equal(role.get('role_type'), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(role.get('location_level.id'), ROLE_DEFAULTS.locationLevelOne);
@@ -73,9 +75,9 @@ test('visiting role/new', (assert) => {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-    var response = Ember.$.extend(true, {}, payload);
+    let response = Ember.$.extend(true, {}, payload);
     payload.location_level = null;
-    xhr(PREFIX + ROLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(ROLE_URL);
     click('.t-role-new');
     andThen(() => {
@@ -89,6 +91,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+    clearxhr(list_xhr);
     visit(ROLE_NEW_URL);
     fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
     click('.t-cancel-btn');
@@ -117,7 +120,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), ROLE_NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
-            var role = store.find('role', {id: UUID.value});
+            let role = store.find('role', {id: UUID.value});
             assert.equal(role.get('length'), 1);
         });
     });
@@ -126,7 +129,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), ROLE_URL);
             assert.equal(find('.t-modal').is(':hidden'), true);
-            var role = store.find('role', {id: UUID.value});
+            let role = store.find('role', {id: UUID.value});
             assert.equal(role.get('length'), 0);
         });
     });

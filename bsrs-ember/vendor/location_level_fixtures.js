@@ -8,6 +8,14 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         // this.nameStore = location_level_defaults.nameStore;
         this.nameDistrict = location_level_defaults.nameDistrict;
     };
+    factory.prototype.generate = function(i) {
+        return {
+            id: i,
+            name : this.nameCompany,
+            children: [],
+            parents: []
+        }
+    };
     factory.prototype.detail = function(i) {
         return {id: this.idOne, name : this.nameCompany};
     };

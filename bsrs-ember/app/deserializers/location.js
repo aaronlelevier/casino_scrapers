@@ -1,10 +1,13 @@
 import Ember from 'ember';
 
-var extract_location_level = function(model, store) {
-    var location_level_pk = model.location_level.id;
-    var location_level = store.push('location-level', model.location_level);
-    var existing_locations = location_level.get('locations') || [];
-    location_level.set('locations', existing_locations.concat([model.id]));
+
+let extract_location_level = (model, store) => {
+    let location_level_pk = model.location_level.id;
+    let location_level = store.push('location-level', model.location_level);
+    let existing_locations = location_level.get('locations') || [];
+    if (existing_locations.indexOf(model.id) === -1) {
+        location_level.set('locations', existing_locations.concat([model.id]));
+    }
     location_level.save();
     delete model.location_level;
     return location_level_pk;
@@ -19,19 +22,19 @@ var LocationDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(response, id) {
-        var store = this.get('store');
+        let store = this.get('store');
         response.location_level_fk = extract_location_level(response, store);
-        var originalLocation = store.push('location', response);
-        originalLocation.save();
+        let location = store.push('location', response);
+        location.save();
     },
     deserialize_list(response) {
         response.results.forEach((model) => {
-            var store = this.get('store');
+            let store = this.get('store');
             model.location_level_fk = extract_location_level(model, store);
-            this.get('store').push('location', model);
+            let location = this.get('store').push('location', model);
+            location.save();
         });
     }
 });
 
 export default LocationDeserializer;
-

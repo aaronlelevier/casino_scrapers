@@ -17,11 +17,29 @@ var extract_addresses = function(model, store) {
     delete model.addresses;
 };
 
+var extract_role_location_level = function(model, store) {
+    let location_level_pk = model.role.location_level;
+    if(location_level_pk) {
+        let role_pk = model.role.id;
+        let location_level = store.find('location-level', location_level_pk);
+        let existing_roles = location_level.get('roles') || [];
+        if (existing_roles.indexOf(role_pk) === -1) {
+            location_level.set('roles', existing_roles.concat([role_pk]));
+        }
+        location_level.save();
+        delete model.role.location_level;
+        model.role.location_level_fk = location_level_pk;
+    }
+};
+
 var extract_role = function(model, store) {
     var role_pk = model.role.id;
+    extract_role_location_level(model, store);
     var role = store.push('role', model.role);
     var existing_people = role.get('people') || [];
-    role.set('people', existing_people.concat([model.id]));
+    if (existing_people.indexOf(model.id) === -1) {
+        role.set('people', existing_people.concat([model.id]));
+    }
     role.save();
     delete model.role;
     return role_pk;
@@ -45,14 +63,21 @@ var extract_person_location = function(model, store, uuid) {
             prevented_duplicate_m2m.push(person_locations[0].get('id'));
         }
     });
+<<<<<<< HEAD
 
+=======
+>>>>>>> master
     let server_locations_sum = newly_added_m2m.concat(prevented_duplicate_m2m);
     let m2m_to_remove = all_person_locations.filter(function(m2m) {
         return Ember.$.inArray(m2m.get('id'), server_locations_sum) < 0;
     });
 
     m2m_to_remove.forEach(function(m2m) {
+<<<<<<< HEAD
         store.push('person-location', {id: m2m.get('id'), removed: true, person_pk: m2m.get('person_pk'), location_pk: m2m.get('location_pk')});
+=======
+        store.push('person-location', {id: m2m.get('id'), removed: true});
+>>>>>>> master
     });
 
     delete model.locations;

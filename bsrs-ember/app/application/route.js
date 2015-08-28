@@ -3,9 +3,7 @@ import config from 'bsrs-ember/config/environment';
 const { Route, inject } = Ember;
 
 export default Ember.Route.extend({
-
   translationsFetcher: inject.service(),
-
   beforeModel() {
     var store = this.get('store');
     var phone_number_config = Ember.$('[data-preload-phonenumber_types]').html();
@@ -93,10 +91,11 @@ export default Ember.Route.extend({
 
     return this.get('translationsFetcher').fetch();
 
-  },
-  actions: {
-    cancel_modal() {
-      Ember.$('.t-modal').modal('hide');
+    },
+    actions: {
+        cancel_modal() {
+            Ember.$('.t-modal').modal('hide');
+        }
     }
   }
   //need to figure out how to output errors on screen

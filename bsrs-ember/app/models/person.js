@@ -1,9 +1,11 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 export default Model.extend({
+    uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
     first_name: attr(''),
@@ -213,17 +215,28 @@ export default Model.extend({
                 return location.get('isDirty') === true;
             });
             return dirty_locations.length > 0;
+
         }
         if(previous_m2m_fks && previous_m2m_fks.get('length') > 0) {
             return true;
         }
     }),
-    person_locations: Ember.computed(function() {
+    update_locations(location_pk) {
         let store = this.get('store');
-        let filter = function(join_model) {
-            return join_model.get('person_pk') === this.get('id') && !join_model.get('removed');
-        };
-        return store.find('person-location', filter.bind(this), ['removed']);
+        if(Ember.$.inArray(location_pk, this.get('location_ids')) > -1) {
+            let m2m_pk = this.get('person_locations').filter((m2m) => {
+                return m2m.get('location_pk') === location_pk;
+            }).objectAt(0).get('id');
+            store.push('person-location', {id: m2m_pk, removed: true});
+        }else{
+            let uuid = this.get('uuid');
+            store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
+        }
+    },
+    location_ids: Ember.computed('locations.[]', function() {
+        return this.get('locations').map((location) => {
+            return location.get('id');
+        });
     }),
     locations: Ember.computed('person_locations.[]', function() {
         let store = this.get('store');
@@ -233,8 +246,16 @@ export default Model.extend({
                 return join_model.get('location_pk');
             });
             return Ember.$.inArray(location.get('id'), location_pks) > -1;
+
         };
         return store.find('location', filter.bind(person_locations), ['id']);
+    }),
+    person_locations: Ember.computed(function() {
+        let store = this.get('store');
+        let filter = function(join_model) {
+            return join_model.get('person_pk') === this.get('id') && !join_model.get('removed');
+        };
+        return store.find('person-location', filter.bind(this), ['removed']);
     }),
     createSerialize() {
         return {
@@ -266,7 +287,7 @@ export default Model.extend({
             status: status_id,
             role: this.get('role').get('id'), //TODO: is this tested/used at all?
             emails: [],
-            locations: [],
+            locations: this.get('location_ids'),
             phone_numbers: phone_numbers,
             addresses: addresses,
             locale: this.get('locale')

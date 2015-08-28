@@ -47,6 +47,11 @@
           {{role-select model=model.role options=roles person=model}}
 				{{/form-group}}
 			</div>
+			<div class="col-sm-12">
+				{{#form-group title="admin.person.label.location" for="location"}}
+          {{person-locations-select model=model.locations options=locations person=model}}
+				{{/form-group}}
+			</div>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
             {{input-currency model=model field="auth_amount"}}
