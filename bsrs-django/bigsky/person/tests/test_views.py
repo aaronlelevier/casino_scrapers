@@ -20,6 +20,8 @@ from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
 from person.serializers import PersonUpdateSerializer, RoleSerializer
 from person.tests.factory import PASSWORD, create_person, create_role
+from translation.models import Locale
+from translation.tests.factory import create_locales
 from util import create, choices
 
 
@@ -229,6 +231,9 @@ class PersonDetailTests(TestCase):
         # Location
         self.location = mommy.make(Location, location_level=self.person.role.location_level)
         self.person.locations.add(self.location)
+        # Locale
+        create_locales()
+        self.locale = Locale.objects.first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
         # GET data
@@ -243,6 +248,16 @@ class PersonDetailTests(TestCase):
 
     def test_role(self):
         self.assertIsInstance(Role.objects.get(id=self.data['role']), Role)
+
+    def test_locale(self):
+        # setup
+        self.assertFalse(self.data['locale'])
+        self.person.locale = self.locale
+        self.person.save()
+        # test
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
+        data = json.loads(response.content)
+        self.assertEqual(data['locale'], str(self.person.locale.id))
 
     def test_location(self):
         self.assertTrue(self.data['locations'])
@@ -303,6 +318,9 @@ class PersonPutTests(APITestCase):
         self.email_type = mommy.make(EmailType)
         self.address_type = mommy.make(AddressType)
         self.phone_number_type = mommy.make(PhoneNumberType)
+        # Locale
+        create_locales()
+        self.locale = Locale.objects.first()
 
         # Person2 w/ some contact info doesn't affect Person1's Contact
         # counts / updates / deletes
@@ -345,6 +363,17 @@ class PersonPutTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content)
         self.assertEqual(self.data['middle_initial'], data['middle_initial'])
+
+    def test_locale(self):
+        # setup
+        self.assertFalse(self.data['locale'])
+        self.data['locale'] = str(self.locale.id)
+        # test
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content)
+        self.assertEqual(data['locale'], str(self.locale.id))
+
 
     ### LOCATIONS
 
