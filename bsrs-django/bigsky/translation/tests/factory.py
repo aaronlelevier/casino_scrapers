@@ -33,7 +33,7 @@ def create_locales():
         'en-x-Sephora'
     ]
     for l in locales:
-        Locale.objects.create(locale=l)
+        Locale.objects.create(locale=l, name=l)
 
 
 def create_translations():
