@@ -31,7 +31,7 @@ npm install
 ./node_modules/ember-cli/bin/ember build --env=production
 
 cd ../bsrs-django
-rm -rf venv
+rm -rf venv*
 virtualenv -p /usr/local/bin/python3 venv3
 venv3/bin/pip install -r requirements.txt
 
@@ -59,7 +59,7 @@ cp -r ../../bsrs-ember/dist/index.html templates
 uwsgi --http :$PORT \
     --wsgi-file bigsky.wsgi \
     --virtualenv /www/django/releases/python3/$NEW_UUID/bsrs-django/venv3 \
-    --daemonize /tmp/bigsky.log \
+    --daemonize /tmp/python3/bigsky.log \
     --static-map /assets=/www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky \
     --static-map /fonts=/www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky \
     --check-static /www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky
