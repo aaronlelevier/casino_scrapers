@@ -52,7 +52,7 @@ test('visiting /people/new', (assert) => {
     click('.t-person-new');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
-        assert.equal(store.find('person').get('length'), 1);
+        assert.equal(store.find('person').get('length'), 2);
         assert.equal(find('.t-person-role-select option:eq(0)').text(), 'Select One');
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
@@ -61,8 +61,8 @@ test('visiting /people/new', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(store.find('person').get('length'), 1);
-        var person = store.find('person').objectAt(0);
+        assert.equal(store.find('person').get('length'), 2);
+        var person = store.find('person').objectAt(1);
         assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
@@ -142,7 +142,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', {id: UUID.value});
             assert.equal(person.get('length'), 0);
-            assert.equal(find('tr.t-person-data').length, 0);
+            assert.equal(find('tr.t-person-data').length, 1);
         });
     });
 });
@@ -152,6 +152,6 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     visit(PEOPLE_NEW_URL);
     click('.t-cancel-btn');
     andThen(() => {
-        assert.equal(store.find('person').get('length'), 0);
+        assert.equal(store.find('person').get('length'), 1);
     });
 });

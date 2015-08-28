@@ -49,11 +49,11 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var sorted = response.sort(function(a,b) {
             return b.id - a.id;
         });
-        return {'count':19,'next':null,'previous':null,'results': sorted};
+        return {'count':18,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
         var response = [];
-        for (var i=11; i <= 19; i++) {
+        for (var i=11; i <= 18; i++) {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
             var person = this.generate(uuid + i);
             person.username = 'scott' + i;
@@ -62,7 +62,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             person.title = i + ' WAT';
             response.push(person);
         }
-        return {'count':19,'next':null,'previous':null,'results': response};
+        return {'count':18,'next':null,'previous':null,'results': response};
     };
     factory.prototype.sorted = function(column, page) {
         var response;
@@ -75,7 +75,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var sorted = response.sort(function(a,b) {
             return b[column] - a[column];
         });
-        return {'count':19,'next':null,'previous':null,'results': sorted};
+        return {'count':18,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.searched = function(search, column, page) {
         var page1 = this.list_two().results;

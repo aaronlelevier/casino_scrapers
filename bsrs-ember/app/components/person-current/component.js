@@ -9,7 +9,7 @@ export default Ember.Component.extend({
   tagName: 'li',
   classNames: ['current-user t-current-user'],
   personCurrent: Ember.inject.service(),
-  person: Ember.computed(function(){
+  instance: Ember.computed(function(){
     var service = this.get('personCurrent');
     return service.get('model');
   }),

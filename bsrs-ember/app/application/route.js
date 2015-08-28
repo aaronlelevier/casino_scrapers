@@ -76,6 +76,17 @@ export default Ember.Route.extend({
     var person_current_config = Ember.$('[data-preload-person-current]').html();
     var person_current = JSON.parse(person_current_config);
     store.push('person-current', person_current);
+    store.push('person', {
+      id: person_current.id,
+      first_name: person_current.first_name,
+      last_name: person_current.last_name,
+      username: person_current.username,
+      title: person_current.title,
+      role_fk: person_current.role
+    });
+
+    var person_current_role = store.find('role', person_current.role);
+    person_current_role.set('people', [person_current.id]);
 
     var current_locale = store.find('locale', person_current.locale);
     config.i18n.currentLocale = current_locale.get('locale');

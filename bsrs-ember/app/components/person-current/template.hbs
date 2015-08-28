@@ -1,6 +1,6 @@
 <a>
-	<span class="user t-current-user-fullname">{{person.first_name}} {{person.last_name}}</span>
-	<span class="role t-current-user-role">{{person.role_name}}</span>
+	<span class="user t-current-user-fullname">{{instance.person.full_name}}</span>
+	<span class="role t-current-user-role">{{instance.person.role.name}}</span>
 	<span class="caret"></span>
 </a>
 <ul class="submenu">
@@ -8,6 +8,6 @@
     <a href="#" title="Log Out" class="t-logout" id="logout" {{action 'logout'}}>Logout</a>
 	</li>
 	<li class="userOpt">
-		{{#link-to "admin.people.person" person.id title="Profile" class="t-person-profile-link" id="profile"}}Profile{{/link-to}}
+		{{#link-to "admin.people.person" instance.id title="Profile" class="t-person-profile-link" id="profile"}}Profile{{/link-to}}
 	</li>
 </ul>

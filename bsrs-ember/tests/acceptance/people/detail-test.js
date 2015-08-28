@@ -130,7 +130,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(currentURL(), PEOPLE_URL);
-        assert.equal(store.find('person').get('length'), 10);
+        assert.equal(store.find('person').get('length'), 11);
         assert.ok(person.get('isNotDirty'));
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
@@ -541,7 +541,7 @@ test('when you deep link to the person detail view you can alter the roll and ro
         });
     });
 });
-test('amk when changing the locale for a user (not current user), the language is not updated on the site', (assert) => {
+test('when changing the locale for a user (not current user), the language is not updated on the site', (assert) => {
   visit(DETAIL_URL);
   andThen(() => {
 

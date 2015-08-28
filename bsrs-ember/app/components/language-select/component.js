@@ -16,27 +16,25 @@ export default Component.extend({
   // in the template, but the template doesn't include the component's own
   // tag yet. See https://github.com/emberjs/rfcs/pull/60
   change: function() {
-    var _this = this;
     var model = this.get('model');
     var val = this.$().val();
     model.set('locale', val);
-    // TODO: Check to see that this is the current user before changing the current locale
-
     var service = this.get('personCurrent');
-    var currentPerson = service.get('model');
-    var currentPersonId = currentPerson.get('id');
-    var editedPersonId = model.get('id');
 
-    if(currentPersonId === editedPersonId){
-      if(val === ''){
-        config.i18n.currentLocale = config.i18n.defaultLocale;
-      }else{
-        config.i18n.currentLocale = this.$().val();
-      }
-      return this.get('translationsFetcher').fetch().then(function(){
-        _this.get('i18n').set('locale', config.i18n.currentLocale);
-      });
-    }
+    // var currentPerson = service.get('model');
+    // var currentPersonId = currentPerson.get('id');
+    // var editedPersonId = model.get('id');
+    //
+    // if(currentPersonId === editedPersonId){
+    //   if(val === ''){
+    //     config.i18n.currentLocale = config.i18n.defaultLocale;
+    //   }else{
+    //     config.i18n.currentLocale = this.$().val();
+    //   }
+    //   return this.get('translationsFetcher').fetch().then(function(){
+    //     _this.get('i18n').set('locale', config.i18n.currentLocale);
+    //   });
+    // }
 
   }
 });
