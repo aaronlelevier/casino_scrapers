@@ -25,8 +25,19 @@ var BSRS_PEOPLE_FACTORY = (function() {
             },
             role: this.role_fixtures.get(),
             emails: this.person_defaults.emails,
-            locations: []
+            locations: [],
+            phone_numbers: [],
+            addresses: []
         }
+    },
+    factory.prototype.generate_single_for_list = function(i) {
+        var person = this.generate(i);
+        delete person.locations;
+        delete person.phone_numbers;
+        delete person.addresses;
+        delete person.role.location_level;
+        delete person.role.role_type;
+        return person;
     },
     factory.prototype.list = function() {
         var response = [];
@@ -39,6 +50,10 @@ var BSRS_PEOPLE_FACTORY = (function() {
             }
             var person = this.generate(uuid);
             delete person.locations;
+            delete person.phone_numbers;
+            delete person.addresses;
+            delete person.role.location_level;
+            delete person.role.role_type;
             //TODO: DRY this up
             person.username = 'mgibson' + i;
             person.first_name = 'Mel' + i;
@@ -57,6 +72,11 @@ var BSRS_PEOPLE_FACTORY = (function() {
         for (var i=11; i <= 19; i++) {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
             var person = this.generate(uuid + i);
+            delete person.locations;
+            delete person.phone_numbers;
+            delete person.addresses;
+            delete person.role.location_level;
+            delete person.role.role_type;
             person.username = 'scott' + i;
             person.first_name = 'Scott' + i;
             person.last_name = 'Newcomer' + i;

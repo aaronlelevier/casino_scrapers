@@ -20,8 +20,8 @@ var LocationRepo = Ember.Object.extend({
             model.saveRelated();
         });
     },
-    find() {
-        PromiseMixin.xhr(LOCATION_URL, 'GET').then((response) => {
+    find(filter) {
+        PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {
             this.get('locationDeserializer').deserialize(response);
         });
         return this.get('store').find('location');
@@ -35,6 +35,15 @@ var LocationRepo = Ember.Object.extend({
     delete(id) {
         PromiseMixin.xhr(LOCATION_URL + id + '/', 'DELETE');
         this.get('store').remove('location', id);
+    },
+    format_url(filter) {
+        let url = LOCATION_URL;
+        if(typeof filter !== 'undefined') {
+            let name = Object.keys(filter)[0];
+            let value = filter[Object.keys(filter)[0]];
+            url = url + '?' + name + '=' + value;
+        }
+        return url;
     }
 });
 

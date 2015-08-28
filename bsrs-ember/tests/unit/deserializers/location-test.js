@@ -55,7 +55,7 @@ test('location deserializer returns correct data with already present location_l
     let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, locations: [LOCATION_DEFAULTS.idOne]});
     let json = LOCATION_FIXTURES.generate(LOCATION_DEFAULTS.unusedId);
-    subject.deserialize(json, LOCATION_DEFAULTS.idOne);
+    subject.deserialize(json, LOCATION_DEFAULTS.unusedId);
     let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('locations'), [LOCATION_DEFAULTS.idOne, LOCATION_DEFAULTS.unusedId]);
     let loc = store.find('location', LOCATION_DEFAULTS.idOne);
