@@ -18,6 +18,9 @@ fuser $PORT/tcp
 cd /www/django/releases/python3
 rm -rf ./*/
 
+wait
+echo "CURRENT /www/django/releases/python3/ CONTENTS:"
+ls
 git clone -b python3 git@github.com:bigskytech/bsrs.git $NEW_UUID
 
 cd $NEW_UUID
