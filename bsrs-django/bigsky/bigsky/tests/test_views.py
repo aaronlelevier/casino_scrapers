@@ -6,10 +6,12 @@ from django.core.urlresolvers import reverse
 
 from model_mommy import mommy
 
+from accounting.models import Currency
 from person.models import Person, PersonStatus, Role
 from contact.models import PhoneNumberType
 from location.models import LocationLevel, LocationStatus
 from person.tests.factory import PASSWORD, create_person, create_role
+from translation.tests.factory import create_locales
 
 
 class IndexTests(TestCase):
@@ -117,12 +119,20 @@ class ConfigurationTests(TestCase):
         configuration = json.loads(response.context['location_status_config'])
         self.assertTrue(len(configuration) > 0)
 
-    def test_current_locale(self):
-        response = self.client.get(reverse('index'))
-        configuration = json.loads(response.context['current_locale'])
-        self.assertTrue(configuration)
-
     def test_locales(self):
+        create_locales()
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['locales'])
+        self.assertTrue(len(configuration) > 0)
+
+    def test_currency(self):
+        Currency.objects.default()
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['currencies'])
+        self.assertTrue(len(configuration) > 0)
+
+    def test_current_person(self):
+        Currency.objects.default()
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['person_current'])
         self.assertTrue(len(configuration) > 0)

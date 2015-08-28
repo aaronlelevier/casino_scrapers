@@ -1,10 +1,13 @@
+import json
+
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 from django.views.decorators.cache import never_cache
 
+from accounting.models import Currency
 from contact.models import PhoneNumberType
-from person.models import Role, PersonStatus
+from person.models import Role, PersonStatus, Person
 from location.models import LocationLevel, LocationStatus
 from translation.models import Locale
 from util import choices
@@ -35,8 +38,8 @@ class IndexView(TemplateView):
             'person_status_config': model_to_json(PersonStatus),
             'location_level_config': model_to_json(LocationLevel),
             'location_status_config': model_to_json(LocationStatus),
-            # 'current_locale' will be replaced w/ 'current_person' @detail_route
-            'current_locale': current_locale(self.request.user),
-            'locales': model_to_json(Locale)
+            'locales': model_to_json(Locale),
+            'currencies': model_to_json(Currency),
+            'person_current': json.dumps(self.request.user.to_dict())
             })
         return context
