@@ -6,8 +6,8 @@ import inject from 'bsrs-ember/utilities/deserializer';
 var PREFIX = config.APP.NAMESPACE;
 var LOCATION_LEVEL_URL = PREFIX + '/admin/location_levels/';
 
-export default Ember.Object.extend({
-//    locationDeserializer: inject('location'),
+var LocationLevelRepo = Ember.Object.extend({
+    locationLevelDeserializer: inject('location-level'),
     insert(model) {
         return PromiseMixin.xhr(LOCATION_LEVEL_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
@@ -20,10 +20,7 @@ export default Ember.Object.extend({
     },
     find() {
         PromiseMixin.xhr(LOCATION_LEVEL_URL, 'GET').then((response) => {
-            response.results.forEach((location) => {
-                this.get('store').push('location-level', location);
-            });
-            // this.get('locationLevelDeserializer').deserialize(response);
+            this.get('locationLevelDeserializer').deserialize(response);
         });
         return this.get('store').find('location-level');
     },
@@ -39,3 +36,4 @@ export default Ember.Object.extend({
     }
 });
 
+export default LocationLevelRepo;
