@@ -141,8 +141,9 @@ test('on boot we should fetch and load the location level configuration', functi
     visit(HOME_URL);
     andThen(() => {
         var location_level_models = store.find('location-level');
-        assert.equal(location_level_models.get('length'), 2);
+        assert.equal(location_level_models.get('length'), 8);
         assert.equal(location_level_models.objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
         assert.equal(location_level_models.objectAt(0).get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(location_level_models.objectAt(0).get('children.length'), 7);
     });
 });

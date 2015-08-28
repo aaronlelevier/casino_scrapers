@@ -19,7 +19,7 @@ var LocationLevel = Model.extend({
     serialize() {
         var levels = [];
         let children = this.get('children');
-        if (children) {
+        if (children.get('length') > 0) {
             children.forEach((model) => {
                 levels.push(model.get('id'));
             });
