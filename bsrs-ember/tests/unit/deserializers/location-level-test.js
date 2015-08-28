@@ -103,7 +103,7 @@ test('location level correctly deserialized if has no children and store locatio
     assert.equal(location_level_two.get('children.length'), 0);
 });
 
-test('sco location level updates children_fks array when new location level is pushed into store', (assert) => {
+test('location level updates children_fks array when new location level is pushed into store', (assert) => {
     let subject = LocationLevelDeserializer.create({store: store});
     let location_level = store.push('location-level', { id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, children_fks: [LOCATION_LEVEL_DEFAULTS.idTwo] });
     let location_level_two = store.push('location-level', { id: LOCATION_LEVEL_DEFAULTS.idTwo, name: LOCATION_LEVEL_DEFAULTS.nameCompany });
