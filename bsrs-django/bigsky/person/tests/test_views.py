@@ -296,8 +296,9 @@ class PersonPutTests(APITestCase):
         self.person = create_person()
         self.client.login(username=self.person.username, password=self.password)
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
-        self.phone_number_type = mommy.make(PhoneNumberType)
         self.email_type = mommy.make(EmailType)
+        self.address_type = mommy.make(AddressType)
+        self.phone_number_type = mommy.make(PhoneNumberType)
 
         # Person2 w/ some contact info doesn't affect Person1's Contact
         # counts / updates / deletes
@@ -333,6 +334,14 @@ class PersonPutTests(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(new_title, data['title'])
 
+    def test_update_middle_initial(self):
+        self.assertFalse(self.data['middle_initial'])
+        self.data['middle_initial'] = 'Y'
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content)
+        self.assertEqual(self.data['middle_initial'], data['middle_initial'])
+
     ### LOCATIONS
 
     def test_locations(self):
@@ -364,6 +373,8 @@ class PersonPutTests(APITestCase):
 
     ### RELATED CONTACT MODELS
 
+    # EMAILS
+
     def test_update_email_add_to_person(self):
         self.assertFalse(self.data['emails'])
         self.data['emails'] = [{
@@ -380,6 +391,27 @@ class PersonPutTests(APITestCase):
             self.person,
             Email.objects.get(id=data['emails'][0]['id']).person
         )
+
+    # ADDRESSES
+
+    def test_update_person_and_create_address(self):
+        self.assertFalse(self.data['addresses'])
+        self.data['addresses'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.address_type.id),
+            'person': str(self.person.id),
+            'address': create._generate_chars()
+        }]
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content)
+        self.assertTrue(data['addresses'])
+        self.assertEqual(
+            self.person,
+            Address.objects.get(id=data['addresses'][0]['id']).person
+        )
+
+    # PHONE NUMBERS
 
     def test_update_person_and_create_phone_number(self):
         self.assertFalse(self.data['phone_numbers'])
@@ -426,14 +458,6 @@ class PersonPutTests(APITestCase):
         # Nested Contacts should be empty!
         self.assertTrue(self.person.phone_numbers.all())
         self.assertFalse(self.person.emails.all())
-
-    def test_update_middle_initial(self):
-        self.assertFalse(self.data['middle_initial'])
-        self.data['middle_initial'] = 'Y'
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
-            self.data, format='json')
-        data = json.loads(response.content)
-        self.assertEqual(self.data['middle_initial'], data['middle_initial'])
 
 
 class PersonDeleteTests(APITestCase):
