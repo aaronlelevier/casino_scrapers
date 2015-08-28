@@ -35,6 +35,7 @@ class IndexView(TemplateView):
             'person_status_config': model_to_json(PersonStatus),
             'location_level_config': model_to_json(LocationLevel),
             'location_status_config': model_to_json(LocationStatus),
+            # 'current_locale' will be replaced w/ 'current_person' @detail_route
             'current_locale': current_locale(self.request.user),
             'locales': model_to_json(Locale)
             })
