@@ -9,7 +9,7 @@ export default Model.extend({
     people: attr([]),
     role_type: attr(),
     cleanupLocation: false,
-    location_level_fk: undefined, //SCOTT: put undefined in parens/required is false, saying this relationship can be null.  Relationship here is not required
+    location_level_fk: undefined, 
     location_level: Ember.computed('location_levels.[]', function() {
         let location_levels = this.get('location_levels');
         let has_location_level = location_levels.get('length') > 0;
