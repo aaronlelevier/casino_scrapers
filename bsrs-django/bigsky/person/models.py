@@ -202,6 +202,24 @@ class Person(BaseModel, AbstractUser):
     def __str__(self):
         return self.username
 
+    def save(self, *args, **kwargs):
+        self._update_defaults()
+        self._validate_locations()
+        return super(Person, self).save(*args, **kwargs)
+
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'first_name': self.first_name,
+            'middle_initial': self.middle_initial,
+            'last_name': self.last_name,
+            'username': self.username,
+            'title': self.title,
+            'employee_id': self.employee_id,
+            'locale': str(self.locale.id if self.locale else ''),
+            'role': str(self.role.id)
+        }
+
     def _update_defaults(self):
         if not self.status:
             self.status = PersonStatus.objects.default()
@@ -216,11 +234,6 @@ class Person(BaseModel, AbstractUser):
         for l in self.locations.all():
             if l.location_level != self.role.location_level:
                 self.locations.remove(l)
-
-    def save(self, *args, **kwargs):
-        self._update_defaults()
-        self._validate_locations()
-        return super(Person, self).save(*args, **kwargs)
 
 
 @receiver(post_save, sender=Person)

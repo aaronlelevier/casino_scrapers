@@ -16,11 +16,40 @@ class CurrencyManager(BaseManager):
 class Currency(BaseModel):
     "Accepted Currencies"
     name = models.CharField(max_length=50, help_text="US Dollar")
+    name_plural = models.CharField(max_length=50, help_text="US Dollars", blank=True)
     code = models.CharField(max_length=3, help_text="usd")
     symbol = models.CharField(max_length=1, help_text="$")
+    symbol_native = models.CharField(max_length=1, help_text="$", blank=True)
     format = models.CharField(max_length=10, help_text="$00.00 for 'usd' for example")
+    decimal_digits = models.IntegerField(blank=True, default=0)
+    rounding = models.IntegerField(blank=True, default=0)
 
     objects = CurrencyManager()
 
+    class Meta:
+        verbose_name_plural = "Currencies"
+
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self._update_defaults()
+        super(Currency, self).save(*args, **kwargs)
+
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'name': self.name,
+            'name_plural': self.name_plural,
+            'code': self.code,
+            'symbol': self.symbol,
+            'symbol_native': self.symbol_native,
+            'decimal_digits': self.decimal_digits,
+            'rounding': self.rounding
+        }
+
+    def _update_defaults(self):
+        if not self.name_plural:
+            self.name_plural = self.name+'s'
+        if not self.symbol_native:
+            self.symbol_native = self.symbol
