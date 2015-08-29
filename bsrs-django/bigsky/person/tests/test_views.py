@@ -20,6 +20,8 @@ from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
 from person.serializers import PersonUpdateSerializer, RoleSerializer
 from person.tests.factory import PASSWORD, create_person, create_role
+from translation.models import Locale
+from translation.tests.factory import create_locales
 from util import create, choices
 
 
@@ -211,7 +213,8 @@ class PersonListTests(TestCase):
         self.assertTrue(self.data['results'][0]['status']['id'])
 
     def test_role(self):
-        self.assertTrue(self.data['results'][0]['role']['id'])
+        self.assertTrue(self.data['results'][0]['role'])
+        self.assertIsInstance(Role.objects.get(id=self.data['results'][0]['role']), Role)
 
     def test_auth_amount(self):
         results = self.data['results'][0]
@@ -228,6 +231,9 @@ class PersonDetailTests(TestCase):
         # Location
         self.location = mommy.make(Location, location_level=self.person.role.location_level)
         self.person.locations.add(self.location)
+        # Locale
+        create_locales()
+        self.locale = Locale.objects.first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
         # GET data
@@ -239,6 +245,19 @@ class PersonDetailTests(TestCase):
 
     def test_retrieve(self):
         self.assertEqual(self.data['username'], self.person.username)
+
+    def test_role(self):
+        self.assertIsInstance(Role.objects.get(id=self.data['role']), Role)
+
+    def test_locale(self):
+        # setup
+        self.assertFalse(self.data['locale'])
+        self.person.locale = self.locale
+        self.person.save()
+        # test
+        response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
+        data = json.loads(response.content)
+        self.assertEqual(data['locale'], str(self.person.locale.id))
 
     def test_location(self):
         self.assertTrue(self.data['locations'])
@@ -296,8 +315,12 @@ class PersonPutTests(APITestCase):
         self.person = create_person()
         self.client.login(username=self.person.username, password=self.password)
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
-        self.phone_number_type = mommy.make(PhoneNumberType)
         self.email_type = mommy.make(EmailType)
+        self.address_type = mommy.make(AddressType)
+        self.phone_number_type = mommy.make(PhoneNumberType)
+        # Locale
+        create_locales()
+        self.locale = Locale.objects.first()
 
         # Person2 w/ some contact info doesn't affect Person1's Contact
         # counts / updates / deletes
@@ -332,6 +355,25 @@ class PersonPutTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content)
         self.assertEqual(new_title, data['title'])
+
+    def test_update_middle_initial(self):
+        self.assertFalse(self.data['middle_initial'])
+        self.data['middle_initial'] = 'Y'
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content)
+        self.assertEqual(self.data['middle_initial'], data['middle_initial'])
+
+    def test_locale(self):
+        # setup
+        self.assertFalse(self.data['locale'])
+        self.data['locale'] = str(self.locale.id)
+        # test
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content)
+        self.assertEqual(data['locale'], str(self.locale.id))
+
 
     ### LOCATIONS
 
@@ -399,6 +441,8 @@ class PersonPutTests(APITestCase):
 
     ### RELATED CONTACT MODELS
 
+    # EMAILS
+
     def test_update_email_add_to_person(self):
         self.assertFalse(self.data['emails'])
         self.data['emails'] = [{
@@ -415,6 +459,27 @@ class PersonPutTests(APITestCase):
             self.person,
             Email.objects.get(id=data['emails'][0]['id']).person
         )
+
+    # ADDRESSES
+
+    def test_update_person_and_create_address(self):
+        self.assertFalse(self.data['addresses'])
+        self.data['addresses'] = [{
+            'id': str(uuid.uuid4()),
+            'type': str(self.address_type.id),
+            'person': str(self.person.id),
+            'address': create._generate_chars()
+        }]
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content)
+        self.assertTrue(data['addresses'])
+        self.assertEqual(
+            self.person,
+            Address.objects.get(id=data['addresses'][0]['id']).person
+        )
+
+    # PHONE NUMBERS
 
     def test_update_person_and_create_phone_number(self):
         self.assertFalse(self.data['phone_numbers'])
@@ -461,14 +526,6 @@ class PersonPutTests(APITestCase):
         # Nested Contacts should be empty!
         self.assertTrue(self.person.phone_numbers.all())
         self.assertFalse(self.person.emails.all())
-
-    def test_update_middle_initial(self):
-        self.assertFalse(self.data['middle_initial'])
-        self.data['middle_initial'] = 'Y'
-        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
-            self.data, format='json')
-        data = json.loads(response.content)
-        self.assertEqual(self.data['middle_initial'], data['middle_initial'])
 
 
 class PersonDeleteTests(APITestCase):

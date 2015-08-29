@@ -2461,7 +2461,7 @@
     "proxy_start_date": null,
     "next_approver": null,
     "locations": [],
-    "is_staff": false,
+    "is_staff": true,
     "user_permissions": [],
     "proxy_end_date": null,
     "date_joined": "2015-08-26T18:27:41.098Z",

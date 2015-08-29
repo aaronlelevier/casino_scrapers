@@ -23,10 +23,11 @@ class ContactBaseModel(BaseModel):
 
     def _valid_person_or_location(self):
         if not (self.person or self.location):
-            raise excp.PersonOrLocationRequiredExcp("Must have either a Person\
- or Location FK.")
+            raise excp.PersonOrLocationRequiredExcp(
+                "Must have either a Person or Location FK.")
         if self.person and self.location:
-            raise excp.PersonAndLocationKeysExcp("Can't have both a Person and Location.")
+            raise excp.PersonAndLocationKeysExcp(
+                "Can't have both a Person and Location.")
 
 
 class PhoneNumberType(AbstractNameOrder):
