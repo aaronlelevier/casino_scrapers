@@ -544,7 +544,8 @@ test('when you deep link to the person detail view you can add and save a locati
         let person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(person.get('locations').get('length'), 0);
     });
-    fillIn('.t-person-locations-select', LOCATION_DEFAULTS.idOne);
+    click('.selectize-input input');
+    click('.t-person-locations-select div.option:eq(0)');
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -558,7 +559,8 @@ test('when you deep link to the person detail view you can add and save a locati
 
 test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-person-locations-select', LOCATION_DEFAULTS.idOne);
+    click('.selectize-input input');
+    click('.t-person-locations-select div.option:eq(0)');
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {
