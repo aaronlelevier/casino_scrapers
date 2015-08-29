@@ -231,6 +231,20 @@ export default Model.extend({
             store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
         }
     },
+    change_role(new_role, old_role) {
+        let person_id = this.get('id');
+        let new_role_people = new_role.get('people') || [];
+        if(new_role.get('id')) {
+            new_role.set('people', new_role_people.concat([person_id]));
+        }
+        if(old_role) {
+            var old_role_people = old_role.get('people') || [];
+            old_role.set('people', old_role_people.filter((old_role_person_pk) => {
+                return old_role_person_pk !== person_id;
+            }));
+            old_role.save();
+        }
+    },
     location_ids: Ember.computed('locations.[]', function() {
         return this.get('locations').map((location) => {
             return location.get('id');

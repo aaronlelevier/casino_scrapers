@@ -106,7 +106,7 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        validators = [LocationValidator('locations')]
+        validators = [LocationValidator('role', 'locations')]
         fields = PERSON_FIELDS + ('locale', 'locations', 'emails',
             'phone_numbers', 'addresses',)
 
