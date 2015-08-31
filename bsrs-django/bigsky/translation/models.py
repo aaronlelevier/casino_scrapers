@@ -18,8 +18,7 @@ class LocaleManager(BaseManager):
 
     def create_default(self):
         "Default Locale from Site settings."
-        obj, _ = self.get_or_create(locale=settings.LANGUAGE_CODE, default=True,
-            name=settings.LANGUAGE_CODE_NAME)
+        obj, _ = self.get_or_create(locale=settings.LANGUAGE_CODE)
         return obj
 
     def update_default(self, id):

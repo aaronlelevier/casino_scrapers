@@ -6,6 +6,24 @@ from django.utils.encoding import python_2_unicode_compatible
 from util.models import AbstractName, BaseModel, BaseManager
 
 
+### SUPPORT MODELS
+
+class State(AbstractName):
+    abbr = models.CharField(max_length=2)
+
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'name': self.name,
+            'abbr': self.abbr
+        }
+
+class Country(AbstractName):
+
+    class Meta:
+        verbose_name_plural = 'Countries'
+
+
 ### SELF REFERENCING BASE
 
 class SelfRefrencingQuerySet(models.query.QuerySet):

@@ -43,21 +43,6 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='State',
-            fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
-                ('created', models.DateTimeField(auto_now_add=True)),
-                ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('name', models.CharField(max_length=50)),
-                ('abbrev', models.CharField(max_length=2)),
-            ],
-            options={
-                'ordering': ('id',),
-                'abstract': False,
-            },
-        ),
-        migrations.CreateModel(
             name='Tester',
             fields=[
                 ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
