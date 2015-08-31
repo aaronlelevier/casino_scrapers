@@ -1,552 +1,584 @@
 [
+
 {
   "fields": {
     "deleted": null,
-    "abbrev": "TN",
-    "modified": "2015-08-03T21:50:38.857Z",
-    "name": "Tennessee",
-    "created": "2015-08-03T21:50:38.857Z"
+    "modified": "2015-08-31T17:25:27.634Z",
+    "name": "Merica",
+    "created": "2015-08-31T17:25:27.634Z"
   },
-  "model": "util.state",
-  "pk": "00a8e49f-90f8-4e68-b8f6-f0c1668ad0f0"
+  "model": "location.country",
+  "pk": "49986e62-1276-4107-bb44-6516102b6d04"
 },
 {
   "fields": {
     "deleted": null,
-    "abbrev": "MT",
-    "modified": "2015-08-03T21:50:38.840Z",
-    "name": "Montana",
-    "created": "2015-08-03T21:50:38.840Z"
+    "modified": "2015-08-31T17:25:27.637Z",
+    "name": "Canada",
+    "created": "2015-08-31T17:25:27.637Z"
   },
-  "model": "util.state",
-  "pk": "072b3b9d-b291-4123-b765-866e6e19f491"
+  "model": "location.country",
+  "pk": "fcafef01-f608-4b83-aec9-7e8d4ab21d4d"
 },
 {
   "fields": {
     "deleted": null,
-    "abbrev": "WA",
-    "modified": "2015-08-03T21:50:38.861Z",
-    "name": "Washington",
-    "created": "2015-08-03T21:50:38.861Z"
-  },
-  "model": "util.state",
-  "pk": "0bd5f0af-ae7a-42f6-8117-1af25bd2d26c"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "SD",
-    "modified": "2015-08-03T21:50:38.856Z",
-    "name": "South Dakota",
-    "created": "2015-08-03T21:50:38.856Z"
-  },
-  "model": "util.state",
-  "pk": "1248e0c5-1979-4441-b139-f5d94dc64f26"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "UT",
-    "modified": "2015-08-03T21:50:38.858Z",
-    "name": "Utah",
-    "created": "2015-08-03T21:50:38.858Z"
-  },
-  "model": "util.state",
-  "pk": "14be812a-1343-4265-84a1-a27206f343bf"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "AL",
-    "modified": "2015-08-03T21:50:38.818Z",
-    "name": "Alabama",
-    "created": "2015-08-03T21:50:38.818Z"
-  },
-  "model": "util.state",
-  "pk": "18151798-241c-4c2d-9b73-cf061513d7f5"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "VT",
-    "modified": "2015-08-03T21:50:38.859Z",
-    "name": "Vermont",
-    "created": "2015-08-03T21:50:38.859Z"
-  },
-  "model": "util.state",
-  "pk": "23869606-b0b3-44e6-814d-f28186266e7d"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "MI",
-    "modified": "2015-08-03T21:50:38.851Z",
-    "name": "Michigan",
-    "created": "2015-08-03T21:50:38.851Z"
-  },
-  "model": "util.state",
-  "pk": "2b94af8e-67b6-4935-ac91-f8550d63591c"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "OK",
-    "modified": "2015-08-03T21:50:38.848Z",
-    "name": "Oklahoma",
-    "created": "2015-08-03T21:50:38.848Z"
-  },
-  "model": "util.state",
-  "pk": "2cc5e77a-52a4-4a3c-b42c-e58757f380b9"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "HI",
-    "modified": "2015-08-03T21:50:38.832Z",
-    "name": "Hawaii",
-    "created": "2015-08-03T21:50:38.832Z"
-  },
-  "model": "util.state",
-  "pk": "2dcba19d-df59-4ac0-85e2-93e40dad5dd0"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "WV",
-    "modified": "2015-08-03T21:50:38.861Z",
-    "name": "West Virginia",
-    "created": "2015-08-03T21:50:38.861Z"
-  },
-  "model": "util.state",
-  "pk": "2e6e72b3-7d3a-432e-b1d8-18a9b7903e98"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "CA",
-    "modified": "2015-08-03T21:50:38.825Z",
-    "name": "California",
-    "created": "2015-08-03T21:50:38.825Z"
-  },
-  "model": "util.state",
-  "pk": "2f9be8b9-f64c-4476-adb7-296dfd4d34a3"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "TX",
-    "modified": "2015-08-03T21:50:38.858Z",
-    "name": "Texas",
-    "created": "2015-08-03T21:50:38.858Z"
-  },
-  "model": "util.state",
-  "pk": "366e1535-1332-4f56-a4dd-2eccd2917343"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "MD",
-    "modified": "2015-08-03T21:50:38.850Z",
-    "name": "Maryland",
-    "created": "2015-08-03T21:50:38.850Z"
-  },
-  "model": "util.state",
-  "pk": "370124b6-a2b7-43b3-906a-a64d2caf26dd"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "ME",
-    "modified": "2015-08-03T21:50:38.839Z",
-    "name": "Maine",
-    "created": "2015-08-03T21:50:38.839Z"
-  },
-  "model": "util.state",
-  "pk": "3ad8eff4-2d6d-4f89-8542-c9e9d3b1512f"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "MN",
-    "modified": "2015-08-03T21:50:38.852Z",
-    "name": "Minnesota",
-    "created": "2015-08-03T21:50:38.852Z"
-  },
-  "model": "util.state",
-  "pk": "3b963b95-c87b-48c1-a83a-fd68b7effa33"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "AZ",
-    "modified": "2015-08-03T21:50:38.823Z",
+    "abbr": "AZ",
+    "modified": "2015-08-31T17:25:06.928Z",
     "name": "Arizona",
-    "created": "2015-08-03T21:50:38.823Z"
+    "created": "2015-08-31T17:25:06.928Z"
   },
-  "model": "util.state",
-  "pk": "3c4d9e5b-d3c9-4d26-a030-c04cf8f243a6"
+  "model": "location.state",
+  "pk": "030ce0b9-0c33-4d25-a2b9-182c72a7e8b7"
 },
 {
   "fields": {
     "deleted": null,
-    "abbrev": "NY",
-    "modified": "2015-08-03T21:50:38.845Z",
-    "name": "New York",
-    "created": "2015-08-03T21:50:38.845Z"
-  },
-  "model": "util.state",
-  "pk": "3f5974eb-2816-4cea-9b12-d8aa2f819ad6"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "MA",
-    "modified": "2015-08-03T21:50:38.851Z",
-    "name": "Massachusetts",
-    "created": "2015-08-03T21:50:38.851Z"
-  },
-  "model": "util.state",
-  "pk": "3f92db15-31ae-4368-b233-538f70960f83"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "ID",
-    "modified": "2015-08-03T21:50:38.833Z",
-    "name": "Idaho",
-    "created": "2015-08-03T21:50:38.833Z"
-  },
-  "model": "util.state",
-  "pk": "45dfad59-5ca7-4696-9e61-d18645fb3e75"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "NE",
-    "modified": "2015-08-03T21:50:38.841Z",
-    "name": "Nebraska",
-    "created": "2015-08-03T21:50:38.841Z"
-  },
-  "model": "util.state",
-  "pk": "464bb5a0-e224-4035-aa72-8ed9efa461ce"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "NV",
-    "modified": "2015-08-03T21:50:38.842Z",
-    "name": "Nevada",
-    "created": "2015-08-03T21:50:38.842Z"
-  },
-  "model": "util.state",
-  "pk": "548c5a51-6c0f-42cc-bf45-3cdfde199beb"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "RI",
-    "modified": "2015-08-03T21:50:38.855Z",
-    "name": "Rhode Island",
-    "created": "2015-08-03T21:50:38.855Z"
-  },
-  "model": "util.state",
-  "pk": "5d25e6b8-e4eb-412d-a8e2-5e0371bf06e4"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "OR",
-    "modified": "2015-08-03T21:50:38.849Z",
-    "name": "Oregon",
-    "created": "2015-08-03T21:50:38.849Z"
-  },
-  "model": "util.state",
-  "pk": "6d45947e-ea9e-4981-a48c-91bd821b63d6"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "SC",
-    "modified": "2015-08-03T21:50:38.856Z",
-    "name": "South Carolina",
-    "created": "2015-08-03T21:50:38.856Z"
-  },
-  "model": "util.state",
-  "pk": "6fdf644c-3a14-4673-b3fc-0faaebf86a14"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "NM",
-    "modified": "2015-08-03T21:50:38.844Z",
-    "name": "New Mexico",
-    "created": "2015-08-03T21:50:38.844Z"
-  },
-  "model": "util.state",
-  "pk": "78fe198a-e45e-4020-a306-8d5f6b0132e7"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "MO",
-    "modified": "2015-08-03T21:50:38.853Z",
+    "abbr": "MO",
+    "modified": "2015-08-31T17:25:06.949Z",
     "name": "Missouri",
-    "created": "2015-08-03T21:50:38.853Z"
+    "created": "2015-08-31T17:25:06.949Z"
   },
-  "model": "util.state",
-  "pk": "7bd7148b-a8ed-40a2-92de-6b0e165d2aec"
+  "model": "location.state",
+  "pk": "07471daf-e8a6-4527-8523-67993898738c"
 },
 {
   "fields": {
     "deleted": null,
-    "abbrev": "CT",
-    "modified": "2015-08-03T21:50:38.827Z",
-    "name": "Connecticut",
-    "created": "2015-08-03T21:50:38.827Z"
-  },
-  "model": "util.state",
-  "pk": "8112a34f-81db-4c8a-bdcd-89b7640ef021"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "CO",
-    "modified": "2015-08-03T21:50:38.826Z",
-    "name": "Colorado",
-    "created": "2015-08-03T21:50:38.826Z"
-  },
-  "model": "util.state",
-  "pk": "8308895f-84b5-4442-9b05-76218f490f26"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "IN",
-    "modified": "2015-08-03T21:50:38.835Z",
-    "name": "Indiana",
-    "created": "2015-08-03T21:50:38.835Z"
-  },
-  "model": "util.state",
-  "pk": "8be6bcbb-893a-4367-8855-492730beec14"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "KS",
-    "modified": "2015-08-03T21:50:38.837Z",
-    "name": "Kansas",
-    "created": "2015-08-03T21:50:38.837Z"
-  },
-  "model": "util.state",
-  "pk": "977f269c-f5c8-4ceb-92b5-16ccb824a8ff"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "VA",
-    "modified": "2015-08-03T21:50:38.860Z",
-    "name": "Virginia",
-    "created": "2015-08-03T21:50:38.860Z"
-  },
-  "model": "util.state",
-  "pk": "9c9a3366-bee1-4417-a510-1a7156432048"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "KY",
-    "modified": "2015-08-03T21:50:38.838Z",
-    "name": "Kentucky",
-    "created": "2015-08-03T21:50:38.838Z"
-  },
-  "model": "util.state",
-  "pk": "9fe4ac89-4830-41d6-a2a2-8da6e22aa7ee"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "NC",
-    "modified": "2015-08-03T21:50:38.846Z",
-    "name": "North Carolina",
-    "created": "2015-08-03T21:50:38.846Z"
-  },
-  "model": "util.state",
-  "pk": "a1139092-17eb-4173-b0ae-f1fd6dcca0f2"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "GA",
-    "modified": "2015-08-03T21:50:38.831Z",
-    "name": "Georgia",
-    "created": "2015-08-03T21:50:38.831Z"
-  },
-  "model": "util.state",
-  "pk": "a17d7b0f-6a3e-4182-9c4f-947f1c03290f"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "AR",
-    "modified": "2015-08-03T21:50:38.824Z",
-    "name": "Arkansas",
-    "created": "2015-08-03T21:50:38.824Z"
-  },
-  "model": "util.state",
-  "pk": "a18e127f-6b23-4973-b120-74fadecb1811"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "NJ",
-    "modified": "2015-08-03T21:50:38.843Z",
-    "name": "New Jersey",
-    "created": "2015-08-03T21:50:38.843Z"
-  },
-  "model": "util.state",
-  "pk": "a25c6d43-c6de-4e40-acb7-20549f1cc594"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "AK",
-    "modified": "2015-08-03T21:50:38.822Z",
-    "name": "Alaska",
-    "created": "2015-08-03T21:50:38.822Z"
-  },
-  "model": "util.state",
-  "pk": "abfd0d61-1971-448a-a472-497fb61fbb50"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "OH",
-    "modified": "2015-08-03T21:50:38.847Z",
-    "name": "Ohio",
-    "created": "2015-08-03T21:50:38.847Z"
-  },
-  "model": "util.state",
-  "pk": "b213e799-d2a2-4d26-91f5-2975d06c27f2"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "WY",
-    "modified": "2015-08-03T21:50:38.863Z",
-    "name": "Wyoming",
-    "created": "2015-08-03T21:50:38.863Z"
-  },
-  "model": "util.state",
-  "pk": "b5477558-b5f1-4b5c-9e88-524ead69fbcc"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "MS",
-    "modified": "2015-08-03T21:50:38.853Z",
-    "name": "Mississippi",
-    "created": "2015-08-03T21:50:38.853Z"
-  },
-  "model": "util.state",
-  "pk": "b5b6777d-492b-42cf-9e9f-644b0a3c160c"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "LA",
-    "modified": "2015-08-03T21:50:38.839Z",
-    "name": "Louisiana",
-    "created": "2015-08-03T21:50:38.839Z"
-  },
-  "model": "util.state",
-  "pk": "b69a10e7-17d8-4b7e-87d3-fba685ab0352"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "ND",
-    "modified": "2015-08-03T21:50:38.847Z",
-    "name": "North Dakota",
-    "created": "2015-08-03T21:50:38.847Z"
-  },
-  "model": "util.state",
-  "pk": "c3149c95-fc90-46e7-b37b-f23338c88d13"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "DE",
-    "modified": "2015-08-03T21:50:38.828Z",
-    "name": "Delaware",
-    "created": "2015-08-03T21:50:38.828Z"
-  },
-  "model": "util.state",
-  "pk": "c660bffd-b102-429c-be6f-d5644ce50bbd"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "FL",
-    "modified": "2015-08-03T21:50:38.830Z",
-    "name": "Florida",
-    "created": "2015-08-03T21:50:38.830Z"
-  },
-  "model": "util.state",
-  "pk": "c8a87caa-0796-4a7b-b160-dc6212f0ac36"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "IL",
-    "modified": "2015-08-03T21:50:38.834Z",
-    "name": "Illinois",
-    "created": "2015-08-03T21:50:38.834Z"
-  },
-  "model": "util.state",
-  "pk": "d55962b8-d311-42f4-a05f-8139978cf981"
-},
-{
-  "fields": {
-    "deleted": null,
-    "abbrev": "WI",
-    "modified": "2015-08-03T21:50:38.862Z",
+    "abbr": "WI",
+    "modified": "2015-08-31T17:25:06.971Z",
     "name": "Wisconsin",
-    "created": "2015-08-03T21:50:38.862Z"
+    "created": "2015-08-31T17:25:06.971Z"
   },
-  "model": "util.state",
-  "pk": "e13b54f2-0234-4797-babf-576c9046ade6"
+  "model": "location.state",
+  "pk": "0bff8841-122b-4aef-9dcb-f6a5023d33c5"
 },
 {
   "fields": {
     "deleted": null,
-    "abbrev": "PA",
-    "modified": "2015-08-03T21:50:38.854Z",
-    "name": "Pennsylvania",
-    "created": "2015-08-03T21:50:38.854Z"
+    "abbr": "VT",
+    "modified": "2015-08-31T17:25:06.967Z",
+    "name": "Vermont",
+    "created": "2015-08-31T17:25:06.967Z"
   },
-  "model": "util.state",
-  "pk": "edbaa2b6-82ea-4701-b77d-35728f62c30e"
+  "model": "location.state",
+  "pk": "0c38f065-fc5b-483a-925a-b506e51aa7ce"
 },
 {
   "fields": {
     "deleted": null,
-    "abbrev": "NH",
-    "modified": "2015-08-03T21:50:38.843Z",
-    "name": "New Hampshire",
-    "created": "2015-08-03T21:50:38.843Z"
+    "abbr": "KS",
+    "modified": "2015-08-31T17:25:06.940Z",
+    "name": "Kansa",
+    "created": "2015-08-31T17:25:06.940Z"
   },
-  "model": "util.state",
-  "pk": "f56a5cd5-c2a1-4db2-8d43-15fabffe7ebe"
+  "model": "location.state",
+  "pk": "0d22e639-ff0e-47c4-bdbc-f14f15b8b658"
 },
 {
   "fields": {
     "deleted": null,
-    "abbrev": "IA",
-    "modified": "2015-08-03T21:50:38.836Z",
+    "abbr": "OH",
+    "modified": "2015-08-31T17:25:06.960Z",
+    "name": "Ohio",
+    "created": "2015-08-31T17:25:06.960Z"
+  },
+  "model": "location.state",
+  "pk": "11730749-66c8-4e8f-bc55-9802a3d640cb"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "GA",
+    "modified": "2015-08-31T17:25:06.935Z",
+    "name": "Georgia",
+    "created": "2015-08-31T17:25:06.935Z"
+  },
+  "model": "location.state",
+  "pk": "1ba08f2c-b507-43ac-8ae6-a24948152fb7"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "IA",
+    "modified": "2015-08-31T17:25:06.939Z",
     "name": "Iowa",
-    "created": "2015-08-03T21:50:38.836Z"
+    "created": "2015-08-31T17:25:06.939Z"
   },
-  "model": "util.state",
-  "pk": "fb42f33f-005d-4a83-879d-bfa06b11f3c5"
+  "model": "location.state",
+  "pk": "20445377-f40e-4f55-93e8-724f2817bc4a"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "NM",
+    "modified": "2015-08-31T17:25:06.956Z",
+    "name": "New Mexico",
+    "created": "2015-08-31T17:25:06.956Z"
+  },
+  "model": "location.state",
+  "pk": "22fd4e6e-9689-4004-b137-28cbcb0f1871"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "VA",
+    "modified": "2015-08-31T17:25:06.968Z",
+    "name": "Virginia",
+    "created": "2015-08-31T17:25:06.968Z"
+  },
+  "model": "location.state",
+  "pk": "24b2c0c9-f4b3-46e0-80b2-ba3fbc4131ee"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "AK",
+    "modified": "2015-08-31T17:25:06.927Z",
+    "name": "Alaska",
+    "created": "2015-08-31T17:25:06.927Z"
+  },
+  "model": "location.state",
+  "pk": "27b47a4e-f75e-4850-a420-f39584df8de6"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "WY",
+    "modified": "2015-08-31T17:25:06.972Z",
+    "name": "Wyoming",
+    "created": "2015-08-31T17:25:06.972Z"
+  },
+  "model": "location.state",
+  "pk": "3967114f-8461-4e62-a47c-10f9f08db150"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "IN",
+    "modified": "2015-08-31T17:25:06.938Z",
+    "name": "Indiana",
+    "created": "2015-08-31T17:25:06.938Z"
+  },
+  "model": "location.state",
+  "pk": "39e20ec8-b54a-4da1-ac7a-20840a6c088c"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "SC",
+    "modified": "2015-08-31T17:25:06.963Z",
+    "name": "South Carolina",
+    "created": "2015-08-31T17:25:06.963Z"
+  },
+  "model": "location.state",
+  "pk": "3ca47d69-a9b7-4595-ad50-36eae3ae3d5d"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "MI",
+    "modified": "2015-08-31T17:25:06.946Z",
+    "name": "Michigan",
+    "created": "2015-08-31T17:25:06.946Z"
+  },
+  "model": "location.state",
+  "pk": "3d75fb42-0a86-4b0b-bc74-9b4d5bd63aa7"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "OR",
+    "modified": "2015-08-31T17:25:06.961Z",
+    "name": "Oregon",
+    "created": "2015-08-31T17:25:06.961Z"
+  },
+  "model": "location.state",
+  "pk": "3e4b2abc-8002-4c4c-a89f-5a298c7e38da"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "TN",
+    "modified": "2015-08-31T17:25:06.965Z",
+    "name": "Tennessee",
+    "created": "2015-08-31T17:25:06.965Z"
+  },
+  "model": "location.state",
+  "pk": "4175cfef-53db-45bc-8d3a-568c1ec0156c"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "PA",
+    "modified": "2015-08-31T17:25:06.962Z",
+    "name": "Pennsylvania",
+    "created": "2015-08-31T17:25:06.962Z"
+  },
+  "model": "location.state",
+  "pk": "42103846-e9e4-4942-80b4-ccbd76d83398"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "AL",
+    "modified": "2015-08-31T17:25:06.925Z",
+    "name": "Alabama",
+    "created": "2015-08-31T17:25:06.925Z"
+  },
+  "model": "location.state",
+  "pk": "44256c87-c1fc-4577-b98c-4547072d7d88"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "UT",
+    "modified": "2015-08-31T17:25:06.966Z",
+    "name": "Utah",
+    "created": "2015-08-31T17:25:06.966Z"
+  },
+  "model": "location.state",
+  "pk": "44e49c2e-c6ec-41c7-8452-1aff10e4f7be"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "MA",
+    "modified": "2015-08-31T17:25:06.945Z",
+    "name": "Massachusetts",
+    "created": "2015-08-31T17:25:06.945Z"
+  },
+  "model": "location.state",
+  "pk": "47607a29-69f9-42c8-9a74-18328f913cb4"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "MD",
+    "modified": "2015-08-31T17:25:06.944Z",
+    "name": "Maryland",
+    "created": "2015-08-31T17:25:06.944Z"
+  },
+  "model": "location.state",
+  "pk": "5430cbf8-1668-4197-b688-cfd5a3461a3f"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "AR",
+    "modified": "2015-08-31T17:25:06.929Z",
+    "name": "Arkansas",
+    "created": "2015-08-31T17:25:06.929Z"
+  },
+  "model": "location.state",
+  "pk": "56f44534-8cf0-465b-b374-120303d76507"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "NJ",
+    "modified": "2015-08-31T17:25:06.955Z",
+    "name": "New Jersey",
+    "created": "2015-08-31T17:25:06.955Z"
+  },
+  "model": "location.state",
+  "pk": "5ab2d8ab-ad00-4404-9091-b1071949d3e4"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "CA",
+    "modified": "2015-08-31T17:25:06.930Z",
+    "name": "California",
+    "created": "2015-08-31T17:25:06.930Z"
+  },
+  "model": "location.state",
+  "pk": "6a3bd982-6726-4a42-b994-a1ff6949637e"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "WV",
+    "modified": "2015-08-31T17:25:06.970Z",
+    "name": "West Virginia",
+    "created": "2015-08-31T17:25:06.970Z"
+  },
+  "model": "location.state",
+  "pk": "6d333663-ef6f-49d8-a596-f5b0fae2068f"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "NY",
+    "modified": "2015-08-31T17:25:06.957Z",
+    "name": "New York",
+    "created": "2015-08-31T17:25:06.957Z"
+  },
+  "model": "location.state",
+  "pk": "71591982-329d-43bb-b6c9-cdc803560b04"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "NH",
+    "modified": "2015-08-31T17:25:06.954Z",
+    "name": "New Hampshire",
+    "created": "2015-08-31T17:25:06.954Z"
+  },
+  "model": "location.state",
+  "pk": "779b3640-6304-4058-9312-5433495b8d81"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "IL",
+    "modified": "2015-08-31T17:25:06.937Z",
+    "name": "Illinois",
+    "created": "2015-08-31T17:25:06.937Z"
+  },
+  "model": "location.state",
+  "pk": "8399871a-88a9-4119-a56b-6e4f8d8bcb70"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "LA",
+    "modified": "2015-08-31T17:25:06.941Z",
+    "name": "Lousiana",
+    "created": "2015-08-31T17:25:06.941Z"
+  },
+  "model": "location.state",
+  "pk": "8c072bc1-8dbf-4402-87f6-1679f46d5978"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "FL",
+    "modified": "2015-08-31T17:25:06.934Z",
+    "name": "Florida",
+    "created": "2015-08-31T17:25:06.934Z"
+  },
+  "model": "location.state",
+  "pk": "8d375fc2-21a6-4046-9fb7-78bf7e19509f"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "MN",
+    "modified": "2015-08-31T17:25:06.947Z",
+    "name": "Minnesota",
+    "created": "2015-08-31T17:25:06.947Z"
+  },
+  "model": "location.state",
+  "pk": "94c03ea0-ddf6-4ebb-af52-7f75d3842697"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "MS",
+    "modified": "2015-08-31T17:25:06.948Z",
+    "name": "Mississippi",
+    "created": "2015-08-31T17:25:06.948Z"
+  },
+  "model": "location.state",
+  "pk": "959b06c3-293b-40c8-984e-6d0775420848"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "DC",
+    "modified": "2015-08-31T17:25:06.933Z",
+    "name": "District of Columbia",
+    "created": "2015-08-31T17:25:06.933Z"
+  },
+  "model": "location.state",
+  "pk": "997fcce5-2c14-4499-aa95-bd553d3f9bbd"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "SD",
+    "modified": "2015-08-31T17:25:06.964Z",
+    "name": "South Dakota",
+    "created": "2015-08-31T17:25:06.964Z"
+  },
+  "model": "location.state",
+  "pk": "9a85843b-bec4-456b-bc03-9b7c4ffb1aff"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "CO",
+    "modified": "2015-08-31T17:25:06.931Z",
+    "name": "Colorado",
+    "created": "2015-08-31T17:25:06.931Z"
+  },
+  "model": "location.state",
+  "pk": "9ad69030-cb37-4782-b540-a6639189cf88"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "TX",
+    "modified": "2015-08-31T17:25:06.966Z",
+    "name": "Texas",
+    "created": "2015-08-31T17:25:06.966Z"
+  },
+  "model": "location.state",
+  "pk": "a928b0bc-16aa-486c-b736-b480942f9359"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "MT",
+    "modified": "2015-08-31T17:25:06.950Z",
+    "name": "Montana",
+    "created": "2015-08-31T17:25:06.950Z"
+  },
+  "model": "location.state",
+  "pk": "b1fcc9ce-f40a-41fa-b8b6-e85f9ba5303e"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "HI",
+    "modified": "2015-08-31T17:25:06.936Z",
+    "name": "Hawaii",
+    "created": "2015-08-31T17:25:06.936Z"
+  },
+  "model": "location.state",
+  "pk": "c1aa6e61-f80a-4706-a64f-b41609dcbb99"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "CT",
+    "modified": "2015-08-31T17:25:06.932Z",
+    "name": "Connecticut",
+    "created": "2015-08-31T17:25:06.932Z"
+  },
+  "model": "location.state",
+  "pk": "c8231041-8d85-4ba7-b48c-43a7e9360d08"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "NV",
+    "modified": "2015-08-31T17:25:06.953Z",
+    "name": "Nevada",
+    "created": "2015-08-31T17:25:06.953Z"
+  },
+  "model": "location.state",
+  "pk": "c870604b-735c-4b8a-adf3-b2ff6ed9ede2"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "ME",
+    "modified": "2015-08-31T17:25:06.942Z",
+    "name": "Maine",
+    "created": "2015-08-31T17:25:06.942Z"
+  },
+  "model": "location.state",
+  "pk": "c8c60b23-46d6-4a01-98bd-c80215d783b2"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "NC",
+    "modified": "2015-08-31T17:25:06.958Z",
+    "name": "North Carolina",
+    "created": "2015-08-31T17:25:06.958Z"
+  },
+  "model": "location.state",
+  "pk": "ca4ca3aa-bb43-4a98-a460-75305c961dae"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "KY",
+    "modified": "2015-08-31T17:25:06.940Z",
+    "name": "Kentucky",
+    "created": "2015-08-31T17:25:06.940Z"
+  },
+  "model": "location.state",
+  "pk": "cb49b530-4ef0-482b-ade0-e41801cee82c"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "WA",
+    "modified": "2015-08-31T17:25:06.969Z",
+    "name": "Washington",
+    "created": "2015-08-31T17:25:06.969Z"
+  },
+  "model": "location.state",
+  "pk": "dadf53e5-7d04-4918-bff4-d1a4d8e1798b"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "DE",
+    "modified": "2015-08-31T17:25:06.932Z",
+    "name": "Delaware",
+    "created": "2015-08-31T17:25:06.932Z"
+  },
+  "model": "location.state",
+  "pk": "def07e9a-216c-4b80-b22c-3a64274c0105"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "ID",
+    "modified": "2015-08-31T17:25:06.936Z",
+    "name": "Idaho",
+    "created": "2015-08-31T17:25:06.936Z"
+  },
+  "model": "location.state",
+  "pk": "e39b86fc-d479-43c7-adc0-7f556c120856"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "RI",
+    "modified": "2015-08-31T17:25:06.963Z",
+    "name": "Rhode Island",
+    "created": "2015-08-31T17:25:06.963Z"
+  },
+  "model": "location.state",
+  "pk": "efe3cffe-3d7c-447d-8b73-d7f2fc61f061"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "ND",
+    "modified": "2015-08-31T17:25:06.959Z",
+    "name": "North Dakota",
+    "created": "2015-08-31T17:25:06.959Z"
+  },
+  "model": "location.state",
+  "pk": "f1491c47-4d88-4657-b999-1c1f4dfa61a2"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "NE",
+    "modified": "2015-08-31T17:25:06.952Z",
+    "name": "Nebraska",
+    "created": "2015-08-31T17:25:06.952Z"
+  },
+  "model": "location.state",
+  "pk": "f490811b-eeb2-44e9-a42e-45875efea29c"
+},
+{
+  "fields": {
+    "deleted": null,
+    "abbr": "OK",
+    "modified": "2015-08-31T17:25:06.960Z",
+    "name": "Oklahoma",
+    "created": "2015-08-31T17:25:06.960Z"
+  },
+  "model": "location.state",
+  "pk": "f653a752-543f-4de5-a453-daf666df6575"
 }
 ]

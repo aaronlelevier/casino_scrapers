@@ -8,7 +8,7 @@ from django.views.decorators.cache import never_cache
 from accounting.models import Currency
 from contact.models import PhoneNumberType, AddressType
 from person.models import Role, PersonStatus, Person
-from location.models import LocationLevel, LocationStatus
+from location.models import LocationLevel, LocationStatus, State, Country
 from translation.models import Locale
 from util import choices
 from util.helpers import model_to_json, choices_to_json, current_locale
@@ -34,6 +34,8 @@ class IndexView(TemplateView):
         context.update({
             'phone_number_types_config': model_to_json(PhoneNumberType),
             'address_types': model_to_json(AddressType),
+            'states_us': model_to_json(State),
+            'countries': model_to_json(Country),
             'role_config': model_to_json(Role),
             'role_types_config': choices_to_json(choices.ROLE_TYPE_CHOICES),
             'person_status_config': model_to_json(PersonStatus),

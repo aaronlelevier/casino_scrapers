@@ -9,7 +9,7 @@ from model_mommy import mommy
 from accounting.models import Currency
 from person.models import Person, PersonStatus, Role
 from contact.models import PhoneNumberType, AddressType
-from location.models import LocationLevel, LocationStatus
+from location.models import LocationLevel, LocationStatus, State, Country
 from person.tests.factory import PASSWORD, create_person, create_role
 from translation.tests.factory import create_locales
 
@@ -76,6 +76,18 @@ class ConfigurationTests(TestCase):
         mommy.make(AddressType)
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['address_types'])
+        self.assertTrue(len(configuration) > 0)
+
+    def test_states_us(self):
+        mommy.make(State)
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['states_us'])
+        self.assertTrue(len(configuration) > 0)
+
+    def test_countries(self):
+        mommy.make(Country)
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['countries'])
         self.assertTrue(len(configuration) > 0)
 
     def test_roles(self):
