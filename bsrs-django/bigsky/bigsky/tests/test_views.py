@@ -8,7 +8,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from person.models import Person, PersonStatus, Role
-from contact.models import PhoneNumberType
+from contact.models import PhoneNumberType, AddressType
 from location.models import LocationLevel, LocationStatus
 from person.tests.factory import PASSWORD, create_person, create_role
 from translation.tests.factory import create_locales
@@ -71,6 +71,12 @@ class ConfigurationTests(TestCase):
         # the model id shows in the context
         self.assertIn(str(self.phone_number_types.id), [c.values()[0] for c in configuration])
         self.assertIn(str(self.phone_number_types.name), [c.values()[1] for c in configuration])
+
+    def test_address_types(self):
+        mommy.make(AddressType)
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['address_types'])
+        self.assertTrue(len(configuration) > 0)
 
     def test_roles(self):
         response = self.client.get(reverse('index'))

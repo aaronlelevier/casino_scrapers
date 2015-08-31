@@ -6,7 +6,7 @@ from django.views.generic.base import TemplateView
 from django.views.decorators.cache import never_cache
 
 from accounting.models import Currency
-from contact.models import PhoneNumberType
+from contact.models import PhoneNumberType, AddressType
 from person.models import Role, PersonStatus, Person
 from location.models import LocationLevel, LocationStatus
 from translation.models import Locale
@@ -33,6 +33,7 @@ class IndexView(TemplateView):
         context = super(IndexView, self).get_context_data(**kwargs)
         context.update({
             'phone_number_types_config': model_to_json(PhoneNumberType),
+            'address_types': model_to_json(AddressType),
             'role_config': model_to_json(Role),
             'role_types_config': choices_to_json(choices.ROLE_TYPE_CHOICES),
             'person_status_config': model_to_json(PersonStatus),
