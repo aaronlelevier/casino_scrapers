@@ -1,7 +1,23 @@
 import Ember from 'ember';
 
 let extract_location_level = (model, store) => {
-    let location_level_pk = model.location_level;
+    let location_level_pk;
+    if (model.location_level) {
+        location_level_pk = model.location_level;
+    } else {
+        let role = store.find('role', model.id);
+        if (role.get('location_level')) {
+            role.set('location_level_fk', undefined);
+            let location_level = role.get('location_level');
+            let role_array = location_level.get('roles');
+            let mutated_array = role_array.filter((role) => {
+                return role !== model.id;
+            });
+            location_level.set('roles', mutated_array);
+            location_level.save();
+        }
+        return false;
+    }
     if(location_level_pk) {
         let location_level = store.find('location-level', model.location_level);
         let existing_roles = location_level.get('roles') || [];
@@ -32,7 +48,8 @@ var RoleDeserializer = Ember.Object.extend({
         response.results.forEach((model) => {
             let store = this.get('store');
             extract_location_level(model, store);
-            this.get('store').push('role', model);
+            let originalRole = this.get('store').push('role', model);
+            originalRole.save();
         });
     }
 });

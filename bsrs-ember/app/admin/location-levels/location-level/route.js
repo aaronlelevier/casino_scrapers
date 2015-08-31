@@ -6,11 +6,9 @@ var LocationLevelSingle =  Ember.Route.extend({
     model(params) {
         var location_pk = params.location_level_id;
         var repository = this.get('repository');
-        var all_location_levels = this.get('store').find('location-level');
         var model = repository.findById(location_pk);
         return Ember.RSVP.hash({
             model: model,
-            all_location_levels: all_location_levels
         });
     },
     setupController: function(controller, hash) {

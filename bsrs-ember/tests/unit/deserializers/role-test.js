@@ -21,8 +21,7 @@ module('unit: role deserializer test', {
     }
 });
 
-
-test('location level will not be serialized into its own store when deserialize list is invoked', (assert) => {
+test('location level will not be deserialized into its own store when deserialize list is invoked', (assert) => {
     var subject = RoleDeserializer.create({store: store});
     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
@@ -30,11 +29,11 @@ test('location level will not be serialized into its own store when deserialize 
     var response = {'count':1,'next':null,'previous':null,'results': [json]};
     subject.deserialize(response);
     var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.deepEqual(original.get('roles'), [ROLE_DEFAULTS.idOne]);
+    assert.deepEqual(original.get('roles'), [ROLE_DEFAULTS.idOne, ROLE_DEFAULTS.unusedId]);
     assert.ok(original.get('isNotDirty'));
 });
 
-test('location level will correctly be serialized into its own store with a foreign key on role (single)', (assert) => {
+test('location level will correctly be deserialized into its own store with a foreign key on role (single)', (assert) => {
     var subject = RoleDeserializer.create({store: store});
     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
@@ -45,7 +44,7 @@ test('location level will correctly be serialized into its own store with a fore
     assert.ok(original.get('isNotDirty'));
 });
 
-test('role location level will not be duplicated and correctly be serialized into its own store with a foreign key on role (single)', (assert) => {
+test('role location level will not be duplicated and correctly be deserialized into its own store with a foreign key on role (single)', (assert) => {
     var subject = RoleDeserializer.create({store: store});
     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
@@ -54,4 +53,46 @@ test('role location level will not be duplicated and correctly be serialized int
     var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('roles'), [ROLE_DEFAULTS.idOne]);
     assert.ok(original.get('isNotDirty'));
+});
+
+test('role location level will correctly be deserialized when server returns role without a location_level (single)', (assert) => {
+    var subject = RoleDeserializer.create({store: store});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
+    var response = ROLE_FIXTURES.generate(ROLE_DEFAULTS.idOne);
+    response.location_level = undefined;
+    subject.deserialize(response, ROLE_DEFAULTS.idOne);
+    var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    assert.deepEqual(original.get('roles'), []);
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(role.get('isNotDirty'));
+    assert.equal(role.get('location_level_fk'), undefined);
+});
+
+test('role location level will correctly be deserialized (with many roles) when server returns role without a location_level (single)', (assert) => {
+    var subject = RoleDeserializer.create({store: store});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne, ROLE_DEFAULTS.unusedId]});
+    var response = ROLE_FIXTURES.generate(ROLE_DEFAULTS.idOne);
+    response.location_level = undefined;
+    subject.deserialize(response, ROLE_DEFAULTS.idOne);
+    var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    assert.deepEqual(original.get('roles'), [ROLE_DEFAULTS.unusedId]);
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(role.get('isNotDirty'));
+    assert.equal(role.get('location_level_fk'), undefined);
+});
+
+test('role location level will correctly be deserialized when server returns role without a location_level (list)', (assert) => {
+    var subject = RoleDeserializer.create({store: store});
+    var role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
+    var json = ROLE_FIXTURES.generate_single_for_list(ROLE_DEFAULTS.idOne);
+    json.location_level = undefined;
+    var response = {'count':1,'next':null,'previous':null,'results': [json]};
+    subject.deserialize(response);
+    var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    assert.deepEqual(original.get('roles'), []);
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(role.get('isNotDirty'));
 });

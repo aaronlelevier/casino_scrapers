@@ -58,7 +58,7 @@ class LocationLevelTests(APITestCase):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
         data = json.loads(response.content)
         self.assertIn(
-            LocationLevel.objects.get(id=data['children'][0]['id']),
+            LocationLevel.objects.get(id=data['children'][0]),
             self.district.children.all()
         )
 
@@ -132,7 +132,7 @@ class LocationLevelTests(APITestCase):
         data = json.loads(response.content)
         self.assertNotIn(
             str(self.district.id),
-            [ea['id'] for ea in data['children']]
+            [ea for ea in data['children']]
         )
 
     def test_delete_parent(self):

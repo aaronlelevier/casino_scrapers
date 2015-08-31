@@ -30,7 +30,7 @@ test('visiting /location-levels', function(assert) {
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
     assert.equal(find('h1.t-location-level').text(), 'Location Levels');
-    assert.equal(find('tr.t-location-level-data').length, 3);
+    assert.equal(find('tr.t-location-level-data').length, 8);
   });
 });
 

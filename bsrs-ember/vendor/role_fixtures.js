@@ -14,7 +14,6 @@ var BSRS_ROLE_FACTORY = (function() {
     };
     factory.prototype.generate_single_for_list = function(i) {
         var role = this.generate(i);
-        delete role.location_level;
         delete role.role_type;
         return role;
     };
