@@ -21,18 +21,18 @@ const CANCEL_BTN = '.t-cancel-btn';
 
 let application, store, endpoint, list_xhr;
 
-module('sco Acceptance | detail-test', {
+module('amk Acceptance | detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        let location_list_data = LOCATION_LEVEL_FIXTURES.list(); 
-        let location_detail_data = LOCATION_LEVEL_FIXTURES.detail(); 
+        let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+        let location_detail_data = LOCATION_LEVEL_FIXTURES.detail();
         endpoint = PREFIX + DJANGO_LOCATION_LEVEL_URL;
         list_xhr = xhr(endpoint, 'GET', null, {}, 200, location_list_data);
         xhr(DJANGO_DETAIL_URL, 'GET', null, {}, 200, location_detail_data);
     },
     afterEach() {
-       Ember.run(application, 'destroy'); 
+       Ember.run(application, 'destroy');
     }
 });
 
