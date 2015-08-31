@@ -18,5 +18,4 @@ NOSE_ARGS = [
     '--cover-package=accounting,contact,location,order,person,role,session,translation,util',
 ]
 
-PASSWORD_HASHERS = ('django.contrib.auth.hashers.MD5PasswordHasher', )
 DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'
