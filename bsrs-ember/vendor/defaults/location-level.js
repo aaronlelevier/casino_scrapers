@@ -17,7 +17,9 @@ var BSRS_LOCATION_LEVEL_DEFAULTS_OBJECT = (function() {
             nameStore: 'Store',
             nameRegion: 'admin.locationlevel.region',
             unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b052138',
-            companyChildren: ["c42bd2fc-d959-4896-9b89-aa2b2136ab9a","73dcbd73-8fad-4152-b92c-3408c2029a65","8854f6c5-58c7-4849-971f-e8df9e15e559","ef2b1f9c-f277-433f-8431-bda21d2d9a74","f7199d15-b78b-4db9-b28f-cc95b4662804","558d3cb9-f076-4303-a818-84799806d698","b42bd1fc-d959-4896-9b89-aa2b2136ab7f"]
+            companyChildren: ["c42bd2fc-d959-4896-9b89-aa2b2136ab9a","73dcbd73-8fad-4152-b92c-3408c2029a65","8854f6c5-58c7-4849-971f-e8df9e15e559"
+                ,"ef2b1f9c-f277-433f-8431-bda21d2d9a74","f7199d15-b78b-4db9-b28f-cc95b4662804","558d3cb9-f076-4303-a818-84799806d698",
+                "b42bd1fc-d959-4896-9b89-aa2b2136ab7f"]
         };
     };
     return factory;

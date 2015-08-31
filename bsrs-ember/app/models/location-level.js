@@ -18,12 +18,10 @@ var LocationLevel = Model.extend({
     },
     serialize() {
         var levels = [];
-        let children = this.get('children');
-        if (children.get('length') > 0) {
-            children.forEach((model) => {
-                levels.push(model.get('id'));
-            });
-        }
+        let children = this.get('children') || [];
+        children.forEach((model) => {
+            levels.push(model.get('id'));
+        });
         return {
             id: this.get('id'),
             name: this.get('name'),

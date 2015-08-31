@@ -26,7 +26,7 @@ var LocationLevelRepo = Ember.Object.extend({
     },
     findById(id) {
         PromiseMixin.xhr(LOCATION_LEVEL_URL + id + '/', 'GET').then((response) => {
-            this.get('store').push('location-level', response);
+            this.get('locationLevelDeserializer').deserialize(response, id);
         });
         return this.get('store').find('location-level', id);
     },
