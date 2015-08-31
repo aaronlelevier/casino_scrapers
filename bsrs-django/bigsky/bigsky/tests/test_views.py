@@ -126,10 +126,14 @@ class ConfigurationTests(TestCase):
         self.assertTrue(len(configuration) > 0)
 
     def test_currency(self):
-        Currency.objects.default()
+        currency = Currency.objects.default()
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['currencies'])
+        # test
         self.assertTrue(len(configuration) > 0)
+        configuration_usd = configuration[currency.code]
+        self.assertTrue(configuration_usd)
+        self.assertEqual(configuration_usd['name'], currency.name)
 
     def test_current_person(self):
         Currency.objects.default()

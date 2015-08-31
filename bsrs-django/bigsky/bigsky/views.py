@@ -39,7 +39,8 @@ class IndexView(TemplateView):
             'location_level_config': model_to_json(LocationLevel),
             'location_status_config': model_to_json(LocationStatus),
             'locales': model_to_json(Locale),
-            'currencies': model_to_json(Currency),
+            'currencies': json.dumps({c.code: c.to_dict()
+                                      for c in Currency.objects.all()}),
             'person_current': json.dumps(self.request.user.to_dict())
             })
         return context

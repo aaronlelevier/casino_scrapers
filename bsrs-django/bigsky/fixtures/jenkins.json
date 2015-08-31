@@ -273,19 +273,6 @@
 },
 {
   "fields": {
-    "code": "usd",
-    "name": "US Dollar",
-    "created": "2015-08-26T18:27:41.066Z",
-    "deleted": null,
-    "symbol": "$",
-    "format": "$00.00",
-    "modified": "2015-08-26T18:27:41.066Z"
-  },
-  "model": "accounting.currency",
-  "pk": "76584047-a8d9-4e88-985f-bfb4e163a1f4"
-},
-{
-  "fields": {
     "deleted": null,
     "order": 1,
     "modified": "2015-07-28T21:59:23.843Z",
