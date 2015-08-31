@@ -7,6 +7,7 @@ from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role
+from translation.models import Locale, Translation
 
 
 class RoleTests(TestCase):
@@ -133,3 +134,10 @@ class PersonTests(TestCase):
         person.save()
         person = Person.objects.get(id=person.id)
         self.assertEqual(person.groups.count(), 1)
+
+    def test_to_dict(self):
+        default_locale = Locale.objects.create_default()
+        self.assertEqual(
+            self.person.to_dict()['locale'],
+            str(default_locale.id)
+        )
