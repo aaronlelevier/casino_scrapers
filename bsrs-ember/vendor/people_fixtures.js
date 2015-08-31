@@ -52,8 +52,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
             delete person.locations;
             delete person.phone_numbers;
             delete person.addresses;
-            delete person.role.location_level;
-            delete person.role.role_type;
+            // delete person.role.location_level;
+            // delete person.role.role_type;
             //TODO: DRY this up
             person.username = 'mgibson' + i;
             person.first_name = 'Mel' + i;
@@ -75,8 +75,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
             delete person.locations;
             delete person.phone_numbers;
             delete person.addresses;
-            delete person.role.location_level;
-            delete person.role.role_type;
+            // delete person.role.location_level;
+            // delete person.role.role_type;
             person.username = 'scott' + i;
             person.first_name = 'Scott' + i;
             person.last_name = 'Newcomer' + i;

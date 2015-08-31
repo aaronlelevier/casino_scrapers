@@ -12,7 +12,6 @@ var PersonCurrent = Model.extend({
     return this.get('store').find('person', this.get('id'));
   }),
   updateSiteLocale: Ember.observer('person.locale', function(){
-    // TODO: move this to the person-currect model and only update the currentLocale if the current user's locale is updated.
     var loc = this.get('person.locale') || config.i18n.defaultLocale;
     config.i18n.currentLocale = loc;
     return this.get('translationsFetcher').fetch().then(function(){
