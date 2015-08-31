@@ -23,33 +23,33 @@
 },
 {
   "fields": {
-    "default": false,
-    "name": "English",
-    "created": "2015-08-31T16:21:24.773Z",
-    "deleted": null,
+    "locale": "es",
+    "name": "Spanish",
+    "created": "2015-08-26T23:25:39.119Z",
+    "native_name": "Espa\u00f1ol",
+    "modified": "2015-08-31T15:34:06.173Z",
     "rtl": false,
-    "presentation_name": "English",
-    "modified": "2015-08-31T16:21:24.773Z",
-    "locale": "en",
-    "native_name": "English"
+    "default": true,
+    "presentation_name": "Espa\u00f1ol",
+    "deleted": null
   },
-  "model": "translation.locale",
-  "pk": "b990d583-eb4f-41f0-a7b0-9fd5a0efc4f1"
+  "pk": "824a9a44-aaa7-4f4d-9990-c4b5aaa6bb67",
+  "model": "translation.locale"
 },
 {
   "fields": {
-    "default": true,
-    "name": "Spanish",
-    "created": "2015-08-26T23:25:39.119Z",
-    "deleted": null,
+    "locale": "en",
+    "name": "English",
+    "created": "2015-08-31T16:21:24.773Z",
+    "native_name": "English",
+    "modified": "2015-08-31T16:21:24.773Z",
     "rtl": false,
-    "presentation_name": "Espa\u00f1ol",
-    "modified": "2015-08-31T15:34:06.173Z",
-    "locale": "es",
-    "native_name": "Espa\u00f1ol"
+    "default": false,
+    "presentation_name": "English",
+    "deleted": null
   },
-  "model": "translation.locale",
-  "pk": "824a9a44-aaa7-4f4d-9990-c4b5aaa6bb67"
+  "pk": "b990d583-eb4f-41f0-a7b0-9fd5a0efc4f1",
+  "model": "translation.locale"
 },
 {
   "fields": {
