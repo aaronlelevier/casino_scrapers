@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='phonenumber',
             name='person',
-            field=models.ForeignKey(related_name='phone_numbers', blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(null=True, blank=True, to=settings.AUTH_USER_MODEL, related_name='phone_numbers'),
         ),
         migrations.AddField(
             model_name='phonenumber',
@@ -27,12 +27,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='email',
             name='location',
-            field=models.ForeignKey(related_name='emails', blank=True, to='location.Location', null=True),
+            field=models.ForeignKey(null=True, blank=True, to='location.Location', related_name='emails'),
         ),
         migrations.AddField(
             model_name='email',
             name='person',
-            field=models.ForeignKey(related_name='emails', blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(null=True, blank=True, to=settings.AUTH_USER_MODEL, related_name='emails'),
         ),
         migrations.AddField(
             model_name='email',
@@ -42,12 +42,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='address',
             name='location',
-            field=models.ForeignKey(related_name='addresses', blank=True, to='location.Location', null=True),
+            field=models.ForeignKey(null=True, blank=True, to='location.Location', related_name='addresses'),
         ),
         migrations.AddField(
             model_name='address',
             name='person',
-            field=models.ForeignKey(related_name='addresses', blank=True, to=settings.AUTH_USER_MODEL, null=True),
+            field=models.ForeignKey(null=True, blank=True, to=settings.AUTH_USER_MODEL, related_name='addresses'),
         ),
         migrations.AddField(
             model_name='address',

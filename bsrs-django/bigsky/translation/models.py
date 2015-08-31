@@ -32,8 +32,7 @@ class LocaleManager(BaseManager):
 
 @python_2_unicode_compatible
 class Locale(BaseModel):
-    locale = models.SlugField(unique=True,
-        help_text="Example values: en, en-US, en-x-Sephora")
+    locale = models.SlugField(help_text="Example values: en, en-US, en-x-Sephora")
     default = models.BooleanField(blank=True, default=False)
     name = models.CharField(max_length=50, 
         help_text="Human readable name in forms. i.e. 'English'")

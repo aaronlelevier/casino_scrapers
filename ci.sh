@@ -95,6 +95,7 @@ function dropAndCreateDB {
 function migrateData {
     export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'
     ./manage.py migrate
+    ./manage.py loaddata fixtures/states.json
     ./manage.py loaddata fixtures/jenkins.json
     ./manage.py loaddata fixtures/jenkins_custom.json
 
