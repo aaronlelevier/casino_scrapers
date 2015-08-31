@@ -115,6 +115,7 @@ class Role(BaseModel):
             return {"id": str(self.pk), "name": self.name}
         return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
 
+
 class ProxyRole(BaseModel):
     '''
     A `Role` that can proxy for, or act on the behalf of, another `Role`
@@ -216,7 +217,7 @@ class Person(BaseModel, AbstractUser):
             'username': self.username,
             'title': self.title,
             'employee_id': self.employee_id,
-            'locale': str(self.locale.id if self.locale else ''),
+            'locale': str(self.locale.id if self.locale else Locale.objects.create_default().id),
             'role': str(self.role.id)
         }
 
