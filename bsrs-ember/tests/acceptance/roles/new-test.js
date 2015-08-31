@@ -46,10 +46,10 @@ test('visiting role/new', (assert) => {
         assert.equal(currentURL(), ROLE_NEW_URL);
         assert.equal(store.find('role').get('length'), 4);
         assert.equal(store.find('role-type').get('length'), 2);
-        assert.equal(store.find('location-level').get('length'), 2);
+        assert.equal(store.find('location-level').get('length'), 8);
         assert.equal(find('.t-location-level option:selected').text(), 'Select One');
         assert.equal(find('.t-location-level option:eq(1)').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
-        assert.equal(find('.t-location-level option:eq(2)').text(), LOCATION_LEVEL_DEFAULTS.nameDepartment);
+        assert.equal(find('.t-location-level option:eq(2)').text(), LOCATION_LEVEL_DEFAULTS.nameRegion);
         assert.equal(find('.t-role-type option:selected').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(0)').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(1)').text(), ROLE_DEFAULTS.roleTypeContractor);

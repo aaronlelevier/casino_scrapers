@@ -41,6 +41,8 @@ export default Ember.Route.extend({
         var location_level_config = Ember.$('[data-preload-location-levels]').html();
         var location_level_list = JSON.parse(location_level_config);
         location_level_list.forEach((model) => {
+            model.children_fks = model.children || [];
+            delete model.children;
             store.push('location-level', model);
         });
         var role_config = Ember.$('[data-preload-roles]').html();

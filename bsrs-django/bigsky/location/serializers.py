@@ -17,7 +17,6 @@ class LocationLevelSerializer(serializers.ModelSerializer):
 
 class LocationLevelDetailSerializer(serializers.ModelSerializer):
 
-    children = LocationLevelSerializer(many=True)
     parents = LocationLevelSerializer(many=True)
 
     class Meta:

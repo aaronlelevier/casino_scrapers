@@ -42,22 +42,19 @@ module('Acceptance | location-level-new', {
 
 test('visiting /location-level/new', (assert) => {
     let response = Ember.$.extend(true, {}, payload);
-    payload.children = ['85c18266-dfca-4499-9cff-7c5c6970af7e', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f'];
     xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);
     click('.t-location-level-new');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
-        assert.equal(store.find('location-level').get('length'), 3);
-        assert.equal(find('.t-location-level > option').length, 3);
+        assert.equal(store.find('location-level').get('length'), 9);
+        assert.equal(find('.t-location-level-children > option').length, 9);
     });
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
-    fillIn('.t-location-level', '85c18266-dfca-4499-9cff-7c5c6970af7e'); //DRY this up ...
-    fillIn('.t-location-level', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f'); //DRY this up ...
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
-        assert.equal(store.find('location-level').get('length'), 3);
+        assert.equal(store.find('location-level').get('length'), 9);
         let locationLevel = store.find('location-level', UUID.value);
         assert.equal(locationLevel.get('id'), UUID.value);
         assert.equal(locationLevel.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
@@ -126,7 +123,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(find('.t-modal').is(':hidden'), true);
             let location_level = store.find('location-level', {id: UUID.value});
             assert.equal(location_level.get('length'), 0);
-            assert.equal(find('tr.t-location-level-data').length, 2);
+            assert.equal(find('tr.t-location-level-data').length, 8);
         });
     });
 });
@@ -135,6 +132,6 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     visit(LOCATION_LEVEL_NEW_URL);
     click('.t-cancel-btn');
     andThen(() => {
-        assert.equal(store.find('location-level').get('length'), 2);
+        assert.equal(store.find('location-level').get('length'), 8);
     });
 });

@@ -88,3 +88,18 @@ test('location array in location level will not be duplicated and deserializer r
     assert.ok(original.get('isNotDirty'));
     assert.equal(store.find('location', LOCATION_DEFAULTS.idOne).get('location_level.name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
 });
+
+test('location location level will correctly be deserialized when server returns location without a location_level (detail)', (assert) => {
+    let subject = LocationDeserializer.create({store: store});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, locations: [LOCATION_DEFAULTS.idOne]});
+    let json = LOCATION_FIXTURES.generate(LOCATION_DEFAULTS.idOne);
+    json.location_level = undefined;
+    subject.deserialize(json, LOCATION_DEFAULTS.idOne);
+    let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    assert.deepEqual(original.get('locations'), []);
+    let loc = store.find('location', LOCATION_DEFAULTS.idOne);
+    assert.equal(loc.get('location_level_fk'), undefined);
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(location.get('isNotDirty'));
+});

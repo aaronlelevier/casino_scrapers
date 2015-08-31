@@ -4,7 +4,7 @@ import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
 
-export default Ember.Component.extend(ValidationMixin, {
+var InputMultiPhone = Ember.Component.extend(ValidationMixin, {
     uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi t-input-multi-phone'],
@@ -32,3 +32,5 @@ export default Ember.Component.extend(ValidationMixin, {
         }
     }
 }); 
+
+export default InputMultiPhone;

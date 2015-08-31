@@ -6,10 +6,12 @@ from django.core.urlresolvers import reverse
 
 from model_mommy import mommy
 
+from accounting.models import Currency
 from person.models import Person, PersonStatus, Role
-from contact.models import PhoneNumberType
-from location.models import LocationLevel, LocationStatus
+from contact.models import PhoneNumberType, AddressType
+from location.models import LocationLevel, LocationStatus, State, Country
 from person.tests.factory import PASSWORD, create_person, create_role
+from translation.tests.factory import create_locales
 
 
 class IndexTests(TestCase):
@@ -66,6 +68,24 @@ class ConfigurationTests(TestCase):
         response = self.client.get(reverse('index'))
         self.assertTrue(response.context['phone_number_types_config'])
 
+    def test_address_types(self):
+        mommy.make(AddressType)
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['address_types'])
+        self.assertTrue(len(configuration) > 0)
+
+    def test_states_us(self):
+        mommy.make(State)
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['states_us'])
+        self.assertTrue(len(configuration) > 0)
+
+    def test_countries(self):
+        mommy.make(Country)
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['countries'])
+        self.assertTrue(len(configuration) > 0)
+
     def test_roles(self):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['role_config'])
@@ -113,12 +133,24 @@ class ConfigurationTests(TestCase):
         configuration = json.loads(response.context['location_status_config'])
         self.assertTrue(len(configuration) > 0)
 
-    def test_current_locale(self):
-        response = self.client.get(reverse('index'))
-        configuration = json.loads(response.context['current_locale'])
-        self.assertTrue(configuration)
-
     def test_locales(self):
+        create_locales()
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['locales'])
+        self.assertTrue(len(configuration) > 0)
+
+    def test_currency(self):
+        currency = Currency.objects.default()
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['currencies'])
+        # test
+        self.assertTrue(len(configuration) > 0)
+        configuration_usd = configuration[currency.code]
+        self.assertTrue(configuration_usd)
+        self.assertEqual(configuration_usd['name'], currency.name)
+
+    def test_current_person(self):
+        Currency.objects.default()
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['person_current'])
         self.assertTrue(len(configuration) > 0)

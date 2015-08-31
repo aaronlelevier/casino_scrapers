@@ -1,5 +1,11 @@
-<select class="t-person-locations-select form-control" onchange={{action (action "changed" person) value="target.value"}} multiple="multiple">
-  {{#each options as |location|}}
-    <option value={{location.id}} selected={{in-list location.id model}}>{{location.name}}</option>
-  {{/each}}
-</select>
+{{ember-selectize
+  required=true
+  multiple=true
+  content=options
+  optionValuePath="content.id"
+  optionLabelPath="content.name"
+  selection=location_ids
+  add-item="change"
+  remove-item="change"
+  class="t-person-locations-select"
+  placeholder="select a location"}}

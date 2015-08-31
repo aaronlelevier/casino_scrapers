@@ -117,12 +117,3 @@ class MainSetting(BaseSetting):
 
 class CustomSetting(BaseSetting):
     pass
-
-
-@python_2_unicode_compatible
-class State(BaseModel):
-    name = models.CharField(max_length=50)
-    abbrev = models.CharField(max_length=2)
-
-    def __str__(self):
-        return self.name

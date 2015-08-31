@@ -110,3 +110,10 @@ List of Postgres Roles
 List of Postgres Databases
 
 `\l`
+
+### Fixtures
+
+* `jenkins.json` - main database dump which contains 23 people fixtures with roles and 
+locations for those Roles
+* `jenkins_custom` - PhoneNumberType, AddressType, Currency, Translation Models
+* `states.json` - States and Countries

@@ -9,9 +9,9 @@ from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
     EmailSerializer, AddressSerializer)
 from location.serializers import LocationLevelSerializer, LocationIdNameSerializer
 from person.models import PersonStatus, Person, Role
+from person.validators import RoleLocationValidator
 from util import create
 from util.serializers import BaseCreateSerializer
-from util.validators import LocationValidator
 
 
 ### ROLE ###
@@ -106,7 +106,7 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        validators = [LocationValidator('locations')]
+        validators = [RoleLocationValidator('role', 'locations')]
         fields = PERSON_FIELDS + ('locale', 'locations', 'emails',
             'phone_numbers', 'addresses',)
 

@@ -60,28 +60,18 @@ class TranslationTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_list(self):
-        response = self.client.get('/api/admin/translations/')
+    def test_list_multiple_translations(self):
+        response = self.client.get('/api/translations/')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], Translation.objects.count())
+        self.assertIsInstance(data, list)
 
-    def test_get(self):
-        response = self.client.get('/api/admin/translations/{}/'
-            .format(self.translation.id))
-        self.assertEqual(response.status_code, 200)
+    def test_filter(self):
+        # Assumes there is a single Locale fixture with the name "en"
+        response = self.client.get('/api/translations/?locale=en')
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['locale'], str(self.translation.locale.id))
+        self.assertIn('en', data)
 
-    def test_update(self):
-        # setup
-        init_locale = Locale.objects.first()
-        new_locale = Locale.objects.last()
-        self.assertNotEqual(init_locale, new_locale)
-        self.data['locale'] = str(new_locale.id)
-        # test
-        response = self.client.put('/api/admin/translations/{}/'
-            .format(self.translation.id), self.data, format='json')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['locale'], str(new_locale.id))
+    def test_filter_not_found(self):
+        response = self.client.get('/api/translations/?locale=123')
+        self.assertEqual(response.status_code, 404)

@@ -7,6 +7,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         this.nameRegion = location_level_defaults.nameRegion;
         // this.nameStore = location_level_defaults.nameStore;
         this.nameDistrict = location_level_defaults.nameDistrict;
+        this.allChildrenArray = location_level_defaults.companyChildren;
     };
     factory.prototype.generate = function(i) {
         return {
@@ -17,7 +18,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         }
     };
     factory.prototype.detail = function(i) {
-        return {id: this.idOne, name : this.nameCompany};
+        return {id: this.idOne, name : this.nameCompany, children: this.allChildrenArray};
     };
     factory.prototype.list = function() {
         response = [ { id: this.idOne, name : this.nameCompany }, { id: this.idTwo, name : this.nameDistrict}, { id: this.idThree, name : this.nameRegion} ];
@@ -28,7 +29,6 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
     };
     factory.prototype.put = function(level) {
         var location_levels = this.detail();
-        level.children = [];
         for(var key in level) {
             location_levels[key] = level[key];
         }
