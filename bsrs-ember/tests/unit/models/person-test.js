@@ -16,7 +16,7 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
 var container, registry, store;
 
-module('toranb unit: person test', {
+module('unit: person test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();
@@ -126,7 +126,7 @@ test('related phone number model is dirty when phone number is dirty', (assert) 
     assert.ok(person.get('phoneNumbersIsDirty'));
 });
 
-test('related addresse model is dirty when address is dirty', (assert) => {
+test('related address model is dirty when address is dirty', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var address = store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('addressesIsNotDirty'));
@@ -384,7 +384,7 @@ test('when person role is changed dirty tracking works as expected', (assert) =>
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('when person has role suddently assigned it shows as a dirty relationship (starting undefined)', (assert) => {
+test('when person has role suddenly assigned it shows as a dirty relationship (starting undefined)', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut, people: undefined});
     assert.ok(person.get('isNotDirty'));

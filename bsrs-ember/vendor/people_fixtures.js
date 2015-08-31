@@ -35,8 +35,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
         delete person.locations;
         delete person.phone_numbers;
         delete person.addresses;
-        delete person.role.location_level;
-        delete person.role.role_type;
+        // delete person.role.location_level;
+        // delete person.role.role_type;
         return person;
     },
     factory.prototype.list = function() {
