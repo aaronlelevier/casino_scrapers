@@ -60,6 +60,7 @@ export default Model.extend({
         this.get('store').remove('role', this.get('id'));
     },
     rollbackRelated() {
+        this.rollbackLocationLevel();
     },
     isNew: Ember.computed(function() {
         return loopAttrs(this, 'role_type', 'location_level');

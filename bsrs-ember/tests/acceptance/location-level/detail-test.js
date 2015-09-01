@@ -21,7 +21,7 @@ const CANCEL_BTN = '.t-cancel-btn';
 
 let application, store, endpoint, list_xhr;
 
-module('sco Acceptance | detail-test', {
+module('Acceptance | detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
