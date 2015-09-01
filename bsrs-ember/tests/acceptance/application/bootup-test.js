@@ -12,6 +12,7 @@ import PHONE_NUMBER_DEFAULT from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
+import BSRS_PERSON_CURRENT_DEFAULTS_OBJECT from 'bsrs-ember/vendor/defaults/person-current';
 
 const HOME_URL = '/';
 
@@ -145,5 +146,15 @@ test('on boot we should fetch and load the location level configuration', functi
         assert.equal(location_level_models.objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
         assert.equal(location_level_models.objectAt(0).get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
         assert.equal(location_level_models.objectAt(0).get('children.length'), 7);
+    });
+});
+
+test('on boot we should fetch and load the current person configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        var person_current_model = store.findOne('person-current');
+        assert.equal(person_current_model.get('id'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.id);
+        assert.equal(person_current_model.get('first_name'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.first_name);
+        assert.equal(person_current_model.get('last_name'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.last_name);
     });
 });

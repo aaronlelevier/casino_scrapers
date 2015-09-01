@@ -39,15 +39,18 @@ var BSRS_ROLE_FACTORY = (function() {
         }
         return response;
     };
+    // factory.prototype.get = function() {
+    //     return {
+    //         'id': this.role_defaults.idOne,
+    //         'name': this.role_defaults.nameOne,
+    //         'location_level': this.location_level_fixtures.detail().id,
+    //         'role_type': this.role_defaults.roleTypeGeneral
+    //     }
+    // };
     factory.prototype.get = function() {
-        return {
-            'id': this.role_defaults.idOne,
-            'name': this.role_defaults.nameOne,
-            'location_level': this.location_level_fixtures.detail().id,
-            'role_type': this.role_defaults.roleTypeGeneral
-        }
+        return this.role_defaults.idOne;
     };
-    return factory
+    return factory;
 })();
 
 if (typeof window === 'undefined') {

@@ -2,10 +2,12 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
+import translations from "bsrs-ember/vendor/translation_fixtures";
 import Person from 'bsrs-ember/models/person';
 import AddressType from 'bsrs-ember/models/address-type';
-import StateSingle from 'bsrs-ember/models/state'; 
+import StateSingle from 'bsrs-ember/models/state';
 import Country from 'bsrs-ember/models/country';
 import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 import ADDRESS_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
@@ -25,6 +27,9 @@ moduleForComponent('input-multi-address', 'integration: input-multi-address test
         translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:person', 'model:address']);
         default_type = AddressType.create({id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName});
+        var service = this.container.lookup('service:i18n');
+        var json = translations.generate('en');
+        loadTranslations(service, json);
     }
 });
 

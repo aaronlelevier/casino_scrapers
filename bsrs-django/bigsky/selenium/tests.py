@@ -42,6 +42,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         # Go to Role Area
         self.at(self.driver.current_url, LoginPage.url())
         nav_page = NavPage(self.driver, self.wait)
+        # self.driver_wait.find_element_by_class_name("t-nav-admin").click()
         nav_page.click_admin()
         nav_admin_role = nav_page.find_role_link()
         nav_admin_role.click()
@@ -167,8 +168,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         location_level_list_view = location_level_page.find_list_name()
         location_level_page.click_name_in_list(location_level_name, location_level_list_view)
         ### UPDATE
-        location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
         self.driver.refresh()
+        location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
         location_level_name = rand_chars(10)
         location_level = InputHelper(location_level_name=location_level_name)
         self._fill_in(location_level, True)
@@ -234,7 +235,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, MethodHelpers, un
         last_phone_number_input.send_keys(new_phone_two)
         person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
         gen_elem_page.click_save_btn()
-        all_people = person_page.find_list_data() 
+        all_people = person_page.find_list_data()
         self.driver.refresh()
         new_person = person_page.click_name_in_list(username, new_person=None)
         try:

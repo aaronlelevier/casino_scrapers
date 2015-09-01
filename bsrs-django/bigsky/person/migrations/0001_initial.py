@@ -13,9 +13,10 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('location', '0001_initial'),
+        ('translation', '0001_initial'),
         ('order', '0001_initial'),
         ('auth', '0006_require_contenttypes_0002'),
+        ('location', '0001_initial'),
         ('accounting', '0001_initial'),
     ]
 
@@ -49,11 +50,12 @@ class Migration(migrations.Migration):
                 ('proxy_status', models.CharField(max_length=100, null=True, verbose_name=b'Out of the Office Status', blank=True)),
                 ('proxy_start_date', models.DateField(max_length=100, null=True, verbose_name=b'Out of the Office Status Start Date', blank=True)),
                 ('proxy_end_date', models.DateField(max_length=100, null=True, verbose_name=b'Out of the Office Status End Date', blank=True)),
-                ('auth_amount_currency', models.ForeignKey(blank=True, to='accounting.Currency', null=True)),
+                ('auth_currency', models.ForeignKey(blank=True, to='accounting.Currency', null=True)),
                 ('groups', models.ManyToManyField(related_query_name='user', related_name='user_set', to='auth.Group', blank=True, help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.', verbose_name='groups')),
-                ('location', models.ForeignKey(blank=True, to='location.Location', null=True)),
-                ('next_approver', models.ForeignKey(related_name='nextapprover', to=settings.AUTH_USER_MODEL, null=True)),
-                ('proxy_user', models.ForeignKey(related_name='coveringuser', to=settings.AUTH_USER_MODEL, null=True)),
+                ('locale', models.ForeignKey(blank=True, to='translation.Locale', help_text=b"If the Person has not 'Locale', the Accept-Language header will be used or the Site's system setting.", null=True)),
+                ('locations', models.ManyToManyField(related_name='people', to='location.Location', blank=True)),
+                ('next_approver', models.ForeignKey(related_name='nextapprover', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('proxy_user', models.ForeignKey(related_name='coveringuser', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'ordering': ('id',),

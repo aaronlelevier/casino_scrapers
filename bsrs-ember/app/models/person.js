@@ -14,6 +14,7 @@ export default Model.extend({
     title: attr(''),
     employee_id: attr(''),
     auth_amount: attr(''),
+    locale: attr(''),
     role_fk: undefined,
     person_location_fks: [],
     isModelDirty: false,
@@ -214,6 +215,7 @@ export default Model.extend({
                 return location.get('isDirty') === true;
             });
             return dirty_locations.length > 0;
+
         }
         if(previous_m2m_fks && previous_m2m_fks.get('length') > 0) {
             return true;
@@ -258,6 +260,7 @@ export default Model.extend({
                 return join_model.get('location_pk');
             });
             return Ember.$.inArray(location.get('id'), location_pks) > -1;
+
         };
         return store.find('location', filter.bind(person_locations), ['id']);
     }),
@@ -300,7 +303,8 @@ export default Model.extend({
             emails: [],
             locations: this.get('location_ids'),
             phone_numbers: phone_numbers,
-            addresses: addresses
+            addresses: addresses,
+            locale: this.get('locale')
         };
     },
     removeRecord() {

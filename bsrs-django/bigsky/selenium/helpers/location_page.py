@@ -22,10 +22,10 @@ class LocationPage(BasePage, MethodHelpers):
             assert getattr(self, k + "_input").get_attribute("value") == v
 
     def find_list_name(self):
-        return self.find_class_elements("t-location-name")
+        return self.wait_xhr("t-location-name", plural=True)
 
     def find_list_data(self):
-        return self.wait_xhr("t-location-data")
+        return self.wait_xhr("t-location-data", plural=True)
 
     def click_name_in_list(self, name, list_view_elements):
         new_location = None

@@ -13,6 +13,22 @@ test('default state for username on person model is undefined', (assert) => {
     assert.ok(person.get('isNotDirty'));
 });
 
+test('default state for locale on person model is undefined', (assert) => {
+    var person = Person.create({id: PEOPLE_DEFAULTS.id, locale: undefined});
+    assert.ok(person.get('isNotDirty'));
+    person.set('locale', PEOPLE_DEFAULTS.locale);
+    assert.ok(person.get('isDirty'));
+    person.set('locale', '');
+    assert.ok(person.get('isNotDirty'));
+});
+
+test('default state for locale on person model is set', (assert) => {
+    var person = Person.create({id: PEOPLE_DEFAULTS.id, locale: PEOPLE_DEFAULTS.locale});
+    assert.ok(person.get('isNotDirty'));
+    assert.equal(person.get('locale'), PEOPLE_DEFAULTS.locale);
+});
+
+
 test('default state for first name, middle initial, and last name on person model is undefined', (assert) => {
     var person = Person.create({id: PEOPLE_DEFAULTS.id, first_name: undefined, middle_initial: undefined, last_name: undefined});
     assert.ok(person.get('isNotDirty'));

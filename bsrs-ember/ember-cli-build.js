@@ -29,6 +29,7 @@ module.exports = function() {
     app.import('vendor/phone_number_fixtures.js');
     app.import('vendor/role_fixtures.js');
     app.import('vendor/category_fixtures.js');
+    app.import('vendor/translation_fixtures.js');
     app.import('vendor/defaults/address-type.js');
     app.import('vendor/defaults/address.js');
     app.import('vendor/defaults/country.js');
@@ -38,6 +39,7 @@ module.exports = function() {
     app.import('vendor/defaults/location-level.js');
     app.import('vendor/defaults/location-status.js');
     app.import('vendor/defaults/person.js');
+    app.import('vendor/defaults/person-current.js');
     app.import('vendor/defaults/person-location.js');
     app.import('vendor/defaults/person-put.js');
     app.import('vendor/defaults/phone-number.js');

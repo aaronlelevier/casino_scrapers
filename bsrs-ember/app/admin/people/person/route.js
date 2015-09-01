@@ -38,6 +38,7 @@ export default Ember.Route.extend({
             statuses: status_repo.find(),
             default_phone_number_type: default_phone_number_type,
             default_address_type: default_address_type,
+            locales: this.get('store').find('locale'),
             roles: roles
         });
     },
@@ -51,6 +52,7 @@ export default Ember.Route.extend({
         controller.set('countries', hash.countries);
         controller.set('statuses', hash.statuses);
         controller.set('roles', hash.roles);
+        controller.set('locales', hash.locales);
     },
     actions: {
         willTransition(transition) {

@@ -7,4 +7,5 @@ class CurrencySerializer(BaseCreateSerializer):
 
     class Meta:
         model = Currency
-        fields = ('id', 'name', 'code', 'symbol', 'format',)
+        fields = ('id', 'name', 'name_plural', 'code', 'symbol', 'symbol_native',
+            'decimal_digits', 'rounding',)

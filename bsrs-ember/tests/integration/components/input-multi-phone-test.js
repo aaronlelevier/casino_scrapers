@@ -2,7 +2,9 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
+import translations from "bsrs-ember/vendor/translation_fixtures";
 import Person from 'bsrs-ember/models/person';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
@@ -19,6 +21,9 @@ moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
         translation.initialize(this);
         default_type = PhoneNumberType.create({id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName});
         store = module_registry(this.container, this.registry, ['model:person', 'model:phonenumber']);
+        var service = this.container.lookup('service:i18n');
+        var json = translations.generate('en');
+        loadTranslations(service, json);
     }
 });
 
@@ -77,7 +82,7 @@ test('once added a button for phone number type appears with a button to delete 
     //NOTE: If we modify from select to div / ul the below needs to be updated
     assert.equal($first_type_select.find('option').length, 2);
     assert.equal($first_type_select.find('option:eq(0)').text(), 'Office');
-    assert.equal($first_type_select.find('option:eq(1)').text(), 'Mobile');
+    assert.equal($first_type_select.find('option:eq(1)').text(), 'Cell');
     assert.equal(model.objectAt(0).get("type"), PHONE_NUMBER_TYPE_DEFAULTS.officeId);
 });
 

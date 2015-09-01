@@ -126,7 +126,7 @@ test('related phone number model is dirty when phone number is dirty', (assert) 
     assert.ok(person.get('phoneNumbersIsDirty'));
 });
 
-test('related addresse model is dirty when address is dirty', (assert) => {
+test('related address model is dirty when address is dirty', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var address = store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('addressesIsNotDirty'));
@@ -384,7 +384,7 @@ test('when person role is changed dirty tracking works as expected', (assert) =>
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('when person has role suddently assigned it shows as a dirty relationship (starting undefined)', (assert) => {
+test('when person has role suddenly assigned it shows as a dirty relationship (starting undefined)', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.namePut, people: undefined});
     assert.ok(person.get('isNotDirty'));
@@ -736,6 +736,7 @@ test('rollback location will reset the previous locations when switching from on
     store.push('person-location', {id: m2m.get('id'), removed: true});
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
+    assert.equal(person.get('locations').get('length'), 1);
     person.save();
     person.saveRelated();
     assert.equal(person.get('locations').get('length'), 1);

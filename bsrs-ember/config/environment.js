@@ -14,7 +14,8 @@ module.exports = function(environment) {
     },
 
     i18n: {
-      defaultLocale: 'en'
+      defaultLocale: 'en',
+      currentLocale: 'en'
     },
 
     APP: {

@@ -21,31 +21,31 @@ admin.autodiscover()
 router = routers.DefaultRouter()
 
 # ACCOUNTING
-router.register(r'currencies', accounting_views.CurrencyViewSet)
+router.register(r'admin/currencies', accounting_views.CurrencyViewSet)
 # CATEGORY
-router.register(r'categories', category_views.CategoryViewSet)
+router.register(r'admin/categories', category_views.CategoryViewSet)
 # CONTACT
-router.register(r'phone_number_types', contact_views.PhoneNumberTypeViewSet)
-router.register(r'phone_numbers', contact_views.PhoneNumberViewSet)
-router.register(r'addresses', contact_views.AddressViewSet)
-router.register(r'address_types', contact_views.AddressTypeViewSet)
-router.register(r'emails', contact_views.EmailViewSet)
-router.register(r'email_types', contact_views.EmailTypeViewSet)
+router.register(r'admin/phone_number_types', contact_views.PhoneNumberTypeViewSet)
+router.register(r'admin/phone_numbers', contact_views.PhoneNumberViewSet)
+router.register(r'admin/addresses', contact_views.AddressViewSet)
+router.register(r'admin/address_types', contact_views.AddressTypeViewSet)
+router.register(r'admin/emails', contact_views.EmailViewSet)
+router.register(r'admin/email_types', contact_views.EmailTypeViewSet)
 # LOCATION
-router.register(r'locations', location_views.LocationViewSet)
-router.register(r'location_levels', location_views.LocationLevelViewSet)
-router.register(r'location_statuses', location_views.LocationStatusViewSet)
-router.register(r'location_types', location_views.LocationTypeViewSet)
+router.register(r'admin/locations', location_views.LocationViewSet)
+router.register(r'admin/location_levels', location_views.LocationLevelViewSet)
+router.register(r'admin/location_statuses', location_views.LocationStatusViewSet)
+router.register(r'admin/location_types', location_views.LocationTypeViewSet)
 # PERSON
-router.register(r'people', person_views.PersonViewSet)
-router.register(r'roles', person_views.RoleViewSet)
+router.register(r'admin/people', person_views.PersonViewSet)
+router.register(r'admin/roles', person_views.RoleViewSet)
 # TRANSLATION
-router.register(r'locales', translation_views.LocaleViewSet)
+router.register(r'admin/locales', translation_views.LocaleViewSet)
 router.register(r'translations', translation_views.TranslationViewSet)
 
 # API
 urlpatterns = patterns('',
-    url(r'^api/admin/', include(router.urls)),
+    url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 )
 

@@ -35,7 +35,7 @@
           <td class="t-person-username">{{person.username}}</td>
           <td class="t-person-fullname">{{person.full_name}}</td>
           <td class="t-person-title">{{person.title}}</td>
-          <td class="t-person-role-name">{{t person.role.name}}</td>
+          <td class="t-person-role-name">{{person.role.name}}</td>
           <td class="text-right t-person-employee-id">{{person.employee_id}}</td>
           {{/link-to}}
           {{/each}}
@@ -44,7 +44,7 @@
 
     </section>
     <footer>
-        <nav>
+        <nav class="text-center">
           <ul class="pagination t-pages">
             {{#each pages as |page|}}
               <li>
