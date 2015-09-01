@@ -21,13 +21,13 @@ class PersonPage(BasePage, MethodHelpers):
             assert getattr(self, k + "_input").get_attribute("value") == v
 
     def find_list_name(self):
-        return self.driver_wait.find_elements_by_class_name("t-person-username")
+        return self.wait_xhr("t-person-username", plural=True)
 
     def find_list_data(self):
-        return self.wait_xhr("t-person-data")
+        return self.wait_xhr("t-person-data", plural=True)
 
     def click_name_in_list(self, name, new_person):
-        pagination = self.driver.find_element_by_class_name("t-pages")
+        pagination = self.wait_xhr("t-pages")
         element_list = pagination.find_elements_by_tag_name("li")
         element_list_len = len(element_list)
         count = 0

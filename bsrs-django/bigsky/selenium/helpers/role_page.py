@@ -22,10 +22,10 @@ class RolePage(BasePage, MethodHelpers):
             assert getattr(self, k + "_input").get_attribute("value") == v
 
     def find_list_name(self):
-        return self.driver_wait.find_elements_by_class_name("t-role-name")
+        return self.wait_xhr("t-role-name", plural=True)
 
     def find_list_data(self):
-        return self.wait_xhr("t-role-data")
+        return self.wait_xhr("t-role-data", plural=True)
 
     def click_name_in_list(self, name, list_view_elements):
         new_role = None

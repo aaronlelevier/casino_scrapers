@@ -4,7 +4,7 @@ from base_page import BasePage
 
 class NavPage(BasePage, MethodHelpers):
     def click_admin(self):
-        self.driver_wait.find_element_by_class_name("t-nav-admin").click()
+        self.wait_xhr("t-nav-admin").click()
         # self.find_class_element("t-nav-admin").click()
     def find_people_link(self):
         return self.wait_xhr("t-nav-admin-people")
