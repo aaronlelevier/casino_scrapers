@@ -1,15 +1,23 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
+import phone_number_validation from 'bsrs-ember/validation/phone';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
 
 var InputMultiPhone = Ember.Component.extend(ValidationMixin, {
+    eventbus: Ember.inject.service(),
     uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi t-input-multi-phone'],
     fieldNames: 'number',
-    // number: validateEach('number'),
+    number: validateEach('number', phone_number_validation),
+    observeValid: Ember.observer('valid', function() {
+        Ember.run.once(this, 'processValid');
+    }),
+    processValid: function() {
+        this.get('eventbus').publish('person-single:input-multi-phone', this, 'onValidation', this.get('valid'));
+    },
     actions: {
         changed(phonenumber, val) {
             Ember.run(() => {
@@ -31,6 +39,6 @@ var InputMultiPhone = Ember.Component.extend(ValidationMixin, {
             this.sendAction('delete');
         }
     }
-}); 
+});
 
 export default InputMultiPhone;

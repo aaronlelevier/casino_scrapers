@@ -85,14 +85,14 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.officeId);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), t(ADDRESS_TYPES_DEFAULTS.officeName));
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address').val(), ADDRESS_DEFAULTS.streetOne);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-address').val(), ADDRESS_DEFAULTS.streetOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), ADDRESS_DEFAULTS.cityOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), ADDRESS_DEFAULTS.countryOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.shippingId);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), t(ADDRESS_TYPES_DEFAULTS.shippingName));
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address').val(), ADDRESS_DEFAULTS.streetTwo);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-address').val(), ADDRESS_DEFAULTS.streetTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), ADDRESS_DEFAULTS.cityTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), ADDRESS_DEFAULTS.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), ADDRESS_DEFAULTS.zipTwo);
@@ -153,6 +153,75 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+});
+
+test('when editing phone numbers to invalid, it checks for validation', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-person-username', '');
+    click('.t-add-btn:eq(0)');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    fillIn('.t-new-entry:eq(2)', '34');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+        assert.equal(find('.t-input-multi-phone-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
+    });
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+        assert.equal(find('.t-input-multi-phone-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
+    });
+    fillIn('.t-new-entry:eq(2)', '515-222-3333');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    click('.t-add-address-btn:eq(0)');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+    fillIn('.t-address-address:eq(2)', 'a');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    fillIn('.t-address-address:eq(2)', '');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+    });
+    fillIn('.t-address-address:eq(2)', 'a');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-username-validation-error:not(:hidden)').length, 1);
+    });
+    var url = PREFIX + DETAIL_URL + "/";
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id});
+    payload.phone_numbers.push({id: 'abc123', number: '515-222-3333', type: PHONE_NUMBER_TYPES_DEFAULTS.officeId });
+    payload.addresses.push({id: 'abc123', type: ADDRESS_TYPES_DEFAULTS.officeId, address: 'a', person: PEOPLE_DEFAULTS.id});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -328,6 +397,7 @@ test('when you deep link to the person detail view you can add a new phone numbe
         assert.equal(find('.t-input-multi-phone').find('input').length, 2);
     });
     click('.t-add-btn:eq(0)');
+    fillIn('.t-new-entry:eq(2)', PHONE_NUMBER_DEFAULTS.numberThree);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-input-multi-phone').find('input').length, 3);
@@ -336,7 +406,7 @@ test('when you deep link to the person detail view you can add a new phone numbe
     });
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+    phone_numbers.push({id: UUID.value, number: PHONE_NUMBER_DEFAULTS.numberThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
@@ -380,10 +450,11 @@ test('when you deep link to the person detail view you can change the phone numb
     visit(DETAIL_URL);
     fillIn('.t-input-multi-phone select:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     click('.t-add-btn:eq(0)');
+    fillIn('.t-new-entry:eq(2)', PHONE_NUMBER_DEFAULTS.numberThree);
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     phone_numbers[0].type = PHONE_NUMBER_TYPES_DEFAULTS.mobileId;
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+    phone_numbers.push({id: UUID.value, number: PHONE_NUMBER_DEFAULTS.numberThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
@@ -406,10 +477,11 @@ test('when you deep link to the person detail view you can add and save a new ph
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     phone_numbers[0].type = PHONE_NUMBER_TYPES_DEFAULTS.mobileId;
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    phone_numbers.push({id: UUID.value, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+    phone_numbers.push({id: UUID.value, number: PHONE_NUMBER_DEFAULTS.numberThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-input-multi-phone select:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+    fillIn('.t-new-entry:eq(2)', PHONE_NUMBER_DEFAULTS.numberThree);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -429,6 +501,7 @@ test('when you deep link to the person detail view you can add a new address', (
         assert.equal(find('.t-input-multi-address').find('input').length, 4);
     });
     click('.t-add-address-btn:eq(0)');
+    fillIn('.t-address-address:eq(2)', 'a');
     andThen(() => {
         assert.equal(find('.t-input-multi-address').find('input').length, 6);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
@@ -436,7 +509,7 @@ test('when you deep link to the person detail view you can add a new address', (
     });
     var addresses = ADDRESS_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: 'a', person: PEOPLE_DEFAULTS.id});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
@@ -452,10 +525,11 @@ test('when you deep link to the person detail view you can change the address ty
     visit(DETAIL_URL);
     fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
     click('.t-add-address-btn:eq(0)');
+    fillIn('.t-address-address:eq(2)', 'a');
     var addresses = ADDRESS_FIXTURES.put();
     addresses[0].type = ADDRESS_TYPES_DEFAULTS.shippingId;
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: 'a', person: PEOPLE_DEFAULTS.id});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);

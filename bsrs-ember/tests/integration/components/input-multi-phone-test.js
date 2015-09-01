@@ -148,3 +148,24 @@ test('click delete btn will remove input', function(assert) {
     assert.equal(this.$('.t-new-entry').length, 1);
     assert.equal(store.find('phonenumber').get('length'), 1);
 });
+
+test('filling in invalid phone number reveals validation message', function(assert) {
+    var phone_number_types = [PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName }), PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, name: PHONE_NUMBER_TYPE_DEFAULTS.mobileName })];
+    var model = store.find('phonenumber', {person: PEOPLE_DEFAULTS.id});
+    this.set('model', model);
+    this.set('related_pk', PEOPLE_DEFAULTS.id);
+    this.set('related_field', 'person');
+    this.set('phone_number_types', phone_number_types);
+    this.set('default_type', default_type);
+    this.render(hbs`{{input-multi-phone model=model types=phone_number_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
+    var $first_btn = this.$('.t-add-btn:eq(0)');
+    var $first_type_select = this.$('.t-multi-phone-type');
+    assert.equal($first_type_select.length, 0);
+    $first_btn.trigger('click').trigger('change');
+    var $component = this.$('.t-input-multi-phone-validation-error');
+    assert.ok($component.is(':hidden'));
+    this.$('.t-new-entry').val('51').trigger('change');
+    assert.ok($component.is(':visible'));
+    this.$('.t-new-entry').val('515-779-5670').trigger('change');
+    assert.ok($component.is(':hidden'));
+});
