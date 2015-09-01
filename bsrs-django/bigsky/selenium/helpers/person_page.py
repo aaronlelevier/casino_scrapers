@@ -19,9 +19,9 @@ class PersonPage(BasePage, MethodHelpers):
         for k,v in kwargs.iteritems():
             setattr(self, k + "_input", self.find_id_element(k))
             assert getattr(self, k + "_input").get_attribute("value") == v
-        
+
     def find_list_name(self):
-        return self.find_class_elements("t-person-username")
+        return self.driver_wait.find_elements_by_class_name("t-person-username")
 
     def find_list_data(self):
         return self.wait_xhr("t-person-data")

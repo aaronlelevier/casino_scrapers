@@ -22,7 +22,7 @@ class LocationPage(BasePage, MethodHelpers):
             assert getattr(self, k + "_input").get_attribute("value") == v
 
     def find_list_name(self):
-        return self.find_class_elements("t-location-name")
+        return self.driver_wait.find_elements_by_class_name("t-location-name")
 
     def find_list_data(self):
         return self.wait_xhr("t-location-data")

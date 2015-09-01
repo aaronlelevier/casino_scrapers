@@ -1,6 +1,22 @@
 [
 {
   "fields": {
+    "code": "USD",
+    "name": "US Dollar",
+    "created": "2015-08-31T22:36:28.985Z",
+    "deleted": null,
+    "symbol": "$",
+    "modified": "2015-08-31T22:36:28.985Z",
+    "symbol_native": "$",
+    "decimal_digits": 2,
+    "rounding": 0,
+    "name_plural": "US Dollars"
+  },
+  "model": "accounting.currency",
+  "pk": "30301d93-0631-4aad-ae4d-5a98d2fbd241"
+},
+{
+  "fields": {
     "model": "logentry",
     "app_label": "admin"
   },
@@ -270,22 +286,6 @@
   },
   "model": "sites.site",
   "pk": 1
-},
-{
-  "fields": {
-    "code": "USD",
-    "name": "US Dollar",
-    "created": "2015-08-31T22:36:28.985Z",
-    "deleted": null,
-    "symbol": "$",
-    "modified": "2015-08-31T22:36:28.985Z",
-    "symbol_native": "$",
-    "decimal_digits": 2,
-    "rounding": 0,
-    "name_plural": "US Dollars"
-  },
-  "model": "accounting.currency",
-  "pk": "30301d93-0631-4aad-ae4d-5a98d2fbd241"
 },
 {
   "fields": {
