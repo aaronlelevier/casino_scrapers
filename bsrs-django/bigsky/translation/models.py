@@ -35,7 +35,7 @@ class LocaleManager(BaseManager):
 @python_2_unicode_compatible
 class Locale(BaseModel):
     locale = models.SlugField(unique=True,
-        help_text="Example values: en, en-US, en-x-Sephora")
+        help_text="Example values: en, en-us, en-x-sephora")
     default = models.BooleanField(blank=True, default=False)
     name = models.CharField(max_length=50, 
         help_text="Human readable name in forms. i.e. 'English'")
@@ -49,10 +49,7 @@ class Locale(BaseModel):
         return self.locale
 
     def save(self, *args, **kwargs):
-        if not self.native_name:
-            self.native_name = self.name
-        if not self.presentation_name:
-            self.presentation_name = self.name
+        self._update_defaults()
         return super(Locale, self).save(*args, **kwargs)
 
     def to_dict(self):
@@ -64,6 +61,13 @@ class Locale(BaseModel):
             'presentation_name':self.presentation_name,
             'rtl':self.rtl
             }
+
+    def _update_defaults(self):
+        self.locale = self.locale.lower()
+        if not self.native_name:
+            self.native_name = self.name
+        if not self.presentation_name:
+            self.presentation_name = self.name
 
 
 @receiver(post_save, sender=Locale)
