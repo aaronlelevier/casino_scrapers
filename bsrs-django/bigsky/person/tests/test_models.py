@@ -146,7 +146,7 @@ class PersonTests(TestCase):
     def test_get_locale_user(self):
         # setup
         create_locales()
-        person_locale = Locale.objects.first()
+        person_locale = Locale.objects.order_by("-name").first()
         # Confirm that the ``system_default`` is not equal to the Locale
         # that we are about to assign to the ``Person``
         self.assertNotEqual(
