@@ -24,12 +24,17 @@ class IndexView(TemplateView):
 
     @never_cache
     def dispatch(self, request, *args, **kwargs):
+        print 'request.LANGUAGE_CODE:', request.LANGUAGE_CODE
+        print 'HTTP_ACCEPT_LANGUAGE:', request.META.get('HTTP_ACCEPT_LANGUAGE', None)
+        self.locale = request.META.get('HTTP_ACCEPT_LANGUAGE', None)
+
         if not request.user.is_authenticated():
             return HttpResponseRedirect(reverse('login'))
         else:
             return super(IndexView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
+        print 'context:', self.request.META.get('HTTP_ACCEPT_LANGUAGE', None)
         context = super(IndexView, self).get_context_data(**kwargs)
         context.update({
             'phone_number_types_config': model_to_json(PhoneNumberType),
@@ -44,6 +49,6 @@ class IndexView(TemplateView):
             'locales': model_to_json(Locale),
             'currencies': json.dumps({c.code: c.to_dict()
                                       for c in Currency.objects.all()}),
-            'person_current': json.dumps(self.request.user.to_dict())
+            'person_current': json.dumps(self.request.user.to_dict(self.locale))
             })
         return context

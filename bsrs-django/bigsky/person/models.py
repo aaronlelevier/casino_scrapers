@@ -1,3 +1,5 @@
+import re
+
 from django.db import models, IntegrityError
 from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.utils.encoding import python_2_unicode_compatible
@@ -208,7 +210,7 @@ class Person(BaseModel, AbstractUser):
         self._validate_locations()
         return super(Person, self).save(*args, **kwargs)
 
-    def to_dict(self):
+    def to_dict(self, locale):
         return {
             'id': str(self.id),
             'first_name': self.first_name,
@@ -217,9 +219,27 @@ class Person(BaseModel, AbstractUser):
             'username': self.username,
             'title': self.title,
             'employee_id': self.employee_id,
-            'locale': str(self.locale.id if self.locale else Locale.objects.create_default().id),
+            'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id)
         }
+
+    def _get_locale(self, locale):
+        """Resolve the Locale using the Accept-Language Header. If not 
+        found, use the system default Locale.
+
+        :locale: Accept-Language Header (string)
+        """
+        try:
+            locales = re.match(r'[\w\_\-\,]+', locale).group()
+            for locale in locales:
+                try:
+                    return str(Locale.objects.get(locale=locale).id)
+                except Locale.DoesNotExist:
+                    pass
+        except (AttributeError, TypeError):
+            pass
+
+        return str(Locale.objects.system_default().id)
 
     def _update_defaults(self):
         if not self.status:

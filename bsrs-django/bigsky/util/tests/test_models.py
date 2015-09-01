@@ -44,7 +44,7 @@ class HelperTests(TestCase):
 
     def test_current_locale_user(self):
         # setup
-        locale = Locale.objects.create_default()
+        locale = Locale.objects.system_default()
         user = create_person()
         user.locale = locale
         user.save()

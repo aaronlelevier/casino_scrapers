@@ -16,7 +16,7 @@ from util.models import AbstractName, BaseModel, BaseManager, BaseQuerySet
 
 class LocaleManager(BaseManager):
 
-    def create_default(self):
+    def system_default(self):
         "Default Locale from Site settings."
         obj, _ = self.get_or_create(locale=settings.LANGUAGE_CODE)
         return obj
@@ -27,7 +27,7 @@ class LocaleManager(BaseManager):
 
         queryset = self.exclude(id=id).filter(default=True)
         if not queryset:
-            self.create_default()
+            self.system_default()
 
         self.exclude(id=id).filter(default=True).update(default=False)
 
@@ -136,6 +136,8 @@ class TranslationManager(BaseManager):
 
 
 def translation_file(instance, filename):
+    """Determines the file location of Translation CSVs saved 
+    within the MEDAI_ROOT directory."""
     return '/'.join(['translations', filename])
 
 
