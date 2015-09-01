@@ -1,27 +1,34 @@
 import Ember from 'ember';
 
 let extract_location_level = (model, store) => {
-    if (model.location_level) {
-        var location_level_pk = model.location_level.id;
-        var location_level = store.push('location-level', model.location_level);
-        var existing_locations = location_level.get('locations') || [];
+    var location_level_pk = model.location_level.id;
+    var location = store.find('location', model.id); 
+    var location_level_fk = location.get('location_level_fk');
+    var location_level_old = store.find('location-level', location_level_fk);
+    var location_level_new = store.push('location-level', model.location_level);
+    if (model.location_level.id === location_level_fk) {
+        var existing_locations = location_level_new.get('locations') || [];
         if (existing_locations.indexOf(model.id) === -1) {
-            location_level.set('locations', existing_locations.concat([model.id]));
+            location_level_new.set('locations', existing_locations.concat([model.id]));
         }
-        location_level.save();
+        location_level_new.save();
         delete model.location_level;
-        return location_level_pk;
     } else {
-        var location = store.find('location', model.id); 
-        var location_level_fk_del = location.get('location_level_fk');
-        var location_level_old = store.find('location-level', location_level_fk_del);
-        var locations = location_level_old.get('locations');
-        var new_locations = locations.filter((location) => {
-            return location !== model.id;
-        });
-        location_level_old.set('locations', new_locations);
-        location_level_old.save();
+        if (location_level_old.get('locations')) {
+            var locations = location_level_old.get('locations');
+            location_level_old.set('locations', locations.filter((loc) => {
+                return loc !== model.id;
+            }));
+            location_level_old.save();
+        }
+        var new_locations = location_level_new.get('locations') || [];
+        if (new_locations.indexOf(model.id) < 0) {
+            location_level_new.set('locations', new_locations.concat([model.id]));
+        }
+        location_level_new.save();
+        delete model.location_level;
     }
+    return location_level_pk;
 };
 
 var LocationDeserializer = Ember.Object.extend({
