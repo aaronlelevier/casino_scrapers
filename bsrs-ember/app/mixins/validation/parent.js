@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import {ValidationMixin} from 'ember-cli-simple-validation/mixins/validate';
 
-//this.get("constructor.ClassMixin.ownerConstructor").toString()
 var ParentValidationComponent = Ember.Component.extend(ValidationMixin, {
     eventbus: Ember.inject.service(),
     _setup: Ember.on('init', function() {
