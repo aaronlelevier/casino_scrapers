@@ -11,7 +11,7 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
 
-var store;
+var store, location_repo;
 
 moduleForComponent('person-single', 'integration: person-single test', {
     integration: true,
@@ -20,7 +20,8 @@ moduleForComponent('person-single', 'integration: person-single test', {
         store.push('currency', CURRENCY_DEFAULTS);
         store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne, ROLE_DEFAULTS.idTwo]});
         translation.initialize(this);
-        repository.initialize(this.container, this.registry, 'location');
+        location_repo = repository.initialize(this.container, this.registry, 'location');
+        location_repo.find = function() { return store.find('location'); };
     }
 });
 
@@ -78,11 +79,26 @@ test('selecting a placeholder instead of legit role will not append the persons 
 
 test('locations multi select is rendered in this component', function(assert) {
     let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
-    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
-    let location_one = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id], location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    let location_one = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne], location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idTwo], locations: [LOCATION_DEFAULTS.idOne]});
     this.set('model', person);
-    this.set('locations', store.find('location'));
-    this.render(hbs`{{person-single model=model locations=locations}}`);
+    this.render(hbs`{{person-single model=model}}`);
     let $component = this.$('.t-person-locations-select');
     assert.equal($component.find('option').length, 1);
+});
+
+test('locations multi select will not break when object proxy passes through without location_level (temporary state of the component)', function(assert) {
+    let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: undefined, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    let role_two = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, people: [PEOPLE_DEFAULTS.id], location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne});
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idTwo, ROLE_DEFAULTS.idOne], locations: []});
+    this.set('model', person);
+    this.set('roles', store.find('role'));
+    this.render(hbs`{{person-single model=model roles=roles}}`);
+    let $component = this.$('.t-person-locations-select');
+    assert.equal($component.find('option').length, 0);
 });

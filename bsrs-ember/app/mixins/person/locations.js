@@ -18,7 +18,8 @@ var PersonLocationsMixin = Ember.Mixin.create({
         let location_level_pk = this.get('location_level_pk');
         if(location_level_pk) {
             return all.filter(function(location) {
-                return location.get('location_level').get('id') === location_level_pk;
+                let location_level = location.get('location_level');
+                return location_level && location_level.get('id') === location_level_pk;
             });
         }
         return [];

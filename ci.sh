@@ -3,7 +3,7 @@
 echo "BUILD STARTED!"
 
 function npmInstall {
-    npm install
+    npm install --no-optional
     NPM_INSTALL=$?
     echo $NPM_INSTALL
     if [ "$NPM_INSTALL" == 1 ]; then
