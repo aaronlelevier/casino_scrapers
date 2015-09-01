@@ -334,6 +334,30 @@ class LocationUpdateTests(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(data['status'], str(new_status.id))
 
+    ### util.UniqueForActive - tests
+
+    def test_update_unique_for_active_active(self):
+        self.assertTrue(self.data['number'])
+        self.data['number'] = Location.objects.exclude(number=self.data['number']).first().number
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_update_unique_for_active_deleted(self):
+        # delete the "old_location", so it will be fine to re-use it's ``number``
+        self.assertTrue(self.data['number'])
+        old_location = Location.objects.exclude(number=self.data['number']).first()
+        old_location.delete()
+        # Requery Update Serializer Data b/c children/parents may have changed 
+        # when the "old_location" was deleted
+        self.location = Location.objects.get(id=self.location.id)
+        self.data = LocationUpdateSerializer(self.location).data
+        # test
+        self.data['number'] = old_location.number
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 200)
+
 
 class LocationDeleteTests(APITestCase):
 

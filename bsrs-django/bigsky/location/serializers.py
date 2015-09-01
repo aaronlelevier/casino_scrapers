@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 from util.serializers import BaseCreateSerializer
-
+from util.validators import UniqueForActive
 
 ### LOCATION LEVEL
 
@@ -52,6 +52,7 @@ class LocationTypeSerializer(BaseCreateSerializer):
 ### LOCATION
 
 class LocationIdNameSerializer(BaseCreateSerializer):
+    """Leaf node serializer for PersonDetailSerializer."""
 
     class Meta:
         model = Location
@@ -59,6 +60,7 @@ class LocationIdNameSerializer(BaseCreateSerializer):
 
 
 class LocationSerializer(serializers.ModelSerializer):
+    """Leaf node serializer for LocationDetailSerializer."""
 
     class Meta:
         model = Location
@@ -98,5 +100,6 @@ class LocationUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Location
+        validators = [UniqueForActive('number')]
         fields = ('id', 'name', 'number', 'status', 'location_level',
             'parents', 'children',)
