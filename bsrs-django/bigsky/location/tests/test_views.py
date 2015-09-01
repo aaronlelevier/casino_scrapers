@@ -290,7 +290,7 @@ class LocationCreateTests(APITestCase):
         response = self.client.post('/api/admin/locations/', self.data, format='json')
         self.assertEqual(response.status_code, 201)
 
-    ### util.UniqueForActive - tests
+    ### util.UniqueForActiveValidator - tests
 
     def test_create_unique_for_active_active(self):
         self.assertTrue(self.data['number'])
@@ -356,7 +356,7 @@ class LocationUpdateTests(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(data['status'], str(new_status.id))
 
-    ### util.UniqueForActive - tests
+    ### util.UniqueForActiveValidator - tests
 
     def test_update_unique_for_active_active(self):
         self.assertTrue(self.data['number'])

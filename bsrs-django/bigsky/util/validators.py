@@ -22,7 +22,7 @@ def validate_phone(phone):
         return re_phone
 
 
-class UniqueForActive(object):
+class UniqueForActiveValidator(object):
     """Validate that the ``value`` being sent over is Unique 
     for active instances of the ``model``.
 
