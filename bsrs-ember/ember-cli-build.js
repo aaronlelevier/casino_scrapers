@@ -11,6 +11,9 @@ var es5Shim = funnel('node_modules/es5-shim', {
 
 module.exports = function() {
     var app = new EmberApp({
+        'SRI': {
+          crossorigin: 'anonymous'
+        },
         'ember-cli-selectize': {
           theme: 'bootstrap3'
         },

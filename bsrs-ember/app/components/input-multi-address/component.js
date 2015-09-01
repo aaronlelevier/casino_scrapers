@@ -2,20 +2,14 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import Address from 'bsrs-ember/models/address';
 import AddressDefaults from 'bsrs-ember/vendor/defaults/address-type';
-import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
+import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
+import {validateEach} from 'ember-cli-simple-validation/mixins/validate';
 
-export default Ember.Component.extend(ValidationMixin, {
-    eventbus: Ember.inject.service(),
+export default ChildValidationComponent.extend({
     uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi-address t-input-multi-address'],
     address: validateEach('address'),
-    observeValid: Ember.observer('valid', function() {
-        Ember.run.once(this, 'processValid');
-    }),
-    processValid: function() {
-        this.get('eventbus').publish('person-single:input-multi-address', this, 'onValidation', this.get('valid'));
-    },
     actions: {
         changed(address, val) {
             Ember.run(() => {
