@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
-import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
+import translation from "bsrs-ember/instance-initializers/ember-i18n";
+import translations from "bsrs-ember/vendor/translation_fixtures";
 import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
@@ -22,6 +24,10 @@ moduleForComponent('person-single', 'integration: person-single test', {
         translation.initialize(this);
         location_repo = repository.initialize(this.container, this.registry, 'location');
         location_repo.find = function() { return store.find('location'); };
+        var service = this.container.lookup('service:i18n');
+        var json = translations.generate('en');
+        loadTranslations(service, json);
+        //repository.initialize(this.container, this.registry, 'location');
     }
 });
 
@@ -34,7 +40,7 @@ test('selecting a role will append the persons id to the new role but remove it 
     this.render(hbs`{{person-single model=model roles=roles}}`);
     var $component = this.$('.t-person-role-select');
     assert.equal(this.$('.t-person-role-select option:eq(0)').text(), 'Select One');
-    assert.equal(this.$('.t-person-role-select option:eq(1)').text(), ROLE_DEFAULTS.nameOne);//TODO: translate this
+    assert.equal(this.$('.t-person-role-select option:eq(1)').text(), 'Administrator');//TODO: translate this
     assert.equal(person.get('role').get('people'), PEOPLE_DEFAULTS.id);
     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
     assert.ok(role_one.get('isNotDirty'));
@@ -59,7 +65,7 @@ test('selecting a placeholder instead of legit role will not append the persons 
     this.render(hbs`{{person-single model=model roles=roles}}`);
     var $component = this.$('.t-person-role-select');
     assert.equal(this.$('.t-person-role-select option:eq(0)').text(), 'Select One');
-    assert.equal(this.$('.t-person-role-select option:eq(1)').text(), ROLE_DEFAULTS.nameOne);//TODO: translate this
+    assert.equal(this.$('.t-person-role-select option:eq(1)').text(), 'Administrator');//TODO: translate this
     assert.equal(person.get('role').get('people'), PEOPLE_DEFAULTS.id);
     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
     assert.ok(role_one.get('isNotDirty'));

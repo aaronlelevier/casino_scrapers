@@ -36,8 +36,8 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('order', models.IntegerField(default=0, blank=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
+                ('order', models.IntegerField(default=0, blank=True)),
             ],
             options={
                 'abstract': False,
@@ -63,8 +63,8 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('order', models.IntegerField(default=0, blank=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
+                ('order', models.IntegerField(default=0, blank=True)),
             ],
             options={
                 'abstract': False,
@@ -91,8 +91,8 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('order', models.IntegerField(default=0, blank=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
+                ('order', models.IntegerField(default=0, blank=True)),
             ],
             options={
                 'abstract': False,

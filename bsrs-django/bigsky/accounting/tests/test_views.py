@@ -38,6 +38,7 @@ class CurrencyTests(APITestCase):
             'id': str(uuid.uuid4())
             })
         response = self.client.post('/api/admin/currencies/', self.data, format='json')
+        print response
         self.assertEqual(response.status_code, 201)
 
     def test_create_duplicate(self):

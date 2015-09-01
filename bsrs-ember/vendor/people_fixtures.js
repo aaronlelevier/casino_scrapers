@@ -35,8 +35,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
         delete person.locations;
         delete person.phone_numbers;
         delete person.addresses;
-        delete person.role.location_level;
-        delete person.role.role_type;
+        // delete person.role.location_level;
+        // delete person.role.role_type;
         return person;
     },
     factory.prototype.list = function() {
@@ -52,8 +52,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
             delete person.locations;
             delete person.phone_numbers;
             delete person.addresses;
-            delete person.role.location_level;
-            delete person.role.role_type;
+            // delete person.role.location_level;
+            // delete person.role.role_type;
             //TODO: DRY this up
             person.username = 'mgibson' + i;
             person.first_name = 'Mel' + i;
@@ -65,25 +65,25 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var sorted = response.sort(function(a,b) {
             return b.id - a.id;
         });
-        return {'count':19,'next':null,'previous':null,'results': sorted};
+        return {'count':18,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
         var response = [];
-        for (var i=11; i <= 19; i++) {
+        for (var i=11; i <= 18; i++) {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
             var person = this.generate(uuid + i);
             delete person.locations;
             delete person.phone_numbers;
             delete person.addresses;
-            delete person.role.location_level;
-            delete person.role.role_type;
+            // delete person.role.location_level;
+            // delete person.role.role_type;
             person.username = 'scott' + i;
             person.first_name = 'Scott' + i;
             person.last_name = 'Newcomer' + i;
             person.title = i + ' WAT';
             response.push(person);
         }
-        return {'count':19,'next':null,'previous':null,'results': response};
+        return {'count':18,'next':null,'previous':null,'results': response};
     };
     factory.prototype.sorted = function(column, page) {
         var response;
@@ -96,7 +96,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var sorted = response.sort(function(a,b) {
             return b[column] - a[column];
         });
-        return {'count':19,'next':null,'previous':null,'results': sorted};
+        return {'count':18,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.searched = function(search, column, page) {
         var page1 = this.list_two().results;
@@ -128,6 +128,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         person.phone_numbers = this.phone_number_fixtures.get();
         person.addresses = this.address_fixtures.get();
         person.emails = [];
+        person.locale = this.person_defaults.locale;
         return person;
     };
     factory.prototype.put = function(person) {
@@ -136,6 +137,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         response.addresses = this.address_fixtures.put();
         response.status = this.status_defaults.activeId;
         response.role = this.role_defaults.idOne;
+        person.locale = this.person_defaults.locale;
         for(var key in person) {
             response[key] = person[key];
         }

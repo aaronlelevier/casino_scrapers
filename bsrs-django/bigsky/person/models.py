@@ -35,7 +35,7 @@ class Role(BaseModel):
     password_history_length = models.PositiveIntegerField(blank=True, null=True,
         help_text="Will be NULL if password length has never been changed.")
     password_char_types = models.CharField(max_length=100,
-        help_text="Password characters allowed") # TODO: This field will need to be accessed when 
+        help_text="Password characters allowed") # TODO: This field will need to be accessed when
                                                  # someone for the role saves their PW to validate it.
     password_expire = models.PositiveIntegerField(blank=True, null=True,
         help_text="Number of days after setting password that it will expire.")
@@ -106,7 +106,7 @@ class Role(BaseModel):
     def __str__(self):
         return self.name
 
-    @property 
+    @property
     def _name(self):
         return self.__name__.lower()
 
@@ -114,6 +114,7 @@ class Role(BaseModel):
         if not self.location_level:
             return {"id": str(self.pk), "name": self.name}
         return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
+
 
 class ProxyRole(BaseModel):
     '''
@@ -178,7 +179,7 @@ class Person(BaseModel, AbstractUser):
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
     password_expire = models.DateField(blank=True, null=True)
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
-    password_change = models.TextField(help_text="Tuple of (datetime of PW change, old PW)") 
+    password_change = models.TextField(help_text="Tuple of (datetime of PW change, old PW)")
     # Out-of-the-Office
     proxy_status = models.CharField("Out of the Office Status", max_length=100,
         blank=True, null=True)
@@ -202,6 +203,24 @@ class Person(BaseModel, AbstractUser):
     def __str__(self):
         return self.username
 
+    def save(self, *args, **kwargs):
+        self._update_defaults()
+        self._validate_locations()
+        return super(Person, self).save(*args, **kwargs)
+
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'first_name': self.first_name,
+            'middle_initial': self.middle_initial,
+            'last_name': self.last_name,
+            'username': self.username,
+            'title': self.title,
+            'employee_id': self.employee_id,
+            'locale': str(self.locale.id if self.locale else Locale.objects.create_default().id),
+            'role': str(self.role.id)
+        }
+
     def _update_defaults(self):
         if not self.status:
             self.status = PersonStatus.objects.default()
@@ -211,16 +230,11 @@ class Person(BaseModel, AbstractUser):
             self.auth_currency = self.role.default_auth_currency
 
     def _validate_locations(self):
-        """Remove invalid Locations from the Person based on 
+        """Remove invalid Locations from the Person based on
         their Role.location_level"""
         for l in self.locations.all():
             if l.location_level != self.role.location_level:
                 self.locations.remove(l)
-
-    def save(self, *args, **kwargs):
-        self._update_defaults()
-        self._validate_locations()
-        return super(Person, self).save(*args, **kwargs)
 
 
 @receiver(post_save, sender=Person)

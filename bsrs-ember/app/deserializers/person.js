@@ -18,25 +18,27 @@ var extract_addresses = function(model, store) {
 };
 
 var extract_role_location_level = function(model, store) {
-    let location_level_pk = model.role.location_level;
+    let role = store.find('role', model.role);
+    let location_level = role.get('location_level');
+    let location_level_pk = location_level.get('id');
     if(location_level_pk) {
-        let role_pk = model.role.id;
+        let role_pk = model.role;
         let location_level = store.find('location-level', location_level_pk);
         let existing_roles = location_level.get('roles') || [];
         if (existing_roles.indexOf(role_pk) === -1) {
             location_level.set('roles', existing_roles.concat([role_pk]));
         }
         location_level.save();
-        delete model.role.location_level;
-        model.role.location_level_fk = location_level_pk;
+        role.set('location_level_fk', location_level_pk);
     }
 };
 
 var extract_role = function(model, store) {
-    var role_pk = model.role.id;
+    let role_pk = model.role;
+    let role = store.find('role', model.role);
     extract_role_location_level(model, store);
-    var role = store.push('role', model.role);
-    var existing_people = role.get('people') || [];
+    //var role = store.push('role', model.role);
+    let existing_people = role.get('people') || [];
     if (existing_people.indexOf(model.id) === -1) {
         role.set('people', existing_people.concat([model.id]));
     }

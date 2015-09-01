@@ -1,3 +1,5 @@
+from rest_framework.exceptions import NotFound
+
 from translation.models import Locale, Translation
 from util.serializers import BaseCreateSerializer
 
@@ -12,6 +14,15 @@ class LocaleSerializer(BaseCreateSerializer):
 
 class TranslationSerializer(BaseCreateSerializer):
 
+    locale = LocaleSerializer()
+
     class Meta:
         model = Translation
-        fields = ('id', 'locale', 'values', 'context', 'csv',)
+        fields = ('locale', 'values',)
+
+    def to_representation(self, instance):
+        ret = super(TranslationSerializer, self).to_representation(instance)
+        try:
+            return {ret['locale']['locale'] : ret['values']}
+        except KeyError:
+            raise NotFound

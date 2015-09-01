@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+from django.contrib.postgres.operations import HStoreExtension
 import translation.models
 import django.contrib.postgres.fields.hstore
-from django.contrib.postgres.operations import HStoreExtension
 import uuid
 
 

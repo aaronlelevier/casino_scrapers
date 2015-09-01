@@ -35,8 +35,7 @@ class LocaleTests(TestCase):
         self.assertTrue(d.default)
 
     def test_post_save_update_locale(self):
-        Locale.objects.create_default()
-        self.assertEqual(Locale.objects.filter(default=True).count(), 1)
+        self.assertTrue(Locale.objects.all().exists())
         # Saving another Locale doesn't violate the single
         # default Locale constraint.
         d = mommy.make(Locale, default=True)

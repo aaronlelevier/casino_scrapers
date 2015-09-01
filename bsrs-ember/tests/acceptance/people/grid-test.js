@@ -12,7 +12,7 @@ const PREFIX = config.APP.NAMESPACE;
 const PEOPLE_URL = "/admin/people";
 const LETTER_M = {keyCode: 77};
 const SPACEBAR = {keyCode: 32};
-const NUMBER_NINE = {keyCode: 57};
+const NUMBER_EIGHT = {keyCode: 56};
 const BACKSPACE = {keyCode: 8};
 
 var application, store;
@@ -114,36 +114,36 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 });
 
 test('typing a search will reset page to 1 and require an additional xhr', function(assert) {
-    var search_two = PREFIX + PEOPLE_URL + '/?page=1&ordering=title&search=9%20m';
-    xhr(search_two ,"GET",null,{},200,PEOPLE_FIXTURES.searched('9 m', 'title'));
+    var search_two = PREFIX + PEOPLE_URL + '/?page=1&ordering=title&search=8%20m';
+    xhr(search_two ,"GET",null,{},200,PEOPLE_FIXTURES.searched('8 m', 'title'));
     var page_two = PREFIX + PEOPLE_URL + '/?page=2&ordering=title';
     xhr(page_two ,"GET",null,{},200,PEOPLE_FIXTURES.searched('', 'title', 2));
     var page_one = PREFIX + PEOPLE_URL + '/?page=1&ordering=title';
     xhr(page_one ,"GET",null,{},200,PEOPLE_FIXTURES.searched('', 'title'));
-    var sort_one = PREFIX + PEOPLE_URL + '/?page=1&ordering=title&search=9';
-    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.searched('9', 'title'));
-    var search_one = PREFIX + PEOPLE_URL + '/?page=1&search=9';
-    xhr(search_one ,"GET",null,{},200,PEOPLE_FIXTURES.searched('9', 'id'));
+    var sort_one = PREFIX + PEOPLE_URL + '/?page=1&ordering=title&search=8';
+    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.searched('8', 'title'));
+    var search_one = PREFIX + PEOPLE_URL + '/?page=1&search=8';
+    xhr(search_one ,"GET",null,{},200,PEOPLE_FIXTURES.searched('8', 'id'));
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    fillIn('.t-grid-search-input', '9');
-    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_NINE);
+    fillIn('.t-grid-search-input', '8');
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_EIGHT);
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL + '?page=1&search=9');
+        assert.equal(currentURL(),PEOPLE_URL + '?page=1&search=8');
         assert.equal(find('.t-person-data').length, 2);
-        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'mgibson9');
-        assert.equal(find('.t-person-data:eq(1) .t-person-username').text(), 'scott19');
+        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'mgibson8');
+        assert.equal(find('.t-person-data:eq(1) .t-person-username').text(), 'scott18');
     });
     click('.t-sort-title');
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL + '?page=1&search=9&sort=title');
+        assert.equal(currentURL(),PEOPLE_URL + '?page=1&search=8&sort=title');
         assert.equal(find('.t-person-data').length, 2);
-        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'scott19');
-        assert.equal(find('.t-person-data:eq(1) .t-person-username').text(), 'mgibson9');
+        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'scott18');
+        assert.equal(find('.t-person-data:eq(1) .t-person-username').text(), 'mgibson8');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
@@ -156,15 +156,15 @@ test('typing a search will reset page to 1 and require an additional xhr', funct
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?page=2&search=&sort=title');
         assert.equal(find('.t-person-data').length, 9);
-        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'scott19');
+        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'mgibson2');
     });
-    fillIn('.t-grid-search-input', '9 m');
-    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_NINE);
+    fillIn('.t-grid-search-input', '8 m');
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_EIGHT);
     triggerEvent('.t-grid-search-input', 'keyup', SPACEBAR);
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_M);
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL + '?page=1&search=9%20m&sort=title');
+        assert.equal(currentURL(),PEOPLE_URL + '?page=1&search=8%20m&sort=title');
         assert.equal(find('.t-person-data').length, 1);
-        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'mgibson9');
+        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'mgibson8');
     });
 });
