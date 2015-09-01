@@ -24,11 +24,16 @@ def validate_phone(phone):
 
 class UniqueForActive(object):
     """Validate that the ``value`` being sent over is Unique 
-    for active instances of the ``model``."""
+    for active instances of the ``model``.
+
+    :model: the model type to check against
+    :key: the field to check for uniqueness
+    """
 
     message = _("{key}:{value} is not unique for {model}.")
 
-    def __init__(self, key, *args, **kwargs):
+    def __init__(self, model, key, *args, **kwargs):
+        self.model = model
         self.key = key
 
     def __call__(self, kwargs):
@@ -54,4 +59,4 @@ class UniqueForActive(object):
         """Determine the existing instance, prior to the validation 
         call being made."""
         self.instance = getattr(serializer, 'instance', None)
-        self.model = type(self.instance)
+        # self.model = type(self.instance)
