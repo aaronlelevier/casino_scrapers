@@ -290,6 +290,23 @@
 {
   "fields": {
     "deleted": null,
+    "children": [
+      "8cf68b73-a5df-4eb4-8457-9bf5754b0d53",
+      "9c0f2b25-f821-44b0-a94c-407ba440a462",
+      "ba392726-e768-41a2-9673-db038e76b01d",
+      "bbebaf1a-c8c3-4176-8fbf-4888cc482a58",
+      "e326ff10-a5cc-491d-84ba-2d839ae43394"
+    ],
+    "modified": "2015-09-01T23:38:24.727Z",
+    "name": "company",
+    "created": "2015-09-01T23:38:24.727Z"
+  },
+  "model": "location.locationlevel",
+  "pk": "24ba6e3f-012b-479b-98f8-ca52d025f952"
+},
+{
+  "fields": {
+    "deleted": null,
     "children": [],
     "modified": "2015-08-31T22:36:28.931Z",
     "name": "district_lp",
