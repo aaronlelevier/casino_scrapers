@@ -233,7 +233,7 @@ class Person(BaseModel, AbstractUser):
             locales = re.match(r'[\w\_\-\,]+', locale).group()
             for locale in locales.split(','):
                 try:
-                    return str(Locale.objects.get(locale=locale).id)
+                    return str(Locale.objects.get(locale__iexact=locale).id)
                 except Locale.DoesNotExist:
                     pass
         except (AttributeError, TypeError):
