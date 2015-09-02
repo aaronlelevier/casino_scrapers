@@ -20,4 +20,8 @@ CACHES = {
 }
 
 if 'test' in sys.argv:
+    # Will only be activated when running ``./manage.py test``
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
     from .ci import *

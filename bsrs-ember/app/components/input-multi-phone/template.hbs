@@ -12,7 +12,7 @@
   </span>
 
   {{input-dynamic obj=phonenumber prop=fieldNames placeholder=placeholder}}
-  {{#validation-error-field submitted=submitted field="number" model=phonenumber index=index validation="number"}}invalid number{{/validation-error-field}}
+  {{#validation-error-field className="t-input-multi-phone-validation-error" submitted=submitted field="number" model=phonenumber index=index validation="number"}}invalid phone number{{/validation-error-field}}
 </div>
 {{/each}}
 <button class="t-add-btn add-btn btn btn-default btn-sm" type="button" {{action 'append'}}><span class="btn-label">{{fa-icon "plus"}} {{t "admin.phone.add"}}</span></button>

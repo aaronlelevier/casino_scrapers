@@ -9,17 +9,19 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
-var registry, container, store, location_repo;
+var registry, container, store, location_repo, eventbus;
 
 module('unit: person-single component test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();
-        store = module_registry(container, registry, ['model:person', 'model:role', 'model:location-level', 'model:location', 'model:person-location']);
+        store = module_registry(container, registry, ['model:person', 'model:role', 'model:location-level', 'model:location', 'model:person-location', 'service:eventbus']);
+        eventbus = container.lookup('service:eventbus');
         location_repo = repository.initialize(container, registry, 'location');
         location_repo.find = function() { return store.find('location'); };
     },
     afterEach() {
+        eventbus = null;
         location_repo = null;
         store = null;
         container = null;
@@ -37,7 +39,7 @@ test('locations computed will be filtered by person.role.location_level', (asser
     let location_one = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne], location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idTwo], locations: [LOCATION_DEFAULTS.idOne]});
     var location_level_two = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idTwo, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, roles: [ROLE_DEFAULTS.idOne], locations: []});
-    let subject = PersonSingleComponent.create({model: person, location_repo: location_repo});
+    let subject = PersonSingleComponent.create({model: person, location_repo: location_repo, eventbus: eventbus});
     assert.equal(subject.get('locations').get('length'), 1);
     let location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idTwo], location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     let m2m_two = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idTwo, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});

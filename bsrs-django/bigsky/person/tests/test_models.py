@@ -8,6 +8,7 @@ from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role
 from translation.models import Locale, Translation
+from translation.tests.factory import create_locales
 
 
 class RoleTests(TestCase):
@@ -136,8 +137,43 @@ class PersonTests(TestCase):
         self.assertEqual(person.groups.count(), 1)
 
     def test_to_dict(self):
-        default_locale = Locale.objects.create_default()
+        default_locale = Locale.objects.system_default()
         self.assertEqual(
-            self.person.to_dict()['locale'],
+            self.person.to_dict(None)['locale'],
             str(default_locale.id)
+        )
+
+    def test_get_locale_user(self):
+        # setup
+        create_locales()
+        person_locale = Locale.objects.order_by("-name").first()
+        # Confirm that the ``system_default`` is not equal to the Locale
+        # that we are about to assign to the ``Person``
+        self.assertNotEqual(
+            Locale.objects.system_default(),
+            person_locale
+        )
+        # test
+        self.person.locale = person_locale
+        self.person.save()
+        # ``person.to_dict(_)`` will return the ``person.locale`` first
+        # if it exists, not ``person._get_locale``
+        self.assertEqual(
+            self.person.to_dict(None)['locale'],
+            str(self.person.locale.id)
+        )
+
+    def test_get_locale_accept_language_header(self):
+        # setup
+        create_locales()
+        self.assertIn(
+            self.person._get_locale("es,en-US;q=0.8"),
+            [str(x) for x in Locale.objects.values_list('id', flat=True)]
+        )
+
+    def test_get_locale_system(self):
+        self.assertIsNone(self.person.locale)
+        self.assertEqual(
+            self.person._get_locale(None),
+            str(Locale.objects.system_default().id)
         )

@@ -2,11 +2,14 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import Address from 'bsrs-ember/models/address';
 import AddressDefaults from 'bsrs-ember/vendor/defaults/address-type';
+import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
+import {validateEach} from 'ember-cli-simple-validation/mixins/validate';
 
-export default Ember.Component.extend({
+export default ChildValidationComponent.extend({
     uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi-address t-input-multi-address'],
+    address: validateEach('address'),
     actions: {
         changed(address, val) {
             Ember.run(() => {

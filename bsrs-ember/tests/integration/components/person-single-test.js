@@ -27,7 +27,6 @@ moduleForComponent('person-single', 'integration: person-single test', {
         var service = this.container.lookup('service:i18n');
         var json = translations.generate('en');
         loadTranslations(service, json);
-        //repository.initialize(this.container, this.registry, 'location');
     }
 });
 

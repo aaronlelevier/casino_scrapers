@@ -29,8 +29,8 @@ def update_dict_values(dict_):
 def create_locales():
     locales = [
         'en',
-        'en-US',
-        'en-x-Sephora'
+        'en-us',
+        'en-x-sephora'
     ]
     for l in locales:
         Locale.objects.create(locale=l, name=l)
@@ -40,8 +40,8 @@ def create_translations():
     create_locales()
 
     en = Locale.objects.get(locale='en')
-    en_us = Locale.objects.get(locale='en-US')
-    en_x_sephora = Locale.objects.get(locale='en-x-Sephora')
+    en_us = Locale.objects.get(locale='en-us')
+    en_x_sephora = Locale.objects.get(locale='en-x-sephora')
 
     dict_ = create_empty_dict()
 

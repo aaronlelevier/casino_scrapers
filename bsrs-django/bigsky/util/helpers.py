@@ -15,5 +15,5 @@ def current_locale(user):
     if user.locale:
         locale = user.locale
     else:
-        locale = Locale.objects.create_default()
+        locale = Locale.objects.system_default()
     return json.dumps(locale.to_dict())

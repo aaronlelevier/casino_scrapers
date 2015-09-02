@@ -38,6 +38,21 @@
 },
 {
   "fields": {
+    "default": false,
+    "name": "English",
+    "created": "2015-09-01T18:59:58.267Z",
+    "deleted": null,
+    "rtl": false,
+    "presentation_name": "English",
+    "modified": "2015-09-01T18:59:58.267Z",
+    "locale": "en-us",
+    "native_name": "English"
+  },
+  "model": "translation.locale",
+  "pk": "e03bc265-e540-4e8a-bd2e-2fe323f2e3a9"
+},
+{
+  "fields": {
     "default": true,
     "name": "Spanish",
     "created": "2015-08-26T23:25:39.119Z",
@@ -63,6 +78,19 @@
   },
   "model": "translation.translation",
   "pk": "79708e18-8ddc-47e3-a6f1-2f323b6b4124"
+},
+{
+  "fields": {
+    "created": "2015-09-01T18:59:58.270Z",
+    "deleted": null,
+    "modified": "2015-09-01T18:59:58.271Z",
+    "locale": "e03bc265-e540-4e8a-bd2e-2fe323f2e3a9",
+    "values": "{\"welcome\": \"What's up\", \"modules.tickets.titleShort\": \"Requests\"}",
+    "context": "{}",
+    "csv": ""
+  },
+  "model": "translation.translation",
+  "pk": "83119410-6062-4298-b7ed-dc35e03f5501"
 },
 {
   "fields": {
