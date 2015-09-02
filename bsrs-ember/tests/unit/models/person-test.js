@@ -197,7 +197,7 @@ test('save related will iterate over each phone number and save that model', (as
     assert.ok(person.get('phoneNumbersIsNotDirty'));
 });
 
-test('toran savePhoneNumbers will remove any phone number model with no (valid) value', (assert) => {
+test('savePhoneNumbers will remove any phone number model with no (valid) value', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, person: PEOPLE_DEFAULTS.id});
     var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, person: PEOPLE_DEFAULTS.id});
@@ -220,6 +220,21 @@ test('toran savePhoneNumbers will remove any phone number model with no (valid) 
     person.savePhoneNumbers();
     assert.equal(store.find('phonenumber').get('length'), 0);
 });
+
+// test('toran phoneNumbersIsDirty is false when a phone number is added but does not have a (valid) number', (assert) => {
+//     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+//     var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, person: PEOPLE_DEFAULTS.id});
+//     var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, person: PEOPLE_DEFAULTS.id});
+//     var third_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idThree, person: PEOPLE_DEFAULTS.id});
+//     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+//     second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+//     third_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+//     // first_phone_number.set('number', PHONE_NUMBER_DEFAULTS.numberOne); do in a later test
+//     // second_phone_number.set('number', PHONE_NUMBER_DEFAULTS.numberTwo);
+//     assert.equal(store.find('phonenumber').get('length'), 3);
+//     assert.ok(person.get('phoneNumbersIsNotDirty'));
+//     assert.equal(store.find('phonenumber').get('length'), 3);
+// });
 
 test('save related will iterate over each address and save that model', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
