@@ -78,6 +78,13 @@ var extract_person_location = function(model, store, uuid) {
     return server_locations_sum;
 };
 
+var extract_locale = function(model, store) {
+    let locale_pk = model.locale;
+    let locale = store.find('locale', model.locale);
+    model.locale = locale.get('locale');
+    return locale_pk;
+};
+
 var PersonDeserializer = Ember.Object.extend({
     uuid: inject('uuid'),
     deserialize(response, options) {
@@ -94,6 +101,7 @@ var PersonDeserializer = Ember.Object.extend({
         extract_addresses(model, store);
         model.role_fk = extract_role(model, store);
         model.person_location_fks = extract_person_location(model, store, uuid);
+        model.locale_fk = extract_locale(model, store);
         let person = store.push('person', model);
         person.save();
     },

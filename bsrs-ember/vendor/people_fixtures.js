@@ -128,7 +128,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         person.phone_numbers = this.phone_number_fixtures.get();
         person.addresses = this.address_fixtures.get();
         person.emails = [];
-        person.locale = this.person_defaults.locale;
+        person.locale = this.person_defaults.locale_id;
         return person;
     };
     factory.prototype.put = function(person) {
