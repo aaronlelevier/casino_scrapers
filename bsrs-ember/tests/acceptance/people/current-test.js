@@ -29,14 +29,14 @@ module('Acceptance | current user test', {
         var people_list_data = PEOPLE_FIXTURES.list();
         var current_person_data = PEOPLE_FIXTURES.detail(PERSON_CURRENT_DEFAULTS.id);
 
-        var locale_data = translations.generate('es');
-        var localeEndpoint = '/api/translations/?locale=es';
+        var locale_data_es = translations.generate('es');
+        var locale_endpoint_es = '/api/translations/?locale=es';
 
         var endpoint = PREFIX + PEOPLE_URL + '/';
         var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
         xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
 
-        xhr(localeEndpoint, 'GET', null, {}, 200, locale_data);
+        xhr(locale_endpoint_es, 'GET', null, {}, 200, locale_data_es);
         xhr(endpoint, 'GET', null, {}, 200, people_list_data);
         xhr(endpoint + PERSON_CURRENT_DEFAULTS.id + '/', 'GET', null, {}, 200, current_person_data);
     },

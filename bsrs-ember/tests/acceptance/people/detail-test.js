@@ -35,17 +35,20 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('Acceptance | detail test', {
+module('Acceptance | amk detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
+
+        var endpoint = PREFIX + PEOPLE_URL + '/';
         var people_list_data = PEOPLE_FIXTURES.list();
         var people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-        var endpoint = PREFIX + PEOPLE_URL + '/';
         var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
-        xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+
         xhr(endpoint, 'GET', null, {}, 200, people_list_data);
         xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
+        xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+
     },
     afterEach() {
         Ember.run(application, 'destroy');
