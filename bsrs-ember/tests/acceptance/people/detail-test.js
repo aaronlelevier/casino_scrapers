@@ -159,7 +159,7 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     });
 });
 
-test('when editing phone numbers to invalid, it checks for validation', (assert) => {
+test('phone numbers without a valid number are ignored and removed', (assert) => {
     visit(DETAIL_URL);
     click('.t-add-btn:eq(0)');
     andThen(() => {
