@@ -233,7 +233,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
     # fields
     name = models.CharField(max_length=50)
-    number = models.CharField(max_length=50, unique=True)
+    number = models.CharField(max_length=50, blank=True, null=True)
 
     objects = LocationManager()
 

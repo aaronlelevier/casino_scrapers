@@ -274,27 +274,49 @@ class LocationCreateTests(APITestCase):
         # Login
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
+        # Data: base data to update unique fields on and POST to test CREATEs
+        serializer = LocationCreateSerializer(self.location)
+        self.data = serializer.data
 
     def tearDown(self):
         self.client.logout()
 
     def test_create(self):
-        # setup
-        serializer = LocationCreateSerializer(self.location)
-        data = serializer.data
         new_uuid = str(uuid.uuid4())
-        data.update({
+        self.data.update({
             'id': new_uuid,
             'number': create._generate_chars()
         })
-        # Test
-        response = self.client.post('/api/admin/locations/', data, format='json')
+        response = self.client.post('/api/admin/locations/', self.data, format='json')
         self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content)
-        self.assertIsInstance(
-            Location.objects.get(id=new_uuid),
-            Location
-        )
+
+    ### util.UniqueForActiveValidator - tests
+
+    def test_create_unique_for_active_active(self):
+        self.assertTrue(self.data['number'])
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'number': Location.objects.exclude(number=self.data['number']).first().number
+        })
+        response = self.client.post('/api/admin/locations/', self.data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_create_unique_for_active_deleted(self):
+        # delete the "old_location", so it will be fine to re-use it's ``number``
+        self.assertTrue(self.data['number'])
+        old_location = Location.objects.exclude(number=self.data['number']).first()
+        old_location.delete()
+        # Requery Update Serializer Data b/c children/parents may have changed 
+        # when the "old_location" was deleted
+        self.location = Location.objects.get(id=self.location.id)
+        self.data = LocationUpdateSerializer(self.location).data
+        # test
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'number': old_location.number
+        })
+        response = self.client.post('/api/admin/locations/', self.data, format='json')
+        self.assertEqual(response.status_code, 201)
 
 
 class LocationUpdateTests(APITestCase):
@@ -333,6 +355,30 @@ class LocationUpdateTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content)
         self.assertEqual(data['status'], str(new_status.id))
+
+    ### util.UniqueForActiveValidator - tests
+
+    def test_update_unique_for_active_active(self):
+        self.assertTrue(self.data['number'])
+        self.data['number'] = Location.objects.exclude(number=self.data['number']).first().number
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_update_unique_for_active_deleted(self):
+        # delete the "old_location", so it will be fine to re-use it's ``number``
+        self.assertTrue(self.data['number'])
+        old_location = Location.objects.exclude(number=self.data['number']).first()
+        old_location.delete()
+        # Requery Update Serializer Data b/c children/parents may have changed 
+        # when the "old_location" was deleted
+        self.location = Location.objects.get(id=self.location.id)
+        self.data = LocationUpdateSerializer(self.location).data
+        # test
+        self.data['number'] = old_location.number
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 200)
 
 
 class LocationDeleteTests(APITestCase):
