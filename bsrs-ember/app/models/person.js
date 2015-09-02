@@ -288,6 +288,8 @@ export default Model.extend({
         var addresses = this.get('addresses').map(function(address) {
             return address.serialize();
         });
+        var locale = store.find('locale', {locale: this.get('locale')});
+        var locale_fk = locale.objectAt(0) ? locale.objectAt(0).get('id') : '';
         return {
             id: this.get('id'),
             username: this.get('username'),
@@ -304,7 +306,7 @@ export default Model.extend({
             locations: this.get('location_ids'),
             phone_numbers: phone_numbers,
             addresses: addresses,
-            locale: this.get('locale')
+            locale: locale_fk
         };
     },
     removeRecord() {
