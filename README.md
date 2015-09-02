@@ -29,3 +29,10 @@ The following dependencies are required to run the build script
 If you need to provision a macbook pro checkout this installer
 
 https://github.com/toranb/osx-workstation/blob/master/installer
+
+
+### Jenkins Ports
+
+* 8000 - Python 2 - deploy.sh
+* 8002 - Python 2 - persistent.sh
+* 8003 - Python 3 - deploy.sh (on python3 branch)
