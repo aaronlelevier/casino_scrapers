@@ -79,10 +79,14 @@ var extract_person_location = function(model, store, uuid) {
 };
 
 var extract_locale = function(model, store) {
-    let locale_pk = model.locale;
-    let locale = store.find('locale', model.locale);
-    model.locale = locale.get('locale');
-    return locale_pk;
+    if(model.locale){
+        let locale_pk = model.locale;
+        let locale = store.find('locale', model.locale);
+        model.locale = locale.get('locale');
+        return locale_pk;
+    }else{
+        return '';
+    }
 };
 
 var PersonDeserializer = Ember.Object.extend({

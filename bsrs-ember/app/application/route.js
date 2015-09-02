@@ -4,6 +4,7 @@ const { Route, inject } = Ember;
 
 export default Ember.Route.extend({
   translationsFetcher: inject.service(),
+  i18n: inject.service(),
   beforeModel() {
     var store = this.get('store');
     var phone_number_config = Ember.$('[data-preload-phonenumber_types]').html();
@@ -93,6 +94,9 @@ export default Ember.Route.extend({
 
     return this.get('translationsFetcher').fetch();
 
+  },
+  afterModel(){
+    this.set('i18n.locale', config.i18n.currentLocale);
   },
   actions: {
       cancel_modal() {

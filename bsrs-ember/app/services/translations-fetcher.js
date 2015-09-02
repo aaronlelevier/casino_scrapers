@@ -18,7 +18,6 @@ export default Service.extend({
 
   _addTranslations(json) {
     const i18n = this.get('i18n');
-
     Object.keys(json).forEach(function(locale) {
       i18n.addTranslations(locale, json[locale]);
     });
