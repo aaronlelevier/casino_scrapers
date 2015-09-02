@@ -96,9 +96,17 @@ export default Model.extend({
     addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     savePhoneNumbers: function() {
-        var phone_numbers = this.get('phone_numbers');
+        let store = this.get('store');
+        let phone_numbers_to_remove = [];
+        let phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
+            if(typeof num.get('number') === 'undefined' || num.get('number').trim() === '') {
+                phone_numbers_to_remove.push(num.get('id'));
+            }
             num.save();
+        });
+        phone_numbers_to_remove.forEach((id) => {
+            store.remove('phonenumber', id);
         });
     },
     saveAddresses: function() {
@@ -282,8 +290,13 @@ export default Model.extend({
     serialize() {
         var store = this.get('store');
         var status_id = store.findOne('status').get('id');
-        var phone_numbers = this.get('phone_numbers').map(function(number) {
-            return number.serialize();
+        var phone_numbers = this.get('phone_numbers').filter(function(num) {
+            if(typeof num.get('number') === 'undefined' || num.get('number').trim() === '') {
+                return;
+            }
+            return num;
+        }).map(function(num) {
+            return num.serialize();
         });
         var addresses = this.get('addresses').map(function(address) {
             return address.serialize();

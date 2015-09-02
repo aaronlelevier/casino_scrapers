@@ -159,6 +159,38 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     });
 });
 
+test('phone numbers without a valid number are ignored and removed', (assert) => {
+    visit(DETAIL_URL);
+    click('.t-add-btn:eq(0)');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    fillIn('.t-new-entry:eq(2)', '34');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+        assert.equal(find('.t-input-multi-phone-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
+    });
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+        assert.equal(store.find('phonenumber').get('length'), 3);
+    });
+    fillIn('.t-new-entry:eq(2)', '');
+    var url = PREFIX + DETAIL_URL + "/";
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(store.find('phonenumber').get('length'), 2);
+    });
+});
+
 test('when editing phone numbers to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-person-username', '');

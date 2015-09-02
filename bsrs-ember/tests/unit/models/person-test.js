@@ -184,8 +184,8 @@ test('person is dirty or related is dirty when model has been updated', (assert)
 
 test('save related will iterate over each phone number and save that model', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
-    var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person: PEOPLE_DEFAULTS.id});
+    var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     assert.ok(person.get('phoneNumbersIsDirty'));
@@ -195,6 +195,30 @@ test('save related will iterate over each phone number and save that model', (as
     assert.ok(person.get('phoneNumbersIsDirty'));
     person.savePhoneNumbers();
     assert.ok(person.get('phoneNumbersIsNotDirty'));
+});
+
+test('toran savePhoneNumbers will remove any phone number model with no (valid) value', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, person: PEOPLE_DEFAULTS.id});
+    var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, person: PEOPLE_DEFAULTS.id});
+    var third_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idThree, person: PEOPLE_DEFAULTS.id});
+    first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+    second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+    third_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+    first_phone_number.set('number', PHONE_NUMBER_DEFAULTS.numberOne);
+    second_phone_number.set('number', PHONE_NUMBER_DEFAULTS.numberTwo);
+    assert.equal(store.find('phonenumber').get('length'), 3);
+    person.savePhoneNumbers();
+    assert.equal(store.find('phonenumber').get('length'), 2);
+    assert.equal(store.find('phonenumber').objectAt(0).get('id'), PHONE_NUMBER_DEFAULTS.id);
+    assert.equal(store.find('phonenumber').objectAt(1).get('id'), PHONE_NUMBER_DEFAULTS.idTwo);
+    first_phone_number.set('number', '');
+    person.savePhoneNumbers();
+    assert.equal(store.find('phonenumber').get('length'), 1);
+    assert.equal(store.find('phonenumber').objectAt(0).get('id'), PHONE_NUMBER_DEFAULTS.idTwo);
+    second_phone_number.set('number', ' ');
+    person.savePhoneNumbers();
+    assert.equal(store.find('phonenumber').get('length'), 0);
 });
 
 test('save related will iterate over each address and save that model', (assert) => {
