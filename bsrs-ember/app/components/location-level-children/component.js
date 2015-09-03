@@ -5,7 +5,7 @@ var LocationLevelChildrenSelect = Ember.Component.extend({
         get(key) {
             let selected_locations = this.get('selected_locations') || [];
             let location_level = this.get('model');
-            if(location_level && location_level.get('id') !== undefined) {
+            if(location_level && location_level.get('id')) {
                 location_level.get('children').forEach(function(child) {
                     selected_locations.pushObject(child);
                 });
@@ -20,7 +20,7 @@ var LocationLevelChildrenSelect = Ember.Component.extend({
             let children = current_location_level.get('children_fks') || [];
             if(Ember.$.inArray(location_level_pk, children) > -1) {
                 let children_removed = children.filter((child) => {
-                    return child !== location_level_pk; 
+                    return child !== location_level_pk;
                 });
                 current_location_level.set('children_fks', children_removed);
             } else {

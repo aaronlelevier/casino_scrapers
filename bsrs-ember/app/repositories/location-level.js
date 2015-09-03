@@ -18,6 +18,9 @@ var LocationLevelRepo = Ember.Object.extend({
             model.save();
         });
     },
+    peek(filter, computed_keys) {
+        return this.get('store').find('location-level', filter, computed_keys);
+    },
     find() {
         PromiseMixin.xhr(LOCATION_LEVEL_URL, 'GET').then((response) => {
             this.get('locationLevelDeserializer').deserialize(response);

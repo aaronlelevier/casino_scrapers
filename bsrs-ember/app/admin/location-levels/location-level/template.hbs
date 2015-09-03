@@ -1,16 +1,6 @@
-{{log model.id}}
-  {{log 'shit'}}
-  {{#each filt_loc_levels as |x|}}
-  {{log x.id}}
-  {{log 'fuck'}}
-  {{log x.name}}
-  {{log 'bitch'}}
-{{/each}}
-
 {{location-level
   model=model
   saveLocationLevel="redirectUser"
   cancelLocationLevel="redirectUser"
   redirectUser="redirectUser"
-  filt_loc_levels=filt_loc_levels
 }}

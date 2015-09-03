@@ -96,23 +96,22 @@ test('sco a location level child can be selected and persisted', (assert) => {
         assert.equal(location_level.get('children_fks').length, 2);
         assert.equal(location_level.get('children').get('length'), 2);
     });
-    let response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idDistrict);
-    response.name = LOCATION_LEVEL_DEFAULTS.nameDistrict;
-    let children = LOCATION_LEVEL_DEFAULTS.districtChildren;
-    children.unshift(LOCATION_LEVEL_FIXTURES.idOne);
-    let payload = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idDistrict, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, children: children});
-    xhr(DJANGO_DISTRICT_DETAIL_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+    // let response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idDistrict);
+    // response.name = LOCATION_LEVEL_DEFAULTS.nameDistrict;
+    // let children = LOCATION_LEVEL_DEFAULTS.districtChildren;
+    // children.unshift(LOCATION_LEVEL_FIXTURES.idOne);
+    // let payload = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idDistrict, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, children: children});
+    // xhr(DJANGO_DISTRICT_DETAIL_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
     click('.selectize-input input');
-    click('.t-location-level-location-level-select div.option:eq(0)');//TODO: assert.async shows district as an option on dropdown.  Should be company
-    var done = assert.async();
-    // andThen(() => {
-    //     let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
-    //     assert.equal(location_level.get('children_fks').length, 3);
-    //     assert.equal(location_level.get('children').get('length'), 3);
-    //     assert.equal(find('.t-location-level-location-level-select > div.option').length, 0);
-    //     assert.equal(find('.items > div.item').length, 3);
-    //     assert.ok(location_level.get('isDirty'));
-    // });
+    click('.t-location-level-location-level-select div.option:eq(0)');
+    andThen(() => {
+        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
+        assert.equal(location_level.get('children_fks').length, 3);
+        assert.equal(location_level.get('children').get('length'), 3);
+        assert.equal(find('.t-location-level-location-level-select > div.option').length, 0);
+        assert.equal(find('.items > div.item').length, 3);
+        assert.ok(location_level.get('isDirty'));
+    });
     // let list = LOCATION_LEVEL_FIXTURES.list();
     // let children_array = LOCATION_LEVEL_DEFAULTS.districtChildren;
     // children_array.push(children_array.shift());
