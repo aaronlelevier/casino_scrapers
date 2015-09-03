@@ -58,7 +58,7 @@ class LocationLevelTests(APITestCase):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
         data = json.loads(response.content)
         self.assertIn(
-            LocationLevel.objects.get(id=data['children'][0]),
+            LocationLevel.objects.get(id=data['children'][0]['id']),
             self.district.children.all()
         )
 
@@ -186,6 +186,12 @@ class LocationListTests(APITestCase):
             LocationLevel.objects.get(id=data['results'][0]['location_level']['id']),
             LocationLevel
         )
+
+    def test_keys(self):
+        response = self.client.get('/api/admin/locations/')
+        data = json.loads(response.content)
+        location = data['results'][0]
+        self.assertEqual(len(location), 5) # 5 fields in this serializer
 
 
 class LocationDetailTests(APITestCase):
