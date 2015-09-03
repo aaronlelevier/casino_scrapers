@@ -32,7 +32,7 @@ class Migration(migrations.Migration):
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
                 ('name', models.CharField(max_length=50)),
-                ('number', models.CharField(unique=True, max_length=50)),
+                ('number', models.CharField(max_length=50, null=True, blank=True)),
                 ('children', models.ManyToManyField(related_name='parents', to='location.Location', blank=True)),
             ],
             options={

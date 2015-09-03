@@ -2,9 +2,9 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-from django.contrib.postgres.operations import HStoreExtension
 import translation.models
 import django.contrib.postgres.fields.hstore
+from django.contrib.postgres.operations import HStoreExtension
 import uuid
 
 
@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('locale', models.SlugField(help_text=b'Example values: en, en-US, en-x-Sephora', unique=True)),
+                ('locale', models.SlugField(help_text=b'Example values: en, en-us, en-x-sephora', unique=True)),
                 ('default', models.BooleanField(default=False)),
                 ('name', models.CharField(help_text=b"Human readable name in forms. i.e. 'English'", max_length=50)),
                 ('native_name', models.CharField(max_length=50, null=True, blank=True)),

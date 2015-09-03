@@ -2,6 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
+import django.contrib.postgres.fields
 import django.contrib.auth.models
 import django.utils.timezone
 from django.conf import settings
@@ -44,6 +45,7 @@ class Migration(migrations.Migration):
                 ('employee_id', models.CharField(max_length=100, null=True, blank=True)),
                 ('middle_initial', models.CharField(max_length=1, null=True, blank=True)),
                 ('title', models.CharField(max_length=100, null=True, blank=True)),
+                ('password_lenth', models.PositiveIntegerField(help_text=b'Store the length of the current password.', null=True, blank=True)),
                 ('password_expire', models.DateField(null=True, blank=True)),
                 ('password_one_time', models.CharField(max_length=255, null=True, blank=True)),
                 ('password_change', models.TextField(help_text=b'Tuple of (datetime of PW change, old PW)')),
@@ -107,8 +109,9 @@ class Migration(migrations.Migration):
                 ('modules', models.TextField(blank=True)),
                 ('dashboad_links', models.TextField(blank=True)),
                 ('tabs', models.TextField(blank=True)),
+                ('password_can_change', models.BooleanField(default=True)),
                 ('password_min_length', models.PositiveIntegerField(default=6, blank=True)),
-                ('password_history_length', models.PositiveIntegerField(help_text=b'Will be NULL if password length has never been changed.', null=True, blank=True)),
+                ('password_history_length', django.contrib.postgres.fields.ArrayField(size=None, null=True, base_field=models.PositiveIntegerField(help_text=b'Will be NULL if password length has never been changed.', null=True, blank=True), blank=True)),
                 ('password_char_types', models.CharField(help_text=b'Password characters allowed', max_length=100)),
                 ('password_expire', models.PositiveIntegerField(help_text=b'Number of days after setting password that it will expire.', null=True, blank=True)),
                 ('password_expire_alert', models.BooleanField(default=True, help_text=b"Does the Person want to be alerted 'pre pw expiring'. Alerts start 3 days before password expires.")),

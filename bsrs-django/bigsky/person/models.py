@@ -6,6 +6,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.postgres.fields import ArrayField
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location
@@ -33,9 +34,15 @@ class Role(BaseModel):
     modules = models.TextField(blank=True)
     dashboad_links = models.TextField(blank=True)
     tabs = models.TextField(blank=True)
+    # Password
+    password_can_change = models.BooleanField(blank=True, default=True)
     password_min_length = models.PositiveIntegerField(blank=True, default=6)
-    password_history_length = models.PositiveIntegerField(blank=True, null=True,
-        help_text="Will be NULL if password length has never been changed.")
+    password_history_length = ArrayField(
+        base_field=models.PositiveIntegerField(blank=True, null=True,
+            help_text="Will be NULL if password length has never been changed."),
+        blank=True,
+        null=True
+        )
     password_char_types = models.CharField(max_length=100,
         help_text="Password characters allowed") # TODO: This field will need to be accessed when
                                                  # someone for the role saves their PW to validate it.
@@ -44,6 +51,7 @@ class Role(BaseModel):
     password_expire_alert = models.BooleanField(blank=True, default=True,
         help_text="Does the Person want to be alerted 'pre pw expiring'. " \
                   "Alerts start 3 days before password expires.")
+    # Proxy
     proxy_set = models.BooleanField(blank=True, default=False,
         help_text="Users in this Role can set their own proxy")
     # Default Settings
@@ -179,6 +187,8 @@ class Person(BaseModel, AbstractUser):
     # Passwords
     # TODO: use django default 1x PW logic here?
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
+    password_lenth = models.PositiveIntegerField(blank=True, null=True,
+        help_text="Store the length of the current password.")
     password_expire = models.DateField(blank=True, null=True)
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
     password_change = models.TextField(help_text="Tuple of (datetime of PW change, old PW)")
@@ -202,12 +212,21 @@ class Person(BaseModel, AbstractUser):
     objects = PersonManager()
     objects_all = UserManager()
 
+    __original_password = {}
+
+    def __init__(self, *args, **kwargs):
+        super(Role, self).__init__(*args, **kwargs)
+        self.__original_password = self.password
+
     def __str__(self):
         return self.username
 
     def save(self, *args, **kwargs):
         self._update_defaults()
         self._validate_locations()
+        # password change
+        if self.password != self.__original_password:
+            self.role.password_history_length.append()
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
