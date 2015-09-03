@@ -3,7 +3,7 @@ import inject from 'bsrs-ember/utilities/inject';
 import injectStore from 'bsrs-ember/utilities/store';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-export default Ember.Component.extend(ValidationMixin, {
+var LocationLevelNew = Ember.Component.extend(ValidationMixin, {
     store: injectStore('main'),
     repository: inject('location-level'),
     nameValidation: validate('model.name'),
@@ -37,3 +37,4 @@ export default Ember.Component.extend(ValidationMixin, {
     }
 });
 
+export default LocationLevelNew;

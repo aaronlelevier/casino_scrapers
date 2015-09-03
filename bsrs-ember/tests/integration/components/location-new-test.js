@@ -40,7 +40,6 @@ test('selecting a location level will append the location id to the location lev
     assert.deepEqual(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
     assert.ok(location_level_one.get('isNotDirty'));
     assert.ok(location_level_two.get('isDirty'));
-
     this.$('.t-location-level').val(LOCATION_LEVEL_DEFAULTS.idOne).trigger('change');
     assert.equal(location_level_two.get('locations.length'), 1);
     assert.deepEqual(location_level_two.get('locations'), [LOCATION_DEFAULTS.unusedId]);
@@ -51,3 +50,13 @@ test('selecting a location level will append the location id to the location lev
     assert.ok(location_level_two.get('isNotDirty'));
     assert.ok(location_level_one.get('isDirty'));
 });
+
+// test('user cannot enter current location level in store', function(assert) {
+//     var location_level_two = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idTwo, name: LOCATION_LEVEL_DEFAULTS.nameCompany, locations: [LOCATION_DEFAULTS.unusedId]});
+//     var location_level_one = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, locations: []});
+//     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, location_level_fk: undefined});
+//     var all_location_levels = store.find('location-level');
+//     this.set('model', location);
+//     this.set('all_location_levels', all_location_levels);
+//     this.render(hbs`{{locations/new-location model=model all_location_levels=all_location_levels}}`);
+// });

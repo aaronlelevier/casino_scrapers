@@ -11,10 +11,10 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         this.allChildrenArray = location_level_defaults.companyChildren;
         this.districtChildrenArray = location_level_defaults.districtChildrenArray;
     };
-    factory.prototype.generate = function(i) {
+    factory.prototype.generate = function(i, name) {
         return {
             id: i,
-            name : this.nameCompany,
+            name : name || this.nameCompany,
             children: [],
             parents: []
         }

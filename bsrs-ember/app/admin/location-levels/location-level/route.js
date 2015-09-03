@@ -10,7 +10,7 @@ var LocationLevelSingle =  Ember.Route.extend({
     },
     actions: {
         willTransition(transition) {
-            var model = this.currentModel.model;
+            var model = this.currentModel;
             if (model.get('isDirtyOrRelatedDirty')) {
                 Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;

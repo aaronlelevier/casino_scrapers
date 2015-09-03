@@ -85,7 +85,7 @@ test('visiting admin/location-level', (assert) => {
     });
 });
 
-test('sco a location level child can be selected and persisted', (assert) => {
+test('a location level child can be selected and persisted', (assert) => {
     clearxhr(list_xhr);
     clearxhr(detail_xhr);
     xhr(DJANGO_DISTRICT_DETAIL_URL, 'GET', null, {}, 200, location_level_district_detail_data);
@@ -96,12 +96,12 @@ test('sco a location level child can be selected and persisted', (assert) => {
         assert.equal(location_level.get('children_fks').length, 2);
         assert.equal(location_level.get('children').get('length'), 2);
     });
-    // let response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idDistrict);
-    // response.name = LOCATION_LEVEL_DEFAULTS.nameDistrict;
-    // let children = LOCATION_LEVEL_DEFAULTS.districtChildren;
-    // children.unshift(LOCATION_LEVEL_FIXTURES.idOne);
-    // let payload = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idDistrict, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, children: children});
-    // xhr(DJANGO_DISTRICT_DETAIL_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+    let response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idDistrict);
+    response.name = LOCATION_LEVEL_DEFAULTS.nameDistrict;
+    let children = LOCATION_LEVEL_DEFAULTS.districtChildren;
+    children.unshift(LOCATION_LEVEL_FIXTURES.idOne);
+    let payload = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idDistrict, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, children: children});
+    xhr(DJANGO_DISTRICT_DETAIL_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
     click('.selectize-input input');
     click('.t-location-level-location-level-select div.option:eq(0)');
     andThen(() => {
@@ -112,18 +112,18 @@ test('sco a location level child can be selected and persisted', (assert) => {
         assert.equal(find('.items > div.item').length, 3);
         assert.ok(location_level.get('isDirty'));
     });
-    // let list = LOCATION_LEVEL_FIXTURES.list();
-    // let children_array = LOCATION_LEVEL_DEFAULTS.districtChildren;
-    // children_array.push(children_array.shift());
-    // list.results[0].children = children_array;
-    // xhr(endpoint, 'GET', null, {}, 200, list);
-    // click(SAVE_BTN);
-    // andThen(() => {
-    //     assert.equal(currentURL(), LOCATION_LEVEL_URL);
-    //     let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
-    //     assert.deepEqual(location_level.get('children_fks'), children_array);
-    //     assert.ok(location_level.get('isNotDirty'));
-    // });
+    let list = LOCATION_LEVEL_FIXTURES.list();
+    let children_array = LOCATION_LEVEL_DEFAULTS.districtChildren;
+    children_array.push(children_array.shift());
+    list.results[0].children = children_array;
+    xhr(endpoint, 'GET', null, {}, 200, list);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_LEVEL_URL);
+        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
+        assert.deepEqual(location_level.get('children_fks'), children_array);
+        assert.ok(location_level.get('isNotDirty'));
+    });
 });
 
 test('when editing name to invalid, it checks for validation', (assert) => {
@@ -181,7 +181,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('sco when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
     click(CANCEL_BTN);

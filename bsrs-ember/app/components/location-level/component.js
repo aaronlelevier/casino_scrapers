@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
+import prevent_duplicate_name from 'bsrs-ember/validation/prevent_duplicate_name';
 
 var LocationLevelComponent = Ember.Component.extend(ValidationMixin, {
     repository: inject('location-level'),
@@ -13,6 +14,14 @@ var LocationLevelComponent = Ember.Component.extend(ValidationMixin, {
             return location_level.get('id') !== location_level_id;
         };
         return repository.peek(filter, ['id']);
+    }),
+    available_location_level_names: Ember.computed('available_location_levels.[]', function() {
+        let available_location_levels = this.get('available_location_levels');
+        let name_arr = [];
+        available_location_levels.forEach((loc_level) => {
+            name_arr.push(loc_level.get('name'));
+        });
+        return name_arr;
     }),
     actions: {
         saveLocationLevel() {

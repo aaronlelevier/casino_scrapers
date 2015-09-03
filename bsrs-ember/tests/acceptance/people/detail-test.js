@@ -35,7 +35,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store;
 
-module('Acceptance | amk detail test', {
+module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
