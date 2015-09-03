@@ -292,15 +292,12 @@ class LocationCreateTests(APITestCase):
         self.client.logout()
 
     def test_create(self):
-        new_uuid = str(uuid.uuid4())
         self.data.update({
-            'id': new_uuid,
+            'id': str(uuid.uuid4()),
             'number': create._generate_chars()
         })
         response = self.client.post('/api/admin/locations/', self.data, format='json')
         self.assertEqual(response.status_code, 201)
-
-    ### util.UniqueForActiveValidator - tests
 
     def test_create_unique_for_active_active(self):
         self.assertTrue(self.data['number'])

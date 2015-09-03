@@ -79,8 +79,13 @@ class LocationParentChildValidator(object):
         """
         values = kwargs.get(self.key, None)
         location_level = kwargs.get(self.location_level, None)
-        for v in values:
-            if location_level == v.location_level:
-                raise ValidationError(self.message.format(
-                    key=self.key, values=v.location_level,
-                    location_level=location_level))
+        try:
+            for v in values:
+                if location_level == v.location_level:
+                    raise ValidationError(self.message.format(
+                        key=self.key, values=v.location_level,
+                        location_level=location_level))
+        except TypeError:
+            # if "values" is None it will raise a TypeError here 
+            # b/c we can't iterate over None
+            pass
