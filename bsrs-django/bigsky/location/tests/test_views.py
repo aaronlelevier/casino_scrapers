@@ -58,7 +58,7 @@ class LocationLevelTests(APITestCase):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
         data = json.loads(response.content)
         self.assertIn(
-            LocationLevel.objects.get(id=data['children'][0]),
+            LocationLevel.objects.get(id=data['children'][0]['id']),
             self.district.children.all()
         )
 
@@ -160,32 +160,41 @@ class LocationListTests(APITestCase):
     def setUp(self):
         create_locations()
         self.location = Location.objects.get(name='ca')
+        self.location_status = mommy.make(LocationStatus)
+        self.location.status = self.location_status
+        self.location.save()
         # Login
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
+        # Response / data
+        self.response = self.client.get('/api/admin/locations/')
+        self.data = json.loads(self.response.content)
+        self.data_location = self.data['results'][0]
 
     def tearDown(self):
         self.client.logout()
 
     def test_list(self):
-        response = self.client.get('/api/admin/locations/')
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.response.status_code, 200)
 
     def test_list_status(self):
-        response = self.client.get('/api/admin/locations/')
-        data = json.loads(response.content)
         self.assertIsInstance(
-            LocationStatus.objects.get(id=data['results'][0]['status']['id']),
+            LocationStatus.objects.get(id=self.data['results'][0]['status']['id']),
             LocationStatus
         )
 
     def test_list_location_level(self):
-        response = self.client.get('/api/admin/locations/')
-        data = json.loads(response.content)
         self.assertIsInstance(
-            LocationLevel.objects.get(id=data['results'][0]['location_level']['id']),
+            LocationLevel.objects.get(id=self.data['results'][0]['location_level']['id']),
             LocationLevel
         )
+
+    def test_keys(self):
+        self.assertEqual(len(self.data_location), 5)
+
+    def test_nested(self):
+        self.assertTrue(self.data_location['status']['id'])
+        self.assertTrue(self.data_location['location_level']['id'])
 
 
 class LocationDetailTests(APITestCase):
@@ -196,45 +205,46 @@ class LocationDetailTests(APITestCase):
         # Login
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
+        # Response / Data
+        self.response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
+        self.data = json.loads(self.response.content)
 
     def tearDown(self):
         self.client.logout()
 
     def test_get(self):
-        response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.response.status_code, 200)
 
-    def test_get_location_level(self):
-        response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
-        data = json.loads(response.content)
+    def test_location_level(self):
         self.assertIsInstance(
-            LocationLevel.objects.get(id=data['location_level']['id']),
+            LocationLevel.objects.get(id=self.data['location_level']['id']),
             LocationLevel
         )
 
+    def test_location_level_nested(self):
+        self.assertTrue(self.data['location_level']['parents'][0]['id'])
+        self.assertTrue(self.data['location_level']['children'][0]['id'])
+
     def test_get_status(self):
-        response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
-        data = json.loads(response.content)
         self.assertIsInstance(
-            LocationStatus.objects.get(id=data['status']),
+            LocationStatus.objects.get(id=self.data['status']),
             LocationStatus
         )
 
     def test_get_parents(self):
-        response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
-        data = json.loads(response.content)
         self.assertIn(
-            Location.objects.get(id=data['parents'][0]['id']),
+            Location.objects.get(id=self.data['parents'][0]['id']),
             self.location.parents.all()
         )
 
     def test_get_children(self):
-        response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
-        data = json.loads(response.content)
         self.assertIn(
-            Location.objects.get(id=data['children'][0]['id']),
+            Location.objects.get(id=self.data['children'][0]['id']),
             self.location.children.all()
         )
+
+    def test_keys(self):
+        self.assertEqual(len(self.data), 7)
 
     ### DETAIL ROUTES
 
@@ -282,15 +292,12 @@ class LocationCreateTests(APITestCase):
         self.client.logout()
 
     def test_create(self):
-        new_uuid = str(uuid.uuid4())
         self.data.update({
-            'id': new_uuid,
+            'id': str(uuid.uuid4()),
             'number': create._generate_chars()
         })
         response = self.client.post('/api/admin/locations/', self.data, format='json')
         self.assertEqual(response.status_code, 201)
-
-    ### util.UniqueForActiveValidator - tests
 
     def test_create_unique_for_active_active(self):
         self.assertTrue(self.data['number'])
@@ -355,6 +362,43 @@ class LocationUpdateTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content)
         self.assertEqual(data['status'], str(new_status.id))
+
+    def test_update_parents(self):
+        new_location = mommy.make(Location)
+        self.data['parents'] = [str(new_location.id)]
+        self.assertNotEqual(new_location.location_level, self.location.location_level)
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        data = json.loads(response.content)
+        # ['parents'][0] is equal to an UUID here b/c 'parents' is an UUID Array
+        self.assertEqual(data['parents'][0], str(new_location.id))
+
+    def test_update_parents_same_location_level(self):
+        # This should raise a ValidationError (400) b/c Parents/Children can't 
+        # have the same LocationLevel as the Location
+        new_location = mommy.make(Location, location_level=self.location.location_level)
+        self.data['parents'] = [str(new_location.id)]
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_update_children(self):
+        new_location = mommy.make(Location)
+        self.data['children'] = [str(new_location.id)]
+        self.assertNotEqual(new_location.location_level, self.location.location_level)
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        data = json.loads(response.content)
+        self.assertEqual(data['children'][0], str(new_location.id))
+
+    def test_update_children_same_location_level(self):
+        # This should raise a ValidationError (400) b/c Parents/Children can't 
+        # have the same LocationLevel as the Location
+        new_location = mommy.make(Location, location_level=self.location.location_level)
+        self.data['children'] = [str(new_location.id)]
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 400)
 
     ### util.UniqueForActiveValidator - tests
 

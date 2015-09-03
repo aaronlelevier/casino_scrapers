@@ -115,7 +115,7 @@ class CategoryUpdateTests(APITestCase):
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
-        self.assertNotEqual(str(self.trade.parent.id), data['parent'])
+        self.assertEqual(str(new_category.id), data['parent'])
 
     def test_change_children(self):
         new_sub_category = mommy.make(Category, name='power', subcategory_label='sub_issue', parent=self.trade)
