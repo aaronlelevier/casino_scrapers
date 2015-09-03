@@ -70,7 +70,8 @@ uwsgi --http :$PORT \
     --daemonize /tmp/bigsky-persistent.log \
     --static-map /assets=/www/django/releases/persistent/bsrs/bsrs-django/bigsky \
     --static-map /fonts=/www/django/releases/persistent/bsrs/bsrs-django/bigsky \
-    --check-static /www/django/releases/persistent/bsrs/bsrs-django/bigsky
+    --check-static /www/django/releases/persistent/bsrs/bsrs-django/bigsky \
+    --enable-threads
 
 wait
 echo "OUTPUT LOG:"
