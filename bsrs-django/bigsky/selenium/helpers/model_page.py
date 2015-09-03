@@ -22,7 +22,7 @@ class ModelPage(JavascriptMixin):
 
     def find_and_assert_elems(self, **kwargs):
         for k, v in kwargs.iteritems():
-            setattr(self, k + "_input", self.find_id_element(k))
+            setattr(self, k + "_input", self.driver.find_element_by_id(k))
             assert getattr(self, k + "_input").get_attribute("value") == v
 
     def find_list_name(self):

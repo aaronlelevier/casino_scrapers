@@ -2,7 +2,13 @@ import time
 
 
 class JavascriptMixin(object):
+    """
+    Wait for a jQuery ``$.active`` flag before returning the element.
 
+    Can only be Mixed-in with classes containing a Selenium driver because 
+    requires the driver to check for elements.
+    """
+    
     def wait_for_xhr_request(self, selector, plural=False):
         for w in range(10):
             print "waiting for xhr callback...{}".format(selector)

@@ -1,33 +1,22 @@
-from method_helpers import MethodHelpers
-from base_page import BasePage
+from .model_page import ModelPage
 
-class PersonPage(BasePage, MethodHelpers):
+
+class PersonPage(ModelPage):
     '''
     Person page containing all DOM nodes
     '''
-    def click_btn(self):
-       element = self.find_id_element()
 
-    def find_new_link(self):
-        return self.wait_xhr("t-person-new")
-
-    def find_wait_and_assert_elem(self, elem, value):
-        elem_input = self.wait_xhr(elem)
-        assert elem_input.get_attribute("value") == value
-
-    def find_and_assert_elems(self, **kwargs):
-        for k,v in kwargs.iteritems():
-            setattr(self, k + "_input", self.find_id_element(k))
-            assert getattr(self, k + "_input").get_attribute("value") == v
-
-    def find_list_name(self):
-        return self.wait_xhr("t-person-username", plural=True)
-
-    def find_list_data(self):
-        return self.wait_xhr("t-person-data", plural=True)
+    def __init__(self, driver, new_link, list_name, list_data, *args, **kwargs):
+        super(ModelPage, self).__init__(*args, **kwargs)
+        # Selenium
+        self.driver = driver
+        # Page
+        self.new_link = new_link
+        self.list_name = list_name
+        self.list_data = list_data
 
     def click_name_in_list(self, name, new_person):
-        pagination = self.wait_xhr("t-pages")
+        pagination = self.wait_for_xhr_request("t-pages")
         element_list = pagination.find_elements_by_tag_name("li")
         element_list_len = len(element_list)
         count = 0
@@ -43,18 +32,18 @@ class PersonPage(BasePage, MethodHelpers):
             if new_person:
                 break
             count += 1
-            pagination = self.find_class_element("t-pages")
+            pagination = self.driver.find_element_by_class_name("t-pages")
             element_list = pagination.find_elements_by_tag_name("a")
             next_elem = element_list[count]
             next_elem.click()
         return new_person
 
     def find_ph_new_entry_send_keys(self, phone_num):
-        first_phone_number_input = self.find_class_element("t-new-entry")
+        first_phone_number_input = self.driver.find_element_by_class_name("t-new-entry")
         first_phone_number_input.send_keys(phone_num)
 
     def find_all_ph_new_entries(self):
-        return self.find_class_elements("t-new-entry")
+        return self.driver.find_elements_by_class_name("t-new-entry")
 
     def assert_ph_inputs(self, inputs, *args):
         assert len(inputs) == 2
@@ -62,7 +51,7 @@ class PersonPage(BasePage, MethodHelpers):
         assert inputs[1].get_attribute("value") == args[1]
 
     def assert_name_not_in_list(self, name, new_person):
-        pagination = self.find_class_element("t-pages")
+        pagination = self.driver.find_element_by_class_name("t-pages")
         element_list = pagination.find_elements_by_tag_name("li")
         element_list_len = len(element_list)
         count = 0
@@ -76,7 +65,7 @@ class PersonPage(BasePage, MethodHelpers):
                 if row.text and row.text == name:
                     new_person = row
             count += 1
-            pagination = self.find_class_element("t-pages")
+            pagination = self.driver.find_element_by_class_name("t-pages")
             try:
                 element_list = pagination.find_elements_by_tag_name("a")
                 next_elem = element_list[count]
