@@ -38,10 +38,10 @@ class Role(BaseModel):
     password_can_change = models.BooleanField(blank=True, default=True)
     password_min_length = models.PositiveIntegerField(blank=True, default=6)
     password_history_length = ArrayField(
-        base_field=models.PositiveIntegerField(blank=True, null=True,
+        base_field=models.PositiveIntegerField(
             help_text="Will be NULL if password length has never been changed."),
         blank=True,
-        null=True
+        default=[]
         )
     password_char_types = models.CharField(max_length=100,
         help_text="Password characters allowed") # TODO: This field will need to be accessed when
@@ -100,21 +100,21 @@ class Role(BaseModel):
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
 
-    def save(self, *args, **kwargs):
+    __original_values = {}
 
-        if not self.group:
-            try:
-                self.group, created = Group.objects.get_or_create(name=self.name)
-            except IntegrityError:
-                raise
-
-        if not self.default_auth_currency:
-            self.default_auth_currency = Currency.objects.default()
-
-        return super(Role, self).save(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Role, self).__init__(*args, **kwargs)
+        self.__original_values.update({
+            'password_min_length': self.password_min_length
+        })
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self._update_defaults()
+        self._update_password_history_length()
+        return super(Role, self).save(*args, **kwargs)
 
     @property
     def _name(self):
@@ -124,6 +124,25 @@ class Role(BaseModel):
         if not self.location_level:
             return {"id": str(self.pk), "name": self.name}
         return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
+
+    def _update_defaults(self):
+        if not self.group:
+            try:
+                self.group, created = Group.objects.get_or_create(name=self.name)
+            except IntegrityError:
+                raise
+
+        if not self.default_auth_currency:
+            self.default_auth_currency = Currency.objects.default()
+
+    def _update_password_history_length(self):
+        """
+        Append the previous ``password_min_length`` to the ``password_history_length`` 
+        if the ``password_min_length`` has changed.
+        """
+        if self.password_min_length != self.__original_values['password_min_length']:
+            self.password_history_length.append(self.__original_values['password_min_length'])
+            self.__original_values['password_min_length'] = self.password_min_length
 
 
 class ProxyRole(BaseModel):
@@ -187,7 +206,7 @@ class Person(BaseModel, AbstractUser):
     # Passwords
     # TODO: use django default 1x PW logic here?
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
-    password_lenth = models.PositiveIntegerField(blank=True, null=True,
+    password_length = models.PositiveIntegerField(blank=True, null=True,
         help_text="Store the length of the current password.")
     password_expire = models.DateField(blank=True, null=True)
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
@@ -212,21 +231,12 @@ class Person(BaseModel, AbstractUser):
     objects = PersonManager()
     objects_all = UserManager()
 
-    __original_password = {}
-
-    def __init__(self, *args, **kwargs):
-        super(Role, self).__init__(*args, **kwargs)
-        self.__original_password = self.password
-
     def __str__(self):
         return self.username
 
     def save(self, *args, **kwargs):
         self._update_defaults()
         self._validate_locations()
-        # password change
-        if self.password != self.__original_password:
-            self.role.password_history_length.append()
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
