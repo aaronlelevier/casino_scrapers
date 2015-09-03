@@ -28,24 +28,22 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
-const PEOPLE_URL = '/admin/people';
-const DETAIL_URL = PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
+const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
+const DETAIL_URL = BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 
-var application, store;
+var application, store, list_xhr;
 
 module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-
-        var endpoint = PREFIX + PEOPLE_URL + '/';
+        var endpoint = PREFIX + BASE_PEOPLE_URL + '/';
         var people_list_data = PEOPLE_FIXTURES.list();
         var people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
         var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
-
-        xhr(endpoint, 'GET', null, {}, 200, people_list_data);
+        list_xhr = xhr(endpoint, 'GET', null, {}, 200, people_list_data);
         xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
         xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
 
@@ -56,9 +54,9 @@ module('Acceptance | detail test', {
 });
 
 test('clicking a persons name will redirect to the given detail view', (assert) => {
-    visit(BASE_PEOPLE_URL);
+    visit(PEOPLE_URL);
     andThen(() => {
-        assert.equal(currentURL(), BASE_PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_URL);
     });
     click('.t-person-data:eq(0)');
     andThen(() => {
@@ -118,7 +116,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name,
                                       middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title,
-                                        employee_id: PEOPLE_DEFAULTS_PUT.employee_id, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount, locale: PEOPLE_DEFAULTS_PUT.locale });
+    employee_id: PEOPLE_DEFAULTS_PUT.employee_id, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount, locale: PEOPLE_DEFAULTS_PUT.locale });
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.first_name);
@@ -264,9 +262,9 @@ test('when editing phone numbers to invalid, it checks for validation', (assert)
 });
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
-    visit(BASE_PEOPLE_URL);
+    visit(PEOPLE_URL);
     andThen(() => {
-        assert.equal(currentURL(), BASE_PEOPLE_URL);
+        assert.equal(currentURL(), PEOPLE_URL);
     });
     click('.t-person-data:eq(0)');
     andThen(() => {
@@ -320,6 +318,7 @@ test('when you change a related role it will be persisted correctly', (assert) =
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+    clearxhr(list_xhr);
     visit(DETAIL_URL);
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     click('.t-cancel-btn');
@@ -406,6 +405,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
 });
 
 test('currency helper displays correct currency format', (assert) => {
+    clearxhr(list_xhr);
     visit(DETAIL_URL);
     var symbol = '$';
     andThen(() => {
@@ -415,7 +415,7 @@ test('currency helper displays correct currency format', (assert) => {
 
 test('when click delete, person is deleted and removed from store', (assert) => {
     visit(DETAIL_URL);
-    xhr(PREFIX + PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id + '/', 'DELETE', null, {}, 204, {});
+    xhr(PREFIX + BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id + '/', 'DELETE', null, {}, 204, {});
     click('.t-delete-btn');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -651,24 +651,20 @@ test('when you deep link to the person detail view you can alter the role and ro
 });
 
 test('when changing the locale for a user (not current user), the language is not updated on the site', (assert) => {
-  visit(DETAIL_URL);
-  andThen(() => {
-
-    assert.equal(currentURL(), DETAIL_URL);
-    var person = store.find('person', PEOPLE_DEFAULTS.id);
-
-    assert.ok(person.get('id') !== PERSON_CURRENT_DEFAULTS.id);
-
-    assert.equal(find('.t-person-first-name').val(), PEOPLE_DEFAULTS.first_name);
-    assert.equal(find('.t-locale-select option:selected').val(), PEOPLE_DEFAULTS.locale);
-    assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
-
-    fillIn('.t-locale-select', PEOPLE_DEFAULTS.locale2);
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
     andThen(() => {
-      assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
+        assert.equal(currentURL(), DETAIL_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('id') !== PERSON_CURRENT_DEFAULTS.id);
+        assert.equal(find('.t-person-first-name').val(), PEOPLE_DEFAULTS.first_name);
+        assert.equal(find('.t-locale-select option:selected').val(), PEOPLE_DEFAULTS.locale);
+        assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
+        fillIn('.t-locale-select', PEOPLE_DEFAULTS.locale2);
+        andThen(() => {
+            assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
+        });
     });
-
-  });
 });
 test('when you deep link to the person detail view you can add and save a location', (assert) => {
     visit(DETAIL_URL);

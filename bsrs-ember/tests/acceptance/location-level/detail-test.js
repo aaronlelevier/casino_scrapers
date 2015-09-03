@@ -181,7 +181,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-test('sco when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
     click(CANCEL_BTN);

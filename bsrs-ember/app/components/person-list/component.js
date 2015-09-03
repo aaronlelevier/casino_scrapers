@@ -26,12 +26,12 @@ export default Ember.Component.extend({
             repository.findWithQuery(page, sort, search);
         }
     }, //TODO: test drive that trim is needed / and toLowerCase inside the regex
-    searched_content: Ember.computed('page', 'sort', 'search', 'model.model.[]', function() {
+    searched_content: Ember.computed('page', 'sort', 'search', 'model.[]', function() {
         var search = this.get('search') ? this.get('search').trim() : '';
         this.query_django(search);
         var regex = new RegExp(search);
         var filter = this.get('searchable').map(function(property) {
-            return this.get('model.model').filter(function(object) {
+            return this.get('model').filter(function(object) {
                 var value = object.get(property) ? object.get(property).toLowerCase() : null;
                 return regex.test(value);
             });
@@ -51,9 +51,9 @@ export default Ember.Component.extend({
         var lowerBound = (page * itemsPerPage) - itemsPerPage;
         return this.get('sorted_content').slice(lowerBound, upperBound);
     }),
-    pages: Ember.computed('model.model.count', function() {
+    pages: Ember.computed('model.count', function() {
         var pages = [];
-        var total = this.get('model.model.count') / this.get('itemsPerPage') || 1;
+        var total = this.get('model.count') / this.get('itemsPerPage') || 1;
         for(var p=1; p <= Math.ceil(total); p++) {
             pages.push(p);
         }

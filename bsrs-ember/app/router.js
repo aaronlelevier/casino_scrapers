@@ -27,7 +27,7 @@ Router.map(function() {
         this.route('assignments');
         this.route('approvals');
         this.route('people', function() {
-            //this.route('index');
+            this.route('index');
             this.route('new');
             this.route('person', {path: '/:person_id'});
         });

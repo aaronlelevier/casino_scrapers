@@ -10,7 +10,8 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 var application, originalLoggerError, originalTestAdapterException;
 
 const PREFIX = config.APP.NAMESPACE;
-const PEOPLE_URL = "/admin/people";
+const BASE_URL = BASEURLS.base_people_url;
+const PEOPLE_URL = BASE_URL + '/index';
 
 module('Acceptance | application redirect test', {
     beforeEach() {
@@ -18,7 +19,7 @@ module('Acceptance | application redirect test', {
         //required to allow tests to pass.
         //Ember configures a Ember.RSVP.on('error', function() {}) for testing which requires
         //each promise to handle the error scenario with a .then() error function or .catch()
-        var endpoint = PREFIX + PEOPLE_URL + "/";
+        var endpoint = PREFIX + BASE_URL + "/";
         xhr( endpoint ,'GET',null,{},403,[] );
         originalLoggerError = Ember.Logger.error;
         originalTestAdapterException = Ember.Test.adapter.exception;
