@@ -10,6 +10,10 @@ fuser $PORT/tcp
 echo "UWSGI KILL:"
 fuser -k $PORT/tcp
 
+wait
+echo "SHOULD BE NO UWSGI PROCESSES HERE:"
+fuser $PORT/tcp
+
 if [  ! -d "/www/django/releases/persistent" ]; then
     mkdir /www/django/releases/persistent
 fi
@@ -63,10 +67,14 @@ cp -r ../../bsrs-ember/dist/index.html templates
 uwsgi --http :$PORT \
     --wsgi-file bigsky.wsgi \
     --virtualenv /www/django/releases/python2/$NEW_UUID/bsrs-django/venv \
-    --daemonize /tmp/bigsky.log \
+    --daemonize /tmp/bigsky-persistent.log \
     --static-map /assets=/www/django/releases/python2/$NEW_UUID/bsrs-django/bigsky \
     --static-map /fonts=/www/django/releases/python2/$NEW_UUID/bsrs-django/bigsky \
     --check-static /www/django/releases/python2/$NEW_UUID/bsrs-django/bigsky
+
+wait
+echo "OUTPUT LOG:"
+cat /tmp/bigsky-persistent.log
 
 echo "DEPLOY FINISHED!"
 exit 0
