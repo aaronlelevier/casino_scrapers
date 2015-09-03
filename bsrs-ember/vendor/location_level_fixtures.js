@@ -19,7 +19,8 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         }
     };
     factory.prototype.detail = function(i) {
-        return {id: this.idOne, name : this.nameCompany, children: this.allChildrenArray};
+        var idDetail = i || this.idOne;
+        return {id: idDetail, name : this.nameCompany, children: this.allChildrenArray};
     };
     factory.prototype.detail_district = function(i) {
         return {id: this.idOne, name: this.nameDistrict, children: this.districtChildrenArray};
