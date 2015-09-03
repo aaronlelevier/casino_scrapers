@@ -104,7 +104,8 @@ class LocationUpdateSerializer(serializers.ModelSerializer):
         model = Location
         validators = [
             UniqueForActiveValidator(Location, 'number'),
-            LocationParentChildValidator('location_level', 'parents')
+            LocationParentChildValidator('location_level', 'parents'),
+            LocationParentChildValidator('location_level', 'children')
         ]
         fields = ('id', 'name', 'number', 'status', 'location_level',
             'parents', 'children',)

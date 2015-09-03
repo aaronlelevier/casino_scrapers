@@ -394,6 +394,15 @@ class LocationUpdateTests(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(data['children'][0], str(new_location.id))
 
+    def test_update_children_same_location_level(self):
+        # This should raise a ValidationError (400) b/c Parents/Children can't 
+        # have the same LocationLevel as the Location
+        new_location = mommy.make(Location, location_level=self.location.location_level)
+        self.data['children'] = [str(new_location.id)]
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 400)
+
     ### util.UniqueForActiveValidator - tests
 
     def test_update_unique_for_active_active(self):

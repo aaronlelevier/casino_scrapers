@@ -79,10 +79,8 @@ class LocationParentChildValidator(object):
         """
         values = kwargs.get(self.key, None)
         location_level = kwargs.get(self.location_level, None)
-        print "values:", values
-        print "location_level:", location_level
         for v in values:
             if location_level == v.location_level:
                 raise ValidationError(self.message.format(
-                    key=self.key, values=v.location_level, location_level=location_level))
-    
+                    key=self.key, values=v.location_level,
+                    location_level=location_level))
