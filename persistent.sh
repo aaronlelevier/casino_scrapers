@@ -66,11 +66,11 @@ cp -r ../../bsrs-ember/dist/index.html templates
 
 uwsgi --http :$PORT \
     --wsgi-file bigsky.wsgi \
-    --virtualenv /www/django/releases/python2/$NEW_UUID/bsrs-django/venv \
+    --virtualenv /www/django/releases/persistent/bsrs/bsrs-django/venv \
     --daemonize /tmp/bigsky-persistent.log \
-    --static-map /assets=/www/django/releases/python2/$NEW_UUID/bsrs-django/bigsky \
-    --static-map /fonts=/www/django/releases/python2/$NEW_UUID/bsrs-django/bigsky \
-    --check-static /www/django/releases/python2/$NEW_UUID/bsrs-django/bigsky
+    --static-map /assets=/www/django/releases/persistent/bsrs/bsrs-django/bigsky \
+    --static-map /fonts=/www/django/releases/persistent/bsrs/bsrs-django/bigsky \
+    --check-static /www/django/releases/persistent/bsrs/bsrs-django/bigsky
 
 wait
 echo "OUTPUT LOG:"
