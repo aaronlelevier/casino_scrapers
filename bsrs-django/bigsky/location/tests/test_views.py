@@ -376,6 +376,15 @@ class LocationUpdateTests(APITestCase):
         # ['parents'][0] is equal to an UUID here b/c 'parents' is an UUID Array
         self.assertEqual(data['parents'][0], str(new_location.id))
 
+    def test_update_parents_same_location_level(self):
+        # This should raise a ValidationError (400) b/c Parents/Children can't 
+        # have the same LocationLevel as the Location
+        new_location = mommy.make(Location, location_level=self.location.location_level)
+        self.data['parents'] = [str(new_location.id)]
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 400)
+
     def test_update_children(self):
         new_location = mommy.make(Location)
         self.data['children'] = [str(new_location.id)]
