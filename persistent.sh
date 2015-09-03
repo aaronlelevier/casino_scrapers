@@ -20,6 +20,7 @@ if [  -d "/www/django/releases/persistent/bsrs" ];
     then
         echo "BSRS REPO EXISTS"
         cd bsrs
+        git checkout .
         git pull
     else
         echo "BSRS REPO DOES NOT EXIST"
