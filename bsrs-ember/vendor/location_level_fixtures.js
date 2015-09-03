@@ -8,6 +8,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         // this.nameStore = location_level_defaults.nameStore;
         this.nameDistrict = location_level_defaults.nameDistrict;
         this.allChildrenArray = location_level_defaults.companyChildren;
+        this.districtChildrenArray = location_level_defaults.districtChildrenArray;
     };
     factory.prototype.generate = function(i) {
         return {
@@ -19,6 +20,9 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
     };
     factory.prototype.detail = function(i) {
         return {id: this.idOne, name : this.nameCompany, children: this.allChildrenArray};
+    };
+    factory.prototype.detail_district = function(i) {
+        return {id: this.idOne, name: this.nameDistrict, children: this.districtChildrenArray};
     };
     factory.prototype.list = function() {
         response = [ { id: this.idOne, name : this.nameCompany }, { id: this.idTwo, name : this.nameDistrict}, { id: this.idThree, name : this.nameRegion} ];
@@ -33,6 +37,16 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
             location_levels[key] = level[key];
         }
         return location_levels;
+    };
+    factory.prototype.all_location_levels = function() {
+        return [{'id': '85c18266-dfca-4499-9cff-7c5c6970af7e','name':'admin.locationlevel.company', 'children': ['c42bd2fc-d959-4896-9b89-aa2b2136ab9a', 'ef2b1f9c-f277-433f-8431-bda21d2d9a74', 'f7199d15-b78b-4db9-b28f-cc95b4662804', '558d3cb9-f076-4303-a818-84799806d698', '73dcbd73-8fad-4152-b92c-3408c2029a65', '8854f6c5-58c7-4849-971f-e8df9e15e559', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f']}, 
+            {'id': 'c42bd2fc-d959-4896-9b89-aa2b2136ab9a','name':'admin.locationlevel.region', 'children': ['73dcbd73-8fad-4152-b92c-3408c2029a65', '8854f6c5-58c7-4849-971f-e8df9e15e559', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f']}, 
+            {'id':'73dcbd73-8fad-4152-b92c-3408c2029a65', 'name': 'admin.locationlevel.district', 'children': ['8854f6c5-58c7-4849-971f-e8df9e15e559', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f'] }, 
+            {'id': '8854f6c5-58c7-4849-971f-e8df9e15e559', 'name': 'admin.locationlevel.store', 'children':['b42bd1fc-d959-4896-9b89-aa2b2136ab7f']}, 
+            {'id': 'ef2b1f9c-f277-433f-8431-bda21d2d9a74','name':'admin.locationlevel.facility_management', 'children': ['8854f6c5-58c7-4849-971f-e8df9e15e559', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f']}, 
+            {'id': 'f7199d15-b78b-4db9-b28f-cc95b4662804', 'name': 'admin.locationlevel.loss_prevention_region', 'children':['8854f6c5-58c7-4849-971f-e8df9e15e559', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f', '558d3cb9-f076-4303-a818-84799806d698']},
+            {'id': '558d3cb9-f076-4303-a818-84799806d698', 'name': 'admin.locationlevel.loss_prevention_district', 'children':['8854f6c5-58c7-4849-971f-e8df9e15e559', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f']}, 
+            {'id': 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f','name':'admin.locationlevel.department', 'children': [] }];
     };
     return factory;
 })();

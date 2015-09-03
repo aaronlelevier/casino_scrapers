@@ -1,5 +1,11 @@
-<select class="t-location-level-children form-control location_level" id="location_level_children" multiple>
-  {{#each model as |child|}}
-  <option value={{child.id}}>{{t child.name}}</option>
-  {{/each}}
-</select>
+{{ember-selectize
+  required=true
+  multiple=true
+  content=options
+  optionValuePath="content.id"
+  optionLabelPath="content.name"
+  selection=location_level_ids
+  add-item="change"
+  remove-item="change"
+  class="t-location-level-location-level-select"
+  placeholder="select a location level"}}

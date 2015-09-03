@@ -4,11 +4,16 @@ import inject from 'bsrs-ember/utilities/inject';
 var LocationLevelSingle =  Ember.Route.extend({
     repository: inject('location-level'),
     model(params) {
-        var location_pk = params.location_level_id;
+        var location_level_pk = params.location_level_id;
         var repository = this.get('repository');
-        var model = repository.findById(location_pk);
+        var model = repository.findById(location_level_pk);
+        let filter = (location_level) => {
+            return location_level.get('id') !== location_level_pk; 
+        };
+        let all_location_levels = this.get('store').find('location-level', filter.bind(this), ['id']);
         return Ember.RSVP.hash({
             model: model,
+            all_location_levels: all_location_levels
         });
     },
     setupController: function(controller, hash) {
