@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var NewNewRollbackModalMixin = Ember.Mixin.create({
+var NewRollbackModalMixin = Ember.Mixin.create({
     actions: {
         willTransition(transition) {
             var model = this.currentModel.model ? this.currentModel.model : this.currentModel;
@@ -17,4 +17,4 @@ var NewNewRollbackModalMixin = Ember.Mixin.create({
     }
 });
 
-export default NewNewRollbackModalMixin;
+export default NewRollbackModalMixin;
