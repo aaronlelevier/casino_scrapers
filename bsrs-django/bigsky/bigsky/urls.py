@@ -49,6 +49,7 @@ urlpatterns = patterns('',
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 )
 
+
 # Logout Required
 urlpatterns += required(
     logout_required,

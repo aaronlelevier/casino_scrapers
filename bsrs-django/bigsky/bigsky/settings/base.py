@@ -33,6 +33,7 @@ THIRD_PARTY_APPS = (
     'rest_framework',
     # testing
     'django_nose',
+    'django_coverage',
     'debug_toolbar',
     'django_extensions',
     )
@@ -150,11 +151,11 @@ CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:80
 ################
 
 ### CATEGORY
-
 TOP_LEVEL_CATEGORY_LABEL = 'type'
 
 ### LOCATION
-
 DEFAULT_LOCATION_STATUS = 'Open'
-
 DEFAULT_LOCATION_TYPE = 'big_store'
+
+### PERSON
+PASSWORD_EXPIRE_DAYS = 90

@@ -1,7 +1,10 @@
 import re
+from datetime import timedelta
 
 from django.db import models, IntegrityError
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager, Group
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -40,17 +43,21 @@ class Role(BaseModel):
     password_history_length = ArrayField(
         base_field=models.PositiveIntegerField(
             help_text="Will be NULL if password length has never been changed."),
-        blank=True,
-        default=[]
-        )
+        blank=True, default=[])
+    password_digit_required = models.BooleanField(blank=True, default=False)
+    password_lower_char_required = models.BooleanField(blank=True, default=False)
+    password_upper_char_required = models.BooleanField(blank=True, default=False)
+    password_special_char_required = models.BooleanField(blank=True, default=False)
     password_char_types = models.CharField(max_length=100,
         help_text="Password characters allowed") # TODO: This field will need to be accessed when
                                                  # someone for the role saves their PW to validate it.
-    password_expire = models.PositiveIntegerField(blank=True, null=True,
-        help_text="Number of days after setting password that it will expire.")
+    password_expire = models.IntegerField(blank=True, default=90,
+        help_text="Number of days after setting password that it will expire."
+                  "If '0', password will never expire.")
     password_expire_alert = models.BooleanField(blank=True, default=True,
         help_text="Does the Person want to be alerted 'pre pw expiring'. " \
                   "Alerts start 3 days before password expires.")
+    password_expired_login_count = models.IntegerField(blank=True, null=True)
     # Proxy
     proxy_set = models.BooleanField(blank=True, default=False,
         help_text="Users in this Role can set their own proxy")
@@ -208,7 +215,9 @@ class Person(BaseModel, AbstractUser):
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
     password_length = models.PositiveIntegerField(blank=True, null=True,
         help_text="Store the length of the current password.")
-    password_expire = models.DateField(blank=True, null=True)
+    password_expire_date = models.DateField(blank=True, null=True,
+        help_text="Date that the Person's password will expire next. "
+                  "Based upon the ``password_expire`` days set on the Role.")
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
     password_change = models.TextField(help_text="Tuple of (datetime of PW change, old PW)")
     # Out-of-the-Office
@@ -252,6 +261,14 @@ class Person(BaseModel, AbstractUser):
             'role': str(self.role.id)
         }
 
+    def set_password(self, raw_password):
+        try:
+            self.password_expire_date = self._password_expire_date
+        except:
+            self.password_expire_date = (timezone.now().date() + 
+                                         timedelta(days=settings.PASSWORD_EXPIRE_DAYS))
+        super(Person, self).set_password(raw_password)
+
     def _get_locale(self, locale):
         """Resolve the Locale using the Accept-Language Header. If not 
         found, use the system default Locale.
@@ -277,6 +294,12 @@ class Person(BaseModel, AbstractUser):
             self.auth_amount = self.role.default_auth_amount
         if not self.auth_currency:
             self.auth_currency = self.role.default_auth_currency
+        if not self.password_expire_date:
+            self.password_expire_date = self._password_expire_date
+
+    @property
+    def _password_expire_date(self):
+        return timezone.now().date() + timedelta(days=self.role.password_expire)
 
     def _validate_locations(self):
         """Remove invalid Locations from the Person based on

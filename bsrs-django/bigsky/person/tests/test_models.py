@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.test import TestCase
 from django.contrib.auth.models import AbstractUser, Group
 
@@ -24,6 +26,24 @@ class RoleTests(TestCase):
 
     def test_to_dict(self):
         self.assertEqual(self.role.to_dict()["location_level"], str(self.role.location_level.id))
+
+    def test_update_password_history_length(self):
+        self.assertFalse(self.role.password_history_length)
+        self.assertIsInstance(self.role.password_history_length, list)
+        # password lengths
+        first_pw_len = self.role.password_min_length
+        second_pw_len = 10
+        third_pw_len = 12
+        self.role.password_min_length = second_pw_len
+        self.role.save()
+        self.assertEqual(self.role.password_history_length, [first_pw_len])
+        self.role.password_min_length = third_pw_len
+        self.role.save()
+        self.assertEqual(
+            self.role.password_history_length,
+            [first_pw_len, second_pw_len]
+        )
+
 
 class PersonStatusManagerTests(TestCase):
 
@@ -80,6 +100,10 @@ class PersonTests(TestCase):
         self.assertIsNone(self.person.status)
         self.person._update_defaults()
         self.assertIsNotNone(self.person.status)
+        self.assertIsNotNone(self.person.password_expire_date)
+
+    def test_password_expire_date(self):
+        self.assertIsInstance(self.person._password_expire_date, date)
 
     def test_validate_locations(self):
         self.person._validate_locations()
