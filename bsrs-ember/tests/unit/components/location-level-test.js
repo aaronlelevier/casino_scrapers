@@ -15,7 +15,7 @@ module('sco prevent duplicate name tests', {
         container = registry.container();
         store = module_registry(container, registry, ['model:location-level']);
         location_level_repo = repository.initialize(container, registry, 'location-level');
-        location_level_repo.peek = function(filter) { return store.find('location-level', filter, ['id']) };//TODO: filter need to be defined??
+        location_level_repo.peek = function(filter) { return store.find('location-level', filter, ['id']); };//TODO: filter need to be defined??
     },
     afterEach() {
         container = null;
