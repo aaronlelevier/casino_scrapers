@@ -30,7 +30,7 @@ function pipInstall {
     rm -rf venv
     virtualenv venv
     source venv/bin/activate
-    pip install -r requirements.txt --no-use-wheel
+    pip install -r requirements.txt
     PIP_INSTALL=$?
     if [ "$PIP_INSTALL" == 1 ]; then
       echo "pip install failed"
@@ -117,14 +117,14 @@ function runSeleniumTests {
 }
 
 cd bsrs-ember
-#npmInstall
-#emberTest
+npmInstall
+emberTest
 
 cd ../bsrs-django
-#pipInstall
+pipInstall
 
 cd bigsky
-#djangoTest
+djangoTest
 
 cd ../../bsrs-ember
 productionEmberBuild
