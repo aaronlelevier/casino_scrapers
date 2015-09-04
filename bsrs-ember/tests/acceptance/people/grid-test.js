@@ -115,7 +115,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     });
 });
 
-test('sco typing a search will reset page to 1 and require an additional xhr', function(assert) {
+test('typing a search will reset page to 1 and require an additional xhr', function(assert) {
     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=title&search=8%20m';
     xhr(search_two ,"GET",null,{},200,PEOPLE_FIXTURES.searched('8 m', 'title'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=title';

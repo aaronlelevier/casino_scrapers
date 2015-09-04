@@ -35,7 +35,8 @@ var LocationLevel = Model.extend({
         let filter = (loc_level) => {
             return Ember.$.inArray(loc_level.get('id'), children_fks) > -1 && loc_level.get('name') !== this.get('name');
         };
-        return this.get('store').find('location-level', filter.bind(this), ['id', 'children']);
+        let z =  this.get('store').find('location-level', filter.bind(this), ['id', 'children']);
+        return z;
     }),
     isNew: Ember.computed(function() {
         return loopAttrs(this, 'location_level');
