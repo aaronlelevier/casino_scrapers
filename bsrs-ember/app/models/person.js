@@ -100,7 +100,7 @@ export default Model.extend(NewMixin, {
         let phone_numbers_to_remove = [];
         let phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
-            if(typeof num.get('number') === 'undefined' || num.get('number').trim() === '') {
+            if(num.get('invalid_number')) {
                 phone_numbers_to_remove.push(num.get('id'));
             }
             num.save();
@@ -199,9 +199,17 @@ export default Model.extend(NewMixin, {
         }
     },
     rollbackPhoneNumbers() {
-        var phone_numbers = this.get('phone_numbers');
+        let store = this.get('store');
+        let phone_numbers_to_remove = [];
+        let phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
+            if(num.get('invalid_number') && num.get('notDirty')) {
+                phone_numbers_to_remove.push(num.get('id'));
+            }
             num.rollback();
+        });
+        phone_numbers_to_remove.forEach((id) => {
+            store.remove('phonenumber', id);
         });
     },
     rollbackAddresses() {
@@ -291,7 +299,7 @@ export default Model.extend(NewMixin, {
         var store = this.get('store');
         var status_id = store.findOne('status').get('id');
         var phone_numbers = this.get('phone_numbers').filter(function(num) {
-            if(typeof num.get('number') === 'undefined' || num.get('number').trim() === '') {
+            if(num.get('invalid_number')) {
                 return;
             }
             return num;

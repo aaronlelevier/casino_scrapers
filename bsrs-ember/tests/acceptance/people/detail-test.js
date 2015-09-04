@@ -160,31 +160,26 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     });
 });
 
-// test('phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-//     visit(DETAIL_URL);
-//     click('.t-add-btn:eq(0)');
-//     andThen(() => {
-//         let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
-//         assert.equal(visible_errors.length, 0);
-//     });
-//     fillIn('.t-new-entry:eq(2)', '34');
-//     andThen(() => {
-//         let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
-//         assert.equal(visible_errors.length, 1);
-//     });
-//     click(SAVE_BTN);
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
-//         assert.equal(visible_errors.length, 1);
-//         assert.equal(store.find('phonenumber').get('length'), 3);
-//     });
-//     fillIn('.t-new-entry:eq(2)', '');
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         assert.equal(currentURL(), PEOPLE_URL);
-//     });
-// });
+test('toran newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+    visit(DETAIL_URL);
+    click('.t-add-btn:eq(0)');
+    andThen(() => {
+        assert.equal(store.find('phonenumber').get('length'), 3);
+        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    fillIn('.t-new-entry:eq(2)', '34');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+    });
+    fillIn('.t-new-entry:eq(2)', '');
+    click('.t-cancel-btn');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(store.find('phonenumber').get('length'), 2);
+    });
+});
 
 test('phone numbers without a valid number are ignored and removed', (assert) => {
     visit(DETAIL_URL);

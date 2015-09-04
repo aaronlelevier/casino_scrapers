@@ -234,20 +234,29 @@ test('savePhoneNumbers will remove any phone number model with no (valid) value'
     assert.equal(store.find('phonenumber').get('length'), 0);
 });
 
-// test('toran phoneNumbersDirty is false when a phone number is added but does not have a (valid) number', (assert) => {
-//     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-//     var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, person: PEOPLE_DEFAULTS.id});
-//     var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, person: PEOPLE_DEFAULTS.id});
-//     var third_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idThree, person: PEOPLE_DEFAULTS.id});
-//     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
-//     second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
-//     third_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
-//     // first_phone_number.set('number', PHONE_NUMBER_DEFAULTS.numberOne); do in a later test
-//     // second_phone_number.set('number', PHONE_NUMBER_DEFAULTS.numberTwo);
-//     assert.equal(store.find('phonenumber').get('length'), 3);
-//     assert.ok(person.get('phoneNumbersNotDirty'));
-//     assert.equal(store.find('phonenumber').get('length'), 3);
-// });
+test('phoneNumbersDirty behaves correctly for phone numbers (newly) added', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var third_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    assert.equal(person.get('phone_numbers').get('length'), 3);
+    assert.ok(person.get('phoneNumbersNotDirty'));
+    first_phone_number.set('number', PHONE_NUMBER_DEFAULTS.numberOne);
+    assert.ok(person.get('phoneNumbersDirty'));
+    first_phone_number.set('number', '');
+    assert.ok(person.get('phoneNumbersNotDirty'));
+});
+
+test('phoneNumbersDirty behaves correctly for existing phone numbers', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    assert.equal(person.get('phone_numbers').get('length'), 1);
+    assert.ok(person.get('phoneNumbersNotDirty'));
+    first_phone_number.set('number', PHONE_NUMBER_DEFAULTS.numberTwo);
+    assert.ok(person.get('phoneNumbersDirty'));
+    first_phone_number.set('number', '');
+    assert.ok(person.get('phoneNumbersDirty'));
+});
 
 test('save related will iterate over each address and save that model', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
@@ -266,8 +275,8 @@ test('save related will iterate over each address and save that model', (assert)
 
 test('rollback related will iterate over each phone number and rollback that model', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
-    var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person: PEOPLE_DEFAULTS.id});
+    var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('phoneNumbersNotDirty'));
     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     assert.ok(person.get('phoneNumbersDirty'));
