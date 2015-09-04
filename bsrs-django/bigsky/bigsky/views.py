@@ -4,6 +4,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 from django.views.decorators.cache import never_cache
+from django.utils import timezone
 
 from accounting.models import Currency
 from contact.models import PhoneNumberType, AddressType
@@ -25,9 +26,13 @@ class IndexView(TemplateView):
     @never_cache
     def dispatch(self, request, *args, **kwargs):
         self.locale = request.META.get('HTTP_ACCEPT_LANGUAGE', None)
+
         if not request.user.is_authenticated():
             return HttpResponseRedirect(reverse('login'))
         else:
+            if request.user.password_expire_date < timezone.now().date():
+                return HttpResponseRedirect(reverse('password_change')+
+                    '?next='+request.get_full_path())
             return super(IndexView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):

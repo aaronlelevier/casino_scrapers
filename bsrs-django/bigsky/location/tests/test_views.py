@@ -66,15 +66,17 @@ class LocationLevelTests(APITestCase):
 
     def test_create(self):
         new_name = 'region_lp'
+        child_location_level = mommy.make(LocationLevel)
         data = {
             'id': str(uuid.uuid4()),
             'name': new_name,
-            'children': []
+            'children': [str(child_location_level.id)]
         }
         response = self.client.post('/api/admin/location_levels/', data, format='json')
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content)
         self.assertIsInstance(LocationLevel.objects.get(id=data['id']), LocationLevel)
+        self.assertEqual(data['children'][0], str(child_location_level.id))
 
     ### UPDATE
 

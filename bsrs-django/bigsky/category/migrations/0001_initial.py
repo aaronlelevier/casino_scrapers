@@ -21,7 +21,7 @@ class Migration(migrations.Migration):
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
                 ('description', models.CharField(max_length=100, null=True, blank=True)),
-                ('label', models.CharField(max_length=100, null=True, blank=True)),
+                ('label', models.CharField(help_text=b'This field cannot be set directly.  It is either set from a system setting, or defaulted from the Parent Category.', max_length=100, null=True, editable=False, blank=True)),
                 ('subcategory_label', models.CharField(max_length=100)),
                 ('cost_amount', models.DecimalField(default=0, max_digits=15, decimal_places=4, blank=True)),
                 ('cost_code', models.CharField(max_length=100, null=True, blank=True)),

@@ -1,11 +1,15 @@
 import re
+from datetime import timedelta
 
 from django.db import models, IntegrityError
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, UserManager, Group
+from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.postgres.fields import ArrayField
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location
@@ -33,17 +37,28 @@ class Role(BaseModel):
     modules = models.TextField(blank=True)
     dashboad_links = models.TextField(blank=True)
     tabs = models.TextField(blank=True)
+    # Password
+    password_can_change = models.BooleanField(blank=True, default=True)
     password_min_length = models.PositiveIntegerField(blank=True, default=6)
-    password_history_length = models.PositiveIntegerField(blank=True, null=True,
-        help_text="Will be NULL if password length has never been changed.")
+    password_history_length = ArrayField(
+        base_field=models.PositiveIntegerField(
+            help_text="Will be NULL if password length has never been changed."),
+        blank=True, default=[])
+    password_digit_required = models.BooleanField(blank=True, default=False)
+    password_lower_char_required = models.BooleanField(blank=True, default=False)
+    password_upper_char_required = models.BooleanField(blank=True, default=False)
+    password_special_char_required = models.BooleanField(blank=True, default=False)
     password_char_types = models.CharField(max_length=100,
         help_text="Password characters allowed") # TODO: This field will need to be accessed when
                                                  # someone for the role saves their PW to validate it.
-    password_expire = models.PositiveIntegerField(blank=True, null=True,
-        help_text="Number of days after setting password that it will expire.")
+    password_expire = models.IntegerField(blank=True, default=90,
+        help_text="Number of days after setting password that it will expire."
+                  "If '0', password will never expire.")
     password_expire_alert = models.BooleanField(blank=True, default=True,
         help_text="Does the Person want to be alerted 'pre pw expiring'. " \
                   "Alerts start 3 days before password expires.")
+    password_expired_login_count = models.IntegerField(blank=True, null=True)
+    # Proxy
     proxy_set = models.BooleanField(blank=True, default=False,
         help_text="Users in this Role can set their own proxy")
     # Default Settings
@@ -92,21 +107,21 @@ class Role(BaseModel):
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
 
-    def save(self, *args, **kwargs):
+    __original_values = {}
 
-        if not self.group:
-            try:
-                self.group, created = Group.objects.get_or_create(name=self.name)
-            except IntegrityError:
-                raise
-
-        if not self.default_auth_currency:
-            self.default_auth_currency = Currency.objects.default()
-
-        return super(Role, self).save(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(Role, self).__init__(*args, **kwargs)
+        self.__original_values.update({
+            'password_min_length': self.password_min_length
+        })
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self._update_defaults()
+        self._update_password_history_length()
+        return super(Role, self).save(*args, **kwargs)
 
     @property
     def _name(self):
@@ -116,6 +131,25 @@ class Role(BaseModel):
         if not self.location_level:
             return {"id": str(self.pk), "name": self.name}
         return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
+
+    def _update_defaults(self):
+        if not self.group:
+            try:
+                self.group, created = Group.objects.get_or_create(name=self.name)
+            except IntegrityError:
+                raise
+
+        if not self.default_auth_currency:
+            self.default_auth_currency = Currency.objects.default()
+
+    def _update_password_history_length(self):
+        """
+        Append the previous ``password_min_length`` to the ``password_history_length`` 
+        if the ``password_min_length`` has changed.
+        """
+        if self.password_min_length != self.__original_values['password_min_length']:
+            self.password_history_length.append(self.__original_values['password_min_length'])
+            self.__original_values['password_min_length'] = self.password_min_length
 
 
 class ProxyRole(BaseModel):
@@ -179,7 +213,11 @@ class Person(BaseModel, AbstractUser):
     # Passwords
     # TODO: use django default 1x PW logic here?
     # https://github.com/django/django/blob/master/django/contrib/auth/views.py (line #214)
-    password_expire = models.DateField(blank=True, null=True)
+    password_length = models.PositiveIntegerField(blank=True, null=True,
+        help_text="Store the length of the current password.")
+    password_expire_date = models.DateField(blank=True, null=True,
+        help_text="Date that the Person's password will expire next. "
+                  "Based upon the ``password_expire`` days set on the Role.")
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
     password_change = models.TextField(help_text="Tuple of (datetime of PW change, old PW)")
     # Out-of-the-Office
@@ -223,6 +261,14 @@ class Person(BaseModel, AbstractUser):
             'role': str(self.role.id)
         }
 
+    def set_password(self, raw_password):
+        try:
+            self.password_expire_date = self._password_expire_date
+        except:
+            self.password_expire_date = (timezone.now().date() + 
+                                         timedelta(days=settings.PASSWORD_EXPIRE_DAYS))
+        super(Person, self).set_password(raw_password)
+
     def _get_locale(self, locale):
         """Resolve the Locale using the Accept-Language Header. If not 
         found, use the system default Locale.
@@ -248,6 +294,12 @@ class Person(BaseModel, AbstractUser):
             self.auth_amount = self.role.default_auth_amount
         if not self.auth_currency:
             self.auth_currency = self.role.default_auth_currency
+        if not self.password_expire_date:
+            self.password_expire_date = self._password_expire_date
+
+    @property
+    def _password_expire_date(self):
+        return timezone.now().date() + timedelta(days=self.role.password_expire)
 
     def _validate_locations(self):
         """Remove invalid Locations from the Person based on
