@@ -62,9 +62,11 @@ def relationships_view(request):
     """"Display a list of links for Models that have relationships, 
     and route to the d3js views for each model."""
     models = []
-    for model in [Location, LocationLevel]:
-        models.append({'app_name': model.__module__.split('.')[0],
-            'model_name': model.__name__})
+    for model in [Location, LocationLevel, Role]:
+        models.append({
+            'app_name': model.__module__.split('.')[0],
+            'model_name': model.__name__
+        })
     return render(request, "relationships.html", {"models": models})
 
 

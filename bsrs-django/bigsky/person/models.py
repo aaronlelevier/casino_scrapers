@@ -1,4 +1,5 @@
 import re
+import json
 from datetime import timedelta
 
 from django.db import models, IntegrityError
@@ -19,6 +20,17 @@ from translation.models import Locale
 from util import choices, create
 from util.models import (AbstractName, MainSetting, CustomSetting,
     BaseModel, BaseManager)
+
+
+class RoleManager(BaseManager):
+
+    @property
+    def d3_json(self):
+        models = []
+        for role in self.all():
+            for person in role.person_set.all():
+                models.append({"source": role.name, "target": person.username, "type": "suit"})
+        return json.dumps(models)
 
 
 @python_2_unicode_compatible
@@ -106,6 +118,9 @@ class Role(BaseModel):
     # use as a normal Django Manager() to access related setting objects.
     main_settings = GenericRelation(MainSetting)
     custom_settings = GenericRelation(CustomSetting)
+
+    # Manager
+    objects = RoleManager()
 
     __original_values = {}
 
