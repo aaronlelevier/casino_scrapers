@@ -27,12 +27,6 @@ moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
     }
 });
 
-// test('renders a single button with a class of t-add-btn', function(assert){
-//   this.render(hbs`{{input-multi model=things}}`);
-//   var $component = this.$('.t-input-multi');
-//   assert.equal($component.find('.t-add-btn').length, 1);
-// });
-
 test('defaults to use phone number model with field name of number', function(assert) {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var model = store.find('phonenumber', {person: PEOPLE_DEFAULTS.id});
@@ -47,13 +41,13 @@ test('defaults to use phone number model with field name of number', function(as
     var $first_btn = $component.find('.t-add-btn:eq(0)');
     $first_btn.trigger('click').trigger('change');
     assert.equal(this.$('.t-new-entry').length, 1);
-    // assert.equal(store.find('phonenumber').length, 1);
+    assert.equal(store.find('phonenumber').get('length'), 1);
     assert.equal(model.get('content.length'), 1);
     assert.equal(model.objectAt(0).get('person'), PEOPLE_DEFAULTS.id);
     assert.equal(model.objectAt(0).get('type'), PHONE_NUMBER_TYPE_DEFAULTS.officeId);
     assert.equal(model.objectAt(0).get('id'), UUID.value);
     assert.equal(model.objectAt(0).get('number'), undefined);
-    assert.ok(model.objectAt(0).get('isDirty'));
+    assert.ok(model.objectAt(0).get('notDirty'));
     this.$('.t-new-entry').val('888-888-8888').trigger('change');
     assert.equal(model.objectAt(0).get('number'), '888-888-8888');
 });

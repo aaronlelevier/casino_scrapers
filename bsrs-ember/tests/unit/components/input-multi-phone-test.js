@@ -32,8 +32,7 @@ test('valid computed should ignore models with an empty or undefined number attr
     let subject = InputMultiPhoneComponent.create({model: model, eventbus: eventbus});
     assert.equal(subject.get('valid'), true);
     run(() => {
-        phone_number = model.push({id: 'def456', person: PEOPLE_DEFAULTS.id});
-        phone_number.set('type', PHONE_NUMBER_TYPE_DEFAULTS.officeId);
+        phone_number = model.push({id: 'def456', type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     });
     assert.equal(subject.get('valid'), true);
     run(() => {
@@ -61,12 +60,9 @@ test('valid computed should ignore models with an empty or undefined number attr
     let subject = InputMultiPhoneComponent.create({model: model, eventbus: eventbus});
     assert.equal(subject.get('valid'), true);
     run(() => {
-        let phone_number_one = model.push({id: 'def457', person: PEOPLE_DEFAULTS.id});
-        phone_number_one.set('type', PHONE_NUMBER_TYPE_DEFAULTS.officeId);
-        phone_number_two = model.push({id: 'def458', person: PEOPLE_DEFAULTS.id});
-        phone_number_two.set('type', PHONE_NUMBER_TYPE_DEFAULTS.officeId);
-        let phone_number_three = model.push({id: 'def459', person: PEOPLE_DEFAULTS.id});
-        phone_number_three.set('type', PHONE_NUMBER_TYPE_DEFAULTS.officeId);
+        let phone_number_one = model.push({id: 'def457', type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+        phone_number_two = model.push({id: 'def458', type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+        let phone_number_three = model.push({id: 'def459', type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     });
     assert.equal(subject.get('valid'), true);
     run(() => {
@@ -96,12 +92,9 @@ test('valid computed should ignore models with an empty or undefined number attr
     let subject = InputMultiPhoneComponent.create({model: model, eventbus: eventbus});
     assert.equal(subject.get('valid'), true);
     run(() => {
-        phone_number_one = model.push({id: 'def457', person: PEOPLE_DEFAULTS.id});
-        phone_number_one.set('type', PHONE_NUMBER_TYPE_DEFAULTS.officeId);
-        phone_number_two = model.push({id: 'def458', person: PEOPLE_DEFAULTS.id});
-        phone_number_two.set('type', PHONE_NUMBER_TYPE_DEFAULTS.officeId);
-        phone_number_three = model.push({id: 'def459', person: PEOPLE_DEFAULTS.id});
-        phone_number_three.set('type', PHONE_NUMBER_TYPE_DEFAULTS.officeId);
+        phone_number_one = model.push({id: 'def457', type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+        phone_number_two = model.push({id: 'def458', type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+        phone_number_three = model.push({id: 'def459', type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     });
     assert.equal(subject.get('valid'), true);
     run(() => {

@@ -1,6 +1,7 @@
+import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 
-export default Model.extend({
+export default Model.extend(NewMixin, {
     type: attr(),
     number: attr(),
     serialize() {

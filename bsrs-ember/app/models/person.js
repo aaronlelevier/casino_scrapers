@@ -71,11 +71,11 @@ export default Model.extend({
         return this.get('role_fk') ? true : false;
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
-    phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
+    phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.dirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
         var phone_numbers = this.get('phone_numbers');
         var phone_number_dirty = false;
         phone_numbers.forEach((num) => {
-            if (num.get('isDirty')) {
+            if (num.get('dirty')) {
                 phone_number_dirty = true;
             }
         });
@@ -314,7 +314,7 @@ export default Model.extend({
             employee_id: this.get('employee_id'),
             auth_amount: this.get('auth_amount'),
             status: status_id,
-            role: this.get('role').get('id'), //TODO: is this tested/used at all?
+            role: this.get('role').get('id'),
             emails: [],
             locations: this.get('location_ids'),
             phone_numbers: phone_numbers,

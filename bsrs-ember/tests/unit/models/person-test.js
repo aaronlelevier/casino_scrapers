@@ -116,7 +116,7 @@ test('related addresses are not dirty with original addresses model', (assert) =
     assert.ok(person.get('addressesIsNotDirty'));
 });
 
-test('related phone number model is dirty when phone number is dirty', (assert) => {
+test('related phone number model is dirty when phone number is dirty (and phone number is not newly added)', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.ok(phone_number.get('isNotDirty'));
@@ -195,6 +195,19 @@ test('save related will iterate over each phone number and save that model', (as
     assert.ok(person.get('phoneNumbersIsDirty'));
     person.savePhoneNumbers();
     assert.ok(person.get('phoneNumbersIsNotDirty'));
+});
+
+test('savePhoneNumbers will remove the new flag if set on the model', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, new: true, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person: PEOPLE_DEFAULTS.id});
+    assert.ok(person.get('phoneNumbersIsNotDirty'));
+    first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+    second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+    assert.ok(person.get('phoneNumbersIsDirty'));
+    person.savePhoneNumbers();
+    assert.ok(person.get('phoneNumbersIsNotDirty'));
+    assert.equal(second_phone_number.get('new'), undefined);
 });
 
 test('savePhoneNumbers will remove any phone number model with no (valid) value', (assert) => {
@@ -312,30 +325,31 @@ test('when new address is added, the person model is not dirty unless address is
     assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
-test('when new phone number is added, the person model is not dirty unless type is altered', (assert) => {
+test('when new phone number is added, the person model is not dirty even when the type or number attrs are modified', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, new: true, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
-    var phone_number_two = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var phone_number_two = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, new: true, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     phone_number_two.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
-    assert.ok(person.get('isDirtyOrRelatedDirty'));
-    phone_number_two.rollback();
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
-    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    phone_number_two.rollback();
+    assert.equal(phone_number_two.get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    phone_number.set('number', '5');
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(phone_number.get('number'), '5');
 });
 
-test('when new phone number is added after render, the person model is dirty when new phone number is appended to the array of phone numbers', (assert) => {
+test('when new phone number is added after render, the person model is not dirty when a new phone number is appended to the array of phone numbers', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('isNotDirty'));
     var phonenumbers = person.get('phone_numbers');
-    var added_phone_num = phonenumbers.push({id: PHONE_NUMBER_DEFAULTS.id, person: PEOPLE_DEFAULTS.id});
-    added_phone_num.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+    var added_phone_num = phonenumbers.push({id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('isNotDirty'));
-    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('when new address is added after render, the person model is dirty when new address is appended to the array of addresses', (assert) => {
