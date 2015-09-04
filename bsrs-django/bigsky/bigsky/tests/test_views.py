@@ -37,6 +37,15 @@ class IndexTests(TestCase):
         self.client.login(username=self.person.username, password=self.password)
         response = self.client.get(reverse('index'))
         self.assertRedirects(response, reverse('password_change')+'?next='+reverse('index'))
+        # Updating the Password here allows a login
+        # note: this is possible because the ``PasswordChangeForm`` native django form
+        # calls ``user.set_password`` which we overrode to change the ``password_ -
+        # expire_date`` for the Person
+        new_password = 'my-new-password'
+        response = self.client.post(reverse('password_change'),
+            {'old_password': self.password, 'new_password1': new_password,
+            'new_password2': new_password})
+        self.assertRedirects(response, reverse('index'))
 
 
 class LoginTests(TestCase):
