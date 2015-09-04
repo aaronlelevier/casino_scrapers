@@ -1,8 +1,10 @@
 import json
+from datetime import timedelta
 
 from django.test import TestCase
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.utils import timezone
 
 from model_mommy import mommy
 
@@ -29,6 +31,13 @@ class IndexTests(TestCase):
         response = self.client.get(reverse('index'))
         self.assertRedirects(response, reverse('login')+'?next='+reverse('index'))
 
+    def test_password_expired(self):
+        self.person.password_expire_date = timezone.now().date() - timedelta(days=1)
+        self.person.save()
+        self.client.login(username=self.person.username, password=self.password)
+        response = self.client.get(reverse('index'))
+        self.assertRedirects(response, reverse('password_change')+'?next='+reverse('index'))
+
 
 class LoginTests(TestCase):
 
@@ -39,6 +48,7 @@ class LoginTests(TestCase):
     def test_login_unauthenticated(self):
         response = self.client.get(reverse('login'))
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context['submit_button'], 'Login')
 
     def test_login_authenticated(self):
         self.client.login(username=self.person.username, password=self.password)

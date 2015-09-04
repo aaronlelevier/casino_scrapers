@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
+from django.core.urlresolvers import reverse
 from django.contrib.auth import views as auth_views, forms
 from django.contrib.auth.decorators import login_required
 
@@ -55,8 +56,11 @@ urlpatterns += required(
     logout_required,
     patterns('',
         url(r'^login/', auth_views.login,
-            {'template_name': 'login.html',
-            'authentication_form': forms.AuthenticationForm
+            {'template_name': 'form.html',
+            'authentication_form': forms.AuthenticationForm,
+            'extra_context': {
+                'submit_button': 'Login'
+                }
             },
             name='login'),
     )
@@ -66,11 +70,16 @@ urlpatterns += required(
 urlpatterns += required(
     login_required,
     patterns('',
+        url(r'^password-change/$', auth_views.password_change,
+            {'template_name': 'form.html',
+            'password_change_form': forms.PasswordChangeForm,
+            'post_change_redirect': '/',
+            },
+            name='password_change'),
         url(r'^django-admin/', include(admin.site.urls)),
         url(r'^.*$', IndexView.as_view(), name='index'),
     )
 )
-
 
 if settings.DEBUG:
     import debug_toolbar

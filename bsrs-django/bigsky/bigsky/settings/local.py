@@ -1,6 +1,13 @@
 from .base import *
 
 
+LOCAL_APPS = (
+    'django_extensions',
+    )
+
+INSTALLED_APPS = INSTALLED_APPS + LOCAL_APPS
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
