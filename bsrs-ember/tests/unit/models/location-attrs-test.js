@@ -20,21 +20,21 @@ module('unit: location attrs test', {
 
 test('location is dirty or related is dirty when name has been updated', (assert) => {
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName});
-    assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(location.get('notDirty'));
+    assert.ok(location.get('notDirtyOrRelatedNotDirty'));
     location.set('name', LOCATION_DEFAULTS.storeNameTwo);
-    assert.ok(location.get('isDirty'));
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    assert.ok(location.get('dirty'));
+    assert.ok(location.get('dirtyOrRelatedDirty'));
     location.set('name', LOCATION_DEFAULTS.storeName);
-    assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(location.get('notDirty'));
+    assert.ok(location.get('notDirtyOrRelatedNotDirty'));
 });
 
 test('default state for name on location model is undefined', (assert) => {
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: undefined});
-    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('notDirty'));
     location.set('name', 'ABC124');
-    assert.ok(location.get('isDirty'));
+    assert.ok(location.get('dirty'));
     location.set('name', '');
-    assert.ok(location.get('isNotDirty'));
+    assert.ok(location.get('notDirty'));
 });

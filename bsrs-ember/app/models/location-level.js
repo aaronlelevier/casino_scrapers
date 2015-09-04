@@ -1,18 +1,19 @@
 import Ember from 'ember';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
-var LocationLevel = Model.extend({
+var LocationLevel = Model.extend(NewMixin, {
     store: inject('main'),
     name: attr(''),
     locations: attr([]),
     roles: attr([]),
     children_fks: attr([]),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
-        return this.get('isDirty');
+    dirtyOrRelatedDirty: Ember.computed('dirty', function() {
+        return this.get('dirty');
     }),
-    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    notDirtyOrRelatedNotDirty: Ember.computed.not('dirtyOrRelatedDirty'),
     rollbackRelated() {
     },
     serialize() {

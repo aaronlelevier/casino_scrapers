@@ -51,7 +51,7 @@ test('visiting admin/location', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let location = store.find('location').objectAt(0);
-        assert.ok(location.get('isNotDirty'));
+        assert.ok(location.get('notDirty'));
         assert.equal(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
         assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.storeName);
         assert.equal(find('.t-location-number').val(), LOCATION_DEFAULTS.storeNumber);
@@ -62,8 +62,8 @@ test('visiting admin/location', (assert) => {
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
     andThen(() => {
         let location = store.find('location', LOCATION_DEFAULTS.idOne);
-        assert.ok(location.get('isDirty'));
-        assert.ok(location.get('isDirtyOrRelatedDirty'));
+        assert.ok(location.get('dirty'));
+        assert.ok(location.get('dirtyOrRelatedDirty'));
     });
     let list = LOCATION_FIXTURES.list();
     list.results[0].name = LOCATION_DEFAULTS.storeNameTwo;
@@ -72,7 +72,7 @@ test('visiting admin/location', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         let location = store.find('location', LOCATION_DEFAULTS.idOne);
-        assert.ok(location.get('isNotDirty'));
+        assert.ok(location.get('notDirty'));
     });
 });
 

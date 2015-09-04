@@ -29,8 +29,8 @@ test('selecting a location level will append the location id to the location lev
     assert.equal(this.$('.t-location-level option:eq(1)').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
     assert.equal(this.$('.t-location-level option:eq(2)').text(), LOCATION_LEVEL_DEFAULTS.nameDistrict);
     assert.equal(location.get('location_level'), undefined);
-    assert.ok(location_level_one.get('isNotDirty'));
-    assert.ok(location_level_two.get('isNotDirty'));
+    assert.ok(location_level_one.get('notDirty'));
+    assert.ok(location_level_two.get('notDirty'));
     this.$('.t-location-level').val(LOCATION_LEVEL_DEFAULTS.idTwo).trigger('change');
     assert.equal(location_level_two.get('locations.length'), 2);
     assert.deepEqual(location_level_two.get('locations'), [LOCATION_DEFAULTS.unusedId, LOCATION_DEFAULTS.idOne]);
@@ -38,8 +38,8 @@ test('selecting a location level will append the location id to the location lev
     assert.deepEqual(location_level_one.get('locations'), []);
     assert.deepEqual(location.get('location_level').get('locations')[1], LOCATION_DEFAULTS.idOne);
     assert.deepEqual(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
-    assert.ok(location_level_one.get('isNotDirty'));
-    assert.ok(location_level_two.get('isDirty'));
+    assert.ok(location_level_one.get('notDirty'));
+    assert.ok(location_level_two.get('dirty'));
     this.$('.t-location-level').val(LOCATION_LEVEL_DEFAULTS.idOne).trigger('change');
     assert.equal(location_level_two.get('locations.length'), 1);
     assert.deepEqual(location_level_two.get('locations'), [LOCATION_DEFAULTS.unusedId]);
@@ -47,8 +47,8 @@ test('selecting a location level will append the location id to the location lev
     assert.deepEqual(location_level_one.get('locations'), [LOCATION_DEFAULTS.idOne]);
     assert.deepEqual(location.get('location_level').get('locations')[0], LOCATION_DEFAULTS.idOne);
     assert.deepEqual(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(location_level_two.get('isNotDirty'));
-    assert.ok(location_level_one.get('isDirty'));
+    assert.ok(location_level_two.get('notDirty'));
+    assert.ok(location_level_one.get('dirty'));
 });
 
 // test('user cannot enter current location level in store', function(assert) {

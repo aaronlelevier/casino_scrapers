@@ -51,7 +51,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-        assert.ok(category.get('isNotDirty'));
+        assert.ok(category.get('notDirty'));
         assert.equal(find('.t-category-name').val(), CATEGORY_DEFAULTS.nameOne);
         assert.equal(find('.t-category-description').val(), CATEGORY_DEFAULTS.descriptionRepair);
         assert.equal(find('.t-category-label').val(), CATEGORY_DEFAULTS.labelOne);
@@ -60,7 +60,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo, description: CATEGORY_DEFAULTS.descriptionMaintenance, 
+    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo, description: CATEGORY_DEFAULTS.descriptionMaintenance,
     label: CATEGORY_DEFAULTS.labelTwo, cost_amount: CATEGORY_DEFAULTS.costAmountTwo, cost_code: CATEGORY_DEFAULTS.costCodeTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
@@ -70,7 +70,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeTwo);
     andThen(() => {
         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-        assert.ok(category.get('isDirty'));
+        assert.ok(category.get('dirty'));
     });
     let list = CATEGORY_FIXTURES.list();
     list.results[0].name = CATEGORY_DEFAULTS.nameTwo;
@@ -78,7 +78,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     list.results[0].label = CATEGORY_DEFAULTS.labelTwo;
     list.results[0].cost_amount = CATEGORY_DEFAULTS.costAmountTwo;
     list.results[0].cost_code = CATEGORY_DEFAULTS.costCodeTwo;
-    //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me. 
+    //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me.
     // let results = list.results[0];
     // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CATEGORY_DEFAULTS);
     xhr(endpoint, 'GET', null, {}, 200, list);
@@ -92,7 +92,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
         assert.equal(category.get('label'), CATEGORY_DEFAULTS.labelTwo);
         assert.equal(category.get('cost_amount'), CATEGORY_DEFAULTS.costAmountTwo);
         assert.equal(category.get('cost_code'), CATEGORY_DEFAULTS.costCodeTwo);
-        assert.ok(category.get('isNotDirty'));
+        assert.ok(category.get('notDirty'));
     });
 });
 
@@ -221,7 +221,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
     let url = PREFIX + DETAIL_URL + '/';
     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, description: CATEGORY_DEFAULTS.descriptionMaintenance, 
+    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, description: CATEGORY_DEFAULTS.descriptionMaintenance,
     label: CATEGORY_DEFAULTS.labelOne, subcategory_label: CATEGORY_DEFAULTS.subCatLabelTwo, cost_amount: CATEGORY_DEFAULTS.costAmountOne, cost_code: CATEGORY_DEFAULTS.costCodeOne});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);

@@ -67,7 +67,7 @@ test('visiting /location-level/new', (assert) => {
         let locationLevel = store.find('location-level', UUID.value);
         assert.equal(locationLevel.get('id'), UUID.value);
         assert.equal(locationLevel.get('name'), LOCATION_LEVEL_DEFAULTS.nameAnother);
-        assert.ok(locationLevel.get('isNotDirty'));
+        assert.ok(locationLevel.get('notDirty'));
     });
 });
 

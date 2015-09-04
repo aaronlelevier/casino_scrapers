@@ -42,7 +42,7 @@ test('role will keep appending when deserialize_list is invoked with many people
     subject.deserialize(response);
     let original = store.find('role', ROLE_DEFAULTS.idOne);
     assert.deepEqual(original.get('people'), [PEOPLE_DEFAULTS.id, PEOPLE_DEFAULTS.unusedId]);
-    assert.ok(original.get('isNotDirty'));
+    assert.ok(original.get('notDirty'));
 });
 
 test('role will setup the correct relationship with location_level when deserialize_single is invoked', (assert) => {
@@ -54,7 +54,7 @@ test('role will setup the correct relationship with location_level when deserial
     let role_location_level = role.get('location_level');
     assert.ok(role_location_level);
     assert.equal(location_level.get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(role_location_level.get('isNotDirty'));
+    assert.ok(role_location_level.get('notDirty'));
     assert.equal(role.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(role_location_level.get('roles'), [ROLE_DEFAULTS.idOne]);
 });
@@ -76,8 +76,8 @@ test('person-location m2m is set up correctly using deserialize single (starting
     assert.equal(locations.objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
 
     assert.equal(store.find('person-location').get('length'), 1);
-    assert.ok(original.get('isNotDirty'));
-    assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(original.get('notDirty'));
+    assert.ok(original.get('notDirtyOrRelatedNotDirty'));
 });
 
 test('person-location m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
@@ -97,8 +97,8 @@ test('person-location m2m is added after deserialize single (starting with exist
     assert.equal(locations.get('length'), 2);
     assert.equal(locations.objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
     assert.equal(locations.objectAt(1).get('name'), LOCATION_DEFAULTS.storeNameTwo);
-    assert.ok(original.get('isNotDirty'));
-    assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(original.get('notDirty'));
+    assert.ok(original.get('notDirtyOrRelatedNotDirty'));
     assert.equal(store.find('person-location').get('length'), 2);
 });
 
@@ -118,8 +118,8 @@ test('person-location m2m is removed when server payload no longer reflects what
     assert.equal(locations.get('length'), 2);
     assert.equal(locations.objectAt(0).get('id'), LOCATION_DEFAULTS.idTwo);
     assert.equal(locations.objectAt(1).get('id'), LOCATION_DEFAULTS.idThree);
-    assert.ok(original.get('isNotDirty'));
-    assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(original.get('notDirty'));
+    assert.ok(original.get('notDirtyOrRelatedNotDirty'));
     assert.equal(store.find('person-location').get('length'), 3);
 });
 
@@ -133,7 +133,7 @@ test('person-location m2m added even when person did not exist before the deseri
     let locations = person.get('locations');
     assert.equal(locations.get('length'), 1);
     assert.equal(locations.objectAt(0).get('id'), LOCATION_DEFAULTS.idOne);
-    assert.ok(person.get('isNotDirty'));
-    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(person.get('notDirty'));
+    assert.ok(person.get('notDirtyOrRelatedNotDirty'));
     assert.equal(store.find('person-location').get('length'), 1);
 });

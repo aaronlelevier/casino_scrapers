@@ -1,19 +1,20 @@
-import { attr, Model } from 'ember-cli-simple-store/model';
 import Ember from 'ember';
-import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 import inject from 'bsrs-ember/utilities/store';
+import NewMixin from 'bsrs-ember/mixins/model/new';
+import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
+import { attr, Model } from 'ember-cli-simple-store/model';
 
-let CategoryModel = Model.extend({
+var CategoryModel = Model.extend(NewMixin, {
     store: inject('main'),
     name: attr(''),
     description: attr(''),
     label: attr(''),
     cost_amount: attr(''),
     cost_code: attr(''),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
-        return this.get('isDirty');
+    dirtyOrRelatedDirty: Ember.computed('dirty', function() {
+        return this.get('dirty');
     }),
-    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    notDirtyOrRelatedNotDirty: Ember.computed.not('dirtyOrRelatedDirty'),
     serialize() {
         return {
             id: this.get('id'),

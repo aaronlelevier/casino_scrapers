@@ -7,24 +7,24 @@ module('unit: role attrs test');
 test('default state for name on role model is undefined', (assert) => {
     var role = Role.create({id: ROLE_DEFAULTS.idOne, name: undefined});
     role.set('name', 'bill');
-    assert.ok(role.get('isDirty'));
+    assert.ok(role.get('dirty'));
     role.set('name', '');
-    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('notDirty'));
 });
 
 test('default state for role type on role model is location', (assert) => {
     var role = Role.create({id: ROLE_DEFAULTS.idOne, role_type: 'Location'});
-    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('notDirty'));
     role.set('role_type', 'Third-Party');
-    assert.ok(role.get('isDirty'));
+    assert.ok(role.get('dirty'));
     role.set('role_type', 'Location');
-    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('notDirty'));
 });
 
 test('default state for people on role model is undefined', (assert) => {
     var role = Role.create({id: ROLE_DEFAULTS.idOne, people: undefined});
     role.set('people', [1, 2, 3]);
-    assert.ok(role.get('isDirty'));
+    assert.ok(role.get('dirty'));
     role.set('people', []);
-    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('notDirty'));
 });

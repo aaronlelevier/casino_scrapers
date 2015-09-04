@@ -32,12 +32,12 @@ test('location deserializer returns correct data with already present location_l
     let original_location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original_location_level.get('locations'), [LOCATION_DEFAULTS.idOne, LOCATION_DEFAULTS.unusedId]);
     assert.equal(store.find('location', LOCATION_DEFAULTS.idOne).get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(original_location_level.get('isNotDirty'));
+    assert.ok(original_location_level.get('notDirty'));
     assert.equal(store.find('location', LOCATION_DEFAULTS.unusedId).get('location_level.name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
     let locations = store.find('location');
     assert.equal(locations.get('length'), 2);
-    assert.ok(locations.objectAt(0).get('isNotDirty'), false);
-    assert.ok(locations.objectAt(1).get('isNotDirty'), false);
+    assert.ok(locations.objectAt(0).get('notDirty'), false);
+    assert.ok(locations.objectAt(1).get('notDirty'), false);
 });
 
 test('location deserializer returns correct data with no current location_level (list)', (assert) => {
@@ -48,7 +48,7 @@ test('location deserializer returns correct data with no current location_level 
     let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('locations'), [LOCATION_DEFAULTS.unusedId]);
     assert.equal(store.find('location', LOCATION_DEFAULTS.unusedId).get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(original.get('isNotDirty'));
+    assert.ok(original.get('notDirty'));
 });
 
 test('location deserializer returns correct data with already present location_level (detail)', (assert) => {
@@ -61,7 +61,7 @@ test('location deserializer returns correct data with already present location_l
     assert.deepEqual(original.get('locations'), [LOCATION_DEFAULTS.idOne, LOCATION_DEFAULTS.unusedId]);
     let loc = store.find('location', LOCATION_DEFAULTS.idOne);
     assert.equal(loc.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(original.get('isNotDirty'));
+    assert.ok(original.get('notDirty'));
     assert.equal(store.find('location', LOCATION_DEFAULTS.unusedId).get('location_level.name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
 });
 
@@ -72,7 +72,7 @@ test('location deserializer returns correct data with no current location_level 
     let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('locations'), [LOCATION_DEFAULTS.unusedId]);
     assert.equal(store.find('location', LOCATION_DEFAULTS.unusedId).get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(original.get('isNotDirty'));
+    assert.ok(original.get('notDirty'));
     assert.equal(store.find('location', LOCATION_DEFAULTS.unusedId).get('location_level.name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
 });
 
@@ -86,7 +86,7 @@ test('location array in location level will not be duplicated and deserializer r
     assert.deepEqual(original.get('locations'), [LOCATION_DEFAULTS.idOne]);
     let loc = store.find('location', LOCATION_DEFAULTS.idOne);
     assert.equal(loc.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(original.get('isNotDirty'));
+    assert.ok(original.get('notDirty'));
     assert.equal(store.find('location', LOCATION_DEFAULTS.idOne).get('location_level.name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
 });
 
@@ -103,7 +103,7 @@ test('location location level will correctly be deserialized when server returns
     assert.deepEqual(newLocationLevel.get('locations'), [LOCATION_DEFAULTS.idOne]);
     let loc = store.find('location', LOCATION_DEFAULTS.idOne);
     assert.equal(loc.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idTwo);
-    assert.ok(original.get('isNotDirty'));
-    assert.ok(newLocationLevel.get('isNotDirty'));
-    assert.ok(location.get('isNotDirty'));
+    assert.ok(original.get('notDirty'));
+    assert.ok(newLocationLevel.get('notDirty'));
+    assert.ok(location.get('notDirty'));
 });

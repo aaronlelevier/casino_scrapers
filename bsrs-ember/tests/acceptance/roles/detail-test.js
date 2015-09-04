@@ -51,8 +51,8 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role').objectAt(0);  
-        assert.ok(role.get('isNotDirty'));
+        let role = store.find('role').objectAt(0);
+        assert.ok(role.get('notDirty'));
         assert.equal(role.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
         assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.nameOne);
         assert.equal(find('.t-role-role-type').val(), ROLE_DEFAULTS.roleTypeGeneral);
@@ -69,8 +69,8 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     fillIn('.t-role-role-type', ROLE_DEFAULTS.roleTypeContractor);
     fillIn('.t-location-level', ROLE_DEFAULTS.locationLevelTwo);
     andThen(() => {
-        let role = store.find('role').objectAt(0);  
-        assert.ok(role.get('isDirty'));
+        let role = store.find('role').objectAt(0);
+        assert.ok(role.get('dirty'));
     });
     let list = ROLE_FIXTURES.list();
     list.results[0].name = ROLE_DEFAULTS.namePut;
@@ -80,8 +80,8 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
-        let role = store.find('role').objectAt(0);  
-        assert.ok(role.get('isNotDirty'));
+        let role = store.find('role').objectAt(0);
+        assert.ok(role.get('notDirty'));
     });
 });
 

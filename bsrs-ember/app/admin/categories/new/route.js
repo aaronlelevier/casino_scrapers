@@ -12,7 +12,7 @@ var CategoryNewRoute = Ember.Route.extend({
             var model = this.currentModel;
             if (model.get('isNew')) {
                 model.removeRecord();
-            } else if (model.get('isDirtyOrRelatedDirty')) {
+            } else if (model.get('dirtyOrRelatedDirty')) {
                 Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;
@@ -24,7 +24,7 @@ var CategoryNewRoute = Ember.Route.extend({
             }
         },
         redirectUser() {
-           this.transitionTo('admin.categories.index'); 
+           this.transitionTo('admin.categories.index');
         }
     }
 });

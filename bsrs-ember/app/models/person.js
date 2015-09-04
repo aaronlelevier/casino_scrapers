@@ -1,10 +1,11 @@
 import Ember from 'ember';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
-export default Model.extend({
+export default Model.extend(NewMixin, {
     uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
@@ -59,19 +60,19 @@ export default Model.extend({
         var store = this.get('store');
         return store.find('address', {person: this.get('id')});
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', 'locationsIsDirty', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty') || this.get('locationsIsDirty');
+    dirtyOrRelatedDirty: Ember.computed('dirty', 'phoneNumbersDirty', 'addressesDirty', 'dirtyModel', 'roleDirty', 'locationsDirty', function() {
+        return this.get('dirty') || this.get('phoneNumbersDirty') || this.get('addressesDirty') || this.get('dirtyModel') || this.get('roleDirty') || this.get('locationsDirty');
     }),
-    roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
+    roleDirty: Ember.computed('role_property.@each.dirty', function() {
         let roles = this.get('role_property');
         var role = roles.objectAt(0);
         if(role) {
-            return role.get('isDirty');
+            return role.get('dirty');
         }
         return this.get('role_fk') ? true : false;
     }),
-    roleIsNotDirty: Ember.computed.not('roleIsDirty'),
-    phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.dirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
+    roleNotDirty: Ember.computed.not('roleDirty'),
+    phoneNumbersDirty: Ember.computed('phone_numbers.@each.dirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
         var phone_numbers = this.get('phone_numbers');
         var phone_number_dirty = false;
         phone_numbers.forEach((num) => {
@@ -81,20 +82,20 @@ export default Model.extend({
         });
         return phone_number_dirty;
     }),
-    phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty'),
-    addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state',
+    phoneNumbersNotDirty: Ember.computed.not('phoneNumbersDirty'),
+    addressesDirty: Ember.computed('addresses.@each.dirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state',
                                      'addresses.@each.postal_code', 'addresses.@each.country', 'addresses.@each.type', function() {
         var addresses = this.get('addresses');
         var address_dirty = false;
         addresses.forEach((address) => {
-            if (address.get('isDirty')) {
+            if (address.get('dirty')) {
                 address_dirty = true;
             }
         });
         return address_dirty;
     }),
-    addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
-    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    addressesNotDirty: Ember.computed.not('addressesDirty'),
+    notDirtyOrRelatedNotDirty: Ember.computed.not('dirtyOrRelatedDirty'),
     savePhoneNumbers: function() {
         let store = this.get('store');
         let phone_numbers_to_remove = [];
@@ -210,8 +211,8 @@ export default Model.extend({
             address.rollback();
         });
     },
-    locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
-    locationsIsDirty: Ember.computed('person_locations', 'locations.@each.isDirty', function() {
+    locationsNotDirty: Ember.computed.not('locationsDirty'),
+    locationsDirty: Ember.computed('person_locations', 'locations.@each.dirty', function() {
         let locations = this.get('locations');
         let previous_m2m_fks = this.get('person_location_fks');
         if(locations.get('length') > 0) {
@@ -220,7 +221,7 @@ export default Model.extend({
             }
 
             let dirty_locations = locations.filter(function(location) {
-                return location.get('isDirty') === true;
+                return location.get('dirty') === true;
             });
             return dirty_locations.length > 0;
 
