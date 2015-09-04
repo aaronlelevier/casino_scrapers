@@ -1,8 +1,9 @@
 import Ember from 'ember';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import inject from 'bsrs-ember/utilities/inject';
+import NewRollbackModalMixin from 'bsrs-ember/mixins/route/rollback/new';
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(NewRollbackModalMixin, {
     uuid: injectUUID('uuid'),
     phone_number_type_repo: inject('phone-number-type'),
     model() {
@@ -10,7 +11,7 @@ export default Ember.Route.extend({
         var role_repo = this.get('role_repo');
         var roles = this.get('store').find('role');
         return Ember.RSVP.hash({
-            model: this.get('store').push('person', {id: pk}),
+            model: this.get('store').push('person', {id: pk, new: true}),
             roles: roles
         });
     },
@@ -19,21 +20,6 @@ export default Ember.Route.extend({
         controller.set('roles', hash.roles);
     },
     actions: {
-        willTransition(transition) {
-            var model = this.currentModel.model;
-            if (model.get('isNew')) {
-                model.removeRecord();
-            } else if (model.get('dirtyOrRelatedDirty')) {
-                Ember.$('.t-modal').modal('show');
-                this.trx.attemptedTransition = transition;
-                this.trx.attemptedTransitionModel = model;
-                this.trx.newModel = true;
-                this.trx.storeType = 'person';
-                transition.abort();
-            } else {
-                Ember.$('.t-modal').modal('hide');
-            }
-        },
         editPerson() {
            this.transitionTo('admin.people.person', this.currentModel.model.get('id'));
         },

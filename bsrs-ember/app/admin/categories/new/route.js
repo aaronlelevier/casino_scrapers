@@ -1,30 +1,16 @@
 import Ember from 'ember';
 import injectUUID from 'bsrs-ember/utilities/uuid';
+import NewRollbackModalMixin from 'bsrs-ember/mixins/route/rollback/new';
 
-var CategoryNewRoute = Ember.Route.extend({
+var CategoryNewRoute = Ember.Route.extend(NewRollbackModalMixin, {
     uuid: injectUUID('uuid'),
     model() {
         let pk = this.get('uuid').v4();
-        return this.get('store').push('category', {id: pk});
+        return this.get('store').push('category', {id: pk, new: true});
     },
     actions: {
-        willTransition(transition) {
-            var model = this.currentModel;
-            if (model.get('isNew')) {
-                model.removeRecord();
-            } else if (model.get('dirtyOrRelatedDirty')) {
-                Ember.$('.t-modal').modal('show');
-                this.trx.attemptedTransition = transition;
-                this.trx.attemptedTransitionModel = model;
-                this.trx.newModel = true;
-                this.trx.storeType = 'category';
-                transition.abort();
-            } else {
-                Ember.$('.t-modal').modal('hide');
-            }
-        },
         redirectUser() {
-           this.transitionTo('admin.categories.index');
+           this.transitionTo('admin.categories');
         }
     }
 });

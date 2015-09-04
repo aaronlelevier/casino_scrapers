@@ -7,6 +7,9 @@ var NewMixin = Ember.Mixin.create({
         var isNew = this.get('new');
         return isNew ? false : isDirty;
     }),
+    isNewAndNotDirty: Ember.computed('new', 'isNotDirty', function() {
+        return this.get('new') && this.get('isNotDirty');
+    }),
     save() {
         this.set('new', undefined);
         this._super();

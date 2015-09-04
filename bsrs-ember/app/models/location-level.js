@@ -2,7 +2,6 @@ import Ember from 'ember';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 var LocationLevel = Model.extend(NewMixin, {
     store: inject('main'),
@@ -38,9 +37,6 @@ var LocationLevel = Model.extend(NewMixin, {
         };
         let z =  this.get('store').find('location-level', filter.bind(this), ['id', 'children']);
         return z;
-    }),
-    isNew: Ember.computed(function() {
-        return loopAttrs(this, 'location_level');
     })
 });
 

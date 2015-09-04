@@ -1,12 +1,13 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
+import NewRollbackModalMixin from 'bsrs-ember/mixins/route/rollback/new';
 
-var LocationNewRoute = Ember.Route.extend({
+var LocationNewRoute = Ember.Route.extend(NewRollbackModalMixin, {
     uuid: inject('uuid'),
     model() {
         var pk = this.get('uuid').v4();
         var all_location_levels = this.get('store').find('location-level');
-        var model = this.get('store').push('location', {id: pk});
+        var model = this.get('store').push('location', {id: pk, new: true});
         return Ember.RSVP.hash({
             model: model,
             all_location_levels: all_location_levels
@@ -17,21 +18,6 @@ var LocationNewRoute = Ember.Route.extend({
         controller.set('all_location_levels', hash.all_location_levels);
     },
     actions: {
-        willTransition(transition) {
-            var model = this.currentModel.model;
-            if (model.get('isNew')) {
-                model.removeRecord();
-            } else if (model.get('dirtyOrRelatedDirty')) {
-                Ember.$('.t-modal').modal('show');
-                this.trx.attemptedTransition = transition;
-                this.trx.attemptedTransitionModel = model;
-                this.trx.newModel = true;
-                this.trx.storeType = 'location';
-                transition.abort();
-            } else {
-                Ember.$('.t-modal').modal('hide');
-            }
-        },
         redirectUser() {
             this.transitionTo('admin.locations');
         }

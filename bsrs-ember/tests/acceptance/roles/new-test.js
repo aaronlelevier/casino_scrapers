@@ -58,10 +58,6 @@ test('visiting role/new', (assert) => {
     fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
     fillIn('.t-role-type', ROLE_DEFAULTS.roleTypeGeneral);
     fillIn('.t-location-level', ROLE_DEFAULTS.locationLevelOne);
-    andThen(() => {
-        let role = store.find('role', UUID.value);
-        assert.ok(role.get('dirty'));
-    });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

@@ -129,7 +129,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('toran when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     clearxhr(detail_xhr);
     visit(PEOPLE_NEW_URL);
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
@@ -154,7 +154,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+test('toran when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
     clearxhr(detail_xhr);
     visit(PEOPLE_NEW_URL);
     click('.t-cancel-btn');

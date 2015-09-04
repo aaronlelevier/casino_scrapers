@@ -2,7 +2,6 @@ import Ember from 'ember';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 var LocationModel = Model.extend(NewMixin, {
     store: inject('main'),
@@ -84,10 +83,7 @@ var LocationModel = Model.extend(NewMixin, {
     },
     removeRecord() {
         this.get('store').remove('location', this.get('id'));
-    },
-    isNew: Ember.computed(function() {
-        return loopAttrs(this);
-    })
+    }
 });
 
 export default LocationModel;

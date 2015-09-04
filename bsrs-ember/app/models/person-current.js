@@ -2,7 +2,6 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 var PersonCurrent = Model.extend({
   store: inject('main'),

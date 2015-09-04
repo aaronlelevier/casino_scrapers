@@ -3,7 +3,6 @@ import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 
 export default Model.extend(NewMixin, {
     uuid: injectUUID('uuid'),
@@ -325,8 +324,5 @@ export default Model.extend(NewMixin, {
     },
     removeRecord() {
         this.get('store').remove('person', this.get('id'));
-    },
-    isNew: Ember.computed(function() {
-        return loopAttrs(this);
-    })
+    }
 });
