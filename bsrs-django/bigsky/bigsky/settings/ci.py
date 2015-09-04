@@ -4,7 +4,6 @@ from .base import *
 CI_APPS = (
     'django_nose',
     'django_coverage',
-    'django_extensions',
     )
 
 INSTALLED_APPS = INSTALLED_APPS + CI_APPS

@@ -26,11 +26,13 @@ function emberTest {
 }
 
 function pipInstall {
+    echo "ENABLE SPECIFIC DJANGO SETTINGS FILE HERE B/C AFFECTS PIP INSTALL"
+    export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'
     easy_install -U pip
     rm -rf venv
     virtualenv venv
     source venv/bin/activate
-    pip install -r requirements_ci.txt --no-use-wheel
+    pip install -r requirements_ci.txt
     PIP_INSTALL=$?
     if [ "$PIP_INSTALL" == 1 ]; then
       echo "pip install failed"
@@ -94,7 +96,6 @@ function dropAndCreateDB {
 }
 
 function migrateData {
-    export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'
     ./manage.py migrate
     ./manage.py loaddata fixtures/jenkins.json
     ./manage.py loaddata fixtures/jenkins_custom.json
