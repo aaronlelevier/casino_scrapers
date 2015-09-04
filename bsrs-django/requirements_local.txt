@@ -1,11 +1,4 @@
--r requirements.txt
-
-# testing
-coverage==3.7.1
-django-coverage==1.2.4
-nose==1.3.7
-django-nose==1.4.1
-selenium==2.47.1
+-r requirements_ci.txt
 
 # ipython / django-extentions
 appnope==0.1.0
