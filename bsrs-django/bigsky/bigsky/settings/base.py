@@ -31,11 +31,7 @@ THIRD_PARTY_APPS = (
     'psycopg2',
     'corsheaders',
     'rest_framework',
-    # testing
-    'django_nose',
-    'django_coverage',
     'debug_toolbar',
-    'django_extensions',
     )
 
 LOCAL_APPS = (

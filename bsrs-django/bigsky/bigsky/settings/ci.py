@@ -1,5 +1,14 @@
 from .base import *
 
+### Application definition ###
+CI_APPS = (
+    'django_nose',
+    'django_coverage',
+    'django_extensions',
+    )
+
+INSTALLED_APPS = INSTALLED_APPS + CI_APPS
+
 
 DATABASES = {
     'default': {

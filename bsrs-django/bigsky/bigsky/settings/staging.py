@@ -3,17 +3,6 @@ import os
 from .base import *
 
 
-LOGGING = None
-
-TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
-
-NOSE_ARGS = [
-    '--with-coverage',
-    '--cover-package=contact,location,order,person,role,session,util',
-]
-
-DEBUG = True
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
