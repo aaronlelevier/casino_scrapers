@@ -9,6 +9,7 @@ from django.shortcuts import render
 from django.utils import timezone
 
 from accounting.models import Currency
+from category.models import Category
 from contact.models import PhoneNumberType, AddressType
 from person.models import Role, PersonStatus, Person
 from location.models import (Location, LocationLevel, LocationStatus,
@@ -62,7 +63,7 @@ def relationships_view(request):
     """"Display a list of links for Models that have relationships, 
     and route to the d3js views for each model."""
     models = []
-    for model in [Location, LocationLevel, Role]:
+    for model in [Category, Location, LocationLevel, Role]:
         models.append({
             'app_name': model.__module__.split('.')[0],
             'model_name': model.__name__
