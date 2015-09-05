@@ -16,7 +16,7 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
 var container, registry, store;
 
-module('unit: person test', {
+module('toran unit: person test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();
@@ -197,19 +197,6 @@ test('save related will iterate over each phone number and save that model', (as
     assert.ok(person.get('phoneNumbersNotDirty'));
 });
 
-test('savePhoneNumbers will remove the new flag if set on the model', (assert) => {
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
-    var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, new: true, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person: PEOPLE_DEFAULTS.id});
-    assert.ok(person.get('phoneNumbersNotDirty'));
-    first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
-    second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
-    assert.ok(person.get('phoneNumbersDirty'));
-    person.savePhoneNumbers();
-    assert.ok(person.get('phoneNumbersNotDirty'));
-    assert.equal(second_phone_number.get('new'), undefined);
-});
-
 test('savePhoneNumbers will remove any phone number model with no (valid) value', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, person: PEOPLE_DEFAULTS.id});
@@ -334,20 +321,20 @@ test('when new address is added, the person model is not dirty unless address is
     assert.ok(person.get('dirtyOrRelatedDirty'));
 });
 
-test('when new phone number is added, the person model is not dirty even when the type or number attrs are modified', (assert) => {
+test('when new phone number is added, the person model is dirty when the type or number attrs are modified', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, new: true, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('phoneNumbersNotDirty'));
     assert.ok(person.get('notDirty'));
-    var phone_number_two = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, new: true, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var phone_number_two = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('notDirtyOrRelatedNotDirty'));
     phone_number_two.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
-    assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+    assert.ok(person.get('dirtyOrRelatedDirty'));
     phone_number_two.rollback();
     assert.equal(phone_number_two.get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
     assert.ok(person.get('notDirtyOrRelatedNotDirty'));
     phone_number.set('number', '5');
-    assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+    assert.ok(person.get('dirtyOrRelatedDirty'));
     assert.equal(phone_number.get('number'), '5');
 });
 

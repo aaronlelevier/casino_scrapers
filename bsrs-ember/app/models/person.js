@@ -71,11 +71,11 @@ export default Model.extend(NewMixin, {
         return this.get('role_fk') ? true : false;
     }),
     roleNotDirty: Ember.computed.not('roleDirty'),
-    phoneNumbersDirty: Ember.computed('phone_numbers.@each.dirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
+    phoneNumbersDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
         var phone_numbers = this.get('phone_numbers');
         var phone_number_dirty = false;
         phone_numbers.forEach((num) => {
-            if (num.get('dirty')) {
+            if (num.get('isDirty')) {
                 phone_number_dirty = true;
             }
         });
