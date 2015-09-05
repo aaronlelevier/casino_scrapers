@@ -258,6 +258,7 @@ test('phoneNumbersDirty behaves correctly for phone numbers (newly) added', (ass
     assert.ok(person.get('phoneNumbersIsNotDirty'));
 });
 
+
 test('phoneNumbersDirty behaves correctly for existing phone numbers', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var first_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
@@ -279,10 +280,44 @@ test('phoneNumbersIsDirty is false when a phone number is added but does not hav
     assert.equal(store.find('phonenumber').get('length'), 3);
 });
 
-test('save related will iterate over each address and save that model', (assert) => {
+test('addressesIsDirty behaves correctly for addresses(newly) added', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     var first_address = store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     var second_address = store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person: PEOPLE_DEFAULTS.id});
+    var third_address = store.push('address', {id: ADDRESS_DEFAULTS.idThree, type: ADDRESS_TYPES_DEFAULTS.shippingId, person: PEOPLE_DEFAULTS.id});
+    assert.equal(person.get('addresses').get('length'), 3);
+    assert.ok(person.get('addressesIsNotDirty'));
+    first_address.set('address', ADDRESS_DEFAULTS.streetOne);
+    assert.ok(person.get('addressesIsDirty'));
+    first_address.set('address', '');
+    assert.ok(person.get('addressesIsNotDirty'));
+});
+
+test('addressessDirty behaves correctly for existing address', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var first_address = store.push('address', {id: ADDRESS_DEFAULTS.idOne, address: ADDRESS_DEFAULTS.streetOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    assert.equal(person.get('addresses').get('length'), 1);
+    assert.ok(person.get('addressesIsNotDirty'));
+    first_address.set('address', ADDRESS_DEFAULTS.streetTwo);
+    assert.ok(person.get('addressesIsDirty'));
+    first_address.set('address', '');
+    assert.ok(person.get('addressesIsDirty'));
+});
+
+test('addressesIsDirty is false when an address is added but does not have a (valid) address', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var first_address = store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var second_address = store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person: PEOPLE_DEFAULTS.id});
+    var third_address = store.push('address', {id: ADDRESS_DEFAULTS.idThree, type: ADDRESS_TYPES_DEFAULTS.shippingId, person: PEOPLE_DEFAULTS.id});
+    assert.equal(store.find('address').get('length'), 3);
+    assert.ok(person.get('addressesIsNotDirty'));
+    assert.equal(store.find('address').get('length'), 3);
+});
+
+test('save related will iterate over each address and save that model', (assert) => {
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var first_address = store.push('address', {id: ADDRESS_DEFAULTS.idOne, address: ADDRESS_DEFAULTS.streetOne,  type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    var second_address = store.push('address', {id: ADDRESS_DEFAULTS.idTwo, address: ADDRESS_DEFAULTS.streetTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('addressesIsNotDirty'));
     first_address.set('type', ADDRESS_TYPES_DEFAULTS.shippingId);
     assert.ok(person.get('addressesIsDirty'));

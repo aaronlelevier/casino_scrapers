@@ -181,6 +181,27 @@ test('newly added phone numbers without a valid number are ignored and removed w
     });
 });
 
+test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+    visit(DETAIL_URL);
+    click('.t-add-address-btn:eq(0)');
+    andThen(() => {
+        assert.equal(store.find('address').get('length'), 3);
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    fillIn('.t-address-address:eq(2)', '34');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+    });
+    fillIn('.t-address-address:eq(2)', '');
+    click('.t-cancel-btn');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(store.find('address').get('length'), 2);
+    });
+});
+
 test('phone numbers without a valid number are ignored and removed', (assert) => {
     visit(DETAIL_URL);
     click('.t-add-btn:eq(0)');
@@ -249,7 +270,7 @@ test('when editing phone numbers to invalid, it checks for validation', (assert)
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
-    fillIn('.t-address-address:eq(2)', 'a');
+    fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
     andThen(() => {
         let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
         assert.equal(visible_errors.length, 0);
@@ -259,7 +280,7 @@ test('when editing phone numbers to invalid, it checks for validation', (assert)
         let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
     });
-    fillIn('.t-address-address:eq(2)', 'a');
+    fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
     andThen(() => {
         let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
         assert.equal(visible_errors.length, 0);
@@ -273,7 +294,7 @@ test('when editing phone numbers to invalid, it checks for validation', (assert)
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id});
     payload.phone_numbers.push({id: 'abc123', number: '515-222-3333', type: PHONE_NUMBER_TYPES_DEFAULTS.officeId });
-    payload.addresses.push({id: 'abc123', type: ADDRESS_TYPES_DEFAULTS.officeId, address: 'a', person: PEOPLE_DEFAULTS.id});
+    payload.addresses.push({id: 'abc123', type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetThree, person: PEOPLE_DEFAULTS.id});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     click(SAVE_BTN);
@@ -556,7 +577,7 @@ test('when you deep link to the person detail view you can add a new address', (
         assert.equal(find('.t-input-multi-address').find('input').length, 4);
     });
     click('.t-add-address-btn:eq(0)');
-    fillIn('.t-address-address:eq(2)', 'a');
+    fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
     andThen(() => {
         assert.equal(find('.t-input-multi-address').find('input').length, 6);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
@@ -564,7 +585,7 @@ test('when you deep link to the person detail view you can add a new address', (
     });
     var addresses = ADDRESS_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: 'a', person: PEOPLE_DEFAULTS.id});
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetThree, person: PEOPLE_DEFAULTS.id});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
@@ -580,11 +601,11 @@ test('when you deep link to the person detail view you can change the address ty
     visit(DETAIL_URL);
     fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
     click('.t-add-address-btn:eq(0)');
-    fillIn('.t-address-address:eq(2)', 'a');
+    fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
     var addresses = ADDRESS_FIXTURES.put();
     addresses[0].type = ADDRESS_TYPES_DEFAULTS.shippingId;
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: 'a', person: PEOPLE_DEFAULTS.id});
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetThree, person: PEOPLE_DEFAULTS.id});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);

@@ -175,7 +175,7 @@ test('filling in invalid address reveals validation message', function(assert) {
     $first_btn.trigger('click').trigger('change');
     var $component = this.$('.t-input-multi-address-validation-error');
     assert.ok($component.is(':hidden'));
-    this.$('.t-address-address').val('a').trigger('change');
+    this.$('.t-address-address').val(ADDRESS_DEFAULTS.streetThree).trigger('change');
     assert.ok($component.is(':hidden'));
     this.$('.t-address-address').val('').trigger('change');
     assert.ok($component.is(':visible'));

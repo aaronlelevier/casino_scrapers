@@ -110,9 +110,17 @@ export default Model.extend(NewMixin, {
         });
     },
     saveAddresses: function() {
-        var addresses = this.get('addresses');
+        let store = this.get('store');
+        let addresses_to_remove = [];
+        let addresses = this.get('addresses');
         addresses.forEach((address) => {
+            if (address.get('invalid_address')) {
+                addresses_to_remove.push(address.get('id')); 
+            }
             address.save();
+        });
+        addresses_to_remove.forEach((id) => {
+            store.remove('address', id);
         });
     },
     saveLocations: function() {
@@ -213,9 +221,17 @@ export default Model.extend(NewMixin, {
         });
     },
     rollbackAddresses() {
-        var addresses = this.get('addresses');
+        let store = this.get('store');
+        let addresses_to_remove = [];
+        let addresses = this.get('addresses');
         addresses.forEach((address) => {
+            if(address.get('invalid_address') && address.get('isNotDirty')) {
+                addresses_to_remove.push(address.get('id'));
+            }
             address.rollback();
+        });
+        addresses_to_remove.forEach((id) => {
+            store.remove('address', id);
         });
     },
     locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
