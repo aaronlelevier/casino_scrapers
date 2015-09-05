@@ -58,7 +58,7 @@ test('visiting admin/location-level', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let location = store.find('location-level').objectAt(0);
-        assert.ok(location.get('notDirty'));
+        assert.ok(location.get('isNotDirty'));
         assert.equal(find('.t-location-level-name').val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
     });
     let response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idOne);
@@ -71,7 +71,7 @@ test('visiting admin/location-level', (assert) => {
         assert.equal(location_level.get('children').get('length'), 7);
         assert.equal(find('.t-location-level-location-level-select > div.option').length, 0);
         assert.equal(find('.items > div.item').length, 7);
-        assert.ok(location_level.get('dirty'));
+        assert.ok(location_level.get('isDirty'));
     });
     let list = LOCATION_LEVEL_FIXTURES.list();
     list.results[0].name = LOCATION_LEVEL_DEFAULTS.nameRegion;
@@ -81,7 +81,7 @@ test('visiting admin/location-level', (assert) => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
         assert.equal(location_level.get('name'), LOCATION_LEVEL_DEFAULTS.nameRegion);
-        assert.ok(location_level.get('notDirty'));
+        assert.ok(location_level.get('isNotDirty'));
     });
 });
 
@@ -110,7 +110,7 @@ test('a location level child can be selected and persisted', (assert) => {
         assert.equal(location_level.get('children').get('length'), 3);
         assert.equal(find('.t-location-level-location-level-select > div.option').length, 0);
         assert.equal(find('.items > div.item').length, 3);
-        assert.ok(location_level.get('dirty'));
+        assert.ok(location_level.get('isDirty'));
     });
     let list = LOCATION_LEVEL_FIXTURES.list();
     let children_array = LOCATION_LEVEL_DEFAULTS.districtChildren;
@@ -122,7 +122,7 @@ test('a location level child can be selected and persisted', (assert) => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
         assert.deepEqual(location_level.get('children_fks'), children_array);
-        assert.ok(location_level.get('notDirty'));
+        assert.ok(location_level.get('isNotDirty'));
     });
 });
 

@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
 var LocationLevel = Model.extend(NewMixin, {
     store: inject('main'),
@@ -9,10 +9,10 @@ var LocationLevel = Model.extend(NewMixin, {
     locations: attr([]),
     roles: attr([]),
     children_fks: attr([]),
-    dirtyOrRelatedDirty: Ember.computed('dirty', function() {
-        return this.get('dirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
+        return this.get('isDirty');
     }),
-    notDirtyOrRelatedNotDirty: Ember.computed.not('dirtyOrRelatedDirty'),
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     rollbackRelated() {
     },
     serialize() {

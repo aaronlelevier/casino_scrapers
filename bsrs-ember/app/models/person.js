@@ -1,8 +1,8 @@
 import Ember from 'ember';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
 export default Model.extend(NewMixin, {
     uuid: injectUUID('uuid'),
@@ -59,19 +59,19 @@ export default Model.extend(NewMixin, {
         var store = this.get('store');
         return store.find('address', {person: this.get('id')});
     }),
-    dirtyOrRelatedDirty: Ember.computed('dirty', 'phoneNumbersDirty', 'addressesDirty', 'dirtyModel', 'roleDirty', 'locationsDirty', function() {
-        return this.get('dirty') || this.get('phoneNumbersDirty') || this.get('addressesDirty') || this.get('dirtyModel') || this.get('roleDirty') || this.get('locationsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', 'locationsIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty') || this.get('locationsIsDirty');
     }),
-    roleDirty: Ember.computed('role_property.@each.dirty', function() {
+    roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
         let roles = this.get('role_property');
         var role = roles.objectAt(0);
         if(role) {
-            return role.get('dirty');
+            return role.get('isDirty');
         }
         return this.get('role_fk') ? true : false;
     }),
-    roleNotDirty: Ember.computed.not('roleDirty'),
-    phoneNumbersDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
+    roleIsNotDirty: Ember.computed.not('roleIsDirty'),
+    phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
         var phone_numbers = this.get('phone_numbers');
         var phone_number_dirty = false;
         phone_numbers.forEach((num) => {
@@ -81,20 +81,20 @@ export default Model.extend(NewMixin, {
         });
         return phone_number_dirty;
     }),
-    phoneNumbersNotDirty: Ember.computed.not('phoneNumbersDirty'),
-    addressesDirty: Ember.computed('addresses.@each.dirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state',
+    phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty'),
+    addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state',
                                      'addresses.@each.postal_code', 'addresses.@each.country', 'addresses.@each.type', function() {
         var addresses = this.get('addresses');
         var address_dirty = false;
         addresses.forEach((address) => {
-            if (address.get('dirty')) {
+            if (address.get('isDirty')) {
                 address_dirty = true;
             }
         });
         return address_dirty;
     }),
-    addressesNotDirty: Ember.computed.not('addressesDirty'),
-    notDirtyOrRelatedNotDirty: Ember.computed.not('dirtyOrRelatedDirty'),
+    addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     savePhoneNumbers: function() {
         let store = this.get('store');
         let phone_numbers_to_remove = [];
@@ -203,7 +203,7 @@ export default Model.extend(NewMixin, {
         let phone_numbers_to_remove = [];
         let phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
-            if(num.get('invalid_number') && num.get('notDirty')) {
+            if(num.get('invalid_number') && num.get('isNotDirty')) {
                 phone_numbers_to_remove.push(num.get('id'));
             }
             num.rollback();
@@ -218,8 +218,8 @@ export default Model.extend(NewMixin, {
             address.rollback();
         });
     },
-    locationsNotDirty: Ember.computed.not('locationsDirty'),
-    locationsDirty: Ember.computed('person_locations', 'locations.@each.dirty', function() {
+    locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
+    locationsIsDirty: Ember.computed('person_locations', 'locations.@each.isDirty', function() {
         let locations = this.get('locations');
         let previous_m2m_fks = this.get('person_location_fks');
         if(locations.get('length') > 0) {
@@ -228,7 +228,7 @@ export default Model.extend(NewMixin, {
             }
 
             let dirty_locations = locations.filter(function(location) {
-                return location.get('dirty') === true;
+                return location.get('isDirty') === true;
             });
             return dirty_locations.length > 0;
 

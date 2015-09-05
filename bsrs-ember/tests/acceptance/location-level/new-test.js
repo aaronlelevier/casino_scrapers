@@ -40,7 +40,7 @@ module('Acceptance | location-level-new', {
     }
 });
 
-test('visiting /location-level/new', (assert) => {
+test('toran visiting /location-level/new', (assert) => {
     let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);
@@ -67,7 +67,7 @@ test('visiting /location-level/new', (assert) => {
         let locationLevel = store.find('location-level', UUID.value);
         assert.equal(locationLevel.get('id'), UUID.value);
         assert.equal(locationLevel.get('name'), LOCATION_LEVEL_DEFAULTS.nameAnother);
-        assert.ok(locationLevel.get('notDirty'));
+        assert.ok(locationLevel.get('isNotDirty'));
     });
 });
 

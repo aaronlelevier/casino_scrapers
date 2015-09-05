@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
 var LocationModel = Model.extend(NewMixin, {
     store: inject('main'),
@@ -9,14 +9,14 @@ var LocationModel = Model.extend(NewMixin, {
     number: attr(''),
     status: attr(),
     location_level_fk: undefined,
-    locationLevelDirty: Ember.computed('location_levels.@each.dirty', function() {
+    locationLevelIsDirty: Ember.computed('location_levels.@each.isDirty', function() {
         let location_level = this.get('location_level');
         if(location_level) {
-            return location_level.get('dirty');
+            return location_level.get('isDirty');
         }
         return this.get('location_level_fk') ? true : false;
     }),
-    locationLevelNotDirty: Ember.computed.not('locationLevelDirty'),
+    locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
     location_level: Ember.computed('location_levels.[]', function() {
         var location_levels = this.get('location_levels');
         var has_location_level = location_levels.get('length') > 0;
@@ -36,10 +36,10 @@ var LocationModel = Model.extend(NewMixin, {
         };
         return store.find('location-level', filter.bind(this), ['locations']);
     }),
-    dirtyOrRelatedDirty: Ember.computed('dirty', 'locationLevelDirty', function() {
-        return this.get('dirty') || this.get('locationLevelDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', function() {
+        return this.get('isDirty') || this.get('locationLevelIsDirty');
     }),
-    notDirtyOrRelatedNotDirty: Ember.computed.not('dirtyOrRelatedDirty'),
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     saveLocationLevel() {
         var location_level = this.get('location_level');
         location_level.save();

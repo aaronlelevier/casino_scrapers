@@ -53,7 +53,7 @@ test('visiting role/new', (assert) => {
         assert.equal(find('.t-role-type option:selected').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(0)').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(1)').text(), ROLE_DEFAULTS.roleTypeContractor);
-        assert.ok(store.find('role').objectAt(1).get('notDirty'));
+        assert.ok(store.find('role').objectAt(1).get('isNotDirty'));
     });
     fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
     fillIn('.t-role-type', ROLE_DEFAULTS.roleTypeGeneral);
@@ -66,7 +66,7 @@ test('visiting role/new', (assert) => {
         assert.equal(role.get('name'), ROLE_DEFAULTS.nameOne);
         assert.equal(role.get('role_type'), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(role.get('location_level.id'), ROLE_DEFAULTS.locationLevelOne);
-        assert.ok(role.get('notDirty'));
+        assert.ok(role.get('isNotDirty'));
     });
 });
 

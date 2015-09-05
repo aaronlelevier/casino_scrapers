@@ -71,7 +71,7 @@ test('visiting /people/new', (assert) => {
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
         assert.equal(person.get('role').get('id'), PEOPLE_DEFAULTS.role);
-        assert.ok(person.get('notDirty'));
+        assert.ok(person.get('isNotDirty'));
     });
 });
 

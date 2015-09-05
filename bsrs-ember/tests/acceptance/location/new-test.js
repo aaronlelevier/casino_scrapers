@@ -65,7 +65,7 @@ test('visiting /location/new', (assert) => {
         assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
         assert.equal(location.get('number'), LOCATION_DEFAULTS.storeNumber);
         //assert.equal(location.get('location_level'), LOCATION_DEFAULTS.location_level);
-        assert.ok(location.get('notDirty'));
+        assert.ok(location.get('isNotDirty'));
     });
 });
 

@@ -69,7 +69,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirty'));
+        assert.ok(person.get('isNotDirty'));
         assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
         assert.equal(find('.t-person-first-name').val(), PEOPLE_DEFAULTS.first_name);
         assert.equal(find('.t-person-middle-initial').val(), PEOPLE_DEFAULTS.middle_initial);
@@ -128,16 +128,16 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     fillIn('.t-locale-select', PEOPLE_DEFAULTS_PUT.locale);
     andThen(() => {
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('dirty'));
-        assert.ok(person.get('dirtyOrRelatedDirty'));
+        assert.ok(person.get('isDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     click(SAVE_BTN);
     andThen(() => {
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(store.find('person').get('length'), 11);
-        assert.ok(person.get('notDirty'));
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
@@ -448,7 +448,7 @@ test('when you deep link to the person detail view you can add a new phone numbe
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(find('.t-input-multi-phone').find('input').length, 2);
     });
     click('.t-add-btn:eq(0)');
@@ -457,7 +457,7 @@ test('when you deep link to the person detail view you can add a new phone numbe
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-input-multi-phone').find('input').length, 3);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('dirtyOrRelatedDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
@@ -468,8 +468,8 @@ test('when you deep link to the person detail view you can add a new phone numbe
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirty'));
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
@@ -478,7 +478,7 @@ test('when you deep link to the person detail view you can remove a new phone nu
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(find('.t-input-multi-phone').find('input').length, 2);
     });
     click('.t-del-btn:eq(0)');
@@ -486,7 +486,7 @@ test('when you deep link to the person detail view you can remove a new phone nu
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-input-multi-phone').find('input').length, 1);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('dirtyOrRelatedDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     var phone_numbers = PHONE_NUMBER_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
@@ -496,8 +496,8 @@ test('when you deep link to the person detail view you can remove a new phone nu
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirty'));
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
@@ -516,10 +516,10 @@ test('when you deep link to the person detail view you can change the phone numb
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirty'));
+        assert.ok(person.get('isNotDirty'));
         assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
         assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
-        assert.ok(person.get('phone_numbers').objectAt(0).get('notDirty'));
+        assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
     });
 });
 
@@ -541,10 +541,10 @@ test('when you deep link to the person detail view you can add and save a new ph
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirty'));
+        assert.ok(person.get('isNotDirty'));
         assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
         assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
-        assert.ok(person.get('phone_numbers').objectAt(0).get('notDirty'));
+        assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
     });
 });
 
@@ -552,7 +552,7 @@ test('when you deep link to the person detail view you can add a new address', (
     visit(DETAIL_URL);
     andThen(() => {
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(find('.t-input-multi-address').find('input').length, 4);
     });
     click('.t-add-address-btn:eq(0)');
@@ -560,7 +560,7 @@ test('when you deep link to the person detail view you can add a new address', (
     andThen(() => {
         assert.equal(find('.t-input-multi-address').find('input').length, 6);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('dirtyOrRelatedDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     var addresses = ADDRESS_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
@@ -571,8 +571,8 @@ test('when you deep link to the person detail view you can add a new address', (
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirty'));
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
@@ -591,10 +591,10 @@ test('when you deep link to the person detail view you can change the address ty
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirty'));
+        assert.ok(person.get('isNotDirty'));
         assert.equal(person.get('addresses').objectAt(0).get('type'), ADDRESS_TYPES_DEFAULTS.shippingId);
         assert.equal(person.get('addresses').objectAt(2).get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
-        assert.ok(person.get('addresses').objectAt(0).get('notDirty'));
+        assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
     });
 });
 
@@ -603,7 +603,7 @@ test('when you deep link to the person detail view you can remove a new address'
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(find('.t-input-multi-address').find('input').length, 4);
     });
     click('.t-del-address-btn:eq(0)');
@@ -611,7 +611,7 @@ test('when you deep link to the person detail view you can remove a new address'
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-input-multi-address').find('input').length, 2);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('dirtyOrRelatedDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     var addresses = ADDRESS_FIXTURES.put();
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
@@ -621,8 +621,8 @@ test('when you deep link to the person detail view you can remove a new address'
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirty'));
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
@@ -633,7 +633,7 @@ test('when you deep link to the person detail view you can alter the role and ro
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idOne);
         assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
     });
@@ -642,7 +642,7 @@ test('when you deep link to the person detail view you can alter the role and ro
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idTwo);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('dirtyOrRelatedDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
         assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
     });
     click('.t-cancel-btn');
@@ -660,12 +660,12 @@ test('when you deep link to the person detail view you can alter the role and ro
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
             var actual_role = store.find('role', ROLE_DEFAULTS.idOne);
-            assert.ok(actual_role.get('notDirty'));
-            assert.ok(person.get('notDirty'));
-            assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+            assert.ok(actual_role.get('isNotDirty'));
+            assert.ok(person.get('isNotDirty'));
+            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
             var previous_role = store.find('role', ROLE_DEFAULTS.idTwo);
             assert.ok(Ember.$.inArray(person.get('id'), previous_role.get('people')) === -1);
-            assert.ok(previous_role.get('notDirty'));
+            assert.ok(previous_role.get('isNotDirty'));
         });
     });
 });
@@ -702,8 +702,8 @@ test('when you deep link to the person detail view you can add and save a locati
         assert.equal(currentURL(), PEOPLE_URL);
         let person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(person.get('locations').get('length'), 1);
-        assert.ok(person.get('notDirty'));
-        assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(person.get('locations').objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
     });
 });
@@ -726,8 +726,8 @@ test('when you deep link to the person detail view you can alter the locations a
             assert.equal(find('.t-modal').is(':hidden'), true);
             let person = store.find('person', PEOPLE_DEFAULTS.id);
             assert.equal(person.get('locations').get('length'), 0);
-            assert.ok(person.get('notDirty'));
-            assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+            assert.ok(person.get('isNotDirty'));
+            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
             var previous_location_m2m = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
             assert.deepEqual(person.get('person_location_fks'), []);
             assert.equal(previous_location_m2m.get('length'), 1);

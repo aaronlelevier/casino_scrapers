@@ -42,8 +42,8 @@ test('selecting a role will append the persons id to the new role but remove it 
     assert.equal(this.$('.t-person-role-select option:eq(1)').text(), 'Administrator');//TODO: translate this
     assert.equal(person.get('role').get('people'), PEOPLE_DEFAULTS.id);
     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
-    assert.ok(role_one.get('notDirty'));
-    assert.ok(role_two.get('notDirty'));
+    assert.ok(role_one.get('isNotDirty'));
+    assert.ok(role_two.get('isNotDirty'));
     this.$('.t-person-role-select').val(ROLE_DEFAULTS.idTwo).trigger('change');
     assert.equal(role_two.get('people.length'), 2);
     assert.deepEqual(role_two.get('people'), [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
@@ -51,8 +51,8 @@ test('selecting a role will append the persons id to the new role but remove it 
     assert.deepEqual(role_one.get('people'), []);
     assert.deepEqual(person.get('role').get('people')[1], PEOPLE_DEFAULTS.id);
     assert.deepEqual(person.get('role.id'), ROLE_DEFAULTS.idTwo);
-    assert.ok(role_one.get('notDirty'));
-    assert.ok(role_two.get('dirty'));
+    assert.ok(role_one.get('isNotDirty'));
+    assert.ok(role_two.get('isDirty'));
 });
 
 test('selecting a placeholder instead of legit role will not append the persons id to anything but still remove it from the previous role', function(assert) {
@@ -67,19 +67,19 @@ test('selecting a placeholder instead of legit role will not append the persons 
     assert.equal(this.$('.t-person-role-select option:eq(1)').text(), 'Administrator');//TODO: translate this
     assert.equal(person.get('role').get('people'), PEOPLE_DEFAULTS.id);
     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
-    assert.ok(role_one.get('notDirty'));
-    assert.ok(role_two.get('notDirty'));
-    assert.ok(person.get('notDirty'));
-    assert.ok(person.get('notDirtyOrRelatedNotDirty'));
+    assert.ok(role_one.get('isNotDirty'));
+    assert.ok(role_two.get('isNotDirty'));
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     this.$('.t-person-role-select').val('Select One').trigger('change');
     assert.equal(role_two.get('people.length'), 1);
     assert.deepEqual(role_two.get('people'), [PEOPLE_DEFAULTS.unusedId]);
     assert.deepEqual(role_one.get('people'), []);
     assert.equal(person.get('role'), undefined);
-    assert.ok(role_one.get('notDirty'));
-    assert.ok(role_two.get('notDirty'));
-    assert.ok(person.get('dirtyOrRelatedDirty'));
-    assert.ok(person.get('notDirty'));
+    assert.ok(role_one.get('isNotDirty'));
+    assert.ok(role_two.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    assert.ok(person.get('isNotDirty'));
 });
 
 test('locations multi select is rendered in this component', function(assert) {

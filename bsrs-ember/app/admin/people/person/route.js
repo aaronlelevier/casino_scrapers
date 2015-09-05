@@ -57,7 +57,7 @@ export default Ember.Route.extend({
     actions: {
         willTransition(transition) {
             var model = this.currentModel.model;
-            if (model.get('dirtyOrRelatedDirty')) {
+            if (model.get('isDirtyOrRelatedDirty')) {
                 Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;
                 this.trx.attemptedTransitionModel = model;

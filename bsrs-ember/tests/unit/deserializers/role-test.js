@@ -30,7 +30,7 @@ test('location level will not be deserialized into its own store when deserializ
     subject.deserialize(response);
     var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('roles'), [ROLE_DEFAULTS.idOne, ROLE_DEFAULTS.unusedId]);
-    assert.ok(original.get('notDirty'));
+    assert.ok(original.get('isNotDirty'));
 });
 
 test('location level will correctly be deserialized into its own store with a foreign key on role (single)', (assert) => {
@@ -41,7 +41,7 @@ test('location level will correctly be deserialized into its own store with a fo
     subject.deserialize(response, ROLE_DEFAULTS.unusedId);
     var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('roles'), [ROLE_DEFAULTS.idOne, ROLE_DEFAULTS.unusedId]);
-    assert.ok(original.get('notDirty'));
+    assert.ok(original.get('isNotDirty'));
 });
 
 test('role location level will not be duplicated and correctly be deserialized into its own store with a foreign key on role (single)', (assert) => {
@@ -52,7 +52,7 @@ test('role location level will not be duplicated and correctly be deserialized i
     subject.deserialize(response, ROLE_DEFAULTS.idOne);
     var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('roles'), [ROLE_DEFAULTS.idOne]);
-    assert.ok(original.get('notDirty'));
+    assert.ok(original.get('isNotDirty'));
 });
 
 test('role location level will correctly be deserialized when server returns role without a location_level (single)', (assert) => {
@@ -64,8 +64,8 @@ test('role location level will correctly be deserialized when server returns rol
     subject.deserialize(response, ROLE_DEFAULTS.idOne);
     var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('roles'), []);
-    assert.ok(original.get('notDirty'));
-    assert.ok(role.get('notDirty'));
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(role.get('isNotDirty'));
     assert.equal(role.get('location_level_fk'), undefined);
 });
 
@@ -78,8 +78,8 @@ test('role location level will correctly be deserialized (with many roles) when 
     subject.deserialize(response, ROLE_DEFAULTS.idOne);
     var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('roles'), [ROLE_DEFAULTS.unusedId]);
-    assert.ok(original.get('notDirty'));
-    assert.ok(role.get('notDirty'));
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(role.get('isNotDirty'));
     assert.equal(role.get('location_level_fk'), undefined);
 });
 
@@ -93,6 +93,6 @@ test('role location level will correctly be deserialized when server returns rol
     subject.deserialize(response);
     var original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('roles'), []);
-    assert.ok(original.get('notDirty'));
-    assert.ok(role.get('notDirty'));
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(role.get('isNotDirty'));
 });

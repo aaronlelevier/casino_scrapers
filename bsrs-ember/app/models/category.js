@@ -10,10 +10,10 @@ var CategoryModel = Model.extend(NewMixin, {
     label: attr(''),
     cost_amount: attr(''),
     cost_code: attr(''),
-    dirtyOrRelatedDirty: Ember.computed('dirty', function() {
-        return this.get('dirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
+        return this.get('isDirty');
     }),
-    notDirtyOrRelatedNotDirty: Ember.computed.not('dirtyOrRelatedDirty'),
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     serialize() {
         return {
             id: this.get('id'),

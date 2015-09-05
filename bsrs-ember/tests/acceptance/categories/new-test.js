@@ -70,7 +70,7 @@ test('visiting /category/new', (assert) => {
         assert.equal(category.get('subcategory_label'), CATEGORY_DEFAULTS.subCatLabelTwo);
         assert.equal(category.get('cost_amount'), CATEGORY_DEFAULTS.costAmountOne);
         assert.equal(category.get('cost_code'), CATEGORY_DEFAULTS.costCodeOne);
-        assert.ok(category.get('notDirty'));
+        assert.ok(category.get('isNotDirty'));
     });
 });
 

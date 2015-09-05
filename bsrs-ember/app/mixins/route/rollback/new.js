@@ -4,7 +4,7 @@ var NewRollbackModalMixin = Ember.Mixin.create({
     actions: {
         willTransition(transition) {
             var model = this.currentModel.model ? this.currentModel.model : this.currentModel;
-            if (model.get('isNewAndNotDirty')) {
+            if (model.get('new') && !model.get('isDirty')) {
                 model.removeRecord();
                 Ember.$('.t-modal').modal('hide');
             } else if (model.get('isDirty')) {

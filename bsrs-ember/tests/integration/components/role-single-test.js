@@ -30,8 +30,8 @@ test('selecting a location level will append the role id to the new location lev
     assert.equal(this.$('.t-location-level option:eq(2)').text(), LOCATION_LEVEL_DEFAULTS.nameDistrict);
     assert.deepEqual(role.get('location_level').get('roles'), [ROLE_DEFAULTS.idOne]);
     assert.equal(role.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(location_level_one.get('notDirty'));
-    assert.ok(location_level_two.get('notDirty'));
+    assert.ok(location_level_one.get('isNotDirty'));
+    assert.ok(location_level_two.get('isNotDirty'));
     this.$('.t-location-level').val(LOCATION_LEVEL_DEFAULTS.idTwo).trigger('change');
     assert.equal(location_level_two.get('roles.length'), 2);
     assert.deepEqual(location_level_two.get('roles'), [ROLE_DEFAULTS.unusedId, ROLE_DEFAULTS.idOne]);
@@ -39,8 +39,8 @@ test('selecting a location level will append the role id to the new location lev
     assert.deepEqual(location_level_one.get('roles'), []);
     assert.deepEqual(role.get('location_level').get('roles')[1], ROLE_DEFAULTS.idOne);
     assert.deepEqual(role.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
-    assert.ok(location_level_one.get('notDirty'));
-    assert.ok(location_level_two.get('dirty'));
+    assert.ok(location_level_one.get('isNotDirty'));
+    assert.ok(location_level_two.get('isDirty'));
 });
 
 test('selecting a placeholder instead of legit location level will not append the roles id to anything but still remove it from the previous location level role', function(assert) {
@@ -57,15 +57,15 @@ test('selecting a placeholder instead of legit location level will not append th
     assert.equal(this.$('.t-location-level option:eq(2)').text(), LOCATION_LEVEL_DEFAULTS.nameDistrict);
     assert.deepEqual(role.get('location_level').get('roles'), [ROLE_DEFAULTS.idOne]);
     assert.equal(role.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(role.get('notDirty'));
-    assert.ok(role.get('notDirtyOrRelatedNotDirty'));
+    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     this.$('.t-location-level').val('Select One').trigger('change');
     assert.equal(location_level_two.get('roles.length'), 1);
     assert.deepEqual(location_level_two.get('roles'), [ROLE_DEFAULTS.unusedId]);
     assert.deepEqual(location_level_one.get('roles'), []);
     assert.equal(role.get('location_level'), undefined);
-    assert.ok(location_level_one.get('notDirty'));
-    assert.ok(location_level_two.get('notDirty'));
-    assert.ok(role.get('dirtyOrRelatedDirty'));
-    assert.ok(role.get('notDirty'));
+    assert.ok(location_level_one.get('isNotDirty'));
+    assert.ok(location_level_two.get('isNotDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+    assert.ok(role.get('isNotDirty'));
 });
