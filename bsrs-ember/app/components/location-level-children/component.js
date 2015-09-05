@@ -1,18 +1,9 @@
 import Ember from 'ember';
 
 var LocationLevelChildrenSelect = Ember.Component.extend({
-    location_level_ids: Ember.computed('model.[]', {
-        get(key) {
-            let selected_locations = this.get('selected_locations') || [];
-            let location_level = this.get('model');
-            if(location_level && location_level.get('id')) {
-                location_level.get('children').forEach(function(child) {
-                    selected_locations.pushObject(child);
-                });
-            }
-            return selected_locations;
-        }
-    }),
+    location_level_ids: Ember.computed(function() {
+        return this.get('model').get('children');
+    }).readOnly(),
     actions: {
         change(location_level) {
             let location_level_pk = location_level.get('id');

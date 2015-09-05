@@ -134,10 +134,17 @@ test('when editing name to invalid, it checks for validation', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
     });
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-name-validation-error').is(':hidden'), false);
+    });
     let response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idOne);
-    let payload = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, children: LOCATION_LEVEL_DEFAULTS.companyChildren});
+    response.name = LOCATION_LEVEL_DEFAULTS.nameAnother;
+    let payload = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameAnother, children: LOCATION_LEVEL_DEFAULTS.companyChildren});
     xhr(DJANGO_DETAIL_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameAnother);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -202,7 +209,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-// test('sco when click delete, location level is deleted and removed from store', (assert) => {
+// test('when click delete, location level is deleted and removed from store', (assert) => {
 //     visit(DETAIL_URL);
 //     xhr(DJANGO_DETAIL_URL, 'DELETE', null, {}, 204, {});
 //     click('.t-delete-btn');

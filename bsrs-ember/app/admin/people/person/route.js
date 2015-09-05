@@ -64,7 +64,9 @@ export default Ember.Route.extend({
                 this.trx.storeType = 'person';
                 transition.abort();
             } else {
-                model.rollbackRelated();
+                if (model.get('id')) {
+                    model.rollbackRelated();
+                }
                 Ember.$('.t-modal').modal('hide');
             }
         },

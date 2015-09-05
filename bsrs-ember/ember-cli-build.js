@@ -9,10 +9,10 @@ var es5Shim = funnel('node_modules/es5-shim', {
     destDir: '/assets'
 });
 
-module.exports = function() {
+module.exports = function(environment) {
     var app = new EmberApp({
         'ember-cli-selectize': {
-          theme: 'bootstrap3'
+            theme: 'bootstrap3'
         },
         'markers': {
             enabled: true,

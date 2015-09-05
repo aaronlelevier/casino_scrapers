@@ -160,7 +160,7 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     });
 });
 
-test('toran newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
     visit(DETAIL_URL);
     click('.t-add-btn:eq(0)');
     andThen(() => {
@@ -442,7 +442,6 @@ test('when click delete, person is deleted and removed from store', (assert) => 
         assert.equal(currentURL(), PEOPLE_URL);
     });
 });
-
 
 test('when you deep link to the person detail view you can add a new phone number', (assert) => {
     visit(DETAIL_URL);
