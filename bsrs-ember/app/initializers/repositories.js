@@ -1,6 +1,6 @@
 import registerWithContainer from 'ember-cli-auto-register/register';
 
-export function initialize(container, application) {
+export function initialize(application) {
     registerWithContainer('repositories', application);
     application.inject('repositories', 'store', 'store:main');
 }

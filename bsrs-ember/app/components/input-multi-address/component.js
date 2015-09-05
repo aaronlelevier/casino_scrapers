@@ -21,10 +21,9 @@ export default ChildValidationComponent.extend({
             var type = this.get('default_type').get('id');
             var related_field = this.get('related_field');
             var related_pk = this.get('related_pk');
-            var model = {id: id};
+            var model = {id: id, type: type};
             model[related_field] = related_pk;
             var address = this.get('model').push(model);
-            address.set('type', type);
         },
         delete(entry) {
             this.get('model').remove(entry.id);
