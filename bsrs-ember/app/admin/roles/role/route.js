@@ -1,7 +1,8 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import RollbackModalMixin from 'bsrs-ember/mixins/route/rollback/existing';
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(RollbackModalMixin, {
     repository: inject('role'),
     model(params) {
         var role_pk = params.role_id;
@@ -22,18 +23,6 @@ export default Ember.Route.extend({
         controller.set('all_location_levels', hash.all_location_levels);
     },
     actions: {
-        willTransition(transition) {
-            var model = this.currentModel.model;
-            if (model.get('isDirtyOrRelatedDirty')) {
-                Ember.$('.t-modal').modal('show');
-                this.trx.attemptedTransition = transition;
-                this.trx.attemptedTransitionModel = model;
-                this.trx.storeType = 'role';
-                transition.abort();
-            } else {
-                Ember.$('.t-modal').modal('hide');
-            }
-        },
         deleteRole() {
             var model = this.modelFor('admin.roles.role');
             // model.destroyRecord().then(() => {

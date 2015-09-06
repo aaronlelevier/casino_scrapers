@@ -2,8 +2,9 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import AddressType from 'bsrs-ember/models/address-type';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
+import RollbackModalMixin from 'bsrs-ember/mixins/route/rollback/existing';
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(RollbackModalMixin, {
     repository: inject('person'),
     state_repo: inject('state'),
     status_repo: inject('status'),
@@ -55,21 +56,6 @@ export default Ember.Route.extend({
         controller.set('locales', hash.locales);
     },
     actions: {
-        willTransition(transition) {
-            var model = this.currentModel.model;
-            if (model.get('isDirtyOrRelatedDirty')) {
-                Ember.$('.t-modal').modal('show');
-                this.trx.attemptedTransition = transition;
-                this.trx.attemptedTransitionModel = model;
-                this.trx.storeType = 'person';
-                transition.abort();
-            } else {
-                if (model.get('id')) {
-                    model.rollbackRelated();
-                }
-                Ember.$('.t-modal').modal('hide');
-            }
-        },
         redirectUser() {
             this.transitionTo('admin.people');
         }
