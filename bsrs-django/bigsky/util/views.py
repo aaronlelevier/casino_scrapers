@@ -3,10 +3,10 @@ from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import viewsets, exceptions, status
 from rest_framework.response import Response
 
-from util.mixins import DestroyModelMixin
+from util.mixins import DestroyModelMixin, OrderingQuerySetMixin
 
 
-class BaseModelViewSet(DestroyModelMixin, viewsets.ModelViewSet):
+class BaseModelViewSet(DestroyModelMixin, OrderingQuerySetMixin, viewsets.ModelViewSet):
 	
     queryset = None
 

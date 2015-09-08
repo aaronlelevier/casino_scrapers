@@ -9,7 +9,7 @@ import rest_framework_filters as filters
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
-from util.mixins import OrderyingQuerysetMixin
+from util.mixins import OrderingQuerySetMixin
 from util.views import BaseModelViewSet
 from rest_framework import pagination
 
@@ -41,7 +41,7 @@ class PersonFilterSet(filters.FilterSet):
         fields = ['first_name', 'username']
 
 
-class PersonViewSet(OrderyingQuerysetMixin, BaseModelViewSet):
+class PersonViewSet(BaseModelViewSet):
     '''
     ## Detail Routes
 

@@ -22,7 +22,7 @@ class DestroyModelMixin(object):
 
 ### QUERYSETS
 
-class OrderyingQuerysetMixin(object):
+class OrderingQuerySetMixin(object):
     """Return a case-insensitive ordered queryset."""
     
     def get_queryset(self):
