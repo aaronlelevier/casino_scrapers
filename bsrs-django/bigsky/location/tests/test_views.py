@@ -1,9 +1,12 @@
 import uuid
 import json
 
+from django.db.models import Q
+
 from rest_framework.test import APITestCase
 from model_mommy import mommy
 
+from contact.models import Address
 from location.tests.factory import create_location_levels, create_locations
 from location.models import (Location, LocationLevel, LocationStatus,
     LocationType)
@@ -483,6 +486,61 @@ class LocationDeleteTests(APITestCase):
         response = self.client.get('/api/admin/locations/{}/'.format(self.district_location.id))
         self.assertEqual(response.status_code, 404)
         self.assertFalse(Location.objects_all.filter(id=self.district_location.id).exists())
+
+
+class LocationSearchTests(APITestCase):
+
+    def setUp(self):
+        create_locations()
+        self.location = Location.objects.get(name='ca')
+        self.location_level = self.location.location_level
+        # Login
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_search_name(self):
+        letter = "a"
+        response = self.client.get('/api/admin/locations/?search={}'.format(letter))
+        data = json.loads(response.content)
+        self.assertEqual(
+            data["count"],
+            Location.objects.filter(
+                Q(name__icontains=letter) | Q(number__icontains=letter)
+                ).count()
+        )
+
+    def test_search_address_city(self):
+        city = "San Diego"
+        address = mommy.make(Address, city=city, location=self.location)
+        response = self.client.get('/api/admin/locations/?search={}'.format(city))
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['results'][0]['id'],
+            str(address.location.id)
+        )
+
+    def test_search_address_postal_code(self):
+        postal_code = "90210"
+        address = mommy.make(Address, postal_code=postal_code, location=self.location)
+        response = self.client.get('/api/admin/locations/?search={}'.format(postal_code))
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['results'][0]['id'],
+            str(address.location.id)
+        )
+
+    def test_search_address_address(self):
+        address = "123 Fern St."
+        address = mommy.make(Address, address="Fern", location=self.location)
+        response = self.client.get('/api/admin/locations/?search={}'.format(address))
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['results'][0]['id'],
+            str(address.location.id)
+        )
 
 
 class DRFFiltersTests(APITestCase):
