@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 from django.conf import settings
 
@@ -6,6 +8,17 @@ from util.models import AbstractName, BaseManager
 
 
 ### CATEGORY
+
+class CategoryManager(BaseManager):
+
+    @property
+    def d3_json(self):
+        models = []
+        for category in Category.objects.all():
+            if category.parent:
+                models.append({"source": category.parent.name, "target": category.name, "type": "suit"})
+        return json.dumps(models)
+
 
 class Category(AbstractName):
     """
@@ -23,7 +36,9 @@ class Category(AbstractName):
     cost_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     cost_currency = models.ForeignKey(Currency, blank=True, null=True)
     cost_code = models.CharField(max_length=100, blank=True, null=True)
-    parent = models.ForeignKey("self", related_name='children', blank=True, null=True)
+    parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
+
+    objects = CategoryManager()
 
     def save(self, *args, **kwargs):
         self._update_defalts()

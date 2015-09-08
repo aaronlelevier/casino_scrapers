@@ -1,15 +1,19 @@
 import json
 
+from django.db.models import get_model
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 from django.views.decorators.cache import never_cache
+from django.shortcuts import render
 from django.utils import timezone
 
 from accounting.models import Currency
+from category.models import Category
 from contact.models import PhoneNumberType, AddressType
 from person.models import Role, PersonStatus, Person
-from location.models import LocationLevel, LocationStatus, State, Country
+from location.models import (Location, LocationLevel, LocationStatus,
+    State, Country)
 from translation.models import Locale
 from util import choices
 from util.helpers import model_to_json, choices_to_json, current_locale
@@ -53,3 +57,21 @@ class IndexView(TemplateView):
             'person_current': json.dumps(self.request.user.to_dict(self.locale))
             })
         return context
+
+
+def relationships_view(request):
+    """"Display a list of links for Models that have relationships, 
+    and route to the d3js views for each model."""
+    models = []
+    for model in [Category, Location, LocationLevel, Role]:
+        models.append({
+            'app_name': model.__module__.split('.')[0],
+            'model_name': model.__name__
+        })
+    return render(request, "relationships.html", {"models": models})
+
+
+def model_relationships(request, app_name, model_name):
+    """Display a d3js relationship diagram."""
+    model = get_model(app_name, model_name)
+    return render(request, "d3.html", {"json": model.objects.d3_json})
