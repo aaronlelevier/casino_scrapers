@@ -12,6 +12,7 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.contrib.auth.hashers import make_password
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField
 
@@ -238,6 +239,10 @@ class Person(BaseModel, AbstractUser):
                   "Based upon the ``password_expire`` days set on the Role.")
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
     password_change = models.TextField(help_text="Tuple of (datetime of PW change, old PW)")
+    password_history = ArrayField(
+        models.CharField(max_length=254),
+        blank=True, default=[]
+    )
     # Out-of-the-Office
     proxy_status = models.CharField("Out of the Office Status", max_length=100,
         blank=True, null=True)
@@ -258,12 +263,23 @@ class Person(BaseModel, AbstractUser):
     objects = PersonManager()
     objects_all = UserManager()
 
+    _current_password = None
+
+    def __init__(self, *args, **kwargs):
+        super(Person, self).__init__(*args, **kwargs)
+        self._current_password = self.password
+
     def __str__(self):
         return self.username
 
     def save(self, *args, **kwargs):
         self._update_defaults()
         self._validate_locations()
+
+        if self._current_password != self.password:
+            self.password_history.append(self._current_password)
+            self._current_password = self.password
+
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
@@ -285,6 +301,7 @@ class Person(BaseModel, AbstractUser):
         except:
             self.password_expire_date = (timezone.now().date() + 
                                          timedelta(days=settings.PASSWORD_EXPIRE_DAYS))
+        _current_password = make_password(raw_password, salt="foo")
         super(Person, self).set_password(raw_password)
 
     def _get_locale(self, locale):
