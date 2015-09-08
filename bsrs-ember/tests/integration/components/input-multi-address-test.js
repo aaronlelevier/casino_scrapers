@@ -33,11 +33,14 @@ moduleForComponent('input-multi-address', 'integration: input-multi-address test
     }
 });
 
-// test('renders a single button with a class of t-add-btn', function(assert){
-//     this.render(hbs`{{input-multi-address model=addresses}}`);
-//     var $component = this.$('.t-input-multi-address');
-//     assert.equal($component.find('.t-add-btn').length, 1);
-// });
+test('renders a single button with a class of t-add-btn', function(assert){
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var model = store.find('address', {person_id: PEOPLE_DEFAULTS.id});
+    this.set('model', model);
+    this.render(hbs`{{input-multi-address model=model}}`);
+    var $component = this.$('.t-input-multi-address');
+    assert.equal($component.find('.t-add-address-btn').length, 1);
+});
 
 test('click add btn will append blank entry to list of entries and binds value to model', function(assert) {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
