@@ -10,10 +10,8 @@ class CategoryTests(TestCase):
 
     def setUp(self):
         factory.create_categories()
-        self.type = Category.objects.get(name='repair')
-        self.trade = Category.objects.get(name='electric')
-        self.issue = Category.objects.get(name='outlets')
-        self.issue2 = Category.objects.get(name='fans')
+        self.type = Category.objects.filter(subcategory_label='trade').first()
+        self.trade = Category.objects.filter(label='trade').first()
 
     def test_label_top_level(self):
         self.assertIsNone(self.type.parent)
