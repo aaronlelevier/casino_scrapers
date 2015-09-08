@@ -4,7 +4,7 @@ from django.db import models
 from django.conf import settings
 
 from accounting.models import Currency
-from util.models import AbstractName, BaseManager
+from util.models import AbstractName, BaseManager, BaseModel
 
 
 ### CATEGORY
@@ -20,7 +20,7 @@ class CategoryManager(BaseManager):
         return json.dumps(models)
 
 
-class Category(AbstractName):
+class Category(BaseModel):
     """
     Category tree. Categories are self referencing OneToMany.  A Parent has 
     many Children.
@@ -28,6 +28,7 @@ class Category(AbstractName):
     - Parent or Label is required to create a Category.
     - If the ``parent`` FK is null, then it is a Top Level Category.
     """
+    name = models.CharField(max_length=100)
     description = models.CharField(max_length=100, blank=True, null=True)
     label = models.CharField(max_length=100, editable=False, blank=True, null=True,
         help_text="This field cannot be set directly.  It is either set from "
