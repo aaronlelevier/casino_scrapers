@@ -664,6 +664,15 @@ class PersonFilterTests(APITransactionTestCase):
     def tearDown(self):
         self.client.logout()
 
+    def test_ordering(self):
+        response = self.client.get('/api/admin/people/?ordering=first_name')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(
+            data["results"][0]["first_name"],
+            Person.objects.order_by("first_name")[0].first_name
+        )
+
     def test_search(self):
         letters = "aa"
         users_count = Person.objects.filter(username__icontains=letters).count()

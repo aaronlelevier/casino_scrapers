@@ -9,6 +9,7 @@ import rest_framework_filters as filters
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
+from util.mixins import OrderyingQuerysetMixin
 from util.views import BaseModelViewSet
 from rest_framework import pagination
 
@@ -40,7 +41,7 @@ class PersonFilterSet(filters.FilterSet):
         fields = ['first_name', 'username']
 
 
-class PersonViewSet(BaseModelViewSet):
+class PersonViewSet(OrderyingQuerysetMixin, BaseModelViewSet):
     '''
     ## Detail Routes
 
@@ -73,14 +74,7 @@ class PersonViewSet(BaseModelViewSet):
 
         https://docs.djangoproject.com/en/1.8/topics/db/queries/#complex-lookups-with-q-objects
         """
-        queryset = self.queryset
-
-        ordering = self.request.query_params.get('ordering', None)
-        if ordering:
-            if ordering.startswith('-'):
-                queryset = queryset.order_by(Lower(ordering[1:])).reverse()
-            else:
-                queryset = queryset.order_by(Lower(ordering))
+        queryset = super(PersonViewSet, self).get_queryset()
 
         search = self.request.query_params.get('search', None)
         if search:
