@@ -43,7 +43,7 @@ module('Acceptance | detail test', {
         var people_list_data = PEOPLE_FIXTURES.list();
         var people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
         var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
-        list_xhr = xhr(endpoint, 'GET', null, {}, 200, people_list_data);
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
         xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
         xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
 

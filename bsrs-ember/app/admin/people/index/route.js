@@ -3,22 +3,22 @@ import inject from 'bsrs-ember/utilities/inject';
 
 var PersonIndexRoute = Ember.Route.extend({
     repository: inject('person'),
-    model: function(params, transition) {
-        var query_params = transition.queryParams;
-        if (!query_params.search) {
-            query_params.search = null;
+    queryParams: {
+        page: {
+            refreshModel: true
+        },
+        sort: {
+            refreshModel: true
+        },
+        search: {
+            refreshModel: true
         }
+    },
+    model: function(params, transition) {
+        var query = transition.queryParams;
         var repository = this.get('repository');
-        var model = repository.find();
-        return Ember.RSVP.hash({
-            model: model,
-            search: query_params.search
-        });
-    },
-    setupController: function(controller, hash) {
-        controller.set('model', hash.model);
-        controller.set('search', hash.search);
-    },
+        return repository.findWithQuery(query.page, query.sort, query.search);
+    }
 });
 
 export default PersonIndexRoute;

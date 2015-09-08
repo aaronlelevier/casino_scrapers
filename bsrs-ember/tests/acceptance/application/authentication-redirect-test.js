@@ -19,7 +19,7 @@ module('Acceptance | application redirect test', {
         //required to allow tests to pass.
         //Ember configures a Ember.RSVP.on('error', function() {}) for testing which requires
         //each promise to handle the error scenario with a .then() error function or .catch()
-        var endpoint = PREFIX + BASE_URL + "/";
+        var endpoint = PREFIX + BASE_URL + '/?page=1';
         xhr( endpoint ,'GET',null,{},403,[] );
         originalLoggerError = Ember.Logger.error;
         originalTestAdapterException = Ember.Test.adapter.exception;

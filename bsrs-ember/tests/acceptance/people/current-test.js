@@ -35,7 +35,7 @@ module('Acceptance | current user test', {
         var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
         xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
         xhr(locale_endpoint_es, 'GET', null, {}, 200, locale_data_es);
-        list_xhr = xhr(endpoint, 'GET', null, {}, 200, people_list_data);
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
         xhr(endpoint + PERSON_CURRENT_DEFAULTS.id + '/', 'GET', null, {}, 200, current_person_data);
     },
     afterEach() {

@@ -33,8 +33,8 @@ module('Acceptance | people-new', {
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
-        var endpoint = PREFIX + BASE_PEOPLE_URL + "/";
-        list_xhr = xhr(endpoint,"GET",null,{},200,PEOPLE_FIXTURES.empty());
+        var endpoint = PREFIX + BASE_PEOPLE_URL + '/';
+        list_xhr = xhr(endpoint + '?page=1','GET',null,{},200,PEOPLE_FIXTURES.empty());
         var detailEndpoint = PREFIX + BASE_PEOPLE_URL + '/';
         var people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
             role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: [], locations: []};

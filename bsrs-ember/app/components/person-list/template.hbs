@@ -21,9 +21,9 @@
         <thead>
           <tr class="head">
             <th></th>
-            <th>{{#link-to 'admin.people.index' (query-params sort="username") class="t-sort-username"}}{{t "admin.person.label.username"}}{{/link-to}}</th>
-            <th>{{#link-to 'admin.people.index' (query-params sort="first_name") class="t-sort-first-name"}}{{t "admin.person.label.name"}}{{/link-to}}</th>
-            <th>{{#link-to 'admin.people.index' (query-params sort="title") class="t-sort-title"}}{{t "admin.person.label.title"}}{{/link-to}}</th>
+            <th>{{#link-to 'admin.people.index' (query-params page=1 sort="username") class="t-sort-username"}}{{t "admin.person.label.username"}}{{/link-to}}</th>
+            <th>{{#link-to 'admin.people.index' (query-params page=1 sort="first_name") class="t-sort-first-name"}}{{t "admin.person.label.name"}}{{/link-to}}</th>
+            <th>{{#link-to 'admin.people.index' (query-params page=1 sort="title") class="t-sort-title"}}{{t "admin.person.label.title"}}{{/link-to}}</th>
             <th>{{t "admin.person.label.role"}}</th>
     				<th class="text-right">{{t "admin.person.label.employee_id"}}</th>
           </tr>

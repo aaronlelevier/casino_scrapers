@@ -20,7 +20,7 @@ module('unit: person-list', {
 });
 test('knows how to sort a list of people even when sortable column is null', (assert) => {
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: PEOPLE_DEFAULTS.username, title: PEOPLE_DEFAULTS.title});
-    var subject = PersonListComponent.create({model: store.find('person'), query_django: function() {}});
+    var subject = PersonListComponent.create({model: store.find('person')});
     var people = subject.get('searched_content');
     assert.equal(people.get('length'), 1);
     store.push('person', {id: 1, username: 'wat', title: PEOPLE_DEFAULTS.title});
@@ -35,7 +35,7 @@ test('sorted content is sorted by id if no other value is specified and breaks c
     store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name});
     store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title});
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title});
-    var subject = PersonListComponent.create({model: store.find('person'), query_django: function() {}});
+    var subject = PersonListComponent.create({model: store.find('person')});
     var people = subject.get('sorted_content');
     assert.equal(people.objectAt(0).get('id'), 1);
     assert.equal(people.objectAt(1).get('id'), 2);
@@ -57,7 +57,7 @@ test('given a list of people and page number, should only return those people on
     store.push('person', {id: 3, username: 'abc'});
     store.push('person', {id: 1, username: 'def'});
     store.push('person', {id: 2, username: 'zzz'});
-    var subject = PersonListComponent.create({model: store.find('person'), itemsPerPage: 2, query_django: function() {}});
+    var subject = PersonListComponent.create({model: store.find('person'), itemsPerPage: 2});
     var people = subject.get('paginated_content');
     assert.equal(people.get('length'), 2);
     subject.set('page', 2);
@@ -75,7 +75,7 @@ test('given a list of people and page number, should only return those people on
     store.push('person', {id: 4, username: 'crb'});
     var model = store.find('person');
     model.set('count', 4);
-    var subject = PersonListComponent.create({model: model, itemsPerPage: 2, query_django: function() {}});
+    var subject = PersonListComponent.create({model: model, itemsPerPage: 2});
     var pages = subject.get('pages');
     assert.equal(pages.get('length'), 2);
     model.set('count', 5);
@@ -88,7 +88,7 @@ test('searched content allows you to look through searchable keys and filter acc
     store.push('person', {id: 1, first_name: 'ab', username: 'x', title: 'scott newcomer'});
     store.push('person', {id: 2, first_name: 'cd', username: 'y', title: 'toran lillups'});
     store.push('person', {id: 3, first_name: 'de', username: 'z', title: 'aaron lelevier'});
-    var subject = PersonListComponent.create({model: store.find('person'), query_django: function() {}});
+    var subject = PersonListComponent.create({model: store.find('person')});
     var people = subject.get('searched_content');
     assert.deepEqual(subject.get('searchable'), ['first_name', 'title']);
     assert.equal(people.get('length'), 3);

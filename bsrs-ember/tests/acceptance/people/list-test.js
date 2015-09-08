@@ -17,7 +17,7 @@ module('Acceptance | people-list', {
     beforeEach() {
         application = startApp();
         var endpoint = PREFIX + BASE_PEOPLE_LIST_URL + '/';
-        xhr(endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
+        xhr(endpoint + '?page=1', 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
     },
     afterEach() {
         Ember.run(application, 'destroy');
