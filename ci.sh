@@ -28,7 +28,6 @@ function emberTest {
 function pipInstall {
     echo "ENABLE SPECIFIC DJANGO SETTINGS FILE HERE B/C AFFECTS PIP INSTALL"
     export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'
-    easy_install -U pip
     rm -rf venv
     virtualenv venv
     source venv/bin/activate
