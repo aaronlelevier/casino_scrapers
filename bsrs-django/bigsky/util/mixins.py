@@ -1,6 +1,10 @@
+from django.db.models.functions import Lower
+
 from rest_framework import status
 from rest_framework.response import Response
 
+
+### VIEWS
 
 class DestroyModelMixin(object):
     """
@@ -14,3 +18,19 @@ class DestroyModelMixin(object):
 
     def perform_destroy(self, instance, override):
         instance.delete(override)
+
+
+### QUERYSETS
+
+class OrderingQuerySetMixin(object):
+    """Return a case-insensitive ordered queryset."""
+    
+    def get_queryset(self):
+        queryset = self.queryset
+        ordering = self.request.query_params.get('ordering', None)
+        if ordering:
+            if ordering.startswith('-'):
+                queryset = queryset.order_by(Lower(ordering[1:])).reverse()
+            else:
+                queryset = queryset.order_by(Lower(ordering))
+        return queryset
