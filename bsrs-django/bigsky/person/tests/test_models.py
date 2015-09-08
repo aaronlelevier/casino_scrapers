@@ -202,13 +202,3 @@ class PersonTests(TestCase):
             self.person._get_locale(None),
             str(Locale.objects.system_default().id)
         )
-
-    def test_password_history(self):
-        password_1 = self.person.password
-        self.assertFalse(self.person.password_history)
-        # 1st password reset
-        print "password_1:", password_1
-        self.person.set_password(_generate_chars())
-        print "password_2:", self.person.password
-        self.person.save()
-        self.assertEqual(self.person.password_history[0], password_1)

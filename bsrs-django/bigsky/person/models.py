@@ -238,11 +238,6 @@ class Person(BaseModel, AbstractUser):
                   "Based upon the ``password_expire`` days set on the Role.")
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
     password_change = models.TextField(help_text="Tuple of (datetime of PW change, old PW)")
-    password_history = ArrayField(
-        base_field=models.CharField(max_length=254,
-            help_text="List of old password hashes to make sure that the same "
-                      "password isn't used twice."),
-        blank=True, default=[])
     # Out-of-the-Office
     proxy_status = models.CharField("Out of the Office Status", max_length=100,
         blank=True, null=True)
@@ -263,22 +258,12 @@ class Person(BaseModel, AbstractUser):
     objects = PersonManager()
     objects_all = UserManager()
 
-    __person_values = {}
-
-    def __init__(self, *args, **kwargs):
-        super(Person, self).__init__(*args, **kwargs)
-        self.__person_values.update({
-            'password': self.password,
-            'status': self.status
-        })
-
     def __str__(self):
         return self.username
 
     def save(self, *args, **kwargs):
         self._update_defaults()
         self._validate_locations()
-        self._update_password_history()
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
@@ -301,19 +286,6 @@ class Person(BaseModel, AbstractUser):
             self.password_expire_date = (timezone.now().date() + 
                                          timedelta(days=settings.PASSWORD_EXPIRE_DAYS))
         super(Person, self).set_password(raw_password)
-
-    def _update_password_history(self):
-        """If the password has changed, append the old password hash 
-        to 'password_history``."""
-
-        print "self.password:", self.password
-        print "self.__person_values['password']:", self.__person_values['password']
-        print "self.status:", self.status
-
-        if (self.__person_values['password'] and
-                self.password != self.__person_values['password']):
-            self.password_history.append(self.__person_values['password'])
-            self.__person_values['password'] = str(self.password)
 
     def _get_locale(self, locale):
         """Resolve the Locale using the Accept-Language Header. If not 
