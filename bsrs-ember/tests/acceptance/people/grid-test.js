@@ -81,8 +81,8 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 });
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
-    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title';
-    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title', 1));
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=username,title';
+    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted(['username', 'title'], 1));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=username';
     xhr(page_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 2));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
@@ -107,9 +107,9 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     });
     click('.t-sort-title');
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL + '?sort=title');
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
         assert.equal(find('.t-person-data').length, 10);
-        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        // assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
 });
 
@@ -168,5 +168,79 @@ test('typing a search will reset page to 1 and require an additional xhr', funct
         assert.equal(currentURL(),PEOPLE_URL + '?search=8%20m&sort=title');
         assert.equal(find('.t-person-data').length, 1);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'mgibson8');
+    });
+});
+
+test('multiple sort options appear in the query string as expected', function(assert) {
+    var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=username,title,first_name';
+    xhr(sort_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted(['username', 'title', 'first_name'], 1));
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=username,title';
+    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted(['username', 'title'], 1));
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-person-data').length, 10);
+        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+    });
+    click('.t-sort-username');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=username');
+        assert.equal(find('.t-person-data').length, 10);
+        // assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+    });
+    click('.t-sort-title');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
+        assert.equal(find('.t-person-data').length, 10);
+        // assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+    });
+    click('.t-sort-first-name');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle%2Cfirst_name');
+        assert.equal(find('.t-person-data').length, 10);
+        // assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+    });
+});
+
+test('clicking the same sort option over and over will flip the direction', function(assert) {
+    var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-username,title';
+    xhr(sort_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted(['-username', 'title'], 1));
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=username,title';
+    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted(['username', 'title'], 1));
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-person-data').length, 10);
+        assert.ok(find('.t-sort-username-dir').hasClass('glyphicon-chevron-down'));
+        assert.ok(find('.t-sort-title-dir').hasClass('glyphicon-chevron-down'));
+        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+    });
+    click('.t-sort-username');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=username');
+        assert.equal(find('.t-person-data').length, 10);
+        assert.ok(find('.t-sort-username-dir').hasClass('glyphicon-chevron-up'));
+        assert.ok(find('.t-sort-title-dir').hasClass('glyphicon-chevron-down'));
+        // assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+    });
+    click('.t-sort-title');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
+        assert.equal(find('.t-person-data').length, 10);
+        assert.ok(find('.t-sort-title-dir').hasClass('glyphicon-chevron-up'));
+        assert.ok(find('.t-sort-username-dir').hasClass('glyphicon-chevron-up'));
+        // assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+    });
+    click('.t-sort-username');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=-username%2Ctitle');
+        assert.equal(find('.t-person-data').length, 10);
+        assert.ok(find('.t-sort-title-dir').hasClass('glyphicon-chevron-up'));
+        assert.ok(find('.t-sort-username-dir').hasClass('glyphicon-chevron-down'));
+        // assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
 });

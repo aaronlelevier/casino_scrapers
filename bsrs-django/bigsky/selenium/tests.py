@@ -265,6 +265,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_dropdown_delete()
         self.gen_elem_page.click_delete_btn()
         self.driver.refresh()
+        time.sleep(3)
+        ### Toran TODO: remove this sleep after the client/to server sorting is finished Thur Sept 10th
         person = person_page.find_list_data()
         person_list_view = person_page.find_list_name()
         person_page.assert_name_not_in_list(username, new_person=None)

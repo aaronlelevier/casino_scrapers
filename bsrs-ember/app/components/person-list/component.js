@@ -41,7 +41,20 @@ export default Ember.Component.extend({
     }),
     actions: {
         sortBy: function(column) {
-            this.setProperties({page: 1, sort: column});
+            var sorted = [];
+            var existing = -1;
+            var currentSort = this.get('sort');
+            if(currentSort) {
+                sorted = currentSort.split(',');
+                existing = Ember.$.inArray(column, sorted);
+                if(existing > -1) {
+                    sorted[existing] = '-' + column;
+                }
+            }
+            if(existing === -1) {
+                sorted.push(column);
+            }
+            this.setProperties({page: 1, sort: sorted});
         },
         keyup: function(search) {
             this.setProperties({page: 1, search: search});
