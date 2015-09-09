@@ -40,6 +40,9 @@ export default Ember.Component.extend({
         return pages;
     }),
     actions: {
+        sortBy: function(column) {
+            this.setProperties({page: 1, sort: column});
+        },
         keyup: function(search) {
             this.setProperties({page: 1, search: search});
         }
