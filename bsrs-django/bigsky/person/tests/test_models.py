@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.test import TestCase
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
 
 from model_mommy import mommy
@@ -202,3 +203,13 @@ class PersonTests(TestCase):
             self.person._get_locale(None),
             str(Locale.objects.system_default().id)
         )
+
+
+class PersonPasswordTests(TestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+
+    def test_password_history(self):
+        # TODO: resume here
