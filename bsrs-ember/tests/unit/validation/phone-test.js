@@ -1,24 +1,38 @@
-import Ember from 'ember';
 import { test, module } from 'qunit';
-import phone_number_validation from 'bsrs-ember/validation/phone';
+import { phoneIsAllowedRegion, phoneIsValidFormat } from 'bsrs-ember/validation/phone';
 
 module('phone validation tests');
 
-test('should be a valid us phone number', function(assert) {
-    assert.ok(!phone_number_validation(''));
-    assert.ok(!phone_number_validation('5'));
-    assert.ok(!phone_number_validation('51'));
-    assert.ok(!phone_number_validation('515'));
-    assert.ok(!phone_number_validation('515-'));
-    assert.ok(!phone_number_validation('515-1'));
-    assert.ok(!phone_number_validation('515-12'));
-    assert.ok(!phone_number_validation('515-123-'));
-    assert.ok(!phone_number_validation('515-123-4'));
-    assert.ok(!phone_number_validation('515-123-45'));
-    assert.ok(!phone_number_validation('515-123-456'));
-    assert.ok(phone_number_validation('515-123-4567'));
-    assert.ok(!phone_number_validation('515-123-45678'));
-    assert.ok(!phone_number_validation('5a5-123-4567'));
-    assert.ok(!phone_number_validation('515-1b3-4567'));
-    assert.ok(!phone_number_validation('515-123-4c67'));
+function assertValidPhone(phoneNumber) {
+    let validRegion = phoneIsAllowedRegion(phoneNumber);
+    let validFormat = phoneIsValidFormat(phoneNumber);
+    return validRegion && validFormat;
+}
+
+test('legit phone numbers', function(assert) {
+    assert.equal(assertValidPhone('5158884567'), true);
+    assertValidPhone(assert, '  5158884567  ');
+    assertValidPhone(assert, '515-888-4567');
+    assertValidPhone(assert, '(515) 888-4567');
+    assertValidPhone(assert, '515 - 888 - 4567');
+    assertValidPhone(assert, '515/888/4567');
+    assertValidPhone(assert, '515.888.4567');
+    assertValidPhone(assert, '+1 (515)888-4567');
+    assertValidPhone(assert, '001 (515)888-4567');
+    assertValidPhone(assert, '15158884567');
+});
+
+test('wrong format phone numbers', function(assert) {
+    assert.equal(phoneIsValidFormat(undefined), false);
+    assert.equal(phoneIsValidFormat(null), false);
+    assert.equal(phoneIsValidFormat(''), false);
+    assert.equal(phoneIsValidFormat('a888456789'), false);
+    assert.equal(phoneIsValidFormat('888456789'), false);
+    assert.equal(phoneIsValidFormat('01 (515)888-4567'), false);
+    assert.equal(phoneIsValidFormat('+001 (515)888-4567'), false);
+    assert.equal(phoneIsValidFormat('+01 (515)888-4567'), false);
+});
+
+test('wrong region phone numbers', function(assert) {
+    assert.equal(phoneIsAllowedRegion('+2 515-888-4567'), false);
 });

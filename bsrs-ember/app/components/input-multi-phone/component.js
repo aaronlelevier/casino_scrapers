@@ -1,18 +1,19 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
-import phone_number_validation from 'bsrs-ember/validation/phone';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
 import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
 import {validateEach} from 'ember-cli-simple-validation/mixins/validate';
+import { phoneIsAllowedRegion, phoneIsValidFormat } from 'bsrs-ember/validation/phone';
 
 var InputMultiPhone = ChildValidationComponent.extend(CustomValidMixin, {
     uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi t-input-multi-phone'],
     fieldNames: 'number',
-    number: validateEach('number', phone_number_validation),
+    numberFormat: validateEach('number', phoneIsValidFormat),
+    numberRegion: validateEach('number', phoneIsAllowedRegion),
     actions: {
         changed(phonenumber, val) {
             Ember.run(() => {
