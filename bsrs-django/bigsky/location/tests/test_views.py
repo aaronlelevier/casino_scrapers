@@ -488,6 +488,63 @@ class LocationDeleteTests(APITestCase):
         self.assertFalse(Location.objects_all.filter(id=self.district_location.id).exists())
 
 
+class LocationOrderingTests(APITestCase):
+
+    def setUp(self):
+        # Login
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_case_insensitive(self):
+        # Setup
+        mommy.make(Location, name='Z')
+        mommy.make(Location, name='a')
+        # test:
+        response = self.client.get('/api/admin/locations/?ordering=name') 
+        data = json.loads(response.content)
+        self.assertEqual(data["results"][0]["name"], "a")
+        self.assertEqual(data["results"][1]["name"], "Z")
+
+    def test_case_insensitive_reverse(self):
+        # Setup
+        mommy.make(Location, name='Z')
+        mommy.make(Location, name='a')
+        # test: expect = B,a,A
+        response = self.client.get('/api/admin/locations/?ordering=-name')
+        data = json.loads(response.content)
+        self.assertEqual(data["results"][0]["name"], "Z")
+        self.assertEqual(data["results"][1]["name"], "a")
+
+    def test_two_fields(self):
+        # Setup
+        mommy.make(Location, name='Z', number='1')
+        mommy.make(Location, name='a', number='2')
+        mommy.make(Location, name='a', number='1')
+        # test
+        response = self.client.get('/api/admin/locations/?ordering=number,name')
+        data = json.loads(response.content)
+        self.assertEqual(data["results"][0]["number"], "1")
+        self.assertEqual(data["results"][0]["name"], "a")
+        self.assertEqual(data["results"][1]["number"], "1")
+        self.assertEqual(data["results"][1]["name"], "Z")
+
+    def test_two_fields_reverse(self):
+        # Setup
+        mommy.make(Location, name='Z', number='1')
+        mommy.make(Location, name='a', number='2')
+        mommy.make(Location, name='a', number='1')
+        # test
+        response = self.client.get('/api/admin/locations/?ordering=-number,name')
+        data = json.loads(response.content)
+        self.assertEqual(data["results"][0]["number"], "2")
+        self.assertEqual(data["results"][0]["name"], "a")
+        self.assertEqual(data["results"][1]["number"], "1")
+        self.assertEqual(data["results"][1]["name"], "a")
+
+
 class LocationSearchTests(APITestCase):
 
     def setUp(self):
