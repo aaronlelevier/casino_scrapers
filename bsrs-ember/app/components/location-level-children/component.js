@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 var LocationLevelChildrenSelect = Ember.Component.extend({
-    location_level_ids: Ember.computed(function() {
+    location_level_ids: Ember.computed('model.children.[]', function() {
         return this.get('model').get('children');
     }).readOnly(),
     actions: {

@@ -165,12 +165,12 @@ test('newly added phone numbers without a valid number are ignored and removed w
     click('.t-add-btn:eq(0)');
     andThen(() => {
         assert.equal(store.find('phonenumber').get('length'), 3);
-        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 0);
     });
     fillIn('.t-new-entry:eq(2)', '34');
     andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
     });
     fillIn('.t-new-entry:eq(2)', '');
@@ -206,19 +206,19 @@ test('phone numbers without a valid number are ignored and removed', (assert) =>
     visit(DETAIL_URL);
     click('.t-add-btn:eq(0)');
     andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 0);
     });
     fillIn('.t-new-entry:eq(2)', '34');
     andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-phone-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
+        assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
     });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
         assert.equal(store.find('phonenumber').get('length'), 3);
     });
@@ -239,26 +239,26 @@ test('when editing phone numbers to invalid, it checks for validation', (assert)
     fillIn('.t-person-username', '');
     click('.t-add-btn:eq(0)');
     andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 0);
     });
     fillIn('.t-new-entry:eq(2)', '34');
     andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-phone-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
+        assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
     });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-phone-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
+        assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
     });
     fillIn('.t-new-entry:eq(2)', '515-222-3333');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 0);
     });
     click('.t-add-address-btn:eq(0)');
@@ -282,7 +282,7 @@ test('when editing phone numbers to invalid, it checks for validation', (assert)
     });
     fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
     andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-error:not(:hidden)');
+        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
         assert.equal(visible_errors.length, 0);
     });
     click(SAVE_BTN);

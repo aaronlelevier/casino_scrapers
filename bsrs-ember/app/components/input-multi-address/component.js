@@ -3,14 +3,17 @@ import inject from 'bsrs-ember/utilities/uuid';
 import Address from 'bsrs-ember/models/address';
 import AddressDefaults from 'bsrs-ember/vendor/defaults/address-type';
 import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
+import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
 import {validateEach} from 'ember-cli-simple-validation/mixins/validate';
-import address_address_validation from 'bsrs-ember/validation/address_address_validation';
+import address_name_validation from 'bsrs-ember/validation/address_name';
+import postal_code_validation from 'bsrs-ember/validation/postal_code';
 
-export default ChildValidationComponent.extend({
+export default ChildValidationComponent.extend(CustomValidMixin, {
     uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi-address t-input-multi-address'],
-    address: validateEach('address', address_address_validation),
+    address: validateEach('address', address_name_validation),
+    postal_code: validateEach('postal_code', postal_code_validation),
     actions: {
         changed(address, val) {
             Ember.run(() => {

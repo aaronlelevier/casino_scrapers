@@ -25,7 +25,9 @@ var CustomValidMixin = Ember.Mixin.create({
         let result = true;
         attrs(this).forEach(function(attr) {
             let index = parseInt(attr.match(/\d+/), 10);
-            let attrName = attr.split(index)[0];
+            let complexName = attr.split(index)[0];
+            let capitalLetter = complexName.match(/[A-Z]/);
+            let attrName = complexName.split(capitalLetter)[0];
             let attrValue = self.get('model').objectAt(index).get(attrName);
             let hasValue = attrValue ? attrValue.trim().length > 0 : false;
             if(hasValue) {
