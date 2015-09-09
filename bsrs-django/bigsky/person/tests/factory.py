@@ -100,8 +100,10 @@ def create_23_people():
             username = create.random_lorem(words=1)
             role = random.choice(roles)
             locations = Location.objects.filter(location_level=role.location_level)
-            mommy.make(Person, username=username, first_name=username, role=role,
+            person = mommy.make(Person, username=username, first_name=username, role=role,
                 locations=locations)
+            person.set_password(PASSWORD)
+            person.save()
         except IntegrityError:
             pass
         count = Person.objects.count()
