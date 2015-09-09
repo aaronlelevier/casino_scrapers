@@ -27,7 +27,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         return {id: this.idDistrict, name: this.nameDistrict, children: ['8854f6c5-58c7-4849-971f-e8df9e15e559', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f']};
     };
     factory.prototype.list = function() {
-        response = [ { id: this.idOne, name : this.nameCompany }, { id: this.idTwo, name : this.nameDistrict}, { id: this.idThree, name : this.nameRegion} ];
+        response = [ { id: this.idOne, name : this.nameCompany }, { id: this.idDistrict, name : this.nameDistrict }, { id: this.idThree, name : this.nameRegion} ];
         return {'count':3,'next':null,'previous':null,'results': response};
     };
     factory.prototype.empty = function() {

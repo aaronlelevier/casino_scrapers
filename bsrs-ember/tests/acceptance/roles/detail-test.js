@@ -46,7 +46,7 @@ test('clicking a role name will redirect to the given detail view', (assert) => 
     });
 });
 
-test('when you deep link to the role detail view you get bound attrs', (assert) => {
+test('sco when you deep link to the role detail view you get bound attrs', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     andThen(() => {
@@ -57,7 +57,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.nameOne);
         assert.equal(find('.t-role-role-type').val(), ROLE_DEFAULTS.roleTypeGeneral);
         // assert.equal(find('.t-role-category:eq(0)').val(), CATEGORY_DEFAULTS.name);
-        assert.equal(find('.t-location-level').val(), LOCATION_LEVEL_FIXTURES.idOne);
+        assert.equal(find('.t-location-level').val(), LOCATION_LEVEL_DEFAULTS.idOne);
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);

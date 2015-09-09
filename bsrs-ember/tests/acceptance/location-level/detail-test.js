@@ -108,14 +108,14 @@ test('a location level child can be selected and persisted', (assert) => {
         let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
         assert.equal(location_level.get('children_fks').length, 3);
         assert.equal(location_level.get('children').get('length'), 3);
-        assert.equal(find('.t-location-level-location-level-select > div.option').length, 0);
+        assert.equal(find('.selectize-dropdown-content > div.option').length, 4);
         assert.equal(find('.items > div.item').length, 3);
         assert.ok(location_level.get('isDirty'));
     });
     let list = LOCATION_LEVEL_FIXTURES.list();
     let children_array = LOCATION_LEVEL_DEFAULTS.districtChildren;
     children_array.push(children_array.shift());
-    list.results[0].children = children_array;
+    list.results[1].children = children_array;
     xhr(endpoint, 'GET', null, {}, 200, list);
     click(SAVE_BTN);
     andThen(() => {

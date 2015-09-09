@@ -30,12 +30,12 @@ var LocationLevel = Model.extend(NewMixin, {
     removeRecord() {
         this.get('store').remove('location-level', this.get('id'));
     },
-    children: Ember.computed('children_fks', function() {
+    children: Ember.computed('children_fks.[]', function() {
         let children_fks = this.get('children_fks');
         let filter = (loc_level) => {
             return Ember.$.inArray(loc_level.get('id'), children_fks) > -1 && loc_level.get('name') !== this.get('name');
         };
-        return this.get('store').find('location-level', filter.bind(this), ['id', 'children']);
+        return this.get('store').find('location-level', filter.bind(this), ['id']);
     })
 });
 
