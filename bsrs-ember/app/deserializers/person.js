@@ -69,11 +69,9 @@ var extract_person_location = function(model, store, uuid) {
     let m2m_to_remove = all_person_locations.filter(function(m2m) {
         return Ember.$.inArray(m2m.get('id'), server_locations_sum) < 0;
     });
-
     m2m_to_remove.forEach(function(m2m) {
         store.push('person-location', {id: m2m.get('id'), removed: true});
     });
-
     delete model.locations;
     return server_locations_sum;
 };
