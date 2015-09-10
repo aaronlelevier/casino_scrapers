@@ -33,18 +33,18 @@ const DETAIL_URL = BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 
-var application, store, list_xhr;
+var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
 module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        var endpoint = PREFIX + BASE_PEOPLE_URL + '/';
+        endpoint = PREFIX + BASE_PEOPLE_URL + '/';
         var people_list_data = PEOPLE_FIXTURES.list();
-        var people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+        people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
         var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
-        xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
+        detail_xhr = xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
         xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
 
     },
@@ -708,7 +708,11 @@ test('when changing the locale for a user (not current user), the language is no
     });
 });
 test('when you deep link to the person detail view you can add and save a location', (assert) => {
+    clearxhr(detail_xhr);
     visit(DETAIL_URL);
+    people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    people_detail_data.locations = [];
+    xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, locations: [LOCATION_DEFAULTS.idOne]});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
@@ -730,7 +734,11 @@ test('when you deep link to the person detail view you can add and save a locati
 });
 
 test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
+    clearxhr(detail_xhr);
     visit(DETAIL_URL);
+    people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    people_detail_data.locations = [];
+    xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
     click('.selectize-input input');
     click('.t-person-locations-select div.option:eq(0)');
     click('.t-cancel-btn');

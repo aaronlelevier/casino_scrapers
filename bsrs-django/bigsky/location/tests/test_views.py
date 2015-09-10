@@ -61,7 +61,7 @@ class LocationLevelTests(APITestCase):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
         data = json.loads(response.content)
         self.assertIn(
-            LocationLevel.objects.get(id=data['children'][0]['id']),
+            LocationLevel.objects.get(id=data['children'][0]),
             self.district.children.all()
         )
 
@@ -228,7 +228,7 @@ class LocationDetailTests(APITestCase):
 
     def test_location_level_nested(self):
         self.assertTrue(self.data['location_level']['parents'][0]['id'])
-        self.assertTrue(self.data['location_level']['children'][0]['id'])
+        self.assertTrue(self.data['location_level']['children'][0])
 
     def test_get_status(self):
         self.assertIsInstance(

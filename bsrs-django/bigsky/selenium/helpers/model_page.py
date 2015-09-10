@@ -28,8 +28,8 @@ class ModelPage(JavascriptMixin):
     def find_list_name(self):
         return self.wait_for_xhr_request(self.list_name, plural=True)
 
-    def find_list_data(self):
-        return self.wait_for_xhr_request(self.list_data, plural=True)
+    def find_list_data(self, just_refreshed=False):
+        return self.wait_for_xhr_request(self.list_data, plural=True, just_refreshed=just_refreshed)
 
     def click_name_in_list(self, name, list_view_elements):
         new_location = None

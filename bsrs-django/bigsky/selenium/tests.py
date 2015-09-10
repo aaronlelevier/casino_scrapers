@@ -265,7 +265,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_dropdown_delete()
         self.gen_elem_page.click_delete_btn()
         self.driver.refresh()
-        person = person_page.find_list_data()
+        person = person_page.find_list_data(just_refreshed=True)
         person_list_view = person_page.find_list_name()
         person_page.assert_name_not_in_list(username, new_person=None)
 

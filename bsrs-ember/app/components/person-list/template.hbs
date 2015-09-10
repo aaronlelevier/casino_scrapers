@@ -21,9 +21,9 @@
         <thead>
           <tr class="head">
             <th></th>
-            <th>{{#link-to 'admin.people.index' (query-params page=1 sort="username") class="t-sort-username"}}{{t "admin.person.label.username"}}{{/link-to}}</th>
-            <th>{{#link-to 'admin.people.index' (query-params page=1 sort="first_name") class="t-sort-first-name"}}{{t "admin.person.label.name"}}{{/link-to}}</th>
-            <th>{{#link-to 'admin.people.index' (query-params page=1 sort="title") class="t-sort-title"}}{{t "admin.person.label.title"}}{{/link-to}}</th>
+            <th><span {{action "sortBy" "username"}} class="t-sort-username-dir glyphicon {{if (query-param-asc "username" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-username">{{t "admin.person.label.username"}}</a></span></th>
+            <th><span {{action "sortBy" "first_name"}} class="t-sort-first-name-dir glyphicon {{if (query-param-asc "first_name" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-first-name">{{t "admin.person.label.name"}}</a></span></th>
+            <th><span {{action "sortBy" "title"}} class="t-sort-title-dir glyphicon {{if (query-param-asc "title" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-title">{{t "admin.person.label.title"}}</a></span></th>
             <th>{{t "admin.person.label.role"}}</th>
     				<th class="text-right">{{t "admin.person.label.employee_id"}}</th>
           </tr>

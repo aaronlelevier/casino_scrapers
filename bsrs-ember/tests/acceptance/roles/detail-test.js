@@ -46,7 +46,7 @@ test('clicking a role name will redirect to the given detail view', (assert) => 
     });
 });
 
-test('sco when you deep link to the role detail view you get bound attrs', (assert) => {
+test('when you deep link to the role detail view you get bound attrs', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     andThen(() => {
