@@ -1783,7 +1783,7 @@
     "proxy_end_date": null,
     "date_joined": "2015-09-10T21:22:18.840Z",
     "middle_initial": null,
-    "first_name": "",
+    "first_name": "AA",
     "employee_id": null,
     "auth_amount": "0.0000",
     "title": null,
@@ -1817,7 +1817,7 @@
 {
   "fields": {
     "status": "7430cecc-5e4a-451c-b735-8248ddf7a932",
-    "last_name": "A",
+    "last_name": "",
     "proxy_start_date": null,
     "locale": null,
     "next_approver": null,
@@ -1830,7 +1830,7 @@
     "proxy_end_date": null,
     "date_joined": "2015-09-10T21:22:19.863Z",
     "middle_initial": null,
-    "first_name": "K",
+    "first_name": "AA",
     "employee_id": null,
     "auth_amount": "0.0000",
     "title": null,
@@ -2505,7 +2505,7 @@
 {
   "fields": {
     "status": "7430cecc-5e4a-451c-b735-8248ddf7a932",
-    "last_name": "R",
+    "last_name": "",
     "proxy_start_date": null,
     "locale": null,
     "next_approver": null,
@@ -2515,7 +2515,7 @@
     "proxy_end_date": null,
     "date_joined": "2015-09-10T21:22:20.548Z",
     "middle_initial": null,
-    "first_name": "A",
+    "first_name": "BB",
     "employee_id": null,
     "auth_amount": "0.0000",
     "title": null,

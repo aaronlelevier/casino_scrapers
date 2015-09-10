@@ -7,6 +7,7 @@ import string
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
@@ -265,9 +266,83 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_dropdown_delete()
         self.gen_elem_page.click_delete_btn()
         self.driver.refresh()
-        person = person_page.find_list_data(just_refreshed=True)
+        person = self.driver_wait.find_elements_by_class_name(person_page.list_data) #person_page.find_list_data(just_refreshed=True)
         person_list_view = person_page.find_list_name()
         person_page.assert_name_not_in_list(username, new_person=None)
+
+
+class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
+
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
+        self.login()
+        # Wait
+        self.driver_wait = Wait(self.driver)
+        # Generic Elements
+        self.gen_elem_page = GeneralElementsPage(self.driver)
+        # Go to Admin Page
+        self.nav_page = NavPage(self.driver)
+        self.nav_page.click_admin()
+        # Go to Person Area
+        self.nav_page.find_people_link().click()
+
+    def tearDown(self):
+        self.driver.close()
+
+    def test_ordering(self):
+        # ASC
+        self.driver.find_element_by_class_name("t-sort-username").click()
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+        assert "aaron" == usernames[0].text
+        # DESC
+        self.driver.find_element_by_class_name("t-sort-username").click()
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+        assert "voluptate" == usernames[0].text
+
+    def test_ordering_multiple(self):
+        # order: first_name, username
+        self.driver.find_element_by_class_name("t-sort-first-name").click()
+        self.driver.find_element_by_class_name("t-sort-username").click()
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+        assert "aaron" == usernames[0].text
+        fullnames = self.wait_for_xhr_request("t-person-fullname", plural=True)
+        assert "AA" == fullnames[0].text
+        assert "AA" == fullnames[1].text
+        # order: first_name, -username
+        self.driver.find_element_by_class_name("t-sort-username").click()
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+        assert "aute" == usernames[0].text
+        fullnames = self.wait_for_xhr_request("t-person-fullname", plural=True)
+        assert "AA" == fullnames[0].text
+        assert "AA" == fullnames[1].text
+
+    def test_search(self):
+        people = self.wait_for_xhr_request("t-person-data", plural=True)
+        assert len(people) == 10
+        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('a')
+        people = self.wait_for_xhr_request("t-person-data", plural=True)
+        assert len(people) == 2
+        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('aaaaa')
+        with self.assertRaises(NoSuchElementException):
+            people = self.driver.find_element_by_class_name("t-person-data")
+
+    def test_search_ordering(self):
+        # Search
+        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('a')
+        people = self.wait_for_xhr_request("t-person-data", plural=True)
+        assert len(people) == 2
+        # Order
+        self.driver.find_element_by_class_name("t-sort-first-name").click()
+        self.driver.find_element_by_class_name("t-sort-username").click()
+        # order: first_name, -username
+        self.driver.find_element_by_class_name("t-sort-username").click()
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+        assert "aute" == usernames[0].text
+        # Search maintained
+        people = self.wait_for_xhr_request("t-person-data", plural=True)
+        assert len(people) == 2
+
 
 if __name__ == "__main__":
     unittest.main()
