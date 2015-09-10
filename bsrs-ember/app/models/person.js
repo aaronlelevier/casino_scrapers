@@ -246,17 +246,19 @@ export default Model.extend(NewMixin, {
             return true;
         }
     }),
-    update_locations(location_pk) {
+    remove_location(location_pk) {
         let store = this.get('store');
         if(Ember.$.inArray(location_pk, this.get('location_ids')) > -1) {
             let m2m_pk = this.get('person_locations').filter((m2m) => {
                 return m2m.get('location_pk') === location_pk;
             }).objectAt(0).get('id');
             store.push('person-location', {id: m2m_pk, removed: true});
-        }else{
-            let uuid = this.get('uuid');
-            store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
         }
+    },
+    update_locations(location_pk) {
+        let store = this.get('store');
+        let uuid = this.get('uuid');
+        store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
     },
     change_role(new_role, old_role) {
         let person_id = this.get('id');
