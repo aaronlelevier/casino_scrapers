@@ -34,20 +34,13 @@ export default Model.extend(NewMixin, {
     }),
     role: Ember.computed('role_property.[]', function() {
         var roles = this.get('role_property');
-        var has_role = roles.get('length') > 0;
-        var foreign_key = has_role ? roles.objectAt(0).get('id') : undefined;
-        if (has_role) {
-            return roles.objectAt(0);
-        }
+        return roles.get('length') > 0 ? roles.objectAt(0) : undefined;
     }),
     role_property: Ember.computed(function() {
         var store = this.get('store');
         var filter = function(role) {
             var people_pks = role.get('people') || [];
-            if(Ember.$.inArray(this.get('id'), people_pks) > -1) {
-                return true;
-            }
-            return false;
+            return Ember.$.inArray(this.get('id'), people_pks) > -1;
         };
         return store.find('role', filter.bind(this), ['people']);
     }),
