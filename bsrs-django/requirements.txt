@@ -38,8 +38,3 @@ waitress==0.8.9
 WebOb==1.4.1
 WebTest==2.0.18
 wheel==0.24.0
-
-# bycrypt
-bcrypt-2.0.0
-cffi-1.2.1
-pycparser-2.14
