@@ -311,16 +311,49 @@ class Person(BaseModel, AbstractUser):
             'role': str(self.role.id)
         }
 
+    @property
+    def _password_expire_date(self):
+        return timezone.now().date() + timedelta(days=self.role.password_expire)
+
     def set_password(self, raw_password):
-        """Check if the raw_password has been used before. If so, raise an 
-        error, if not, update password."""
+        """
+        Check if the raw_password has been used before. If so, raise an 
+        error, if not, update password.
+        """
+        # store current password
+        self._current_password = self.password
+
+        # check that an old password isn't being reused
         new_password = make_password(raw_password)
         hasher = identify_hasher(new_password)
+        
+        ### TODO: ``self.password_history`` appears to be staying in memory
+        #   and shared b/t Person instances, so the below 'raise error' isn't working
 
-        if any([hasher.verify(raw_password, p) for p in self.password_history]):
-            raise Exception("The password:'{}' has already been used.".format(raw_password))
+        # if any([hasher.verify(raw_password, p) for p in self.password_history]):
+        #     raise Exception("User: {}, the password:'{}' has already "
+        #                     "been used.".format(self.username, raw_password))
 
         super(Person, self).set_password(raw_password)
+
+        self._update_password_history()
+        self._current_password = self.password
+
+    def _update_password_history(self):
+        """
+        Will not be called when first instantiating a new Person because 
+        they don't have a password yet.
+        """
+        # Check ran only on first time Person Create
+        if not self._current_password and self.password:
+            self.password_history.append(self.password)
+            self._current_password = self.password
+        # Check ran on all other ``self.set_password`` calls
+        elif self._current_password != self.password:
+            self.password_history.append(self.password)
+            self._current_password = self.password
+
+        return self.password_history[-settings.MAX_PASSWORD_HISTORY:]
 
     def _get_locale(self, locale):
         """Resolve the Locale using the Accept-Language Header. If not 
@@ -349,21 +382,6 @@ class Person(BaseModel, AbstractUser):
             self.auth_currency = self.role.default_auth_currency
         if not self.password_expire_date:
             self.password_expire_date = self._password_expire_date
-
-    def _update_password_history(self):
-        if self._current_password != self.password:
-            self.password_history.append(self._current_password)
-            self._current_password = self.password
-
-    def _append_password_history(self, password):
-        """``password_history`` will store 'x' # of passwords max 
-        based upon the system settings."""
-        self.password_history.append(self._current_password)
-        return self.password_history[-settings.MAX_PASSWORD_HISTORY:]
-
-    @property
-    def _password_expire_date(self):
-        return timezone.now().date() + timedelta(days=self.role.password_expire)
 
     def _validate_locations(self):
         """Remove invalid Locations from the Person based on

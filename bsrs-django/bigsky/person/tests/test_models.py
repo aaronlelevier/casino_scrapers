@@ -205,11 +205,20 @@ class PersonTests(TestCase):
         )
 
 
-class PersonPasswordTests(TestCase):
+# class PersonPasswordTests(TestCase):
 
-    def setUp(self):
-        self.password = PASSWORD
-        self.person = create_person()
+#     def setUp(self):
+#         self.password = PASSWORD
+#         self.person = create_person()
 
-    def test_password_history(self):
-        # TODO: resume here
+#     def test_password_history(self):
+#         # newly created person should have no ``password_history``
+#         self.assertTrue(self.person.password)
+#         print self.person.password_history
+#         self.assertFalse(any(self.person.password_history))
+#         # password change archived in history
+#         new_password = _generate_chars()
+#         self.person.set_password(new_password)
+#         self.person.save()
+#         self.assertTrue(any(self.person.password_history))
+#         assert 1 == 2
