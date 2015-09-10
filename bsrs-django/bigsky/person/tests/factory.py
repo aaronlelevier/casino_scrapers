@@ -97,11 +97,15 @@ def create_23_people():
     count = Person.objects.count()
     while count < 23:
         try:
+            # setup
             username = create.random_lorem(words=1)
+            first_name = random.choice(string.ascii_uppercase)
+            last_name = random.choice(string.ascii_uppercase)
             role = random.choice(roles)
             locations = Location.objects.filter(location_level=role.location_level)
-            person = mommy.make(Person, username=username, first_name=username, role=role,
-                locations=locations)
+            # create
+            person = mommy.make(Person, username=username, first_name=first_name, 
+                last_name=last_name, role=role,locations=locations)
             person.set_password(PASSWORD)
             person.save()
         except IntegrityError:
