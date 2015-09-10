@@ -93,10 +93,21 @@ var BSRS_PEOPLE_FACTORY = (function() {
         } else {
             response = this.list().results;
         }
-        //we do a reverse order sort here to verify a real sort occurs in the component
+        var columns = column.split(',');
+        var column = columns[0];
         var sorted = response.sort(function(a,b) {
-            return b[column] - a[column];
+            if(column.match(/[-]/)) {
+                return a[column] - b[column];
+            }else{
+                return b[column] - a[column];
+            }
+            //we do a reverse order sort here to verify a real sort occurs in the component
         });
+        if(columns.length === 2) {
+            sorted = response.sort(function(a,b) {
+                return b[columns[1]] - a[columns[1]];
+            });
+        }
         return {'count':18,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.searched = function(search, column, page) {
