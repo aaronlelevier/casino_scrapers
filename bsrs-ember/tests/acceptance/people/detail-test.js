@@ -35,7 +35,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
-module('Acceptance | detail test', {
+module('sco Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -424,6 +424,28 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
     });
 });
 
+// test('sco when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+//     visit(DETAIL_URL);
+//     click('.t-del-btn:eq(0)');
+//     click('.t-cancel-btn');
+//     andThen(() => {
+//         waitFor(() => {
+//             assert.equal(currentURL(), DETAIL_URL);
+//             assert.equal(find('.t-modal').is(':visible'), true);
+//         });
+//     });
+//     click('.t-modal-footer .t-modal-rollback-btn');
+//     // andThen(() => {
+//     //     waitFor(() => {
+//     //         assert.equal(currentURL(), PEOPLE_URL);
+//     //         assert.equal(find('.t-modal').is(':hidden'), true);
+//     //         var person = store.find('person', PEOPLE_DEFAULTS.id);
+//     //         var phone_numbers = store.find('phonenumber', PEOPLE_DEFAULTS.id);
+//     //         assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+//     //     });
+//     // });
+// });
+
 test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
@@ -532,15 +554,8 @@ test('when you deep link to the person detail view you can add and remove a new 
         assert.equal(find('.t-input-multi-phone').find('input').length, 2);
     });
     click('.t-add-btn:eq(0)');
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-input-multi-phone').find('input').length, 3);
-        var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    });
     click('.t-del-btn:eq(2)');
     andThen(() => {
-        // assert.equal(currentURL(),PEOPLE_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isNotDirty'));
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));

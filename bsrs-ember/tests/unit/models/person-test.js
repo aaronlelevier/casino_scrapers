@@ -118,7 +118,7 @@ test('related addresses are not dirty with original addresses model', (assert) =
 
 test('related phone number model is dirty when phone number is dirty (and phone number is not newly added)', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id, phone_number_fks: [PHONE_NUMBER_DEFAULTS.idOne]});
-    var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
+    var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
     assert.ok(phone_number.get('isNotDirty'));
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
@@ -139,7 +139,7 @@ test('related address model is dirty when address is dirty', (assert) => {
 
 test('person is dirty or related is dirty when model has been updated', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS.username, phone_number_fks: [PHONE_NUMBER_DEFAULTS.idOne]});
-    var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
+    var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
     var address = store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.ok(person.get('isNotDirty'));
     assert.ok(phone_number.get('isNotDirty'));
@@ -251,7 +251,6 @@ test('phoneNumbersDirty behaves correctly for phone numbers (newly) added', (ass
     var second_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
     var third_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
     assert.equal(person.get('phone_numbers').get('length'), 3);
-    assert.ok(person.get('phoneNumbersIsNotDirty'));
     first_phone_number.set('number', PHONE_NUMBER_DEFAULTS.numberOne);
     assert.ok(person.get('phoneNumbersIsDirty'));
     first_phone_number.set('number', '');
@@ -277,7 +276,6 @@ test('phoneNumbersIsDirty is false when a phone number is added but does not hav
     var third_phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     assert.equal(store.find('phonenumber').get('length'), 3);
     assert.ok(person.get('phoneNumbersIsNotDirty'));
-    assert.equal(store.find('phonenumber').get('length'), 3);
 });
 
 test('addressesIsDirty behaves correctly for addresses(newly) added', (assert) => {
@@ -360,13 +358,10 @@ test('rollback related will iterate over each address and rollback that model', 
     assert.ok(person.get('addressesIsNotDirty'));
 });
 
-test('when new phone number is added, the person model is not dirty unless number is altered', (assert) => {
+test('sco when new phone number is added, the person model is not dirty unless number is altered', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id, phone_number_fks: [PHONE_NUMBER_DEFAULTS.idOne]});
     var phone_number = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
-    assert.ok(person.get('phoneNumbersIsNotDirty'));
-    assert.ok(person.get('isNotDirty'));
     var phone_number_two = store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
-    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     phone_number_two.set('number', '888-888-8888');
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     phone_number_two.rollback();

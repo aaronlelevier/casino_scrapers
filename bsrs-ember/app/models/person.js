@@ -49,8 +49,8 @@ export default Model.extend(NewMixin, {
         var store = this.get('store');
         var filter = function(phone_number) {
             let phone_fks = this.get('phone_number_fks');
-            return this.get('id') === phone_number.get('person_fk');
-            //return Ember.$.inArray(phone_fks, phone_number.get('id'));//a wash if delete model. Have a problem if don't remove ph# from store
+            //return this.get('id') === phone_number.get('person_fk');
+            return Ember.$.inArray(phone_fks, phone_number.get('id'));//a wash if delete model. Have a problem if don't remove ph# from store
         };
         return store.find('phonenumber', filter.bind(this), ['id']);
     }),
@@ -81,17 +81,23 @@ export default Model.extend(NewMixin, {
         let phone_number_ids = this.get('phone_number_ids'); 
         let phone_number_dirty = false;
         let phone_fks = this.get('phone_number_fks');
-        phone_fks.forEach((fk) => {
-            //TODO: remove from array w/ index from forEach  
-            if (phone_number_ids.indexOf(fk) < 0) {
+        phone_numbers.forEach((num) => {
+            //if dirty
+            if (num.get('isDirty')) {
                 phone_number_dirty = true;
             }
-            phone_numbers.forEach((num) => {
-                if (num.get('isDirty')) {
-                    phone_number_dirty = true;
-                }
-            });
         });
+        phone_numbers.forEach((num) => {
+            //if invalid, don't mark as dirty, but clean up array
+            if (num.get('invalid_number')) {
+                this.cleanupPhoneNumber(num);
+            }
+        });
+        //if not dirty, but delete phone number, then mark as dirty and clean up array
+        if (phone_numbers.get('length') > 0 && phone_fks.length !== phone_numbers.get('length')) {
+            phone_number_dirty = true;
+            this.cleanupPhoneNumbers();
+        }
         return phone_number_dirty;
     }),
     phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty'),
@@ -108,25 +114,50 @@ export default Model.extend(NewMixin, {
     }),
     addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    savePhoneNumbers: function() {
+    cleanupPhoneNumber: function(num) {
+        let store = this.get('store');
+        store.remove('phonenumber', num.get('id'));
+    },
+    cleanupPhoneNumbers: function() {
         let store = this.get('store');
         let phone_numbers_to_remove = [];
         let phone_numbers = this.get('phone_numbers');
         let phone_fks = this.get('phone_number_fks');
         let phone_number_ids = this.get('phone_number_ids');
+        phone_numbers.forEach((num) => {
+            if(num.get('invalid_number')) {
+                phone_numbers_to_remove.push(num.get('id'));
+            }
+        });
+        phone_numbers_to_remove.forEach((id) => {
+            store.remove('phonenumber', id);
+        });
+        this.cleanupPhoneNumberFKs();
+    },
+    cleanupPhoneNumberFKs: function() {
+        let phone_fks = this.get('phone_number_fks');
+        let phone_number_ids = this.get('phone_number_ids');
+        //add
+        phone_number_ids.forEach((id) => {
+            if (Ember.$.inArray(id, phone_fks) < 0) {
+                phone_fks.push(id);
+            }
+        });
+        //remove
         phone_fks.forEach((fk, indx) => {
             if (phone_number_ids.indexOf(fk) < 0) {
                phone_fks.splice(indx, 1); 
             }
         });
+    },
+    savePhoneNumbers: function() {
+        //cleanup
+        this.cleanupPhoneNumberFKs();
+        this.cleanupPhoneNumbers();
+        //save
+        let phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
-            if(num.get('invalid_number')) {
-                phone_numbers_to_remove.push(num.get('id'));
-            }
             num.save();
-        });
-        phone_numbers_to_remove.forEach((id) => {
-            store.remove('phonenumber', id);
         });
     },
     saveAddresses: function() {
@@ -230,6 +261,15 @@ export default Model.extend(NewMixin, {
         let store = this.get('store');
         let phone_numbers_to_remove = [];
         let phone_numbers = this.get('phone_numbers');
+        
+        // let phone_fks = this.get('phone_number_fks');
+        // let phone_number_ids = this.get('phone_number_ids');
+        // phone_fks.forEach((fk, indx) => {
+        //     if (phone_number_ids.indexOf(fk) < 0) {
+        //        phone_fks.splice(indx, 1); 
+        //     }
+        // });
+
         phone_numbers.forEach((num) => {
             if(num.get('invalid_number') && num.get('isNotDirty')) {
                 phone_numbers_to_remove.push(num.get('id'));
