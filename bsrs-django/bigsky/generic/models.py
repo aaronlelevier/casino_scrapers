@@ -9,22 +9,30 @@ from django.core.exceptions import ValidationError
 from util.models import BaseModel, BaseManager
 
 
+### HELPERS
+
+IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.gif', '.png']
+
+
 ### FILE PATHS
 
-def upload_to_files(instance, filename):
-    return '/'.join(['attachments/files', filename])
+def upload_to(instance, filename):
+    name, extension = os.path.splitext(filename)
 
+    if extension in IMAGE_EXTENSIONS:
+        dir_ = 'images/full'
+    else:
+        dir_ = 'files'
 
-def upload_to_images_thumbnail(instance, filename):
-    return '/'.join(['attachments/images/thumbnails', filename])
+    return '/'.join(['attachments/{}'.format(dir_), filename])
 
 
 def upload_to_images_medium(instance, filename):
     return '/'.join(['attachments/images/medium', filename])
 
 
-def upload_to_images_full(instance, filename):
-    return '/'.join(['attachments/images/full', filename])
+def upload_to_images_thumbnail(instance, filename):
+    return '/'.join(['attachments/images/thumbnails', filename])
 
 
 ### ATTACHMENT
@@ -37,15 +45,17 @@ class Attachment(BaseModel):
     Will reject uploads that exceed the ``settings.MAX_UPLOAD_SIZE``
 
     Populate ``filename`` and ``is_image`` upon upload.
+
+    `MIME Types reference <http://www.sitepoint.com/web-foundations/mime-types-complete-list/>`_
     """
     model_id = models.UUIDField(help_text="UUID of the Model Instance that "
                                           "the Attachment is related to.")
     filename = models.CharField(max_length=100, blank=True)
-    file = models.FileField(upload_to=upload_to_files, null=True, blank=True)
+    file = models.FileField(upload_to=upload_to, null=True, blank=True)
     is_image = models.BooleanField(blank=True, default=False)
-    image_thumbnail = models.ImageField(upload_to=upload_to_images_thumbnail, null=True, blank=True)
+    image_full = models.ImageField(upload_to=upload_to, null=True, blank=True)
     image_medium = models.ImageField(upload_to=upload_to_images_medium, null=True, blank=True)
-    image_full = models.ImageField(upload_to=upload_to_images_full, null=True, blank=True)
+    image_thumbnail = models.ImageField(upload_to=upload_to_images_thumbnail, null=True, blank=True)
 
     def __str__(self):
         return self.filename
@@ -55,14 +65,13 @@ class Attachment(BaseModel):
         Only the ``model_id`` and the ``file`` field will be available. After being sent,
         if it an Image, set the ``file=None``, and use the Image Fields.
         """
+        self._validate_file_size()
 
-        # Validate Size OK
-        if self.file._file._size > settings.MAX_UPLOAD_SIZE:
-            raise ValidationError("File size: {} to big".format(
-                self.file._file._size))
+        self.filename = self._filename
 
-        self.filename, extension = self.filename_and_extension
-        if extension in self.image_extensions:
+        name, extension = os.path.splitext(self.file.name)
+
+        if extension in IMAGE_EXTENSIONS:
             # Mark as Image
             self.is_image = True
             # Save Image Sizes
@@ -73,22 +82,20 @@ class Attachment(BaseModel):
         return super(Attachment, self).save(*args, **kwargs)
 
     @property
-    def filename_and_extension(self):
+    def _filename(self):
         try:
-            name = os.path.abspath(self.file.name).split("/")[-1]
+            return os.path.abspath(self.file.name).split("/")[-1]
         except AttributeError:
-            name = self.file.name
-        extension = name.split(".")[-1]
-        return name, extension
+            return self.file.name
 
     @property
     def image_extensions(self):
-        return ['JPG', 'JPEG', 'GIF', 'PNG']
+        return ['jpg', 'jpeg', 'gif', 'png']
 
-
-
-
-
-
-
-
+    def _validate_file_size(self):
+        try:
+            if self.file._file._size > settings.MAX_UPLOAD_SIZE:
+                raise ValidationError("File size: {} to big".format(
+                    self.file._file._size))
+        except AttributeError:
+            pass
