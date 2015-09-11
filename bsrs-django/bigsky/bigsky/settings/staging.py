@@ -13,5 +13,3 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
-DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'

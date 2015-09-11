@@ -26,5 +26,3 @@ NOSE_ARGS = [
     '--with-coverage',
     '--cover-package=accounting,category,contact,generic,location,order,person,session,translation,util',
 ]
-
-DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'

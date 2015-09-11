@@ -117,6 +117,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'source')
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
+### FILES
+
+MAX_UPLOAD_SIZE = 2621440 # 2621440 # default - aka: 2.5MB
+
 
 ### 3RD PARTY APPS ###
 

@@ -166,4 +166,4 @@ class Translation(BaseModel):
     objects = TranslationManager()
 
     def __str__(self):
-        return "{self.locale}: {self.values}".format(self=self)
+        return "{}: {}".format(self.locale, self.csv)
