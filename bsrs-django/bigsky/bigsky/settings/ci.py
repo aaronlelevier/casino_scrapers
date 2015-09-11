@@ -24,7 +24,7 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=accounting,category,contact,location,order,person,session,translation,util',
+    '--cover-package=accounting,category,contact,generic,location,order,person,session,translation,util',
 ]
 
 DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'

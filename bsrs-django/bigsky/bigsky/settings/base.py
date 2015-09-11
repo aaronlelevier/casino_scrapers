@@ -38,6 +38,7 @@ LOCAL_APPS = (
     'accounting',
     'category',
     'contact',
+    'generic',
     'location',
     'person',
     'session',
