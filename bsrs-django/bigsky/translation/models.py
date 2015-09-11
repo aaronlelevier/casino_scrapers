@@ -91,11 +91,13 @@ class TranslationManager(BaseManager):
         '''
         # Boiler-plate code for creating a new `Translation` record
 
-        from translation.models import Translation, Locale
-        for model in [Translation, Locale]:
-            for m in model.objects_all.all():
-                m.delete(override=True)
-        Translation.objects.import_csv('en')
+        .. code-block:: python
+
+            from translation.models import Translation, Locale
+            for model in [Translation, Locale]:
+                for m in model.objects_all.all():
+                    m.delete(override=True)
+            Translation.objects.import_csv('en')
         '''
         with open(os.path.join(self.translation_dir, '{}.csv'.format(language))) as csvfile:
             reader = csv.DictReader(csvfile)
@@ -120,11 +122,13 @@ class TranslationManager(BaseManager):
 
     def export_csv(self, id):
         '''
-        # Test `export_csv` Boiler-plate
+        Test `export_csv` Boiler-plate
 
-        from translation.models import Translation, Locale
-        a = Translation.objects.first()
-        Translation.objects.export_csv(a.id)
+        .. code-block:: python
+
+            from translation.models import Translation, Locale
+            a = Translation.objects.first()
+            Translation.objects.export_csv(a.id)
         '''
         t = self.get(id=id)
         with open(os.path.join(self.translation_dir, '{}-out.csv'.format(t.locale)), 'wb') as csvfile:
