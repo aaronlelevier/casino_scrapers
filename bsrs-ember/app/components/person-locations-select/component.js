@@ -9,7 +9,7 @@ export default Ember.Component.extend({
         add(location) {
             let person = this.get('person');
             let location_pk = location.get('id');
-            person.update_locations(location_pk);
+            person.add_locations(location_pk);
         },
         remove(location) {
             let person = this.get('person');

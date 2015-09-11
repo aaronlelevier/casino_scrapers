@@ -2,10 +2,14 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 
 var extract_phone_numbers = function(model, store) {
+    let phone_number_fks = [];
     model.phone_numbers.forEach((phone_number) => {
+        phone_number_fks.push(phone_number.id);
+        phone_number.person_fk = model.id;
         store.push('phonenumber', phone_number);
     });
     delete model.phone_numbers;
+    return phone_number_fks;
 };
 
 var extract_addresses = function(model, store) {
@@ -99,7 +103,7 @@ var PersonDeserializer = Ember.Object.extend({
     deserialize_single(model, id) {
         let uuid = this.get('uuid');
         let store = this.get('store');
-        extract_phone_numbers(model, store);
+        model.phone_number_fks = extract_phone_numbers(model, store);
         extract_addresses(model, store);
         model.role_fk = extract_role(model, store);
         model.person_location_fks = extract_person_location(model, store, uuid);

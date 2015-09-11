@@ -27,11 +27,12 @@ var InputMultiPhone = ChildValidationComponent.extend(CustomValidMixin, {
             var related_pk = this.get('related_pk');
             var model = {id: id, type: type};
             model[related_field] = related_pk;
-            var phone_number = this.get('model').push(model);
+            this.get('model').push(model);
+            //this.get('person').get('phone_number_fks').push(id);
         },
         delete(entry) {
-            this.get('model').remove(entry.id);
-            this.sendAction('delete');
+            this.get('model').remove(entry.id);//if I remove, then to compare if dirty on existing, only point of reference is p#_fks and can check if phone numbers is not in array
+            //this.get('model').set('person_fk', undefined);//need some sort of cleanup if go this route
         }
     }
 });

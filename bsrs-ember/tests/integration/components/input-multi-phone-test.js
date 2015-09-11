@@ -102,7 +102,7 @@ test('changing the phone number type will alter the bound value', function(asser
 });
 
 test('changing existing phone number type will alter the model regardless of the primary key value', function(assert) {
-    store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, person: PEOPLE_DEFAULTS.id});
     var model = store.find('phonenumber', {person: PEOPLE_DEFAULTS.id});
     this.set('model', model);
@@ -125,7 +125,7 @@ test('changing existing phone number type will alter the model regardless of the
 test('click delete btn will remove input', function(assert) {
     //todo: reduce the duplication on phone_number_types
     var phone_number_types = [PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName }), PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, name: PHONE_NUMBER_TYPE_DEFAULTS.mobileName})];
-    store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.id, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+    store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
     store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, person: PEOPLE_DEFAULTS.id});
     var model = store.find('phonenumber', {person: PEOPLE_DEFAULTS.id});
     this.set('model', model);

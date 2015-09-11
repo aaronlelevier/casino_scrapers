@@ -16,6 +16,7 @@ export default Model.extend(NewMixin, {
     auth_amount: attr(''),
     locale: attr(''),
     role_fk: undefined,
+    phone_number_fks: [],
     person_location_fks: [],
     isModelDirty: false,
     dirtyModel: Ember.computed('isModelDirty', {
@@ -46,7 +47,17 @@ export default Model.extend(NewMixin, {
     }),
     phone_numbers: Ember.computed(function() {
         var store = this.get('store');
-        return store.find('phonenumber', {person: this.get('id')});
+        var filter = function(phone_number) {
+            let phone_fks = this.get('phone_number_fks');
+            return this.get('id') === phone_number.get('person_fk');
+            //return Ember.$.inArray(phone_fks, phone_number.get('id'));//a wash if delete model. Have a problem if don't remove ph# from store
+        };
+        return store.find('phonenumber', filter.bind(this), ['id']);
+    }),
+    phone_number_ids: Ember.computed('phone_numbers.[]', function() {
+        return this.get('phone_numbers').map((ph_num) => {
+            return ph_num.get('id');
+        });
     }),
     addresses: Ember.computed(function() {
         var store = this.get('store');
@@ -64,13 +75,22 @@ export default Model.extend(NewMixin, {
         return this.get('role_fk') ? true : false;
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
-    phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
-        var phone_numbers = this.get('phone_numbers');
-        var phone_number_dirty = false;
-        phone_numbers.forEach((num) => {
-            if (num.get('isDirty')) {
+    phoneNumbersIsDirty: Ember.computed('phone_numbers.[]', 'phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
+        let person_id = this.get('id');
+        let phone_numbers = this.get('phone_numbers');
+        let phone_number_ids = this.get('phone_number_ids'); 
+        let phone_number_dirty = false;
+        let phone_fks = this.get('phone_number_fks');
+        phone_fks.forEach((fk) => {
+            //TODO: remove from array w/ index from forEach  
+            if (phone_number_ids.indexOf(fk) < 0) {
                 phone_number_dirty = true;
             }
+            phone_numbers.forEach((num) => {
+                if (num.get('isDirty')) {
+                    phone_number_dirty = true;
+                }
+            });
         });
         return phone_number_dirty;
     }),
@@ -92,6 +112,13 @@ export default Model.extend(NewMixin, {
         let store = this.get('store');
         let phone_numbers_to_remove = [];
         let phone_numbers = this.get('phone_numbers');
+        let phone_fks = this.get('phone_number_fks');
+        let phone_number_ids = this.get('phone_number_ids');
+        phone_fks.forEach((fk, indx) => {
+            if (phone_number_ids.indexOf(fk) < 0) {
+               phone_fks.splice(indx, 1); 
+            }
+        });
         phone_numbers.forEach((num) => {
             if(num.get('invalid_number')) {
                 phone_numbers_to_remove.push(num.get('id'));
@@ -255,7 +282,7 @@ export default Model.extend(NewMixin, {
             store.push('person-location', {id: m2m_pk, removed: true});
         }
     },
-    update_locations(location_pk) {
+    add_locations(location_pk) {
         let store = this.get('store');
         let uuid = this.get('uuid');
         store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
@@ -287,7 +314,6 @@ export default Model.extend(NewMixin, {
                 return join_model.get('location_pk');
             });
             return Ember.$.inArray(location.get('id'), location_pks) > -1;
-
         };
         return store.find('location', filter.bind(person_locations), ['id']);
     }),
