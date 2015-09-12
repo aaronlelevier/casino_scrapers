@@ -3,8 +3,9 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import NewMixin from 'bsrs-ember/mixins/model/new';
+import CopyMixin from 'bsrs-ember/mixins/model/copy';
 
-export default Model.extend(NewMixin, {
+export default Model.extend(NewMixin, CopyMixin, {
     uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
@@ -48,7 +49,6 @@ export default Model.extend(NewMixin, {
     phone_numbers_all: Ember.computed(function() {
         var store = this.get('store');
         var filter = function(phone_number) {
-            let phone_fks = this.get('phone_number_fks');
             return this.get('id') === phone_number.get('person_fk');
         };
         return store.find('phonenumber', filter.bind(this), ['removed']);
@@ -84,33 +84,40 @@ export default Model.extend(NewMixin, {
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.[]', 'phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
+        let uuid = this.get('uuid');
+        let phone_number_dirty = false;
         let person_id = this.get('id');
         let phone_numbers = this.get('phone_numbers');
-        let phone_number_ids = this.get('phone_number_ids'); 
-        let phone_number_dirty = false;
         let phone_fks = this.get('phone_number_fks');
-        if (phone_fks.length < phone_numbers.get('length')) {
-            //if add and delete phone number and try to navigate away
-            this.cleanupPhoneNumberFKs();//if added phone number...put on append method
+        let filtered_phone_numbers = phone_numbers.map((phone) => {
+            return this.copy(phone);
+        });
+        let filtered_phone_fks = Ember.$.extend(true, [], phone_fks);
+        if (filtered_phone_fks.length < filtered_phone_numbers.length) {
+            //if add new phone number and ask right away if dirty, need to update fk array
+            phone_numbers.forEach((obj) => {
+                if (Ember.$.inArray(obj.get('id'), filtered_phone_fks) < 0) {
+                    filtered_phone_fks.push(obj.get('id'));
+                }
+            });
         }
-        let filtered_phone_fks = phone_fks;
         phone_numbers.forEach((num) => {
             //if dirty
             if (num.get('isDirty')) {
                 phone_number_dirty = true;
             }
-        });
-        phone_numbers.forEach((num) => {
-            //get ride of invalid numbers and provide array for dirty check
-            //if invalid, don't mark as dirty, but clean up array
-            if (num.get('invalid_number') && phone_fks.length > phone_numbers.get('length')) {
-                filtered_phone_fks = phone_fks.filter((fk) => {
-                        return fk !== num.get('id');//if removed phone number
+            //get ride of invalid numbers and provide updated array for dirty check; only if off by one.  If same length, then don't want to filter out.
+            if (num.get('invalid_number') && filtered_phone_fks.length !== filtered_phone_numbers.get('length')) {
+                filtered_phone_fks = filtered_phone_fks.filter((fk) => {
+                        return fk !== num.get('id');
+                });
+                filtered_phone_numbers = filtered_phone_numbers.filter((phone_number) => {
+                    return phone_number.number !== '';
                 });
             }
         });
         //if not dirty, but delete phone number, then mark as dirty and clean up array
-        if (phone_numbers.get('length') > 0 && filtered_phone_fks.length !== phone_numbers.get('length')) {
+        if (phone_numbers.get('length') > 0 && filtered_phone_fks.length !== filtered_phone_numbers.length) {
             phone_number_dirty = true;
         }
         return phone_number_dirty;
@@ -166,10 +173,8 @@ export default Model.extend(NewMixin, {
         });
     },
     savePhoneNumbers: function() {
-        //cleanup
         this.cleanupPhoneNumberFKs();
         this.cleanupPhoneNumbers();
-        //save
         let phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
             num.save();

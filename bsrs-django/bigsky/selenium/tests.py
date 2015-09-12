@@ -66,7 +66,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.driver.refresh()
         role_list_view = role_page.find_list_name()
         role_page.click_name_in_list(name, role_list_view)
-
         ### UPDATE
         # Go to the first Role's Detail view
         role_page.find_wait_and_assert_elem("t-role-name", name)
@@ -79,7 +78,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.driver.refresh()
         role_list_view = role_page.find_list_name()
         role_page.click_name_in_list(role_name, role_list_view)
-
         ### DELETE
         # Go to the first Role's Detail view
         role_page.find_wait_and_assert_elem("t-role-name", role_name)
@@ -123,7 +121,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.driver.refresh()
         location_list_view = location_page.find_list_name()
         location_page.click_name_in_list(location_name, location_list_view)
-
         ### UPDATE
         # Go to Location Detail view, Change name and hit "save"
         location_page.find_wait_and_assert_elem("t-location-name", location_name)
@@ -135,7 +132,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         locations = location_page.find_list_data()
         location_list_view = location_page.find_list_name()
         location_page.click_name_in_list(location_name, location_list_view)
-
         ### DELETE
         # Go to Location Detail view click Delete
         self.gen_elem_page.click_dropdown_delete()
@@ -173,7 +169,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.driver.refresh()
         location_level_list_view = location_level_page.find_list_name()
         location_level_page.click_name_in_list(location_level_name, location_level_list_view)
-        
         ### UPDATE
         self.driver.refresh()
         location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
@@ -186,7 +181,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.driver.refresh()
         location_level_list_view = location_level_page.find_list_name()
         location_level_page.click_name_in_list(location_level_name, location_level_list_view)
-        
         ### DELETE
         # Go to the first Role's Detail view
         location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
@@ -223,7 +217,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         role_input.select_by_index(1)
         self._fill_in(person)
         self.gen_elem_page.click_save_btn()
-
         ### UPDATE
         person_page.find_wait_and_assert_elem("t-person-username", username)
         first_name = "scooter"

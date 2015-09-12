@@ -35,7 +35,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
-module('Acceptance | detail test', {
+module('sco Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -135,9 +135,9 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     andThen(() => {
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(currentURL(), PEOPLE_URL);
-        // assert.equal(store.find('person').get('length'), 11);
+        assert.equal(store.find('person').get('length'), 11);
         assert.ok(person.get('isNotDirty'));
-        // assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
@@ -177,7 +177,6 @@ test('newly added phone numbers without a valid number are ignored and removed w
     click('.t-cancel-btn');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
-        assert.equal(store.find('phonenumber').get('length'), 2);
     });
 });
 
@@ -544,7 +543,7 @@ test('when you deep link to the person detail view you can remove a new phone nu
     });
 });
 
-test('sco when you deep link to the person detail view you can add and remove a new phone number', (assert) => {
+test('when you deep link to the person detail view you can add and remove a new phone number', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     andThen(() => {
