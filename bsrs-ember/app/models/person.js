@@ -45,14 +45,22 @@ export default Model.extend(NewMixin, {
         };
         return store.find('role', filter.bind(this), ['people']);
     }),
+    phone_numbers_all: Ember.computed(function() {
+        var store = this.get('store');
+        var filter = function(phone_number) {
+            let phone_fks = this.get('phone_number_fks');
+            return this.get('id') === phone_number.get('person_fk');
+        };
+        return store.find('phonenumber', filter.bind(this), ['removed']);
+    }),
     phone_numbers: Ember.computed(function() {
         var store = this.get('store');
         var filter = function(phone_number) {
             let phone_fks = this.get('phone_number_fks');
-            //return this.get('id') === phone_number.get('person_fk');
-            return Ember.$.inArray(phone_fks, phone_number.get('id'));//a wash if delete model. Have a problem if don't remove ph# from store
+            return this.get('id') === phone_number.get('person_fk') && !phone_number.get('removed');
+            // return Ember.$.inArray(phone_number.get('id'), phone_fks) > -1 && !phone_number.get('removed');
         };
-        return store.find('phonenumber', filter.bind(this), ['id']);
+        return store.find('phonenumber', filter.bind(this), ['removed']);
     }),
     phone_number_ids: Ember.computed('phone_numbers.[]', function() {
         return this.get('phone_numbers').map((ph_num) => {
@@ -81,6 +89,11 @@ export default Model.extend(NewMixin, {
         let phone_number_ids = this.get('phone_number_ids'); 
         let phone_number_dirty = false;
         let phone_fks = this.get('phone_number_fks');
+        if (phone_fks.length < phone_numbers.get('length')) {
+            //if add and delete phone number and try to navigate away
+            this.cleanupPhoneNumberFKs();//if added phone number...put on append method
+        }
+        let filtered_phone_fks = phone_fks;
         phone_numbers.forEach((num) => {
             //if dirty
             if (num.get('isDirty')) {
@@ -88,15 +101,17 @@ export default Model.extend(NewMixin, {
             }
         });
         phone_numbers.forEach((num) => {
+            //get ride of invalid numbers and provide array for dirty check
             //if invalid, don't mark as dirty, but clean up array
-            if (num.get('invalid_number')) {
-                this.cleanupPhoneNumber(num);
+            if (num.get('invalid_number') && phone_fks.length > phone_numbers.get('length')) {
+                filtered_phone_fks = phone_fks.filter((fk) => {
+                        return fk !== num.get('id');//if removed phone number
+                });
             }
         });
         //if not dirty, but delete phone number, then mark as dirty and clean up array
-        if (phone_numbers.get('length') > 0 && phone_fks.length !== phone_numbers.get('length')) {
+        if (phone_numbers.get('length') > 0 && filtered_phone_fks.length !== phone_numbers.get('length')) {
             phone_number_dirty = true;
-            this.cleanupPhoneNumbers();
         }
         return phone_number_dirty;
     }),
@@ -125,7 +140,7 @@ export default Model.extend(NewMixin, {
         let phone_fks = this.get('phone_number_fks');
         let phone_number_ids = this.get('phone_number_ids');
         phone_numbers.forEach((num) => {
-            if(num.get('invalid_number')) {
+            if(num.get('invalid_number') || num.get('removed')) {
                 phone_numbers_to_remove.push(num.get('id'));
             }
         });
@@ -260,17 +275,12 @@ export default Model.extend(NewMixin, {
     rollbackPhoneNumbers() {
         let store = this.get('store');
         let phone_numbers_to_remove = [];
-        let phone_numbers = this.get('phone_numbers');
-        
-        // let phone_fks = this.get('phone_number_fks');
-        // let phone_number_ids = this.get('phone_number_ids');
-        // phone_fks.forEach((fk, indx) => {
-        //     if (phone_number_ids.indexOf(fk) < 0) {
-        //        phone_fks.splice(indx, 1); 
-        //     }
-        // });
-
+        let phone_numbers = this.get('phone_numbers_all');
         phone_numbers.forEach((num) => {
+            //rollback scenario
+            if (num.get('removed')) {
+                num.set('removed', undefined);
+            }
             if(num.get('invalid_number') && num.get('isNotDirty')) {
                 phone_numbers_to_remove.push(num.get('id'));
             }

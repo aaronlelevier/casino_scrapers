@@ -1,8 +1,10 @@
 import Ember from 'ember';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
+import inject from 'bsrs-ember/utilities/store';
 
 var PhoneNumberModel =  Model.extend(NewMixin, {
+    store: inject('main'),
     type: attr(),
     number: attr(''),
     person_fk: undefined,
