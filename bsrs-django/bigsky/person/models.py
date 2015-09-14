@@ -1,9 +1,6 @@
 import re
 import json
 from datetime import timedelta
-import sys
-if sys.version_info > (2,7):
-    str = unicode
 
 from django.db import models, IntegrityError
 from django.conf import settings
