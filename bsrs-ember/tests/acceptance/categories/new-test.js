@@ -198,4 +198,3 @@ test('when user enters new form and doesnt enter data, the record is correctly r
         assert.equal(store.find('category').get('length'), 0);
     });
 });
-

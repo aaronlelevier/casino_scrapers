@@ -2,14 +2,18 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
-import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
+import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
+import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
+import {validateEach} from 'ember-cli-simple-validation/mixins/validate';
+import { phoneIsAllowedRegion, phoneIsValidFormat } from 'bsrs-ember/validation/phone';
 
-var InputMultiPhone = Ember.Component.extend(ValidationMixin, {
+var InputMultiPhone = ChildValidationComponent.extend(CustomValidMixin, {
     uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi t-input-multi-phone'],
     fieldNames: 'number',
-    // number: validateEach('number'),
+    numberFormat: validateEach('number', phoneIsValidFormat),
+    numberRegion: validateEach('number', phoneIsAllowedRegion),
     actions: {
         changed(phonenumber, val) {
             Ember.run(() => {
@@ -21,16 +25,14 @@ var InputMultiPhone = Ember.Component.extend(ValidationMixin, {
             var type = this.get('default_type').get('id');
             var related_field = this.get('related_field');
             var related_pk = this.get('related_pk');
-            var model = {id: id};
+            var model = {id: id, type: type};
             model[related_field] = related_pk;
-            var phone_number = this.get('model').push(model);
-            phone_number.set('type', type);
+            this.get('model').push(model);
         },
         delete(entry) {
-            this.get('model').remove(entry.id);
-            this.sendAction('delete');
+            this.get('model').push({id: entry.get('id'), removed: true});
         }
     }
-}); 
+});
 
 export default InputMultiPhone;

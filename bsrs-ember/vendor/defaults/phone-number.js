@@ -1,9 +1,6 @@
-const BSRS_PHONE_NUMBER_ID = 1;
-const BSRS_PHONE_NUMBER_ID_TWO = 2;
-const BSRS_PHONE_NUMBER_PUT = 3; 
-const BSRS_PHONE_NUMBER_ONE = '858-715-5026';
-const BSRS_PHONE_NUMBER_TWO = '858-715-5056';
-var phone_number_defaults = {id: BSRS_PHONE_NUMBER_ONE, idTwo: BSRS_PHONE_NUMBER_TWO, idPut: BSRS_PHONE_NUMBER_PUT, numberOne: BSRS_PHONE_NUMBER_ONE, numberTwo: BSRS_PHONE_NUMBER_TWO};
+var phone_number_defaults = {idOne: '9435c17c-44eb-43be-9aa6-fd111a787b2a', idTwo: '820fd29e-8e95-4e6e-9986-01bf17f4269a', 
+    idPut: 'b2b6757b-2b08-48be-8034-d144d2958ce7', numberOne: '858-715-5026', numberTwo: '858-715-5056', 
+    idThree: 'beabb30a-6b18-4256-a1d1-4c661c24c08c', numberThree: '515-717-9876'};
 
 if (typeof window === 'undefined') {
     module.exports = phone_number_defaults;

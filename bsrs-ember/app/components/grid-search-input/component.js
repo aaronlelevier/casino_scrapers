@@ -8,6 +8,6 @@ export default Ember.TextField.extend({
         clearTimeout(keyup);
         keyup = Ember.run.later(this, function() {
             this.sendAction('keyup', this.get('value'));
-        }, 200);
+        }, 500);
     }
 });

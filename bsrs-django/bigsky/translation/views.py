@@ -2,7 +2,6 @@ from rest_framework import viewsets
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-import rest_framework_filters as filters
 
 from translation.models import Locale, Translation
 from translation.serializers import LocaleSerializer, TranslationSerializer
@@ -30,13 +29,15 @@ class TranslationViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = TranslationSerializer
     queryset = Translation.objects.all()
-    # filter_class = TranslationFilterSet
 
     def get_paginated_response(self, data):
-        if len(data) > 1:
-            return Response(data)
-        elif len(data) == 1:
-            return Response(data[0])
+        """
+        The response should alwasy be an object.  The key each item in the 
+        object is the Locale, and the value is the Translation ``key:value`` 
+        object for that Translation.
+        """
+        if data:
+            return Response({d.iterkeys().next(): d.itervalues().next() for d in data})
         else:
             raise NotFound
 
@@ -44,8 +45,9 @@ class TranslationViewSet(viewsets.ModelViewSet):
         queryset = Translation.objects.all()
         locale = self.request.query_params.get('locale', None)
         if locale is not None:
-            try:
-                queryset = queryset.filter(locale__locale=locale)
-            except Translation.DoesNotExist:
-                raise NotFound
+            queryset = queryset.filter(
+                locale__locale__istartswith=locale[:2]
+                ).extra(
+                where=["CHAR_LENGTH(locale) <= {}".format(len(locale))]
+                )
         return queryset

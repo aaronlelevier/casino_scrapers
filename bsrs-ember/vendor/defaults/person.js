@@ -41,6 +41,10 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             title: BSRS_PERSON_TITLE,
             auth_amount: BSRS_PERSON_AUTH_AMOUNT,
             auth_currency: this.currency_defaults.id,
+            locale: 'en',
+            locale2: 'es',
+            locale_id: 'a7ae2835-ee7c-4604-92f7-045f3994936e',
+            locale2_id: '51905ba8-024f-4739-ae5c-2d90ffc3f726',
             unusedId: BSRS_PERSON_UNUSED_ID
         };
     };
@@ -53,9 +57,9 @@ if (typeof window === 'undefined') {
     var currency_defaults = require('./currencies');
     module.exports = new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults).defaults();
 } else {
-    define('bsrs-ember/vendor/defaults/person', ['exports', 'bsrs-ember/vendor/defaults/role', 
-                                                'bsrs-ember/vendor/defaults/status', 
-                                                'bsrs-ember/vendor/defaults/currencies'], 
+    define('bsrs-ember/vendor/defaults/person', ['exports', 'bsrs-ember/vendor/defaults/role',
+                                                'bsrs-ember/vendor/defaults/status',
+                                                'bsrs-ember/vendor/defaults/currencies'],
     function (exports, role_defaults, status_defaults, currency_defaults) {
         'use strict';
         return new BSRS_PERSON_DEFAULTS_OBJECT(role_defaults, status_defaults, currency_defaults).defaults();

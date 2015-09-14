@@ -2,9 +2,10 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
+import NewMixin from 'bsrs-ember/mixins/model/new';
+import CopyMixin from 'bsrs-ember/mixins/model/copy';
 
-export default Model.extend({
+export default Model.extend(NewMixin, CopyMixin, {
     uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
@@ -14,7 +15,9 @@ export default Model.extend({
     title: attr(''),
     employee_id: attr(''),
     auth_amount: attr(''),
+    locale: attr(''),
     role_fk: undefined,
+    phone_number_fks: [],
     person_location_fks: [],
     isModelDirty: false,
     dirtyModel: Ember.computed('isModelDirty', {
@@ -33,26 +36,36 @@ export default Model.extend({
     }),
     role: Ember.computed('role_property.[]', function() {
         var roles = this.get('role_property');
-        var has_role = roles.get('length') > 0;
-        var foreign_key = has_role ? roles.objectAt(0).get('id') : undefined;
-        if (has_role) {
-            return roles.objectAt(0);
-        }
+        return roles.get('length') > 0 ? roles.objectAt(0) : undefined;
     }),
     role_property: Ember.computed(function() {
         var store = this.get('store');
         var filter = function(role) {
             var people_pks = role.get('people') || [];
-            if(Ember.$.inArray(this.get('id'), people_pks) > -1) {
-                return true;
-            }
-            return false;
+            return Ember.$.inArray(this.get('id'), people_pks) > -1;
         };
         return store.find('role', filter.bind(this), ['people']);
     }),
+    phone_numbers_all: Ember.computed(function() {
+        var store = this.get('store');
+        var filter = function(phone_number) {
+            return this.get('id') === phone_number.get('person_fk');
+        };
+        return store.find('phonenumber', filter.bind(this), ['removed']);
+    }),
     phone_numbers: Ember.computed(function() {
         var store = this.get('store');
-        return store.find('phonenumber', {person: this.get('id')});
+        var filter = function(phone_number) {
+            let phone_fks = this.get('phone_number_fks');
+            return this.get('id') === phone_number.get('person_fk') && !phone_number.get('removed');
+            // return Ember.$.inArray(phone_number.get('id'), phone_fks) > -1 && !phone_number.get('removed');
+        };
+        return store.find('phonenumber', filter.bind(this), ['removed']);
+    }),
+    phone_number_ids: Ember.computed('phone_numbers.[]', function() {
+        return this.get('phone_numbers').map((ph_num) => {
+            return ph_num.get('id');
+        });
     }),
     addresses: Ember.computed(function() {
         var store = this.get('store');
@@ -70,14 +83,43 @@ export default Model.extend({
         return this.get('role_fk') ? true : false;
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
-    phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
-        var phone_numbers = this.get('phone_numbers');
-        var phone_number_dirty = false;
+    phoneNumbersIsDirty: Ember.computed('phone_numbers.[]', 'phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
+        let uuid = this.get('uuid');
+        let phone_number_dirty = false;
+        let person_id = this.get('id');
+        let phone_numbers = this.get('phone_numbers');
+        let phone_fks = this.get('phone_number_fks');
+        let filtered_phone_numbers = phone_numbers.map((phone) => {
+            return this.copy(phone);
+        });
+        let filtered_phone_fks = Ember.$.extend(true, [], phone_fks);
+        if (filtered_phone_fks.length < filtered_phone_numbers.length) {
+            //if add new phone number and ask right away if dirty, need to update fk array
+            phone_numbers.forEach((obj) => {
+                if (Ember.$.inArray(obj.get('id'), filtered_phone_fks) < 0) {
+                    filtered_phone_fks.push(obj.get('id'));
+                }
+            });
+        }
         phone_numbers.forEach((num) => {
+            //if dirty
             if (num.get('isDirty')) {
                 phone_number_dirty = true;
             }
+            //get ride of invalid numbers and provide updated array for dirty check; only if off by one.  If same length, then don't want to filter out.
+            if (num.get('invalid_number') && filtered_phone_fks.length !== filtered_phone_numbers.get('length')) {
+                filtered_phone_fks = filtered_phone_fks.filter((fk) => {
+                        return fk !== num.get('id');
+                });
+                filtered_phone_numbers = filtered_phone_numbers.filter((phone_number) => {
+                    return phone_number.number !== '';
+                });
+            }
         });
+        //if not dirty, but delete phone number, then mark as dirty and clean up array
+        if (phone_numbers.get('length') > 0 && filtered_phone_fks.length !== filtered_phone_numbers.length) {
+            phone_number_dirty = true;
+        }
         return phone_number_dirty;
     }),
     phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty'),
@@ -94,16 +136,62 @@ export default Model.extend({
     }),
     addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    cleanupPhoneNumber: function(num) {
+        let store = this.get('store');
+        store.remove('phonenumber', num.get('id'));
+    },
+    cleanupPhoneNumbers: function() {
+        let store = this.get('store');
+        let phone_numbers_to_remove = [];
+        let phone_numbers = this.get('phone_numbers');
+        let phone_fks = this.get('phone_number_fks');
+        let phone_number_ids = this.get('phone_number_ids');
+        phone_numbers.forEach((num) => {
+            if(num.get('invalid_number') || num.get('removed')) {
+                phone_numbers_to_remove.push(num.get('id'));
+            }
+        });
+        phone_numbers_to_remove.forEach((id) => {
+            store.remove('phonenumber', id);
+        });
+        this.cleanupPhoneNumberFKs();
+    },
+    cleanupPhoneNumberFKs: function() {
+        let phone_fks = this.get('phone_number_fks');
+        let phone_number_ids = this.get('phone_number_ids');
+        //add
+        phone_number_ids.forEach((id) => {
+            if (Ember.$.inArray(id, phone_fks) < 0) {
+                phone_fks.push(id);
+            }
+        });
+        //remove
+        phone_fks.forEach((fk, indx) => {
+            if (phone_number_ids.indexOf(fk) < 0) {
+               phone_fks.splice(indx, 1); 
+            }
+        });
+    },
     savePhoneNumbers: function() {
-        var phone_numbers = this.get('phone_numbers');
+        this.cleanupPhoneNumberFKs();
+        this.cleanupPhoneNumbers();
+        let phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
             num.save();
         });
     },
     saveAddresses: function() {
-        var addresses = this.get('addresses');
+        let store = this.get('store');
+        let addresses_to_remove = [];
+        let addresses = this.get('addresses');
         addresses.forEach((address) => {
+            if (address.get('invalid_address')) {
+                addresses_to_remove.push(address.get('id')); 
+            }
             address.save();
+        });
+        addresses_to_remove.forEach((id) => {
+            store.remove('address', id);
         });
     },
     saveLocations: function() {
@@ -190,15 +278,35 @@ export default Model.extend({
         }
     },
     rollbackPhoneNumbers() {
-        var phone_numbers = this.get('phone_numbers');
+        let store = this.get('store');
+        let phone_numbers_to_remove = [];
+        let phone_numbers = this.get('phone_numbers_all');
         phone_numbers.forEach((num) => {
+            //rollback scenario
+            if (num.get('removed')) {
+                num.set('removed', undefined);
+            }
+            if(num.get('invalid_number') && num.get('isNotDirty')) {
+                phone_numbers_to_remove.push(num.get('id'));
+            }
             num.rollback();
+        });
+        phone_numbers_to_remove.forEach((id) => {
+            store.remove('phonenumber', id);
         });
     },
     rollbackAddresses() {
-        var addresses = this.get('addresses');
+        let store = this.get('store');
+        let addresses_to_remove = [];
+        let addresses = this.get('addresses');
         addresses.forEach((address) => {
+            if(address.get('invalid_address') && address.get('isNotDirty')) {
+                addresses_to_remove.push(address.get('id'));
+            }
             address.rollback();
+        });
+        addresses_to_remove.forEach((id) => {
+            store.remove('address', id);
         });
     },
     locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
@@ -214,22 +322,25 @@ export default Model.extend({
                 return location.get('isDirty') === true;
             });
             return dirty_locations.length > 0;
+
         }
         if(previous_m2m_fks && previous_m2m_fks.get('length') > 0) {
             return true;
         }
     }),
-    update_locations(location_pk) {
+    remove_location(location_pk) {
         let store = this.get('store');
         if(Ember.$.inArray(location_pk, this.get('location_ids')) > -1) {
             let m2m_pk = this.get('person_locations').filter((m2m) => {
                 return m2m.get('location_pk') === location_pk;
             }).objectAt(0).get('id');
             store.push('person-location', {id: m2m_pk, removed: true});
-        }else{
-            let uuid = this.get('uuid');
-            store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
         }
+    },
+    add_locations(location_pk) {
+        let store = this.get('store');
+        let uuid = this.get('uuid');
+        store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
     },
     change_role(new_role, old_role) {
         let person_id = this.get('id');
@@ -279,12 +390,19 @@ export default Model.extend({
     serialize() {
         var store = this.get('store');
         var status_id = store.findOne('status').get('id');
-        var phone_numbers = this.get('phone_numbers').map(function(number) {
-            return number.serialize();
+        var phone_numbers = this.get('phone_numbers').filter(function(num) {
+            if(num.get('invalid_number')) {
+                return;
+            }
+            return num;
+        }).map(function(num) {
+            return num.serialize();
         });
         var addresses = this.get('addresses').map(function(address) {
             return address.serialize();
         });
+        var locale = store.find('locale', {locale: this.get('locale')});
+        var locale_fk = locale.objectAt(0) ? locale.objectAt(0).get('id') : '';
         return {
             id: this.get('id'),
             username: this.get('username'),
@@ -296,17 +414,15 @@ export default Model.extend({
             employee_id: this.get('employee_id'),
             auth_amount: this.get('auth_amount'),
             status: status_id,
-            role: this.get('role').get('id'), //TODO: is this tested/used at all?
+            role: this.get('role').get('id'),
             emails: [],
             locations: this.get('location_ids'),
             phone_numbers: phone_numbers,
-            addresses: addresses
+            addresses: addresses,
+            locale: locale_fk
         };
     },
     removeRecord() {
         this.get('store').remove('person', this.get('id'));
-    },
-    isNew: Ember.computed(function() {
-        return loopAttrs(this);
-    })
+    }
 });

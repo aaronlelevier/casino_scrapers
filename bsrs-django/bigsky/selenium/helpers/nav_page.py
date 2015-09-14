@@ -1,15 +1,22 @@
-from .method_helpers import MethodHelpers
-from .base_page import BasePage
+from javascript import JavascriptMixin
 
 
-class NavPage(BasePage, MethodHelpers):
+class NavPage(JavascriptMixin):
+
+    def __init__(self, driver):
+        self.driver = driver
+
     def click_admin(self):
-        self.find_class_element("t-nav-admin").click()
+        self.wait_for_xhr_request("t-nav-admin").click()
+    
     def find_people_link(self):
-        return self.wait_xhr("t-nav-admin-people")
+        return self.wait_for_xhr_request("t-nav-admin-people")
+    
     def find_location_link(self):
-        return self.wait_xhr("t-nav-admin-location")
+        return self.wait_for_xhr_request("t-nav-admin-location")
+    
     def find_location_level_link(self):
-        return self.wait_xhr("t-nav-admin-location-level")
+        return self.wait_for_xhr_request("t-nav-admin-location-level")
+    
     def find_role_link(self):
-        return self.wait_xhr("t-nav-admin-role")
+        return self.wait_for_xhr_request("t-nav-admin-role")

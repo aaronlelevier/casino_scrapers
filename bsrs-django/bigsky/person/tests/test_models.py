@@ -1,3 +1,5 @@
+from datetime import date
+
 from django.test import TestCase
 from django.contrib.auth.models import AbstractUser, Group
 
@@ -7,6 +9,9 @@ from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role
+from translation.models import Locale, Translation
+from translation.tests.factory import create_locales
+from util.create import _generate_chars
 
 
 class RoleTests(TestCase):
@@ -22,6 +27,24 @@ class RoleTests(TestCase):
 
     def test_to_dict(self):
         self.assertEqual(self.role.to_dict()["location_level"], str(self.role.location_level.id))
+
+    def test_update_password_history_length(self):
+        self.assertFalse(self.role.password_history_length)
+        self.assertIsInstance(self.role.password_history_length, list)
+        # password lengths
+        first_pw_len = self.role.password_min_length
+        second_pw_len = 10
+        third_pw_len = 12
+        self.role.password_min_length = second_pw_len
+        self.role.save()
+        self.assertEqual(self.role.password_history_length, [first_pw_len])
+        self.role.password_min_length = third_pw_len
+        self.role.save()
+        self.assertEqual(
+            self.role.password_history_length,
+            [first_pw_len, second_pw_len]
+        )
+
 
 class PersonStatusManagerTests(TestCase):
 
@@ -78,6 +101,14 @@ class PersonTests(TestCase):
         self.assertIsNone(self.person.status)
         self.person._update_defaults()
         self.assertIsNotNone(self.person.status)
+        self.assertIsNotNone(self.person.password_expire_date)
+        self.assertEqual(
+            self.person.name,
+            self.person.first_name + ' ' + self.person.last_name
+        )
+
+    def test_password_expire_date(self):
+        self.assertIsInstance(self.person._password_expire_date, date)
 
     def test_validate_locations(self):
         self.person._validate_locations()
@@ -133,3 +164,45 @@ class PersonTests(TestCase):
         person.save()
         person = Person.objects.get(id=person.id)
         self.assertEqual(person.groups.count(), 1)
+
+    def test_to_dict(self):
+        default_locale = Locale.objects.system_default()
+        self.assertEqual(
+            self.person.to_dict(None)['locale'],
+            str(default_locale.id)
+        )
+
+    def test_get_locale_user(self):
+        # setup
+        create_locales()
+        person_locale = Locale.objects.order_by("-name").first()
+        # Confirm that the ``system_default`` is not equal to the Locale
+        # that we are about to assign to the ``Person``
+        self.assertNotEqual(
+            Locale.objects.system_default(),
+            person_locale
+        )
+        # test
+        self.person.locale = person_locale
+        self.person.save()
+        # ``person.to_dict(_)`` will return the ``person.locale`` first
+        # if it exists, not ``person._get_locale``
+        self.assertEqual(
+            self.person.to_dict(None)['locale'],
+            str(self.person.locale.id)
+        )
+
+    def test_get_locale_accept_language_header(self):
+        # setup
+        create_locales()
+        self.assertIn(
+            self.person._get_locale("es,en-US;q=0.8"),
+            [str(x) for x in Locale.objects.values_list('id', flat=True)]
+        )
+
+    def test_get_locale_system(self):
+        self.assertIsNone(self.person.locale)
+        self.assertEqual(
+            self.person._get_locale(None),
+            str(Locale.objects.system_default().id)
+        )

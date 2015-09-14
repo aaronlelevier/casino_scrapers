@@ -2,9 +2,11 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import injectStore from 'bsrs-ember/utilities/store';
 import PersonLocationsMixin from 'bsrs-ember/mixins/person/locations';
-import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
+import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
+import { validate } from 'ember-cli-simple-validation/mixins/validate';
 
-export default Ember.Component.extend(ValidationMixin, PersonLocationsMixin, {
+export default ParentValidationComponent.extend(PersonLocationsMixin, {
+    child_components: ['input-multi-phone', 'input-multi-address'],
     repository: inject('person'),
     location_repo: inject('location'),
     classNames: ['wrapper', 'form'],
@@ -14,7 +16,7 @@ export default Ember.Component.extend(ValidationMixin, PersonLocationsMixin, {
         savePerson() {
             this.get('model').set('dirtyModel', false);
             this.set('submitted', true);
-            if (this.get('valid')) {
+            if (this.all_components_valid()) {
                 var model = this.get('model');
                 var repository = this.get('repository');
                 repository.update(model).then(() => {

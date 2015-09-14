@@ -5,7 +5,7 @@ module.exports = function(app) {
   var adminLocationLevelsRouter = express.Router();
 
   adminLocationLevelsRouter.get('/', function(req, res) {
-    res.send();
+    res.send(LOCATION_LEVEL_FIXTURES.list());
   });
 
   adminLocationLevelsRouter.post('/', function(req, res) {
@@ -14,7 +14,7 @@ module.exports = function(app) {
   });
 
   adminLocationLevelsRouter.get('/:id', function(req, res) {
-    res.send();
+    res.send(LOCATION_LEVEL_FIXTURES.detail());
   });
 
   adminLocationLevelsRouter.put('/:id', function(req, res) {

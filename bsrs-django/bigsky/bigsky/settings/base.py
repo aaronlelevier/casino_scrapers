@@ -31,16 +31,14 @@ THIRD_PARTY_APPS = (
     'psycopg2',
     'corsheaders',
     'rest_framework',
-    # testing
-    'django_nose',
     'debug_toolbar',
-    'django_extensions',
     )
 
 LOCAL_APPS = (
     'accounting',
     'category',
     'contact',
+    'generic',
     'location',
     'person',
     'session',
@@ -119,6 +117,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'source')
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
+### FILES
+
+MAX_UPLOAD_SIZE = 2621440 # 2621440 # default - aka: 2.5MB
+
 
 ### 3RD PARTY APPS ###
 
@@ -150,11 +152,11 @@ CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:80
 ################
 
 ### CATEGORY
-
 TOP_LEVEL_CATEGORY_LABEL = 'type'
 
 ### LOCATION
-
 DEFAULT_LOCATION_STATUS = 'Open'
-
 DEFAULT_LOCATION_TYPE = 'big_store'
+
+### PERSON
+PASSWORD_EXPIRE_DAYS = 90

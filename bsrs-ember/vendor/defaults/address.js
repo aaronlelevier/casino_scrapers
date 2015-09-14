@@ -6,15 +6,19 @@ var BSRS_ADDRESS_DEFAULTS_OBJECT = (function() {
         return {
             idOne: '1ee82b8c-89bd-45a2-8d57-5b920c8b9786', 
             idTwo: '2cc82b8c-89bd-45a2-8d57-5b920c8b9786', 
+            idThree: '2cc82b8c-89bd-45a2-8d57-5b920c8b9787',
             streetOne: 'Sky Park',
             streetTwo: '123 PB',
+            streetThree: 'Milwaukee Way',
             cityOne: 'San Diego',
             cityTwo: 'San Diego',
             cityThree: 'Melbourne',
             stateOne: 1,
             stateTwo: 5,
+            stateThree: 5,
             zipOne: '92123',
             zipTwo: '92100',
+            zipThree: '55666',
             countryOne: this.country_defaults.id,
             countryTwo: this.country_defaults.idTwo
         };

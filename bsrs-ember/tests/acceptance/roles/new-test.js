@@ -53,15 +53,11 @@ test('visiting role/new', (assert) => {
         assert.equal(find('.t-role-type option:selected').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(0)').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(1)').text(), ROLE_DEFAULTS.roleTypeContractor);
-        assert.ok(store.find('role').objectAt(0).get('isNotDirty'));
+        assert.ok(store.find('role').objectAt(1).get('isNotDirty'));
     });
     fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
     fillIn('.t-role-type', ROLE_DEFAULTS.roleTypeGeneral);
     fillIn('.t-location-level', ROLE_DEFAULTS.locationLevelOne);
-    andThen(() => {
-        let role = store.find('role', UUID.value);
-        assert.ok(role.get('isDirty'));
-    });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

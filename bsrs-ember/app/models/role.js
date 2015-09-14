@@ -1,9 +1,9 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
-export default Model.extend({
+export default Model.extend(NewMixin, {
     store: inject('main'),
     name: attr(''),
     people: attr([]),
@@ -60,10 +60,8 @@ export default Model.extend({
         this.get('store').remove('role', this.get('id'));
     },
     rollbackRelated() {
+        this.rollbackLocationLevel();
     },
-    isNew: Ember.computed(function() {
-        return loopAttrs(this, 'role_type', 'location_level');
-    }),
     saveRelated() {
         this.saveLocationLevel();
     },

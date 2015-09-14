@@ -1,10 +1,23 @@
+import random
+
 from model_mommy import mommy
 
 from category.models import Category
+from util.create import random_lorem
 
 
 def create_categories():
-    type = mommy.make(Category, name='repair', subcategory_label='trade')
-    trade = mommy.make(Category, name='electric', subcategory_label='issue', parent=type)
-    issue = mommy.make(Category, name='outlets', subcategory_label='sub_issue', parent=trade)
-    issue2 = mommy.make(Category, name='fans', subcategory_label='sub_issue', parent=trade)
+    # Repair
+    type = mommy.make(Category, name='repair',
+        subcategory_label='trade')
+    
+    for i in range(random.randrange(2,5)):
+        name = random_lorem(1)
+        trade = mommy.make(Category, name=name,
+            subcategory_label='issue', parent=type)
+
+    for category in Category.objects.filter(subcategory_label='issue'):
+        for i in range(random.randrange(2,7)):
+            name = random_lorem(2)
+            issue = mommy.make(Category, name=name,
+                subcategory_label='sub_issue', parent=category)

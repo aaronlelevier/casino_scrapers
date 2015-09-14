@@ -4,11 +4,11 @@ import copy
 import sys
 import codecs
 
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.db.models.functions import Lower
 
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
 from accounting.models import Currency
@@ -18,7 +18,7 @@ from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
 from person.serializers import PersonUpdateSerializer, RoleSerializer
-from person.tests.factory import PASSWORD, create_person, create_role
+from person.tests.factory import PASSWORD, create_person, create_role, create_23_people
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from util import create, choices
@@ -572,7 +572,43 @@ class PersonDeleteTests(APITestCase):
             Person.objects_all.get(id=self.person2.id)
 
 
-class PersonFilterTests(TestCase):
+class PersonSearchTests(APITransactionTestCase):
+
+    def setUp(self):
+        self.role = create_role()
+        create_23_people()
+        # Login
+        self.person = None
+        while not self.person:
+            try:
+                self.person = Person.objects.get(username='aaron')
+            except Person.DoesNotExist:
+                pass
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_search(self):
+        letters = "aa"
+        users_count = Person.objects.filter(username__icontains=letters).count()
+        self.assertEqual(users_count, 1)
+        response = self.client.get('/api/admin/people/?search={}'.format(letters))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], users_count)
+
+    def test_search_multiple(self):
+        mommy.make(Person, username="Bob", role=self.role)
+        mommy.make(Person, username="Bobby", role=self.role)
+        letters = "bob"
+        users_count = Person.objects.filter(username__icontains=letters).count()
+        self.assertEqual(users_count, 2)
+        response = self.client.get('/api/admin/people/?search={}'.format(letters))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], users_count)
+
+
+class PersonSearchOrderingTests(TestCase):
 
     def setUp(self):
         # Role

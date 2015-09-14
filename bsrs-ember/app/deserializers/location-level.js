@@ -12,14 +12,16 @@ var LocationLevelDeserializer = Ember.Object.extend({
         let store = this.get('store');
         response.children_fks = response.children || [];
         delete response.children;
-        store.push('location-level', response);
+        let location_level = store.push('location-level', response);
+        location_level.save();
     },
     deserialize_list(response) {
         let store = this.get('store');
         response.results.forEach((model) => {
             model.children_fks = model.children || [];
             delete model.children;
-            store.push('location-level', model);
+            let location_level = store.push('location-level', model);
+            location_level.save();
         });
     }
 });

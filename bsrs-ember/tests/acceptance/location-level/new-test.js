@@ -30,8 +30,8 @@ module('Acceptance | location-level-new', {
         list_xhr = xhr(DJANGO_LOCATION_LEVEL_URL, "GET", null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
         payload = {
             id: UUID.value,
-            name: LOCATION_LEVEL_DEFAULTS.nameCompany,
-            children: []
+            name: LOCATION_LEVEL_DEFAULTS.nameAnother,
+            children: LOCATION_LEVEL_DEFAULTS.newTemplateChildren
         };
     },
     afterEach() {
@@ -45,25 +45,35 @@ test('visiting /location-level/new', (assert) => {
     xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);
     click('.t-location-level-new');
+    click('.selectize-input input');
+    click('.t-location-level-location-level-select div.option:eq(0)');
+    click('.t-location-level-location-level-select div.option:eq(0)');
+    click('.t-location-level-location-level-select div.option:eq(0)');
+    click('.t-location-level-location-level-select div.option:eq(0)');
+    click('.t-location-level-location-level-select div.option:eq(0)');
+    click('.t-location-level-location-level-select div.option:eq(0)');
+    click('.t-location-level-location-level-select div.option:eq(0)');
+    click('.t-location-level-location-level-select div.option:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
         assert.equal(store.find('location-level').get('length'), 9);
-        assert.equal(find('.t-location-level-children > option').length, 9);
+        assert.equal(find('.t-location-level-location-level-select > option').length, 8);
     });
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameAnother);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(store.find('location-level').get('length'), 9);
         let locationLevel = store.find('location-level', UUID.value);
         assert.equal(locationLevel.get('id'), UUID.value);
-        assert.equal(locationLevel.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(locationLevel.get('name'), LOCATION_LEVEL_DEFAULTS.nameAnother);
         assert.ok(locationLevel.get('isNotDirty'));
     });
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
     payload.name = LOCATION_LEVEL_DEFAULTS.nameRegion;
+    payload.children = [];
     let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);

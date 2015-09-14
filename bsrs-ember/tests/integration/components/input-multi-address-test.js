@@ -2,10 +2,12 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
+import translations from "bsrs-ember/vendor/translation_fixtures";
 import Person from 'bsrs-ember/models/person';
 import AddressType from 'bsrs-ember/models/address-type';
-import StateSingle from 'bsrs-ember/models/state'; 
+import StateSingle from 'bsrs-ember/models/state';
 import Country from 'bsrs-ember/models/country';
 import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 import ADDRESS_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
@@ -25,14 +27,20 @@ moduleForComponent('input-multi-address', 'integration: input-multi-address test
         translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:person', 'model:address']);
         default_type = AddressType.create({id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName});
+        var service = this.container.lookup('service:i18n');
+        var json = translations.generate('en');
+        loadTranslations(service, json);
     }
 });
 
-// test('renders a single button with a class of t-add-btn', function(assert){
-//     this.render(hbs`{{input-multi-address model=addresses}}`);
-//     var $component = this.$('.t-input-multi-address');
-//     assert.equal($component.find('.t-add-btn').length, 1);
-// });
+test('renders a single button with a class of t-add-btn', function(assert){
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    var model = store.find('address', {person_id: PEOPLE_DEFAULTS.id});
+    this.set('model', model);
+    this.render(hbs`{{input-multi-address model=model}}`);
+    var $component = this.$('.t-input-multi-address');
+    assert.equal($component.find('.t-add-address-btn').length, 1);
+});
 
 test('click add btn will append blank entry to list of entries and binds value to model', function(assert) {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
@@ -60,7 +68,7 @@ test('click add btn will append blank entry to list of entries and binds value t
     assert.equal(model.objectAt(0).get('city'), undefined);
     assert.equal(model.objectAt(0).get('state'), undefined);
     assert.equal(model.objectAt(0).get('postal_code'), undefined);
-    this.$('.t-address').val(ADDRESS_DEFAULTS.streetOne).trigger('change');
+    this.$('.t-address-address').val(ADDRESS_DEFAULTS.streetOne).trigger('change');
     assert.equal(model.objectAt(0).get('address'), ADDRESS_DEFAULTS.streetOne);
 });
 
@@ -124,7 +132,7 @@ test('model with existing array of entries is shown at render and bound to model
     assert.equal(model.get('content.length'), 2);
     assert.equal($select.length, 2);
     $component.find('.t-address-type:eq(0)').val(ADDRESS_TYPE_DEFAULTS.officeId).trigger('change');
-    $component.find('.t-address:eq(0)').val(PEOPLE_DEFAULTS.username).trigger('change');
+    $component.find('.t-address-address:eq(0)').val(PEOPLE_DEFAULTS.username).trigger('change');
     $component.find('.t-address-city:eq(0)').val('San Jose').trigger('change');
     $component.find('.t-address-state:eq(0)').val(STATE_DEFAULTS.idTwo).trigger('change');
     $component.find('.t-address-postal-code:eq(0)').val('12345').trigger('change');
@@ -155,4 +163,23 @@ test('changing existing address type will alter the model regardless of the prim
     $first_type_select.val(ADDRESS_TYPE_DEFAULTS.shippingId).trigger("change");
     assert.equal(model.objectAt(0).get("type"), ADDRESS_TYPE_DEFAULTS.shippingId);
     assert.equal($first_type_select.val(), ADDRESS_TYPE_DEFAULTS.shippingId);
+});
+
+test('filling in invalid address reveals validation message', function(assert) {
+    var model = store.find('address', {person_id: PEOPLE_DEFAULTS.id});
+    this.set('model', model);
+    this.set('related_pk', PEOPLE_DEFAULTS.id);
+    this.set('related_field', 'person_id');
+    this.set('default_type', default_type);
+    var address_number_types = [AddressType.create({id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName})];
+    this.set('address_number_types', address_number_types);
+    this.render(hbs`{{input-multi-address model=model types=address_number_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
+    var $first_btn = this.$('.t-add-address-btn:eq(0)');
+    $first_btn.trigger('click').trigger('change');
+    var $component = this.$('.t-input-multi-address-validation-error');
+    assert.ok($component.is(':hidden'));
+    this.$('.t-address-address').val(ADDRESS_DEFAULTS.streetThree).trigger('change');
+    assert.ok($component.is(':hidden'));
+    this.$('.t-address-address').val('').trigger('change');
+    assert.ok($component.is(':visible'));
 });

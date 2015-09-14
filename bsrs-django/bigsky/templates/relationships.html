@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>d3js relationships</title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    </head>
+    <body>
+        <br>
+        <div class="container">
+            <ul>
+                {% for model in models %}
+                    <a href="{% url 'relationships_model' model.app_name model.model_name %}">
+                        <li>{{ model.app_name }}.models.{{ model.model_name }}</li>
+                    </a>
+                {% endfor %}
+            </ul>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,255 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>translation.models &mdash; BSRS 1 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="top" title="BSRS 1 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for translation.models</h1><div class="highlight"><pre>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">csv</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="k">if</span> <span class="n">sys</span><span class="o">.</span><span class="n">version_info</span> <span class="o">&gt;</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="mi">7</span><span class="p">):</span>
+    <span class="nb">str</span> <span class="o">=</span> <span class="nb">unicode</span>
+
+<span class="kn">from</span> <span class="nn">django.db</span> <span class="kn">import</span> <span class="n">models</span>
+<span class="kn">from</span> <span class="nn">django.contrib.postgres.fields</span> <span class="kn">import</span> <span class="n">HStoreField</span>
+<span class="kn">from</span> <span class="nn">django.conf</span> <span class="kn">import</span> <span class="n">settings</span>
+<span class="kn">from</span> <span class="nn">django.db.models.signals</span> <span class="kn">import</span> <span class="n">post_save</span>
+<span class="kn">from</span> <span class="nn">django.dispatch</span> <span class="kn">import</span> <span class="n">receiver</span>
+<span class="kn">from</span> <span class="nn">django.utils.encoding</span> <span class="kn">import</span> <span class="n">python_2_unicode_compatible</span>
+
+<span class="kn">from</span> <span class="nn">util.models</span> <span class="kn">import</span> <span class="n">AbstractName</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">BaseManager</span><span class="p">,</span> <span class="n">BaseQuerySet</span>
+
+
+<span class="k">class</span> <span class="nc">LocaleManager</span><span class="p">(</span><span class="n">BaseManager</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="nf">system_default</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">&quot;Default Locale from Site settings.&quot;</span>
+        <span class="n">obj</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">locale</span><span class="o">=</span><span class="n">settings</span><span class="o">.</span><span class="n">LANGUAGE_CODE</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">obj</span>
+
+    <span class="k">def</span> <span class="nf">update_default</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Only 1 default record allowed. Enforce below in the </span>
+<span class="sd">        Locale.save() method.&quot;&quot;&quot;</span>
+
+        <span class="n">queryset</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">queryset</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">system_default</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">exclude</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+
+<span class="nd">@python_2_unicode_compatible</span>
+<div class="viewcode-block" id="Locale"><a class="viewcode-back" href="../../modules/models.html#translation.models.Locale">[docs]</a><span class="k">class</span> <span class="nc">Locale</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">locale</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">SlugField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span>
+        <span class="n">help_text</span><span class="o">=</span><span class="s">&quot;Example values: en, en-us, en-x-sephora&quot;</span><span class="p">)</span>
+    <span class="n">default</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> 
+        <span class="n">help_text</span><span class="o">=</span><span class="s">&quot;Human readable name in forms. i.e. &#39;English&#39;&quot;</span><span class="p">)</span>
+    <span class="n">native_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">presentation_name</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">rtl</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">BooleanField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">LocaleManager</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">locale</span>
+
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_update_defaults</span><span class="p">()</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">Locale</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">to_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s">&#39;id&#39;</span><span class="p">:</span><span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">),</span>
+            <span class="s">&#39;locale&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">locale</span><span class="p">,</span>
+            <span class="s">&#39;name&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="s">&#39;native_name&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">native_name</span><span class="p">,</span>
+            <span class="s">&#39;presentation_name&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">presentation_name</span><span class="p">,</span>
+            <span class="s">&#39;rtl&#39;</span><span class="p">:</span><span class="bp">self</span><span class="o">.</span><span class="n">rtl</span>
+            <span class="p">}</span>
+
+    <span class="k">def</span> <span class="nf">_update_defaults</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">locale</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">locale</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">native_name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">native_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">presentation_name</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">presentation_name</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+</div>
+<span class="nd">@receiver</span><span class="p">(</span><span class="n">post_save</span><span class="p">,</span> <span class="n">sender</span><span class="o">=</span><span class="n">Locale</span><span class="p">)</span>
+<div class="viewcode-block" id="update_locale"><a class="viewcode-back" href="../../modules/models.html#translation.models.update_locale">[docs]</a><span class="k">def</span> <span class="nf">update_locale</span><span class="p">(</span><span class="n">sender</span><span class="p">,</span> <span class="n">instance</span><span class="o">=</span><span class="bp">None</span><span class="p">,</span> <span class="n">created</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="s">&quot;Post-save hook for maintaing single default Locale.&quot;</span>
+    <span class="k">if</span> <span class="n">instance</span><span class="o">.</span><span class="n">default</span><span class="p">:</span>
+        <span class="n">Locale</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">update_default</span><span class="p">(</span><span class="n">instance</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+
+</div>
+<div class="viewcode-block" id="TranslationManager"><a class="viewcode-back" href="../../modules/models.html#translation.models.TranslationManager">[docs]</a><span class="k">class</span> <span class="nc">TranslationManager</span><span class="p">(</span><span class="n">BaseManager</span><span class="p">):</span>
+    <span class="s">&quot;CSV Model methods&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">translation_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="s">&quot;Directory to hold all Translation documents.&quot;</span>
+        <span class="n">current_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">__file__</span><span class="p">)))</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">current_dir</span><span class="p">,</span> <span class="s">&#39;source/translation&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="TranslationManager.import_csv"><a class="viewcode-back" href="../../modules/models.html#translation.models.TranslationManager.import_csv">[docs]</a>    <span class="k">def</span> <span class="nf">import_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">language</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        # Boiler-plate code for creating a new `Translation` record</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            from translation.models import Translation, Locale</span>
+<span class="sd">            for model in [Translation, Locale]:</span>
+<span class="sd">                for m in model.objects_all.all():</span>
+<span class="sd">                    m.delete(override=True)</span>
+<span class="sd">            Translation.objects.import_csv(&#39;en&#39;)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation_dir</span><span class="p">,</span> <span class="s">&#39;{}.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">language</span><span class="p">)))</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">reader</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">DictReader</span><span class="p">(</span><span class="n">csvfile</span><span class="p">)</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="n">locale</span> <span class="o">=</span> <span class="bp">None</span>
+            <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">reader</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;LOCALE&#39;</span><span class="p">]:</span>
+                    <span class="n">locale</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;LOCALE&#39;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;CONTEXT&#39;</span><span class="p">]:</span>
+                    <span class="n">context</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;KEY&#39;</span><span class="p">]:</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;CONTEXT&#39;</span><span class="p">]})</span>
+                <span class="k">if</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;VALUE&#39;</span><span class="p">]:</span>
+                    <span class="n">values</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">row</span><span class="p">[</span><span class="s">&#39;KEY&#39;</span><span class="p">]:</span> <span class="n">row</span><span class="p">[</span><span class="s">&#39;VALUE&#39;</span><span class="p">]})</span>
+            
+            <span class="n">locale</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Locale</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">locale</span><span class="o">=</span><span class="n">language</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">language</span><span class="p">)</span>
+            
+            <span class="n">ret</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">Translation</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="n">locale</span><span class="o">=</span><span class="n">locale</span><span class="p">,</span> <span class="n">values</span><span class="o">=</span><span class="p">{})</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="n">values</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">context</span> <span class="o">=</span> <span class="n">context</span>
+            <span class="n">ret</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">ret</span>
+</div>
+<div class="viewcode-block" id="TranslationManager.export_csv"><a class="viewcode-back" href="../../modules/models.html#translation.models.TranslationManager.export_csv">[docs]</a>    <span class="k">def</span> <span class="nf">export_csv</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Test `export_csv` Boiler-plate</span>
+
+<span class="sd">        .. code-block:: python</span>
+
+<span class="sd">            from translation.models import Translation, Locale</span>
+<span class="sd">            a = Translation.objects.first()</span>
+<span class="sd">            Translation.objects.export_csv(a.id)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">id</span><span class="o">=</span><span class="nb">id</span><span class="p">)</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">translation_dir</span><span class="p">,</span> <span class="s">&#39;{}-out.csv&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">locale</span><span class="p">)),</span> <span class="s">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">csvfile</span><span class="p">:</span>
+            <span class="n">writer</span> <span class="o">=</span> <span class="n">csv</span><span class="o">.</span><span class="n">writer</span><span class="p">(</span><span class="n">csvfile</span><span class="p">,</span> <span class="n">delimiter</span><span class="o">=</span><span class="s">&#39;,&#39;</span><span class="p">)</span>
+            <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span><span class="s">&#39;LOCALE&#39;</span><span class="p">,</span> <span class="s">&#39;KEY&#39;</span><span class="p">,</span> <span class="s">&#39;VALUE&#39;</span><span class="p">,</span> <span class="s">&#39;CONTEXT&#39;</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">t</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="n">writer</span><span class="o">.</span><span class="n">writerow</span><span class="p">([</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">locale</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="s">&#39;&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span>
+                    <span class="nb">str</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">context</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">,</span><span class="s">&#39;&#39;</span><span class="p">))</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="p">])</span>
+
+</div></div>
+<div class="viewcode-block" id="translation_file"><a class="viewcode-back" href="../../modules/models.html#translation.models.translation_file">[docs]</a><span class="k">def</span> <span class="nf">translation_file</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Determines the file location of Translation CSVs saved </span>
+<span class="sd">    within the MEDAI_ROOT directory.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="s">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="s">&#39;translations&#39;</span><span class="p">,</span> <span class="n">filename</span><span class="p">])</span>
+
+</div>
+<span class="nd">@python_2_unicode_compatible</span>
+<div class="viewcode-block" id="Translation"><a class="viewcode-back" href="../../modules/models.html#translation.models.Translation">[docs]</a><span class="k">class</span> <span class="nc">Translation</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    :values: contains all translations for the Locale</span>
+
+<span class="sd">    `Flatdict Helper library &lt;https://pypi.python.org/pypi/flatdict&gt;`_ </span>
+<span class="sd">    may be useful in flattening nested dictionaries for this Model.</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">locale</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">ForeignKey</span><span class="p">(</span><span class="n">Locale</span><span class="p">)</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">HStoreField</span><span class="p">()</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">HStoreField</span><span class="p">(</span><span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+    <span class="n">csv</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">FileField</span><span class="p">(</span><span class="n">upload_to</span><span class="o">=</span><span class="n">translation_file</span><span class="p">,</span> <span class="n">blank</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="n">null</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
+
+    <span class="n">objects</span> <span class="o">=</span> <span class="n">TranslationManager</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s">&quot;{self.locale}: {self.values}&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="bp">self</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Aaron, Scott, Andy, Tom, Toran.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.6</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

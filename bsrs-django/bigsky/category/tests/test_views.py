@@ -42,10 +42,8 @@ class CategoryDetailTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.type = Category.objects.get(name='repair')
-        self.trade = Category.objects.get(name='electric')
-        self.issue = Category.objects.get(name='outlets')
-        self.issue2 = Category.objects.get(name='fans')
+        self.type = Category.objects.filter(subcategory_label='trade').first()
+        self.trade = Category.objects.filter(label='trade').first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -70,7 +68,7 @@ class CategoryDetailTests(APITestCase):
         response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(data['children'], list)
-        self.assertEqual(len(data['children']), 2)
+        self.assertTrue(data['children'])
         # Forloop comprehension required b/c data['children'] is a nested obj and not a list
         self.assertIn(str(self.trade.children.first().id), [c['id'] for c in data['children']])
 
@@ -82,10 +80,8 @@ class CategoryUpdateTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.type = Category.objects.get(name='repair')
-        self.trade = Category.objects.get(name='electric')
-        self.issue = Category.objects.get(name='outlets')
-        self.issue2 = Category.objects.get(name='fans')
+        self.type = Category.objects.filter(subcategory_label='trade').first()
+        self.trade = Category.objects.filter(label='trade').first()
         # Data
         serializer = CategorySerializer(self.trade)
         self.data = serializer.data
@@ -115,7 +111,7 @@ class CategoryUpdateTests(APITestCase):
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertNotEqual(str(self.trade.parent.id), data['parent'])
+        self.assertEqual(str(new_category.id), data['parent'])
 
     def test_change_children(self):
         new_sub_category = mommy.make(Category, name='power', subcategory_label='sub_issue', parent=self.trade)
@@ -135,10 +131,8 @@ class CategoryCreateTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.type = Category.objects.get(name='repair')
-        self.trade = Category.objects.get(name='electric')
-        self.issue = Category.objects.get(name='outlets')
-        self.issue2 = Category.objects.get(name='fans')
+        self.type = Category.objects.filter(subcategory_label='trade').first()
+        self.trade = Category.objects.filter(label='trade').first()
         # Data
         serializer = CategorySerializer(self.trade)
         self.data = serializer.data
@@ -193,10 +187,8 @@ class CategoryFilterTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.type = Category.objects.get(name='repair')
-        self.trade = Category.objects.get(name='electric')
-        self.issue = Category.objects.get(name='outlets')
-        self.issue2 = Category.objects.get(name='fans')
+        self.type = Category.objects.filter(subcategory_label='trade').first()
+        self.trade = Category.objects.filter(label='trade').first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -212,11 +204,3 @@ class CategoryFilterTests(APITestCase):
         response = self.client.get('/api/admin/categories/?parent={}'.format(self.trade.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], self.trade.children.count())
-
-
-
-
-
-
-
-

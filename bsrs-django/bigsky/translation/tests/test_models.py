@@ -21,7 +21,7 @@ class LocaleTests(TestCase):
             l.delete(override=True)
         self.assertEqual(Locale.objects_all.count(), 0)
 
-        d = Locale.objects.create_default()
+        d = Locale.objects.system_default()
         self.assertIsInstance(d, Locale)
         self.assertEqual(d.locale, settings.LANGUAGE_CODE)
 

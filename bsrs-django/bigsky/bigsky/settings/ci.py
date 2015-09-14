@@ -1,5 +1,13 @@
 from .base import *
 
+### Application definition ###
+CI_APPS = (
+    'django_nose',
+    'django_coverage',
+    )
+
+INSTALLED_APPS = INSTALLED_APPS + CI_APPS
+
 
 DATABASES = {
     'default': {
@@ -15,7 +23,6 @@ DATABASES = {
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
-    '--cover-package=accounting,contact,location,order,person,role,session,translation,util',
+    '--with-coverage',
+    '--cover-package=accounting,category,contact,generic,location,order,person,session,translation,util',
 ]
-
-DEFAULT_FILE_STORAGE = 'inmemorystorage.InMemoryStorage'

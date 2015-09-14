@@ -14,23 +14,22 @@ const ROLE_URL = BASE_URL + '/index';
 let application;
 
 module('Acceptance | role-list', {
-  beforeEach() {
-    application = startApp();
-    let endpoint = PREFIX + BASE_URL + '/';
-    xhr( endpoint ,'GET',null,{},200,ROLE_FIXTURES.list() );
-  },
-  afterEach() {
-    Ember.run(application, 'destroy');
-  }
+    beforeEach() {
+        application = startApp();
+        let endpoint = PREFIX + BASE_URL + '/';
+        xhr( endpoint ,'GET',null,{},200,ROLE_FIXTURES.list() );
+    },
+    afterEach() {
+        Ember.run(application, 'destroy');
+    }
 });
 
 test('visiting /role', function(assert) {
-  visit(ROLE_URL);
-
-  andThen(() => {
-    assert.equal(currentURL(), ROLE_URL);
-    assert.equal(find('h1.t-roles').text(), 'Roles');
-    assert.equal(find('tr.t-role-data').length, 3);
-  });
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+        assert.equal(find('h1.t-roles').text(), 'Roles');
+        assert.equal(find('tr.t-role-data').length, 3);
+    });
 });
 

@@ -1,9 +1,9 @@
-import { attr, Model } from 'ember-cli-simple-store/model';
 import Ember from 'ember';
-import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
 import inject from 'bsrs-ember/utilities/store';
+import NewMixin from 'bsrs-ember/mixins/model/new';
+import { attr, Model } from 'ember-cli-simple-store/model';
 
-let CategoryModel = Model.extend({
+var CategoryModel = Model.extend(NewMixin, {
     store: inject('main'),
     name: attr(''),
     description: attr(''),
@@ -31,10 +31,7 @@ let CategoryModel = Model.extend({
         this.get('store').remove('category', this.get('id'));
     },
     rollbackRelated() {
-    },
-    isNew: Ember.computed(function() {
-        return loopAttrs(this);
-    })
+    }
 });
 
 export default CategoryModel;

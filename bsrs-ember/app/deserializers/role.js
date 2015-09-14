@@ -55,4 +55,3 @@ var RoleDeserializer = Ember.Object.extend({
 });
 
 export default RoleDeserializer;
-

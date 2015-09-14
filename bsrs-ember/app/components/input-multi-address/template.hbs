@@ -1,4 +1,4 @@
-{{#each model as |address|}}
+{{#each model as |address index|}}
 <div class="input-group-vertical t-address-group">
   <div class="input-group">
     <span class="input-group-btn">
@@ -12,7 +12,8 @@
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.address"}}</span>
-    {{textarea value=address.address class="form-control t-address"}}
+    {{textarea value=address.address class="form-control t-address-address"}}
+    {{#validation-error-field className="t-input-multi-address-validation-error" submitted=submitted field="address" model=address index=index validation="address"}}invalid address{{/validation-error-field}}
   </div>
   <div class="input-group">
     <span class="input-group-addon address-label">{{t "admin.address.city"}}</span>

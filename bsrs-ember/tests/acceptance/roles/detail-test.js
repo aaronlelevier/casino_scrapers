@@ -57,7 +57,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.nameOne);
         assert.equal(find('.t-role-role-type').val(), ROLE_DEFAULTS.roleTypeGeneral);
         // assert.equal(find('.t-role-category:eq(0)').val(), CATEGORY_DEFAULTS.name);
-        assert.equal(find('.t-location-level').val(), LOCATION_LEVEL_FIXTURES.idOne);
+        assert.equal(find('.t-location-level').val(), LOCATION_LEVEL_DEFAULTS.idOne);
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);
@@ -149,6 +149,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-role-name', ROLE_DEFAULTS.nameTwo);
+    fillIn('.t-location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {

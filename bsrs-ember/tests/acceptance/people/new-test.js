@@ -16,12 +16,12 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
-const PEOPLE_URL = "/admin/people";
-const DETAIL_URL = PEOPLE_URL + '/' + UUID.value;
-const PEOPLE_NEW_URL = PEOPLE_URL + '/new';
+const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
+const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
+const PEOPLE_NEW_URL = BASE_PEOPLE_URL + '/new';
 const SAVE_BTN = '.t-save-btn';
 
-var application, store, payload, detail_xhr;
+var application, store, payload, detail_xhr, list_xhr;
 
 module('Acceptance | people-new', {
     beforeEach() {
@@ -33,9 +33,9 @@ module('Acceptance | people-new', {
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
-        var endpoint = PREFIX + PEOPLE_URL + "/";
-        xhr(endpoint,"GET",null,{},200,PEOPLE_FIXTURES.empty());
-        var detailEndpoint = PREFIX + PEOPLE_URL + '/';
+        var endpoint = PREFIX + BASE_PEOPLE_URL + '/';
+        list_xhr = xhr(endpoint + '?page=1','GET',null,{},200,PEOPLE_FIXTURES.empty());
+        var detailEndpoint = PREFIX + BASE_PEOPLE_URL + '/';
         var people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
             role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: [], locations: []};
         detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
@@ -49,14 +49,14 @@ module('Acceptance | people-new', {
 
 test('visiting /people/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
-    xhr(PREFIX + PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
+    xhr(PREFIX + BASE_PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-    visit(BASE_PEOPLE_URL);
+    visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
-        assert.equal(store.find('person').get('length'), 1);
+        assert.equal(store.find('person').get('length'), 2);
         assert.equal(find('.t-person-role-select option:eq(0)').text(), 'Select One');
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
@@ -65,8 +65,8 @@ test('visiting /people/new', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(store.find('person').get('length'), 1);
-        var person = store.find('person').objectAt(0);
+        assert.equal(store.find('person').get('length'), 2);
+        var person = store.find('person').objectAt(1);
         assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), PEOPLE_DEFAULTS.password);
@@ -77,11 +77,11 @@ test('visiting /people/new', (assert) => {
 
 test('validation works and when hit save, we do same post', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
-    var url = PREFIX + PEOPLE_URL + '/';
+    var url = PREFIX + BASE_PEOPLE_URL + '/';
     xhr( url,'POST',JSON.stringify(payload),{},201,response );
     var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-    visit(BASE_PEOPLE_URL);
+    visit(PEOPLE_URL);
     click('.t-person-new');
     andThen(() => {
         assert.ok(find('.t-username-validation-error').is(':hidden'));
@@ -108,6 +108,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
     clearxhr(detail_xhr);
+    clearxhr(list_xhr);
     visit(PEOPLE_NEW_URL);
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     click('.t-cancel-btn');
@@ -148,7 +149,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', {id: UUID.value});
             assert.equal(person.get('length'), 0);
-            assert.equal(find('tr.t-person-data').length, 0);
+            assert.equal(find('tr.t-person-data').length, 1);
         });
     });
 });
@@ -158,6 +159,6 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     visit(PEOPLE_NEW_URL);
     click('.t-cancel-btn');
     andThen(() => {
-        assert.equal(store.find('person').get('length'), 0);
+        assert.equal(store.find('person').get('length'), 1);
     });
 });

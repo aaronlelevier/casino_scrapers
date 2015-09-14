@@ -1,3 +1,5 @@
+import json
+
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -93,14 +95,31 @@ class SelfRefrencingManager(BaseManager):
     def get_all_parents(self, child, first_child_id=None, all_parents=None):
         return self.get_queryset().get_all_parents(child, first_child_id, all_parents)
 
+    @property
+    def d3_json(self):
+        """
+        Output the Models' self referencing structure to JSON for d3js. Note: "type": "suite" 
+        is a default argument for the code, but can be used to change the colors of the arrows.
+
+        `d3js reference <http://bl.ocks.org/mbostock/1153292#index.html>`_
+        """
+        links = []
+        for level in self.all():
+            if level.children:
+                for child in level.children.all():
+                    links.append({"source": level.name, "target": child.name, "type": "suit"})
+        return json.dumps(links)
+
 
 class SelfRefrencingBaseModel(models.Model):
     '''
     ``symmetrical = false``: to indicate one way relationship
 
-    `Symetrical Documentation Here <https://docs.djangoproject.com/en/1.8/ref/models/fields/#django.db.models.ManyToManyField.symmetrical>`_
+    `Symetrical Documentation Here <https://docs.djangoproject.com/en/1.8/ref/models/fields/
+    #django.db.models.ManyToManyField.symmetrical>`_
     '''
-    children = models.ManyToManyField('self', blank=True, symmetrical=False, related_name='parents')
+    children = models.ManyToManyField('self', blank=True,
+        symmetrical=False, related_name='parents')
 
     # Manager
     objects = SelfRefrencingManager()
@@ -233,7 +252,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
     # fields
     name = models.CharField(max_length=50)
-    number = models.CharField(max_length=50, unique=True)
+    number = models.CharField(max_length=50, blank=True, null=True)
 
     objects = LocationManager()
 

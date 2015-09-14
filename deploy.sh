@@ -26,7 +26,7 @@ git clone -b python3 git@github.com:bigskytech/bsrs.git $NEW_UUID
 
 cd $NEW_UUID
 cd bsrs-ember
-npm install
+npm install --no-optional
 
 ./node_modules/ember-cli/bin/ember build --env=production
 

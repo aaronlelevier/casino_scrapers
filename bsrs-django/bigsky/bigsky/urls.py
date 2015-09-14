@@ -1,13 +1,14 @@
 from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
+from django.core.urlresolvers import reverse
 from django.contrib.auth import views as auth_views, forms
 from django.contrib.auth.decorators import login_required
 
 from rest_framework import routers
 
 from accounting import views as accounting_views
-from bigsky.views import IndexView
+from bigsky import views as bigsky_views
 from category import views as category_views
 from contact import views as contact_views
 from location import views as location_views
@@ -49,30 +50,47 @@ urlpatterns = patterns('',
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 )
 
+
 # Logout Required
 urlpatterns += required(
     logout_required,
     patterns('',
         url(r'^login/', auth_views.login,
-            {'template_name': 'login.html',
-            'authentication_form': forms.AuthenticationForm
+            {'template_name': 'form.html',
+            'authentication_form': forms.AuthenticationForm,
+            'extra_context': {
+                'submit_button': 'Login'
+                }
             },
             name='login'),
     )
 )
 
-# Login Required
-urlpatterns += required(
-    login_required,
-    patterns('',
-        url(r'^django-admin/', include(admin.site.urls)),
-        url(r'^.*$', IndexView.as_view(), name='index'),
-    )
+
+relationship_patterns = patterns('',
+    url(r'^$', bigsky_views.relationships_view, name='relationships_index'),
+    url(r'^model/(?P<app_name>\w+)/(?P<model_name>\w+)/$', bigsky_views.model_relationships, name='relationships_model'),
 )
-
-
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += patterns('',
         url(r'^__debug__/', include(debug_toolbar.urls)),
+        url(r'^relationships/', include(relationship_patterns)),
     )
+
+# Login Required
+urlpatterns += required(
+    login_required,
+    patterns('',
+        url(r'^password-change/$', auth_views.password_change,
+            {'template_name': 'form.html',
+            'password_change_form': forms.PasswordChangeForm,
+            'post_change_redirect': '/',
+            },
+            name='password_change'),
+        url(r'^django-admin/', include(admin.site.urls)),
+        # This URL must be the last Django URL defined, or else the URLs defined 
+        # below it won't resolve, and this URL will catch the URL request.
+        url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),
+    )
+)

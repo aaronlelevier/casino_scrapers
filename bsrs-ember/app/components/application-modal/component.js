@@ -4,15 +4,10 @@ var ApplicationModalComponent = Ember.Component.extend({
     classNames: ['application-modal'],
     actions: {
         rollback_model() {
-            var transition = this.trx.attemptedTransition;
-            var model = this.trx.attemptedTransitionModel;
-            var newModel = this.trx.newModel;
-            var storeType = this.trx.storeType;
+            let transition = this.trx.attemptedTransition;
+            let model = this.trx.attemptedTransitionModel;
             model.rollback();
             model.rollbackRelated();
-            if (newModel) {
-                model.removeRecord();
-            }
             transition.retry();
         },
         cancel_modal() {

@@ -1,7 +1,8 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import RollbackModalMixin from 'bsrs-ember/mixins/route/rollback/existing';
 
-export default Ember.Route.extend({
+export default Ember.Route.extend(RollbackModalMixin, {
     repository: inject('location'),
     model(params) {
         var location_pk = params.location_id;
@@ -22,18 +23,6 @@ export default Ember.Route.extend({
         controller.set('all_statuses', hash.all_statuses);
     },
     actions: {
-        willTransition(transition) {
-            var model = this.currentModel.model;
-            if (model.get('isDirtyOrRelatedDirty')) {
-                Ember.$('.t-modal').modal('show');
-                this.trx.attemptedTransition = transition;
-                this.trx.attemptedTransitionModel = model;
-                this.trx.storeType = 'location';
-                transition.abort();
-            } else {
-                Ember.$('.t-modal').modal('hide');
-            }
-        },
         deleteLocation() {
             var model = this.modelFor('admin.locations.location');
             // model.destroyRecord().then(() => {

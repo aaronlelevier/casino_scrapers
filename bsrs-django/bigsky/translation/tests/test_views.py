@@ -64,13 +64,23 @@ class TranslationTests(APITestCase):
         response = self.client.get('/api/translations/')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertIsInstance(data, list)
+        self.assertIsInstance(data, dict)
 
     def test_filter(self):
         # Assumes there is a single Locale fixture with the name "en"
         response = self.client.get('/api/translations/?locale=en')
         data = json.loads(response.content.decode('utf8'))
         self.assertIn('en', data)
+        self.assertEqual(len(data), 1)
+
+    def test_filter_multiple_returns(self):
+        # Assumes there is an "en" and "en-us" translation. It should 
+        # return both.
+        response = self.client.get('/api/translations/?locale=en-us')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIn('en', data)
+        self.assertIn('en-us', data)
+        self.assertEqual(len(data), 2)
 
     def test_filter_not_found(self):
         response = self.client.get('/api/translations/?locale=123')

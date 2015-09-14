@@ -13,7 +13,7 @@ from util.models import AbstractName, BaseModel, BaseManager, BaseQuerySet
 
 class LocaleManager(BaseManager):
 
-    def create_default(self):
+    def system_default(self):
         "Default Locale from Site settings."
         obj, _ = self.get_or_create(locale=settings.LANGUAGE_CODE)
         return obj
@@ -24,7 +24,7 @@ class LocaleManager(BaseManager):
 
         queryset = self.exclude(id=id).filter(default=True)
         if not queryset:
-            self.create_default()
+            self.system_default()
 
         self.exclude(id=id).filter(default=True).update(default=False)
 
@@ -45,10 +45,7 @@ class Locale(BaseModel):
         return self.locale
 
     def save(self, *args, **kwargs):
-        if not self.native_name:
-            self.native_name = self.name
-        if not self.presentation_name:
-            self.presentation_name = self.name
+        self._update_defaults()
         return super(Locale, self).save(*args, **kwargs)
 
     def to_dict(self):
@@ -60,6 +57,13 @@ class Locale(BaseModel):
             'presentation_name':self.presentation_name,
             'rtl':self.rtl
             }
+
+    def _update_defaults(self):
+        self.locale = self.locale.lower()
+        if not self.native_name:
+            self.native_name = self.name
+        if not self.presentation_name:
+            self.presentation_name = self.name
 
 
 @receiver(post_save, sender=Locale)
@@ -83,11 +87,13 @@ class TranslationManager(BaseManager):
         '''
         # Boiler-plate code for creating a new `Translation` record
 
-        from translation.models import Translation, Locale
-        for model in [Translation, Locale]:
-            for m in model.objects_all.all():
-                m.delete(override=True)
-        Translation.objects.import_csv('en')
+        .. code-block:: python
+
+            from translation.models import Translation, Locale
+            for model in [Translation, Locale]:
+                for m in model.objects_all.all():
+                    m.delete(override=True)
+            Translation.objects.import_csv('en')
         '''
         with open(os.path.join(self.translation_dir, '{}.csv'.format(language))) as csvfile:
             reader = csv.DictReader(csvfile)
@@ -112,11 +118,13 @@ class TranslationManager(BaseManager):
 
     def export_csv(self, id):
         '''
-        # Test `export_csv` Boiler-plate
+        Test `export_csv` Boiler-plate
 
-        from translation.models import Translation, Locale
-        a = Translation.objects.first()
-        Translation.objects.export_csv(a.id)
+        .. code-block:: python
+
+            from translation.models import Translation, Locale
+            a = Translation.objects.first()
+            Translation.objects.export_csv(a.id)
         '''
         t = self.get(id=id)
         with open(os.path.join(self.translation_dir, '{}-out.csv'.format(t.locale)), 'w', newline='') as csvfile:
@@ -137,6 +145,8 @@ class TranslationManager(BaseManager):
 
 
 def translation_file(instance, filename):
+    """Determines the file location of Translation CSVs saved 
+    within the MEDAI_ROOT directory."""
     return '/'.join(['translations', filename])
 
 
@@ -157,4 +167,4 @@ class Translation(BaseModel):
     objects = TranslationManager()
 
     def __str__(self):
-        return "{self.locale}: {self.values}".format(self=self)
+        return "{}: {}".format(self.locale, self.id)

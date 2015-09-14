@@ -1,6 +1,13 @@
 from .base import *
 
 
+LOCAL_APPS = (
+    'django_extensions',
+    )
+
+INSTALLED_APPS = INSTALLED_APPS + LOCAL_APPS
+
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
@@ -20,4 +27,8 @@ CACHES = {
 }
 
 if 'test' in sys.argv:
+    # Will only be activated when running ``./manage.py test``
+    PASSWORD_HASHERS = (
+        'django.contrib.auth.hashers.MD5PasswordHasher',
+    )
     from .ci import *

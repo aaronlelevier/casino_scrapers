@@ -3,7 +3,7 @@
 echo "BUILD STARTED!"
 
 function npmInstall {
-    npm install
+    npm install --no-optional
     NPM_INSTALL=$?
     echo $NPM_INSTALL
     if [ "$NPM_INSTALL" == 1 ]; then
@@ -26,10 +26,11 @@ function emberTest {
 }
 
 function pipInstall {
+    echo "ENABLE SPECIFIC DJANGO SETTINGS FILE HERE B/C AFFECTS PIP INSTALL"
+    export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'
     rm -rf venv
     virtualenv -p /usr/local/bin/python3 venv
-    source venv/bin/activate
-    venv/bin/pip install -r requirements.txt
+    pip install -r requirements_ci.txt
     PIP_INSTALL=$?
     if [ "$PIP_INSTALL" == 1 ]; then
       echo "pip install failed"
@@ -93,7 +94,6 @@ function dropAndCreateDB {
 }
 
 function migrateData {
-    export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'
     ./manage.py migrate
     ./manage.py loaddata fixtures/states.json
     ./manage.py loaddata fixtures/jenkins.json

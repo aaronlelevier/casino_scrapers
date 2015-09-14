@@ -1,16 +1,15 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import loopAttrs from 'bsrs-ember/utilities/loop-attrs';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
-var LocationLevel = Model.extend({
+var LocationLevel = Model.extend(NewMixin, {
     store: inject('main'),
     name: attr(''),
     locations: attr([]),
     roles: attr([]),
-    children_fks: [],
+    children_fks: attr([]),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
-        //for children eventually
         return this.get('isDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
@@ -31,15 +30,12 @@ var LocationLevel = Model.extend({
     removeRecord() {
         this.get('store').remove('location-level', this.get('id'));
     },
-    children: Ember.computed('children_fks', function() {
+    children: Ember.computed('children_fks.[]', function() {
         let children_fks = this.get('children_fks');
         let filter = (loc_level) => {
-            return Ember.$.inArray(loc_level.get('id'), children_fks) > -1;
+            return Ember.$.inArray(loc_level.get('id'), children_fks) > -1 && loc_level.get('name') !== this.get('name');
         };
-        return this.get('store').find('location-level', filter.bind(this), ['id', 'children']);
-    }),
-    isNew: Ember.computed(function() {
-        return loopAttrs(this, 'location_level');
+        return this.get('store').find('location-level', filter.bind(this), ['id']);
     })
 });
 

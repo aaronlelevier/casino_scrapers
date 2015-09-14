@@ -2,6 +2,11 @@
 
 module.exports = function(environment) {
   var ENV = {
+    contentSecurityPolicy: {
+        'script-src': "'self' 'unsafe-inline'",
+        'style-src': "'self' 'unsafe-inline'",
+        'connect-src': "'self'"
+    },
     modulePrefix: 'bsrs-ember',
     environment: environment,
     baseURL: '/',
@@ -14,7 +19,8 @@ module.exports = function(environment) {
     },
 
     i18n: {
-      defaultLocale: 'en'
+      defaultLocale: 'en',
+      currentLocale: 'en'
     },
 
     APP: {

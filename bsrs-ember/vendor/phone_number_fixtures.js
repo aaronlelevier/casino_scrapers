@@ -1,31 +1,23 @@
 var BSRS_PHONE_NUMBER_FACTORY = (function() {
     var factory = function(phone_number_defaults, people_defaults, phone_number_type_defaults) {
-        this.first_pk = 3;
-        this.second_pk = 4;
-        this.first_number = '858-715-5026';
-        this.second_number = '858-715-5056';
         this.phone_number_type_defaults = phone_number_type_defaults;
         this.phone_number_defaults = phone_number_defaults;
         this.person = people_defaults; 
     };
     factory.prototype.get = function() {
         return [{
-            'id':this.first_pk,
-            'number':this.first_number,
+            'id':this.phone_number_defaults.idOne,
+            'number':this.phone_number_defaults.numberOne,
             'type': this.phone_number_type_defaults.officeId,
-            'person': this.person.id
         },
         {
-            'id':this.second_pk,
-            'number':this.second_number,
+            'id':this.phone_number_defaults.idTwo,
+            'number':this.phone_number_defaults.numberTwo,
             'type': this.phone_number_type_defaults.mobileId,
-            'person': this.person.id
         }];
     };
     factory.prototype.put = function(phone_number) {
-        var phone_numbers = [
-            {id: this.first_pk, number: this.first_number, type: this.phone_number_type_defaults.officeId}, {id: this.second_pk, number: this.second_number, type: this.phone_number_type_defaults.mobileId}
-        ];
+        var phone_numbers = this.get();
         if(!phone_number) {
             return phone_numbers;
         }
