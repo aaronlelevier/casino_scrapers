@@ -1,4 +1,4 @@
-from javascript import JavascriptMixin
+from .javascript import JavascriptMixin
 
 
 class NavPage(JavascriptMixin):

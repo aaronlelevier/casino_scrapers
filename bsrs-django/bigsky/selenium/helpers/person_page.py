@@ -1,9 +1,4 @@
-<<<<<<< HEAD
-from .method_helpers import MethodHelpers
-from .base_page import BasePage
-=======
 from .model_page import ModelPage
->>>>>>> django
 
 
 class PersonPage(ModelPage):
@@ -19,9 +14,6 @@ class PersonPage(ModelPage):
         self.new_link = new_link
         self.list_name = list_name
         self.list_data = list_data
-
-    def find_list_name(self):
-        return self.find_class_elements("t-person-username")
 
     def _loop_over_names(self, name, new_person, count):
         """Loop over names in the list.
