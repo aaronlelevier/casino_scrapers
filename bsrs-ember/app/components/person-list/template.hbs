@@ -16,14 +16,27 @@
 
 
     </header>
+
+    {{#if toggleFilter}}
+      {{#tether-dialog target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='top right'}}
+        {{input-dynamic-filter obj=filterModel prop=filterField placeholder=filterPlaceholder}}
+      {{/tether-dialog}}
+    {{/if}}
+
     <section class="docSection docSectionWithFooter">
       <table class="table table-striped table-hover">
         <thead>
           <tr class="head">
             <th></th>
-            <th><span {{action "sortBy" "username"}} class="t-sort-username-dir glyphicon {{if (query-param-asc "username" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-username">{{t "admin.person.label.username"}}</a></span></th>
-            <th><span {{action "sortBy" "first_name"}} class="t-sort-first-name-dir glyphicon {{if (query-param-asc "first_name" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-first-name">{{t "admin.person.label.name"}}</a></span></th>
-            <th><span {{action "sortBy" "title"}} class="t-sort-title-dir glyphicon {{if (query-param-asc "title" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-title">{{t "admin.person.label.title"}}</a></span></th>
+            <th><span {{action "sortBy" "username"}} class="t-sort-username-dir glyphicon {{if (query-param-asc "username" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-username">{{t "admin.person.label.username"}}</a></span>
+              <span class="t-filter-username glyphicon glyphicon-filter pull-right" {{action 'toggleFilterModal' 'username'}}></span>
+            </th>
+            <th><span {{action "sortBy" "first_name"}} class="t-sort-first-name-dir glyphicon {{if (query-param-asc "first_name" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-first-name">{{t "admin.person.label.name"}}</a></span>
+              <span class="t-filter-first-name glyphicon glyphicon-filter pull-right" {{action 'toggleFilterModal' 'first_name'}}></span>
+            </th>
+            <th><span {{action "sortBy" "title"}} class="t-sort-title-dir glyphicon {{if (query-param-asc "title" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-title">{{t "admin.person.label.title"}}</a></span>
+              <span class="t-filter-title glyphicon glyphicon-filter pull-right" {{action 'toggleFilterModal' 'title'}}></span>
+            </th>
             <th>{{t "admin.person.label.role"}}</th>
     				<th class="text-right">{{t "admin.person.label.employee_id"}}</th>
           </tr>

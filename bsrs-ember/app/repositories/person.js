@@ -26,7 +26,7 @@ export default Ember.Object.extend({
         });
         return this.get('store').find('person');
     },
-    findWithQuery(page, sort, search) {
+    findWithQuery(page, sort, search, find) {
         page = page || 1;
         var endpoint = PREFIX + '/admin/people/?page=' + page;
         if (sort && sort !== 'id') {
@@ -34,6 +34,15 @@ export default Ember.Object.extend({
         }
         if (search && search !== '') {
             endpoint = endpoint + '&search=' + encodeURIComponent(search);
+        }
+        if (find && find !== '') {
+            let finds = find.split(',');
+            finds.forEach(function(data) {
+                let params = data.split(':');
+                let key = params[0];
+                let value = params[1];
+                endpoint = endpoint + '&' + key + '__icontains=' + encodeURIComponent(value);
+            });
         }
         var all = this.get('store').find('person');
         PromiseMixin.xhr(endpoint).then((response) => {

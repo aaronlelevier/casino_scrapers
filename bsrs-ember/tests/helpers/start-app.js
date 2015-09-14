@@ -5,6 +5,16 @@ import windowProxy from 'bsrs-ember/utilities/window-proxy';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import t from './t';
 
+function filterGrid(app, column, text) {
+  var eventbus = app.__container__.lookup('service:eventbus');
+  Ember.run(function() {
+    eventbus.publish('bsrs-ember@component:input-dynamic-filter:', this, 'onValueUpdated', column, text);
+  });
+  return app.testHelpers.wait();
+}
+
+Ember.Test.registerAsyncHelper('filterGrid', filterGrid);
+
 export default function startApp(attrs) {
     var application;
 
