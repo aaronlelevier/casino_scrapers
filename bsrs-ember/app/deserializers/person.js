@@ -13,12 +13,16 @@ var extract_phone_numbers = function(model, store) {
 };
 
 var extract_addresses = function(model, store) {
+    let address_fks = [];
     model.addresses.forEach((address) => {
-        store.push('address-type', address.type);
-        address.type = address.type.id;
+        address_fks.push(address.id);
+        address.person_fk = model.id;
+        // store.push('address-type', address.type);
+        // address.type = address.type.id;
         store.push('address', address);
     });
     delete model.addresses;
+    return address_fks;
 };
 
 var extract_role_location_level = function(model, store) {
@@ -104,7 +108,7 @@ var PersonDeserializer = Ember.Object.extend({
         let uuid = this.get('uuid');
         let store = this.get('store');
         model.phone_number_fks = extract_phone_numbers(model, store);
-        extract_addresses(model, store);
+        model.address_fks = extract_addresses(model, store);
         model.role_fk = extract_role(model, store);
         model.person_location_fks = extract_person_location(model, store, uuid);
         model.locale_fk = extract_locale(model, store);

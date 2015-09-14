@@ -28,11 +28,11 @@ test('valid computed should ignore models with an empty or undefined address att
     let address;
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let address_types = [AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName })];
-    let model = store.find('address', {person: PEOPLE_DEFAULTS.id});
+    let model = store.find('address', {person_fk: PEOPLE_DEFAULTS.id});
     let subject = InputMultiAddressComponent.create({model: model, eventbus: eventbus});
     assert.equal(subject.get('valid'), true);
     run(() => {
-        address = model.push({id: 'def456', type: ADDRESS_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+        address = model.push({id: 'def456', type: ADDRESS_TYPE_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
     });
     assert.equal(subject.get('valid'), true);
     run(() => {
@@ -66,11 +66,11 @@ test('valid computed should ignore models with an empty or undefined zip code at
     let address;
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let address_types = [AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName })];
-    let model = store.find('address', {person: PEOPLE_DEFAULTS.id});
+    let model = store.find('address', {person_fk: PEOPLE_DEFAULTS.id});
     let subject = InputMultiAddressComponent.create({model: model, eventbus: eventbus});
     assert.equal(subject.get('valid'), true);
     run(() => {
-        address = model.push({id: 'def456', type: ADDRESS_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+        address = model.push({id: 'def456', type: ADDRESS_TYPE_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
     });
     assert.equal(subject.get('valid'), true);
     run(() => {
@@ -109,13 +109,13 @@ test('valid computed should ignore models with an empty or undefined address att
     let address_two;
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let address_types = [AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName })];
-    let model = store.find('address', {person: PEOPLE_DEFAULTS.id});
+    let model = store.find('address', {person_fk: PEOPLE_DEFAULTS.id});
     let subject = InputMultiAddressComponent.create({model: model, eventbus: eventbus});
     assert.equal(subject.get('valid'), true);
     run(() => {
-        let address_one = model.push({id: 'def455', type: ADDRESS_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
-        address_two = model.push({id: 'def456', type: ADDRESS_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
-        let address_three = model.push({id: 'def457', type: ADDRESS_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+        let address_one = model.push({id: 'def455', type: ADDRESS_TYPE_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
+        address_two = model.push({id: 'def456', type: ADDRESS_TYPE_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
+        let address_three = model.push({id: 'def457', type: ADDRESS_TYPE_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
     });
     assert.equal(subject.get('valid'), true);
     run(() => {
@@ -171,13 +171,13 @@ test('valid computed should ignore models with an empty or undefined address att
     let address_three;
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let address_types = [AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName })];
-    let model = store.find('address', {person: PEOPLE_DEFAULTS.id});
+    let model = store.find('address', {person_fk: PEOPLE_DEFAULTS.id});
     let subject = InputMultiAddressComponent.create({model: model, eventbus: eventbus});
     assert.equal(subject.get('valid'), true);
     run(() => {
-        address_one = model.push({id: 'def455', type: ADDRESS_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
-        address_two = model.push({id: 'def456', type: ADDRESS_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
-        address_three = model.push({id: 'def457', type: ADDRESS_TYPE_DEFAULTS.officeId, person: PEOPLE_DEFAULTS.id});
+        address_one = model.push({id: 'def455', type: ADDRESS_TYPE_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
+        address_two = model.push({id: 'def456', type: ADDRESS_TYPE_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
+        address_three = model.push({id: 'def457', type: ADDRESS_TYPE_DEFAULTS.officeId, person_fk: PEOPLE_DEFAULTS.id});
     });
     assert.equal(subject.get('valid'), true);
     run(() => {

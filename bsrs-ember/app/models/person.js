@@ -3,8 +3,9 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import NewMixin from 'bsrs-ember/mixins/model/new';
+import CopyMixin from 'bsrs-ember/mixins/model/copy';
 
-var Person = Model.extend(NewMixin, {
+var Person = Model.extend(NewMixin, CopyMixin, {
     uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
@@ -17,17 +18,9 @@ var Person = Model.extend(NewMixin, {
     locale: attr(''),
     role_fk: undefined,
     phone_number_fks: [],
+    address_fks: [],
     person_location_fks: [],
     isModelDirty: false,
-    dirtyModel: Ember.computed('isModelDirty', {
-        get(key) {
-            return this.isModelDirty;
-        },
-        set(key, value) {
-            this.set('isModelDirty', value);
-            return this.get('isModelDirty');
-        }
-    }),
     full_name: Ember.computed('first_name', 'last_name', function() {
         var first_name = this.get('first_name');
         var last_name = this.get('last_name');
@@ -55,9 +48,7 @@ var Person = Model.extend(NewMixin, {
     phone_numbers: Ember.computed(function() {
         var store = this.get('store');
         var filter = function(phone_number) {
-            let phone_fks = this.get('phone_number_fks');
             return this.get('id') === phone_number.get('person_fk') && !phone_number.get('removed');
-            // return Ember.$.inArray(phone_number.get('id'), phone_fks) > -1 && !phone_number.get('removed');
         };
         return store.find('phonenumber', filter.bind(this), ['removed']);
     }),
@@ -66,12 +57,27 @@ var Person = Model.extend(NewMixin, {
             return ph_num.get('id');
         });
     }),
+    addresses_all: Ember.computed(function() {
+        var store = this.get('store');
+        var filter = function(address) {
+            return this.get('id') === address.get('person_fk');
+        };
+        return store.find('address', filter.bind(this), ['removed']);
+    }),
     addresses: Ember.computed(function() {
         var store = this.get('store');
-        return store.find('address', {person: this.get('id')});
+        var filter = function(address) {
+            return this.get('id') === address.get('person_fk') && !address.get('removed');
+        };
+        return store.find('address', filter.bind(this), ['removed']);
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', 'locationsIsDirty', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty') || this.get('locationsIsDirty');
+    address_ids: Ember.computed('addresses.[]', function() {
+        return this.get('addresses').map((address) => {
+            return address.get('id');
+        });
+    }),
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty');
     }),
     roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
         let roles = this.get('role_property');
@@ -83,18 +89,18 @@ var Person = Model.extend(NewMixin, {
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
-        let uuid = this.get('uuid');
         let phone_number_dirty = false;
-        let person_id = this.get('id');
         let phone_numbers = this.get('phone_numbers');
         let phone_fks = this.get('phone_number_fks');
-        let filtered_phone_numbers = [];
+        let filtered_phone_numbers = phone_numbers.map((phone_number) => {
+            return this.copy(phone_number);
+        });
         let filtered_phone_fks = Ember.$.extend(true, [], phone_fks);
-        if (filtered_phone_fks.length < phone_numbers.get('length')) {
+        if (filtered_phone_fks.length < filtered_phone_numbers.length) {
             //if add new phone number and ask right away if dirty, need to update fk array
-            phone_numbers.forEach((obj) => {
-                if (Ember.$.inArray(obj.get('id'), filtered_phone_fks) < 0) {
-                    filtered_phone_fks.push(obj.get('id'));
+            phone_numbers.forEach((phone_number) => {
+                if (Ember.$.inArray(phone_number.get('id'), filtered_phone_fks) < 0) {
+                    filtered_phone_fks.push(phone_number.get('id'));
                 }
             });
         }
@@ -103,19 +109,18 @@ var Person = Model.extend(NewMixin, {
             if (num.get('isDirty')) {
                 phone_number_dirty = true;
             }
-            //get ride of invalid numbers and provide updated array for dirty check; only if off by one.  If same length, then don't want to filter out.
-            if (num.get('invalid_number') && filtered_phone_fks.length !== phone_numbers.get('length')) {
+            //get rid of invalid numbers and provide updated array for dirty check; only if off by one.  If same length, then don't want to filter out.
+            if (num.get('invalid_number') && filtered_phone_fks.length !== filtered_phone_numbers.length) {
                 filtered_phone_fks = filtered_phone_fks.filter((fk) => {
                         return fk !== num.get('id');
                 });
-                filtered_phone_numbers = phone_numbers.filter((phone_number) => {
-                    return phone_number.number !== '';
+                filtered_phone_numbers = filtered_phone_numbers.filter((phone_number) => {
+                    return phone_number.number !== '' || phone_number.number !== 'undefined';
                 });
             }
         });
         //if not dirty, but delete phone number, then mark as dirty and clean up array
-        let phone_numberlength = filtered_phone_numbers.length || phone_numbers.get('length');
-        if (phone_numbers.get('length') > 0 && filtered_phone_fks.length !== phone_numberlength) {
+        if (this.get('phone_numbers_all').get('length') > 0 && filtered_phone_fks.length !== filtered_phone_numbers.length) {
             phone_number_dirty = true;
         }
         return phone_number_dirty;
@@ -123,28 +128,48 @@ var Person = Model.extend(NewMixin, {
     phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty'),
     addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state',
                                      'addresses.@each.postal_code', 'addresses.@each.country', 'addresses.@each.type', function() {
-        var addresses = this.get('addresses');
         var address_dirty = false;
+        var addresses = this.get('addresses');
+        var address_fks = this.get('address_fks');
+        let filtered_addresses = addresses.map((address) => {
+            return this.copy(address);
+        });
+        let filtered_address_fks = Ember.$.extend(true, [], address_fks);
+        if (filtered_address_fks.length < addresses.get('length')) {
+            addresses.forEach((address) => {
+                if (Ember.$.inArray(address.get('id'), filtered_address_fks) < 0) {
+                    filtered_address_fks.push(address.get('id'));
+                }
+            });
+        }
         addresses.forEach((address) => {
             if (address.get('isDirty')) {
                 address_dirty = true;
             }
+            if (address.get('invalid_address') && filtered_address_fks.length !== filtered_addresses.length) {
+                filtered_address_fks = filtered_address_fks.filter((fk) => {
+                    return fk !== address.get('id');
+                }); 
+                filtered_addresses = filtered_addresses.filter((address) => {
+                    return address.address !== '' || address.address !== 'undefined';
+                });
+            }
         });
+        if (this.get('addresses_all').get('length') > 0 && filtered_address_fks.length !== filtered_addresses.length) {
+            address_dirty = true;
+        }
         return address_dirty;
     }),
     addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    cleanupPhoneNumber: function(num) {
-        let store = this.get('store');
-        store.remove('phonenumber', num.get('id'));
-    },
     cleanupPhoneNumbers: function() {
         let store = this.get('store');
         let phone_numbers_to_remove = [];
         let phone_numbers = this.get('phone_numbers');
+        let phone_numbers_all = this.get('phone_numbers_all');
         let phone_fks = this.get('phone_number_fks');
         let phone_number_ids = this.get('phone_number_ids');
-        phone_numbers.forEach((num) => {
+        phone_numbers_all.forEach((num) => {//TODO: write test for this
             if(num.get('invalid_number') || num.get('removed')) {
                 phone_numbers_to_remove.push(num.get('id'));
             }
@@ -171,7 +196,7 @@ var Person = Model.extend(NewMixin, {
         });
     },
     savePhoneNumbers: function() {
-        this.cleanupPhoneNumberFKs();
+        this.cleanupPhoneNumberFKs();//SCOTT: put this after so don't have to call again in cleanupPhoneNumber?
         this.cleanupPhoneNumbers();
         let phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {
@@ -179,17 +204,44 @@ var Person = Model.extend(NewMixin, {
         });
     },
     saveAddresses: function() {
+        this.cleanupAddressFKs();//SCOTT: put this after so don't have to call again in cleanupPhoneNumber?
+        this.cleanupAddresses();
+        let addresses = this.get('addresses');
+        addresses.forEach((address) => {
+            address.save();
+        });
+    },
+    cleanupAddresses: function() {
         let store = this.get('store');
         let addresses_to_remove = [];
         let addresses = this.get('addresses');
-        addresses.forEach((address) => {
-            if (address.get('invalid_address')) {
-                addresses_to_remove.push(address.get('id')); 
+        let addresses_all = this.get('addresses_all');
+        let address_fks = this.get('address_fks');
+        let address_ids = this.get('address_ids');
+        addresses_all.forEach((address) => {
+            if(address.get('invalid_address') || address.get('removed')) {
+                addresses_to_remove.push(address.get('id'));
             }
-            address.save();
         });
         addresses_to_remove.forEach((id) => {
             store.remove('address', id);
+        });
+        this.cleanupAddressFKs();
+    },
+    cleanupAddressFKs: function() {
+        let address_fks = this.get('address_fks');
+        let address_ids = this.get('address_ids');
+        //add
+        address_ids.forEach((id) => {
+            if (Ember.$.inArray(id, address_fks) < 0) {
+                address_fks.push(id);
+            }
+        });
+        //remove
+        address_fks.forEach((fk, indx) => {
+            if (address_ids.indexOf(fk) < 0) {
+               address_fks.splice(indx, 1); 
+            }
         });
     },
     saveLocations: function() {
@@ -296,8 +348,11 @@ var Person = Model.extend(NewMixin, {
     rollbackAddresses() {
         let store = this.get('store');
         let addresses_to_remove = [];
-        let addresses = this.get('addresses');
+        let addresses = this.get('addresses_all');
         addresses.forEach((address) => {
+            if (address.get('removed')) {
+                address.set('removed', undefined);
+            }
             if(address.get('invalid_address') && address.get('isNotDirty')) {
                 addresses_to_remove.push(address.get('id'));
             }
@@ -396,7 +451,12 @@ var Person = Model.extend(NewMixin, {
         }).map(function(num) {
             return num.serialize();
         });
-        var addresses = this.get('addresses').map(function(address) {
+        var addresses = this.get('addresses').filter(function(address) {
+            if (address.get('invalid_address')) {
+                return;
+            }
+            return address;
+        }).map(function(address) {
             return address.serialize();
         });
         var locale = store.find('locale', {locale: this.get('locale')});

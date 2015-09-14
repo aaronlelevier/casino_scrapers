@@ -122,7 +122,7 @@ test('changing existing phone number type will alter the model regardless of the
     assert.equal($first_type_select.val(), PHONE_NUMBER_TYPE_DEFAULTS.mobileId);
 });
 
-test('sco click delete btn will remove input', function(assert) {
+test('click delete btn will remove input', function(assert) {
     //todo: reduce the duplication on phone_number_types
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id, phone_number_fks: [PHONE_NUMBER_DEFAULTS.idOne, PHONE_NUMBER_DEFAULTS.idTwo]});
     var phone_number_types = [PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName }), PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, name: PHONE_NUMBER_TYPE_DEFAULTS.mobileName})];
@@ -130,12 +130,11 @@ test('sco click delete btn will remove input', function(assert) {
     store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, person_fk: PEOPLE_DEFAULTS.id});
     var model = store.find('phonenumber', {person_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
-    this.set('person', person);
     this.set('related_pk', PEOPLE_DEFAULTS.id);
     this.set('related_field', 'person_fk');
     this.set('phone_number_types', phone_number_types);
     this.set('default_type', default_type);
-    this.render(hbs`{{input-multi-phone model=model person=person types=phone_number_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
+    this.render(hbs`{{input-multi-phone model=model types=phone_number_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
     var $component = this.$('.t-input-multi-phone');
     assert.equal(this.$('.t-new-entry').length, 2);
     var $first_del_btn = $component.find('.t-del-btn:eq(0)');

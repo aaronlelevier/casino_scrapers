@@ -105,13 +105,13 @@
 				{{#form-group title="admin.person.label.address"}}
 					{{input-multi-address
 						model=model.addresses
+            person=model
 						state_list=state_list
 						countries=countries
 						types=address_types
             default_type=default_address_type
-            related_field="person"
+            related_field="person_fk"
             related_pk=model.id
-            delete="dirtyModel"
 					}}
 				{{/form-group}}
 			</div>

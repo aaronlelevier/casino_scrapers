@@ -14,7 +14,6 @@ export default ParentValidationComponent.extend(PersonLocationsMixin, {
     usernameValidation: validate('model.username'),
     actions: {
         savePerson() {
-            this.get('model').set('dirtyModel', false);
             this.set('submitted', true);
             if (this.all_components_valid()) {
                 var model = this.get('model');
@@ -33,8 +32,5 @@ export default ParentValidationComponent.extend(PersonLocationsMixin, {
             repository.delete(model.get('id'));
             this.sendAction('redirectUser');
         },
-        dirtyModel() {
-            this.get('model').set('dirtyModel', true);
-        }
     }
 });

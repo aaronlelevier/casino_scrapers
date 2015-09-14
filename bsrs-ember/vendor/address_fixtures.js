@@ -10,37 +10,26 @@ var BSRS_ADDRESS_FACTORY = (function() {
         return [
             {
                 'id': this.address_defaults.idOne,
-                'type': {
-                    'id': this.address_type_defaults.officeId,
-                    'name':this.address_type_defaults.officeName
-                },
-                'address': 'Sky Park',
-                'city': 'San Diego',
+                'type': this.address_type_defaults.officeId,
+                'address': this.address_defaults.streetOne,
+                'city': this.address_defaults.cityOne,
                 'state': this.state_list.id,
-                'postal_code': '92123',
+                'postal_code': this.address_defaults.zipOne,
                 'country': this.country_list.id,
-                'person': this.person.id
             },
             {
                 'id': this.address_defaults.idTwo,
-                'type': {
-                    'id': this.address_type_defaults.shippingId,
-                    'name':this.address_type_defaults.shippingName
-                },
-                'address': '123 PB',
-                'city': 'San Diego',
+                'type': this.address_type_defaults.shippingId,
+                'address': this.address_defaults.streetTwo,
+                'city': this.address_defaults.cityTwo,
                 'state': this.state_list.id,
-                'postal_code': '92100',
+                'postal_code': this.address_defaults.zipTwo,
                 'country': this.country_list.idTwo,
-                'person': this.person.id
             }
         ];
     };
     factory.prototype.put = function(address) {
-        var addresses = [
-            {id: this.address_defaults.idOne, type: this.address_type_defaults.officeId, address: 'Sky Park', city: 'San Diego', state: this.state_list.id, postal_code: '92123', country: this.country_list.id, person: this.person.id},
-            {id: this.address_defaults.idTwo, type: this.address_type_defaults.shippingId, address: '123 PB', city: 'San Diego', state: this.state_list.id, postal_code: '92100', country: this.country_list.idTwo, person: this.person.id}
-        ];
+        var addresses = this.get();
         if (!address) {
             return addresses;
         }

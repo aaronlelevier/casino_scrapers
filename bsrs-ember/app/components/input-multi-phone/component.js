@@ -21,6 +21,7 @@ var InputMultiPhone = ChildValidationComponent.extend(CustomValidMixin, {
             });
         },
         append() {
+            //TODO: remove person=model from template
             var id = this.get('uuid').v4();
             var type = this.get('default_type').get('id');
             var related_field = this.get('related_field');

@@ -35,7 +35,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
-module('sco Acceptance | detail test', {
+module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -46,7 +46,6 @@ module('sco Acceptance | detail test', {
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
         detail_xhr = xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
         xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -201,7 +200,7 @@ test('newly added addresses without a valid name are ignored and removed when us
     });
 });
 
-test('phone numbers without a valid number are ignored and removed', (assert) => {
+test('phone numbers without a valid number are ignored and removed on save', (assert) => {
     visit(DETAIL_URL);
     click('.t-add-btn:eq(0)');
     andThen(() => {
@@ -233,7 +232,59 @@ test('phone numbers without a valid number are ignored and removed', (assert) =>
     });
 });
 
-test('when editing phone numbers to invalid, it checks for validation', (assert) => {
+test('address without a valid address or zip code are ignored and removed on save', (assert) => {
+    visit(DETAIL_URL);
+    click('.t-add-address-btn:eq(0)');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+        assert.equal(visible_zip_errors.length, 0);
+    });
+    fillIn('.t-address-address:eq(2)', '34');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+        assert.equal(find('.t-input-multi-address-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid address');
+    });
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+        assert.equal(visible_zip_errors.length, 0);
+        assert.equal(store.find('address').get('length'), 3);
+    });
+    fillIn('.t-address-address:eq(2)', '');
+    fillIn('.t-address-postal-code:eq(2)', '34');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+        assert.equal(find('.t-input-multi-address-zip-validation-error:not(:hidden):eq(0)').text().trim(), 'invalid postal code');
+    });
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        let visible_zip_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+        assert.equal(visible_zip_errors.length, 1);
+        assert.equal(store.find('address').get('length'), 3);
+    });
+    fillIn('.t-address-postal-code:eq(2)', '');
+    var url = PREFIX + DETAIL_URL + "/";
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(store.find('address').get('length'), 2);
+    });
+});
+
+test('when editing phone numbers and addresses to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-person-username', '');
     click('.t-add-btn:eq(0)');
@@ -282,6 +333,23 @@ test('when editing phone numbers to invalid, it checks for validation', (assert)
     fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
     andThen(() => {
         let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
+        let visible_address_errors = find('.t-input-multi-address-validation-format-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+        assert.equal(visible_address_errors.length, 0);
+    });
+    fillIn('.t-address-postal-code:eq(2)', ADDRESS_DEFAULTS.zipOne);
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    fillIn('.t-address-postal-code:eq(2)', '');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+    });
+    fillIn('.t-address-postal-code:eq(2)', ADDRESS_DEFAULTS.zipOne);
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
         assert.equal(visible_errors.length, 0);
     });
     click(SAVE_BTN);
@@ -292,8 +360,8 @@ test('when editing phone numbers to invalid, it checks for validation', (assert)
     var url = PREFIX + DETAIL_URL + "/";
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id});
-    payload.phone_numbers.push({id: 'abc123', number: '515-222-3333', type: PHONE_NUMBER_TYPES_DEFAULTS.officeId });
-    payload.addresses.push({id: 'abc123', type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetThree, person: PEOPLE_DEFAULTS.id});
+    payload.phone_numbers.push({id: 'abc123', number: '515-222-3333', type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+    payload.addresses.push({id: 'abc123', type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetThree, postal_code: ADDRESS_DEFAULTS.zipOne});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     click(SAVE_BTN);
@@ -423,6 +491,28 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
     });
 });
 
+test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            var person = store.find('person', PEOPLE_DEFAULTS.id);
+            var addresses = store.find('address', PEOPLE_DEFAULTS.id);
+            assert.equal(addresses.source[0].get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
+        });
+    });
+});
+
 test('when user removes a phone number clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
     visit(DETAIL_URL);
     click('.t-del-btn:eq(0)');
@@ -445,9 +535,9 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
     });
 });
 
-test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+test('when user removes an address clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    click('.t-del-address-btn:eq(0)');
     click('.t-cancel-btn');
     andThen(() => {
         waitFor(() => {
@@ -515,6 +605,34 @@ test('when you deep link to the person detail view you can add a new phone numbe
     });
 });
 
+test('when you deep link to the person detail view you can add a new address', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-input-multi-address').find('input').length, 4);
+    });
+    click('.t-add-address-btn:eq(0)');
+    fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
+    andThen(() => {
+        assert.equal(find('.t-input-multi-address').find('input').length, 6);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
+    });
+    var addresses = ADDRESS_FIXTURES.put();
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetThree});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
 test('when you deep link to the person detail view you can remove a new phone number', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
@@ -543,6 +661,34 @@ test('when you deep link to the person detail view you can remove a new phone nu
     });
 });
 
+test('when you deep link to the person detail view you can remove a new address', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-input-multi-address').find('input').length, 4);
+    });
+    click('.t-del-address-btn:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-input-multi-address').find('input').length, 2);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
+    });
+    var addresses = ADDRESS_FIXTURES.put();
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: [addresses[1]]});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
 test('when you deep link to the person detail view you can add and remove a new phone number', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
@@ -554,6 +700,24 @@ test('when you deep link to the person detail view you can add and remove a new 
     });
     click('.t-add-btn:eq(0)');
     click('.t-del-btn:eq(2)');
+    andThen(() => {
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when you deep link to the person detail view you can add and remove a new address', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-input-multi-address').find('input').length, 4);
+    });
+    click('.t-add-address-btn:eq(0)');
+    click('.t-del-address-btn:eq(2)');
     andThen(() => {
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isNotDirty'));
@@ -583,6 +747,28 @@ test('when you deep link to the person detail view you can change the phone numb
     });
 });
 
+test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    click('.t-add-address-btn:eq(0)');
+    fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
+    var addresses = ADDRESS_FIXTURES.put();
+    addresses[0].type = ADDRESS_TYPES_DEFAULTS.shippingId;
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetThree});
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirty'));
+        assert.equal(person.get('addresses').objectAt(0).get('type'), ADDRESS_TYPES_DEFAULTS.shippingId);
+        assert.equal(person.get('addresses').objectAt(2).get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
+        assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
+    });
+});
+
 test('when you deep link to the person detail view you can add and save a new phone number with validation', (assert) => {
     visit(DETAIL_URL);
     click('.t-add-btn:eq(0)');
@@ -608,81 +794,28 @@ test('when you deep link to the person detail view you can add and save a new ph
     });
 });
 
-test('when you deep link to the person detail view you can add a new address', (assert) => {
+test('when you deep link to the person detail view you can add and save a new address with validation', (assert) => {
     visit(DETAIL_URL);
-    andThen(() => {
-        var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(find('.t-input-multi-address').find('input').length, 4);
-    });
     click('.t-add-address-btn:eq(0)');
-    fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
     andThen(() => {
-        assert.equal(find('.t-input-multi-address').find('input').length, 6);
-        var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isDirtyOrRelatedDirty'));
+        assert.equal(currentURL(), DETAIL_URL);
     });
     var addresses = ADDRESS_FIXTURES.put();
+    addresses[0].type = ADDRESS_TYPES_DEFAULTS.shippingId;
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetThree, person: PEOPLE_DEFAULTS.id});
+    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetThree});
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    fillIn('.t-input-multi-address select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.ok(person.get('isNotDirty'));
-        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    });
-});
-
-test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
-    visit(DETAIL_URL);
-    fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
-    click('.t-add-address-btn:eq(0)');
-    fillIn('.t-address-address:eq(2)', ADDRESS_DEFAULTS.streetThree);
-    var addresses = ADDRESS_FIXTURES.put();
-    addresses[0].type = ADDRESS_TYPES_DEFAULTS.shippingId;
-    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetThree, person: PEOPLE_DEFAULTS.id});
-    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: addresses});
-    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL);
-        var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isNotDirty'));
         assert.equal(person.get('addresses').objectAt(0).get('type'), ADDRESS_TYPES_DEFAULTS.shippingId);
         assert.equal(person.get('addresses').objectAt(2).get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
         assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
-    });
-});
-
-test('when you deep link to the person detail view you can remove a new address', (assert) => {
-    visit(DETAIL_URL);
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(find('.t-input-multi-address').find('input').length, 4);
-    });
-    click('.t-del-address-btn:eq(0)');
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-input-multi-address').find('input').length, 2);
-        var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isDirtyOrRelatedDirty'));
-    });
-    var addresses = ADDRESS_FIXTURES.put();
-    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, addresses: [addresses[1]]});
-    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL);
-        var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isNotDirty'));
-        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
