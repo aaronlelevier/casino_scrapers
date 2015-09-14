@@ -1,5 +1,6 @@
 import os
 import csv
+import copy
 
 from django.db import models
 from django.contrib.postgres.fields import HStoreField
@@ -135,12 +136,17 @@ class TranslationManager(BaseManager):
                 'VALUE',
                 'CONTEXT'
             ])
+
+            # copy the values to write to 'csv' here, or else will 
+            # raise a runtime error in python3
+            values = copy.copy(t.values)
+            context = copy.copy(t.context)
             for k in t.values.keys():
                 writer.writerow([
                     str(t.locale),
                     str(k),
-                    str(t.values.pop(k, '')),
-                    str(t.context.pop(k,''))
+                    str(values.pop(k, '')),
+                    str(context.pop(k,''))
                 ])
 
 
