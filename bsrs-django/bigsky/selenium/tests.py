@@ -287,35 +287,35 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         # ASC
         self.driver.find_element_by_class_name("t-sort-username").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        assert "aaron" == usernames[0].text
+        self.assertEqual("aaron", usernames[0].text)
         # DESC
         self.driver.find_element_by_class_name("t-sort-username").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        assert "voluptate" == usernames[0].text
+        self.assertEqual("voluptate", usernames[0].text)
 
     def test_ordering_multiple(self):
         # order: first_name, username
         self.driver.find_element_by_class_name("t-sort-first-name").click()
         self.driver.find_element_by_class_name("t-sort-username").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        assert "aaron" == usernames[0].text
+        self.assertEqual("dolore", usernames[0].text)
         fullnames = self.wait_for_xhr_request("t-person-fullname", plural=True)
-        assert "AA" == fullnames[0].text
-        assert "AA" == fullnames[1].text
+        self.assertEqual("A N", fullnames[0].text)
+        self.assertEqual("A N", fullnames[1].text)
         # order: first_name, -username
         self.driver.find_element_by_class_name("t-sort-username").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        assert "aute" == usernames[0].text
+        self.assertEqual("minim", usernames[0].text)
         fullnames = self.wait_for_xhr_request("t-person-fullname", plural=True)
-        assert "AA" == fullnames[0].text
-        assert "AA" == fullnames[1].text
+        self.assertEqual("A N", fullnames[0].text)
+        self.assertEqual("A N", fullnames[1].text)
 
     def test_search(self):
         people = self.wait_for_xhr_request("t-person-data", plural=True)
-        assert len(people) == 10
+        self.assertEqual(len(people), 10)
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('a')
         people = self.wait_for_xhr_request("t-person-data", plural=True)
-        assert len(people) == 2
+        self.assertEqual(len(people), 3)
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('aaaaa')
         with self.assertRaises(NoSuchElementException):
             people = self.driver.find_element_by_class_name("t-person-data")
@@ -324,17 +324,17 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         # Search
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('a')
         people = self.wait_for_xhr_request("t-person-data", plural=True)
-        assert len(people) == 2
+        self.assertEqual(len(people), 3)
         # Order
         self.driver.find_element_by_class_name("t-sort-first-name").click()
         self.driver.find_element_by_class_name("t-sort-username").click()
         # order: first_name, -username
         self.driver.find_element_by_class_name("t-sort-username").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        assert "aute" == usernames[0].text
+        self.assertEqual("minim", usernames[0].text)
         # Search maintained
         people = self.wait_for_xhr_request("t-person-data", plural=True)
-        assert len(people) == 2
+        self.assertEqual(len(people), 4)
 
 
 if __name__ == "__main__":
