@@ -3,9 +3,8 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import NewMixin from 'bsrs-ember/mixins/model/new';
-import CopyMixin from 'bsrs-ember/mixins/model/copy';
 
-export default Model.extend(NewMixin, CopyMixin, {
+var Person = Model.extend(NewMixin, {
     uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
@@ -83,17 +82,15 @@ export default Model.extend(NewMixin, CopyMixin, {
         return this.get('role_fk') ? true : false;
     }),
     roleIsNotDirty: Ember.computed.not('roleIsDirty'),
-    phoneNumbersIsDirty: Ember.computed('phone_numbers.[]', 'phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
+    phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
         let uuid = this.get('uuid');
         let phone_number_dirty = false;
         let person_id = this.get('id');
         let phone_numbers = this.get('phone_numbers');
         let phone_fks = this.get('phone_number_fks');
-        let filtered_phone_numbers = phone_numbers.map((phone) => {
-            return this.copy(phone);
-        });
+        let filtered_phone_numbers = [];
         let filtered_phone_fks = Ember.$.extend(true, [], phone_fks);
-        if (filtered_phone_fks.length < filtered_phone_numbers.length) {
+        if (filtered_phone_fks.length < phone_numbers.get('length')) {
             //if add new phone number and ask right away if dirty, need to update fk array
             phone_numbers.forEach((obj) => {
                 if (Ember.$.inArray(obj.get('id'), filtered_phone_fks) < 0) {
@@ -107,17 +104,18 @@ export default Model.extend(NewMixin, CopyMixin, {
                 phone_number_dirty = true;
             }
             //get ride of invalid numbers and provide updated array for dirty check; only if off by one.  If same length, then don't want to filter out.
-            if (num.get('invalid_number') && filtered_phone_fks.length !== filtered_phone_numbers.get('length')) {
+            if (num.get('invalid_number') && filtered_phone_fks.length !== phone_numbers.get('length')) {
                 filtered_phone_fks = filtered_phone_fks.filter((fk) => {
                         return fk !== num.get('id');
                 });
-                filtered_phone_numbers = filtered_phone_numbers.filter((phone_number) => {
+                filtered_phone_numbers = phone_numbers.filter((phone_number) => {
                     return phone_number.number !== '';
                 });
             }
         });
         //if not dirty, but delete phone number, then mark as dirty and clean up array
-        if (phone_numbers.get('length') > 0 && filtered_phone_fks.length !== filtered_phone_numbers.length) {
+        let phone_numberlength = filtered_phone_numbers.length || phone_numbers.get('length');
+        if (phone_numbers.get('length') > 0 && filtered_phone_fks.length !== phone_numberlength) {
             phone_number_dirty = true;
         }
         return phone_number_dirty;
@@ -426,3 +424,5 @@ export default Model.extend(NewMixin, CopyMixin, {
         this.get('store').remove('person', this.get('id'));
     }
 });
+
+export default Person;
