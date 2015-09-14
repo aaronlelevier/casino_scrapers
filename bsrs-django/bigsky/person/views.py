@@ -36,6 +36,7 @@ class PersonFilterSet(filters.FilterSet):
     first_name = filters.AllLookupsFilter(name='first_name')
     username = filters.AllLookupsFilter(name='username')
     name = filters.AllLookupsFilter(name='name')
+    title = filters.AllLookupsFilter(name='title')
     
     class Meta:
         model= Person
