@@ -33,14 +33,13 @@ class PersonStatusViewSet(BaseModelViewSet):
 ### PERSON
 
 class PersonFilterSet(filters.FilterSet):
-    first_name = filters.AllLookupsFilter(name='first_name')
     username = filters.AllLookupsFilter(name='username')
-    fullname = filters.AllLookupsFilter(name='name')
+    fullname = filters.AllLookupsFilter(name='fullname')
     title = filters.AllLookupsFilter(name='title')
     
     class Meta:
         model= Person
-        fields = ['first_name', 'username', 'fullname']
+        fields = ['username', 'fullname', 'title']
 
 
 class PersonViewSet(BaseModelViewSet):
@@ -83,7 +82,7 @@ class PersonViewSet(BaseModelViewSet):
             queryset = queryset.filter(
                 Q(first_name__icontains=search) | \
                 Q(username__icontains=search) | \
-                Q(name__icontains=search)
+                Q(fullname__icontains=search)
             )
 
         return queryset

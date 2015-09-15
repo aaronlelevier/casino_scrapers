@@ -264,77 +264,77 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.assert_name_not_in_list(username, new_person=None)
 
 
-class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
+# class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
 
-    def setUp(self):
-        self.driver = webdriver.Firefox()
-        self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
-        self.login()
-        # Wait
-        self.driver_wait = Wait(self.driver)
-        # Generic Elements
-        self.gen_elem_page = GeneralElementsPage(self.driver)
-        # Go to Admin Page
-        self.nav_page = NavPage(self.driver)
-        self.nav_page.click_admin()
-        # Go to Person Area
-        self.nav_page.find_people_link().click()
+#     def setUp(self):
+#         self.driver = webdriver.Firefox()
+#         self.wait = webdriver.support.ui.WebDriverWait(self.driver, 10)
+#         self.login()
+#         # Wait
+#         self.driver_wait = Wait(self.driver)
+#         # Generic Elements
+#         self.gen_elem_page = GeneralElementsPage(self.driver)
+#         # Go to Admin Page
+#         self.nav_page = NavPage(self.driver)
+#         self.nav_page.click_admin()
+#         # Go to Person Area
+#         self.nav_page.find_people_link().click()
 
-    def tearDown(self):
-        self.driver.close()
+#     def tearDown(self):
+#         self.driver.close()
 
-    def test_ordering(self):
-        # ASC
-        self.driver.find_element_by_class_name("t-sort-username").click()
-        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual("aaron", usernames[0].text)
-        # DESC
-        self.driver.find_element_by_class_name("t-sort-username").click()
-        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual("voluptate", usernames[0].text)
+#     def test_ordering(self):
+#         # ASC
+#         self.driver.find_element_by_class_name("t-sort-username").click()
+#         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+#         self.assertEqual("aaron", usernames[0].text)
+#         # DESC
+#         self.driver.find_element_by_class_name("t-sort-username").click()
+#         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+#         self.assertEqual("voluptate", usernames[0].text)
 
-    def test_ordering_multiple(self):
-        # order: first_name, username
-        self.driver.find_element_by_class_name("t-sort-first-name").click()
-        self.driver.find_element_by_class_name("t-sort-username").click()
-        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual("dolore", usernames[0].text)
-        fullnames = self.wait_for_xhr_request("t-person-fullname", plural=True)
-        self.assertEqual("A N", fullnames[0].text)
-        self.assertEqual("A N", fullnames[1].text)
-        # order: first_name, -username
-        self.driver.find_element_by_class_name("t-sort-username").click()
-        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual("minim", usernames[0].text)
-        fullnames = self.wait_for_xhr_request("t-person-fullname", plural=True)
-        self.assertEqual("A N", fullnames[0].text)
-        self.assertEqual("A N", fullnames[1].text)
+#     def test_ordering_multiple(self):
+#         # order: first_name, username
+#         self.driver.find_element_by_class_name("t-sort-first-name").click()
+#         self.driver.find_element_by_class_name("t-sort-username").click()
+#         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+#         self.assertEqual("dolore", usernames[0].text)
+#         fullnames = self.wait_for_xhr_request("t-person-fullname", plural=True)
+#         self.assertEqual("A N", fullnames[0].text)
+#         self.assertEqual("A N", fullnames[1].text)
+#         # order: first_name, -username
+#         self.driver.find_element_by_class_name("t-sort-username").click()
+#         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+#         self.assertEqual("minim", usernames[0].text)
+#         fullnames = self.wait_for_xhr_request("t-person-fullname", plural=True)
+#         self.assertEqual("A N", fullnames[0].text)
+#         self.assertEqual("A N", fullnames[1].text)
 
-    def test_search(self):
-        people = self.wait_for_xhr_request("t-person-data", plural=True)
-        self.assertEqual(len(people), 10)
-        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('a')
-        people = self.wait_for_xhr_request("t-person-data", plural=True)
-        self.assertEqual(len(people), 3)
-        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('aaaaa')
-        with self.assertRaises(NoSuchElementException):
-            people = self.driver.find_element_by_class_name("t-person-data")
+#     def test_search(self):
+#         people = self.wait_for_xhr_request("t-person-data", plural=True)
+#         self.assertEqual(len(people), 10)
+#         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('a')
+#         people = self.wait_for_xhr_request("t-person-data", plural=True)
+#         self.assertEqual(len(people), 3)
+#         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('aaaaa')
+#         with self.assertRaises(NoSuchElementException):
+#             people = self.driver.find_element_by_class_name("t-person-data")
 
-    def test_search_ordering(self):
-        # Search
-        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('a')
-        people = self.wait_for_xhr_request("t-person-data", plural=True)
-        self.assertEqual(len(people), 3)
-        # Order
-        self.driver.find_element_by_class_name("t-sort-first-name").click()
-        self.driver.find_element_by_class_name("t-sort-username").click()
-        # order: first_name, -username
-        self.driver.find_element_by_class_name("t-sort-username").click()
-        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual("minim", usernames[0].text)
-        # Search maintained
-        people = self.wait_for_xhr_request("t-person-data", plural=True)
-        self.assertEqual(len(people), 4)
+#     def test_search_ordering(self):
+#         # Search
+#         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('a')
+#         people = self.wait_for_xhr_request("t-person-data", plural=True)
+#         self.assertEqual(len(people), 3)
+#         # Order
+#         self.driver.find_element_by_class_name("t-sort-first-name").click()
+#         self.driver.find_element_by_class_name("t-sort-username").click()
+#         # order: first_name, -username
+#         self.driver.find_element_by_class_name("t-sort-username").click()
+#         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+#         self.assertEqual("minim", usernames[0].text)
+#         # Search maintained
+#         people = self.wait_for_xhr_request("t-person-data", plural=True)
+#         self.assertEqual(len(people), 4)
 
 
 if __name__ == "__main__":
