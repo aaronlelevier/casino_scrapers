@@ -32,7 +32,7 @@
               <span class="t-filter-username glyphicon glyphicon-filter pull-right" {{action 'toggleFilterModal' 'username'}}></span>
             </th>
             <th><span {{action "sortBy" "first_name"}} class="t-sort-first-name-dir glyphicon {{if (query-param-asc "first_name" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-first-name">{{t "admin.person.label.name"}}</a></span>
-              <span class="t-filter-first-name glyphicon glyphicon-filter pull-right" {{action 'toggleFilterModal' 'first_name'}}></span>
+              <span class="t-filter-fullname glyphicon glyphicon-filter pull-right" {{action 'toggleFilterModal' 'fullname'}}></span>
             </th>
             <th><span {{action "sortBy" "title"}} class="t-sort-title-dir glyphicon {{if (query-param-asc "title" sort) "glyphicon-chevron-up" "glyphicon-chevron-down"}}"><a href="#" class="t-sort-title">{{t "admin.person.label.title"}}</a></span>
               <span class="t-filter-title glyphicon glyphicon-filter pull-right" {{action 'toggleFilterModal' 'title'}}></span>
@@ -46,7 +46,7 @@
           {{#link-to 'admin.people.person' person.id tagName="tr" class="t-person-data"}}
           <td><input type="checkbox" /></td>
           <td class="t-person-username">{{person.username}}</td>
-          <td class="t-person-fullname">{{person.full_name}}</td>
+          <td class="t-person-fullname">{{person.fullname}}</td>
           <td class="t-person-title">{{person.title}}</td>
           <td class="t-person-role-name">{{person.role.name}}</td>
           <td class="text-right t-person-employee-id">{{person.employee_id}}</td>

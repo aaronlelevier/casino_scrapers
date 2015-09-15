@@ -30,13 +30,13 @@ module('unit: person test', {
     }
 });
 
-test('full_name property is a computed of first and last', (assert) => {
+test('fullname property is a computed of first and last', (assert) => {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id, first_name: PEOPLE_DEFAULTS.first_name, last_name: PEOPLE_DEFAULTS.last_name});
-    assert.equal(person.get('full_name'), PEOPLE_DEFAULTS.first_name + ' ' + PEOPLE_DEFAULTS.last_name);
+    assert.equal(person.get('fullname'), PEOPLE_DEFAULTS.first_name + ' ' + PEOPLE_DEFAULTS.last_name);
     person.set('first_name', 'wat');
-    assert.equal(person.get('full_name'), 'wat ' + PEOPLE_DEFAULTS.last_name);
+    assert.equal(person.get('fullname'), 'wat ' + PEOPLE_DEFAULTS.last_name);
     person.set('last_name', 'man');
-    assert.equal(person.get('full_name'), 'wat man');
+    assert.equal(person.get('fullname'), 'wat man');
 });
 
 test('related phone numbers are not dirty when no phone numbers present', (assert) => {

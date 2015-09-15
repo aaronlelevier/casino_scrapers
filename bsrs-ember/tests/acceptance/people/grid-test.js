@@ -254,6 +254,10 @@ test('clicking the same sort option over and over will flip the direction', func
 });
 
 test('full text search will filter down the result set and query django accordingly', function(assert) {
+    let find_four = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=lelevier&fullname__icontains=ewcomer';
+    xhr(find_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:lelevier,fullname:ewcomer', 1));
+    let find_three = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7&fullname__icontains=ewcomer';
+    xhr(find_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7,fullname:S', 1));
     let find_two = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7';
     xhr(find_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7', 1));
     let find_one = PREFIX + BASE_URL + '/?page=1&title__icontains=wat';
@@ -285,5 +289,18 @@ test('full text search will filter down the result set and query django accordin
         assert.equal(currentURL(),PEOPLE_URL + '?find=title%3Awat%2Cusername%3A7');
         assert.equal(find('.t-person-data').length, 1);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'scott17');
+    });
+    click('.t-filter-fullname');
+    filterGrid('fullname', 'ewcomer');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?find=title%3Awat%2Cusername%3A7%2Cfullname%3Aewcomer');
+        assert.equal(find('.t-person-data').length, 1);
+        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'scott17');
+    });
+    click('.t-filter-fullname');
+    filterGrid('username', 'lelevier');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?find=title%3Awat%2Cusername%3Alelevier%2Cfullname%3Aewcomer');
+        assert.equal(find('.t-person-data').length, 0);
     });
 });

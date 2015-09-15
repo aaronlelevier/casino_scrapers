@@ -16,11 +16,11 @@ module('filter-by unit tests');
 
 test('will update filter field/placeholder/target/toggle properties on calling ember object', function(assert) {
     let subject = new FakeComponent();
-    let result = subject.run('full_name');
-    assert.equal(subject.get('filterField'), 'full_name');
+    let result = subject.run('fullname');
+    assert.equal(subject.get('filterField'), 'fullname');
     assert.equal(subject.get('toggleFilter'), true);
-    assert.equal(subject.get('targetFilter'), '.t-filter-full-name');
-    assert.equal(subject.get('filterPlaceholder'), 'Search full_name');
+    assert.equal(subject.get('targetFilter'), '.t-filter-fullname');
+    assert.equal(subject.get('filterPlaceholder'), 'Search fullname');
 });
 
 test('will toggle filter off when no column name incoming', function(assert) {

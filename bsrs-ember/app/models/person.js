@@ -21,7 +21,7 @@ var Person = Model.extend(NewMixin, CopyMixin, {
     address_fks: [],
     person_location_fks: [],
     isModelDirty: false,
-    full_name: Ember.computed('first_name', 'last_name', function() {
+    fullname: Ember.computed('first_name', 'last_name', function() {
         var first_name = this.get('first_name');
         var last_name = this.get('last_name');
         return first_name + ' ' + last_name;
