@@ -59,7 +59,6 @@ var PhoneNumberMixin = Ember.Mixin.create({
     }),
     phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty'),
     savePhoneNumbers() {
-        this.cleanupPhoneNumberFKs();//SCOTT: put this after so don't have to call again in cleanupPhoneNumber?
         this.cleanupPhoneNumbers();
         let phone_numbers = this.get('phone_numbers');
         phone_numbers.forEach((num) => {

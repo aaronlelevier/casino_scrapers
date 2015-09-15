@@ -21,7 +21,6 @@ var AddressMixin = Ember.Mixin.create({
         });
     }),
     saveAddresses() {
-        this.cleanupAddressFKs();//SCOTT: put this after so don't have to call again in cleanupPhoneNumber?
         this.cleanupAddresses();
         let addresses = this.get('addresses');
         addresses.forEach((address) => {
