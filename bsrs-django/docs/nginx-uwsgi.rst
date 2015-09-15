@@ -15,14 +15,31 @@ Python 3.4
     # This will install pip3.4 already
 
 
-PostgreSQL / Virtualenv
-=======================
+PostgreSQL
+==========
 
 .. code-block::
 
     # pre-requisite for "psycopg2" or else will get this error:
     # * Error: pg_config executable not found. *
     sudo yum install postgresql postgresql-devel
+
+    # create separate DB for persistent deploy
+    createdb persistent -U bsdev -O bsdev
+
+    # enable ``Django`` settings/persistent.py
+    export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
+
+    # run initial migrations (no data loaded at this point)
+    ./manage.py migrate
+
+    # initial data (only required for initial setup)
+    ./manage.py loaddata fixtures/jenkins.json
+    ./manage.py loaddata fixtures/jenkins_custom.json
+
+
+Virtualenv
+==========
 
     # creat Python3 virtualenv
     virtualenv -p /usr/local/bin/python3.4 ~/.virtualenvs/bs_py34
@@ -38,6 +55,7 @@ PostgreSQL / Virtualenv
     pip3 install -r requirements.txt
 
 
+
 Nginx
 =====
 
@@ -46,8 +64,10 @@ Uwsgi
 
 .. code-block::
 
-    # test.py
+    # check that uWSGI is installed globally
     uwsgi --http :8003 --wsgi-file test.py
 
     # w/ django - simple
-    uwsgi --http :8003 --chdir /www/django/releases/persistent/bsrs/python3/ --wsgi-file bigsky.wsgi --no-site
+    uwsgi --http :8003 --home /home/bsdev/.virtualenvs/bs_py34 --chdir /www/django/releases/persistent/bsrs/python3/ --wsgi-file bigsky.wsgi --no-site
+
+    uwsgi --http :8003 --home /home/bsdev/.virtualenvs/bs_py34 --chdir /www/django/releases/persistent/bsrs/python3/ --wsgi-file bigsky.wsgi --no-site
