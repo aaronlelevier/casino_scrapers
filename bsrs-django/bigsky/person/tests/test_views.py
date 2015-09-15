@@ -713,37 +713,37 @@ class DRFFiltersTests(TestCase):
 
     def test_startswith(self):
         letter = 'A'
-        response = self.client.get('/api/admin/people/?first_name__startswith={}'
+        response = self.client.get('/api/admin/people/?fullname__startswith={}'
             .format(letter))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(
             data['count'],
-            Person.objects.filter(first_name__startswith=letter).count()
+            Person.objects.filter(fullname__startswith=letter).count()
         )
 
     def test_contains(self):
         # Case-sensitive
         letter = 'T'
-        response = self.client.get('/api/admin/people/?first_name__contains={}'
+        response = self.client.get('/api/admin/people/?fullname__contains={}'
             .format(letter))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(
             data['count'],
-            Person.objects.filter(first_name__contains=letter).count()
+            Person.objects.filter(fullname__contains=letter).count()
         )
 
     def test_icontains(self):
         # Not Case-sensitive
         letter = 'T'
-        response = self.client.get('/api/admin/people/?first_name__icontains={}'
+        response = self.client.get('/api/admin/people/?fullname__icontains={}'
             .format(letter))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(
             data['count'],
-            Person.objects.filter(first_name__icontains=letter).count()
+            Person.objects.filter(fullname__icontains=letter).count()
         )
 
 

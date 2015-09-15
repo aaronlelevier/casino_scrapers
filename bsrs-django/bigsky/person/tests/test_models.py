@@ -103,7 +103,7 @@ class PersonTests(TestCase):
         self.assertIsNotNone(self.person.status)
         self.assertIsNotNone(self.person.password_expire_date)
         self.assertEqual(
-            self.person.name,
+            self.person.fullname,
             self.person.first_name + ' ' + self.person.last_name
         )
 
