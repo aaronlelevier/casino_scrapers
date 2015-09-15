@@ -291,7 +291,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         # DESC
         self.driver.find_element_by_class_name("t-sort-username").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual("voluptate", usernames[0].text)
+        self.assertEqual("ullamco", usernames[0].text)
 
     def test_ordering_multiple(self):
         # order: first_name, username
