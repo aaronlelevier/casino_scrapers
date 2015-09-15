@@ -20,7 +20,7 @@ const BACKSPACE = {keyCode: 8};
 
 var application, store;
 
-module('Acceptance | people-grid-list', {
+module('sco Acceptance | people-grid-list', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

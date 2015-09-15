@@ -1,11 +1,11 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import MultiSort from 'bsrs-ember/utilities/sort';
-import SortBy from 'bsrs-ember/utilities/sort-by';
+import SortBy from 'bsrs-ember/mixins/sort-by';
 import FilterBy from 'bsrs-ember/mixins/filter-by';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
 
-export default Ember.Component.extend(FilterBy, UpdateFind, {
+export default Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
     itemsPerPage: 10,
     toggleFilter: false,
     classNames: ['wrapper'],
@@ -110,7 +110,7 @@ export default Ember.Component.extend(FilterBy, UpdateFind, {
         },
         sortBy: function(column) {
             let current = this.get('sort');
-            let sorted = SortBy.reorder(current, column);
+            let sorted = this.get('reorder')(current, column);
             this.setProperties({page: 1, sort: sorted});
         },
         toggleFilterModal: function(column) {

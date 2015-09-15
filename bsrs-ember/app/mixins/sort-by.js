@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var SortBy = Ember.Object.extend().reopenClass({
+var SortBy = Ember.Mixin.create({
     reorder: function(currentSort, column) {
         let sorted = [];
         let existing = -1;
