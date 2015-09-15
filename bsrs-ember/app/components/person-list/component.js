@@ -9,7 +9,7 @@ export default Ember.Component.extend(FilterBy, UpdateFind, {
     itemsPerPage: 10,
     toggleFilter: false,
     classNames: ['wrapper'],
-    searchable: ['first_name', 'title'],
+    searchable: ['username', 'fullname', 'title'],
     eventbus: Ember.inject.service(),
     _setup: Ember.on('init', function() {
         this.set('filterModel', Ember.Object.create()); //TODO: push this down each time from the route
