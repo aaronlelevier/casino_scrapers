@@ -98,14 +98,14 @@ def create_23_people():
     while count < 23:
         try:
             # setup
-            username = create.random_lorem(words=1)
-            first_name = create.random_lorem(words=1)
-            last_name = create.random_lorem(words=1)
+            kwargs = {}
+            for ea in ['username', 'first_name', 'last_name', 'title']:
+                kwargs[ea] = create.random_lorem(words=1)
+
             role = random.choice(roles)
             locations = Location.objects.filter(location_level=role.location_level)
             # create
-            person = mommy.make(Person, username=username, first_name=first_name, 
-                last_name=last_name, role=role,locations=locations)
+            person = mommy.make(Person, role=role,locations=locations, **kwargs)
             person.set_password(PASSWORD)
             person.save()
         except IntegrityError:

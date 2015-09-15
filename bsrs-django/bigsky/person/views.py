@@ -80,9 +80,9 @@ class PersonViewSet(BaseModelViewSet):
         search = self.request.query_params.get('search', None)
         if search:
             queryset = queryset.filter(
-                Q(first_name__icontains=search) | \
                 Q(username__icontains=search) | \
-                Q(fullname__icontains=search)
+                Q(fullname__icontains=search) | \
+                Q(title__icontains=search)
             )
 
         return queryset
