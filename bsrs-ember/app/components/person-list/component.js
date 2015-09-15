@@ -81,6 +81,25 @@ export default Ember.Component.extend(FilterBy, UpdateFind, {
         }
         return pages;
     }),
+    first: Ember.computed('page', function() {
+        let current = parseInt(this.get('page'), 10);
+        return current === 1 ? undefined : 1;
+    }),
+    last: Ember.computed('page', 'pages', function() {
+        let available = this.get('pages').length;
+        let current = parseInt(this.get('page'), 10);
+        return current !== available ? available : undefined;
+    }),
+    next: Ember.computed('page', 'pages', function() {
+        let available = this.get('pages').length;
+        let current = parseInt(this.get('page'), 10);
+        let next = current + 1;
+        return next <= available ? next : undefined;
+    }),
+    previous: Ember.computed('page', function() {
+        let previous = this.get('page') - 1;
+        return previous > 0 ? previous : undefined;
+    }),
     actions: {
         keyup: function(search) {
             this.setProperties({page: 1, search: search});
