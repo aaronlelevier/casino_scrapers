@@ -209,7 +209,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         )
         # Go to Create Person view
         person_page.find_new_link().click()
-        username = rand_chars()
+        username = "lmno_"+rand_chars()
         password = "bobber1"
         role = "RNfkmZFxsz"
         person = InputHelper(username=username, password=password)

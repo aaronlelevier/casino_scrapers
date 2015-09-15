@@ -99,8 +99,8 @@ def create_23_people():
         try:
             # setup
             username = create.random_lorem(words=1)
-            first_name = random.choice(string.ascii_uppercase)
-            last_name = random.choice(string.ascii_uppercase)
+            first_name = create.random_lorem(words=1)
+            last_name = create.random_lorem(words=1)
             role = random.choice(roles)
             locations = Location.objects.filter(location_level=role.location_level)
             # create
