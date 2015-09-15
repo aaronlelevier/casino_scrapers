@@ -17,7 +17,7 @@ from django.core.wsgi import get_wsgi_application
 _application = get_wsgi_application()
 
 # Add the app directories to the PYTHONPATH
-os.environ['DJANGO_SETTINGS_MODULE'] = 'bigsky.settings.prod'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'bigsky.settings.ci'
 
 
 def application(environ, start_response):
