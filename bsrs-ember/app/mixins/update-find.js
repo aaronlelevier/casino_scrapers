@@ -11,7 +11,7 @@ var UpdateFind = Ember.Mixin.create({
         if(Ember.$.inArray(column, keysOnlyArray) === -1) {
             newFind = find && find.length > 0 ? find + ',' + hash : hash;
         } else {
-            let regex = new RegExp('(' + column +'\\:\\w*)(?:,)*');
+            let regex = new RegExp(column +':\\w*,?');
             let replacedFind = find.replace(regex, hash + ',');
             newFind = replacedFind.replace(/,+$/, '');
         }
