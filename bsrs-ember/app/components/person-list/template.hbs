@@ -59,15 +59,15 @@
     <footer>
         <nav class="text-center">
           <ul class="pagination t-pages">
-            <li class="t-first" disabled={{if first disabled ''}}>{{#link-to 'admin.people.index' (query-params page=first)}}first{{/link-to}}</li>
-            <li class="t-previous" disabled={{if previous disabled ''}}>{{#link-to 'admin.people.index' (query-params page=previous)}}previous{{/link-to}}</li>
+            <li class="t-first {{if first '' 'disabled'}}" disabled={{if first disabled ''}}>{{#link-to 'admin.people.index' (query-params page=first) disabled=notFirst}}first{{/link-to}}</li>
+            <li class="t-previous {{if previous '' 'disabled'}}" disabled={{if previous disabled ''}}>{{#link-to 'admin.people.index' (query-params page=previous) disabled=notPrevious}}previous{{/link-to}}</li>
             {{#each pages as |page|}}
               <li class="t-page">
                   {{#link-to 'admin.people.index' (query-params page=page)}}{{page}}{{/link-to}}
               </li>
             {{/each}}
-            <li class="t-next" disabled={{if next disabled ''}}>{{#link-to 'admin.people.index' (query-params page=next)}}next{{/link-to}}</li>
-            <li class="t-last" disabled={{if last disabled ''}}>{{#link-to 'admin.people.index' (query-params page=last)}}last{{/link-to}}</li>
+            <li class="t-next {{if next '' 'disabled'}}" disabled={{if next disabled ''}}>{{#link-to 'admin.people.index' (query-params page=next) disabled=notNext}}next{{/link-to}}</li>
+            <li class="t-last {{if last '' 'disabled'}}" disabled={{if last disabled ''}}>{{#link-to 'admin.people.index' (query-params page=last) disabled=notLast}}last{{/link-to}}</li>
           </ul>
         </nav>
     </footer>

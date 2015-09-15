@@ -8,6 +8,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_people_url;
@@ -87,51 +88,46 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-person-data').length, 10);
-        let pagination = find('.t-pages');
-        assert.equal(pagination.find('.t-previous').attr('disabled'), 'disabled');
-        assert.equal(pagination.find('.t-next').attr('disabled'), undefined);
-        assert.equal(pagination.find('.t-first').attr('disabled'), 'disabled');
-        assert.equal(pagination.find('.t-last').attr('disabled'), undefined);
+        isDisabledElement('.t-first');
+        isDisabledElement('.t-previous');
+        isNotDisabledElement('.t-next');
+        isNotDisabledElement('.t-last');
     });
     click('.t-next a');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL + '?page=2');
         assert.equal(find('.t-person-data').length, 9);
-        let pagination = find('.t-pages');
-        assert.equal(pagination.find('.t-previous').attr('disabled'), undefined);
-        assert.equal(pagination.find('.t-next').attr('disabled'), 'disabled');
-        assert.equal(pagination.find('.t-first').attr('disabled'), undefined);
-        assert.equal(pagination.find('.t-last').attr('disabled'), 'disabled');
+        isNotDisabledElement('.t-first');
+        isNotDisabledElement('.t-previous');
+        isDisabledElement('.t-next');
+        isDisabledElement('.t-last');
     });
     click('.t-previous a');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(find('.t-person-data').length, 10);
-        let pagination = find('.t-pages');
-        assert.equal(pagination.find('.t-previous').attr('disabled'), 'disabled');
-        assert.equal(pagination.find('.t-next').attr('disabled'), undefined);
-        assert.equal(pagination.find('.t-first').attr('disabled'), 'disabled');
-        assert.equal(pagination.find('.t-last').attr('disabled'), undefined);
+        isDisabledElement('.t-first');
+        isDisabledElement('.t-previous');
+        isNotDisabledElement('.t-next');
+        isNotDisabledElement('.t-last');
     });
     click('.t-last a');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL + '?page=2');
         assert.equal(find('.t-person-data').length, 9);
-        let pagination = find('.t-pages');
-        assert.equal(pagination.find('.t-previous').attr('disabled'), undefined);
-        assert.equal(pagination.find('.t-next').attr('disabled'), 'disabled');
-        assert.equal(pagination.find('.t-first').attr('disabled'), undefined);
-        assert.equal(pagination.find('.t-last').attr('disabled'), 'disabled');
+        isNotDisabledElement('.t-first');
+        isNotDisabledElement('.t-previous');
+        isDisabledElement('.t-next');
+        isDisabledElement('.t-last');
     });
     click('.t-first a');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(find('.t-person-data').length, 10);
-        let pagination = find('.t-pages');
-        assert.equal(pagination.find('.t-previous').attr('disabled'), 'disabled');
-        assert.equal(pagination.find('.t-next').attr('disabled'), undefined);
-        assert.equal(pagination.find('.t-first').attr('disabled'), 'disabled');
-        assert.equal(pagination.find('.t-last').attr('disabled'), undefined);
+        isDisabledElement('.t-first');
+        isDisabledElement('.t-previous');
+        isNotDisabledElement('.t-next');
+        isNotDisabledElement('.t-last');
     });
 });
 

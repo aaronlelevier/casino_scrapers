@@ -100,6 +100,10 @@ export default Ember.Component.extend(FilterBy, UpdateFind, {
         let previous = this.get('page') - 1;
         return previous > 0 ? previous : undefined;
     }),
+    notNext: Ember.computed.not('next'),
+    notPrevious: Ember.computed.not('previous'),
+    notFirst: Ember.computed.not('first'),
+    notLast: Ember.computed.not('last'),
     actions: {
         keyup: function(search) {
             this.setProperties({page: 1, search: search});
