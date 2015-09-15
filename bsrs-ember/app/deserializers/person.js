@@ -56,7 +56,7 @@ var extract_role = function(model, store) {
 };
 
 var extract_person_location = function(model, store, uuid) {
-    let newly_added_m2m = [];
+    let server_locations_sum = [];
     let person_location_fks = [];
     let prevented_duplicate_m2m = [];
     let all_person_locations = store.find('person-location');
@@ -66,14 +66,14 @@ var extract_person_location = function(model, store, uuid) {
         });
         if(person_locations.length === 0) {
             let pk = uuid.v4();
-            newly_added_m2m.push(pk);
+            server_locations_sum.push(pk);
             store.push('location', location_json);
             store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});
         }else{
             prevented_duplicate_m2m.push(person_locations[0].get('id'));
         }
     });
-    let server_locations_sum = newly_added_m2m.concat(prevented_duplicate_m2m);
+    server_locations_sum.push(...prevented_duplicate_m2m);
     let m2m_to_remove = all_person_locations.filter(function(m2m) {
         return Ember.$.inArray(m2m.get('id'), server_locations_sum) < 0;
     });
