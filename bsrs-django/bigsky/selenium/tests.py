@@ -253,7 +253,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.find_wait_and_assert_elem("t-person-username", username)
         person_page.find_and_assert_elems(username=username, first_name=first_name,
             middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
-        
         ### DELETE
         person_page.find_wait_and_assert_elem("t-person-username", username)
         self.gen_elem_page.click_dropdown_delete()
@@ -315,15 +314,16 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual(len(people), 10)
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('cu')
         people = self.wait_for_xhr_request("t-person-data", plural=True)
-        self.assertEqual(len(people), 5)
+        self.assertEqual(len(people), 10)
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('aaaaa')
         with self.assertRaises(NoSuchElementException):
+            people = self.wait_for_xhr_request("t-person-data", debounce=True)
             people = self.driver.find_element_by_class_name("t-person-data")
 
     def test_search_ordering(self):
         # Search
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('cu')
-        people = self.wait_for_xhr_request("t-person-data", plural=True)
+        people = self.wait_for_xhr_request("t-person-data", plural=True, debounce=True)
         self.assertEqual(len(people), 5)
         # Order
         self.wait_for_xhr_request("t-sort-title").click()

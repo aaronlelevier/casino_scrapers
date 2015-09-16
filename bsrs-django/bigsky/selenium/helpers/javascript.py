@@ -9,7 +9,9 @@ class JavascriptMixin(object):
     requires the driver to check for elements.
     """
     
-    def wait_for_xhr_request(self, selector, plural=False, just_refreshed=False):
+    def wait_for_xhr_request(self, selector, plural=False, just_refreshed=False, debounce=False):
+        if debounce:
+            time.sleep(.5)
         for w in range(10):
             print "waiting for xhr callback...{}".format(selector)
             if(self.driver.execute_script("return $.active") == 0):
