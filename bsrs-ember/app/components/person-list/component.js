@@ -110,7 +110,7 @@ export default Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
         },
         sortBy: function(column) {
             let current = this.get('sort');
-            let sorted = this.get('reorder')(current, column);
+            let sorted = this.reorder(current, column);
             this.setProperties({page: 1, sort: sorted});
         },
         toggleFilterModal: function(column) {
