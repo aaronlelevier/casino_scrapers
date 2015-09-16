@@ -2,7 +2,7 @@ import Ember from 'ember';
 import { test } from 'qunit';
 import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
-import {xhr} from 'bsrs-ember/tests/helpers/xhr';
+import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
@@ -18,14 +18,14 @@ const SPACEBAR = {keyCode: 32};
 const NUMBER_EIGHT = {keyCode: 56};
 const BACKSPACE = {keyCode: 8};
 
-var application, store;
+var application, store, endpoint, list_xhr;
 
 module('Acceptance | people-grid-list', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        var endpoint = PREFIX + BASE_URL + '/?page=1';
-        xhr(endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.list());
+        endpoint = PREFIX + BASE_URL + '/?page=1';
+        list_xhr = xhr(endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.list());
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -313,28 +313,18 @@ test('full text search will filter down the result set and query django accordin
     xhr(find_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7', 1));
     let find_one = PREFIX + BASE_URL + '/?page=1&title__icontains=wat';
     xhr(find_one ,"GET",null,{},200,PEOPLE_FIXTURES.fulltext('title:wat', 1));
-    let page_two = PREFIX + BASE_URL + '/?page=2';
-    xhr(page_two ,"GET",null,{},200,PEOPLE_FIXTURES.list_two());
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-page:eq(1) a');
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL + '?page=2');
-        assert.equal(find('.t-person-data').length, 9);
-        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'scott11');
-    });
-    click('.t-filter-username');
     filterGrid('title', 'wat');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?find=title%3Awat');
         assert.equal(find('.t-person-data').length, 8);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'scott11');
     });
-    click('.t-filter-title');
     filterGrid('username', '7');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?find=title%3Awat%2Cusername%3A7');
@@ -353,5 +343,42 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?find=title%3Awat%2Cusername%3Alelevier%2Cfullname%3Aewcomer');
         assert.equal(find('.t-person-data').length, 0);
+    });
+});
+
+test('loading screen shown before xhr resolves', function(assert) {
+    visitSync(PEOPLE_URL);
+    Ember.run.later(function() {
+        assert.equal(find('.t-person-data').length, 0);
+        assert.equal(find('.t-no-content').length, 0);
+        assert.equal(find('.t-pages').length, 0);
+        assert.equal(find('.t-grid-loading-graphic').length, 1);
+    }, 0);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+        assert.equal(find('.t-person-data').length, 10);
+        assert.equal(find('.t-pages').length, 1);
+        assert.equal(find('.t-no-content').length, 0);
+        assert.equal(find('.t-grid-loading-graphic').length, 0);
+    });
+});
+
+test('loading screen shown before xhr resolves even when no data is returned', function(assert) {
+    clearxhr(list_xhr);
+    xhr(endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.empty());
+    visitSync(PEOPLE_URL);
+    Ember.run.later(function() {
+        assert.equal(find('.t-person-data').length, 0);
+        assert.equal(find('.t-no-content').length, 0);
+        assert.equal(find('.t-pages').length, 0);
+        assert.equal(find('.t-grid-loading-graphic').length, 1);
+        store.clear('person');
+    }, 0);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL);
+        assert.equal(find('.t-person-data').length, 0);
+        assert.equal(find('.t-no-content').length, 1);
+        assert.equal(find('.t-pages').length, 0);
+        assert.equal(find('.t-grid-loading-graphic').length, 0);
     });
 });

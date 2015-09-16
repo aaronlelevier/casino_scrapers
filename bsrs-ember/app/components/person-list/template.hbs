@@ -23,6 +23,9 @@
       {{/tether-dialog}}
     {{/if}}
 
+{{#if model.isLoaded}}
+{{#if model.content}}
+
     <section class="docSection docSectionWithFooter">
       <table class="table table-striped table-hover">
         <thead>
@@ -56,6 +59,16 @@
       </table>
 
     </section>
+
+{{else}}
+  <div class="t-no-content"><h2>No data available</h2></div>
+{{/if}}
+{{else}}
+  {{grid-loading-graphic}}
+{{/if}}
+
+{{#if model.isLoaded}}
+  {{#if model.content}}
     <footer>
         <nav class="text-center">
           <ul class="pagination t-pages">
@@ -71,4 +84,7 @@
           </ul>
         </nav>
     </footer>
+  {{/if}}
+{{/if}}
+
 </div>

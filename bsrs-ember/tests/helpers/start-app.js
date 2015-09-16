@@ -13,7 +13,31 @@ function filterGrid(app, column, text) {
   return app.testHelpers.wait();
 }
 
+function visitSync(app, url) {
+    var router = app.__container__.lookup('router:main');
+    var shouldHandleURL = false;
+
+    app.boot().then(function () {
+      router.location.setURL(url);
+
+      if (shouldHandleURL) {
+        Ember.run(app.__deprecatedInstance__, 'handleURL', url);
+      }
+    });
+
+    if (app._readinessDeferrals > 0) {
+      router['initialURL'] = url;
+      Ember.run(app, 'advanceReadiness');
+      delete router['initialURL'];
+    } else {
+      shouldHandleURL = true;
+    }
+
+    return app.testHelpers.wait();
+}
+
 Ember.Test.registerAsyncHelper('filterGrid', filterGrid);
+Ember.Test.registerHelper('visitSync', visitSync);
 
 export default function startApp(attrs) {
     var application;

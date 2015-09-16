@@ -46,6 +46,7 @@ export default Ember.Object.extend({
         }
         var all = this.get('store').find('person');
         PromiseMixin.xhr(endpoint).then((response) => {
+            all.set('isLoaded', true);
             all.set('count', response.count);
             this.get('PersonDeserializer').deserialize(response);
         });
