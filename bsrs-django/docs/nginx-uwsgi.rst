@@ -41,6 +41,8 @@ PostgreSQL
 Virtualenv
 ==========
 
+.. code-block::
+
     # creat Python3 virtualenv
     virtualenv -p /usr/local/bin/python3.4 ~/.virtualenvs/bs_py34
 
@@ -58,6 +60,26 @@ Virtualenv
 
 Nginx
 =====
+
+.. code-block::
+
+    include /etc/nginx/conf.d/*.conf;
+
+    sudo service nginx restart
+    sudo service nginx status
+
+
+Static Assets
+=============
+
+.. code-block::
+
+    sudo ~/.virtualenvs/bs_py34/bin/python manage.py collectstatic --noinput
+    # or (w/ virtualenv activated)
+    sudo python manage.py collectstatic --noinput 
+
+
+
 
 Uwsgi
 =====
