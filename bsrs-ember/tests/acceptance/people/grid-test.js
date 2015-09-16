@@ -160,7 +160,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
         assert.equal(find('.t-person-data').length, 10);
-        // assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
 });
 
