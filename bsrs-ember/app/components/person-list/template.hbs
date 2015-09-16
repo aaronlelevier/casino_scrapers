@@ -74,7 +74,7 @@
           <ul class="pagination t-pages">
             <li class="t-first {{if first '' 'disabled'}}" disabled={{if first disabled ''}}>{{#link-to 'admin.people.index' (query-params page=first) disabled=notFirst}}first{{/link-to}}</li>
             <li class="t-previous {{if previous '' 'disabled'}}" disabled={{if previous disabled ''}}>{{#link-to 'admin.people.index' (query-params page=previous) disabled=notPrevious}}previous{{/link-to}}</li>
-            {{#each pages as |page|}}
+            {{#each shown_pages as |page|}}
               <li class="t-page">
                   {{#link-to 'admin.people.index' (query-params page=page)}}{{page}}{{/link-to}}
               </li>

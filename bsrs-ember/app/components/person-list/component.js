@@ -81,6 +81,17 @@ export default Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
         }
         return pages;
     }),
+    shown_pages: Ember.computed('pages', 'page', function() {
+        let all = this.get('pages');
+        let available = all.length;
+        let current = parseInt(this.get('page'), 10);
+        if(current > 6) {
+            let max = current + 4;
+            let min = current - 6;
+            return max <= available ? all.slice(min, max) : all.slice(available - 10, available);
+        }
+        return all.slice(0, 10);
+    }),
     first: Ember.computed('page', function() {
         let current = parseInt(this.get('page'), 10);
         return current === 1 ? undefined : 1;

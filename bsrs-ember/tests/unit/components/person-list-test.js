@@ -20,6 +20,7 @@ module('unit: person-list', {
         store = null;
     }
 });
+
 test('knows how to sort a list of people even when sortable column is null', (assert) => {
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: PEOPLE_DEFAULTS.username, title: PEOPLE_DEFAULTS.title});
     var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
@@ -220,4 +221,75 @@ test('found filter will only match those exactly in all columns', (assert) => {
     subject.set('find', 'username:xyyv,foo:babcdeqr,title:deaabc');
     people = subject.get('found_content');
     assert.equal(people.get('length'), 0);
+});
+
+test('rolling pagination shows only ten records at a time', (assert) => {
+    for(var i=1; i < 179; i++) {
+        store.push('person', {id: i});
+    }
+    let model = store.find('person');
+    model.set('count', 179);
+    let subject = PersonListComponent.create({page: 1, model: model, eventbus: eventbus});
+    let current = subject.get('page');
+    assert.equal(current, 1);
+    let pages = subject.get('pages');
+    assert.equal(pages.length, 18);
+    let shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 2);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 3);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 4);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 5);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 6);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 7);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    subject.set('page', 8);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    subject.set('page', 9);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+    subject.set('page', 10);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+    subject.set('page', 11);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+    subject.set('page', 12);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+    subject.set('page', 13);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+    subject.set('page', 14);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    subject.set('page', 15);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    subject.set('page', 16);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    subject.set('page', 17);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    subject.set('page', 18);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    store.push('person', {id: 180});
+    store.push('person', {id: 181});
+    model.set('count', 181);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
 });
