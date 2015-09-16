@@ -2,15 +2,15 @@ import Ember from 'ember';
 
 var PhoneNumberMixin = Ember.Mixin.create({
     phone_numbers_all: Ember.computed(function() {
-        var store = this.get('store');
-        var filter = function(phone_number) {
+        let store = this.get('store');
+        let filter = function(phone_number) {
             return this.get('id') === phone_number.get('person_fk');
         };
         return store.find('phonenumber', filter.bind(this), ['removed']);
     }),
     phone_numbers: Ember.computed(function() {
-        var store = this.get('store');
-        var filter = function(phone_number) {
+        let store = this.get('store');
+        let filter = function(phone_number) {
             return this.get('id') === phone_number.get('person_fk') && !phone_number.get('removed');
         };
         return store.find('phonenumber', filter.bind(this), ['removed']);
@@ -20,7 +20,7 @@ var PhoneNumberMixin = Ember.Mixin.create({
             return ph_num.get('id');
         });
     }),
-    phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
+    phoneNumbersIsDirty: Ember.computed('phone_numbers.[]', 'phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
         let phone_number_dirty = false;
         let phone_numbers = this.get('phone_numbers');
         let phone_fks = this.get('phone_number_fks');
@@ -70,10 +70,11 @@ var PhoneNumberMixin = Ember.Mixin.create({
         let phone_numbers_to_remove = [];
         let phone_numbers = this.get('phone_numbers_all');
         phone_numbers.forEach((num) => {
-            //rollback scenario
+            //remove
             if (num.get('removed')) {
                 num.set('removed', undefined);
             }
+            //add
             if(num.get('invalid_number') && num.get('isNotDirty')) {
                 phone_numbers_to_remove.push(num.get('id'));
             }

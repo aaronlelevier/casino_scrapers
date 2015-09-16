@@ -2,15 +2,15 @@ import Ember from 'ember';
 
 var AddressMixin = Ember.Mixin.create({
     addresses_all: Ember.computed(function() {
-        var store = this.get('store');
-        var filter = function(address) {
+        let store = this.get('store');
+        let filter = function(address) {
             return this.get('id') === address.get('person_fk');
         };
         return store.find('address', filter.bind(this), ['removed']);
     }),
     addresses: Ember.computed(function() {
-        var store = this.get('store');
-        var filter = function(address) {
+        let store = this.get('store');
+        let filter = function(address) {
             return this.get('id') === address.get('person_fk') && !address.get('removed');
         };
         return store.find('address', filter.bind(this), ['removed']);
@@ -29,9 +29,9 @@ var AddressMixin = Ember.Mixin.create({
     },
     addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state',
                                      'addresses.@each.postal_code', 'addresses.@each.country', 'addresses.@each.type', function() {
-        var address_dirty = false;
-        var addresses = this.get('addresses');
-        var address_fks = this.get('address_fks');
+        let address_dirty = false;
+        let addresses = this.get('addresses');
+        let address_fks = this.get('address_fks');
         let filtered_addresses = addresses.map((address) => {
             return this.copy(address);
         });

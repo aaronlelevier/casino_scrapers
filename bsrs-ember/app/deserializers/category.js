@@ -28,8 +28,6 @@ var CategoryDeserializer = Ember.Object.extend({
     deserialize_list(response) {
         let store = this.get('store');
         response.results.forEach((model) => {
-            model.children_fks = extract_children(model.children, store);
-            delete model.children;
             let category = store.push('category', model);
             category.save();
         });

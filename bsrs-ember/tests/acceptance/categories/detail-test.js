@@ -21,7 +21,7 @@ const CANCEL_BTN = '.t-cancel-btn';
 
 let application, store, endpoint, list_xhr;
 
-module('Acceptance | detail test', {
+module('sco Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -39,8 +39,7 @@ test('clicking a categories name will redirect to the given detail view', (asser
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
-    //TODO : figure out why eq(0) isn't working
-    click('.t-categories-data:eq(1)');
+    click('.t-categories-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
