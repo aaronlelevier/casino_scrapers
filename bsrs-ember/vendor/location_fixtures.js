@@ -13,7 +13,7 @@ var BSRS_LOCATION_FACTORY = (function() {
     factory.prototype.generate = function(i) {
         return {
             id: i,
-            name : this.location_defaults.storeName,
+            name : this.location_defaults.baseStoreName,
             number : this.location_defaults.storeNumber,
             status: this.location_defaults.status,
             location_level: this.location_level_fixtures.detail(),
@@ -25,12 +25,14 @@ var BSRS_LOCATION_FACTORY = (function() {
         var response = [];
         for (var i=1; i <= 5; i++) {
             var uuid = '232z46cf-9fbb-456z-4hc3-59728vu30990';
-            response.push(this.generate(uuid + i));
+            var location = this.generate(uuid + i);
+            location.name = location.name + i;
+            response.push(location);
         }
-        return {'count':3,'next':null,'previous':null,'results': response};
+        return {'count':5,'next':null,'previous':null,'results': response};
     };
     factory.prototype.empty = function() {
-        return {'count':3,'next':null,'previous':null,'results': []};
+        return {'count':0,'next':null,'previous':null,'results': []};
     };
     factory.prototype.detail = function(i) {
         return this.generate(this.location_defaults.idOne);

@@ -7,7 +7,7 @@ var PREFIX = config.APP.NAMESPACE;
 var LOCATION_URL = PREFIX + '/admin/locations/';
 
 var LocationRepo = Ember.Object.extend({
-    locationDeserializer: inject('location'),
+    LocationDeserializer: inject('location'),
     insert(model) {
         return PromiseMixin.xhr(LOCATION_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
@@ -22,13 +22,13 @@ var LocationRepo = Ember.Object.extend({
     },
     find(filter) {
         PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {
-            this.get('locationDeserializer').deserialize(response);
+            this.get('LocationDeserializer').deserialize(response);
         });
         return this.get('store').find('location');
     },
     findById(id) {
         PromiseMixin.xhr(LOCATION_URL + id + '/', 'GET').then((response) => {
-            this.get('locationDeserializer').deserialize(response, id);
+            this.get('LocationDeserializer').deserialize(response, id);
         });
         return this.get('store').find('location', id);
     },

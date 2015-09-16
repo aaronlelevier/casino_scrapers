@@ -7,7 +7,7 @@ import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 
 let container, store, registry;
 
-module('sco unit: location deserializer test', {
+module('unit: location deserializer test', {
     beforeEach() {
         registry = new Ember.Registry();
         container = registry.container();

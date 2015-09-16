@@ -28,6 +28,7 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
+const BASE_LOCATION_URL = BASEURLS.base_locations_url;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const SUBMIT_BTN = '.submit_btn';
@@ -885,6 +886,8 @@ test('when you deep link to the person detail view you can add and save a locati
     people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     people_detail_data.locations = [];
     xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
+    let locations_endpoint = PREFIX + '/admin/locations/';
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, locations: [LOCATION_DEFAULTS.idOne]});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
@@ -911,6 +914,8 @@ test('when you deep link to the person detail view you can alter the locations a
     people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     people_detail_data.locations = [];
     xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
+    let locations_endpoint = PREFIX + '/admin/locations/';
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     click('.selectize-input input');
     click('.t-person-locations-select div.option:eq(0)');
     click('.t-cancel-btn');
@@ -934,5 +939,21 @@ test('when you deep link to the person detail view you can alter the locations a
             assert.equal(previous_location_m2m.get('length'), 1);
             assert.ok(previous_location_m2m.objectAt(0).get('removed'), true);
         });
+    });
+});
+
+test('clicking in the person-locations-select component will fire off xhr to get locations', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(detail_xhr);
+    people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    people_detail_data.locations = [];
+    xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
+    let locations_endpoint = PREFIX + '/admin/locations/';
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+    visit(DETAIL_URL);
+    click('.selectize-input input');
+    let locations = store.find('location');
+    andThen(() => {
+        assert.equal(locations.get('length'), 5);
     });
 });

@@ -53,7 +53,7 @@ test('visiting admin/location', (assert) => {
         let location = store.find('location').objectAt(0);
         assert.ok(location.get('isNotDirty'));
         assert.equal(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
-        assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.baseStoreName);
         assert.equal(find('.t-location-number').val(), LOCATION_DEFAULTS.storeNumber);
     });
     let response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);

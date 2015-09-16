@@ -2,11 +2,12 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import repository from 'bsrs-ember/tests/helpers/repository';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
 
-let store, m2m, m2m_two, person, location_one, location_two, location_three, location_four, run = Ember.run;
+let store, m2m, m2m_two, person, location_one, location_two, location_three, location_four, run = Ember.run, location_repo;
 
 moduleForComponent('person-locations-select', 'integration: person-locations-select test', {
     integration: true,
@@ -19,6 +20,8 @@ moduleForComponent('person-locations-select', 'integration: person-locations-sel
         location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, person_location_fks: [PERSON_LOCATION_DEFAULTS.idTwo]});
         location_three = store.push('location', {id: LOCATION_DEFAULTS.unusedId, name: LOCATION_DEFAULTS.storeNameThree, person_location_fks: [PERSON_LOCATION_DEFAULTS.idThree]});
         location_four = store.push('location', {id: LOCATION_DEFAULTS.anotherId, name: LOCATION_DEFAULTS.storeNameFour, person_location_fks: [PERSON_LOCATION_DEFAULTS.idFour]});
+        location_repo = repository.initialize(this.container, this.registry, 'location');
+        location_repo.find = function() { return store.find('location'); };
     }
 });
 
@@ -136,3 +139,13 @@ test('removing a location will remove from the person-location m2m relationship'
     assert.ok(location_three.get('isNotDirty'));
     assert.ok(location_four.get('isNotDirty'));
 });
+
+// test('when click on input field, component should fetch more data', function(assert) {
+//     this.set('person', person);
+//     this.set('model', person.get('locations'));
+//     this.set('options', store.find('location'));
+//     this.render(hbs`{{person-locations-select model=model person=person options=options}}`);
+//     let $component = this.$('.t-person-locations-select');
+//     assert.equal($component.prop('multiple'), true);
+//     assert.equal($component.find('div.option').length, 2);
+// });

@@ -1,6 +1,10 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
+import injectStore from 'bsrs-ember/utilities/store';
 
-export default Ember.Component.extend({
+var PersonLocationsSelect = Ember.Component.extend({
+    repository: inject('location'),
+    store: injectStore('main'),
     location_ids: Ember.computed('person.person_locations.[]', function() {
         let person = this.get('person');
         return person.get('locations');
@@ -15,6 +19,16 @@ export default Ember.Component.extend({
             let person = this.get('person');
             let location_pk = location.get('id');
             person.remove_location(location_pk);
+        },
+        getLocations() {
+           let repository = this.get('repository'); 
+           let store = this.get('store'); 
+           let locations = repository.find();
+           locations.forEach((location) => {
+               store.push('location', location);
+           });
         }
     }
 });
+
+export default PersonLocationsSelect;
