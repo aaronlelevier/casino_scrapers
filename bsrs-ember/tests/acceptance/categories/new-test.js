@@ -29,7 +29,8 @@ module('Acceptance | category-new', {
             cost_code: CATEGORY_DEFAULTS.costCodeOne,
             label: CATEGORY_DEFAULTS.labelOne,
             subcategory_label: CATEGORY_DEFAULTS.subCatLabelTwo,
-            parent: []
+            parent: [],
+            children: []
         };
         application = startApp();
         store = application.__container__.lookup('store:main');

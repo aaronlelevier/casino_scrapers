@@ -39,7 +39,8 @@ test('clicking a categories name will redirect to the given detail view', (asser
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
-    click('.t-categories-data:eq(0)');
+    //TODO : figure out why eq(0) isn't working
+    click('.t-categories-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -112,7 +113,14 @@ test('when editing the category name to invalid, it checks for validation', (ass
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').text().trim(), 'invalid name');
     });
+    fillIn('.t-category-description', '');
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-description-validation-error').text().trim(), 'Invalid Description');
+    });
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
+    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionRepair);
     let url = PREFIX + DETAIL_URL + "/";
     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo});

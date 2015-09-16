@@ -7,6 +7,7 @@ var PREFIX = config.APP.NAMESPACE;
 var CATEGORY_URL = PREFIX + '/admin/categories/';
 
 var CategoryRepo = Ember.Object.extend({
+    CategoryDeserializer: inject('category'),
     insert(model) {
         return PromiseMixin.xhr(CATEGORY_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
@@ -19,16 +20,13 @@ var CategoryRepo = Ember.Object.extend({
     },
     find() {
         PromiseMixin.xhr(CATEGORY_URL, 'GET').then((response) => {
-            response.results.forEach((category) => {
-                var cat = this.get('store').push('category', category);
-                cat.save();
-            });
+            this.get('CategoryDeserializer').deserialize(response);
         });
         return this.get('store').find('category');
     },
     findById(id) {
         PromiseMixin.xhr(CATEGORY_URL + id + '/', 'GET').then((response) => {
-            this.get('store').push('category', response);
+            this.get('CategoryDeserializer').deserialize(response, id);
         });
         return this.get('store').find('category', id);
     },

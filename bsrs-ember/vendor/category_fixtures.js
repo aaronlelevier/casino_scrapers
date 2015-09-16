@@ -12,7 +12,8 @@ var BSRS_CATEGORY_FACTORY = (function() {
             cost_code: this.category_defaults.costCodeOne,
             label: this.category_defaults.labelOne,
             subcategory_label: this.category_defaults.subCatLabelOne,
-            parent: []
+            parent: [],
+            children: [{id: this.category_defaults.idChild, name: this.category_defaults.nameTwo, description: this.category_defaults.descriptionMaintenance}]
         }
     },
     factory.prototype.list = function() {
@@ -34,6 +35,9 @@ var BSRS_CATEGORY_FACTORY = (function() {
     };
     factory.prototype.put = function(category) {
         var response = this.generate(category.id)
+        response.children = response.children.map(function(child) {
+            return child.id ;
+        });
         for (var key in category) {
             response[key] = category[key];
         }
