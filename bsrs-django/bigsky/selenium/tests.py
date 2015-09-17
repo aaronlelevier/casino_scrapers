@@ -284,25 +284,25 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
 
     def test_ordering(self):
         # ASC
-        self.wait_for_xhr_request("t-sort-username").click()
+        self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
         self.assertEqual("aaron", usernames[0].text)
         # DESC
-        self.wait_for_xhr_request("t-sort-username").click()
+        self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
         self.assertEqual("ullamco", usernames[0].text)
 
     def test_ordering_multiple(self):
         # order: title, username
-        self.wait_for_xhr_request("t-sort-title").click()
-        self.wait_for_xhr_request("t-sort-username").click()
+        self.wait_for_xhr_request("t-sort-title-dir").click()
+        self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
         self.assertEqual("laboris", usernames[9].text)
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
         self.assertEqual("et", titles[8].text)
         self.assertEqual("et", titles[9].text)
         # order: first_name, -username
-        self.wait_for_xhr_request("t-sort-username").click()
+        self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
         self.assertEqual("aaron", usernames[9].text)
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
@@ -326,10 +326,10 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         people = self.wait_for_xhr_request("t-person-data", plural=True, debounce=True)
         self.assertEqual(len(people), 5)
         # Order
-        self.wait_for_xhr_request("t-sort-title").click()
-        self.wait_for_xhr_request("t-sort-username").click()
+        self.wait_for_xhr_request("t-sort-title-dir").click()
+        self.wait_for_xhr_request("t-sort-username-dir").click()
         # order: first_name, -username
-        self.wait_for_xhr_request("t-sort-username").click()
+        self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
         self.assertEqual("culpa", usernames[0].text)
         # Search maintained
