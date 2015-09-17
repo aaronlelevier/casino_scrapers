@@ -144,7 +144,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-sort-username');
+    click('.t-sort-username-dir');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL + '?sort=username');
         assert.equal(find('.t-person-data').length, 10);
@@ -156,7 +156,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
         assert.equal(find('.t-person-data').length, 9);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'scott11');
     });
-    click('.t-sort-title');
+    click('.t-sort-title-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
         assert.equal(find('.t-person-data').length, 10);
@@ -189,7 +189,7 @@ test('typing a search will reset page to 1 and require an additional xhr', funct
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'mgibson8');
         assert.equal(find('.t-person-data:eq(1) .t-person-username').text(), 'scott18');
     });
-    click('.t-sort-title');
+    click('.t-sort-title-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?search=8&sort=title');
         assert.equal(find('.t-person-data').length, 2);
@@ -233,19 +233,19 @@ test('multiple sort options appear in the query string as expected', function(as
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-sort-username');
+    click('.t-sort-username-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?sort=username');
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-sort-title');
+    click('.t-sort-title-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-sort-first-name');
+    click('.t-sort-first-name-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle%2Cfirst_name');
         assert.equal(find('.t-person-data').length, 10);
@@ -264,40 +264,40 @@ test('clicking the same sort option over and over will flip the direction', func
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-person-data').length, 10);
-        assert.ok(find('.t-sort-username-dir').hasClass('glyphicon-chevron-down'));
-        assert.ok(find('.t-sort-title-dir').hasClass('glyphicon-chevron-down'));
+        assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-desc'));
+        assert.ok(find('.t-sort-title-dir').hasClass('fa-sort-desc'));
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-sort-username');
+    click('.t-sort-username-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?sort=username');
         assert.equal(find('.t-person-data').length, 10);
-        assert.ok(find('.t-sort-username-dir').hasClass('glyphicon-chevron-up'));
-        assert.ok(find('.t-sort-title-dir').hasClass('glyphicon-chevron-down'));
+        assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-asc'));
+        assert.ok(find('.t-sort-title-dir').hasClass('fa-sort-desc'));
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-sort-title');
+    click('.t-sort-title-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
         assert.equal(find('.t-person-data').length, 10);
-        assert.ok(find('.t-sort-title-dir').hasClass('glyphicon-chevron-up'));
-        assert.ok(find('.t-sort-username-dir').hasClass('glyphicon-chevron-up'));
+        assert.ok(find('.t-sort-title-dir').hasClass('fa-sort-asc'));
+        assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-asc'));
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-sort-username');
+    click('.t-sort-username-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?sort=-username%2Ctitle');
         assert.equal(find('.t-person-data').length, 10);
-        assert.ok(find('.t-sort-title-dir').hasClass('glyphicon-chevron-up'));
-        assert.ok(find('.t-sort-username-dir').hasClass('glyphicon-chevron-down'));
+        assert.ok(find('.t-sort-title-dir').hasClass('fa-sort-asc'));
+        assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-desc'));
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'wanker');
     });
-    click('.t-sort-username');
+    click('.t-sort-username-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
         assert.equal(find('.t-person-data').length, 10);
-        assert.ok(find('.t-sort-title-dir').hasClass('glyphicon-chevron-up'));
-        assert.ok(find('.t-sort-username-dir').hasClass('glyphicon-chevron-up'));
+        assert.ok(find('.t-sort-title-dir').hasClass('fa-sort-asc'));
+        assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-asc'));
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
 });
