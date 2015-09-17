@@ -338,8 +338,8 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
 
     def test_full_text_search(self):
         self.wait_for_xhr_request("t-filter-username").click()
-        fullname_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
-        fullname_fulltext_search.send_keys("at")
+        username_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        username_fulltext_search.send_keys("at")
         people = self.wait_for_xhr_request("t-person-data", plural=True, debounce=True)
         self.assertEqual(len(people), 2)
         usernames = self.driver.find_elements_by_class_name("t-person-username")
@@ -357,11 +357,11 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         usernames = self.driver.find_elements_by_class_name("t-person-username")
         self.assertEqual("consequat.", usernames[0].text)
         self.driver.find_element_by_class_name("t-filter-username").click()
-        fullname_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
-        self.assertEqual(fullname_fulltext_search.get_attribute("value"), "at")
+        username_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        self.assertEqual(username_fulltext_search.get_attribute("value"), "at")
         self.driver.find_element_by_class_name("t-filter-title").click()
-        fullname_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
-        self.assertEqual(fullname_fulltext_search.get_attribute("value"), "de")
+        title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        self.assertEqual(title_fulltext_search.get_attribute("value"), "de")
 
 
 if __name__ == "__main__":
