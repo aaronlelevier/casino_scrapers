@@ -293,21 +293,21 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual("ullamco", usernames[0].text)
 
     def test_ordering_multiple(self):
-        # order: title, username
+        # order: username,title
         self.wait_for_xhr_request("t-sort-title-dir").click()
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual("laboris", usernames[9].text)
+        self.assertEqual("eu", usernames[9].text)
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
-        self.assertEqual("et", titles[8].text)
-        self.assertEqual("et", titles[9].text)
-        # order: first_name, -username
+        self.assertEqual("nostrud", titles[8].text)
+        self.assertEqual("esse", titles[9].text)
+        # order: -username,title
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual("aaron", usernames[9].text)
+        self.assertEqual("irure", usernames[9].text)
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
         self.assertEqual("et", titles[8].text)
-        self.assertEqual("et", titles[9].text)
+        self.assertEqual("sint", titles[9].text)
 
     def test_search(self):
         people = self.wait_for_xhr_request("t-person-data", plural=True)
@@ -328,10 +328,10 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         # Order
         self.wait_for_xhr_request("t-sort-title-dir").click()
         self.wait_for_xhr_request("t-sort-username-dir").click()
-        # order: first_name, -username
+        # Order: -username,title
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual("culpa", usernames[0].text)
+        self.assertEqual("sed", usernames[0].text)
         # Search maintained
         people = self.wait_for_xhr_request("t-person-data", plural=True)
         self.assertEqual(len(people), 5)

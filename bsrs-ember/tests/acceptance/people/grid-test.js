@@ -132,8 +132,8 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 });
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
-    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=username,title';
-    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username,title', 1));
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
+    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title,username', 1));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=username';
     xhr(page_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 2));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
@@ -158,7 +158,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     });
     click('.t-sort-title-dir');
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=title%2Cusername');
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
@@ -221,10 +221,10 @@ test('typing a search will reset page to 1 and require an additional xhr', funct
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
-    var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=username,title,first_name';
-    xhr(sort_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username,title,first_name', 1));
-    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=username,title';
-    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username,title', 1));
+    var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=first_name,title,username';
+    xhr(sort_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('first_name,title,username', 1));
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
+    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title,username', 1));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
     xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
     visit(PEOPLE_URL);
@@ -241,23 +241,25 @@ test('multiple sort options appear in the query string as expected', function(as
     });
     click('.t-sort-title-dir');
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=title%2Cusername');
         assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
     click('.t-sort-first-name-dir');
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle%2Cfirst_name');
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=first_name%2Ctitle%2Cusername');
         assert.equal(find('.t-person-data').length, 10);
-        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), 'wanker');
     });
 });
 
 test('clicking the same sort option over and over will flip the direction', function(assert) {
+    var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=username,title';
+    xhr(sort_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username,title', 1));
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-username,title';
     xhr(sort_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('-username,title', 1));
-    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=username,title';
-    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username,title', 1));
+    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
+    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title,username', 1));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
     xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
     visit(PEOPLE_URL);
@@ -278,7 +280,7 @@ test('clicking the same sort option over and over will flip the direction', func
     });
     click('.t-sort-title-dir');
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL + '?sort=username%2Ctitle');
+        assert.equal(currentURL(),PEOPLE_URL + '?sort=title%2Cusername');
         assert.equal(find('.t-person-data').length, 10);
         assert.ok(find('.t-sort-title-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-asc'));
