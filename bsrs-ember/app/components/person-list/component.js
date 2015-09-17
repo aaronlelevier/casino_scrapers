@@ -12,7 +12,6 @@ export default Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
     searchable: ['username', 'fullname', 'title'],
     eventbus: Ember.inject.service(),
     _setup: Ember.on('init', function() {
-        this.set('filterModel', Ember.Object.create()); //TODO: push this down each time from the route
         this.get('eventbus').subscribe('bsrs-ember@component:input-dynamic-filter:', this, 'onValueUpdated');
     }),
     _teardown: Ember.on('willDestroyElement', function() {
