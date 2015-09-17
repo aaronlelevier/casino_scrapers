@@ -346,39 +346,24 @@ test('full text search will filter down the result set and query django accordin
     });
 });
 
-test('loading screen shown before xhr resolves', function(assert) {
+test('loading screen shown before any xhr and hidden after', function(assert) {
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
     visitSync(PEOPLE_URL);
     Ember.run.later(function() {
-        assert.equal(find('.t-person-data').length, 0);
-        assert.equal(find('.t-no-content').length, 0);
-        assert.equal(find('.t-pages').length, 0);
+        assert.equal(find('.t-person-data').length, 1);
         assert.equal(find('.t-grid-loading-graphic').length, 1);
     }, 0);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(find('.t-person-data').length, 10);
-        assert.equal(find('.t-pages').length, 1);
-        assert.equal(find('.t-no-content').length, 0);
         assert.equal(find('.t-grid-loading-graphic').length, 0);
     });
-});
-
-test('loading screen shown before xhr resolves even when no data is returned', function(assert) {
-    clearxhr(list_xhr);
-    xhr(endpoint ,"GET",null,{},200,PEOPLE_FIXTURES.empty());
-    visitSync(PEOPLE_URL);
+    click('.t-sort-username-dir');
     Ember.run.later(function() {
-        assert.equal(find('.t-person-data').length, 0);
-        assert.equal(find('.t-no-content').length, 0);
-        assert.equal(find('.t-pages').length, 0);
         assert.equal(find('.t-grid-loading-graphic').length, 1);
-        store.clear('person');
     }, 0);
     andThen(() => {
-        assert.equal(currentURL(),PEOPLE_URL);
-        assert.equal(find('.t-person-data').length, 0);
-        assert.equal(find('.t-no-content').length, 1);
-        assert.equal(find('.t-pages').length, 0);
         assert.equal(find('.t-grid-loading-graphic').length, 0);
     });
 });
