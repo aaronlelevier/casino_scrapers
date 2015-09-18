@@ -8,6 +8,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -365,5 +366,17 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
     }, 0);
     andThen(() => {
         assert.equal(find('.t-grid-loading-graphic').length, 0);
+    });
+});
+
+test('when a full text filter is selected the input inside the modal is focused', function(assert) {
+    visit(PEOPLE_URL);
+    click('.t-filter-fullname');
+    andThen(() => {
+        isFocused('.ember-modal-dialog input:first');
+    });
+    click('.t-filter-title');
+    andThen(() => {
+        isFocused('.ember-modal-dialog input:first');
     });
 });

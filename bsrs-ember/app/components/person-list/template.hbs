@@ -16,9 +16,9 @@
   </header>
 
   {{#if toggleFilter}}
-    {{#tether-dialog target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='top right'}}
+    {{#focus-tether-dialog target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='top right'}}
       {{input-dynamic-filter obj=filterModel prop=filterField placeholder=filterPlaceholder}}
-    {{/tether-dialog}}
+    {{/focus-tether-dialog}}
   {{/if}}
 
         <section class="docSection docSectionWithFooter">
