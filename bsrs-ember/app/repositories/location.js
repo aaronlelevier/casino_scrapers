@@ -20,6 +20,12 @@ var LocationRepo = Ember.Object.extend({
             model.saveRelated();
         });
     },
+    findLocationSelect(filter) {
+        PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {
+            this.get('LocationDeserializer').deserialize(response);
+        });
+        return this.get('store').find('location', {location_level_fk: filter.location_level});
+    },
     find(filter) {
         PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {
             this.get('LocationDeserializer').deserialize(response);

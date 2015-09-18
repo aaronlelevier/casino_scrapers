@@ -958,32 +958,3 @@ test('clicking in the person-locations-select component will fire off xhr to get
     });
 });
 
-// test('sco person locations select returns bound array proxy that populates the selectize options', (assert) => {
-//     clearxhr(list_xhr);
-//     clearxhr(locations_xhr);
-//     let locations_list = LOCATION_FIXTURES.list();
-//     locations_list.results.forEach((location) => {
-//         location.location_level.id = LOCATION_LEVEL_DEFAULTS.idTwo;
-//     });
-//     let locations_xhr_two = xhr(locations_endpoint, 'GET', null, {}, 200, locations_list);
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         debugger;
-//         assert.equal(find('div.item').length, 0);
-//     });
-//     andThen(() => {
-//         //emulate location deserializer
-//         let location_push = LOCATION_FIXTURES.detail();
-//         location_push.id = LOCATION_DEFAULTS.idThree;
-//         location_push.location_level_fk = LOCATION_LEVEL_DEFAULTS.idOne;
-//         let location_level = location_push.location_level;
-//         location_level.locations = [LOCATION_DEFAULTS.idThree];
-//         delete location_push.location_level;
-//         //push into store after DETAIL view has been visited and locations_list has run through deserializer
-//         store.push('location', location_push);
-//         store.push('location-level', location_level);
-//     });
-//     andThen(() => {
-//         assert.equal(find('div.item').length, 1);
-//     });
-// });

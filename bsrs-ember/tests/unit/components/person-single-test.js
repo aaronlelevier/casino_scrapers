@@ -18,7 +18,7 @@ module('unit: person-single component test', {
         store = module_registry(container, registry, ['model:person', 'model:role', 'model:location-level', 'model:location', 'model:person-location', 'service:eventbus']);
         eventbus = container.lookup('service:eventbus');
         location_repo = repository.initialize(container, registry, 'location');
-        location_repo.find = function() { return store.find('location'); };
+        location_repo.findLocationSelect = function() { return store.find('location'); };
     },
     afterEach() {
         eventbus = null;

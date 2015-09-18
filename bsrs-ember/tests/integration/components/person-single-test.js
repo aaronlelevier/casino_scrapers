@@ -23,7 +23,7 @@ moduleForComponent('person-single', 'integration: person-single test', {
         store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne, ROLE_DEFAULTS.idTwo]});
         translation.initialize(this);
         location_repo = repository.initialize(this.container, this.registry, 'location');
-        location_repo.find = function() { return store.find('location'); };
+        location_repo.findLocationSelect = function() { return store.find('location'); };
         var service = this.container.lookup('service:i18n');
         var json = translations.generate('en');
         loadTranslations(service, json);
@@ -94,7 +94,7 @@ test('locations multi select is rendered in this component', function(assert) {
     assert.equal($component.find('option').length, 1);
 });
 
-test('locations multi select will not break when object proxy passes through without location_level (temporary state of the component)', function(assert) {
+test('locations multi select will not break when array proxy passes through without location_level (temporary state of the component)', function(assert) {
     let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
     let role = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: undefined, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
     let role_two = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, people: [PEOPLE_DEFAULTS.id], location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
@@ -106,4 +106,21 @@ test('locations multi select will not break when object proxy passes through wit
     this.render(hbs`{{person-single model=model roles=roles}}`);
     let $component = this.$('.t-person-locations-select');
     assert.equal($component.find('option').length, 0);
+});
+
+test('locations multi select will not break when array proxy passes through without location_level (temporary state of the component) but is pushed into store at a later time after xhr request returns (application flow is like this)', function(assert) {
+    let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: undefined, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    let role_two = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, people: [PEOPLE_DEFAULTS.id], location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, role_fk: ROLE_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne});
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idTwo, ROLE_DEFAULTS.idOne], locations: []});
+    this.set('model', person);
+    this.set('roles', store.find('role'));
+    this.render(hbs`{{person-single model=model roles=roles}}`);
+    let $component = this.$('.t-person-locations-select');
+    assert.equal($component.find('option').length, 0);
+    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne], location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idTwo], locations: [LOCATION_DEFAULTS.idOne]});
+    assert.equal($component.find('option').length, 1);
 });
