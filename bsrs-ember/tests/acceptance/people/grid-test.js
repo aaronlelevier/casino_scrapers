@@ -380,3 +380,44 @@ test('when a full text filter is selected the input inside the modal is focused'
         isFocused('.ember-modal-dialog input:first');
     });
 });
+
+test('full text searched columns will have a special on css class when active', function(assert) {
+    let find_four = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=&fullname__icontains=ewcomer';
+    xhr(find_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,fullname:ewcomer', 1));
+    let find_three = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7&fullname__icontains=ewcomer';
+    xhr(find_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7,fullname:S', 1));
+    let find_two = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7';
+    xhr(find_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7', 1));
+    let find_one = PREFIX + BASE_URL + '/?page=1&title__icontains=wat';
+    xhr(find_one ,"GET",null,{},200,PEOPLE_FIXTURES.fulltext('title:wat', 1));
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.ok(!find('.t-filter-fullname').hasClass('on'));
+        assert.ok(!find('.t-filter-username').hasClass('on'));
+        assert.ok(!find('.t-filter-title').hasClass('on'));
+    });
+    filterGrid('title', 'wat');
+    andThen(() => {
+        assert.ok(!find('.t-filter-fullname').hasClass('on'));
+        assert.ok(!find('.t-filter-username').hasClass('on'));
+        assert.ok(find('.t-filter-title').hasClass('on'));
+    });
+    filterGrid('username', '7');
+    andThen(() => {
+        assert.ok(!find('.t-filter-fullname').hasClass('on'));
+        assert.ok(find('.t-filter-username').hasClass('on'));
+        assert.ok(find('.t-filter-title').hasClass('on'));
+    });
+    filterGrid('fullname', 'ewcomer');
+    andThen(() => {
+        assert.ok(find('.t-filter-fullname').hasClass('on'));
+        assert.ok(find('.t-filter-username').hasClass('on'));
+        assert.ok(find('.t-filter-title').hasClass('on'));
+    });
+    filterGrid('username', '');
+    andThen(() => {
+        assert.ok(find('.t-filter-fullname').hasClass('on'));
+        assert.ok(!find('.t-filter-username').hasClass('on'));
+        assert.ok(find('.t-filter-title').hasClass('on'));
+    });
+});
