@@ -43,10 +43,10 @@ module('Acceptance | detail test', {
         endpoint = PREFIX + BASE_PEOPLE_URL + '/';
         var people_list_data = PEOPLE_FIXTURES.list();
         people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-        locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
+        // locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
         detail_xhr = xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-        locations_xhr = xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+        // locations_xhr = xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -942,19 +942,35 @@ test('when you deep link to the person detail view you can alter the locations a
     });
 });
 
-test('clicking in the person-locations-select component will fire off xhr to get locations', (assert) => {
+test('sco deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', (assert) => {
     clearxhr(list_xhr);
     clearxhr(detail_xhr);
     people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    people_detail_data.locations = [];
+    people_detail_data.locations = [LOCATION_FIXTURES.get()];
     xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = PREFIX + '/admin/locations/';
-    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-    visit(DETAIL_URL);
-    click('.selectize-input input');
-    let locations = store.find('location');
-    andThen(() => {
-        assert.equal(locations.get('length'), 5);
+
+    let locations_endpoint_new = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
+    let location_list = LOCATION_FIXTURES.list();
+    location_list.results.forEach((loc, indx) => {
+        let count = '123';
+        loc.id = 'ZYX123' + indx;
+        loc.location_level.id = count + indx;
     });
+    xhr(locations_endpoint_new, 'GET', null, {}, 200, location_list);
+
+    visit(DETAIL_URL);
+    andThen(() => {
+        let locations = store.find('location', {location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+        debugger;
+        assert.equal(locations.get('length'), 1);
+        assert.equal(find('div.items').length, 1);
+        assert.equal(find('div.options').length, 0);
+    });
+
+    //click('.selectize-input input');
+    // andThen(() => {
+    //     let locations = store.find('location', {location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+    //     assert.equal(locations.get('length'), 5);
+    // });
 });
 

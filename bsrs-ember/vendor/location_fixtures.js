@@ -11,8 +11,9 @@ var BSRS_LOCATION_FACTORY = (function() {
         }
     },
     factory.prototype.generate = function(i) {
+        var id = i || this.location_defaults.idOne;
         return {
-            id: i,
+            id: id,
             name : this.location_defaults.baseStoreName,
             number : this.location_defaults.storeNumber,
             status: this.location_defaults.status,
