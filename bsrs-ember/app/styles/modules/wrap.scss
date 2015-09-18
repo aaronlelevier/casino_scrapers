@@ -125,7 +125,10 @@ section.wrap{
         vertical-align: middle;
         font-size: 1.6em;
         font-weight: normal;
-        display: inline;
+        float: left;
+        margin: 0;
+        height: $documentHeaderHeight;
+        line-height: $documentHeaderHeight;
         @media screen and (max-width: $mobileDeviceWidth) {
           font-size: 1.35rem;
         }

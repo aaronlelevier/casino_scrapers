@@ -1,6 +1,7 @@
 <div class="rowTable">
   <header>
-    <h1 class="t-people">{{t "admin.person" count="2"}}{{#unless model.isLoaded}}<div class="pull-left">{{grid-loading-graphic}}</div>{{/unless}}</h1>
+    <h1 class="t-people">{{t "admin.person" count="2"}}</h1>
+    {{#unless model.isLoaded}}{{grid-loading-graphic}}{{/unless}}
     <div class="control-menu pull-right">
       <form class="form-inline" onsubmit="return false;">
         <div class="form-group">
