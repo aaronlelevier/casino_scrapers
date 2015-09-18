@@ -125,6 +125,9 @@ export default Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
         },
         toggleFilterModal: function(column) {
             this.toggle(column);
+        },
+        resetSort: function() {
+            this.setProperties({page: 1, sort: undefined});
         }
     }
 });

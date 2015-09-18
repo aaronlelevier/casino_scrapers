@@ -254,7 +254,7 @@ test('multiple sort options appear in the query string as expected', function(as
     });
 });
 
-test('clicking the same sort option over and over will flip the direction', function(assert) {
+test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
     var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=username,title';
     xhr(sort_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username,title', 1));
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-username,title';
@@ -270,6 +270,7 @@ test('clicking the same sort option over and over will flip the direction', func
         assert.ok(find('.t-sort-username-dir').hasClass('fa-sort'));
         assert.ok(find('.t-sort-title-dir').hasClass('fa-sort'));
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-reset-sort-order').length, 0);
     });
     click('.t-sort-username-dir');
     andThen(() => {
@@ -301,6 +302,12 @@ test('clicking the same sort option over and over will flip the direction', func
         assert.equal(find('.t-person-data').length, 10);
         assert.ok(find('.t-sort-title-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-asc'));
+        assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+    });
+    click('.t-reset-sort-order');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-person-data').length, 10);
         assert.equal(find('.t-person-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
 });

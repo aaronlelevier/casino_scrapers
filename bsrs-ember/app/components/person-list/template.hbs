@@ -5,6 +5,9 @@
     <div class="control-menu pull-right">
       <form class="form-inline" onsubmit="return false;">
         <div class="form-group">
+          {{#if sort}}
+          <span class="t-reset-sort-order" {{action "resetSort"}}>Reset sort order</span>
+          {{/if}}
           {{grid-search-input placeholder=(t 'admin.person.search') keyup="keyup"}}
           <div class="btn-group btn-group-sm">
             {{#link-to 'admin.people.new' class="t-person-new add-btn btn btn-default btn-sm"}}
