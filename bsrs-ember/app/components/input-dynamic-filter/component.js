@@ -5,7 +5,7 @@ import InputDynamic from 'bsrs-ember/components/input-dynamic/component';
 export default InputDynamic.extend({
     eventbus: Ember.inject.service(),
     observeValid: Ember.observer('value', function() {
-        Ember.run.once(this, 'valueUpdated');
+        Ember.run.debounce(this, this.valueUpdated, 300, false);
     }),
     valueUpdated: function() {
         let prop = this.get('prop');

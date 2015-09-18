@@ -8,7 +8,7 @@ var GridSearch =  Ember.TextField.extend({
         this.sendAction('keyup', this.get('value'));
     },
     keyUp: function() {
-        Ember.run.debounce(this, 'keyUpFunction', 500);
+        Ember.run.debounce(this, this.keyUpFunction, 300, false);
     }
 });
 
