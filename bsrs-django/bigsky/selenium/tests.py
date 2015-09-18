@@ -8,6 +8,9 @@ from selenium import webdriver
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
+
+from helpers.element import is_present
 
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
@@ -362,6 +365,20 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.driver.find_element_by_class_name("t-filter-title").click()
         title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
         self.assertEqual(title_fulltext_search.get_attribute("value"), "de")
+
+    def test_full_text_search_hidden_on_enter_and_escape(self):
+        self.wait_for_xhr_request("t-filter-username").click()
+        username_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        username_fulltext_search.send_keys("at")
+        username_fulltext_search.send_keys(Keys.RETURN)
+        fulltext_modal_present = is_present(self.driver, "ember-modal-dialog")
+        self.assertEqual(fulltext_modal_present, False)
+        self.wait_for_xhr_request("t-filter-title").click()
+        title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        title_fulltext_search.send_keys("de")
+        title_fulltext_search.send_keys(Keys.ESCAPE)
+        title_modal_present = is_present(self.driver, "ember-modal-dialog")
+        self.assertEqual(title_modal_present, False)
 
 
 if __name__ == "__main__":

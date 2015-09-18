@@ -18,7 +18,7 @@
 
   {{#if toggleFilter}}
     {{#focus-tether-dialog target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='top right'}}
-      {{input-dynamic-filter obj=filterModel prop=filterField placeholder=filterPlaceholder}}
+      {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
     {{/focus-tether-dialog}}
   {{/if}}
 

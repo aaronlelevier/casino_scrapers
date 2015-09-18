@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-export default Ember.TextField.extend({
+var InputDynamic = Ember.TextField.extend({
   classNames: ['t-new-entry form-control'],
   value: Ember.computed('obj', {
     get(key){
@@ -14,3 +14,5 @@ export default Ember.TextField.extend({
     }
   })
 });
+
+export default InputDynamic;
