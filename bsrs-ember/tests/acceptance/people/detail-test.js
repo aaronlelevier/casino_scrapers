@@ -34,7 +34,7 @@ const DETAIL_URL = BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 
-var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
+var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, locations_endpoint, locations_xhr;
 
 module('Acceptance | detail test', {
     beforeEach() {
@@ -43,10 +43,10 @@ module('Acceptance | detail test', {
         endpoint = PREFIX + BASE_PEOPLE_URL + '/';
         var people_list_data = PEOPLE_FIXTURES.list();
         people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-        var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
+        locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
         detail_xhr = xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-        xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+        locations_xhr = xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -957,3 +957,33 @@ test('clicking in the person-locations-select component will fire off xhr to get
         assert.equal(locations.get('length'), 5);
     });
 });
+
+// test('sco person locations select returns bound array proxy that populates the selectize options', (assert) => {
+//     clearxhr(list_xhr);
+//     clearxhr(locations_xhr);
+//     let locations_list = LOCATION_FIXTURES.list();
+//     locations_list.results.forEach((location) => {
+//         location.location_level.id = LOCATION_LEVEL_DEFAULTS.idTwo;
+//     });
+//     let locations_xhr_two = xhr(locations_endpoint, 'GET', null, {}, 200, locations_list);
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         debugger;
+//         assert.equal(find('div.item').length, 0);
+//     });
+//     andThen(() => {
+//         //emulate location deserializer
+//         let location_push = LOCATION_FIXTURES.detail();
+//         location_push.id = LOCATION_DEFAULTS.idThree;
+//         location_push.location_level_fk = LOCATION_LEVEL_DEFAULTS.idOne;
+//         let location_level = location_push.location_level;
+//         location_level.locations = [LOCATION_DEFAULTS.idThree];
+//         delete location_push.location_level;
+//         //push into store after DETAIL view has been visited and locations_list has run through deserializer
+//         store.push('location', location_push);
+//         store.push('location-level', location_level);
+//     });
+//     andThen(() => {
+//         assert.equal(find('div.item').length, 1);
+//     });
+// });

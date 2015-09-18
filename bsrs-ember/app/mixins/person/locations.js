@@ -17,9 +17,19 @@ var PersonLocationsMixin = Ember.Mixin.create({
         let all = this.get('all_locations');
         let location_level_pk = this.get('location_level_pk');
         if(location_level_pk) {
-            return all.filter(function(location) {
-                let location_level = location.get('location_level');
-                return location_level && location_level.get('id') === location_level_pk;
+            // return all.filter(function(location) {
+            //     let location_level = location.get('location_level');
+            //     return location_level && location_level.get('id') === location_level_pk;
+            // });
+            return Ember.ArrayProxy.extend({
+                content: Ember.computed(function () {
+                    return all.filter(function(location) {
+                        let location_level = location.get('location_level');
+                        return location_level && location_level.get('id') === location_level_pk;
+                    });
+                }).property('source.@each.location_level')
+            }).create({
+                source: all 
             });
         }
         return [];
