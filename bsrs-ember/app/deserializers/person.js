@@ -39,12 +39,13 @@ var extract_role_location_level = function(model, store) {
         location_level.save();
         role.set('location_level_fk', location_level_pk);
     }
+    return location_level_pk;
 };
 
 var extract_role = function(model, store) {
     let role_pk = model.role;
     let role = store.find('role', model.role);
-    extract_role_location_level(model, store);
+    let location_level_fk = extract_role_location_level(model, store);
     //var role = store.push('role', model.role);
     let existing_people = role.get('people') || [];
     if (existing_people.indexOf(model.id) === -1) {
@@ -52,15 +53,16 @@ var extract_role = function(model, store) {
     }
     role.save();
     delete model.role;
-    return role_pk;
+    return [role_pk, location_level_fk];
 };
 
-var extract_person_location = function(model, store, uuid) {
+var extract_person_location = function(model, store, uuid, location_level_fk) {
     let server_locations_sum = [];
     let person_location_fks = [];
     let prevented_duplicate_m2m = [];
     let all_person_locations = store.find('person-location');
     model.locations.forEach((location_json) => {
+        location_json.location_level_fk = location_level_fk;
         let person_locations = all_person_locations.filter((m2m) => {
             return m2m.get('location_pk') === location_json.id && m2m.get('person_pk') === model.id;
         });
@@ -107,10 +109,11 @@ var PersonDeserializer = Ember.Object.extend({
     deserialize_single(model, id) {
         let uuid = this.get('uuid');
         let store = this.get('store');
+        let location_level_fk;//used to setup location_level_fk correctly for a location pushed into the store from this deserializer
         model.phone_number_fks = extract_phone_numbers(model, store);
         model.address_fks = extract_addresses(model, store);
-        model.role_fk = extract_role(model, store);
-        model.person_location_fks = extract_person_location(model, store, uuid);
+        [model.role_fk, location_level_fk] = extract_role(model, store);
+        model.person_location_fks = extract_person_location(model, store, uuid, location_level_fk);
         model.locale_fk = extract_locale(model, store);
         let person = store.push('person', model);
         person.save();

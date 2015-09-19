@@ -412,8 +412,6 @@ test('when you change a related address type it will be persisted correctly', (a
 });
 
 test('when you change a related role it will be persisted correctly', (assert) => {
-    // var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
-    // xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
     var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
@@ -425,6 +423,34 @@ test('when you change a related role it will be persisted correctly', (assert) =
         assert.equal(currentURL(),PEOPLE_URL);
     });
 });
+
+// test('sco when you change a related role it will change the related locations as well', (assert) => {
+//     var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+//     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+//     visit(DETAIL_URL);
+//     var url = PREFIX + DETAIL_URL + "/";
+//     var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
+//     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
+//     xhr(url,'PUT',JSON.stringify(payload),{},200);
+//     andThen(() => {
+//         let locations = store.find('location');
+//         assert.equal(locations.get('length'), 1);
+//         assert.equal(find('div.item').length, 1);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     fillIn('.selectize-input input', 'a');
+//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+//     andThen(() => {
+//         let locations = store.find('location');
+//         assert.equal(locations.get('length'), 5);
+//         assert.equal(find('div.item').length, 1);
+//         assert.equal(find('div.option').length, 4);
+//     });
+//     click(SAVE_BTN);
+//     andThen(() => {
+//         assert.equal(currentURL(),PEOPLE_URL);
+//     });
+// });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     clearxhr(list_xhr);
@@ -879,6 +905,7 @@ test('when changing the locale for a user (not current user), the language is no
         });
     });
 });
+
 test('when you deep link to the person detail view you can add and save a location', (assert) => {
     clearxhr(detail_xhr);
     visit(DETAIL_URL);
@@ -907,6 +934,31 @@ test('when you deep link to the person detail view you can add and save a locati
         assert.equal(person.get('locations').objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
     });
 });
+
+// test('sco when you deep link to the person detail view you can remove a location', (assert) => {
+//     visit(DETAIL_URL);
+//     let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
+//     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+//     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+//     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, locations: [LOCATION_DEFAULTS.idOne]});
+//     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+//     andThen(() => {
+//         let person = store.find('person', PEOPLE_DEFAULTS.id);
+//         assert.equal(person.get('locations').get('length'), 0);
+//     });
+//     fillIn('.selectize-input input', 'a');
+//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+//     click('.t-person-locations-select div.option:eq(0)');
+//     click(SAVE_BTN);
+//     andThen(() => {
+//         assert.equal(currentURL(), PEOPLE_URL);
+//         let person = store.find('person', PEOPLE_DEFAULTS.id);
+//         assert.equal(person.get('locations').get('length'), 1);
+//         assert.ok(person.get('isNotDirty'));
+//         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+//         assert.equal(person.get('locations').objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
+//     });
+// });
 
 test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
     clearxhr(detail_xhr);
@@ -957,7 +1009,7 @@ test('deep link to person and clicking in the person-locations-select component 
     fillIn('.selectize-input input', 'a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
     andThen(() => {
-        let locations = store.find('location');
+        let locations = store.find('location', {location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
         assert.equal(locations.get('length'), 5);
         assert.equal(find('div.item').length, 1);
         assert.equal(find('div.option').length, 4);

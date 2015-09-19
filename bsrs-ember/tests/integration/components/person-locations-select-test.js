@@ -116,6 +116,7 @@ test('removing a location will remove from the person-location m2m relationship'
     this.set('options', store.find('location'));
     this.render(hbs`{{person-locations-select model=model person=person options=options}}`);
     let $component = this.$('.t-person-locations-select');
+    assert.equal($component.prop('multiple'), true);
     assert.equal($component.find('div.option').length, 2);
     assert.equal($component.find('div.option:eq(0)').data('value'), LOCATION_DEFAULTS.unusedId);
     assert.equal($component.find('div.option:eq(1)').data('value'), LOCATION_DEFAULTS.anotherId);
@@ -138,14 +139,4 @@ test('removing a location will remove from the person-location m2m relationship'
     assert.ok(location_two.get('isNotDirty'));
     assert.ok(location_three.get('isNotDirty'));
     assert.ok(location_four.get('isNotDirty'));
-});
-
-test('when click on input field, component should fetch more data', function(assert) {
-    this.set('person', person);
-    this.set('model', person.get('locations'));
-    this.set('options', store.find('location'));
-    this.render(hbs`{{person-locations-select model=model person=person}}`);
-    let $component = this.$('.t-person-locations-select');
-    assert.equal($component.prop('multiple'), true);
-    assert.equal($component.find('div.option').length, 2);
 });

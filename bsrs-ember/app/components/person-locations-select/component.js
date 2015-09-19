@@ -10,26 +10,14 @@ var PersonLocationsSelect = Ember.Component.extend(PersonLocationsMixin, {
         let person = this.get('person');
         return person.get('locations');
     }),
-    person_location_ids: Ember.computed('person_locations_selected.[]', function() {
-        let person_locations = this.get('person_locations') || [];
-        return person_locations.map((loc) => {
-            return loc.get('id');
-        });
-    }),
     options: Ember.computed('person_location_ids.[]', 'locations_fetch.[]', function() {
-        let store = this.get('store');
-        let person_locations = this.get('person_locations');   
-        let person_location_ids = this.get('person_location_ids');   
-        let filter = function(location) {
-            if (Ember.$.inArray(location.get('id'), person_location_ids) < 0) {
-                return this.get('id') === location.get('person_fk');
-            }
-        };
+        //options must be present for selected locations to populate selectize (line 586 contentArrayDidChange calls this._selectionDidChange();)
         //this bound array is updated when action getLocations is called and more locations are pushed into the store
-        return store.find('location', filter.bind(this), ['id']);
+        return this.get('store').find('location');
     }),
     actions: {
         add(location) {
+            //auto updates person's locations
             let person = this.get('person');
             let location_pk = location.get('id');
             person.add_locations(location_pk);
