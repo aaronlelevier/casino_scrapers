@@ -10,6 +10,11 @@ div.rowTable {
 
     table{
       th{
+        span{
+          display: inline-block;
+          height: 18px;
+          line-height: 18px;
+        }
         .fa-sort,
         .fa-filter{
           color: $gray;
