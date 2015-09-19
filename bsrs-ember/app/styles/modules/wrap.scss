@@ -122,10 +122,10 @@ section.wrap{
       //z-index: 5;
 
       h1{
-        vertical-align: middle;
+        vertical-align: baseline;
         font-size: 1.6em;
         font-weight: normal;
-        float: left;
+        display: inline-block;
         margin: 0;
         height: $documentHeaderHeight;
         line-height: $documentHeaderHeight;
@@ -133,7 +133,17 @@ section.wrap{
           font-size: 1.35rem;
         }
       }//h1
-
+      .reset-grid{
+        display: inline-block;
+        height: $documentHeaderHeight;
+        line-height: $documentHeaderHeight;
+        vertical-align: baseline;
+        font-size: 0.9em;
+        text-decoration: underline;
+        cursor: pointer;
+        margin: 0 0 0 10px;
+        color: $darkGray;
+      }
       span.add-btn {
         float: right;
         height: 100%;
