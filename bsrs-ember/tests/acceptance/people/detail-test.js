@@ -33,8 +33,9 @@ const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
+const LETTER_A = {keyCode: 65};
 
-var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, locations_endpoint, locations_xhr;
+var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
 module('Acceptance | detail test', {
     beforeEach() {
@@ -43,10 +44,8 @@ module('Acceptance | detail test', {
         endpoint = PREFIX + BASE_PEOPLE_URL + '/';
         var people_list_data = PEOPLE_FIXTURES.list();
         people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-        locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
         detail_xhr = xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-        locations_xhr = xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -413,8 +412,8 @@ test('when you change a related address type it will be persisted correctly', (a
 });
 
 test('when you change a related role it will be persisted correctly', (assert) => {
-    var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
-    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+    // var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+    // xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     var url = PREFIX + DETAIL_URL + "/";
     var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
@@ -821,8 +820,8 @@ test('when you deep link to the person detail view you can add and save a new ad
 });
 
 test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
-    var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
-    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+    // var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+    // xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -886,7 +885,7 @@ test('when you deep link to the person detail view you can add and save a locati
     people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     people_detail_data.locations = [];
     xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = PREFIX + '/admin/locations/';
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, locations: [LOCATION_DEFAULTS.idOne]});
@@ -895,7 +894,8 @@ test('when you deep link to the person detail view you can add and save a locati
         let person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(person.get('locations').get('length'), 0);
     });
-    click('.selectize-input input');
+    fillIn('.selectize-input input', 'a');
+    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
     click('.t-person-locations-select div.option:eq(0)');
     click(SAVE_BTN);
     andThen(() => {
@@ -914,9 +914,10 @@ test('when you deep link to the person detail view you can alter the locations a
     people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     people_detail_data.locations = [];
     xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = PREFIX + '/admin/locations/';
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-    click('.selectize-input input');
+    fillIn('.selectize-input input', 'a');
+    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
     click('.t-person-locations-select div.option:eq(0)');
     click('.t-cancel-btn');
     andThen(() => {
@@ -942,19 +943,24 @@ test('when you deep link to the person detail view you can alter the locations a
     });
 });
 
-test('clicking in the person-locations-select component will fire off xhr to get locations', (assert) => {
+test('deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', (assert) => {
     clearxhr(list_xhr);
-    clearxhr(detail_xhr);
-    people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    people_detail_data.locations = [];
-    xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = PREFIX + '/admin/locations/';
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
-    click('.selectize-input input');
-    let locations = store.find('location');
     andThen(() => {
+        let locations = store.find('location');
+        assert.equal(locations.get('length'), 1);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 0);
+    });
+    fillIn('.selectize-input input', 'a');
+    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+    andThen(() => {
+        let locations = store.find('location');
         assert.equal(locations.get('length'), 5);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 4);
     });
 });
 

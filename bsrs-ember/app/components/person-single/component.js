@@ -1,11 +1,10 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import injectStore from 'bsrs-ember/utilities/store';
-import PersonLocationsMixin from 'bsrs-ember/mixins/person/locations';
 import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 import { validate } from 'ember-cli-simple-validation/mixins/validate';
 
-export default ParentValidationComponent.extend(PersonLocationsMixin, {
+var PersonSingle = ParentValidationComponent.extend({
     child_components: ['input-multi-phone', 'input-multi-address'],
     repository: inject('person'),
     location_repo: inject('location'),
@@ -34,3 +33,5 @@ export default ParentValidationComponent.extend(PersonLocationsMixin, {
         },
     }
 });
+
+export default PersonSingle;

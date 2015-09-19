@@ -39,6 +39,7 @@ var BSRS_ROLE_FACTORY = (function() {
         }
         return response;
     };
+    //TODO: does this need to return the full object as shown in API docs or b/c we have loc_level and roles preloaded, then we don't?
     // factory.prototype.get = function() {
     //     return {
     //         'id': this.role_defaults.idOne,

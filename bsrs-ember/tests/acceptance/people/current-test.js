@@ -11,8 +11,6 @@ import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_DEFAULTS_PUT from 'bsrs-ember/vendor/defaults/person-put';
 import PERSON_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
-import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -32,8 +30,6 @@ module('Acceptance | current user test', {
         var locale_data_es = translations.generate('es');
         var locale_endpoint_es = '/api/translations/?locale=es';
         var endpoint = PREFIX + BASE_URL + '/';
-        var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
-        xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
         xhr(locale_endpoint_es, 'GET', null, {}, 200, locale_data_es);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
         xhr(endpoint + PERSON_CURRENT_DEFAULTS.id + '/', 'GET', null, {}, 200, current_person_data);
