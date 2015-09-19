@@ -7,6 +7,27 @@ div.rowTable {
         cursor: pointer;
       }
     }//table
+
+    table{
+      th{
+        .fa-sort,
+        .fa-filter{
+          color: $gray;
+        }
+        .fa-filter.on,
+        .fa-sort-asc,
+        .fa-sort-desc{
+          color: $lightGreen;
+        }
+        .fa-sort,
+        .fa-filter,
+        .fa-sort-asc,
+        .fa-sort-desc{
+          cursor: pointer;
+        }
+      }
+    }
+
   }
 
   footer nav{

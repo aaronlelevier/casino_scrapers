@@ -20,7 +20,7 @@
   </header>
 
   {{#if toggleFilter}}
-    {{#focus-tether-dialog target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='top right'}}
+    {{#focus-tether-dialog container-class='column-filter' target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='center right' targetAttachment='center right' offset='0 -5px'}}
       {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
     {{/focus-tether-dialog}}
   {{/if}}
