@@ -97,6 +97,9 @@ export default Ember.Route.extend({
     return this.get('translationsFetcher').fetch();
 
   },
+  setupController(controller, hash) {
+    controller.set('tabs', this.get('store').find('tab'));
+  },
   afterModel(){
     this.set('i18n.locale', config.i18n.currentLocale);
   },

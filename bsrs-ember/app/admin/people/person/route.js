@@ -12,10 +12,6 @@ export default Ember.Route.extend(RollbackModalMixin, {
     role_repo: inject('role'),
     phone_number_type_repo: inject('phone-number-type'),
     address_type_repo: inject('address-type'),
-    init() {
-        var comp = this.get('tabDoc');
-        this.set('editPrivilege', true);
-    },
     model(params) {
         var person_pk = params.person_id,
             country_repo = this.get('country_repo'),
@@ -42,6 +38,7 @@ export default Ember.Route.extend(RollbackModalMixin, {
             locales: this.get('store').find('locale'),
             roles: roles
         });
+
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);

@@ -8,9 +8,17 @@ var PersonSingle = ParentValidationComponent.extend({
     child_components: ['input-multi-phone', 'input-multi-address'],
     repository: inject('person'),
     location_repo: inject('location'),
+    store: injectStore('main'),
     classNames: ['wrapper', 'form'],
     attemptedTransition: '',
     usernameValidation: validate('model.username'),
+    didInsertElement(){
+      this._super();
+      this.get('store').push('tab', {
+          id: this.get('model.id'),
+          title: this.get('model.fullname')
+      });
+    },
     actions: {
         savePerson() {
             this.set('submitted', true);
@@ -30,7 +38,7 @@ var PersonSingle = ParentValidationComponent.extend({
             var repository = this.get('repository');
             repository.delete(model.get('id'));
             this.sendAction('redirectUser');
-        },
+        }
     }
 });
 
