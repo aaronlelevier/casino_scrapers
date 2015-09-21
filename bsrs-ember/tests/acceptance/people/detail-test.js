@@ -882,7 +882,7 @@ test('when you deep link to the person detail view you can add and save a locati
     people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     people_detail_data.locations = [];
     xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, locations: [LOCATION_DEFAULTS.idOne]});
@@ -952,7 +952,7 @@ test('when you deep link to the person detail view you can alter the locations a
     people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     people_detail_data.locations = [];
     xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     fillIn('.selectize-input input', 'a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
@@ -983,7 +983,7 @@ test('when you deep link to the person detail view you can alter the locations a
 
 test('deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', (assert) => {
     clearxhr(list_xhr);
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     andThen(() => {
@@ -1002,41 +1002,41 @@ test('deep link to person and clicking in the person-locations-select component 
     });
 });
 
-// test('sco when you change a related role it will change the related locations as well', (assert) => {
-//     clearxhr(list_xhr);
-//     let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
-//     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-//     visit(DETAIL_URL);
-//     // let url = PREFIX + DETAIL_URL + "/";
-//     // let role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
-//     // let payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
-//     // xhr(url,'PUT',JSON.stringify(payload),{},200);
-//     andThen(() => {
-//         let locations = store.find('location');
-//         assert.equal(locations.get('length'), 1);
-//         assert.equal(find('div.item').length, 1);
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     fillIn('.selectize-input input', 'a');
-//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-//     andThen(() => {
-//         let locations = store.find('location');
-//         assert.equal(locations.get('length'), 5);
-//         assert.equal(find('div.item').length, 1);
-//         assert.equal(find('div.option').length, 4);
-//     });
-//     fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
-//     andThen(() => {
-//         let person = store.find('person', PEOPLE_DEFAULTS.id);
-//         let locations = store.find('location');
-//         assert.equal(locations.get('length'), 1);
-//         assert.equal(find('div.item').length, 1);
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     // fillIn('.selectize-input input', 'a');
-//     // triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-//     // click(SAVE_BTN);
-//     // andThen(() => {
-//     //     assert.equal(currentURL(),PEOPLE_URL);
-//     // });
-// });
+test('when you change a related role it will change the related locations as well', (assert) => {
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+    visit(DETAIL_URL);
+    let url = PREFIX + DETAIL_URL + "/";
+    let role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
+    let payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
+    xhr(url,'PUT',JSON.stringify(payload),{},200);
+    andThen(() => {
+        let locations = store.find('location');
+        assert.equal(locations.get('length'), 1);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 0);
+    });
+    fillIn('.selectize-input input', 'a');
+    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+    andThen(() => {
+        let locations = store.find('location');
+        assert.equal(locations.get('length'), 5);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 4);
+    });
+    fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+    andThen(() => {
+        let person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
+        let locations = store.find('location');
+        assert.equal(locations.get('length'), 5);
+        assert.equal(find('div.item').length, 0);
+        assert.equal(find('div.option').length, 0);
+    });
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        let person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
