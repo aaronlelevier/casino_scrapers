@@ -31,12 +31,10 @@ var LocationMixin = Ember.Mixin.create({
     },
     remove_location(location_pk) {
         let store = this.get('store');
-        if(Ember.$.inArray(location_pk, this.get('location_ids')) > -1) {
-            let m2m_pk = this.get('person_locations').filter((m2m) => {
-                return m2m.get('location_pk') === location_pk;
-            }).objectAt(0).get('id');
-            store.push('person-location', {id: m2m_pk, removed: true});
-        }
+        let m2m_pk = this.get('person_locations').filter((m2m) => {
+            return m2m.get('location_pk') === location_pk;
+        }).objectAt(0).get('id');
+        store.push('person-location', {id: m2m_pk, removed: true});
     },
     locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
     locationsIsDirty: Ember.computed('person_locations', 'locations.@each.isDirty', function() {
