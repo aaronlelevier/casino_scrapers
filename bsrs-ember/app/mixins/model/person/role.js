@@ -2,13 +2,13 @@ import Ember from 'ember';
 
 var RoleMixin = Ember.Mixin.create({
     role: Ember.computed('role_property.[]', function() {
-        var roles = this.get('role_property');
+        let roles = this.get('role_property');
         return roles.get('length') > 0 ? roles.objectAt(0) : undefined;
     }),
     role_property: Ember.computed(function() {
-        var store = this.get('store');
-        var filter = function(role) {
-            var people_pks = role.get('people') || [];
+        let store = this.get('store');
+        let filter = function(role) {
+            let people_pks = role.get('people') || [];
             return Ember.$.inArray(this.get('id'), people_pks) > -1;
         };
         return store.find('role', filter.bind(this), ['people']);
@@ -20,7 +20,7 @@ var RoleMixin = Ember.Mixin.create({
             new_role.set('people', new_role_people.concat([person_id]));
         }
         if(old_role) {
-            var old_role_people = old_role.get('people') || [];
+            let old_role_people = old_role.get('people') || [];
             old_role.set('people', old_role_people.filter((old_role_person_pk) => {
                 return old_role_person_pk !== person_id;
             }));
@@ -29,7 +29,7 @@ var RoleMixin = Ember.Mixin.create({
     },
     roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
         let roles = this.get('role_property');
-        var role = roles.objectAt(0);
+        let role = roles.objectAt(0);
         if(role) {
             return role.get('isDirty');
         }

@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 var PersonLocationsMixin = Ember.Mixin.create({
+    //not used currently...in person-location-select component
     //still need the following two computeds to fetch new locations when role is changed
     location_level_pk: Ember.computed('person.role', function() {
         let role = this.get('person.role');

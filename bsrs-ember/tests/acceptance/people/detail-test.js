@@ -37,7 +37,7 @@ const LETTER_A = {keyCode: 65};
 
 var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
-module('Acceptance | detail test', {
+module('acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -115,7 +115,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username, first_name: PEOPLE_DEFAULTS_PUT.first_name,
                                       middle_initial: PEOPLE_DEFAULTS_PUT.middle_initial, last_name: PEOPLE_DEFAULTS_PUT.last_name, title: PEOPLE_DEFAULTS_PUT.title,
-    employee_id: PEOPLE_DEFAULTS_PUT.employee_id, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount, locale: PEOPLE_DEFAULTS_PUT.locale });
+    employee_id: PEOPLE_DEFAULTS_PUT.employee_id, auth_amount: PEOPLE_DEFAULTS_PUT.auth_amount, locale: PEOPLE_DEFAULTS.locale_id });
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.first_name);
@@ -423,34 +423,6 @@ test('when you change a related role it will be persisted correctly', (assert) =
         assert.equal(currentURL(),PEOPLE_URL);
     });
 });
-
-// test('sco when you change a related role it will change the related locations as well', (assert) => {
-//     var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
-//     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-//     visit(DETAIL_URL);
-//     var url = PREFIX + DETAIL_URL + "/";
-//     var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
-//     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
-//     xhr(url,'PUT',JSON.stringify(payload),{},200);
-//     andThen(() => {
-//         let locations = store.find('location');
-//         assert.equal(locations.get('length'), 1);
-//         assert.equal(find('div.item').length, 1);
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     fillIn('.selectize-input input', 'a');
-//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-//     andThen(() => {
-//         let locations = store.find('location');
-//         assert.equal(locations.get('length'), 5);
-//         assert.equal(find('div.item').length, 1);
-//         assert.equal(find('div.option').length, 4);
-//     });
-//     click(SAVE_BTN);
-//     andThen(() => {
-//         assert.equal(currentURL(),PEOPLE_URL);
-//     });
-// });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     clearxhr(list_xhr);
@@ -846,8 +818,6 @@ test('when you deep link to the person detail view you can add and save a new ad
 });
 
 test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
-    // var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
-    // xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -920,10 +890,20 @@ test('when you deep link to the person detail view you can add and save a locati
     andThen(() => {
         let person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(person.get('locations').get('length'), 0);
+        let person_location = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
+        assert.equal(person_location.get('length'), 0);
     });
     fillIn('.selectize-input input', 'a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
     click('.t-person-locations-select div.option:eq(0)');
+    andThen(() => {
+        //selectize updates passed array proxy immediately.
+        let person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.equal(person.get('locations').get('length'), 1);
+        //add_locations method
+        let person_location = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
+        assert.equal(person_location.get('length'), 1);
+    });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -935,30 +915,36 @@ test('when you deep link to the person detail view you can add and save a locati
     });
 });
 
-// test('sco when you deep link to the person detail view you can remove a location', (assert) => {
-//     visit(DETAIL_URL);
-//     let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
-//     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-//     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-//     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, locations: [LOCATION_DEFAULTS.idOne]});
-//     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-//     andThen(() => {
-//         let person = store.find('person', PEOPLE_DEFAULTS.id);
-//         assert.equal(person.get('locations').get('length'), 0);
-//     });
-//     fillIn('.selectize-input input', 'a');
-//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-//     click('.t-person-locations-select div.option:eq(0)');
-//     click(SAVE_BTN);
-//     andThen(() => {
-//         assert.equal(currentURL(), PEOPLE_URL);
-//         let person = store.find('person', PEOPLE_DEFAULTS.id);
-//         assert.equal(person.get('locations').get('length'), 1);
-//         assert.ok(person.get('isNotDirty'));
-//         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//         assert.equal(person.get('locations').objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
-//     });
-// });
+test('when you deep link to the person detail view you can remove a location', (assert) => {
+    clearxhr(detail_xhr);
+    visit(DETAIL_URL);
+    people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
+    andThen(() => {
+        let person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.equal(person.get('locations').get('length'), 1);
+        let person_location = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
+        assert.equal(person_location.get('length'), 1);
+    });
+    click('div.item > a.remove:eq(0)');
+    andThen(() => {
+        let person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.equal(person.get('locations').get('length'), 0);
+        let person_location = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
+        assert.ok(person_location.objectAt(0).get('removed'));
+    });
+    let response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    let payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, locations: []});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        let person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.equal(person.get('locations').get('length'), 0);
+        assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
 
 test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
     clearxhr(detail_xhr);
@@ -1016,3 +1002,41 @@ test('deep link to person and clicking in the person-locations-select component 
     });
 });
 
+// test('sco when you change a related role it will change the related locations as well', (assert) => {
+//     clearxhr(list_xhr);
+//     let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
+//     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+//     visit(DETAIL_URL);
+//     // let url = PREFIX + DETAIL_URL + "/";
+//     // let role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
+//     // let payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
+//     // xhr(url,'PUT',JSON.stringify(payload),{},200);
+//     andThen(() => {
+//         let locations = store.find('location');
+//         assert.equal(locations.get('length'), 1);
+//         assert.equal(find('div.item').length, 1);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     fillIn('.selectize-input input', 'a');
+//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+//     andThen(() => {
+//         let locations = store.find('location');
+//         assert.equal(locations.get('length'), 5);
+//         assert.equal(find('div.item').length, 1);
+//         assert.equal(find('div.option').length, 4);
+//     });
+//     fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+//     andThen(() => {
+//         let person = store.find('person', PEOPLE_DEFAULTS.id);
+//         let locations = store.find('location');
+//         assert.equal(locations.get('length'), 1);
+//         assert.equal(find('div.item').length, 1);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     // fillIn('.selectize-input input', 'a');
+//     // triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+//     // click(SAVE_BTN);
+//     // andThen(() => {
+//     //     assert.equal(currentURL(),PEOPLE_URL);
+//     // });
+// });
