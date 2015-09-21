@@ -20,9 +20,14 @@ nav.tabs{
       width: $tabWidth;
       margin: 0 3px 0 0;
       border-radius: $borderRadiusTop;
+      position: relative;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       .close-icon{
-        float: right;
-        margin: 3px -7px 0 0;
+        position: absolute;
+        top: 3px;
+        right: 3px;
         color: $darkGray;
       }
       .close-icon:hover{

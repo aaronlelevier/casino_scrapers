@@ -41,7 +41,7 @@ test('deep linking the people detail url should push a tab into the tab store', 
         var tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
-        assert.equal(thisTab.get('title'), PEOPLE_DEFAULTS.fullname);
+        assert.equal(thisTab.get('doc_title'), PEOPLE_DEFAULTS.fullname);
         assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
     });
 
@@ -65,7 +65,7 @@ test('visiting the people detail url from the detail url should push a tab into 
         var tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
-        assert.equal(thisTab.get('title'), PEOPLE_DEFAULTS.fullname);
+        assert.equal(thisTab.get('doc_title'), PEOPLE_DEFAULTS.fullname);
         assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
     });
 

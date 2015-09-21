@@ -1,10 +1,12 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import injectStore from 'bsrs-ember/utilities/store';
 import AddressType from 'bsrs-ember/models/address-type';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 import RollbackModalMixin from 'bsrs-ember/mixins/route/rollback/existing';
 
 export default Ember.Route.extend(RollbackModalMixin, {
+    store: injectStore('main'),
     repository: inject('person'),
     state_repo: inject('state'),
     status_repo: inject('status'),

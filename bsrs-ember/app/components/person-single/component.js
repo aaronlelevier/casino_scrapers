@@ -12,17 +12,14 @@ var PersonSingle = ParentValidationComponent.extend({
     classNames: ['wrapper', 'form'],
     attemptedTransition: '',
     usernameValidation: validate('model.username'),
-    didInsertElement(){
-      this._super();
-      //TODO: This is not right... need to figure out how to wait until the data is here
-      Ember.run.later(this, 'addTab', 500);
-    },
-    addTab(){
+    //TODO: Need to remove this observer and move it into a service.
+    initTab: Ember.observer('model.address_fks', function(){
       this.get('store').push('tab', {
           id: this.get('model.id'),
-          title: this.get('model.fullname')
+          doc_type: 'person',
+          doc_route: 'admin.people.person'
       });
-    },
+    }),
     actions: {
         savePerson() {
             this.set('submitted', true);
