@@ -17,7 +17,7 @@ moduleForComponent('person-locations-select', 'integration: person-locations-sel
         store = module_registry(this.container, this.registry, ['model:person', 'model:location', 'model:person-location']);
         m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
         m2m_two = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idTwo, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idTwo});
-        person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne, PERSON_LOCATION_DEFAULTS.idTwo]});
+        person = store.push('person', {id: PEOPLE_DEFAULTS.id, location_level_pk: LOCATION_LEVEL_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne, PERSON_LOCATION_DEFAULTS.idTwo]});
         role = store.push('role', {id: ROLE_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id], location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
         location_one = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
         location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idTwo]});
@@ -43,8 +43,10 @@ test('should render a selectbox with bound options filtered by location level', 
     this.set('model', person.get('locations'));
     this.render(hbs`{{person-locations-select model=model person=person}}`);
     let $component = this.$('.t-person-locations-select');
-    location_three = store.push('location', {id: 'ABC123', name: LOCATION_DEFAULTS.storeNameThree, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idThree]});
-    location_four = store.push('location', {id: 'DEF456', name: LOCATION_DEFAULTS.storeNameFour});
+    run(() => {
+        location_three = store.push('location', {id: 'ABC123', name: LOCATION_DEFAULTS.storeNameThree, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, person_location_fks: [PERSON_LOCATION_DEFAULTS.idThree]});
+        location_four = store.push('location', {id: 'DEF456', name: LOCATION_DEFAULTS.storeNameFour});
+    });
     assert.equal($component.prop('multiple'), true);
     assert.equal($component.find('div.option').length, 3);
 });

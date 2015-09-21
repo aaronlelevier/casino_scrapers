@@ -1,6 +1,13 @@
 import Ember from 'ember';
 
 var LocationMixin = Ember.Mixin.create({
+    location_level_pk: Ember.computed('role', function() {
+        let role = this.get('role');
+        if(role && role.get('id')) {
+            let location_level = role.get('location_level');
+            return location_level ? location_level.get('id') : undefined;
+        }
+    }),
     location_ids: Ember.computed('locations.[]', function() {
         return this.get('locations').map((location) => {
             return location.get('id');

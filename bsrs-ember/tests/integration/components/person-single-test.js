@@ -108,7 +108,7 @@ test('locations multi select will not break when array proxy passes through with
     assert.equal($component.find('option').length, 0);
 });
 
-test('sco locations multi select will update options if clicked into.', function(assert) {
+test('locations multi select will update options if clicked into.', function(assert) {
     var done = assert.async();
     let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
     let role = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: undefined, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
