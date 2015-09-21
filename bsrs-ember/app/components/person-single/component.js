@@ -14,6 +14,10 @@ var PersonSingle = ParentValidationComponent.extend({
     usernameValidation: validate('model.username'),
     didInsertElement(){
       this._super();
+      //TODO: This is not right... need to figure out how to wait until the data is here
+      Ember.run.later(this, 'addTab', 500);
+    },
+    addTab(){
       this.get('store').push('tab', {
           id: this.get('model.id'),
           title: this.get('model.fullname')

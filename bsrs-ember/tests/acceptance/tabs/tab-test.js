@@ -25,9 +25,7 @@ module('Acceptance | tab test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_PEOPLE_URL + '/';
-        var people_list_data = PEOPLE_FIXTURES.list();
         people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
         detail_xhr = xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
     },
     afterEach() {
@@ -35,7 +33,24 @@ module('Acceptance | tab test', {
     }
 });
 
-test('amk visiting the people detail url from the detail url should push a tab into the tab store', (assert) => {
+test('deep linking the people detail url should push a tab into the tab store', (assert) => {
+
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
+        assert.equal(thisTab.get('title'), PEOPLE_DEFAULTS.fullname);
+        assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
+    });
+
+});
+
+test('visiting the people detail url from the detail url should push a tab into the tab store', (assert) => {
+
+    var people_list_data = PEOPLE_FIXTURES.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
 
     visit(PEOPLE_URL);
     andThen(() => {
