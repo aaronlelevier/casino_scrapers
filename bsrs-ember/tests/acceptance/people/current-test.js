@@ -83,7 +83,7 @@ test('when rolling back the locale the current locale is also changed back', (as
                 assert.equal(find('.t-modal').is(':hidden'), true);
                 var person = store.find('person', PERSON_CURRENT_DEFAULTS.id);
                 assert.equal(person.get('locale'), PEOPLE_DEFAULTS.locale);
-                assert.equal(find('.t-people').text(), "People");
+                assert.equal(find('.t-grid-title').text(), "People");
             });
         });
     });

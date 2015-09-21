@@ -50,7 +50,7 @@ test('visiting /people/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + BASE_PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(PEOPLE_URL);
-    click('.t-person-new');
+    click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.equal(store.find('person').get('length'), 2);
@@ -77,7 +77,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     var url = PREFIX + BASE_PEOPLE_URL + '/';
     xhr( url,'POST',JSON.stringify(payload),{},201,response );
     visit(PEOPLE_URL);
-    click('.t-person-new');
+    click('.t-add-new');
     andThen(() => {
         assert.ok(find('.t-username-validation-error').is(':hidden'));
         assert.ok(find('.t-password-validation-error').is(':hidden'));
@@ -144,7 +144,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', {id: UUID.value});
             assert.equal(person.get('length'), 0);
-            assert.equal(find('tr.t-person-data').length, 1);
+            assert.equal(find('tr.t-grid-data').length, 1);
         });
     });
 });
