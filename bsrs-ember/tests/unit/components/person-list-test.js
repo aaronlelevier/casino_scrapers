@@ -93,7 +93,7 @@ test('searched content allows you to look through searchable keys and filter acc
     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier'});
     var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
     var people = subject.get('searched_content');
-    assert.deepEqual(subject.get('searchable'), ['username', 'fullname', 'title']);
+    assert.deepEqual(subject.get('searchable'), ['fullname', 'username', 'title']);
     assert.equal(people.get('length'), 3);
     subject.set('search', 'scot'); 
     people = subject.get('searched_content');

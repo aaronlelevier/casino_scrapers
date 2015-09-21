@@ -206,9 +206,9 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # Create Person Page Object
         person_page = PersonPage(
             driver = self.driver,
-            new_link = "t-person-new",
+            new_link = "t-add-new",
             list_name = "t-person-username",
-            list_data = "t-person-data"
+            list_data = "t-grid-data"
         )
         # Go to Create Person view
         person_page.find_new_link().click()
@@ -313,20 +313,20 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual("sint", titles[9].text)
 
     def test_search(self):
-        people = self.wait_for_xhr_request("t-person-data", plural=True)
+        people = self.wait_for_xhr_request("t-grid-data", plural=True)
         self.assertEqual(len(people), 10)
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('cu')
-        people = self.wait_for_xhr_request("t-person-data", plural=True)
+        people = self.wait_for_xhr_request("t-grid-data", plural=True)
         self.assertEqual(len(people), 10)
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('aaaaa')
         with self.assertRaises(NoSuchElementException):
-            people = self.wait_for_xhr_request("t-person-data", debounce=True)
-            people = self.driver.find_element_by_class_name("t-person-data")
+            people = self.wait_for_xhr_request("t-grid-data", debounce=True)
+            people = self.driver.find_element_by_class_name("t-grid-data")
 
     def test_search_ordering(self):
         # Search
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('cu')
-        people = self.wait_for_xhr_request("t-person-data", plural=True, debounce=True)
+        people = self.wait_for_xhr_request("t-grid-data", plural=True, debounce=True)
         self.assertEqual(len(people), 5)
         # Order
         self.wait_for_xhr_request("t-sort-title-dir").click()
@@ -336,26 +336,26 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
         self.assertEqual("sed", usernames[0].text)
         # Search maintained
-        people = self.wait_for_xhr_request("t-person-data", plural=True)
+        people = self.wait_for_xhr_request("t-grid-data", plural=True)
         self.assertEqual(len(people), 5)
 
     def test_full_text_search(self):
         self.wait_for_xhr_request("t-filter-username").click()
         username_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
         username_fulltext_search.send_keys("at")
-        people = self.wait_for_xhr_request("t-person-data", plural=True, debounce=True)
+        people = self.wait_for_xhr_request("t-grid-data", plural=True, debounce=True)
         self.assertEqual(len(people), 2)
         usernames = self.driver.find_elements_by_class_name("t-person-username")
         self.assertEqual("occaecat", usernames[0].text)
         self.driver.find_element_by_class_name("t-filter-title").click()
         title_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
         title_fulltext_search.send_keys("de")
-        people = self.wait_for_xhr_request("t-person-data", plural=True, debounce=True)
+        people = self.wait_for_xhr_request("t-grid-data", plural=True, debounce=True)
         self.assertEqual(len(people), 1)
         usernames = self.driver.find_elements_by_class_name("t-person-username")
         self.assertEqual("consequat.", usernames[0].text)
         self.driver.refresh()
-        people = self.wait_for_xhr_request("t-person-data", plural=True, just_refreshed=True)
+        people = self.wait_for_xhr_request("t-grid-data", plural=True, just_refreshed=True)
         self.assertEqual(len(people), 1)
         usernames = self.driver.find_elements_by_class_name("t-person-username")
         self.assertEqual("consequat.", usernames[0].text)

@@ -59,7 +59,7 @@ test('visiting the people detail url from the detail url should push a tab into 
         assert.equal(tabs.get('length'), 0);
     });
 
-    click('.t-person-data:eq(0)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var tabs = store.find('tab');

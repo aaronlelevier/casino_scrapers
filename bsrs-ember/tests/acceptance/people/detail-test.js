@@ -57,7 +57,7 @@ test('clicking a persons name will redirect to the given detail view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
-    click('.t-person-data:eq(0)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -375,7 +375,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
-    click('.t-person-data:eq(0)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
