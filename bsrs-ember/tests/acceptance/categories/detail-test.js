@@ -237,7 +237,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-// test('categories children can be selected', (assert) => {
+// test('clicking and typing into selectize for categories children will fire off xhr request for all categories', (assert) => {
 //     visit(DETAIL_URL);
 //     assert.equal(1,2)
 // });
