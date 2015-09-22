@@ -132,7 +132,7 @@ Tests with uWSGI
     ~/misc/uwsgi-2.0.3/uwsgi --socket bigsky.socket --wsgi-file bigsky.wsgi
 
     # test 'ini'
-    sudo ~/misc/uwsgi-2.0.3/uwsgi --ini uwsgi.ini --no-site
+    sudo ~/misc/uwsgi-2.0.3/uwsgi --ini uwsgi.ini
 
     # run compiled "uwsgi"
     ~/misc/uwsgi-2.0.3/uwsgi --http :8003 --wsgi-file bigsky.wsgi
