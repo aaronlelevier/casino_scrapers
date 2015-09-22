@@ -14,6 +14,7 @@ from location.serializers import (LocationCreateSerializer,
     LocationUpdateSerializer)
 from person.tests.factory import create_person, PASSWORD
 from util import create
+from util.create import _generate_chars
 
 
 ### LOCATION LEVEL
@@ -620,4 +621,30 @@ class DRFFiltersTests(APITestCase):
         self.assertEqual(
             data['count'],
             Location.objects.filter(location_level=self.location_level).count()
+        )
+
+    def test_location_level_filter_by_name(self):
+        # 3 locations total: [c, ca, cat]
+        c = mommy.make(Location, number=_generate_chars(),
+            location_level=self.location_level, name='c')
+        cat = mommy.make(Location, number=_generate_chars(),
+            location_level=self.location_level, name='cat')
+        # filter by "c" gets 3
+        name = "c"
+        response = self.client.get('/api/admin/locations/?location_level={}&name__icontains={}'
+            .format(self.location_level.id, name))
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['count'],
+            Location.objects.filter(location_level=self.location_level, name__icontains=name).count()
+        )
+
+        # filter by "ca" gets 2
+        name = "ca"
+        response = self.client.get('/api/admin/locations/?location_level={}&name__icontains={}'
+            .format(self.location_level.id, name))
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['count'],
+            Location.objects.filter(location_level=self.location_level, name__icontains=name).count()
         )
