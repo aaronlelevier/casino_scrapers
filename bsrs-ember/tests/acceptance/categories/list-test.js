@@ -17,8 +17,8 @@ let application;
 module('Acceptance | category-list', {
     beforeEach() {
         application = startApp();
-        let endpoint = PREFIX + BASE_URL + "/";
-        xhr(endpoint, "GET", null, {}, 200, CATEGORY_FIXTURES.list());
+        let endpoint = PREFIX + BASE_URL + '/';
+        xhr(endpoint + '?page=1', "GET", null, {}, 200, CATEGORY_FIXTURES.list());
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -29,10 +29,6 @@ test('visiting /categories/index', (assert) => {
     visit(CATEGORIES_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
-        assert.equal(find('h1.t-categories').text(), 'Categories');
-        assert.equal(find('tr.t-categories-data').length, 23);
-        assert.equal(find('th:eq(1)').text(), 'Name ');
-        assert.equal(find('th:eq(2)').text(), 'Description ');
-        assert.equal(find('th:eq(3)').text(), 'Label ');
+        assert.equal(find('tr.t-grid-data').length, 10);
     });
 });

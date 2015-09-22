@@ -35,6 +35,32 @@ var CategoryRepo = Ember.Object.extend({
         });
         return this.get('store').find('category');
     },
+    findWithQuery(page, sort, search, find) {
+        page = page || 1;
+        var endpoint = CATEGORY_URL + '?page=' + page; //TODO: make url consistent in all repos
+        if (sort && sort !== 'id') {
+            endpoint = endpoint + '&ordering=' + sort;
+        }
+        if (search && search !== '') {
+            endpoint = endpoint + '&search=' + encodeURIComponent(search);
+        }
+        if (find && find !== '') {
+            let finds = find.split(',');
+            finds.forEach(function(data) {
+                let params = data.split(':');
+                let key = params[0];
+                let value = params[1];
+                endpoint = endpoint + '&' + key + '__icontains=' + encodeURIComponent(value);
+            });
+        }
+        var all = this.get('store').find('category');
+        PromiseMixin.xhr(endpoint).then((response) => {
+            all.set('isLoaded', true);
+            all.set('count', response.count);
+            this.get('CategoryDeserializer').deserialize(response); //TODO: remove this ?
+        });
+        return all;
+    },
     findById(id) {
         PromiseMixin.xhr(CATEGORY_URL + id + '/', 'GET').then((response) => {
             this.get('CategoryDeserializer').deserialize(response, id);

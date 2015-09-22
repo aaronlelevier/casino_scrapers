@@ -28,7 +28,7 @@ module('Acceptance | detail test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/';
-        list_xhr = xhr(endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
         xhr(endpoint + CATEGORY_DEFAULTS.idOne + '/', 'GET', null, {}, 200, CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne));
     },
     afterEach() {
@@ -41,7 +41,7 @@ test('clicking a categories name will redirect to the given detail view', (asser
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
-    click('.t-categories-data:eq(0)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -83,11 +83,11 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me. 
     // let results = list.results[0];
     // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CATEGORY_DEFAULTS);
-    xhr(endpoint, 'GET', null, {}, 200, list);
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
-        assert.equal(store.find('category').get('length'), 23);
+        assert.equal(store.find('category').get('length'), 10);
         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
         assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameTwo);
         assert.equal(category.get('description'), CATEGORY_DEFAULTS.descriptionMaintenance);

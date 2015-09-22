@@ -4,9 +4,9 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            idOne: 'ec62006b-6275-4aa9-abfa-38b146383d30',
-            idTwo: 'ec62006b-6275-4aa9-abfa-38b146383d31',
-            idChild: 'ec62006b-6275-4aa9-abfa-38b146383d32',
+            idOne: 'ec62006b-6275-4aa9-abfa-38b146383d301',
+            idTwo: 'ec62006b-6275-4aa9-abfa-38b146383d302',
+            idChild: 'ec62006b-6275-4aa9-abfa-38b146383d303',
             unusedId: 'ec62006b-6275-4aa9-abfa-38b146383d50',
             nameOne: 'admin.category.name.repair',
             nameTwo: 'admin.category.name.maintenance',
