@@ -103,9 +103,9 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # Create Location Page Object
         location_page = ModelPage(
             driver = self.driver,
-            new_link = "t-location-new",
+            new_link = "t-add-new",
             list_name = "t-location-name",
-            list_data = "t-location-data"
+            list_data = "t-grid-data"
         )
         # Get to "Location create view"
         location_new_link = location_page.find_new_link()
