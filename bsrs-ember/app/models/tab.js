@@ -13,5 +13,10 @@ export default Ember.Object.extend({
   }),
   changed_doc_title: Ember.observer('parent.fullname', function(){
     this.set('doc_title', this.get('parent.fullname'));
+  }),
+  isDirty: false,
+  changed_is_dirty: Ember.observer('parent.isDirty', function(){
+    var dirty = this.get('parent.isDirty');
+    this.set('isDirty', dirty);
   })
 });

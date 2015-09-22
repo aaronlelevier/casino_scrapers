@@ -24,27 +24,39 @@ nav.tabs{
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
-      .close-icon{
-        position: absolute;
-        top: 3px;
-        right: 3px;
-        color: $darkGray;
-      }
-      .close-icon:hover{
-        cursor: pointer;
-        color: $dark;
+      .close-wrap{
+        .close-icon{
+          height: 12px;
+          width: 12px;
+          position: absolute;
+          top: 3px;
+          right: 3px;
+          color: $darkGray;
+        }
+        .close-icon:hover{
+          cursor: pointer;
+          color: $dark;
+        }
+        &.dirty{
+          .close-icon{
+            color: $orange;
+          }
+          .close-icon:hover{
+            color: $dark;
+          }
+        }
+        &:hover{
+          cursor: pointer;
+        }
+        &.active{
+          background: $white;
+          font-weight: bold;
+        }
+        @media screen and (max-width: $mobileDeviceWidth){
+          float: none;
+        }
       }
 
-      &:hover{
-        cursor: pointer;
-      }
-      &.active{
-        background: $white;
-        font-weight: bold;
-      }
-      @media screen and (max-width: $mobileDeviceWidth){
-        float: none;
-      }
     }//li
 
     li.new{

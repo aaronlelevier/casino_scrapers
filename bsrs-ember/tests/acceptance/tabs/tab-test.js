@@ -47,7 +47,7 @@ test('deep linking the people detail url should push a tab into the tab store', 
 
 });
 
-test('visiting the people detail url from the detail url should push a tab into the tab store', (assert) => {
+test('visiting the people detail url from the list url should push a tab into the tab store', (assert) => {
 
     var people_list_data = PEOPLE_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
@@ -67,6 +67,60 @@ test('visiting the people detail url from the detail url should push a tab into 
         var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
         assert.equal(thisTab.get('doc_title'), PEOPLE_DEFAULTS.fullname);
         assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
+    });
+
+});
+
+test('clicking on a tab from the list url should take you to the detail url', (assert) => {
+
+    var people_list_data = PEOPLE_FIXTURES.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
+
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        var tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 0);
+    });
+
+    click('.t-grid-data:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
+        assert.equal(thisTab.get('doc_title'), PEOPLE_DEFAULTS.fullname);
+        assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
+    });
+
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+
+    click('.t-tab:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+
+});
+
+test('amk a dirty model should add the dirty class to the tab close icon', (assert) => {
+
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
+        assert.equal(thisTab.get('doc_title'), PEOPLE_DEFAULTS.fullname);
+        assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
+
+        fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.username);
+        andThen(() => {
+          assert.equal(find('.dirty').length, 1);
+        });
+
     });
 
 });

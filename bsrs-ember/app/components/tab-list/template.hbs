@@ -1,9 +1,9 @@
 <nav class="tabs">
   <ul id="tabs" class="list-inline">
     {{#each tabs as |tab|}}
-      {{#link-to tab.doc_route tab.id tagName="li"}}
+      {{#link-to tab.doc_route tab.id classNames="t-tab" tagName="li"}}
         <span class="t-tab-title">{{tab.doc_title}}</span>
-        <span>{{fa-icon "times-circle" classNames="close-icon"}}</span>
+        <span class="close-wrap {{if tab.isDirty 'dirty'}}">{{fa-icon "times-circle" classNames="close-icon"}}</span>
       {{/link-to}}
     {{/each}}
     <li class="new">
