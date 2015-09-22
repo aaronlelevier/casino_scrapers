@@ -37,7 +37,7 @@ fi
 venv/bin/pip3 install -r requirements.txt
 
 cd bigsky/
-export DJANGO_SETTINGS_MODULE='bigsky.settings.persistant'
+export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
 ../venv/bin/python manage.py makemigrations
 ../venv/bin/python manage.py migrate
 ../venv/bin/python manage.py collectstatic --noinput
