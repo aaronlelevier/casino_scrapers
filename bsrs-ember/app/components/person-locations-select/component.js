@@ -21,6 +21,7 @@ var PersonLocationsSelect = Ember.Component.extend({
         return location_level_pk ? repo.findLocationSelect({location_level: location_level_pk}, search_criteria) : [];
     }),
     find_all_locations: function() {
+        //TODO: removed let statement
         let locations = this.get('all_locations'); 
     },
     actions: {
