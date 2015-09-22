@@ -1,22 +1,35 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
+import injectStore from 'bsrs-ember/utilities/store';
 
 var CategoryChildrenSelect = Ember.Component.extend({
-    category_ids: Ember.computed('model.children.[]', function() {
-        return this.get('model').get('children');
-    }).readOnly(),
+    repository: inject('category'),
+    store: injectStore('main'),
+    categories_selected: Ember.computed(function() {
+        let category = this.get('category');
+        return category.get('children');
+    }),
+    options: Ember.computed(function() {
+        return this.get('store').find('category');
+    }),
+    find_all_categories() {
+        let repo = this.get('repository');
+        let search_criteria = this.get('search_criteria');
+        repo.findCategoryChildren(search_criteria);
+    },
     actions: {
-        change(location_level) {
-            let location_level_pk = location_level.get('id');
-            let current_location_level = this.get('model');
-            let children = current_location_level.get('children_fks') || [];
-            if(Ember.$.inArray(location_level_pk, children) > -1) {
-                let children_removed = children.filter((child) => {
-                    return child !== location_level_pk;
-                });
-                current_location_level.set('children_fks', children_removed);
-            } else {
-                current_location_level.set('children_fks', children.concat([location_level_pk]));
-            }
+        add(category_child) {
+            let category = this.get('category');
+            let category_id = category_child.get('id');
+            category.add_child(category_id);
+        },
+        remove(category_child) {
+            let category = this.get('category');
+            let category_id = category_child.get('id');
+            category.remove_child(category_id);
+        },
+        update_filter() {
+            Ember.run.debounce(this, this.get('find_all_categories'), 300);
         }
     }
 });

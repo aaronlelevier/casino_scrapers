@@ -236,3 +236,8 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
 });
+
+// test('categories children can be selected', (assert) => {
+//     visit(DETAIL_URL);
+//     assert.equal(1,2)
+// });

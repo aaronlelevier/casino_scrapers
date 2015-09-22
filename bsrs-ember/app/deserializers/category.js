@@ -4,7 +4,6 @@ var extract_children = (children, store) => {
     let children_fks = [];
     children.forEach((child_model) => {
         children_fks.push(child_model.id);
-        //possible to push its children in as well? question is how deep should we go?? recursive sol'n?
         store.push('category', child_model);
     });
     return children_fks;

@@ -22,7 +22,9 @@ var BSRS_CATEGORY_FACTORY = (function() {
         var response = [];
         for (var i=0; i < 23; i++) {
             var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
-            response.push(this.generate(uuid + i));
+            var category = this.generate(uuid + i);
+            category.name += i;
+            response.push(category);
         }
         return {'count':23,'next':null,'previous':null,'results': response};
     },
