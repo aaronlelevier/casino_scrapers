@@ -36,10 +36,16 @@ if [  -d "/www/django/releases/persistent/bsrs/bsrs-django/venv" ];
 fi
 venv/bin/pip3 install -r requirements.txt
 
+wait
+
 cd bigsky/
 export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
+
+wait
 ../venv/bin/python manage.py makemigrations
+wait
 ../venv/bin/python manage.py migrate
+wait
 ../venv/bin/python manage.py collectstatic --noinput
 
 cp -r ../../bsrs-ember/dist/assets .
