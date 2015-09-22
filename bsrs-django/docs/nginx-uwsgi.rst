@@ -81,25 +81,58 @@ Static Assets
 
 
 
-Uwsgi
+uWSGI
 =====
+
+Setting up uWSGI
+----------------
+`Followed this blog <http://www.robberphex.com/2014/03/335>`_
+
+The main steps are:
+
+0. Make sure that uWSGI is not installed globally
+
+1. Compile uWSGI from source:
+
+.. code-block::
+
+    wget http://projects.unbit.it/downloads/uwsgi-2.0.3.tar.gz
+    tar -xvf uwsgi-2.0.3.tar.gz
+    cd uwsgi-2.0.3
+
+2. Activate virtualenv & build uWSGI
+
+.. code-block::
+
+    python uwsgiconfig.py --build
+
+3. Then use the *path/to/uwsgi/executable* to run uWSGI:
+
+.. code-block::
+
+    ~/misc/uwsgi-2.0.3/uwsgi --http :8003 --wsgi-file bigsky.wsgi
+
+
+Tests with uWSGI
+----------------
 
 .. code-block::
 
     # test uwsgi works
-    uwsgi --http :8003 --wsgi-file test.py
+    ~/misc/uwsgi-2.0.3/uwsgi --http :8003 --wsgi-file test.py
 
     # test 'runserver'
     # activate virtualenv
     python manage.py runserver 0.0.0.0:8003
 
     # test project '.wsgi' file
-    uwsgi --http :8003 --wsgi-file bigsky.wsgi
+    ~/misc/uwsgi-2.0.3/uwsgi --http :8003 --wsgi-file bigsky.wsgi
+
+    # test socket
+    ~/misc/uwsgi-2.0.3/uwsgi --socket bigsky.socket --wsgi-file bigsky.wsgi
 
     # test 'ini'
-    sudo uwsgi --ini uwsgi.ini --no-site
+    sudo ~/misc/uwsgi-2.0.3/uwsgi --ini uwsgi.ini --no-site
 
-    # w/ django - simple
-    uwsgi --http :8003 --home /home/bsdev/.virtualenvs/bs_py34 --chdir /www/django/releases/persistent/bsrs/python3/ --wsgi-file bigsky.wsgi --no-site
-
-    uwsgi --http :8003 --home /home/bsdev/.virtualenvs/bs_py34 --chdir /www/django/releases/persistent/bsrs/python3/ --wsgi-file bigsky.wsgi --no-site
+    # run compiled "uwsgi"
+    ~/misc/uwsgi-2.0.3/uwsgi --http :8003 --wsgi-file bigsky.wsgi

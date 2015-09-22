@@ -5,10 +5,10 @@ import sys
 # python 3
 sys.path.append('/usr/local/bin/python3.4')
 sys.path.append('/usr/local/lib/python3.4/site-packages')
+sys.path.append('/home/bsdev/.virtualenvs/bs_py34/lib/python3.4/site-packages')
 
 # project
 sys.path.append('/www/django/releases/persistent/bsrs/python3')
-sys.path.append('/www/django/releases/persistent/bsrs/bsrs-django')
 sys.path.append('/www/django/releases/persistent/bsrs/bsrs-django/bigsky')
 sys.path.append('/www/django/releases/persistent/bsrs/bsrs-django/bigsky/bigsky')
 
