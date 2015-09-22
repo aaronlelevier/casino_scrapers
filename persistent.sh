@@ -2,17 +2,7 @@
 
 echo "PERSISTENT DEPLOY STARTED!"
 
-PORT=$((8002))
-
-echo "UWSGI PROCESS RUNNING BEFORE KILL:"
-fuser $PORT/tcp
-
-echo "UWSGI KILL:"
-fuser -k $PORT/tcp
-
-wait
-echo "SHOULD BE NO UWSGI PROCESSES HERE:"
-fuser $PORT/tcp
+PORT=$((8003))
 
 if [  ! -d "/www/django/releases/persistent" ]; then
     mkdir /www/django/releases/persistent
@@ -34,48 +24,25 @@ fi
 
 cd bsrs-ember
 npm install --no-optional
-
 ./node_modules/ember-cli/bin/ember build --env=production
 
 cd ../bsrs-django
-if [  -d "/www/django/releases/persistent/bsrs/bsrs-django/venv" ]; 
-    then
-        echo "VIRTUALENV EXISTS"
-    else
-        echo "VIRTUALENV DOES NOT EXIST"
-        virtualenv venv
-fi
-venv/bin/pip install -r requirements.txt
-
-DB_NAME="staging_persistant"
-export PGPASSWORD=tango
-dropdb $DB_NAME -U bsdev
-createdb $DB_NAME -U bsdev -O bsdev
+source /home/bsdev/.virtualenvs/bs_py34/bin/activate
+pip3 install -r requirements.txt
 
 cd bigsky/
-export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
-../venv/bin/python manage.py makemigrations
-../venv/bin/python manage.py migrate
-
-../venv/bin/python manage.py loaddata fixtures/jenkins.json
-../venv/bin/python manage.py loaddata fixtures/jenkins_custom.json
+export DJANGO_SETTINGS_MODULE='bigsky.settings.persistant'
+./manage.py makemigrations
+./manage.py migrate
+./manage.py collectstatic --noinput
 
 cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/fonts .
 cp -r ../../bsrs-ember/dist/index.html templates
 
-uwsgi --http :$PORT \
-    --wsgi-file bigsky.wsgi \
-    --virtualenv /www/django/releases/persistent/bsrs/bsrs-django/venv \
-    --daemonize /tmp/bigsky-persistent.log \
-    --static-map /assets=/www/django/releases/persistent/bsrs/bsrs-django/bigsky \
-    --static-map /fonts=/www/django/releases/persistent/bsrs/bsrs-django/bigsky \
-    --check-static /www/django/releases/persistent/bsrs/bsrs-django/bigsky \
-    --enable-threads
+/home/bsdev/misc/uwsgi-2.0.3/uwsgi --ini uwsgi.ini
 
-wait
-echo "OUTPUT LOG:"
-cat /tmp/bigsky-persistent.log
+service nginx restart
 
 echo "DEPLOY FINISHED!"
 exit 0
