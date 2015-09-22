@@ -37,24 +37,22 @@ nav.tabs{
           cursor: pointer;
           color: $dark;
         }
-        &.dirty{
-          .close-icon{
-            color: $orange;
-          }
-          .close-icon:hover{
-            color: $dark;
-          }
+        .dirty{
+          color: $lightGreen;
         }
-        &:hover{
-          cursor: pointer;
-        }
-        &.active{
-          background: $white;
-          font-weight: bold;
-        }
-        @media screen and (max-width: $mobileDeviceWidth){
-          float: none;
-        }
+
+      }
+      &:hover{
+        cursor: pointer;
+      }
+      &.active{
+        background: $white;
+      }
+      &:hover.active{
+        cursor: default;
+      }
+      @media screen and (max-width: $mobileDeviceWidth){
+        float: none;
       }
 
     }//li
