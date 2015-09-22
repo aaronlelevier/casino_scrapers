@@ -26,7 +26,7 @@ module('Acceptance | detail-test', {
         endpoint = PREFIX + BASE_URL + '/';
         let location_list_data = LOCATION_FIXTURES.list();
         let location_detail_data = LOCATION_FIXTURES.detail();
-        list_xhr = xhr(endpoint, 'GET', null, {}, 200, location_list_data);
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
         xhr(endpoint + LOCATION_DEFAULTS.idOne + '/', 'GET', null, {}, 200, location_detail_data);
     },
     afterEach() {
@@ -39,7 +39,7 @@ test('clicking on a locations name will redirect them to the detail view', (asse
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
     });
-    click('.t-location-data:eq(0)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -67,7 +67,7 @@ test('visiting admin/location', (assert) => {
     });
     let list = LOCATION_FIXTURES.list();
     list.results[0].name = LOCATION_DEFAULTS.storeNameTwo;
-    xhr(endpoint, 'GET', null, {}, 200, list);
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
@@ -100,7 +100,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
     });
-    click('.t-location-data:eq(0)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
     });

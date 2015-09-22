@@ -996,9 +996,9 @@ test('deep link to person and clicking in the person-locations-select component 
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
     andThen(() => {
         let locations = store.find('location', {location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
-        assert.equal(locations.get('length'), 5);
+        assert.equal(locations.get('length'), 10);
         assert.equal(find('div.item').length, 1);
-        assert.equal(find('div.option').length, 4);
+        assert.equal(find('div.option').length, 9);
     });
 });
 
@@ -1020,16 +1020,16 @@ test('when you change a related role it will change the related locations as wel
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
     andThen(() => {
         let locations = store.find('location');
-        assert.equal(locations.get('length'), 5);
+        assert.equal(locations.get('length'), 10);
         assert.equal(find('div.item').length, 1);
-        assert.equal(find('div.option').length, 4);
+        assert.equal(find('div.option').length, 9);
     });
     fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
     andThen(() => {
         let person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
         let locations = store.find('location');
-        assert.equal(locations.get('length'), 5);
+        assert.equal(locations.get('length'), 10);
         assert.equal(find('div.item').length, 0);
         assert.equal(find('div.option').length, 0);
     });
