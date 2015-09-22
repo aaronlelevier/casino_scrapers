@@ -86,8 +86,18 @@ Uwsgi
 
 .. code-block::
 
-    # check that uWSGI is installed globally
+    # test uwsgi works
     uwsgi --http :8003 --wsgi-file test.py
+
+    # test 'runserver'
+    # activate virtualenv
+    python manage.py runserver 0.0.0.0:8003
+
+    # test project '.wsgi' file
+    uwsgi --http :8003 --wsgi-file bigsky.wsgi
+
+    # test 'ini'
+    sudo uwsgi --ini uwsgi.ini --no-site
 
     # w/ django - simple
     uwsgi --http :8003 --home /home/bsdev/.virtualenvs/bs_py34 --chdir /www/django/releases/persistent/bsrs/python3/ --wsgi-file bigsky.wsgi --no-site
