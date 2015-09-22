@@ -40,6 +40,15 @@ var CategoryModel = Model.extend(NewMixin, {
         };
         return store.find('category', filter.bind(this), ['children_fks']);
     }),
+    add_child(category_child_id) {
+        let children_fks = this.get('children_fks');
+        children_fks.push(category_child_id);
+    },
+    remove_child(category_child_id) {
+        let children_fks = this.get('children_fks');
+        let indx = children_fks.indexOf(category_child_id);
+        children_fks.splice(indx, 1);
+    },
     removeRecord() {
         this.get('store').remove('category', this.get('id'));
     },
