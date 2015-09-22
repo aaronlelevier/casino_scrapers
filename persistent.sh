@@ -27,14 +27,20 @@ npm install --no-optional
 ./node_modules/ember-cli/bin/ember build --env=production
 
 cd ../bsrs-django
-source /home/bsdev/.virtualenvs/bs_py34/bin/activate
-pip3 install -r requirements.txt
+if [  -d "/www/django/releases/persistent/bsrs/bsrs-django/venv" ]; 
+    then
+        echo "VIRTUALENV EXISTS"
+    else
+        echo "VIRTUALENV DOES NOT EXIST"
+        virtualenv -p /usr/local/bin/python3.4 venv
+fi
+venv/bin/pip3 install -r requirements.txt
 
 cd bigsky/
 export DJANGO_SETTINGS_MODULE='bigsky.settings.persistant'
-./manage.py makemigrations
-./manage.py migrate
-./manage.py collectstatic --noinput
+../venv/bin/python manage.py makemigrations
+../venv/bin/python manage.py migrate
+../venv/bin/python manage.py collectstatic --noinput
 
 cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/fonts .
