@@ -39,6 +39,9 @@ var PersonSingle = ParentValidationComponent.extend({
             var repository = this.get('repository');
             repository.delete(model.get('id'));
             this.sendAction('redirectUser');
+        },
+        localeChanged(locale){
+            this.sendAction('localeChanged', locale);
         }
     }
 });

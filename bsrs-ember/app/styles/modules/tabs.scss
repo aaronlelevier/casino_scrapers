@@ -40,6 +40,9 @@ nav.tabs{
         .dirty{
           color: $lightGreen;
         }
+        .dirty:hover{
+          color: $darkGreen;
+        }
 
       }
       &:hover{

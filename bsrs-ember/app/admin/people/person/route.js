@@ -1,11 +1,11 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import config from 'bsrs-ember/config/environment';
 import injectStore from 'bsrs-ember/utilities/store';
 import AddressType from 'bsrs-ember/models/address-type';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
-import RollbackModalMixin from 'bsrs-ember/mixins/route/rollback/existing';
 
-export default Ember.Route.extend(RollbackModalMixin, {
+export default Ember.Route.extend({
     store: injectStore('main'),
     repository: inject('person'),
     state_repo: inject('state'),
@@ -14,6 +14,9 @@ export default Ember.Route.extend(RollbackModalMixin, {
     role_repo: inject('role'),
     phone_number_type_repo: inject('phone-number-type'),
     address_type_repo: inject('address-type'),
+    translationsFetcher: Ember.inject.service(),
+    i18n: Ember.inject.service(),
+    personCurrent: Ember.inject.service(),
     model(params) {
         var person_pk = params.person_id,
             country_repo = this.get('country_repo'),
@@ -57,6 +60,33 @@ export default Ember.Route.extend(RollbackModalMixin, {
     actions: {
         redirectUser() {
             this.transitionTo('admin.people');
+        },
+        localeChanged(locale){
+            var personCurrent = this.get('personCurrent');
+            var personCurrentId = personCurrent.get('model.id');
+            var model = this.currentModel.model;
+            model.set('locale', locale);
+            if(personCurrentId === model.get('id')){
+                config.i18n.currentLocale = locale;
+                return this.get('translationsFetcher').fetch().then(function(){
+                    this.get('i18n').set('locale', config.i18n.currentLocale);
+                }.bind(this));
+            }
+        },
+        willTransition(transition) {
+            var model = this.currentModel.model ? this.currentModel.model : this.currentModel;
+            if (model.get('isDirtyOrRelatedDirty')) {
+                Ember.$('.t-modal').modal('show');
+                this.trx.attemptedTransition = transition;
+                this.trx.attemptedTransitionModel = model;
+                transition.abort();
+            } else {
+                if (model.get('id')) {
+                    model.rollbackRelated();
+                    this.send('localeChanged', model.get('locale'));
+                }
+                Ember.$('.t-modal').modal('hide');
+            }
         }
     }
 });
