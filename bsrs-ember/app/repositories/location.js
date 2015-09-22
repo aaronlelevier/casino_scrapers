@@ -2,12 +2,16 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
+import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
 var PREFIX = config.APP.NAMESPACE;
 var LOCATION_URL = PREFIX + '/admin/locations/';
 
-var LocationRepo = Ember.Object.extend({
+var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
+    type: Ember.computed(function() { return 'location'; }),
+    url: Ember.computed(function() { return LOCATION_URL; }),
     LocationDeserializer: inject('location'),
+    deserializer: Ember.computed.alias('LocationDeserializer'),
     insert(model) {
         return PromiseMixin.xhr(LOCATION_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
@@ -33,32 +37,6 @@ var LocationRepo = Ember.Object.extend({
             this.get('LocationDeserializer').deserialize(response);
         });
         return this.get('store').find('location');
-    },
-    findWithQuery(page, sort, search, find) {
-        page = page || 1;
-        var endpoint = LOCATION_URL + '?page=' + page; //TODO: make url consistent in both repos
-        if (sort && sort !== 'id') {
-            endpoint = endpoint + '&ordering=' + sort;
-        }
-        if (search && search !== '') {
-            endpoint = endpoint + '&search=' + encodeURIComponent(search);
-        }
-        if (find && find !== '') {
-            let finds = find.split(',');
-            finds.forEach(function(data) {
-                let params = data.split(':');
-                let key = params[0];
-                let value = params[1];
-                endpoint = endpoint + '&' + key + '__icontains=' + encodeURIComponent(value);
-            });
-        }
-        var all = this.get('store').find('location');
-        PromiseMixin.xhr(endpoint).then((response) => {
-            all.set('isLoaded', true);
-            all.set('count', response.count);
-            this.get('LocationDeserializer').deserialize(response); //TODO: remove this ?
-        });
-        return all;
     },
     findById(id) {
         PromiseMixin.xhr(LOCATION_URL + id + '/', 'GET').then((response) => {
