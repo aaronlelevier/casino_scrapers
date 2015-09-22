@@ -18,6 +18,8 @@ const DETAIL_URL = BASE_URL + '/' + CATEGORY_DEFAULTS.idOne;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 const CANCEL_BTN = '.t-cancel-btn';
+const LETTER_A = {keyCode: 65};
+const SPACEBAR = {keyCode: 32};
 
 let application, store, endpoint, list_xhr;
 
@@ -237,7 +239,61 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-// test('clicking and typing into selectize for categories children will fire off xhr request for all categories', (assert) => {
-//     visit(DETAIL_URL);
-//     assert.equal(1,2)
-// });
+test('clicking and typing into selectize for categories children will fire off xhr request for all categories', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        assert.equal(category.get('children_fks').length, 1);
+        assert.equal(category.get('children').get('length'), 1);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 0);
+    });
+    let category_children_endpoint = PREFIX + '/admin/categories/' + '?search=a';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
+    fillIn('.selectize-input input', 'a');
+    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+    click('.t-category-children-select div.option:eq(0)');
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        assert.equal(category.get('children_fks').get('length'), 2);
+        assert.equal(find('div.option').length, 20);
+        assert.equal(find('div.item').length, 2);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
+    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, children: [CATEGORY_DEFAULTS.idChild, CATEGORY_DEFAULTS.idTwo]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
+
+test('clicking and typing into selectize for categories children will not filter if spacebar pressed', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        assert.equal(category.get('children_fks').length, 1);
+        assert.equal(category.get('children').get('length'), 1);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 0);
+    });
+    fillIn('.selectize-input input', ' ');
+    triggerEvent('.selectize-input input', 'keyup', SPACEBAR);
+    andThen(() => {
+        assert.equal(find('div.option').length, 0);
+    });
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        assert.equal(category.get('children_fks').get('length'), 1);
+        assert.equal(find('div.item').length, 1);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
+    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, children: [CATEGORY_DEFAULTS.idChild]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});

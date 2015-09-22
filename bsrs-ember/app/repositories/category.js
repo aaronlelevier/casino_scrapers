@@ -20,11 +20,14 @@ var CategoryRepo = Ember.Object.extend({
     },
     findCategoryChildren(search) {
         let url = CATEGORY_URL;
-        url += '?children&search=' + search;
-        PromiseMixin.xhr(url, 'GET').then((response) => {
-            this.get('CategoryDeserializer').deserialize(response);
-        });
-        return this.get('store').find('category');
+        search = search ? search.trim() : search;
+        if (search) {
+            url += '?search=' + search;
+            PromiseMixin.xhr(url, 'GET').then((response) => {
+                this.get('CategoryDeserializer').deserialize(response);
+            });
+            return this.get('store').find('category');
+        }
     },
     find() {
         PromiseMixin.xhr(CATEGORY_URL, 'GET').then((response) => {

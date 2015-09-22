@@ -16,7 +16,9 @@ moduleForComponent('category-children-select', 'integration: category-children-s
         category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, children_fks: []});
         category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, children_fks: []});
         category_repo = repository.initialize(this.container, this.registry, 'category');
-        category_repo.findCategoryChildren = function() { return store.find('category'); };
+        category_repo.findCategoryChildren = function() { 
+            return store.find('category'); 
+        };
     }
 });
 
@@ -28,36 +30,4 @@ test('should render a selectbox with bound options and multiple set to true', fu
     assert.equal($component.find('div.item').length, 1);
     assert.equal($component.find('div.option').length, 0);
 });
-
-test('select should show items selected correctly based on the model', function(assert) {
-    this.set('model', category);
-    this.render(hbs`{{category-children-select category=model}}`);
-    let $component = this.$('.t-category-children-select');
-    let $input = this.$('.selectize-input input');
-    assert.equal(category.get('children').get('length'), 1);
-    assert.deepEqual(category.get('children_fks'), [CATEGORY_DEFAULTS.idTwo]);
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 0);
-    assert.equal($component.find('div.item:eq(0)').data('value'), CATEGORY_DEFAULTS.idTwo);
-    $input.val('a').trigger('keyup').trigger('change');
-    $input.trigger('click').trigger('change');
-    run(() => { 
-        $component.find('div.option:eq(0)').trigger('click').trigger('change'); 
-    });
-    assert.equal($component.find('div.option').length, 0);
-    assert.equal($component.find('div.item').length, 2);
-    assert.equal(category.get('children').get('length'), 2);
-    assert.deepEqual(category.get('children_fks'), [CATEGORY_DEFAULTS.idTwo, CATEGORY_DEFAULTS.unusedId]);
-    assert.equal($component.find('div.item:eq(0)').data('value'), CATEGORY_DEFAULTS.idTwo);
-    assert.equal($component.find('div.item:eq(1)').data('value'), CATEGORY_DEFAULTS.unusedId);
-    run(() => { $component.find('div.item:eq(1) > a.remove').trigger('click').trigger('change'); });
-    assert.equal($component.find('div.option').length, 1);
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal(category.get('children').get('length'), 1);
-    assert.deepEqual(category.get('children_fks'), [CATEGORY_DEFAULTS.idTwo]);
-    assert.equal($component.find('div.item:eq(0)').data('value'), CATEGORY_DEFAULTS.idTwo);
-});
-
-
-
 
