@@ -10,8 +10,7 @@ var CategorySingleRoute = Ember.Route.extend(RollbackModalMixin, {
         },
     },
     model(params, transition) {
-        let query = transition.queryParams;
-        let search = query.search;
+        let search = transition.queryParams.search;
         let categories_children = this.get('repository').findCategoryChildren(search) || [];
         let model = this.get('repository').findById(params.category_id);
         return Ember.RSVP.hash({
