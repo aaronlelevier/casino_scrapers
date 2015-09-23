@@ -1,15 +1,24 @@
 #!/bin/bash -lx
-
 echo "PERSISTENT DEPLOY STARTED!"
 
+
+echo "CONFIG - SET SCRIPT CONFIGURATION"
 PORT=$((8003))
+export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
 
-if [  ! -d "/www/django/releases/persistent" ]; then
-    mkdir /www/django/releases/persistent
+
+echo "PROJECT DIR - CHECK IF PERSISTENT PROJECT DIRECTORY EXISTS"
+if [  ! -d "/www/django/releases/persistent" ]; 
+    then
+        echo "DOES NOT EXIST"
+        mkdir /www/django/releases/persistent
+    else
+        echo "EXISTS"
 fi
-
 cd /www/django/releases/persistent
 
+
+echo "GIT - PULL/CLONE REPO"
 if [  -d "/www/django/releases/persistent/bsrs" ]; 
     then
         echo "BSRS REPO EXISTS"
@@ -24,9 +33,12 @@ if [  -d "/www/django/releases/persistent/bsrs" ];
         git checkout python3
 fi
 
+
+echo "EMBER - BUILD"
 cd bsrs-ember
 npm install --no-optional
 ./node_modules/ember-cli/bin/ember build --env=production
+
 
 cd ../bsrs-django
 if [  -d "/www/django/releases/persistent/bsrs/bsrs-django/venv" ]; 
@@ -38,26 +50,32 @@ if [  -d "/www/django/releases/persistent/bsrs/bsrs-django/venv" ];
 fi
 venv/bin/pip3 install -r requirements.txt
 
-wait
 
+wait
+echo "DJANGO - MIGRATE DATABASE SCHEMA"
 cd bigsky/
-export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
+../venv/bin/python manage.py makemigrations
+../venv/bin/python manage.py migrate
+
 
 wait
-../venv/bin/python manage.py makemigrations
-wait
-../venv/bin/python manage.py migrate
-wait
+echo "DJANGO - COLLECTSTATIC"
 ../venv/bin/python manage.py collectstatic --noinput
 
+
+wait
+echo "EMBER - COPY STATIC ASSETS FROM EMBER TO DJANGO SIDE"
 cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/fonts .
 cp -r ../../bsrs-ember/dist/index.html templates
 
-# grant ownership to this directory for Tomcat
+
+wait
+echo "UWSGI - START/RELOAD"
 /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
 
-# grant ownership to this for Tomcat
+
+echo "NGINX - RESTART"
 service nginx restart
 
 echo "DEPLOY FINISHED!"
