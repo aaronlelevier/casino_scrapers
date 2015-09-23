@@ -16,10 +16,12 @@ if [  -d "/www/django/releases/persistent/bsrs" ];
         cd bsrs
         git checkout .
         git pull
+        git checkout python3
     else
         echo "BSRS REPO DOES NOT EXIST"
         git clone git@github.com:bigskytech/bsrs.git
         cd bsrs
+        git checkout python3
 fi
 
 cd bsrs-ember
@@ -52,8 +54,10 @@ cp -r ../../bsrs-ember/dist/assets .
 cp -r ../../bsrs-ember/dist/fonts .
 cp -r ../../bsrs-ember/dist/index.html templates
 
-/home/bsdev/misc/uwsgi-2.0.3/uwsgi --ini uwsgi.ini
+# grant ownership to this directory for Tomcat
+/usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
 
+# grant ownership to this for Tomcat
 service nginx restart
 
 echo "DEPLOY FINISHED!"
