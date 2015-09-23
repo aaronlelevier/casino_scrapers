@@ -259,6 +259,9 @@ class Person(BaseModel, AbstractUser):
     objects = PersonManager()
     objects_all = UserManager()
 
+    class Meta:
+        ordering = ('fullname',)
+
     def __str__(self):
         return self.username
 
