@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import InputMultiPhoneComponent from 'bsrs-ember/components/input-multi-phone/component';
@@ -7,20 +7,12 @@ import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 import PHONE_NUMBER_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
-var registry, container, store, eventbus, run = Ember.run;
+var store, eventbus, run = Ember.run;
 
 module('unit: input-multi-phone component test', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:person', 'model:phonenumber', 'service:eventbus']);
-        eventbus = container.lookup('service:eventbus');
-    },
-    afterEach() {
-        eventbus = null;
-        store = null;
-        container = null;
-        registry = null;
+        store = module_registry(this.container, this.registry, ['model:person', 'model:phonenumber', 'service:eventbus']);
+        eventbus = this.container.lookup('service:eventbus');
     }
 });
 

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PersonSingleComponent from 'bsrs-ember/components/person-single/component';
@@ -10,23 +10,14 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
-var registry, container, store, location_repo, eventbus;
+var store, location_repo, eventbus;
 
 module('unit: person-single component test', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:person', 'model:role', 'model:location-level', 'model:location', 'model:person-location', 'service:eventbus']);
-        eventbus = container.lookup('service:eventbus');
-        location_repo = repository.initialize(container, registry, 'location');
+        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:location-level', 'model:location', 'model:person-location', 'service:eventbus']);
+        eventbus = this.container.lookup('service:eventbus');
+        location_repo = repository.initialize(this.container, this.registry, 'location');
         location_repo.findLocationSelect = function() { return store.find('location'); };
-    },
-    afterEach() {
-        eventbus = null;
-        location_repo = null;
-        store = null;
-        container = null;
-        registry = null;
     }
 });
 

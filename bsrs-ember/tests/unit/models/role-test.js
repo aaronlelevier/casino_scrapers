@@ -1,22 +1,15 @@
 import Ember from 'ember';
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
-let container, registry, store;
+var store;
 
 module('unit: role test', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:role', 'model:location-level']);
-    },
-    afterEach() {
-        container = null;
-        registry = null;
-        store = null;
+        store = module_registry(this.container, this.registry, ['model:role', 'model:location-level']);
     }
 });
 

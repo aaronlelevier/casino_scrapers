@@ -1,21 +1,14 @@
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import LocationLevelNewComponent from "bsrs-ember/components/location-levels/new/component";
 import Ember from 'ember';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
-var registry, container, store;
+var store;
 
 module('unit: location-level new test', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:location-level']);
-    },
-    afterEach() {
-        container = null;
-        registry = null;
-        store = null;
+        store = module_registry(this.container, this.registry, ['model:location-level']);
     }
 });
 

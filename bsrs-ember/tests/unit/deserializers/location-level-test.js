@@ -1,22 +1,15 @@
 import Ember from 'ember';
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location_level_fixtures';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 
-let container, store, registry;
+var store;
 
 module('unit: location level deserializer test', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:location-level']);
-    },
-    afterEach() {
-        store = null;
-        container = null;
-        registry = null;
+        store = module_registry(this.container, this.registry, ['model:location-level']);
     }
 });
 
