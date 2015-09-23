@@ -72,6 +72,7 @@ cp -r ../../bsrs-ember/dist/index.html templates
 
 wait
 echo "UWSGI - START/RELOAD"
+cd ../../python3/
 /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
 
 
