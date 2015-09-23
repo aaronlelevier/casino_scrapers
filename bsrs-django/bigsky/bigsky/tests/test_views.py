@@ -180,4 +180,5 @@ class ConfigurationTests(TestCase):
 
     def test_default_model_ordering(self):
         response = self.client.get(reverse('index'))
-        self.assertTrue(response.context['default_model_ordering'])
+        configuration = json.loads(response.context['default_model_ordering'])
+        self.assertTrue(len(configuration) > 0)
