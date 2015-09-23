@@ -77,7 +77,7 @@ cd ../../python3/
 
 
 echo "NGINX - RESTART"
-service nginx restart
+bash restart_nginx.sh
 
 echo "DEPLOY FINISHED!"
 exit 0
