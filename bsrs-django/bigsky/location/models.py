@@ -256,6 +256,9 @@ class Location(SelfRefrencingBaseModel, BaseModel):
 
     objects = LocationManager()
 
+    class Meta:
+        ordering = ("name", "number",)
+
     def __str__(self):
         return self.name
 

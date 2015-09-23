@@ -94,3 +94,12 @@ urlpatterns += required(
         url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),
     )
 )
+
+
+### URL HELPERS
+
+def default_model_ordering():
+    return {".".join(x[0].split('/'))+".index": x[1].queryset.model._meta.ordering
+            for x in router.registry}
+
+settings.default_model_ordering = default_model_ordering()
