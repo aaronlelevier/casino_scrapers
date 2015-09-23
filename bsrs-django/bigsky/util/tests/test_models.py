@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from model_mommy import mommy
 
+from bigsky.urls import router
 from person.models import Role
 from person.tests.factory import create_person, create_role
 from translation.models import Locale

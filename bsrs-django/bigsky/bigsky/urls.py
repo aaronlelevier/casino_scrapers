@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
@@ -94,3 +96,12 @@ urlpatterns += required(
         url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),
     )
 )
+
+
+### URL HELPERS
+
+def default_model_ordering():
+    return {".".join(x[0].split('/'))+".index": x[1].queryset.model._meta.ordering
+            for x in router.registry}
+
+settings.default_model_ordering = json.dumps(default_model_ordering())

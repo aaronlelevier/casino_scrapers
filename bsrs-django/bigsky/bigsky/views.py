@@ -1,14 +1,16 @@
 import json
 
+from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect
-from django.core.urlresolvers import reverse
 from django.views.generic.base import TemplateView
 from django.views.decorators.cache import never_cache
 from django.shortcuts import render
 from django.utils import timezone
 
 from accounting.models import Currency
+# from bigsky.urls import default_model_ordering
 from category.models import Category
 from contact.models import PhoneNumberType, AddressType
 from person.models import Role, PersonStatus, Person
@@ -54,8 +56,11 @@ class IndexView(TemplateView):
             'locales': model_to_json(Locale),
             'currencies': json.dumps({c.code: c.to_dict()
                                       for c in Currency.objects.all()}),
-            'person_current': json.dumps(self.request.user.to_dict(self.locale))
+            'person_current': json.dumps(self.request.user.to_dict(self.locale)),
+            'default_model_ordering': settings.default_model_ordering
             })
+        print type(settings.default_model_ordering)
+        print settings.default_model_ordering
         return context
 
 
