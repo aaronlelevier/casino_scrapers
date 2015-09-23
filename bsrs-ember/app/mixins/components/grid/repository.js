@@ -20,9 +20,9 @@ var GridRepositoryMixin = Ember.Mixin.create({
             let finds = find.split(',');
             finds.forEach(function(data) {
                 let params = data.split(':');
-                let key = params[0];
+                let key = params[0] || '';
                 let value = params[1];
-                endpoint = endpoint + '&' + key + '__icontains=' + encodeURIComponent(value);
+                endpoint = endpoint + '&' + key.replace('-', '_') + '__icontains=' + encodeURIComponent(value);
             });
         }
         let all = store.find(type);
