@@ -60,11 +60,11 @@ class FactoryTests(TransactionTestCase):
 
     ### .create_person(): End
 
-    def test_create_23_people(self):
+    def test_create_all_people(self):
         # Make sure that there are 23 People, and that all People Roles
         # have a valid Location that uses that ``person.role.location_level``
-        factory.create_23_people()
+        factory.create_all_people()
         people = Person.objects.all()
-        self.assertEqual(people.count(), 23)
+        self.assertEqual(people.count(), 187)
         # At least some people are assigned to Location(s)
         self.assertTrue(Person.objects.exclude(locations__isnull=True))

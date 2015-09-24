@@ -1,9 +1,3 @@
-import Ember from 'ember';
+import GridViewController from 'bsrs-ember/mixins/controller/grid';
 
-export default Ember.Controller.extend({
-    queryParams: ['page', 'sort', 'search', 'find'],
-    page: 1,
-    sort: undefined,
-    search: undefined,
-    find: undefined
-});
+export default GridViewController.extend();

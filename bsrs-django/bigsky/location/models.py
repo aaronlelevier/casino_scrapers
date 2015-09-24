@@ -125,6 +125,7 @@ class SelfRefrencingBaseModel(models.Model):
     objects = SelfRefrencingManager()
 
     class Meta:
+        ordering = ('id',)
         abstract = True
 
 
@@ -255,6 +256,9 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     number = models.CharField(max_length=50, blank=True, null=True)
 
     objects = LocationManager()
+
+    class Meta:
+        ordering = ("name", "number",)
 
     def __str__(self):
         return self.name
