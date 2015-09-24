@@ -54,9 +54,9 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # Create Role Page Object
         role_page = ModelPage(
             driver = self.driver,
-            new_link = "t-role-new",
+            new_link = "t-add-new",
             list_name = "t-role-name",
-            list_data = "t-role-data"
+            list_data = "t-grid-data"
         )
         role_page.find_new_link().click()
         # New Role Data

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import CurrencyDefaults from 'bsrs-ember/vendor/defaults/currencies';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
@@ -14,19 +14,12 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
-let container, registry, store;
+var store;
 
 module('unit: person test', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'model:person-location', 'service:currency']);
+        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'model:person-location', 'service:currency']);
         store.push('currency', CurrencyDefaults);
-    },
-    afterEach() {
-        container = null;
-        registry = null;
-        store = null;
     }
 });
 

@@ -5,9 +5,10 @@ import injectStore from 'bsrs-ember/utilities/store';
 import AddressType from 'bsrs-ember/models/address-type';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 
-export default Ember.Route.extend({
+var PersonRoute = Ember.Route.extend({
     store: injectStore('main'),
     repository: inject('person'),
+    location_repo: inject('location'),
     state_repo: inject('state'),
     status_repo: inject('status'),
     country_repo: inject('country'),
@@ -18,8 +19,17 @@ export default Ember.Route.extend({
     i18n: Ember.inject.service(),
     personCurrent: Ember.inject.service(),
     tabList: Ember.inject.service(),
+    queryParams: {
+        search: {
+            refreshModel: true
+        },
+        role_change: {
+            refreshModel: true
+        },
+    },
     model(params, transition) {
         var person_pk = params.person_id,
+            location_repo = this.get('location_repo'),
             country_repo = this.get('country_repo'),
             state_repo = this.get('state_repo'),
             status_repo = this.get('status_repo'),
@@ -31,6 +41,10 @@ export default Ember.Route.extend({
             address_type_repo = this.get('address_type_repo'),
             default_address_type = address_type_repo.get_default(),
             roles = role_repo.get_default();
+        let search = transition.queryParams.search;
+        let role_change = transition.queryParams.role_change;
+        let location_level_pk = person.get('location_level_pk');
+        let person_locations_children = search && location_level_pk ? location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change) : [];
 
         transition.send('createTab', person_pk);
 
@@ -44,7 +58,10 @@ export default Ember.Route.extend({
             default_phone_number_type: default_phone_number_type,
             default_address_type: default_address_type,
             locales: this.get('store').find('locale'),
-            roles: roles
+            roles: roles,
+            search: search,
+            role_change: role_change,
+            person_locations_children: person_locations_children
         });
 
     },
@@ -59,22 +76,30 @@ export default Ember.Route.extend({
         controller.set('statuses', hash.statuses);
         controller.set('roles', hash.roles);
         controller.set('locales', hash.locales);
+        controller.set('search', hash.search);
+        controller.set('role_change', hash.role_change);
+        controller.set('person_locations_children', hash.person_locations_children);
     },
     actions: {
         localeChanged(locale){
-            var personCurrent = this.get('personCurrent');
-            var personCurrentId = personCurrent.get('model.id');
             var model = this.currentModel.model;
             model.set('locale', locale);
-            if(model.get('localeIsDirty') && personCurrentId === model.get('id')){
-                config.i18n.currentLocale = locale;
-                return this.get('translationsFetcher').fetch().then(function(){
-                    this.get('i18n').set('locale', config.i18n.currentLocale);
-                }.bind(this));
-            }
+            model.changeLocale();
+            // var personCurrent = this.get('personCurrent');
+            // var personCurrentId = personCurrent.get('model.id');
+            // var model = this.currentModel.model;
+            // model.set('locale', locale);
+            // if(model.get('localeIsDirty') && personCurrentId === model.get('id')){
+            //     config.i18n.currentLocale = locale;
+            //     return this.get('translationsFetcher').fetch().then(function(){
+            //         this.get('i18n').set('locale', config.i18n.currentLocale);
+            //     }.bind(this));
+            // }
         },
         createTab(id){
             this.get('tabList').createTab(this.routeName, 'person', id, 'admin.people.index');
         }
     }
 });
+
+export default PersonRoute;

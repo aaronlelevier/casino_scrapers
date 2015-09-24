@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import InputMultiAddressComponent from 'bsrs-ember/components/input-multi-address/component';
@@ -7,20 +7,12 @@ import AddressType from 'bsrs-ember/models/address-type';
 import ADDRESS_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
-var registry, container, store, eventbus, run = Ember.run;
+var store, eventbus, run = Ember.run;
 
 module('unit: input-multi-address component test', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:person', 'model:address', 'service:eventbus']);
-        eventbus = container.lookup('service:eventbus');
-    },
-    afterEach() {
-        eventbus = null;
-        store = null;
-        container = null;
-        registry = null;
+        store = module_registry(this.container, this.registry, ['model:person', 'model:address', 'service:eventbus']);
+        eventbus = this.container.lookup('service:eventbus');
     }
 });
 

@@ -26,6 +26,11 @@ var RoleMixin = Ember.Mixin.create({
             }));
             old_role.save();
         }
+        let location_level_pk = this.get('location_level_pk');
+        let person_locations = this.get('person_locations');
+        person_locations.forEach((person_location) => {
+            this.get('store').remove('person-location', person_location.get('id'));
+        });
     },
     roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
         let roles = this.get('role_property');

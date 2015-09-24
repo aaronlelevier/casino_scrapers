@@ -120,7 +120,7 @@ export default Ember.Route.extend({
             } else {
                 Ember.$('.t-modal').modal('hide');
                 let temp = this.router.generate(this.controller.currentPath);
-                temp = temp.split("/").pop();
+                temp = temp.split('/').pop();
                 if(temp === tab.get('id')){
                     this.transitionTo(tab.get('redirect'));
                 }else if(this.controller.currentPath !== tab.get('redirect')){

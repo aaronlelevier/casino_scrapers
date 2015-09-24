@@ -15,6 +15,11 @@ var PersonSingle = ParentValidationComponent.extend({
     tab(){
         return this.get('store').find('tab', this.get('model.id'));
     },
+
+    //TODO need to figure out changing a person's locations when role changes
+    // change_role: Ember.observer('model.location_level_pk', function() {
+    //    this.set('role_change', this.get('person.location_level_pk'));
+    // }),
     actions: {
         savePerson() {
             this.set('submitted', true);

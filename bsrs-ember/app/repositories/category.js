@@ -2,11 +2,12 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
+import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
 var PREFIX = config.APP.NAMESPACE;
 var CATEGORY_URL = PREFIX + '/admin/categories/';
 
-var CategoryRepo = Ember.Object.extend({
+var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'category'; }),
     url: Ember.computed(function() { return CATEGORY_URL; }),
     CategoryDeserializer: inject('category'),

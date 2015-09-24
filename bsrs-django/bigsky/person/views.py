@@ -21,7 +21,6 @@ class RoleViewSet(BaseModelViewSet):
     queryset = Role.objects.all()
     serializer_class = ps.RoleSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    paginate_by = 1000
 
 
 class PersonStatusViewSet(BaseModelViewSet):

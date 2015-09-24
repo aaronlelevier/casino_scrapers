@@ -1,22 +1,15 @@
 import Ember from 'ember';
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 
-let container, store, registry;
+var store;
 
 module('unit: location deserializer test', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:category']);
-    },
-    afterEach() {
-        store = null;
-        container = null;
-        registry = null;
+        store = module_registry(this.container, this.registry, ['model:category']);
     }
 });
 

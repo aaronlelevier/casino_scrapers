@@ -1,19 +1,13 @@
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PersonCurrent from "bsrs-ember/models/person-current";
 import Ember from 'ember';
-var store, container, registry;
+
+var store;
 
 module('unit: current-user test', {
   beforeEach() {
-      registry = new Ember.Registry();
-      container = registry.container();
-      store = module_registry(container, registry, ['model:person', 'model:person-current']);
-  },
-  afterEach() {
-      registry = null;
-      container = null;
-      store = null;
+      store = module_registry(this.container, this.registry, ['model:person', 'model:person-current']);
   }
 });
 
