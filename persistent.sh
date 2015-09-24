@@ -67,6 +67,7 @@ rm -rf ../../bsrs-django/bigsky/ember/*
 
 cp -r ../../bsrs-ember/dist/assets ember/assets
 cp -r ../../bsrs-ember/dist/fonts ember/fonts
+cp ../../bsrs-ember/dist/index.html templates
 
 
 wait
@@ -77,7 +78,13 @@ echo "DJANGO - COLLECTSTATIC"
 wait
 echo "UWSGI - START/RELOAD"
 cd ../../python3/
-/usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
+ls /tmp/bigsky-master.pid
+if [ $? -eq 0 ];
+    then
+        /usr/local/lib/uwsgi/uwsgi --reload /tmp/bigsky-master.pid
+    else
+        /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
+fi
 
 
 echo "NGINX - RESTART"

@@ -33,6 +33,9 @@ Auto-generate for UUID's for `Django <https://docs.djangoproject.com/en/1.8/ref/
 
 uWSGI
 -----
+
+`kill with uwsgi docs <http://uwsgi-docs.readthedocs.org/en/latest/Management.html#stopping-the-server>`_
+
 .. code-block::
 
     # kill all
