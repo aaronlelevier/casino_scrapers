@@ -15,40 +15,42 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CustomSetting',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
+                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('settings', models.TextField(help_text=b'JSON Dict saved as a string in DB', blank=True)),
+                ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
+                ('settings', models.TextField(help_text='JSON Dict saved as a string in DB', blank=True)),
                 ('object_id', models.UUIDField()),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
         migrations.CreateModel(
             name='MainSetting',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
+                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('settings', models.TextField(help_text=b'JSON Dict saved as a string in DB', blank=True)),
+                ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
+                ('settings', models.TextField(help_text='JSON Dict saved as a string in DB', blank=True)),
                 ('object_id', models.UUIDField()),
                 ('content_type', models.ForeignKey(to='contenttypes.ContentType')),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
         migrations.CreateModel(
             name='Tester',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
+                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
+                ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
             ],
             options={
                 'ordering': ('id',),
