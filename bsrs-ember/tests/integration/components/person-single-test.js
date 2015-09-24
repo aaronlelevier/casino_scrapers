@@ -73,7 +73,9 @@ test('selecting a placeholder instead of legit role will not append the persons 
     assert.ok(role_two.get('isNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    this.$('.t-person-role-select').val('Select One').trigger('change');
+    run(() => {
+        this.$('.t-person-role-select').val('Select One').trigger('change');
+    });
     assert.equal(role_two.get('people.length'), 1);
     assert.deepEqual(role_two.get('people'), [PEOPLE_DEFAULTS.unusedId]);
     assert.deepEqual(role_one.get('people'), []);

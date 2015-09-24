@@ -46,7 +46,7 @@ var extract_role = function(model, store) {
     let role_pk = model.role;
     let role = store.find('role', model.role);
     let location_level_fk = extract_role_location_level(model, store);
-    //var role = store.push('role', model.role);
+    //var role = store.push('role', model.role);//don't need to do this b/c roles already bootstrapped...remove at later point in time
     let existing_people = role.get('people') || [];
     if (existing_people.indexOf(model.id) === -1) {
         role.set('people', existing_people.concat([model.id]));
