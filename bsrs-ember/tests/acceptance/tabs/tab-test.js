@@ -59,7 +59,7 @@ test('visiting the people detail url from the list url should push a tab into th
         assert.equal(tabs.get('length'), 0);
     });
 
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var tabs = store.find('tab');
@@ -83,7 +83,7 @@ test('clicking on a tab from the list url should take you to the detail url', (a
         assert.equal(tabs.get('length'), 0);
     });
 
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var tabs = store.find('tab');

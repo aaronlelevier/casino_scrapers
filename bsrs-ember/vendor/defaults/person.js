@@ -1,5 +1,6 @@
 const BSRS_PERSON_ID = '139543cf-8fea-426a-8bc3-09778cd79901';
 const BSRS_PERSON_ORIG_USERNAME = 'mgibson';
+const BSRS_PERSON_SORTED_USERNAME = 'wanker';
 const BSRS_PERSON_USERNAME = BSRS_PERSON_ORIG_USERNAME + '1';
 const BSRS_PERSON_PASSWORD = '1!';
 const BSRS_PERSON_EMAIL = [];
@@ -46,7 +47,8 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             locale2: 'es',
             locale_id: 'a7ae2835-ee7c-4604-92f7-045f3994936e',
             locale2_id: '51905ba8-024f-4739-ae5c-2d90ffc3f726',
-            unusedId: BSRS_PERSON_UNUSED_ID
+            unusedId: BSRS_PERSON_UNUSED_ID,
+            sorted_username: BSRS_PERSON_SORTED_USERNAME
         };
     };
     return factory;
