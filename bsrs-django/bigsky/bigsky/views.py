@@ -44,6 +44,7 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
         context.update({
+            'STATIC_URL': settings.STATIC_URL,
             'phone_number_types_config': model_to_json(PhoneNumberType),
             'address_types': model_to_json(AddressType),
             'states_us': model_to_json(State),
@@ -59,8 +60,6 @@ class IndexView(TemplateView):
             'person_current': json.dumps(self.request.user.to_dict(self.locale)),
             'default_model_ordering': settings.default_model_ordering
             })
-        print type(settings.default_model_ordering)
-        print settings.default_model_ordering
         return context
 
 
