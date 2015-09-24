@@ -18,8 +18,7 @@ var store;
 
 module('unit: person test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'model:person-location', 'service:currency']);
-        store.push('currency', CurrencyDefaults);
+        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'model:person-location', 'service:currency','service:person-current','service:translations-fetcher','service:i18n']);
     }
 });
 

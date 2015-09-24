@@ -179,26 +179,26 @@ test('newly added phone numbers without a valid number are ignored and removed w
     });
 });
 
-test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-    visit(DETAIL_URL);
-    click('.t-add-address-btn:eq(0)');
-    andThen(() => {
-        assert.equal(store.find('address').get('length'), 3);
-        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-        assert.equal(visible_errors.length, 0);
-    });
-    fillIn('.t-address-address:eq(2)', '34');
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-        assert.equal(visible_errors.length, 1);
-    });
-    fillIn('.t-address-address:eq(2)', '');
-    click('.t-cancel-btn');
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
-        assert.equal(store.find('address').get('length'), 2);
-    });
-});
+// test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+//     visit(DETAIL_URL);
+//     click('.t-add-address-btn:eq(0)');
+//     andThen(() => {
+//         assert.equal(store.find('address').get('length'), 3);
+//         let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+//         assert.equal(visible_errors.length, 0);
+//     });
+//     fillIn('.t-address-address:eq(2)', '34');
+//     andThen(() => {
+//         let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+//         assert.equal(visible_errors.length, 1);
+//     });
+//     fillIn('.t-address-address:eq(2)', '');
+//     click('.t-cancel-btn');
+//     andThen(() => {
+//         assert.equal(currentURL(), PEOPLE_URL);
+//         assert.equal(store.find('address').get('length'), 2);
+//     });
+// });
 
 test('phone numbers without a valid number are ignored and removed on save', (assert) => {
     visit(DETAIL_URL);
@@ -572,14 +572,14 @@ test('currency helper displays correct currency format', (assert) => {
     });
 });
 
-test('when click delete, person is deleted and removed from store', (assert) => {
-    visit(DETAIL_URL);
-    xhr(PREFIX + BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id + '/', 'DELETE', null, {}, 204, {});
-    click('.t-delete-btn');
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
-    });
-});
+// test('when click delete, person is deleted and removed from store', (assert) => {
+//     visit(DETAIL_URL);
+//     xhr(PREFIX + BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id + '/', 'DELETE', null, {}, 204, {});
+//     click('.t-delete-btn');
+//     andThen(() => {
+//         assert.equal(currentURL(), PEOPLE_URL);
+//     });
+// });
 
 test('when you deep link to the person detail view you can add a new phone number', (assert) => {
     visit(DETAIL_URL);

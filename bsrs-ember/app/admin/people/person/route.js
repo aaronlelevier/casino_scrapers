@@ -15,9 +15,6 @@ var PersonRoute = Ember.Route.extend({
     role_repo: inject('role'),
     phone_number_type_repo: inject('phone-number-type'),
     address_type_repo: inject('address-type'),
-    translationsFetcher: Ember.inject.service(),
-    i18n: Ember.inject.service(),
-    personCurrent: Ember.inject.service(),
     tabList: Ember.inject.service(),
     queryParams: {
         search: {
@@ -85,16 +82,6 @@ var PersonRoute = Ember.Route.extend({
             var model = this.currentModel.model;
             model.set('locale', locale);
             model.changeLocale();
-            // var personCurrent = this.get('personCurrent');
-            // var personCurrentId = personCurrent.get('model.id');
-            // var model = this.currentModel.model;
-            // model.set('locale', locale);
-            // if(model.get('localeIsDirty') && personCurrentId === model.get('id')){
-            //     config.i18n.currentLocale = locale;
-            //     return this.get('translationsFetcher').fetch().then(function(){
-            //         this.get('i18n').set('locale', config.i18n.currentLocale);
-            //     }.bind(this));
-            // }
         },
         createTab(id){
             this.get('tabList').createTab(this.routeName, 'person', id, 'admin.people.index');

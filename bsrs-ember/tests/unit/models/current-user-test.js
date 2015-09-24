@@ -7,7 +7,7 @@ var store;
 
 module('unit: current-user test', {
   beforeEach() {
-      store = module_registry(this.container, this.registry, ['model:person', 'model:person-current']);
+      store = module_registry(this.container, this.registry, ['model:person','model:person-current','service:person-current','service:translations-fetcher','service:i18n']);
   }
 });
 

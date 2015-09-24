@@ -26,8 +26,8 @@ var Person = Model.extend(NewMixin, CopyMixin, PhoneNumberMixin, AddressMixin, R
     address_fks: [],
     person_location_fks: [],
     isModelDirty: false,
-    personCurrent: Ember.inject.service(),
-    translationsFetcher: Ember.inject.service(),
+    personCurrent: Ember.inject.service('person-current'),
+    translationsFetcher: Ember.inject.service('translations-fetcher'),
     i18n: Ember.inject.service(),
     changeLocale(){
         var personCurrent = this.get('personCurrent');
