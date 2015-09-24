@@ -110,7 +110,10 @@ The main steps are:
 
 .. code-block::
 
-    ~/misc/uwsgi-2.0.3/uwsgi --http :8003 --wsgi-file bigsky.wsgi
+    /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
+
+    # Note: in order to run as daemon, w/i 'uwsgi.ini' file add:
+    daemonize = /path/to/logfile.log
 
 
 Tests with uWSGI

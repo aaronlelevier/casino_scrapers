@@ -13,3 +13,5 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+STATIC_URL = '/static/'

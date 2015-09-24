@@ -1,7 +1,8 @@
 Centos
-------
+======
 
 Get Vagrant Centos
+------------------
 
 .. code-block::
 
@@ -10,6 +11,7 @@ Get Vagrant Centos
     vagrant up
 
 Set up Centos w/ Python
+-----------------------
 
 .. code-block::
 
@@ -25,7 +27,16 @@ Set up Centos w/ Python
     sudo make
     sudo make install
 
+Processes
+---------
+
+.. code-block::
+
+    # kill process on port #
+    sudo fuser -k 8003/tcp
+
 Virtualenv
+----------
 
 `this SO answer <http://stackoverflow.com/a/15013895/1913888>`_
 
@@ -37,6 +48,7 @@ Virtualenv
 
 
 Postgres
+--------
 
 .. code-block::
 
@@ -59,6 +71,7 @@ Postgres
 
 
 Node
+----
 
 `DO tutorial <https://www.digitalocean.com/community/tutorials/how-to-install-node-js-on-a-centos-7-server>`_
 
