@@ -59,15 +59,19 @@ cd bigsky/
 
 
 wait
-echo "DJANGO - COLLECTSTATIC"
-../venv/bin/python manage.py collectstatic --noinput
+echo "EMBER - COPY STATIC ASSETS FROM EMBER TO DJANGO SIDE"
+rm -rf -rf assets
+rm -rf -rf templates/index.html
+wait
+rm -rf ../../bsrs-django/bigsky/ember/*
+
+cp -r ../../bsrs-ember/dist/assets ember/assets
+cp -r ../../bsrs-ember/dist/fonts ember/fonts
 
 
 wait
-echo "EMBER - COPY STATIC ASSETS FROM EMBER TO DJANGO SIDE"
-cp -r ../../bsrs-ember/dist/assets .
-cp -r ../../bsrs-ember/dist/fonts .
-cp -r ../../bsrs-ember/dist/index.html templates
+echo "DJANGO - COLLECTSTATIC"
+../venv/bin/python manage.py collectstatic --noinput
 
 
 wait
