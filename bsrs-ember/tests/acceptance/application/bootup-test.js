@@ -158,3 +158,13 @@ test('on boot we should fetch and load the current person configuration', functi
         assert.equal(person_current_model.get('last_name'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.last_name);
     });
 });
+
+test('on boot we should fetch and load the default model ordering configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        var model_ordering = store.find('model-ordering');
+        assert.equal(model_ordering.get('length'), 1);
+        assert.equal(model_ordering.objectAt(0).get('id'), 'admin.people.index');
+        assert.deepEqual(model_ordering.objectAt(0).get('order'), ['fullname']);
+    });
+});

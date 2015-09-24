@@ -67,6 +67,13 @@ export default Ember.Route.extend({
       store.push('role-type', {id: index+1, name: model});
     });
 
+    var model_default_order_config = Ember.$('[data-preload-default-model-ordering]').html();
+    var model_default_order_definitions = JSON.parse(model_default_order_config);
+    Object.keys(model_default_order_definitions).forEach(function(key) {
+      var order = model_default_order_definitions[key];
+      store.push('model-ordering', {id: key, order: order});
+    });
+
     var locale_config = Ember.$('[data-preload-locales]').html();
     var locale_list = JSON.parse(locale_config);
 
