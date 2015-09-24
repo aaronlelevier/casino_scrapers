@@ -1,0 +1,31 @@
+import Ember from 'ember';
+import { test, module } from 'qunit';
+import set_filter_model_attrs from 'bsrs-ember/utilities/filter-model-attrs';
+
+module('unit: filter model attrs test');
+
+test('when query is undefined any param set on the filter model is reset to undefined', function(assert) {
+    var filterModel = Ember.Object.create({name: 'x', role: 'y', random: 'z'});
+    set_filter_model_attrs(filterModel, undefined);
+    assert.equal(filterModel.get('name'), undefined);
+    assert.equal(filterModel.get('role'), undefined);
+    assert.equal(filterModel.get('random'), undefined);
+});
+
+test('when query is legit the filter model is updated appropriately', function(assert) {
+    var query = 'name:wat';
+    var filterModel = Ember.Object.create({name: 'x', role: 'y', random: 'z'});
+    set_filter_model_attrs(filterModel, query);
+    assert.equal(filterModel.get('name'), 'wat');
+    assert.equal(filterModel.get('role'), 'y');
+    assert.equal(filterModel.get('random'), 'z');
+});
+
+test('complex query will break apart and the filter model will be updated appropriately', function(assert) {
+    var query = 'role:huh,name:x,random:zap';
+    var filterModel = Ember.Object.create({role: 'y', random: 'z'});
+    set_filter_model_attrs(filterModel, query);
+    assert.equal(filterModel.get('name'), 'x');
+    assert.equal(filterModel.get('role'), 'huh');
+    assert.equal(filterModel.get('random'), 'zap');
+});

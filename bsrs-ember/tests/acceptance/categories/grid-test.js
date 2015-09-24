@@ -401,3 +401,35 @@ test('full text searched columns will have a special on css class when active', 
         assert.ok(!find('.t-filter-label').hasClass('on'));
     });
 });
+
+test('after you reset the grid the filter model will also be reset', function(assert) {
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=name&search=4&name__icontains=4';
+    xhr(option_three ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name:4', 1));
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=name&search=4';
+    xhr(option_two ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name:4', 1));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
+    xhr(option_one ,'GET',null,{},200,CATEGORY_FIXTURES.searched('4', 'id'));
+    visit(CATEGORY_URL);
+    fillIn('.t-grid-search-input', '4');
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
+    andThen(() => {
+        assert.equal(currentURL(),CATEGORY_URL + '?search=4');
+    });
+    click('.t-sort-name-dir');
+    andThen(() => {
+        assert.equal(currentURL(),CATEGORY_URL + '?search=4&sort=name');
+    });
+    filterGrid('name', '4');
+    andThen(() => {
+        assert.equal(currentURL(),CATEGORY_URL + '?find=name%3A4&search=4&sort=name');
+    });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORY_URL);
+    });
+    click('.t-filter-name');
+    andThen(() => {
+        let name_filter_value = $('.ember-modal-dialog input:first').val();
+        assert.equal(name_filter_value, '');
+    });
+});

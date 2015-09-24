@@ -1,12 +1,5 @@
 import Ember from 'ember';
-
-var set_filter_model_attrs = function(filterModel, query) {
-    let columns = query ? query.split(',') : [];
-    columns.forEach((pair) => {
-        let attrs = pair.split(':');
-        filterModel.set(attrs[0], attrs[1]);
-    });
-};
+import set_filter_model_attrs from 'bsrs-ember/utilities/filter-model-attrs';
 
 var GridViewRoute = Ember.Route.extend({
     init: function() {
