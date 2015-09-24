@@ -17,7 +17,10 @@ module.exports = function(environment) {
     'markers': {
       enabled: true,
       kinds: ['TODO']
-    }
+    },
+    'fingerprint': {
+      prepend: '/static/'
+    },
   });
 
   //app.import('bower_components/ember/ember-template-compiler.js');

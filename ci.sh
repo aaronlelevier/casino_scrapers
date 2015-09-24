@@ -60,6 +60,8 @@ function productionEmberBuild {
 function copyEmberAssetsToDjango {
     rm -rf -rf assets
     rm -rf -rf templates/index.html
+    wait
+    rm -rf ../../bsrs-django/bigsky/ember/*
 
     cp -r ../../bsrs-ember/dist/assets ember/assets
     cp -r ../../bsrs-ember/dist/fonts ember/fonts
