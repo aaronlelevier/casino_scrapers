@@ -59,8 +59,6 @@ class IndexView(TemplateView):
             'person_current': json.dumps(self.request.user.to_dict(self.locale)),
             'default_model_ordering': settings.default_model_ordering
             })
-        print type(settings.default_model_ordering)
-        print settings.default_model_ordering
         return context
 
 
