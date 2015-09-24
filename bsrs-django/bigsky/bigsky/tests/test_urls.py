@@ -26,5 +26,4 @@ class UrlTests(TestCase):
             try:
                 assert v
             except AssertionError:
-                print "No value: {}: {}".format(k,v)
                 raise
