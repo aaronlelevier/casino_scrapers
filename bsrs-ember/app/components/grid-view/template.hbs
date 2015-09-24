@@ -1,8 +1,8 @@
 <div class="rowTable">
   <header>
     <h1 class="t-grid-title">{{grid_title}}</h1>
-    {{#if sort}}
-      <span class="t-reset-sort-order reset-grid" {{action "resetSort"}}>Reset sort order</span>
+    {{#if (filters-applied sort find search)}}
+      <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>Reset all options</span>
     {{/if}}
     {{#unless model.isLoaded}}
       {{grid-loading-graphic}}
