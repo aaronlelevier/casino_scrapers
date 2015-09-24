@@ -17,7 +17,8 @@ export default Ember.Route.extend({
     translationsFetcher: Ember.inject.service(),
     i18n: Ember.inject.service(),
     personCurrent: Ember.inject.service(),
-    model(params) {
+    tabList: Ember.inject.service(),
+    model(params, transition) {
         var person_pk = params.person_id,
             country_repo = this.get('country_repo'),
             state_repo = this.get('state_repo'),
@@ -30,6 +31,8 @@ export default Ember.Route.extend({
             address_type_repo = this.get('address_type_repo'),
             default_address_type = address_type_repo.get_default(),
             roles = role_repo.get_default();
+
+        transition.send('createTab', person_pk);
 
         return Ember.RSVP.hash({
             model: person,
@@ -58,35 +61,20 @@ export default Ember.Route.extend({
         controller.set('locales', hash.locales);
     },
     actions: {
-        redirectUser() {
-            this.transitionTo('admin.people');
-        },
         localeChanged(locale){
             var personCurrent = this.get('personCurrent');
             var personCurrentId = personCurrent.get('model.id');
             var model = this.currentModel.model;
             model.set('locale', locale);
-            if(personCurrentId === model.get('id')){
+            if(model.get('localeIsDirty') && personCurrentId === model.get('id')){
                 config.i18n.currentLocale = locale;
                 return this.get('translationsFetcher').fetch().then(function(){
                     this.get('i18n').set('locale', config.i18n.currentLocale);
                 }.bind(this));
             }
         },
-        willTransition(transition) {
-            var model = this.currentModel.model ? this.currentModel.model : this.currentModel;
-            if (model.get('isDirtyOrRelatedDirty')) {
-                Ember.$('.t-modal').modal('show');
-                this.trx.attemptedTransition = transition;
-                this.trx.attemptedTransitionModel = model;
-                transition.abort();
-            } else {
-                if (model.get('id')) {
-                    model.rollbackRelated();
-                    this.send('localeChanged', model.get('locale'));
-                }
-                Ember.$('.t-modal').modal('hide');
-            }
+        createTab(id){
+            this.get('tabList').createTab(this.routeName, 'person', id, 'admin.people.index');
         }
     }
 });
