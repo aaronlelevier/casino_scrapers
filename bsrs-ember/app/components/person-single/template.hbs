@@ -44,12 +44,12 @@
 			</div>
 			<div class="col-sm-6">
 				{{#form-group title="admin.person.label.role" for="role"}}
-          {{role-select model=model.role options=roles person=model}}
+          {{role-select model=model.role options=roles person=model role_change=role_change}}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-12">
 				{{#form-group title="admin.person.label.location" for="location"}}
-          {{person-locations-select model=model.locations person=model person_locations_children=person_locations_children search=search role_change=role_change}}
+          {{person-locations-select model=model.locations person=model person_locations_children=person_locations_children search=search}}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-6">

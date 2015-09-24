@@ -9,6 +9,7 @@ var RoleSelect = Ember.Component.extend({
             Ember.run(() => {
                 person.change_role(new_role, this.get('model'));
             });
+            // this.set('role_change', person.get('location_level_pk')); 
         }
     }
 });

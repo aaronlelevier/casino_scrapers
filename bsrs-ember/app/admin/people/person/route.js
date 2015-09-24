@@ -44,7 +44,7 @@ var PersonRoute = Ember.Route.extend({
         let search = transition.queryParams.search;
         let role_change = transition.queryParams.role_change;
         let location_level_pk = person.get('location_level_pk');
-        let person_locations_children = search && location_level_pk ? location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change) : [];
+        let person_locations_children = (search || role_change) && location_level_pk ? location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change) : [];
 
         transition.send('createTab', person_pk);
 

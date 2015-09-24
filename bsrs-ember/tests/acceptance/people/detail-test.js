@@ -37,7 +37,7 @@ const LETTER_A = {keyCode: 65};
 
 var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
-module('acceptance | detail test', {
+module('sco acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -825,47 +825,47 @@ test('when you deep link to the person detail view you can add and save a new ad
     });
 });
 
-// test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         var person = store.find('person', PEOPLE_DEFAULTS.id);
-//         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//         assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idOne);
-//         assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
-//     });
-//     fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idTwo);
-//         var person = store.find('person', PEOPLE_DEFAULTS.id);
-//         assert.ok(person.get('isDirtyOrRelatedDirty'));
-//         assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
-//     });
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.equal(find('.t-modal').is(':visible'), true);
-//         });
-//     });
-//     click('.t-modal-footer .t-modal-rollback-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), PEOPLE_URL);
-//             assert.equal(find('.t-modal').is(':hidden'), true);
-//             var person = store.find('person', PEOPLE_DEFAULTS.id);
-//             assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
-//             var actual_role = store.find('role', ROLE_DEFAULTS.idOne);
-//             assert.ok(actual_role.get('isNotDirty'));
-//             assert.ok(person.get('isNotDirty'));
-//             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//             var previous_role = store.find('role', ROLE_DEFAULTS.idTwo);
-//             assert.ok(Ember.$.inArray(person.get('id'), previous_role.get('people')) === -1);
-//             assert.ok(previous_role.get('isNotDirty'));
-//         });
-//     });
-// });
+test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idOne);
+        assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
+    });
+    fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idTwo);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
+        assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
+    });
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            var person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
+            var actual_role = store.find('role', ROLE_DEFAULTS.idOne);
+            assert.ok(actual_role.get('isNotDirty'));
+            assert.ok(person.get('isNotDirty'));
+            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+            var previous_role = store.find('role', ROLE_DEFAULTS.idTwo);
+            assert.ok(Ember.$.inArray(person.get('id'), previous_role.get('people')) === -1);
+            assert.ok(previous_role.get('isNotDirty'));
+        });
+    });
+});
 
 test('when changing the locale for a user (not current user), the language is not updated on the site', (assert) => {
     clearxhr(list_xhr);
@@ -890,7 +890,7 @@ test('when you deep link to the person detail view you can add and save a locati
     people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     people_detail_data.locations = [];
     xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, locations: [LOCATION_DEFAULTS.idOne]});
@@ -954,44 +954,44 @@ test('when you deep link to the person detail view you can remove a location', (
     });
 });
 
-// test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
-//     clearxhr(detail_xhr);
-//     visit(DETAIL_URL);
-//     people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-//     people_detail_data.locations = [];
-//     xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-//     let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
-//     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-//     fillIn('.selectize-input input', 'a');
-//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-//     click('.t-person-locations-select div.option:eq(0)');
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.equal(find('.t-modal').is(':visible'), true);
-//         });
-//     });
-//     click('.t-modal-footer .t-modal-rollback-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), PEOPLE_URL);
-//             assert.equal(find('.t-modal').is(':hidden'), true);
-//             let person = store.find('person', PEOPLE_DEFAULTS.id);
-//             assert.equal(person.get('locations').get('length'), 0);
-//             assert.ok(person.get('isNotDirty'));
-//             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//             var previous_location_m2m = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
-//             assert.deepEqual(person.get('person_location_fks'), []);
-//             assert.equal(previous_location_m2m.get('length'), 1);
-//             assert.ok(previous_location_m2m.objectAt(0).get('removed'), true);
-//         });
-//     });
-// });
+//test('sco when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
+    // clearxhr(detail_xhr);
+    // visit(DETAIL_URL);
+    // people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    // people_detail_data.locations = [];
+    // xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
+    // let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+    // xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+    // fillIn('.selectize-input input', 'a');
+    // triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+    // click('.t-person-locations-select div.option:eq(0)');
+    // click('.t-cancel-btn');
+    // andThen(() => {
+    //     waitFor(() => {
+    //         assert.equal(currentURL(), DETAIL_URL);
+    //         assert.equal(find('.t-modal').is(':visible'), true);
+    //     });
+    // });
+    // click('.t-modal-footer .t-modal-rollback-btn');
+    // andThen(() => {
+    //     waitFor(() => {
+    //         assert.equal(currentURL(), PEOPLE_URL);
+    //         assert.equal(find('.t-modal').is(':hidden'), true);
+    //         let person = store.find('person', PEOPLE_DEFAULTS.id);
+    //         assert.equal(person.get('locations').get('length'), 0);
+    //         assert.ok(person.get('isNotDirty'));
+    //         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    //         var previous_location_m2m = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
+    //         assert.deepEqual(person.get('person_location_fks'), []);
+    //         assert.equal(previous_location_m2m.get('length'), 1);
+    //         assert.ok(previous_location_m2m.objectAt(0).get('removed'), true);
+    //     });
+    // });
+//});
 
 test('deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', (assert) => {
     clearxhr(list_xhr);
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     andThen(() => {
@@ -1010,8 +1010,8 @@ test('deep link to person and clicking in the person-locations-select component 
     });
 });
 
-// test('when you change a related role it will change the related locations as well', (assert) => {
-//     let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
+// test('sco when you change a related role it will change the related locations as well', (assert) => {
+//     let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
 //     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
 //     visit(DETAIL_URL);
 //     let url = PREFIX + DETAIL_URL + "/";
@@ -1024,27 +1024,27 @@ test('deep link to person and clicking in the person-locations-select component 
 //         assert.equal(find('div.item').length, 1);
 //         assert.equal(find('div.option').length, 0);
 //     });
-//     fillIn('.selectize-input input', 'a');
-//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-//     andThen(() => {
-//         let locations = store.find('location');
-//         assert.equal(locations.get('length'), 10);
-//         assert.equal(find('div.item').length, 1);
-//         assert.equal(find('div.option').length, 9);
-//     });
-//     fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
-//     andThen(() => {
-//         let person = store.find('person', PEOPLE_DEFAULTS.id);
-//         assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
-//         let locations = store.find('location');
-//         assert.equal(locations.get('length'), 10);
-//         assert.equal(find('div.item').length, 0);
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     click(SAVE_BTN);
-//     andThen(() => {
-//         assert.equal(currentURL(), PEOPLE_URL);
-//         let person = store.find('person', PEOPLE_DEFAULTS.id);
-//         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//     });
-// });
+    // fillIn('.selectize-input input', 'a');
+    // triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+    // andThen(() => {
+    //     let locations = store.find('location');
+    //     assert.equal(locations.get('length'), 10);
+    //     assert.equal(find('div.item').length, 1);
+    //     assert.equal(find('div.option').length, 9);
+    // });
+    //fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+    // andThen(() => {
+    //     let person = store.find('person', PEOPLE_DEFAULTS.id);
+    //     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
+    //     let locations = store.find('location');
+    //     assert.equal(locations.get('length'), 10);
+    //     assert.equal(find('div.item').length, 0);
+    //     assert.equal(find('div.option').length, 0);
+    // });
+    // click(SAVE_BTN);
+    // andThen(() => {
+    //     assert.equal(currentURL(), PEOPLE_URL);
+    //     let person = store.find('person', PEOPLE_DEFAULTS.id);
+    //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    // });
+//});
