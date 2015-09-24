@@ -54,7 +54,6 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = LocationLevel.objects.all()
     model = LocationLevel
-    paginate_by = 1000
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -90,10 +89,11 @@ class LocationTypeViewSet(BaseModelViewSet):
 class LocationFilterSet(filters.FilterSet):
 
     location_level = filters.AllLookupsFilter(name='location_level')
+    name = filters.AllLookupsFilter(name='name')
     
     class Meta:
         model= Location
-        fields = ['location_level']
+        fields = ['location_level', 'name']
 
 
 class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
@@ -142,6 +142,8 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        URL: `/api/admin/locations/?location_level={level_id}`
 
+       URL2: `/api/admin/locations/?location_level={level_id}&name__icontains={x}`
+
        LocationLevel ID where: `person.role.location_level == location.location_level`
     
     '''
@@ -149,7 +151,6 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     queryset = Location.objects.all()
     model = Location
     filter_class = LocationFilterSet
-    paginate_by = 1000
 
     def get_serializer_class(self):
         if self.action == 'list':

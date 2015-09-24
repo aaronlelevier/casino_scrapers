@@ -79,8 +79,6 @@ Static Assets
     sudo python manage.py collectstatic --noinput 
 
 
-
-
 uWSGI
 =====
 

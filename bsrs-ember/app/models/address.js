@@ -9,13 +9,14 @@ var AddressModel = Model.extend(NewMixin, {
     state: attr(),
     postal_code: attr(),
     country: attr(),
+    person_fk: undefined,
     invalid_address: Ember.computed('address', function() {
         let address = this.get('address');
         return typeof address === 'undefined' || address.trim() === '';
     }),
     serialize() {
         return {id: this.get('id'), type: this.get('type'), address: this.get('address'), city: this.get('city'), state: this.get('state'), 
-            postal_code: this.get('postal_code'), country: this.get('country'), person: this.get('person')};
+            postal_code: this.get('postal_code'), country: this.get('country')};
     }
 });
 

@@ -59,8 +59,11 @@ function productionEmberBuild {
 function copyEmberAssetsToDjango {
     rm -rf -rf assets
     rm -rf -rf templates/index.html
+    wait
+    rm -rf ../../bsrs-django/bigsky/ember/*
 
-    cp -r ../../bsrs-ember/dist/assets .
+    cp -r ../../bsrs-ember/dist/assets ember/assets
+    cp -r ../../bsrs-ember/dist/fonts ember/fonts
     COPY_EMBER_ASSETS=$?
     if [ "$COPY_EMBER_ASSETS" == 1 ]; then
       echo "copy of assets from ember to django failed"

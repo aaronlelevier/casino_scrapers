@@ -7,6 +7,32 @@ div.rowTable {
         cursor: pointer;
       }
     }//table
+
+    table{
+      th{
+        span{
+          display: inline-block;
+          height: 18px;
+          line-height: 18px;
+        }
+        .fa-sort,
+        .fa-filter{
+          color: $gray;
+        }
+        .fa-filter.on,
+        .fa-sort-asc,
+        .fa-sort-desc{
+          color: $lightGreen;
+        }
+        .fa-sort,
+        .fa-filter,
+        .fa-sort-asc,
+        .fa-sort-desc{
+          cursor: pointer;
+        }
+      }
+    }
+
   }
 
   footer nav{

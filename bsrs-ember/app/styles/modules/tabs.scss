@@ -15,30 +15,49 @@ nav.tabs{
       border: $borderStyle;
       border-width: 1px 1px 0 1px;
       padding: 0 10px;
+      float: left;
       font-size: 1.2em;
       width: $tabWidth;
       margin: 0 3px 0 0;
       border-radius: $borderRadiusTop;
-      .close-icon{
-        float: right;
-        margin: 3px -7px 0 0;
-        color: $darkGray;
-      }
-      .close-icon:hover{
-        cursor: pointer;
-        color: $dark;
-      }
+      position: relative;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      .close-wrap{
+        .close-icon{
+          height: 12px;
+          width: 12px;
+          position: absolute;
+          top: 3px;
+          right: 3px;
+          color: $darkGray;
+        }
+        .close-icon:hover{
+          cursor: pointer;
+          color: $dark;
+        }
+        .dirty{
+          color: $lightGreen;
+        }
+        .dirty:hover{
+          color: $darkGreen;
+        }
 
+      }
       &:hover{
         cursor: pointer;
       }
       &.active{
         background: $white;
-        font-weight: bold;
+      }
+      &:hover.active{
+        cursor: default;
       }
       @media screen and (max-width: $mobileDeviceWidth){
         float: none;
       }
+
     }//li
 
     li.new{

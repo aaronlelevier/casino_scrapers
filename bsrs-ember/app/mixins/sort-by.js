@@ -1,6 +1,14 @@
 import Ember from 'ember';
 
-var SortBy = Ember.Object.extend().reopenClass({
+var remove_and_shift = function(sorted, column, existing) {
+    let removed = sorted.filter((_, index) => {
+        return index !== existing;
+    });
+    removed.unshift(column);
+    return removed;
+};
+
+var SortBy = Ember.Mixin.create({
     reorder: function(currentSort, column) {
         let sorted = [];
         let existing = -1;
@@ -8,14 +16,16 @@ var SortBy = Ember.Object.extend().reopenClass({
             sorted = currentSort.split(',');
             existing = Ember.$.inArray(column, sorted);
             if(existing > -1) {
-                sorted[existing] = '-' + column;
+                sorted = remove_and_shift(sorted, '-' + column, existing);
             }else if(!column.match(/[-]/)) {
                 existing = Ember.$.inArray('-' + column, sorted);
-                sorted[existing] = column;
+                if(existing > -1) {
+                    sorted = remove_and_shift(sorted, column, existing);
+                }
             }
         }
         if(existing === -1) {
-            sorted.push(column);
+            sorted.unshift(column);
         }
         return sorted;
     }

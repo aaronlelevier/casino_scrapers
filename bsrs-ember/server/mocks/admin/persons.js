@@ -26,6 +26,7 @@ module.exports = function(app) {
   });
 
   adminPersonsRouter.get('/:id', function(req, res) {
+      console.log('detail');
     res.send(PEOPLE_FIXTURES.detail(req.params.id));
   });
 

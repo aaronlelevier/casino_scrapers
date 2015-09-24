@@ -92,5 +92,9 @@ export default Model.extend(NewMixin, {
         } else {
             this.set('cleanupLocation', true);  
         }
+    },
+    toString: function() {
+        let name = this.get('name');
+        return name ? name : '';
     }
 });

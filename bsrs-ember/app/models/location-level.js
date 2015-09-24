@@ -36,7 +36,11 @@ var LocationLevel = Model.extend(NewMixin, {
             return Ember.$.inArray(loc_level.get('id'), children_fks) > -1 && loc_level.get('name') !== this.get('name');
         };
         return this.get('store').find('location-level', filter.bind(this), ['id']);
-    })
+    }),
+    toString: function() {
+        let name = this.get('name');
+        return name ? name : '';
+    }
 });
 
 export default LocationLevel;

@@ -1,23 +1,16 @@
 import Ember from 'ember';
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import RoleDeserializer from 'bsrs-ember/deserializers/role';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-var container, registry, store;
+var store;
 
 module('unit: role deserializer test', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:role', 'model:location-level']);
-    },
-    afterEach() {
-        store = null;
-        container = null;
-        registry = null;
+        store = module_registry(this.container, this.registry, ['model:role', 'model:location-level']);
     }
 });
 

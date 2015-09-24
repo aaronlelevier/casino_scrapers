@@ -15,6 +15,7 @@ class ContactBaseModel(BaseModel):
     pass
 
     class Meta:
+        ordering = ('id',)
         abstract = True
 
     def save(self, *args, **kwargs):

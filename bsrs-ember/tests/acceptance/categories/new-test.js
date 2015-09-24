@@ -29,12 +29,13 @@ module('Acceptance | category-new', {
             cost_code: CATEGORY_DEFAULTS.costCodeOne,
             label: CATEGORY_DEFAULTS.labelOne,
             subcategory_label: CATEGORY_DEFAULTS.subCatLabelTwo,
-            parent: []
+            parent: [],
+            children: []
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
-        let endpoint = PREFIX + BASE_URL + "/";
-        list_xhr = xhr(endpoint, "GET", null, {}, 200, CATEGORY_FIXTURES.empty());
+        let endpoint = PREFIX + BASE_URL + '/';
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CATEGORY_FIXTURES.empty());
     },
     afterEach() {
         payload = null;
@@ -47,7 +48,7 @@ test('visiting /category/new', (assert) => {
     let response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(CATEGORIES_URL);
-    click('.t-category-new');
+    click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         assert.equal(store.find('category').get('length'), 1);
@@ -79,7 +80,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     let url = PREFIX + BASE_URL + '/';
     xhr(url, 'POST', JSON.stringify(payload), {}, 201, response );
     visit(CATEGORIES_URL);
-    click('.t-category-new');
+    click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         assert.ok(find('.t-name-validation-error').is(':hidden'));

@@ -43,6 +43,9 @@ module.exports = function(environment) {
     // Testem prefers this...
     ENV.baseURL = '/';
     ENV.locationType = 'none';
+    ENV.APP.emberModalDialog = {
+        modalRootElementId: 'ember-testing'
+    }
 
     // keep test console output quieter
     ENV.APP.LOG_ACTIVE_GENERATION = false;
@@ -52,7 +55,7 @@ module.exports = function(environment) {
   }
 
   if (environment === 'production') {
-
+    
   }
 
   return ENV;

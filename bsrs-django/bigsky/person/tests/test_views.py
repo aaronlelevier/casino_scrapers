@@ -18,7 +18,7 @@ from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
 from person.models import Person, Role, PersonStatus
 from person.serializers import PersonUpdateSerializer, RoleSerializer
-from person.tests.factory import PASSWORD, create_person, create_role, create_23_people
+from person.tests.factory import PASSWORD, create_person, create_role, create_all_people
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from util import create, choices
@@ -576,7 +576,7 @@ class PersonSearchTests(APITransactionTestCase):
 
     def setUp(self):
         self.role = create_role()
-        create_23_people()
+        create_all_people()
         # Login
         self.person = None
         while not self.person:
@@ -643,7 +643,7 @@ class PersonSearchOrderingTests(TestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['id'],
-            str(Person.objects.order_by('id').first().id)
+            str(Person.objects.first().id)
             )
 
     def test_ordering_first_name_data(self):
@@ -719,37 +719,37 @@ class DRFFiltersTests(TestCase):
 
     def test_startswith(self):
         letter = 'A'
-        response = self.client.get('/api/admin/people/?first_name__startswith={}'
+        response = self.client.get('/api/admin/people/?fullname__startswith={}'
             .format(letter))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
-            Person.objects.filter(first_name__startswith=letter).count()
+            Person.objects.filter(fullname__startswith=letter).count()
         )
 
     def test_contains(self):
         # Case-sensitive
         letter = 'T'
-        response = self.client.get('/api/admin/people/?first_name__contains={}'
+        response = self.client.get('/api/admin/people/?fullname__contains={}'
             .format(letter))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
-            Person.objects.filter(first_name__contains=letter).count()
+            Person.objects.filter(fullname__contains=letter).count()
         )
 
     def test_icontains(self):
         # Not Case-sensitive
         letter = 'T'
-        response = self.client.get('/api/admin/people/?first_name__icontains={}'
+        response = self.client.get('/api/admin/people/?fullname__icontains={}'
             .format(letter))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
-            Person.objects.filter(first_name__icontains=letter).count()
+            Person.objects.filter(fullname__icontains=letter).count()
         )
 
 

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import { test, module } from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import prevent_duplicate_name from 'bsrs-ember/validation/prevent_duplicate_name';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
@@ -7,21 +7,13 @@ import LocationLevel from 'bsrs-ember/models/location-level';
 import LocationLevelComponent from "bsrs-ember/components/location-level/component";
 import repository from 'bsrs-ember/tests/helpers/repository';
 
-var container, registry, store, location_level_repo;
+var store, location_level_repo;
 
 module('prevent duplicate name tests', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:location-level']);
-        location_level_repo = repository.initialize(container, registry, 'location-level');
+        store = module_registry(this.container, this.registry, ['model:location-level']);
+        location_level_repo = repository.initialize(this.container, this.registry, 'location-level');
         location_level_repo.peek = (filter) => { return store.find('location-level', filter, ['id']); };
-    },
-    afterEach() {
-        container = null;
-        registry = null;
-        store = null;
-        location_level_repo = null;
     }
 });
 

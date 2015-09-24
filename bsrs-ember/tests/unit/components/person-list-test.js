@@ -1,41 +1,36 @@
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import PersonListComponent from "bsrs-ember/components/person-list/component";
 import Ember from 'ember';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
-var registry, container, store;
+var store, eventbus;
 
 module('unit: person-list', {
     beforeEach() {
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:person']);
-    },
-    afterEach() {
-        container = null;
-        registry = null;
-        store = null;
+        store = module_registry(this.container, this.registry, ['model:person', 'service:eventbus']);
+        eventbus = this.container.lookup('service:eventbus');
     }
 });
+
 test('knows how to sort a list of people even when sortable column is null', (assert) => {
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: PEOPLE_DEFAULTS.username, title: PEOPLE_DEFAULTS.title});
-    var subject = PersonListComponent.create({model: store.find('person')});
+    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
     var people = subject.get('searched_content');
     assert.equal(people.get('length'), 1);
     store.push('person', {id: 1, username: 'wat', title: PEOPLE_DEFAULTS.title});
     people = subject.get('searched_content');
     assert.equal(people.get('length'), 2);
-    store.push('person', {id: 3, username: 'wat', first_name: PEOPLE_DEFAULTS.first_name});
+    store.push('person', {id: 3, username: 'wat', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
     people = subject.get('searched_content');
     assert.equal(people.get('length'), 3);
 });
 
-test('sorted content is sorted by id if no other value is specified and breaks cache when sort is updated', (assert) => {
-    store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name});
+test('sorted content is sorted by the defaultSort provided if no other value is specified and breaks cache when sort is updated', (assert) => {
+    store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
     store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title});
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title});
-    var subject = PersonListComponent.create({model: store.find('person')});
+    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id']});
     var people = subject.get('sorted_content');
     assert.equal(people.objectAt(0).get('id'), 1);
     assert.equal(people.objectAt(1).get('id'), 2);
@@ -54,10 +49,10 @@ test('sorted content is sorted by id if no other value is specified and breaks c
 });
 
 test('given a list of people and page number, should only return those people on that page', (assert) => {
-    store.push('person', {id: 3, username: 'abc'});
-    store.push('person', {id: 1, username: 'def'});
-    store.push('person', {id: 2, username: 'zzz'});
-    var subject = PersonListComponent.create({model: store.find('person'), itemsPerPage: 2});
+    store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
+    store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
+    store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
+    var subject = PersonListComponent.create({model: store.find('person'), itemsPerPage: 2, eventbus: eventbus, defaultSort: ['id']});
     var people = subject.get('paginated_content');
     assert.equal(people.get('length'), 2);
     subject.set('page', 2);
@@ -69,13 +64,13 @@ test('given a list of people and page number, should only return those people on
 });
 
 test('given a list of people and page number, should only return those people on that page (4 people)', (assert) => {
-    store.push('person', {id: 3, username: 'abc'});
-    store.push('person', {id: 1, username: 'def'});
-    store.push('person', {id: 2, username: 'zzz'});
-    store.push('person', {id: 4, username: 'crb'});
+    store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
+    store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
+    store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
+    store.push('person', {id: 4, username: 'crb', first_name: '', last_name: ''});
     var model = store.find('person');
     model.set('count', 4);
-    var subject = PersonListComponent.create({model: model, itemsPerPage: 2});
+    var subject = PersonListComponent.create({model: model, itemsPerPage: 2, eventbus: eventbus});
     var pages = subject.get('pages');
     assert.equal(pages.get('length'), 2);
     model.set('count', 5);
@@ -85,12 +80,12 @@ test('given a list of people and page number, should only return those people on
 });
 
 test('searched content allows you to look through searchable keys and filter accordingly', (assert) => {
-    store.push('person', {id: 1, first_name: 'ab', username: 'x', title: 'scott newcomer'});
-    store.push('person', {id: 2, first_name: 'cd', username: 'y', title: 'toran lillups'});
-    store.push('person', {id: 3, first_name: 'de', username: 'z', title: 'aaron lelevier'});
-    var subject = PersonListComponent.create({model: store.find('person')});
+    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer'});
+    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups'});
+    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier'});
+    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
     var people = subject.get('searched_content');
-    assert.deepEqual(subject.get('searchable'), ['first_name', 'title']);
+    assert.deepEqual(subject.get('searchable'), ['fullname', 'username', 'title']);
     assert.equal(people.get('length'), 3);
     subject.set('search', 'scot'); 
     people = subject.get('searched_content');
@@ -99,7 +94,7 @@ test('searched content allows you to look through searchable keys and filter acc
     subject.set('search', ''); 
     people = subject.get('searched_content');
     assert.equal(people.get('length'), 3);
-    subject.set('search', 'x'); 
+    subject.set('search', 'q'); 
     people = subject.get('searched_content');
     assert.equal(people.get('length'), 0);
     subject.set('search', 'd'); 
@@ -128,4 +123,165 @@ test('searched content allows you to look through searchable keys and filter acc
     // assert.equal(people.get('length'), 2);
     // assert.equal(people.objectAt(0).get('id'), 2);
     // assert.equal(people.objectAt(1).get('id'), 3);
+});
+
+test('found content allows you to look through searchable keys and filter accordingly', (assert) => {
+    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
+    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'yzq', title: 'toran billups'});
+    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'zed', title: 'aaron lelevier'});
+    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
+    var people = subject.get('found_content');
+    assert.equal(people.get('length'), 3);
+    subject.set('find', 'title:sco');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 1);
+    assert.equal(people.objectAt(0).get('title'), 'scott newcomer');
+    subject.set('find', 'title:sco,username:z');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 1);
+    assert.equal(people.objectAt(0).get('title'), 'scott newcomer');
+    subject.set('find', 'title:sco,username:ze');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 0);
+    subject.set('find', 'title:,username:z');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 3);
+});
+
+test('found will filter out null objects when that column is searched on explicitly', (assert) => {
+    store.push('person', {id: 1, first_name: '', last_name: '', username: 'aaron', title: 'abz'});
+    store.push('person', {id: 2, first_name: '', last_name: '', username: 'aute', title: 'abc'});
+    store.push('person', {id: 3, first_name: '', last_name: '', username: 'veniam', title: null});
+    store.push('person', {id: 4, first_name: '', last_name: '', username: 'cupidatat', title: null});
+    store.push('person', {id: 5, first_name: '', last_name: '', username: 'laborum.', title: null});
+    store.push('person', {id: 6, first_name: '', last_name: '', username: 'pariatur', title: null});
+    store.push('person', {id: 7, first_name: '', last_name: '', username: 'voluptate', title: null});
+    store.push('person', {id: 8, first_name: '', last_name: '', username: 'adipisicing', title: null});
+    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
+    subject.set('find', 'username:a');
+    var people = subject.get('found_content');
+    assert.equal(people.get('length'), 8);
+    subject.set('find', 'title:ab,username:a');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 2);
+    assert.equal(people.objectAt(0).get('id'), 1);
+    assert.equal(people.objectAt(1).get('id'), 2);
+    subject.set('find', 'title:ab,username:aa');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 1);
+    assert.equal(people.objectAt(0).get('id'), 1);
+});
+
+test('found filter will only match those exactly in all columns', (assert) => {
+    store.push('person', {id: 1, foo: 'baa', username: 'xyzz', title: 'deaa'});
+    store.push('person', {id: 2, foo: 'bab', username: 'xyyy', title: 'deaa'});
+    store.push('person', {id: 3, foo: 'babc', username: 'xyyx', title: 'deaa'});
+    store.push('person', {id: 4, foo: 'babcd', username: 'xyyw', title: 'deaa'});
+    store.push('person', {id: 5, foo: 'babcde', username: 'xyyv1', title: 'deaab'});
+    store.push('person', {id: 6, foo: 'babcde', username: 'xyyv2', title: 'deaabc'});
+    store.push('person', {id: 7, foo: 'babcde', username: 'xyyv3', title: 'deaabcd'});
+    store.push('person', {id: 8, foo: 'babcdeq', username: 'xyyv4', title: 'deaabcde'});
+    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
+    subject.set('find', 'username:x');
+    var people = subject.get('found_content');
+    assert.equal(people.get('length'), 8);
+    subject.set('find', 'username:x,foo:ba');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 8);
+    subject.set('find', 'username:x,foo:bab');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 7);
+    subject.set('find', 'username:x,foo:bab,title:dea');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 7);
+    subject.set('find', 'username:xyyv,foo:bab,title:dea');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 4);
+    subject.set('find', 'username:xyyv,foo:bab,title:dea');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 4);
+    subject.set('find', 'username:xyyv,foo:babc,title:dea');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 4);
+    subject.set('find', 'username:xyyv,foo:babc,title:deaabc');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 3);
+    subject.set('find', 'username:xyyv,foo:babcdeq,title:deaabc');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 1);
+    assert.equal(people.objectAt(0).get('id'), 8);
+    subject.set('find', 'username:xyyv,foo:babcdeqr,title:deaabc');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 0);
+});
+
+test('rolling pagination shows only ten records at a time', (assert) => {
+    for(var i=1; i < 179; i++) {
+        store.push('person', {id: i});
+    }
+    let model = store.find('person');
+    model.set('count', 179);
+    let subject = PersonListComponent.create({page: 1, model: model, eventbus: eventbus});
+    let current = subject.get('page');
+    assert.equal(current, 1);
+    let pages = subject.get('pages');
+    assert.equal(pages.length, 18);
+    let shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 2);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 3);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 4);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 5);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 6);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    subject.set('page', 7);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+    subject.set('page', 8);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
+    subject.set('page', 9);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [4, 5, 6, 7, 8, 9, 10, 11, 12, 13]);
+    subject.set('page', 10);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [5, 6, 7, 8, 9, 10, 11, 12, 13, 14]);
+    subject.set('page', 11);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [6, 7, 8, 9, 10, 11, 12, 13, 14, 15]);
+    subject.set('page', 12);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [7, 8, 9, 10, 11, 12, 13, 14, 15, 16]);
+    subject.set('page', 13);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
+    subject.set('page', 14);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    subject.set('page', 15);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    subject.set('page', 16);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    subject.set('page', 17);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    subject.set('page', 18);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
+    store.push('person', {id: 180});
+    store.push('person', {id: 181});
+    model.set('count', 181);
+    shown = subject.get('shown_pages');
+    assert.deepEqual(shown, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
 });

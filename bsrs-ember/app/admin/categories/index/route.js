@@ -1,31 +1,9 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import GridViewRoute from 'bsrs-ember/mixins/route/components/grid';
 
-var CategoriesIndexRoute = Ember.Route.extend({
-    repository: inject('category'),
-    model(params) {
-        var repository = this.get('repository');
-        return repository.find();
-    }
-    // repository: inject('category'),
-    // model: function(params) {
-    //   var repository = this.get('repository');
-    //   var model = repository.find();
-    //   return Ember.RSVP.hash({
-    //       model: model,
-    //   });
-    // },
-    // setupController: function(controller, hash) {
-    //     controller.set('model', hash.model);
-    // },
-    // actions: {
-    //   cancel() {
-    //     this.transitionTo('admin.categories');
-    //   },
-    //   new() {
-    //     this.transitionTo('admin.categories.new');
-    //   }
-    // }
+var CategroyIndexRoute = GridViewRoute.extend({
+    repository: inject('category')
 });
 
-export default CategoriesIndexRoute;
+export default CategroyIndexRoute;

@@ -2,11 +2,16 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
+import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
 var PREFIX = config.APP.NAMESPACE;
 var CATEGORY_URL = PREFIX + '/admin/categories/';
 
-var CategoryRepo = Ember.Object.extend({
+var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
+    type: Ember.computed(function() { return 'category'; }),
+    url: Ember.computed(function() { return CATEGORY_URL; }),
+    CategoryDeserializer: inject('category'),
+    deserializer: Ember.computed.alias('CategoryDeserializer'),
     insert(model) {
         return PromiseMixin.xhr(CATEGORY_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
@@ -17,18 +22,26 @@ var CategoryRepo = Ember.Object.extend({
             model.save();
         });   
     },
+    findCategoryChildren(search) {
+        let url = CATEGORY_URL;
+        search = search ? search.trim() : search;
+        if (search) {
+            url += `?name__icontains=${search}`;
+            PromiseMixin.xhr(url, 'GET').then((response) => {
+                this.get('CategoryDeserializer').deserialize(response);
+            });
+            return this.get('store').find('category');
+        }
+    },
     find() {
         PromiseMixin.xhr(CATEGORY_URL, 'GET').then((response) => {
-            response.results.forEach((category) => {
-                var cat = this.get('store').push('category', category);
-                cat.save();
-            });
+            this.get('CategoryDeserializer').deserialize(response);
         });
         return this.get('store').find('category');
     },
     findById(id) {
         PromiseMixin.xhr(CATEGORY_URL + id + '/', 'GET').then((response) => {
-            this.get('store').push('category', response);
+            this.get('CategoryDeserializer').deserialize(response, id);
         });
         return this.get('store').find('category', id);
     },

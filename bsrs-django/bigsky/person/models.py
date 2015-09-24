@@ -215,7 +215,7 @@ class Person(BaseModel, AbstractUser):
                   "header will be used or the Site's system setting.")
     # required
     # Auth Amounts - can be defaulted by the Role
-    name = models.CharField(max_length=50, blank=True)
+    fullname = models.CharField(max_length=50, blank=True)
     auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
     accept_assign = models.BooleanField(default=True, blank=True)
@@ -255,6 +255,9 @@ class Person(BaseModel, AbstractUser):
     # Managers
     objects = PersonManager()
     objects_all = UserManager()
+
+    class Meta:
+        ordering = ('fullname',)
 
     def __str__(self):
         return self.username
@@ -316,8 +319,8 @@ class Person(BaseModel, AbstractUser):
             self.auth_currency = self.role.default_auth_currency
         if not self.password_expire_date:
             self.password_expire_date = self._password_expire_date
-        if not self.name:
-            self.name = self.first_name + ' ' + self.last_name
+        if not self.fullname:
+            self.fullname = self.first_name + ' ' + self.last_name
 
     def _validate_locations(self):
         """Remove invalid Locations from the Person based on

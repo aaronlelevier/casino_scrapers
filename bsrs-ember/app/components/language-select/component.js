@@ -16,9 +16,6 @@ export default Component.extend({
   // in the template, but the template doesn't include the component's own
   // tag yet. See https://github.com/emberjs/rfcs/pull/60
   change: function() {
-    var model = this.get('model');
-    var val = this.$().val();
-    model.set('locale', val);
-    var service = this.get('personCurrent');
+    this.sendAction('localeChanged', this.$().val());
   }
 });

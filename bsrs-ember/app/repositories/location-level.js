@@ -7,7 +7,7 @@ var PREFIX = config.APP.NAMESPACE;
 var LOCATION_LEVEL_URL = PREFIX + '/admin/location_levels/';
 
 var LocationLevelRepo = Ember.Object.extend({
-    locationLevelDeserializer: inject('location-level'),
+    LocationLevelDeserializer: inject('location-level'),
     insert(model) {
         return PromiseMixin.xhr(LOCATION_LEVEL_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
@@ -23,13 +23,13 @@ var LocationLevelRepo = Ember.Object.extend({
     },
     find() {
         PromiseMixin.xhr(LOCATION_LEVEL_URL, 'GET').then((response) => {
-            this.get('locationLevelDeserializer').deserialize(response);
+            this.get('LocationLevelDeserializer').deserialize(response);
         });
         return this.get('store').find('location-level');
     },
     findById(id) {
         PromiseMixin.xhr(LOCATION_LEVEL_URL + id + '/', 'GET').then((response) => {
-            this.get('locationLevelDeserializer').deserialize(response, id);
+            this.get('LocationLevelDeserializer').deserialize(response, id);
         });
         return this.get('store').find('location-level', id);
     },

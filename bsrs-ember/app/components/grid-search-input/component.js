@@ -2,12 +2,14 @@ import Ember from 'ember';
 
 var keyup;
 
-export default Ember.TextField.extend({
+var GridSearch =  Ember.TextField.extend({
     classNames: ['t-grid-search-input form-control input-sm'],
+    keyUpFunction() {
+        this.sendAction('keyup', this.get('value'));
+    },
     keyUp: function() {
-        clearTimeout(keyup);
-        keyup = Ember.run.later(this, function() {
-            this.sendAction('keyup', this.get('value'));
-        }, 500);
+        Ember.run.debounce(this, this.keyUpFunction, 300, false);
     }
 });
+
+export default GridSearch;

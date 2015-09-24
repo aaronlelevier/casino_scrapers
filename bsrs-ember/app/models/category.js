@@ -10,6 +10,7 @@ var CategoryModel = Model.extend(NewMixin, {
     label: attr(''),
     cost_amount: attr(''),
     cost_code: attr(''),
+    children_fks: [],
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty');
     }),
@@ -24,8 +25,29 @@ var CategoryModel = Model.extend(NewMixin, {
             cost_code: this.get('cost_code'),
             label: this.get('label'),
             subcategory_label: this.get('subcategory_label'),
-            parent: []
+            parent: [],
+            children: this.get('children_fks')
         };
+    },
+    children: Ember.computed(function() {
+        let store = this.get('store');
+        let filter = (category) => {
+            let children_fks = this.get('children_fks') || [];
+            if (Ember.$.inArray(category.get('id'), children_fks) > -1) { 
+                return true; 
+            }
+            return false;
+        };
+        return store.find('category', filter.bind(this), ['children_fks']);
+    }),
+    add_child(category_child_id) {
+        let children_fks = this.get('children_fks');
+        children_fks.push(category_child_id);
+    },
+    remove_child(category_child_id) {
+        let children_fks = this.get('children_fks');
+        let indx = children_fks.indexOf(category_child_id);
+        children_fks.splice(indx, 1);
     },
     removeRecord() {
         this.get('store').remove('category', this.get('id'));

@@ -1,5 +1,5 @@
 import Ember from 'ember';
-import {test, module} from 'qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
 import PHONE_NUMBER_FIXTURES from 'bsrs-ember/vendor/phone_number_fixtures';
@@ -9,27 +9,22 @@ import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
+import Person from 'bsrs-ember/models/person';
 import PersonDeserializer from 'bsrs-ember/deserializers/person';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import random from 'bsrs-ember/models/random';
 
-var container, registry, subject, store, uuid;
+var store, personProxy, subject, personCurrent, uuid;
 
 module('unit: person deserializer test', {
     beforeEach() {
         random.uuid = function() { return Ember.uuid(); };
-        registry = new Ember.Registry();
-        container = registry.container();
-        store = module_registry(container, registry, ['model:random','model:uuid','model:person', 'model:role','model:person-location','model:location','model:location-level','model:phonenumber','model:address','model:address-type']);
-        uuid = container.lookup('model:uuid');
+        store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:role','model:person-location','model:location','model:location-level','model:phonenumber','model:address','model:address-type','service:person-current','service:translations-fetcher','service:i18n']);
+        uuid = this.container.lookup('model:uuid');
         subject = PersonDeserializer.create({store: store, uuid: uuid});
     },
     afterEach() {
         random.uuid = function() { return 'abc123'; };
-        subject = null;
-        store = null;
-        container = null;
-        registry = null;
     }
 });
 

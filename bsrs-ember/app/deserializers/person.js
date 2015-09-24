@@ -13,12 +13,16 @@ var extract_phone_numbers = function(model, store) {
 };
 
 var extract_addresses = function(model, store) {
+    let address_fks = [];
     model.addresses.forEach((address) => {
-        store.push('address-type', address.type);
-        address.type = address.type.id;
+        address_fks.push(address.id);
+        address.person_fk = model.id;
+        // store.push('address-type', address.type);
+        // address.type = address.type.id;
         store.push('address', address);
     });
     delete model.addresses;
+    return address_fks;
 };
 
 var extract_role_location_level = function(model, store) {
@@ -35,12 +39,13 @@ var extract_role_location_level = function(model, store) {
         location_level.save();
         role.set('location_level_fk', location_level_pk);
     }
+    return location_level_pk;
 };
 
 var extract_role = function(model, store) {
     let role_pk = model.role;
     let role = store.find('role', model.role);
-    extract_role_location_level(model, store);
+    let location_level_fk = extract_role_location_level(model, store);
     //var role = store.push('role', model.role);
     let existing_people = role.get('people') || [];
     if (existing_people.indexOf(model.id) === -1) {
@@ -48,28 +53,29 @@ var extract_role = function(model, store) {
     }
     role.save();
     delete model.role;
-    return role_pk;
+    return [role_pk, location_level_fk];
 };
 
-var extract_person_location = function(model, store, uuid) {
-    let newly_added_m2m = [];
+var extract_person_location = function(model, store, uuid, location_level_fk) {
+    let server_locations_sum = [];
     let person_location_fks = [];
     let prevented_duplicate_m2m = [];
     let all_person_locations = store.find('person-location');
     model.locations.forEach((location_json) => {
+        location_json.location_level_fk = location_level_fk;
         let person_locations = all_person_locations.filter((m2m) => {
             return m2m.get('location_pk') === location_json.id && m2m.get('person_pk') === model.id;
         });
         if(person_locations.length === 0) {
             let pk = uuid.v4();
-            newly_added_m2m.push(pk);
+            server_locations_sum.push(pk);
             store.push('location', location_json);
             store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});
         }else{
             prevented_duplicate_m2m.push(person_locations[0].get('id'));
         }
     });
-    let server_locations_sum = newly_added_m2m.concat(prevented_duplicate_m2m);
+    server_locations_sum.push(...prevented_duplicate_m2m);
     let m2m_to_remove = all_person_locations.filter(function(m2m) {
         return Ember.$.inArray(m2m.get('id'), server_locations_sum) < 0;
     });
@@ -103,10 +109,11 @@ var PersonDeserializer = Ember.Object.extend({
     deserialize_single(model, id) {
         let uuid = this.get('uuid');
         let store = this.get('store');
+        let location_level_fk;//used to setup location_level_fk correctly for a location pushed into the store from this deserializer
         model.phone_number_fks = extract_phone_numbers(model, store);
-        extract_addresses(model, store);
-        model.role_fk = extract_role(model, store);
-        model.person_location_fks = extract_person_location(model, store, uuid);
+        model.address_fks = extract_addresses(model, store);
+        [model.role_fk, location_level_fk] = extract_role(model, store);
+        model.person_location_fks = extract_person_location(model, store, uuid, location_level_fk);
         model.locale_fk = extract_locale(model, store);
         let person = store.push('person', model);
         person.save();

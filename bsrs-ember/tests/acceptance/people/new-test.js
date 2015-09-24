@@ -6,7 +6,6 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
-import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
@@ -50,10 +49,8 @@ module('Acceptance | people-new', {
 test('visiting /people/new', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + BASE_PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
-    var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
-    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(PEOPLE_URL);
-    click('.t-person-new');
+    click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.equal(store.find('person').get('length'), 2);
@@ -79,10 +76,8 @@ test('validation works and when hit save, we do same post', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
     var url = PREFIX + BASE_PEOPLE_URL + '/';
     xhr( url,'POST',JSON.stringify(payload),{},201,response );
-    var locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
-    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(PEOPLE_URL);
-    click('.t-person-new');
+    click('.t-add-new');
     andThen(() => {
         assert.ok(find('.t-username-validation-error').is(':hidden'));
         assert.ok(find('.t-password-validation-error').is(':hidden'));
@@ -149,7 +144,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', {id: UUID.value});
             assert.equal(person.get('length'), 0);
-            assert.equal(find('tr.t-person-data').length, 1);
+            assert.equal(find('tr.t-grid-data').length, 1);
         });
     });
 });

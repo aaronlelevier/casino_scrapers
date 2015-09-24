@@ -1,5 +1,7 @@
 {
   "predef": [
+    "filterGrid",
+    "visitSync",
     "document",
     "window",
     "location",

@@ -52,6 +52,11 @@
             {{#validation-error-field submitted=submitted field="cost_code" className="validation validation-under t-cost-code-validation-error" model=model validation=costCodeValidation}}{{t "validation.invalid"}} {{t "admin.category.label.cost_code"}}{{/validation-error-field}}
 				{{/form-group}}
 			</div>
+			<div class="col-sm-12">
+				{{#form-group title="admin.category.label.children" for="category"}}
+          {{category-children-select category=model search=search categories_children=categories_children}}
+				{{/form-group}}
+			</div>
     </section>
 	</section>
 </form>

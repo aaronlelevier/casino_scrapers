@@ -21,7 +21,6 @@ class RoleViewSet(BaseModelViewSet):
     queryset = Role.objects.all()
     serializer_class = ps.RoleSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    paginate_by = 1000
 
 
 class PersonStatusViewSet(BaseModelViewSet):
@@ -33,14 +32,13 @@ class PersonStatusViewSet(BaseModelViewSet):
 ### PERSON
 
 class PersonFilterSet(filters.FilterSet):
-    first_name = filters.AllLookupsFilter(name='first_name')
     username = filters.AllLookupsFilter(name='username')
-    name = filters.AllLookupsFilter(name='name')
+    fullname = filters.AllLookupsFilter(name='fullname')
     title = filters.AllLookupsFilter(name='title')
     
     class Meta:
         model= Person
-        fields = ['first_name', 'username', 'name']
+        fields = ['username', 'fullname', 'title']
 
 
 class PersonViewSet(BaseModelViewSet):
@@ -81,9 +79,9 @@ class PersonViewSet(BaseModelViewSet):
         search = self.request.query_params.get('search', None)
         if search:
             queryset = queryset.filter(
-                Q(first_name__icontains=search) | \
                 Q(username__icontains=search) | \
-                Q(name__icontains=search)
+                Q(fullname__icontains=search) | \
+                Q(title__icontains=search)
             )
 
         return queryset

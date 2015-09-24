@@ -74,6 +74,7 @@ class AbstractName(BaseModel):
     name = models.CharField(max_length=100, unique=True)
 
     class Meta:
+        ordering = ('id',)
         abstract = True
 
     def __str__(self):
@@ -87,6 +88,7 @@ class AbstractNameOrder(AbstractName):
     order = models.IntegerField(blank=True, default=0)
 
     class Meta:
+        ordering = ('id',)
         abstract = True
 
 
@@ -105,6 +107,7 @@ class BaseSetting(BaseModel):
     content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
+        ordering = ('id',)
         abstract = True
 
     def __str__(self):

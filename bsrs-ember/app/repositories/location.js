@@ -2,12 +2,16 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
+import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
 var PREFIX = config.APP.NAMESPACE;
 var LOCATION_URL = PREFIX + '/admin/locations/';
 
-var LocationRepo = Ember.Object.extend({
-    locationDeserializer: inject('location'),
+var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
+    type: Ember.computed(function() { return 'location'; }),
+    url: Ember.computed(function() { return LOCATION_URL; }),
+    LocationDeserializer: inject('location'),
+    deserializer: Ember.computed.alias('LocationDeserializer'),
     insert(model) {
         return PromiseMixin.xhr(LOCATION_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
@@ -20,15 +24,27 @@ var LocationRepo = Ember.Object.extend({
             model.saveRelated();
         });
     },
+    findLocationSelect(filter, search_criteria, role_change) {
+        let url = this.format_url(filter);
+        if (role_change) {
+            url += '&role_change=' + role_change;
+        } else {
+            url += `&name__icontains=${search_criteria}`;
+        }
+        PromiseMixin.xhr(url, 'GET').then((response) => {
+            this.get('LocationDeserializer').deserialize(response);
+        });
+        return this.get('store').find('location', {location_level_fk: filter.location_level});
+    },
     find(filter) {
         PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {
-            this.get('locationDeserializer').deserialize(response);
+            this.get('LocationDeserializer').deserialize(response);
         });
         return this.get('store').find('location');
     },
     findById(id) {
         PromiseMixin.xhr(LOCATION_URL + id + '/', 'GET').then((response) => {
-            this.get('locationDeserializer').deserialize(response, id);
+            this.get('LocationDeserializer').deserialize(response, id);
         });
         return this.get('store').find('location', id);
     },

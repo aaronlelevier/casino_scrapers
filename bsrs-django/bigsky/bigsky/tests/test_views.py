@@ -173,3 +173,8 @@ class ConfigurationTests(TestCase):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['person_current'])
         self.assertTrue(len(configuration) > 0)
+
+    def test_default_model_ordering(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['default_model_ordering'])
+        self.assertTrue(len(configuration) > 0)

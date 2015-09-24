@@ -110,6 +110,33 @@ var BSRS_PEOPLE_FACTORY = (function() {
         }
         return {'count':18,'next':null,'previous':null,'results': sorted};
     };
+    factory.prototype.fulltext = function(find, page) {
+        var page1 = this.list_two().results;
+        var page2 = this.list().results;
+        var response = page1.concat(page2);
+        var sorted = response.sort(function(a,b) {
+            return a['id'] - b['id'];
+        });
+        var params = find.split(',');
+        var filtered = params.map(function(option) {
+            var property = option.split(':')[0];
+            var propertyValue = option.split(':')[1];
+            var findRegex = new RegExp(propertyValue);
+            return sorted.filter(function(object) {
+                var value = object[property] ? object[property].toLowerCase() : null;
+                return findRegex.test(value);
+            });
+        });
+
+        var paged;
+        if(page && page > 1) {
+            paged = filtered.slice(10, 20);
+        } else {
+            paged = filtered.slice(0, 10);
+        }
+        paged = paged.reduce(function(a, b) { return a.concat(b); }).uniq();
+        return {'count':filtered.length,'next':null,'previous':null,'results': paged};
+    },
     factory.prototype.searched = function(search, column, page) {
         var page1 = this.list_two().results;
         var page2 = this.list().results;
@@ -150,8 +177,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
         response.addresses = this.address_fixtures.put();
         response.status = this.status_defaults.activeId;
         response.role = this.role_defaults.idOne;
-        person.locale = this.person_defaults.locale_id;
-        person.locations = [this.location_defaults.idOne];
+        response.locale = this.person_defaults.locale_id;
+        response.locations = [this.location_defaults.idOne];
         for(var key in person) {
             response[key] = person[key];
         }
