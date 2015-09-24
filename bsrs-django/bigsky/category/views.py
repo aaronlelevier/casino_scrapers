@@ -8,10 +8,11 @@ from category import serializers as cs
 
 class CategoryFilterSet(filters.FilterSet):
     parent = filters.AllLookupsFilter(name='parent')
+    name = filters.AllLookupsFilter(name='name')
 
     class Meta:
         model = Category
-        fields = ['parent']
+        fields = ['parent', 'name']
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
@@ -33,6 +34,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
         `/api/admin/categories/?parent=id`
 
+    3. Get all categories for selectize input
+        `/api/admin/categories/?name__icontains={x}`
     '''
     permission_classes = (IsAuthenticated,)
     queryset = Category.objects.all()

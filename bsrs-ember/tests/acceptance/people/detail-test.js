@@ -37,7 +37,7 @@ const LETTER_A = {keyCode: 65};
 
 var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
-module('acceptance | detail test', {
+module('sco acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -890,7 +890,7 @@ test('when you deep link to the person detail view you can add and save a locati
     people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     people_detail_data.locations = [];
     xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, locations: [LOCATION_DEFAULTS.idOne]});
@@ -960,7 +960,7 @@ test('when you deep link to the person detail view you can remove a location', (
     // people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     // people_detail_data.locations = [];
     // xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-    // let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
+    // let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
     // xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     // fillIn('.selectize-input input', 'a');
     // triggerEvent('.selectize-input input', 'keyup', LETTER_A);
@@ -991,7 +991,7 @@ test('when you deep link to the person detail view you can remove a location', (
 
 test('deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', (assert) => {
     clearxhr(list_xhr);
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     andThen(() => {
@@ -1011,7 +1011,7 @@ test('deep link to person and clicking in the person-locations-select component 
 });
 
 // test('sco when you change a related role it will change the related locations as well', (assert) => {
-//     let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&search=a';
+//     let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
 //     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
 //     visit(DETAIL_URL);
 //     let url = PREFIX + DETAIL_URL + "/";
