@@ -5,7 +5,7 @@ import injectStore from 'bsrs-ember/utilities/store';
 var PersonLocationsSelect = Ember.Component.extend({
     repository: inject('location'),
     store: injectStore('main'),
-    person_locations_selected: Ember.computed('person.person_locations.[]', 'person.location_level_pk', function() {
+    person_locations_selected: Ember.computed('person.person_locations.[]', 'person.person_locations.@each.removed', 'person.location_level_pk', function() {
         let person = this.get('person');
         return person.get('locations');
     }),
@@ -15,7 +15,7 @@ var PersonLocationsSelect = Ember.Component.extend({
     find_all_locations: function() {
         let search_criteria = this.get('search_criteria');
         if (search_criteria) {
-            this.set('search', search_criteria);
+           this.set('search', search_criteria);
         }
     },
     actions: {

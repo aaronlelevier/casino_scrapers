@@ -27,7 +27,7 @@ module('Acceptance | role-detail', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/';
-        list_xhr = xhr(endpoint, 'GET', null, {}, 200, ROLE_FIXTURES.list());
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ROLE_FIXTURES.list());
         xhr(endpoint + ROLE_DEFAULTS.idOne + '/', 'GET', null, {}, 200, ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne));
     },
     afterEach() {
@@ -40,7 +40,7 @@ test('clicking a role name will redirect to the given detail view', (assert) => 
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
-    click('.t-role-data:eq(0)');
+    click('.t-grid-data:eq(7)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -76,7 +76,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     list.results[0].name = ROLE_DEFAULTS.namePut;
     list.results[0].role_type = ROLE_DEFAULTS.roleTypeContractor;
     list.results[0].location_level = ROLE_DEFAULTS.locationLevelTwo;
-    xhr(endpoint, 'GET', null, {}, 200, list);
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
@@ -114,7 +114,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
-    click('.t-role-data:eq(0)');
+    click('.t-grid-data:eq(7)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });

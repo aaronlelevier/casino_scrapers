@@ -26,11 +26,11 @@ test('knows how to sort a list of people even when sortable column is null', (as
     assert.equal(people.get('length'), 3);
 });
 
-test('sorted content is sorted by id if no other value is specified and breaks cache when sort is updated', (assert) => {
+test('sorted content is sorted by the defaultSort provided if no other value is specified and breaks cache when sort is updated', (assert) => {
     store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
     store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title});
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title});
-    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
+    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id']});
     var people = subject.get('sorted_content');
     assert.equal(people.objectAt(0).get('id'), 1);
     assert.equal(people.objectAt(1).get('id'), 2);
@@ -52,7 +52,7 @@ test('given a list of people and page number, should only return those people on
     store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
     store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
     store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
-    var subject = PersonListComponent.create({model: store.find('person'), itemsPerPage: 2, eventbus: eventbus});
+    var subject = PersonListComponent.create({model: store.find('person'), itemsPerPage: 2, eventbus: eventbus, defaultSort: ['id']});
     var people = subject.get('paginated_content');
     assert.equal(people.get('length'), 2);
     subject.set('page', 2);

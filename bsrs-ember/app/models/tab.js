@@ -3,20 +3,8 @@ import inject from 'bsrs-ember/utilities/store';
 
 export default Ember.Object.extend({
   store: inject('main'),
+  tabList: Ember.inject.service(),
   parent: Ember.computed(function(){
-    var doc_type = this.get('doc_type');
-    var doc_id = this.get('id');
-    return this.get('store').find(doc_type, doc_id);
-  }),
-  doc_title: Ember.computed(function(){
-    return this.get('parent.fullname');
-  }),
-  changed_doc_title: Ember.observer('parent.fullname', function(){
-    this.set('doc_title', this.get('parent.fullname'));
-  }),
-  isDirty: false,
-  changed_is_dirty: Ember.observer('parent.isDirty', function(){
-    var dirty = this.get('parent.isDirty');
-    this.set('isDirty', dirty);
+    return this.get('store').find(this.get('doc_type'), this.get('id'));
   })
 });

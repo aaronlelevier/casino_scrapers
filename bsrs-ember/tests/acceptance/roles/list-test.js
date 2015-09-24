@@ -17,7 +17,7 @@ module('Acceptance | role-list', {
     beforeEach() {
         application = startApp();
         let endpoint = PREFIX + BASE_URL + '/';
-        xhr( endpoint ,'GET',null,{},200,ROLE_FIXTURES.list() );
+        xhr(endpoint + '?page=1' ,'GET',null,{},200,ROLE_FIXTURES.list());
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -28,8 +28,6 @@ test('visiting /role', function(assert) {
     visit(ROLE_URL);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
-        assert.equal(find('h1.t-roles').text(), 'Roles');
-        assert.equal(find('tr.t-role-data').length, 3);
+        assert.equal(find('tr.t-grid-data').length, 10);
     });
 });
-

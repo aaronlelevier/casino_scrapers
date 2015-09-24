@@ -13,7 +13,7 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
 
-var store, location_repo;
+var store, location_repo, run = Ember.run;
 
 moduleForComponent('person-single', 'integration: person-single test', {
     integration: true,
@@ -44,7 +44,9 @@ test('selecting a role will append the persons id to the new role but remove it 
     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
     assert.ok(role_one.get('isNotDirty'));
     assert.ok(role_two.get('isNotDirty'));
-    this.$('.t-person-role-select').val(ROLE_DEFAULTS.idTwo).trigger('change');
+    run(() => {
+        this.$('.t-person-role-select').val(ROLE_DEFAULTS.idTwo).trigger('change');
+    });
     assert.equal(role_two.get('people.length'), 2);
     assert.deepEqual(role_two.get('people'), [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
     assert.equal(role_one.get('people.length'), 0);

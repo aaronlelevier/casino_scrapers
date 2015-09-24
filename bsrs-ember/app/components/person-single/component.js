@@ -12,17 +12,12 @@ var PersonSingle = ParentValidationComponent.extend({
     classNames: ['wrapper', 'form'],
     attemptedTransition: '',
     usernameValidation: validate('model.username'),
-    //TODO: Need to remove this observer and move it into a service.
-    initTab: Ember.observer('model.address_fks', function(){
-      this.get('store').push('tab', {
-          id: this.get('model.id'),
-          doc_type: 'person',
-          doc_route: 'admin.people.person'
-      });
-    }),
+    tab(){
+        return this.get('store').find('tab', this.get('model.id'));
+    },
     //TODO need to figure out changing a person's locations when role changes
     // change_role: Ember.observer('model.location_level_pk', function() {
-    //    this.set('role_change', this.get('person.location_level_pk')); 
+    //    this.set('role_change', this.get('person.location_level_pk'));
     // }),
     actions: {
         savePerson() {
@@ -31,18 +26,18 @@ var PersonSingle = ParentValidationComponent.extend({
                 var model = this.get('model');
                 var repository = this.get('repository');
                 repository.update(model).then(() => {
-                    this.sendAction('savePerson');
+                    this.sendAction('savePerson', this.tab());
                 });
             }
         },
         cancelPerson() {
-            this.sendAction('cancelPerson');
+            this.sendAction('cancelPerson', this.tab());
         },
         deletePerson() {
             var model = this.get('model');
             var repository = this.get('repository');
             repository.delete(model.get('id'));
-            this.sendAction('redirectUser');
+            this.sendAction('cancelPerson', this.tab());
         },
         localeChanged(locale){
             this.sendAction('localeChanged', locale);

@@ -80,7 +80,9 @@ var LocationMixin = Ember.Mixin.create({
 
         previous_m2m_fks.forEach(function(pk) {
             var m2m_to_keep = store.find('person-location', pk);
-            m2m_to_keep.set('removed', undefined);
+            if (m2m_to_keep.get('id')) {
+                m2m_to_keep.set('removed', undefined);
+            }
         });
 
         this.resetPersonLocationFks();

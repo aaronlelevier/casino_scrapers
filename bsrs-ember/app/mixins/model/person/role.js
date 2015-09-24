@@ -26,10 +26,10 @@ var RoleMixin = Ember.Mixin.create({
             }));
             old_role.save();
         }
-        let location_level_pk = this.get('location_level_pk');
+        //cleanup person_locations in order to cleanup locations for person-locations-select component
         let person_locations = this.get('person_locations');
         person_locations.forEach((person_location) => {
-            this.get('store').remove('person-location', person_location.get('id'));
+            person_location.set('removed', true);
         });
     },
     roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {

@@ -41,34 +41,28 @@ test('deep linking the people detail url should push a tab into the tab store', 
         var tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
-        assert.equal(thisTab.get('doc_title'), PEOPLE_DEFAULTS.fullname);
         assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
     });
 
 });
 
 test('visiting the people detail url from the list url should push a tab into the tab store', (assert) => {
-
     var people_list_data = PEOPLE_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
-
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         var tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
-
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
-        assert.equal(thisTab.get('doc_title'), PEOPLE_DEFAULTS.fullname);
         assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
     });
-
 });
 
 test('clicking on a tab from the list url should take you to the detail url', (assert) => {
@@ -83,13 +77,12 @@ test('clicking on a tab from the list url should take you to the detail url', (a
         assert.equal(tabs.get('length'), 0);
     });
 
-    click('.t-grid-data:eq(0)');
+    click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         var tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
-        assert.equal(thisTab.get('doc_title'), PEOPLE_DEFAULTS.fullname);
         assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
     });
 
@@ -102,10 +95,29 @@ test('clicking on a tab from the list url should take you to the detail url', (a
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
-
 });
 
-test('amk a dirty model should add the dirty class to the tab close icon', (assert) => {
+test('a dirty model should add the dirty class to the tab close icon', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.dirty').length, 0);
+        var tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
+        assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
+
+        fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.username);
+        andThen(() => {
+            assert.equal(find('.dirty').length, 1);
+        });
+    });
+});
+
+test('closing a document should close it\'s related tab', (assert) => {
+
+    var people_list_data = PEOPLE_FIXTURES.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
 
     visit(DETAIL_URL);
     andThen(() => {
@@ -113,14 +125,63 @@ test('amk a dirty model should add the dirty class to the tab close icon', (asse
         var tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
-        assert.equal(thisTab.get('doc_title'), PEOPLE_DEFAULTS.fullname);
         assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
 
+        click('.t-cancel-btn:eq(0)');
+        andThen(() => {
+          assert.equal(tabs.get('length'), 0);
+        });
+    });
+});
+
+test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
+
+    var people_list_data = PEOPLE_FIXTURES.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
+
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
+        assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
+        visit(PEOPLE_URL);
+        andThen(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            click('.t-tab-close:eq(0)');
+            andThen(() => {
+                assert.equal(tabs.get('length'), 0);
+            });
+        });
+    });
+});
+
+test('opening a tab, making the model dirty, navigating away and closing the tab should display the confirm dialog', (assert) => {
+
+    var people_list_data = PEOPLE_FIXTURES.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
+
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        var thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
+        assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
         fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.username);
         andThen(() => {
-          assert.equal(find('.dirty').length, 1);
+            assert.equal(find('.dirty').length, 1);
+            visit(PEOPLE_URL);
+            andThen(() => {
+                assert.equal(currentURL(), PEOPLE_URL);
+                click('.t-tab-close:eq(0)');
+                andThen(() => {
+                    waitFor(() => {
+                        assert.equal(find('.t-modal-body').length, 1);
+                    });
+                });
+            });
         });
-
     });
-
 });

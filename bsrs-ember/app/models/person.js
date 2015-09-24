@@ -8,6 +8,7 @@ import PhoneNumberMixin from 'bsrs-ember/mixins/model/person/phone_number';
 import AddressMixin from 'bsrs-ember/mixins/model/person/address';
 import RoleMixin from 'bsrs-ember/mixins/model/person/role';
 import LocationMixin from 'bsrs-ember/mixins/model/person/location';
+import config from 'bsrs-ember/config/environment';
 
 var Person = Model.extend(NewMixin, CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, {
     uuid: injectUUID('uuid'),
@@ -25,6 +26,19 @@ var Person = Model.extend(NewMixin, CopyMixin, PhoneNumberMixin, AddressMixin, R
     address_fks: [],
     person_location_fks: [],
     isModelDirty: false,
+    personCurrent: Ember.inject.service('person-current'),
+    translationsFetcher: Ember.inject.service('translations-fetcher'),
+    i18n: Ember.inject.service(),
+    changeLocale(){
+        var personCurrent = this.get('personCurrent');
+        var personCurrentId = personCurrent.get('model.id');
+        if(personCurrentId === this.get('id')){
+            config.i18n.currentLocale = this.get('locale');
+            return this.get('translationsFetcher').fetch().then(function(){
+                this.get('i18n').set('locale', config.i18n.currentLocale);
+            }.bind(this));
+        }
+    },
     fullname: Ember.computed('first_name', 'last_name', function() {
         var first_name = this.get('first_name');
         var last_name = this.get('last_name');
@@ -41,6 +55,7 @@ var Person = Model.extend(NewMixin, CopyMixin, PhoneNumberMixin, AddressMixin, R
         this.saveLocations();
     },
     rollbackRelated() {
+        this.changeLocale();
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
         this.rollbackRole();

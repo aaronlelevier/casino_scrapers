@@ -29,7 +29,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
         if (role_change) {
             url += '&role_change=' + role_change;
         } else {
-            url += '&search=' + search_criteria;
+            url += `&name__icontains=${search_criteria}`;
         }
         PromiseMixin.xhr(url, 'GET').then((response) => {
             this.get('LocationDeserializer').deserialize(response);
