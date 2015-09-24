@@ -27,6 +27,7 @@ class Currency(BaseModel):
     objects = CurrencyManager()
 
     class Meta:
+        ordering = ('id',)
         verbose_name_plural = "Currencies"
 
     def __str__(self):

@@ -58,8 +58,8 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
         return searched_content;
     }),
     sorted_content: Ember.computed('found_content.[]', function() {
-        let sort = this.get('sort') || 'id';
-        let options = sort.split(',');
+        let sort = this.get('sort') || '';
+        let options = sort.length > 0 ? sort.split(',') : this.get('defaultSort');
         let found_content = this.get('found_content');
         return MultiSort.run(found_content, options);
     }),

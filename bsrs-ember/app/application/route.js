@@ -4,6 +4,7 @@ import injectStore from 'bsrs-ember/utilities/store';
 const { Route, inject } = Ember;
 
 export default Ember.Route.extend({
+
     store: injectStore('main'),
     translationsFetcher: inject.service(),
     i18n: inject.service(),
@@ -68,6 +69,13 @@ export default Ember.Route.extend({
         var role_type_list = JSON.parse(role_types_config);
         role_type_list.forEach((model, index) => {
             store.push('role-type', {id: index+1, name: model});
+        });
+
+        var model_default_order_config = Ember.$('[data-preload-default-model-ordering]').html();
+        var model_default_order_definitions = JSON.parse(model_default_order_config);
+        Object.keys(model_default_order_definitions).forEach(function(key) {
+            var order = model_default_order_definitions[key];
+            store.push('model-ordering', {id: key, order: order});
         });
 
         var locale_config = Ember.$('[data-preload-locales]').html();

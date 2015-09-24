@@ -38,11 +38,11 @@ test('initial load should only show first 10 records ordered by id with correct 
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-fullname').text(), PEOPLE_DEFAULTS.fullname);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-title').text(), PEOPLE_DEFAULTS.title);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-fullname').text(), 'Donald Trump');
+        assert.equal(find('.t-grid-data:eq(0) .t-person-title').text(), 'Wanker Extrodinare');
         assert.equal(find('.t-grid-data:eq(0) .t-person-role').text(), t(ROLE_DEFAULTS.nameOne));
-        assert.equal(find('.t-grid-data:eq(0) .t-person-employee_id').text(), PEOPLE_DEFAULTS.employee_id);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-employee_id').text(), '');
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -60,7 +60,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), 'scott11');
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), 'mgibson9');
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -72,7 +72,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -143,7 +143,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
     });
     click('.t-sort-username-dir');
     andThen(() => {
@@ -180,7 +180,7 @@ test('typing a search will reset page to 1 and require an additional xhr', funct
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
     });
     fillIn('.t-grid-search-input', '8');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_EIGHT);
@@ -232,7 +232,7 @@ test('multiple sort options appear in the query string as expected', function(as
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
     });
     click('.t-sort-username-dir');
     andThen(() => {
@@ -250,7 +250,7 @@ test('multiple sort options appear in the query string as expected', function(as
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?sort=fullname%2Ctitle%2Cusername');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), 'wanker');
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
     });
 });
 
@@ -269,7 +269,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-username-dir').hasClass('fa-sort'));
         assert.ok(find('.t-sort-title-dir').hasClass('fa-sort'));
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
         assert.equal(find('.t-reset-sort-order').length, 0);
     });
     click('.t-sort-username-dir');
@@ -294,7 +294,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-title-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-desc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), 'wanker');
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
     });
     click('.t-sort-username-dir');
     andThen(() => {
@@ -308,7 +308,7 @@ test('clicking the same sort option over and over will flip the direction and re
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
     });
 });
 
@@ -325,7 +325,7 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
     });
     filterGrid('title', 'wat');
     andThen(() => {

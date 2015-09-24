@@ -79,7 +79,14 @@ def create_person(username=None, _many=1):
     return user
 
 
-def create_23_people():
+"""
+Boilerplate create in shell code:
+
+from person.tests.factory import create_all_people
+create_all_people()
+"""
+def create_all_people():
+
     # initial Locations
     try:
         create_locations()
@@ -89,25 +96,20 @@ def create_23_people():
     # initial Roles
     roles = create_roles()
 
-    # Person used to Login (so needs a 'password' set here)
-    aaron = mommy.make(Person, username='aaron', role=roles[0])
-    update_login_person(aaron)
-
     # other Persons for Grid View
-    count = Person.objects.count()
-    while count < 23:
-        try:
-            # setup
-            kwargs = {}
-            for ea in ['username', 'first_name', 'last_name', 'title']:
-                kwargs[ea] = create.random_lorem(words=1)
+    names = sorted(create.LOREM_IPSUM_WORDS.split())
+    for name in names:
+        kwargs = {}
+        for ea in ['username', 'first_name', 'last_name', 'title']:
+            kwargs[ea] = name
 
-            role = random.choice(roles)
-            locations = Location.objects.filter(location_level=role.location_level)
-            # create
-            person = mommy.make(Person, role=role,locations=locations, **kwargs)
-            person.set_password(PASSWORD)
-            person.save()
-        except IntegrityError:
-            pass
-        count = Person.objects.count()
+        role = random.choice(roles)
+        locations = Location.objects.filter(location_level=role.location_level)
+        # create
+        person = mommy.make(Person, role=role,locations=locations, **kwargs)
+        person.set_password(PASSWORD)
+        person.save()
+
+    # Person used to Login (so needs a 'password' set here)
+    aaron = Person.objects.get(username="aaron")
+    update_login_person(aaron)
