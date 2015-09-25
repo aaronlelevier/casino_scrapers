@@ -1,16 +1,29 @@
 <nav class="tabs">
   <ul id="tabs" class="list-inline">
     {{#each tabs as |tab|}}
-      {{#link-to tab.doc_route tab.id classNames="t-tab" tagName="li"}}
-        <span class="t-tab-title">{{tab.parent.fullname}}</span>
-        <span class="close-wrap">
-          {{#if tab.parent.isDirty}}
-            <span class="t-tab-close" {{action "closeTab" tab bubbles=false}}>{{fa-icon "circle" classNames="close-icon dirty"}}</span>
-          {{else}}
-            <span class="t-tab-close" {{action "closeTab" tab bubbles=false}}>{{fa-icon "times-circle" classNames="close-icon"}}</span>
-          {{/if}}
-        </span>
-      {{/link-to}}
+      {{#if tab.newModel}}
+        {{#link-to tab.doc_route classNames="t-tab" tagName="li"}}
+        <span class="t-tab-title">New {{tab.doc_type}}</span>
+          <span class="close-wrap">
+            {{#if tab.parent.isDirty}}
+              <span class="t-tab-close" {{action "closeTab" tab bubbles=false}}>{{fa-icon "circle" classNames="close-icon dirty"}}</span>
+            {{else}}
+              <span class="t-tab-close" {{action "closeTab" tab bubbles=false}}>{{fa-icon "times-circle" classNames="close-icon"}}</span>
+            {{/if}}
+          </span>
+        {{/link-to}}
+      {{else}}
+        {{#link-to tab.doc_route tab.id classNames="t-tab" tagName="li"}}
+          <span class="t-tab-title">{{tab.parent.fullname}}</span>
+          <span class="close-wrap">
+            {{#if tab.parent.isDirty}}
+              <span class="t-tab-close" {{action "closeTab" tab bubbles=false}}>{{fa-icon "circle" classNames="close-icon dirty"}}</span>
+            {{else}}
+              <span class="t-tab-close" {{action "closeTab" tab bubbles=false}}>{{fa-icon "times-circle" classNames="close-icon"}}</span>
+            {{/if}}
+          </span>
+        {{/link-to}}
+      {{/if}}
     {{/each}}
     <li class="new">
       <span>{{fa-icon "plus"}}</span>

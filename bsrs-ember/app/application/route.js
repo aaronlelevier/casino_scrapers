@@ -130,7 +130,7 @@ var ApplicationRoute = Ember.Route.extend({
                 Ember.$('.t-modal').modal('hide');
                 let temp = this.router.generate(this.controller.currentPath);
                 temp = temp.split('/').pop();
-                if(temp === tab.get('id')){
+                if(temp === tab.get('id') || tab.get('newModel')){
                     this.transitionTo(tab.get('redirect'));
                 }else if(this.controller.currentPath !== tab.get('redirect')){
                     this.transitionTo(this.controller.currentPath);

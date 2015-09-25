@@ -3,12 +3,13 @@ import inject from 'bsrs-ember/utilities/store';
 
 export default Ember.Service.extend({
     store: inject('main'),
-    createTab(doc_route, doc_type, id, redirect){
+    createTab(doc_route, doc_type, id, redirect=undefined, newModel=false){
         this.get('store').push('tab', {
             id: id,
             doc_type: doc_type,
             doc_route: doc_route,
-            redirect: redirect
+            redirect: redirect,
+            newModel: newModel
         });
     },
     closeTab(id){
