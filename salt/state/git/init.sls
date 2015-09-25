@@ -4,7 +4,7 @@ git:
 github.com:
     ssh_known_hosts:
         - present
-        - user: tomcat
+        - user: bsdev
         - fingerprint: 2e:15:f2:4a:7e:b0:db:ab:89:10:ba:b6:b1:6c:9f:c0
 
 git-website-prod:
