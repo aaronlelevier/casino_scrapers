@@ -14,6 +14,7 @@ var RoleMixin = Ember.Mixin.create({
         return store.find('role', filter.bind(this), ['people']);
     }),
     change_role(new_role, old_role) {
+        let store = this.get('store');
         let person_id = this.get('id');
         let new_role_people = new_role.get('people') || [];
         if(new_role.get('id')) {
@@ -26,10 +27,21 @@ var RoleMixin = Ember.Mixin.create({
             }));
             old_role.save();
         }
-        //cleanup person_locations in order to cleanup locations for person-locations-select component
+        //remove person-locations that are part of the old role
         let person_locations = this.get('person_locations');
-        person_locations.forEach((person_location) => {
-            person_location.set('removed', true);
+        let person_location_ids = person_locations.map((person_location) => {
+            return person_location.get('id');
+        });
+        person_location_ids.forEach((id) => {
+            store.find('person-location', id).set('removed', true);
+        });
+        //reset removed person-locations as a result of the new role set.
+        let all_person_locations = store.find('person-location');
+        all_person_locations.forEach((person_location) => {
+            let location = store.find('location', person_location.get('location_pk')); 
+            if (new_role.get('location_level_fk') === location.get('location_level_fk')) {
+                person_location.set('removed', undefined);
+            }
         });
         //setup rollback_role_fk for rollback. role_fk is used for dirty tracking. check for old role on person new template
         if (old_role) { this.set('rollback_role_fk', old_role.get('id')); }
