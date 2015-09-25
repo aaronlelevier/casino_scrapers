@@ -30,6 +30,7 @@ function pipInstall {
     export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'
     rm -rf venv
     virtualenv -p /usr/local/bin/python3 venv
+    source venv/bin/activate
     pip install -r requirements_ci.txt
     PIP_INSTALL=$?
     if [ "$PIP_INSTALL" == 1 ]; then
