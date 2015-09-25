@@ -79,6 +79,23 @@ Static Assets
     sudo python manage.py collectstatic --noinput 
 
 
+Permissions
+===========
+
+To correctly ``git pull`` when getting this error: 
+``error: cannot open .git/FETCH_HEAD: Permission denied ``
+
+`SO answer <http://stackoverflow.com/questions/13195814/trying-to-git-pull-with-error-cannot-open-git-fetch-head-permission-denied>`_
+
+.. code-block::
+
+    sudo chown -R tomcat:tomcat bsrs/
+
+    sudo chown -R tomcat:tomcat .git/
+
+    git pull
+
+
 uWSGI
 =====
 

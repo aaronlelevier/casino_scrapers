@@ -81,9 +81,9 @@ cd ../../python3/
 ls /tmp/bigsky-master.pid
 if [ $? -eq 0 ];
     then
-        /usr/local/lib/uwsgi/uwsgi --reload /tmp/bigsky-master.pid
+        sudo /usr/local/lib/uwsgi/uwsgi --reload /tmp/bigsky-master.pid
     else
-        /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
+        sudo /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
 fi
 
 

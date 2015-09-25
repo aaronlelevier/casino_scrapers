@@ -76,6 +76,14 @@ function copyEmberAssetsToDjango {
       echo "copy of index.html from ember to django failed"
       exit $COPY_INDEX_HTML
     fi
+
+    rm -rf static/*
+    ./manage.py collectstatic --noinput
+    DJANGO_COLLECT_STATIC=$?
+    if [ "$DJANGO_COLLECT_STATIC" == 1 ]; then
+      echo "django collectstatic failed"
+      exit $DJANGO_COLLECT_STATIC
+    fi
 }
 
 function dropAndCreateDB {
