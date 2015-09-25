@@ -124,8 +124,8 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
         toggleFilterModal: function(column) {
             this.toggle(column);
         },
-        resetSort: function() {
-            this.setProperties({page: 1, sort: undefined});
+        resetGrid: function() {
+            this.setProperties({page: 1, sort: undefined, find: undefined, search: undefined});
         }
     }
 });

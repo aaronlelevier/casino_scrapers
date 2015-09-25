@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
 export default Ember.Component.extend({
-    tagName: 'ul',
-    classNames: ['t-grid-loading-graphic', 'loading']
+    tagName: 'div',
+    classNames: ['t-grid-loading-graphic', 'la-ball-clip-rotate', 'la-sm']
 });

@@ -24,11 +24,9 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.saveRelated();
         });
     },
-    findLocationSelect(filter, search_criteria, role_change) {
+    findLocationSelect(filter, search_criteria) {
         let url = this.format_url(filter);
-        if (role_change) {
-            url += '&role_change=' + role_change;
-        } else {
+        if (search_criteria) {
             url += `&name__icontains=${search_criteria}`;
         }
         PromiseMixin.xhr(url, 'GET').then((response) => {

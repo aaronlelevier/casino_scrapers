@@ -165,7 +165,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     });
 });
 
-test('typing a search will reset page to 1 and require an additional xhr', function(assert) {
+test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=number&search=14';
     xhr(search_two ,"GET",null,{},200,LOCATION_FIXTURES.searched('14', 'number'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=number';
@@ -218,6 +218,12 @@ test('typing a search will reset page to 1 and require an additional xhr', funct
         assert.equal(find('.t-grid-data').length, 1);
         assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), 'vzoname14');
     });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+    });
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
@@ -261,7 +267,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort'));
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort'));
         assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
-        assert.equal(find('.t-reset-sort-order').length, 0);
+        assert.equal(find('.t-reset-grid').length, 0);
     });
     click('.t-sort-name-dir');
     andThen(() => {
@@ -295,7 +301,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
         assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
     });
-    click('.t-reset-sort-order');
+    click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, 10);
@@ -303,7 +309,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
 });
 
-test('full text search will filter down the result set and query django accordingly', function(assert) {
+test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
     let find_two = PREFIX + BASE_URL + '/?page=1&number__icontains=num&name__icontains=7';
     xhr(find_two ,"GET",null,{},200,LOCATION_FIXTURES.sorted('number:num,name:7', 1));
     let find_one = PREFIX + BASE_URL + '/?page=1&number__icontains=num';
@@ -325,6 +331,12 @@ test('full text search will filter down the result set and query django accordin
         assert.equal(currentURL(),LOCATION_URL + '?find=number%3Anum%2Cname%3A7');
         assert.equal(find('.t-grid-data').length, 1);
         assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), 'vzoname17');
+    });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
     });
 });
 
@@ -388,5 +400,37 @@ test('full text searched columns will have a special on css class when active', 
     andThen(() => {
         assert.ok(find('.t-filter-name').hasClass('on'));
         assert.ok(!find('.t-filter-number').hasClass('on'));
+    });
+});
+
+test('after you reset the grid the filter model will also be reset', function(assert) {
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=name&search=4&name__icontains=4';
+    xhr(option_three ,'GET',null,{},200,LOCATION_FIXTURES.sorted('name:4', 1));
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=name&search=4';
+    xhr(option_two ,'GET',null,{},200,LOCATION_FIXTURES.sorted('name:4', 1));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
+    xhr(option_one ,'GET',null,{},200,LOCATION_FIXTURES.searched('4', 'id'));
+    visit(LOCATION_URL);
+    fillIn('.t-grid-search-input', '4');
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?search=4');
+    });
+    click('.t-sort-name-dir');
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?search=4&sort=name');
+    });
+    filterGrid('name', '4');
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?find=name%3A4&search=4&sort=name');
+    });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
+    });
+    click('.t-filter-name');
+    andThen(() => {
+        let name_filter_value = $('.ember-modal-dialog input:first').val();
+        assert.equal(name_filter_value, '');
     });
 });

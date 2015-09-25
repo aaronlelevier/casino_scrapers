@@ -1,6 +1,6 @@
 #!/bin/bash -lx
 
-echo "BUILD STARTED!"
+echo $(date -u) "BUILD STARTED!"
 
 function npmInstall {
     npm install --no-optional
@@ -147,5 +147,6 @@ wait
 
 runSeleniumTests
 
-echo "BUILD SUCCESSFUL!"
+echo $(date -u) "BUILD SUCCESSFUL!"
+
 exit 0

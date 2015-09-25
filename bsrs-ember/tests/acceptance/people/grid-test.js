@@ -165,7 +165,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     });
 });
 
-test('typing a search will reset page to 1 and require an additional xhr', function(assert) {
+test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=title&search=8%20m';
     xhr(search_two ,"GET",null,{},200,PEOPLE_FIXTURES.searched('8 m', 'title'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=title';
@@ -219,6 +219,12 @@ test('typing a search will reset page to 1 and require an additional xhr', funct
         assert.equal(find('.t-grid-data').length, 1);
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), 'mgibson8');
     });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
+    });
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
@@ -270,7 +276,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.ok(find('.t-sort-username-dir').hasClass('fa-sort'));
         assert.ok(find('.t-sort-title-dir').hasClass('fa-sort'));
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
-        assert.equal(find('.t-reset-sort-order').length, 0);
+        assert.equal(find('.t-reset-grid').length, 0);
     });
     click('.t-sort-username-dir');
     andThen(() => {
@@ -304,7 +310,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-asc'));
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-reset-sort-order');
+    click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, 10);
@@ -312,7 +318,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
 });
 
-test('full text search will filter down the result set and query django accordingly', function(assert) {
+test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
     let find_four = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=lelevier&fullname__icontains=ewcomer';
     xhr(find_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:lelevier,fullname:ewcomer', 1));
     let find_three = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7&fullname__icontains=ewcomer';
@@ -351,6 +357,12 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?find=title%3Awat%2Cusername%3Alelevier%2Cfullname%3Aewcomer');
         assert.equal(find('.t-grid-data').length, 0);
+    });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
     });
 });
 
@@ -426,5 +438,37 @@ test('full text searched columns will have a special on css class when active', 
         assert.ok(find('.t-filter-fullname').hasClass('on'));
         assert.ok(!find('.t-filter-username').hasClass('on'));
         assert.ok(find('.t-filter-title').hasClass('on'));
+    });
+});
+
+test('after you reset the grid the filter model will also be reset', function(assert) {
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=username&search=m&username__icontains=gib';
+    xhr(option_three ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username:m', 1));
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=username&search=m';
+    xhr(option_two ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username:m', 1));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=m';
+    xhr(option_one ,'GET',null,{},200,PEOPLE_FIXTURES.searched('m', 'id'));
+    visit(PEOPLE_URL);
+    fillIn('.t-grid-search-input', 'm');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_M);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=m');
+    });
+    click('.t-sort-username-dir');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=m&sort=username');
+    });
+    filterGrid('username', 'gib');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?find=username%3Agib&search=m&sort=username');
+    });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+    click('.t-filter-username');
+    andThen(() => {
+        let username_filter_value = $('.ember-modal-dialog input:first').val();
+        assert.equal(username_filter_value, '');
     });
 });

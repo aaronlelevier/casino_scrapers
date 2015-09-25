@@ -28,126 +28,29 @@ moduleForComponent('person-locations-select', 'integration: person-locations-sel
     }
 });
 
-// test('should render a selectbox with bound options and multiple set to true', function(assert) {
-//     this.set('person', person);
-//     this.set('model', person.get('locations'));
-//     this.render(hbs`{{person-locations-select model=model person=person}}`);
-//     let $component = this.$('.t-person-locations-select');
-//     assert.equal($component.prop('multiple'), true);
-//     assert.equal($component.find('div.item').length, 2);
-//     assert.equal($component.find('div.option').length, 0);
-// });
+test('should render a selectbox with bound options and multiple set to true', function(assert) {
+    this.set('person', person);
+    this.set('model', person.get('locations'));
+    this.render(hbs`{{person-locations-select model=model person=person}}`);
+    let $component = this.$('.t-person-locations-select');
+    assert.equal($component.prop('multiple'), true);
+    assert.equal($component.find('div.item').length, 2);
+    assert.equal($component.find('div.option').length, 0);
+});
 
-
-// test('sco select should show items selected correctly based on the model', function(assert) {
-//     var done = assert.async();
-//     this.set('person', person);
-//     this.set('model', person.get('locations'));
-//     this.set('options', store.find('location'));
-//     this.render(hbs`{{person-locations-select model=model person=person}}`);
-//     let $component = this.$('.t-person-locations-select');
-//     assert.equal(person.get('locations').get('length'), 2);
-//     assert.equal($component.find('div.item').length, 2);
-//     assert.equal($component.find('div.item:eq(0)').data('value'), LOCATION_DEFAULTS.idOne);
-//     assert.equal($component.find('div.item:eq(1)').data('value'), LOCATION_DEFAULTS.idTwo);
-//     this.$('.selectize-input input').trigger('click');
-//     this.$('.selectize-input input').val('a').trigger('change');
-//     run(() => { 
-//         $component.find('div.option:eq(1)').trigger('click').trigger('change'); 
-//     });
-//     setTimeout(() => {
-//         assert.equal($component.find('div.option').length, 0);
-//         assert.equal($component.find('div.item').length, 3);
-//         assert.equal(person.get('locations').get('length'), 3);
-//         done();
-//     }, 1);
-//     assert.equal($component.find('div.item:eq(0)').data('value'), LOCATION_DEFAULTS.idOne);
-//     assert.equal($component.find('div.item:eq(1)').data('value'), LOCATION_DEFAULTS.idTwo);
-//     assert.equal($component.find('div.item:eq(2)').data('value'), LOCATION_DEFAULTS.anotherId);
-// });
-
-// test('selecting a location will update the model when person had no locations to begin with', function(assert) {
-//     store.clear('person-location');
-//     person.set('person_location_fks', []);
-//     person.save();
-//     person.saveRelated();
-//     assert.equal(person.get('locations').get('length'), 0);
-//     this.set('person', person);
-//     this.set('model', person.get('locations'));
-//     this.set('options', store.find('location'));
-//     this.render(hbs`{{person-locations-select model=model person=person}}`);
-//     let $component = this.$('.t-person-locations-select');
-//     assert.equal(person.get('locations').get('length'), 0);
-//     assert.equal($component.find('div.item').length, 0);
-//     this.$('.selectize-input input').trigger('click');
-//     run(() => { $component.find('div.option:eq(0)').trigger('click').trigger('change'); });
-//     assert.equal($component.find('div.item').length, 1);
-//     assert.equal(person.get('locations').get('length'), 1);
-// });
-
-// test('adding a location will append it to the person-location m2m relationship', function(assert) {
-//     this.set('person', person);
-//     this.set('model', person.get('locations'));
-//     this.set('options', store.find('location'));
-//     this.render(hbs`{{person-locations-select model=model person=person}}`);
-//     let $component = this.$('.t-person-locations-select');
-//     assert.equal(person.get('locations').get('length'), 2);
-//     assert.equal($component.find('div.item').length, 2);
-//     assert.equal($component.find('div.item:eq(0)').data('value'), LOCATION_DEFAULTS.idOne);
-//     assert.equal($component.find('div.item:eq(1)').data('value'), LOCATION_DEFAULTS.idTwo);
-//     assert.equal($component.find('div.option').length, 2);
-//     assert.equal($component.find('div.option:eq(0)').data('value'), LOCATION_DEFAULTS.unusedId);
-//     assert.equal($component.find('div.option:eq(1)').data('value'), LOCATION_DEFAULTS.anotherId);
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//     assert.ok(location_one.get('isNotDirty'));
-//     assert.ok(location_two.get('isNotDirty'));
-//     assert.ok(location_three.get('isNotDirty'));
-//     assert.ok(location_four.get('isNotDirty'));
-//     assert.equal(person.get('locations').get('length'), 2);
-//     assert.equal(person.get('locations').objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
-//     assert.equal(person.get('locations').objectAt(1).get('name'), LOCATION_DEFAULTS.storeNameTwo);
-//     this.$('.selectize-input input').trigger('click');
-//     run(() => { $component.find('div.option:eq(1)').trigger('click').trigger('change'); });
-//     assert.equal(person.get('locations').get('length'), 3);
-//     assert.equal(person.get('locations').objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
-//     assert.equal(person.get('locations').objectAt(1).get('name'), LOCATION_DEFAULTS.storeNameTwo);
-//     assert.equal(person.get('locations').objectAt(2).get('name'), LOCATION_DEFAULTS.storeNameFour);
-//     assert.ok(person.get('isDirtyOrRelatedDirty'));
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(location_one.get('isNotDirty'));
-//     assert.ok(location_two.get('isNotDirty'));
-//     assert.ok(location_three.get('isNotDirty'));
-//     assert.ok(location_four.get('isNotDirty'));
-// });
-
-// test('removing a location will remove from the person-location m2m relationship', function(assert) {
-//     this.set('person', person);
-//     this.set('model', person.get('locations'));
-//     this.set('options', store.find('location'));
-//     this.render(hbs`{{person-locations-select model=model person=person}}`);
-//     let $component = this.$('.t-person-locations-select');
-//     assert.equal($component.prop('multiple'), true);
-//     assert.equal($component.find('div.option').length, 2);
-//     assert.equal($component.find('div.option:eq(0)').data('value'), LOCATION_DEFAULTS.unusedId);
-//     assert.equal($component.find('div.option:eq(1)').data('value'), LOCATION_DEFAULTS.anotherId);
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//     assert.ok(location_one.get('isNotDirty'));
-//     assert.ok(location_two.get('isNotDirty'));
-//     assert.ok(location_three.get('isNotDirty'));
-//     assert.ok(location_four.get('isNotDirty'));
-//     assert.equal(person.get('locations').get('length'), 2);
-//     assert.equal(person.get('locations').objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
-//     assert.equal(person.get('locations').objectAt(1).get('name'), LOCATION_DEFAULTS.storeNameTwo);
-//     this.$('.selectize-input input').trigger('click');
-//     run(() => { $component.find('div.item:eq(0) a').trigger('click').trigger('change'); });
-//     assert.equal(person.get('locations').get('length'), 1);
-//     assert.equal(person.get('locations').objectAt(0).get('name'), LOCATION_DEFAULTS.storeNameTwo);
-//     assert.ok(person.get('isDirtyOrRelatedDirty'));
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(location_one.get('isNotDirty'));
-//     assert.ok(location_two.get('isNotDirty'));
-//     assert.ok(location_three.get('isNotDirty'));
-//     assert.ok(location_four.get('isNotDirty'));
-// });
+test('input has a debouce that prevents each keystroke from publishing a message', function(assert) {
+    var done = assert.async();
+    this.set('person', person);
+    this.set('search', undefined);
+    this.set('model', person.get('locations'));
+    this.render(hbs`{{person-locations-select model=model person=person search=search}}`);
+    let $component = this.$('.t-person-locations-select');
+    this.$('div.selectize-input input').val('x').trigger('keyup');
+    setTimeout(() => {
+        assert.equal(this.get('search'), undefined);
+        setTimeout(() => {
+            assert.equal(this.get('search'), 'x');
+            done();
+        }, 11);
+    }, 290);
+});

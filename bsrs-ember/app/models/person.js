@@ -22,6 +22,7 @@ var Person = Model.extend(NewMixin, CopyMixin, PhoneNumberMixin, AddressMixin, R
     auth_amount: attr(''),
     locale: attr(''),
     role_fk: undefined,
+    rollback_role_fk: undefined,
     phone_number_fks: [],
     address_fks: [],
     person_location_fks: [],

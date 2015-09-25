@@ -14,9 +14,7 @@ var PersonLocationsSelect = Ember.Component.extend({
     }),
     find_all_locations: function() {
         let search_criteria = this.get('search_criteria');
-        if (search_criteria) {
-           this.set('search', search_criteria);
-        }
+        this.set('search', search_criteria);
     },
     actions: {
         add(location) {
