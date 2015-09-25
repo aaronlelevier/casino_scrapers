@@ -13,7 +13,7 @@ var CategorySingleRoute = Ember.Route.extend({
         let search = transition.queryParams.search;
         let categories_children = this.get('repository').findCategoryChildren(search) || [];
         let model = this.get('repository').findById(params.category_id);
-        transition.send('createTab', params.category_id);
+        this.get('tabList').createTab(this.routeName, 'category', params.category_id, 'admin.categories.index');
         return Ember.RSVP.hash({
             model: model,
             categories_children: categories_children,
@@ -28,9 +28,6 @@ var CategorySingleRoute = Ember.Route.extend({
     actions: {
         redirectUser() {
             this.transitionTo('admin.categories');
-        },
-        createTab(id){
-            this.get('tabList').createTab(this.routeName, 'category', id, 'admin.categories.index');
         }
     }
 });

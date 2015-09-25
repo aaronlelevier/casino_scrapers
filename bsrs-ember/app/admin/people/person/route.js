@@ -43,7 +43,7 @@ var PersonRoute = Ember.Route.extend({
         let location_level_pk = person.get('location_level_pk');
         let person_locations_children = (search || role_change) && location_level_pk ? location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change) : [];
 
-        transition.send('createTab', person_pk);
+        this.get('tabList').createTab(this.routeName, 'person', person_pk, 'admin.people.index');
 
         return Ember.RSVP.hash({
             model: person,
@@ -82,9 +82,6 @@ var PersonRoute = Ember.Route.extend({
             var model = this.currentModel.model;
             model.set('locale', locale);
             model.changeLocale();
-        },
-        createTab(id){
-            this.get('tabList').createTab(this.routeName, 'person', id, 'admin.people.index');
         }
     }
 });
