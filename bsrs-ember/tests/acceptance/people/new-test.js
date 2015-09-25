@@ -22,7 +22,7 @@ const SAVE_BTN = '.t-save-btn';
 
 var application, store, payload, detail_xhr, list_xhr;
 
-module('sco Acceptance | people-new', {
+module('Acceptance | people-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
@@ -124,36 +124,36 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     });
 });
 
-// test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
-//     clearxhr(detail_xhr);
-//     visit(PEOPLE_NEW_URL);
-//     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), PEOPLE_NEW_URL);
-//             assert.equal(find('.t-modal').is(':visible'), true);
-//             var person = store.find('person', {id: UUID.value});
-//             assert.equal(person.get('length'), 1);
-//         });
-//     });
-//     click('.t-modal-footer .t-modal-rollback-btn');
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), PEOPLE_URL);
-//             assert.equal(find('.t-modal').is(':hidden'), true);
-//             var person = store.find('person', {id: UUID.value});
-//             assert.equal(person.get('length'), 0);
-//             assert.equal(find('tr.t-grid-data').length, 1);
-//         });
-//     });
-// });
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+    clearxhr(detail_xhr);
+    visit(PEOPLE_NEW_URL);
+    fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_NEW_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+            var person = store.find('person', {id: UUID.value});
+            assert.equal(person.get('length'), 1);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+            var person = store.find('person', {id: UUID.value});
+            assert.equal(person.get('length'), 0);
+            assert.equal(find('tr.t-grid-data').length, 1);
+        });
+    });
+});
 
-// test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
-//     clearxhr(detail_xhr);
-//     visit(PEOPLE_NEW_URL);
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         assert.equal(store.find('person').get('length'), 1);
-//     });
-// });
+test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+    clearxhr(detail_xhr);
+    visit(PEOPLE_NEW_URL);
+    click('.t-cancel-btn');
+    andThen(() => {
+        assert.equal(store.find('person').get('length'), 1);
+    });
+});

@@ -121,7 +121,7 @@ var ApplicationRoute = Ember.Route.extend({
         },
         closeTabMaster(tab){
             let model = this.get('store').find(tab.get('doc_type'), tab.get('id'));
-            if (model.get('isDirtyOrRelatedDirty')) {
+            if (model && model.get('isDirtyOrRelatedDirty')) {
                 Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTabModel = tab;
                 this.trx.attemptedTransitionModel = model;
@@ -132,6 +132,9 @@ var ApplicationRoute = Ember.Route.extend({
                 temp = temp.split('/').pop();
                 if(temp === tab.get('id') || tab.get('newModel')){
                     this.transitionTo(tab.get('redirect'));
+                    if (tab.get('newModel')) {
+                        model.removeRecord(); 
+                    }
                 }else if(this.controller.currentPath !== tab.get('redirect')){
                     this.transitionTo(this.controller.currentPath);
                 }else if(typeof tab.get('redirect') !== undefined){
