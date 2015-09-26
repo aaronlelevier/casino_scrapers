@@ -438,7 +438,7 @@ test('when you change a related role it will be persisted correctly', (assert) =
         click(SAVE_BTN);
         andThen(() => {
             let person = store.find('person', PEOPLE_DEFAULTS.id);
-            assert.equal(person.get('rollback_role_fk'), ROLE_DEFAULTS.idOne);
+            assert.equal(person.get('rollback_role_fk'), ROLE_DEFAULTS.idTwo);
             assert.equal(person.get('locations').get('length'), 0);
             assert.equal(currentURL(),PEOPLE_URL);
         });
@@ -1033,6 +1033,10 @@ test('deep link to person and clicking in the person-locations-select component 
 });
 
 test('when you change a related role it will change the related locations as well', (assert) => {
+    clearxhr(list_xhr);
+    let people_list_data_mod = PEOPLE_FIXTURES.list();
+    people_list_data_mod.results[0].role = ROLE_DEFAULTS.idTwo;
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
     visit(DETAIL_URL);
     let url = PREFIX + DETAIL_URL + "/";
     let role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
@@ -1054,6 +1058,8 @@ test('when you change a related role it will change the related locations as wel
             assert.equal(locations.get('length'), 10);
             assert.equal(find('div.item').length, 1);
             assert.equal(find('div.option').length, 9);
+            let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('locationsIsDirty'), false);
         });
         clearxhr(detail_xhr);
         let people_detail_data_two = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
@@ -1064,6 +1070,8 @@ test('when you change a related role it will change the related locations as wel
         fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
         andThen(() => {
             let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('locationsIsDirty'), false);
+            assert.equal(person.get('isDirtyOrRelatedDirty'), true);
             assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
             let locations = store.find('location');
             assert.equal(locations.get('length'), 10);
@@ -1080,6 +1088,10 @@ test('when you change a related role it will change the related locations as wel
 });
 
 test('when you change a related role it will change the related locations as well with no search criteria that was cleared out by user', (assert) => {
+    clearxhr(list_xhr);
+    let people_list_data_mod = PEOPLE_FIXTURES.list();
+    people_list_data_mod.results[0].role = ROLE_DEFAULTS.idTwo;
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
     visit(DETAIL_URL);
     let url = PREFIX + DETAIL_URL + "/";
     let role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
