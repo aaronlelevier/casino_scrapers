@@ -110,20 +110,28 @@ var PersonDeserializer = Ember.Object.extend({
         let uuid = this.get('uuid');
         let store = this.get('store');
         let location_level_fk;//used to setup location_level_fk correctly for a location pushed into the store from this deserializer
-        model.phone_number_fks = extract_phone_numbers(model, store);
-        model.address_fks = extract_addresses(model, store);
-        [model.role_fk, location_level_fk] = extract_role(model, store);
-        model.person_location_fks = extract_person_location(model, store, uuid, location_level_fk);
-        model.locale_fk = extract_locale(model, store);
-        let person = store.push('person', model);
-        person.save();
+        let person_check = store.find('person', model.id);
+        //prevent updating person if dirty
+        if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
+            model.phone_number_fks = extract_phone_numbers(model, store);
+            model.address_fks = extract_addresses(model, store);
+            [model.role_fk, location_level_fk] = extract_role(model, store);
+            model.person_location_fks = extract_person_location(model, store, uuid, location_level_fk);
+            model.locale_fk = extract_locale(model, store);
+            let person = store.push('person', model);
+            person.save();
+        }
     },
     deserialize_list(response) {
         let store = this.get('store');
         response.results.forEach((model) => {
-            model.role_fk = extract_role(model, store);
-            let person = store.push('person', model);
-            person.save();
+            let person_check = store.find('person', model.id);
+            //prevent updating person if dirty
+            if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
+                model.role_fk = extract_role(model, store);
+                let person = store.push('person', model);
+                person.save();
+            }
         });
     }
 });
