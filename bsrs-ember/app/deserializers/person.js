@@ -115,7 +115,7 @@ var PersonDeserializer = Ember.Object.extend({
         if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
             model.phone_number_fks = extract_phone_numbers(model, store);
             model.address_fks = extract_addresses(model, store);
-            [model.role_fk, location_level_fk] = extract_role(model, store);
+            let location_level_fk = extract_role(model, store);
             model.person_location_fks = extract_person_location(model, store, uuid, location_level_fk);
             model.locale_fk = extract_locale(model, store);
             let person = store.push('person', model);
@@ -128,7 +128,7 @@ var PersonDeserializer = Ember.Object.extend({
             let person_check = store.find('person', model.id);
             //prevent updating person if dirty
             if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
-                model.role_fk = extract_role(model, store);
+                extract_role(model, store);
                 let person = store.push('person', model);
                 person.save();
             }

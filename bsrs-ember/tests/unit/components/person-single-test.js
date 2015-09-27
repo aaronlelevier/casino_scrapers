@@ -58,9 +58,9 @@ test('locations computed will be filtered by person.role.location_level', (asser
     assert.equal(person_location_two.get('removed'), undefined);
     assert.equal(person_location_three.get('removed'), undefined);
     assert.equal(person_location_four.get('removed'), undefined);
-    assert.equal(person.get('rollback_role_fk'), undefined);
+    assert.equal(person.get('role_fk'), ROLE_DEFAULTS.idTwo);
     person.change_role(role_invalid, role);
-    assert.equal(person.get('rollback_role_fk'), role.get('id'));
+    assert.equal(person.get('role_fk'), role.get('id'));
     assert.equal(person_location_one.get('removed'), true);
     assert.equal(person_location_two.get('removed'), true);
     assert.equal(person_location_three.get('removed'), undefined);

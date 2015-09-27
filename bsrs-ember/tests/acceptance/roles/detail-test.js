@@ -85,7 +85,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     });
 });
 
-// test('when you change a related category name it will be persisted correctly', (assert) => {
+// test('sco when you change a related category name it will be persisted correctly', (assert) => {
 //     visit(DETAIL_URL);
 //     let url = PREFIX + DETAIL_URL + "/";
 //     let categories = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.id, name: CATEGORY_DEFAULTS.nameTwo});

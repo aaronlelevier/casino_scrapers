@@ -47,14 +47,14 @@ var RoleMixin = Ember.Mixin.create({
                 person_location.set('removed', undefined);
             }
         });
-        //setup rollback_role_fk for rollback. role_fk is used for dirty tracking. check for old role on person new template
+        //setup role_fk for rollback. role_fk is used for dirty tracking. check for old role on person new template
         if (old_role) { 
-            this.set('rollback_role_fk', old_role.get('id')); }
+            this.set('role_fk', old_role.get('id')); }
     },
-    roleIsDirty: Ember.computed('role_property.@each.isDirty', 'rollback_role_fk', function() {
+    roleIsDirty: Ember.computed('role_property.@each.isDirty', 'role_fk', function() {
         let roles = this.get('role_property');
         let role = roles.objectAt(0);
-        let rollback_fk = this.get('rollback_role_fk');
+        let rollback_fk = this.get('role_fk');
         //role_fk is updated and serialized in the person so need new way to check if dirty
         if(role) {
             if (rollback_fk && rollback_fk !== role.get('id')) {
@@ -71,12 +71,11 @@ var RoleMixin = Ember.Mixin.create({
         if(role) {
             role.save();
             this.set('role_fk', role.get('id'));
-            this.set('rollback_role_fk', role.get('id'));
         }
     },
     rollbackRole() {
         var store = this.get('store');
-        var previous_role_fk = this.get('rollback_role_fk') || this.get('role_fk');
+        var previous_role_fk = this.get('role_fk');
 
         var current_role = this.get('role');
         if(current_role) {
