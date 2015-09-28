@@ -5,7 +5,19 @@ module.exports = function(app) {
   var adminLocationLevelsRouter = express.Router();
 
   adminLocationLevelsRouter.get('/', function(req, res) {
-    res.send(LOCATION_LEVEL_FIXTURES.list());
+    var page = req.query.page || 1;
+    var sort = req.query.ordering ? req.query.ordering.trim() : '';
+    var search = req.query.search ? req.query.search.trim() : '';
+    if(search && search.length > 0) {
+        var term = decodeURIComponent(search);
+        res.send(LOCATION_LEVEL_FIXTURES.searched(term, sort, page));
+    } else if(sort && sort.length > 0) {
+        res.send(LOCATION_LEVEL_FIXTURES.sorted(sort, page));
+    } else if(parseInt(page) > 1) {
+        res.send(LOCATION_LEVEL_FIXTURES.list_two());
+    }else{
+        res.send(LOCATION_LEVEL_FIXTURES.list());
+    }
   });
 
   adminLocationLevelsRouter.post('/', function(req, res) {
