@@ -11,6 +11,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             nameOne: 'admin.category.name.repair',
             nameTwo: 'admin.category.name.maintenance',
             nameThree: 'admin.category.name.loss_prevention', 
+            idNew: 'abc123',
             status: 'admin.category.status.active',
             descriptionRepair: 'Interior and Exterior Store Repair',
             descriptionMaintenance: 'Preventive Maintenance',

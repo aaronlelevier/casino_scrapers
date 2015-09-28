@@ -2,7 +2,7 @@ import Ember from 'ember';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import inject from 'bsrs-ember/utilities/inject';
 
-export default Ember.Route.extend({
+var PersonNew = Ember.Route.extend({
     uuid: injectUUID('uuid'),
     phone_number_type_repo: inject('phone-number-type'),
     tabList: Ember.inject.service(),
@@ -26,3 +26,5 @@ export default Ember.Route.extend({
         },
     }
 });
+
+export default PersonNew;

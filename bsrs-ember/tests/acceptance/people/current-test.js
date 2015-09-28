@@ -5,7 +5,6 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
-import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
@@ -46,7 +45,7 @@ test('when changing the locale for the current user, the language is updated on 
         assert.equal(currentURL(), PERSON_CURRENT_URL);
         var person = store.find('person', PERSON_CURRENT_DEFAULTS.id);
         assert.equal(person.get('id'), PERSON_CURRENT_DEFAULTS.id);
-        assert.equal(find('.t-person-first-name').val(), PEOPLE_DEFAULTS.first_name);
+        assert.equal(find('.t-person-first-name').val(), PERSON_CURRENT_DEFAULTS.first_name);
         assert.equal(find('.t-locale-select option:selected').val(), PEOPLE_DEFAULTS.locale);
         assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
         fillIn('.t-locale-select', PEOPLE_DEFAULTS.locale2);
@@ -62,7 +61,7 @@ test('when rolling back the locale the current locale is also changed back', (as
         assert.equal(currentURL(), PERSON_CURRENT_URL);
         var person = store.find('person', PERSON_CURRENT_DEFAULTS.id);
         assert.equal(person.get('id'), PERSON_CURRENT_DEFAULTS.id);
-        assert.equal(find('.t-person-first-name').val(), PEOPLE_DEFAULTS.first_name);
+        assert.equal(find('.t-person-first-name').val(), PERSON_CURRENT_DEFAULTS.first_name);
         assert.equal(find('.t-locale-select option:selected').val(), PEOPLE_DEFAULTS.locale);
         assert.equal(find('.t-person-first-name').prop("placeholder"), "First Name");
         fillIn('.t-locale-select', PEOPLE_DEFAULTS.locale2);

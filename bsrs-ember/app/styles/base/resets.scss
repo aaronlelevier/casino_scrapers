@@ -1,3 +1,19 @@
+.selectize-input{
+	border: $borderStyle;
+	border-radius: $borderRadius;
+}
+.selectize-input.focus {
+    border-color: $activeColor;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+	border-radius: $borderRadiusTop;
+}
+.selectize-dropdown, .selectize-dropdown.form-control{
+	margin: -1px 0 0;
+	border-color: $activeColor;
+	border-radius: $borderRadiusBottom;
+}
 input, textarea, select, button {
 	outline: none;
 	-webkit-box-shadow: none !important;
