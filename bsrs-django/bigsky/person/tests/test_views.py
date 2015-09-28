@@ -210,9 +210,6 @@ class PersonListTests(TestCase):
     def test_response(self):
         self.assertEqual(self.response.status_code, 200)
 
-    def test_count(self):
-        self.assertEqual(self.data['count'], settings.REST_FRAMEWORK['PAGINATE_BY'])
-
     def test_status(self):
         self.assertTrue(self.data['results'][0]['status']['id'])
 

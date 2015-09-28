@@ -13,6 +13,7 @@ from util.mixins import DestroyModelMixin, OrderingQuerySetMixin
 class BaseModelViewSet(DestroyModelMixin, OrderingQuerySetMixin, viewsets.ModelViewSet):
 	
     queryset = None
+    filter_fields = None
 
     def get_model(self):
         return self.model
@@ -34,16 +35,23 @@ class BaseModelViewSet(DestroyModelMixin, OrderingQuerySetMixin, viewsets.ModelV
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def get_queryset(self):
-        "Allow filterable by 'IN' keyword."
+        """
+        Allow filterable by 'IN' keyword.
+
+        ``filter_fields``: A list of filterable fields that uses the 
+        Django ORM sytax. Must be defined on the ModelViewSet that is 
+        implementing this feature.
+        """
         queryset = super(BaseModelViewSet, self).get_queryset()
 
-        for param in self.request.query_params:
-            if param.split("__")[0] in self.filter_fields:
-                if param.split("__")[-1] == "in":
-                    value = self.request.query_params.get(param).split(',')
-                else:
-                    value = self.request.query_params.get(param)
+        if self.filter_fields:
+            for param in self.request.query_params:
+                if param.split("__")[0] in self.filter_fields:
+                    if param.split("__")[-1] == "in":
+                        value = self.request.query_params.get(param).split(',')
+                    else:
+                        value = self.request.query_params.get(param)
 
-                queryset = queryset.filter(**{param: value})
+                    queryset = queryset.filter(**{param: value})
 
         return queryset
