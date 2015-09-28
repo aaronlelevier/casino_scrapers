@@ -53,7 +53,9 @@ class PersonViewSet(BaseModelViewSet):
     '''
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
-    filter_class = PersonFilterSet
+    model = Person
+    filter_fields = [f.name for f in model._meta.get_fields()]
+
 
     def get_serializer_class(self):
         """

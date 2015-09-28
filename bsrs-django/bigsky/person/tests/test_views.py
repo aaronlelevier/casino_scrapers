@@ -683,7 +683,7 @@ class PersonSearchOrderingTests(TestCase):
         self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
 
 
-class DRFFiltersTests(TestCase):
+class FilterByFieldTests(TestCase):
 
     def setUp(self):
         # Role
