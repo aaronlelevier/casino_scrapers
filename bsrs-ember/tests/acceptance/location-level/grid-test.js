@@ -36,7 +36,7 @@ test('initial load should only show first 10 records ordered by id with correct 
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
-        // assert.equal(find('.t-grid-title').text(), 'Location Levels');
+        assert.equal(find('.t-grid-title').text(), 'Location Levels');
         assert.equal(find('.t-grid-data').length, 10);
         assert.equal(find('.t-grid-data:eq(0) .t-location-level-name').text(), LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict);
         var pagination = find('.t-pages');
