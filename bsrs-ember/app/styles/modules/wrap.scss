@@ -173,20 +173,27 @@ section.wrap{
         right: 0;
         bottom: 0;
         left: 0;
-        background: $white;
+        background: $light;
         overflow: auto;
         &.docSectionWithFooter{
             margin-bottom: $documentFooterHeight;
         }
         section{
-            margin: 20px 0;
-
+            margin: 0 0 15px;
+            padding: 0 15px;
+            border: 1px solid $gray;
+            background: $white;
+            box-shadow: 0 0 2px 0 $gray;
             h2{
+                margin: 0;
                 font-size: 1.3em;
                 padding-bottom: 20px;
                 text-transform: uppercase;
             }//h2
         }
+
+        .row {margin: 1.5em -7.5px}
+        [class*="col-"] {padding: 0 7.5px;}
 
     }//section.docSection
     // .form{
