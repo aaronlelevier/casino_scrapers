@@ -424,8 +424,7 @@ test('when you change a related role it will be persisted correctly', (assert) =
         xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data_two);
         andThen(() => {
             let person = store.find('person', PEOPLE_DEFAULTS.id);
-            assert.equal(person.get('role_fk'), ROLE_DEFAULTS.idOne);
-            assert.equal(person.get('rollback_role_fk'), undefined);
+            assert.equal(person.get('role_fk'), undefined);
             assert.equal(person.get('locations').get('length'), 1);
             assert.equal(person.get('locations').objectAt(0).get('id'), LOCATION_DEFAULTS.idOne);
         });
@@ -438,7 +437,7 @@ test('when you change a related role it will be persisted correctly', (assert) =
         click(SAVE_BTN);
         andThen(() => {
             let person = store.find('person', PEOPLE_DEFAULTS.id);
-            assert.equal(person.get('rollback_role_fk'), ROLE_DEFAULTS.idTwo);
+            assert.equal(person.get('role_fk'), ROLE_DEFAULTS.idTwo);
             assert.equal(person.get('locations').get('length'), 0);
             assert.equal(currentURL(),PEOPLE_URL);
         });

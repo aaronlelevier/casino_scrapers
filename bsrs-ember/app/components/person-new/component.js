@@ -5,9 +5,9 @@ import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/vali
 
 var PersonNewComponent = Ember.Component.extend(ValidationMixin, {
     repository: inject('person'),
+    store: injectStore('main'),
     usernameValidation: validate('model.username'),
     passwordValidation: validate('model.password'),
-    store: injectStore('main'),
     tab(){
         return this.get('store').find('tab', this.get('model.id'));
     },

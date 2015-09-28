@@ -34,10 +34,10 @@
                     <tr class="head">
                         <th></th>
                         {{#each searchable as |column|}}
-                        {{grid-column class="twenty-percent" label=(t (t-prefix prefix column)) column=column find=find sort=sort toggleFilterModal="toggleFilterModal" sortBy="sortBy"}}
+                        {{grid-column label=(t (t-prefix prefix column)) column=column find=find sort=sort toggleFilterModal="toggleFilterModal" sortBy="sortBy"}}
                         {{/each}}
                         {{#each nonsearchable as |column|}}
-                        <th class="twenty-percent {{add-text-right nonsearchable column}}">{{t (t-prefix prefix column) }}</th>
+                        <th class={{add-text-right nonsearchable column}}>{{t (t-prefix prefix column) }}</th>
                         {{/each}}
                     </tr>
                 </thead>

@@ -50,6 +50,11 @@
 					{{#validation-error-field submitted=submitted field="subcategory_label" className="validation validation-under t-subcategory-label-validation-error" model=model validation=subCategoryLabelValidation}}{{t "validation.invalid"}} {{t "admin.category.label.subcategory_label"}}{{/validation-error-field}}
 				{{/form-group}}
 			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.category.label.children" for="category"}}
+          {{category-children-select category=model search=search categories_children=categories_children}}
+				{{/form-group}}
+			</div>
 		</section>
 	</section>
 </form>
