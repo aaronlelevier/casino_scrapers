@@ -25,19 +25,22 @@ var PersonRoute = Ember.Route.extend({
         },
     },
     model(params, transition) {
-        var person_pk = params.person_id,
-            location_repo = this.get('location_repo'),
-            country_repo = this.get('country_repo'),
-            state_repo = this.get('state_repo'),
-            status_repo = this.get('status_repo'),
-            role_repo = this.get('role_repo'),
-            repository = this.get('repository'),
-            person = repository.findById(person_pk),
-            phone_number_type_repo = this.get('phone_number_type_repo'),
-            default_phone_number_type = phone_number_type_repo.get_default(),
-            address_type_repo = this.get('address_type_repo'),
-            default_address_type = address_type_repo.get_default(),
-            roles = role_repo.get_default();
+        let person_pk = params.person_id;
+        let location_repo = this.get('location_repo');
+        let country_repo = this.get('country_repo');
+        let state_repo = this.get('state_repo');
+        let status_repo = this.get('status_repo');
+        let role_repo = this.get('role_repo');
+        let repository = this.get('repository');
+        let person = this.get('store').find('person', person_pk);
+        if (!person.get('length') || person.get('isNotDirtyOrRelatedNotDirty')) { 
+            person = repository.findById(person_pk);
+        }
+        let phone_number_type_repo = this.get('phone_number_type_repo');
+        let default_phone_number_type = phone_number_type_repo.get_default();
+        let address_type_repo = this.get('address_type_repo');
+        let default_address_type = address_type_repo.get_default();
+        let roles = role_repo.get_default();
         let search = transition.queryParams.search;
         let role_change = transition.queryParams.role_change;
         let location_level_pk = person.get('location_level_pk');
@@ -79,7 +82,7 @@ var PersonRoute = Ember.Route.extend({
     },
     actions: {
         localeChanged(locale){
-            var model = this.currentModel.model;
+            let model = this.currentModel.model;
             model.set('locale', locale);
             model.changeLocale();
         }

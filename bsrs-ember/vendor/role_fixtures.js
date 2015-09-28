@@ -20,9 +20,9 @@ var BSRS_ROLE_FACTORY = (function() {
     factory.prototype.list = function() {
         var response = [];
         var uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04b';
-        response.push({id: uuid + 1, name: this.role_defaults.nameOne});
-        response.push({id: uuid + 2, name: this.role_defaults.nameTwo});
-        response.push({id: uuid + 3, name: this.role_defaults.nameThree});
+        response.push({id: uuid + 1, name: this.role_defaults.nameOne, location_level: this.location_level_fixtures.detail().id });
+        response.push({id: uuid + 2, name: this.role_defaults.nameTwo, location_level: this.location_level_fixtures.detail().id});
+        response.push({id: uuid + 3, name: this.role_defaults.nameThree, location_level: this.location_level_fixtures.detail().id});
         for (var i=4; i <= 10; i++) {
             var rando_uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04';
             if (i < 10) {

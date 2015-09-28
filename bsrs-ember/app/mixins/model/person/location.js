@@ -61,6 +61,7 @@ var LocationMixin = Ember.Mixin.create({
         if(previous_m2m_fks && previous_m2m_fks.get('length') > 0) {
             return true;
         }
+        return false;
     }),
     saveLocations() {
         this.resetPersonLocationFks({save: true});

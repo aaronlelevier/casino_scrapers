@@ -2,8 +2,8 @@
 	<header>
 		<h1>{{model.first_name}} {{model.middle_initial}} {{model.last_name}} <small>{{model.title}}</small></h1>
 		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
-      {{button-generic save="savePerson" type="save"}}
-      {{button-generic cancel="cancelPerson" type="cancel"}}
+			{{button-generic save="savePerson" type="save"}}
+			{{button-generic cancel="cancelPerson" type="cancel"}}
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 				<span class="caret"></span>
 			</button>
@@ -14,105 +14,108 @@
 			</ul>
 		</div>
 	</header>
-	<section class="docSection container-fluid">
+	<section class="docSection">
 		<section>
-			<h2 class="col-sm-12">{{t "admin.person.label.general"}}</h2>
-			<div class="col-sm-5">
-				{{#form-group title="admin.person.label.first_name" for="first_name"}}
-			    	{{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control t-person-first-name" id="first_name"}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-2">
-				{{#form-group title="admin.person.label.middle_initial" for="middle_initial"}}
-			    	{{input type="text" placeholder=(t "admin.person.label.middle_initial") value=model.middle_initial class="form-control t-person-middle-initial" id="middle_initial"}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-5">
-				{{#form-group title="admin.person.label.last_name" for="last_name"}}
-			    	{{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control t-person-last-name" id="last_name"}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-6">
-				{{#form-group title="admin.person.label.title" for="title"}}
-			  		{{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control t-person-title" id="title"}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-6">
-				{{#form-group title="admin.person.label.employee_id" for="employee_id"}}
-			    	{{input type="text" placeholder=(t "admin.person.label.employee_id") value=model.employee_id class="form-control t-person-employee_id" id="employee_id"}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-6">
-				{{#form-group title="admin.person.label.role" for="role"}}
-          {{role-select model=model.role options=roles person=model role_change=role_change}}
+			<div class="col-sm-8">
+				<h2 class="col-sm-12">{{t "admin.person.label.general"}}</h2>
+				<div class="col-sm-12">
+					{{#form-group title="admin.person.label.role" for="role"}}
+					{{role-select model=model.role options=roles person=model role_change=role_change}}
+					{{/form-group}}
+				</div>
+				<div class="col-sm-12">
+					{{#form-group title="admin.person.label.location" for="location"}}
+					{{person-locations-select model=model.locations person=model person_locations_children=person_locations_children search=search}}
+					{{/form-group}}
+				</div>
+				<div class="col-sm-12">
+					{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
+					{{input-currency model=model field="auth_amount"}}
+					{{/form-group}}
+				</div>
+				<div class="col-sm-12">
+					{{#form-group title="admin.person.label.employee_id" for="employee_id"}}
+					{{input type="text" placeholder=(t "admin.person.label.employee_id") value=model.employee_id class="form-control t-person-employee_id" id="employee_id"}}
+					{{/form-group}}
+				</div>
+				<div class="col-sm-12">
+					{{#form-group title="admin.person.label.language" for="locale"}}
+					{{language-select model=model locales=locales field="locale" localeChanged="localeChanged"}}
+					{{/form-group}}
+				</div>
+				<h2 class="col-sm-12">{{t "admin.person.label.credentials"}}</h2>
+				<div class="col-sm-12">
+					{{#form-group title="admin.person.label.status"}}
+					<select class="form-control t-statuses-select">
+						{{#each statuses as |status|}}
+						<option class="t-status-option" value="{{status.id}}">{{t status.name}}</option>
+						{{/each}}
+					</select>
+					{{/form-group}}
+				</div>
+				<div class="col-sm-12">
+					{{#form-group title="admin.person.label.username" for="username"}}
+					{{input type="text" placeholder=(t "admin.person.label.username") value=model.username class="form-control t-person-username" id="username"}}
+					{{#validation-error-field submitted=submitted field="username" className="t-username-validation-error" model=model validation=usernameValidation}}invalid username{{/validation-error-field}}
+					{{/form-group}}
+				</div>
+				<div class="col-sm-12">
+					{{#form-group title="admin.person.label.password" for="password"}}
+					<div><button class="btn btn-default btn-md">{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
+					{{/form-group}}
+				</div>
+				<h2 class="col-sm-12">{{t "admin.person.label.contact"}}</h2>
+				<div class="col-sm-12">
+					{{#form-group title="admin.person.label.phone_number.other"}}
+					{{input-multi-phone placeholder=(t "admin.person.label.phone_number.one")
+					model=model.phone_numbers
+					types=phone_number_types
+					default_type=default_phone_number_type
+					related_field="person_fk"
+					related_pk=model.id
+				}}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-12">
-				{{#form-group title="admin.person.label.location" for="location"}}
-          {{person-locations-select model=model.locations person=model person_locations_children=person_locations_children search=search}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-6">
-				{{#form-group title="admin.person.label.auth_amount" for="auth_amount"}}
-            {{input-currency model=model field="auth_amount"}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-6">
-				{{#form-group title="admin.person.label.language" for="locale"}}
-            {{language-select model=model locales=locales field="locale" localeChanged="localeChanged"}}
+				{{#form-group title="admin.person.label.address"}}
+				{{input-multi-address
+					model=model.addresses
+					state_list=state_list
+					countries=countries
+					types=address_types
+					default_type=default_address_type
+					related_field="person_fk"
+					related_pk=model.id
+				}}
 				{{/form-group}}
 			</div>
 
-		</section>
-		<section>
-			<h2 class="col-sm-12">{{t "admin.person.label.credentials"}}</h2>
-			<div class="col-sm-4">
-				{{#form-group title="admin.person.label.status"}}
-					<select class="form-control t-statuses-select">
-			        {{#each statuses as |status|}}
-			            <option class="t-status-option" value="{{status.id}}">{{t status.name}}</option>
-			        {{/each}}
-					</select>
+		</div>
+		<div class="col-sm-4 user-info">
+			<div class="col-sm-12">
+				<div class="user-photo">{{fa-icon "user"}}</div>
+			</div>
+			<div class="col-sm-8">
+				{{#form-group title="admin.person.label.first_name" for="first_name"}}
+				{{input type="text" placeholder=(t "admin.person.label.first_name") value=model.first_name class="form-control input-sm t-person-first-name" id="first_name"}}
 				{{/form-group}}
 			</div>
 			<div class="col-sm-4">
-				{{#form-group title="admin.person.label.username" for="username"}}
-				    {{input type="text" placeholder=(t "admin.person.label.username") value=model.username class="form-control t-person-username" id="username"}}
-					{{#validation-error-field submitted=submitted field="username" className="t-username-validation-error" model=model validation=usernameValidation}}invalid username{{/validation-error-field}}
+				{{#form-group title="admin.person.label.middle_initial" for="middle_initial"}}
+				{{input type="text" placeholder=(t "admin.person.label.middle_initial") value=model.middle_initial class="form-control input-sm t-person-middle-initial" id="middle_initial"}}
 				{{/form-group}}
 			</div>
-			<div class="col-sm-4">
-				{{#form-group title="admin.person.label.password" for="password"}}
-				    <div><button class="btn btn-default btn-md">{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
+			<div class="col-sm-12">
+				{{#form-group title="admin.person.label.last_name" for="last_name"}}
+				{{input type="text" placeholder=(t "admin.person.label.last_name") value=model.last_name class="form-control input-sm t-person-last-name" id="last_name"}}
 				{{/form-group}}
 			</div>
-		</section>
-		<section>
-			<h2 class="col-sm-12">{{t "admin.person.label.contact"}}</h2>
-			<div class="col-sm-6">
-				{{#form-group title="admin.person.label.phone_number.other"}}
-					{{input-multi-phone placeholder=(t "admin.person.label.phone_number.one")
-						model=model.phone_numbers
-						types=phone_number_types
-						default_type=default_phone_number_type
-						related_field="person_fk"
-						related_pk=model.id
-					}}
+			<div class="col-sm-12">
+				{{#form-group title="admin.person.label.title" for="title"}}
+				{{input type="text" placeholder=(t "admin.person.label.title") value=model.title class="form-control input-sm t-person-title" id="title"}}
 				{{/form-group}}
 			</div>
-			<div class="col-sm-6">
-				{{#form-group title="admin.person.label.address"}}
-					{{input-multi-address
-						model=model.addresses
-						state_list=state_list
-						countries=countries
-						types=address_types
-            default_type=default_address_type
-            related_field="person_fk"
-            related_pk=model.id
-					}}
-				{{/form-group}}
-			</div>
-		</section>
-	</section>
+		</div>
+</section>
+</section>
 </form>
