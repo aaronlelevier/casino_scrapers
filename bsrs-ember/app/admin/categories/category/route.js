@@ -1,21 +1,27 @@
 import Ember from 'ember';
+import TabRoute from 'bsrs-ember/admin/tab/route';
 import inject from 'bsrs-ember/utilities/inject';
 
-var CategorySingleRoute = Ember.Route.extend({
+var CategorySingleRoute = TabRoute.extend({
     repository: inject('category'),
-    tabList: Ember.inject.service(),
     queryParams: {
         search: {
             refreshModel: true
         },
     },
+    redirectRoute: Ember.computed(function() { return 'admin.categories.index'; }),
+    modelName: Ember.computed(function() { return 'category'; }),
+    templateModelField: Ember.computed(function() { return 'name'; }),
     model(params, transition) {
+        let pk = params.category_id;
         let search = transition.queryParams.search;
         let categories_children = this.get('repository').findCategoryChildren(search) || [];
-        let model = this.get('repository').findById(params.category_id);
-        this.get('tabList').createTab(this.routeName, 'category', params.category_id, 'admin.categories.index');
+        let category = this.get('store').find('category', pk);
+        if (!category.get('length') || category.get('isNotDirtyOrRelatedNotDirty')) { 
+            category = this.get('repository').findById(pk);
+        }
         return Ember.RSVP.hash({
-            model: model,
+            model: category,
             categories_children: categories_children,
             search: search
         });
