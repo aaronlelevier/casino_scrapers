@@ -85,7 +85,7 @@ test('visiting admin/location-level', (assert) => {
     });
 });
 
-test('toran a location level child can be selected and persisted', (assert) => {
+test('a location level child can be selected and persisted', (assert) => {
     clearxhr(list_xhr);
     clearxhr(detail_xhr);
     xhr(DJANGO_DISTRICT_DETAIL_URL, 'GET', null, {}, 200, location_level_district_detail_data);
