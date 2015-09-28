@@ -472,3 +472,27 @@ test('after you reset the grid the filter model will also be reset', function(as
         assert.equal(username_filter_value, '');
     });
 });
+
+test('count is shown and updated as the user filters down the list from django', function(assert) {
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=8';
+    xhr(option_one ,'GET',null,{},200,PEOPLE_FIXTURES.searched('8', 'id'));
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-count').text(), '18 People');
+    });
+    fillIn('.t-grid-search-input', '8');
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_EIGHT);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=8');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-page-count').text(), '2 People');
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-count').text(), '18 People');
+    });
+});

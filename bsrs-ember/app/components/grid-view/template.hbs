@@ -59,6 +59,7 @@
     </section>
 
     <footer>
+        <span class="pull-left t-page-count">{{model.count}} {{plural}}</span>
         <nav class="text-center">
             <ul class="pagination t-pages">
                 <li class="t-first {{if first '' 'disabled'}}" disabled={{if first disabled ''}}>{{#link-to list_url (query-params page=first) disabled=notFirst}}&laquo;{{/link-to}}</li>
