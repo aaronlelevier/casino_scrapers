@@ -39,14 +39,11 @@ class BaseModelViewSet(DestroyModelMixin, OrderingQuerySetMixin, viewsets.ModelV
 
         for param in self.request.query_params:
             if param.split("__")[0] in self.filter_fields:
-                print 'param'
-                value = self.request.query_params.get(param).split(',')
-                value = value if len(value) > 1 else value[0]
-                print param
-                print value
-                # field, lookup = param.split("__")
-                print queryset
+                if param.split("__")[-1] == "in":
+                    value = self.request.query_params.get(param).split(',')
+                else:
+                    value = self.request.query_params.get(param)
+
                 queryset = queryset.filter(**{param: value})
-                print queryset
 
         return queryset
