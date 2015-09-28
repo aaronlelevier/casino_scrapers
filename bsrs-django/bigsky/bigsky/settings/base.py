@@ -101,11 +101,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'assets'),
+    os.path.join(BASE_DIR, 'ember'),
     )
 
-STATIC_URL = '/assets/'
+STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 

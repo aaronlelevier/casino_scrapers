@@ -43,9 +43,15 @@ def create_roles():
     return Role.objects.all()
 
 
-def create_single_person(username, role):
-    return Person.objects.create_user(username, 'myemail@mail.com', PASSWORD,
-        first_name=create._generate_chars(), role=role)
+def create_single_person(name=None, role=None):
+    name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
+    role = role or create_role()
+
+    try:
+        return Person.objects.get(username=name)
+    except Person.DoesNotExist:
+        return Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
+            first_name=name, last_name=name, title=name, role=role)
 
 
 def update_login_person(person):
@@ -55,13 +61,13 @@ def update_login_person(person):
     person.save()
 
 
-def create_person(username=None, _many=1):
+def create_person(username=None, role=None, _many=1):
     '''
     Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )
 
     Return: the last user created from the `forloop`
     '''
-    role = create_role()
+    role = role or create_role()
 
     # Single User Create
     if username and _many != 1:
@@ -73,8 +79,8 @@ def create_person(username=None, _many=1):
         
     # Multiple User Create
     for i in range(_many):
-        username = ''.join([random.choice(string.ascii_letters) for x in range(10)])
-        user = create_single_person(username, role)
+        name = random.choice(create.LOREM_IPSUM_WORDS.split())
+        user = create_single_person(name, role)
     
     return user
 
