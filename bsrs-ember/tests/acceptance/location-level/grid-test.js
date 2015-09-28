@@ -387,3 +387,27 @@ test('after you reset the grid the filter model will also be reset', function(as
         assert.equal(name_filter_value, '');
     });
 });
+
+test('count is shown and updated as the user filters down the list from django', function(assert) {
+    let option_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&search=9';
+    xhr(option_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.searched('9', 'id'));
+    visit(LOCATION_LEVEL_URL);
+    andThen(() => {
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-count').text(), '19 Location Levels');
+    });
+    fillIn('.t-grid-search-input', '9');
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_NINE);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_LEVEL_URL + '?search=9');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-page-count').text(), '2 Location Levels');
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_LEVEL_URL + '?search=');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-count').text(), '19 Location Levels');
+    });
+});

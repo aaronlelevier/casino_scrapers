@@ -110,7 +110,7 @@ var PersonDeserializer = Ember.Object.extend({
         let uuid = this.get('uuid');
         let store = this.get('store');
         let location_level_fk;//used to setup location_level_fk correctly for a location pushed into the store from this deserializer
-        let person_check = store.find('person', model.id);
+        let person_check = store.find('person', id);
         //prevent updating person if dirty
         if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
             model.phone_number_fks = extract_phone_numbers(model, store);

@@ -24,7 +24,7 @@ const SAVE_BTN = '.t-save-btn';
 
 let application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
-module('Acceptance | tab test', {
+module('Acceptance | tab people test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -195,8 +195,8 @@ test('clicking on a tab that is dirty from the list url should take you to the d
         andThen(() => {
             assert.equal(currentURL(), PEOPLE_URL);
         });
-        click('.t-tab:eq(0)');
     });
+    click('.t-tab:eq(0)');
     andThen(() => {
         let person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS_PUT.username);
@@ -279,7 +279,6 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
         assert.equal(find('.dirty').length, 0);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let thisTab = store.find('tab', PEOPLE_DEFAULTS.id);
         assert.equal(find('.t-tab-title:eq(0)').text(), PEOPLE_DEFAULTS.fullname);
     });
     fillIn('.t-person-first-name', PEOPLE_DEFAULTS_PUT.username);
@@ -347,3 +346,4 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
         });
     });
 });
+

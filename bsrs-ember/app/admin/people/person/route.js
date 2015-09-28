@@ -2,10 +2,11 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import config from 'bsrs-ember/config/environment';
 import injectStore from 'bsrs-ember/utilities/store';
+import TabRoute from 'bsrs-ember/admin/tab/route';
 import AddressType from 'bsrs-ember/models/address-type';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 
-var PersonRoute = Ember.Route.extend({
+var PersonRoute = TabRoute.extend({
     store: injectStore('main'),
     repository: inject('person'),
     location_repo: inject('location'),
@@ -15,7 +16,6 @@ var PersonRoute = Ember.Route.extend({
     role_repo: inject('role'),
     phone_number_type_repo: inject('phone-number-type'),
     address_type_repo: inject('address-type'),
-    tabList: Ember.inject.service(),
     queryParams: {
         search: {
             refreshModel: true
@@ -24,6 +24,9 @@ var PersonRoute = Ember.Route.extend({
             refreshModel: true
         },
     },
+    redirectRoute: Ember.computed(function() { return 'admin.people.index'; }),
+    modelName: Ember.computed(function() { return 'person'; }),
+    templateModelField: Ember.computed(function() { return 'fullname'; }),
     model(params, transition) {
         let person_pk = params.person_id;
         let location_repo = this.get('location_repo');
@@ -45,11 +48,9 @@ var PersonRoute = Ember.Route.extend({
         let role_change = transition.queryParams.role_change;
         let location_level_pk = person.get('location_level_pk');
         let person_locations_children = (search || role_change) && location_level_pk ? location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change) : [];
-
-        this.get('tabList').createTab(this.routeName, 'person', person_pk, 'admin.people.index');
-
         return Ember.RSVP.hash({
             model: person,
+            model_id: person_pk,
             phone_number_types: phone_number_type_repo.find(),
             countries: country_repo.find(),
             state_list: state_repo.find(),
@@ -63,7 +64,6 @@ var PersonRoute = Ember.Route.extend({
             role_change: role_change,
             person_locations_children: person_locations_children
         });
-
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);

@@ -44,7 +44,7 @@ var LocationMixin = Ember.Mixin.create({
         store.push('person-location', {id: m2m_pk, removed: true});
     },
     locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
-    locationsIsDirty: Ember.computed('person_locations', 'locations.@each.isDirty', function() {
+    locationsIsDirty: Ember.computed('person_locations', 'person_location_fks', 'locations.@each.isDirty', function() {
         let locations = this.get('locations');
         let previous_m2m_fks = this.get('person_location_fks');
         if(locations.get('length') > 0) {

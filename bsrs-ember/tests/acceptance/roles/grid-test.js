@@ -431,3 +431,27 @@ test('after you reset the grid the filter model will also be reset', function(as
         assert.equal(name_filter_value, '');
     });
 });
+
+test('count is shown and updated as the user filters down the list from django', function(assert) {
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
+    xhr(option_one ,'GET',null,{},200,ROLE_FIXTURES.searched('4', 'id'));
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-count').text(), '19 Roles');
+    });
+    fillIn('.t-grid-search-input', '4');
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
+    andThen(() => {
+        assert.equal(currentURL(),ROLE_URL + '?search=4');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-page-count').text(), '2 Roles');
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),ROLE_URL + '?search=');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-count').text(), '19 Roles');
+    });
+});
