@@ -173,27 +173,51 @@ section.wrap{
         right: 0;
         bottom: 0;
         left: 0;
-        background: $light;
+        background: $white;
         overflow: auto;
         &.docSectionWithFooter{
             margin-bottom: $documentFooterHeight;
         }
         section{
             margin: 0 0 15px;
-            padding: 0 15px;
+            padding: 0 15px 15px;
             border: 1px solid $gray;
             background: $white;
             box-shadow: 0 0 2px 0 $gray;
             h2{
+                color: $darkGray;
                 margin: 0;
                 font-size: 1.3em;
                 padding-bottom: 20px;
                 text-transform: uppercase;
+                text-shadow: 1px 1px 0 $white;
             }//h2
+            label{
+                font-weight: normal;
+                font-size: 0.9em;
+                color: $medGray;
+            }
         }
 
-        .row {margin: 1.5em -7.5px}
-        [class*="col-"] {padding: 0 7.5px;}
+        .row {
+            margin: 15px -7.5px;
+            .row{
+                margin: 8px -4px;
+                &.card-title{
+                    background-color: $light;
+                    margin: 0 -15px;
+                    padding: 10px;
+                    border-bottom: $borderStyle;
+                    border-width: 0 0 1px;
+                }
+            }
+        }
+        [class*="col-"] {
+            padding: 0 7.5px;
+            [class*="col-"] {
+                padding: 4px;
+            }
+        }
 
     }//section.docSection
     // .form{
