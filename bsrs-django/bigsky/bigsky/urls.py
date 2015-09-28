@@ -13,6 +13,7 @@ from accounting import views as accounting_views
 from bigsky import views as bigsky_views
 from category import views as category_views
 from contact import views as contact_views
+from generic import views as generic_views
 from location import views as location_views
 from person import views as person_views
 from translation import views as translation_views
@@ -34,6 +35,8 @@ router.register(r'admin/addresses', contact_views.AddressViewSet)
 router.register(r'admin/address_types', contact_views.AddressTypeViewSet)
 router.register(r'admin/emails', contact_views.EmailViewSet)
 router.register(r'admin/email_types', contact_views.EmailTypeViewSet)
+# GENERIC
+router.register(r'admin/generic', generic_views.SavedSearchViewSet)
 # LOCATION
 router.register(r'admin/locations', location_views.LocationViewSet)
 router.register(r'admin/location_levels', location_views.LocationLevelViewSet)

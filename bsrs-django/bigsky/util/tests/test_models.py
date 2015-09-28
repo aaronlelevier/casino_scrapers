@@ -14,7 +14,7 @@ from person.models import Role
 from person.tests.factory import create_person, create_role
 from translation.models import Locale
 from util import create, choices, helpers
-from util.models import MainSetting, CustomSetting, Tester
+from util.models import Tester
 from util.permissions import perms_map
 
 
@@ -142,24 +142,7 @@ class TesterPermissionAlreadyCreatedTests(TransactionTestCase):
             Permission
             )
 
-
-class MainSettingTests(TestCase):
-    # Only testing one ``Setting` Model b/c they are inheriting
-    # from the same Base Model
-
-    def setUp(self):
-        self.person = create_person()
-
-    def test_setting(self):
-        ct = ContentType.objects.get(app_label='person', model='person')
-        s = MainSetting.objects.create(
-            content_type=ct,
-            object_id=self.person.id,
-            content_object=self.person
-            )
-        self.assertEqual(s.content_object, self.person)
-
-
+        
 class UpdateTests(TestCase):
 
     def setUp(self):
