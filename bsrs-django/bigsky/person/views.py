@@ -56,7 +56,6 @@ class PersonViewSet(BaseModelViewSet):
     model = Person
     filter_fields = [f.name for f in model._meta.get_fields()]
 
-
     def get_serializer_class(self):
         """
         set the serializer based on the method

@@ -44,19 +44,14 @@ def create_roles():
 
 
 def create_single_person(name=None, role=None):
+    name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
     role = role or create_role()
-    person = None
-    
-    while not person:
-        name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
 
-        try:
-            person = Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
-                first_name=name, last_name=name, title=name, role=role)
-        except IntegrityError:
-            pass
-
-    return person
+    try:
+        return Person.objects.get(username=name)
+    except Person.DoesNotExist:
+        return Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
+            first_name=name, last_name=name, title=name, role=role)
 
 
 def update_login_person(person):

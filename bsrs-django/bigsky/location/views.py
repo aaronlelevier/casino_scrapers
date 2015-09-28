@@ -150,7 +150,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Location.objects.all()
     model = Location
-    filter_class = LocationFilterSet
+    filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
         if self.action == 'list':
