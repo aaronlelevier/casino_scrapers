@@ -31,7 +31,7 @@ module('Acceptance | detail-test', {
         let location_detail_data = LOCATION_LEVEL_FIXTURES.detail();
         location_level_district_detail_data = LOCATION_LEVEL_FIXTURES.detail_district();
         endpoint = PREFIX + DJANGO_LOCATION_LEVEL_URL;
-        list_xhr = xhr(endpoint, 'GET', null, {}, 200, location_list_data);
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
         detail_xhr = xhr(DJANGO_DETAIL_URL, 'GET', null, {}, 200, location_detail_data);
     },
     afterEach() {
@@ -46,7 +46,7 @@ test('clicking on a location levels name will redirect them to the detail view',
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
     });
-    click('.t-location-level-data:eq(0)');
+    click('.t-grid-data:eq(2)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -75,7 +75,7 @@ test('visiting admin/location-level', (assert) => {
     });
     let list = LOCATION_LEVEL_FIXTURES.list();
     list.results[0].name = LOCATION_LEVEL_DEFAULTS.nameRegion;
-    xhr(endpoint, 'GET', null, {}, 200, list);
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -85,7 +85,7 @@ test('visiting admin/location-level', (assert) => {
     });
 });
 
-test('a location level child can be selected and persisted', (assert) => {
+test('toran a location level child can be selected and persisted', (assert) => {
     clearxhr(list_xhr);
     clearxhr(detail_xhr);
     xhr(DJANGO_DISTRICT_DETAIL_URL, 'GET', null, {}, 200, location_level_district_detail_data);
@@ -116,7 +116,7 @@ test('a location level child can be selected and persisted', (assert) => {
     let children_array = LOCATION_LEVEL_DEFAULTS.districtChildren;
     children_array.push(children_array.shift());
     list.results[1].children = children_array;
-    xhr(endpoint, 'GET', null, {}, 200, list);
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -156,7 +156,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
     });
-    click('.t-location-level-data:eq(0)');
+    click('.t-grid-data:eq(2)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });

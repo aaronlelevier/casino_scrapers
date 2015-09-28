@@ -27,7 +27,7 @@ module('Acceptance | location-level-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        list_xhr = xhr(DJANGO_LOCATION_LEVEL_URL, "GET", null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
+        list_xhr = xhr(DJANGO_LOCATION_LEVEL_URL + '?page=1', 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
         payload = {
             id: UUID.value,
             name: LOCATION_LEVEL_DEFAULTS.nameAnother,
@@ -44,7 +44,7 @@ test('visiting /location-level/new', (assert) => {
     let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);
-    click('.t-location-level-new');
+    click('.t-add-new');
     click('.selectize-input input');
     click('.t-location-level-location-level-select div.option:eq(0)');
     click('.t-location-level-location-level-select div.option:eq(0)');
@@ -77,7 +77,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);
-    click('.t-location-level-new');
+    click('.t-add-new');
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
     });
@@ -133,7 +133,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(find('.t-modal').is(':hidden'), true);
             let location_level = store.find('location-level', {id: UUID.value});
             assert.equal(location_level.get('length'), 0);
-            assert.equal(find('tr.t-location-level-data').length, 8);
+            assert.equal(find('.t-grid-data').length, 8);
         });
     });
 });

@@ -17,7 +17,7 @@ module('Acceptance | location-level-list', {
   beforeEach() {
     application = startApp();
     let endpoint = PREFIX + DJANGO_LOCATION_LEVEL_URL;
-    xhr(endpoint ,"GET",null,{}, 200, LOCATION_LEVEL_FIXTURES.list() );
+    xhr(endpoint + '?page=1' ,'GET',null,{}, 200, LOCATION_LEVEL_FIXTURES.list() );
   },
   afterEach() {
     Ember.run(application, 'destroy');
@@ -26,11 +26,8 @@ module('Acceptance | location-level-list', {
 
 test('visiting /location-levels', function(assert) {
   visit(LOCATION_LEVEL_URL);
-
   andThen(() => {
     assert.equal(currentURL(), LOCATION_LEVEL_URL);
-    assert.equal(find('h1.t-location-level').text(), 'Location Levels');
-    assert.equal(find('tr.t-location-level-data').length, 8);
+    assert.equal(find('.t-grid-data').length, 10);
   });
 });
-

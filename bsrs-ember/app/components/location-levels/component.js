@@ -1,8 +1,7 @@
-import Ember from 'ember';
+import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 
-var LocationLevelListComponent = Ember.Component.extend({
-  classNames: ['wrapper']
+export default GridViewComponent.extend({
+    layoutName: 'components/grid-view',
+    searchable: ['name'],
+    nonsearchable: []
 });
-
-export default LocationLevelListComponent;
-
