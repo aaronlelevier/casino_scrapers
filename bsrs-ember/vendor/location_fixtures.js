@@ -2,7 +2,7 @@ var BSRS_LOCATION_FACTORY = (function() {
     var factory = function(location_defaults, location_level_defaults, location_level_fixtures) {
         this.location_defaults = location_defaults;
         this.location_level_defaults = location_level_defaults;
-        this.location_level_fixtures = location_level_fixtures;
+        this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
     };
     factory.prototype.get = function(i) {
         return {
@@ -55,96 +55,6 @@ var BSRS_LOCATION_FACTORY = (function() {
         }
         return {'count':19,'next':null,'previous':null,'results': response};
     };
-    factory.prototype.paginated = function(page_size) {
-        var page1 = this.list_two().results;
-        var page2 = this.list().results;
-        var response = page1.concat(page2);
-        var sorted = response.sort(function(a,b) {
-            return a['id'] - b['id'];
-        });
-        var paginated;
-        if(page_size > 10) {
-            paginated = sorted;
-        }else{
-            paginated = sorted.slice(0, 10);
-        }
-        return {'count':18,'next':null,'previous':null,'results': paginated};
-    };
-    factory.prototype.sorted = function(column, page) {
-        var response;
-        if(page && page === 2) {
-            response = this.list_two().results;
-        } else {
-            response = this.list().results;
-        }
-        var columns = column.split(',');
-        var column = columns[0];
-        var sorted = response.sort(function(a,b) {
-            if(column.match(/[-]/)) {
-                return a[column] - b[column];
-            }else{
-                return b[column] - a[column];
-            }
-            //we do a reverse order sort here to verify a real sort occurs in the component
-        });
-        if(columns.length === 2) {
-            sorted = response.sort(function(a,b) {
-                return b[columns[1]] - a[columns[1]];
-            });
-        }
-        return {'count':19,'next':null,'previous':null,'results': sorted};
-    };
-    factory.prototype.fulltext = function(find, page) {
-        var page1 = this.list_two().results;
-        var page2 = this.list().results;
-        var response = page1.concat(page2);
-        var sorted = response.sort(function(a,b) {
-            return a['id'] - b['id'];
-        });
-        var params = find.split(',');
-        var filtered = params.map(function(option) {
-            var property = option.split(':')[0];
-            var propertyValue = option.split(':')[1];
-            var findRegex = new RegExp(propertyValue);
-            return sorted.filter(function(object) {
-                var value = object[property] ? object[property].toLowerCase() : null;
-                return findRegex.test(value);
-            });
-        });
-
-        var paged;
-        if(page && page > 1) {
-            paged = filtered.slice(10, 20);
-        } else {
-            paged = filtered.slice(0, 10);
-        }
-        paged = paged.reduce(function(a, b) { return a.concat(b); }).uniq();
-        return {'count':filtered.length,'next':null,'previous':null,'results': paged};
-    },
-    factory.prototype.searched = function(search, column, page) {
-        var page1 = this.list_two().results;
-        var page2 = this.list().results;
-        var response = page1.concat(page2);
-        //we do a normal order sort here to slice correctly below
-        var sorted = response.sort(function(a,b) {
-            return a[column] - b[column];
-        });
-        var regex = new RegExp(search);
-        var searched = sorted.filter(function(object) {
-            var value = object.name;
-            return regex.test(value);
-        });
-        var paged;
-        if(page && page > 1) {
-            paged = searched.slice(10, 20);
-        } else {
-            paged = searched.slice(0, 10);
-        }
-        return {'count':searched.length,'next':null,'previous':null,'results': paged};
-    };
-    factory.prototype.empty = function() {
-        return {'count':0,'next':null,'previous':null,'results': []};
-    };
     factory.prototype.detail = function(i) {
         return this.generate(this.location_defaults.idOne);
     };
@@ -160,14 +70,19 @@ var BSRS_LOCATION_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
+    var objectAssign = require('object-assign');
+    var mixin = require('../vendor/mixin');
     var location_defaults = require('../vendor/defaults/location');
     var location_level_fixtures = require('../vendor/location_level_fixtures');
     var location_level_defaults = require('../vendor/defaults/location-level');
+    objectAssign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
     module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults, location_level_fixtures);
 } else {
-    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures'], function (exports, location_defaults, location_level_defaults, location_level_fixtures) {
+    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin'], function (exports, location_defaults, location_level_defaults, location_level_fixtures, mixin) {
         'use strict';
-        return new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults, location_level_fixtures);
+        Object.assign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
+        var Factory = new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults, location_level_fixtures);
+        return {default: Factory};
     });
 }
 
