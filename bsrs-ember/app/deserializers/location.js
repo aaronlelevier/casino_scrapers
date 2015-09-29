@@ -1,6 +1,5 @@
 import Ember from 'ember';
 
-
 let extract_location_level = (model, store) => {
     var location_level_pk = model.location_level.id;
     var location = store.find('location', model.id); 

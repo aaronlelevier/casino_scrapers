@@ -54,9 +54,11 @@ class LocationTypeSerializer(BaseCreateSerializer):
 class LocationIdNameSerializer(BaseCreateSerializer):
     """Leaf node serializer for PersonDetailSerializer."""
 
+    location_level = LocationLevelSerializer()
+
     class Meta:
         model = Location
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'number', 'location_level')
 
 
 class LocationSerializer(serializers.ModelSerializer):

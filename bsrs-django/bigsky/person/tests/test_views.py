@@ -273,7 +273,9 @@ class PersonDetailTests(TestCase):
     def test_location(self):
         self.assertTrue(self.data['locations'])
         location = Location.objects.get(id=self.data['locations'][0]['id'])
+        location_level = LocationLevel.objects.get(id=self.data['locations'][0]['location_level']['id'])
         self.assertIsInstance(location, Location)
+        self.assertIsInstance(location_level, LocationLevel)
 
     def test_emails(self):
         self.assertTrue(self.data['emails'])
