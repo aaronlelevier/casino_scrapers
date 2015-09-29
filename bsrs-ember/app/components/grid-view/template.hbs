@@ -1,9 +1,6 @@
 <div class="rowTable">
     <header>
         <h1 class="t-grid-title">{{grid_title}}</h1>
-        {{#if (filters-applied sort find search)}}
-        <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>Reset all options</span>
-        {{/if}}
         {{#unless model.isLoaded}}
         {{grid-loading-graphic}}
         {{/unless}}
@@ -58,6 +55,9 @@
 
     <footer>
         <span class="pull-left t-page-count">{{model.count}} {{plural}}</span>
+        {{#if (filters-applied sort find search)}}
+        <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>Reset all options</span>
+        {{/if}}
         <nav class="text-center">
             <ul class="pagination t-pages">
                 <li class="t-first {{if first '' 'disabled'}}" disabled={{if first disabled ''}}>{{#link-to list_url (query-params page=first) disabled=notFirst}}&laquo;{{/link-to}}</li>
