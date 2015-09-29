@@ -43,8 +43,8 @@ class AttachmentModelTests(TestCase):
         self.file = join(base_dir, "source/attachments/test_in/es.csv")
 
     def test_files_exist(self):
-        self.assertTrue(os.path.exists(self.image))
-        self.assertTrue(os.path.exists(self.file))
+        self.assertTrue(os.path.isfile(self.image))
+        self.assertTrue(os.path.isfile(self.file))
 
     def test_create(self):
         _file = SimpleUploadedFile(self.image, "file_content",
