@@ -496,3 +496,73 @@ test('count is shown and updated as the user filters down the list from django',
         assert.equal(find('.t-page-count').text(), '18 People');
     });
 });
+
+test('picking a different number of pages will alter the query string and xhr', function(assert) {
+    let option_two = PREFIX + BASE_URL + '/?page=1&page_size=10';
+    xhr(option_two, 'GET',null,{},200,PEOPLE_FIXTURES.paginated(10));
+    let option_one = PREFIX + BASE_URL + '/?page=1&page_size=25';
+    xhr(option_one, 'GET',null,{},200,PEOPLE_FIXTURES.paginated(25));
+    let page_two = PREFIX + BASE_URL + '/?page=2';
+    xhr(page_two, 'GET',null,{},200,PEOPLE_FIXTURES.list_two());
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-size option:selected').text(), '10 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+    click('.t-page:eq(1) a');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL + '?page=2');
+        assert.equal(find('.t-grid-data').length, 9);
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(!pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+    alterPageSize('.t-page-size', 25);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?page_size=25');
+        assert.equal(find('.t-grid-data').length, 19);
+        assert.equal(find('.t-page-size option:selected').text(), '25 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 1);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+    });
+    alterPageSize('.t-page-size', 10);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?page_size=10');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-size option:selected').text(), '10 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+});
+
+test('starting with a page size greater than 10 will set the selected', function(assert) {
+    clearxhr(list_xhr);
+    let option_one = PREFIX + BASE_URL + '/?page=1&page_size=25';
+    xhr(option_one, 'GET',null,{},200,PEOPLE_FIXTURES.paginated(25));
+    visit(PEOPLE_URL + '?page_size=25');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?page_size=25');
+        assert.equal(find('.t-grid-data').length, 19);
+        assert.equal(find('.t-page-size option:selected').text(), '25 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 1);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+    });
+});

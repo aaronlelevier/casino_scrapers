@@ -1,6 +1,7 @@
 {
   "predef": [
     "filterGrid",
+    "alterPageSize",
     "visitSync",
     "document",
     "window",
