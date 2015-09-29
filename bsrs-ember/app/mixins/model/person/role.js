@@ -43,7 +43,7 @@ var RoleMixin = Ember.Mixin.create({
         let all_person_locations = store.find('person-location');
         all_person_locations.forEach((person_location) => {
             let location = store.find('location', person_location.get('location_pk')); 
-            if (new_role.get('location_level_fk') === location.get('location_level_fk')) {
+            if (new_role.get('location_level_fk') === location.get('location_level').get('id')) {
                 person_location.set('removed', undefined);
             }
         });

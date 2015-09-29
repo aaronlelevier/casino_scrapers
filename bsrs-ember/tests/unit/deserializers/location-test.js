@@ -24,7 +24,6 @@ test('location deserializer returns correct data with already present location_l
     subject.deserialize(response);
     let original_location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original_location_level.get('locations'), [LOCATION_DEFAULTS.idOne, LOCATION_DEFAULTS.unusedId]);
-    assert.equal(store.find('location', LOCATION_DEFAULTS.idOne).get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
     assert.ok(original_location_level.get('isNotDirty'));
     assert.equal(store.find('location', LOCATION_DEFAULTS.unusedId).get('location_level.name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
     let locations = store.find('location');
@@ -40,7 +39,6 @@ test('location deserializer returns correct data with no current location_level 
     subject.deserialize(response);
     let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('locations'), [LOCATION_DEFAULTS.unusedId]);
-    assert.equal(store.find('location', LOCATION_DEFAULTS.unusedId).get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
     assert.ok(original.get('isNotDirty'));
 });
 
@@ -64,7 +62,6 @@ test('location deserializer returns correct data with no current location_level 
     subject.deserialize(json, LOCATION_DEFAULTS.unusedId);
     let original = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
     assert.deepEqual(original.get('locations'), [LOCATION_DEFAULTS.unusedId]);
-    assert.equal(store.find('location', LOCATION_DEFAULTS.unusedId).get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
     assert.ok(original.get('isNotDirty'));
     assert.equal(store.find('location', LOCATION_DEFAULTS.unusedId).get('location_level.name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
 });
@@ -95,7 +92,6 @@ test('location location level will correctly be deserialized when server returns
     let newLocationLevel = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
     assert.deepEqual(newLocationLevel.get('locations'), [LOCATION_DEFAULTS.idOne]);
     let loc = store.find('location', LOCATION_DEFAULTS.idOne);
-    assert.equal(loc.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idTwo);
     assert.ok(original.get('isNotDirty'));
     assert.ok(newLocationLevel.get('isNotDirty'));
     assert.ok(location.get('isNotDirty'));

@@ -63,7 +63,6 @@ var extract_person_location = function(model, store, uuid, location_level_fk, lo
     let prevented_duplicate_m2m = [];
     let all_person_locations = store.find('person-location');
     model.locations.forEach((location_json) => {
-        // location_json.location_level_fk = location_level_fk;
         let person_locations = all_person_locations.filter((m2m) => {
             return m2m.get('location_pk') === location_json.id && m2m.get('person_pk') === model.id;
         });
@@ -71,7 +70,6 @@ var extract_person_location = function(model, store, uuid, location_level_fk, lo
             let pk = uuid.v4();
             server_locations_sum.push(pk);
             location_deserializer.deserialize(location_json, location_json.id);
-            //store.push('location', location_json);
             store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});
         }else{
             prevented_duplicate_m2m.push(person_locations[0].get('id'));
@@ -113,7 +111,6 @@ var PersonDeserializer = Ember.Object.extend({
     deserialize_single(model, id, location_deserializer) {
         let uuid = this.get('uuid');
         let store = this.get('store');
-        // let location_level_fk;//used to setup location_level_fk correctly for a location pushed into the store from this deserializer
         let person_check = store.find('person', id);
         //prevent updating person if dirty
         if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {

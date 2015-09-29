@@ -28,7 +28,6 @@ let extract_location_level = (model, store) => {
         location_level_new.save();
         delete model.location_level;
     }
-    return location_level_pk;
 };
 
 var LocationDeserializer = Ember.Object.extend({
@@ -43,7 +42,7 @@ var LocationDeserializer = Ember.Object.extend({
         let store = this.get('store');
         let existing_location = store.find('location', id);
         if (!existing_location.get('id') || existing_location.get('isNotDirtyOrRelatedNotDirty')) {
-            response.location_level_fk = extract_location_level(response, store) || undefined;
+            extract_location_level(response, store);
             let location = store.push('location', response);
             location.save();
         }
@@ -53,7 +52,7 @@ var LocationDeserializer = Ember.Object.extend({
             let store = this.get('store');
             let existing_location = store.find('location', model.id);
             if (!existing_location.get('id') || existing_location.get('isNotDirtyOrRelatedNotDirty')) {
-                model.location_level_fk = extract_location_level(model, store) || undefined;
+                extract_location_level(model, store);
                 let location = this.get('store').push('location', model);
                 location.save();
             }
