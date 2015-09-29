@@ -244,7 +244,7 @@ test('multiple sort options appear in the query string as expected', function(as
     andThen(() => {
         assert.equal(currentURL(),ROLE_URL + '?sort=role_type%2Cname');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-role-name').text(), ROLE_DEFAULTS.nameOne);
+        assert.equal(find('.t-grid-data:eq(0) .t-role-name').text(), ROLE_DEFAULTS.nameTwo);
     });
 });
 

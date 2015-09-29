@@ -6,7 +6,6 @@ import inject from 'bsrs-ember/utilities/inject';
 var PersonNew = TabRoute.extend({
     uuid: injectUUID('uuid'),
     phone_number_type_repo: inject('phone-number-type'),
-    tabList: Ember.inject.service(),
     redirectRoute: Ember.computed(function() { return 'admin.people.index'; }),
     modelName: Ember.computed(function() { return 'person'; }),
     templateModelField: Ember.computed(function() { return 'Person'; }),

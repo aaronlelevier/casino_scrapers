@@ -1,9 +1,12 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
-import NewRollbackModalMixin from 'bsrs-ember/mixins/route/rollback/new';
+import TabRoute from 'bsrs-ember/admin/tab/new-route';
 
-export default Ember.Route.extend(NewRollbackModalMixin, {
+var RoleNewRoute = TabRoute.extend({
     uuid: inject('uuid'),
+    redirectRoute: Ember.computed(function() { return 'admin.roles.index'; }),
+    modelName: Ember.computed(function() { return 'role'; }),
+    templateModelField: Ember.computed(function() { return 'Role'; }),
     model() {
         var pk = this.get('uuid').v4();
         var all_role_types = this.get('store').find('role-type');
@@ -27,3 +30,5 @@ export default Ember.Route.extend(NewRollbackModalMixin, {
         }
     }
 });
+
+export default RoleNewRoute;

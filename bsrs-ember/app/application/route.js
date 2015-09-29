@@ -91,6 +91,8 @@ var ApplicationRoute = Ember.Route.extend({
 
         let person_current_role = store.find('role', person_current.role);
         person_current_role.set('people', [person_current.id]);
+        //save so not dirty
+        person_current_role.save();
 
         let current_locale = store.find('locale', person_current.locale);
         config.i18n.currentLocale = current_locale.get('locale');
