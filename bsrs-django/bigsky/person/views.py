@@ -6,7 +6,6 @@ from rest_framework import permissions
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
 import rest_framework_filters as filters
-from rest_framework_extensions.mixins import PaginateByMaxMixin
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
