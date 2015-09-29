@@ -20,7 +20,7 @@ var PhoneNumberMixin = Ember.Mixin.create({
             return ph_num.get('id');
         });
     }),
-    phoneNumbersIsDirty: Ember.computed('phone_numbers.[]', 'phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
+    phoneNumbersIsDirty: Ember.computed('phone_numbers.[]', 'phone_numbers.@each.{isDirty,number,type}', function() {
         let phone_number_dirty = false;
         let phone_numbers = this.get('phone_numbers');
         let phone_fks = this.get('phone_number_fks');

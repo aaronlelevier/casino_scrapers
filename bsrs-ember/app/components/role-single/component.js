@@ -1,25 +1,29 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import injectStore from 'bsrs-ember/utilities/store';
 
-export default Ember.Component.extend({
+var RoleSingle = Ember.Component.extend({
     classNames: ['wrapper', 'form'],
     repository: inject('role'),
+    store: injectStore('main'),
+    tab(){
+        return this.get('store').find('tab', this.get('model.id'));
+    },
     actions: {
         saveRole() {
             var model = this.get('model'); 
             var repository = this.get('repository');
             repository.update(model).then(() => {
-                this.sendAction('saveRole');
+                this.sendAction('save', this.tab());
             });
         },
         deleteRole() {
             var model = this.get('model');
             var repository = this.get('repository');
-            repository.delete(model.get('id'));
-            this.sendAction('redirectUser');
+            this.sendAction('delete', this.tab(), model, repository);
         },
         cancelRole() {
-            this.sendAction('redirectUser');
+            this.sendAction('cancel', this.tab());
         },
         changed(model, val) {
             Ember.run(() => {
@@ -33,3 +37,5 @@ export default Ember.Component.extend({
         },
     }
 });
+
+export default RoleSingle;

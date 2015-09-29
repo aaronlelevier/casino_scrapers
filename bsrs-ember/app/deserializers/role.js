@@ -41,16 +41,22 @@ var RoleDeserializer = Ember.Object.extend({
     },
     deserialize_single(response, id) {
         let store = this.get('store');
-        response.location_level_fk = extract_location_level(response, store);
-        let originalRole = store.push('role', response);
-        originalRole.save();
+        let role_check = store.find('role', id);
+        if (!role_check.get('id') || role_check.get('isNotDirtyOrRelatedNotDirty')) {
+            response.location_level_fk = extract_location_level(response, store);
+            let originalRole = store.push('role', response);
+            originalRole.save();
+        }
     },
     deserialize_list(response) {
         response.results.forEach((model) => {
             let store = this.get('store');
-            model.location_level_fk = extract_location_level(model, store);
-            let originalRole = this.get('store').push('role', model);
-            originalRole.save();
+            let role_check = store.find('role', model.id);
+            if (!role_check.get('id') || role_check.get('isNotDirtyOrRelatedNotDirty')) {
+                model.location_level_fk = extract_location_level(model, store);
+                let originalRole = this.get('store').push('role', model);
+                originalRole.save();
+            }
         });
     }
 });

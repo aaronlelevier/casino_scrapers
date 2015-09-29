@@ -245,7 +245,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     });
 });
 
-test('clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and not fire off an xhr request', (assert) => {
+test('clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and fire off an xhr request', (assert) => {
     xhr(endpoint + '?page=1','GET',null,{},200,CATEGORY_FIXTURES.list());
     visit(CATEGORY_URL);
     andThen(() => {

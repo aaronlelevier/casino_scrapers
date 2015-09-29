@@ -31,10 +31,12 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, {
         return this.get('store').find('role');
     },
     findById(id) {
+        let role = this.get('store').find('role', id);
+        role.id = id;
         PromiseMixin.xhr(ROLE_URL + id + '/', 'GET').then((response) => {
             this.get('RoleDeserializer').deserialize(response, id);
         });
-        return this.get('store').find('role', id);
+        return role;
     },
     delete(id) {
        PromiseMixin.xhr(ROLE_URL + id + '/', 'DELETE');
