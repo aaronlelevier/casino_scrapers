@@ -6,6 +6,7 @@ nav.tabs{
   left: $tabLeft;
   height: $tabHeight;
   overflow: hidden;
+  z-index: 1;
   ul{
     margin-left: 0px;
     li{
@@ -13,7 +14,6 @@ nav.tabs{
       line-height: $tabHeight;
       background: $light;
       border: $borderStyle;
-      border-width: 1px 1px 0 1px;
       padding: 0 10px;
       float: left;
       font-size: 1.2em;
@@ -49,7 +49,8 @@ nav.tabs{
         cursor: pointer;
       }
       &.active{
-        background: $white;
+        background: $lightGray;
+        border-bottom-color: $lightGray;
       }
       &:hover.active{
         cursor: default;
@@ -64,6 +65,13 @@ nav.tabs{
       width: 40px;
       text-align: center;
       color: $darkGray;
+      border-width: 0 0 1px;
+      &:hover{
+          color: $hoverColor;
+      }
+      &:active{
+          color: $activeColor;
+      }
     }//li.new
   }//ul
   @media screen and (max-width: $mobileDeviceWidth){

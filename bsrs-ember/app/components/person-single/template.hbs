@@ -1,7 +1,7 @@
 <form {{action "return false" this on="submit"}}>
 	<header>
-		<h1>{{model.first_name}} {{model.middle_initial}} {{model.last_name}} <small>{{model.title}}</small></h1>
-		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
+
+		<div class="btn-group btn-group-sm pull-right center-block">
 			{{button-generic save="savePerson" type="save"}}
 			{{button-generic cancel="cancelPerson" type="cancel"}}
 			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -16,11 +16,15 @@
 	</header>
 	<section class="docSection container-fluid">
 		<div class="row">
+			<div class="col-md-12">
+				<section style="padding-bottom: 0">
+					<div class="row card-title">
+						<h1 class="col-md-12">{{model.first_name}} {{model.middle_initial}} {{model.last_name}} <small>{{model.title}}</small></h1>
+					</div>
+				</section>
+			</div>
 			<div class="col-md-4 user-info">
 				<section>
-					<div class="row card-title">
-						<h2 class="col-md-12">{{t "admin.person.label.profile"}}</h2>
-					</div>
 					<div class="row">
 						<div class="col-md-12">
 							<div class="user-photo">{{fa-icon "user"}}</div>
@@ -53,42 +57,11 @@
 						</div>
 					</div>
 				</section>
-				<section>
-					<div class="row card-title">
-						<h2 class="col-md-12">{{t "admin.person.label.credentials"}}</h2>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							{{#form-group title="admin.person.label.status"}}
-							<select class="form-control t-statuses-select">
-								{{#each statuses as |status|}}
-								<option class="t-status-option" value="{{status.id}}">{{t status.name}}</option>
-								{{/each}}
-							</select>
-							{{/form-group}}
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-md-12">
-							{{#form-group title="admin.person.label.username" for="username"}}
-							{{input type="text" placeholder=(t "admin.person.label.username") value=model.username class="form-control t-person-username" id="username"}}
-							{{#validation-error-field submitted=submitted field="username" className="t-username-validation-error" model=model validation=usernameValidation}}invalid username{{/validation-error-field}}
-							{{/form-group}}
-						</div>
-						<div class="col-md-12">
-							{{#form-group title="admin.person.label.password" for="password"}}
-							<div><button class="btn btn-default btn-sm">{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
-							{{/form-group}}
-						</div>
-					</div>
-				</section>
+
 			</div>
 
 			<div class="col-md-8">
 				<section>
-					<div class="row card-title">
-						<h2 class="col-md-12">{{t "admin.person.label.general"}}</h2>
-					</div>
 					<div class="row">
 						<div class="col-md-12">
 							{{#form-group title="admin.person.label.role" for="role"}}
@@ -126,6 +99,42 @@
 					</div>
 				</section>
 
+
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-4">
+				<section>
+					<div class="row card-title">
+						<h2 class="col-md-12">{{t "admin.person.label.credentials"}}</h2>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							{{#form-group title="admin.person.label.status"}}
+							<select class="form-control t-statuses-select">
+								{{#each statuses as |status|}}
+								<option class="t-status-option" value="{{status.id}}">{{t status.name}}</option>
+								{{/each}}
+							</select>
+							{{/form-group}}
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+							{{#form-group title="admin.person.label.username" for="username"}}
+							{{input type="text" placeholder=(t "admin.person.label.username") value=model.username class="form-control t-person-username" id="username"}}
+							{{#validation-error-field submitted=submitted field="username" className="t-username-validation-error" model=model validation=usernameValidation}}invalid username{{/validation-error-field}}
+							{{/form-group}}
+						</div>
+						<div class="col-md-12">
+							{{#form-group title="admin.person.label.password" for="password"}}
+							<div><button class="btn btn-default btn-sm">{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
+							{{/form-group}}
+						</div>
+					</div>
+				</section>
+			</div>
+			<div class="col-md-8">
 				<section>
 					<div class="row card-title">
 						<h2 class="col-md-12">{{t "admin.person.label.contact"}}</h2>

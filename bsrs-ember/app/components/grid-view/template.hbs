@@ -11,11 +11,9 @@
             <form class="form-inline" onsubmit="return false;">
                 <div class="form-group">
                     {{grid-search-input placeholder=search_placeholder keyup="keyup"}}
-                    <div class="btn-group btn-group-sm">
-                        {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
-                        {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-                        {{/link-to}}
-                    </div>
+                    {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
+                    {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+                    {{/link-to}}
                 </div>
             </form>
         </div>
