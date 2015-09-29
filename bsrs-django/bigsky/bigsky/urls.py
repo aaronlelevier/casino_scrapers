@@ -94,9 +94,10 @@ urlpatterns += required(
             },
             name='password_change'),
         url(r'^django-admin/', include(admin.site.urls)),
+        url(r'', include('generic.urls')),
         # This URL must be the last Django URL defined, or else the URLs defined 
         # below it won't resolve, and this URL will catch the URL request.
-        url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),
+        url(r'^$', bigsky_views.IndexView.as_view(), name='index'),
     )
 )
 
