@@ -11,7 +11,6 @@ from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role
 from translation.models import Locale, Translation
 from translation.tests.factory import create_locales
-from util.create import _generate_chars
 
 
 class RoleTests(TestCase):

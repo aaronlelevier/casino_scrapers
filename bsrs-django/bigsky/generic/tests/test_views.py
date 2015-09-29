@@ -1,16 +1,11 @@
 import json
 import uuid
 
-from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ValidationError as DjangoValidationError
-
 from model_mommy import mommy
 from rest_framework.test import APITestCase
-from rest_framework.exceptions import ValidationError
 
 from generic.models import SavedSearch
 from generic.serializers import SavedSearchSerializer
-from person.models import Person, Role
 from person.tests.factory import PASSWORD, create_single_person, create_role
 
 

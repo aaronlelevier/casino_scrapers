@@ -1,11 +1,7 @@
 import unittest
-import uuid
-import time
-import random
-import string
 
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.keys import Keys
@@ -13,8 +9,8 @@ from selenium.webdriver.common.keys import Keys
 from helpers.element import is_present
 from helpers.lorem_ipsum import LOREM_IPSUM_WORDS
 from helpers import (
-    LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
-    NavPage, GeneralElementsPage, Wait, PersonPage, ModelPage
+    LoginMixin, FillInHelper, JavascriptMixin,
+    NavPage, GeneralElementsPage, Wait,
 )
 
 class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):

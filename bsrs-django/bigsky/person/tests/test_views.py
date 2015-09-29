@@ -6,8 +6,7 @@ import sys
 if sys.version_info > (2,7):
     str = unicode
 
-from django.conf import settings
-from django.test import TestCase, TransactionTestCase
+from django.test import TestCase
 from django.db.models.functions import Lower
 
 from rest_framework import status
