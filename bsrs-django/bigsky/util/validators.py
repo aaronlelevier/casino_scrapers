@@ -27,23 +27,25 @@ class UniqueForActiveValidator(object):
     for active instances of the ``model``.
 
     :model: the model type to check against
-    :key: the field to check for uniqueness
+    :keys: an array of fields to check for uniqueness
     """
 
-    message = _("{key}:{value} is not unique for {model}.")
+    message = _("A {model} exists with these values: {values}.")
 
-    def __init__(self, model, key, *args, **kwargs):
+    def __init__(self, model, keys, *args, **kwargs):
         self.model = model
-        self.key = key
+        self.keys = keys
 
     def __call__(self, kwargs):
-        value = kwargs.get(self.key, None)
-        if value:
+        # value = kwargs.get(self.key, None)
+        values = {key: kwargs.get(key, None) for key in self.keys}
+
+        if values:
             queryset = self.get_queryset()
             queryset = self.exclude_current_instance(queryset)
-            if queryset.filter(**{self.key:value}).exists():
+            if queryset.filter(**values).exists():
                 raise ValidationError(self.message.format(
-                    key=self.key, value=value, model=self.model.__name__))
+                    values=values, model=self.model.__name__))
 
     def get_queryset(self):
         return self.model.objects.all()

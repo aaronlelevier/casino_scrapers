@@ -93,7 +93,7 @@ class LocationCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Location
-        validators = [UniqueForActiveValidator(Location, 'number')]
+        validators = [UniqueForActiveValidator(Location, ['number'])]
         fields = ('id', 'name', 'number', 'status', 'location_level',)
 
 
@@ -102,7 +102,7 @@ class LocationUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         validators = [
-            UniqueForActiveValidator(Location, 'number'),
+            UniqueForActiveValidator(Location, ['number']),
             LocationParentChildValidator('location_level', 'parents'),
             LocationParentChildValidator('location_level', 'children')
         ]

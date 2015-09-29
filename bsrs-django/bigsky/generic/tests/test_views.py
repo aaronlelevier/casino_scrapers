@@ -1,8 +1,12 @@
 import json
 import uuid
 
+from django.utils.translation import ugettext_lazy as _
+from django.core.exceptions import ValidationError as DjangoValidationError
+
 from model_mommy import mommy
 from rest_framework.test import APITestCase
+from rest_framework.exceptions import ValidationError
 
 from generic.models import SavedSearch
 from generic.serializers import SavedSearchSerializer
@@ -60,3 +64,21 @@ class SavedSearchTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         new_data = json.loads(response.content)
         self.assertEqual(data['endpoint_uri'], new_data['endpoint_uri'])
+
+    ### util.UniqueForActiveValidator - two key tests
+
+    def test_unique_for_active_two_keys(self):
+        serializer = SavedSearchSerializer(self.saved_search)
+        data = serializer.data
+        data['id'] = str(uuid.uuid4())
+        response = self.client.post('/api/admin/generic/', data=data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_unique_for_active_two_keys_deleted(self):
+        # Ignore deleted models when checking for uniqueness
+        self.saved_search.delete()
+        serializer = SavedSearchSerializer(self.saved_search)
+        data = serializer.data
+        data['id'] = str(uuid.uuid4())
+        response = self.client.post('/api/admin/generic/', data=data, format='json')
+        self.assertEqual(response.status_code, 201)
