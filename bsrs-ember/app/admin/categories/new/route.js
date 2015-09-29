@@ -1,11 +1,14 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
+import TabRoute from 'bsrs-ember/admin/tab/new-route';
 
-var CategoryNewRoute = Ember.Route.extend({
+var CategoryNewRoute = TabRoute.extend({
     repository: inject('category'),
     uuid: injectUUID('uuid'),
-    tabList: Ember.inject.service(),
+    redirectRoute: Ember.computed(function() { return 'admin.categories.index'; }),
+    modelName: Ember.computed(function() { return 'category'; }),
+    templateModelField: Ember.computed(function() { return 'Category'; }),
     queryParams: {
         search: {
             refreshModel: true
@@ -17,7 +20,6 @@ var CategoryNewRoute = Ember.Route.extend({
         let categories_children = this.get('repository').findCategoryChildren(search) || [];
         let pk = this.get('uuid').v4();
         let model = this.get('store').push('category', {id: pk, new: true});
-        this.get('tabList').createTab(this.routeName, 'category', pk, 'admin.categories.index', true);
         return Ember.RSVP.hash({
             model: model,
             categories_children: categories_children,

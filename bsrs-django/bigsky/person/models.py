@@ -21,8 +21,7 @@ from person import helpers
 from order.models import WorkOrderStatus
 from translation.models import Locale
 from util import choices, create
-from util.models import (AbstractName, MainSetting, CustomSetting,
-    BaseModel, BaseManager)
+from util.models import AbstractName, BaseModel, BaseManager
 
 
 class RoleManager(BaseManager):
@@ -117,10 +116,6 @@ class Role(BaseModel):
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
-
-    # use as a normal Django Manager() to access related setting objects.
-    main_settings = GenericRelation(MainSetting)
-    custom_settings = GenericRelation(CustomSetting)
 
     # Manager
     objects = RoleManager()
@@ -250,10 +245,6 @@ class Person(BaseModel, AbstractUser):
         blank=True, null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
-
-    # use as a normal Django Manager() to access related setting objects.
-    main_settings = GenericRelation(MainSetting)
-    custom_settings = GenericRelation(CustomSetting)
 
     # Managers
     objects = PersonManager()

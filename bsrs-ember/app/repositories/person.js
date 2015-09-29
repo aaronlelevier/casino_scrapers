@@ -31,10 +31,12 @@ export default Ember.Object.extend(GridRepositoryMixin, {
         return this.get('store').find('person');
     },
     findById(id) {
+        let model = this.get('store').find('person', id);
+        model.id = id;
         PromiseMixin.xhr(PEOPLE_URL + id + '/', 'GET').then((response) => {
             this.get('PersonDeserializer').deserialize(response, id);
         });
-        return this.get('store').find('person', id);
+        return model;
     },
     delete(id) {
         PromiseMixin.xhr(PEOPLE_URL + id + '/', 'DELETE');

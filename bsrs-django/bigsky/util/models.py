@@ -1,3 +1,7 @@
+"""
+All Model, Manager, and QuerySet definitions in this module 
+should be Abstract.
+"""
 import uuid
 
 from django.db import models
@@ -112,11 +116,3 @@ class BaseSetting(BaseModel):
 
     def __str__(self):
         return self.settings
-
-
-class MainSetting(BaseSetting):
-    pass
-
-
-class CustomSetting(BaseSetting):
-    pass

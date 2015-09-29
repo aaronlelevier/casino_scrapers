@@ -6,8 +6,48 @@ from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.core.exceptions import ValidationError
 
-from util.models import BaseModel, BaseManager
+from person.models import Person
+from util.models import BaseModel, BaseManager, BaseSetting
 
+
+### SAVED SEARCHES
+
+@python_2_unicode_compatible
+class SavedSearch(BaseModel):
+    """
+    So the Person can save their searches for any model.
+    """
+    name = models.CharField(max_length=254,
+        help_text="name of the saved search that the Person designates.")
+    person = models.ForeignKey(Person,
+        help_text="The Person who saves the search.")
+    model_id = models.UUIDField(
+        help_text="Primary key of the Model that this search is saved for.")
+    endpoint = models.CharField(max_length=254,
+        help_text="API Endpoint that this search is saved for. With all keywords "
+                  "ordering, and filters, etc...")
+
+    class Meta:
+        ordering = ('-modified',)
+        verbose_name_plural = "Saved Searches"
+
+    def __str__(self):
+        return self.endpoint
+
+
+### SETTINGS
+
+class MainSetting(BaseSetting):
+    pass
+
+
+class CustomSetting(BaseSetting):
+    pass
+
+
+###############
+# ATTACHMENTS #
+###############
 
 ### HELPERS
 

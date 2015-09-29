@@ -38,7 +38,6 @@ _*.rst
 venv/
 bsrs-django/bigsky/ember/*
 bsrs-django/bigsky/static/*
-bsrs-django/bigsky/templates/index.html
 bsrs-django/bigsky/fonts/
 
 # attachments
