@@ -53,6 +53,21 @@ var BSRS_LOCATION_FACTORY = (function() {
         }
         return {'count':19,'next':null,'previous':null,'results': response};
     };
+    factory.prototype.paginated = function(page_size) {
+        var page1 = this.list_two().results;
+        var page2 = this.list().results;
+        var response = page1.concat(page2);
+        var sorted = response.sort(function(a,b) {
+            return a['id'] - b['id'];
+        });
+        var paginated;
+        if(page_size > 10) {
+            paginated = sorted;
+        }else{
+            paginated = sorted.slice(0, 10);
+        }
+        return {'count':18,'next':null,'previous':null,'results': paginated};
+    };
     factory.prototype.sorted = function(column, page) {
         var response;
         if(page && page === 2) {

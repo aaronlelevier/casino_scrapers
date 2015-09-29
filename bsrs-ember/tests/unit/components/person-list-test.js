@@ -48,11 +48,11 @@ test('sorted content is sorted by the defaultSort provided if no other value is 
     assert.equal(people.objectAt(3).get('id'), 2);
 });
 
-test('given a list of people and page number, should only return those people on that page', (assert) => {
+test('toran given a list of people and page number, should only return those people on that page', (assert) => {
     store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
     store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
     store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
-    var subject = PersonListComponent.create({model: store.find('person'), itemsPerPage: 2, eventbus: eventbus, defaultSort: ['id']});
+    var subject = PersonListComponent.create({model: store.find('person'), page_size: 2, eventbus: eventbus, defaultSort: ['id']});
     var people = subject.get('paginated_content');
     assert.equal(people.get('length'), 2);
     subject.set('page', 2);
@@ -63,14 +63,14 @@ test('given a list of people and page number, should only return those people on
     assert.equal(people.get('length'), 2);
 });
 
-test('given a list of people and page number, should only return those people on that page (4 people)', (assert) => {
+test('toran given a list of people and page number, should only return those people on that page (4 people)', (assert) => {
     store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
     store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
     store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
     store.push('person', {id: 4, username: 'crb', first_name: '', last_name: ''});
     var model = store.find('person');
     model.set('count', 4);
-    var subject = PersonListComponent.create({model: model, itemsPerPage: 2, eventbus: eventbus});
+    var subject = PersonListComponent.create({model: model, page_size: 2, eventbus: eventbus});
     var pages = subject.get('pages');
     assert.equal(pages.get('length'), 2);
     model.set('count', 5);

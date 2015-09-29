@@ -3,6 +3,7 @@ import inject from 'bsrs-ember/utilities/store';
 
 var GridViewController = Ember.Controller.extend({
     page: 1,
+    page_size: undefined,
     sort: undefined,
     find: undefined,
     search: undefined,
