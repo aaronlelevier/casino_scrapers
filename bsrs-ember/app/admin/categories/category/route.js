@@ -1,6 +1,6 @@
 import Ember from 'ember';
-import TabRoute from 'bsrs-ember/admin/tab/route';
 import inject from 'bsrs-ember/utilities/inject';
+import TabRoute from 'bsrs-ember/admin/tab/route';
 
 var CategorySingleRoute = TabRoute.extend({
     repository: inject('category'),

@@ -1,7 +1,8 @@
 import Ember from 'ember';
 import injectStore from 'bsrs-ember/utilities/store';
+import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var BaseComponent = Ember.Component.extend({
+var BaseComponent = Ember.Component.extend(ValidationMixin, {
     classNames: ['wrapper', 'form'],
     store: injectStore('main'),
     tab(){
@@ -9,15 +10,18 @@ var BaseComponent = Ember.Component.extend({
     },
     actions: {
         save() {
-                var model = this.get('model'); 
-                var repository = this.get('repository');
+            this.set('submitted', true);
+            if (this.get('valid')) {
+                let model = this.get('model'); 
+                let repository = this.get('repository');
                 repository.update(model).then(() => {
                     this.sendAction('save', this.tab());
                 });
+            }
         },
         delete() {
-            var model = this.get('model');
-            var repository = this.get('repository');
+            let model = this.get('model');
+            let repository = this.get('repository');
             this.sendAction('delete', this.tab(), model, repository);
         },
         cancel() {

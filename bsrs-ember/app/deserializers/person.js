@@ -53,7 +53,7 @@ var extract_role = function(model, store) {
     }
     role.save();
     delete model.role;
-    return [role_pk, location_level_fk];
+    return location_level_fk;
 };
 
 var extract_person_location = function(model, store, uuid, location_level_fk) {

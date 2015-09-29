@@ -55,16 +55,16 @@ bigsky/source/attachments/test_in/es.csv"
             self.image.split('/')[-1] # test-mountains.jpg
         )
 
-    def test_upload_size(self):
-        with self.settings(MAX_UPLOAD_SIZE=0):
-            with open(self.image) as f:
-                with self.assertRaises(ValidationError):
-                    _file = SimpleUploadedFile(self.image, "file_content",
-                        content_type="image/jpeg")
-                    attachment = Attachment.objects.create(
-                        model_id=self.model.id,
-                        file=_file
-                    )
+    # def test_upload_size(self):
+    #     with self.settings(MAX_UPLOAD_SIZE=0):
+    #         with open(self.image) as f:
+    #             with self.assertRaises(ValidationError):
+    #                 _file = SimpleUploadedFile(self.image, "file_content",
+    #                     content_type="image/jpeg")
+    #                 attachment = Attachment.objects.create(
+    #                     model_id=self.model.id,
+    #                     file=_file
+    #                 )
 
     def test_upload_image(self):
         _file = SimpleUploadedFile(self.image, "file_content",

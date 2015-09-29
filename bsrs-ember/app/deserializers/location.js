@@ -42,16 +42,22 @@ var LocationDeserializer = Ember.Object.extend({
     },
     deserialize_single(response, id) {
         let store = this.get('store');
-        response.location_level_fk = extract_location_level(response, store) || undefined;
-        let location = store.push('location', response);
-        location.save();
+        let existing_location = store.find('location', id);
+        if (!existing_location.get('id') || existing_location.get('isNotDirtyOrRelatedNotDirty')) {
+            response.location_level_fk = extract_location_level(response, store) || undefined;
+            let location = store.push('location', response);
+            location.save();
+        }
     },
     deserialize_list(response) {
         response.results.forEach((model) => {
             let store = this.get('store');
-            model.location_level_fk = extract_location_level(model, store) || undefined;
-            let location = this.get('store').push('location', model);
-            location.save();
+            let existing_location = store.find('location', model.id);
+            if (!existing_location.get('id') || existing_location.get('isNotDirtyOrRelatedNotDirty')) {
+                model.location_level_fk = extract_location_level(model, store) || undefined;
+                let location = this.get('store').push('location', model);
+                location.save();
+            }
         });
     }
 });
