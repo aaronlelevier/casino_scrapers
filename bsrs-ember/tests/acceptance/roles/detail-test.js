@@ -22,7 +22,7 @@ const SAVE_BTN = '.t-save-btn';
 
 let application, store, list_xhr, endpoint;
 
-module('Acceptance | role-detail', {
+module('sco Acceptance | role-detail', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
