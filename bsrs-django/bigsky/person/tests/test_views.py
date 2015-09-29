@@ -222,6 +222,17 @@ class PersonListTests(TestCase):
         self.assertEqual(results['auth_amount'], "{0:.4f}".format(self.person.auth_amount))
         self.assertEqual(results['auth_currency'], str(self.person.auth_currency.id))
 
+    def test_max_paginate_by_default(self):
+        response = self.client.get('/api/admin/people/')
+        data = json.loads(self.response.content)
+        self.assertEqual(data['count'], Person.objects.count())
+
+    def test_max_paginate_by_page_size(self):
+        number = 1
+        response = self.client.get('/api/admin/people/?page_size={}'.format(number))
+        data = json.loads(response.content)
+        self.assertEqual(len(data['results']), number)
+
 
 class PersonDetailTests(TestCase):
 

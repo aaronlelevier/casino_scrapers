@@ -6,4 +6,4 @@ class SavedSearchSerializer(BaseCreateSerializer):
 
     class Meta:
         model = SavedSearch
-        fields = ('id', 'name', 'person', 'model_id', 'endpoint')
+        fields = ('id', 'name', 'person', 'endpoint_name', 'endpoint_uri')
