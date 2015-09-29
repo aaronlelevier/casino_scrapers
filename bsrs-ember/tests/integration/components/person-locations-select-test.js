@@ -51,6 +51,6 @@ test('input has a debouce that prevents each keystroke from publishing a message
         setTimeout(() => {
             assert.equal(this.get('search'), 'x');
             done();
-        }, 11);
+        }, 15);
     }, 290);
 });
