@@ -1,12 +1,15 @@
 import json
 import uuid
 
+from django.core.urlresolvers import reverse
+
 from model_mommy import mommy
 from rest_framework.test import APITestCase
+from rest_framework.exceptions import ValidationError
 
 from generic.models import SavedSearch
 from generic.serializers import SavedSearchSerializer
-from person.tests.factory import PASSWORD, create_single_person, create_role
+from person.tests.factory import PASSWORD, create_single_person, create_role, create_person
 
 
 class SavedSearchTests(APITestCase):
@@ -77,3 +80,34 @@ class SavedSearchTests(APITestCase):
         data['id'] = str(uuid.uuid4())
         response = self.client.post('/api/admin/generic/', data=data, format='json')
         self.assertEqual(response.status_code, 201)
+
+
+class ExportDataTests(APITestCase):
+
+    def setUp(self):
+        # Role
+        self.role = create_role()
+        self.person = create_single_person(name='aaron', role=self.role)
+        create_person(_many=10)
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_get(self):
+        response = self.client.get(reverse("export_data"))
+        self.assertEqual(response.status_code, 404)
+
+    def test_post_bad_data(self):
+        data = {
+            'app_name': 'person',
+            'model_name': 'person'
+        }
+        response = self.client.post(reverse("export_data"), data)
+        self.assertEqual(response.status_code, 400)
+
+
+
+
+
