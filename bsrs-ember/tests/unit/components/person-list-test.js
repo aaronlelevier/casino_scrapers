@@ -48,7 +48,7 @@ test('sorted content is sorted by the defaultSort provided if no other value is 
     assert.equal(people.objectAt(3).get('id'), 2);
 });
 
-test('toran given a list of people and page number, should only return those people on that page', (assert) => {
+test('given a list of people and page number, should only return those people on that page', (assert) => {
     store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
     store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
     store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
@@ -63,7 +63,7 @@ test('toran given a list of people and page number, should only return those peo
     assert.equal(people.get('length'), 2);
 });
 
-test('toran given a list of people and page number, should only return those people on that page (4 people)', (assert) => {
+test('given a list of people and page number, should only return those people on that page (4 people)', (assert) => {
     store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
     store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
     store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
