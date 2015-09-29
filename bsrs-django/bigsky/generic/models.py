@@ -21,9 +21,9 @@ class SavedSearch(BaseModel):
         help_text="name of the saved search that the Person designates.")
     person = models.ForeignKey(Person,
         help_text="The Person who saves the search.")
-    model_id = models.UUIDField(
-        help_text="Primary key of the Model that this search is saved for.")
-    endpoint = models.CharField(max_length=254,
+    endpoint_name = models.CharField(max_length=254,
+        help_text="the Ember List API route name. i.e. 'admin.people.index'.")
+    endpoint_uri = models.CharField(max_length=254,
         help_text="API Endpoint that this search is saved for. With all keywords "
                   "ordering, and filters, etc...")
 
@@ -32,7 +32,18 @@ class SavedSearch(BaseModel):
         verbose_name_plural = "Saved Searches"
 
     def __str__(self):
-        return self.endpoint
+        return self.name
+
+    def save(self, *args, **kwargs):
+        self.validate_endpoint_name()
+        return super(SavedSearch, self).save(*args, **kwargs)
+
+    def validate_endpoint_name(self):
+        from bigsky.urls import router
+        if self.endpoint_name not in [".".join(x[0].split('/'))+".index" for x in router.registry]:
+            raise ValidationError("{} is not a valid Ember List API endpoint name."
+                .format(self.endpoint_name))
+        
 
 
 ### SETTINGS

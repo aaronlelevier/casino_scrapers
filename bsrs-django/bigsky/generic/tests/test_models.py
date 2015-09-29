@@ -8,9 +8,35 @@ from django.contrib.auth.models import ContentType
 
 from model_mommy import mommy
 
-from generic.models import MainSetting, Attachment
+from generic.models import MainSetting, Attachment, SavedSearch
 from location.models import LocationLevel
 from person.tests.factory import create_single_person
+
+
+class SavedSearchTests(TestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        self.saved_search = mommy.make(SavedSearch, person=self.person,
+            endpoint_name="admin.people.index")
+
+    def test_create(self):
+        self.assertIsInstance(self.saved_search, SavedSearch)
+
+    def test_meta(self):
+        self.saved_search._meta.ordering = ('-modified',)
+        self.saved_search._meta.verbose_name_plural = "Saved Searches"
+
+    def test_str(self):
+        self.assertEqual(str(self.saved_search), self.saved_search.name)
+
+    def test_validate_endpoint_name(self):
+        self.assertIsNone(self.saved_search.validate_endpoint_name())
+        
+    def test_validate_endpoint_name_raise(self):
+        self.saved_search.endpoint_name = "not a valid endpoint_name"
+        with self.assertRaises(ValidationError):
+            self.saved_search.save()
 
 
 class MainSettingTests(TestCase):

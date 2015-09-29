@@ -104,6 +104,12 @@ urlpatterns += required(
 ### URL HELPERS
 
 def default_model_ordering():
+    """
+    Return ``dict`` with:
+
+    - key: the Ember List API route name. i.e. "admin.people.index"
+    - value: default ordering in Django Model
+    """
     return {".".join(x[0].split('/'))+".index": x[1].queryset.model._meta.ordering
             for x in router.registry}
 

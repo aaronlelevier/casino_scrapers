@@ -17,7 +17,8 @@ class SavedSearchTests(APITestCase):
         self.role = create_role()
         self.person = create_single_person(name='aaron', role=self.role)
         self.client.login(username=self.person.username, password=PASSWORD)
-        self.saved_search = mommy.make(SavedSearch, person=self.person, model_id=self.role.id)
+        self.saved_search = mommy.make(SavedSearch, person=self.person,
+            endpoint_name='admin.people.index')
 
     def tearDown(self):
         self.client.logout()
@@ -25,10 +26,10 @@ class SavedSearchTests(APITestCase):
     def test_create(self):
         data = {
             "id": str(uuid.uuid4()),
-            "person": str(self.person.id),
-            "model_id": str(self.role.id),
             "name": "my new search",
-            "endpoint": "/api/admin/phone_numbers/"
+            "person": str(self.person.id),
+            "endpoint_name": self.saved_search.endpoint_name,
+            "endpoint_uri": "/api/admin/phone_numbers/"
         }
         response = self.client.post('/api/admin/generic/', data, format='json')
         self.assertEqual(response.status_code, 201)
@@ -40,7 +41,7 @@ class SavedSearchTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content)
         self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['model_id'], str(self.role.id))
+        self.assertEqual(data['results'][0]['endpoint_name'], self.saved_search.endpoint_name)
 
     def test_detail(self):
         response = self.client.get('/api/admin/generic/{}/'.format(self.saved_search.id))
@@ -52,10 +53,10 @@ class SavedSearchTests(APITestCase):
         # Setup
         serializer = SavedSearchSerializer(self.saved_search)
         data = serializer.data
-        data['endpoint'] = "/api/admin/emails/?ordering=-email"
+        data['endpoint_uri'] = "/api/admin/emails/?ordering=-email"
         # test
         response = self.client.put('/api/admin/generic/{}/'.format(self.saved_search.id),
             data=data, format='json')
         self.assertEqual(response.status_code, 200)
         new_data = json.loads(response.content)
-        self.assertEqual(data['endpoint'], new_data['endpoint'])
+        self.assertEqual(data['endpoint_uri'], new_data['endpoint_uri'])
