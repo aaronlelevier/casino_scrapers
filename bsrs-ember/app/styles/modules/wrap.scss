@@ -22,13 +22,13 @@ section.wrap{
             line-height: $documentHeaderHeight;
             border: $borderStyle;
             border-width: 0 0 1px;
-            padding: 0 15px;
+            padding: 0 10px;
             position: relative;
             background: $lightGray;
             //z-index: 5;
             h1{
                 vertical-align: middle;
-                font-size: 1.6em;
+                font-size: 1.3em;
                 font-weight: normal;
                 display: inline;
                 @media screen and (max-width: $mobileDeviceWidth) {
@@ -49,6 +49,7 @@ section.wrap{
             border: $borderStyle;
             border-width: 0 1px 0 0;
             section{
+                margin: 5px 0;
                 h3{
                     margin: 0;
                     color: $dark;
@@ -111,7 +112,7 @@ section.wrap{
             height: $documentHeaderHeight;
             line-height: $documentHeaderHeight;
             background: $lightGray;
-            padding: 0 15px;
+            padding: 0 10px;
             border: $borderStyle;
             border-width: 0 0 1px 0;
             position: relative;
