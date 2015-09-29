@@ -43,7 +43,6 @@ class SavedSearch(BaseModel):
         if self.endpoint_name not in [".".join(x[0].split('/'))+".index" for x in router.registry]:
             raise ValidationError("{} is not a valid Ember List API endpoint name."
                 .format(self.endpoint_name))
-        
 
 
 ### SETTINGS
