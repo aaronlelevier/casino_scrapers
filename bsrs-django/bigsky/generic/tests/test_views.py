@@ -2,6 +2,8 @@ import json
 import uuid
 
 from django.core.urlresolvers import reverse
+from django.db.models.loading import get_model
+from django.test import TestCase
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase
@@ -96,12 +98,30 @@ class ExportDataTests(APITestCase):
 
     def test_get(self):
         response = self.client.get(reverse("export_data"))
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 403)
 
     def test_post_bad_data(self):
         data = {
             'app_name': 'person',
             'model_name': 'person'
         }
-        response = self.client.post(reverse("export_data"), data)
+        response = self.client.post(reverse("export_data"), data, format='json')
         self.assertEqual(response.status_code, 400)
+
+    def test_post_good(self):
+        data = {
+            'app_name': 'person',
+            'model_name': 'person',
+            'fields': ['id', 'username'],
+            'query_params': {'username__icontains': 'aaron'}
+        }
+        model = get_model(data['app_name'], data['model_name'])
+        response = self.client.post(reverse("export_data"), data, format='json')
+        self.assertEqual(response.status_code, 200)
+        self.assertEquals(
+            response.get('Content-Disposition'),
+            'attachment; filename="{name}.csv"'.format(
+                name=model._meta.verbose_name_plural)
+        )
+
+

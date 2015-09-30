@@ -1,4 +1,5 @@
 import csv
+import json
 
 from django.core.exceptions import PermissionDenied
 from django.db.models.loading import get_model
@@ -39,19 +40,18 @@ def export_static(request):
 
 ### EXPORT DATA
 
-class ExportData(View):
+from rest_framework.views import APIView
+
+class ExportData(APIView):
     """
     Parse the requested CSV report requested from the Person.
 
     Requires the POST params:
 
-    :app_name:
-    :model_name:
-    :query_params: filters, sorting, etc.  TBD: Django ORM, or need to convert from Ember ??
-    :fields: Person defined fields to output
-
-    # TODO: would the Person like to name the CSV report that they are outputting?
-    #   or we parse some kind of human readable file output name w/ a datetime stamp?
+    :app_name: string
+    :model_name: string
+    :query_params: dict - filters, sorting, etc.  TBD: Django ORM, or need to convert from Ember ??
+    :fields: array - Person defined fields to output
     """
 
     def dispatch(self, request, *args, **kwargs):
@@ -59,48 +59,35 @@ class ExportData(View):
             raise PermissionDenied("{} not allowed".format(request.method.lower()))
         return super(ExportData, self).dispatch(request, *args, **kwargs)
 
-    def get_model_and_fields(self, request):
+    def set_model_and_fields(self, data):
         try:
-            app_name = request.POST.pop('app_name')
-            model_name = request.POST.pop('model_name')
-            fields = request.POST.pop('fields')
-            query_params = request.POST.get('query_params')
+            self.app_name = data.get('app_name')
+            self.model_name = data.get('model_name')
+            self.model = get_model(self.app_name, self.model_name)
+            self.fields = data.get('fields')
+            self.query_params = data.get('query_params')
         except KeyError as e:
             raise ValidationError(str(e))
-        return (app_name, model_name, fields, query_params)
+
+    def validate_required(self):
+        required = [self.app_name, self.model_name, self.model, self.fields, self.query_params]
+        if not all(required):
+            raise ValidationError("Required arguments missing: {}".format(required))
 
     def post(self, request, *args, **kwargs):
-        (app_name, model_name, fields, query_params) = self.get_model_and_fields(request)
-
-        model = get_model(app_name, model_name)
+        data = json.loads(request.body)
+        self.set_model_and_fields(data)
+        self.validate_required()
 
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="{name}.csv"'.format(
-            name=model._meta.verbose_name_plural)
+            name=self.model._meta.verbose_name_plural)
 
-        # Init CSV
         writer = csv.writer(response)
-        # Header
-        writer.writerow(fields)
-        
-        # Parse ``query_params``
-        kwargs = {}
-
-        for param in query_params:
-            if param.split("__")[-1] == "in":
-                value = query_params.get(param).split(',')
-            else:
-                value = query_params.get(param)
-
-                kwargs.update({param: value})
-
-        queryset = model.objects.filter(**kwargs)
+        writer.writerow(self.fields)
 
         # Data
-        for obj in queryset:
-            writer.writerow([str(getattr(obj, field)) for field in fields])
+        for obj in self.model.objects.filter(**self.query_params):
+            writer.writerow([str(getattr(obj, field)) for field in self.fields])
 
         return response
-    else:
-        # This view can only be POSTed to.
-        raise Http404
