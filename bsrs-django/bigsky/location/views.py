@@ -83,18 +83,6 @@ class LocationTypeViewSet(BaseModelViewSet):
     queryset = LocationType.objects.all()
 
 
-### LOCATION
-
-class LocationFilterSet(filters.FilterSet):
-
-    location_level = filters.AllLookupsFilter(name='location_level')
-    name = filters.AllLookupsFilter(name='name')
-    
-    class Meta:
-        model= Location
-        fields = ['location_level', 'name']
-
-
 class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     '''
     ## Detail Routes

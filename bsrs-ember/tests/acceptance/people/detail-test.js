@@ -38,7 +38,7 @@ const BACKSPACE = {keyCode: 8};
 
 var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
-module('acceptance | detail test', {
+module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -429,6 +429,9 @@ test('when you change a related role it will be persisted correctly', (assert) =
             assert.equal(person.get('locations').objectAt(0).get('id'), LOCATION_DEFAULTS.idOne);
         });
         fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+        andThen(() => {
+            assert.equal(currentURL(), DETAIL_URL + '?role_change=' + ROLE_DEFAULTS.idTwo);
+        });
         var url = PREFIX + DETAIL_URL + "/";
         var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
         var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
@@ -439,7 +442,7 @@ test('when you change a related role it will be persisted correctly', (assert) =
             let person = store.find('person', PEOPLE_DEFAULTS.id);
             assert.equal(person.get('role_fk'), ROLE_DEFAULTS.idTwo);
             assert.equal(person.get('locations').get('length'), 0);
-            assert.equal(currentURL(),PEOPLE_URL);
+            assert.equal(currentURL(), PEOPLE_URL);
         });
     });
 });
@@ -1024,7 +1027,11 @@ test('deep link to person and clicking in the person-locations-select component 
     fillIn('.selectize-input input', 'a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
     andThen(() => {
-        let locations = store.find('location', {location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+        let filterFunc = function(location) {
+            let location_level_fk = location.get('location_level').get('id');
+            return location_level_fk === LOCATION_LEVEL_DEFAULTS.idOne;
+        };
+        let locations = store.find('location', filterFunc, ['id', 'location_level']);
         assert.equal(locations.get('length'), 10);
         assert.equal(find('div.item').length, 1);
         assert.equal(find('div.option').length, 9);

@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
+import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
 var extract_phone_numbers = function(model, store) {
     let phone_number_fks = [];
@@ -56,20 +57,19 @@ var extract_role = function(model, store) {
     return location_level_fk;
 };
 
-var extract_person_location = function(model, store, uuid, location_level_fk) {
+var extract_person_location = function(model, store, uuid, location_level_fk, location_deserializer) {
     let server_locations_sum = [];
     let person_location_fks = [];
     let prevented_duplicate_m2m = [];
     let all_person_locations = store.find('person-location');
     model.locations.forEach((location_json) => {
-        location_json.location_level_fk = location_level_fk;
         let person_locations = all_person_locations.filter((m2m) => {
             return m2m.get('location_pk') === location_json.id && m2m.get('person_pk') === model.id;
         });
         if(person_locations.length === 0) {
             let pk = uuid.v4();
             server_locations_sum.push(pk);
-            store.push('location', location_json);
+            location_deserializer.deserialize(location_json, location_json.id);
             store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});
         }else{
             prevented_duplicate_m2m.push(person_locations[0].get('id'));
@@ -99,24 +99,25 @@ var extract_locale = function(model, store) {
 
 var PersonDeserializer = Ember.Object.extend({
     uuid: inject('uuid'),
+    LocationDeserializer: injectDeserializer('location'),
     deserialize(response, options) {
+        let location_deserializer = this.get('LocationDeserializer');
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options);
+            this.deserialize_single(response, options, location_deserializer);
         }
     },
-    deserialize_single(model, id) {
+    deserialize_single(model, id, location_deserializer) {
         let uuid = this.get('uuid');
         let store = this.get('store');
-        let location_level_fk;//used to setup location_level_fk correctly for a location pushed into the store from this deserializer
         let person_check = store.find('person', id);
         //prevent updating person if dirty
         if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
             model.phone_number_fks = extract_phone_numbers(model, store);
             model.address_fks = extract_addresses(model, store);
             let location_level_fk = extract_role(model, store);
-            model.person_location_fks = extract_person_location(model, store, uuid, location_level_fk);
+            model.person_location_fks = extract_person_location(model, store, uuid, location_level_fk, location_deserializer);
             model.locale_fk = extract_locale(model, store);
             let person = store.push('person', model);
             person.save();

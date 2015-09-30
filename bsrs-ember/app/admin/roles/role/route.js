@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import injectStore from 'bsrs-ember/utilities/store';
-import TabRoute from 'bsrs-ember/admin/tab/route';
+import TabRoute from 'bsrs-ember/route/tab/route';
 
 var RoleRoute = TabRoute.extend({
     store: injectStore('main'),

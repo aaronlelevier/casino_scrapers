@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import TabRoute from 'bsrs-ember/admin/tab/new-route';
+import TabRoute from 'bsrs-ember/route/tab/new-route';
 
 var CategoryNewRoute = TabRoute.extend({
     repository: inject('category'),
@@ -30,11 +30,6 @@ var CategoryNewRoute = TabRoute.extend({
         controller.set('model', hash.model);
         controller.set('categories_children', hash.categories_children);
         controller.set('search', hash.search);
-    },
-    actions: {
-        redirectUser() {
-           this.transitionTo('admin.categories');
-        }
     }
 });
 

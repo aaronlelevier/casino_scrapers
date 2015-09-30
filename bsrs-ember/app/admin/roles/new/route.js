@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
-import TabRoute from 'bsrs-ember/admin/tab/new-route';
+import TabRoute from 'bsrs-ember/route/tab/new-route';
 
 var RoleNewRoute = TabRoute.extend({
     uuid: inject('uuid'),
