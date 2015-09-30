@@ -29,7 +29,6 @@ class SavedSearchTests(APITestCase):
         data = {
             "id": str(uuid.uuid4()),
             "name": "my new search",
-            "person": str(self.person.id),
             "endpoint_name": self.saved_search.endpoint_name,
             "endpoint_uri": "/api/admin/phone_numbers/"
         }
@@ -63,7 +62,7 @@ class SavedSearchTests(APITestCase):
         new_data = json.loads(response.content)
         self.assertEqual(data['endpoint_uri'], new_data['endpoint_uri'])
 
-    ### util.UniqueForActiveValidator - two key tests
+#     ### util.UniqueForActiveValidator - two key tests
 
     def test_unique_for_active_two_keys(self):
         serializer = SavedSearchSerializer(self.saved_search)
@@ -82,32 +81,27 @@ class SavedSearchTests(APITestCase):
         self.assertEqual(response.status_code, 201)
 
 
-class ExportDataTests(APITestCase):
+# class ExportDataTests(APITestCase):
 
-    def setUp(self):
-        # Role
-        self.role = create_role()
-        self.person = create_single_person(name='aaron', role=self.role)
-        create_person(_many=10)
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
+#     def setUp(self):
+#         # Role
+#         self.role = create_role()
+#         self.person = create_single_person(name='aaron', role=self.role)
+#         create_person(_many=10)
+#         # Login
+#         self.client.login(username=self.person.username, password=PASSWORD)
 
-    def tearDown(self):
-        self.client.logout()
+#     def tearDown(self):
+#         self.client.logout()
 
-    def test_get(self):
-        response = self.client.get(reverse("export_data"))
-        self.assertEqual(response.status_code, 404)
+#     def test_get(self):
+#         response = self.client.get(reverse("export_data"))
+#         self.assertEqual(response.status_code, 404)
 
-    def test_post_bad_data(self):
-        data = {
-            'app_name': 'person',
-            'model_name': 'person'
-        }
-        response = self.client.post(reverse("export_data"), data)
-        self.assertEqual(response.status_code, 400)
-
-
-
-
-
+#     def test_post_bad_data(self):
+#         data = {
+#             'app_name': 'person',
+#             'model_name': 'person'
+#         }
+#         response = self.client.post(reverse("export_data"), data)
+#         self.assertEqual(response.status_code, 400)

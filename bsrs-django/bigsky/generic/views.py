@@ -19,6 +19,9 @@ class SavedSearchViewSet(BaseModelViewSet):
     serializer_class = SavedSearchSerializer
     queryset = SavedSearch.objects.all()
 
+    def perform_create(self, serializer):
+        serializer.save(person=self.request.user)
+
 
 def export_static(request):
     # Create the HttpResponse object with the appropriate CSV header.

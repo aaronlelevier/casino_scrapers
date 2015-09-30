@@ -6,5 +6,4 @@ class SavedSearchSerializer(BaseCreateSerializer):
 
     class Meta:
         model = SavedSearch
-        validators = [UniqueForActiveValidator(SavedSearch, ['person', 'name'])]
-        fields = ('id', 'name', 'person', 'endpoint_name', 'endpoint_uri')
+        fields = ('id', 'name', 'endpoint_name', 'endpoint_uri')
