@@ -15,9 +15,6 @@ class BaseModelViewSet(DestroyModelMixin, OrderingQuerySetMixin, viewsets.ModelV
     queryset = None
     filter_fields = None
 
-    def get_model(self):
-        return self.model
-
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
