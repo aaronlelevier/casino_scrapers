@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import TabRoute from 'bsrs-ember/admin/tab/route';
+import TabRoute from 'bsrs-ember/route/tab/route';
 
 var LocationLevelSingle = TabRoute.extend({
     repository: inject('location-level'),

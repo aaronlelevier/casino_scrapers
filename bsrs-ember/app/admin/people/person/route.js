@@ -2,7 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import config from 'bsrs-ember/config/environment';
 import injectStore from 'bsrs-ember/utilities/store';
-import TabRoute from 'bsrs-ember/admin/tab/route';
+import TabRoute from 'bsrs-ember/route/tab/route';
 import AddressType from 'bsrs-ember/models/address-type';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 
