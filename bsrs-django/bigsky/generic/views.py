@@ -6,8 +6,9 @@ from django.db.models.loading import get_model
 from django.http import HttpResponse
 from django.views.generic import View
 
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import ValidationError
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
 
 from generic.models import SavedSearch
 from generic.serializers import SavedSearchSerializer
@@ -25,23 +26,7 @@ class SavedSearchViewSet(BaseModelViewSet):
     def perform_create(self, serializer):
         serializer.save(person=self.request.user)
 
-
-def export_static(request):
-    # Create the HttpResponse object with the appropriate CSV header.
-    response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="somefilename.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(['First row', 'Foo', 'Bar', 'Baz'])
-    writer.writerow(['Second row', 'A', 'B', 'C', '"Testing"', "Here's a quote"])
-
-    return response
-
-
-### EXPORT DATA
-
-from rest_framework.views import APIView
-
+        
 class ExportData(APIView):
     """
     Parse the requested CSV report requested from the Person.
