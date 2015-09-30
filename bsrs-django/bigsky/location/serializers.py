@@ -54,9 +54,11 @@ class LocationTypeSerializer(BaseCreateSerializer):
 class LocationIdNameSerializer(BaseCreateSerializer):
     """Leaf node serializer for PersonDetailSerializer."""
 
+    location_level = LocationLevelSerializer()
+
     class Meta:
         model = Location
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'number', 'location_level')
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -93,7 +95,7 @@ class LocationCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Location
-        validators = [UniqueForActiveValidator(Location, 'number')]
+        validators = [UniqueForActiveValidator(Location, ['number'])]
         fields = ('id', 'name', 'number', 'status', 'location_level',)
 
 
@@ -102,7 +104,7 @@ class LocationUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         validators = [
-            UniqueForActiveValidator(Location, 'number'),
+            UniqueForActiveValidator(Location, ['number']),
             LocationParentChildValidator('location_level', 'parents'),
             LocationParentChildValidator('location_level', 'children')
         ]

@@ -5,7 +5,6 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import detail_route
 from rest_framework.exceptions import MethodNotAllowed
-from rest_framework import pagination
 import rest_framework_filters as filters
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
@@ -82,18 +81,6 @@ class LocationTypeViewSet(BaseModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = ls.LocationTypeSerializer
     queryset = LocationType.objects.all()
-
-
-### LOCATION
-
-class LocationFilterSet(filters.FilterSet):
-
-    location_level = filters.AllLookupsFilter(name='location_level')
-    name = filters.AllLookupsFilter(name='name')
-    
-    class Meta:
-        model= Location
-        fields = ['location_level', 'name']
 
 
 class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):

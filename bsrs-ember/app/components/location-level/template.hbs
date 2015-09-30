@@ -2,15 +2,15 @@
     <header>
         <h1>{{model.name}}</h1>
         <div class="btn-group btn-group-sm pull-right center-block">
-            {{button-generic save="saveLocationLevel" type="save"}}
-            {{button-generic cancel="cancelLocationLevel" type="cancel"}}
+            {{button-generic save="save" type="save"}}
+            {{button-generic cancel="cancel" type="cancel"}}
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu">
                 <li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
                 <li><a href="#">{{fa-icon "print"}} Print</a></li>
-                <li>{{delete-button delete="deleteLocationLevel"}}</li>
+                <li>{{delete-button delete="delete"}}</li>
             </ul>
         </div>
     </header>

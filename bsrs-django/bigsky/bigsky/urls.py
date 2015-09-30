@@ -36,7 +36,7 @@ router.register(r'admin/address_types', contact_views.AddressTypeViewSet)
 router.register(r'admin/emails', contact_views.EmailViewSet)
 router.register(r'admin/email_types', contact_views.EmailTypeViewSet)
 # GENERIC
-router.register(r'admin/generic', generic_views.SavedSearchViewSet)
+router.register(r'admin/saved_searches', generic_views.SavedSearchViewSet)
 # LOCATION
 router.register(r'admin/locations', location_views.LocationViewSet)
 router.register(r'admin/location_levels', location_views.LocationLevelViewSet)
@@ -94,6 +94,7 @@ urlpatterns += required(
             },
             name='password_change'),
         url(r'^django-admin/', include(admin.site.urls)),
+        url(r'', include('generic.urls')),
         # This URL must be the last Django URL defined, or else the URLs defined 
         # below it won't resolve, and this URL will catch the URL request.
         url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),

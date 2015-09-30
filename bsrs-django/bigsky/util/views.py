@@ -45,6 +45,8 @@ class BaseModelViewSet(DestroyModelMixin, OrderingQuerySetMixin, viewsets.ModelV
         queryset = super(BaseModelViewSet, self).get_queryset()
 
         if self.filter_fields:
+            kwargs = {}
+
             for param in self.request.query_params:
                 if param.split("__")[0] in self.filter_fields:
                     if param.split("__")[-1] == "in":
@@ -52,6 +54,8 @@ class BaseModelViewSet(DestroyModelMixin, OrderingQuerySetMixin, viewsets.ModelV
                     else:
                         value = self.request.query_params.get(param)
 
-                    queryset = queryset.filter(**{param: value})
+                    kwargs.update({param: value})
+
+            queryset = queryset.filter(**kwargs)
 
         return queryset

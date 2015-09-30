@@ -7,6 +7,7 @@ import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 
@@ -453,5 +454,87 @@ test('count is shown and updated as the user filters down the list from django',
         assert.equal(currentURL(),ROLE_URL + '?search=');
         assert.equal(find('.t-grid-data').length, 10);
         assert.equal(find('.t-page-count').text(), '19 Roles');
+    });
+});
+
+test('picking a different number of pages will alter the query string and xhr', function(assert) {
+    let option_two = PREFIX + BASE_URL + '/?page=1&page_size=10';
+    xhr(option_two, 'GET',null,{},200,ROLE_FIXTURES.paginated(10));
+    let option_one = PREFIX + BASE_URL + '/?page=1&page_size=25';
+    xhr(option_one, 'GET',null,{},200,ROLE_FIXTURES.paginated(25));
+    let page_two = PREFIX + BASE_URL + '/?page=2';
+    xhr(page_two, 'GET',null,{},200,ROLE_FIXTURES.list_two());
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-size option:selected').text(), '10 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+    click('.t-page:eq(1) a');
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL + '?page=2');
+        assert.equal(find('.t-grid-data').length, 9);
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(!pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+    alterPageSize('.t-page-size', 25);
+    andThen(() => {
+        assert.equal(currentURL(),ROLE_URL + '?page_size=25');
+        assert.equal(find('.t-grid-data').length, 19);
+        assert.equal(find('.t-page-size option:selected').text(), '25 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 1);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+    });
+    alterPageSize('.t-page-size', 10);
+    andThen(() => {
+        assert.equal(currentURL(),ROLE_URL + '?page_size=10');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-size option:selected').text(), '10 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+});
+
+test('starting with a page size greater than 10 will set the selected', function(assert) {
+    clearxhr(list_xhr);
+    let option_one = PREFIX + BASE_URL + '/?page=1&page_size=25';
+    xhr(option_one, 'GET',null,{},200,ROLE_FIXTURES.paginated(25));
+    visit(ROLE_URL + '?page_size=25');
+    andThen(() => {
+        assert.equal(currentURL(),ROLE_URL + '?page_size=25');
+        assert.equal(find('.t-grid-data').length, 19);
+        assert.equal(find('.t-page-size option:selected').text(), '25 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 1);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+    });
+});
+
+test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
+    visit(ROLE_URL);
+    click('.t-show-save-filterset-modal');
+    andThen(() => {
+        isFocused('.ember-modal-dialog input:first');
+    });
+    click('.t-grid-search-input');
+    andThen(() => {
+        isNotFocused('.ember-modal-dialog input:first');
     });
 });

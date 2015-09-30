@@ -1,6 +1,4 @@
-from django.core.exceptions import ValidationError
-
-from rest_framework import viewsets, permissions
+from rest_framework import permissions
 
 from accounting.models import Currency
 from accounting.serializers import CurrencySerializer

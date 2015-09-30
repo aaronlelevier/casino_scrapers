@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.db import IntegrityError
 
 from category.tests import factory
 from category.models import Category

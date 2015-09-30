@@ -11,6 +11,7 @@ from model_mommy import mommy
 from accounting.models import Currency
 from person.models import Person, PersonStatus, Role
 from contact.models import PhoneNumberType, AddressType
+from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus, State, Country
 from person.tests.factory import PASSWORD, create_person, create_role
 from translation.tests.factory import create_locales
@@ -74,6 +75,9 @@ class ConfigurationTests(TestCase):
         self.location_levels = mommy.make(LocationLevel)
         self.location_statuses = mommy.make(LocationStatus)
         self.person_status = mommy.make(PersonStatus)
+        self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
+            endpoint_name="admin.people.index")
+        # Login
         self.client.login(username=self.person.username, password=self.password)
 
     def tearDown(self):
@@ -182,3 +186,9 @@ class ConfigurationTests(TestCase):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['default_model_ordering'])
         self.assertTrue(len(configuration) > 0)
+
+    def test_context_saved_search(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['saved_search'])
+        self.assertTrue(len(configuration) > 0)
+

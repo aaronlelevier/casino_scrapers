@@ -32,7 +32,11 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
         PromiseMixin.xhr(url, 'GET').then((response) => {
             this.get('LocationDeserializer').deserialize(response);
         });
-        return this.get('store').find('location', {location_level_fk: filter.location_level});
+        let filterFunc = function(location) {
+            let location_level_fk = location.get('location_level').get('id');
+            return location_level_fk === filter.location_level;
+        };
+        return this.get('store').find('location', filterFunc, ['id', 'location_level']);
     },
     find(filter) {
         PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {

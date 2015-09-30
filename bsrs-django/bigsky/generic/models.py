@@ -1,16 +1,25 @@
 import os
-from PIL import Image
 
 from django.db import models
 from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError as DjangoValidationError
+
+from rest_framework.exceptions import ValidationError
 
 from person.models import Person
 from util.models import BaseModel, BaseManager, BaseSetting
 
 
 ### SAVED SEARCHES
+
+class SavedSearchManager(BaseManager):
+
+    def person_saved_searches(self, person):
+        """Used for bootsrapping the Person's SavedSearch's in the 
+        bootsrap config."""
+        return [x.to_dict() for x in self.filter(person=person)]
+
 
 @python_2_unicode_compatible
 class SavedSearch(BaseModel):
@@ -23,9 +32,11 @@ class SavedSearch(BaseModel):
         help_text="The Person who saves the search.")
     endpoint_name = models.CharField(max_length=254,
         help_text="the Ember List API route name. i.e. 'admin.people.index'.")
-    endpoint_uri = models.CharField(max_length=254,
+    endpoint_uri = models.CharField(max_length=2048,
         help_text="API Endpoint that this search is saved for. With all keywords "
                   "ordering, and filters, etc...")
+
+    objects = SavedSearchManager()
 
     class Meta:
         ordering = ('-modified',)
@@ -36,13 +47,31 @@ class SavedSearch(BaseModel):
 
     def save(self, *args, **kwargs):
         self.validate_endpoint_name()
+        self.validate_person_name_unique()
         return super(SavedSearch, self).save(*args, **kwargs)
 
     def validate_endpoint_name(self):
         from bigsky.urls import router
         if self.endpoint_name not in [".".join(x[0].split('/'))+".index" for x in router.registry]:
-            raise ValidationError("{} is not a valid Ember List API endpoint name."
+            raise DjangoValidationError("{} is not a valid Ember List API endpoint name."
                 .format(self.endpoint_name))
+
+    def validate_person_name_unique(self):
+        """Use ``self.created`` check, so this validator will only be triggered
+        when creating new records."""
+        if not self.created and SavedSearch.objects.filter(
+            person=self.person, name=self.name).exists():
+
+            raise ValidationError("Record for: {} with name: {} already exists.".format(
+                self.person, self.name))
+
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "name": self.name,
+            "endpoint_name": self.endpoint_name,
+            "endpoint_uri": self.endpoint_uri
+        }
 
 
 ### SETTINGS
@@ -145,7 +174,7 @@ class Attachment(BaseModel):
     def _validate_file_size(self):
         try:
             if self.file._file._size > settings.MAX_UPLOAD_SIZE:
-                raise ValidationError("File size: {} to big".format(
+                raise DjangoValidationError("File size: {} to big".format(
                     self.file._file._size))
         except AttributeError:
             pass

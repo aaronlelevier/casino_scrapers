@@ -2,7 +2,7 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
     var factory = function(location_status, location_level, location_level_fixtures) {
         this.location_status = location_status;
         this.location_level = location_level;
-        this.location_level_fixtures = location_level_fixtures;
+        this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
     };
     factory.prototype.defaults = function() {
         return {

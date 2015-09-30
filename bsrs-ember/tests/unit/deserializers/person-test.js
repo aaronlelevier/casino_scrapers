@@ -11,17 +11,19 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import Person from 'bsrs-ember/models/person';
 import PersonDeserializer from 'bsrs-ember/deserializers/person';
+import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import random from 'bsrs-ember/models/random';
 
-var store, personProxy, subject, personCurrent, uuid;
+var store, personProxy, subject, personCurrent, uuid, location_deserializer;
 
 module('unit: person deserializer test', {
     beforeEach() {
         random.uuid = function() { return Ember.uuid(); };
         store = module_registry(this.container, this.registry, ['model:random','model:uuid','model:person', 'model:role','model:person-location','model:location','model:location-level','model:phonenumber','model:address','model:address-type','service:person-current','service:translations-fetcher','service:i18n']);
         uuid = this.container.lookup('model:uuid');
-        subject = PersonDeserializer.create({store: store, uuid: uuid});
+        location_deserializer = LocationDeserializer.create({store: store});
+        subject = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
     },
     afterEach() {
         random.uuid = function() { return 'abc123'; };
@@ -104,7 +106,6 @@ test('person-location m2m is set up correctly using deserialize single (starting
     let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: []});
     let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
-
     response.locations = [LOCATION_FIXTURES.get()];
     let locations = person.get('locations');
     assert.equal(locations.get('length'), 0);
@@ -112,9 +113,7 @@ test('person-location m2m is set up correctly using deserialize single (starting
     let original = store.find('person', PEOPLE_DEFAULTS.id);
     locations = original.get('locations');
     assert.equal(locations.get('length'), 1);
-
     assert.equal(locations.objectAt(0).get('name'), LOCATION_DEFAULTS.storeName);
-
     assert.equal(store.find('person-location').get('length'), 1);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
@@ -122,15 +121,15 @@ test('person-location m2m is set up correctly using deserialize single (starting
 
 test('person-location m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
     let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
-
     let m2m = store.push('person-location', {id: PERSON_LOCATION_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, location_pk: LOCATION_DEFAULTS.idOne});
     let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, people: [PEOPLE_DEFAULTS.id]});
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations.length'), 1);
     let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
-
-    response.locations = [LOCATION_FIXTURES.get(), {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo}];
+    let second_location = LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idTwo);
+    second_location.name = LOCATION_DEFAULTS.storeNameTwo;
+    response.locations = [LOCATION_FIXTURES.get(), second_location];
     subject.deserialize(response, PEOPLE_DEFAULTS.id);
     let original = store.find('person', PEOPLE_DEFAULTS.id);
     let locations = original.get('locations');
@@ -150,8 +149,11 @@ test('person-location m2m is removed when server payload no longer reflects what
     let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, person_location_fks: [PERSON_LOCATION_DEFAULTS.idOne]});
     assert.equal(person.get('locations').get('length'), 1);
     let response = PEOPLE_FIXTURES.generate(PEOPLE_DEFAULTS.id);
-
-    response.locations = [{id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo}, {id: LOCATION_DEFAULTS.idThree, name: LOCATION_DEFAULTS.storeNameThree}];
+    let second_location = LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idTwo);
+    second_location.name = LOCATION_DEFAULTS.storeNameTwo;
+    let third_location = LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idThree);
+    third_location.name = LOCATION_DEFAULTS.storeNameThree;
+    response.locations = [second_location, third_location];
     subject.deserialize(response, PEOPLE_DEFAULTS.id);
     let original = store.find('person', PEOPLE_DEFAULTS.id);
     let locations = original.get('locations');

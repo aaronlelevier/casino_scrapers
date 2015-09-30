@@ -6,8 +6,7 @@ import sys
 if sys.version_info > (2,7):
     str = unicode
 
-from django.conf import settings
-from django.test import TestCase, TransactionTestCase
+from django.test import TestCase
 from django.db.models.functions import Lower
 
 from rest_framework import status
@@ -274,7 +273,9 @@ class PersonDetailTests(TestCase):
     def test_location(self):
         self.assertTrue(self.data['locations'])
         location = Location.objects.get(id=self.data['locations'][0]['id'])
+        location_level = LocationLevel.objects.get(id=self.data['locations'][0]['location_level']['id'])
         self.assertIsInstance(location, Location)
+        self.assertIsInstance(location_level, LocationLevel)
 
     def test_emails(self):
         self.assertTrue(self.data['emails'])
@@ -324,7 +325,7 @@ class PersonPutTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
-        self.person = create_person()
+        self.person = create_single_person(name="aaron")
         self.client.login(username=self.person.username, password=self.password)
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
         self.email_type = mommy.make(EmailType)
@@ -475,9 +476,9 @@ class PersonPutTests(APITestCase):
     # ADDRESSES
 
     def test_update_person_and_create_address(self):
-        self.assertFalse(self.data['addresses'])
+        address_id = str(uuid.uuid4())
         self.data['addresses'] = [{
-            'id': str(uuid.uuid4()),
+            'id': address_id,
             'type': str(self.address_type.id),
             'person': str(self.person.id),
             'address': create._generate_chars()
@@ -488,7 +489,7 @@ class PersonPutTests(APITestCase):
         self.assertTrue(data['addresses'])
         self.assertEqual(
             self.person,
-            Address.objects.get(id=data['addresses'][0]['id']).person
+            Address.objects.get(id=address_id).person
         )
 
     # PHONE NUMBERS
@@ -515,6 +516,7 @@ class PersonPutTests(APITestCase):
         # Person FK on Contact Nested Model
         create_person_and_contacts(self.person)
         # Post standard data w/o contacts
+        self.data["emails"] = []
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
@@ -529,6 +531,7 @@ class PersonPutTests(APITestCase):
             'number': create._generate_ph(),
             'person': str(self.person.id)
         }]
+        self.data["emails"] = []
         # Post standard data w/o contacts
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')

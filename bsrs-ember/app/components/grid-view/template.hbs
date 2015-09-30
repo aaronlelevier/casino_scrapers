@@ -8,13 +8,26 @@
             <form class="form-inline" onsubmit="return false;">
                 <div class="form-group">
                     {{grid-search-input placeholder=search_placeholder keyup="keyup"}}
-                    {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
-                    {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-                    {{/link-to}}
+
+                    <div class="btn-group btn-group-sm">
+                        <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>Save Filter</button>
+                        {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
+                        {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+                        {{/link-to}}
+                    </div>
                 </div>
             </form>
         </div>
     </header>
+
+    {{#if savingFilter}}
+    {{#focus-tether-dialog target='.t-show-save-filterset-modal' close='toggleSaveFilterSetModal' clickOutsideToClose=true}}
+      <div class="form-group">
+       {{input value=filtersetName class="form-control input-sm t-filterset-name-input" placeholder="Name"}}
+       <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>Save</button>
+      </div>
+    {{/focus-tether-dialog}}
+    {{/if}}
 
     {{#if toggleFilter}}
     {{#focus-tether-dialog container-class='column-filter' target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='center left' targetAttachment='center left' offset='0 14px'}}
@@ -58,7 +71,7 @@
         {{#if (filters-applied sort find search)}}
         <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>Reset all options</span>
         {{/if}}
-        <nav class="text-center">
+        <nav class="text-center" style="display: inline; padding-left: 40%;">
             <ul class="pagination t-pages">
                 <li class="t-first {{if first '' 'disabled'}}" disabled={{if first disabled ''}}>{{#link-to list_url (query-params page=first) disabled=notFirst}}&laquo;{{/link-to}}</li>
                 <li class="t-previous {{if previous '' 'disabled'}}" disabled={{if previous disabled ''}}>{{#link-to list_url (query-params page=previous) disabled=notPrevious}}&lsaquo;{{/link-to}}</li>
@@ -71,6 +84,13 @@
                 <li class="t-last {{if last '' 'disabled'}}" disabled={{if last disabled ''}}>{{#link-to list_url (query-params page=last) disabled=notLast}}&raquo;{{/link-to}}</li>
             </ul>
         </nav>
+        <span class="text-right pull-right t-page-size">
+          <select class="form-control" onchange={{action "togglePageSize" value="target.value"}}>
+            {{#each page_sizes as |size|}}
+              <option value={{size}} selected={{is-equal page_size size}}>{{size}} per page</option>
+            {{/each}}
+          </select>
+        </span>
     </footer>
 
 </div>

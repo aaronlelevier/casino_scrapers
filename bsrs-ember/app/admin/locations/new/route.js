@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
-import TabRoute from 'bsrs-ember/admin/tab/new-route';
+import TabRoute from 'bsrs-ember/route/tab/new-route';
 
 var LocationNewRoute = TabRoute.extend({
     uuid: inject('uuid'),
@@ -19,11 +19,6 @@ var LocationNewRoute = TabRoute.extend({
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
         controller.set('all_location_levels', hash.all_location_levels);
-    },
-    actions: {
-        redirectUser() {
-            this.transitionTo('admin.locations');
-        }
     }
 });
 

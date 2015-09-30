@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from django.db.models.functions import Lower
 from django.db.models import Q
 
 from rest_framework import permissions
@@ -9,9 +8,7 @@ import rest_framework_filters as filters
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
-from util.mixins import OrderingQuerySetMixin
 from util.views import BaseModelViewSet
-from rest_framework import pagination
 
 
 class RoleViewSet(BaseModelViewSet):

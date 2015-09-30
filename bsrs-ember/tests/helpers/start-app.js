@@ -5,6 +5,13 @@ import windowProxy from 'bsrs-ember/utilities/window-proxy';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import t from './t';
 
+function alterPageSize(app, selector, size) {
+  Ember.run(function() {
+    Ember.$(selector).find('option[value="' + size + '"]').prop('selected',true).trigger('change');
+  });
+  return app.testHelpers.wait();
+}
+
 function filterGrid(app, column, text) {
   var eventbus = app.__container__.lookup('service:eventbus');
   Ember.run(function() {
@@ -36,6 +43,7 @@ function visitSync(app, url) {
     return app.testHelpers.wait();
 }
 
+Ember.Test.registerAsyncHelper('alterPageSize', alterPageSize);
 Ember.Test.registerAsyncHelper('filterGrid', filterGrid);
 Ember.Test.registerHelper('visitSync', visitSync);
 

@@ -1,5 +1,3 @@
-from django.db.models.functions import Lower
-
 from rest_framework import status
 from rest_framework.response import Response
 

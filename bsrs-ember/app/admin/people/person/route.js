@@ -2,12 +2,13 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import config from 'bsrs-ember/config/environment';
 import injectStore from 'bsrs-ember/utilities/store';
-import TabRoute from 'bsrs-ember/admin/tab/route';
+import TabRoute from 'bsrs-ember/route/tab/route';
 import AddressType from 'bsrs-ember/models/address-type';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 
-var PersonRoute = TabRoute.extend({
+var PersonRoute = Ember.Route.extend({
     store: injectStore('main'),
+    tabList: Ember.inject.service(),
     repository: inject('person'),
     location_repo: inject('location'),
     state_repo: inject('state'),
@@ -47,7 +48,13 @@ var PersonRoute = TabRoute.extend({
         let search = transition.queryParams.search;
         let role_change = transition.queryParams.role_change;
         let location_level_pk = person.get('location_level_pk');
-        let person_locations_children = (search || role_change) && location_level_pk ? location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change) : [];
+        var person_locations_children;
+        if ((search || role_change) && location_level_pk) { 
+            person_locations_children = location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change);
+        } else { 
+            person_locations_children = []; 
+        }
+        this.get('tabList').createTab(this.routeName, this.get('modelName'), person_pk, this.get('templateModelField'), this.get('redirectRoute'));
         return Ember.RSVP.hash({
             model: person,
             model_id: person_pk,

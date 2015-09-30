@@ -1,4 +1,3 @@
-import string
 import random
 
 from django.db import IntegrityError
@@ -63,6 +62,9 @@ def update_login_person(person):
 
 def create_person(username=None, role=None, _many=1):
     '''
+    # TODO: Change this method name to ``create_people`` b/c can
+        create more than 1!
+        
     Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )
 
     Return: the last user created from the `forloop`

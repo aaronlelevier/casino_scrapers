@@ -2,7 +2,7 @@ import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
 var GridRepositoryMixin = Ember.Mixin.create({
-    findWithQuery(page, sort, search, find) {
+    findWithQuery(page, sort, search, find, page_size) {
         let type = this.get('type');
         let url = this.get('url');
         let store = this.get('store');
@@ -15,6 +15,9 @@ var GridRepositoryMixin = Ember.Mixin.create({
         }
         if (search && search !== '') {
             endpoint = endpoint + '&search=' + encodeURIComponent(search);
+        }
+        if (page_size && page_size !== '') {
+            endpoint = endpoint + '&page_size=' + page_size;
         }
         if (find && find !== '') {
             let finds = find.split(',');

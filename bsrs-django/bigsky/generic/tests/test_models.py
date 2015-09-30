@@ -3,10 +3,11 @@ from os.path import dirname, join
 
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.contrib.auth.models import ContentType
 
 from model_mommy import mommy
+from rest_framework.exceptions import ValidationError
 
 from generic.models import MainSetting, Attachment, SavedSearch
 from location.models import LocationLevel
@@ -17,8 +18,10 @@ class SavedSearchTests(TestCase):
 
     def setUp(self):
         self.person = create_single_person()
-        self.saved_search = mommy.make(SavedSearch, person=self.person,
+        self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
             endpoint_name="admin.people.index")
+
+    ### MODEL TESTS
 
     def test_create(self):
         self.assertIsInstance(self.saved_search, SavedSearch)
@@ -35,8 +38,25 @@ class SavedSearchTests(TestCase):
         
     def test_validate_endpoint_name_raise(self):
         self.saved_search.endpoint_name = "not a valid endpoint_name"
-        with self.assertRaises(ValidationError):
+        with self.assertRaises(DjangoValidationError):
             self.saved_search.save()
+
+    def test_validate_person_name_unique(self):
+        with self.assertRaises(ValidationError):
+            mommy.make(SavedSearch, person=self.person, name="foo",
+                endpoint_name="admin.people.index")
+
+    def test_to_dict(self):
+        self.assertEqual(len(self.saved_search.to_dict()), 4)
+        self.assertIsInstance(self.saved_search.to_dict(), dict)
+
+    ### MANAGER TESTS
+
+    def test_person_saved_searches(self):
+        ret = SavedSearch.objects.person_saved_searches(self.person)
+        self.assertIsInstance(ret, list)
+        self.assertIsInstance(ret[0], dict)
+
 
 
 class MainSettingTests(TestCase):
@@ -88,7 +108,7 @@ class AttachmentModelTests(TestCase):
     def test_upload_size(self):
         with self.settings(MAX_UPLOAD_SIZE=0):
             with open(self.image) as f:
-                with self.assertRaises(ValidationError):
+                with self.assertRaises(DjangoValidationError):
                     _file = SimpleUploadedFile(self.image, "file_content",
                         content_type="image/jpeg")
                     attachment = Attachment.objects.create(
