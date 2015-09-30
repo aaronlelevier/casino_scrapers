@@ -13,6 +13,9 @@ var LocationLevelNew = Ember.Component.extend(ValidationMixin, {
             return model.get('id') !== level.get('id'); 
         }); 
     }),
+    tab(){
+        return this.get('store').find('tab', this.get('model.id'));
+    },
     actions: {
         changed(model, val) {
             Ember.run(() => {
@@ -27,12 +30,12 @@ var LocationLevelNew = Ember.Component.extend(ValidationMixin, {
                 var model = this.get('model');
                 var repository = this.get('repository');
                 repository.insert(model).then(() => {
-                    this.sendAction('saveLocationLevel');
+                    this.sendAction('save');
                 });
             }
         },
         cancelLocationLevel() {
-            this.sendAction('redirectUser');
+            this.sendAction('cancel', this.tab());
         }
     }
 });

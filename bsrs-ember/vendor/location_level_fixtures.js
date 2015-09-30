@@ -6,6 +6,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         this.idDistrict = location_level_defaults.idDistrict;
         this.nameCompany = location_level_defaults.nameCompany;
         this.nameRegion = location_level_defaults.nameRegion;
+        this.nameLossPreventionDistrict = location_level_defaults.lossPreventionDistrict;
         // this.nameStore = location_level_defaults.nameStore;
         this.nameDistrict = location_level_defaults.nameDistrict;
         this.allChildrenArray = location_level_defaults.companyChildren;
