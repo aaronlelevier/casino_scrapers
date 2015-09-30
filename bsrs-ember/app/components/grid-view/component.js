@@ -7,6 +7,7 @@ import UpdateFind from 'bsrs-ember/mixins/update-find';
 var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
     page_sizes: ['10', '25', '50', '100'],
     toggleFilter: false,
+    savingFilter: false,
     classNames: ['wrapper'],
     eventbus: Ember.inject.service(),
     _setup: Ember.on('init', function() {
@@ -130,6 +131,14 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
         },
         resetGrid: function() {
             this.setProperties({page: 1, sort: undefined, find: undefined, search: undefined});
+        },
+        toggleSaveFilterSetModal: function() {
+            this.toggleProperty('savingFilter');
+        },
+        invokeSaveFilterSet: function() {
+            this.sendAction('save_filterset', this.get('filtersetName'));
+            this.toggleProperty('savingFilter');
+            this.set('filtersetName', '');
         }
     }
 });

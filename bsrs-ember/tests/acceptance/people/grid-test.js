@@ -8,6 +8,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 
@@ -564,5 +565,17 @@ test('starting with a page size greater than 10 will set the selected', function
         assert.equal(pagination.find('.t-page').length, 1);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
         assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+    });
+});
+
+test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
+    visit(PEOPLE_URL);
+    click('.t-show-save-filterset-modal');
+    andThen(() => {
+        isFocused('.ember-modal-dialog input:first');
+    });
+    click('.t-grid-search-input');
+    andThen(() => {
+        isNotFocused('.ember-modal-dialog input:first');
     });
 });
