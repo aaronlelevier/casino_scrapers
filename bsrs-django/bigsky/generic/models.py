@@ -13,6 +13,14 @@ from util.models import BaseModel, BaseManager, BaseSetting
 
 ### SAVED SEARCHES
 
+class SavedSearchManager(BaseManager):
+
+    def person_saved_searches(self, person):
+        """Used for bootsrapping the Person's SavedSearch's in the 
+        bootsrap config."""
+        return [x.to_dict() for x in self.filter(person=person)]
+
+
 @python_2_unicode_compatible
 class SavedSearch(BaseModel):
     """
@@ -27,6 +35,8 @@ class SavedSearch(BaseModel):
     endpoint_uri = models.CharField(max_length=2048,
         help_text="API Endpoint that this search is saved for. With all keywords "
                   "ordering, and filters, etc...")
+
+    objects = SavedSearchManager()
 
     class Meta:
         ordering = ('-modified',)
@@ -54,6 +64,14 @@ class SavedSearch(BaseModel):
 
             raise ValidationError("Record for: {} with name: {} already exists.".format(
                 self.person, self.name))
+
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "name": self.name,
+            "endpoint_name": self.endpoint_name,
+            "endpoint_uri": self.endpoint_uri
+        }
 
 
 ### SETTINGS

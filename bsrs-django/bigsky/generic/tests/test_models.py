@@ -21,6 +21,8 @@ class SavedSearchTests(TestCase):
         self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
             endpoint_name="admin.people.index")
 
+    ### MODEL TESTS
+
     def test_create(self):
         self.assertIsInstance(self.saved_search, SavedSearch)
 
@@ -43,6 +45,18 @@ class SavedSearchTests(TestCase):
         with self.assertRaises(ValidationError):
             mommy.make(SavedSearch, person=self.person, name="foo",
                 endpoint_name="admin.people.index")
+
+    def test_to_dict(self):
+        self.assertEqual(len(self.saved_search.to_dict()), 4)
+        self.assertIsInstance(self.saved_search.to_dict(), dict)
+
+    ### MANAGER TESTS
+
+    def test_person_saved_searches(self):
+        ret = SavedSearch.objects.person_saved_searches(self.person)
+        self.assertIsInstance(ret, list)
+        self.assertIsInstance(ret[0], dict)
+
 
 
 class MainSettingTests(TestCase):
