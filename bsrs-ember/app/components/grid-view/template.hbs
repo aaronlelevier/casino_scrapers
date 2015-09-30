@@ -12,6 +12,7 @@
                 <div class="form-group">
                     {{grid-search-input placeholder=search_placeholder keyup="keyup"}}
                     <div class="btn-group btn-group-sm">
+                        <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>Save Filter</button>
                         {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
                         {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
                         {{/link-to}}
@@ -20,6 +21,15 @@
             </form>
         </div>
     </header>
+
+    {{#if savingFilter}}
+    {{#focus-tether-dialog target='.t-show-save-filterset-modal' close='toggleSaveFilterSetModal' clickOutsideToClose=true}}
+      <div class="form-group">
+       {{input value=filtersetName class="form-control input-sm t-filterset-name-input" placeholder="Name"}}
+       <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>Save</button>
+      </div>
+    {{/focus-tether-dialog}}
+    {{/if}}
 
     {{#if toggleFilter}}
     {{#focus-tether-dialog container-class='column-filter' target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='center left' targetAttachment='center left' offset='0 14px'}}

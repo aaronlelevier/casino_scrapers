@@ -72,6 +72,12 @@ var ApplicationRoute = Ember.Route.extend({
             store.push('role-type', {id: index+1, name: model});
         });
 
+        let filterset_config = Ember.$('[data-preload-saved-filterset]').html();
+        let filterset_list = JSON.parse(filterset_config);
+        filterset_list.forEach(filterset => {
+            store.push('filterset', filterset);
+        });
+
         let model_default_order_config = Ember.$('[data-preload-default-model-ordering]').html();
         let model_default_order_definitions = JSON.parse(model_default_order_config);
         Object.keys(model_default_order_definitions).forEach(function(key) {
