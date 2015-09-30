@@ -325,7 +325,7 @@ class PersonPutTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
-        self.person = create_person()
+        self.person = create_single_person(name="aaron")
         self.client.login(username=self.person.username, password=self.password)
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
         self.email_type = mommy.make(EmailType)
@@ -516,6 +516,7 @@ class PersonPutTests(APITestCase):
         # Person FK on Contact Nested Model
         create_person_and_contacts(self.person)
         # Post standard data w/o contacts
+        self.data["emails"] = []
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
@@ -530,6 +531,7 @@ class PersonPutTests(APITestCase):
             'number': create._generate_ph(),
             'person': str(self.person.id)
         }]
+        self.data["emails"] = []
         # Post standard data w/o contacts
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
