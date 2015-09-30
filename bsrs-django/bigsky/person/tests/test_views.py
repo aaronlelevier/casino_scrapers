@@ -476,9 +476,9 @@ class PersonPutTests(APITestCase):
     # ADDRESSES
 
     def test_update_person_and_create_address(self):
-        self.assertFalse(self.data['addresses'])
+        address_id = str(uuid.uuid4())
         self.data['addresses'] = [{
-            'id': str(uuid.uuid4()),
+            'id': address_id,
             'type': str(self.address_type.id),
             'person': str(self.person.id),
             'address': create._generate_chars()
@@ -489,7 +489,7 @@ class PersonPutTests(APITestCase):
         self.assertTrue(data['addresses'])
         self.assertEqual(
             self.person,
-            Address.objects.get(id=data['addresses'][0]['id']).person
+            Address.objects.get(id=address_id).person
         )
 
     # PHONE NUMBERS
