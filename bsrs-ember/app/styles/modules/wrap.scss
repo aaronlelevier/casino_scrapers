@@ -64,9 +64,10 @@ section.wrap{
 
                 ul{
                     padding: 0;
-                    margin: 0 0 10px;
+                    margin: 0;
                     font-size: 0.9em;
                     li{
+                        clear: both;
                         line-height: 2rem;
                         a{
                             color: $darkGray;
@@ -75,15 +76,54 @@ section.wrap{
                             display: block;
                             &:hover{
                                 cursor: pointer;
-                                color: $hoverColor;
+                                color: $white;
+                                background-color: $hoverColor;
+                                .fa{
+                                    color: $white;
+                                    &:hover{
+                                        color: $orange;
+                                    }
+                                }
                             }
                             &.active{
-                                color: $activeColor;
+                                color: $white;
+                                background-color: $activeColor;
+                                .fa{
+                                    color: $white;
+                                    &:hover{
+                                        color: $orange;
+                                    }
+                                }
                             }
                             &.active:hover{
                                 cursor: default;
+                                .fa{
+                                    color: $white;
+                                    &:hover{
+                                        cursor: pointer;
+                                        color: $orange;
+                                    }
+                                }
+                            }
+
+                            .fa{
+                                line-height: 1.7rem;
+                                margin-right: 7px;
+                                &:hover{
+                                    color: $orange;
+                                }
                             }
                         }//a
+                        ul{
+                            list-style-type: none;
+                            li{
+                                font-size: 1em;
+                                line-height: 1.7rem;
+                                a{
+                                    padding: 3px 8px 3px 40px;
+                                }
+                            }
+                        }//ul
                         @media screen and (max-width: $mobileDeviceWidth){
                             line-height: 2.3rem;
                         }
