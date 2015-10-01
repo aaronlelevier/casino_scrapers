@@ -160,6 +160,7 @@ test('when click delete, category is deleted and removed from store', (assert) =
     click('.t-delete-btn');
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
+        assert.equal(store.find('category', CATEGORY_DEFAULTS.idOne).get('length'), undefined);
     });
 });
 
@@ -321,5 +322,62 @@ test('clicking and typing into selectize for categories children will not filter
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
+
+test('clicking cancel button will take from detail view to list view', (assert) => {
+    visit(CATEGORIES_URL);
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+    click('.t-grid-data:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(),DETAIL_URL);
+    });
+    click('.t-cancel-btn');
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
+
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
+        });
+    });
+    click('.t-modal-footer .t-modal-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-category-name').val(), CATEGORY_DEFAULTS.nameTwo);
+            assert.equal(find('.t-modal').is(':hidden'), true);
+        });
+    });
+});
+
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-modal').is(':visible'), true);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), CATEGORIES_URL);
+            let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+            assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameOne + '1');
+        });
     });
 });

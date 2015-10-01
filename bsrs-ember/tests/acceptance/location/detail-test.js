@@ -147,7 +147,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             let location = store.find('location', LOCATION_DEFAULTS.idOne);
             assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
         });

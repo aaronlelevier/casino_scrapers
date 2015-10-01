@@ -483,7 +483,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         });
@@ -504,7 +503,6 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             var phone_numbers = store.find('phonenumber', PEOPLE_DEFAULTS.id);
             assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
@@ -526,7 +524,6 @@ test('when user changes an attribute on address and clicks cancel we prompt them
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             var addresses = store.find('address', PEOPLE_DEFAULTS.id);
             assert.equal(addresses.source[0].get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
@@ -548,7 +545,6 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             var phone_numbers = store.find('phonenumber', PEOPLE_DEFAULTS.id);
             assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
@@ -570,7 +566,6 @@ test('when user removes an address clicks cancel we prompt them with a modal and
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             var addresses = store.find('address', PEOPLE_DEFAULTS.id);
             assert.equal(addresses.source[0].get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
@@ -876,7 +871,6 @@ test('when you deep link to the person detail view you can alter the role and ro
         andThen(() => {
             waitFor(() => {
                 assert.equal(currentURL(), PEOPLE_URL);
-                assert.equal(find('.t-modal').is(':hidden'), true);
                 var person = store.find('person', PEOPLE_DEFAULTS.id);
                 assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
                 var actual_role = store.find('role', ROLE_DEFAULTS.idOne);
@@ -1000,7 +994,6 @@ test('when you deep link to the person detail view you can alter the locations a
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             let person = store.find('person', PEOPLE_DEFAULTS.id);
             assert.equal(person.get('locations').get('length'), 0);
             assert.ok(person.get('isNotDirty'));

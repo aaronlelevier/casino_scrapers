@@ -1,31 +1,30 @@
 import Ember from 'ember';
 import injectStore from 'bsrs-ember/utilities/store';
-import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var BaseComponent = Ember.Component.extend(ValidationMixin, {
+var BaseComponent = Ember.Component.extend({
     classNames: ['wrapper', 'form'],
     store: injectStore('main'),
     tab(){
         return this.get('store').find('tab', this.get('model.id'));
     },
     actions: {
+        saveBase() {
+            this.sendAction('saveBase');
+        },
         save() {
-            this.set('submitted', true);
-            if (this.get('valid')) {
-                let model = this.get('model'); 
-                let repository = this.get('repository');
-                repository.update(model).then(() => {
-                    this.sendAction('save', this.tab());
-                });
-            }
+            let model = this.get('model'); 
+            let repository = this.get('repository');
+            repository.update(model).then(() => {
+                this.attrs.save(this.tab());
+            });
         },
         delete() {
             let model = this.get('model');
             let repository = this.get('repository');
-            this.sendAction('delete', this.tab(), model, repository);
+            this.attrs.delete(this.tab(), model, repository);
         },
         cancel() {
-            this.sendAction('cancel', this.tab());
+            this.attrs.cancel(this.tab());
         },
     }
 });

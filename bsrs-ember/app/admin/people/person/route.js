@@ -6,9 +6,8 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 import AddressType from 'bsrs-ember/models/address-type';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 
-var PersonRoute = Ember.Route.extend({
+var PersonRoute = TabRoute.extend({
     store: injectStore('main'),
-    tabList: Ember.inject.service(),
     repository: inject('person'),
     location_repo: inject('location'),
     state_repo: inject('state'),
@@ -54,9 +53,9 @@ var PersonRoute = Ember.Route.extend({
         } else { 
             person_locations_children = []; 
         }
-        this.get('tabList').createTab(this.routeName, this.get('modelName'), person_pk, this.get('templateModelField'), this.get('redirectRoute'));
         return Ember.RSVP.hash({
             model: person,
+            repository: repository,
             model_id: person_pk,
             phone_number_types: phone_number_type_repo.find(),
             countries: country_repo.find(),
@@ -74,6 +73,7 @@ var PersonRoute = Ember.Route.extend({
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);
+        controller.set('repository', hash.repository);
         controller.set('phone_number_types', hash.phone_number_types);
         controller.set('default_phone_number_type', hash.default_phone_number_type);
         controller.set('address_types', hash.address_types);

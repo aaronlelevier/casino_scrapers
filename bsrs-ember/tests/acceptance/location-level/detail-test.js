@@ -202,18 +202,18 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_LEVEL_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
             assert.equal(location_level.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
         });
     });
 });
 
-// test('when click delete, location level is deleted and removed from store', (assert) => {
-//     visit(DETAIL_URL);
-//     xhr(DJANGO_DETAIL_URL, 'DELETE', null, {}, 204, {});
-//     click('.t-delete-btn');
-//     andThen(() => {
-//         assert.equal(currentURL(), LOCATION_LEVEL_URL);
-//     });
-// });
+test('when click delete, location level is deleted and removed from store', (assert) => {
+    visit(DETAIL_URL);
+    xhr(DJANGO_DETAIL_URL, 'DELETE', null, {}, 204, {});
+    click('.t-delete-btn');
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_LEVEL_URL);
+        assert.equal(store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne).get('length'), undefined);
+    });
+});

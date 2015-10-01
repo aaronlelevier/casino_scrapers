@@ -7,6 +7,12 @@ var LocationSingle = BaseComponent.extend(ValidationMixin, {
     repository: inject('location'),
     nameValidation: validate('model.name'),
     actions: {
+        save() {
+            this.set('submitted', true);
+            if (this.get('valid')) {
+                this._super();
+            }
+        },
         changedStatus(model, val) {
             Ember.run(() => {
                 model.set('status', val);

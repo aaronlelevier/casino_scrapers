@@ -3,8 +3,7 @@ import inject from 'bsrs-ember/utilities/inject';
 import BaseComponent from 'bsrs-ember/components/base-component-new/component';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var LocationLevelNew = BaseComponent.extend({
-    repository: inject('location-level'),
+var LocationLevelNew = BaseComponent.extend(ValidationMixin, {
     nameValidation: validate('model.name'),
     filtered_location_levels: Ember.computed('all_location_levels.[]', function() { //TODO: test model.@each is needed or not?
         var model = this.get('model');
@@ -13,6 +12,12 @@ var LocationLevelNew = BaseComponent.extend({
         }); 
     }),
     actions: {
+        save() {
+            this.set('submitted', true);
+            if (this.get('valid')) {
+                this._super();
+            }
+        },
         changed(model, val) {
             Ember.run(() => {
                 var adding = this.get('store').find('location-level', val);
