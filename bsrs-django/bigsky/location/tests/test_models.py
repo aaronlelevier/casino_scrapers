@@ -45,8 +45,6 @@ class SelfRefrencingManagerTests(TestCase):
         first_child.delete()
         self.assertIsNotNone(first_child.deleted)
         # M2M test
-        for location_level in LocationLevel.objects_all.all():
-            print location_level.name, location_level.deleted
         self.assertEqual(
             self.district.children.count(),
             init_count-1
