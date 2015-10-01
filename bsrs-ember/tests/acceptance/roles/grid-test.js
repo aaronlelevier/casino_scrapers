@@ -7,6 +7,7 @@ import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
@@ -536,5 +537,27 @@ test('when a save filterset modal is selected the input inside the modal is focu
     click('.t-grid-search-input');
     andThen(() => {
         isNotFocused('.ember-modal-dialog input:first');
+    });
+});
+
+test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
+    let name = 'foobar';
+    let routePath = 'admin.roles.index';
+    let url = window.location.toString();
+    let query = url.slice(url.indexOf('?'));
+    let section = '.t-side-menu > section:eq(1)';
+    let navigation = '.t-admin-roles-index-navigation li';
+    let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
+    visit(ROLE_URL);
+    click('.t-show-save-filterset-modal');
+    xhr('/api/admin/saved_searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+    saveFilterSet(name, routePath);
+    andThen(() => {
+        let html = find(section);
+        assert.equal(html.find(navigation).length, 2);
+        let filterset = store.find('filterset', UUID.value);
+        assert.equal(filterset.get('name'), name);
+        assert.equal(filterset.get('endpoint_name'), routePath);
+        assert.equal(filterset.get('endpoint_uri'), query);
     });
 });
