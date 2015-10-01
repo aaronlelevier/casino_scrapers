@@ -17,6 +17,15 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
         fields = ('id', 'name',)
 
 
+class CategoryRoleSerializer(BaseCreateSerializer):
+    '''
+    Serializer for Role detail
+    '''
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'status',)
+
+
 class CategoryListSerializer(BaseCreateSerializer):
 
     class Meta:

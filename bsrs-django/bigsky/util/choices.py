@@ -9,6 +9,11 @@ PERSON_STATUS_CHOICES = (
     ('two', 'two'),
 )
 
+CATEGORY_STATUS_CHOICES = (
+    ('active', 'active'),
+    ('two', 'two'),
+)
+
 ROLE_TYPE_CHOICES = (
     ('Internal', 'Internal'),
     ('Third Party', 'Third Party'),

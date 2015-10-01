@@ -16,8 +16,16 @@ class RoleViewSet(BaseModelViewSet):
     API endpoint that allows roles to be viewed or edited.
     """
     queryset = Role.objects.all()
-    serializer_class = ps.RoleSerializer
     permission_classes = (permissions.IsAuthenticated,)
+
+    def get_serializer_class(self):
+        """
+        set the serializer based on the method
+        """
+        if self.action == 'retrieve':
+            return ps.RoleDetailSerializer
+        else:
+             return ps.RoleSerializer
 
 
 class PersonStatusViewSet(BaseModelViewSet):

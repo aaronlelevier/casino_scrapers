@@ -6,6 +6,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location
+from category.models import Category
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
 from util import create
@@ -13,22 +14,23 @@ from util import create
 
 PASSWORD = '1234'
 LOCATION_LEVEL = 'region'
+CATEGORY = 'repair'
 
 def create_role():
     "Single Role needed to create Person with Login privileges."
 
     currency = Currency.objects.default()
+    location_level, created = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
+    category, created = Category.objects.get_or_create(name=CATEGORY)
 
-    try:
-        location_level = LocationLevel.objects.get(name=LOCATION_LEVEL)
-    except LocationLevel.DoesNotExist:
-        location_level = mommy.make(LocationLevel, name=LOCATION_LEVEL)
-
-    return mommy.make(Role, name=create._generate_chars(), location_level=location_level)
+    return mommy.make(Role, name=create._generate_chars(), location_level=location_level, category=category)
 
 
 def create_roles():
     "Create a Role for each LocationLevel"
+
+    category, created = Category.objects.get_or_create(name=CATEGORY)
+    
     # initial Locations
     try:
         create_locations()
@@ -37,7 +39,7 @@ def create_roles():
 
     for location_level in LocationLevel.objects.all():
         mommy.make(Role, name='{}-role'.format(location_level.name),
-            location_level=location_level)
+            location_level=location_level, category=category)
 
     return Role.objects.all()
 
