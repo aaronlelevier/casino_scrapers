@@ -1,5 +1,6 @@
-import BaseController from 'bsrs-ember/controller/base-controller';
+import Ember from 'ember';
+import TabActionMixin from 'bsrs-ember/mixins/controller/tab-actions';
 
-var RoleController = BaseController.extend({
+var RoleController = Ember.Controller.extend(TabActionMixin, {
 });
 export default RoleController;

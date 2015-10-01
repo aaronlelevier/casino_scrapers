@@ -7,6 +7,8 @@ import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import UUID from 'bsrs-ember/vendor/defaults/uuid';
+import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 
@@ -525,5 +527,39 @@ test('starting with a page size greater than 10 will set the selected', function
         assert.equal(pagination.find('.t-page').length, 1);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
         assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+    });
+});
+
+test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
+    visit(CATEGORY_URL);
+    click('.t-show-save-filterset-modal');
+    andThen(() => {
+        isFocused('.ember-modal-dialog input:first');
+    });
+    click('.t-grid-search-input');
+    andThen(() => {
+        isNotFocused('.ember-modal-dialog input:first');
+    });
+});
+
+test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
+    let name = 'foobar';
+    let routePath = 'admin.categories.index';
+    let url = window.location.toString();
+    let query = url.slice(url.indexOf('?'));
+    let section = '.t-side-menu > section:eq(3)';
+    let navigation = '.t-admin-categories-index-navigation li';
+    let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
+    visit(CATEGORY_URL);
+    click('.t-show-save-filterset-modal');
+    xhr('/api/admin/saved_searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+    saveFilterSet(name, routePath);
+    andThen(() => {
+        let html = find(section);
+        assert.equal(html.find(navigation).length, 1);
+        let filterset = store.find('filterset', UUID.value);
+        assert.equal(filterset.get('name'), name);
+        assert.equal(filterset.get('endpoint_name'), routePath);
+        assert.equal(filterset.get('endpoint_uri'), query);
     });
 });

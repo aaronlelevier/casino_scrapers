@@ -1,6 +1,7 @@
-import BaseController from 'bsrs-ember/controller/base-controller';
+import Ember from 'ember';
+import TabActionMixin from 'bsrs-ember/mixins/controller/tab-actions';
 
-var LocationController = BaseController.extend({
+var LocationController = Ember.Controller.extend(TabActionMixin, {
 });
 export default LocationController;
 
