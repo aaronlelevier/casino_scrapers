@@ -49,6 +49,7 @@ export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
 
 ../venv/bin/python manage.py loaddata fixtures/jenkins.json
 ../venv/bin/python manage.py loaddata fixtures/jenkins_custom.json
+../venv/bin/python manage.py collectstatic --noinput
 
 uwsgi --http :$PORT \
     --wsgi-file bigsky.wsgi \
