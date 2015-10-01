@@ -485,7 +485,10 @@ test('starting with a page size greater than 10 will set the selected', function
 });
 
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
+    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    xhr(sort_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name', 1));
     visit(LOCATION_LEVEL_URL);
+    click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
     andThen(() => {
         isFocused('.ember-modal-dialog input:first');
@@ -497,6 +500,8 @@ test('when a save filterset modal is selected the input inside the modal is focu
 });
 
 test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
+    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    xhr(sort_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name', 1));
     let name = 'foobar';
     let routePath = 'admin.location-levels.index';
     let url = window.location.toString();
@@ -505,6 +510,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     let navigation = '.t-admin-location-levels-index-navigation li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
     visit(LOCATION_LEVEL_URL);
+    click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
     xhr('/api/admin/saved_searches/', 'POST', JSON.stringify(payload), {}, 200, {});
     saveFilterSet(name, routePath);
