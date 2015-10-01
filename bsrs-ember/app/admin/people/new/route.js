@@ -17,7 +17,7 @@ var PersonNew = TabRoute.extend({
         let role_repo = this.get('role_repo');
         let roles = this.get('store').find('role');
         return Ember.RSVP.hash({
-            model: this.get('store').push('person', {id: pk, new: true}),
+            model: this.get('store').push('person', {id: pk}),
             repository: repository,
             roles: roles
         });

@@ -1,10 +1,8 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import injectStore from 'bsrs-ember/utilities/store';
 
 var TabNewRoute = Ember.Route.extend({
     tabList: Ember.inject.service(),
-    store: injectStore('main'),
     afterModel(model, transition) {
         this.get('tabList').createTab(this.routeName, this.get('modelName'), model.model.get('id'), this.get('templateModelField'), this.get('redirectRoute'), true);
     },

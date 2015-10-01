@@ -19,9 +19,8 @@ var BaseComponent = Ember.Component.extend({
             });
         },
         delete() {
-            let model = this.get('model');
             let repository = this.get('repository');
-            this.attrs.delete(this.tab(), model, repository);
+            this.attrs.delete(this.tab(), repository);
         },
         cancel() {
             this.attrs.cancel(this.tab());

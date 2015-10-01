@@ -20,7 +20,7 @@ var CategoryNewRoute = TabRoute.extend({
         let repository = this.get('repository');
         let categories_children = repository.findCategoryChildren(search) || [];
         let pk = this.get('uuid').v4();
-        let model = this.get('store').push('category', {id: pk, new: true});
+        let model = this.get('store').push('category', {id: pk});
         return Ember.RSVP.hash({
             model: model,
             repository: repository,

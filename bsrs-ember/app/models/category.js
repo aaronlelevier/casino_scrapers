@@ -1,9 +1,8 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 
-var CategoryModel = Model.extend(NewMixin, {
+var CategoryModel = Model.extend({
     store: inject('main'),
     name: attr(''),
     description: attr(''),

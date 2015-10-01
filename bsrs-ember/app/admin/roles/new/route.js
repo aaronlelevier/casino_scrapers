@@ -15,7 +15,7 @@ var RoleNewRoute = TabRoute.extend({
         let all_role_types = this.get('store').find('role-type');
         let default_role_type = all_role_types.objectAt(0).get('name');
         let all_location_levels = this.get('store').find('location-level');
-        let model = this.get('store').push('role', {id: pk, new: true, role_type: default_role_type});
+        let model = this.get('store').push('role', {id: pk, role_type: default_role_type});
         return Ember.RSVP.hash({
             model: model,
             repository: repository,

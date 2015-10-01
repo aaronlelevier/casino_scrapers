@@ -1,9 +1,8 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 
-export default Model.extend(NewMixin, {
+var RoleModel = Model.extend({
     store: inject('main'),
     name: attr(''),
     people: attr([]),
@@ -98,3 +97,5 @@ export default Model.extend(NewMixin, {
         return name ? name : '';
     }
 });
+
+export default RoleModel;
