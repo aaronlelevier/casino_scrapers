@@ -33,17 +33,22 @@ export PGPASSWORD=tango
 dropdb $DB_NAME -U bsdev
 createdb $DB_NAME -U bsdev -O bsdev
 
-cd bigsky/
+cd bigsky
+
+rm -rf templates/index.html
+rm -rf ember
+mkdir ember
+
+cp -r ../../bsrs-ember/dist/assets ember/assets
+cp -r ../../bsrs-ember/dist/fonts ember/fonts
+cp -r ../../bsrs-ember/dist/index.html templates
+
 export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
 ../venv/bin/python manage.py makemigrations
 ../venv/bin/python manage.py migrate
 
 ../venv/bin/python manage.py loaddata fixtures/jenkins.json
 ../venv/bin/python manage.py loaddata fixtures/jenkins_custom.json
-
-cp -r ../../bsrs-ember/dist/assets .
-cp -r ../../bsrs-ember/dist/fonts .
-cp -r ../../bsrs-ember/dist/index.html templates
 
 uwsgi --http :$PORT \
     --wsgi-file bigsky.wsgi \
