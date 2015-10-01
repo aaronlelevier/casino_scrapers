@@ -540,3 +540,16 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
         assert.equal(section.find(navigation).length, 0);
     });
 });
+
+test('save filterset button only available when a dynamic filter is present', function(assert) {
+    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    xhr(sort_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name', 1));
+    visit(LOCATION_LEVEL_URL);
+    andThen(() => {
+        assert.equal(find('.t-show-save-filterset-modal').length, 0);
+    });
+    click('.t-sort-name-dir');
+    andThen(() => {
+        assert.equal(find('.t-show-save-filterset-modal').length, 1);
+    });
+});
