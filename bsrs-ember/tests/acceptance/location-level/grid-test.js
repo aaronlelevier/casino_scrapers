@@ -517,3 +517,26 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
         assert.equal(filterset.get('endpoint_uri'), query);
     });
 });
+
+test('delete filterset will fire off xhr and remove item from the sidebar navigation', function(assert) {
+    let name = 'foobar';
+    let routePath = 'admin.location-levels.index';
+    let query = '?foo=bar';
+    let navigation = '.t-admin-location-levels-index-navigation li';
+    let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
+    visit(LOCATION_LEVEL_URL);
+    clearAll(store, 'filterset');
+    andThen(() => {
+        store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
+    });
+    andThen(() => {
+        let section = find('.t-side-menu > section:eq(2)');
+        assert.equal(section.find(navigation).length, 1);
+    });
+    xhr('/api/admin/saved_searches/' + UUID.value + '/', 'DELETE', null, {}, 204, {});
+    click(navigation + '> a > .t-remove-filterset:eq(0)');
+    andThen(() => {
+        let section = find('.t-side-menu > section:eq(2)');
+        assert.equal(section.find(navigation).length, 0);
+    });
+});

@@ -19,6 +19,11 @@ var FilterSetRepository = Ember.Object.extend({
     fetch() {
         let store = this.get('store');
         return store.find('filterset');
+    },
+    delete(id) {
+        let store = this.get('store');
+        PromiseMixin.xhr(FILTERSET_URL + id + '/', 'DELETE');
+        store.remove('filterset', id);
     }
 });
 
