@@ -143,13 +143,11 @@ section.wrap{
                 color: $darkGray;
             }
             .btn-group{
-                @include vertical-align;
                 z-index: 2;
-                margin: -1px 0 0;
+                margin: 5px 0 0;
             }
-            .form-inline{
-                height: auto;
-                line-height: 1;
+            .search-wrap{
+                margin: 5px 0 0;
             }
             span.add-btn {
                 width: 75px;

@@ -1,22 +1,23 @@
 <div class="rowTable">
-    <header>
-        <h1 class="t-grid-title">{{grid_title}}</h1>
-        {{#unless model.isLoaded}}
-        {{grid-loading-graphic}}
-        {{/unless}}
-        <div class="control-menu pull-right">
-            <form class="form-inline" onsubmit="return false;">
-                <div class="form-group">
-                    {{grid-search-input placeholder=search_placeholder keyup="keyup"}}
-
-                    <div class="btn-group btn-group-sm">
-                        <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>Save Filter</button>
-                        {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
-                        {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-                        {{/link-to}}
-                    </div>
+    <header class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <h1 class="t-grid-title">{{grid_title}}</h1>
+                {{#unless model.isLoaded}}
+                {{grid-loading-graphic}}
+                {{/unless}}
+            </div>
+            <div class="col-md-4 text-center search-wrap">
+                {{grid-search-input placeholder=search_placeholder keyup="keyup"}}
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right btn-group btn-group-sm">
+                    <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>Save Filter</button>
+                    {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
+                    {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+                    {{/link-to}}
                 </div>
-            </form>
+            </div>
         </div>
     </header>
 
@@ -66,31 +67,39 @@
         </div>
     </section>
 
-    <footer>
-        <span class="pull-left t-page-count">{{model.count}} {{plural}}</span>
-        {{#if (filters-applied sort find search)}}
-        <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>Reset all options</span>
-        {{/if}}
-        <nav class="text-center" style="display: inline; padding-left: 40%;">
-            <ul class="pagination t-pages">
-                <li class="t-first {{if first '' 'disabled'}}" disabled={{if first disabled ''}}>{{#link-to list_url (query-params page=first) disabled=notFirst}}&laquo;{{/link-to}}</li>
-                <li class="t-previous {{if previous '' 'disabled'}}" disabled={{if previous disabled ''}}>{{#link-to list_url (query-params page=previous) disabled=notPrevious}}&lsaquo;{{/link-to}}</li>
-                {{#each shown_pages as |page|}}
-                <li class="t-page">
-                    {{#link-to list_url (query-params page=page)}}{{page}}{{/link-to}}
-                </li>
-                {{/each}}
-                <li class="t-next {{if next '' 'disabled'}}" disabled={{if next disabled ''}}>{{#link-to list_url (query-params page=next) disabled=notNext}}&rsaquo;{{/link-to}}</li>
-                <li class="t-last {{if last '' 'disabled'}}" disabled={{if last disabled ''}}>{{#link-to list_url (query-params page=last) disabled=notLast}}&raquo;{{/link-to}}</li>
-            </ul>
-        </nav>
-        <span class="text-right pull-right t-page-size">
-          <select class="form-control" onchange={{action "togglePageSize" value="target.value"}}>
-            {{#each page_sizes as |size|}}
-              <option value={{size}} selected={{is-equal page_size size}}>{{size}} per page</option>
-            {{/each}}
-          </select>
-        </span>
+    <footer class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <span class="pull-left t-page-count">{{model.count}} {{plural}}</span>
+                {{#if (filters-applied sort find search)}}
+                <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>Reset all options</span>
+                {{/if}}
+            </div>
+            <div class="col-md-4">
+                <nav class="text-center">
+                    <ul class="pagination t-pages">
+                        <li class="t-first {{if first '' 'disabled'}}" disabled={{if first disabled ''}}>{{#link-to list_url (query-params page=first) disabled=notFirst}}&laquo;{{/link-to}}</li>
+                        <li class="t-previous {{if previous '' 'disabled'}}" disabled={{if previous disabled ''}}>{{#link-to list_url (query-params page=previous) disabled=notPrevious}}&lsaquo;{{/link-to}}</li>
+                        {{#each shown_pages as |page|}}
+                        <li class="t-page">
+                            {{#link-to list_url (query-params page=page)}}{{page}}{{/link-to}}
+                        </li>
+                        {{/each}}
+                        <li class="t-next {{if next '' 'disabled'}}" disabled={{if next disabled ''}}>{{#link-to list_url (query-params page=next) disabled=notNext}}&rsaquo;{{/link-to}}</li>
+                        <li class="t-last {{if last '' 'disabled'}}" disabled={{if last disabled ''}}>{{#link-to list_url (query-params page=last) disabled=notLast}}&raquo;{{/link-to}}</li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-4">
+                <span class="text-right pull-right page-size t-page-size">
+                  <select class="form-control input-sm" onchange={{action "togglePageSize" value="target.value"}}>
+                    {{#each page_sizes as |size|}}
+                      <option value={{size}} selected={{is-equal page_size size}}>{{size}} per page</option>
+                    {{/each}}
+                  </select>
+                </span>
+            </div>
+        </div>
     </footer>
 
 </div>

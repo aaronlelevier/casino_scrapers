@@ -31,16 +31,21 @@ div.rowTable {
             }
         }
     }
-    footer nav{
-        ul.pagination{
-            margin: 8px 0 0;
-            li{
-                a.active{
-                    background: $activeColor;
-                    border-color: $activeColor;
-                    color: $white;
+    footer{
+        nav{
+            ul.pagination{
+                margin: 4px 0 0;
+                li{
+                    a.active{
+                        background: $activeColor;
+                        border-color: $activeColor;
+                        color: $white;
+                    }
                 }
             }
+        }
+        .page-size{
+            margin: 4px 0 0;
         }
     }
 }//section#userTable
