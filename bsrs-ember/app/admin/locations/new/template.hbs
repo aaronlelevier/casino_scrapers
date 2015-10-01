@@ -1,6 +1,8 @@
-{{locations/new-location 
-  model=model
-  all_location_levels=all_location_levels
-  save="closeTabMaster"
-  cancel="closeTabMaster"
-}}
+  {{locations/new-location 
+    model=model
+    repository=repository
+    all_location_levels=all_location_levels
+    save=(action "tabManagement")
+    saveBase="save"
+    cancel=(action "tabManagement")
+  }}

@@ -1,15 +1,9 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/inject';
-import injectStore from 'bsrs-ember/utilities/store';
+import BaseComponent from 'bsrs-ember/components/base-component-new/component';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var RoleNew = Ember.Component.extend(ValidationMixin, {
-    repository: inject('role'),
+var RoleNew = BaseComponent.extend(ValidationMixin, {
     nameValidation: validate('model.name'),
-    store: injectStore('main'),
-    tab(){
-        return this.get('store').find('tab', this.get('model.id'));
-    },
     actions: {
         changed(model, val) {
             Ember.run(() => {
@@ -24,15 +18,8 @@ var RoleNew = Ember.Component.extend(ValidationMixin, {
         save() {
             this.set('submitted', true);
             if (this.get('valid')) {
-                var model = this.get('model');
-                var repository = this.get('repository');
-                repository.insert(model).then(() => {
-                    this.sendAction('save');   
-                });
+                this._super();
             }
-        },
-        cancel() {
-            this.sendAction('cancel', this.tab());
         }
     }
 });

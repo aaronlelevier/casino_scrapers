@@ -21,26 +21,16 @@ var RoleRoute = TabRoute.extend({
         return Ember.RSVP.hash({
             model: role,
             all_role_types: all_role_types,
-            all_location_levels: all_location_levels
+            all_location_levels: all_location_levels,
+            repository: repository
         });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
         controller.set('all_role_types', hash.all_role_types);
         controller.set('all_location_levels', hash.all_location_levels);
-    },
-    actions: {
-        deleteRole() {
-            var model = this.modelFor('admin.roles.role');
-            // model.destroyRecord().then(() => {
-            //   this.transitionTo('admin.people');
-            // });
-            this.transitionTo('admin.roles');
-        },
-        redirectUser() {
-            this.transitionTo('admin.roles');
-        }
-    }
+        controller.set('repository', hash.repository);
+    } 
 });
 
 export default RoleRoute;

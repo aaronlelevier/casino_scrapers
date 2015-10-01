@@ -124,7 +124,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), ROLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             let role = store.find('role', {id: UUID.value});
             assert.equal(role.get('length'), 0);
         });

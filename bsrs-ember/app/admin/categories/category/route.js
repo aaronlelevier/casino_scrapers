@@ -15,27 +15,25 @@ var CategorySingleRoute = TabRoute.extend({
     model(params, transition) {
         let pk = params.category_id;
         let search = transition.queryParams.search;
-        let categories_children = this.get('repository').findCategoryChildren(search) || [];
+        let repository = this.get('repository');
+        let categories_children = repository.findCategoryChildren(search) || [];
         let category = this.get('store').find('category', pk);
         if (!category.get('length') || category.get('isNotDirtyOrRelatedNotDirty')) { 
-            category = this.get('repository').findById(pk);
+            category = repository.findById(pk);
         }
         return Ember.RSVP.hash({
             model: category,
             categories_children: categories_children,
-            search: search
+            search: search,
+            repository: repository
         });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
         controller.set('categories_children', hash.categories_children);
         controller.set('search', hash.search);
+        controller.set('repository', hash.repository);
     },
-    actions: {
-        redirectUser() {
-            this.transitionTo('admin.categories');
-        }
-    }
 });
 
 export default CategorySingleRoute;

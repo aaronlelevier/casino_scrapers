@@ -1,20 +1,22 @@
-{{person-single
-  model=model
-  save="closeTabMaster"
-  cancel="closeTabMaster"
-  delete="deleteAndCloseTabMaster"
-  localeChanged="localeChanged"
-  state_list=state_list
-  countries=countries
-  address_types=address_types
-  phone_number_types=phone_number_types
-  statuses=statuses
-  locales=locales
-  default_phone_number_type=default_phone_number_type
-  default_address_type=default_address_type
-  roles=roles
-  localeChanged="localeChanged"
-  search=search
-  role_change=role_change
-  person_locations_children=person_locations_children
-}}
+  {{person-single
+    model=model
+    repository=repository
+    save=(action "tabManagement")
+    saveBase="save"
+    cancel=(action "tabManagement")
+    delete=(action "deleteTabManagement")
+    localeChanged="localeChanged"
+    state_list=state_list
+    countries=countries
+    address_types=address_types
+    phone_number_types=phone_number_types
+    statuses=statuses
+    locales=locales
+    default_phone_number_type=default_phone_number_type
+    default_address_type=default_address_type
+    roles=roles
+    localeChanged="localeChanged"
+    search=search
+    role_change=role_change
+    person_locations_children=person_locations_children
+  }}

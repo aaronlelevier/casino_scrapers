@@ -20,7 +20,8 @@ var LocationRoute = TabRoute.extend({
         return Ember.RSVP.hash({
             model: location,
             all_location_levels: all_location_levels,
-            all_statuses: all_statuses
+            all_statuses: all_statuses,
+            repository: repository
         });
 
     },
@@ -28,11 +29,7 @@ var LocationRoute = TabRoute.extend({
         controller.set('model', hash.model);
         controller.set('all_location_levels', hash.all_location_levels);
         controller.set('all_statuses', hash.all_statuses);
-    },
-    actions: {
-        redirectUser() {
-            this.transitionTo('admin.locations');
-        }
+        controller.set('repository', hash.repository);
     }
 });
 

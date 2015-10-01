@@ -1,6 +1,7 @@
 import Ember from 'ember';
+import BaseController from 'bsrs-ember/controller/base-controller';
 
-var CategoryController = Ember.Controller.extend({
+var CategoryController = BaseController.extend({
     queryParams: ['search'],
     search: undefined,
 });
