@@ -1,6 +1,8 @@
-{{location-level
-  model=model
-  save="closeTabMaster" 
-  cancel="closeTabMaster"
-  delete="deleteAndCloseTabMaster"
-}}
+  {{location-level
+    model=model
+    repository=repository
+    save=(action "tabManagement")
+    saveBase="save"
+    cancel=(action "tabManagement")
+    delete=(action "deleteTabManagement")
+  }}

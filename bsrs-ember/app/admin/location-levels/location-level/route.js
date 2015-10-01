@@ -2,7 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
 
-var LocationLevelSingle = TabRoute.extend({
+var LocationLevelRoute = TabRoute.extend({
     repository: inject('location-level'),
     redirectRoute: Ember.computed(function() { return 'admin.location-levels.index'; }),
     modelName: Ember.computed(function() { return 'location-level'; }),
@@ -14,14 +14,16 @@ var LocationLevelSingle = TabRoute.extend({
         if (!location_level.get('length') || location_level.get('isNotDirtyOrRelatedNotDirty')) { 
             location_level = repository.findById(location_level_pk);
         }
-        return location_level;
-    },
-    actions: {
-        redirectUser() {
-            this.transitionTo('admin.location-levels');
-        }
+        return Ember.RSVP.hash({
+            model: location_level,
+            repository: repository
+        });
+    }, 
+    setupController: function(controller, hash) {
+        controller.set('model', hash.model);
+        controller.set('repository', hash.repository);
     }
 });
 
-export default LocationLevelSingle;
+export default LocationLevelRoute;
 

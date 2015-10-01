@@ -1,6 +1,10 @@
-{{person-new 
-  model=model 
-  roles=roles
-  save="editPerson" 
-  cancel="closeTabMaster"
-}}
+  {{person-new 
+    model=model 
+    repository=repository
+    roles=roles
+    save=(action "tabManagement")
+    saveBase="save"
+    cancel=(action "tabManagement")
+    editPerson="editPerson"
+  }}
+

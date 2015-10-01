@@ -1,8 +1,9 @@
-{{roles/new-role
-  model=model 
-  save="redirectUser"
-  cancel="closeTabMaster"
-  all_role_types=all_role_types
-  all_location_levels=all_location_levels
-}}
-
+  {{roles/new-role
+    model=model 
+    repository=repository
+    all_role_types=all_role_types
+    all_location_levels=all_location_levels
+    save=(action "tabManagement")
+    saveBase="save"
+    cancel=(action "tabManagement")
+  }}

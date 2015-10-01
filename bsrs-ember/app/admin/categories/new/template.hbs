@@ -1,9 +1,9 @@
-{{categories/category-new 
-  model=model
-  save="closeTabMaster" 
-  cancel="closeTabMaster"
-  delete="deleteAndCloseTabMaster"
-  search=search
-  categories_children=categories_children
-}}
-
+  {{categories/category-new 
+    model=model
+    repository=repository
+    search=search
+    categories_children=categories_children
+    save=(action "tabManagement")
+    saveBase="save"
+    cancel=(action "tabManagement")
+  }}

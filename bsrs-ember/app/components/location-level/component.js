@@ -24,6 +24,14 @@ var LocationLevelComponent = BaseComponent.extend(ValidationMixin, {
         });
         return name_arr;
     }),
+    actions: {
+        save() {
+            this.set('submitted', true);
+            if (this.get('valid')) {
+                this._super();
+            }
+        }
+    }
 });
 
 export default LocationLevelComponent;

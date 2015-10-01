@@ -193,7 +193,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), CATEGORIES_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             let category = store.find('category', {id: UUID.value});
             assert.equal(category.get('length'), 0);
             assert.equal(find('tr.t-category-data').length, 0);
