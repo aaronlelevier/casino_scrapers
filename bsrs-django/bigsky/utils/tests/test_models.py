@@ -13,9 +13,9 @@ from bigsky.urls import router
 from person.models import Role
 from person.tests.factory import create_person, create_role
 from translation.models import Locale
-from util import create, choices, helpers
-from util.models import Tester
-from util.permissions import perms_map
+from utils import create, choices, helpers
+from utils.models import Tester
+from utils.permissions import perms_map
 
 
 class HelperTests(TestCase):
@@ -102,8 +102,8 @@ class TesterTests(TestCase):
 class TesterPermissionTests(TestCase):
 
     def setUp(self):
-        self.model = Tester.__name__.lower() # returns: 'tester'
-        self.ct = ContentType.objects.get(app_label="util", model=self.model)
+        self.model_name = Tester.__name__.lower() # returns: 'tester'
+        self.ct = ContentType.objects.get(app_label="utils", model=self.model_name)
 
     def test_perms(self):
         ct = self.ct
@@ -111,7 +111,7 @@ class TesterPermissionTests(TestCase):
 
         # perm doesn't exit yet
         with self.assertRaises(ObjectDoesNotExist):
-            Permission.objects.get(content_type=ct, codename='view_{}'.format(self.model))
+            Permission.objects.get(content_type=ct, codename='view_{}'.format(self.model_name))
 
         # create perm
         # VARs
@@ -124,7 +124,7 @@ class TesterPermissionTests(TestCase):
                 return Permission.objects.create(name=name, codename=codename, content_type=ct)
 
         self.assertIsInstance(
-            Permission.objects.get(content_type=ct, codename='view_{}'.format(self.model)),
+            Permission.objects.get(content_type=ct, codename='view_{}'.format(self.model_name)),
             Permission
             )
 
@@ -132,13 +132,13 @@ class TesterPermissionTests(TestCase):
 class TesterPermissionAlreadyCreatedTests(TransactionTestCase):
 
     def test_perms(self):
-        self.model = Tester.__name__.lower() # returns: 'tester'
-        self.ct = ContentType.objects.get(app_label="util", model=self.model)
+        self.model_name = Tester.__name__.lower() # returns: 'tester'
+        self.ct = ContentType.objects.get(app_label="utils", model=self.model_name)
 
         create._create_model_view_permissions()
 
         self.assertIsInstance(
-            Permission.objects.get(content_type=self.ct, codename='view_{}'.format(self.model)),
+            Permission.objects.get(content_type=self.ct, codename='view_{}'.format(self.model_name)),
             Permission
             )
 

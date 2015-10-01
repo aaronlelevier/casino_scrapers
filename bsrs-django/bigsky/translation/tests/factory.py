@@ -1,7 +1,7 @@
 import copy
 
 from translation.models import Locale, Translation
-from util.create import random_lorem
+from utils.create import random_lorem
 
 
 ### HELPER FUNCTIONS

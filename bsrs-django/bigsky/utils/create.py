@@ -4,7 +4,7 @@ import string
 from django.db import IntegrityError
 from django.contrib.auth.models import ContentType, Group, Permission
 
-from util.permissions import perms_map
+from utils.permissions import perms_map
 
 
 LOREM_IPSUM_WORDS = u'''\

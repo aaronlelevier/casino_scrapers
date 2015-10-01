@@ -17,8 +17,8 @@ from person.models import Role, PersonStatus, Person
 from location.models import (Location, LocationLevel, LocationStatus,
     State, Country)
 from translation.models import Locale
-from util import choices
-from util.helpers import model_to_json, choices_to_json, current_locale
+from utils import choices
+from utils.helpers import model_to_json, choices_to_json, current_locale
 
 
 class IndexView(TemplateView):

@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError
 
 from person.models import Person
-from util.models import BaseModel, BaseManager, BaseSetting
+from utils.models import BaseModel, BaseManager, BaseSetting
 
 
 ### SAVED SEARCHES

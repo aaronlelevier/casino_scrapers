@@ -7,7 +7,7 @@ from django.db.models.sql.constants import QUERY_TERMS
 from rest_framework import viewsets, exceptions, status
 from rest_framework.response import Response
 
-from util.mixins import DestroyModelMixin, OrderingQuerySetMixin
+from utils.mixins import DestroyModelMixin, OrderingQuerySetMixin
 
 
 class BaseModelViewSet(DestroyModelMixin, OrderingQuerySetMixin, viewsets.ModelViewSet):

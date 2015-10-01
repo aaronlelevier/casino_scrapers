@@ -17,7 +17,7 @@ from generic import views as generic_views
 from location import views as location_views
 from person import views as person_views
 from translation import views as translation_views
-from util.decorators import required, logout_required
+from utils.decorators import required, logout_required
 
 
 admin.autodiscover()

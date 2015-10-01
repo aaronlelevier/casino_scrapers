@@ -19,8 +19,8 @@ from location.models import LocationLevel, Location
 from person import helpers
 from order.models import WorkOrderStatus
 from translation.models import Locale
-from util import choices, create
-from util.models import AbstractName, BaseModel, BaseManager
+from utils import choices, create
+from utils.models import AbstractName, BaseModel, BaseManager
 
 
 class RoleManager(BaseManager):

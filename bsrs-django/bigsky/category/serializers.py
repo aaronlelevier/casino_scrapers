@@ -1,5 +1,5 @@
 from category.models import Category
-from util.serializers import BaseCreateSerializer
+from utils.serializers import BaseCreateSerializer
 
 
 ### CATEGORY

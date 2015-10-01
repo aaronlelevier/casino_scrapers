@@ -4,7 +4,7 @@ from django.db import models
 from django.conf import settings
 
 from accounting.models import Currency
-from util.models import AbstractName, BaseManager, BaseModel
+from utils.models import AbstractName, BaseManager, BaseModel
 
 
 ### CATEGORY

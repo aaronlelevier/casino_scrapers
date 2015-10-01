@@ -8,7 +8,7 @@ from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
-from util.views import BaseModelViewSet
+from utils.views import BaseModelViewSet
 
 class SelfReferencingRouteMixin(object):
 

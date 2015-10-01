@@ -3,8 +3,8 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from person.models import Person
 from location.models import Location
-from util.models import AbstractNameOrder, BaseModel
-from util import exceptions as excp
+from utils import exceptions as excp
+from utils.models import AbstractNameOrder, BaseModel
 
 
 class ContactBaseModel(BaseModel):

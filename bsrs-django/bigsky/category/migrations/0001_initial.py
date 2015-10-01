@@ -19,7 +19,7 @@ class Migration(migrations.Migration):
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
-                ('name', models.CharField(unique=True, max_length=100)),
+                ('name', models.CharField(max_length=100)),
                 ('description', models.CharField(max_length=100, null=True, blank=True)),
                 ('label', models.CharField(help_text=b'This field cannot be set directly.  It is either set from a system setting, or defaulted from the Parent Category.', max_length=100, null=True, editable=False, blank=True)),
                 ('subcategory_label', models.CharField(max_length=100)),
@@ -29,6 +29,7 @@ class Migration(migrations.Migration):
                 ('parent', models.ForeignKey(related_name='children', blank=True, to='category.Category', null=True)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
