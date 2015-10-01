@@ -1,7 +1,7 @@
 import Ember from 'ember';
-import BaseController from 'bsrs-ember/controller/base-controller';
+import TabActionMixin from 'bsrs-ember/mixins/controller/tab-actions';
 
-var PersonController = BaseController.extend({
+var PersonController = Ember.Controller.extend(TabActionMixin, {
     queryParams: ['search', 'role_change'],
     search: undefined,
     role_change: undefined,
