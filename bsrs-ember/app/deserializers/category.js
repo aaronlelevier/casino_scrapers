@@ -2,6 +2,7 @@ import Ember from 'ember';
 
 var extract_children = (children, store) => {
     let children_fks = [];
+    //SCOTT: need to think about recursive calls or one level deep and pushing categories in the store
     children.forEach((child_model) => {
         children_fks.push(child_model.id);
         store.push('category', child_model);

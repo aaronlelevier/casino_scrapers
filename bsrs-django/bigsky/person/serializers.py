@@ -27,11 +27,11 @@ class RoleSerializer(BaseCreateSerializer):
 
 class RoleDetailSerializer(BaseCreateSerializer):
     
-    category = CategoryRoleSerializer()
+    categories = CategoryRoleSerializer(many=True)
 
     class Meta:
         model = Role
-        fields = ('id', 'name', 'role_type', 'location_level', 'category')
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories')
 
 class RoleIdNameSerializer(serializers.ModelSerializer):
     "Used for nested serializer data for other serializers."

@@ -1,12 +1,12 @@
-{{#tab-single model=model parentAction="parentAction"}}
   {{role-single
     model=model
     repository=repository
     all_role_types=all_role_types
     all_location_levels=all_location_levels
+    categories_children=categories_children
+    search=search
     save=(action "tabActions")
     saveBase="save"
     cancel=(action "tabActions")
     delete=(action "deleteTabAction")
   }}
-{{/tab-single}}

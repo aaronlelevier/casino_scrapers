@@ -9,6 +9,18 @@ var RoleModel = Model.extend({
     role_type: attr(),
     cleanupLocation: false,
     location_level_fk: undefined, 
+    category_fks: [],
+    categories: Ember.computed('category_fks.[]', function() {
+        let category_fks = this.get('category_fks');
+        let filter = (category) => {
+            if (Ember.$.inArray(category.get('id'), category_fks) > -1) { 
+                return true; 
+            }
+            return false;
+        };
+        let store = this.get('store');
+        return store.find('category', filter.bind(this), ['id']);
+    }),
     location_level: Ember.computed('location_levels.[]', function() {
         let location_levels = this.get('location_levels');
         let has_location_level = location_levels.get('length') > 0;

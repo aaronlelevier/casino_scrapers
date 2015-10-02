@@ -12,7 +12,8 @@ var BSRS_CATEGORY_FACTORY = (function() {
             cost_code: this.category_defaults.costCodeOne,
             label: this.category_defaults.labelOne,
             subcategory_label: this.category_defaults.subCatLabelOne,
-            parent: []
+            parent: [],
+            // status: this.category_defaults.statusOne
         }
     },
     factory.prototype.children = function() {
@@ -50,7 +51,8 @@ var BSRS_CATEGORY_FACTORY = (function() {
         return {'count':19,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i) {
-        var category = this.generate(i);
+        var id = i || this.category_defaults.idOne;
+        var category = this.generate(id);
         category.sub_category_label = this.category_defaults.subCatLabelOne;
         category.parent = this.category_defaults.parent;
         category.children = this.children();

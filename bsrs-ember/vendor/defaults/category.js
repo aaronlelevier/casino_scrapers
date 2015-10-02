@@ -25,7 +25,9 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             labelThree: 'admin.category.labelCat.issue',
             subCatLabelOne: 'Trade',
             subCatLabelTwo: 'Issue',
-            parent: []
+            parent: [],
+            statusOne: 'admin.category.status.active',
+            statusTwo: 'admin.category.status.inactive'
         };
     };
     return factory;

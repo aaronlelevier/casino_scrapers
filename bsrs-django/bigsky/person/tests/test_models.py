@@ -26,7 +26,7 @@ class RoleTests(TestCase):
 
     def test_to_dict(self):
         self.assertEqual(self.role.to_dict()["location_level"], str(self.role.location_level.id))
-        self.assertEqual(self.role.to_dict()["category"]["id"], str(self.role.category.id))
+        self.assertEqual(self.role.to_dict()["categories"][0]["id"], str(self.role.categories.first().id))
 
     def test_update_password_history_length(self):
         self.assertFalse(self.role.password_history_length)
