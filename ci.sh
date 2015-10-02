@@ -102,7 +102,7 @@ function dropAndCreateDB {
 
     DROP_AND_CREATE_DB=$?
     if [ "$DROP_AND_CREATE_DB" == 1 ]; then
-      echo "selenium test failed"
+      echo "createdb failed"
       exit $DROP_AND_CREATE_DB
     fi
 }
