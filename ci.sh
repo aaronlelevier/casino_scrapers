@@ -28,8 +28,8 @@ function emberTest {
 function pipInstall {
     echo "ENABLE SPECIFIC DJANGO SETTINGS FILE HERE B/C AFFECTS PIP INSTALL"
     export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'
-    rm -rf venv
-    virtualenv -p /usr/local/bin/python3 venv
+    rm -rf venv*
+    virtualenv -p /usr/local/bin/python3.3 venv
     source venv/bin/activate
     pip install -r requirements_ci.txt
     PIP_INSTALL=$?
@@ -89,12 +89,14 @@ function copyEmberAssetsToDjango {
 
 function dropAndCreateDB {
 
-    DB_NAME="ci3"
+    DB_NAME="ci"
     export PGPASSWORD=tango
 
+    wait
     dropdb $DB_NAME -U bsdev
     echo "$DB_NAME dropped"
 
+    wait
     createdb $DB_NAME -U bsdev -O bsdev
     echo "$DB_NAME created"
 
@@ -106,7 +108,10 @@ function dropAndCreateDB {
 }
 
 function migrateData {
+    ./manage.py makemigrations accounting category contact generic location order person session translation utils
+    wait
     ./manage.py migrate
+    wait
     ./manage.py loaddata fixtures/states.json
     ./manage.py loaddata fixtures/jenkins.json
     ./manage.py loaddata fixtures/jenkins_custom.json
@@ -131,8 +136,10 @@ echo $(date -u) "NPM INSTALL"
 cd bsrs-ember
 npmInstall
 
-#echo $(date -u) "EMBER TESTS"
-#emberTest
+if [ "$(uname)" == "Darwin" ]; then
+  echo $(date -u) "EMBER TESTS"
+  emberTest
+fi
 
 echo $(date -u) "PIP INSTALL"
 cd ../bsrs-django

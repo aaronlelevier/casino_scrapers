@@ -64,6 +64,7 @@ wait
 ../venv/bin/python manage.py loaddata fixtures/jenkins_custom.json
 ../venv/bin/python manage.py collectstatic --noinput
 
+wait
 uwsgi --http :$PORT \
     --wsgi-file bigsky.wsgi \
     --virtualenv /www/django/releases/python3/$NEW_UUID/bsrs-django/venv \
