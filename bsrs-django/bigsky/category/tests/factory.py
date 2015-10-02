@@ -3,7 +3,7 @@ import random
 from model_mommy import mommy
 
 from category.models import Category
-from util.create import random_lorem
+from utils.create import random_lorem
 
 
 def create_categories():

@@ -22,6 +22,7 @@ class Migration(migrations.Migration):
                 ('amount', models.PositiveIntegerField()),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
@@ -35,6 +36,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),

@@ -1,4 +1,5 @@
 import unittest
+import uuid
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
@@ -62,7 +63,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
         self.assertEqual(self.lorem[0], titles[0].text)
 
-    def test_search(self):
+    def test_search_input(self):
         people = self.wait_for_xhr_request("t-grid-data", plural=True)
         self.assertEqual(len(people), 10)
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('cu')
@@ -73,7 +74,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
             people = self.wait_for_xhr_request("t-grid-data", debounce=True)
             people = self.driver.find_element_by_class_name("t-grid-data")
 
-    def test_search_ordering(self):
+    def test_search_input_with_ordering(self):
         # Search
         _search_input = "ab"
         _search_input_matches = sorted([x for x in self.lorem if _search_input in x])
@@ -93,7 +94,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         people = self.wait_for_xhr_request("t-grid-data", plural=True)
         self.assertEqual(len(people), len(_search_input_matches))
 
-    def test_full_text_search(self):
+    def test_search_field_and_order(self):
         # USERNAME
         # setup
         _username= "tt"
@@ -147,6 +148,44 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         title_fulltext_search.send_keys(Keys.ESCAPE)
         title_modal_present = is_present(self.driver, "ember-modal-dialog")
         self.assertEqual(title_modal_present, False)
+
+    def test_reset_grid(self):
+        people = self.wait_for_xhr_request("t-grid-data", plural=True)
+        self.assertEqual(len(people), 10)
+        # Filter Username
+        _username= "tt"
+        _username_matches = sorted([x for x in self.lorem if _username in x])
+        self.wait_for_xhr_request("t-filter-username").click()
+        username_fulltext_search = self.driver.find_element_by_class_name("t-new-entry")
+        username_fulltext_search.send_keys(_username)
+        people = self.wait_for_xhr_request("t-grid-data", plural=True, debounce=True)
+        self.assertEqual(len(people), len(_username_matches)) # 3
+        # Reset Grid
+        self.wait_for_xhr_request("t-reset-grid").click()
+        people = self.wait_for_xhr_request("t-grid-data", plural=True)
+        self.assertEqual(len(people), 10)
+
+    def test_save_filter(self):
+        # Sort DESC
+        self.wait_for_xhr_request("t-sort-username-dir").click()
+        self.wait_for_xhr_request("t-sort-username-dir").click()
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+        self.assertEqual(self.lorem[-1], usernames[0].text)
+        # Save FilterSet
+        search_name = str(uuid.uuid4())[:5]
+        modal = self.wait_for_xhr_request("t-show-save-filterset-modal")
+        modal.click()
+        modal_input = self.wait_for_xhr_request("t-filterset-name-input")
+        modal_input.send_keys(search_name)
+        self.wait_for_xhr_request("t-filterset-save-btn").click()
+        self.driver.find_element_by_link_text(search_name)
+        # Hard refresh OK b/c saved in the DB
+        self.driver.refresh()
+        self.wait_for_xhr_request("t-reset-grid").click()
+        self.driver.find_element_by_link_text(search_name).click()
+        usernames = self.wait_for_xhr_request("t-person-username", plural=True)
+        self.assertEqual(self.lorem[-1], usernames[0].text)
+
 
 if __name__ == "__main__":
     unittest.main()

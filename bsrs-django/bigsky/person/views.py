@@ -8,7 +8,7 @@ import rest_framework_filters as filters
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
-from util.views import BaseModelViewSet
+from utils.views import BaseModelViewSet
 
 
 class RoleViewSet(BaseModelViewSet):

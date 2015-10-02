@@ -26,6 +26,7 @@ class Migration(migrations.Migration):
                 ('country', models.CharField(max_length=100, null=True, blank=True)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
@@ -40,6 +41,7 @@ class Migration(migrations.Migration):
                 ('order', models.IntegerField(default=0, blank=True)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
@@ -53,6 +55,7 @@ class Migration(migrations.Migration):
                 ('email', models.EmailField(max_length=255)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
@@ -67,6 +70,7 @@ class Migration(migrations.Migration):
                 ('order', models.IntegerField(default=0, blank=True)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
@@ -81,6 +85,7 @@ class Migration(migrations.Migration):
                 ('location', models.ForeignKey(related_name='phone_numbers', blank=True, to='location.Location', null=True)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
@@ -95,6 +100,7 @@ class Migration(migrations.Migration):
                 ('order', models.IntegerField(default=0, blank=True)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),

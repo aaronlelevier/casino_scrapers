@@ -9,7 +9,7 @@ from location.models import LocationLevel, Location
 from category.models import Category
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
-from util import create
+from utils import create
 
 
 PASSWORD = '1234'

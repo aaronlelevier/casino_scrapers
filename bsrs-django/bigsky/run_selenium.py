@@ -19,10 +19,12 @@ def django_app():
 
 def run_selenium_tests():
     os.environ['browser'] = 'firefox'
+    
     run_result = subprocess.call(['python', 'selenium/admin-crud-tests.py'])
-    run_result_two = subprocess.call(['python', 'selenium/grid-tests.py'])
     if run_result > 0:
         raise Exception("{} selenium test(s) failed".format(run_result))
+
+    run_result_two = subprocess.call(['python', 'selenium/grid-tests.py'])
     if run_result_two > 0:
         raise Exception("{} selenium test(s) failed".format(run_result_two))
 

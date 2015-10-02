@@ -11,8 +11,8 @@ from location.serializers import LocationLevelSerializer, LocationIdNameSerializ
 from category.serializers import CategoryRoleSerializer
 from person.models import PersonStatus, Person, Role
 from person.validators import RoleLocationValidator
-from util import create
-from util.serializers import BaseCreateSerializer
+from utils import create
+from utils.serializers import BaseCreateSerializer
 
 
 ### ROLE ###

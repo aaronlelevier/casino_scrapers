@@ -7,7 +7,7 @@ from model_mommy import mommy
 
 from translation.models import Locale, Translation
 from translation.tests import factory
-from util.create import _generate_chars
+from utils.create import _generate_chars
 
 
 class LocaleTests(TestCase):

@@ -43,7 +43,7 @@ LOCAL_APPS = (
     'person',
     'session',
     'translation',
-    'util',
+    'utils',
     'order',
     )
 

@@ -2,7 +2,7 @@ from rest_framework import serializers
 
 from contact.models import (PhoneNumberType, PhoneNumber, AddressType,
     Address, EmailType, Email)
-from util.serializers import BaseCreateSerializer
+from utils.serializers import BaseCreateSerializer
 
 ### PHONE NUMBER ###
 

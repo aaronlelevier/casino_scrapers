@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from location.models import LocationLevel, LocationStatus, LocationType, Location
-from util.serializers import BaseCreateSerializer
-from util.validators import UniqueForActiveValidator, LocationParentChildValidator
+from utils.serializers import BaseCreateSerializer
+from utils.validators import UniqueForActiveValidator, LocationParentChildValidator
 
 ### LOCATION LEVEL
 

@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
 
-from util.models import AbstractName, BaseModel, BaseManager
+from utils.models import AbstractName, BaseModel, BaseManager
 
 
 ### SUPPORT MODELS

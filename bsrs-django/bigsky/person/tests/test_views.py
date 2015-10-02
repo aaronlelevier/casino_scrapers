@@ -26,7 +26,7 @@ from person.tests.factory import (
     create_all_people)
 from translation.models import Locale
 from translation.tests.factory import create_locales
-from util import create, choices
+from utils import create, choices
 
 
 ### ROLE ###

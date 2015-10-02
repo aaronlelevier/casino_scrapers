@@ -6,7 +6,7 @@ from contact.models import (PhoneNumber, PhoneNumberType,
     Address, AddressType, Email, EmailType)
 from location.models import Location
 from person.tests.factory import create_person
-from util import exceptions as excp
+from utils import exceptions as excp
 
 
 class PhoneNumberTests(TestCase):

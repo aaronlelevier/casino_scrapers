@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 
 from generic.models import SavedSearch
 from generic.serializers import SavedSearchSerializer
-from util.views import BaseModelViewSet
+from utils.views import BaseModelViewSet
 
 
 ### API

@@ -36,7 +36,7 @@ class Migration(migrations.Migration):
                 ('children', models.ManyToManyField(related_name='parents', to='location.Location', blank=True)),
             ],
             options={
-                'abstract': False,
+                'ordering': ('name', 'number'),
             },
         ),
         migrations.CreateModel(
@@ -50,6 +50,7 @@ class Migration(migrations.Migration):
                 ('children', models.ManyToManyField(related_name='parents', to='location.LocationLevel', blank=True)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
@@ -63,6 +64,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
@@ -76,6 +78,7 @@ class Migration(migrations.Migration):
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
@@ -90,6 +93,7 @@ class Migration(migrations.Migration):
                 ('abbr', models.CharField(max_length=2)),
             ],
             options={
+                'ordering': ('id',),
                 'abstract': False,
             },
         ),
