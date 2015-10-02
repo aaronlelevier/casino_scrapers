@@ -11,6 +11,7 @@ wait
 ./manage.py migrate
 wait
 ./manage.py loaddata fixtures/currency.json
+./manage.py loaddata fixtures/category.json
 wait
 ./manage.py create_all_people
 wait
