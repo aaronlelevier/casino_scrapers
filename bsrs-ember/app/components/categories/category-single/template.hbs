@@ -1,56 +1,79 @@
 <form {{action "return false" this on="submit"}}>
-  {{base-component 
-    model=model
-    repository=repository
-    save=attrs.save
-    saveBase="save"
-    cancel=attrs.cancel
-    delete=attrs.delete
-  }}
-	<section class="docSection container-fluid">
-		<section>
-			<h2 class="col-sm-12">{{t "admin.category.label.general"}}</h2>
-			<div class="col-sm-5">
-				{{#form-group title="admin.category.label.name" for="name"}}
-			    	{{input type="text" placeholder=(t "admin.category.label.name") value=model.name class="form-control t-category-name" id="category_name"}}
-            {{#validation-error-field submitted=submitted field="name" className="t-name-validation-error" model=model validation=nameValidation}}invalid name{{/validation-error-field}}
-				{{/form-group}}
+    {{base-component
+        model=model
+        repository=repository
+        save=attrs.save
+        saveBase="save"
+        cancel=attrs.cancel
+        delete=attrs.delete
+    }}
+    <section class="docSection container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+				<section style="padding-bottom: 0">
+					<div class="row card-title">
+						<h1 class="col-md-12">{{model.name}}</h1>
+					</div>
+				</section>
 			</div>
-			<div class="col-sm-5">
-				{{#form-group title="admin.category.label.description" for="description"}}
-			    	{{input type="text" placeholder=(t "admin.category.label.description") value=model.description class="form-control t-category-description" id="category_description"}}
-            {{#validation-error-field submitted=submitted field="description" className="validation validation-under t-description-validation-error" model=model validation=descriptionValidation}}{{t "validation.invalid"}} {{t "admin.category.label.description"}}{{/validation-error-field}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-5">
-				{{#form-group title="admin.category.label.label" for="description"}}
-			    	{{input type="text" placeholder=(t "admin.category.label.label") value=model.label class="form-control t-category-label" id="category_label"}}
-            {{#validation-error-field submitted=submitted field="label" className="validation validation-under t-label-validation-error" model=model validation=labelValidation}}{{t "validation.invalid"}} {{t "admin.category.label.label"}}{{/validation-error-field}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-6">
-				{{#form-group title="admin.category.label.subcategory_label" for="subcategory_label"}}
-					{{input type="text" value=model.subcategory_label placeholder=(t "admin.category.label.subcategory_label") class="form-control t-category-subcategory-label" id="subcategory_label"}}
-					{{#validation-error-field submitted=submitted field="subcategory_label" className="validation validation-under t-subcategory-label-validation-error" model=model validation=subCategoryLabelValidation}}{{t "validation.invalid"}} {{t "admin.category.label.subcategory_label"}}{{/validation-error-field}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-6">
-				{{#form-group title="admin.category.label.cost_amount" for="cost_amount"}}
-            {{input-currency model=model field="cost_amount"}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-5">
-				{{#form-group title="admin.category.label.cost_code" for="description"}}
-			    	{{input type="text" placeholder=(t "admin.category.label.cost_code") value=model.cost_code class="form-control t-category-cost-code" id="category_cost_code"}}
-            {{#validation-error-field submitted=submitted field="cost_code" className="validation validation-under t-cost-code-validation-error" model=model validation=costCodeValidation}}{{t "validation.invalid"}} {{t "admin.category.label.cost_code"}}{{/validation-error-field}}
-				{{/form-group}}
-			</div>
-			<div class="col-sm-12">
-				{{#form-group title="admin.category.label.children" for="category"}}
-          {{category-children-select category=model search=search categories_children=categories_children}}
-				{{/form-group}}
-			</div>
+            <div class="col-md-12">
+        		<section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.category.label.name" for="name"}}
+            			    	{{input type="text" placeholder=(t "admin.category.label.name") value=model.name class="form-control t-category-name" id="category_name"}}
+                                {{#validation-error-field submitted=submitted field="name" className="t-name-validation-error" model=model validation=nameValidation}}invalid name{{/validation-error-field}}
+            				{{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.category.label.description" for="description"}}
+            			    	{{input type="text" placeholder=(t "admin.category.label.description") value=model.description class="form-control t-category-description" id="category_description"}}
+                                {{#validation-error-field submitted=submitted field="description" className="validation validation-under t-description-validation-error" model=model validation=descriptionValidation}}{{t "validation.invalid"}} {{t "admin.category.label.description"}}{{/validation-error-field}}
+            				{{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.category.label.label" for="description"}}
+            			    	{{input type="text" placeholder=(t "admin.category.label.label") value=model.label class="form-control t-category-label" id="category_label"}}
+                                {{#validation-error-field submitted=submitted field="label" className="validation validation-under t-label-validation-error" model=model validation=labelValidation}}{{t "validation.invalid"}} {{t "admin.category.label.label"}}{{/validation-error-field}}
+            				{{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.category.label.subcategory_label" for="subcategory_label"}}
+            					{{input type="text" value=model.subcategory_label placeholder=(t "admin.category.label.subcategory_label") class="form-control t-category-subcategory-label" id="subcategory_label"}}
+            					{{#validation-error-field submitted=submitted field="subcategory_label" className="validation validation-under t-subcategory-label-validation-error" model=model validation=subCategoryLabelValidation}}{{t "validation.invalid"}} {{t "admin.category.label.subcategory_label"}}{{/validation-error-field}}
+            				{{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.category.label.cost_amount" for="cost_amount"}}
+                                {{input-currency model=model field="cost_amount"}}
+            				{{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.category.label.cost_code" for="category_cost_code"}}
+            			    	{{input type="text" placeholder=(t "admin.category.label.cost_code") value=model.cost_code class="form-control t-category-cost-code" id="category_cost_code"}}
+                                {{#validation-error-field submitted=submitted field="cost_code" className="validation validation-under t-cost-code-validation-error" model=model validation=costCodeValidation}}{{t "validation.invalid"}} {{t "admin.category.label.cost_code"}}{{/validation-error-field}}
+            				{{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.category.label.children" for="category"}}
+                                {{category-children-select category=model search=search categories_children=categories_children}}
+            				{{/form-group}}
+                        </div>
+                    </div>
+        		</section>
+            </div>
+        </div>
     </section>
-	</section>
 </form>
-
