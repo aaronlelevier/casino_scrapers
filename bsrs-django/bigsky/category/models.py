@@ -111,4 +111,4 @@ class Category(BaseModel):
             self.cost_currency = Currency.objects.default()
 
     def to_dict(self):
-        return {"id": str(self.pk), "name": self.name, "status": str(CategoryStatus.objects.default())}
+        return {"id": str(self.pk), "name": self.name, "status": self.status}
