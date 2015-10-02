@@ -41,13 +41,13 @@ class RoleViewSetTests(APITestCase):
         # LocationLevel
         self.location = mommy.make(Location)
         # Category
-        self.category, _ = Category.objects.get_or_create(name="repair")
+        self.categories = mommy.make(Category, _quantity=2)
         # Currency
         self.currency = Currency.objects.default()
         # Role
         self.role = self.person.role
         self.role.location_level = self.location.location_level
-        self.role.category = self.category
+        self.role.categories = self.categories
         self.role.save()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -72,7 +72,7 @@ class RoleViewSetTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.role.pk))
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
-        self.assertEqual(data['category']['id'], str(self.category.id))
+        self.assertIn(data['categories'][0]['id'], [str(c.id) for c in self.categories])
 
     def test_create(self):
         role_data = {

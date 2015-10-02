@@ -1,5 +1,18 @@
 import Ember from 'ember';
 
+let extract_category = (model, store) => {
+    let category_fks = [];
+    let categories = model.categories;
+    if (categories) {
+        model.categories.forEach((category) => {
+            category_fks.push(category.id);
+            store.push('category', category);
+        });
+        delete model.categories;
+        return category_fks;
+    }
+};
+
 let extract_location_level = (model, store) => {
     let location_level_pk;
     if (model.location_level) {
@@ -21,10 +34,10 @@ let extract_location_level = (model, store) => {
     if(location_level_pk) {
         let location_level = store.find('location-level', model.location_level);
         let existing_roles = location_level.get('roles') || [];
-        if (existing_roles.indexOf(model.id) === -1) {
+        if (location_level.get('content') && existing_roles.indexOf(model.id) === -1) {
             location_level.set('roles', existing_roles.concat([model.id]));
+            location_level.save();
         }
-        location_level.save();
         delete model.location_level;
         model.location_level_fk = location_level_pk;
     }
@@ -44,6 +57,7 @@ var RoleDeserializer = Ember.Object.extend({
         let role_check = store.find('role', id);
         if (!role_check.get('id') || role_check.get('isNotDirtyOrRelatedNotDirty')) {
             response.location_level_fk = extract_location_level(response, store);
+            response.category_fks = extract_category(response, store);
             let originalRole = store.push('role', response);
             originalRole.save();
         }
@@ -54,6 +68,7 @@ var RoleDeserializer = Ember.Object.extend({
             let role_check = store.find('role', model.id);
             if (!role_check.get('id') || role_check.get('isNotDirtyOrRelatedNotDirty')) {
                 model.location_level_fk = extract_location_level(model, store);
+                model.category_fks = extract_category(model, store);
                 let originalRole = this.get('store').push('role', model);
                 originalRole.save();
             }

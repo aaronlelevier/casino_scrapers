@@ -41,7 +41,7 @@ class Role(BaseModel):
         choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
     # Required
     name = models.CharField(max_length=100, unique=True, help_text="Will be set to the Group Name")
-    category = models.ForeignKey(Category, blank=True, null=True) 
+    categories = models.ManyToManyField(Category, blank=True) 
     # Optional
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
@@ -141,7 +141,8 @@ class Role(BaseModel):
     def to_dict(self):
         if not self.location_level:
             return {"id": str(self.pk), "name": self.name}
-        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id), "category": self.category.to_dict()}
+        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id), 
+                "categories": [c.to_dict() for c in self.categories.all()]}
 
     def _update_defaults(self):
         if not self.group:

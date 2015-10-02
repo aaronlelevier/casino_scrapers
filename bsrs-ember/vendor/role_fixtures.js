@@ -10,11 +10,13 @@ var BSRS_ROLE_FACTORY = (function() {
             id: i,
             name: this.role_defaults.nameOne,
             role_type: this.role_defaults.roleTypeGeneral,
-            location_level: this.location_level_fixtures.detail().id
+            location_level: this.location_level_fixtures.detail().id,
+            categories: [this.category_fixtures.detail()]
         }
     };
     factory.prototype.generate_single_for_list = function(i) {
-        var role = this.generate(i);
+        var id = i || this.role_defaults.idOne;
+        var role = this.generate(id);
         delete role.role_type;
         return role;
     };

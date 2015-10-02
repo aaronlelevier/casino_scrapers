@@ -21,16 +21,15 @@ def create_role():
 
     currency = Currency.objects.default()
     location_level, created = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
-    category, created = Category.objects.get_or_create(name=CATEGORY)
+    categories = mommy.make(Category, _quantity=2)
 
-    return mommy.make(Role, name=create._generate_chars(), location_level=location_level, category=category)
+    return mommy.make(Role, name=create._generate_chars(), location_level=location_level, categories=categories)
 
 
 def create_roles():
     "Create a Role for each LocationLevel"
 
-    category, _ = Category.objects.get_or_create(name='repair',
-        subcategory_label='trade')
+    categories = mommy.make(Category, _quantity=2)
     
     # initial Locations
     try:
@@ -40,7 +39,7 @@ def create_roles():
 
     for location_level in LocationLevel.objects.all():
         mommy.make(Role, name='{}-role'.format(location_level.name),
-            location_level=location_level, category=category)
+            location_level=location_level, categories=categories)
 
     return Role.objects.all()
 
