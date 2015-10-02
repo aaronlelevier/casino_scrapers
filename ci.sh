@@ -154,12 +154,12 @@ copyEmberAssetsToDjango
 echo $(date -u) "DROP AND CREATE DATABASE"
 dropAndCreateDB
 
-echo $(date -u) "DJANGO MIGRATE DATABASE"
 wait
+echo $(date -u) "DJANGO MIGRATE DATABASE"
 migrateData
 
-echo $(date -u) "SELENIUM TESTS"
 wait
+echo $(date -u) "SELENIUM TESTS"
 runSeleniumTests
 
 echo $(date -u) "BUILD SUCCESSFUL!"
