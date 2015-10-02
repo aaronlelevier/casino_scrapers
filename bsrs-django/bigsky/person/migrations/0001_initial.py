@@ -14,11 +14,12 @@ import uuid
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('translation', '0001_initial'),
-        ('order', '0001_initial'),
         ('auth', '0006_require_contenttypes_0002'),
-        ('location', '0001_initial'),
         ('accounting', '0001_initial'),
+        ('order', '0001_initial'),
+        ('translation', '0001_initial'),
+        ('location', '0001_initial'),
+        ('category', '0001_initial'),
     ]
 
     operations = [
@@ -148,6 +149,7 @@ class Migration(migrations.Migration):
                 ('msg_copy_email', models.BooleanField(default=False)),
                 ('msg_copy_default', models.BooleanField(default=False)),
                 ('msg_stored_link', models.BooleanField(default=False)),
+                ('category', models.ForeignKey(blank=True, to='category.Category', null=True)),
                 ('default_auth_currency', models.ForeignKey(blank=True, to='accounting.Currency', null=True)),
                 ('group', models.OneToOneField(null=True, blank=True, to='auth.Group')),
                 ('inv_wo_status', models.ForeignKey(blank=True, to='order.WorkOrderStatus', null=True)),
