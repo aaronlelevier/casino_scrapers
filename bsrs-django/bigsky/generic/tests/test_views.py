@@ -36,20 +36,20 @@ class SavedSearchTests(APITestCase):
         }
         response = self.client.post('/api/admin/saved_searches/', data, format='json')
         self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(SavedSearch.objects.get(id=data['id']), SavedSearch)
 
     def test_list(self):
         response = self.client.get('/api/admin/saved_searches/')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['endpoint_name'], self.saved_search.endpoint_name)
 
     def test_detail(self):
         response = self.client.get('/api/admin/saved_searches/{}/'.format(self.saved_search.id))
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.saved_search.id))
 
     def test_update(self):
@@ -61,7 +61,7 @@ class SavedSearchTests(APITestCase):
         response = self.client.put('/api/admin/saved_searches/{}/'.format(self.saved_search.id),
             data=data, format='json')
         self.assertEqual(response.status_code, 200)
-        new_data = json.loads(response.content)
+        new_data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['endpoint_uri'], new_data['endpoint_uri'])
 
 #     ### util.UniqueForActiveValidator - two key tests
@@ -123,5 +123,3 @@ class ExportDataTests(APITestCase):
             'attachment; filename="{name}.csv"'.format(
                 name=model._meta.verbose_name_plural)
         )
-
-

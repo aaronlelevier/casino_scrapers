@@ -76,62 +76,62 @@ class MainSettingTests(TestCase):
         self.assertEqual(s.content_object, self.person)
 
 
-class AttachmentModelTests(TestCase):
+# class AttachmentModelTests(TestCase):
 
-    def setUp(self):
-        # this can be any Model here, ``Attachment`` just requires a 
-        # model UUID to reference b/c the attachments are assoc. w/ models.
-        self.model = mommy.make(LocationLevel)
+#     def setUp(self):
+#         # this can be any Model here, ``Attachment`` just requires a 
+#         # model UUID to reference b/c the attachments are assoc. w/ models.
+#         self.model = mommy.make(LocationLevel)
 
-        # test upload file save in source control
-        base_dir = dirname(dirname(dirname(__file__)))
-        self.image = join(base_dir, "source/attachments/test_in/test-mountains.jpg")
-        self.file = join(base_dir, "source/attachments/test_in/es.csv")
+#         # test upload file save in source control
+#         base_dir = dirname(dirname(dirname(__file__)))
+#         self.image = join(base_dir, "source/attachments/test_in/test-mountains.jpg")
+#         self.file = join(base_dir, "source/attachments/test_in/es.csv")
 
-    def test_files_exist(self):
-        self.assertTrue(os.path.isfile(self.image))
-        self.assertTrue(os.path.isfile(self.file))
+#     def test_files_exist(self):
+#         self.assertTrue(os.path.isfile(self.image))
+#         self.assertTrue(os.path.isfile(self.file))
 
-    def test_create(self):
-        _file = SimpleUploadedFile(self.image, "file_content",
-            content_type="image/jpeg")
-        attachment = Attachment.objects.create(
-            model_id=self.model.id,
-            file=_file
-        )
-        self.assertIsInstance(attachment, Attachment)
-        self.assertEqual(
-            attachment.filename,
-            self.image.split('/')[-1] # test-mountains.jpg
-        )
+#     def test_create(self):
+#         _file = SimpleUploadedFile(self.image, "file_content",
+#             content_type="image/jpeg")
+#         attachment = Attachment.objects.create(
+#             model_id=self.model.id,
+#             file=_file
+#         )
+#         self.assertIsInstance(attachment, Attachment)
+#         self.assertEqual(
+#             attachment.filename,
+#             self.image.split('/')[-1] # test-mountains.jpg
+#         )
 
-    def test_upload_size(self):
-        with self.settings(MAX_UPLOAD_SIZE=0):
-            with open(self.image) as f:
-                with self.assertRaises(DjangoValidationError):
-                    _file = SimpleUploadedFile(self.image, "file_content",
-                        content_type="image/jpeg")
-                    attachment = Attachment.objects.create(
-                        model_id=self.model.id,
-                        file=_file
-                    )
+#     def test_upload_size(self):
+#         with self.settings(MAX_UPLOAD_SIZE=0):
+#             with open(self.image) as f:
+#                 with self.assertRaises(DjangoValidationError):
+#                     _file = SimpleUploadedFile(self.image, "file_content",
+#                         content_type="image/jpeg")
+#                     attachment = Attachment.objects.create(
+#                         model_id=self.model.id,
+#                         file=_file
+#                     )
 
-    def test_upload_image(self):
-        _file = SimpleUploadedFile(self.image, "file_content",
-            content_type="image/jpeg")
-        attachment = Attachment.objects.create(
-            model_id=self.model.id,
-            file=_file
-        )
-        self.assertTrue(attachment.is_image)
-        self.assertTrue(attachment.image_full)
+#     def test_upload_image(self):
+#         _file = SimpleUploadedFile(self.image, "file_content",
+#             content_type="image/jpeg")
+#         attachment = Attachment.objects.create(
+#             model_id=self.model.id,
+#             file=_file
+#         )
+#         self.assertTrue(attachment.is_image)
+#         self.assertTrue(attachment.image_full)
 
-    def test_upload_file(self):
-        _file = SimpleUploadedFile(self.file, "file_content",
-            content_type="text/csv")
-        attachment = Attachment.objects.create(
-            model_id=self.model.id,
-            file=_file
-        )
-        self.assertFalse(attachment.is_image)
-        self.assertFalse(attachment.image_full)
+#     def test_upload_file(self):
+#         _file = SimpleUploadedFile(self.file, "file_content",
+#             content_type="text/csv")
+#         attachment = Attachment.objects.create(
+#             model_id=self.model.id,
+#             file=_file
+#         )
+#         self.assertFalse(attachment.is_image)
+#         self.assertFalse(attachment.image_full)

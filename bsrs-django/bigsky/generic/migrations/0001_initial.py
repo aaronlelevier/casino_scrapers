@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import uuid
 import generic.models
+import uuid
 
 
 class Migration(migrations.Migration):
@@ -15,17 +15,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Attachment',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                ('id', models.UUIDField(default=uuid.uuid4, serialize=False, editable=False, primary_key=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
-                ('model_id', models.UUIDField(help_text='UUID of the Model Instance that the Attachment is related to.')),
+                ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
+                ('model_id', models.UUIDField(help_text=b'UUID of the Model Instance that the Attachment is related to.')),
                 ('filename', models.CharField(max_length=100, blank=True)),
-                ('file', models.FileField(upload_to=generic.models.upload_to, null=True, blank=True)),
+                ('file', models.FileField(null=True, upload_to=generic.models.upload_to, blank=True)),
                 ('is_image', models.BooleanField(default=False)),
-                ('image_full', models.ImageField(upload_to=generic.models.upload_to, null=True, blank=True)),
-                ('image_medium', models.ImageField(upload_to=generic.models.upload_to_images_medium, null=True, blank=True)),
-                ('image_thumbnail', models.ImageField(upload_to=generic.models.upload_to_images_thumbnail, null=True, blank=True)),
+                ('image_full', models.ImageField(null=True, upload_to=generic.models.upload_to, blank=True)),
+                ('image_medium', models.ImageField(null=True, upload_to=generic.models.upload_to_images_medium, blank=True)),
+                ('image_thumbnail', models.ImageField(null=True, upload_to=generic.models.upload_to_images_thumbnail, blank=True)),
             ],
             options={
                 'ordering': ('id',),

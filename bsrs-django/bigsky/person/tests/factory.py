@@ -29,7 +29,8 @@ def create_role():
 def create_roles():
     "Create a Role for each LocationLevel"
 
-    category, created = Category.objects.get_or_create(name=CATEGORY)
+    category, _ = Category.objects.get_or_create(name='repair',
+        subcategory_label='trade')
     
     # initial Locations
     try:

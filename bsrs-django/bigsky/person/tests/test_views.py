@@ -41,8 +41,7 @@ class RoleViewSetTests(APITestCase):
         # LocationLevel
         self.location = mommy.make(Location)
         # Category
-        self.category = mommy.make(Category, name="repair")
-        print self.category
+        self.category, _ = Category.objects.get_or_create(name="repair")
         # Currency
         self.currency = Currency.objects.default()
         # Role
@@ -231,13 +230,13 @@ class PersonListTests(TestCase):
 
     def test_max_paginate_by_default(self):
         response = self.client.get('/api/admin/people/')
-        data = json.loads(self.response.content)
+        data = json.loads(self.response.content.decode('utf8'))
         self.assertEqual(data['count'], Person.objects.count())
 
     def test_max_paginate_by_page_size(self):
         number = 1
         response = self.client.get('/api/admin/people/?page_size={}'.format(number))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['results']), number)
 
 
@@ -752,14 +751,14 @@ class FilterByFieldTests(APITransactionTestCase):
     def test_related_field(self):
         response = self.client.get('/api/admin/people/?role__name={}'.format(self.role.name))
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], Person.objects.filter(role__name=self.role.name).count())
 
     def test_related_field_with_arg(self):
         response = self.client.get('/api/admin/people/?role__name__icontains={}'
             .format(self.role.name[0]))
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
             Person.objects.filter(role__name__icontains=self.role.name[0]).count()
@@ -768,7 +767,7 @@ class FilterByFieldTests(APITransactionTestCase):
     def test_related_id_in(self):
         response = self.client.get('/api/admin/people/?role__id__in={}'.format(self.role.id))
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
             Person.objects.filter(role__id__in=[self.role.id]).count()
@@ -790,7 +789,7 @@ class FilterByFieldTests(APITransactionTestCase):
         letter = self.person.username[0]
         response = self.client.get('/api/admin/people/?username__in={}'.format(letter))
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], Person.objects.filter(username__in=[letter]).count())
 
     def test_in_multiple(self):
@@ -802,13 +801,13 @@ class FilterByFieldTests(APITransactionTestCase):
         # Test
         response = self.client.get('/api/admin/people/?username__in={}'.format(usernames))
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], Person.objects.filter(username__in=[a,b]).count())
 
     def test_in_single_uuid(self):
         response = self.client.get('/api/admin/people/?id__in={}'.format(self.person.id))
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], Person.objects.filter(id__in=[self.person.id]).count())
 
     def test_in_multiple_uuid(self):
@@ -817,7 +816,7 @@ class FilterByFieldTests(APITransactionTestCase):
         b = people[1]
         response = self.client.get('/api/admin/people/?id__in={},{}'.format(a.id, b.id))
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], Person.objects.filter(id__in=[a.id, b.id]).count())
 
 

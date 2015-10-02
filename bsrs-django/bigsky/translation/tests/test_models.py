@@ -56,10 +56,11 @@ class TranslationManagerTests(TestCase):
     def test_export_csv(self):
         mypath = Translation.objects.translation_dir
         t = Translation.objects.import_csv('en')
-        try:
-            os.remove(os.path.join(mypath, '{}-out.csv'.format(t.locale)))
-        except FileNotFoundError:
-            pass
+
+        file_ = os.path.join(mypath, '{}-out.csv'.format(t.locale))
+        if os.path.exists(file_):
+            os.remove(file_)
+
         Translation.objects.export_csv(t.id)
         os.path.isfile(os.path.join(mypath, '{}-out.csv'.format(t.locale)))
 
