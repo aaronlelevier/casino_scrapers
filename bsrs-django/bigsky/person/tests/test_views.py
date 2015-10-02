@@ -18,8 +18,9 @@ from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
+from category.models import Category
 from person.models import Person, Role, PersonStatus
-from person.serializers import PersonUpdateSerializer, RoleSerializer
+from person.serializers import PersonUpdateSerializer, RoleSerializer, RoleDetailSerializer
 from person.tests.factory import (
     PASSWORD, create_person, create_role, create_roles, create_single_person,
     create_all_people)
@@ -37,11 +38,15 @@ class RoleViewSetTests(APITestCase):
         self.person = create_person()
         # LocationLevel
         self.location = mommy.make(Location)
+        # Category
+        self.category = mommy.make(Category, name="repair")
+        print self.category
         # Currency
         self.currency = Currency.objects.default()
         # Role
         self.role = self.person.role
         self.role.location_level = self.location.location_level
+        self.role.category = self.category
         self.role.save()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -66,6 +71,7 @@ class RoleViewSetTests(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(data['id'], str(self.role.pk))
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
+        self.assertEqual(data['category']['id'], str(self.category.id))
 
     def test_create(self):
         role_data = {

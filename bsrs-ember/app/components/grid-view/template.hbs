@@ -12,7 +12,7 @@
             </div>
             <div class="col-md-4">
                 <div class="pull-right btn-group btn-group-sm">
-                    <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>Save Filter</button>
+                    {{#if hasActiveFilterSet}}<button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>Save Filter</button>{{/if}}
                     {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
                     {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
                     {{/link-to}}

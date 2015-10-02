@@ -43,6 +43,12 @@ function visitSync(app, url) {
     return app.testHelpers.wait();
 }
 
+function clearAll(app, store, type) {
+  Ember.run(function() {
+      store.clear(type);
+  });
+}
+
 function saveFilterSet(app, name, controller) {
   Ember.run(function() {
       var component = app.__container__.lookup('component:grid-view');
@@ -54,6 +60,7 @@ function saveFilterSet(app, name, controller) {
   });
 }
 
+Ember.Test.registerAsyncHelper('clearAll', clearAll);
 Ember.Test.registerAsyncHelper('saveFilterSet', saveFilterSet);
 Ember.Test.registerAsyncHelper('alterPageSize', alterPageSize);
 Ember.Test.registerAsyncHelper('filterGrid', filterGrid);

@@ -485,7 +485,10 @@ test('starting with a page size greater than 10 will set the selected', function
 });
 
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
+    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    xhr(sort_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name', 1));
     visit(LOCATION_LEVEL_URL);
+    click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
     andThen(() => {
         isFocused('.ember-modal-dialog input:first');
@@ -497,6 +500,8 @@ test('when a save filterset modal is selected the input inside the modal is focu
 });
 
 test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
+    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    xhr(sort_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name', 1));
     let name = 'foobar';
     let routePath = 'admin.location-levels.index';
     let url = window.location.toString();
@@ -505,6 +510,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     let navigation = '.t-admin-location-levels-index-navigation li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
     visit(LOCATION_LEVEL_URL);
+    click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
     xhr('/api/admin/saved_searches/', 'POST', JSON.stringify(payload), {}, 200, {});
     saveFilterSet(name, routePath);
@@ -515,5 +521,41 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
         assert.equal(filterset.get('name'), name);
         assert.equal(filterset.get('endpoint_name'), routePath);
         assert.equal(filterset.get('endpoint_uri'), query);
+    });
+});
+
+test('delete filterset will fire off xhr and remove item from the sidebar navigation', function(assert) {
+    let name = 'foobar';
+    let routePath = 'admin.location-levels.index';
+    let query = '?foo=bar';
+    let navigation = '.t-admin-location-levels-index-navigation li';
+    let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
+    visit(LOCATION_LEVEL_URL);
+    clearAll(store, 'filterset');
+    andThen(() => {
+        store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
+    });
+    andThen(() => {
+        let section = find('.t-side-menu > section:eq(2)');
+        assert.equal(section.find(navigation).length, 1);
+    });
+    xhr('/api/admin/saved_searches/' + UUID.value + '/', 'DELETE', null, {}, 204, {});
+    click(navigation + '> a > .t-remove-filterset:eq(0)');
+    andThen(() => {
+        let section = find('.t-side-menu > section:eq(2)');
+        assert.equal(section.find(navigation).length, 0);
+    });
+});
+
+test('save filterset button only available when a dynamic filter is present', function(assert) {
+    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    xhr(sort_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name', 1));
+    visit(LOCATION_LEVEL_URL);
+    andThen(() => {
+        assert.equal(find('.t-show-save-filterset-modal').length, 0);
+    });
+    click('.t-sort-name-dir');
+    andThen(() => {
+        assert.equal(find('.t-show-save-filterset-modal').length, 1);
     });
 });
