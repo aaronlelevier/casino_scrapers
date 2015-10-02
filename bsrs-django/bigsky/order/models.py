@@ -1,6 +1,6 @@
 from django.db import models
 
-from util.models import AbstractName
+from utils.models import AbstractName
 
 
 class WorkOrderStatus(AbstractName):

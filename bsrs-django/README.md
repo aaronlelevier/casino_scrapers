@@ -2,13 +2,23 @@
 
 Big Sky Retail Services - Django code repository
 
-## Setup
+## Setup Python Environment
+
+#### pip
 
 Try to upgrade to the latest verson of `pip`, if `pip` is not available 
 get the python install file [here](https://bootstrap.pypa.io/get-pip.py) and install it.
 
 ```
-easy_install -U pip
+easy_install -U pip==7.1.0
+```
+
+#### virtualenv
+
+Install globally
+
+```
+pip install virtualenv
 ```
 
 Create a directory at the root directory to hold `virtualenvs` and 
@@ -30,12 +40,24 @@ source ~/.virtualenvs/bs/bin/activate
 deactivate
 ```
 
+#### Python 3
+
+[Download Python 3.4.3](https://www.python.org/downloads/release/python-343/)
+
+Create a virtualenv with Python 3
+
+`virtualenv -p /usr/local/bin/python3.4 ~/.virtualenvs/py3`
+
+#### requirements.txt style pip install
+
 Once the `virtualenv` is activated, `cd` in to the project directory, and 
 install the python dependencies from the `requirements.txt` file.
 
 ```
-pip install -r requirements.txt
+pip install -r requirements_local.txt
 ```
+
+#### psycopg2
 
 note: to install psycopg2 you need to have the postgres bin directory on the path before running pip install.
 

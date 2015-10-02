@@ -14,11 +14,19 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
+<<<<<<< HEAD
+=======
+        ('auth', '0006_require_contenttypes_0002'),
+>>>>>>> master
         ('accounting', '0001_initial'),
         ('order', '0001_initial'),
         ('translation', '0001_initial'),
         ('location', '0001_initial'),
+<<<<<<< HEAD
         ('auth', '0006_require_contenttypes_0002'),
+=======
+        ('category', '0001_initial'),
+>>>>>>> master
     ]
 
     operations = [
@@ -38,16 +46,27 @@ class Migration(migrations.Migration):
                 ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
+<<<<<<< HEAD
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
                 ('fullname', models.CharField(max_length=50, blank=True)),
                 ('auth_amount', models.DecimalField(decimal_places=4, max_digits=15, default=0, blank=True)),
+=======
+                ('deleted', models.DateTimeField(help_text=b'If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True, blank=True)),
+                ('fullname', models.CharField(max_length=50, blank=True)),
+                ('auth_amount', models.DecimalField(default=0, max_digits=15, decimal_places=4, blank=True)),
+>>>>>>> master
                 ('accept_assign', models.BooleanField(default=True)),
                 ('accept_notify', models.BooleanField(default=True)),
                 ('employee_id', models.CharField(max_length=100, null=True, blank=True)),
                 ('middle_initial', models.CharField(max_length=1, null=True, blank=True)),
                 ('title', models.CharField(max_length=100, null=True, blank=True)),
+<<<<<<< HEAD
                 ('password_length', models.PositiveIntegerField(null=True, help_text='Store the length of the current password.', blank=True)),
                 ('password_expire_date', models.DateField(null=True, help_text="Date that the Person's password will expire next. Based upon the ``password_expire`` days set on the Role.", blank=True)),
+=======
+                ('password_length', models.PositiveIntegerField(help_text=b'Store the length of the current password.', null=True, blank=True)),
+                ('password_expire_date', models.DateField(help_text=b"Date that the Person's password will expire next. Based upon the ``password_expire`` days set on the Role.", null=True, blank=True)),
+>>>>>>> master
                 ('password_one_time', models.CharField(max_length=255, null=True, blank=True)),
                 ('password_change', models.TextField(help_text='Tuple of (datetime of PW change, old PW)')),
                 ('proxy_status', models.CharField(max_length=100, verbose_name='Out of the Office Status', null=True, blank=True)),
@@ -112,16 +131,28 @@ class Migration(migrations.Migration):
                 ('tabs', models.TextField(blank=True)),
                 ('password_can_change', models.BooleanField(default=True)),
                 ('password_min_length', models.PositiveIntegerField(default=6, blank=True)),
+<<<<<<< HEAD
                 ('password_history_length', django.contrib.postgres.fields.ArrayField(base_field=models.PositiveIntegerField(help_text='Will be NULL if password length has never been changed.'), size=None, default=[], blank=True)),
+=======
+                ('password_history_length', django.contrib.postgres.fields.ArrayField(default=[], size=None, base_field=models.PositiveIntegerField(help_text=b'Will be NULL if password length has never been changed.'), blank=True)),
+>>>>>>> master
                 ('password_digit_required', models.BooleanField(default=False)),
                 ('password_lower_char_required', models.BooleanField(default=False)),
                 ('password_upper_char_required', models.BooleanField(default=False)),
                 ('password_special_char_required', models.BooleanField(default=False)),
+<<<<<<< HEAD
                 ('password_char_types', models.CharField(max_length=100, help_text='Password characters allowed')),
                 ('password_expire', models.IntegerField(help_text="Number of days after setting password that it will expire.If '0', password will never expire.", default=90, blank=True)),
                 ('password_expire_alert', models.BooleanField(help_text="Does the Person want to be alerted 'pre pw expiring'. Alerts start 3 days before password expires.", default=True)),
                 ('password_expired_login_count', models.IntegerField(null=True, blank=True)),
                 ('proxy_set', models.BooleanField(help_text='Users in this Role can set their own proxy', default=False)),
+=======
+                ('password_char_types', models.CharField(help_text=b'Password characters allowed', max_length=100)),
+                ('password_expire', models.IntegerField(default=90, help_text=b"Number of days after setting password that it will expire.If '0', password will never expire.", blank=True)),
+                ('password_expire_alert', models.BooleanField(default=True, help_text=b"Does the Person want to be alerted 'pre pw expiring'. Alerts start 3 days before password expires.")),
+                ('password_expired_login_count', models.IntegerField(null=True, blank=True)),
+                ('proxy_set', models.BooleanField(default=False, help_text=b'Users in this Role can set their own proxy')),
+>>>>>>> master
                 ('default_accept_assign', models.BooleanField(default=True)),
                 ('accept_assign', models.BooleanField(default=False)),
                 ('default_accept_notify', models.BooleanField(default=True)),
@@ -148,10 +179,18 @@ class Migration(migrations.Migration):
                 ('msg_copy_email', models.BooleanField(default=False)),
                 ('msg_copy_default', models.BooleanField(default=False)),
                 ('msg_stored_link', models.BooleanField(default=False)),
+<<<<<<< HEAD
                 ('default_auth_currency', models.ForeignKey(to='accounting.Currency', blank=True, null=True)),
                 ('group', models.OneToOneField(to='auth.Group', blank=True, null=True)),
                 ('inv_wo_status', models.ForeignKey(to='order.WorkOrderStatus', blank=True, null=True)),
                 ('location_level', models.ForeignKey(to='location.LocationLevel', blank=True, null=True)),
+=======
+                ('category', models.ForeignKey(blank=True, to='category.Category', null=True)),
+                ('default_auth_currency', models.ForeignKey(blank=True, to='accounting.Currency', null=True)),
+                ('group', models.OneToOneField(null=True, blank=True, to='auth.Group')),
+                ('inv_wo_status', models.ForeignKey(blank=True, to='order.WorkOrderStatus', null=True)),
+                ('location_level', models.ForeignKey(blank=True, to='location.LocationLevel', null=True)),
+>>>>>>> master
             ],
             options={
                 'ordering': ('id',),

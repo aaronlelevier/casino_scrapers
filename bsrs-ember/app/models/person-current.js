@@ -2,9 +2,8 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 
-var PersonCurrent = Model.extend(NewMixin, {
+var PersonCurrent = Model.extend({
     store: inject('main'),
     translationsFetcher: Ember.inject.service(),
     i18n: Ember.inject.service(),

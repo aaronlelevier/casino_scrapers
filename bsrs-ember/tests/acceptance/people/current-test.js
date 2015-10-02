@@ -5,7 +5,6 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
-import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
@@ -80,7 +79,6 @@ test('when rolling back the locale the current locale is also changed back', (as
         andThen(() => {
             waitFor(() => {
                 assert.equal(currentURL(), PEOPLE_URL);
-                assert.equal(find('.t-modal').is(':hidden'), true);
                 var person = store.find('person', PERSON_CURRENT_DEFAULTS.id);
                 assert.equal(person.get('locale'), PEOPLE_DEFAULTS.locale);
                 assert.equal(find('.t-grid-title').text(), "People");

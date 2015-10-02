@@ -1,3 +1,5 @@
+#!/bin/bash -lx
+
 cd bsrs-django/bigsky
 
 dropdb ci

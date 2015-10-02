@@ -1,77 +1,105 @@
 <div class="rowTable">
-  <header>
-    <h1 class="t-grid-title">{{grid_title}}</h1>
-    {{#if sort}}
-      <span class="t-reset-sort-order reset-grid" {{action "resetSort"}}>Reset sort order</span>
-    {{/if}}
-    {{#unless model.isLoaded}}
-      {{grid-loading-graphic}}
-    {{/unless}}
-    <div class="control-menu pull-right">
-      <form class="form-inline" onsubmit="return false;">
-        <div class="form-group">
-
-          {{grid-search-input placeholder=search_placeholder keyup="keyup"}}
-          <div class="btn-group btn-group-sm">
-            {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
-            {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-            {{/link-to}}
-          </div>
+    <header class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <h1 class="t-grid-title">{{grid_title}}</h1>
+                {{#unless model.isLoaded}}
+                {{grid-loading-graphic}}
+                {{/unless}}
+            </div>
+            <div class="col-md-4 text-center search-wrap">
+                {{grid-search-input placeholder=search_placeholder keyup="keyup"}}
+            </div>
+            <div class="col-md-4">
+                <div class="pull-right btn-group btn-group-sm">
+                    {{#if hasActiveFilterSet}}<button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>Save Filter</button>{{/if}}
+                    {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
+                    {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+                    {{/link-to}}
+                </div>
+            </div>
         </div>
-      </form>
-    </div>
-  </header>
+    </header>
 
-  {{#if toggleFilter}}
-    {{#focus-tether-dialog container-class='column-filter' target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='center left' targetAttachment='center left' offset='0 14px'}}
-      {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
+    {{#if savingFilter}}
+    {{#focus-tether-dialog target='.t-show-save-filterset-modal' close='toggleSaveFilterSetModal' clickOutsideToClose=true}}
+      <div class="form-group">
+       {{input value=filtersetName class="form-control input-sm t-filterset-name-input" placeholder="Name"}}
+       <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>Save</button>
+      </div>
     {{/focus-tether-dialog}}
-  {{/if}}
+    {{/if}}
 
-  <section class="docSection docSectionWithFooter">
+    {{#if toggleFilter}}
+    {{#focus-tether-dialog container-class='column-filter' target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='center left' targetAttachment='center left' offset='0 14px'}}
+    {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
+    {{/focus-tether-dialog}}
+    {{/if}}
 
-<table class="table table-striped table-hover">
-      <thead>
-        <tr class="head">
-          <th></th>
-          {{#each searchable as |column|}}
-            {{grid-column class="twenty-percent" label=(t (t-prefix prefix column)) column=column find=find sort=sort toggleFilterModal="toggleFilterModal" sortBy="sortBy"}}
-          {{/each}}
-          {{#each nonsearchable as |column|}}
-            <th class="twenty-percent {{add-text-right nonsearchable column}}">{{t (t-prefix prefix column) }}</th>
-          {{/each}}
-        </tr>
-      </thead>
-      <tbody>
-        {{#each paginated_content as |item|}}
-        {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
-        <td><input type="checkbox" /></td>
-        {{#each searchable as |column|}}
-          <td class="{{grid-row-class noun column}}">{{grid-row-value item column}}</td>
-        {{/each}}
-        {{#each nonsearchable as |column|}}
-          <td class="{{grid-row-class noun column}} {{add-text-right nonsearchable column}}">{{grid-row-value item column}}</td>
-        {{/each}}
-        {{/link-to}}
-        {{/each}}
-      </tbody>
-    </table>
-  </section>
+    <section class="docSection docSectionWithFooter">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr class="head">
+                        <th></th>
+                        {{#each searchable as |column|}}
+                        {{grid-column label=(t (t-prefix prefix column)) column=column find=find sort=sort toggleFilterModal="toggleFilterModal" sortBy="sortBy"}}
+                        {{/each}}
+                        {{#each nonsearchable as |column|}}
+                        <th class={{add-text-right nonsearchable column}}>{{t (t-prefix prefix column) }}</th>
+                        {{/each}}
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each paginated_content as |item|}}
+                    {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
+                    <td><input type="checkbox" /></td>
+                    {{#each searchable as |column|}}
+                    <td class="{{grid-row-class noun column}}">{{grid-row-value item column}}</td>
+                    {{/each}}
+                    {{#each nonsearchable as |column|}}
+                    <td class="{{grid-row-class noun column}} {{add-text-right nonsearchable column}}">{{grid-row-value item column}}</td>
+                    {{/each}}
+                    {{/link-to}}
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
+    </section>
 
-  <footer>
-      <nav class="text-center">
-        <ul class="pagination t-pages">
-          <li class="t-first {{if first '' 'disabled'}}" disabled={{if first disabled ''}}>{{#link-to list_url (query-params page=first) disabled=notFirst}}&laquo;{{/link-to}}</li>
-          <li class="t-previous {{if previous '' 'disabled'}}" disabled={{if previous disabled ''}}>{{#link-to list_url (query-params page=previous) disabled=notPrevious}}&lsaquo;{{/link-to}}</li>
-          {{#each shown_pages as |page|}}
-            <li class="t-page">
-                {{#link-to list_url (query-params page=page)}}{{page}}{{/link-to}}
-            </li>
-          {{/each}}
-          <li class="t-next {{if next '' 'disabled'}}" disabled={{if next disabled ''}}>{{#link-to list_url (query-params page=next) disabled=notNext}}&rsaquo;{{/link-to}}</li>
-          <li class="t-last {{if last '' 'disabled'}}" disabled={{if last disabled ''}}>{{#link-to list_url (query-params page=last) disabled=notLast}}&raquo;{{/link-to}}</li>
-        </ul>
-      </nav>
-  </footer>
+    <footer class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <span class="pull-left t-page-count">{{model.count}} {{plural}}</span>
+                {{#if (filters-applied sort find search)}}
+                <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>Reset all options</span>
+                {{/if}}
+            </div>
+            <div class="col-md-4">
+                <nav class="text-center">
+                    <ul class="pagination t-pages">
+                        <li class="t-first {{if first '' 'disabled'}}" disabled={{if first disabled ''}}>{{#link-to list_url (query-params page=first) disabled=notFirst}}&laquo;{{/link-to}}</li>
+                        <li class="t-previous {{if previous '' 'disabled'}}" disabled={{if previous disabled ''}}>{{#link-to list_url (query-params page=previous) disabled=notPrevious}}&lsaquo;{{/link-to}}</li>
+                        {{#each shown_pages as |page|}}
+                        <li class="t-page">
+                            {{#link-to list_url (query-params page=page)}}{{page}}{{/link-to}}
+                        </li>
+                        {{/each}}
+                        <li class="t-next {{if next '' 'disabled'}}" disabled={{if next disabled ''}}>{{#link-to list_url (query-params page=next) disabled=notNext}}&rsaquo;{{/link-to}}</li>
+                        <li class="t-last {{if last '' 'disabled'}}" disabled={{if last disabled ''}}>{{#link-to list_url (query-params page=last) disabled=notLast}}&raquo;{{/link-to}}</li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-4">
+                <span class="text-right pull-right page-size t-page-size">
+                  <select class="form-control input-sm" onchange={{action "togglePageSize" value="target.value"}}>
+                    {{#each page_sizes as |size|}}
+                      <option value={{size}} selected={{is-equal page_size size}}>{{size}} per page</option>
+                    {{/each}}
+                  </select>
+                </span>
+            </div>
+        </div>
+    </footer>
 
 </div>

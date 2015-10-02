@@ -5,8 +5,7 @@
 @import 'bootstrap';
 @import 'app/styles/base/_variables.scss';
 @import 'app/styles/mixins/_mixins.scss';
-@import 'app/styles/base/bootstrap-reset.scss';
-@import 'app/styles/base/reset.scss';
+@import 'app/styles/base/resets.scss';
 @import 'app/styles/base/index.scss';
 @import 'app/styles/base/components.scss';
 @import 'app/styles/modules/buttons.scss';
@@ -24,3 +23,4 @@
 @import 'ember-modal-dialog/ember-modal-structure';
 @import 'ember-modal-dialog/ember-modal-appearance';
 @import 'app/styles/modules/modal.scss';
+@import 'app/styles/models/person.scss';

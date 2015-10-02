@@ -34,10 +34,11 @@ const DETAIL_URL = BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 const LETTER_A = {keyCode: 65};
+const BACKSPACE = {keyCode: 8};
 
 var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 
-module('sco acceptance | detail test', {
+module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -179,26 +180,26 @@ test('newly added phone numbers without a valid number are ignored and removed w
     });
 });
 
-// test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
-//     visit(DETAIL_URL);
-//     click('.t-add-address-btn:eq(0)');
-//     andThen(() => {
-//         assert.equal(store.find('address').get('length'), 3);
-//         let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-//         assert.equal(visible_errors.length, 0);
-//     });
-//     fillIn('.t-address-address:eq(2)', '34');
-//     andThen(() => {
-//         let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-//         assert.equal(visible_errors.length, 1);
-//     });
-//     fillIn('.t-address-address:eq(2)', '');
-//     click('.t-cancel-btn');
-//     andThen(() => {
-//         assert.equal(currentURL(), PEOPLE_URL);
-//         assert.equal(store.find('address').get('length'), 2);
-//     });
-// });
+test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+    visit(DETAIL_URL);
+    click('.t-add-address-btn:eq(0)');
+    andThen(() => {
+        assert.equal(store.find('address').get('length'), 3);
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    fillIn('.t-address-address:eq(2)', '34');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+    });
+    fillIn('.t-address-address:eq(2)', '');
+    click('.t-cancel-btn');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(store.find('address').get('length'), 3);
+    });
+});
 
 test('phone numbers without a valid number are ignored and removed on save', (assert) => {
     visit(DETAIL_URL);
@@ -412,23 +413,37 @@ test('when you change a related address type it will be persisted correctly', (a
 });
 
 test('when you change a related role it will be persisted correctly', (assert) => {
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     andThen(() => {
-        let person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.equal(person.get('locations').get('length'), 1);
-        assert.equal(person.get('locations').objectAt(0).get('id'), LOCATION_DEFAULTS.idOne);
-    });
-    var url = PREFIX + DETAIL_URL + "/";
-    var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
-    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
-    payload.locations = [];
-    xhr(url,'PUT',JSON.stringify(payload),{},200);
-    fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
-    click(SAVE_BTN);
-    andThen(() => {
-        let person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.equal(person.get('locations').get('length'), 0);
-        assert.equal(currentURL(),PEOPLE_URL);
+        clearxhr(detail_xhr);
+        //refreshModel will call findById in people repo
+        let people_detail_data_two = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+        people_detail_data_two.role = ROLE_DEFAULTS.idTwo;
+        xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data_two);
+        andThen(() => {
+            let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('role_fk'), undefined);
+            assert.equal(person.get('locations').get('length'), 1);
+            assert.equal(person.get('locations').objectAt(0).get('id'), LOCATION_DEFAULTS.idOne);
+        });
+        fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+        andThen(() => {
+            assert.equal(currentURL(), DETAIL_URL + '?role_change=' + ROLE_DEFAULTS.idTwo);
+        });
+        var url = PREFIX + DETAIL_URL + "/";
+        var role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
+        var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
+        payload.locations = [];
+        xhr(url,'PUT',JSON.stringify(payload),{},200);
+        click(SAVE_BTN);
+        andThen(() => {
+            let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('role_fk'), ROLE_DEFAULTS.idTwo);
+            assert.equal(person.get('locations').get('length'), 0);
+            assert.equal(currentURL(), PEOPLE_URL);
+        });
     });
 });
 
@@ -468,7 +483,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         });
@@ -489,7 +503,6 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             var phone_numbers = store.find('phonenumber', PEOPLE_DEFAULTS.id);
             assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
@@ -511,7 +524,6 @@ test('when user changes an attribute on address and clicks cancel we prompt them
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             var addresses = store.find('address', PEOPLE_DEFAULTS.id);
             assert.equal(addresses.source[0].get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
@@ -533,7 +545,6 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             var phone_numbers = store.find('phonenumber', PEOPLE_DEFAULTS.id);
             assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
@@ -555,7 +566,6 @@ test('when user removes an address clicks cancel we prompt them with a modal and
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', PEOPLE_DEFAULTS.id);
             var addresses = store.find('address', PEOPLE_DEFAULTS.id);
             assert.equal(addresses.source[0].get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
@@ -572,14 +582,14 @@ test('currency helper displays correct currency format', (assert) => {
     });
 });
 
-// test('when click delete, person is deleted and removed from store', (assert) => {
-//     visit(DETAIL_URL);
-//     xhr(PREFIX + BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id + '/', 'DELETE', null, {}, 204, {});
-//     click('.t-delete-btn');
-//     andThen(() => {
-//         assert.equal(currentURL(), PEOPLE_URL);
-//     });
-// });
+test('when click delete, person is deleted and removed from store', (assert) => {
+    visit(DETAIL_URL);
+    xhr(PREFIX + BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id + '/', 'DELETE', null, {}, 204, {});
+    click('.t-delete-btn');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+});
 
 test('when you deep link to the person detail view you can add a new phone number', (assert) => {
     visit(DETAIL_URL);
@@ -826,43 +836,51 @@ test('when you deep link to the person detail view you can add and save a new ad
 });
 
 test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
     visit(DETAIL_URL);
     andThen(() => {
+        clearxhr(detail_xhr);
+        //refreshModel will call findById in people repo
+        let people_detail_data_two = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+        people_detail_data_two.role = ROLE_DEFAULTS.idTwo;
+        xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data_two);
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idOne);
-        assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
-    });
-    fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idTwo);
-        var person = store.find('person', PEOPLE_DEFAULTS.id);
-        assert.ok(person.get('isDirtyOrRelatedDirty'));
-        assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
-    });
-    click('.t-cancel-btn');
-    andThen(() => {
-        waitFor(() => {
-            assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
-        });
-    });
-    click('.t-modal-footer .t-modal-rollback-btn');
-    andThen(() => {
-        waitFor(() => {
-            assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
-            var person = store.find('person', PEOPLE_DEFAULTS.id);
-            assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
-            var actual_role = store.find('role', ROLE_DEFAULTS.idOne);
-            assert.ok(actual_role.get('isNotDirty'));
-            assert.ok(person.get('isNotDirty'));
+        andThen(() => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-            var previous_role = store.find('role', ROLE_DEFAULTS.idTwo);
-            assert.ok(Ember.$.inArray(person.get('id'), previous_role.get('people')) === -1);
-            assert.ok(previous_role.get('isNotDirty'));
+            assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idOne);
+            assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
+        });
+        fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+        andThen(() => {
+            assert.equal(currentURL(), DETAIL_URL + '?role_change=' + ROLE_DEFAULTS.idTwo);
+            assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idTwo);
+            var person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.ok(person.get('isDirtyOrRelatedDirty'));
+            assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
+        });
+        click('.t-cancel-btn');
+        andThen(() => {
+            waitFor(() => {
+                assert.equal(currentURL(), DETAIL_URL + '?role_change=' + ROLE_DEFAULTS.idTwo);
+                assert.equal(find('.t-modal').is(':visible'), true);
+            });
+        });
+        click('.t-modal-footer .t-modal-rollback-btn');
+        andThen(() => {
+            waitFor(() => {
+                assert.equal(currentURL(), PEOPLE_URL);
+                var person = store.find('person', PEOPLE_DEFAULTS.id);
+                assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
+                var actual_role = store.find('role', ROLE_DEFAULTS.idOne);
+                assert.ok(actual_role.get('isNotDirty'));
+                assert.ok(person.get('isNotDirty'));
+                assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+                var previous_role = store.find('role', ROLE_DEFAULTS.idTwo);
+                assert.ok(Ember.$.inArray(person.get('id'), previous_role.get('people')) === -1);
+                assert.ok(previous_role.get('isNotDirty'));
+            });
         });
     });
 });
@@ -954,40 +972,39 @@ test('when you deep link to the person detail view you can remove a location', (
     });
 });
 
-//test('sco when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
-    // clearxhr(detail_xhr);
-    // visit(DETAIL_URL);
-    // people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-    // people_detail_data.locations = [];
-    // xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
-    // let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
-    // xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-    // fillIn('.selectize-input input', 'a');
-    // triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-    // click('.t-person-locations-select div.option:eq(0)');
-    // click('.t-cancel-btn');
-    // andThen(() => {
-    //     waitFor(() => {
-    //         assert.equal(currentURL(), DETAIL_URL);
-    //         assert.equal(find('.t-modal').is(':visible'), true);
-    //     });
-    // });
-    // click('.t-modal-footer .t-modal-rollback-btn');
-    // andThen(() => {
-    //     waitFor(() => {
-    //         assert.equal(currentURL(), PEOPLE_URL);
-    //         assert.equal(find('.t-modal').is(':hidden'), true);
-    //         let person = store.find('person', PEOPLE_DEFAULTS.id);
-    //         assert.equal(person.get('locations').get('length'), 0);
-    //         assert.ok(person.get('isNotDirty'));
-    //         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    //         var previous_location_m2m = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
-    //         assert.deepEqual(person.get('person_location_fks'), []);
-    //         assert.equal(previous_location_m2m.get('length'), 1);
-    //         assert.ok(previous_location_m2m.objectAt(0).get('removed'), true);
-    //     });
-    // });
-//});
+test('when you deep link to the person detail view you can alter the locations and rolling back will reset it', (assert) => {
+    clearxhr(detail_xhr);
+    visit(DETAIL_URL);
+    people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    people_detail_data.locations = [];
+    xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+    fillIn('.selectize-input input', 'a');
+    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+    click('.t-person-locations-select div.option:eq(0)');
+    click('.t-cancel-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL + '?search=a');
+            assert.equal(find('.t-modal').is(':visible'), true);
+        });
+    });
+    click('.t-modal-footer .t-modal-rollback-btn');
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('locations').get('length'), 0);
+            assert.ok(person.get('isNotDirty'));
+            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+            var previous_location_m2m = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
+            assert.deepEqual(person.get('person_location_fks'), []);
+            assert.equal(previous_location_m2m.get('length'), 1);
+            assert.ok(previous_location_m2m.objectAt(0).get('removed'), true);
+        });
+    });
+});
 
 test('deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', (assert) => {
     clearxhr(list_xhr);
@@ -1003,48 +1020,127 @@ test('deep link to person and clicking in the person-locations-select component 
     fillIn('.selectize-input input', 'a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
     andThen(() => {
-        let locations = store.find('location', {location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
+        let filterFunc = function(location) {
+            let location_level_fk = location.get('location_level').get('id');
+            return location_level_fk === LOCATION_LEVEL_DEFAULTS.idOne;
+        };
+        let locations = store.find('location', filterFunc, ['id', 'location_level']);
         assert.equal(locations.get('length'), 10);
         assert.equal(find('div.item').length, 1);
         assert.equal(find('div.option').length, 9);
     });
 });
 
-// test('sco when you change a related role it will change the related locations as well', (assert) => {
-//     let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
-//     xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-//     visit(DETAIL_URL);
-//     let url = PREFIX + DETAIL_URL + "/";
-//     let role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
-//     let payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id});
-//     xhr(url,'PUT',JSON.stringify(payload),{},200);
-//     andThen(() => {
-//         let locations = store.find('location');
-//         assert.equal(locations.get('length'), 1);
-//         assert.equal(find('div.item').length, 1);
-//         assert.equal(find('div.option').length, 0);
-//     });
-    // fillIn('.selectize-input input', 'a');
-    // triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-    // andThen(() => {
-    //     let locations = store.find('location');
-    //     assert.equal(locations.get('length'), 10);
-    //     assert.equal(find('div.item').length, 1);
-    //     assert.equal(find('div.option').length, 9);
-    // });
-    //fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
-    // andThen(() => {
-    //     let person = store.find('person', PEOPLE_DEFAULTS.id);
-    //     assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
-    //     let locations = store.find('location');
-    //     assert.equal(locations.get('length'), 10);
-    //     assert.equal(find('div.item').length, 0);
-    //     assert.equal(find('div.option').length, 0);
-    // });
-    // click(SAVE_BTN);
-    // andThen(() => {
-    //     assert.equal(currentURL(), PEOPLE_URL);
-    //     let person = store.find('person', PEOPLE_DEFAULTS.id);
-    //     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    // });
-//});
+test('when you change a related role it will change the related locations as well', (assert) => {
+    clearxhr(list_xhr);
+    let people_list_data_mod = PEOPLE_FIXTURES.list();
+    people_list_data_mod.results[0].role = ROLE_DEFAULTS.idTwo;
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
+    visit(DETAIL_URL);
+    let url = PREFIX + DETAIL_URL + "/";
+    let role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
+    let payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id, locations: []});
+    xhr(url,'PUT',JSON.stringify(payload),{},200);
+    andThen(() => {
+        andThen(() => {
+            let locations = store.find('location');
+            assert.equal(locations.get('length'), 1);
+            assert.equal(find('div.item').length, 1);
+            assert.equal(find('div.option').length, 0);
+        });
+        let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+        xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+        fillIn('.selectize-input input', 'a');
+        triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+        andThen(() => {
+            let locations = store.find('location');
+            assert.equal(locations.get('length'), 10);
+            assert.equal(find('div.item').length, 1);
+            assert.equal(find('div.option').length, 9);
+            let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('locationsIsDirty'), false);
+        });
+        clearxhr(detail_xhr);
+        let people_detail_data_two = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+        people_detail_data_two.role = ROLE_DEFAULTS.idTwo;
+        xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data_two);
+        let locations_endpoint_role_change = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo + '&name__icontains=a';
+        xhr(locations_endpoint_role_change, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+        fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+        andThen(() => {
+            let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('locationsIsDirty'), false);
+            assert.equal(person.get('isDirtyOrRelatedDirty'), true);
+            assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
+            let locations = store.find('location');
+            assert.equal(locations.get('length'), 10);
+            assert.equal(find('div.item').length, 0);
+            assert.equal(find('div.option').length, 0);
+        });
+        click(SAVE_BTN);
+        andThen(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        });
+    });
+});
+
+test('when you change a related role it will change the related locations as well with no search criteria that was cleared out by user', (assert) => {
+    clearxhr(list_xhr);
+    let people_list_data_mod = PEOPLE_FIXTURES.list();
+    people_list_data_mod.results[0].role = ROLE_DEFAULTS.idTwo;
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data_mod);
+    visit(DETAIL_URL);
+    let url = PREFIX + DETAIL_URL + "/";
+    let role = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameTwo, people: [PEOPLE_DEFAULTS.id]});
+    let payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, role: role.id, locations: []});
+    xhr(url,'PUT',JSON.stringify(payload),{},200);
+    andThen(() => {
+        andThen(() => {
+            let locations = store.find('location');
+            assert.equal(locations.get('length'), 1);
+            assert.equal(find('div.item').length, 1);
+            assert.equal(find('div.option').length, 0);
+        });
+        let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+        xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+        fillIn('.selectize-input input', 'a');
+        triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+        andThen(() => {
+            let locations = store.find('location');
+            assert.equal(locations.get('length'), 10);
+            assert.equal(find('div.item').length, 1);
+            assert.equal(find('div.option').length, 9);
+        });
+        fillIn('.selectize-input input', '');
+        triggerEvent('.selectize-input input', 'keyup', BACKSPACE);
+        andThen(() => {
+            let locations = store.find('location');
+            assert.equal(locations.get('length'), 10);
+            assert.equal(find('div.item').length, 1);
+            assert.equal(find('div.option').length, 0);
+        });
+        clearxhr(detail_xhr);
+        let people_detail_data_two = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+        people_detail_data_two.role = ROLE_DEFAULTS.idTwo;
+        xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data_two);
+        let locations_endpoint_role_change = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+        xhr(locations_endpoint_role_change, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+        fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+        andThen(() => {
+            let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
+            let locations = store.find('location');
+            assert.equal(locations.get('length'), 10);
+            assert.equal(find('div.item').length, 0);
+            assert.equal(find('div.option').length, 0);
+        });
+        click(SAVE_BTN);
+        andThen(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            let person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+        });
+    });
+});

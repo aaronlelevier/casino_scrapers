@@ -1,30 +1,17 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
+import BaseComponent from 'bsrs-ember/components/base-component/component';
 
-var LocationSingle = Ember.Component.extend(ValidationMixin, {
+var LocationSingle = BaseComponent.extend(ValidationMixin, {
     repository: inject('location'),
-    classNames: ['wrapper', 'form'],
     nameValidation: validate('model.name'),
     actions: {
-        saveLocation() {
+        save() {
             this.set('submitted', true);
             if (this.get('valid')) {
-                var model = this.get('model');
-                var repository = this.get('repository');
-                repository.update(model).then(() => {
-                    this.sendAction('saveLocation');
-                });
+                this._super();
             }
-        },
-        cancelLocation() {
-            this.sendAction('redirectUser');
-        },
-        deleteLocation() {
-            var model = this.get('model');
-            var repository = this.get('repository');
-            repository.delete(model.get('id'));
-            this.sendAction('redirectUser');
         },
         changedStatus(model, val) {
             Ember.run(() => {

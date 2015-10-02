@@ -5,8 +5,9 @@ import FilterBy from 'bsrs-ember/mixins/filter-by';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
 
 var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
-    itemsPerPage: 10,
+    page_sizes: ['10', '25', '50', '100'],
     toggleFilter: false,
+    savingFilter: false,
     classNames: ['wrapper'],
     eventbus: Ember.inject.service(),
     _setup: Ember.on('init', function() {
@@ -65,14 +66,15 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
     }),
     paginated_content: Ember.computed('sorted_content.[]', function() {
         var page = parseInt(this.get('page')) || 1;
-        var itemsPerPage = this.get('itemsPerPage');
-        var upperBound = (page * itemsPerPage);
-        var lowerBound = (page * itemsPerPage) - itemsPerPage;
+        var page_size = this.get('page_size') || 10;
+        var upperBound = (page * page_size);
+        var lowerBound = (page * page_size) - page_size;
         return this.get('sorted_content').slice(lowerBound, upperBound);
     }),
     pages: Ember.computed('model.count', function() {
         var pages = [];
-        var total = this.get('model.count') / this.get('itemsPerPage') || 1;
+        var page_size = this.get('page_size') || 10;
+        var total = this.get('model.count') / page_size || 1;
         for(var p=1; p <= Math.ceil(total); p++) {
             pages.push(p);
         }
@@ -124,8 +126,19 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
         toggleFilterModal: function(column) {
             this.toggle(column);
         },
-        resetSort: function() {
-            this.setProperties({page: 1, sort: undefined});
+        togglePageSize: function(page_size) {
+            this.setProperties({page: 1, page_size: page_size});
+        },
+        resetGrid: function() {
+            this.setProperties({page: 1, sort: undefined, find: undefined, search: undefined});
+        },
+        toggleSaveFilterSetModal: function() {
+            this.toggleProperty('savingFilter');
+        },
+        invokeSaveFilterSet: function() {
+            this.sendAction('save_filterset', this.get('filtersetName'));
+            this.toggleProperty('savingFilter');
+            this.set('filtersetName', '');
         }
     }
 });

@@ -31,3 +31,19 @@ test('should render a selectbox with bound options and multiple set to true', fu
     assert.equal($component.find('div.option').length, 0);
 });
 
+// test('input has a debouce that prevents each keystroke from publishing a message', function(assert) {
+//     var done = assert.async();
+//     this.set('model', category);
+//     this.set('search', undefined);
+//     this.set('categories_children', store.find('category'));
+//     this.render(hbs`{{category-children-select search=search category=model categories_children=categories_children}}`);
+//     this.$('div.selectize-input input').val('x').trigger('keyup');
+//     setTimeout(() => {
+//         assert.equal(this.get('search'), undefined);
+//         setTimeout(() => {
+//             assert.equal(this.get('search'), 'x');
+//             done();
+//         }, 11);
+//     }, 290);
+// });
+

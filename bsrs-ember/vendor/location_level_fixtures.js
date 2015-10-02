@@ -6,6 +6,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         this.idDistrict = location_level_defaults.idDistrict;
         this.nameCompany = location_level_defaults.nameCompany;
         this.nameRegion = location_level_defaults.nameRegion;
+        this.nameLossPreventionDistrict = location_level_defaults.lossPreventionDistrict;
         // this.nameStore = location_level_defaults.nameStore;
         this.nameDistrict = location_level_defaults.nameDistrict;
         this.allChildrenArray = location_level_defaults.companyChildren;
@@ -27,11 +28,35 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         return {id: this.idDistrict, name: this.nameDistrict, children: ['8854f6c5-58c7-4849-971f-e8df9e15e559', 'b42bd1fc-d959-4896-9b89-aa2b2136ab7f']};
     };
     factory.prototype.list = function() {
-        response = [ { id: this.idOne, name : this.nameCompany }, { id: this.idDistrict, name : this.nameDistrict }, { id: this.idThree, name : this.nameRegion} ];
-        return {'count':3,'next':null,'previous':null,'results': response};
+        response = [
+            {id: this.idOne, name : this.nameCompany},
+            {id: this.idDistrict, name : this.nameDistrict},
+            {id: this.idThree, name : this.nameRegion}
+        ];
+        for (var i=9; i <= 10; i++) {
+            var uuid = '8854f6c5-58c7-4849-971f-e8df9e15e55';
+            if (i < 10) {
+                uuid = uuid + '0' + i;
+            } else{
+                uuid = uuid + i;
+            }
+            response.push({id: uuid, name: 'admin.locationlevel.company' + i});
+        }
+        //we do a reverse order sort here to verify a real sort occurs in the component
+        var sorted = response.sort(function(a,b) {
+            return b.id - a.id;
+        });
+        return {'count':19,'next':null,'previous':null,'results': sorted};
     };
-    factory.prototype.empty = function() {
-        return {'count':3,'next':null,'previous':null,'results': []};
+    factory.prototype.list_two = function() {
+        var response = [];
+        for (var i=11; i <= 19; i++) {
+            var uuid = '8854f6c5-58c7-4849-971f-e8df9e15e55';
+            var level = this.generate(uuid + i);
+            level.name = 'admin.locationlevel.company.tsiname' + i;
+            response.push(level);
+        }
+        return {'count':19,'next':null,'previous':null,'results': response};
     };
     factory.prototype.put = function(level) {
         var location_levels = this.detail();
@@ -54,12 +79,17 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
+    var objectAssign = require('object-assign');
+    var mixin = require('../vendor/mixin');
     var location_level_defaults = require('./defaults/location-level');
+    objectAssign(BSRS_LOCATION_LEVEL_FACTORY.prototype, mixin.prototype);
     module.exports = new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults);
 } else {
-    define('bsrs-ember/vendor/location_level_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location-level'], function (exports, location_level_defaults) {
+    define('bsrs-ember/vendor/location_level_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/mixin'], function (exports, location_level_defaults, mixin) {
         'use strict';
-        return new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults);
+        Object.assign(BSRS_LOCATION_LEVEL_FACTORY.prototype, mixin.prototype);
+        var Factory = new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults);
+        return {default: Factory};
     });
 }
 

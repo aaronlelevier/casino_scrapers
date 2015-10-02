@@ -19,16 +19,22 @@ var CategoryDeserializer = Ember.Object.extend({
     },
     deserialize_single(response, id) {
         let store = this.get('store');
-        response.children_fks = extract_children(response.children, store);
-        delete response.children;
-        let category = store.push('category', response);
-        category.save();
+        let existing_category = store.find('category', id);
+        if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
+            response.children_fks = extract_children(response.children, store);
+            delete response.children;
+            let category = store.push('category', response);
+            category.save();
+        }
     },
     deserialize_list(response) {
         let store = this.get('store');
         response.results.forEach((model) => {
-            let category = store.push('category', model);
-            category.save();
+            let existing_category = store.find('category', model.id);
+            if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
+                let category = store.push('category', model);
+                category.save();
+            }
         });
     }
 });

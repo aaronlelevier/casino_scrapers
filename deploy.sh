@@ -3,7 +3,7 @@ echo "DEPLOY STARTED!"
 
 NEW_UUID=$(( ( RANDOM  )  + 1 ))
 
-PORT=$((8003))
+PORT=$((8000))
 
 echo "UWSGI PROCESS RUNNING BEFORE KILL:"
 fuser $PORT/tcp
@@ -44,24 +44,29 @@ export PGPASSWORD=tango
 dropdb $DB_NAME -U bsdev
 createdb $DB_NAME -U bsdev -O bsdev
 
-cd bigsky/
+cd bigsky
+
+rm -rf templates/index.html
+rm -rf ember
+mkdir ember
+
+cp -r ../../bsrs-ember/dist/assets ember/assets
+cp -r ../../bsrs-ember/dist/fonts ember/fonts
+cp -r ../../bsrs-ember/dist/index.html templates
+
 export DJANGO_SETTINGS_MODULE='bigsky.settings.staging'
 ../venv3/bin/python manage.py makemigrations
 ../venv3/bin/python manage.py migrate
 
-../venv3/bin/python manage.py loaddata fixtures/jenkins.json
-../venv3/bin/python manage.py loaddata fixtures/jenkins_custom.json
-
-cp -r ../../bsrs-ember/dist/assets .
-cp -r ../../bsrs-ember/dist/fonts .
-cp -r ../../bsrs-ember/dist/index.html templates
+../venv/bin/python manage.py loaddata fixtures/jenkins.json
+../venv/bin/python manage.py loaddata fixtures/jenkins_custom.json
+../venv/bin/python manage.py collectstatic --noinput
 
 uwsgi --http :$PORT \
     --wsgi-file bigsky.wsgi \
     --virtualenv /www/django/releases/python3/$NEW_UUID/bsrs-django/venv3 \
     --daemonize /tmp/python3/bigsky.log \
-    --static-map /assets=/www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky \
-    --static-map /fonts=/www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky \
+    --static-map /static=/www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky \
     --check-static /www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky
 
 

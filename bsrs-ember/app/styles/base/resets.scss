@@ -1,0 +1,135 @@
+.selectize-input{
+	border: $borderStyle;
+	border-radius: $borderRadius;
+}
+.selectize-input.focus {
+    border-color: $activeColor;
+    outline: 0;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+	border-radius: $borderRadiusTop;
+}
+.selectize-dropdown, .selectize-dropdown.form-control{
+	margin: -1px 0 0;
+	border-color: $activeColor;
+	border-radius: $borderRadiusBottom;
+}
+input, textarea, select, button {
+	outline: none;
+	-webkit-box-shadow: none !important;
+	-moz-box-shadow: none !important;
+	-ms-box-shadow: none !important;
+	box-shadow: none !important;
+}
+input[type="text"]:disabled {
+	border: none;
+	box-shadow: none;
+	&:hover {
+		border: none;
+		box-shadow: none;
+	}
+}//input
+
+.form-control{
+	border-radius: $borderRadius;
+	border-color: $gray;
+	color: $dark;
+	&:hover{
+		// border-color: $hoverColor;
+	}
+	&:focus{
+		border-color: $activeColor;
+		z-index: 3;
+	}
+}
+.input-group-addon:first-child{
+	border-radius: $borderRadiusLeft;
+}
+.input-group-addon:last-child{
+	border-radius: $borderRadiusRight;
+}
+.btn{
+	border-radius: $borderRadius;
+}
+.btn-default,
+.input-group-addon{
+	border-color: $gray;
+}
+//remove browser default
+.btn:focus,
+.btn:active {
+   outline: none !important;
+}
+
+.input-group .btn {
+    height: 34px !important; //Remove after bootstrap fix released
+ }
+
+.btn-default:hover,
+.input-group-addon,
+.form-control[disabled],
+.form-control[readonly],
+fieldset[disabled] .form-control,
+.btn-default:active,
+.btn-default.active,
+.open > .btn-default.dropdown-toggle,
+.btn-default:active:hover,
+.btn-default:active:focus,
+.btn-default:active.focus,
+.btn-default.active:hover,
+.btn-default.active:focus,
+.btn-default.active.focus,
+.open > .btn-default.dropdown-toggle:hover,
+.open > .btn-default.dropdown-toggle:focus,
+.open > .btn-default.dropdown-toggle.focus{
+	background-color: $light;
+	border-color: $gray;
+	z-index: 3;
+}
+.btn-default:active,
+.btn-default.active,
+.open > .btn-default.dropdown-toggle,
+.btn-default:active:hover,
+.btn-default:active:focus,
+.btn-default:active.focus,
+.btn-default.active:hover,
+.btn-default.active:focus,
+.btn-default.active.focus,
+.open > .btn-default.dropdown-toggle:hover,
+.open > .btn-default.dropdown-toggle:focus,
+.open > .btn-default.dropdown-toggle.focus{
+	border-color: $activeColor;
+	z-index: 3;
+}
+.badge{
+	background-color: $orange;
+	font-size: 1.1rem;
+	border-radius: $borderRadius;
+}
+.list-group{
+	.list-group-item{
+		border-width: 0 0 1px;
+		margin-bottom: 0;
+		border-radius: 0 !important;
+		border-color: $gray;
+		background: $light;
+		&:hover{
+			background-color: $white !important;
+		}
+	}
+
+
+	.list-group-item.active,
+	.list-group-item.active:hover,
+	.list-group-item.active:focus{
+		background-color: $white;
+		color: $activeColor;
+		border-color: $gray;
+		font-weight: bold;
+	}
+	.list-group-item.active > .badge,
+	.nav-pills > .active > a > .badge{
+		background-color: $orange;
+		color: $white;
+	}
+}

@@ -8,6 +8,8 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import UUID from 'bsrs-ember/vendor/defaults/uuid';
+import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 
@@ -165,7 +167,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     });
 });
 
-test('typing a search will reset page to 1 and require an additional xhr', function(assert) {
+test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=title&search=8%20m';
     xhr(search_two ,"GET",null,{},200,PEOPLE_FIXTURES.searched('8 m', 'title'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=title';
@@ -219,6 +221,12 @@ test('typing a search will reset page to 1 and require an additional xhr', funct
         assert.equal(find('.t-grid-data').length, 1);
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), 'mgibson8');
     });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
+    });
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
@@ -270,7 +278,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.ok(find('.t-sort-username-dir').hasClass('fa-sort'));
         assert.ok(find('.t-sort-title-dir').hasClass('fa-sort'));
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
-        assert.equal(find('.t-reset-sort-order').length, 0);
+        assert.equal(find('.t-reset-grid').length, 0);
     });
     click('.t-sort-username-dir');
     andThen(() => {
@@ -304,7 +312,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.ok(find('.t-sort-username-dir').hasClass('fa-sort-asc'));
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
     });
-    click('.t-reset-sort-order');
+    click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, 10);
@@ -312,7 +320,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
 });
 
-test('full text search will filter down the result set and query django accordingly', function(assert) {
+test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
     let find_four = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=lelevier&fullname__icontains=ewcomer';
     xhr(find_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:lelevier,fullname:ewcomer', 1));
     let find_three = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7&fullname__icontains=ewcomer';
@@ -351,6 +359,12 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?find=title%3Awat%2Cusername%3Alelevier%2Cfullname%3Aewcomer');
         assert.equal(find('.t-grid-data').length, 0);
+    });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
     });
 });
 
@@ -426,5 +440,207 @@ test('full text searched columns will have a special on css class when active', 
         assert.ok(find('.t-filter-fullname').hasClass('on'));
         assert.ok(!find('.t-filter-username').hasClass('on'));
         assert.ok(find('.t-filter-title').hasClass('on'));
+    });
+});
+
+test('after you reset the grid the filter model will also be reset', function(assert) {
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=username&search=m&username__icontains=gib';
+    xhr(option_three ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username:m', 1));
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=username&search=m';
+    xhr(option_two ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username:m', 1));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=m';
+    xhr(option_one ,'GET',null,{},200,PEOPLE_FIXTURES.searched('m', 'id'));
+    visit(PEOPLE_URL);
+    fillIn('.t-grid-search-input', 'm');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_M);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=m');
+    });
+    click('.t-sort-username-dir');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=m&sort=username');
+    });
+    filterGrid('username', 'gib');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?find=username%3Agib&search=m&sort=username');
+    });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+    click('.t-filter-username');
+    andThen(() => {
+        let username_filter_value = $('.ember-modal-dialog input:first').val();
+        assert.equal(username_filter_value, '');
+    });
+});
+
+test('count is shown and updated as the user filters down the list from django', function(assert) {
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=8';
+    xhr(option_one ,'GET',null,{},200,PEOPLE_FIXTURES.searched('8', 'id'));
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-count').text(), '18 People');
+    });
+    fillIn('.t-grid-search-input', '8');
+    triggerEvent('.t-grid-search-input', 'keyup', NUMBER_EIGHT);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=8');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-page-count').text(), '2 People');
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-count').text(), '18 People');
+    });
+});
+
+test('picking a different number of pages will alter the query string and xhr', function(assert) {
+    let option_two = PREFIX + BASE_URL + '/?page=1&page_size=10';
+    xhr(option_two, 'GET',null,{},200,PEOPLE_FIXTURES.paginated(10));
+    let option_one = PREFIX + BASE_URL + '/?page=1&page_size=25';
+    xhr(option_one, 'GET',null,{},200,PEOPLE_FIXTURES.paginated(25));
+    let page_two = PREFIX + BASE_URL + '/?page=2';
+    xhr(page_two, 'GET',null,{},200,PEOPLE_FIXTURES.list_two());
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-size option:selected').text(), '10 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+    click('.t-page:eq(1) a');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL + '?page=2');
+        assert.equal(find('.t-grid-data').length, 9);
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(!pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+    alterPageSize('.t-page-size', 25);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?page_size=25');
+        assert.equal(find('.t-grid-data').length, 19);
+        assert.equal(find('.t-page-size option:selected').text(), '25 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 1);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+    });
+    alterPageSize('.t-page-size', 10);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?page_size=10');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-page-size option:selected').text(), '10 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+});
+
+test('starting with a page size greater than 10 will set the selected', function(assert) {
+    clearxhr(list_xhr);
+    let option_one = PREFIX + BASE_URL + '/?page=1&page_size=25';
+    xhr(option_one, 'GET',null,{},200,PEOPLE_FIXTURES.paginated(25));
+    visit(PEOPLE_URL + '?page_size=25');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?page_size=25');
+        assert.equal(find('.t-grid-data').length, 19);
+        assert.equal(find('.t-page-size option:selected').text(), '25 per page');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 1);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+    });
+});
+
+test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+    xhr(sort_one ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    visit(PEOPLE_URL);
+    click('.t-sort-username-dir');
+    click('.t-show-save-filterset-modal');
+    andThen(() => {
+        isFocused('.ember-modal-dialog input:first');
+    });
+    click('.t-grid-search-input');
+    andThen(() => {
+        isNotFocused('.ember-modal-dialog input:first');
+    });
+});
+
+test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+    xhr(sort_one ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    let name = 'foobar';
+    let routePath = 'admin.people.index';
+    let url = window.location.toString();
+    let query = url.slice(url.indexOf('?'));
+    let section = '.t-side-menu > section:eq(1)';
+    let navigation = '.t-admin-people-index-navigation li';
+    let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
+    visit(PEOPLE_URL);
+    click('.t-sort-username-dir');
+    click('.t-show-save-filterset-modal');
+    xhr('/api/admin/saved_searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+    saveFilterSet(name, routePath);
+    andThen(() => {
+        let html = find(section);
+        assert.equal(html.find(navigation).length, 3);
+        let filterset = store.find('filterset', UUID.value);
+        assert.equal(filterset.get('name'), name);
+        assert.equal(filterset.get('endpoint_name'), routePath);
+        assert.equal(filterset.get('endpoint_uri'), query);
+    });
+});
+
+test('delete filterset will fire off xhr and remove item from the sidebar navigation', function(assert) {
+    let name = 'foobar';
+    let routePath = 'admin.people.index';
+    let query = '?foo=bar';
+    let navigation = '.t-admin-people-index-navigation li';
+    let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
+    visit(PEOPLE_URL);
+    clearAll(store, 'filterset');
+    andThen(() => {
+        store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
+    });
+    andThen(() => {
+        let section = find('.t-side-menu > section:eq(1)');
+        assert.equal(section.find(navigation).length, 1);
+    });
+    xhr('/api/admin/saved_searches/' + UUID.value + '/', 'DELETE', null, {}, 204, {});
+    click(navigation + '> a > .t-remove-filterset:eq(0)');
+    andThen(() => {
+        let section = find('.t-side-menu > section:eq(1)');
+        assert.equal(section.find(navigation).length, 0);
+    });
+});
+
+test('save filterset button only available when a dynamic filter is present', function(assert) {
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
+    xhr(sort_one ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(find('.t-show-save-filterset-modal').length, 0);
+    });
+    click('.t-sort-username-dir');
+    andThen(() => {
+        assert.equal(find('.t-show-save-filterset-modal').length, 1);
     });
 });

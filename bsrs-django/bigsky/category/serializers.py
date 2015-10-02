@@ -1,5 +1,5 @@
 from category.models import Category
-from util.serializers import BaseCreateSerializer
+from utils.serializers import BaseCreateSerializer
 
 
 ### CATEGORY
@@ -15,6 +15,15 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
     class Meta:
         model = Category
         fields = ('id', 'name',)
+
+
+class CategoryRoleSerializer(BaseCreateSerializer):
+    '''
+    Serializer for Role detail
+    '''
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'status',)
 
 
 class CategoryListSerializer(BaseCreateSerializer):

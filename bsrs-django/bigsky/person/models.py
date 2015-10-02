@@ -9,17 +9,16 @@ from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location
+from category.models import Category
 from person import helpers
 from order.models import WorkOrderStatus
 from translation.models import Locale
-from util import choices, create
-from util.models import (AbstractName, MainSetting, CustomSetting,
-    BaseModel, BaseManager)
+from utils import choices, create
+from utils.models import AbstractName, BaseModel, BaseManager
 
 
 class RoleManager(BaseManager):
@@ -42,6 +41,7 @@ class Role(BaseModel):
         choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
     # Required
     name = models.CharField(max_length=100, unique=True, help_text="Will be set to the Group Name")
+    category = models.ForeignKey(Category, blank=True, null=True) 
     # Optional
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
@@ -115,10 +115,6 @@ class Role(BaseModel):
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
 
-    # use as a normal Django Manager() to access related setting objects.
-    main_settings = GenericRelation(MainSetting)
-    custom_settings = GenericRelation(CustomSetting)
-
     # Manager
     objects = RoleManager()
 
@@ -145,7 +141,7 @@ class Role(BaseModel):
     def to_dict(self):
         if not self.location_level:
             return {"id": str(self.pk), "name": self.name}
-        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
+        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id), "category": self.category.to_dict()}
 
     def _update_defaults(self):
         if not self.group:
@@ -247,10 +243,6 @@ class Person(BaseModel, AbstractUser):
         blank=True, null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
-
-    # use as a normal Django Manager() to access related setting objects.
-    main_settings = GenericRelation(MainSetting)
-    custom_settings = GenericRelation(CustomSetting)
 
     # Managers
     objects = PersonManager()

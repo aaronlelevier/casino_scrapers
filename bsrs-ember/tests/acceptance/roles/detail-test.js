@@ -161,7 +161,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), ROLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             let role = store.find('role', ROLE_DEFAULTS.idOne);
             assert.equal(role.get('name'), ROLE_DEFAULTS.nameOne);
         });
@@ -174,5 +173,6 @@ test('when click delete, role is deleted and removed from store', (assert) => {
     click('.t-delete-btn');
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
+        assert.equal(store.find('role', ROLE_DEFAULTS.idOne).get('length'), undefined);
     });
 });

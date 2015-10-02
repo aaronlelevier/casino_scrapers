@@ -1,13 +1,12 @@
 from .base import *
 
-### Application definition ###
+
 CI_APPS = (
     'django_nose',
     'django_coverage',
     )
 
 INSTALLED_APPS = INSTALLED_APPS + CI_APPS
-
 
 DATABASES = {
     'default': {
@@ -24,5 +23,5 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=accounting,category,contact,generic,location,order,person,session,translation,util',
+    '--cover-package=accounting,category,contact,generic,location,order,person,session,translation,utils',
 ]

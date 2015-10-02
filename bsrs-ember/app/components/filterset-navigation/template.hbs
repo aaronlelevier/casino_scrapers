@@ -1,0 +1,6 @@
+<li>{{#link-to route class=className}}{{t translate count="2"}}{{/link-to}}</li>
+<ul class={{filterset-nav-class route}}>
+{{#each saved as |filterset|}}
+<li>{{#link-to filterset.endpoint_name (filterset-params filterset)}}{{filterset.name}}<i class="fa fa-minus-circle pull-right t-remove-filterset" aria-hidden="true" {{action "removeFilterSet" filterset.id}}></i>{{/link-to}}</li>
+{{/each}}
+</ul>

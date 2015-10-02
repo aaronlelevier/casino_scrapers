@@ -2,7 +2,6 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 import PhoneNumberMixin from 'bsrs-ember/mixins/model/person/phone_number';
 import AddressMixin from 'bsrs-ember/mixins/model/person/address';
@@ -10,7 +9,7 @@ import RoleMixin from 'bsrs-ember/mixins/model/person/role';
 import LocationMixin from 'bsrs-ember/mixins/model/person/location';
 import config from 'bsrs-ember/config/environment';
 
-var Person = Model.extend(NewMixin, CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, {
+var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, {
     uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),

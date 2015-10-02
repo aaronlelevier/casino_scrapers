@@ -1,6 +1,6 @@
 #!/bin/bash -lx
 
-echo "BUILD STARTED!"
+echo $(date -u) "BUILD STARTED!"
 
 function npmInstall {
     npm install --no-optional
@@ -118,7 +118,6 @@ function migrateData {
     fi
 }
 
-
 function runSeleniumTests {
     python run_selenium.py
     SELENIUM_TEST=$?
@@ -128,33 +127,41 @@ function runSeleniumTests {
     fi
 }
 
+echo $(date -u) "NPM INSTALL"
 cd bsrs-ember
 npmInstall
+
+echo $(date -u) "EMBER TESTS"
 emberTest
 
+echo $(date -u) "PIP INSTALL"
 cd ../bsrs-django
 pipInstall
 
+echo $(date -u) "DJANGO TESTS"
 cd bigsky
 djangoTest
 
+echo $(date -u) "BUILD EMBER"
 cd ../../bsrs-ember
 productionEmberBuild
 
+echo $(date -u) "COLLECT STATIC ASSETS"
 cd ../bsrs-django
 cd bigsky
-
 copyEmberAssetsToDjango
 
+echo $(date -u) "DROP AND CREATE DATABASE"
 dropAndCreateDB
 
+echo $(date -u) "DJANGO MIGRATE DATABASE"
 wait
-
 migrateData
 
+echo $(date -u) "SELENIUM TESTS"
 wait
-
 runSeleniumTests
 
-echo "BUILD SUCCESSFUL!"
+echo $(date -u) "BUILD SUCCESSFUL!"
+
 exit 0

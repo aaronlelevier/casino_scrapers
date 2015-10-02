@@ -25,6 +25,7 @@ module.exports = function(environment) {
 
   //app.import('bower_components/ember/ember-template-compiler.js');
   app.import('bower_components/fauxjax/dist/fauxjax.min.js');
+  app.import('vendor/mixin.js');
   app.import('vendor/address_fixtures.js');
   app.import('vendor/location_fixtures.js');
   app.import('vendor/location_level_fixtures.js');

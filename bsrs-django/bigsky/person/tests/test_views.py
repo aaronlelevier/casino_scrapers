@@ -1,10 +1,11 @@
 import json
 import uuid
 import copy
+import random
 import sys
 import codecs
 
-from django.test import TestCase, TransactionTestCase
+from django.test import TestCase
 from django.db.models.functions import Lower
 
 from rest_framework import status
@@ -16,12 +17,15 @@ from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
+from category.models import Category
 from person.models import Person, Role, PersonStatus
-from person.serializers import PersonUpdateSerializer, RoleSerializer
-from person.tests.factory import PASSWORD, create_person, create_role, create_all_people
+from person.serializers import PersonUpdateSerializer, RoleSerializer, RoleDetailSerializer
+from person.tests.factory import (
+    PASSWORD, create_person, create_role, create_roles, create_single_person,
+    create_all_people)
 from translation.models import Locale
 from translation.tests.factory import create_locales
-from util import create, choices
+from utils import create, choices
 
 
 reader = codecs.getreader("utf-8")
@@ -36,11 +40,15 @@ class RoleViewSetTests(APITestCase):
         self.person = create_person()
         # LocationLevel
         self.location = mommy.make(Location)
+        # Category
+        self.category = mommy.make(Category, name="repair")
+        print self.category
         # Currency
         self.currency = Currency.objects.default()
         # Role
         self.role = self.person.role
         self.role.location_level = self.location.location_level
+        self.role.category = self.category
         self.role.save()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -65,6 +73,7 @@ class RoleViewSetTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.role.pk))
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
+        self.assertEqual(data['category']['id'], str(self.category.id))
 
     def test_create(self):
         role_data = {
@@ -208,9 +217,6 @@ class PersonListTests(TestCase):
     def test_response(self):
         self.assertEqual(self.response.status_code, 200)
 
-    def test_count(self):
-        self.assertEqual(self.data['count'], self.people)
-
     def test_status(self):
         self.assertTrue(self.data['results'][0]['status']['id'])
 
@@ -222,6 +228,17 @@ class PersonListTests(TestCase):
         results = self.data['results'][0]
         self.assertEqual(results['auth_amount'], "{0:.4f}".format(self.person.auth_amount))
         self.assertEqual(results['auth_currency'], str(self.person.auth_currency.id))
+
+    def test_max_paginate_by_default(self):
+        response = self.client.get('/api/admin/people/')
+        data = json.loads(self.response.content)
+        self.assertEqual(data['count'], Person.objects.count())
+
+    def test_max_paginate_by_page_size(self):
+        number = 1
+        response = self.client.get('/api/admin/people/?page_size={}'.format(number))
+        data = json.loads(response.content)
+        self.assertEqual(len(data['results']), number)
 
 
 class PersonDetailTests(TestCase):
@@ -264,7 +281,9 @@ class PersonDetailTests(TestCase):
     def test_location(self):
         self.assertTrue(self.data['locations'])
         location = Location.objects.get(id=self.data['locations'][0]['id'])
+        location_level = LocationLevel.objects.get(id=self.data['locations'][0]['location_level']['id'])
         self.assertIsInstance(location, Location)
+        self.assertIsInstance(location_level, LocationLevel)
 
     def test_emails(self):
         self.assertTrue(self.data['emails'])
@@ -314,7 +333,7 @@ class PersonPutTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
-        self.person = create_person()
+        self.person = create_single_person(name="aaron")
         self.client.login(username=self.person.username, password=self.password)
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
         self.email_type = mommy.make(EmailType)
@@ -461,9 +480,9 @@ class PersonPutTests(APITestCase):
     # ADDRESSES
 
     def test_update_person_and_create_address(self):
-        self.assertFalse(self.data['addresses'])
+        address_id = str(uuid.uuid4())
         self.data['addresses'] = [{
-            'id': str(uuid.uuid4()),
+            'id': address_id,
             'type': str(self.address_type.id),
             'person': str(self.person.id),
             'address': create._generate_chars()
@@ -474,7 +493,7 @@ class PersonPutTests(APITestCase):
         self.assertTrue(data['addresses'])
         self.assertEqual(
             self.person,
-            Address.objects.get(id=data['addresses'][0]['id']).person
+            Address.objects.get(id=address_id).person
         )
 
     # PHONE NUMBERS
@@ -501,6 +520,7 @@ class PersonPutTests(APITestCase):
         # Person FK on Contact Nested Model
         create_person_and_contacts(self.person)
         # Post standard data w/o contacts
+        self.data["emails"] = []
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
@@ -515,6 +535,7 @@ class PersonPutTests(APITestCase):
             'number': create._generate_ph(),
             'person': str(self.person.id)
         }]
+        self.data["emails"] = []
         # Post standard data w/o contacts
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
@@ -689,47 +710,33 @@ class PersonSearchOrderingTests(TestCase):
         self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
 
 
-class DRFFiltersTests(TestCase):
+class FilterByFieldTests(APITransactionTestCase):
 
     def setUp(self):
-        # Role
-        self.role = create_role()
-        # Person Records w/ specific Username
-        for i in range(15):
-            name = self._get_name(i)
-            Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
-                first_name=name, role=self.role)
-            
-        self.people = Person.objects.count()
-        # Login
-        self.person = create_person(username='aaron')
+        self.roles = create_roles()
+        self.role = self.roles[0]
+        for role in self.roles:
+            create_single_person(
+                name=random.choice(create.LOREM_IPSUM_WORDS.split()),
+                role=role
+            )
+        # Login User
+        self.person = create_single_person(name="aaron", role=self.role)
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
 
-    @staticmethod
-    def _get_name(record):
-        # Generate regarless of letter case name/username function 
-        # for "ordering" tests
-        if record % 2 == 0:
-            return "wat{}".format(chr(65+record))
-        else:
-            return "waT{}".format(chr(65+record))
+    # FIELDS
 
-    def test_startswith(self):
-        letter = 'A'
-        response = self.client.get('/api/admin/people/?fullname__startswith={}'
-            .format(letter))
+    def test_field(self):
+        username = self.person.username
+        response = self.client.get('/api/admin/people/?username={}'.format(username))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data['count'],
-            Person.objects.filter(fullname__startswith=letter).count()
-        )
+        self.assertEqual(data['count'], Person.objects.filter(username=username).count())
 
-    def test_contains(self):
-        # Case-sensitive
+    def test_field_with_arg(self):
         letter = 'T'
         response = self.client.get('/api/admin/people/?fullname__contains={}'
             .format(letter))
@@ -740,17 +747,79 @@ class DRFFiltersTests(TestCase):
             Person.objects.filter(fullname__contains=letter).count()
         )
 
-    def test_icontains(self):
-        # Not Case-sensitive
-        letter = 'T'
-        response = self.client.get('/api/admin/people/?fullname__icontains={}'
-            .format(letter))
+    # RELATED
+
+    def test_related_field(self):
+        response = self.client.get('/api/admin/people/?role__name={}'.format(self.role.name))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data['count'], Person.objects.filter(role__name=self.role.name).count())
+
+    def test_related_field_with_arg(self):
+        response = self.client.get('/api/admin/people/?role__name__icontains={}'
+            .format(self.role.name[0]))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['count'],
+            Person.objects.filter(role__name__icontains=self.role.name[0]).count()
+        )
+
+    def test_related_id_in(self):
+        response = self.client.get('/api/admin/people/?role__id__in={}'.format(self.role.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(
+            data['count'],
+            Person.objects.filter(role__id__in=[self.role.id]).count()
+        )
+
+    def test_related_id_in_multiple(self):
+        response = self.client.get('/api/admin/people/?role__id__in={},{}'
+            .format(self.roles[0].id, self.roles[1].id))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
-            Person.objects.filter(fullname__icontains=letter).count()
+            Person.objects.filter(role__id__in=[self.roles[0].id, self.roles[1].id]).count()
         )
+
+    # IN
+
+    def test_in_single(self):
+        letter = self.person.username[0]
+        response = self.client.get('/api/admin/people/?username__in={}'.format(letter))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data['count'], Person.objects.filter(username__in=[letter]).count())
+
+    def test_in_multiple(self):
+        # Setup
+        people = Person.objects.all()
+        a = people[0].username
+        b = people[1].username
+        usernames = "{},{}".format(a,b)
+        # Test
+        response = self.client.get('/api/admin/people/?username__in={}'.format(usernames))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data['count'], Person.objects.filter(username__in=[a,b]).count())
+
+    def test_in_single_uuid(self):
+        response = self.client.get('/api/admin/people/?id__in={}'.format(self.person.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data['count'], Person.objects.filter(id__in=[self.person.id]).count())
+
+    def test_in_multiple_uuid(self):
+        people = Person.objects.all()
+        a = people[0]
+        b = people[1]
+        response = self.client.get('/api/admin/people/?id__in={},{}'.format(a.id, b.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content)
+        self.assertEqual(data['count'], Person.objects.filter(id__in=[a.id, b.id]).count())
+
 
 
 

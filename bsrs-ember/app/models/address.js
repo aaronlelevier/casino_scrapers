@@ -1,8 +1,7 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 
-var AddressModel = Model.extend(NewMixin, {
+var AddressModel = Model.extend({
     type: attr(),
     address: attr(''),
     city: attr(),

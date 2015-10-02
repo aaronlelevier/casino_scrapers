@@ -1,6 +1,9 @@
 {
   "predef": [
+    "clearAll",
+    "saveFilterSet",
     "filterGrid",
+    "alterPageSize",
     "visitSync",
     "document",
     "window",

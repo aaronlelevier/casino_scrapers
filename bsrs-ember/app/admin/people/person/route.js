@@ -2,10 +2,11 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import config from 'bsrs-ember/config/environment';
 import injectStore from 'bsrs-ember/utilities/store';
+import TabRoute from 'bsrs-ember/route/tab/route';
 import AddressType from 'bsrs-ember/models/address-type';
 import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
 
-var PersonRoute = Ember.Route.extend({
+var PersonRoute = TabRoute.extend({
     store: injectStore('main'),
     repository: inject('person'),
     location_repo: inject('location'),
@@ -15,7 +16,6 @@ var PersonRoute = Ember.Route.extend({
     role_repo: inject('role'),
     phone_number_type_repo: inject('phone-number-type'),
     address_type_repo: inject('address-type'),
-    tabList: Ember.inject.service(),
     queryParams: {
         search: {
             refreshModel: true
@@ -24,29 +24,39 @@ var PersonRoute = Ember.Route.extend({
             refreshModel: true
         },
     },
+    redirectRoute: Ember.computed(function() { return 'admin.people.index'; }),
+    modelName: Ember.computed(function() { return 'person'; }),
+    templateModelField: Ember.computed(function() { return 'fullname'; }),
     model(params, transition) {
-        var person_pk = params.person_id,
-            location_repo = this.get('location_repo'),
-            country_repo = this.get('country_repo'),
-            state_repo = this.get('state_repo'),
-            status_repo = this.get('status_repo'),
-            role_repo = this.get('role_repo'),
-            repository = this.get('repository'),
-            person = repository.findById(person_pk),
-            phone_number_type_repo = this.get('phone_number_type_repo'),
-            default_phone_number_type = phone_number_type_repo.get_default(),
-            address_type_repo = this.get('address_type_repo'),
-            default_address_type = address_type_repo.get_default(),
-            roles = role_repo.get_default();
+        let person_pk = params.person_id;
+        let location_repo = this.get('location_repo');
+        let country_repo = this.get('country_repo');
+        let state_repo = this.get('state_repo');
+        let status_repo = this.get('status_repo');
+        let role_repo = this.get('role_repo');
+        let repository = this.get('repository');
+        let person = this.get('store').find('person', person_pk);
+        if (!person.get('length') || person.get('isNotDirtyOrRelatedNotDirty')) { 
+            person = repository.findById(person_pk);
+        }
+        let phone_number_type_repo = this.get('phone_number_type_repo');
+        let default_phone_number_type = phone_number_type_repo.get_default();
+        let address_type_repo = this.get('address_type_repo');
+        let default_address_type = address_type_repo.get_default();
+        let roles = role_repo.get_default();
         let search = transition.queryParams.search;
         let role_change = transition.queryParams.role_change;
         let location_level_pk = person.get('location_level_pk');
-        let person_locations_children = (search || role_change) && location_level_pk ? location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change) : [];
-
-        transition.send('createTab', person_pk);
-
+        var person_locations_children;
+        if ((search || role_change) && location_level_pk) { 
+            person_locations_children = location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change);
+        } else { 
+            person_locations_children = []; 
+        }
         return Ember.RSVP.hash({
             model: person,
+            repository: repository,
+            model_id: person_pk,
             phone_number_types: phone_number_type_repo.find(),
             countries: country_repo.find(),
             state_list: state_repo.find(),
@@ -60,10 +70,10 @@ var PersonRoute = Ember.Route.extend({
             role_change: role_change,
             person_locations_children: person_locations_children
         });
-
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);
+        controller.set('repository', hash.repository);
         controller.set('phone_number_types', hash.phone_number_types);
         controller.set('default_phone_number_type', hash.default_phone_number_type);
         controller.set('address_types', hash.address_types);
@@ -79,12 +89,9 @@ var PersonRoute = Ember.Route.extend({
     },
     actions: {
         localeChanged(locale){
-            var model = this.currentModel.model;
+            let model = this.currentModel.model;
             model.set('locale', locale);
             model.changeLocale();
-        },
-        createTab(id){
-            this.get('tabList').createTab(this.routeName, 'person', id, 'admin.people.index');
         }
     }
 });

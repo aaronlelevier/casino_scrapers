@@ -1,10 +1,11 @@
 import Ember from 'ember';
 
-export default Ember.Component.extend({
-  tabList: Ember.inject.service(),
+var TabList = Ember.Component.extend({
   actions: {
     closeTab(tab){
       this.sendAction('closeTabMaster', tab);
     }
   }
 });
+
+export default TabList;

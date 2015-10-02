@@ -24,17 +24,19 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.saveRelated();
         });
     },
-    findLocationSelect(filter, search_criteria, role_change) {
+    findLocationSelect(filter, search_criteria) {
         let url = this.format_url(filter);
-        if (role_change) {
-            url += '&role_change=' + role_change;
-        } else {
+        if (search_criteria) {
             url += `&name__icontains=${search_criteria}`;
         }
         PromiseMixin.xhr(url, 'GET').then((response) => {
             this.get('LocationDeserializer').deserialize(response);
         });
-        return this.get('store').find('location', {location_level_fk: filter.location_level});
+        let filterFunc = function(location) {
+            let location_level_fk = location.get('location_level').get('id');
+            return location_level_fk === filter.location_level;
+        };
+        return this.get('store').find('location', filterFunc, ['id', 'location_level']);
     },
     find(filter) {
         PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {
@@ -43,10 +45,12 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
         return this.get('store').find('location');
     },
     findById(id) {
+        let model = this.get('store').find('location', id);
+        model.id = id;
         PromiseMixin.xhr(LOCATION_URL + id + '/', 'GET').then((response) => {
             this.get('LocationDeserializer').deserialize(response, id);
         });
-        return this.get('store').find('location', id);
+        return model;
     },
     delete(id) {
         PromiseMixin.xhr(LOCATION_URL + id + '/', 'DELETE');

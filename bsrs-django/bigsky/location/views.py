@@ -5,12 +5,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import detail_route
 from rest_framework.exceptions import MethodNotAllowed
-from rest_framework import pagination
-import rest_framework_filters as filters
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
-from util.views import BaseModelViewSet
+from utils.views import BaseModelViewSet
 
 class SelfReferencingRouteMixin(object):
 
@@ -84,18 +82,6 @@ class LocationTypeViewSet(BaseModelViewSet):
     queryset = LocationType.objects.all()
 
 
-### LOCATION
-
-class LocationFilterSet(filters.FilterSet):
-
-    location_level = filters.AllLookupsFilter(name='location_level')
-    name = filters.AllLookupsFilter(name='name')
-    
-    class Meta:
-        model= Location
-        fields = ['location_level', 'name']
-
-
 class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     '''
     ## Detail Routes
@@ -150,7 +136,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = Location.objects.all()
     model = Location
-    filter_class = LocationFilterSet
+    filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
         if self.action == 'list':

@@ -13,10 +13,11 @@ from accounting import views as accounting_views
 from bigsky import views as bigsky_views
 from category import views as category_views
 from contact import views as contact_views
+from generic import views as generic_views
 from location import views as location_views
 from person import views as person_views
 from translation import views as translation_views
-from util.decorators import required, logout_required
+from utils.decorators import required, logout_required
 
 
 admin.autodiscover()
@@ -34,6 +35,8 @@ router.register(r'admin/addresses', contact_views.AddressViewSet)
 router.register(r'admin/address_types', contact_views.AddressTypeViewSet)
 router.register(r'admin/emails', contact_views.EmailViewSet)
 router.register(r'admin/email_types', contact_views.EmailTypeViewSet)
+# GENERIC
+router.register(r'admin/saved_searches', generic_views.SavedSearchViewSet)
 # LOCATION
 router.register(r'admin/locations', location_views.LocationViewSet)
 router.register(r'admin/location_levels', location_views.LocationLevelViewSet)
@@ -91,6 +94,7 @@ urlpatterns += required(
             },
             name='password_change'),
         url(r'^django-admin/', include(admin.site.urls)),
+        url(r'', include('generic.urls')),
         # This URL must be the last Django URL defined, or else the URLs defined 
         # below it won't resolve, and this URL will catch the URL request.
         url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),
@@ -101,6 +105,12 @@ urlpatterns += required(
 ### URL HELPERS
 
 def default_model_ordering():
+    """
+    Return ``dict`` with:
+
+    - key: the Ember List API route name. i.e. "admin.people.index"
+    - value: default ordering in Django Model
+    """
     return {".".join(x[0].split('/'))+".index": x[1].queryset.model._meta.ordering
             for x in router.registry}
 

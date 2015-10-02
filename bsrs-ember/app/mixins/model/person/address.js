@@ -27,8 +27,7 @@ var AddressMixin = Ember.Mixin.create({
             address.save();
         });
     },
-    addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state',
-                                     'addresses.@each.postal_code', 'addresses.@each.country', 'addresses.@each.type', function() {
+    addressesIsDirty: Ember.computed('addresses.@each.{isDirty,address,city,state,postal_code,country,type}', function() {
         let address_dirty = false;
         let addresses = this.get('addresses');
         let address_fks = this.get('address_fks');

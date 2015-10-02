@@ -132,5 +132,5 @@ and they will fail when running `/.manage.py migrate`
     pip install psycopg2
     
     # run migrations
-    ./manage.py makemigrations accounting category contact generic location order person session translation util
+    ./manage.py makemigrations accounting category contact generic location order person session translation utils
     ./manage.py migrate

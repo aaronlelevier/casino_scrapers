@@ -141,7 +141,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             var person = store.find('person', {id: UUID.value});
             assert.equal(person.get('length'), 0);
             assert.equal(find('tr.t-grid-data').length, 1);

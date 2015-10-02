@@ -34,12 +34,8 @@ coverage/
 .ctags
 _*.rst
 
-# static
+# virtualenv
 venv/
-bsrs-django/bigsky/ember/*
-bsrs-django/bigsky/static/*
-bsrs-django/bigsky/templates/index.html
-bsrs-django/bigsky/fonts/
 
 # attachments
 bsrs-django/bigsky/source/attachments/files/

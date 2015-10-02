@@ -16,22 +16,22 @@
 		<section>
 			<h3>{{fa-icon "users" classNames="menuIcon"}}{{t "admin.person.other"}}</h3>
 			<ul class="list-unstyled">
-				<li>{{#link-to "admin.roles" class="t-nav-admin-role"}}{{t "admin.role" count="2"}}{{/link-to}}</li>
-				<li>{{#link-to "admin.people" class="t-nav-admin-people"}}{{t "admin.person" count="2"}}{{/link-to}}</li>
+        {{filterset-navigation filtersets=model route="admin.roles.index" translate="admin.role" className="t-nav-admin-role"}}
+        {{filterset-navigation filtersets=model route="admin.people.index" translate="admin.person" className="t-nav-admin-people"}}
 			</ul>
 		</section>
 		<section>
 			<h3>{{fa-icon "building" classNames="menuIcon"}}{{t "admin.location" count="2"}}</h3>
 			<ul class="list-unstyled">
-				<li>{{#link-to "admin.location-levels" class="t-nav-admin-location-level"}}{{t "admin.locationlevel" count="2"}}{{/link-to}}</li>
-				<li>{{#link-to "admin.locations" class="t-nav-admin-location"}}{{t "admin.location" count="2"}}{{/link-to}}</li>
+        {{filterset-navigation filtersets=model route="admin.location-levels.index" translate="admin.locationlevel" className="t-nav-admin-location-level"}}
+        {{filterset-navigation filtersets=model route="admin.locations.index" translate="admin.location" className="t-nav-admin-location"}}
 			</ul>
 		</section>
 		<section>
 			<h3>{{fa-icon "list" classNames="menuIcon"}}{{t "admin.category" count="2"}}</h3>
 			<ul class="list-unstyled">
 				<li>{{#link-to "admin.category-types"}}{{t "admin.categoryType" count="2"}}{{/link-to}}</li>
-				<li>{{#link-to "admin.categories"}}{{t "admin.category" count="2"}}{{/link-to}}</li>
+        {{filterset-navigation filtersets=model route="admin.categories.index" translate="admin.category" className="t-nav-admin-category"}}
 			</ul>
 		</section>
 		<section>

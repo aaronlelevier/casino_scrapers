@@ -168,3 +168,13 @@ test('on boot we should fetch and load the default model ordering configuration'
         assert.deepEqual(model_ordering.objectAt(0).get('order'), ['fullname']);
     });
 });
+
+test('on boot we should fetch and load the saved filterset configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        var filtersets = store.find('filterset');
+        assert.equal(filtersets.get('length'), 3);
+        assert.equal(filtersets.objectAt(0).get('endpoint_name'), 'admin.people.index');
+        assert.deepEqual(filtersets.objectAt(0).get('endpoint_uri'), '?sort=title');
+    });
+});

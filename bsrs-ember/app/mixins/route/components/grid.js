@@ -1,12 +1,5 @@
 import Ember from 'ember';
-
-var set_filter_model_attrs = function(filterModel, query) {
-    let columns = query ? query.split(',') : [];
-    columns.forEach((pair) => {
-        let attrs = pair.split(':');
-        filterModel.set(attrs[0], attrs[1]);
-    });
-};
+import set_filter_model_attrs from 'bsrs-ember/utilities/filter-model-attrs';
 
 var GridViewRoute = Ember.Route.extend({
     init: function() {
@@ -14,6 +7,9 @@ var GridViewRoute = Ember.Route.extend({
         this._super();
     },
     queryParams: {
+        page_size: {
+            refreshModel: true
+        },
         page: {
             refreshModel: true
         },
@@ -31,7 +27,7 @@ var GridViewRoute = Ember.Route.extend({
         let query = transition.queryParams;
         let repository = this.get('repository');
         set_filter_model_attrs(this.filterModel, query.find);
-        return repository.findWithQuery(query.page, query.sort, query.search, query.find);
+        return repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size);
     },
     setupController: function(controller, model) {
         controller.set('model', model);

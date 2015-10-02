@@ -1,0 +1,19 @@
+[
+{
+  "fields": {
+    "description": null,
+    "parent": null,
+    "created": "2015-09-08T21:01:21.222Z",
+    "deleted": null,
+    "subcategory_label": "trade",
+    "modified": "2015-09-08T21:01:21.222Z",
+    "cost_amount": "0.0000",
+    "label": "type",
+    "cost_code": null,
+    "cost_currency": "2c969193-0896-42cd-9531-f42717397248",
+    "name": "repair"
+  },
+  "model": "category.category",
+  "pk": "6812bb07-5c8a-4a31-b72e-e47d1d6abaa3"
+}
+]

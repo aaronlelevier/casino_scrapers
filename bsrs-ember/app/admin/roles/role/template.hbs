@@ -1,7 +1,12 @@
-{{role-single
-  model=model
-  all_role_types=all_role_types
-  all_location_levels=all_location_levels
-  saveRole="redirectUser"
-  redirectUser="redirectUser"
-}}
+{{#tab-single model=model parentAction="parentAction"}}
+  {{role-single
+    model=model
+    repository=repository
+    all_role_types=all_role_types
+    all_location_levels=all_location_levels
+    save=(action "tabActions")
+    saveBase="save"
+    cancel=(action "tabActions")
+    delete=(action "deleteTabAction")
+  }}
+{{/tab-single}}
