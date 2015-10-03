@@ -65,13 +65,13 @@ wait
 ../venv/bin/python manage.py collectstatic --noinput
 
 wait
-uwsgi --http :$PORT \
+/usr/local/lib/uwsgi/uwsgi --http :$PORT \
     --wsgi-file bigsky.wsgi \
-    --virtualenv /www/django/releases/python3/$NEW_UUID/bsrs-django/venv \
-    --daemonize /tmp/python3/bigsky.log \
+    --env DJANGO_SETTINGS_MODULE=bigsky.settings.staging \
+    --home /home/bsdev/.virtualenvs/bs_py34/ \
     --static-map /static=/www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky \
+    --daemonize /tmp/bigsky-deploy.log \
     --check-static /www/django/releases/python3/$NEW_UUID/bsrs-django/bigsky
-
 
 wait
 echo "SHOW UWSGI PROCESSES:"
