@@ -98,6 +98,7 @@ wait
 rm -rf templates/index.html
 wait
 rm -rf ember/*
+rm -rf static/*
 TEST=$?; if [ "$TEST" == 1 ]; then echo "rm old static failed"; exit $TEST; fi
 
 
