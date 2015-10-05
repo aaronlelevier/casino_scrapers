@@ -38,14 +38,13 @@ var CategoryChildrenSelect = Ember.Component.extend({
     },
     actions: {
         add(category_child) {
-            // let role = this.get('role');
-            // let category_id = category_child.get('id');
-            // role.add_category(category_id);
         },
         remove(category_child) {
-            // let role = this.get('role');
-            // let category_id = category_child.get('id');
-            // role.remove_category(category_id);
+            let role = this.get('role');
+            let categories = role.get('categories');
+            role.set('categories', categories.filter((category) => {
+                return category.get('id') !== category_child.get('id') ? true : false;
+            }));
         },
         update_filter() {
             Ember.run.debounce(this, this.get('find_all_categories'), 300);

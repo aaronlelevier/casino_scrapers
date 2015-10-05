@@ -25,6 +25,14 @@ class RoleSerializer(BaseCreateSerializer):
         fields = ('id', 'name', 'role_type', 'location_level')
 
 
+class RoleUpdateSerializer(BaseCreateSerializer):
+    "Serializer used for update ``Role`` API Endpoint operations."
+
+    class Meta:
+        model = Role
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories')
+
+
 class RoleDetailSerializer(BaseCreateSerializer):
     
     categories = CategoryRoleSerializer(many=True)

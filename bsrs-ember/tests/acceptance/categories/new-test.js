@@ -57,7 +57,7 @@ test('visiting /category/new', (assert) => {
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
-        assert.equal(store.find('category').get('length'), 1);
+        assert.equal(store.find('category').get('length'), 4);
     });
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
     fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
@@ -68,9 +68,7 @@ test('visiting /category/new', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
-        assert.equal(store.find('category').get('length'), 1);
-        let category = store.find('category').objectAt(0);
-        assert.equal(category.get('id'), UUID.value);
+        let category = store.find('category', UUID.value);
         assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameOne);
         assert.equal(category.get('description'), CATEGORY_DEFAULTS.descriptionMaintenance);
         assert.equal(category.get('label'), CATEGORY_DEFAULTS.labelOne);
@@ -203,9 +201,12 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
     clearxhr(children_xhr);
     visit(CATEGORY_NEW_URL);
+    andThen(() => {
+        assert.equal(store.find('category').get('length'), 4);
+    });
     click('.t-cancel-btn');
     andThen(() => {
-        assert.equal(store.find('category').get('length'), 0);
+        assert.equal(store.find('category').get('length'), 3);
     });
 });
 

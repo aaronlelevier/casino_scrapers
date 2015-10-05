@@ -55,7 +55,6 @@ var RoleMixin = Ember.Mixin.create({
         let roles = this.get('role_property');
         let role = roles.objectAt(0);
         let rollback_fk = this.get('role_fk');
-        //role_fk is updated and serialized in the person so need new way to check if dirty
         if(role) {
             if (rollback_fk && rollback_fk !== role.get('id')) {
                 return true;

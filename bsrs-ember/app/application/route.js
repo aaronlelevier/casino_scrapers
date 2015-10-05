@@ -2,10 +2,12 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import injectStore from 'bsrs-ember/utilities/store';
 import injectRepo from 'bsrs-ember/utilities/inject';
+import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 const { Route, inject } = Ember;
 
 var ApplicationRoute = Ember.Route.extend({
     repository: injectRepo('person'),
+    RoleDeserializer: injectDeserializer('role'),
     store: injectStore('main'),
     translationsFetcher: inject.service(),
     i18n: inject.service(),
@@ -56,7 +58,9 @@ var ApplicationRoute = Ember.Route.extend({
         });
         let role_config = Ember.$('[data-preload-roles]').html();
         let role_list = JSON.parse(role_config);
+        let role_deserializer = this.get('RoleDeserializer');
         role_list.forEach((model) => {
+            role_deserializer.deserialize(model, model.id);
             if (model.location_level) {
                 let loc_level = store.find('location-level', model.location_level);
                 let existing_roles = loc_level.get('roles') || [];

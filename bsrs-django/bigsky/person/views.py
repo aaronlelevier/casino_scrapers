@@ -24,6 +24,8 @@ class RoleViewSet(BaseModelViewSet):
         """
         if self.action == 'retrieve':
             return ps.RoleDetailSerializer
+        elif self.action == ('update' or 'partial_update'):
+            return ps.RoleUpdateSerializer
         else:
              return ps.RoleSerializer
 

@@ -20,7 +20,7 @@ from contact.tests.factory import create_person_and_contacts
 from location.models import Location, LocationLevel
 from category.models import Category
 from person.models import Person, Role, PersonStatus
-from person.serializers import PersonUpdateSerializer, RoleSerializer, RoleDetailSerializer
+from person.serializers import PersonUpdateSerializer, RoleSerializer, RoleDetailSerializer, RoleUpdateSerializer
 from person.tests.factory import (
     PASSWORD, create_person, create_role, create_roles, create_single_person,
     create_all_people)
@@ -86,13 +86,21 @@ class RoleViewSetTests(APITestCase):
         self.assertIsInstance(Role.objects.get(id=role_data['id']), Role)
 
     def test_update(self):
+        category = mommy.make(Category)
+        serializer = RoleUpdateSerializer(self.role)
+        self.data = serializer.data
         role_data = self.data
         role_data['name'] = 'new name here'
+        role_data['categories'].append(str(category.id))
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         new_role_data = json.loads(response.content)
         self.assertNotEqual(self.role.name, new_role_data['name'])
+        self.assertIn(
+            category.id,
+            Role.objects.get(id=self.data['id']).categories.values_list('id', flat=True)
+            )
 
     def test_update_location_level(self):
         role_data = copy.copy(self.data)

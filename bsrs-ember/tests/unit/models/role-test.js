@@ -4,12 +4,13 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 
 var store;
 
 module('unit: role test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:role', 'model:location-level']);
+        store = module_registry(this.container, this.registry, ['model:role', 'model:category', 'model:location-level']);
     }
 });
 
@@ -201,4 +202,30 @@ test('saving an undefined location level on a previously dirty role will clean t
     assert.ok(typeof role.get('location_level') === 'undefined');
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('category pushing into store from selectize will refire categoryIsDirty method', (assert) => {
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, category_fks: [CATEGORY_DEFAULTS.idOne]});
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne});
+    let category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo});
+    let categories = role.get('categories');
+    categories.pushObject(category_two);
+    assert.equal(role.get('categoryIsDirty'), true);
+    role.saveRelated();
+    assert.equal(role.get('categoryIsDirty'), false);
+    assert.deepEqual(role.get('category_fks'), [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]);
+});
+
+test('category removing from store from selectize will refire categoryIsDirty method', (assert) => {
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, category_fks: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]});
+    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne});
+    let category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo});
+    let categories = role.get('categories');
+    categories.removeObject(category_two);
+    assert.equal(role.get('categoryIsDirty'), true);
+    role.saveRelated();
+    assert.equal(role.get('categoryIsDirty'), false);
+    assert.deepEqual(role.get('category_fks'), [CATEGORY_DEFAULTS.idOne]);
 });

@@ -208,42 +208,42 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     });
 });
 
-// test('clicking on a tab that is dirty from the role url (or any non related page) should take you to the detail url and not fire off an xhr request', (assert) => {
-//     let category_list_data = CATEGORY_FIXTURES.list();
-//     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, category_list_data);
-//     visit(CATEGORY_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), CATEGORY_URL);
-//         let tabs = store.find('tab');
-//         assert.equal(tabs.get('length'), 0);
-//     });
-//     click('.t-grid-data:eq(0)');
-//     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-//         assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameTwo);
-//         assert.equal(category.get('isDirtyOrRelatedDirty'), true);
-//         let tabs = store.find('tab');
-//         assert.equal(tabs.get('length'), 1);
-//         assert.equal(find('.t-tab-title:eq(0)').text(), CATEGORY_DEFAULTS.nameTwo);
-//     });
-//     andThen(() => {
-//         let endpoint = PREFIX + BASE_ROLE_URL + '/';
-//         xhr(endpoint + '?page=1','GET',null,{},200,ROLE_FIXTURES.list());
-//         visit(ROLE_URL);
-//         andThen(() => {
-//             assert.equal(currentURL(), ROLE_URL);
-//         });
-//     });
-//     click('.t-tab:eq(0)');
-//     andThen(() => {
-//         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-//         assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameTwo);
-//         assert.equal(category.get('isDirtyOrRelatedDirty'), true);
-//         assert.equal(currentURL(), DETAIL_URL);
-//     });
-// });
+test('clicking on a tab that is dirty from the role url (or any non related page) should take you to the detail url and not fire off an xhr request', (assert) => {
+    let category_list_data = CATEGORY_FIXTURES.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, category_list_data);
+    visit(CATEGORY_URL);
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORY_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 0);
+    });
+    click('.t-grid-data:eq(0)');
+    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameTwo);
+        assert.equal(category.get('isDirtyOrRelatedDirty'), true);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        assert.equal(find('.t-tab-title:eq(0)').text(), CATEGORY_DEFAULTS.nameTwo);
+    });
+    andThen(() => {
+        let endpoint = PREFIX + BASE_ROLE_URL + '/';
+        xhr(endpoint + '?page=1','GET',null,{},200,ROLE_FIXTURES.list());
+        visit(ROLE_URL);
+        andThen(() => {
+            assert.equal(currentURL(), ROLE_URL);
+        });
+    });
+    click('.t-tab:eq(0)');
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameTwo);
+        assert.equal(category.get('isDirtyOrRelatedDirty'), true);
+        assert.equal(currentURL(), DETAIL_URL);
+    });
+});
 
 test('clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and fire off an xhr request', (assert) => {
     xhr(endpoint + '?page=1','GET',null,{},200,CATEGORY_FIXTURES.list());

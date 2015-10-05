@@ -51,12 +51,10 @@ var LocationMixin = Ember.Mixin.create({
             if(!previous_m2m_fks || previous_m2m_fks.get('length') !== locations.get('length')) {
                 return true;
             }
-
             let dirty_locations = locations.filter(function(location) {
                 return location.get('isDirty') === true;
             });
             return dirty_locations.length > 0;
-
         }
         if(previous_m2m_fks && previous_m2m_fks.get('length') > 0) {
             return true;

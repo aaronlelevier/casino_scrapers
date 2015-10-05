@@ -21,6 +21,13 @@ var RoleModel = Model.extend({
         let store = this.get('store');
         return store.find('category', filter.bind(this), ['id']);
     }),
+    categoryIsDirty: Ember.computed('category_fks.[]', 'categories.[]', function() {
+        let categories = this.get('categories');
+        let category_fks = this.get('category_fks');
+        if (categories && category_fks) {
+            return categories.get('length') !== category_fks.length ? true : false;
+        }
+    }),
     location_level: Ember.computed('location_levels.[]', function() {
         let location_levels = this.get('location_levels');
         let has_location_level = location_levels.get('length') > 0;
@@ -37,8 +44,8 @@ var RoleModel = Model.extend({
         let store = this.get('store');
         return store.find('location-level', filter.bind(this), ['roles']);
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', function() {
-        return this.get('isDirty') || this.get('locationLevelIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'categoryIsDirty', function() {
+        return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoryIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     locationLevelIsDirty: Ember.computed('location_levels.@each.isDirty', 'location_levels.[]', 'location_level_fk', function() {
@@ -60,11 +67,16 @@ var RoleModel = Model.extend({
         if (location_level) {
             location_level_id = location_level.get('id');
         }
+        let categories = this.get('categories');
+        let category_ids = categories.map((category) => {
+            return category.get('id');
+        });
         return {
             id: this.get('id'),
             name: this.get('name'),
             role_type: this.get('role_type'),
-            location_level: location_level_id || null
+            location_level: location_level_id || null,
+            categories: category_ids 
         };
     },
     removeRecord() {
@@ -75,6 +87,7 @@ var RoleModel = Model.extend({
     },
     saveRelated() {
         this.saveLocationLevel();
+        this.saveCategories();
     },
     saveLocationLevel() {
         let location_level = this.get('location_level');
@@ -84,6 +97,26 @@ var RoleModel = Model.extend({
         } else {
             this.set('location_level_fk', undefined);
         }
+    },
+    saveCategories() {
+        let categories = this.get('categories');
+        let category_ids = categories.map((category) => {
+            return category.get('id');
+        });
+        let category_fks = this.get('category_fks');
+        //add
+        categories.forEach((category) => {
+            category.save();
+            if (Ember.$.inArray(category.get('id'), category_fks) === -1) {
+                category_fks.pushObject(category.get('id'));
+            } 
+        });
+        //remove
+        category_fks.forEach((fk, indx) => {
+            if (Ember.$.inArray(fk, category_ids) === -1) {
+                category_fks.removeObject(fk);
+            } 
+        });
     },
     rollbackLocationLevel() {
         let store = this.get('store');

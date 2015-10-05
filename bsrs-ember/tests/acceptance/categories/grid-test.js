@@ -346,7 +346,7 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
     xhr(sort_one ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name', 1));
     visitSync(CATEGORY_URL);
     Ember.run.later(function() {
-        assert.equal(find('.t-grid-data').length, 0);
+        assert.equal(find('.t-grid-data').length, 3);
         assert.equal(find('.t-grid-loading-graphic').length, 1);
     }, 0);
     andThen(() => {

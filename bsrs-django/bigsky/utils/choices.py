@@ -34,3 +34,8 @@ CLOSE_WO_ON_APPROVAL_CHOICES = (
     ('unchecked', 'unchecked'),
     ('checked', 'checked'),
 )
+
+CONTRACTOR_STATUS_CHOICES = (
+    ('active', 'active'),
+    ('two', 'two'),
+)

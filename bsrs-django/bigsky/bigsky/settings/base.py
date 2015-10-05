@@ -45,6 +45,7 @@ LOCAL_APPS = (
     'translation',
     'utils',
     'order',
+    'third_party',
     )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
