@@ -47,3 +47,23 @@ test('input has a debouce that prevents each keystroke from publishing a message
         }, 11);
     }, 290);
 });
+
+test('input will pass along empty string value', function(assert) {
+    var done = assert.async();
+    var obj = Ember.Object.create({id: 1, name: 'x'});
+    var prop = 'name';
+    this.set('obj', obj);
+    this.set('prop', prop);
+    this.render(hbs`{{input-dynamic-filter prop=prop obj=obj}}`);
+    assert.equal(this.$('.t-new-entry').val(), 'x');
+    this.$('input:first').val('').trigger('change');
+    assert.equal(this.$('input:first').val(), '');
+    assert.equal(stub.hits(), 0);
+    setTimeout(function() {
+        assert.equal(stub.hits(), 0);
+        setTimeout(function() {
+            assert.equal(stub.hits(), 1);
+            done();
+        }, 11);
+    }, 290);
+});
