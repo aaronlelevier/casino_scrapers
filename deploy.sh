@@ -46,7 +46,9 @@ echo "DJANGO - MIGRATE DATABASE SCHEMA"
 
 DB_NAME="deploy"
 export PGPASSWORD=tango
+wait
 dropdb $DB_NAME -U bsdev
+wait
 createdb $DB_NAME -U bsdev -O bsdev
 TEST=$?; if [ "$TEST" == 1 ]; then echo "create db failed"; exit $TEST; fi
 
