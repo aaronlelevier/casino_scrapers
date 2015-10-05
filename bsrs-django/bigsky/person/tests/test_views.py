@@ -70,7 +70,7 @@ class RoleViewSetTests(APITestCase):
         data = json.loads(response.content)
         self.assertEqual(data['id'], str(self.role.pk))
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
-        self.assertEqual(data['categories'][0]['id'], str(self.categories[0].id))
+        self.assertIn(data['categories'][0]['id'], [str(c.id) for c in self.categories])
 
     def test_create(self):
         role_data = {
