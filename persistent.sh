@@ -67,6 +67,13 @@ wait
 TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $MKDIR; fi
 
 
+echo "AFTER MIGRATIONS, LOAD LATEST FIXTURE DATA."
+wait
+../venv/bin/python manage.py loaddata fixtures/jenkins.json
+wait
+../venv/bin/python manage.py loaddata fixtures/jenkins_custom.json
+
+
 echo "EMBER"
 
 cd ../../bsrs-ember
@@ -116,9 +123,9 @@ echo "UWSGI - START/RELOAD"
 ls /tmp/bigsky-master.pid
 if [ $? -eq 0 ];
     then
-        sudo /usr/local/lib/uwsgi/uwsgi --reload /tmp/bigsky-master.pid
+        /usr/local/lib/uwsgi/uwsgi --reload /tmp/bigsky-master.pid
     else
-        sudo /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
+        /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
 fi
 TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $MKDIR; fi
 
