@@ -121,13 +121,8 @@ cd ../../builds/persistent/
 
 wait
 echo "UWSGI - START/RELOAD"
-ls /tmp/bigsky-master.pid
-if [ $? -eq 0 ];
-    then
-        sudo /usr/local/lib/uwsgi/uwsgi --reload /tmp/bigsky-master.pid
-    else
-        sudo /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
-fi
+sudo /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
+sudo touch /tmp/bigsky-master-persistent.pid
 TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $TEST; fi
 
 
