@@ -5,7 +5,7 @@ import injectStore from 'bsrs-ember/utilities/store';
 var CategoryChildrenSelect = Ember.Component.extend({
     repository: inject('category'),
     store: injectStore('main'),
-    categories_selected: Ember.computed('category.children_fks.[]', function() {
+    categories_selected: Ember.computed(function() {
         let category = this.get('category');
         return category.get('children') || [];
     }),
@@ -18,7 +18,7 @@ var CategoryChildrenSelect = Ember.Component.extend({
         });
         return Ember.ArrayProxy.extend({
           content: Ember.computed(function () {
-            let mix = Ember.A(this.get('source'));
+            let mix = this.get('source');
             categories_children.forEach((cat) => {
                 if (cat.get('id') !== category.get('id')) {
                     mix.pushObject(cat);
