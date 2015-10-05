@@ -127,7 +127,11 @@ if [ $? -eq 0 ];
     else
         /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
 fi
-TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $MKDIR; fi
+TEST=$?
+if [ "$TEST" == 1 ]; then
+    echo "uwsgi failed"
+    exit $MKDIR
+fi
 
 
 echo "NGINX - RESTART"
