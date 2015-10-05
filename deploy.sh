@@ -124,7 +124,6 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $TEST; fi
 
 wait
 echo "NGINX - RESTART"
-sudo cp deploy.conf /etc/nginx/conf.d
 sudo cp ../nginx.conf /etc/nginx/nginx.conf
 wait
 sudo service nginx restart
