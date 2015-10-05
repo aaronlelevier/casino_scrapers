@@ -133,8 +133,8 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $TEST; fi
 
 wait
 echo "NGINX - RESTART"
-cp ../nginx.conf /etc/nginx/nginx.conf
 cp persistent.conf /etc/nginx/conf.d
+cp ../nginx.conf /etc/nginx/nginx.conf
 wait
 service nginx restart
 TEST=$?; if [ "$TEST" == 1 ]; then echo "nginx failed"; exit $TEST; fi
