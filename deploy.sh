@@ -18,8 +18,8 @@ fi
 cd /www/django/releases/deploy
 TEST=$?; if [ "$TEST" == 1 ]; then echo "mkdir failed"; exit $TEST; fi
 
-
-rm -rf deploy/*
+wait
+rm -rf bsrs
 TEST=$?; if [ "$TEST" == 1 ]; then echo "rm failed"; exit $TEST; fi
 
 
