@@ -117,7 +117,7 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "django collectstatic failed"; exit $TES
 
 echo "RELOAD SERVER SCRIPTS"
 
-cd ../../python3/persistent/
+cd ../../builds/persistent/
 
 wait
 echo "UWSGI - START/RELOAD"
@@ -131,7 +131,11 @@ fi
 TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $TEST; fi
 
 
+wait
 echo "NGINX - RESTART"
+cp ../nginx.conf /etc/nginx/nginx.conf
+cp persistent.conf /etc/nginx/conf.d
+wait
 bash ../restart_nginx.sh
 TEST=$?; if [ "$TEST" == 1 ]; then echo "nginx failed"; exit $TEST; fi
 
