@@ -124,19 +124,19 @@ echo "UWSGI - START/RELOAD"
 ls /tmp/bigsky-master.pid
 if [ $? -eq 0 ];
     then
-        sudo /usr/local/lib/uwsgi/uwsgi --reload /tmp/bigsky-master.pid
+        /usr/local/lib/uwsgi/uwsgi --reload /tmp/bigsky-master.pid
     else
-        sudo /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
+        /usr/local/lib/uwsgi/uwsgi --ini uwsgi.ini
 fi
 TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $TEST; fi
 
 
 wait
 echo "NGINX - RESTART"
-sudo cp ../nginx.conf /etc/nginx/nginx.conf
-sudo cp persistent.conf /etc/nginx/conf.d
+cp ../nginx.conf /etc/nginx/nginx.conf
+cp persistent.conf /etc/nginx/conf.d
 wait
-sudo service nginx restart
+service nginx restart
 TEST=$?; if [ "$TEST" == 1 ]; then echo "nginx failed"; exit $TEST; fi
 
 
