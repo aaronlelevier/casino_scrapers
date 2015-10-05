@@ -135,5 +135,5 @@ sudo service nginx restart
 TEST=$?; if [ "$TEST" == 1 ]; then echo "nginx failed"; exit $TEST; fi
 
 
-echo "DEPLOY FINISHED!"
+echo "PERSISTENT FINISHED!"
 exit 0
