@@ -108,8 +108,6 @@ function dropAndCreateDB {
 }
 
 function migrateData {
-    ./manage.py makemigrations accounting category contact generic location order person session translation utils
-    wait
     ./manage.py migrate
     wait
     ./manage.py loaddata fixtures/states.json
