@@ -10,7 +10,7 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
             roleTypeGeneral: 'Internal',
             nameOne: 'admin.role.system_administrator',
             nameTwo: 'admin.role.guest',
-            nameThree: 'admin.role.manager',
+            nameThree: 'Manager',
             nameGrid: 'zap4',
             nameGridTen: 'zap10',
             nameGridXav: 'xav14',

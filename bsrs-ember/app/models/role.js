@@ -1,33 +1,52 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 
 var RoleModel = Model.extend({
     store: inject('main'),
+    uuid: injectUUID('uuid'),
     name: attr(''),
     people: attr([]),
     role_type: attr(),
     cleanupLocation: false,
     location_level_fk: undefined, 
-    category_fks: [],
-    categories: Ember.computed('category_fks.[]', function() {
-        let category_fks = this.get('category_fks');
-        let filter = (category) => {
-            if (Ember.$.inArray(category.get('id'), category_fks) > -1) { 
-                return true; 
-            }
-            return false;
+    role_category_fks: [],
+    role_categories: Ember.computed('role_category_fks.[]', function() {
+        let filter = (join_model) => {
+            return join_model.get('role_fk') === this.get('id') && !join_model.get('removed');
         };
         let store = this.get('store');
-        return store.find('category', filter.bind(this), ['id']);
+        return store.find('role-category', filter.bind(this), ['removed']);
     }),
-    categoryIsDirty: Ember.computed('category_fks.[]', 'categories.[]', function() {
+    categories: Ember.computed('role_categories.[]', function() {
+        let role_categories = this.get('role_categories');
+        let filter = function(category) {
+            let categories_fk = this.map((join_model) => {
+                return join_model.get('category_fk');
+            });
+            return Ember.$.inArray(category.get('id'), categories_fk) > -1;
+        };
+        return this.get('store').find('category', filter.bind(role_categories), ['id']);
+    }),
+    categoryIsDirty: Ember.computed('role_category_fks.[]', 'categories.[]', function() {
+        let role_category_fks = this.get('role_category_fks');
         let categories = this.get('categories');
-        let category_fks = this.get('category_fks');
-        if (categories && category_fks) {
-            return categories.get('length') !== category_fks.length ? true : false;
+        if (categories) {
+            return categories.get('length') !== role_category_fks.length ? true : false;
         }
     }),
+    add_category(category_pk) {
+        let uuid = this.get('uuid');
+        let store = this.get('store');
+        store.push('role-category', {id: uuid.v4(), role_fk: this.get('id'), category_fk: category_pk});
+    },
+    remove_category(category_pk) {
+        let uuid = this.get('uuid');
+        let store = this.get('store');
+        let m2m_pk = this.get('role_categories').objectAt(0).get('id');
+        store.push('role-category', {id: m2m_pk, removed: true});
+    },
     location_level: Ember.computed('location_levels.[]', function() {
         let location_levels = this.get('location_levels');
         let has_location_level = location_levels.get('length') > 0;
@@ -99,22 +118,21 @@ var RoleModel = Model.extend({
         }
     },
     saveCategories() {
-        let categories = this.get('categories');
-        let category_ids = categories.map((category) => {
-            return category.get('id');
+        let role_categories = this.get('role_categories');
+        let role_categories_ids = role_categories.map((cat) => {
+            return cat.get('id');
         });
-        let category_fks = this.get('category_fks');
+        let role_category_fks = this.get('role_category_fks');
         //add
-        categories.forEach((category) => {
-            category.save();
-            if (Ember.$.inArray(category.get('id'), category_fks) === -1) {
-                category_fks.pushObject(category.get('id'));
+        role_categories.forEach((join_model) => {
+            if (Ember.$.inArray(join_model.get('id'), role_category_fks) === -1) {
+                role_category_fks.pushObject(join_model.get('id'));
             } 
         });
         //remove
-        category_fks.forEach((fk, indx) => {
-            if (Ember.$.inArray(fk, category_ids) === -1) {
-                category_fks.removeObject(fk);
+        role_category_fks.forEach((fk) => {
+            if (Ember.$.inArray(fk, role_categories_ids) === -1) {
+                role_category_fks.removeObject(fk);
             } 
         });
     },

@@ -43,6 +43,8 @@ deactivate
 #### Python 3
 
 [Download Python 3.4.3](https://www.python.org/downloads/release/python-343/)
+OR
+brew switch [formula] [version]
 
 Create a virtualenv with Python 3
 

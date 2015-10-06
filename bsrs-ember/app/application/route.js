@@ -68,13 +68,6 @@ var ApplicationRoute = Ember.Route.extend({
                 loc_level.save();
                 delete model.location_level;
             }
-            // if (model.categories) {
-            //     model.categories.forEach((category) => {
-            //         model.category_fks = category.id || [];
-            //         store.push('category', category);
-            //     });
-            //     delete model.categories;
-            // }
             store.push('role', model);
         });
         let role_types_config = Ember.$('[data-preload-role-types]').html();

@@ -3,14 +3,15 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
+import ROLE_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/role-category';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 
-var store;
+var store, uuid;
 
 module('unit: role test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:role', 'model:category', 'model:location-level']);
+        store = module_registry(this.container, this.registry, ['model:role', 'model:category', 'model:location-level', 'model:role-category', 'model:uuid']);
     }
 });
 
@@ -205,27 +206,32 @@ test('saving an undefined location level on a previously dirty role will clean t
 });
 
 test('category pushing into store from selectize will refire categoryIsDirty method', (assert) => {
-    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, category_fks: [CATEGORY_DEFAULTS.idOne]});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne]});
+    let role_category = store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne});
     let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
     let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne});
     let category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo});
     let categories = role.get('categories');
     categories.pushObject(category_two);
+    role.add_category(category_two.get('id'));
     assert.equal(role.get('categoryIsDirty'), true);
     role.saveRelated();
     assert.equal(role.get('categoryIsDirty'), false);
-    assert.deepEqual(role.get('category_fks'), [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]);
+    assert.deepEqual(role.get('role_category_fks'), [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.abc]);
 });
 
 test('category removing from store from selectize will refire categoryIsDirty method', (assert) => {
-    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, category_fks: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.idTwo]});
+    let role_category = store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne});
+    let role_category_two = store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idTwo, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idTwo});
     let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
     let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne});
     let category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo});
     let categories = role.get('categories');
     categories.removeObject(category_two);
+    role.remove_category(category_two.get('id'));
     assert.equal(role.get('categoryIsDirty'), true);
     role.saveRelated();
     assert.equal(role.get('categoryIsDirty'), false);
-    assert.deepEqual(role.get('category_fks'), [CATEGORY_DEFAULTS.idOne]);
+    assert.deepEqual(role.get('role_category_fks'), [ROLE_CATEGORY_DEFAULTS.idTwo]);
 });

@@ -5,6 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
+import random from 'bsrs-ember/models/random';
 import config from 'bsrs-ember/config/environment';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
@@ -35,8 +36,10 @@ module('Acceptance | tab role test', {
         endpoint = PREFIX + BASE_ROLE_URL + '/';
         role_detail_data = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);
         detail_xhr = xhr(endpoint + ROLE_DEFAULTS.idOne + '/', 'GET', null, {}, 200, role_detail_data);
+        random.uuid = function() { return Ember.uuid(); };
     },
     afterEach() {
+        random.uuid = function() { return 'abc123'; };
         Ember.run(application, 'destroy');
     }
 });
@@ -161,14 +164,14 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     visit(ROLE_URL);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
-        let role = store.find('role', UUID.value);
+        let role = store.find('role').objectAt(3);//sensitive to changes in number of roles that are bootstrapped.  Bc remove uuid = 'abc123' for new model, need to find specific one
         assert.equal(role.get('name'), ROLE_DEFAULTS.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
     });
     click('.t-tab:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), NEW_URL);
-        let role = store.find('role', UUID.value);
+        let role = store.find('role').objectAt(3);
         assert.equal(role.get('name'), ROLE_DEFAULTS.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
     });

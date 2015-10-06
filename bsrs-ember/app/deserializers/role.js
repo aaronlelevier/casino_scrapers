@@ -1,31 +1,42 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/uuid';
+import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
-let extract_category = (model, store, role_existing) => {
-    let category_fks = [];
-    let categories = model.categories;
-    //add
-    if (categories) {
-        categories.forEach((category) => {
-            category_fks.push(category.id);
-            let category_pushed = store.push('category', category);
-            category_pushed.save();
+let extract_category = (model, store, role_existing, uuid, category_deserializer) => {
+    let server_sum_category_fks = [];
+    let prevented_duplicate_m2m = [];
+    let all_join_models = store.find('role-category', {role_fk: model.id});
+    let categories = model.categories || [];
+    let all_filtered_models = [];
+    categories.forEach((category_json) => {
+        let filtered_model = all_join_models.filter((m2m) => {
+            return m2m.get('category_fk') === category_json.id;
         });
-    }
-    //remove
-    // if (role_existing.get('id')) {
-    //     let category_fks_existing = role_existing.get('category_fks'); 
-    //     let model_categories_id = model.categories.map((cat) => {
-    //         return cat.id;
-    //     });
-    //     category_fks_existing.forEach((fk, indx) => {
-    //         if (Ember.$.inArray(fk, model_categories_id) === -1) {
-    //             category_fks_existing.splice(indx, 1);
-    //         }
-    //     });
-    //     role_existing.save();
-    // }
+        if (filtered_model.length === 0) {
+            category_deserializer.deserialize(category_json, category_json.id);
+            let pk = uuid.v4();
+            server_sum_category_fks.push(pk);  
+            store.push('role-category', {id: pk, role_fk: model.id, category_fk: category_json.id});
+        } else {
+            prevented_duplicate_m2m.push(filtered_model[0].get('id'));
+        }
+        all_filtered_models.concat(filtered_model);
+    });
+    server_sum_category_fks.push(...prevented_duplicate_m2m);
+    //check for join models not returned from server with categories
+    all_filtered_models.forEach((join_model) => {
+        if (Ember.$.inArray(join_model.get('id'), server_sum_category_fks) === -1) {
+            store.push('role-category', {id: join_model.get('id'), removed: true});
+        }
+    });
+    //check for join models not returned from server with no categories
+    all_join_models.forEach((join_model) => {
+        if (Ember.$.inArray(join_model.get('id'), server_sum_category_fks) === -1) {
+            store.push('role-category', {id: join_model.get('id'), removed: true});
+        }
+    });
     delete model.categories;
-    return category_fks;
+    return server_sum_category_fks;
 };
 
 let extract_location_level = (model, store) => {
@@ -60,19 +71,23 @@ let extract_location_level = (model, store) => {
 };
 
 var RoleDeserializer = Ember.Object.extend({
+    uuid: inject('uuid'),
+    CategoryDeserializer: injectDeserializer('category'),
     deserialize(response, options) {
+        let category_deserializer = this.get('CategoryDeserializer');
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options);
+            this.deserialize_single(response, options, category_deserializer);
         }
     },
-    deserialize_single(response, id) {
+    deserialize_single(response, id, category_deserializer) {
+        let uuid = this.get('uuid');
         let store = this.get('store');
         let role_existing = store.find('role', id);
         if (!role_existing.get('id') || role_existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.location_level_fk = extract_location_level(response, store);
-            response.category_fks = extract_category(response, store, role_existing);
+            response.role_category_fks = extract_category(response, store, role_existing, uuid, category_deserializer);
             let originalRole = store.push('role', response);
             originalRole.save();
         }

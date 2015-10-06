@@ -49,6 +49,7 @@ module.exports = function(environment) {
   app.import('vendor/defaults/phone-number.js');
   app.import('vendor/defaults/phone-number-type.js');
   app.import('vendor/defaults/role.js');
+  app.import('vendor/defaults/role-category.js');
   app.import('vendor/defaults/state.js');
   app.import('vendor/defaults/status.js');
   app.import('vendor/defaults/uuid.js');

@@ -2,6 +2,7 @@ import Ember from 'ember';
 import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
+import random from 'bsrs-ember/models/random';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
@@ -31,8 +32,10 @@ module('Acceptance | role-detail', {
         endpoint = PREFIX + BASE_URL + '/';
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ROLE_FIXTURES.list());
         xhr(endpoint + ROLE_DEFAULTS.idOne + '/', 'GET', null, {}, 200, ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne));
+        random.uuid = function() { return Ember.uuid(); };
     },
     afterEach() {
+        random.uuid = function() { return 'abc123'; };
         Ember.run(application, 'destroy');
     }
 });
@@ -171,8 +174,8 @@ test('clicking and typing into selectize for categories will fire off xhr reques
     visit(DETAIL_URL);
     andThen(() => {
         let role = store.find('role', ROLE_DEFAULTS.idOne);
-        assert.equal(role.get('category_fks').length, 1);
-        // assert.equal(find('div.item').length, 1);//TODO: add back all div.item tests for firefox at a later time.  Seems broken with Ember 2.1
+        assert.equal(role.get('role_category_fks').length, 1);
+        assert.equal(find('div.item').length, 1);
         assert.equal(find('div.option').length, 0);
     });
     let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
@@ -182,10 +185,10 @@ test('clicking and typing into selectize for categories will fire off xhr reques
     click('.t-role-category-select div.option:eq(0)');
     andThen(() => {
         let role = store.find('role', ROLE_DEFAULTS.idOne);
-        assert.equal(role.get('category_fks').length, 1);
+        assert.equal(role.get('role_category_fks').length, 1);
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
-        // assert.equal(find('div.item').length, 2);
+        assert.equal(find('div.item').length, 2);
         assert.equal(find('div.option').length, 8);
     });
     let url = PREFIX + DETAIL_URL + "/";
@@ -198,28 +201,29 @@ test('clicking and typing into selectize for categories will fire off xhr reques
     });
 });
 
-// test('removing a category in selectize for categories will save correctly and cleanup category_fks', (assert) => {
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         let role = store.find('role', ROLE_DEFAULTS.idOne);
-//         assert.equal(role.get('category_fks').length, 1);
-//         // assert.equal(find('div.item').length, 1);
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     click('div.item > a.remove:eq(0)');
-//     andThen(() => {
-//         let role = store.find('role', ROLE_DEFAULTS.idOne);
-//         assert.equal(role.get('category_fks').length, 1);
-//         assert.equal(role.get('categories').get('length'), 0);
-//         assert.ok(role.get('isDirtyOrRelatedDirty'));
-//         assert.equal(find('div.item').length, 0);
-//         assert.equal(find('div.option').length, 1);
-//     });
-//     let url = PREFIX + DETAIL_URL + "/";
-//     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, location_level: LOCATION_LEVEL_DEFAULTS.idOne, categories: []});
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-//     click(SAVE_BTN);
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-// });
+test('removing a category in selectize for categories will save correctly and cleanup category_fks', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let role = store.find('role', ROLE_DEFAULTS.idOne);
+        assert.equal(role.get('role_category_fks').length, 1);
+        assert.equal(role.get('categories').get('length'), 1);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 0);
+    });
+    click('div.item > a.remove:eq(0)');
+    andThen(() => {
+        let role = store.find('role', ROLE_DEFAULTS.idOne);
+        assert.equal(role.get('role_category_fks').length, 1);
+        assert.equal(role.get('categories').get('length'), 0);
+        assert.ok(role.get('isDirtyOrRelatedDirty'));
+        assert.equal(find('div.item').length, 0);
+        assert.equal(find('div.option').length, 1);
+    });
+    let url = PREFIX + DETAIL_URL + "/";
+    let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, location_level: LOCATION_LEVEL_DEFAULTS.idOne, categories: []});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
