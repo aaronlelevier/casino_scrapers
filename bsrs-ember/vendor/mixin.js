@@ -23,12 +23,9 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
     };
 
     factory.prototype.sorted = function(column, page) {
-        var response;
-        if(page && page === 2) {
-            response = this.list_two().results;
-        } else {
-            response = this.list().results;
-        }
+        var page1 = this.list_two().results;
+        var page2 = this.list().results;
+        var response = page1.concat(page2);
         var columns = column.split(',');
         var column = columns[0];
         var sorted = response.sort(function(a,b) {
@@ -44,7 +41,7 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
                 return b[columns[1]] - a[columns[1]];
             });
         }
-        return {'count':19,'next':null,'previous':null,'results': sorted};
+        return {'count':sorted.length,'next':null,'previous':null,'results': sorted};
     };
 
     factory.prototype.fulltext = function(find, page) {
