@@ -6,7 +6,7 @@ from .base import *
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2', 
-        'NAME': os.environ.get('BSRS_DB_STAGING_NAME', 'ci'),
+        'NAME': os.environ.get('BSRS_DB_STAGING_NAME', 'deploy'),
         'USER': os.environ.get('BSRS_DB_STAGING_USER', 'bsdev'),
         'PASSWORD': os.environ.get('BSRS_DB_STAGING_NAME', 'tango'),
         'HOST': 'localhost',

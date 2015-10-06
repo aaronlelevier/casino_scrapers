@@ -4,6 +4,6 @@ def is_present(driver, selector):
     element = False
     try:
         element = driver.find_element_by_class_name(selector)
-    except NoSuchElementException, e:
+    except NoSuchElementException as e:
         pass
     return element

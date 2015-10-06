@@ -84,7 +84,7 @@ def model_to_simple_dict(instance):
 
 def update_model(instance, dict_):
     "Update a Model Object with all attrs from the dict_."
-    for k, v in dict_.iteritems():
+    for k,v in dict_.items():
         setattr(instance, k, v)
     instance.save()
     return instance

@@ -60,7 +60,7 @@ class ExportData(APIView):
             raise ValidationError("Required arguments missing: {}".format(required))
 
     def post(self, request, *args, **kwargs):
-        data = json.loads(request.body)
+        data = json.loads(request.body.decode('utf8'))
         self.set_model_and_fields(data)
         self.validate_required()
 

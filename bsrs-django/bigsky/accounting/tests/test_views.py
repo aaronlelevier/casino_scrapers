@@ -25,9 +25,8 @@ class CurrencyTests(APITestCase):
     def test_list(self):
         response = self.client.get('/api/admin/currencies/')
         self.assertEqual(response.status_code, 200)
-        # Content
-        data = json.loads(response.content)
-        self.assertTrue(data['results'] > 0)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(len(data['results']) > 0)
 
     def test_detail(self):
         response = self.client.get('/api/admin/currencies/{}/'.format(self.currency.id))

@@ -38,7 +38,7 @@ class LocationLevelTests(APITestCase):
     def test_list(self):
         response = self.client.get('/api/admin/location_levels/')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(
             LocationLevel.objects.get(id=data['results'][0]['id']),
             LocationLevel
@@ -52,7 +52,7 @@ class LocationLevelTests(APITestCase):
 
     def test_get_parents(self):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIn(
             LocationLevel.objects.get(id=data['parents'][0]['id']),
             self.district.parents.all()
@@ -60,7 +60,7 @@ class LocationLevelTests(APITestCase):
 
     def test_get_children(self):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIn(
             LocationLevel.objects.get(id=data['children'][0]),
             self.district.children.all()
@@ -78,7 +78,7 @@ class LocationLevelTests(APITestCase):
         }
         response = self.client.post('/api/admin/location_levels/', data, format='json')
         self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(LocationLevel.objects.get(id=data['id']), LocationLevel)
         self.assertEqual(data['children'][0], str(child_location_level.id))
 
@@ -93,7 +93,7 @@ class LocationLevelTests(APITestCase):
             'children': [str(r.id) for r in region.children.all()]
         }
         response = self.client.put('/api/admin/location_levels/{}/'.format(region.id), data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(data['name'], old_name)
 
     ### DETAIL ROUTES
@@ -101,7 +101,7 @@ class LocationLevelTests(APITestCase):
     def test_get_all_children(self):
         region = LocationLevel.objects.get(name='region')
         response = self.client.get('/api/admin/location_levels/{}/get-all-children/'.format(region.id), format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             len(data),
             LocationLevel.objects.get_all_children(region).count()
@@ -110,7 +110,7 @@ class LocationLevelTests(APITestCase):
     def test_get_all_parents(self):
         department = LocationLevel.objects.get(name='department')
         response = self.client.get('/api/admin/location_levels/{}/get-all-parents/'.format(department.id), format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             len(data),
             LocationLevel.objects.get_all_parents(department).count()
@@ -125,7 +125,7 @@ class LocationLevelTests(APITestCase):
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
         self.assertEqual(response.status_code, 404)
         response = self.client.get('/api/admin/location_levels/')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district.id),
             [d['id'] for d in data['results']]
@@ -135,7 +135,7 @@ class LocationLevelTests(APITestCase):
         response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id))
         self.assertTrue(LocationLevel.objects_all.get(id=self.district.id).deleted)
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.region.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district.id),
             [ea for ea in data['children']]
@@ -145,7 +145,7 @@ class LocationLevelTests(APITestCase):
         response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id))
         self.assertTrue(LocationLevel.objects_all.get(id=self.district.id).deleted)
         response = self.client.get('/api/admin/location_levels/{}/'.format(self.store.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district.id),
             [ea['id'] for ea in data['parents']]
@@ -174,7 +174,7 @@ class LocationListTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
         # Response / data
         self.response = self.client.get('/api/admin/locations/')
-        self.data = json.loads(self.response.content)
+        self.data = json.loads(self.response.content.decode('utf8'))
         self.data_location = self.data['results'][0]
 
     def tearDown(self):
@@ -213,7 +213,7 @@ class LocationDetailTests(APITestCase):
         self.client.login(username=self.person.username, password=PASSWORD)
         # Response / Data
         self.response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
-        self.data = json.loads(self.response.content)
+        self.data = json.loads(self.response.content.decode('utf8'))
 
     def tearDown(self):
         self.client.logout()
@@ -261,9 +261,9 @@ class LocationDetailTests(APITestCase):
         # Test
         response = self.client.get('/api/admin/locations/{pk}/get-level-children/{level_id}/'.format(
             pk=location.id, level_id=location_level.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         store1 = Location.objects.filter(location_level=location_level).first()
-        self.assertIn(str(store1.id), response.content)
+        self.assertIn(str(store1.id), response.content.decode('utf8'))
         self.assertEqual(len(data), 2)
 
     def test_get_level_parents(self):
@@ -276,9 +276,9 @@ class LocationDetailTests(APITestCase):
         # Test
         response = self.client.get('/api/admin/locations/{pk}/get-level-parents/{level_id}/'.format(
             pk=location.id, level_id=location_level.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         region1 = Location.objects.filter(location_level=location_level).first()
-        self.assertIn(str(region1.id), response.content)
+        self.assertIn(str(region1.id), response.content.decode('utf8'))
         self.assertEqual(len(data), 2)
 
 
@@ -358,7 +358,7 @@ class LocationUpdateTests(APITestCase):
         self.data['name'] = new_name
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
             self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['name'], new_name)
 
     def test_update_status(self):
@@ -366,7 +366,7 @@ class LocationUpdateTests(APITestCase):
         self.data['status'] = str(new_status.id)
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
             self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['status'], str(new_status.id))
 
     def test_update_parents(self):
@@ -375,7 +375,7 @@ class LocationUpdateTests(APITestCase):
         self.assertNotEqual(new_location.location_level, self.location.location_level)
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
             self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         # ['parents'][0] is equal to an UUID here b/c 'parents' is an UUID Array
         self.assertEqual(data['parents'][0], str(new_location.id))
 
@@ -394,7 +394,7 @@ class LocationUpdateTests(APITestCase):
         self.assertNotEqual(new_location.location_level, self.location.location_level)
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
             self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['children'][0], str(new_location.id))
 
     def test_update_children_same_location_level(self):
@@ -454,7 +454,7 @@ class LocationDeleteTests(APITestCase):
         self.assertTrue(Location.objects_all.filter(id=self.district_location.id).exists())
         # Not in List
         response = self.client.get('/api/admin/locations/')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district_location.id),
             [d['id'] for d in data['results']]
@@ -464,7 +464,7 @@ class LocationDeleteTests(APITestCase):
         response = self.client.delete('/api/admin/locations/{}/'.format(self.district_location.id))
         self.assertTrue(Location.objects_all.get(id=self.district_location.id).deleted)
         response = self.client.get('/api/admin/locations/{}/'.format(self.region_location.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district_location.id),
             [ea['id'] for ea in data['children']]
@@ -474,7 +474,7 @@ class LocationDeleteTests(APITestCase):
         response = self.client.delete('/api/admin/locations/{}/'.format(self.district_location.id))
         self.assertTrue(Location.objects_all.get(id=self.district_location.id).deleted)
         response = self.client.get('/api/admin/locations/{}/'.format(self.store_location.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district_location.id),
             [ea['id'] for ea in data['parents']]
@@ -505,7 +505,7 @@ class LocationOrderingTests(APITestCase):
         mommy.make(Location, name='a')
         # test:
         response = self.client.get('/api/admin/locations/?ordering=name') 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["results"][0]["name"], "a")
         self.assertEqual(data["results"][1]["name"], "Z")
 
@@ -515,7 +515,7 @@ class LocationOrderingTests(APITestCase):
         mommy.make(Location, name='a')
         # test: expect = B,a,A
         response = self.client.get('/api/admin/locations/?ordering=-name')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["results"][0]["name"], "Z")
         self.assertEqual(data["results"][1]["name"], "a")
 
@@ -526,7 +526,7 @@ class LocationOrderingTests(APITestCase):
         mommy.make(Location, name='a', number='1')
         # test
         response = self.client.get('/api/admin/locations/?ordering=number,name')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["results"][0]["number"], "1")
         self.assertEqual(data["results"][0]["name"], "a")
         self.assertEqual(data["results"][1]["number"], "1")
@@ -539,7 +539,7 @@ class LocationOrderingTests(APITestCase):
         mommy.make(Location, name='a', number='1')
         # test
         response = self.client.get('/api/admin/locations/?ordering=-number,name')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["results"][0]["number"], "2")
         self.assertEqual(data["results"][0]["name"], "a")
         self.assertEqual(data["results"][1]["number"], "1")
@@ -562,7 +562,7 @@ class LocationSearchTests(APITestCase):
     def test_search_name(self):
         letter = "a"
         response = self.client.get('/api/admin/locations/?search={}'.format(letter))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data["count"],
             Location.objects.filter(
@@ -574,7 +574,7 @@ class LocationSearchTests(APITestCase):
         city = "San Diego"
         address = mommy.make(Address, city=city, location=self.location)
         response = self.client.get('/api/admin/locations/?search={}'.format(city))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['id'],
             str(address.location.id)
@@ -584,7 +584,7 @@ class LocationSearchTests(APITestCase):
         postal_code = "90210"
         address = mommy.make(Address, postal_code=postal_code, location=self.location)
         response = self.client.get('/api/admin/locations/?search={}'.format(postal_code))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['id'],
             str(address.location.id)
@@ -594,7 +594,7 @@ class LocationSearchTests(APITestCase):
         address = "123 Fern St."
         address = mommy.make(Address, address="Fern", location=self.location)
         response = self.client.get('/api/admin/locations/?search={}'.format(address))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['id'],
             str(address.location.id)
@@ -617,7 +617,7 @@ class DRFFiltersTests(APITestCase):
     def test_location_level_filter(self):
         response = self.client.get('/api/admin/locations/?location_level={}'
             .format(self.location_level.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
             Location.objects.filter(location_level=self.location_level).count()
@@ -633,7 +633,7 @@ class DRFFiltersTests(APITestCase):
         name = "c"
         response = self.client.get('/api/admin/locations/?location_level={}&name__icontains={}'
             .format(self.location_level.id, name))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
             Location.objects.filter(location_level=self.location_level, name__icontains=name).count()
@@ -643,7 +643,7 @@ class DRFFiltersTests(APITestCase):
         name = "ca"
         response = self.client.get('/api/admin/locations/?location_level={}&name__icontains={}'
             .format(self.location_level.id, name))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
             Location.objects.filter(location_level=self.location_level, name__icontains=name).count()

@@ -37,7 +37,7 @@ class TranslationViewSet(viewsets.ModelViewSet):
         object for that Translation.
         """
         if data:
-            return Response({d.iterkeys().next(): d.itervalues().next() for d in data})
+            return Response({next(iter(d)):d[next(iter(d))] for d in data})
         else:
             raise NotFound
 

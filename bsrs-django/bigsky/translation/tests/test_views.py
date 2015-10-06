@@ -24,13 +24,13 @@ class LocaleTests(APITestCase):
     def test_list(self):
         response = self.client.get('/api/admin/locales/')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], Locale.objects.count())
 
     def test_get(self):
         response = self.client.get('/api/admin/locales/{}/'.format(self.locale.id))
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.locale.id))
 
     def test_update(self):
@@ -43,7 +43,7 @@ class LocaleTests(APITestCase):
         response = self.client.put('/api/admin/locales/{}/'.format(self.locale.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['name'], new_name)
 
 
@@ -63,13 +63,13 @@ class TranslationTests(APITestCase):
     def test_list_multiple_translations(self):
         response = self.client.get('/api/translations/')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(data, dict)
 
     def test_filter(self):
         # Assumes there is a single Locale fixture with the name "en"
         response = self.client.get('/api/translations/?locale=en')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIn('en', data)
         self.assertEqual(len(data), 1)
 
@@ -77,7 +77,7 @@ class TranslationTests(APITestCase):
         # Assumes there is an "en" and "en-us" translation. It should 
         # return both.
         response = self.client.get('/api/translations/?locale=en-us')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIn('en', data)
         self.assertIn('en-us', data)
         self.assertEqual(len(data), 2)

@@ -1,4 +1,4 @@
-from javascript import JavascriptMixin
+from .javascript import JavascriptMixin
 
 
 class ModelPage(JavascriptMixin):
@@ -21,7 +21,7 @@ class ModelPage(JavascriptMixin):
         assert elem_input.get_attribute("value") == value
 
     def find_and_assert_elems(self, **kwargs):
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr(self, k + "_input", self.driver.find_element_by_id(k))
             assert getattr(self, k + "_input").get_attribute("value") == v
 

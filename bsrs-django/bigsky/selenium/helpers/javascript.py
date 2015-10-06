@@ -13,7 +13,7 @@ class JavascriptMixin(object):
         if debounce:
             time.sleep(.5)
         for w in range(10):
-            print "waiting for xhr callback...{}".format(selector)
+            print("waiting for xhr callback...{}".format(selector))
             if(self.driver.execute_script("return $.active") == 0):
                 if(plural):
                     element = self.driver.find_elements_by_class_name(selector)
