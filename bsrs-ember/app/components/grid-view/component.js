@@ -77,7 +77,8 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
             max = page * page_size;
             min = page * page_size - page_size;
         }else if(min >= max) {
-            min = max - page_size;
+            let lower = max - page_size;
+            min = lower < 0 ? 0 : lower;
         }
         return sorted_content.slice(min, max);
     }),
