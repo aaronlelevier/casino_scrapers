@@ -1,12 +1,12 @@
-import {test, module} from 'bsrs-ember/tests/helpers/qunit';
-import PersonListComponent from "bsrs-ember/components/person-list/component";
 import Ember from 'ember';
-import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 
 var store, eventbus;
 
-module('unit: person-list', {
+module('unit: grid-view test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'service:eventbus']);
         eventbus = this.container.lookup('service:eventbus');
@@ -15,7 +15,7 @@ module('unit: person-list', {
 
 test('knows how to sort a list of people even when sortable column is null', (assert) => {
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: PEOPLE_DEFAULTS.username, title: PEOPLE_DEFAULTS.title});
-    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     var people = subject.get('searched_content');
     assert.equal(people.get('length'), 1);
     store.push('person', {id: 1, username: 'wat', title: PEOPLE_DEFAULTS.title});
@@ -30,7 +30,7 @@ test('sorted content is sorted by the defaultSort provided if no other value is 
     store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
     store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title});
     store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title});
-    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id']});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
     var people = subject.get('sorted_content');
     assert.equal(people.objectAt(0).get('id'), 1);
     assert.equal(people.objectAt(1).get('id'), 2);
@@ -52,8 +52,11 @@ test('given a list of people and page number, should only return those people on
     store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
     store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
     store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
-    var subject = PersonListComponent.create({model: store.find('person'), page_size: 2, eventbus: eventbus, defaultSort: ['id']});
+    var model = store.find('person');
+    model.set('count', 3);
+    var subject = GridViewComponent.create({model: model, page_size: 2, eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
     var people = subject.get('paginated_content');
+    assert.equal(subject.get('page'), undefined);
     assert.equal(people.get('length'), 2);
     subject.set('page', 2);
     people = subject.get('paginated_content');
@@ -70,7 +73,7 @@ test('given a list of people and page number, should only return those people on
     store.push('person', {id: 4, username: 'crb', first_name: '', last_name: ''});
     var model = store.find('person');
     model.set('count', 4);
-    var subject = PersonListComponent.create({model: model, page_size: 2, eventbus: eventbus});
+    var subject = GridViewComponent.create({model: model, page_size: 2, eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     var pages = subject.get('pages');
     assert.equal(pages.get('length'), 2);
     model.set('count', 5);
@@ -79,11 +82,89 @@ test('given a list of people and page number, should only return those people on
     assert.equal(pages.get('length'), 3);
 });
 
+test('when the min pages equals the max we instead make min our max value minus page size', (assert) => {
+    store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
+    store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
+    store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
+    store.push('person', {id: 4, username: 'crb', first_name: '', last_name: ''});
+    var model = store.find('person');
+    model.set('count', 6);
+    var subject = GridViewComponent.create({model: model, page_size: 2, eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
+    var pages = subject.get('pages');
+    assert.equal(pages.get('length'), 3);
+    subject.set('page', 2);
+    var content = subject.get('paginated_content');
+    assert.equal(content.get('length'), 2);
+    assert.equal(content.objectAt(0).get('id'), 3);
+    assert.equal(content.objectAt(1).get('id'), 4);
+    model.set('count', 7);
+    store.push('person', {id: 5, username: 'drb'});
+    pages = subject.get('pages');
+    assert.equal(pages.get('length'), 4);
+    content = subject.get('paginated_content');
+    assert.equal(content.get('length'), 2);
+    assert.equal(content.objectAt(0).get('id'), 3);
+    assert.equal(content.objectAt(1).get('id'), 4);
+    subject.set('page', 3);
+    content = subject.get('paginated_content');
+    assert.equal(content.get('length'), 2);
+    assert.equal(content.objectAt(0).get('id'), 4);
+    assert.equal(content.objectAt(1).get('id'), 5);
+});
+
+test('given a list of people and page number, should always return the maximum number of records regardless of page', (assert) => {
+    store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
+    store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
+    store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
+    store.push('person', {id: 4, username: '4 crb', first_name: '', last_name: ''});
+    var model = store.find('person');
+    model.set('count', 13);
+    var subject = GridViewComponent.create({model: model, page_size: 2, page: 5, eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
+    var pages = subject.get('pages');
+    assert.equal(pages.get('length'), 7);
+    var content = subject.get('paginated_content');
+    assert.equal(content.get('length'), 2);
+    assert.equal(content.objectAt(0).get('id'), 3);
+    assert.equal(content.objectAt(1).get('id'), 4);
+    subject.set('page', 6);
+    content = subject.get('paginated_content');
+    assert.equal(content.get('length'), 2);
+    assert.equal(content.objectAt(0).get('id'), 3);
+    assert.equal(content.objectAt(1).get('id'), 4);
+    subject.set('page', 1);
+    content = subject.get('paginated_content');
+    assert.equal(content.get('length'), 2);
+    assert.equal(content.objectAt(0).get('id'), 1);
+    assert.equal(content.objectAt(1).get('id'), 2);
+});
+
+test('given a (large) list of people and page number, should always return the maximum number of records regardless of page', (assert) => {
+    store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
+    store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
+    store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
+    store.push('person', {id: 4, username: '4 crb', first_name: '', last_name: ''});
+    store.push('person', {id: 5, username: '4 crb', first_name: '', last_name: ''});
+    store.push('person', {id: 6, username: '4 crb', first_name: '', last_name: ''});
+    store.push('person', {id: 7, username: '4 crb', first_name: '', last_name: ''});
+    store.push('person', {id: 8, username: '4 crb', first_name: '', last_name: ''});
+    store.push('person', {id: 9, username: '4 crb', first_name: '', last_name: ''});
+    store.push('person', {id: 10, username: '4 crb', first_name: '', last_name: ''});
+    store.push('person', {id: 11, username: '4 crb', first_name: '', last_name: ''});
+    store.push('person', {id: 12, username: '4 crb', first_name: '', last_name: ''});
+    var model = store.find('person');
+    model.set('count', 12);
+    var subject = GridViewComponent.create({model: model, page_size: 10, page: 2, eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
+    var content = subject.get('paginated_content');
+    assert.equal(content.get('length'), 2);
+    assert.equal(content.objectAt(0).get('id'), 11);
+    assert.equal(content.objectAt(1).get('id'), 12);
+});
+
 test('searched content allows you to look through searchable keys and filter accordingly', (assert) => {
     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer'});
     store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups'});
     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier'});
-    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     var people = subject.get('searched_content');
     assert.deepEqual(subject.get('searchable'), ['fullname', 'username', 'title']);
     assert.equal(people.get('length'), 3);
@@ -129,7 +210,7 @@ test('found content allows you to look through searchable keys and filter accord
     store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
     store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'yzq', title: 'toran billups'});
     store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'zed', title: 'aaron lelevier'});
-    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 3);
     subject.set('find', 'title:sco');
@@ -157,7 +238,7 @@ test('found will filter out null objects when that column is searched on explici
     store.push('person', {id: 6, first_name: '', last_name: '', username: 'pariatur', title: null});
     store.push('person', {id: 7, first_name: '', last_name: '', username: 'voluptate', title: null});
     store.push('person', {id: 8, first_name: '', last_name: '', username: 'adipisicing', title: null});
-    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     subject.set('find', 'username:a');
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 8);
@@ -181,7 +262,7 @@ test('found filter will only match those exactly in all columns', (assert) => {
     store.push('person', {id: 6, foo: 'babcde', username: 'xyyv2', title: 'deaabc'});
     store.push('person', {id: 7, foo: 'babcde', username: 'xyyv3', title: 'deaabcd'});
     store.push('person', {id: 8, foo: 'babcdeq', username: 'xyyv4', title: 'deaabcde'});
-    var subject = PersonListComponent.create({model: store.find('person'), eventbus: eventbus});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     subject.set('find', 'username:x');
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 8);
@@ -221,7 +302,7 @@ test('rolling pagination shows only ten records at a time', (assert) => {
     }
     let model = store.find('person');
     model.set('count', 179);
-    let subject = PersonListComponent.create({page: 1, model: model, eventbus: eventbus});
+    let subject = GridViewComponent.create({page: 1, model: model, eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     let current = subject.get('page');
     assert.equal(current, 1);
     let pages = subject.get('pages');
