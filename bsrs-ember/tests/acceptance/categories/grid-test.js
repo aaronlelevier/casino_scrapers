@@ -135,11 +135,11 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=label,name';
-    xhr(sort_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('label,name', 1));
+    xhr(sort_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('label,name'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=name';
-    xhr(page_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name', 2));
+    xhr(page_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name'));
     visit(CATEGORY_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_URL);
@@ -229,9 +229,9 @@ test('typing a search will reset page to 1 and require an additional xhr and res
 
 test('multiple sort options appear in the query string as expected', function(assert) {
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=label,name';
-    xhr(sort_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('label,name', 1));
+    xhr(sort_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('label,name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name'));
     visit(CATEGORY_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_URL);
@@ -254,13 +254,13 @@ test('multiple sort options appear in the query string as expected', function(as
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
     var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=name,label';
-    xhr(sort_four ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name,label', 1));
+    xhr(sort_four ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name,label'));
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-name,label';
-    xhr(sort_three ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('-name,label', 1));
+    xhr(sort_three ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('-name,label'));
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=label,name';
-    xhr(sort_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('label,name', 1));
+    xhr(sort_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('label,name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name'));
     visit(CATEGORY_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_URL);
@@ -292,7 +292,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-label-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-desc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CATEGORY_DEFAULTS.nameOne + '9');
+        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), 'cococat19');
     });
     click('.t-sort-name-dir');
     andThen(() => {
@@ -312,7 +312,7 @@ test('clicking the same sort option over and over will flip the direction and re
 
 test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
     let find_two = PREFIX + BASE_URL + '/?page=1&label__icontains=hat&name__icontains=7';
-    xhr(find_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('label:hat,name:7', 1));
+    xhr(find_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('label:hat,name:7'));
     let find_one = PREFIX + BASE_URL + '/?page=1&label__icontains=hat';
     xhr(find_one ,"GET",null,{},200,CATEGORY_FIXTURES.fulltext('label:hat', 1));
     visit(CATEGORY_URL);
@@ -343,7 +343,7 @@ test('full text search will filter down the result set and query django accordin
 
 test('loading screen shown before any xhr and hidden after', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name'));
     visitSync(CATEGORY_URL);
     Ember.run.later(function() {
         assert.equal(find('.t-grid-data').length, 3);
@@ -377,9 +377,9 @@ test('when a full text filter is selected the input inside the modal is focused'
 
 test('full text searched columns will have a special on css class when active', function(assert) {
     let find_three = PREFIX + BASE_URL + '/?page=1&label__icontains=&name__icontains=7';
-    xhr(find_three ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name:7', 1));
+    xhr(find_three ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('name:7'));
     let find_two = PREFIX + BASE_URL + '/?page=1&label__icontains=num&name__icontains=7';
-    xhr(find_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('label:num,name:7', 1));
+    xhr(find_two ,"GET",null,{},200,CATEGORY_FIXTURES.sorted('label:num,name:7'));
     let find_one = PREFIX + BASE_URL + '/?page=1&label__icontains=num';
     xhr(find_one ,"GET",null,{},200,CATEGORY_FIXTURES.fulltext('label:num', 1));
     visit(CATEGORY_URL);
@@ -406,9 +406,9 @@ test('full text searched columns will have a special on css class when active', 
 
 test('after you reset the grid the filter model will also be reset', function(assert) {
     let option_three = PREFIX + BASE_URL + '/?page=1&ordering=name&search=4&name__icontains=4';
-    xhr(option_three ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name:4', 1));
+    xhr(option_three ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name:4'));
     let option_two = PREFIX + BASE_URL + '/?page=1&ordering=name&search=4';
-    xhr(option_two ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name:4', 1));
+    xhr(option_two ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name:4'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(option_one ,'GET',null,{},200,CATEGORY_FIXTURES.searched('4', 'id'));
     visit(CATEGORY_URL);
@@ -532,7 +532,7 @@ test('starting with a page size greater than 10 will set the selected', function
 
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name'));
     visit(CATEGORY_URL);
     click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
@@ -547,7 +547,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 
 test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name'));
     let name = 'foobar';
     let routePath = 'admin.categories.index';
     let url = window.location.toString();
@@ -595,7 +595,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 
 test('save filterset button only available when a dynamic filter is present', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,'GET',null,{},200,CATEGORY_FIXTURES.sorted('name'));
     visit(CATEGORY_URL);
     andThen(() => {
         assert.equal(find('.t-show-save-filterset-modal').length, 0);

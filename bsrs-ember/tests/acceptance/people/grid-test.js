@@ -136,11 +136,11 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
-    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title,username', 1));
+    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title,username'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=username';
-    xhr(page_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 2));
+    xhr(page_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
-    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username'));
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -231,11 +231,11 @@ test('typing a search will reset page to 1 and require an additional xhr and res
 
 test('multiple sort options appear in the query string as expected', function(assert) {
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=fullname,title,username';
-    xhr(sort_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('fullname,title,username', 1));
+    xhr(sort_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('fullname,title,username'));
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
-    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title,username', 1));
+    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title,username'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
-    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username'));
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -264,13 +264,13 @@ test('multiple sort options appear in the query string as expected', function(as
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
     var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=username,title';
-    xhr(sort_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username,title', 1));
+    xhr(sort_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username,title'));
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-username,title';
-    xhr(sort_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('-username,title', 1));
+    xhr(sort_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('-username,title'));
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=title,username';
-    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title,username', 1));
+    xhr(sort_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title,username'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
-    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username'));
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
@@ -322,11 +322,11 @@ test('clicking the same sort option over and over will flip the direction and re
 
 test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
     let find_four = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=lelevier&fullname__icontains=ewcomer';
-    xhr(find_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:lelevier,fullname:ewcomer', 1));
+    xhr(find_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:lelevier,fullname:ewcomer'));
     let find_three = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7&fullname__icontains=ewcomer';
-    xhr(find_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7,fullname:S', 1));
+    xhr(find_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7,fullname:S'));
     let find_two = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7';
-    xhr(find_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7', 1));
+    xhr(find_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7'));
     let find_one = PREFIX + BASE_URL + '/?page=1&title__icontains=wat';
     xhr(find_one ,"GET",null,{},200,PEOPLE_FIXTURES.fulltext('title:wat', 1));
     visit(PEOPLE_URL);
@@ -370,7 +370,7 @@ test('full text search will filter down the result set and query django accordin
 
 test('loading screen shown before any xhr and hidden after', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
-    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('username'));
     visitSync(PEOPLE_URL);
     Ember.run.later(function() {
         assert.equal(find('.t-grid-data').length, 1);
@@ -404,11 +404,11 @@ test('when a full text filter is selected the input inside the modal is focused'
 
 test('full text searched columns will have a special on css class when active', function(assert) {
     let find_four = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=&fullname__icontains=ewcomer';
-    xhr(find_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,fullname:ewcomer', 1));
+    xhr(find_four ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,fullname:ewcomer'));
     let find_three = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7&fullname__icontains=ewcomer';
-    xhr(find_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7,fullname:S', 1));
+    xhr(find_three ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7,fullname:S'));
     let find_two = PREFIX + BASE_URL + '/?page=1&title__icontains=wat&username__icontains=7';
-    xhr(find_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7', 1));
+    xhr(find_two ,"GET",null,{},200,PEOPLE_FIXTURES.sorted('title:wat,username:7'));
     let find_one = PREFIX + BASE_URL + '/?page=1&title__icontains=wat';
     xhr(find_one ,"GET",null,{},200,PEOPLE_FIXTURES.fulltext('title:wat', 1));
     visit(PEOPLE_URL);
@@ -445,9 +445,9 @@ test('full text searched columns will have a special on css class when active', 
 
 test('after you reset the grid the filter model will also be reset', function(assert) {
     let option_three = PREFIX + BASE_URL + '/?page=1&ordering=username&search=m&username__icontains=gib';
-    xhr(option_three ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username:m', 1));
+    xhr(option_three ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username:m'));
     let option_two = PREFIX + BASE_URL + '/?page=1&ordering=username&search=m';
-    xhr(option_two ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username:m', 1));
+    xhr(option_two ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username:m'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=m';
     xhr(option_one ,'GET',null,{},200,PEOPLE_FIXTURES.searched('m', 'id'));
     visit(PEOPLE_URL);
@@ -571,7 +571,7 @@ test('starting with a page size greater than 10 will set the selected', function
 
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
-    xhr(sort_one ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    xhr(sort_one ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username'));
     visit(PEOPLE_URL);
     click('.t-sort-username-dir');
     click('.t-show-save-filterset-modal');
@@ -586,7 +586,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 
 test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
-    xhr(sort_one ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    xhr(sort_one ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username'));
     let name = 'foobar';
     let routePath = 'admin.people.index';
     let url = window.location.toString();
@@ -634,7 +634,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 
 test('save filterset button only available when a dynamic filter is present', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=username';
-    xhr(sort_one ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username', 1));
+    xhr(sort_one ,'GET',null,{},200,PEOPLE_FIXTURES.sorted('username'));
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(find('.t-show-save-filterset-modal').length, 0);

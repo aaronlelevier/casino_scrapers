@@ -133,11 +133,11 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=role_type,name';
-    xhr(sort_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type,name', 1));
+    xhr(sort_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type,name'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=name';
-    xhr(page_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('name', 2));
+    xhr(page_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,ROLE_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,"GET",null,{},200,ROLE_FIXTURES.sorted('name'));
     visit(ROLE_URL);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
@@ -227,9 +227,9 @@ test('typing a search will reset page to 1 and require an additional xhr and res
 
 test('multiple sort options appear in the query string as expected', function(assert) {
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=role_type,name';
-    xhr(sort_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type,name', 1));
+    xhr(sort_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type,name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,ROLE_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,"GET",null,{},200,ROLE_FIXTURES.sorted('name'));
     visit(ROLE_URL);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
@@ -252,13 +252,13 @@ test('multiple sort options appear in the query string as expected', function(as
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
     var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=name,role_type';
-    xhr(sort_four ,"GET",null,{},200,ROLE_FIXTURES.sorted('name,role_type', 1));
+    xhr(sort_four ,"GET",null,{},200,ROLE_FIXTURES.sorted('name,role_type'));
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-name,role_type';
-    xhr(sort_three ,"GET",null,{},200,ROLE_FIXTURES.sorted('-name,role_type', 1));
+    xhr(sort_three ,"GET",null,{},200,ROLE_FIXTURES.sorted('-name,role_type'));
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=role_type,name';
-    xhr(sort_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type,name', 1));
+    xhr(sort_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type,name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,ROLE_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,"GET",null,{},200,ROLE_FIXTURES.sorted('name'));
     visit(ROLE_URL);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
@@ -310,7 +310,7 @@ test('clicking the same sort option over and over will flip the direction and re
 
 test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
     let find_two = PREFIX + BASE_URL + '/?page=1&role_type__icontains=i&name__icontains=xav';
-    xhr(find_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type:i,name:xav', 1));
+    xhr(find_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type:i,name:xav'));
     let find_one = PREFIX + BASE_URL + '/?page=1&role_type__icontains=i';
     xhr(find_one ,"GET",null,{},200,ROLE_FIXTURES.fulltext('role_type:i', 1));
     visit(ROLE_URL);
@@ -341,7 +341,7 @@ test('full text search will filter down the result set and query django accordin
 
 test('loading screen shown before any xhr and hidden after', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,ROLE_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,"GET",null,{},200,ROLE_FIXTURES.sorted('name'));
     visitSync(ROLE_URL);
     Ember.run.later(function() {
         assert.equal(find('.t-grid-data').length, 3);
@@ -375,9 +375,9 @@ test('when a full text filter is selected the input inside the modal is focused'
 
 test('full text searched columns will have a special on css class when active', function(assert) {
     let find_three = PREFIX + BASE_URL + '/?page=1&role_type__icontains=&name__icontains=7';
-    xhr(find_three ,"GET",null,{},200,ROLE_FIXTURES.sorted('name:7', 1));
+    xhr(find_three ,"GET",null,{},200,ROLE_FIXTURES.sorted('name:7'));
     let find_two = PREFIX + BASE_URL + '/?page=1&role_type__icontains=in&name__icontains=7';
-    xhr(find_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type:in,name:7', 1));
+    xhr(find_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type:in,name:7'));
     let find_one = PREFIX + BASE_URL + '/?page=1&role_type__icontains=in';
     xhr(find_one ,"GET",null,{},200,ROLE_FIXTURES.fulltext('role_type:in', 1));
     visit(ROLE_URL);
@@ -404,9 +404,9 @@ test('full text searched columns will have a special on css class when active', 
 
 test('after you reset the grid the filter model will also be reset', function(assert) {
     let option_three = PREFIX + BASE_URL + '/?page=1&ordering=name&search=4&name__icontains=4';
-    xhr(option_three ,'GET',null,{},200,ROLE_FIXTURES.sorted('name:4', 1));
+    xhr(option_three ,'GET',null,{},200,ROLE_FIXTURES.sorted('name:4'));
     let option_two = PREFIX + BASE_URL + '/?page=1&ordering=name&search=4';
-    xhr(option_two ,'GET',null,{},200,ROLE_FIXTURES.sorted('name:4', 1));
+    xhr(option_two ,'GET',null,{},200,ROLE_FIXTURES.sorted('name:4'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
     xhr(option_one ,'GET',null,{},200,ROLE_FIXTURES.searched('4', 'id'));
     visit(ROLE_URL);
@@ -530,7 +530,7 @@ test('starting with a page size greater than 10 will set the selected', function
 
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,ROLE_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,'GET',null,{},200,ROLE_FIXTURES.sorted('name'));
     visit(ROLE_URL);
     click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
@@ -545,7 +545,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 
 test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,ROLE_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,'GET',null,{},200,ROLE_FIXTURES.sorted('name'));
     let name = 'foobar';
     let routePath = 'admin.roles.index';
     let url = window.location.toString();
@@ -593,7 +593,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 
 test('save filterset button only available when a dynamic filter is present', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,ROLE_FIXTURES.sorted('name', 1));
+    xhr(sort_one ,'GET',null,{},200,ROLE_FIXTURES.sorted('name'));
     visit(ROLE_URL);
     andThen(() => {
         assert.equal(find('.t-show-save-filterset-modal').length, 0);

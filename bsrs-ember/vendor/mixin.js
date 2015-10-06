@@ -22,7 +22,7 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
         return {'count':18,'next':null,'previous':null,'results': paginated};
     };
 
-    factory.prototype.sorted = function(column, page) {
+    factory.prototype.sorted = function(column) {
         var page1 = this.list_two().results;
         var page2 = this.list().results;
         var response = page1.concat(page2);
@@ -41,6 +41,7 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
                 return b[columns[1]] - a[columns[1]];
             });
         }
+
         return {'count':sorted.length,'next':null,'previous':null,'results': sorted};
     };
 
@@ -69,7 +70,7 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
             paged = filtered.slice(0, 10);
         }
         paged = paged.reduce(function(a, b) { return a.concat(b); }).uniq();
-        return {'count':filtered.length,'next':null,'previous':null,'results': paged};
+        return {'count':paged.length,'next':null,'previous':null,'results': paged};
     };
 
     factory.prototype.searched = function(search, column, page) {
