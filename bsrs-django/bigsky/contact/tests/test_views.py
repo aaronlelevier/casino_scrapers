@@ -21,7 +21,7 @@ class PhoneNumberViewSetTests(APITestCase):
         self.client.logout()
 
     def test_get(self):
-        response = self.client.get('/api/admin/phone_numbers/{}/'.format(self.phone_number.pk))
+        response = self.client.get('/api/admin/phone-numbers/{}/'.format(self.phone_number.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['number'], self.phone_number.number)
@@ -29,7 +29,7 @@ class PhoneNumberViewSetTests(APITestCase):
     def test_list(self):
         # have 2 ph #'s total
         mommy.make(PhoneNumber, person=self.person)
-        response = self.client.get('/api/admin/phone_numbers/')
+        response = self.client.get('/api/admin/phone-numbers/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
         numbers = data['results']
@@ -67,7 +67,7 @@ class PhoneNumberFilterTests(APITestCase):
             return "waT{}".format(chr(65+record))
 
     def test_related_filter(self):
-        response = self.client.get('/api/admin/phone_numbers/?person__username={}'
+        response = self.client.get('/api/admin/phone-numbers/?person__username={}'
             .format(self.person.username))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -90,7 +90,7 @@ class PhoneNumberTypeViewSetTests(APITestCase):
         self.client.logout()
 
     def test_get(self):
-        response = self.client.get('/api/admin/phone_numbers/{}/'.format(self.phone_number.pk))
+        response = self.client.get('/api/admin/phone-numbers/{}/'.format(self.phone_number.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['type'], str(self.type.pk))
@@ -100,7 +100,7 @@ class PhoneNumberTypeViewSetTests(APITestCase):
         ph2 = mommy.make(PhoneNumber, person=self.person)
         type2 = ph2.type
 
-        response = self.client.get('/api/admin/phone_number_types/')
+        response = self.client.get('/api/admin/phone-number-types/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
         numbers = data['results']

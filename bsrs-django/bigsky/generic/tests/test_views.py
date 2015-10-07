@@ -32,22 +32,22 @@ class SavedSearchTests(APITestCase):
             "id": str(uuid.uuid4()),
             "name": "my new search",
             "endpoint_name": self.saved_search.endpoint_name,
-            "endpoint_uri": "/api/admin/phone_numbers/"
+            "endpoint_uri": "/api/admin/phone-numbers/"
         }
-        response = self.client.post('/api/admin/saved_searches/', data, format='json')
+        response = self.client.post('/api/admin/saved-searches/', data, format='json')
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(SavedSearch.objects.get(id=data['id']), SavedSearch)
 
     def test_list(self):
-        response = self.client.get('/api/admin/saved_searches/')
+        response = self.client.get('/api/admin/saved-searches/')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['endpoint_name'], self.saved_search.endpoint_name)
 
     def test_detail(self):
-        response = self.client.get('/api/admin/saved_searches/{}/'.format(self.saved_search.id))
+        response = self.client.get('/api/admin/saved-searches/{}/'.format(self.saved_search.id))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.saved_search.id))
@@ -58,7 +58,7 @@ class SavedSearchTests(APITestCase):
         data = serializer.data
         data['endpoint_uri'] = "/api/admin/emails/?ordering=-email"
         # test
-        response = self.client.put('/api/admin/saved_searches/{}/'.format(self.saved_search.id),
+        response = self.client.put('/api/admin/saved-searches/{}/'.format(self.saved_search.id),
             data=data, format='json')
         self.assertEqual(response.status_code, 200)
         new_data = json.loads(response.content.decode('utf8'))
@@ -70,7 +70,7 @@ class SavedSearchTests(APITestCase):
         serializer = SavedSearchSerializer(self.saved_search)
         data = serializer.data
         data['id'] = str(uuid.uuid4())
-        response = self.client.post('/api/admin/saved_searches/', data=data, format='json')
+        response = self.client.post('/api/admin/saved-searches/', data=data, format='json')
         self.assertEqual(response.status_code, 400)
 
     def test_unique_for_active_two_keys_deleted(self):
@@ -79,7 +79,7 @@ class SavedSearchTests(APITestCase):
         serializer = SavedSearchSerializer(self.saved_search)
         data = serializer.data
         data['id'] = str(uuid.uuid4())
-        response = self.client.post('/api/admin/saved_searches/', data=data, format='json')
+        response = self.client.post('/api/admin/saved-searches/', data=data, format='json')
         self.assertEqual(response.status_code, 201)
 
 

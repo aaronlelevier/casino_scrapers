@@ -36,7 +36,7 @@ class LocationLevelTests(APITestCase):
     ### LIST
 
     def test_list(self):
-        response = self.client.get('/api/admin/location_levels/')
+        response = self.client.get('/api/admin/location-levels/')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(
@@ -47,11 +47,11 @@ class LocationLevelTests(APITestCase):
     ### GET
 
     def test_get(self):
-        response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
+        response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
         self.assertEqual(response.status_code, 200)
 
     def test_get_parents(self):
-        response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
+        response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertIn(
             LocationLevel.objects.get(id=data['parents'][0]['id']),
@@ -59,7 +59,7 @@ class LocationLevelTests(APITestCase):
         )
 
     def test_get_children(self):
-        response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
+        response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertIn(
             LocationLevel.objects.get(id=data['children'][0]),
@@ -76,7 +76,7 @@ class LocationLevelTests(APITestCase):
             'name': new_name,
             'children': [str(child_location_level.id)]
         }
-        response = self.client.post('/api/admin/location_levels/', data, format='json')
+        response = self.client.post('/api/admin/location-levels/', data, format='json')
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(LocationLevel.objects.get(id=data['id']), LocationLevel)
@@ -92,7 +92,7 @@ class LocationLevelTests(APITestCase):
             'name': 'new_name',
             'children': [str(r.id) for r in region.children.all()]
         }
-        response = self.client.put('/api/admin/location_levels/{}/'.format(region.id), data, format='json')
+        response = self.client.put('/api/admin/location-levels/{}/'.format(region.id), data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(data['name'], old_name)
 
@@ -100,7 +100,7 @@ class LocationLevelTests(APITestCase):
 
     def test_get_all_children(self):
         region = LocationLevel.objects.get(name='region')
-        response = self.client.get('/api/admin/location_levels/{}/get-all-children/'.format(region.id), format='json')
+        response = self.client.get('/api/admin/location-levels/{}/get-all-children/'.format(region.id), format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             len(data),
@@ -109,7 +109,7 @@ class LocationLevelTests(APITestCase):
 
     def test_get_all_parents(self):
         department = LocationLevel.objects.get(name='department')
-        response = self.client.get('/api/admin/location_levels/{}/get-all-parents/'.format(department.id), format='json')
+        response = self.client.get('/api/admin/location-levels/{}/get-all-parents/'.format(department.id), format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             len(data),
@@ -120,11 +120,11 @@ class LocationLevelTests(APITestCase):
     # Do delete's behave differently because they are 'self-referencing'?
 
     def test_delete(self):
-        response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id))
+        response = self.client.delete('/api/admin/location-levels/{}/'.format(self.district.id))
         self.assertEqual(response.status_code, 204)
-        response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
+        response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
         self.assertEqual(response.status_code, 404)
-        response = self.client.get('/api/admin/location_levels/')
+        response = self.client.get('/api/admin/location-levels/')
         data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district.id),
@@ -132,9 +132,9 @@ class LocationLevelTests(APITestCase):
         )
 
     def test_delete_children(self):
-        response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id))
+        response = self.client.delete('/api/admin/location-levels/{}/'.format(self.district.id))
         self.assertTrue(LocationLevel.objects_all.get(id=self.district.id).deleted)
-        response = self.client.get('/api/admin/location_levels/{}/'.format(self.region.id))
+        response = self.client.get('/api/admin/location-levels/{}/'.format(self.region.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district.id),
@@ -142,9 +142,9 @@ class LocationLevelTests(APITestCase):
         )
 
     def test_delete_parent(self):
-        response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id))
+        response = self.client.delete('/api/admin/location-levels/{}/'.format(self.district.id))
         self.assertTrue(LocationLevel.objects_all.get(id=self.district.id).deleted)
-        response = self.client.get('/api/admin/location_levels/{}/'.format(self.store.id))
+        response = self.client.get('/api/admin/location-levels/{}/'.format(self.store.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district.id),
@@ -152,10 +152,10 @@ class LocationLevelTests(APITestCase):
         )
 
     def test_delete_override(self):
-        response = self.client.delete('/api/admin/location_levels/{}/'.format(self.district.id),
+        response = self.client.delete('/api/admin/location-levels/{}/'.format(self.district.id),
             {'override': True}, format='json')
         self.assertEqual(response.status_code, 204)
-        response = self.client.get('/api/admin/location_levels/{}/'.format(self.district.id))
+        response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
         self.assertEqual(response.status_code, 404)
 
 
