@@ -556,7 +556,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     visit(ROLE_URL);
     click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
-    xhr('/api/admin/saved_searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+    xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
     saveFilterSet(name, routePath);
     andThen(() => {
         let html = find(section);
@@ -583,7 +583,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
         let section = find('.t-side-menu > section:eq(1)');
         assert.equal(section.find(navigation).length, 1);
     });
-    xhr('/api/admin/saved_searches/' + UUID.value + '/', 'DELETE', null, {}, 204, {});
+    xhr('/api/admin/saved-searches/' + UUID.value + '/', 'DELETE', null, {}, 204, {});
     click(navigation + '> a > .t-remove-filterset:eq(0)');
     andThen(() => {
         let section = find('.t-side-menu > section:eq(1)');

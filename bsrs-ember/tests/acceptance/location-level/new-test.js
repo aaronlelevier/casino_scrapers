@@ -14,20 +14,19 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new';
-const DJANGO_LOCATION_LEVEL_URL = PREFIX + '/admin/location_levels/';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
-const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_LEVEL_URL + LOCATION_LEVEL_DEFAULTS.idOne + '/';
 const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 const CANCEL_BTN = '.t-cancel-btn';
 
-let application, store, payload, list_xhr;
+let application, store, payload, list_xhr, endpoint;
 
 module('Acceptance | location-level-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        list_xhr = xhr(DJANGO_LOCATION_LEVEL_URL + '?page=1', 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
+        endpoint = PREFIX + BASE_URL + '/' + '?page=1';
+        list_xhr = xhr(endpoint, 'GET', null, {}, 200, LOCATION_LEVEL_FIXTURES.empty());
         payload = {
             id: UUID.value,
             name: LOCATION_LEVEL_DEFAULTS.nameAnother,
@@ -42,7 +41,7 @@ module('Acceptance | location-level-new', {
 
 test('visiting /location-level/new', (assert) => {
     let response = Ember.$.extend(true, {}, payload);
-    xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);
     click('.t-add-new');
     click('.selectize-input input');
@@ -75,7 +74,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     payload.name = LOCATION_LEVEL_DEFAULTS.nameRegion;
     payload.children = [];
     let response = Ember.$.extend(true, {}, payload);
-    xhr(DJANGO_LOCATION_LEVEL_URL, 'POST', JSON.stringify(payload), {}, 201, response);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_LEVEL_URL);
     click('.t-add-new');
     andThen(() => {

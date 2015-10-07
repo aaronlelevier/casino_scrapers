@@ -15,7 +15,6 @@ import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
-const DJANGO_LOCATION_LEVEL_URL = PREFIX + BASE_URL.replace('-', '_');
 const NUMBER_ONE = {keyCode: 49};
 const NUMBER_NINE = {keyCode: 57};
 const BACKSPACE = {keyCode: 8};
@@ -26,7 +25,7 @@ module('Acceptance | location-level-grid-list', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        endpoint = DJANGO_LOCATION_LEVEL_URL + '/?page=1';
+        endpoint = PREFIX + BASE_URL + '/?page=1';
         list_xhr = xhr(endpoint ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.list());
     },
     afterEach() {
@@ -51,7 +50,7 @@ test('initial load should only show first 10 records ordered by id with correct 
 });
 
 test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', function(assert) {
-    var page_two = DJANGO_LOCATION_LEVEL_URL + '/?page=2';
+    var page_two = PREFIX+BASE_URL + '/?page=2';
     xhr(page_two ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.list_two());
     visit(LOCATION_LEVEL_URL);
     click('.t-page:eq(1) a');
@@ -81,7 +80,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 });
 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
-    var page_two = DJANGO_LOCATION_LEVEL_URL + '/?page=2';
+    var page_two = PREFIX+BASE_URL + '/?page=2';
     xhr(page_two ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.list_two());
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -131,11 +130,11 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 });
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
-    // var sort_two = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=number,name';
+    // var sort_two = PREFIX+BASE_URL + '/?page=1&ordering=number,name';
     // xhr(sort_two ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.sorted('number,name'));
-    var page_two = DJANGO_LOCATION_LEVEL_URL + '/?page=2&ordering=name';
+    var page_two = PREFIX+BASE_URL + '/?page=2&ordering=name';
     xhr(page_two ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name'));
-    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    var sort_one = PREFIX+BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name'));
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -164,15 +163,15 @@ test('clicking header will sort by given property and reset page to 1 (also requ
 });
 
 test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
-    var search_two = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name&search=19';
+    var search_two = PREFIX+BASE_URL + '/?page=1&ordering=name&search=19';
     xhr(search_two ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.searched('19', 'name'));
-    var page_two = DJANGO_LOCATION_LEVEL_URL + '/?page=2&ordering=name';
+    var page_two = PREFIX+BASE_URL + '/?page=2&ordering=name';
     xhr(page_two ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.searched('', 'name', 2));
-    var page_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    var page_one = PREFIX+BASE_URL + '/?page=1&ordering=name';
     xhr(page_one ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.searched('', 'name'));
-    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name&search=9';
+    var sort_one = PREFIX+BASE_URL + '/?page=1&ordering=name&search=9';
     xhr(sort_one ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.searched('9', 'name'));
-    var search_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&search=9';
+    var search_one = PREFIX+BASE_URL + '/?page=1&search=9';
     xhr(search_one ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.searched('9', 'id'));
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -225,9 +224,9 @@ test('typing a search will reset page to 1 and require an additional xhr and res
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
-    // var sort_two = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=number,name';
+    // var sort_two = PREFIX+BASE_URL + '/?page=1&ordering=number,name';
     // xhr(sort_two ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.sorted('number,name'));
-    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    var sort_one = PREFIX+BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name'));
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -250,9 +249,9 @@ test('multiple sort options appear in the query string as expected', function(as
 });
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
-    var sort_two = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=-name';
+    var sort_two = PREFIX+BASE_URL + '/?page=1&ordering=-name';
     xhr(sort_two ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name'));
-    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    var sort_one = PREFIX+BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name'));
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -285,9 +284,9 @@ test('clicking the same sort option over and over will flip the direction and re
 });
 
 test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
-    // let find_two = DJANGO_LOCATION_LEVEL_URL + '/?page=1&number__icontains=num&name__icontains=7';
+    // let find_two = PREFIX+BASE_URL + '/?page=1&number__icontains=num&name__icontains=7';
     // xhr(find_two ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.sorted('number:num,name:7'));
-    let find_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&name__icontains=tsi';
+    let find_one = PREFIX+BASE_URL + '/?page=1&name__icontains=tsi';
     xhr(find_one ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.fulltext('name:tsi', 1));
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -310,7 +309,7 @@ test('full text search will filter down the result set and query django accordin
 });
 
 test('loading screen shown before any xhr and hidden after', function(assert) {
-    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    var sort_one = PREFIX+BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name'));
     visitSync(LOCATION_LEVEL_URL);
     Ember.run.later(function() {
@@ -340,9 +339,9 @@ test('when a full text filter is selected the input inside the modal is focused'
 });
 
 test('full text searched columns will have a special on css class when active', function(assert) {
-    let find_two = DJANGO_LOCATION_LEVEL_URL + '/?page=1&name__icontains=';
+    let find_two = PREFIX+BASE_URL + '/?page=1&name__icontains=';
     xhr(find_two ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.fulltext('name:', 1));
-    let find_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&name__icontains=tsi';
+    let find_one = PREFIX+BASE_URL + '/?page=1&name__icontains=tsi';
     xhr(find_one ,"GET",null,{},200,LOCATION_LEVEL_FIXTURES.fulltext('name:tsi', 1));
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -359,11 +358,11 @@ test('full text searched columns will have a special on css class when active', 
 });
 
 test('after you reset the grid the filter model will also be reset', function(assert) {
-    let option_three = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name&search=9&name__icontains=9';
+    let option_three = PREFIX+BASE_URL + '/?page=1&ordering=name&search=9&name__icontains=9';
     xhr(option_three ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name:9'));
-    let option_two = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name&search=9';
+    let option_two = PREFIX+BASE_URL + '/?page=1&ordering=name&search=9';
     xhr(option_two ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name:9'));
-    let option_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&search=9';
+    let option_one = PREFIX+BASE_URL + '/?page=1&search=9';
     xhr(option_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.searched('9', 'id'));
     visit(LOCATION_LEVEL_URL);
     fillIn('.t-grid-search-input', '9');
@@ -391,7 +390,7 @@ test('after you reset the grid the filter model will also be reset', function(as
 });
 
 test('count is shown and updated as the user filters down the list from django', function(assert) {
-    let option_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&search=9';
+    let option_one = PREFIX+BASE_URL + '/?page=1&search=9';
     xhr(option_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.searched('9', 'id'));
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -415,11 +414,11 @@ test('count is shown and updated as the user filters down the list from django',
 });
 
 test('picking a different number of pages will alter the query string and xhr', function(assert) {
-    let option_two = DJANGO_LOCATION_LEVEL_URL + '/?page=1&page_size=10';
+    let option_two = PREFIX+BASE_URL + '/?page=1&page_size=10';
     xhr(option_two, 'GET',null,{},200,LOCATION_LEVEL_FIXTURES.paginated(10));
-    let option_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&page_size=25';
+    let option_one = PREFIX+BASE_URL + '/?page=1&page_size=25';
     xhr(option_one, 'GET',null,{},200,LOCATION_LEVEL_FIXTURES.paginated(25));
-    let page_two = DJANGO_LOCATION_LEVEL_URL + '/?page=2';
+    let page_two = PREFIX+BASE_URL + '/?page=2';
     xhr(page_two, 'GET',null,{},200,LOCATION_LEVEL_FIXTURES.list_two());
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -470,7 +469,7 @@ test('picking a different number of pages will alter the query string and xhr', 
 
 test('starting with a page size greater than 10 will set the selected', function(assert) {
     clearxhr(list_xhr);
-    let option_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&page_size=25';
+    let option_one = PREFIX+BASE_URL + '/?page=1&page_size=25';
     xhr(option_one, 'GET',null,{},200,LOCATION_LEVEL_FIXTURES.paginated(25));
     visit(LOCATION_LEVEL_URL + '?page_size=25');
     andThen(() => {
@@ -485,7 +484,7 @@ test('starting with a page size greater than 10 will set the selected', function
 });
 
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
-    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    var sort_one = PREFIX+BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name'));
     visit(LOCATION_LEVEL_URL);
     click('.t-sort-name-dir');
@@ -500,7 +499,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 });
 
 test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
-    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    var sort_one = PREFIX+BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name'));
     let name = 'foobar';
     let routePath = 'admin.location-levels.index';
@@ -512,7 +511,7 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     visit(LOCATION_LEVEL_URL);
     click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
-    xhr('/api/admin/saved_searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+    xhr('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
     saveFilterSet(name, routePath);
     andThen(() => {
         let html = find(section);
@@ -539,7 +538,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
         let section = find('.t-side-menu > section:eq(2)');
         assert.equal(section.find(navigation).length, 1);
     });
-    xhr('/api/admin/saved_searches/' + UUID.value + '/', 'DELETE', null, {}, 204, {});
+    xhr('/api/admin/saved-searches/' + UUID.value + '/', 'DELETE', null, {}, 204, {});
     click(navigation + '> a > .t-remove-filterset:eq(0)');
     andThen(() => {
         let section = find('.t-side-menu > section:eq(2)');
@@ -548,7 +547,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 });
 
 test('save filterset button only available when a dynamic filter is present', function(assert) {
-    var sort_one = DJANGO_LOCATION_LEVEL_URL + '/?page=1&ordering=name';
+    var sort_one = PREFIX+BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,LOCATION_LEVEL_FIXTURES.sorted('name'));
     visit(LOCATION_LEVEL_URL);
     andThen(() => {

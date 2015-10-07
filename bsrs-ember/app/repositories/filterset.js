@@ -4,7 +4,7 @@ import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
 var PREFIX = config.APP.NAMESPACE;
-var FILTERSET_URL = PREFIX + '/admin/saved_searches/';
+var FILTERSET_URL = PREFIX + '/admin/saved-searches/';
 
 var FilterSetRepository = Ember.Object.extend({
     uuid: inject('uuid'),
