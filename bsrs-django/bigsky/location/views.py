@@ -37,7 +37,7 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        Will return all *Child LocationsLevels*
        
-       URL: `/api/admin/location_levels/{pk}/get-all-children/`
+       URL: `/api/admin/location-levels/{pk}/get-all-children/`
 
        LocationLevel ID: `{pk}`
 
@@ -45,7 +45,7 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        Will return all *Parent LocationsLevels*
        
-       URL: `/api/admin/location_levels/{pk}/get-all-parents/`
+       URL: `/api/admin/location-levels/{pk}/get-all-parents/`
 
        LocationLevel ID: `{pk}`
     '''
