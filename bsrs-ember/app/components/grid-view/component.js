@@ -4,6 +4,13 @@ import SortBy from 'bsrs-ember/mixins/sort-by';
 import FilterBy from 'bsrs-ember/mixins/filter-by';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
 
+var difference = function(max, page_size) {
+    if(max > 10) {
+        return Math.abs(parseInt((max / page_size + '').split('.')[1]) - page_size);
+    }
+    return Math.abs(Math.floor(max / page_size) - page_size);
+};
+
 var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
     page_sizes: ['10', '25', '50', '100'],
     toggleFilter: false,
@@ -67,20 +74,17 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
     paginated_content: Ember.computed('model.count', 'sorted_content.[]', function() {
         let pages = this.get('pages').length;
         let page = parseInt(this.get('page')) || 1;
-        let page_size = this.get('page_size') || 10;
+        let page_size = parseInt(this.get('page_size')) || 10;
         let sorted_content = this.get('sorted_content');
         let max = sorted_content.get('length') || 1;
-        let upper = page_size * pages;
-        let diff = upper - max;
-        let min = max - page_size + diff;
-        if(page * page_size < max) {
-            max = page * page_size;
-            min = page * page_size - page_size;
-        }else if(min >= max) {
-            let lower = max - page_size;
-            min = lower < 0 ? 0 : lower;
-        }
-        return sorted_content.slice(min, max);
+        let min = max - page_size + (page_size * pages - max);
+        let total = page * page_size;
+        let diff = difference(max, page_size);
+        let lower = total === max + diff ? max : total - page_size;
+        let offset = lower === max ? diff : 0;
+        let top = lower < 1 || lower >= (max + diff) ? page_size : lower;
+        let bottom = top + offset - page_size;
+        return sorted_content.slice(bottom, top);
     }),
     pages: Ember.computed('model.count', function() {
         var pages = [];
