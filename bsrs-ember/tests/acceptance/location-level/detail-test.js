@@ -39,7 +39,7 @@ module('Acceptance | detail-test', {
     }
 });
 
-test('sco clicking on a location levels name will redirect them to the detail view', (assert) => {
+test('clicking on a location levels name will redirect them to the detail view', (assert) => {
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -111,15 +111,11 @@ test('a location level child can be selected and persisted', (assert) => {
         assert.ok(location_level.get('isDirty'));
     });
     let list = LOCATION_LEVEL_FIXTURES.list();
-    let children_array = LOCATION_LEVEL_DEFAULTS.districtChildren;
-    children_array.push(children_array.shift());
-    list.results[1].children = children_array;
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
-        assert.deepEqual(location_level.get('children_fks'), children_array);
         assert.ok(location_level.get('isNotDirty'));
     });
 });
