@@ -8,7 +8,7 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from rest_framework.exceptions import ValidationError
 
 from person.models import Person
-from utils.models import BaseModel, BaseManager, BaseSetting
+from utils.models import BaseModel, BaseManager, BaseSettingModel
 
 
 ### SAVED SEARCHES
@@ -76,11 +76,11 @@ class SavedSearch(BaseModel):
 
 ### SETTINGS
 
-class MainSetting(BaseSetting):
+class MainSetting(BaseSettingModel):
     pass
 
 
-class CustomSetting(BaseSetting):
+class CustomSetting(BaseSettingModel):
     pass
 
 

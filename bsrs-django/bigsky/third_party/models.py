@@ -5,7 +5,7 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
 
-from utils.models import AbstractName, BaseModel, BaseManager
+from utils.models import BaseNameModel, BaseModel, BaseManager
 from utils import choices
 
 
@@ -16,7 +16,7 @@ class ThirdPartyStatusManager(BaseManager):
         return obj
 
 
-class ThirdPartyStatus(AbstractName):
+class ThirdPartyStatus(BaseNameModel):
     description = models.CharField(max_length=100, choices=choices.CONTRACTOR_STATUS_CHOICES,
         default=choices.CONTRACTOR_STATUS_CHOICES[0][0])
 

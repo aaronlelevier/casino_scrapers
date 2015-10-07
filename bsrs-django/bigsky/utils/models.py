@@ -74,7 +74,7 @@ class Tester(BaseModel):
     
 
 @python_2_unicode_compatible
-class AbstractName(BaseModel):
+class BaseNameModel(BaseModel):
     name = models.CharField(max_length=100, unique=True)
 
     class Meta:
@@ -88,7 +88,7 @@ class AbstractName(BaseModel):
         return {"id": str(self.pk), "name": self.name}
 
 
-class AbstractNameOrder(AbstractName):
+class BaseNameOrderModel(BaseNameModel):
     order = models.IntegerField(blank=True, default=0)
 
     class Meta:
@@ -97,7 +97,7 @@ class AbstractNameOrder(AbstractName):
 
 
 @python_2_unicode_compatible
-class BaseSetting(BaseModel):
+class BaseSettingModel(BaseModel):
     '''
     ``Setting`` records will be either Standard or Custom. and be set 
     at levels. ex - Location, Role, User.

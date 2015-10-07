@@ -18,7 +18,7 @@ from person import helpers
 from order.models import WorkOrderStatus
 from translation.models import Locale
 from utils import choices, create
-from utils.models import AbstractName, BaseModel, BaseManager
+from utils.models import BaseNameModel, BaseModel, BaseManager
 
 
 class RoleManager(BaseManager):
@@ -178,7 +178,7 @@ class PersonStatusManager(BaseManager):
         return obj
 
 
-class PersonStatus(AbstractName):
+class PersonStatus(BaseNameModel):
     description = models.CharField(max_length=100, choices=choices.PERSON_STATUS_CHOICES,
         default=choices.PERSON_STATUS_CHOICES[0][0])
 

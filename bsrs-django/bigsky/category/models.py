@@ -5,7 +5,7 @@ from django.conf import settings
 
 from accounting.models import Currency
 from utils import choices
-from utils.models import AbstractName, BaseManager, BaseModel
+from utils.models import BaseNameModel, BaseManager, BaseModel
 
 
 ### CATEGORY
@@ -17,7 +17,7 @@ class CategoryStatusManager(BaseManager):
         return obj
 
 
-class CategoryStatus(AbstractName):
+class CategoryStatus(BaseNameModel):
     description = models.CharField(max_length=100, choices=choices.CATEGORY_STATUS_CHOICES,
         default=choices.CATEGORY_STATUS_CHOICES[0][0])
 
