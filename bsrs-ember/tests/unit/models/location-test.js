@@ -28,13 +28,13 @@ test('related location-level is not dirty when no location-level present', (asse
     assert.equal(location.get('location-level'), undefined);
 });
 
-test('related location-level is not dirty with original location-level model', (assert) => {
+test('related location-level is not dirty with original location-level model and changing location level will not affect location isDirty', (assert) => {
     var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, locations: [LOCATION_DEFAULTS.idOne]});
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne});
     assert.ok(location.get('locationLevelIsNotDirty'));
     location_level.set('name', LOCATION_LEVEL_DEFAULTS.nameDepartment);
     assert.ok(location_level.get('isDirty'));
-    assert.ok(location.get('locationLevelIsDirty'));
+    assert.ok(location.get('locationLevelIsNotDirty'));
     assert.equal(location.get('location_level.name'), LOCATION_LEVEL_DEFAULTS.nameDepartment);
 });
 
@@ -64,53 +64,34 @@ test('related location-level will update when the location-levels locations arra
     assert.equal(location.get('location_level'), undefined);
 });
 
-test('when location location-level is changed dirty tracking works as expected', (assert) => {
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne});
-    var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, locations: [LOCATION_DEFAULTS.idOne]});
-    assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
-    location_level.set('name', LOCATION_LEVEL_DEFAULTS.nameDistrict);
-    assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
-    location_level.rollback();
-    assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
-    location_level.set('name', LOCATION_LEVEL_DEFAULTS.nameStore);
-    assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
-    location_level.rollback();
-    assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
-});
-
-test('when location has location-level suddently assigned it shows as a dirty relationship (starting undefined)', (assert) => {
+test('when location has location-level suddently assigned it shows as a not dirty relationship (starting undefined)', (assert) => {
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne});
     var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, locations: undefined});
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     location_level.set('locations', [LOCATION_DEFAULTS.idOne]);
     assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('when location has location-level suddently assigned it shows as a dirty relationship (starting empty array)', (assert) => {
+test('when location has location-level suddently assigned it shows as a not dirty relationship (starting empty array)', (assert) => {
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne});
     var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, locations: []});
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     location_level.set('locations', [LOCATION_DEFAULTS.idOne]);
     assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('when location has location-level suddently assigned it shows as a dirty relationship (starting with legit value)', (assert) => {
+test('when location has location-level suddently assigned it shows as a not dirty relationship (starting with legit value)', (assert) => {
     var location = store.push('location', {id: LOCATION_DEFAULTS.idOne});
     var location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, locations: [LOCATION_DEFAULTS.unusedId]});
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     location_level.set('locations', [LOCATION_DEFAULTS.unusedId, LOCATION_DEFAULTS.idOne]);
     assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('when location has location-level suddently removed it shows as a dirty relationship', (assert) => {
@@ -140,6 +121,7 @@ test('rollback location-level will reset the previously used location-level when
     assert.ok(location.get('isDirtyOrRelatedDirty'));
     location.save();
     location.saveRelated();
+    //location's location level set to none
     admin_location_level.set('locations', [LOCATION_DEFAULTS.unusedId]);
     admin_location_level.save();
     assert.equal(location.get('location_level'), undefined);
