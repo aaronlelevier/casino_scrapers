@@ -3,6 +3,7 @@ from datetime import date
 from django.test import TestCase
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
+from django.core.exceptions import ValidationError
 
 from model_mommy import mommy
 
@@ -209,20 +210,24 @@ class PersonTests(TestCase):
         )
 
 
-# class PersonPasswordTests(TestCase):
+class PersonPasswordHistoryTests(TestCase):
 
-#     def setUp(self):
-#         self.password = PASSWORD
-#         self.person = create_person()
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
 
-#     def test_password_history(self):
-#         # newly created person should have no ``password_history``
-#         self.assertTrue(self.person.password)
-#         print self.person.password_history
-#         self.assertFalse(any(self.person.password_history))
-#         # password change archived in history
-#         new_password = _generate_chars()
-#         self.person.set_password(new_password)
-#         self.person.save()
-#         self.assertTrue(any(self.person.password_history))
-#         assert 1 == 2
+    def test_initial(self):
+        self.assertEqual(len(self.person.password_history), 1)
+
+    def test_new_password(self):
+        self.person.set_password('new')
+        self.person.save()
+        self.assertEqual(len(self.person.password_history), 2)
+
+    def test_repeat_password(self):
+        self.person.set_password('new')
+        self.person.save()
+        self.assertEqual(len(self.person.password_history), 2)
+        with self.assertRaises(ValidationError):
+            self.person.set_password('new')
+        self.assertEqual(len(self.person.password_history), 2)

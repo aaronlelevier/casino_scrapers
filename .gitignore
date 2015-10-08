@@ -33,6 +33,7 @@ coverage/
 
 .ctags
 _*.rst
+*-out.csv
 
 # virtualenv
 venv/

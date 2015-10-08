@@ -4,6 +4,7 @@ from datetime import timedelta
 
 from django.db import models, IntegrityError
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
@@ -276,19 +277,12 @@ class Person(BaseModel, AbstractUser):
     class Meta:
         ordering = ('fullname',)
 
-    _current_password = None
-
-    def __init__(self, *args, **kwargs):
-        super(Person, self).__init__(*args, **kwargs)
-        self._current_password = self.password
-
     def __str__(self):
         return self.username
 
     def save(self, *args, **kwargs):
         self._update_defaults()
         self._validate_locations()
-        self._update_password_history()
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
@@ -311,42 +305,26 @@ class Person(BaseModel, AbstractUser):
     def set_password(self, raw_password):
         """
         Check if the raw_password has been used before. If so, raise an 
-        error, if not, update password.
+        error. If not, update password, and append the password hash to 
+        the list of password_history for this Person.
         """
-        # store current password
-        self._current_password = self.password
-
-        # check that an old password isn't being reused
         new_password = make_password(raw_password)
         hasher = identify_hasher(new_password)
-        
-        ### TODO: ``self.password_history`` appears to be staying in memory
-        #   and shared b/t Person instances, so the below 'raise error' isn't working
 
-        # if any([hasher.verify(raw_password, p) for p in self.password_history]):
-        #     raise Exception("User: {}, the password:'{}' has already "
-        #                     "been used.".format(self.username, raw_password))
+        if not self.password:
+            self.password_history = []
+
+        if not self.password_history:
+            self.password_history.append(new_password)
+        else:
+            if any([hasher.verify(raw_password, p) for p in self.password_history]):
+                raise ValidationError("User: {}, the password:'{}' has already "
+                                "been used.".format(self.username, raw_password))
 
         super(Person, self).set_password(raw_password)
 
-        self._update_password_history()
-        self._current_password = self.password
-
-    def _update_password_history(self):
-        """
-        Will not be called when first instantiating a new Person because 
-        they don't have a password yet.
-        """
-        # Check ran only on first time Person Create
-        if not self._current_password and self.password:
-            self.password_history.append(self.password)
-            self._current_password = self.password
-        # Check ran on all other ``self.set_password`` calls
-        elif self._current_password != self.password:
-            self.password_history.append(self.password)
-            self._current_password = self.password
-
-        return self.password_history[-settings.MAX_PASSWORD_HISTORY:]
+        if new_password not in self.password_history:
+            self.password_history.append(new_password)
 
     def _get_locale(self, locale):
         """Resolve the Locale using the Accept-Language Header. If not 

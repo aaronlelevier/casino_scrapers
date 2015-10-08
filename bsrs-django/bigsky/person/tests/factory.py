@@ -56,7 +56,6 @@ def create_single_person(name=None, role=None):
 
 
 def update_login_person(person):
-    person.set_password('1234')
     person.is_superuser = True
     person.is_staff = True
     person.save()
@@ -116,9 +115,9 @@ def create_all_people():
         role = random.choice(roles)
         locations = Location.objects.filter(location_level=role.location_level)
         # create
-        person = mommy.make(Person, role=role,locations=locations, **kwargs)
-        person.set_password(PASSWORD)
-        person.save()
+        person = create_single_person(name=name, role=role)
+        person.locations.add(*locations)
+        person.save()        
 
     # Person used to Login (so needs a 'password' set here)
     aaron = Person.objects.get(username="aaron")
