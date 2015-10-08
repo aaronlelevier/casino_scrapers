@@ -35,7 +35,7 @@ CLOSE_WO_ON_APPROVAL_CHOICES = (
     ('checked', 'checked'),
 )
 
-CONTRACTOR_STATUS_CHOICES = (
+THIRD_PARTY_STATUS_CHOICES = (
     ('active', 'active'),
     ('two', 'two'),
 )

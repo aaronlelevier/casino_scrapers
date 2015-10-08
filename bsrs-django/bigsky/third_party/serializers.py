@@ -4,17 +4,22 @@ from utils.serializers import BaseCreateSerializer
 
 ### CONTRACTOR
 
-CONTRACTOR_FIELDS = ('id', 'name', 'number', 'status',)
+THIRD_PARTY_FIELDS = ('id', 'name', 'number', 'status',)
 
-
-class ContractorListSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = ThirdParty
-        fields = CATEGORY_FIELDS
-
-class ContractorDetailSerializer(BaseCreateSerializer):
+class ThirdPartySerializer(BaseCreateSerializer):
 
     class Meta:
         model = ThirdParty
-        fields = CATEGORY_FIELDS
+        fields = THIRD_PARTY_FIELDS
+
+class ThirdPartyListSerializer(BaseCreateSerializer):
+
+    class Meta:
+        model = ThirdParty
+        fields = THIRD_PARTY_FIELDS
+
+class ThirdPartyDetailSerializer(BaseCreateSerializer):
+
+    class Meta:
+        model = ThirdParty
+        fields = THIRD_PARTY_FIELDS
