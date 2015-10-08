@@ -46,6 +46,7 @@ LOCAL_APPS = (
     'utils',
     'order',
     'third_party',
+    'ticket',
     )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
