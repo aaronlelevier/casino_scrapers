@@ -12,13 +12,12 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
 const PREFIX = config.APP.NAMESPACE;
-const BASE_LOCATION_LEVEL_URL = BASEURLS.base_location_levels_url;
+const BASE_URL = BASEURLS.base_location_levels_url;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;
-const LOCATION_LEVEL_URL = BASE_LOCATION_LEVEL_URL + '/index';
-const DJANGO_LOCATION_LEVEL_URL = '/admin/location_levels/';
-const NEW_URL = BASE_LOCATION_LEVEL_URL + '/new';
-const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_LEVEL_URL + LOCATION_LEVEL_DEFAULTS.idLossDistrict + '/';
-const DETAIL_URL = BASE_LOCATION_LEVEL_URL + '/' + LOCATION_LEVEL_DEFAULTS.idLossDistrict;
+const LOCATION_LEVEL_URL = BASE_URL + '/index';
+const NEW_URL = BASE_URL + '/new';
+const DJANGO_DETAIL_URL = PREFIX + BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idLossDistrict + '/';
+const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idLossDistrict;
 const SUBMIT_BTN = '.submit_btn';
 const ROLE_URL = BASE_ROLE_URL + '/index';
 const SAVE_BTN = '.t-save-btn';
@@ -33,7 +32,7 @@ module('Acceptance | tab location-level test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        endpoint = PREFIX + DJANGO_LOCATION_LEVEL_URL;
+        endpoint = PREFIX + BASE_URL + '/';
         location_detail_data = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idLossDistrict);
         location_detail_data.name = LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict;
         detail_xhr = xhr(DJANGO_DETAIL_URL, 'GET', null, {}, 200, location_detail_data);

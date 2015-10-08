@@ -47,14 +47,13 @@ var extract_role = function(model, store) {
     let role_pk = model.role;
     let role = store.find('role', model.role);
     let location_level_fk = extract_role_location_level(model, store);
-    //var role = store.push('role', model.role);//don't need to do this b/c roles already bootstrapped...remove at later point in time
     let existing_people = role.get('people') || [];
     if (existing_people.indexOf(model.id) === -1) {
         role.set('people', existing_people.concat([model.id]));
     }
     role.save();
     delete model.role;
-    return location_level_fk;
+    return [role_pk, location_level_fk];
 };
 
 var extract_person_location = function(model, store, uuid, location_level_fk, location_deserializer) {
@@ -112,11 +111,12 @@ var PersonDeserializer = Ember.Object.extend({
         let uuid = this.get('uuid');
         let store = this.get('store');
         let person_check = store.find('person', id);
+        let location_level_fk;
         //prevent updating person if dirty
         if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
             model.phone_number_fks = extract_phone_numbers(model, store);
             model.address_fks = extract_addresses(model, store);
-            let location_level_fk = extract_role(model, store);
+            [model.role_fk, location_level_fk] = extract_role(model, store);
             model.person_location_fks = extract_person_location(model, store, uuid, location_level_fk, location_deserializer);
             model.locale_fk = extract_locale(model, store);
             let person = store.push('person', model);

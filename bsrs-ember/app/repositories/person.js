@@ -14,14 +14,14 @@ export default Ember.Object.extend(GridRepositoryMixin, {
     deserializer: Ember.computed.alias('PersonDeserializer'),
     insert(model) {
         return PromiseMixin.xhr(PEOPLE_URL, 'POST', {data: JSON.stringify(model.createSerialize())}).then(() => {
-            model.save();
             model.saveRelated();
+            model.save();
         });
     },
     update(model) {
         return PromiseMixin.xhr(PEOPLE_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
-            model.save();
             model.saveRelated();
+            model.save();
         });
     },
     find() {

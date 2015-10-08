@@ -13,47 +13,6 @@ module('unit: location level deserializer test', {
     }
 });
 
-test('location level correctly deserialized the children with no children currently in store (list)', (assert) => {
-    let subject = LocationLevelDeserializer.create({store: store});
-    let location_level = store.push('location-level', { id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany });
-    let loc_level_one = LOCATION_LEVEL_FIXTURES.generate(LOCATION_LEVEL_DEFAULTS.idOne);
-    loc_level_one.children = [LOCATION_LEVEL_DEFAULTS.idTwo];
-    let json = [loc_level_one, LOCATION_LEVEL_FIXTURES.generate(LOCATION_LEVEL_DEFAULTS.idTwo, LOCATION_LEVEL_DEFAULTS.nameDepartment)];
-    let response = {'count':2,'next':null,'previous':null,'results': json};
-    subject.deserialize(response);
-    assert.equal(location_level.get('children').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
-    let location_level_two = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
-    assert.equal(location_level_two.get('children.length'), 0);
-});
-
-test('location level correctly deserialized the children with children currently in store (list)', (assert) => {
-    let subject = LocationLevelDeserializer.create({store: store});
-    let location_level = store.push('location-level', { id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, children: [LOCATION_LEVEL_DEFAULTS.idTwo] });
-    let loc_level_one = LOCATION_LEVEL_FIXTURES.generate(LOCATION_LEVEL_DEFAULTS.idOne);
-    loc_level_one.children = [LOCATION_LEVEL_DEFAULTS.idTwo];
-    let json = [loc_level_one, LOCATION_LEVEL_FIXTURES.generate(LOCATION_LEVEL_DEFAULTS.idTwo, LOCATION_LEVEL_DEFAULTS.nameDepartment)];
-    let response = {'count':2,'next':null,'previous':null,'results': json};
-    subject.deserialize(response);
-    delete location_level.children;
-    assert.equal(location_level.get('children').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
-    let location_level_two = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
-    assert.equal(location_level_two.get('children.length'), 0);
-});
-
-test('location level correctly deserialized the children with children not currently in store (list)', (assert) => {
-    let subject = LocationLevelDeserializer.create({store: store});
-    let location_level = store.push('location-level', { id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany });
-    let loc_level_one = LOCATION_LEVEL_FIXTURES.generate(LOCATION_LEVEL_DEFAULTS.idOne);
-    loc_level_one.children = [LOCATION_LEVEL_DEFAULTS.idTwo];
-    let json = [loc_level_one, LOCATION_LEVEL_FIXTURES.generate(LOCATION_LEVEL_DEFAULTS.idTwo, LOCATION_LEVEL_DEFAULTS.nameDepartment)];
-    let response = {'count':2,'next':null,'previous':null,'results': json};
-    subject.deserialize(response);
-    delete location_level.children;
-    assert.equal(location_level.get('children').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
-    let location_level_two = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
-    assert.equal(location_level_two.get('children.length'), 0);
-});
-
 test('location level correctly deserialized if has children and new one comes in the store w/ children already present (detail)', (assert) => {
     let subject = LocationLevelDeserializer.create({store: store});
     let location_level = store.push('location-level', { id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, children_fks: [LOCATION_LEVEL_DEFAULTS.idTwo] });

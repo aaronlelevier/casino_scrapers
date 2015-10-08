@@ -15,7 +15,7 @@ import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location
 
 var store, location_repo, run = Ember.run;
 
-moduleForComponent('person-single', 'integration: person-single test', {
+moduleForComponent('sco person-single', 'integration: person-single test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:location-level', 'model:currency', 'service:currency']);
@@ -54,7 +54,7 @@ test('selecting a role will append the persons id to the new role but remove it 
     assert.deepEqual(person.get('role').get('people')[1], PEOPLE_DEFAULTS.id);
     assert.deepEqual(person.get('role.id'), ROLE_DEFAULTS.idTwo);
     assert.ok(role_one.get('isNotDirty'));
-    assert.ok(role_two.get('isDirty'));
+    assert.ok(role_two.get('isNotDirty'));
 });
 
 test('selecting a placeholder instead of legit role will not append the persons id to anything but still remove it from the previous role', function(assert) {

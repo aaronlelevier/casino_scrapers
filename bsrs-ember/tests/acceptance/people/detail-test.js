@@ -150,12 +150,13 @@ test('when editing username to invalid, it checks for validation', (assert) => {
         assert.equal(find('.t-username-validation-error').text().trim(), 'invalid username');
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS_PUT.username);
-    var url = PREFIX + DETAIL_URL + "/";
+    var url = PREFIX + DETAIL_URL + '/';
     var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
     var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS_PUT.username});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
     andThen(() => {
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(currentURL(), PEOPLE_URL);
     });
 });
@@ -424,7 +425,7 @@ test('when you change a related role it will be persisted correctly', (assert) =
         xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data_two);
         andThen(() => {
             let person = store.find('person', PEOPLE_DEFAULTS.id);
-            assert.equal(person.get('role_fk'), undefined);
+            assert.equal(person.get('role_fk'), ROLE_DEFAULTS.idOne);
             assert.equal(person.get('locations').get('length'), 1);
             assert.equal(person.get('locations').objectAt(0).get('id'), LOCATION_DEFAULTS.idOne);
         });
@@ -885,6 +886,55 @@ test('when you deep link to the person detail view you can alter the role and ro
     });
 });
 
+test('when you deep link to the person detail view you can alter the role and change it back without dirtying the person model', (assert) => {
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+    let first_location_xhr = xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+    visit(DETAIL_URL);
+    andThen(() => {
+        clearxhr(detail_xhr);
+        //refreshModel will call findById in people repo
+        let people_detail_data_two = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+        people_detail_data_two.role = ROLE_DEFAULTS.idTwo;
+        let first_role_change = xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data_two);
+        assert.equal(currentURL(), DETAIL_URL);
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        andThen(() => {
+            assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+            assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idOne);
+            assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
+        });
+        fillIn('.t-person-role-select', ROLE_DEFAULTS.idTwo);
+        andThen(() => {
+            assert.equal(currentURL(), DETAIL_URL + '?role_change=' + ROLE_DEFAULTS.idTwo);
+            assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idTwo);
+            var person = store.find('person', PEOPLE_DEFAULTS.id);
+            assert.ok(person.get('isDirtyOrRelatedDirty'));
+            assert.equal(person.get('role.id'), ROLE_DEFAULTS.idTwo);
+        });
+        andThen(() => {
+            clearxhr(first_role_change);
+            clearxhr(first_location_xhr);
+            let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
+            xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+            let people_detail_data_three = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+            people_detail_data_three.role = ROLE_DEFAULTS.idOne;
+            xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data_three);
+            fillIn('.t-person-role-select', ROLE_DEFAULTS.idOne);
+            andThen(() => {
+                assert.equal(currentURL(), DETAIL_URL + '?role_change=' + ROLE_DEFAULTS.idOne);
+                assert.equal(find('.t-person-role-select option:selected').val(), ROLE_DEFAULTS.idOne);
+                var person = store.find('person', PEOPLE_DEFAULTS.id);
+                assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+                assert.equal(person.get('role.id'), ROLE_DEFAULTS.idOne);
+            });
+        });
+        click('.t-cancel-btn');
+        andThen(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+        });
+    });
+});
+
 test('when changing the locale for a user (not current user), the language is not updated on the site', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
@@ -1062,7 +1112,6 @@ test('when you change a related role it will change the related locations as wel
         });
         clearxhr(detail_xhr);
         let people_detail_data_two = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
-        people_detail_data_two.role = ROLE_DEFAULTS.idTwo;
         xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data_two);
         let locations_endpoint_role_change = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo + '&name__icontains=a';
         xhr(locations_endpoint_role_change, 'GET', null, {}, 200, LOCATION_FIXTURES.list());

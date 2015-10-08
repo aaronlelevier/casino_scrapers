@@ -23,8 +23,6 @@ var LocationLevelDeserializer = Ember.Object.extend({
         response.results.forEach((model) => {
             let existing_location_level = store.find('location-level', model.id);
             if (!existing_location_level.get('id') || existing_location_level.get('isNotDirtyOrRelatedNotDirty')) {
-                model.children_fks = model.children || [];
-                delete model.children;
                 let location_level = store.push('location-level', model);
                 location_level.save();
             }

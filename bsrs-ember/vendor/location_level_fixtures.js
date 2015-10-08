@@ -20,6 +20,12 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
             parents: []
         }
     };
+    factory.prototype.generate_list = function(i, name) {
+        return {
+            id: i,
+            name : name || this.nameCompany
+        }
+    };
     factory.prototype.detail = function(i) {
         var idDetail = i || this.idOne;
         return {id: idDetail, name : this.nameCompany, children: this.allChildrenArray};
@@ -52,7 +58,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         var response = [];
         for (var i=11; i <= 19; i++) {
             var uuid = '8854f6c5-58c7-4849-971f-e8df9e15e55';
-            var level = this.generate(uuid + i);
+            var level = this.generate_list(uuid + i);
             level.name = 'admin.locationlevel.company.tsiname' + i;
             response.push(level);
         }
