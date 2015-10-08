@@ -42,9 +42,13 @@ var LocationModel = Model.extend({
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     saveLocationLevel() {
-        var location_level = this.get('location_level');
-        location_level.save();
-        this.set('location_level_fk', this.get('location_level').get('id'));
+        let location_level = this.get('location_level');
+        if (location_level) {
+            location_level.save();
+            this.set('location_level_fk', this.get('location_level').get('id'));
+        } else {
+            this.set('location_level_fk', undefined);
+        }
     },
     rollbackLocationLevel() {
         var store = this.get('store');
