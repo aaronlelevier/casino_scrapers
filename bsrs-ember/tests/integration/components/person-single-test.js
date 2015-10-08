@@ -15,7 +15,7 @@ import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location
 
 var store, location_repo, run = Ember.run;
 
-moduleForComponent('sco person-single', 'integration: person-single test', {
+moduleForComponent('person-single', 'integration: person-single test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:location-level', 'model:currency', 'service:currency']);

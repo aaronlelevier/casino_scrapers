@@ -50,7 +50,7 @@ test('visiting admin/location', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let location = store.find('location').objectAt(0);
+        let location = store.find('location', LOCATION_DEFAULTS.idOne);
         assert.ok(location.get('isNotDirty'));
         assert.equal(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
         assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.baseStoreName);
@@ -160,5 +160,34 @@ test('when click delete, location is deleted and removed from store', (assert) =
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(store.find('location', LOCATION_DEFAULTS.idOne).get('length'), undefined);
+    });
+});
+
+test('changing location level will update related location level locations array', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+        let location = store.find('location', LOCATION_DEFAULTS.idOne);
+        assert.equal(location.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
+        assert.deepEqual(location_level.get('locations'), [LOCATION_DEFAULTS.idOne]);
+    });
+    fillIn('.t-location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
+    andThen(() => {
+        let location_level_two = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
+        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+        let location = store.find('location', LOCATION_DEFAULTS.idOne);
+        assert.equal(location.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
+        assert.deepEqual(location_level_two.get('locations'), [LOCATION_DEFAULTS.idOne]);
+        assert.deepEqual(location_level.get('locations'), []);
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+        assert.ok(location_level.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(location_level_two.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    let response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
+    let payload = LOCATION_FIXTURES.put({location_level: LOCATION_LEVEL_DEFAULTS.idTwo});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
     });
 });
