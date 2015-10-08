@@ -830,32 +830,65 @@ class FilterByFieldTests(APITransactionTestCase):
 
 
 
+class PasswordTests(APITestCase):
 
-# Password Tests to use later
+    def setUp(self):
+        self.roles = create_roles()
+        self.role = self.roles[0]
+        self.person = create_single_person(name="aaron", role=self.role)
+        self.person2 = create_single_person()
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
 
-    # def test_put_password_change(self):
-    #     # test the User is currently logged in
-    #     self.assertIn('_auth_user_id', self.client.session)
-    #     # update their PW and see if they are still logged in
-    #     password = 'new-password'
-    #     person = PersonUpdateSerializer(self.person).data # returns a python dict
-    #                                                        # serialized object
-    #     # change a field on the Person to see if the PUT works!
-    #     person.update({'password':password})
-    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     # still logged in after PW change test
-    #     self.assertIn('_auth_user_id', self.client.session)
+    def tearDown(self):
+        self.client.logout()
 
-    # def test_put_password_change_and_login(self):
-    #     password = 'new'
-    #     person = PersonUpdateSerializer(self.person).data
-    #     person.update({'password':password})
-    #     response = self.client.put('/api/admin/people/{}/'.format(self.person.pk), person, format='json')
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.client.logout()
-    #     self.assertNotIn('_auth_user_id', self.client.session)
-    #     # Updated password works for logging in
-    #     self.client.login(username=self.person.username, password=password)
-    #     p = Person.objects.get(pk=self.person.pk)
-    #     self.assertEqual(int(self.client.session['_auth_user_id']), p.pk)
+    ### ``reset_password``
+
+    def test_get_object_or_404(self):
+        data = {
+            'new_password1': 'foo',
+            'new_password2': 'bar'
+        }
+        response = self.client.post("/api/admin/people/reset-password/{}/"
+            .format(uuid.uuid4()), data, format='json')
+        self.assertEqual(response.status_code, 404)
+
+    def test_validate_passwords_match(self):
+        data = {
+            'new_password1': 'foo',
+            'new_password2': 'bar'
+        }
+        response = self.client.post("/api/admin/people/reset-password/{}/"
+            .format(self.person.id), data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_reset_password(self):
+        new_password = 'new_password'
+        data = {
+            'new_password1': new_password,
+            'new_password2': new_password
+        }
+        response = self.client.post("/api/admin/people/reset-password/{}/".format(self.person.id),
+            data, format='json')
+        self.assertEqual(response.status_code, 200)
+
+        # # login under new password
+        self.client.logout()
+        self.client.login(username=self.person.username, password=new_password)
+        self.assertIn('_auth_user_id', self.client.session)
+
+    def test_reset_password_other_persons(self):
+        new_password = 'new_password'
+        data = {
+            'new_password1': new_password,
+            'new_password2': new_password
+        }
+        response = self.client.post("/api/admin/people/reset-password/{}/".format(self.person2.id),
+            data, format='json')
+        self.assertEqual(response.status_code, 200)
+
+        # # login under new password
+        self.client.logout()
+        self.client.login(username=self.person2.username, password=new_password)
+        self.assertIn('_auth_user_id', self.client.session)

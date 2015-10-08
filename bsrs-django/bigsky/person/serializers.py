@@ -159,19 +159,35 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
 
 ### PASSWORD ###
 
-class PasswordSerializer(serializers.Serializer):
-    '''
-    **TODO:** this will be a route for Password and the main ``Person 
-    Update`` will be separate
-    '''
-    class Meta:
-        model = Person
-        write_only_fields = ('password',)
-        fields = ('password',)
+# class PasswordSerializer(serializers.ModelSerializer):
+#     '''
+#     **TODO:** this will be a route for Password and the main ``Person 
+#     Update`` will be separate
+#     '''
+#     class Meta:
+#         model = Person
+#         write_only_fields = ('password',)
+#         fields = ('password',)
 
-        def update(self, instance, validated_data):
-            password = validated_data.pop('password')
-            instance.set_password(password)
-            instance.save()
-            update_session_auth_hash(self.context['request'], instance)
-            return super(PasswordSerializer, self).update(instance, validated_data)
+#         def update(self, instance, validated_data):
+#             password = validated_data.pop('password')
+#             instance.set_password(password)
+#             instance.save()
+#             update_session_auth_hash(self.context['request'], instance)
+#             return super(PasswordSerializer, self).update(instance, validated_data)
+
+
+# class ResetPasswordSerializer(serializers.Serializer):
+
+#     new_password1 = serializers.CharField(style={'input_type': 'password'})
+#     new_password2 = serializers.CharField(style={'input_type': 'password'})
+
+#     default_error_messages = {
+#         'password_mismatch': 'passwords do not match.'
+#     }
+
+#     def validate(self, attrs):
+#         attrs = super(ResetPasswordSerializer, self).validate(attrs)
+#         if attrs['new_password1'] != attrs['new_password2']:
+#             raise serializers.ValidationError(self.error_messages['password_mismatch'])
+#         return attrs
