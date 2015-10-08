@@ -1,9 +1,8 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 
-var LocationLevel = Model.extend(NewMixin, {
+var LocationLevel = Model.extend({
     store: inject('main'),
     name: attr(''),
     locations: attr([]),
@@ -36,7 +35,11 @@ var LocationLevel = Model.extend(NewMixin, {
             return Ember.$.inArray(loc_level.get('id'), children_fks) > -1 && loc_level.get('name') !== this.get('name');
         };
         return this.get('store').find('location-level', filter.bind(this), ['id']);
-    })
+    }),
+    toString: function() {
+        let name = this.get('name');
+        return name ? name : '';
+    }
 });
 
 export default LocationLevel;

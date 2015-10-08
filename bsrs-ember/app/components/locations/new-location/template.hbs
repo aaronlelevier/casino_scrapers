@@ -1,18 +1,12 @@
 <form {{action "return false" this on="submit"}}>
-	<header>
-		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
-      {{button-generic save="saveLocation" type="save"}}
-      {{button-generic cancel="cancelLocation" type="cancel"}}
-			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
-				<li><a href="#">{{fa-icon "print"}} Print</a></li>
-				<li>{{delete-button delete="deleteLocation"}}</li>
-			</ul>
-		</div>
-	</header>
+  {{base-component-new
+    model=model
+    repository=repository
+    save=attrs.save
+    saveBase="save"
+    cancel=attrs.cancel
+    delete=attrs.delete
+  }}
 	<section class="docSection container-fluid">
 		<section>
 			<h2 class="col-sm-12">{{t "admin.location-level.label.credentials"}}</h2>

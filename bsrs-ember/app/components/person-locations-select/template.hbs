@@ -4,8 +4,11 @@
   content=options
   optionValuePath="content.id"
   optionLabelPath="content.name"
-  selection=location_ids
-  add-item="change"
-  remove-item="change"
+  selection=person_locations_selected
+  add-item="add"
+  remove-item="remove"
   class="t-person-locations-select"
-  placeholder="select a location"}}
+  placeholder="type to find more locations"
+  update-filter="update_filter"
+  filter=search_criteria
+}}

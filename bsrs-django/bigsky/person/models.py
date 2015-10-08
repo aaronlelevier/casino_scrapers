@@ -1,9 +1,6 @@
 import re
 import json
 from datetime import timedelta
-import sys
-if sys.version_info > (2, 7):
-    str = unicode
 
 from django.db import models, IntegrityError
 from django.conf import settings
@@ -19,12 +16,12 @@ from django.contrib.postgres.fields import ArrayField
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location
+from category.models import Category
 from person import helpers
 from order.models import WorkOrderStatus
 from translation.models import Locale
-from util import choices, create
-from util.models import (AbstractName, MainSetting, CustomSetting,
-                         BaseModel, BaseManager)
+from utils import choices, create
+from utils.models import BaseNameModel, BaseModel, BaseManager
 
 
 class RoleManager(BaseManager):
@@ -47,8 +44,8 @@ class Role(BaseModel):
     role_type = models.CharField(max_length=29, blank=True,
                                  choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
     # Required
-    name = models.CharField(
-        max_length=100, unique=True, help_text="Will be set to the Group Name")
+    name = models.CharField(max_length=100, unique=True, help_text="Will be set to the Group Name")
+    categories = models.ManyToManyField(Category, blank=True) 
     # Optional
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
@@ -128,10 +125,6 @@ class Role(BaseModel):
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
 
-    # use as a normal Django Manager() to access related setting objects.
-    main_settings = GenericRelation(MainSetting)
-    custom_settings = GenericRelation(CustomSetting)
-
     # Manager
     objects = RoleManager()
 
@@ -158,7 +151,8 @@ class Role(BaseModel):
     def to_dict(self):
         if not self.location_level:
             return {"id": str(self.pk), "name": self.name}
-        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
+        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id), 
+                "categories": [c.to_dict() for c in self.categories.all()]}
 
     def _update_defaults(self):
         if not self.group:
@@ -199,7 +193,7 @@ class PersonStatusManager(BaseManager):
         return obj
 
 
-class PersonStatus(AbstractName):
+class PersonStatus(BaseNameModel):
     description = models.CharField(max_length=100, choices=choices.PERSON_STATUS_CHOICES,
                                    default=choices.PERSON_STATUS_CHOICES[0][0])
 
@@ -237,8 +231,8 @@ class Person(BaseModel, AbstractUser):
                                "header will be used or the Site's system setting.")
     # required
     # Auth Amounts - can be defaulted by the Role
-    auth_amount = models.DecimalField(
-        max_digits=15, decimal_places=4, blank=True, default=0)
+    fullname = models.CharField(max_length=50, blank=True)
+    auth_amount = models.DecimalField(max_digits=15, decimal_places=4, blank=True, default=0)
     auth_currency = models.ForeignKey(Currency, blank=True, null=True)
     accept_assign = models.BooleanField(default=True, blank=True)
     accept_notify = models.BooleanField(default=True, blank=True)
@@ -275,13 +269,12 @@ class Person(BaseModel, AbstractUser):
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
 
-    # use as a normal Django Manager() to access related setting objects.
-    main_settings = GenericRelation(MainSetting)
-    custom_settings = GenericRelation(CustomSetting)
-
     # Managers
     objects = PersonManager()
     objects_all = UserManager()
+
+    class Meta:
+        ordering = ('fullname',)
 
     _current_password = None
 
@@ -382,6 +375,8 @@ class Person(BaseModel, AbstractUser):
             self.auth_currency = self.role.default_auth_currency
         if not self.password_expire_date:
             self.password_expire_date = self._password_expire_date
+        if not self.fullname:
+            self.fullname = self.first_name + ' ' + self.last_name
 
     def _validate_locations(self):
         """Remove invalid Locations from the Person based on

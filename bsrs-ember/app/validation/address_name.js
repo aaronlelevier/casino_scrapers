@@ -1,10 +1,10 @@
-var address_name_validation = function(value) {
+var addressNameValidation = function(value) {
     let address_pattern = /^[0-9a-z.,@*&#\-\{\}\[\]\(\)\s]+$/i;
-    if (value.length < 5) {
+    if (value.length < 3) {
         return false;
     }
     return (value.match(address_pattern) !== null);
 };
 
-export default address_name_validation;
+export default addressNameValidation;
 

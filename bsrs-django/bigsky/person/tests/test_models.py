@@ -12,7 +12,6 @@ from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role
 from translation.models import Locale, Translation
 from translation.tests.factory import create_locales
-from util.create import _generate_chars
 
 
 class RoleTests(TestCase):
@@ -28,6 +27,7 @@ class RoleTests(TestCase):
 
     def test_to_dict(self):
         self.assertEqual(self.role.to_dict()["location_level"], str(self.role.location_level.id))
+        self.assertEqual(self.role.to_dict()["categories"][0]["id"], str(self.role.categories.first().id))
 
     def test_update_password_history_length(self):
         self.assertFalse(self.role.password_history_length)
@@ -103,6 +103,10 @@ class PersonTests(TestCase):
         self.person._update_defaults()
         self.assertIsNotNone(self.person.status)
         self.assertIsNotNone(self.person.password_expire_date)
+        self.assertEqual(
+            self.person.fullname,
+            self.person.first_name + ' ' + self.person.last_name
+        )
 
     def test_password_expire_date(self):
         self.assertIsInstance(self.person._password_expire_date, date)

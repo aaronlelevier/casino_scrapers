@@ -1,3 +1,5 @@
+import json
+
 from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
@@ -11,10 +13,11 @@ from accounting import views as accounting_views
 from bigsky import views as bigsky_views
 from category import views as category_views
 from contact import views as contact_views
+from generic import views as generic_views
 from location import views as location_views
 from person import views as person_views
 from translation import views as translation_views
-from util.decorators import required, logout_required
+from utils.decorators import required, logout_required
 
 
 admin.autodiscover()
@@ -26,17 +29,19 @@ router.register(r'admin/currencies', accounting_views.CurrencyViewSet)
 # CATEGORY
 router.register(r'admin/categories', category_views.CategoryViewSet)
 # CONTACT
-router.register(r'admin/phone_number_types', contact_views.PhoneNumberTypeViewSet)
-router.register(r'admin/phone_numbers', contact_views.PhoneNumberViewSet)
+router.register(r'admin/phone-number-types', contact_views.PhoneNumberTypeViewSet)
+router.register(r'admin/phone-numbers', contact_views.PhoneNumberViewSet)
 router.register(r'admin/addresses', contact_views.AddressViewSet)
-router.register(r'admin/address_types', contact_views.AddressTypeViewSet)
+router.register(r'admin/address-types', contact_views.AddressTypeViewSet)
 router.register(r'admin/emails', contact_views.EmailViewSet)
-router.register(r'admin/email_types', contact_views.EmailTypeViewSet)
+router.register(r'admin/email-types', contact_views.EmailTypeViewSet)
+# GENERIC
+router.register(r'admin/saved-searches', generic_views.SavedSearchViewSet)
 # LOCATION
 router.register(r'admin/locations', location_views.LocationViewSet)
-router.register(r'admin/location_levels', location_views.LocationLevelViewSet)
-router.register(r'admin/location_statuses', location_views.LocationStatusViewSet)
-router.register(r'admin/location_types', location_views.LocationTypeViewSet)
+router.register(r'admin/location-levels', location_views.LocationLevelViewSet)
+router.register(r'admin/location-statuses', location_views.LocationStatusViewSet)
+router.register(r'admin/location-types', location_views.LocationTypeViewSet)
 # PERSON
 router.register(r'admin/people', person_views.PersonViewSet)
 router.register(r'admin/roles', person_views.RoleViewSet)
@@ -89,8 +94,24 @@ urlpatterns += required(
             },
             name='password_change'),
         url(r'^django-admin/', include(admin.site.urls)),
+        url(r'', include('generic.urls')),
         # This URL must be the last Django URL defined, or else the URLs defined 
         # below it won't resolve, and this URL will catch the URL request.
         url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),
     )
 )
+
+
+### URL HELPERS
+
+def default_model_ordering():
+    """
+    Return ``dict`` with:
+
+    - key: the Ember List API route name. i.e. "admin.people.index"
+    - value: default ordering in Django Model
+    """
+    return {".".join(x[0].split('/'))+".index": x[1].queryset.model._meta.ordering
+            for x in router.registry}
+
+settings.default_model_ordering = json.dumps(default_model_ordering())

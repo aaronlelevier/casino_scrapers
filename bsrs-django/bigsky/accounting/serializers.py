@@ -1,5 +1,5 @@
 from accounting.models import Currency
-from util.serializers import BaseCreateSerializer
+from utils.serializers import BaseCreateSerializer
 
 ### CURRENCY
 

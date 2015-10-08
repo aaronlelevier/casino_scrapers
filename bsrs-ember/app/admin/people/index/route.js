@@ -1,24 +1,9 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import GridViewRoute from 'bsrs-ember/mixins/route/components/grid';
 
-var PersonIndexRoute = Ember.Route.extend({
-    repository: inject('person'),
-    queryParams: {
-        page: {
-            refreshModel: true
-        },
-        sort: {
-            refreshModel: true
-        },
-        search: {
-            refreshModel: true
-        }
-    },
-    model: function(params, transition) {
-        var query = transition.queryParams;
-        var repository = this.get('repository');
-        return repository.findWithQuery(query.page, query.sort, query.search);
-    }
+var PersonIndexRoute = GridViewRoute.extend({
+    repository: inject('person')
 });
 
 export default PersonIndexRoute;

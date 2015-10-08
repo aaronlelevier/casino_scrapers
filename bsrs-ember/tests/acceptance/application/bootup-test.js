@@ -6,6 +6,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
 import STORE_STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/location-status';
 import STATE_DEFAULTS from 'bsrs-ember/vendor/defaults/state';
+import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import ADDRESS_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import PHONE_NUMBER_DEFAULT from 'bsrs-ember/vendor/defaults/phone-number-type';
@@ -118,7 +119,9 @@ test('on boot we should fetch and load the role configuration', function(assert)
     visit(HOME_URL);
     andThen(() => {
         var role_models = store.find('role');
+        var category_models = store.find('category');
         assert.equal(role_models.get('length'), 3);
+        assert.equal(category_models.get('length'), 3);
         assert.equal(role_models.objectAt(0).get('id'), ROLE_DEFAULTS.idOne);
         assert.equal(role_models.objectAt(0).get('name'), t(ROLE_DEFAULTS.nameOne));
         assert.equal(role_models.objectAt(0).get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
@@ -156,5 +159,25 @@ test('on boot we should fetch and load the current person configuration', functi
         assert.equal(person_current_model.get('id'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.id);
         assert.equal(person_current_model.get('first_name'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.first_name);
         assert.equal(person_current_model.get('last_name'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.last_name);
+    });
+});
+
+test('on boot we should fetch and load the default model ordering configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        var model_ordering = store.find('model-ordering');
+        assert.equal(model_ordering.get('length'), 1);
+        assert.equal(model_ordering.objectAt(0).get('id'), 'admin.people.index');
+        assert.deepEqual(model_ordering.objectAt(0).get('order'), ['fullname']);
+    });
+});
+
+test('on boot we should fetch and load the saved filterset configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        var filtersets = store.find('filterset');
+        assert.equal(filtersets.get('length'), 3);
+        assert.equal(filtersets.objectAt(0).get('endpoint_name'), 'admin.people.index');
+        assert.deepEqual(filtersets.objectAt(0).get('endpoint_uri'), '?sort=title');
     });
 });

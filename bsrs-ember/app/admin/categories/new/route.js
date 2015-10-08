@@ -1,17 +1,38 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import NewRollbackModalMixin from 'bsrs-ember/mixins/route/rollback/new';
+import TabRoute from 'bsrs-ember/route/tab/new-route';
 
-var CategoryNewRoute = Ember.Route.extend(NewRollbackModalMixin, {
+var CategoryNewRoute = TabRoute.extend({
+    repository: inject('category'),
     uuid: injectUUID('uuid'),
-    model() {
-        let pk = this.get('uuid').v4();
-        return this.get('store').push('category', {id: pk, new: true});
+    redirectRoute: Ember.computed(function() { return 'admin.categories.index'; }),
+    modelName: Ember.computed(function() { return 'category'; }),
+    templateModelField: Ember.computed(function() { return 'Category'; }),
+    queryParams: {
+        search: {
+            refreshModel: true
+        },
     },
-    actions: {
-        redirectUser() {
-           this.transitionTo('admin.categories');
-        }
+    model() {
+        let transition = arguments[1];
+        let search = transition.queryParams.search;
+        let repository = this.get('repository');
+        let categories_children = repository.findCategoryChildren(search) || [];
+        let pk = this.get('uuid').v4();
+        let model = this.get('store').push('category', {id: pk});
+        return Ember.RSVP.hash({
+            model: model,
+            repository: repository,
+            categories_children: categories_children,
+            search: search
+        });
+    },
+    setupController: function(controller, hash) {
+        controller.set('model', hash.model);
+        controller.set('repository', hash.repository);
+        controller.set('categories_children', hash.categories_children);
+        controller.set('search', hash.search);
     }
 });
 

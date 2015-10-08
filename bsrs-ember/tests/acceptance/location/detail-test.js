@@ -26,7 +26,7 @@ module('Acceptance | detail-test', {
         endpoint = PREFIX + BASE_URL + '/';
         let location_list_data = LOCATION_FIXTURES.list();
         let location_detail_data = LOCATION_FIXTURES.detail();
-        list_xhr = xhr(endpoint, 'GET', null, {}, 200, location_list_data);
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
         xhr(endpoint + LOCATION_DEFAULTS.idOne + '/', 'GET', null, {}, 200, location_detail_data);
     },
     afterEach() {
@@ -39,7 +39,7 @@ test('clicking on a locations name will redirect them to the detail view', (asse
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
     });
-    click('.t-location-data:eq(0)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -50,10 +50,10 @@ test('visiting admin/location', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let location = store.find('location').objectAt(0);
+        let location = store.find('location', LOCATION_DEFAULTS.idOne);
         assert.ok(location.get('isNotDirty'));
         assert.equal(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
-        assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.baseStoreName);
         assert.equal(find('.t-location-number').val(), LOCATION_DEFAULTS.storeNumber);
     });
     let response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
@@ -67,7 +67,7 @@ test('visiting admin/location', (assert) => {
     });
     let list = LOCATION_FIXTURES.list();
     list.results[0].name = LOCATION_DEFAULTS.storeNameTwo;
-    xhr(endpoint, 'GET', null, {}, 200, list);
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
@@ -100,7 +100,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
     });
-    click('.t-location-data:eq(0)');
+    click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
     });
@@ -147,7 +147,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             let location = store.find('location', LOCATION_DEFAULTS.idOne);
             assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
         });
@@ -161,5 +160,51 @@ test('when click delete, location is deleted and removed from store', (assert) =
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(store.find('location', LOCATION_DEFAULTS.idOne).get('length'), undefined);
+    });
+});
+
+test('changing location level will update related location level locations array', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+        let location = store.find('location', LOCATION_DEFAULTS.idOne);
+        assert.equal(location.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
+        assert.deepEqual(location_level.get('locations'), [LOCATION_DEFAULTS.idOne]);
+    });
+    fillIn('.t-location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
+    andThen(() => {
+        let location_level_two = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
+        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+        let location = store.find('location', LOCATION_DEFAULTS.idOne);
+        assert.equal(location.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
+        assert.deepEqual(location_level_two.get('locations'), [LOCATION_DEFAULTS.idOne]);
+        assert.deepEqual(location_level.get('locations'), []);
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+        assert.ok(location_level.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(location_level_two.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    let response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
+    let payload = LOCATION_FIXTURES.put({location_level: LOCATION_LEVEL_DEFAULTS.idTwo});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
+    });
+});
+
+test('changing location level to none will dirty the location model', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-location-level', 'Select One');
+    andThen(() => {
+        let location = store.find('location', LOCATION_DEFAULTS.idOne);
+        assert.equal(location.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+    });
+    let response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
+    let payload = LOCATION_FIXTURES.put({location_level: undefined});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
     });
 });

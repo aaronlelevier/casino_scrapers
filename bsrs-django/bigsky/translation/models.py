@@ -1,8 +1,6 @@
 import os
 import csv
-import sys
-if sys.version_info > (2,7):
-    str = unicode
+import copy
 
 from django.db import models
 from django.contrib.postgres.fields import HStoreField
@@ -11,7 +9,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
 
-from util.models import AbstractName, BaseModel, BaseManager, BaseQuerySet
+from utils.models import BaseModel, BaseManager, BaseQuerySet
 
 
 class LocaleManager(BaseManager):
@@ -34,8 +32,7 @@ class LocaleManager(BaseManager):
 
 @python_2_unicode_compatible
 class Locale(BaseModel):
-    locale = models.SlugField(unique=True,
-        help_text="Example values: en, en-us, en-x-sephora")
+    locale = models.SlugField(help_text="Example values: en, en-US, en-x-Sephora")
     default = models.BooleanField(blank=True, default=False)
     name = models.CharField(max_length=50, 
         help_text="Human readable name in forms. i.e. 'English'")
@@ -91,11 +88,13 @@ class TranslationManager(BaseManager):
         '''
         # Boiler-plate code for creating a new `Translation` record
 
-        from translation.models import Translation, Locale
-        for model in [Translation, Locale]:
-            for m in model.objects_all.all():
-                m.delete(override=True)
-        Translation.objects.import_csv('en')
+        .. code-block:: python
+
+            from translation.models import Translation, Locale
+            for model in [Translation, Locale]:
+                for m in model.objects_all.all():
+                    m.delete(override=True)
+            Translation.objects.import_csv('en')
         '''
         with open(os.path.join(self.translation_dir, '{}.csv'.format(language))) as csvfile:
             reader = csv.DictReader(csvfile)
@@ -120,22 +119,34 @@ class TranslationManager(BaseManager):
 
     def export_csv(self, id):
         '''
-        # Test `export_csv` Boiler-plate
+        Test `export_csv` Boiler-plate
 
-        from translation.models import Translation, Locale
-        a = Translation.objects.first()
-        Translation.objects.export_csv(a.id)
+        .. code-block:: python
+
+            from translation.models import Translation, Locale
+            a = Translation.objects.first()
+            Translation.objects.export_csv(a.id)
         '''
         t = self.get(id=id)
-        with open(os.path.join(self.translation_dir, '{}-out.csv'.format(t.locale)), 'wb') as csvfile:
+        with open(os.path.join(self.translation_dir, '{}-out.csv'.format(t.locale)), 'w', newline='') as csvfile:
             writer = csv.writer(csvfile, delimiter=',')
-            writer.writerow(['LOCALE', 'KEY', 'VALUE', 'CONTEXT'])
+            writer.writerow([
+                'LOCALE',
+                'KEY',
+                'VALUE',
+                'CONTEXT'
+            ])
+
+            # copy the values to write to 'csv' here, or else will 
+            # raise a runtime error in python3
+            values = copy.copy(t.values)
+            context = copy.copy(t.context)
             for k in t.values.keys():
                 writer.writerow([
-                    str(t.locale).encode('utf-8').strip(),
-                    str(k).encode('utf-8').strip(),
-                    str(t.values.pop(k, '')).encode('utf-8').strip(),
-                    str(t.context.pop(k,'')).encode('utf-8').strip()
+                    str(t.locale),
+                    str(k),
+                    str(values.pop(k, '')),
+                    str(context.pop(k,''))
                 ])
 
 
@@ -162,4 +173,4 @@ class Translation(BaseModel):
     objects = TranslationManager()
 
     def __str__(self):
-        return "{self.locale}: {self.values}".format(self=self)
+        return "{}: {}".format(self.locale, self.id)

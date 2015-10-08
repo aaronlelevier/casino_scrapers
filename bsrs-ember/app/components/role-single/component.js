@@ -1,25 +1,14 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/inject';
+import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
+import BaseComponent from 'bsrs-ember/components/base-component/component';
 
-export default Ember.Component.extend({
-    classNames: ['wrapper', 'form'],
-    repository: inject('role'),
+var RoleSingle = BaseComponent.extend(ValidationMixin, {
     actions: {
-        saveRole() {
-            var model = this.get('model'); 
-            var repository = this.get('repository');
-            repository.update(model).then(() => {
-                this.sendAction('saveRole');
-            });
-        },
-        deleteRole() {
-            var model = this.get('model');
-            var repository = this.get('repository');
-            repository.delete(model.get('id'));
-            this.sendAction('redirectUser');
-        },
-        cancelRole() {
-            this.sendAction('redirectUser');
+        save() {
+            this.set('submitted', true);
+            if (this.get('valid')) {
+                this._super();
+            }
         },
         changed(model, val) {
             Ember.run(() => {
@@ -33,3 +22,5 @@ export default Ember.Component.extend({
         },
     }
 });
+
+export default RoleSingle;

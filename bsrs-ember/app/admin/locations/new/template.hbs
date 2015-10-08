@@ -1,7 +1,8 @@
-{{locations/new-location 
-  model=model
-  all_location_levels=all_location_levels
-  saveLocation="redirectUser"
-  cancelLocation="redirectUser"
-  redirectUser="redirectUser"
-}}
+  {{locations/new-location 
+    model=model
+    repository=repository
+    all_location_levels=all_location_levels
+    save=(action "tabActions")
+    saveBase="save"
+    cancel=(action "tabActions")
+  }}

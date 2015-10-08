@@ -5,12 +5,10 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import detail_route
 from rest_framework.exceptions import MethodNotAllowed
-from rest_framework import pagination
-import rest_framework_filters as filters
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
-from util.views import BaseModelViewSet
+from utils.views import BaseModelViewSet
 
 class SelfReferencingRouteMixin(object):
 
@@ -39,7 +37,7 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        Will return all *Child LocationsLevels*
        
-       URL: `/api/admin/location_levels/{pk}/get-all-children/`
+       URL: `/api/admin/location-levels/{pk}/get-all-children/`
 
        LocationLevel ID: `{pk}`
 
@@ -47,14 +45,13 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        Will return all *Parent LocationsLevels*
        
-       URL: `/api/admin/location_levels/{pk}/get-all-parents/`
+       URL: `/api/admin/location-levels/{pk}/get-all-parents/`
 
        LocationLevel ID: `{pk}`
     '''
     permission_classes = (IsAuthenticated,)
     queryset = LocationLevel.objects.all()
     model = LocationLevel
-    paginate_by = 1000
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -83,17 +80,6 @@ class LocationTypeViewSet(BaseModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = ls.LocationTypeSerializer
     queryset = LocationType.objects.all()
-
-
-### LOCATION
-
-class LocationFilterSet(filters.FilterSet):
-
-    location_level = filters.AllLookupsFilter(name='location_level')
-    
-    class Meta:
-        model= Location
-        fields = ['location_level']
 
 
 class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
@@ -142,14 +128,15 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        URL: `/api/admin/locations/?location_level={level_id}`
 
+       URL2: `/api/admin/locations/?location_level={level_id}&name__icontains={x}`
+
        LocationLevel ID where: `person.role.location_level == location.location_level`
     
     '''
     permission_classes = (IsAuthenticated,)
     queryset = Location.objects.all()
     model = Location
-    filter_class = LocationFilterSet
-    paginate_by = 1000
+    filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
         if self.action == 'list':

@@ -1,14 +1,8 @@
-import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import GridViewRoute from 'bsrs-ember/mixins/route/components/grid';
 
-var LocationLevelIndexRoute = Ember.Route.extend({
-  repository: inject('location-level'),
-  model(params) {
-    var repository = this.get('repository');
-    return repository.find();
-  },
+var LocationLevelIndexRoute = GridViewRoute.extend({
+    repository: inject('location-level')
 });
 
 export default LocationLevelIndexRoute;
-
-

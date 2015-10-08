@@ -2,9 +2,14 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-import NewMixin from 'bsrs-ember/mixins/model/new';
+import CopyMixin from 'bsrs-ember/mixins/model/copy';
+import PhoneNumberMixin from 'bsrs-ember/mixins/model/person/phone_number';
+import AddressMixin from 'bsrs-ember/mixins/model/person/address';
+import RoleMixin from 'bsrs-ember/mixins/model/person/role';
+import LocationMixin from 'bsrs-ember/mixins/model/person/location';
+import config from 'bsrs-ember/config/environment';
 
-export default Model.extend(NewMixin, {
+var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, {
     uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
@@ -15,124 +20,33 @@ export default Model.extend(NewMixin, {
     employee_id: attr(''),
     auth_amount: attr(''),
     locale: attr(''),
-    role_fk: undefined,
+    role_fk: attr(),
+    phone_number_fks: [],
+    address_fks: [],
     person_location_fks: [],
     isModelDirty: false,
-    dirtyModel: Ember.computed('isModelDirty', {
-        get(key) {
-            return this.isModelDirty;
-        },
-        set(key, value) {
-            this.set('isModelDirty', value);
-            return this.get('isModelDirty');
+    personCurrent: Ember.inject.service('person-current'),
+    translationsFetcher: Ember.inject.service('translations-fetcher'),
+    i18n: Ember.inject.service(),
+    changeLocale(){
+        var personCurrent = this.get('personCurrent');
+        var personCurrentId = personCurrent.get('model.id');
+        if(personCurrentId === this.get('id')){
+            config.i18n.currentLocale = this.get('locale');
+            return this.get('translationsFetcher').fetch().then(function(){
+                this.get('i18n').set('locale', config.i18n.currentLocale);
+            }.bind(this));
         }
-    }),
-    full_name: Ember.computed('first_name', 'last_name', function() {
+    },
+    fullname: Ember.computed('first_name', 'last_name', function() {
         var first_name = this.get('first_name');
         var last_name = this.get('last_name');
         return first_name + ' ' + last_name;
     }),
-    role: Ember.computed('role_property.[]', function() {
-        var roles = this.get('role_property');
-        var has_role = roles.get('length') > 0;
-        var foreign_key = has_role ? roles.objectAt(0).get('id') : undefined;
-        if (has_role) {
-            return roles.objectAt(0);
-        }
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty');
     }),
-    role_property: Ember.computed(function() {
-        var store = this.get('store');
-        var filter = function(role) {
-            var people_pks = role.get('people') || [];
-            if(Ember.$.inArray(this.get('id'), people_pks) > -1) {
-                return true;
-            }
-            return false;
-        };
-        return store.find('role', filter.bind(this), ['people']);
-    }),
-    phone_numbers: Ember.computed(function() {
-        var store = this.get('store');
-        return store.find('phonenumber', {person: this.get('id')});
-    }),
-    addresses: Ember.computed(function() {
-        var store = this.get('store');
-        return store.find('address', {person: this.get('id')});
-    }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'dirtyModel', 'roleIsDirty', 'locationsIsDirty', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('dirtyModel') || this.get('roleIsDirty') || this.get('locationsIsDirty');
-    }),
-    roleIsDirty: Ember.computed('role_property.@each.isDirty', function() {
-        let roles = this.get('role_property');
-        var role = roles.objectAt(0);
-        if(role) {
-            return role.get('isDirty');
-        }
-        return this.get('role_fk') ? true : false;
-    }),
-    roleIsNotDirty: Ember.computed.not('roleIsDirty'),
-    phoneNumbersIsDirty: Ember.computed('phone_numbers.@each.isDirty', 'phone_numbers.@each.number', 'phone_numbers.@each.type', function() {
-        var phone_numbers = this.get('phone_numbers');
-        var phone_number_dirty = false;
-        phone_numbers.forEach((num) => {
-            if (num.get('isDirty')) {
-                phone_number_dirty = true;
-            }
-        });
-        return phone_number_dirty;
-    }),
-    phoneNumbersIsNotDirty: Ember.computed.not('phoneNumbersIsDirty'),
-    addressesIsDirty: Ember.computed('addresses.@each.isDirty', 'addresses.@each.address', 'addresses.@each.city', 'addresses.@each.state',
-                                     'addresses.@each.postal_code', 'addresses.@each.country', 'addresses.@each.type', function() {
-        var addresses = this.get('addresses');
-        var address_dirty = false;
-        addresses.forEach((address) => {
-            if (address.get('isDirty')) {
-                address_dirty = true;
-            }
-        });
-        return address_dirty;
-    }),
-    addressesIsNotDirty: Ember.computed.not('addressesIsDirty'),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    savePhoneNumbers: function() {
-        let store = this.get('store');
-        let phone_numbers_to_remove = [];
-        let phone_numbers = this.get('phone_numbers');
-        phone_numbers.forEach((num) => {
-            if(num.get('invalid_number')) {
-                phone_numbers_to_remove.push(num.get('id'));
-            }
-            num.save();
-        });
-        phone_numbers_to_remove.forEach((id) => {
-            store.remove('phonenumber', id);
-        });
-    },
-    saveAddresses: function() {
-        let store = this.get('store');
-        let addresses_to_remove = [];
-        let addresses = this.get('addresses');
-        addresses.forEach((address) => {
-            if (address.get('invalid_address')) {
-                addresses_to_remove.push(address.get('id')); 
-            }
-            address.save();
-        });
-        addresses_to_remove.forEach((id) => {
-            store.remove('address', id);
-        });
-    },
-    saveLocations: function() {
-        this.resetPersonLocationFks({save: true});
-    },
-    saveRole: function() {
-        var role = this.get('role');
-        if(role) {
-            role.save();
-            this.set('role_fk', role.get('id'));
-        }
-    },
     saveRelated() {
         this.savePhoneNumbers();
         this.saveAddresses();
@@ -140,169 +54,12 @@ export default Model.extend(NewMixin, {
         this.saveLocations();
     },
     rollbackRelated() {
+        this.changeLocale();
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
         this.rollbackRole();
         this.rollbackLocations();
     },
-    rollbackLocations() {
-        let store = this.get('store');
-        let locations = this.get('locations');
-        let previous_m2m_fks = this.get('person_location_fks');
-
-        let m2m_to_throw_out = store.find('person-location', function(join_model) {
-            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
-        }, ['removed']);
-
-        m2m_to_throw_out.forEach(function(join_model) {
-            join_model.set('removed', true);
-        });
-
-        previous_m2m_fks.forEach(function(pk) {
-            var m2m_to_keep = store.find('person-location', pk);
-            m2m_to_keep.set('removed', undefined);
-        });
-
-        this.resetPersonLocationFks();
-    },
-    resetPersonLocationFks(options) {
-        let saved_m2m_pks = [];
-        let store = this.get('store');
-        let locations = this.get('locations');
-        locations.forEach((location) => {
-            if(options && options.save === true) {
-                location.save();
-            }
-            let filter = function(location_model, join_model) {
-                let removed = join_model.get('removed');
-                let person_pk = join_model.get('person_pk');
-                let location_pk = join_model.get('location_pk');
-                return person_pk === this.get('id') &&
-                    location_pk === location_model.get('id') && !removed;
-            };
-            let m2m = store.find('person-location', filter.bind(this, location), ['removed']);
-            m2m.forEach(function(join_model) {
-                saved_m2m_pks.push(join_model.get('id'));
-            });
-        });
-        this.set('person_location_fks', saved_m2m_pks);
-    },
-    rollbackRole() {
-        var store = this.get('store');
-        var previous_role_fk = this.get('role_fk');
-
-        var current_role = this.get('role');
-        if(current_role) {
-            var current_role_people = current_role.get('people') || [];
-            current_role.set('people', current_role_people.filter((old_role_person_pk) => {
-                return old_role_person_pk !== this.get('id');
-            }));
-        }
-
-        var new_role = store.find('role', previous_role_fk);
-        if(new_role.get('id')) {
-            var role_people = new_role.get('people') || [];
-            new_role.set('people', role_people.concat([this.get('id')]));
-            new_role.save();
-        }
-    },
-    rollbackPhoneNumbers() {
-        let store = this.get('store');
-        let phone_numbers_to_remove = [];
-        let phone_numbers = this.get('phone_numbers');
-        phone_numbers.forEach((num) => {
-            if(num.get('invalid_number') && num.get('isNotDirty')) {
-                phone_numbers_to_remove.push(num.get('id'));
-            }
-            num.rollback();
-        });
-        phone_numbers_to_remove.forEach((id) => {
-            store.remove('phonenumber', id);
-        });
-    },
-    rollbackAddresses() {
-        let store = this.get('store');
-        let addresses_to_remove = [];
-        let addresses = this.get('addresses');
-        addresses.forEach((address) => {
-            if(address.get('invalid_address') && address.get('isNotDirty')) {
-                addresses_to_remove.push(address.get('id'));
-            }
-            address.rollback();
-        });
-        addresses_to_remove.forEach((id) => {
-            store.remove('address', id);
-        });
-    },
-    locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
-    locationsIsDirty: Ember.computed('person_locations', 'locations.@each.isDirty', function() {
-        let locations = this.get('locations');
-        let previous_m2m_fks = this.get('person_location_fks');
-        if(locations.get('length') > 0) {
-            if(!previous_m2m_fks || previous_m2m_fks.get('length') !== locations.get('length')) {
-                return true;
-            }
-
-            let dirty_locations = locations.filter(function(location) {
-                return location.get('isDirty') === true;
-            });
-            return dirty_locations.length > 0;
-
-        }
-        if(previous_m2m_fks && previous_m2m_fks.get('length') > 0) {
-            return true;
-        }
-    }),
-    update_locations(location_pk) {
-        let store = this.get('store');
-        if(Ember.$.inArray(location_pk, this.get('location_ids')) > -1) {
-            let m2m_pk = this.get('person_locations').filter((m2m) => {
-                return m2m.get('location_pk') === location_pk;
-            }).objectAt(0).get('id');
-            store.push('person-location', {id: m2m_pk, removed: true});
-        }else{
-            let uuid = this.get('uuid');
-            store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
-        }
-    },
-    change_role(new_role, old_role) {
-        let person_id = this.get('id');
-        let new_role_people = new_role.get('people') || [];
-        if(new_role.get('id')) {
-            new_role.set('people', new_role_people.concat([person_id]));
-        }
-        if(old_role) {
-            var old_role_people = old_role.get('people') || [];
-            old_role.set('people', old_role_people.filter((old_role_person_pk) => {
-                return old_role_person_pk !== person_id;
-            }));
-            old_role.save();
-        }
-    },
-    location_ids: Ember.computed('locations.[]', function() {
-        return this.get('locations').map((location) => {
-            return location.get('id');
-        });
-    }),
-    locations: Ember.computed('person_locations.[]', function() {
-        let store = this.get('store');
-        let person_locations = this.get('person_locations');
-        let filter = function(location) {
-            let location_pks = this.map(function(join_model) {
-                return join_model.get('location_pk');
-            });
-            return Ember.$.inArray(location.get('id'), location_pks) > -1;
-
-        };
-        return store.find('location', filter.bind(person_locations), ['id']);
-    }),
-    person_locations: Ember.computed(function() {
-        let store = this.get('store');
-        let filter = function(join_model) {
-            return join_model.get('person_pk') === this.get('id') && !join_model.get('removed');
-        };
-        return store.find('person-location', filter.bind(this), ['removed']);
-    }),
     createSerialize() {
         return {
             id: this.get('id'),
@@ -322,7 +79,12 @@ export default Model.extend(NewMixin, {
         }).map(function(num) {
             return num.serialize();
         });
-        var addresses = this.get('addresses').map(function(address) {
+        var addresses = this.get('addresses').filter(function(address) {
+            if (address.get('invalid_address')) {
+                return;
+            }
+            return address;
+        }).map(function(address) {
             return address.serialize();
         });
         var locale = store.find('locale', {locale: this.get('locale')});
@@ -350,3 +112,5 @@ export default Model.extend(NewMixin, {
         this.get('store').remove('person', this.get('id'));
     }
 });
+
+export default Person;

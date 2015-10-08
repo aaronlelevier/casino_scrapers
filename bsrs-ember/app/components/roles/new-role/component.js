@@ -1,9 +1,8 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/inject';
+import BaseComponent from 'bsrs-ember/components/base-component-new/component';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var RoleNew = Ember.Component.extend(ValidationMixin, {
-    repository: inject('role'),
+var RoleNew = BaseComponent.extend(ValidationMixin, {
     nameValidation: validate('model.name'),
     actions: {
         changed(model, val) {
@@ -16,18 +15,11 @@ var RoleNew = Ember.Component.extend(ValidationMixin, {
                 model.set('location_level', val);
             });
         },
-        saveRole() {
+        save() {
             this.set('submitted', true);
             if (this.get('valid')) {
-                var model = this.get('model');
-                var repository = this.get('repository');
-                repository.insert(model).then(() => {
-                    this.sendAction('saveRole');   
-                });
+                this._super();
             }
-        },
-        cancelRole() {
-            this.sendAction('redirectUser');
         }
     }
 });

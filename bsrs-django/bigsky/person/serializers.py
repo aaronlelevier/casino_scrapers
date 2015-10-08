@@ -8,10 +8,11 @@ from contact.models import PhoneNumber, Address, Email
 from contact.serializers import (PhoneNumberSerializer, AddressSerializer,
     EmailSerializer, AddressSerializer)
 from location.serializers import LocationLevelSerializer, LocationIdNameSerializer
+from category.serializers import CategoryRoleSerializer
 from person.models import PersonStatus, Person, Role
 from person.validators import RoleLocationValidator
-from util import create
-from util.serializers import BaseCreateSerializer
+from utils import create
+from utils.serializers import BaseCreateSerializer
 
 
 ### ROLE ###
@@ -23,6 +24,22 @@ class RoleSerializer(BaseCreateSerializer):
         model = Role
         fields = ('id', 'name', 'role_type', 'location_level')
 
+
+class RoleUpdateSerializer(BaseCreateSerializer):
+    "Serializer used for update ``Role`` API Endpoint operations."
+
+    class Meta:
+        model = Role
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories')
+
+
+class RoleDetailSerializer(BaseCreateSerializer):
+    
+    categories = CategoryRoleSerializer(many=True)
+
+    class Meta:
+        model = Role
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories')
 
 class RoleIdNameSerializer(serializers.ModelSerializer):
     "Used for nested serializer data for other serializers."

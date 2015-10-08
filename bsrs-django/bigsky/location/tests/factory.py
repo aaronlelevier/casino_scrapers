@@ -1,7 +1,7 @@
 from model_mommy import mommy
 
 from location.models import Location, LocationLevel
-from util.create import _generate_chars
+from utils.create import _generate_chars
 
 def create_location_levels():
     '''

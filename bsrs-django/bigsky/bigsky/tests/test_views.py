@@ -11,6 +11,7 @@ from model_mommy import mommy
 from accounting.models import Currency
 from person.models import Person, PersonStatus, Role
 from contact.models import PhoneNumberType, AddressType
+from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus, State, Country
 from person.tests.factory import PASSWORD, create_person, create_role
 from translation.tests.factory import create_locales
@@ -74,6 +75,9 @@ class ConfigurationTests(TestCase):
         self.location_levels = mommy.make(LocationLevel)
         self.location_statuses = mommy.make(LocationStatus)
         self.person_status = mommy.make(PersonStatus)
+        self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
+            endpoint_name="admin.people.index")
+        # Login
         self.client.login(username=self.person.username, password=self.password)
 
     def tearDown(self):
@@ -85,11 +89,7 @@ class ConfigurationTests(TestCase):
 
     def test_phone_number_types(self):
         response = self.client.get(reverse('index'))
-        configuration = json.loads(response.context['phone_number_types_config'])
-        self.assertTrue(len(configuration) > 0)
-        # the model id shows in the context
-        self.assertIn(str(self.phone_number_types.id), [c.values()[0] for c in configuration])
-        self.assertIn(str(self.phone_number_types.name), [c.values()[1] for c in configuration])
+        self.assertTrue(response.context['phone_number_types_config'])
 
     def test_address_types(self):
         mommy.make(AddressType)
@@ -140,16 +140,16 @@ class ConfigurationTests(TestCase):
         configuration = json.loads(response.context['person_status_config'])
         self.assertTrue(len(configuration) > 0)
         # the model id shows in the context
-        self.assertIn(str(self.person_status.id), [c.values()[0] for c in configuration])
-        self.assertIn(str(self.person_status.name), [c.values()[1] for c in configuration])
+        self.assertIn(str(self.person_status.id), [c['id'] for c in configuration])
+        self.assertIn(str(self.person_status.name), [c['name'] for c in configuration])
 
     def test_location_level(self):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['location_level_config'])
         self.assertTrue(len(configuration) > 0)
         # the model id shows in the context
-        self.assertIn(str(self.location_levels.id), [c.values()[0] for c in configuration])
-        self.assertIn(str(self.location_levels.name), [c.values()[1] for c in configuration])
+        self.assertIn(str(self.location_levels.id), [c['id'] for c in configuration])
+        self.assertIn(str(self.location_levels.name), [c['name'] for c in configuration])
 
     def test_location_status(self):
         response = self.client.get(reverse('index'))
@@ -177,3 +177,14 @@ class ConfigurationTests(TestCase):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['person_current'])
         self.assertTrue(len(configuration) > 0)
+
+    def test_default_model_ordering(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['default_model_ordering'])
+        self.assertTrue(len(configuration) > 0)
+
+    def test_context_saved_search(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['saved_search'])
+        self.assertTrue(len(configuration) > 0)
+

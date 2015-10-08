@@ -5,12 +5,12 @@ from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
 
-from util.models import AbstractName, BaseModel, BaseManager
+from utils.models import BaseNameModel, BaseModel, BaseManager
 
 
 ### SUPPORT MODELS
 
-class State(AbstractName):
+class State(BaseNameModel):
     abbr = models.CharField(max_length=2)
 
     def to_dict(self):
@@ -20,7 +20,7 @@ class State(AbstractName):
             'abbr': self.abbr
         }
 
-class Country(AbstractName):
+class Country(BaseNameModel):
 
     class Meta:
         verbose_name_plural = 'Countries'
@@ -125,12 +125,13 @@ class SelfRefrencingBaseModel(models.Model):
     objects = SelfRefrencingManager()
 
     class Meta:
+        ordering = ('id',)
         abstract = True
 
 
 ### LOCATION LEVEL
 
-class LocationLevel(SelfRefrencingBaseModel, AbstractName):
+class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
@@ -150,7 +151,7 @@ class LocationStatusManager(BaseManager):
         return obj
 
 
-class LocationStatus(AbstractName):
+class LocationStatus(BaseNameModel):
     '''
     Tells whether the store is: *Open, Closed, Future, etc...*
 
@@ -171,7 +172,7 @@ class LocationTypeManager(BaseManager):
         return obj
 
 
-class LocationType(AbstractName):
+class LocationType(BaseNameModel):
     ''' '''
     
     objects = LocationTypeManager()
@@ -255,6 +256,9 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     number = models.CharField(max_length=50, blank=True, null=True)
 
     objects = LocationManager()
+
+    class Meta:
+        ordering = ("name", "number",)
 
     def __str__(self):
         return self.name

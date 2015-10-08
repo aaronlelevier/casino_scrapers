@@ -2,8 +2,9 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 import prevent_duplicate_name from 'bsrs-ember/validation/prevent_duplicate_name';
+import BaseComponent from 'bsrs-ember/components/base-component/component';
 
-var LocationLevelComponent = Ember.Component.extend(ValidationMixin, {
+var LocationLevelComponent = BaseComponent.extend(ValidationMixin, {
     repository: inject('location-level'),
     classNames: ['wrapper', 'form'],
     nameValidation: validate('model.name', prevent_duplicate_name),
@@ -24,24 +25,11 @@ var LocationLevelComponent = Ember.Component.extend(ValidationMixin, {
         return name_arr;
     }),
     actions: {
-        saveLocationLevel() {
+        save() {
             this.set('submitted', true);
             if (this.get('valid')) {
-                var model = this.get('model');
-                var repository = this.get('repository');
-                repository.update(model).then(() => {
-                    this.sendAction('saveLocationLevel');
-                });
+                this._super();
             }
-        },
-        cancelLocationLevel() {
-            this.sendAction('redirectUser');
-        },
-        deleteLocationLevel() {
-            var model = this.get('model');
-            var repository = this.get('repository');
-            repository.delete(model.get('id'));
-            this.sendAction('redirectUser');
         }
     }
 });

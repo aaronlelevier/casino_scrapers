@@ -4,11 +4,14 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            idOne: 'ec62006b-6275-4aa9-abfa-38b146383d30',
-            idTwo: 'ec62006b-6275-4aa9-abfa-38b146383d31',
+            idOne: 'ec62006b-6275-4aa9-abfa-38b146383d301',
+            idTwo: 'ec62006b-6275-4aa9-abfa-38b146383d302',
+            idChild: 'ec62006b-6275-4aa9-abfa-38b146383d303',
+            unusedId: 'ec62006b-6275-4aa9-abfa-38b146383d50',
             nameOne: 'admin.category.name.repair',
             nameTwo: 'admin.category.name.maintenance',
             nameThree: 'admin.category.name.loss_prevention', 
+            idNew: 'abc123',
             status: 'admin.category.status.active',
             descriptionRepair: 'Interior and Exterior Store Repair',
             descriptionMaintenance: 'Preventive Maintenance',
@@ -22,7 +25,9 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             labelThree: 'admin.category.labelCat.issue',
             subCatLabelOne: 'Trade',
             subCatLabelTwo: 'Issue',
-            parent: []
+            parent: [],
+            statusOne: 'admin.category.status.active',
+            statusTwo: 'admin.category.status.inactive'
         };
     };
     return factory;

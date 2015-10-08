@@ -1,13 +1,14 @@
 var BSRS_PEOPLE_FACTORY = (function() {
-    var factory = function(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures) {
+    var factory = function(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults) {
         this.address_fixtures = address_fixtures;
         this.person_defaults = person_defaults;
         this.phone_number_fixtures = phone_number_fixtures;
-        this.role_fixtures = role_fixtures;
-        this.location_fixtures = location_fixtures;
+        this.role_fixtures = role_fixtures.default || role_fixtures;
+        this.location_fixtures = location_fixtures.default || location_fixtures;
         this.role_defaults = role_defaults;
         this.status_defaults = status_defaults;
         this.location_level_defaults = location_level_defaults;
+        this.location_defaults = location_defaults;
     };
     factory.prototype.generate = function(i) {
         return {
@@ -85,43 +86,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
         }
         return {'count':18,'next':null,'previous':null,'results': response};
     };
-    factory.prototype.sorted = function(column, page) {
-        var response;
-        if(page && page === 2) {
-            response = this.list_two().results;
-        } else {
-            response = this.list().results;
-        }
-        //we do a reverse order sort here to verify a real sort occurs in the component
-        var sorted = response.sort(function(a,b) {
-            return b[column] - a[column];
-        });
-        return {'count':18,'next':null,'previous':null,'results': sorted};
-    };
-    factory.prototype.searched = function(search, column, page) {
-        var page1 = this.list_two().results;
-        var page2 = this.list().results;
-        var response = page1.concat(page2);
-        //we do a normal order sort here to slice correctly below
-        var sorted = response.sort(function(a,b) {
-            return a[column] - b[column];
-        });
-        var regex = new RegExp(search);
-        var searched = sorted.filter(function(object) {
-            var value = object.username;
-            return regex.test(value);
-        });
-        var paged;
-        if(page && page > 1) {
-            paged = searched.slice(10, 20);
-        } else {
-            paged = searched.slice(0, 10);
-        }
-        return {'count':searched.length,'next':null,'previous':null,'results': paged};
-    };
-    factory.prototype.empty = function() {
-        return {'count':0,'next':null,'previous':null,'results': []};
-    };
     factory.prototype.detail = function(i) {
         var person = this.generate(i);
         person.acceptassign = false;
@@ -129,6 +93,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         person.addresses = this.address_fixtures.get();
         person.emails = [];
         person.locale = this.person_defaults.locale_id;
+        person.locations = [this.location_fixtures.get()];
         return person;
     };
     factory.prototype.put = function(person) {
@@ -137,7 +102,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
         response.addresses = this.address_fixtures.put();
         response.status = this.status_defaults.activeId;
         response.role = this.role_defaults.idOne;
-        person.locale = this.person_defaults.locale_id;
+        response.locale = this.person_defaults.locale_id;
+        response.locations = [this.location_defaults.idOne];
         for(var key in person) {
             response[key] = person[key];
         }
@@ -147,6 +113,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
+    var objectAssign = require('object-assign');
+    var mixin = require('../vendor/mixin');
     var address_fixtures = require('../vendor/address_fixtures');
     var phone_number_fixtures = require('../vendor/phone_number_fixtures');
     var role_fixtures = require('../vendor/role_fixtures');
@@ -154,14 +122,18 @@ if (typeof window === 'undefined') {
     var role_defaults = require('../vendor/defaults/role');
     var status_defaults = require('../vendor/defaults/status');
     var location_level_defaults = require('../vendor/defaults/location-level');
+    var location_defaults = require('../vendor/defaults/location');
     var location_fixtures = require('../vendor/location_fixtures');
-    module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures);
+    objectAssign(BSRS_PEOPLE_FACTORY.prototype, mixin.prototype);
+    module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults);
 } else {
     define('bsrs-ember/vendor/people_fixtures', ['exports', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/phone_number_fixtures',
            'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/role_fixtures',
-            'bsrs-ember/vendor/location_fixtures'],
-           function (exports, address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures) {
+            'bsrs-ember/vendor/location_fixtures', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/mixin'],
+           function (exports, address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults, mixin) {
         'use strict';
-        return new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures);
+        Object.assign(BSRS_PEOPLE_FACTORY.prototype, mixin.prototype);
+        var Factory = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults);
+        return {default: Factory};
     });
 }

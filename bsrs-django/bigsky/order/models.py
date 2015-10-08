@@ -1,11 +1,11 @@
 from django.db import models
 
-from util.models import AbstractName
+from utils.models import BaseNameModel
 
 
-class WorkOrderStatus(AbstractName):
+class WorkOrderStatus(BaseNameModel):
     pass
     
 
-class WorkOrder(AbstractName):
+class WorkOrder(BaseNameModel):
     amount = models.PositiveIntegerField()

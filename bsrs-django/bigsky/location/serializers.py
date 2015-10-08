@@ -1,8 +1,8 @@
 from rest_framework import serializers
 
 from location.models import LocationLevel, LocationStatus, LocationType, Location
-from util.serializers import BaseCreateSerializer
-from util.validators import UniqueForActiveValidator, LocationParentChildValidator
+from utils.serializers import BaseCreateSerializer
+from utils.validators import UniqueForActiveValidator, LocationParentChildValidator
 
 ### LOCATION LEVEL
 
@@ -17,7 +17,6 @@ class LocationLevelSerializer(serializers.ModelSerializer):
 
 class LocationLevelDetailSerializer(serializers.ModelSerializer):
 
-    children = LocationLevelSerializer(many=True)
     parents = LocationLevelSerializer(many=True)
 
     class Meta:
@@ -55,9 +54,11 @@ class LocationTypeSerializer(BaseCreateSerializer):
 class LocationIdNameSerializer(BaseCreateSerializer):
     """Leaf node serializer for PersonDetailSerializer."""
 
+    location_level = LocationLevelSerializer()
+
     class Meta:
         model = Location
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'number', 'location_level')
 
 
 class LocationSerializer(serializers.ModelSerializer):
@@ -94,7 +95,7 @@ class LocationCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Location
-        validators = [UniqueForActiveValidator(Location, 'number')]
+        validators = [UniqueForActiveValidator(Location, ['number'])]
         fields = ('id', 'name', 'number', 'status', 'location_level',)
 
 
@@ -103,7 +104,7 @@ class LocationUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Location
         validators = [
-            UniqueForActiveValidator(Location, 'number'),
+            UniqueForActiveValidator(Location, ['number']),
             LocationParentChildValidator('location_level', 'parents'),
             LocationParentChildValidator('location_level', 'children')
         ]

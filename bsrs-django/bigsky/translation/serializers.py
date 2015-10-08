@@ -1,7 +1,7 @@
 from rest_framework.exceptions import NotFound
 
 from translation.models import Locale, Translation
-from util.serializers import BaseCreateSerializer
+from utils.serializers import BaseCreateSerializer
 
 
 class LocaleSerializer(BaseCreateSerializer):

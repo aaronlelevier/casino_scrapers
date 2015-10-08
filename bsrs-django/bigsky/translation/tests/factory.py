@@ -1,7 +1,7 @@
 import copy
 
 from translation.models import Locale, Translation
-from util.create import random_lorem
+from utils.create import random_lorem
 
 
 ### HELPER FUNCTIONS
@@ -19,7 +19,7 @@ def create_empty_dict(keys=50):
 
 def update_dict_values(dict_):
     dict_ = copy.copy(dict_)
-    for k,v in dict_.iteritems():
+    for k,v in dict_.items():
         dict_[k] = random_lorem(words=1)
     return dict_
 

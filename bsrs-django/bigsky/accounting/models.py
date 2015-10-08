@@ -2,7 +2,7 @@ from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 from django.utils.text import capfirst
 
-from util.models import BaseModel, BaseManager
+from utils.models import BaseModel, BaseManager
 
 
 class CurrencyManager(BaseManager):
@@ -27,6 +27,7 @@ class Currency(BaseModel):
     objects = CurrencyManager()
 
     class Meta:
+        ordering = ('id',)
         verbose_name_plural = "Currencies"
 
     def __str__(self):

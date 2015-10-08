@@ -27,11 +27,10 @@ var InputMultiPhone = ChildValidationComponent.extend(CustomValidMixin, {
             var related_pk = this.get('related_pk');
             var model = {id: id, type: type};
             model[related_field] = related_pk;
-            var phone_number = this.get('model').push(model);
+            this.get('model').push(model);
         },
         delete(entry) {
-            this.get('model').remove(entry.id);
-            this.sendAction('delete');
+            this.get('model').push({id: entry.get('id'), removed: true});
         }
     }
 });

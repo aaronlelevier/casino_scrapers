@@ -3,8 +3,8 @@ from django.utils.encoding import python_2_unicode_compatible
 
 from person.models import Person
 from location.models import Location
-from util.models import AbstractNameOrder, BaseModel
-from util import exceptions as excp
+from utils import exceptions as excp
+from utils.models import BaseNameOrderModel, BaseModel
 
 
 class ContactBaseModel(BaseModel):
@@ -15,6 +15,7 @@ class ContactBaseModel(BaseModel):
     pass
 
     class Meta:
+        ordering = ('id',)
         abstract = True
 
     def save(self, *args, **kwargs):
@@ -30,7 +31,7 @@ class ContactBaseModel(BaseModel):
                 "Can't have both a Person and Location.")
 
 
-class PhoneNumberType(AbstractNameOrder):
+class PhoneNumberType(BaseNameOrderModel):
     '''
     Ex- mobile, cell, home, fax.
     '''
@@ -55,7 +56,7 @@ class PhoneNumber(ContactBaseModel):
         return self.number
 
 
-class AddressType(AbstractNameOrder):
+class AddressType(BaseNameOrderModel):
     pass
 
 
@@ -86,7 +87,7 @@ class Address(ContactBaseModel):
             return ""
 
 
-class EmailType(AbstractNameOrder):
+class EmailType(BaseNameOrderModel):
     pass
 
 

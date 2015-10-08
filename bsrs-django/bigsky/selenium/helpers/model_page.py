@@ -1,4 +1,4 @@
-from javascript import JavascriptMixin
+from .javascript import JavascriptMixin
 
 
 class ModelPage(JavascriptMixin):
@@ -21,15 +21,15 @@ class ModelPage(JavascriptMixin):
         assert elem_input.get_attribute("value") == value
 
     def find_and_assert_elems(self, **kwargs):
-        for k, v in kwargs.iteritems():
+        for k, v in kwargs.items():
             setattr(self, k + "_input", self.driver.find_element_by_id(k))
             assert getattr(self, k + "_input").get_attribute("value") == v
 
     def find_list_name(self):
         return self.wait_for_xhr_request(self.list_name, plural=True)
 
-    def find_list_data(self):
-        return self.wait_for_xhr_request(self.list_data, plural=True)
+    def find_list_data(self, just_refreshed=False):
+        return self.wait_for_xhr_request(self.list_data, plural=True, just_refreshed=just_refreshed)
 
     def click_name_in_list(self, name, list_view_elements):
         new_location = None

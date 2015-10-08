@@ -1,0 +1,13 @@
+.user-info{
+    .user-photo{
+        border: $borderStyle;
+        margin: 0 0 20px 0;
+        line-height: 200px;
+        height: 200px;
+        background: $light;
+        font-size:100px;
+        text-align:center;
+        color: $gray;
+    }
+
+}

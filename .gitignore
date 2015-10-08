@@ -31,14 +31,12 @@ bower_components/
 connect.lock/
 coverage/
 
-# ci script
-venv/
-bsrs-django/bigsky/assets/
-bsrs-django/bigsky/templates/index.html
-
 .ctags
 _*.rst
 
-# static
-bsrs-django/bigsky/assets/
-bsrs-django/bigsky/fonts/
+# virtualenv
+venv/
+
+# attachments
+bsrs-django/bigsky/source/attachments/files/
+bsrs-django/bigsky/source/attachments/images/

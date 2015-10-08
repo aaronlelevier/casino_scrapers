@@ -1,6 +1,8 @@
-{{location-level
-  model=model
-  saveLocationLevel="redirectUser"
-  cancelLocationLevel="redirectUser"
-  redirectUser="redirectUser"
-}}
+  {{location-level
+    model=model
+    repository=repository
+    save=(action "tabActions")
+    saveBase="save"
+    cancel=(action "tabActions")
+    delete=(action "deleteTabAction")
+  }}

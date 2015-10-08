@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from django.db.models.functions import Lower
 from django.db.models import Q
 
 from rest_framework import permissions
@@ -9,9 +8,7 @@ import rest_framework_filters as filters
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
-from util.mixins import OrderingQuerySetMixin
-from util.views import BaseModelViewSet
-from rest_framework import pagination
+from utils.views import BaseModelViewSet
 
 
 class RoleViewSet(BaseModelViewSet):
@@ -19,9 +16,18 @@ class RoleViewSet(BaseModelViewSet):
     API endpoint that allows roles to be viewed or edited.
     """
     queryset = Role.objects.all()
-    serializer_class = ps.RoleSerializer
     permission_classes = (permissions.IsAuthenticated,)
-    paginate_by = 1000
+
+    def get_serializer_class(self):
+        """
+        set the serializer based on the method
+        """
+        if self.action == 'retrieve':
+            return ps.RoleDetailSerializer
+        elif self.action == ('update' or 'partial_update'):
+            return ps.RoleUpdateSerializer
+        else:
+             return ps.RoleSerializer
 
 
 class PersonStatusViewSet(BaseModelViewSet):
@@ -33,12 +39,13 @@ class PersonStatusViewSet(BaseModelViewSet):
 ### PERSON
 
 class PersonFilterSet(filters.FilterSet):
-    first_name = filters.AllLookupsFilter(name='first_name')
     username = filters.AllLookupsFilter(name='username')
+    fullname = filters.AllLookupsFilter(name='fullname')
+    title = filters.AllLookupsFilter(name='title')
     
     class Meta:
         model= Person
-        fields = ['first_name', 'username']
+        fields = ['username', 'fullname', 'title']
 
 
 class PersonViewSet(BaseModelViewSet):
@@ -53,7 +60,8 @@ class PersonViewSet(BaseModelViewSet):
     '''
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
-    filter_class = PersonFilterSet
+    model = Person
+    filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
         """
@@ -79,7 +87,9 @@ class PersonViewSet(BaseModelViewSet):
         search = self.request.query_params.get('search', None)
         if search:
             queryset = queryset.filter(
-                Q(first_name__icontains=search) | Q(username__icontains=search)
+                Q(username__icontains=search) | \
+                Q(fullname__icontains=search) | \
+                Q(title__icontains=search)
             )
 
         return queryset

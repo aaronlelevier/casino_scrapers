@@ -46,9 +46,9 @@ class FactoryTests(TransactionTestCase):
         self.assertEqual(person.username, new_person_name)
 
     def test_multiple_person_create(self):
-        people = 10
-        factory.create_person(_many=people)
-        self.assertEqual(Person.objects.count(), people)
+        # Will `get_or_create` Person Obj, so confirm at least 2 exist
+        factory.create_person(_many=2)
+        self.assertTrue(Person.objects.count() >= 2)
 
     def test_many_with_username(self):
         with self.assertRaises(Exception):
@@ -60,11 +60,11 @@ class FactoryTests(TransactionTestCase):
 
     ### .create_person(): End
 
-    def test_create_23_people(self):
+    def test_create_all_people(self):
         # Make sure that there are 23 People, and that all People Roles
         # have a valid Location that uses that ``person.role.location_level``
-        factory.create_23_people()
+        factory.create_all_people()
         people = Person.objects.all()
-        self.assertEqual(people.count(), 23)
+        self.assertEqual(people.count(), 187)
         # At least some people are assigned to Location(s)
         self.assertTrue(Person.objects.exclude(locations__isnull=True))

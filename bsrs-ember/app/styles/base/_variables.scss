@@ -7,7 +7,7 @@ $orange: #e67e22;
 $darkOrange: #d15627;
 $white: #FFF;
 $light: #F5F5F5;
-$lightGray: #E5F6FF;
+$lightGray: #FCFCFC;
 $gray: #E5E5E5;
 $medGray: #989898;
 $darkGray: #666;
@@ -28,7 +28,7 @@ $fontfamily: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 
 // Layout
 $menuHeight: 42px;
-$tabTop: 56px;
+$tabTop: 57px;
 $tabLeft: 56px;
 $tabHeight: 34px;
 $tabWidth: 180px;
@@ -37,9 +37,9 @@ $mainTop: 90px; //tabTop + tabHeight
 $mainLeft: 56px; //same as tabLeft
 
 $documentLeft: 250px;
-$documentHeaderHeight: 50px;
-$documentHeaderHeightPlus1: 51px;
-$documentFooterHeight: 50px;
+$documentHeaderHeight: 41px;
+$documentHeaderHeightPlus1: 42px;
+$documentFooterHeight: 41px;
 
 // Responsive Gates
 $mobileDeviceWidth: 20px;

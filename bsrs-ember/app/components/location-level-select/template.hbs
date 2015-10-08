@@ -1,9 +1,5 @@
 <select class="t-location-level form-control location_level" onchange={{action (action "changed" manyRelationshipModel) value="target.value"}} id="location_location_level_select">
-  {{#if new}}
     <option>Select One</option>
-  {{else}}
-    <option>Select One</option>
-  {{/if}}
   {{#each options as |location_level|}}
     <option value={{location_level.id}} selected={{is-equal model.id location_level.id}}>{{location_level.name}}</option>
   {{/each}}

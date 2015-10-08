@@ -38,12 +38,14 @@ LOCAL_APPS = (
     'accounting',
     'category',
     'contact',
+    'generic',
     'location',
     'person',
     'session',
     'translation',
-    'util',
+    'utils',
     'order',
+    'third_party',
     )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -100,11 +102,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'assets'),
+    os.path.join(BASE_DIR, 'ember'),
     )
 
-STATIC_URL = '/assets/'
+STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
@@ -116,6 +119,10 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'source')
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 
+### FILES
+
+MAX_UPLOAD_SIZE = 2621440 # 2621440 # default - aka: 2.5MB
+
 
 ### 3RD PARTY APPS ###
 
@@ -124,7 +131,7 @@ DEBUG_TOOLBAR_PATCH_SETTINGS = False
 REST_FRAMEWORK = {
     'PAGINATE_BY': 10,
     'PAGINATE_BY_PARAM': 'page_size',
-    'MAX_PAGINATE_BY': 10,
+    'MAX_PAGINATE_BY': 100,
     # 'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',

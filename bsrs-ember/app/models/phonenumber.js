@@ -1,10 +1,10 @@
 import Ember from 'ember';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 
-export default Model.extend(NewMixin, {
+var PhoneNumberModel =  Model.extend({
     type: attr(),
     number: attr(''),
+    person_fk: undefined,
     invalid_number: Ember.computed('number', function() {
         let number = this.get('number');
         return typeof number === 'undefined' || number.trim() === '';
@@ -13,3 +13,5 @@ export default Model.extend(NewMixin, {
         return {id: this.get('id'), number: this.get('number'), type: this.get('type')};
     }
 });
+
+export default PhoneNumberModel;

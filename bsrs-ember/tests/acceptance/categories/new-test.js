@@ -16,8 +16,10 @@ const CATEGORIES_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + UUID.value;
 const CATEGORY_NEW_URL = BASE_URL + '/new';
 const SAVE_BTN = '.t-save-btn';
+const LETTER_A = {keyCode: 65};
+const SPACEBAR = {keyCode: 32};
 
-let application, store, payload, list_xhr;
+let application, store, payload, list_xhr, children_xhr;
 
 module('Acceptance | category-new', {
     beforeEach() {
@@ -29,28 +31,33 @@ module('Acceptance | category-new', {
             cost_code: CATEGORY_DEFAULTS.costCodeOne,
             label: CATEGORY_DEFAULTS.labelOne,
             subcategory_label: CATEGORY_DEFAULTS.subCatLabelTwo,
-            parent: []
+            parent: [],
+            children: []
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
-        let endpoint = PREFIX + BASE_URL + "/";
-        list_xhr = xhr(endpoint, "GET", null, {}, 200, CATEGORY_FIXTURES.empty());
+        let endpoint = PREFIX + BASE_URL + '/';
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CATEGORY_FIXTURES.empty());
+        let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
+        children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
     },
     afterEach() {
         payload = null;
-        Ember.run(application, 'destroy');
         list_xhr = null;
+        children_xhr = null;
+        Ember.run(application, 'destroy');
     }
 });
 
 test('visiting /category/new', (assert) => {
+    clearxhr(children_xhr);
     let response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(CATEGORIES_URL);
-    click('.t-category-new');
+    click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
-        assert.equal(store.find('category').get('length'), 1);
+        assert.equal(store.find('category').get('length'), 4);
     });
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
     fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
@@ -61,9 +68,7 @@ test('visiting /category/new', (assert) => {
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
-        assert.equal(store.find('category').get('length'), 1);
-        let category = store.find('category').objectAt(0);
-        assert.equal(category.get('id'), UUID.value);
+        let category = store.find('category', UUID.value);
         assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameOne);
         assert.equal(category.get('description'), CATEGORY_DEFAULTS.descriptionMaintenance);
         assert.equal(category.get('label'), CATEGORY_DEFAULTS.labelOne);
@@ -75,11 +80,12 @@ test('visiting /category/new', (assert) => {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
+    clearxhr(children_xhr);
     let response = Ember.$.extend(true, {}, payload);
     let url = PREFIX + BASE_URL + '/';
     xhr(url, 'POST', JSON.stringify(payload), {}, 201, response );
     visit(CATEGORIES_URL);
-    click('.t-category-new');
+    click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         assert.ok(find('.t-name-validation-error').is(':hidden'));
@@ -146,6 +152,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 });
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
+    clearxhr(children_xhr);
     clearxhr(list_xhr);
     visit(CATEGORY_NEW_URL);
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
@@ -168,6 +175,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+    clearxhr(children_xhr);
     visit(CATEGORY_NEW_URL);
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
     click('.t-cancel-btn');
@@ -183,7 +191,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), CATEGORIES_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             let category = store.find('category', {id: UUID.value});
             assert.equal(category.get('length'), 0);
             assert.equal(find('tr.t-category-data').length, 0);
@@ -192,9 +199,112 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
+    clearxhr(children_xhr);
     visit(CATEGORY_NEW_URL);
+    andThen(() => {
+        assert.equal(store.find('category').get('length'), 4);
+    });
     click('.t-cancel-btn');
     andThen(() => {
-        assert.equal(store.find('category').get('length'), 0);
+        assert.equal(store.find('category').get('length'), 3);
+    });
+});
+
+test('when you deep link to the category detail can remove child from category', (assert) => {
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
+    visit(CATEGORY_NEW_URL);
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idNew);
+        assert.equal(category.get('children').get('length'), 0);
+        assert.equal(find('div.item').length, 0);
+        assert.equal(find('div.option').length, 0);
+    });
+    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
+    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
+    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
+    fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
+    fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
+    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
+    fillIn('.selectize-input input', 'a');
+    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+    click('.t-category-children-select div.option:eq(0)');
+    click('div.item > a.remove:eq(0)');
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idNew);
+        assert.equal(category.get('children_fks').get('length'), 0);
+        assert.equal(find('div.option').length, 10);
+        assert.equal(find('div.item').length, 0);
+    });
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
+
+test('clicking and typing into selectize for categories children will not filter if spacebar pressed', (assert) => {
+    clearxhr(children_xhr);
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
+    visit(CATEGORY_NEW_URL);
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idNew);
+        assert.equal(category.get('children').get('length'), 0);
+        assert.equal(find('div.item').length, 0);
+        assert.equal(find('div.option').length, 0);
+    });
+    fillIn('.selectize-input input', ' ');
+    triggerEvent('.selectize-input input', 'keyup', SPACEBAR);
+    andThen(() => {
+        assert.equal(find('div.option').length, 0);
+    });
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idNew);
+        assert.equal(category.get('children_fks').get('length'), 0);
+        // assert.equal(find('div.item').length, 1);//firefox clears out input?
+    });
+    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
+    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
+    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
+    fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
+    fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
+    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
+
+//TODO: figure out why has to be last test...leeky vars cause previous two tests to have children in payload
+test('clicking and typing into selectize for categories children will fire off xhr request for all categories', (assert) => {
+    let payload_new = Ember.$.extend(true, {}, payload);
+    payload_new.children = [CATEGORY_DEFAULTS.idOne];
+    let response = Ember.$.extend(true, {}, payload_new);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload_new), {}, 201, response);
+    visit(CATEGORY_NEW_URL);
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idNew);
+        assert.equal(category.get('children').get('length'), 0);
+        assert.equal(find('div.item').length, 0);
+        assert.equal(find('div.option').length, 0);
+    });
+    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
+    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
+    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
+    fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
+    fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
+    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
+    fillIn('.selectize-input input', 'a');
+    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+    click('.t-category-children-select div.option:eq(0)');
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idNew);
+        assert.equal(category.get('children_fks').get('length'), 1);
+        assert.equal(find('div.option').length, 9);
+        assert.equal(find('div.item').length, 1);
+    });
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
     });
 });

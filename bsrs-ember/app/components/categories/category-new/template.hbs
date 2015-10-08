@@ -1,17 +1,12 @@
 <form {{action "return false" this on="submit"}}>
-	<header>
-		<div class="btn-group btn-group-sm pull-right center-block" style="z-index: 2">
-      {{button-generic save="save" type="save"}}
-      {{button-generic cancel="cancel" type="cancel"}}
-			<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-				<span class="caret"></span>
-			</button>
-			<ul class="dropdown-menu">
-				<li><a href="#">{{fa-icon "files-o"}} Duplicate</a></li>
-				<li><a href="#">{{fa-icon "print"}} Print</a></li>
-			</ul>
-		</div>
-	</header>
+  {{base-component-new
+    model=model
+    repository=repository
+    save=attrs.save
+    saveBase="save"
+    cancel=attrs.cancel
+    delete=attrs.delete
+  }}
 	<section class="docSection container-fluid">
 		<section>
 			<h2 class="col-sm-12">{{t "admin.category.label.name"}}</h2>
@@ -48,6 +43,11 @@
 				{{#form-group title="admin.category.label.subcategory_label" for="subcategory_label"}}
 					{{input type="text" value=model.subcategory_label placeholder=(t "admin.category.label.subcategory_label") class="form-control t-category-subcategory-label" id="subcategory_label"}}
 					{{#validation-error-field submitted=submitted field="subcategory_label" className="validation validation-under t-subcategory-label-validation-error" model=model validation=subCategoryLabelValidation}}{{t "validation.invalid"}} {{t "admin.category.label.subcategory_label"}}{{/validation-error-field}}
+				{{/form-group}}
+			</div>
+			<div class="col-sm-6">
+				{{#form-group title="admin.category.label.children" for="category"}}
+          {{category-children-select category=model search=search categories_children=categories_children}}
 				{{/form-group}}
 			</div>
 		</section>

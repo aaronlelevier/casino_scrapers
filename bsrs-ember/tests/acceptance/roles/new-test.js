@@ -26,11 +26,12 @@ module('Acceptance | role-new', {
             name: ROLE_DEFAULTS.nameOne,
             role_type: ROLE_DEFAULTS.roleTypeGeneral,
             location_level: ROLE_DEFAULTS.locationLevelOne,
+            categories: []
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
         let endpoint = PREFIX + BASE_URL + '/';
-        list_xhr = xhr(endpoint, 'GET', null, {}, 200, ROLE_FIXTURES.empty());
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ROLE_FIXTURES.empty());
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -41,7 +42,7 @@ test('visiting role/new', (assert) => {
     visit(ROLE_URL);
     let response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
-    click('.t-role-new');
+    click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), ROLE_NEW_URL);
         assert.equal(store.find('role').get('length'), 4);
@@ -75,7 +76,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     payload.location_level = null;
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(ROLE_URL);
-    click('.t-role-new');
+    click('.t-add-new');
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
     });
@@ -124,7 +125,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), ROLE_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             let role = store.find('role', {id: UUID.value});
             assert.equal(role.get('length'), 0);
         });

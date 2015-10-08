@@ -1,0 +1,3 @@
+<span class="fa fa-filter {{filterClass}} {{if (fulltext-active column find) "on" ""}}" {{action 'toggleFilterModal' column}}></span>
+<span {{action "sortBy" column}} class="fa {{sortByClass}} {{query-param-asc column sort}}"></span>
+<span class={{sortClass}}>{{label}}</span>

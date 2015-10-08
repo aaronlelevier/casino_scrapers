@@ -101,9 +101,10 @@ test('once added a button for address type appears with a button to delete it', 
 });
 
 test('click delete btn will remove input', function(assert) {
-    store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPE_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, person_id: PEOPLE_DEFAULTS.id});
-    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, address: ADDRESS_DEFAULTS.streetTwo, city: ADDRESS_DEFAULTS.cityTwo, state: ADDRESS_DEFAULTS.stateTwo, postal_code: ADDRESS_DEFAULTS.zipTwo, country: ADDRESS_DEFAULTS.countryTwo, person_id: PEOPLE_DEFAULTS.id});
-    var model = store.find('address', {person_id: PEOPLE_DEFAULTS.id});
+    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, address_fks: [ADDRESS_DEFAULTS.idOne, ADDRESS_DEFAULTS.idTwo]});
+    store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPE_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, person_fk: PEOPLE_DEFAULTS.id});
+    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, address: ADDRESS_DEFAULTS.streetTwo, city: ADDRESS_DEFAULTS.cityTwo, state: ADDRESS_DEFAULTS.stateTwo, postal_code: ADDRESS_DEFAULTS.zipTwo, country: ADDRESS_DEFAULTS.countryTwo, person_fk: PEOPLE_DEFAULTS.id});
+    var model = store.find('address', {person_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.render(hbs`{{input-multi-address model=model}}`);
     var $component = this.$('.t-input-multi-address');
@@ -111,7 +112,9 @@ test('click delete btn will remove input', function(assert) {
     assert.equal($component.find('.t-del-address-btn').length, 2);
     var $first_del_btn = $component.find('.t-del-address-btn:eq(0)');
     $first_del_btn.trigger('click');
-    assert.equal($component.find('.t-del-address-btn').length, 1);
+    var addresses = store.find('address');
+    assert.equal(addresses.get('length'), 2);
+    assert.equal(addresses.objectAt(0).get('removed'), true);
 });
 
 test('model with existing array of entries is shown at render and bound to model', function(assert) {

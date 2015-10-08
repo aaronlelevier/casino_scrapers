@@ -1,10 +1,8 @@
-{{location-levels/new
-  model=model 
-  all_location_levels=all_location_levels
-  saveLocationLevel="redirectUser"
-  cancelLocationLevel="redirectUser"
-  redirectUser="redirectUser"
-  all_location_levels=all_location_levels
-}}
-
-
+  {{location-levels/new
+    model=model 
+    repository=repository
+    all_location_levels=all_location_levels
+    save=(action "tabActions")
+    saveBase="save"
+    cancel=(action "tabActions")
+  }}

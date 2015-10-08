@@ -1,20 +1,29 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
+import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
 var extract_phone_numbers = function(model, store) {
+    let phone_number_fks = [];
     model.phone_numbers.forEach((phone_number) => {
+        phone_number_fks.push(phone_number.id);
+        phone_number.person_fk = model.id;
         store.push('phonenumber', phone_number);
     });
     delete model.phone_numbers;
+    return phone_number_fks;
 };
 
 var extract_addresses = function(model, store) {
+    let address_fks = [];
     model.addresses.forEach((address) => {
-        store.push('address-type', address.type);
-        address.type = address.type.id;
+        address_fks.push(address.id);
+        address.person_fk = model.id;
+        // store.push('address-type', address.type);
+        // address.type = address.type.id;
         store.push('address', address);
     });
     delete model.addresses;
+    return address_fks;
 };
 
 var extract_role_location_level = function(model, store) {
@@ -31,24 +40,24 @@ var extract_role_location_level = function(model, store) {
         location_level.save();
         role.set('location_level_fk', location_level_pk);
     }
+    return location_level_pk;
 };
 
 var extract_role = function(model, store) {
     let role_pk = model.role;
     let role = store.find('role', model.role);
-    extract_role_location_level(model, store);
-    //var role = store.push('role', model.role);
+    let location_level_fk = extract_role_location_level(model, store);
     let existing_people = role.get('people') || [];
     if (existing_people.indexOf(model.id) === -1) {
         role.set('people', existing_people.concat([model.id]));
     }
     role.save();
     delete model.role;
-    return role_pk;
+    return [role_pk, location_level_fk];
 };
 
-var extract_person_location = function(model, store, uuid) {
-    let newly_added_m2m = [];
+var extract_person_location = function(model, store, uuid, location_level_fk, location_deserializer) {
+    let server_locations_sum = [];
     let person_location_fks = [];
     let prevented_duplicate_m2m = [];
     let all_person_locations = store.find('person-location');
@@ -58,22 +67,20 @@ var extract_person_location = function(model, store, uuid) {
         });
         if(person_locations.length === 0) {
             let pk = uuid.v4();
-            newly_added_m2m.push(pk);
-            store.push('location', location_json);
+            server_locations_sum.push(pk);
+            location_deserializer.deserialize(location_json, location_json.id);
             store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});
         }else{
             prevented_duplicate_m2m.push(person_locations[0].get('id'));
         }
     });
-    let server_locations_sum = newly_added_m2m.concat(prevented_duplicate_m2m);
+    server_locations_sum.push(...prevented_duplicate_m2m);
     let m2m_to_remove = all_person_locations.filter(function(m2m) {
         return Ember.$.inArray(m2m.get('id'), server_locations_sum) < 0;
     });
-
     m2m_to_remove.forEach(function(m2m) {
         store.push('person-location', {id: m2m.get('id'), removed: true});
     });
-
     delete model.locations;
     return server_locations_sum;
 };
@@ -91,30 +98,41 @@ var extract_locale = function(model, store) {
 
 var PersonDeserializer = Ember.Object.extend({
     uuid: inject('uuid'),
+    LocationDeserializer: injectDeserializer('location'),
     deserialize(response, options) {
+        let location_deserializer = this.get('LocationDeserializer');
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options);
+            this.deserialize_single(response, options, location_deserializer);
         }
     },
-    deserialize_single(model, id) {
+    deserialize_single(model, id, location_deserializer) {
         let uuid = this.get('uuid');
         let store = this.get('store');
-        extract_phone_numbers(model, store);
-        extract_addresses(model, store);
-        model.role_fk = extract_role(model, store);
-        model.person_location_fks = extract_person_location(model, store, uuid);
-        model.locale_fk = extract_locale(model, store);
-        let person = store.push('person', model);
-        person.save();
+        let person_check = store.find('person', id);
+        let location_level_fk;
+        //prevent updating person if dirty
+        if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
+            model.phone_number_fks = extract_phone_numbers(model, store);
+            model.address_fks = extract_addresses(model, store);
+            [model.role_fk, location_level_fk] = extract_role(model, store);
+            model.person_location_fks = extract_person_location(model, store, uuid, location_level_fk, location_deserializer);
+            model.locale_fk = extract_locale(model, store);
+            let person = store.push('person', model);
+            person.save();
+        }
     },
     deserialize_list(response) {
         let store = this.get('store');
         response.results.forEach((model) => {
-            model.role_fk = extract_role(model, store);
-            let person = store.push('person', model);
-            person.save();
+            let person_check = store.find('person', model.id);
+            //prevent updating person if dirty
+            if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
+                extract_role(model, store);
+                let person = store.push('person', model);
+                person.save();
+            }
         });
     }
 });

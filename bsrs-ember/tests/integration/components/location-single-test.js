@@ -8,7 +8,7 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 
 var store;
 
-    moduleForComponent('location-single', 'integration: location-single test', {
+moduleForComponent('location-single', 'integration: location-single test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:location', 'model:location-level']);
@@ -40,7 +40,7 @@ test('selecting a location level will append the location id to the new location
     assert.deepEqual(location.get('location_level').get('locations')[1], LOCATION_DEFAULTS.idOne);
     assert.deepEqual(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
     assert.ok(location_level_one.get('isNotDirty'));
-    assert.ok(location_level_two.get('isDirty'));
+    assert.ok(location_level_two.get('isNotDirty'));
 });
 
 test('selecting a placeholder instead of legit role will not append the persons id to anything but still remove it from the previous role', function(assert) {
@@ -64,6 +64,7 @@ test('selecting a placeholder instead of legit role will not append the persons 
     assert.deepEqual(location_level_two.get('locations'), [LOCATION_DEFAULTS.unusedId]);
     assert.deepEqual(location_level_one.get('locations'), []);
     assert.equal(location.get('location_level'), undefined);
+    assert.equal(location.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
     assert.ok(location_level_one.get('isNotDirty'));
     assert.ok(location_level_two.get('isNotDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));

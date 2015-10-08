@@ -1,7 +1,8 @@
 import Ember from 'ember';
+import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 
-var CategoryListComponent = Ember.Component.extend({
-  classNames: ['wrapper']
+export default GridViewComponent.extend({
+    layoutName: 'components/grid-view',
+    searchable: ['name', 'description', 'label'],
+    nonsearchable: ['cost_amount', 'cost_code']
 });
-
-export default CategoryListComponent;

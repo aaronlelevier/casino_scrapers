@@ -31,7 +31,7 @@ class CategoryListTests(APITestCase):
 
     def test_data(self):
         response = self.client.get('/api/admin/categories/')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data['results']) > 0)
 
 
@@ -56,17 +56,17 @@ class CategoryDetailTests(APITestCase):
 
     def test_data(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data), 0)
 
     def test_parent(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(str(self.trade.parent.id), data['parent']['id'])
 
     def test_children(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(data['children'], list)
         self.assertTrue(data['children'])
         # Forloop comprehension required b/c data['children'] is a nested obj and not a list
@@ -101,7 +101,7 @@ class CategoryUpdateTests(APITestCase):
         response = self.client.put('/api/admin/categories/{}/'.format(self.trade.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(self.trade.name, data['name'])
 
     def test_change_parent(self):
@@ -110,7 +110,7 @@ class CategoryUpdateTests(APITestCase):
         response = self.client.put('/api/admin/categories/{}/'.format(self.trade.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(str(new_category.id), data['parent'])
 
     def test_change_children(self):
@@ -119,7 +119,7 @@ class CategoryUpdateTests(APITestCase):
         response = self.client.put('/api/admin/categories/{}/'.format(self.trade.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertIn(str(new_sub_category.id), data['children'])
         self.assertTrue(self.trade.children.filter(id=new_sub_category.id).exists())
 
@@ -149,7 +149,7 @@ class CategoryCreateTests(APITestCase):
             'name': 'plumbing'
             })
         response = self.client.post('/api/admin/categories/', self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
         self.assertIsInstance(Category.objects.get(id=data['id']), Category)
 
@@ -160,7 +160,7 @@ class CategoryCreateTests(APITestCase):
             'parent': str(self.type.id)
         })
         response = self.client.post('/api/admin/categories/', self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
         self.assertIsInstance(Category.objects.get(id=data['id']), Category)
         self.assertEqual(data['parent'], str(self.type.id))
@@ -175,7 +175,7 @@ class CategoryCreateTests(APITestCase):
             'children': [str(new_sub_category.id)]
         })
         response = self.client.post('/api/admin/categories/', self.data, format='json')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
         self.assertIn(str(new_sub_category.id), data['children'])
 
@@ -197,10 +197,21 @@ class CategoryFilterTests(APITestCase):
 
     def test_filter_top_level(self):
         response = self.client.get('/api/admin/categories/?parent__isnull=True')
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], Category.objects.filter(parent__isnull=True).count())
 
     def test_filter_by_parent(self):
         response = self.client.get('/api/admin/categories/?parent={}'.format(self.trade.id))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], self.trade.children.count())
+
+    def test_filter_by_name(self):
+        cat = mommy.make(Category, name="cat")
+        dog = mommy.make(Category, name="dog")
+        name = "dog"
+        response = self.client.get('/api/admin/categories/?name__icontains={}'.format(name))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+                data['count'],
+                Category.objects.filter(name__icontains=name).count()
+        )

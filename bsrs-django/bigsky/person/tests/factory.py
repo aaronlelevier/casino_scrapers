@@ -1,4 +1,3 @@
-import string
 import random
 
 from django.db import IntegrityError
@@ -7,29 +6,31 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location
+from category.models import Category
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
-from util import create
+from utils import create
 
 
 PASSWORD = '1234'
 LOCATION_LEVEL = 'region'
+CATEGORY = 'repair'
 
 def create_role():
     "Single Role needed to create Person with Login privileges."
 
     currency = Currency.objects.default()
+    location_level, created = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
+    categories = mommy.make(Category, _quantity=2)
 
-    try:
-        location_level = LocationLevel.objects.get(name=LOCATION_LEVEL)
-    except LocationLevel.DoesNotExist:
-        location_level = mommy.make(LocationLevel, name=LOCATION_LEVEL)
-
-    return mommy.make(Role, name=create._generate_chars(), location_level=location_level)
+    return mommy.make(Role, name=create._generate_chars(), location_level=location_level, categories=categories)
 
 
 def create_roles():
     "Create a Role for each LocationLevel"
+
+    categories = mommy.make(Category, _quantity=2)
+    
     # initial Locations
     try:
         create_locations()
@@ -38,14 +39,20 @@ def create_roles():
 
     for location_level in LocationLevel.objects.all():
         mommy.make(Role, name='{}-role'.format(location_level.name),
-            location_level=location_level)
+            location_level=location_level, categories=categories)
 
     return Role.objects.all()
 
 
-def create_single_person(username, role):
-    return Person.objects.create_user(username, 'myemail@mail.com', PASSWORD,
-        first_name=create._generate_chars(), role=role)
+def create_single_person(name=None, role=None):
+    name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
+    role = role or create_role()
+
+    try:
+        return Person.objects.get(username=name)
+    except Person.DoesNotExist:
+        return Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
+            first_name=name, last_name=name, title=name, role=role)
 
 
 def update_login_person(person):
@@ -57,6 +64,9 @@ def update_login_person(person):
 
 def create_person(username=None, role=None, _many=1):
     '''
+    # TODO: Change this method name to ``create_people`` b/c can
+        create more than 1!
+        
     Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )
 
     Return: the last user created from the `forloop`
@@ -73,13 +83,20 @@ def create_person(username=None, role=None, _many=1):
         
     # Multiple User Create
     for i in range(_many):
-        username = ''.join([random.choice(string.ascii_letters) for x in range(10)])
-        user = create_single_person(username, role)
+        name = random.choice(create.LOREM_IPSUM_WORDS.split())
+        user = create_single_person(name, role)
     
     return user
 
 
-def create_23_people():
+"""
+Boilerplate create in shell code:
+
+from person.tests.factory import create_all_people
+create_all_people()
+"""
+def create_all_people():
+
     # initial Locations
     try:
         create_locations()
@@ -89,21 +106,20 @@ def create_23_people():
     # initial Roles
     roles = create_roles()
 
-    # Person used to Login (so needs a 'password' set here)
-    aaron = mommy.make(Person, username='aaron', role=roles[0])
-    update_login_person(aaron)
-
     # other Persons for Grid View
-    count = Person.objects.count()
-    while count < 23:
-        try:
-            username = create.random_lorem(words=1)
-            role = random.choice(roles)
-            locations = Location.objects.filter(location_level=role.location_level)
-            person = mommy.make(Person, username=username, first_name=username, role=role,
-                locations=locations)
-            person.set_password(PASSWORD)
-            person.save()
-        except IntegrityError:
-            pass
-        count = Person.objects.count()
+    names = sorted(create.LOREM_IPSUM_WORDS.split())
+    for name in names:
+        kwargs = {}
+        for ea in ['username', 'first_name', 'last_name', 'title']:
+            kwargs[ea] = name
+
+        role = random.choice(roles)
+        locations = Location.objects.filter(location_level=role.location_level)
+        # create
+        person = mommy.make(Person, role=role,locations=locations, **kwargs)
+        person.set_password(PASSWORD)
+        person.save()
+
+    # Person used to Login (so needs a 'password' set here)
+    aaron = Person.objects.get(username="aaron")
+    update_login_person(aaron)

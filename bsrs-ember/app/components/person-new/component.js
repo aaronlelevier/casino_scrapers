@@ -1,24 +1,22 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/inject';
+import BaseComponent from 'bsrs-ember/components/base-component-new/component';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-export default Ember.Component.extend(ValidationMixin, {
-    repository: inject('person'),
+var PersonNewComponent = BaseComponent.extend(ValidationMixin, {
     usernameValidation: validate('model.username'),
     passwordValidation: validate('model.password'),
     actions: {
-        savePerson() {
+        save() {
             this.set('submitted', true);
             if (this.get('valid')) {
-                var model = this.get('model');
-                var repository = this.get('repository');
-                repository.insert(model).then(() => {
-                    this.sendAction('savePerson');
-                });
+                this._super();
+                this.sendAction('editPerson');
             }
         },
-        cancelPerson() {
-            this.sendAction('redirectUser');
+        cancel() {
+            this.sendAction('cancel', this.tab());
         }
     }
 });
+
+export default PersonNewComponent;

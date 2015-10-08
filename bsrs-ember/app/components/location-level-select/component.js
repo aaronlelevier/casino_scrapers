@@ -13,6 +13,7 @@ let LocationLevelSelect = Ember.Component.extend({
             Ember.run(() => {
                 if(new_location_level.get('content')) {
                     new_location_level.set(manyRelationshipModel, new_location_level_locations.concat([location_id]));
+                    new_location_level.save();
                 }
                 if(old_location_level) {
                     var old_location_level_locations = old_location_level.get(manyRelationshipModel) || [];

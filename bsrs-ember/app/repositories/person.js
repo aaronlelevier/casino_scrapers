@@ -2,22 +2,26 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
+import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
 var PREFIX = config.APP.NAMESPACE;
 var PEOPLE_URL = PREFIX + '/admin/people/';
 
-export default Ember.Object.extend({
+export default Ember.Object.extend(GridRepositoryMixin, {
+    type: Ember.computed(function() { return 'person'; }),
+    url: Ember.computed(function() { return PEOPLE_URL; }),
     PersonDeserializer: inject('person'),
+    deserializer: Ember.computed.alias('PersonDeserializer'),
     insert(model) {
         return PromiseMixin.xhr(PEOPLE_URL, 'POST', {data: JSON.stringify(model.createSerialize())}).then(() => {
-            model.save();
             model.saveRelated();
+            model.save();
         });
     },
     update(model) {
         return PromiseMixin.xhr(PEOPLE_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
-            model.save();
             model.saveRelated();
+            model.save();
         });
     },
     find() {
@@ -26,27 +30,13 @@ export default Ember.Object.extend({
         });
         return this.get('store').find('person');
     },
-    findWithQuery(page, sort, search) {
-        page = page || 1;
-        var endpoint = PREFIX + '/admin/people/?page=' + page;
-        if (sort && sort !== 'id') {
-            endpoint = endpoint + '&ordering=' + sort;
-        }
-        if (search && search !== '') {
-            endpoint = endpoint + '&search=' + encodeURIComponent(search);
-        }
-        var all = this.get('store').find('person');
-        PromiseMixin.xhr(endpoint).then((response) => {
-            all.set('count', response.count);
-            this.get('PersonDeserializer').deserialize(response);
-        });
-        return all;
-    },
     findById(id) {
+        let model = this.get('store').find('person', id);
+        model.id = id;
         PromiseMixin.xhr(PEOPLE_URL + id + '/', 'GET').then((response) => {
             this.get('PersonDeserializer').deserialize(response, id);
         });
-        return this.get('store').find('person', id);
+        return model;
     },
     delete(id) {
         PromiseMixin.xhr(PEOPLE_URL + id + '/', 'DELETE');

@@ -12,28 +12,58 @@ var BSRS_CATEGORY_FACTORY = (function() {
             cost_code: this.category_defaults.costCodeOne,
             label: this.category_defaults.labelOne,
             subcategory_label: this.category_defaults.subCatLabelOne,
-            parent: []
+            parent: [],
+            // status: this.category_defaults.statusOne
         }
+    },
+    factory.prototype.children = function() {
+        return [{id: this.category_defaults.idChild, name: this.category_defaults.nameTwo, description: this.category_defaults.descriptionMaintenance}];
     },
     factory.prototype.list = function() {
         var response = [];
-        for (var i=0; i < 23; i++) {
+        for (var i=1; i <= 10; i++) {
             var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
-            response.push(this.generate(uuid + i));
+            if (i < 10) {
+                uuid = uuid + '0' + i;
+            } else{
+                uuid = uuid + i;
+            }
+            var category = this.generate(uuid);
+            category.name += i;
+            category.label += i;
+            response.push(category);
         }
-        return {'count':23,'next':null,'previous':null,'results': response};
+        //we do a reverse order sort here to verify a real sort occurs in the component
+        var sorted = response.sort(function(a,b) {
+            return b.id - a.id;
+        });
+        return {'count':19,'next':null,'previous':null,'results': sorted};
     },
+    factory.prototype.list_two = function() {
+        var response = [];
+        for (var i=11; i <= 19; i++) {
+            var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
+            var category = this.generate(uuid + i);
+            category.name = 'cococat' + i;
+            category.label = 'scohat' + i;
+            response.push(category);
+        }
+        return {'count':19,'next':null,'previous':null,'results': response};
+    };
     factory.prototype.detail = function(i) {
-        var category = this.generate(i);
+        var id = i || this.category_defaults.idOne;
+        var category = this.generate(id);
         category.sub_category_label = this.category_defaults.subCatLabelOne;
         category.parent = this.category_defaults.parent;
+        category.children = this.children();
         return category;
-    },
-    factory.prototype.empty = function() {
-        return {'count':0,'next':null,'previous':null,'results': []};
     };
     factory.prototype.put = function(category) {
         var response = this.generate(category.id)
+        response.children = this.children();
+        response.children = response.children.map(function(child) {
+            return child.id ;
+        });
         for (var key in category) {
             response[key] = category[key];
         }
@@ -43,12 +73,17 @@ var BSRS_CATEGORY_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
+    var objectAssign = require('object-assign');
+    var mixin = require('../vendor/mixin');
     var category_defaults = require('./defaults/category');
+    objectAssign(BSRS_CATEGORY_FACTORY.prototype, mixin.prototype);
     module.exports = new BSRS_CATEGORY_FACTORY(category_defaults);
 } else {
-    define('bsrs-ember/vendor/category_fixtures', ['exports', 'bsrs-ember/vendor/defaults/category'], function (exports, category_defaults) {
+    define('bsrs-ember/vendor/category_fixtures', ['exports', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin'], function (exports, category_defaults, mixin) {
         'use strict';
-        return new BSRS_CATEGORY_FACTORY(category_defaults);
+        Object.assign(BSRS_CATEGORY_FACTORY.prototype, mixin.prototype);
+        var Factory = new BSRS_CATEGORY_FACTORY(category_defaults);
+        return {default: Factory};
     });
 }
 

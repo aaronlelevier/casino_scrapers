@@ -1,5 +1,7 @@
-import Ember from 'ember';
+import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 
-export default Ember.Component.extend({
-  classNames: ['wrapper']
+export default GridViewComponent.extend({
+    layoutName: 'components/grid-view',
+    searchable: ['name', 'role_type'],
+    nonsearchable: ['location_level']
 });

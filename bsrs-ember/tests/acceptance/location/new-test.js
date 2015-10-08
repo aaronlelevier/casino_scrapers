@@ -28,7 +28,7 @@ module('Acceptance | location-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        list_xhr = xhr(DJANGO_LOCATION_URL, "GET", null, {}, 200, LOCATION_FIXTURES.empty());
+        list_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LOCATION_FIXTURES.empty());
         payload = {
             id: UUID.value,
             name: LOCATION_DEFAULTS.storeName,
@@ -48,7 +48,7 @@ test('visiting /location/new', (assert) => {
     let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_URL);
-    click('.t-location-new');
+    click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_NEW_URL);
         assert.equal(store.find('location').get('length'), 1);
@@ -73,7 +73,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_URL);
-    click('.t-location-new');
+    click('.t-add-new');
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-number-validation-error').is(':hidden'));
@@ -136,10 +136,9 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
-            assert.equal(find('.t-modal').is(':hidden'), true);
             let location = store.find('location', {id: UUID.value});
             assert.equal(location.get('length'), 0);
-            assert.equal(find('tr.t-location-data').length, 0);
+            assert.equal(find('tr.t-grid-data').length, 0);
         });
     });
 });

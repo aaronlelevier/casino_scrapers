@@ -1,7 +1,10 @@
-{{location-single
-  model=model
-  all_location_levels=all_location_levels
-  all_statuses=all_statuses
-  saveLocation="redirectUser"
-  redirectUser="redirectUser"
-}}
+  {{location-single
+    model=model
+    repository=repository
+    all_location_levels=all_location_levels
+    all_statuses=all_statuses
+    save=(action "tabActions")
+    saveBase="save"
+    cancel=(action "tabActions")
+    delete=(action "deleteTabAction")
+  }}

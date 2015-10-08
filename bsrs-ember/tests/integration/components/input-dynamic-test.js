@@ -15,11 +15,8 @@ test('renders input with computed value property', function(assert) {
     var prop = 'number';
     this.set('obj', obj);
     this.set('prop', prop);
-
     this.render(hbs`{{input-dynamic prop=prop obj=obj}}`);
-
     assert.equal(this.$('.t-new-entry').val(), '');
-
     this.$('.t-new-entry').val(PHONE_NUMBER_DEFAULTS.numberOne);
     assert.equal(this.$('.t-new-entry').val(), PHONE_NUMBER_DEFAULTS.numberOne);
 });
