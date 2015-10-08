@@ -1,21 +1,12 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-import rest_framework_filters as filters
 
 from category.models import Category
 from category import serializers as cs
+from utils.views import BaseModelViewSet
 
 
-class CategoryFilterSet(filters.FilterSet):
-    parent = filters.AllLookupsFilter(name='parent')
-    name = filters.AllLookupsFilter(name='name')
-
-    class Meta:
-        model = Category
-        fields = ['parent', 'name']
-
-
-class CategoryViewSet(viewsets.ModelViewSet):
+class CategoryViewSet(BaseModelViewSet):
     '''
     ### Create
     Can add a single Parent and multiple Children Categories.
@@ -39,7 +30,8 @@ class CategoryViewSet(viewsets.ModelViewSet):
     '''
     permission_classes = (IsAuthenticated,)
     queryset = Category.objects.all()
-    filter_class = CategoryFilterSet
+    model = Category
+    filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
         """

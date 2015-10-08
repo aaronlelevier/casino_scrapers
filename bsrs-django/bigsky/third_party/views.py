@@ -4,22 +4,16 @@ import rest_framework_filters as filters
 
 from third_party.models import ThirdParty
 from third_party import serializers as cs
+from utils.views import BaseModelViewSet
 
 
-class ThirdPartyFilterSet(filters.FilterSet):
-    name = filters.AllLookupsFilter(name='name')
-
-    class Meta:
-        model = ThirdParty
-        fields = ['name']
-
-
-class third_partyViewSet(viewsets.ModelViewSet):
+class third_partyViewSet(BaseModelViewSet):
     '''
     '''
     permission_classes = (IsAuthenticated,)
     queryset = ThirdParty.objects.all()
-    filter_class = ThirdPartyFilterSet
+    model = ThirdParty
+    filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
         """

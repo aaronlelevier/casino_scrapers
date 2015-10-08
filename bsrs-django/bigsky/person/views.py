@@ -4,7 +4,6 @@ from django.db.models import Q
 from rest_framework import permissions
 from rest_framework.decorators import list_route
 from rest_framework.response import Response
-import rest_framework_filters as filters
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
@@ -31,22 +30,13 @@ class RoleViewSet(BaseModelViewSet):
 
 
 class PersonStatusViewSet(BaseModelViewSet):
+    
     queryset = PersonStatus.objects.all()
     serializer_class = ps.PersonStatusSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
 
 ### PERSON
-
-class PersonFilterSet(filters.FilterSet):
-    username = filters.AllLookupsFilter(name='username')
-    fullname = filters.AllLookupsFilter(name='fullname')
-    title = filters.AllLookupsFilter(name='title')
-    
-    class Meta:
-        model= Person
-        fields = ['username', 'fullname', 'title']
-
 
 class PersonViewSet(BaseModelViewSet):
     '''

@@ -7,7 +7,6 @@ from contact.serializers import (
     EmailSerializer)
 from contact.models import (
     PhoneNumber, PhoneNumberType, Address, AddressType, Email, EmailType)
-from person.views import PersonFilterSet
 from utils.views import BaseModelViewSet
 
 
