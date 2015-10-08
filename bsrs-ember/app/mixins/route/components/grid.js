@@ -1,7 +1,12 @@
 import Ember from 'ember';
 import set_filter_model_attrs from 'bsrs-ember/utilities/filter-model-attrs';
 
+var nameRoute = function(route) {
+    return route.get('constructor.ClassMixin.ownerConstructor').toString();
+};
+
 var GridViewRoute = Ember.Route.extend({
+    pagination: Ember.inject.service(),
     init: function() {
         this.filterModel = Ember.Object.create();
         this._super();
@@ -24,13 +29,18 @@ var GridViewRoute = Ember.Route.extend({
         }
     },
     model: function(params, transition) {
+        let name = nameRoute(this);
         let query = transition.queryParams;
+        let page = parseInt(query.page, 10) || 1;
         let repository = this.get('repository');
+        let requested = this.get('pagination').requested(name, page);
         set_filter_model_attrs(this.filterModel, query.find);
-        return repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size);
+        let model = repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size);
+        return {model: model, requested: requested};
     },
-    setupController: function(controller, model) {
-        controller.set('model', model);
+    setupController: function(controller, hash) {
+        controller.set('model', hash.model);
+        controller.set('requested', hash.requested);
         controller.set('filterModel', this.filterModel);
     }
 });
