@@ -64,23 +64,13 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
         let found_content = this.get('found_content');
         return MultiSort.run(found_content, options);
     }),
-    paginated_content: Ember.computed('model.count', 'sorted_content.[]', function() {
-        let pages = this.get('pages').length;
+    paginated_content: Ember.computed('sorted_content.[]', function() {
+        let requested = this.get('requested');
         let page = parseInt(this.get('page')) || 1;
-        let page_size = this.get('page_size') || 10;
-        let sorted_content = this.get('sorted_content');
-        let max = sorted_content.get('length') || 1;
-        let upper = page_size * pages;
-        let diff = upper - max;
-        let min = max - page_size + diff;
-        if(page * page_size < max) {
-            max = page * page_size;
-            min = page * page_size - page_size;
-        }else if(min >= max) {
-            let lower = max - page_size;
-            min = lower < 0 ? 0 : lower;
-        }
-        return sorted_content.slice(min, max);
+        let page_size = parseInt(this.get('page_size')) || 10;
+        let pages = requested.toArray().sort(function(a, b) { return a - b; }).uniq();
+        let max = (pages.indexOf(page) + 1) * page_size;
+        return this.get('sorted_content').slice(max - page_size, max);
     }),
     pages: Ember.computed('model.count', function() {
         var pages = [];
