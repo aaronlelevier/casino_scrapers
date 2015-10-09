@@ -2,7 +2,7 @@ from third_party.models import ThirdParty
 from utils.serializers import BaseCreateSerializer
 
 
-### CONTRACTOR
+### THIRD PARTY
 
 THIRD_PARTY_FIELDS = ('id', 'name', 'number', 'status',)
 

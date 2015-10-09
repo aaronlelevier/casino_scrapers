@@ -39,3 +39,8 @@ THIRD_PARTY_STATUS_CHOICES = (
     ('active', 'active'),
     ('two', 'two'),
 )
+
+TICKET_STATUS_CHOICES = (
+    ('active', 'active'),
+    ('two', 'two'),
+)
