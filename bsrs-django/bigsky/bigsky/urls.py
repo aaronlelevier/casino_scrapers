@@ -93,6 +93,7 @@ urlpatterns += required(
             'post_change_redirect': '/',
             },
             name='password_change'),
+        url(r'^logout/$', bigsky_views.logout, name='logout'),
         url(r'^django-admin/', include(admin.site.urls)),
         url(r'', include('generic.urls')),
         # This URL must be the last Django URL defined, or else the URLs defined 

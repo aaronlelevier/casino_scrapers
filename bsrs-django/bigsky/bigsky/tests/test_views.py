@@ -32,21 +32,32 @@ class IndexTests(TestCase):
         response = self.client.get(reverse('index'))
         self.assertRedirects(response, reverse('login')+'?next='+reverse('index'))
 
-    # def test_password_expired(self):
-    #     self.person.password_expire_date = timezone.now().date() - timedelta(days=1)
-    #     self.person.save()
-    #     self.client.login(username=self.person.username, password=self.password)
-    #     response = self.client.get(reverse('index'))
-    #     self.assertRedirects(response, reverse('password_change')+'?next='+reverse('index'))
-    #     # Updating the Password here allows a login
-    #     # note: this is possible because the ``PasswordChangeForm`` native django form
-    #     # calls ``user.set_password`` which we overrode to change the ``password_ -
-    #     # expire_date`` for the Person
-    #     new_password = 'my-new-password'
-    #     response = self.client.post(reverse('password_change'),
-    #         {'old_password': self.password, 'new_password1': new_password,
-    #         'new_password2': new_password})
-    #     self.assertRedirects(response, reverse('index'))
+    def test_logout(self):
+        self.client.login(username=self.person.username, password=self.password)
+        self.assertIn('_auth_user_id', self.client.session)
+        self.client.get(reverse('logout'))
+        self.assertNotIn('_auth_user_id', self.client.session)
+
+    def test_password_change_get(self):
+        self.client.login(username=self.person.username, password=self.password)
+        response = self.client.get(reverse('password_change'))
+        self.assertEqual(response.status_code, 200)
+
+    def test_password_change_post(self):
+        self.client.login(username=self.person.username, password=self.password)
+        new_password = "my-new-password"
+        response = self.client.post(reverse('password_change'),
+            {'old_password': self.password, 'new_password1': new_password,
+            'new_password2': new_password})
+        self.assertRedirects(response, reverse('index'))
+        self.assertIn('_auth_user_id', self.client.session)
+
+    def test_password_expired(self):
+        self.person.password_expire_date = timezone.now().date() - timedelta(days=1)
+        self.person.save()
+        self.client.login(username=self.person.username, password=self.password)
+        response = self.client.get(reverse('index'))
+        self.assertRedirects(response, reverse('password_change')+'?next='+reverse('index'))
 
 
 class LoginTests(TestCase):

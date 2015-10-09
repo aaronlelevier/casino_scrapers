@@ -1,6 +1,7 @@
 import json
 
 from django.conf import settings
+from django.contrib import auth
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect
@@ -62,6 +63,11 @@ class IndexView(TemplateView):
                 SavedSearch.objects.person_saved_searches(self.request.user))
         })
         return context
+
+
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect(reverse('login'))
 
 
 def relationships_view(request):
