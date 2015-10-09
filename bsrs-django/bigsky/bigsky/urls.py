@@ -15,6 +15,8 @@ from category import views as category_views
 from contact import views as contact_views
 from generic import views as generic_views
 from location import views as location_views
+from third_party import views as third_party_views
+from ticket import views as tickets_views
 from person import views as person_views
 from translation import views as translation_views
 from utils.decorators import required, logout_required
@@ -45,6 +47,10 @@ router.register(r'admin/location-types', location_views.LocationTypeViewSet)
 # PERSON
 router.register(r'admin/people', person_views.PersonViewSet)
 router.register(r'admin/roles', person_views.RoleViewSet)
+# THIRD PARTY
+router.register(r'admin/third-parties', third_party_views.ThirdPartyViewSet)
+# Tickets
+router.register(r'admin/tickets', tickets_views.TicketsViewSet)
 # TRANSLATION
 router.register(r'admin/locales', translation_views.LocaleViewSet)
 router.register(r'translations', translation_views.TranslationViewSet)

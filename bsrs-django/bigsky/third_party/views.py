@@ -1,15 +1,11 @@
-from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-import rest_framework_filters as filters
 
 from third_party.models import ThirdParty
-from third_party import serializers as cs
+from third_party import serializers as tps
 from utils.views import BaseModelViewSet
 
 
-class third_partyViewSet(BaseModelViewSet):
-    '''
-    '''
+class ThirdPartyViewSet(BaseModelViewSet):
     permission_classes = (IsAuthenticated,)
     queryset = ThirdParty.objects.all()
     model = ThirdParty
@@ -20,8 +16,8 @@ class third_partyViewSet(BaseModelViewSet):
         set the serializer based on the method
         """
         if self.action == 'list':
-            return cs.ThirdPartyListSerializer
+            return tps.ThirdPartyListSerializer
         elif self.action == 'retrieve':
-            return cs.ThirdPartyDetailSerializer
+            return tps.ThirdPartyDetailSerializer
         else:
-            return cs.ThirdPartySerializer
+            return tps.ThirdPartySerializer

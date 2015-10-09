@@ -1,12 +1,12 @@
 from model_mommy import mommy
 
 from third_party.models import ThirdParty
-from utils.create import _generate_chars
 
-def create_third_party():
+def create_third_parties():
     '''
+    Third Party Contactors with unique name
     '''
-    contractor = mommy.make(ThirdParty)
-    contractor = mommy.make(ThirdParty)
-    contractor = mommy.make(ThirdParty)
+    third_party = mommy.make(ThirdParty, name="ABC_CONTRACTOR")
+    third_party = mommy.make(ThirdParty, name="DEF_CONTRACTOR")
+    third_party = mommy.make(ThirdParty, name="GHI_CONTRACTOR")
 

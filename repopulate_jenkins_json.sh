@@ -6,12 +6,13 @@ dropdb ci
 wait
 createdb ci
 wait
-./manage.py makemigrations accounting category contact generic location order person session translation utils
+./manage.py makemigrations accounting category contact generic location order person session third_party translation utils
 wait
 ./manage.py migrate
 wait
 ./manage.py loaddata fixtures/currency.json
 ./manage.py loaddata fixtures/category.json
+./manage.py loaddata fixtures/third-party.json
 wait
 ./manage.py create_all_people
 wait

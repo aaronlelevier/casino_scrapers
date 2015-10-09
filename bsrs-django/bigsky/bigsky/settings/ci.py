@@ -23,5 +23,5 @@ TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=accounting,category,contact,generic,location,order,person,session,translation,utils,third_party',
+    '--cover-package=accounting,category,contact,generic,location,order,person,session,translation,utils,third_party,ticket',
 ]
