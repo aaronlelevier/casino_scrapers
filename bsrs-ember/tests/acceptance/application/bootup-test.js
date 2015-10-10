@@ -11,6 +11,7 @@ import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import ADDRESS_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import PHONE_NUMBER_DEFAULT from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
+import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import BSRS_PERSON_CURRENT_DEFAULTS_OBJECT from 'bsrs-ember/vendor/defaults/person-current';
@@ -96,6 +97,44 @@ test('on boot we should fetch and load the store status configuration', function
         assert.equal(store.find('location-status').objectAt(1).get('name'), STORE_STATUS_DEFAULTS.closedName);
         assert.equal(store.find('location-status').objectAt(2).get('id'), STORE_STATUS_DEFAULTS.futureId);
         assert.equal(store.find('location-status').objectAt(2).get('name'), STORE_STATUS_DEFAULTS.futureName);
+    });
+});
+
+test('on boot we should fetch and load the ticket status configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        assert.equal(store.find('ticket-status').get('length'), 8);
+        assert.equal(store.find('ticket-status').objectAt(0).get('id'), TICKET_DEFAULTS.statusOneId);
+        assert.equal(store.find('ticket-status').objectAt(0).get('name'), TICKET_DEFAULTS.statusOne);
+        assert.equal(store.find('ticket-status').objectAt(1).get('id'), TICKET_DEFAULTS.statusTwoId);
+        assert.equal(store.find('ticket-status').objectAt(1).get('name'), TICKET_DEFAULTS.statusTwo);
+        assert.equal(store.find('ticket-status').objectAt(2).get('id'), TICKET_DEFAULTS.statusThreeId);
+        assert.equal(store.find('ticket-status').objectAt(2).get('name'), TICKET_DEFAULTS.statusThree);
+        assert.equal(store.find('ticket-status').objectAt(3).get('id'), TICKET_DEFAULTS.statusFourId);
+        assert.equal(store.find('ticket-status').objectAt(3).get('name'), TICKET_DEFAULTS.statusFour);
+        assert.equal(store.find('ticket-status').objectAt(4).get('id'), TICKET_DEFAULTS.statusFiveId);
+        assert.equal(store.find('ticket-status').objectAt(4).get('name'), TICKET_DEFAULTS.statusFive);
+        assert.equal(store.find('ticket-status').objectAt(5).get('id'), TICKET_DEFAULTS.statusSixId);
+        assert.equal(store.find('ticket-status').objectAt(5).get('name'), TICKET_DEFAULTS.statusSix);
+        assert.equal(store.find('ticket-status').objectAt(6).get('id'), TICKET_DEFAULTS.statusSevenId);
+        assert.equal(store.find('ticket-status').objectAt(6).get('name'), TICKET_DEFAULTS.statusSeven);
+        assert.equal(store.find('ticket-status').objectAt(7).get('id'), TICKET_DEFAULTS.statusEightId);
+        assert.equal(store.find('ticket-status').objectAt(7).get('name'), TICKET_DEFAULTS.statusEight);
+    });
+});
+
+test('on boot we should fetch and load the ticket priority configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        assert.equal(store.find('ticket-priority').get('length'), 4);
+        assert.equal(store.find('ticket-priority').objectAt(0).get('id'), TICKET_DEFAULTS.priorityOneId);
+        assert.equal(store.find('ticket-priority').objectAt(0).get('name'), TICKET_DEFAULTS.priorityOne);
+        assert.equal(store.find('ticket-priority').objectAt(1).get('id'), TICKET_DEFAULTS.priorityTwoId);
+        assert.equal(store.find('ticket-priority').objectAt(1).get('name'), TICKET_DEFAULTS.priorityTwo);
+        assert.equal(store.find('ticket-priority').objectAt(2).get('id'), TICKET_DEFAULTS.priorityThreeId);
+        assert.equal(store.find('ticket-priority').objectAt(2).get('name'), TICKET_DEFAULTS.priorityThree);
+        assert.equal(store.find('ticket-priority').objectAt(3).get('id'), TICKET_DEFAULTS.priorityFourId);
+        assert.equal(store.find('ticket-priority').objectAt(3).get('name'), TICKET_DEFAULTS.priorityFour);
     });
 });
 

@@ -14,6 +14,7 @@ from category.models import Category
 from contact.models import PhoneNumberType, AddressType
 from generic.models import SavedSearch
 from person.models import Role, PersonStatus, Person
+from ticket.models import TicketStatus, TicketPriority
 from location.models import (Location, LocationLevel, LocationStatus,
     State, Country)
 from translation.models import Locale
@@ -59,7 +60,9 @@ class IndexView(TemplateView):
             'person_current': json.dumps(self.request.user.to_dict(self.locale)),
             'default_model_ordering': settings.default_model_ordering,
             'saved_search': json.dumps(
-                SavedSearch.objects.person_saved_searches(self.request.user))
+                SavedSearch.objects.person_saved_searches(self.request.user)),
+            'ticket_status_config': model_to_json(TicketStatus),
+            'ticket_priority_config': model_to_json(TicketPriority),
         })
         return context
 

@@ -1,6 +1,6 @@
 from django.test import TestCase
 
-from ticket.models import Ticket, TicketStatus
+from ticket.models import Ticket, TicketStatus, TicketPriority
 from ticket.tests import factory
 
 
@@ -17,7 +17,9 @@ class TicketStatusManagerTests(TestCase):
 
     def test_default(self):
         default = TicketStatus.objects.default()
+        default_priority = TicketPriority.objects.default()
         self.assertIsInstance(default, TicketStatus)
+        self.assertIsInstance(default_priority, TicketPriority)
         self.assertIsNotNone(default.name)
 
 
