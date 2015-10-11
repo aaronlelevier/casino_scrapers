@@ -61,8 +61,8 @@ class IndexView(TemplateView):
             'default_model_ordering': settings.default_model_ordering,
             'saved_search': json.dumps(
                 SavedSearch.objects.person_saved_searches(self.request.user)),
-            'ticket_status_config': model_to_json(TicketStatus),
-            'ticket_priority_config': model_to_json(TicketPriority),
+            'ticket_statuses': model_to_json(TicketStatus),
+            'ticket_priorities': model_to_json(TicketPriority),
         })
         return context
 

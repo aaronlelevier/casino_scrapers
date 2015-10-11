@@ -44,7 +44,6 @@ var ApplicationRoute = Ember.Route.extend({
         loc_status_list.forEach((model) => {
             store.push('location-status', model);
         });
-
         let ticket_status_config = Ember.$('[data-preload-ticket-statuses]').html();
         let ticket_status_list = JSON.parse(ticket_status_config);
         ticket_status_list.forEach((model) => {

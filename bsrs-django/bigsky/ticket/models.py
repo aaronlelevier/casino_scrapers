@@ -7,13 +7,13 @@ from utils import choices
 class TicketStatusManager(BaseManager):
 
     def default(self):
-        obj, created = self.get_or_create(description=choices.TICKET_STATUS_CHOICES[0][0])
+        obj, created = self.get_or_create(name=choices.TICKET_STATUS_CHOICES[0][0])
         return obj
 
 
 class TicketStatus(BaseNameModel):
-    description = models.CharField(max_length=100, choices=choices.TICKET_STATUS_CHOICES,
-        default=choices.TICKET_STATUS_CHOICES[0][0])
+    # name = models.CharField(max_length=100, choices=choices.TICKET_STATUS_CHOICES,
+    #     default=choices.TICKET_STATUS_CHOICES[0][0])
 
     objects = TicketStatusManager()
 
@@ -21,13 +21,13 @@ class TicketStatus(BaseNameModel):
 class TicketPriorityManager(BaseManager):
 
     def default(self):
-        obj, created = self.get_or_create(description=choices.TICKET_PRIORITY_CHOICES[0][0])
+        obj, created = self.get_or_create(name=choices.TICKET_PRIORITY_CHOICES[0][0])
         return obj
     
 
 class TicketPriority(BaseNameModel):
-    description = models.CharField(max_length=100, choices=choices.TICKET_PRIORITY_CHOICES,
-        default=choices.TICKET_PRIORITY_CHOICES[0][0])
+    # description = models.CharField(max_length=100, choices=choices.TICKET_PRIORITY_CHOICES,
+    #     default=choices.TICKET_PRIORITY_CHOICES[0][0])
 
     objects = TicketPriorityManager()
 

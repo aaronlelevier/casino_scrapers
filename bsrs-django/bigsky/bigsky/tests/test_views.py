@@ -10,6 +10,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from person.models import Person, PersonStatus, Role
+from ticket.models import Ticket, TicketStatus, TicketPriority
 from contact.models import PhoneNumberType, AddressType
 from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus, State, Country
@@ -75,6 +76,8 @@ class ConfigurationTests(TestCase):
         self.location_levels = mommy.make(LocationLevel)
         self.location_statuses = mommy.make(LocationStatus)
         self.person_status = mommy.make(PersonStatus)
+        self.ticket_status = mommy.make(TicketStatus)
+        self.ticket_priority = mommy.make(TicketPriority)
         self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
             endpoint_name="admin.people.index")
         # Login
@@ -142,6 +145,20 @@ class ConfigurationTests(TestCase):
         # the model id shows in the context
         self.assertIn(str(self.person_status.id), [c['id'] for c in configuration])
         self.assertIn(str(self.person_status.name), [c['name'] for c in configuration])
+
+    def test_ticket_statuses(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['ticket_statuses'])
+        self.assertTrue(len(configuration) > 0)
+        self.assertIn(str(self.ticket_status.id), [c['id'] for c in configuration])
+        self.assertIn(str(self.ticket_status.name), [c['name'] for c in configuration])
+
+    def test_ticket_priorities(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['ticket_priorities'])
+        self.assertTrue(len(configuration) > 0)
+        self.assertIn(str(self.ticket_priority.id), [c['id'] for c in configuration])
+        self.assertIn(str(self.ticket_priority.name), [c['name'] for c in configuration])
 
     def test_location_level(self):
         response = self.client.get(reverse('index'))

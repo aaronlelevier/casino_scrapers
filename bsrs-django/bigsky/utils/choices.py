@@ -10,8 +10,8 @@ PERSON_STATUS_CHOICES = (
 )
 
 CATEGORY_STATUS_CHOICES = (
-    ('active', 'active'),
-    ('two', 'two'),
+    ('Active', 'Active'),
+    ('Inactive', 'Inactive'),
 )
 
 ROLE_TYPE_CHOICES = (
