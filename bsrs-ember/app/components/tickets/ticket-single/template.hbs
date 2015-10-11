@@ -34,6 +34,24 @@
               {{/form-group}}
             </div>
           </div>
+          <div class="row">
+            <div class="col-md-12">
+              <select class="t-ticket-status form-control ticket-status" onchange={{action (action "changed" model) value="target.value"}}>
+              {{#each statuses as |ticketStatus|}}
+              <option value={{ticketStatus.id}} selected={{is-equal model.status.id ticketStatus.id}}>{{t ticketStatus.name}}</option>
+              {{/each}}
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <select class="t-ticket-priority form-control ticket-priority" onchange={{action (action "changedPriority" model) value="target.value"}}>
+              {{#each priorities as |ticketPriority|}}
+              <option value={{ticketPriority.id}} selected={{is-equal model.priority.id ticketPriority.id}}>{{t ticketPriority.name}}</option>
+              {{/each}}
+              </select>
+            </div>
+          </div>
         </section>
       </div>
     </div>

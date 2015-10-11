@@ -15,8 +15,8 @@ var BSRS_TICKET = (function() {
             id: id,
             number: this.ticket.numberOne,
             subject: this.ticket.subjectOne,
-            status: this.ticket.statusOne,
-            priority: this.ticket.priorityOne,
+            status: this.ticket.statusOneId,
+            priority: this.ticket.priorityOneId,
         }
     };
     factory.prototype.list = function() {
