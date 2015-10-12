@@ -1,20 +1,14 @@
-var BSRS_TICKET = (function() {
+var BSRS_TICKET_FACTORY = (function() {
     var factory = function(ticket) {
         this.ticket = ticket;
     };
-    // factory.prototype.get = function(i) {
-    //     return {
-    //         id: i || this.ticket.idOne,
-    //         name: this.ticket.nameOne,
-    //         number: this.ticket.numberOne,
-    //     }
-    // },
     factory.prototype.generate = function(i) {
         var id = i || this.ticket.idOne;
         return {
             id: id,
             number: this.ticket.numberOne,
             subject: this.ticket.subjectOne,
+            request: this.ticket.requestOne,
             status: this.ticket.statusOneId,
             priority: this.ticket.priorityOneId,
         }
@@ -29,26 +23,29 @@ var BSRS_TICKET = (function() {
                 uuid = uuid + i;
             }
             var ticket = this.generate(uuid);
-            ticket.number = ticket.number + i;
+            ticket.number = 'bye' + i;
+            ticket.request = 'sub' + i;
+            ticket.subject = 'diagram' + i;
             response.push(ticket);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component
-        // var sorted = response.sort(function(a,b) {
-        //     return b.id - a.id;
-        // });
+        var sorted = response.sort(function(a,b) {
+            return b.id - a.id;
+        });
+        return {'count':19,'next':null,'previous':null,'results': sorted};
+    };
+    factory.prototype.list_two = function() {
+        var response = [];
+        for (var i=11; i <= 19; i++) {
+            var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d';
+            var ticket = this.generate(uuid + i);
+            ticket.number = 'gone' + i;
+            ticket.request = 'ape' + i;
+            ticket.subject = 'rabbit' + i;
+            response.push(ticket);
+        }
         return {'count':19,'next':null,'previous':null,'results': response};
     };
-    // factory.prototype.list_two = function() {
-    //     var response = [];
-    //     for (var i=11; i <= 19; i++) {
-    //         var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
-    //         var ticket = this.generate(uuid + i);
-    //         ticket.name = 'vzoname' + i;
-    //         ticket.number = 'sconumber' + i;
-    //         response.push(ticket);
-    //     }
-    //     return {'count':19,'next':null,'previous':null,'results': response};
-    // };
     factory.prototype.detail = function(i) {
         return this.generate(this.ticket.idOne);
     };
@@ -63,17 +60,17 @@ var BSRS_TICKET = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    // var objectAssign = require('object-assign');
-    // var mixin = require('../vendor/mixin');
-    var ticket = require('../vendor/defaults/ticket');
-    // objectAssign(BSRS_TICKET.prototype, mixin.prototype);
-    module.exports = new BSRS_TICKET(ticket);
+    var objectAssign = require('object-assign');
+    var mixin = require('../vendor/mixin');
+    var ticket_defaults = require('./defaults/ticket');
+    objectAssign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
+    module.exports = new BSRS_TICKET_FACTORY(ticket_defaults);
 } else {
-    define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket'], function (exports, ticket) {
+    define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/mixin'], function (exports, ticket_defaults, mixin) {
         'use strict';
-        // Object.assign(BSRS_TICKET.prototype, mixin.prototype);
-        return new BSRS_TICKET(ticket);
-        // return {default: Factory};
+        Object.assign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
+        var Factory = new BSRS_TICKET_FACTORY(ticket_defaults);
+        return {default: Factory};
     });
 }
 
