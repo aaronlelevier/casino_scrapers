@@ -34,12 +34,17 @@ Stop
 Scott Note's for new vagrant setup
 
 .. code-block::
-    sudo apt-get install virtualbox
-    sudo apt-get install vagrant
+    brew cask install vagrant
 
     # installs ubuntu 12.4
-    vagrant init hashicorp/precise32
+    mkdir vagrant #from root or wherever
+    cd vagrant
+    # https://atlas.hashicorp.com/boxes/search
+    vagrant init hashicorp/precise32 #creates Vagrantfile
+    OR
+    vagrant init ubuntu/trusty64 #creates Vagrantfile
     vagrant up
+    vagrant ssh
 
     # sudo apt-get installs
     sudo apt-get update
@@ -53,20 +58,22 @@ Scott Note's for new vagrant setup
     startdb
     createdb foo
     psql foo
-    CREATE ROLE bsdev WITH PASSWORD 'tango' CREATEDB SUPERUSER LOGIN;
-    CREATE DATABASE ci OWNER bsdev;
-    \q
-    sudo -u postgres createuser -s vagrant
-    sudo -u postgres psql -c 
+        CREATE ROLE bsdev WITH PASSWORD 'tango' CREATEDB SUPERUSER LOGIN;
+        CREATE DATABASE ci OWNER bsdev;
+        \q
+    sudo -u postgres createuser -s vagrant     
+    sudo -u postgres psql
         ALTER USER vagrant WITH PASSWORD 'vagrant'
     sudo service postgresql restart
 
     # modify last lines in following file and replace 'seed with 'md5
     sudo vim /etc/postgresql/9.1/main/pg_hba.cong
+    # add new line with postgres and change to ci
 
     sudo apt-get install firefox
     sudo apt-get install x11-xserver-utils
     sudo apt-get install xvfb
+
     mkdir Downloads
     cd Downloads
 
@@ -81,36 +88,62 @@ Scott Note's for new vagrant setup
 
     # python sourced (no symlink)
     cd Downloads
+
+    sudo apt-get install build-essential libbz2-dev libncurses5-dev libreadline6-dev libsqlite3-dev libgdbm-dev liblzma-dev libssl-dev python3-setuptools
+    sudo easy_install3 pip # if want pip installs
+
     wget [url for python verson] #sourced tarball https://www.python.org/downloads/release/python-343/ 
     tar -xvzf Python-3.4.3.tgz
     rm -rf Python-3.4.3.tgz
     cd Python-3.4.3.tgz
-    [sudo] ./configure && sudoe make && sudo make install
-    [sudo] pip3 install --upgrade pip setuptools
-    cd /usr/bin
-    ls | grep py3
-    alias python=python3
-    cd 
+
+    sudo mkdir /opt/python
+    sudo chown -R vagrant:vagrant /opt/python
+    ./configure --prefix=/opt/python # check to see if have everything needed to build application
+    make  # compiles source code
+    make install # move to appropriate system directory
+    .. cd /usr/bin
+    .. ls | grep py3
+    .. alias python=python3
+
+    # nginx
+    sudo apt-get install nginx 
 
     # setup github
+    cd 
     cd ..ssh
     ssh-keygen -t rsa -C "vagrant@snewcomer.com"
     ls -la .ssh
     cat .ssh/id_rsa.pub
     sudo apt-get install git
     git clone git@github.com:bigskytech/bsrs.git
+
+    # setup virtualenv
+    sudo mkdir /opt/project_env
+    sudo chown vagrant:vagrant /opt/project_env
+    /opt/python/bin/pyvenv /opt/project_env
+    source /opt/project_env/bin/activate
+    pip install -r requirements_local.txt
+
+    # check UTF8 encoding.  Rebuild template1 db
+    psql template1 -c "UPDATE pg_database SET datallowconn = TRUE WHERE datname='template0'"
+    psql template0 -c "UPDATE pg_database SET datistemplate = FALSE WHERE datname='template1'"
+    dropdb template1
+    psql
+        create database template1 with owner=postgres encoding='UTF-8'
+          lc_collate='en_US.utf8' lc_ctype='en_US.utf8' template template0;
+    \q
+    psql template0 -c "UPDATE pg_database SET datistemplate = TRUE WHERE datname='template1'"
+    psql template1 -c "UPDATE pg_database SET datallowconn = FALSE WHERE datname='template0'"
+
+    # ember side
+    npm config set prefix /usr/local # ensure symlink binaries end up here.  Try npm config get prefix to see if set to /usr/local
     npm install -g bower
-    ./node_modules/bower/bin/bower install
+    npm install
 
     # headless browser
     Xvfb :1 &
     export DISPLAY=:1
-
-    # setup virtualenv
-    sudo apt-get remove python-virtualenv
-    sudo pip3 install virtualenv --upgrade
-
-
 
 
     ./node_modules/ember-cli/bin/ember test -s

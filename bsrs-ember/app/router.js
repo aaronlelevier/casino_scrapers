@@ -41,9 +41,17 @@ Router.map(function() {
             this.route('new');
             this.route('location-level', {path: '/:location_level_id'});
         });
+        this.route('third-parties', function() {
+            this.route('index');
+            this.route('new');
+            this.route('third-party');
+        });
     });
-    this.route('tickets');
-
+    this.route('tickets', function() {
+        this.route('index');
+        this.route('new');
+        this.route('ticket', {path: '/:ticket_id'});
+    });
     this.route('work-orders');
     this.route('purchase-orders');
     this.route('tasks');

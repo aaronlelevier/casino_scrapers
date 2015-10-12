@@ -44,6 +44,16 @@ var ApplicationRoute = Ember.Route.extend({
         loc_status_list.forEach((model) => {
             store.push('location-status', model);
         });
+        let ticket_status_config = Ember.$('[data-preload-ticket-statuses]').html();
+        let ticket_status_list = JSON.parse(ticket_status_config);
+        ticket_status_list.forEach((model) => {
+            store.push('ticket-status', model);
+        });
+        let ticket_priority_config = Ember.$('[data-preload-ticket-priorities]').html();
+        let ticket_priority_list = JSON.parse(ticket_priority_config);
+        ticket_priority_list.forEach((model) => {
+            store.push('ticket-priority', model);
+        });
         let currency_config = Ember.$('[data-preload-currencies]').html();
         let currency_list = JSON.parse(currency_config);
         for (let key in currency_list) {

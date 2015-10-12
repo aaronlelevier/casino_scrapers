@@ -12,6 +12,7 @@ class ThirdPartyTests(TestCase):
     def test_model(self):
         third_party = ThirdParty.objects.first()
         self.assertIsInstance(third_party, ThirdParty)
+        self.assertIsNotNone(third_party.number)
 
 class ThirdPartyStatusManagerTests(TestCase):
 

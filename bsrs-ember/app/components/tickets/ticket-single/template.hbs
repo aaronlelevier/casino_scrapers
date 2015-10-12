@@ -1,0 +1,60 @@
+<form {{action "return false" this on="submit"}}>
+  {{base-component
+  model=model
+  repository=repository
+  save=attrs.save
+  saveBase="save"
+  cancel=attrs.cancel
+  delete=attrs.delete
+  }}
+  <section class="docSection container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <section style="padding-bottom: 0">
+          <div class="row card-title">
+            <h1 class="col-md-12">{{model.subject}}</h1>
+          </div>
+        </section>
+      </div>
+      <div class="col-md-12">
+        <section>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="ticket.label.number" for="number"}}
+              {{input type="text" placeholder=(t "ticket.label.number") value=model.number class="form-control t-ticket-number" id="ticket_number"}}
+              {{#validation-error-field submitted=submitted field="number" className="t-number-validation-error" model=model validation=numberValidation}}invalid number{{/validation-error-field}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="ticket.label.subject" for="subject"}}
+              {{input type="text" placeholder=(t "ticket.label.subject") value=model.subject class="form-control t-ticket-subject" id="ticket_subject"}}
+              {{#validation-error-field submitted=submitted field="subject" className="validation validation-under t-subject-validation-error" model=model validation=subjectValidation}}{{t "validation.invalid"}} {{t "ticket.label.subject"}}{{/validation-error-field}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <select class="t-ticket-status form-control ticket-status" onchange={{action (action "changed" model) value="target.value"}}>
+              {{#each statuses as |ticketStatus|}}
+              <option value={{ticketStatus.id}} selected={{is-equal model.status.id ticketStatus.id}}>{{t ticketStatus.name}}</option>
+              {{/each}}
+              </select>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              <select class="t-ticket-priority form-control ticket-priority" onchange={{action (action "changedPriority" model) value="target.value"}}>
+              {{#each priorities as |ticketPriority|}}
+              <option value={{ticketPriority.id}} selected={{is-equal model.priority.id ticketPriority.id}}>{{t ticketPriority.name}}</option>
+              {{/each}}
+              </select>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</form>
+
