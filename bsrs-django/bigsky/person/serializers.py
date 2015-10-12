@@ -120,14 +120,21 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
     phone_numbers = PhoneNumberSerializer(many=True)
     addresses = AddressSerializer(many=True)
     emails = EmailSerializer(many=True)
+    password = serializers.CharField(required=False, style={'input_type': 'password'})
 
     class Meta:
         model = Person
         validators = [RoleLocationValidator('role', 'locations')]
-        fields = PERSON_FIELDS + ('locale', 'locations', 'emails',
+        write_only_fields = ('password',)
+        fields = PERSON_FIELDS + ('password', 'locale', 'locations', 'emails',
             'phone_numbers', 'addresses',)
 
     def update(self, instance, validated_data):
+        # Pasword
+        raw_password = validated_data.pop('password', None)
+        if raw_password:
+            instance.set_password(raw_password)
+        # Contacts
         phone_numbers = validated_data.pop('phone_numbers', [])
         addresses = validated_data.pop('addresses', [])
         emails = validated_data.pop('emails', [])
@@ -155,39 +162,3 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
                                    .exclude(id__in=[x for x in contact_ids])):
                 m.delete()
         return instance
-
-
-### PASSWORD ###
-
-# class PasswordSerializer(serializers.ModelSerializer):
-#     '''
-#     **TODO:** this will be a route for Password and the main ``Person 
-#     Update`` will be separate
-#     '''
-#     class Meta:
-#         model = Person
-#         write_only_fields = ('password',)
-#         fields = ('password',)
-
-#         def update(self, instance, validated_data):
-#             password = validated_data.pop('password')
-#             instance.set_password(password)
-#             instance.save()
-#             update_session_auth_hash(self.context['request'], instance)
-#             return super(PasswordSerializer, self).update(instance, validated_data)
-
-
-# class ResetPasswordSerializer(serializers.Serializer):
-
-#     new_password1 = serializers.CharField(style={'input_type': 'password'})
-#     new_password2 = serializers.CharField(style={'input_type': 'password'})
-
-#     default_error_messages = {
-#         'password_mismatch': 'passwords do not match.'
-#     }
-
-#     def validate(self, attrs):
-#         attrs = super(ResetPasswordSerializer, self).validate(attrs)
-#         if attrs['new_password1'] != attrs['new_password2']:
-#             raise serializers.ValidationError(self.error_messages['password_mismatch'])
-#         return attrs

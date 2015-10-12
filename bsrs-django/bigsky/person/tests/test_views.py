@@ -402,6 +402,39 @@ class PersonPutTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['locale'], str(self.locale.id))
 
+    def test_change_password(self):
+        new_password = 'new_password'
+        self.data['password'] = new_password
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        self.client.logout()
+        with self.assertRaises(KeyError):
+            self.client.session['_auth_user_id']
+        # login with 'new_password"'
+        self.client.login(username=self.data['username'], password=new_password)
+        self.assertEqual(
+            self.client.session['_auth_user_id'],
+            str(Person.objects.get(username=self.data['username']).pk)
+        )
+
+    def test_change_password_other_persons_password(self):
+
+        serializer = PersonUpdateSerializer(self.person2)
+        self.data = serializer.data
+
+        new_password = 'new_password'
+        self.data['password'] = new_password
+        response = self.client.put('/api/admin/people/{}/'.format(self.person2.id),
+            self.data, format='json')
+        self.client.logout()
+        with self.assertRaises(KeyError):
+            self.client.session['_auth_user_id']
+        # login with 'new_password"'
+        self.client.login(username=self.data['username'], password=new_password)
+        self.assertEqual(
+            self.client.session['_auth_user_id'],
+            str(Person.objects.get(username=self.data['username']).pk)
+        )
 
     ### LOCATIONS
 
