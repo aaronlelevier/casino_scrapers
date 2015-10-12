@@ -15,6 +15,7 @@ var TicketModel = Model.extend({
             id: this.get('id'),
             number: this.get('number'),
             subject: this.get('subject'),
+            request: this.get('request'),
             status: this.get('status'),
             priority: this.get('priority')
         };
