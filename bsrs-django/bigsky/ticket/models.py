@@ -34,6 +34,9 @@ class TicketPriority(BaseNameModel):
 
 
 class Ticket(BaseModel):
+    '''
+    Ticket model
+    '''
     status = models.ForeignKey(TicketStatus, blank=True, null=True)
     priority = models.ForeignKey(TicketPriority, blank=True, null=True)
     subject = models.TextField(max_length=100, blank=True, null=True)
