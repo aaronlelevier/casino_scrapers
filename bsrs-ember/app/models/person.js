@@ -92,7 +92,6 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
         return {
             id: this.get('id'),
             username: this.get('username'),
-            password: this.get('password'),
             first_name: this.get('first_name'),
             middle_initial: this.get('middle_initial'),
             last_name: this.get('last_name'),

@@ -20,3 +20,6 @@ class NavPage(JavascriptMixin):
     
     def find_role_link(self):
         return self.wait_for_xhr_request("t-nav-admin-role")
+
+    def find_ticket_link(self):
+        return self.wait_for_xhr_request("t-nav-tickets")
