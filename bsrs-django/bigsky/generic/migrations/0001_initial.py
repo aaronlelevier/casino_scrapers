@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-import generic.models
 import uuid
+import generic.models
 
 
 class Migration(migrations.Migration):
@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Attachment',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CustomSetting',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
@@ -50,7 +50,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MainSetting',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
@@ -65,17 +65,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='SavedSearch',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
-                ('name', models.CharField(help_text='name of the saved search that the Person designates.', max_length=254)),
-                ('endpoint_name', models.CharField(help_text="the Ember List API route name. i.e. 'admin.people.index'.", max_length=254)),
-                ('endpoint_uri', models.CharField(help_text='API Endpoint that this search is saved for. With all keywords ordering, and filters, etc...', max_length=2048)),
+                ('name', models.CharField(max_length=254, help_text='name of the saved search that the Person designates.')),
+                ('endpoint_name', models.CharField(max_length=254, help_text="the Ember List API route name. i.e. 'admin.people.index'.")),
+                ('endpoint_uri', models.CharField(max_length=2048, help_text='API Endpoint that this search is saved for. With all keywords ordering, and filters, etc...')),
             ],
             options={
-                'verbose_name_plural': 'Saved Searches',
                 'ordering': ('-modified',),
+                'verbose_name_plural': 'Saved Searches',
             },
         ),
     ]

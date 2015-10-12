@@ -12,6 +12,8 @@ class TicketTests(TestCase):
     def test_model(self):
         ticket = Ticket.objects.first()
         self.assertIsInstance(ticket, Ticket)
+        self.assertTrue(hasattr(ticket, 'subject'))
+
 
 class TicketStatusManagerTests(TestCase):
 
@@ -21,5 +23,3 @@ class TicketStatusManagerTests(TestCase):
         self.assertIsInstance(default, TicketStatus)
         self.assertIsInstance(default_priority, TicketPriority)
         self.assertIsNotNone(default.name)
-
-

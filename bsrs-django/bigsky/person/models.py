@@ -22,7 +22,8 @@ from person import helpers
 from order.models import WorkOrderStatus
 from translation.models import Locale
 from utils import choices, create
-from utils.models import BaseNameModel, BaseModel, BaseManager
+from utils.models import (BaseNameModel, BaseModel, BaseManager, BaseStatusModel,
+    BaseStatusManager)
 
 
 class RoleManager(BaseManager):
@@ -186,19 +187,20 @@ class ProxyRole(BaseModel):
     role = models.ForeignKey(Role)
 
 
-class PersonStatusManager(BaseManager):
+class PersonStatusManager(BaseStatusManager):
 
-    def default(self):
-        obj, created = self.get_or_create(
-            description=choices.PERSON_STATUS_CHOICES[0][0])
-        return obj
+    def get_or_create_default(self):
+        return self.get_or_create(name=choices.PERSON_STATUS_CHOICES[0][0], default=True)
 
 
-class PersonStatus(BaseNameModel):
-    description = models.CharField(max_length=100, choices=choices.PERSON_STATUS_CHOICES,
-                                   default=choices.PERSON_STATUS_CHOICES[0][0])
+class PersonStatus(BaseStatusModel):
 
     objects = PersonStatusManager()
+
+    def save(self, *args, **kwargs):
+        if self.default:
+            PersonStatus.objects.update_non_defaults(self.id)
+        return super(PersonStatus, self).save(*args, **kwargs)
 
 
 class PersonQuerySet(models.query.QuerySet):
@@ -346,7 +348,7 @@ class Person(BaseModel, AbstractUser):
 
     def _update_defaults(self):
         if not self.status:
-            self.status = PersonStatus.objects.default()
+            self.status, _ = PersonStatus.objects.get_or_create_default()
         if not self.auth_amount:
             self.auth_amount = self.role.default_auth_amount
         if not self.auth_currency:

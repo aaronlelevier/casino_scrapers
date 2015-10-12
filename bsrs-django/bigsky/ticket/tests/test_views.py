@@ -11,8 +11,6 @@ from ticket.tests.factory import create_tickets
 from person.tests.factory import PASSWORD, create_person
 
 
-### TICKET
-
 class TicketListTests(APITestCase):
 
     def setUp(self):
@@ -114,7 +112,3 @@ class TicketCreateTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
         self.assertIsInstance(Ticket.objects.get(id=data['id']), Ticket)
-
-
-
-

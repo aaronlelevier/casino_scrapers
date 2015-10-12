@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from ticket import models
+
+
+@admin.register(models.Ticket)
+class TicketAdmin(admin.ModelAdmin):
+    pass

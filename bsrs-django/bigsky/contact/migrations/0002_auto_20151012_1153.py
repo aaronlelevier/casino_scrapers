@@ -8,16 +8,16 @@ from django.conf import settings
 class Migration(migrations.Migration):
 
     dependencies = [
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('location', '0001_initial'),
         ('contact', '0001_initial'),
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
             model_name='phonenumber',
             name='person',
-            field=models.ForeignKey(null=True, blank=True, related_name='phone_numbers', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='phone_numbers', blank=True, null=True),
         ),
         migrations.AddField(
             model_name='phonenumber',
@@ -27,12 +27,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='email',
             name='location',
-            field=models.ForeignKey(null=True, blank=True, related_name='emails', to='location.Location'),
+            field=models.ForeignKey(to='location.Location', related_name='emails', blank=True, null=True),
         ),
         migrations.AddField(
             model_name='email',
             name='person',
-            field=models.ForeignKey(null=True, blank=True, related_name='emails', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='emails', blank=True, null=True),
         ),
         migrations.AddField(
             model_name='email',
@@ -42,12 +42,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='address',
             name='location',
-            field=models.ForeignKey(null=True, blank=True, related_name='addresses', to='location.Location'),
+            field=models.ForeignKey(to='location.Location', related_name='addresses', blank=True, null=True),
         ),
         migrations.AddField(
             model_name='address',
             name='person',
-            field=models.ForeignKey(null=True, blank=True, related_name='addresses', to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='addresses', blank=True, null=True),
         ),
         migrations.AddField(
             model_name='address',

@@ -40,13 +40,13 @@ LOCAL_APPS = (
     'contact',
     'generic',
     'location',
+    'order',
     'person',
     'session',
-    'translation',
-    'utils',
-    'order',
     'third_party',
     'ticket',
+    'translation',
+    'utils',
     )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -119,6 +119,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'source')
 
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
+LOGOUT_URL = '/logout/'
+
 
 ### FILES
 

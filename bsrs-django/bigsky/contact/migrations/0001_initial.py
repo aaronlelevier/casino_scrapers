@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Address',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
@@ -33,11 +33,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='AddressType',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
-                ('name', models.CharField(unique=True, max_length=100)),
+                ('name', models.CharField(max_length=100, unique=True)),
                 ('order', models.IntegerField(default=0, blank=True)),
             ],
             options={
@@ -48,7 +48,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Email',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
@@ -62,11 +62,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='EmailType',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
-                ('name', models.CharField(unique=True, max_length=100)),
+                ('name', models.CharField(max_length=100, unique=True)),
                 ('order', models.IntegerField(default=0, blank=True)),
             ],
             options={
@@ -77,12 +77,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PhoneNumber',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
                 ('number', models.CharField(max_length=32)),
-                ('location', models.ForeignKey(null=True, blank=True, related_name='phone_numbers', to='location.Location')),
+                ('location', models.ForeignKey(to='location.Location', related_name='phone_numbers', blank=True, null=True)),
             ],
             options={
                 'abstract': False,
@@ -92,11 +92,11 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PhoneNumberType',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
-                ('name', models.CharField(unique=True, max_length=100)),
+                ('name', models.CharField(max_length=100, unique=True)),
                 ('order', models.IntegerField(default=0, blank=True)),
             ],
             options={

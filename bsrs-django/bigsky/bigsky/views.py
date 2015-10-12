@@ -1,6 +1,7 @@
 import json
 
 from django.conf import settings
+from django.contrib import auth
 from django.core.urlresolvers import reverse
 from django.db.models import get_model
 from django.http import HttpResponseRedirect
@@ -32,6 +33,11 @@ class IndexView(TemplateView):
 
     @never_cache
     def dispatch(self, request, *args, **kwargs):
+        # test: start
+        from django.contrib import messages
+        messages.add_message(request, messages.INFO, 'Hello world.')
+        # test: end
+        
         self.locale = request.META.get('HTTP_ACCEPT_LANGUAGE', None)
 
         if not request.user.is_authenticated():
@@ -65,6 +71,11 @@ class IndexView(TemplateView):
             'ticket_priorities': model_to_json(TicketPriority),
         })
         return context
+
+
+def logout(request):
+    auth.logout(request)
+    return HttpResponseRedirect(reverse('login'))
 
 
 def relationships_view(request):

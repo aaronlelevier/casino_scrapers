@@ -2,11 +2,7 @@
 from __future__ import unicode_literals
 
 from django.db import models, migrations
-from django.contrib.postgres.operations import HStoreExtension
-
-import translation.models
 import uuid
-import django.contrib.postgres.fields.hstore
 
 
 class Migration(migrations.Migration):
@@ -15,20 +11,15 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        HStoreExtension(),
         migrations.CreateModel(
-            name='Locale',
+            name='ThirdParty',
             fields=[
                 ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
-                ('locale', models.SlugField(help_text='Example values: en, en-US, en-x-Sephora')),
-                ('default', models.BooleanField(default=False)),
-                ('name', models.CharField(max_length=50, help_text="Human readable name in forms. i.e. 'English'")),
-                ('native_name', models.CharField(null=True, max_length=50, blank=True)),
-                ('presentation_name', models.CharField(null=True, max_length=50, blank=True)),
-                ('rtl', models.BooleanField(default=False)),
+                ('name', models.CharField(max_length=100, unique=True)),
+                ('number', models.CharField(null=True, max_length=50, blank=True)),
             ],
             options={
                 'abstract': False,
@@ -36,20 +27,23 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='Translation',
+            name='ThirdPartyStatus',
             fields=[
                 ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
-                ('values', django.contrib.postgres.fields.hstore.HStoreField()),
-                ('context', django.contrib.postgres.fields.hstore.HStoreField(null=True, blank=True)),
-                ('csv', models.FileField(null=True, upload_to=translation.models.translation_file, blank=True)),
-                ('locale', models.ForeignKey(to='translation.Locale')),
+                ('name', models.CharField(max_length=100, unique=True)),
+                ('description', models.CharField(max_length=100, choices=[('active', 'active'), ('two', 'two')], default='active')),
             ],
             options={
                 'abstract': False,
                 'ordering': ('id',),
             },
+        ),
+        migrations.AddField(
+            model_name='thirdparty',
+            name='status',
+            field=models.ForeignKey(to='third_party.ThirdPartyStatus', blank=True, null=True),
         ),
     ]
