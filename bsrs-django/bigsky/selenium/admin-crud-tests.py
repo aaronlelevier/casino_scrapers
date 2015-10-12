@@ -235,8 +235,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         last_phone_number_input = all_phone_number_inputs[1]
         last_phone_number_input.send_keys(new_phone_two)
         person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
-        print('triggered')
-        time.sleep(300)
         self.gen_elem_page.click_save_btn()
         all_people = person_page.find_list_data()
         self.driver.refresh()
