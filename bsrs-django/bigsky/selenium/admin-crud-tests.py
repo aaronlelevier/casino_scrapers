@@ -1,6 +1,7 @@
 import unittest
 import random
 import string
+import time
 
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select, WebDriverWait
@@ -205,7 +206,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # Go to Create Person view
         person_page.find_new_link().click()
         username = "lmno_"+rand_chars()
-        password = "bobber1"
+        password = "bobber-foo"
         role = "RNfkmZFxsz"
         person = InputHelper(username=username, password=password)
         role_input = Select(self.driver.find_element_by_id("person-role"))
@@ -221,6 +222,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         title = "myTitle"
         new_phone_one = "888-999-7878"
         new_phone_two = "888-999-7899"
+        new_password = "bobber-bar"
         person = InputHelper(first_name=first_name, middle_initial=middle_initial,
                 last_name=last_name, employee_id=employee_id,
                 title=title)
@@ -233,6 +235,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         last_phone_number_input = all_phone_number_inputs[1]
         last_phone_number_input.send_keys(new_phone_two)
         person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
+        print('triggered')
+        time.sleep(300)
         self.gen_elem_page.click_save_btn()
         all_people = person_page.find_list_data()
         self.driver.refresh()
