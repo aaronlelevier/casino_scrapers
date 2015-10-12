@@ -32,6 +32,11 @@ class IndexView(TemplateView):
 
     @never_cache
     def dispatch(self, request, *args, **kwargs):
+        # test: start
+        from django.contrib import messages
+        messages.add_message(request, messages.INFO, 'Hello world.')
+        # test: end
+        
         self.locale = request.META.get('HTTP_ACCEPT_LANGUAGE', None)
 
         if not request.user.is_authenticated():
