@@ -3,9 +3,10 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.contrib.postgres.operations import HStoreExtension
-import django.contrib.postgres.fields.hstore
+
 import translation.models
 import uuid
+import django.contrib.postgres.fields.hstore
 
 
 class Migration(migrations.Migration):
@@ -18,13 +19,13 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Locale',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
                 ('locale', models.SlugField(help_text='Example values: en, en-US, en-x-Sephora')),
                 ('default', models.BooleanField(default=False)),
-                ('name', models.CharField(help_text="Human readable name in forms. i.e. 'English'", max_length=50)),
+                ('name', models.CharField(max_length=50, help_text="Human readable name in forms. i.e. 'English'")),
                 ('native_name', models.CharField(null=True, max_length=50, blank=True)),
                 ('presentation_name', models.CharField(null=True, max_length=50, blank=True)),
                 ('rtl', models.BooleanField(default=False)),
@@ -37,7 +38,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Translation',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
                 ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),

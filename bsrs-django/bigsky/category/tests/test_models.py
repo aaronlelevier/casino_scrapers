@@ -1,8 +1,10 @@
 from django.test import TestCase
 from django.conf import settings
 
+from model_mommy import mommy
+
 from accounting.models import Currency
-from category.models import Category, CategoryStatus
+from category.models import Category
 from category.tests import factory
 
 
@@ -24,9 +26,7 @@ class CategoryTests(TestCase):
     def test_currency(self):
         self.assertIsInstance(self.trade.cost_currency, Currency)
 
-
-class CategoryStatusManagerTests(TestCase):
-
-    def test_default(self):
-        default = CategoryStatus.objects.default()
-        self.assertIsInstance(default, CategoryStatus)
+    def test_to_dict(self):
+        d = self.type.to_dict()
+        self.assertIsInstance(d, dict)
+        self.assertIn('id', d)

@@ -15,6 +15,8 @@ from translation.models import Locale, Translation
 from translation.tests.factory import create_locales
 
 
+### ROLE
+
 class RoleTests(TestCase):
 
     def setUp(self):
@@ -48,19 +50,26 @@ class RoleTests(TestCase):
         )
 
 
+### PERSON STATUS
+
 class PersonStatusManagerTests(TestCase):
 
-    def test_default(self):
-        default = PersonStatus.objects.default()
+    def test_get_or_create_default(self):
+        default, created = PersonStatus.objects.get_or_create_default()
         self.assertIsInstance(default, PersonStatus)
+        self.assertTrue(created)
 
 
 class PersonStatusTests(TestCase):
 
-    def test_create(self):
-        ps = mommy.make(PersonStatus)
-        self.assertIsInstance(ps, PersonStatus)
+    def test_save_enforces_default(self):
+        for x in range(3):
+            status = mommy.make(PersonStatus, default=True)
+        self.assertTrue(status.default)
+        self.assertEqual(PersonStatus.objects.filter(default=True).count(), 1)
 
+
+### PERSON
 
 class PersonManagerTests(TestCase):
 
@@ -209,6 +218,8 @@ class PersonTests(TestCase):
             str(Locale.objects.system_default().id)
         )
 
+
+### PASSWORD
 
 class PersonPasswordHistoryTests(TestCase):
 

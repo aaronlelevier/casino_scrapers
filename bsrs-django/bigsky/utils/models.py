@@ -4,6 +4,7 @@ should be Abstract.
 """
 import uuid
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
@@ -94,6 +95,57 @@ class BaseNameOrderModel(BaseNameModel):
     class Meta:
         ordering = ('id',)
         abstract = True
+
+
+class BaseStatusQuerySet(models.query.QuerySet):
+
+    def default(self):
+        try:
+            return self.get(default=True)
+        except ObjectDoesNotExist:
+            return
+    
+    def update_non_defaults(self, id):
+        self.exclude(id=id).update(default=False)
+
+
+class BaseStatusManager(BaseManager):
+
+    def get_queryset(self):
+        return BaseStatusQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
+
+    def default(self):
+        return self.get_queryset().default()
+
+    def update_non_defaults(self, id):
+        self.get_queryset().update_non_defaults(id)
+
+
+@python_2_unicode_compatible
+class BaseStatusModel(BaseModel):
+    """
+    To be used with all leaf node `Status` models, and provide a 
+    unique name with a single default record.
+    """
+    name = models.CharField(max_length=100, unique=True)
+    default = models.BooleanField(blank=True, default=False)
+
+    objects = BaseStatusManager()
+
+    class Meta:
+        ordering = ('name',)
+        abstract = True
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def _status_model(self):
+        """
+        If a Model has this `property` and it is set to `True`, then it will 
+        be loaded into the `Boostrap` data under a single Array of Statuses.
+        """
+        return True
 
 
 @python_2_unicode_compatible

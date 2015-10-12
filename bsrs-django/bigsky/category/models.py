@@ -8,22 +8,6 @@ from utils import choices
 from utils.models import BaseNameModel, BaseManager, BaseModel
 
 
-### CATEGORY
-
-class CategoryStatusManager(BaseManager):
-
-    def default(self):
-        obj, created = self.get_or_create(description=choices.CATEGORY_STATUS_CHOICES[0][0])
-        return obj
-
-
-class CategoryStatus(BaseNameModel):
-    description = models.CharField(max_length=100, choices=choices.CATEGORY_STATUS_CHOICES,
-        default=choices.CATEGORY_STATUS_CHOICES[0][0])
-
-    objects = CategoryStatusManager()
-
-
 class CategoryManager(BaseManager):
 
     @property
@@ -93,7 +77,7 @@ class Category(BaseModel):
     cost_currency = models.ForeignKey(Currency, blank=True, null=True)
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
-    status = models.ForeignKey(CategoryStatus, blank=True, null=True)
+    status = models.BooleanField(blank=True, default=True)
 
     objects = CategoryManager()
 

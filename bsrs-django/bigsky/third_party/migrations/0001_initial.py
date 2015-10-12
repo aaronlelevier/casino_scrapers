@@ -14,36 +14,36 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='ThirdParty',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
                 ('name', models.CharField(max_length=100, unique=True)),
-                ('number', models.CharField(blank=True, max_length=50, null=True)),
+                ('number', models.CharField(null=True, max_length=50, blank=True)),
             ],
             options={
-                'ordering': ('id',),
                 'abstract': False,
+                'ordering': ('id',),
             },
         ),
         migrations.CreateModel(
             name='ThirdPartyStatus',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(editable=False, serialize=False, primary_key=True, default=uuid.uuid4)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(null=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True)),
                 ('name', models.CharField(max_length=100, unique=True)),
-                ('description', models.CharField(choices=[('active', 'active'), ('two', 'two')], default='active', max_length=100)),
+                ('description', models.CharField(max_length=100, choices=[('active', 'active'), ('two', 'two')], default='active')),
             ],
             options={
-                'ordering': ('id',),
                 'abstract': False,
+                'ordering': ('id',),
             },
         ),
         migrations.AddField(
             model_name='thirdparty',
             name='status',
-            field=models.ForeignKey(null=True, to='third_party.ThirdPartyStatus', blank=True),
+            field=models.ForeignKey(to='third_party.ThirdPartyStatus', blank=True, null=True),
         ),
     ]

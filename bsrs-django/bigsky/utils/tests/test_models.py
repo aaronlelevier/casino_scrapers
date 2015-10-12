@@ -10,7 +10,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from model_mommy import mommy
 
 from bigsky.urls import router
-from person.models import Role
+from person.models import Role, PersonStatus
 from person.tests.factory import create_person, create_role
 from translation.models import Locale
 from utils import create, choices, helpers
@@ -155,3 +155,20 @@ class UpdateTests(TestCase):
         self.assertNotEqual(self.person.username, new_username)
         self.person = create.update_model(instance=self.person, dict_={'username':new_username})
         self.assertEqual(self.person.username, new_username)
+
+
+class BaseStatusModelTests(TestCase):
+
+    def test_default(self):
+        status = mommy.make(PersonStatus, default=True)
+        self.assertIsInstance(PersonStatus.objects.default(), PersonStatus)
+
+    def test_update_non_defaults(self):
+        status = mommy.make(PersonStatus, default=True)
+        status2 = mommy.make(PersonStatus, default=True)
+
+        PersonStatus.objects.update_non_defaults(id=status.id)
+        self.assertTrue(status.default)
+
+        status2 = PersonStatus.objects.get(id=status2.id)
+        self.assertFalse(status2.default)
