@@ -38,7 +38,7 @@ class Ticket(BaseModel):
     Ticket model
     '''
     subject = models.TextField(max_length=100, blank=True, null=True)
-    number = models.CharField(max_length=50, blank=True, null=True)
+    number = models.IntegerField(blank=True, null=True)
     status = models.ForeignKey(TicketStatus, blank=True, null=True)
     priority = models.ForeignKey(TicketPriority, blank=True, null=True)
     cc = models.ManyToManyField(Person, blank=True)
