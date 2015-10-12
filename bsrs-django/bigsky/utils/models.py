@@ -121,13 +121,11 @@ class BaseStatusManager(BaseManager):
         self.get_queryset().update_non_defaults(id)
 
 
-@python_2_unicode_compatible
-class BaseStatusModel(BaseModel):
+class BaseStatusModel(BaseNameModel):
     """
     To be used with all leaf node `Status` models, and provide a 
     unique name with a single default record.
     """
-    name = models.CharField(max_length=100, unique=True)
     default = models.BooleanField(blank=True, default=False)
 
     objects = BaseStatusManager()
@@ -135,9 +133,6 @@ class BaseStatusModel(BaseModel):
     class Meta:
         ordering = ('name',)
         abstract = True
-
-    def __str__(self):
-        return self.name
 
     @property
     def _status_model(self):
