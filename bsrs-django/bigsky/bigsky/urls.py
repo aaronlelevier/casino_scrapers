@@ -50,7 +50,7 @@ router.register(r'admin/roles', person_views.RoleViewSet)
 # THIRD PARTY
 router.register(r'admin/third-parties', third_party_views.ThirdPartyViewSet)
 # Tickets
-router.register(r'admin/tickets', tickets_views.TicketsViewSet)
+router.register(r'tickets', tickets_views.TicketsViewSet)
 # TRANSLATION
 router.register(r'admin/locales', translation_views.LocaleViewSet)
 router.register(r'translations', translation_views.TranslationViewSet)
