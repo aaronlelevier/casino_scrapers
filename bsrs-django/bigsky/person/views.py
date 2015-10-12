@@ -55,6 +55,13 @@ class PersonViewSet(BaseModelViewSet):
        Reset a Person's password using `{person_id}` the Person.
 
        URL: `/api/admin/people/reset-password/{person_id}/`
+
+    **3. ticket people:**
+
+        Return people based on search
+
+        URL: `/api/admin/people&name__icontains={x}`
+
     '''
     error_messages = {
         'password_mismatch': _("The two password fields didn't match."),

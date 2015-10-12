@@ -25,11 +25,11 @@ class TicketListTests(APITestCase):
         self.client.logout()
 
     def test_response(self):
-        response = self.client.get('/api/admin/tickets/')
+        response = self.client.get('/api/tickets/')
         self.assertEqual(response.status_code, 200)
 
     def test_data(self):
-        response = self.client.get('/api/admin/tickets/')
+        response = self.client.get('/api/tickets/')
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data['results']) > 0)
 
@@ -49,7 +49,7 @@ class TicketDetailTests(APITestCase):
         self.client.logout()
 
     def test_detail(self):
-        response = self.client.get('/api/admin/tickets/{}/'.format(self.ticket.id))
+        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.ticket.id))
@@ -73,13 +73,13 @@ class TicketUpdateTests(APITestCase):
         self.client.logout()
 
     def test_no_change(self):
-        response = self.client.put('/api/admin/tickets/{}/'.format(self.ticket.id),
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
 
     def test_change_name(self):
         self.data['subject'] = 'new subject name'
-        response = self.client.put('/api/admin/tickets/{}/'.format(self.ticket.id),
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -108,7 +108,7 @@ class TicketCreateTests(APITestCase):
             'id': str(uuid.uuid4()),
             'subject': 'plumbing'
             })
-        response = self.client.post('/api/admin/tickets/', self.data, format='json')
+        response = self.client.post('/api/tickets/', self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
         self.assertIsInstance(Ticket.objects.get(id=data['id']), Ticket)

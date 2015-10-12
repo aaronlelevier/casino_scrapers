@@ -7,6 +7,7 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             idTwo: '6ff90fb2-17ca-434d-9943-4035ea386b13',
             unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b056789',
             numberOne: '123zz',
+            requestOne: 'working',
             numberTwo: '456zz',
             subjectOne: 'Plumbing Fixtures',
             subjectTwo: 'Roof Repair',
@@ -34,13 +35,20 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             priorityThree: 'ticket.priority.medium',
             priorityFourId: '7562051b-f5b7-40bf-a640-5c4cfb3a72a8',
             priorityFour: 'ticket.priority.low',
+            requestOneGrid: 'sub1',
+            requestLastGrid: 'ape11',
+            requestLastPage2Grid: 'ape19',
+            subjectOneGrid: 'diagram1',
+            requestFourGrid: 'sub4',
+            requestOtherGrid: 'sub10',
+            requestFourteenGrid: 'ape14'
         };
     };
     return factory;
 })();
 
 if (typeof window === 'undefined') {
-    module.exports = new BSRS_TICKET_DEFAULTS_OBJECT(ticket_status).defaults();
+    module.exports = new BSRS_TICKET_DEFAULTS_OBJECT().defaults();
 } else {
     define('bsrs-ember/vendor/defaults/ticket', ['exports'], function (exports) {
         'use strict';

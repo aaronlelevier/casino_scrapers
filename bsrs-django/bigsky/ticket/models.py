@@ -2,6 +2,7 @@ from django.db import models
 
 from utils.models import BaseNameModel, BaseModel, BaseManager
 from utils import choices
+from person.models import Person
 
 
 class TicketStatusManager(BaseManager):
@@ -37,3 +38,6 @@ class Ticket(BaseModel):
     priority = models.ForeignKey(TicketPriority, blank=True, null=True)
     subject = models.TextField(max_length=100, blank=True, null=True)
     number = models.CharField(max_length=50, blank=True, null=True)
+    cc = models.ManyToManyField(Person, blank=True)
+    assignee = models.ForeignKey(Person, blank=True, null=True, related_name="person_ticket_assignee")
+    request = models.TextField(max_length=100, blank=True, null=True)
