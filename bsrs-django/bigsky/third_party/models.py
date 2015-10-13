@@ -33,5 +33,4 @@ class ThirdParty(BaseNameModel):
     number = models.CharField(max_length=50, blank=True, null=True)
     status = models.ForeignKey(ThirdPartyStatus, blank=True, null=True)
     currency = models.ForeignKey(Currency, blank=True, null=True)
-    categories = models.ManyToManyField(Category, related_name="categories",
-        blank=True, null=True)
+    categories = models.ManyToManyField(Category, related_name="categories", blank=True)
