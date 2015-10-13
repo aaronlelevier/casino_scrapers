@@ -12,9 +12,8 @@ class TicketStatusManager(BaseManager):
         return obj
 
 
-class TicketStatus(BaseNameModel):
-    # name = models.CharField(max_length=100, choices=choices.TICKET_STATUS_CHOICES,
-    #     default=choices.TICKET_STATUS_CHOICES[0][0])
+class TicketStatus(BaseModel):
+    name = models.CharField(max_length=50, default=choices.TICKET_STATUS_CHOICES[0][0])
 
     objects = TicketStatusManager()
 
@@ -37,10 +36,16 @@ class Ticket(BaseModel):
     '''
     Ticket model
     '''
-    status = models.ForeignKey(TicketStatus, blank=True, null=True)
-    priority = models.ForeignKey(TicketPriority, blank=True, null=True)
+    def no_ticket_models():
+        no = Ticket.objects.count()
+        if no == None:
+            return 1
+        else: 
+            return no + 1
+    status = models.ForeignKey(TicketStatus, null=True)
+    priority = models.ForeignKey(TicketPriority, null=True)
     subject = models.TextField(max_length=100, blank=True, null=True)
-    number = models.CharField(max_length=50, blank=True, null=True)
+    number = models.IntegerField(default=no_ticket_models)
     cc = models.ManyToManyField(Person, blank=True)
     assignee = models.ForeignKey(Person, blank=True, null=True, related_name="person_ticket_assignee")
     request = models.TextField(max_length=100, blank=True, null=True)

@@ -13,6 +13,7 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
     uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
+    password: attr(''),
     first_name: attr(''),
     middle_initial: attr(''),
     last_name: attr(''),
@@ -25,6 +26,7 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
     address_fks: [],
     person_location_fks: [],
     isModelDirty: false,
+    changingPassword: false,
     personCurrent: Ember.inject.service('person-current'),
     translationsFetcher: Ember.inject.service('translations-fetcher'),
     i18n: Ember.inject.service(),
@@ -89,7 +91,8 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
         });
         var locale = store.find('locale', {locale: this.get('locale')});
         var locale_fk = locale.objectAt(0) ? locale.objectAt(0).get('id') : '';
-        return {
+
+        var payload = {
             id: this.get('id'),
             username: this.get('username'),
             first_name: this.get('first_name'),
@@ -106,6 +109,13 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
             addresses: addresses,
             locale: locale_fk
         };
+        var newPassword = this.get('password');
+        this.set('password', '');
+        this.set('changingPassword', false);
+        if(newPassword !== ''){
+            payload.password = newPassword;
+        }
+        return payload;
     },
     removeRecord() {
         this.get('store').remove('person', this.get('id'));

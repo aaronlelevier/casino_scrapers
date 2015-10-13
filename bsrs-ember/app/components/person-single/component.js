@@ -16,6 +16,9 @@ var PersonSingle = ParentValidationComponent.extend({
         },
         localeChanged(locale){
             this.sendAction('localeChanged', locale);
+        },
+        changePassword(){
+            this.sendAction('changePassword');
         }
     }
 });

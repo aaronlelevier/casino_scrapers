@@ -1,5 +1,6 @@
 import json
 import uuid
+import random
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase
@@ -106,6 +107,7 @@ class TicketCreateTests(APITestCase):
     def test_create(self):
         self.data.update({
             'id': str(uuid.uuid4()),
+            'number': random.randint(0, 1000),
             'subject': 'plumbing'
             })
         response = self.client.post('/api/tickets/', self.data, format='json')
