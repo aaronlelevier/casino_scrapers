@@ -162,7 +162,6 @@ class ConfigurationTests(TestCase):
         configuration = json.loads(response.context['ticket_statuses'])
         self.assertTrue(len(configuration) > 0)
         self.assertIn(str(self.ticket_status.id), [c['id'] for c in configuration])
-        self.assertIn(str(self.ticket_status.name), [c['name'] for c in configuration])
 
     def test_ticket_priorities(self):
         response = self.client.get(reverse('index'))
