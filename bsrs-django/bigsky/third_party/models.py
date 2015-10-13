@@ -1,5 +1,7 @@
 from django.db import models
 
+from accounting.models import Currency
+from category.models import Category
 from utils.models import BaseNameModel, BaseModel, BaseManager
 from utils import choices
 
@@ -20,7 +22,16 @@ class ThirdPartyStatus(BaseNameModel):
 
 class ThirdParty(BaseNameModel):
     '''
-    Third Party model
+    TODO
+    ----
+    Put: Email, Address, PhoneNumber as a GenericKey on their own models, 
+    so they can link up with ThirdParty, Person, Location.
+    
+    These are contractor companies, and other companies that the site Operators 
+    will be dealing with.
     '''
     number = models.CharField(max_length=50, blank=True, null=True)
     status = models.ForeignKey(ThirdPartyStatus, blank=True, null=True)
+    currency = models.ForeignKey(Currency, blank=True, null=True)
+    categories = models.ManyToManyField(Category, related_name="categories",
+        blank=True, null=True)
