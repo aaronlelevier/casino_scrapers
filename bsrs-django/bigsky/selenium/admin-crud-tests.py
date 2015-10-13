@@ -6,6 +6,7 @@ import time
 from selenium import webdriver
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
@@ -235,7 +236,14 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         last_phone_number_input = all_phone_number_inputs[1]
         last_phone_number_input.send_keys(new_phone_two)
         person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
+
+        # b/c first save won't work if the 'password' is still attached to the person.
         self.gen_elem_page.click_save_btn()
+        try:
+            self.gen_elem_page.click_save_btn()
+        except NoSuchElementException:
+            pass
+
         all_people = person_page.find_list_data()
         self.driver.refresh()
         new_person = person_page.click_name_in_list(username, new_person=None)

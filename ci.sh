@@ -135,8 +135,10 @@ echo $(date -u) "NPM INSTALL"
 cd bsrs-ember
 npmInstall
 
-echo $(date -u) "EMBER TESTS"
-emberTest
+if [ "$(uname)" == "Darwin" ]; then
+  echo $(date -u) "EMBER TESTS"
+  emberTest
+fi
 
 echo $(date -u) "PIP INSTALL"
 cd ../bsrs-django

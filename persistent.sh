@@ -26,12 +26,10 @@ if [  -d "/www/django/releases/persistent/bsrs" ];
         cd bsrs
         git checkout .
         git pull
-        git checkout python3
     else
         echo "BSRS REPO DOES NOT EXIST"
         git clone git@github.com:bigskytech/bsrs.git
         cd bsrs
-        git checkout python3
 fi
 TEST=$?; if [ "$TEST" == 1 ]; then echo "git pull/clone failed"; exit $TEST; fi
 
@@ -58,7 +56,7 @@ cd bigsky/
 
 wait
 echo "DJANGO - MIGRATE DATABASE SCHEMA"
-../venv/bin/python manage.py makemigrations accounting category contact generic location order person session translation utils
+../venv/bin/python manage.py makemigrations accounting category contact generic location order person session third_party ticket translation utils
 TEST=$?; if [ "$TEST" == 1 ]; then echo "makemigrations failed"; exit $TEST; fi
 
 

@@ -255,7 +255,8 @@ class Person(BaseModel, AbstractUser):
                                             help_text="Date that the Person's password will expire next. "
                                             "Based upon the ``password_expire`` days set on the Role.")
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
-    password_change = models.TextField(
+    # TODO: add functionality to populate this field
+    password_change = models.TextField( blank=True, null=True,
         help_text="Tuple of (datetime of PW change, old PW)")
     password_history = ArrayField(
         models.CharField(max_length=254),
