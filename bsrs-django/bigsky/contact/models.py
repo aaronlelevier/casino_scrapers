@@ -1,5 +1,8 @@
+import uuid
+
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
+from django.contrib.contenttypes.fields import GenericForeignKey
+from django.contrib.contenttypes.models import ContentType
 
 from person.models import Person
 from location.models import Location
@@ -7,98 +10,69 @@ from utils import exceptions as excp
 from utils.models import BaseNameOrderModel, BaseModel
 
 
-class ContactBaseModel(BaseModel):
-    '''
-    All contact Models: PhoneNumber, Address, and Email must have
-    a ForeignKey to ``location`` or ``person`` but not both.
-    '''
-    pass
+class BaseContactModel(BaseModel):
+    """
+    GenericForeignKey fields that will be used for all Contact models.
+    """
+    content_type = models.ForeignKey(ContentType)
+    object_id = models.UUIDField()
+    content_object = GenericForeignKey('content_type', 'object_id')
 
     class Meta:
-        ordering = ('id',)
         abstract = True
 
     def save(self, *args, **kwargs):
-        self._valid_person_or_location()
-        return super(ContactBaseModel, self).save(*args, **kwargs)
-
-    def _valid_person_or_location(self):
-        if not (self.person or self.location):
-            raise excp.PersonOrLocationRequiredExcp(
-                "Must have either a Person or Location FK.")
-        if self.person and self.location:
-            raise excp.PersonAndLocationKeysExcp(
-                "Can't have both a Person and Location.")
+        self.object_id = self.content_object.id
+        return super(BaseContactModel, self).save(*args, **kwargs)
 
 
 class PhoneNumberType(BaseNameOrderModel):
-    '''
-    Ex- mobile, cell, home, fax.
-    '''
     pass
 
 
-@python_2_unicode_compatible
-class PhoneNumber(ContactBaseModel):
-    '''
+class PhoneNumber(BaseContactModel):
+    """
     TODO: Will use this "phone number lib" for validation:
 
     https://github.com/daviddrysdale/python-phonenumbers
-    '''
-    # keys
+    """
     type = models.ForeignKey(PhoneNumberType)
-    location = models.ForeignKey(Location, related_name='phone_numbers', null=True, blank=True)
-    person = models.ForeignKey(Person, related_name='phone_numbers', null=True, blank=True)
-    # fields
     number = models.CharField(max_length=32)
-    
-    def __str__(self):
-        return self.number
+
+    class Meta:
+        ordering = ('number',)
 
 
 class AddressType(BaseNameOrderModel):
     pass
 
 
-@python_2_unicode_compatible
-class Address(ContactBaseModel):
-    '''
+class Address(BaseContactModel):
+    """
     Not every field is required to be a valid address, but at 
     least one "non-foreign-key" field must be populated.
 
     ForeignKey Reqs: either the `location` or `person` FK must be 
     populated, but not both.
-    '''
-    # keys
+    """
     type = models.ForeignKey(AddressType)
-    location = models.ForeignKey(Location, related_name='addresses', null=True, blank=True)
-    person = models.ForeignKey(Person, related_name='addresses', null=True, blank=True)
-    # fields
     address = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     state = models.CharField(max_length=100, null=True, blank=True)
     postal_code = models.CharField(max_length=32, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
 
-    def __str__(self):
-        if self.address:
-            return self.address
-        else:
-            return ""
+    class Meta:
+        ordering = ('address',)
 
 
 class EmailType(BaseNameOrderModel):
     pass
 
 
-@python_2_unicode_compatible
-class Email(ContactBaseModel):
-    # keys
+class Email(BaseContactModel):
     type = models.ForeignKey(EmailType)
-    location = models.ForeignKey(Location, related_name='emails', null=True, blank=True)
-    person = models.ForeignKey(Person, related_name='emails', null=True, blank=True)
-    # fields
     email = models.EmailField(max_length=255)
-    
-    def __str__(self):
-        return self.email
+
+    class Meta:
+        ordering = ('email',)

@@ -17,7 +17,7 @@ class PhoneNumberSerializer(BaseCreateSerializer):
 
     class Meta:
         model = PhoneNumber
-        fields = ('id', 'type', 'number', 'person',)
+        fields = ('id', 'type', 'number',)
 
 
 ### ADDRESS ###
