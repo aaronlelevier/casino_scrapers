@@ -44,6 +44,24 @@ def create_roles():
     return Role.objects.all()
 
 
+"""
+from person.models import Person
+[p.delete(override=True) for p in Person.objects.exclude(username="aaron")]
+
+./manage.py dumpdata --indent=2 > fixtures/persistent.json
+
+export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
+wait
+dropdb persistent
+wait
+createdb persistent
+wait
+./manage.py migrate
+wait
+./manage.py loaddata fixtures/persistent.json
+
+"""
+
 def create_single_person(name=None, role=None):
     name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
     role = role or create_role()
