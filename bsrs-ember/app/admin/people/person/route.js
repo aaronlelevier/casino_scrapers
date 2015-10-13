@@ -36,7 +36,7 @@ var PersonRoute = TabRoute.extend({
         let role_repo = this.get('role_repo');
         let repository = this.get('repository');
         let person = this.get('store').find('person', person_pk);
-        if (!person.get('length') || person.get('isNotDirtyOrRelatedNotDirty')) { 
+        if (!person.get('length') || person.get('isNotDirtyOrRelatedNotDirty')) {
             person = repository.findById(person_pk);
         }
         let phone_number_type_repo = this.get('phone_number_type_repo');
@@ -48,10 +48,10 @@ var PersonRoute = TabRoute.extend({
         let role_change = transition.queryParams.role_change;
         let location_level_pk = person.get('location_level_pk');
         var person_locations_children;
-        if ((search || role_change) && location_level_pk) { 
+        if ((search || role_change) && location_level_pk) {
             person_locations_children = location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change);
-        } else { 
-            person_locations_children = []; 
+        } else {
+            person_locations_children = [];
         }
         return Ember.RSVP.hash({
             model: person,
@@ -92,6 +92,17 @@ var PersonRoute = TabRoute.extend({
             let model = this.currentModel.model;
             model.set('locale', locale);
             model.changeLocale();
+        },
+        changePassword(){
+            let model = this.currentModel.model;
+            var changing = model.get('changingPassword');
+            if(changing === true){
+                model.set('changingPassword', false);
+                model.set('password', '');
+            }else{
+                model.set('changingPassword', true);
+                Ember.$('#password').focus();
+            }
         }
     }
 });
