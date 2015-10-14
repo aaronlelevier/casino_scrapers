@@ -125,11 +125,12 @@
 					<div class="row">
 						<div class="col-md-12">
 							{{#form-group title="admin.person.label.password" for="password"}}
-								{{#if model.changingPassword}}
-									{{input-focus type="password" placeholder=(t "admin.person.label.password") value=model.password class="form-control t-person-password" id="password"}}
-									<div style="padding: 4px 0 0"><button class="btn btn-default btn-sm" {{action 'changePassword'}}>{{fa-icon "ban"}} {{t "crud.cancel.button"}}</button></div>
+								{{#if changingPassword}}
+									{{input-focus type="text" placeholder=(t "admin.person.label.password") value=model.password class="form-control t-person-password" id="password"}}
+									{{#validation-error-field submitted=submitted field="password" className="t-password-validation-error" model=model validation=passwordValidation}}invalid password{{/validation-error-field}}
+									<div style="padding: 4px 0 0"><button class="btn btn-default btn-sm" {{action 'changePassword'}}>{{fa-icon "times-circle"}} {{t "crud.cancel.button"}}</button></div>
 								{{else}}
-									<div><button class="btn btn-default btn-sm" {{action 'changePassword'}}>{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
+									<div><button class="btn btn-default btn-sm t-person-change-password" {{action 'changePassword'}}>{{fa-icon "key"}} {{t "admin.person.label.change_password"}}</button></div>
 								{{/if}}
 							{{/form-group}}
 						</div>

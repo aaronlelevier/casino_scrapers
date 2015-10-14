@@ -6,6 +6,7 @@ var BSRS_PERSON_PUT_DEFAULTS_OBJECT = (function() {
         return {
             id: '263126de-5fzx-315a-8bc3-09778cd78841',
             username: 'llcoolj',
+            password: '',
             first_name: 'Ice',
             middle_initial: 'F\'in',
             last_name: 'Cube',

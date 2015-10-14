@@ -92,17 +92,6 @@ var PersonRoute = TabRoute.extend({
             let model = this.currentModel.model;
             model.set('locale', locale);
             model.changeLocale();
-        },
-        changePassword(){
-            let model = this.currentModel.model;
-            var changing = model.get('changingPassword');
-            if(changing === true){
-                model.set('changingPassword', false);
-                model.set('password', '');
-            }else{
-                model.set('changingPassword', true);
-                Ember.$('#password').focus();
-            }
         }
     }
 });

@@ -49,11 +49,15 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
         return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    clearPassword() {
+        this.set('password', '');
+    },
     saveRelated() {
         this.savePhoneNumbers();
         this.saveAddresses();
         this.saveRole();
         this.saveLocations();
+        this.clearPassword();
     },
     rollbackRelated() {
         this.changeLocale();
@@ -92,7 +96,7 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
         var locale = store.find('locale', {locale: this.get('locale')});
         var locale_fk = locale.objectAt(0) ? locale.objectAt(0).get('id') : '';
 
-        var payload = {
+        return {
             id: this.get('id'),
             username: this.get('username'),
             first_name: this.get('first_name'),
@@ -107,15 +111,10 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
             locations: this.get('location_ids'),
             phone_numbers: phone_numbers,
             addresses: addresses,
-            locale: locale_fk
+            locale: locale_fk,
+            password: this.get('password'),
         };
-        var newPassword = this.get('password');
-        this.set('password', '');
-        this.set('changingPassword', false);
-        if(newPassword !== ''){
-            payload.password = newPassword;
-        }
-        return payload;
+
     },
     removeRecord() {
         this.get('store').remove('person', this.get('id'));

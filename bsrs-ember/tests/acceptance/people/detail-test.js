@@ -161,6 +161,28 @@ test('when editing username to invalid, it checks for validation', (assert) => {
     });
 });
 
+test('when changing password to invalid, it checks for validation', (assert) => {
+    visit(DETAIL_URL);
+    click('.t-person-change-password');
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-password-validation-error').text().trim(), 'invalid password');
+    });
+    fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
+    var url = PREFIX + DETAIL_URL + '/';
+    var response = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
+    var payload = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.id, username: PEOPLE_DEFAULTS.username, password: PEOPLE_DEFAULTS.password});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+
+    click(SAVE_BTN);
+    andThen(() => {
+        var person = store.find('person', PEOPLE_DEFAULTS.id);
+        assert.equal(person.get('password'), '');
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+});
+
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
     visit(DETAIL_URL);
     click('.t-add-btn:eq(0)');
