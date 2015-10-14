@@ -1,8 +1,11 @@
 import Ember from 'ember';
-import BaseComponent from 'bsrs-ember/components/base-component-new/component';
+import inject from 'bsrs-ember/utilities/inject';
+import TabMixin from 'bsrs-ember/mixins/components/tab/base';
+import NewMixin from 'bsrs-ember/mixins/components/tab/new';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var RoleNew = BaseComponent.extend(ValidationMixin, {
+var RoleNew = Ember.Component.extend(TabMixin, NewMixin, ValidationMixin, {
+    repository: inject('role'),
     nameValidation: validate('model.name'),
     actions: {
         changed(model, val) {

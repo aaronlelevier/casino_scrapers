@@ -3,6 +3,9 @@ import inject from 'bsrs-ember/utilities/store';
 
 export default Ember.Service.extend({
     store: inject('main'),
+    findTab(id) {
+        return this.get('store').find('tab', id);
+    },
     createTab(doc_route, doc_type, id, templateModelField, redirect=undefined, newModel=false){
         this.get('store').push('tab', {
             id: id,

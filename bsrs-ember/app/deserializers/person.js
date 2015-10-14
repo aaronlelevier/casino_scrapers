@@ -58,7 +58,6 @@ var extract_role = function(model, store) {
 
 var extract_person_location = function(model, store, uuid, location_level_fk, location_deserializer) {
     let server_locations_sum = [];
-    let person_location_fks = [];
     let prevented_duplicate_m2m = [];
     let all_person_locations = store.find('person-location');
     model.locations.forEach((location_json) => {

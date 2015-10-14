@@ -10,6 +10,15 @@ var BSRS_PEOPLE_FACTORY = (function() {
         this.location_level_defaults = location_level_defaults;
         this.location_defaults = location_defaults;
     };
+    factory.prototype.get = function(i) {
+        //right now function used for tickets
+        return {
+            id: i || this.person_defaults.id,
+            name: this.person_defaults.fullname,
+            email: this.person_defaults.emails,
+            role: this.person_defaults.role,
+        }
+    },
     factory.prototype.generate = function(i) {
         return {
             id: i,

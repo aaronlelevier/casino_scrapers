@@ -1,11 +1,9 @@
 <form {{action "return false" this on="submit"}}>
   {{base-component
   model=model
-  repository=repository
-  save=attrs.save
-  saveBase="save"
-  cancel=attrs.cancel
-  delete=attrs.delete
+  save="save"
+  cancel="cancel"
+  delete="delete"
   }}
   <section class="docSection container-fluid">
     <div class="row">

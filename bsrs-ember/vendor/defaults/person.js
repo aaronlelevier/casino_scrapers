@@ -27,6 +27,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
     factory.prototype.defaults = function() {
         return {
             id: BSRS_PERSON_ID,
+            idTwo: '8b881d03-ac0b-4e4c-9d30-8a1d3d7d0783',
             username: BSRS_PERSON_USERNAME,
             password: BSRS_PERSON_PASSWORD,
             emails: BSRS_PERSON_EMAIL,

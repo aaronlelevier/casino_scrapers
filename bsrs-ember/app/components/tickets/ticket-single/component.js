@@ -1,8 +1,11 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
+import TabMixin from 'bsrs-ember/mixins/components/tab/base';
+import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
-import BaseComponent from 'bsrs-ember/components/base-component/component';
 
-var TicketSingleComponent = BaseComponent.extend(ValidationMixin, {
+var TicketSingleComponent = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
+    repository: inject('ticket'),
     numberValidation: validate('model.number'),
     subjectValidation: validate('model.subject'),
     // priorityValidation: validate('model.priority'),
@@ -13,10 +16,9 @@ var TicketSingleComponent = BaseComponent.extend(ValidationMixin, {
                 this._super();
             }
         },
-        changed(model, val) {
-            Ember.run(() => {
-                model.set('status', val);
-            });
+        changed: function(new_status_id) {
+            let ticket = this.get('model');
+            ticket.change_status(new_status_id);
         },
         changedPriority(model, val) {
             Ember.run(() => {
