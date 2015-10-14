@@ -11,7 +11,7 @@ import random from 'bsrs-ember/models/random';
 
 let store, subject, uuid;
 
-module('toran unit: ticket deserializer test', {
+module('unit: ticket deserializer test', {
     beforeEach() {
         random.uuid = function() { return Ember.uuid(); };
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-status', 'model:person', 'model:uuid']);
