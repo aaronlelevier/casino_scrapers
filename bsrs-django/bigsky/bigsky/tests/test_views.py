@@ -15,6 +15,7 @@ from contact.models import PhoneNumberType, AddressType
 from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus, State, Country
 from person.tests.factory import PASSWORD, create_person, create_role
+from ticket.models import TicketStatus, TicketPriority
 from translation.tests.factory import create_locales
 
 
@@ -29,15 +30,9 @@ class IndexTests(TestCase):
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
-    def test_logged_out(self):
+    def test_logged_out_redirect(self):
         response = self.client.get(reverse('index'))
         self.assertRedirects(response, reverse('login')+'?next='+reverse('index'))
-
-    def test_logout(self):
-        self.client.login(username=self.person.username, password=self.password)
-        self.assertIn('_auth_user_id', self.client.session)
-        self.client.get(reverse('logout'))
-        self.assertNotIn('_auth_user_id', self.client.session)
 
     def test_password_change_get(self):
         self.client.login(username=self.person.username, password=self.password)
@@ -78,6 +73,19 @@ class LoginTests(TestCase):
         self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
 
 
+class LogoutTests(TestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+
+    def test_logout(self):
+        self.client.login(username=self.person.username, password=self.password)
+        self.assertIn('_auth_user_id', self.client.session)
+        self.client.get(reverse('logout'))
+        self.assertNotIn('_auth_user_id', self.client.session)
+
+
 class ConfigurationTests(TestCase):
 
     def setUp(self):
@@ -103,7 +111,8 @@ class ConfigurationTests(TestCase):
 
     def test_phone_number_types(self):
         response = self.client.get(reverse('index'))
-        self.assertTrue(response.context['phone_number_types_config'])
+        configuration = json.loads(response.context['phone_number_types_config'])
+        self.assertTrue(len(configuration) > 0)
 
     def test_address_types(self):
         mommy.make(AddressType)
@@ -157,19 +166,6 @@ class ConfigurationTests(TestCase):
         self.assertIn(str(self.person_status.id), [c['id'] for c in configuration])
         self.assertIn(str(self.person_status.name), [c['name'] for c in configuration])
 
-    def test_ticket_statuses(self):
-        response = self.client.get(reverse('index'))
-        configuration = json.loads(response.context['ticket_statuses'])
-        self.assertTrue(len(configuration) > 0)
-        self.assertIn(str(self.ticket_status.id), [c['id'] for c in configuration])
-
-    def test_ticket_priorities(self):
-        response = self.client.get(reverse('index'))
-        configuration = json.loads(response.context['ticket_priorities'])
-        self.assertTrue(len(configuration) > 0)
-        self.assertIn(str(self.ticket_priority.id), [c['id'] for c in configuration])
-        self.assertIn(str(self.ticket_priority.name), [c['name'] for c in configuration])
-
     def test_location_level(self):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['location_level_config'])
@@ -199,7 +195,7 @@ class ConfigurationTests(TestCase):
         self.assertTrue(configuration_usd)
         self.assertEqual(configuration_usd['name'], currency.name)
 
-    def test_current_person(self):
+    def test_person_current(self):
         Currency.objects.default()
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['person_current'])
@@ -210,8 +206,20 @@ class ConfigurationTests(TestCase):
         configuration = json.loads(response.context['default_model_ordering'])
         self.assertTrue(len(configuration) > 0)
 
-    def test_context_saved_search(self):
+    def test_saved_search(self):
         response = self.client.get(reverse('index'))
         configuration = json.loads(response.context['saved_search'])
         self.assertTrue(len(configuration) > 0)
 
+    def test_ticket_statuses(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['ticket_statuses'])
+        self.assertTrue(len(configuration) > 0)
+        self.assertIn(str(self.ticket_status.id), [c['id'] for c in configuration])
+
+    def test_ticket_priorities(self):
+        response = self.client.get(reverse('index'))
+        configuration = json.loads(response.context['ticket_priorities'])
+        self.assertTrue(len(configuration) > 0)
+        self.assertIn(str(self.ticket_priority.id), [c['id'] for c in configuration])
+        self.assertIn(str(self.ticket_priority.name), [c['name'] for c in configuration])
