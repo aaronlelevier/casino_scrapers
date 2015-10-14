@@ -312,11 +312,11 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['auth_currency'], str(self.person.auth_currency.id))
 
     def test_person_fk(self):
-        # Person FK should be in the nested contact records, so
-        # Ember can more easily push it into the Ember Store
-        person = Person.objects.get(id=self.data['phone_numbers'][0]['person'])
-        self.assertIsInstance(person, Person)
-
+        self.assertIn(
+            self.data['phone_numbers'][0]['id'],
+            [str(x) for x in self.person.phone_numbers.values_list('id', flat=True)]
+        )
+    
     ### DETAIL ROUTES
 
     def test_current(self):
@@ -418,7 +418,7 @@ class PersonPutTests(APITestCase):
         )
 
     def test_change_password_other_persons_password(self):
-
+        
         serializer = PersonUpdateSerializer(self.person2)
         self.data = serializer.data
 
@@ -507,15 +507,14 @@ class PersonPutTests(APITestCase):
             'id': str(uuid.uuid4()),
             'type': str(self.email_type.id),
             'email': 'mail@mail.com',
-            'person': str(self.person.id)
         }]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['emails'])
-        self.assertEqual(
-            self.person,
-            Email.objects.get(id=data['emails'][0]['id']).person
+        self.assertIn(
+            data['emails'][0]['id'],
+            [str(x) for x in self.person.emails.values_list('id', flat=True)]            
         )
 
     # ADDRESSES
@@ -525,16 +524,15 @@ class PersonPutTests(APITestCase):
         self.data['addresses'] = [{
             'id': address_id,
             'type': str(self.address_type.id),
-            'person': str(self.person.id),
-            'address': create._generate_chars()
+            'address': '123 My St.',
         }]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['addresses'])
-        self.assertEqual(
-            self.person,
-            Address.objects.get(id=address_id).person
+        self.assertIn(
+            data['addresses'][0]['id'],
+            [str(x) for x in self.person.addresses.values_list('id', flat=True)]
         )
 
     # PHONE NUMBERS
@@ -545,15 +543,14 @@ class PersonPutTests(APITestCase):
             'id': str(uuid.uuid4()),
             'type': str(self.phone_number_type.id),
             'number': create._generate_ph(),
-            'person': str(self.person.id)
         }]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(data['phone_numbers'])
-        self.assertEqual(
-            self.person,
-            PhoneNumber.objects.get(id=data['phone_numbers'][0]['id']).person
+        self.assertIn(
+            data['phone_numbers'][0]['id'],
+            [str(x) for x in self.person.phone_numbers.values_list('id', flat=True)]
         )
 
     def test_missing_contact_models(self):
@@ -574,7 +571,6 @@ class PersonPutTests(APITestCase):
             'id': str(uuid.uuid4()),
             'type': str(self.phone_number_type.id),
             'number': create._generate_ph(),
-            'person': str(self.person.id)
         }]
         self.data["emails"] = []
         # Post standard data w/o contacts
