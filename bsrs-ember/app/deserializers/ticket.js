@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 
-let extract_cc = (model, store, uuid) => {
+var extract_cc = function(model, store, uuid) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
     let all_ticket_people = store.find('ticket-person');
@@ -29,7 +29,7 @@ let extract_cc = (model, store, uuid) => {
     return server_sum;
 };
 
-let extract_ticket_status = (model, store) => {
+var extract_ticket_status = function(model, store) {
     let status_id = model.status;
     let existing_ticket = store.find('ticket', model.id);
     if (existing_ticket.get('id') && existing_ticket.get('status.id') !== status_id) {
@@ -59,10 +59,11 @@ var TicketDeserializer = Ember.Object.extend({
         let store = this.get('store');
         let existing_ticket = store.find('ticket', id);
         if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
-            response.status_fk = extract_ticket_status(response, store);
-            response.ticket_people_fks = extract_cc(response, store, uuid);
+            extract_ticket_status(response, store);
+            extract_cc(response, store, uuid);
             let ticket = store.push('ticket', response);
             ticket.save();
+            ticket.saveRelated();
         }
     },
     deserialize_list(response) {
@@ -70,9 +71,10 @@ var TicketDeserializer = Ember.Object.extend({
         response.results.forEach((model) => {
             let existing_ticket = store.find('ticket', model.id);
             if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
-                model.status_fk = extract_ticket_status(model, store);
+                extract_ticket_status(model, store);
                 let ticket = store.push('ticket', model);
                 ticket.save();
+                ticket.saveRelated();
             }
         });
     }
