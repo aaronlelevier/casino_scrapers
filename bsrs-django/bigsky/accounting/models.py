@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 from django.utils.text import capfirst
 
 from utils.models import BaseModel, BaseManager
@@ -13,7 +12,6 @@ class CurrencyManager(BaseManager):
         return obj
 
 
-@python_2_unicode_compatible
 class Currency(BaseModel):
     "Accepted Currencies"
     name = models.CharField(max_length=50, help_text="US Dollar")
@@ -30,12 +28,16 @@ class Currency(BaseModel):
         ordering = ('id',)
         verbose_name_plural = "Currencies"
 
-    def __str__(self):
-        return self.name
-
     def save(self, *args, **kwargs):
         self._update_defaults()
         super(Currency, self).save(*args, **kwargs)
+
+    def _update_defaults(self):
+        self.code = self.code.upper()
+        if not self.name_plural:
+            self.name_plural = capfirst(self.name+'s')
+        if not self.symbol_native:
+            self.symbol_native = self.symbol
 
     def to_dict(self):
         return {
@@ -48,10 +50,3 @@ class Currency(BaseModel):
             'decimal_digits': self.decimal_digits,
             'rounding': self.rounding
         }
-
-    def _update_defaults(self):
-        self.code = self.code.upper()
-        if not self.name_plural:
-            self.name_plural = capfirst(self.name+'s')
-        if not self.symbol_native:
-            self.symbol_native = self.symbol
