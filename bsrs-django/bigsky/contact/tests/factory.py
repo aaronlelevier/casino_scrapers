@@ -5,6 +5,15 @@ from location.models import Location
 from person.tests.factory import create_person
 
 
+def create_contact(model, content_object):
+    """
+    `object_id` is a UUID, which `model_mommy` doesn't know how to make, 
+    so it must be specified.
+    """
+    return mommy.make(model, content_object=content_object,
+        object_id=content_object.id)
+
+
 def create_person_and_contacts(person=None):
     if not person:
         person = create_person()

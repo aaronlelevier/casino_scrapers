@@ -572,32 +572,13 @@ class LocationSearchTests(APITestCase):
 
     def test_search_address_city(self):
         city = "San Diego"
-        address = mommy.make(Address, city=city, location=self.location)
+        address = mommy.make(Address, city=city, content_object=self.location,
+            object_id=self.location.id)
         response = self.client.get('/api/admin/locations/?search={}'.format(city))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['results'][0]['id'],
-            str(address.location.id)
-        )
-
-    def test_search_address_postal_code(self):
-        postal_code = "90210"
-        address = mommy.make(Address, postal_code=postal_code, location=self.location)
-        response = self.client.get('/api/admin/locations/?search={}'.format(postal_code))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data['results'][0]['id'],
-            str(address.location.id)
-        )
-
-    def test_search_address_address(self):
-        address = "123 Fern St."
-        address = mommy.make(Address, address="Fern", location=self.location)
-        response = self.client.get('/api/admin/locations/?search={}'.format(address))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data['results'][0]['id'],
-            str(address.location.id)
+            str(address.object_id)
         )
 
 

@@ -4,7 +4,9 @@ from django.db import models
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils.encoding import python_2_unicode_compatible
+from django.contrib.contenttypes.fields import GenericRelation
 
+from contact.models import PhoneNumber, Address, Email
 from utils.models import BaseNameModel, BaseModel, BaseManager
 
 
@@ -251,6 +253,9 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True,
         help_text="If not provided, will be the default 'LocationStatus'.")
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
+    phone_numbers = GenericRelation(PhoneNumber)
+    addresses = GenericRelation(Address)
+    emails = GenericRelation(Email)
     # fields
     name = models.CharField(max_length=50)
     number = models.CharField(max_length=50, blank=True, null=True)

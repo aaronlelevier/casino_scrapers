@@ -5,6 +5,7 @@ from model_mommy import mommy
 
 from contact.models import (PhoneNumber, PhoneNumberType,
     Address, AddressType, Email, EmailType)
+from contact.tests.factory import create_contact
 from location.models import Location
 from person.models import Person
 from person.tests.factory import create_person
@@ -17,8 +18,7 @@ class PhoneNumberTests(TestCase):
         self.person = create_person()
         self.location = mommy.make(Location)
         self.ph_type = mommy.make(PhoneNumberType)
-        self.ph = PhoneNumber.objects.create(number='1',
-            type=self.ph_type, content_object=self.person)
+        self.ph = create_contact(PhoneNumber, self.person)
 
     def test_create(self):
         self.assertIsInstance(self.ph, PhoneNumber)
@@ -45,9 +45,9 @@ class AddressTests(TestCase):
         self.person = create_person()
 
     def test_address(self):
-        a = mommy.make(Address, content_object=self.person)
-        self.assertIsInstance(a, Address)
-        self.assertIsInstance(a.type, AddressType)
+        address = create_contact(Address, self.person)
+        self.assertIsInstance(address, Address)
+        self.assertIsInstance(address.type, AddressType)
 
 
 class EmailTests(TestCase):
@@ -56,6 +56,6 @@ class EmailTests(TestCase):
         self.person = create_person()
 
     def test_email(self):
-        e = mommy.make(Email, content_object=self.person)
-        self.assertIsInstance(e, Email)
-        self.assertIsInstance(e.type, EmailType)
+        email = create_contact(Email, self.person)
+        self.assertIsInstance(email, Email)
+        self.assertIsInstance(email.type, EmailType)
