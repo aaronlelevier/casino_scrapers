@@ -16,6 +16,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField
 
 from accounting.models import Currency
+from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location
 from category.models import Category
 from person import helpers
@@ -272,6 +273,9 @@ class Person(BaseModel, AbstractUser):
                                    blank=True, null=True)
     # TODO: add logs for:
     #   pw_chage_log, login_activity, user_history
+    phone_numbers = GenericRelation(PhoneNumber)
+    addresses = GenericRelation(Address)
+    emails = GenericRelation(Email)
 
     # Managers
     objects = PersonManager()

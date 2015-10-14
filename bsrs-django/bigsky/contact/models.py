@@ -4,10 +4,21 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-from person.models import Person
 from location.models import Location
 from utils import exceptions as excp
 from utils.models import BaseNameOrderModel, BaseModel
+
+
+class MyGenericForeignKey(GenericForeignKey):
+
+    @property
+    def verbose_name(self):
+        return "Content Object"
+        # return "{}.{}".format(self.content_type.model, self.content_type.app_label)
+
+    @property
+    def choices(self):
+        return []
 
 
 class BaseContactModel(BaseModel):
@@ -16,7 +27,7 @@ class BaseContactModel(BaseModel):
     """
     content_type = models.ForeignKey(ContentType)
     object_id = models.UUIDField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    content_object = MyGenericForeignKey('content_type', 'object_id')
 
     class Meta:
         abstract = True

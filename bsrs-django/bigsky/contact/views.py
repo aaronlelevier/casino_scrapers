@@ -1,10 +1,9 @@
-from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
 from contact.serializers import (
     PhoneNumberTypeSerializer, PhoneNumberSerializer,
-    AddressTypeSerializer, AddressSerializer, EmailTypeSerializer,
-    EmailSerializer)
+    AddressTypeSerializer, AddressSerializer,
+    EmailTypeSerializer, EmailSerializer)
 from contact.models import (
     PhoneNumber, PhoneNumberType, Address, AddressType, Email, EmailType)
 from utils.views import BaseModelViewSet
@@ -28,7 +27,7 @@ class PhoneNumberViewSet(BaseModelViewSet):
     queryset = PhoneNumber.objects.all()
     model = PhoneNumber
     filter_fields = [f.name for f in model._meta.get_fields()]
-    
+
 
 class AddressTypeViewSet(BaseModelViewSet):
     """
