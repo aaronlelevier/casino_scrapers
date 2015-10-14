@@ -5,8 +5,10 @@ from django.contrib.auth import update_session_auth_hash
 from rest_framework import serializers
 
 from contact.models import PhoneNumber, Address, Email
-from contact.serializers import (PhoneNumberNodeSerializer,
-    EmailNodeSerializer, AddressNodeSerializer)
+from contact.serializers import   (
+    PhoneNumberFlatSerializer, PhoneNumberSerializer,
+    EmailFlatSerializer, EmailSerializer,
+    AddressFlatSerializer, AddressSerializer)
 from location.serializers import LocationLevelSerializer, LocationIdNameSerializer
 from category.serializers import CategoryRoleSerializer
 from person.models import PersonStatus, Person, Role
@@ -96,9 +98,9 @@ class PersonListSerializer(serializers.ModelSerializer):
 class PersonDetailSerializer(serializers.ModelSerializer):
 
     status = PersonStatusSerializer()
-    phone_numbers = PhoneNumberNodeSerializer(many=True)
-    addresses = AddressNodeSerializer(many=True)
-    emails = EmailNodeSerializer(many=True)
+    phone_numbers = PhoneNumberSerializer(many=True)
+    addresses = AddressSerializer(many=True)
+    emails = EmailSerializer(many=True)
     locations = LocationIdNameSerializer(many=True)
 
     class Meta:
@@ -117,9 +119,9 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         `person.location.location_level == person.role.location.location_level`
 
     '''
-    phone_numbers = PhoneNumberNodeSerializer(many=True)
-    addresses = AddressNodeSerializer(many=True)
-    emails = EmailNodeSerializer(many=True)
+    phone_numbers = PhoneNumberFlatSerializer(many=True)
+    addresses = AddressFlatSerializer(many=True)
+    emails = EmailFlatSerializer(many=True)
     password = serializers.CharField(required=False, style={'input_type': 'password'})
 
     class Meta:

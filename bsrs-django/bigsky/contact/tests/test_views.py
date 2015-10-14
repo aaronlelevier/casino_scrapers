@@ -50,7 +50,7 @@ class PhoneNumberTypeViewSetTests(APITestCase):
         response = self.client.get('/api/admin/phone-numbers/{}/'.format(self.phone_number.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['type'], str(self.type.pk))
+        self.assertEqual(data['type']['id'], str(self.type.pk))
 
     def test_list(self):
         # have 2 ph #'s total

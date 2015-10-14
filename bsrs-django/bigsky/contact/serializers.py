@@ -15,7 +15,7 @@ class PhoneNumberTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class PhoneNumberNodeSerializer(BaseCreateSerializer):
+class PhoneNumberFlatSerializer(BaseCreateSerializer):
     """Used for Person detail/update serializer leaf node."""
 
     class Meta:
@@ -25,9 +25,11 @@ class PhoneNumberNodeSerializer(BaseCreateSerializer):
 
 class PhoneNumberSerializer(BaseCreateSerializer):
 
+    type = PhoneNumberTypeSerializer()
+
     class Meta:
         model = PhoneNumber
-        fields = ('id', 'type', 'number', 'object_id',)
+        fields = ('id', 'type', 'number',)
 
 
 ### ADDRESS ###
@@ -39,7 +41,7 @@ class AddressTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-class AddressNodeSerializer(BaseCreateSerializer):
+class AddressFlatSerializer(BaseCreateSerializer):
     
     class Meta:
         model = Address
@@ -49,10 +51,12 @@ class AddressNodeSerializer(BaseCreateSerializer):
 
 class AddressSerializer(BaseCreateSerializer):
     
+    type = AddressTypeSerializer()
+
     class Meta:
         model = Address
         fields = ('id', 'type', 'address', 'city', 'state',
-            'country', 'postal_code', 'object_id',)
+            'country', 'postal_code',)
 
 
 ### EMAIL ###
@@ -64,7 +68,7 @@ class EmailTypeSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-class EmailNodeSerializer(BaseCreateSerializer):
+class EmailFlatSerializer(BaseCreateSerializer):
     
     class Meta:
         model = Email
@@ -72,7 +76,9 @@ class EmailNodeSerializer(BaseCreateSerializer):
 
 
 class EmailSerializer(BaseCreateSerializer):
+
+    type = EmailTypeSerializer()
     
     class Meta:
         model = Email
-        fields = ('id', 'type', 'email', 'object_id',)
+        fields = ('id', 'type', 'email',)
