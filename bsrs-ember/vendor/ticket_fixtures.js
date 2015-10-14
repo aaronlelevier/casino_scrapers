@@ -28,6 +28,7 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.number = 'bye' + i;
             ticket.request = 'sub' + i;
             ticket.subject = 'diagram' + i;
+            delete ticket.cc;
             response.push(ticket);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component
@@ -44,6 +45,7 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.number = 'gone' + i;
             ticket.request = 'ape' + i;
             ticket.subject = 'rabbit' + i;
+            delete ticket.cc;
             response.push(ticket);
         }
         return {'count':19,'next':null,'previous':null,'results': response};

@@ -23,7 +23,7 @@ var TicketSingleRoute = TabRoute.extend({
         let statuses = this.get('statusRepository').fetch();
         let priorities = this.get('store').find('ticket-priority');
         let peopleRepo = this.get('peopleRepo');
-        let ticket_cc = search ? peopleRepo.find(search) : [];
+        let ticket_cc_options = search ? peopleRepo.find(search) : [];
         if (!ticket.get('length') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             ticket = repository.findById(pk);
         }
@@ -33,7 +33,7 @@ var TicketSingleRoute = TabRoute.extend({
             statuses: statuses,
             priorities: priorities,
             search: search,
-            ticket_cc: ticket_cc
+            ticket_cc_options: ticket_cc_options
         });
     },
     setupController: function(controller, hash) {
@@ -42,7 +42,7 @@ var TicketSingleRoute = TabRoute.extend({
         controller.set('statuses', hash.statuses);
         controller.set('priorities', hash.priorities);
         controller.set('search', hash.search);
-        controller.set('ticket_cc', hash.ticket_cc);
+        controller.set('ticket_cc_options', hash.ticket_cc_options);
     },
 });
 

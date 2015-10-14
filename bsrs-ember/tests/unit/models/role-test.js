@@ -205,6 +205,7 @@ test('saving an undefined location level on a previously dirty role will clean t
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+/*ROLE TO CATEGORY Many-to-Many RELATIONSHIP*/
 test('category pushing into store from selectize will refire categoryIsDirty method', (assert) => {
     let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne]});
     let role_category = store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne});

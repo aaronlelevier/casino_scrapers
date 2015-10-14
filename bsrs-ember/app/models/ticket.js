@@ -3,8 +3,17 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 
+//kill this later?
+function equal(first, second) {
+    if (first instanceof Array && second instanceof Array) {
+        return Ember.$(first).not(second).get().length === 0 && Ember.$(second).not(first).get().length === 0;
+    }
+    return first === second;
+}
+
 var TicketModel = Model.extend({
     store: inject('main'),
+    uuid: injectUUID('uuid'),
     number: attr(''),
     subject: attr(''),
     ticket_people_fks: [],
@@ -13,7 +22,7 @@ var TicketModel = Model.extend({
         return this.get('cc').map((cc) => {
             return cc.get('id');
         });
-    }), 
+    }),
     cc: Ember.computed('ticket_cc.[]', function() {
         let store = this.get('store');
         let ticket_cc = this.get('ticket_cc');
@@ -25,13 +34,41 @@ var TicketModel = Model.extend({
         };
         return store.find('person', filter.bind(ticket_cc), ['id']);
     }),
+    ticket_cc_ids: Ember.computed('ticket_cc.[]', function() {
+        return this.get('ticket_cc').map((cc) => {
+            return cc.get('id');
+        }); 
+    }),
     ticket_cc: Ember.computed(function() {
+        let store = this.get('store');
         let filter = function(join_model) {
             return join_model.get('ticket_pk') === this.get('id') && !join_model.get('removed');
         };
-        let store = this.get('store');
         return store.find('ticket-person', filter.bind(this), ['removed']);
     }),
+    ccIsDirty: Ember.computed('cc.[]', 'cc_ids.[]', 'ticket_people_fks.[]', function() {
+        let cc = this.get('cc');
+        let previous_m2m_fks = this.get('ticket_people_fks') || [];
+        if(cc.get('length') !== previous_m2m_fks.length) {
+            let current_fk_ids = this.get('cc_ids');
+            return equal(current_fk_ids, previous_m2m_fks) ? false : true;
+        }
+        let current_fk_ids = this.get('ticket_cc_ids') || [];
+        return equal(current_fk_ids, previous_m2m_fks) ? false : true;
+    }),
+    ccIsNotDirty: Ember.computed.not('ccIsDirty'),
+    add_person(person_pk) {
+        let uuid = this.get('uuid');
+        let store = this.get('store');
+        store.push('ticket-person', {id: uuid.v4(), ticket_pk: this.get('id'), person_pk: person_pk});
+    },
+    remove_person(person_pk) {
+        let store = this.get('store');
+        let m2m_pk = this.get('ticket_cc').filter((m2m) => {
+            return m2m.get('person_pk') === person_pk;
+        }).objectAt(0).get('id');
+        store.push('ticket-person', {id: m2m_pk, removed: true});
+    },
     status: Ember.computed('belongs_to.[]', function() {
         let belongs_to = this.get('belongs_to');
         return belongs_to.objectAt(0);
@@ -52,6 +89,40 @@ var TicketModel = Model.extend({
             this.change_status(status_fk);
         }
     },
+    rollbackCC() {
+        let store = this.get('store');
+        let previous_m2m_fks = this.get('ticket_people_fks') || [];
+
+        let m2m_to_throw_out = store.find('ticket-person', function(join_model) {
+            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
+        }, ['removed']);
+
+        m2m_to_throw_out.forEach(function(join_model) {
+            join_model.set('removed', true);
+        });
+
+        previous_m2m_fks.forEach(function(pk) {
+            var m2m_to_keep = store.find('ticket-person', pk);
+            if (m2m_to_keep.get('id')) {
+                m2m_to_keep.set('removed', undefined);
+            }
+        });
+    },
+    saveCC() {
+        let ticket_cc = this.get('ticket_cc');
+        let ticket_cc_ids = this.get('ticket_cc_ids') || [];
+        let previous_m2m_fks = this.get('ticket_people_fks') || [];
+        ticket_cc.forEach((join_model) => {
+            if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
+                previous_m2m_fks.pushObject(join_model.get('id'));
+            } 
+        });
+        previous_m2m_fks.forEach((fk) => {
+            if (Ember.$.inArray(fk, ticket_cc_ids) === -1) {
+                previous_m2m_fks.removeObject(fk);
+            } 
+        });
+    },
     saveStatus() {
         let status = this.get('status');
         if (status) { this.set('status_fk', status.get('id')); }
@@ -64,8 +135,8 @@ var TicketModel = Model.extend({
         }
         return status_fk ? true : false;
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'statusIsDirty', function() {
-        return this.get('isDirty') || this.get('statusIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'statusIsDirty', 'ccIsDirty', function() {
+        return this.get('isDirty') || this.get('statusIsDirty') || this.get('ccIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     change_status: function(new_status_id) {
@@ -98,9 +169,11 @@ var TicketModel = Model.extend({
     },
     rollbackRelated() {
         this.rollbackStatus();
+        this.rollbackCC();
     },
     saveRelated() {
         this.saveStatus();
+        this.saveCC();
     }
 });
 

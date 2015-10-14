@@ -48,6 +48,7 @@ test('ticket status will be updated when server returns same status (list)', (as
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    delete json.cc;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     subject.deserialize(response);
     assert.deepEqual(ticket_status.get('tickets'), [TICKET_DEFAULTS.idOne]);
@@ -70,6 +71,7 @@ test('ticket status will be updated when server returns different status (list)'
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_status_two = store.push('ticket-status', {id: TICKET_DEFAULTS.statusTwoId, name: TICKET_DEFAULTS.statusOne, tickets: []});
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    delete json.cc;
     json.status = TICKET_DEFAULTS.statusTwoId;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     subject.deserialize(response);
@@ -84,6 +86,7 @@ test('newly inserted ticket will have non dirty status when deserialize list exe
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: []});
     let ticket_status_two = store.push('ticket-status', {id: TICKET_DEFAULTS.statusTwoId, name: TICKET_DEFAULTS.statusOne, tickets: []});
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    delete json.cc;
     json.status = TICKET_DEFAULTS.statusTwoId;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     subject.deserialize(response);
@@ -112,7 +115,7 @@ test('ticket-person m2m is set up correctly using deserialize single (starting w
 });
 
 test('ticket-status m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, ticket_people_fks: [TICKET_PERSON_DEFAULTS.idOne]});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
     let person = store.push('person', {id: PEOPLE_DEFAULTS.id, name: PEOPLE_DEFAULTS.fullname});
