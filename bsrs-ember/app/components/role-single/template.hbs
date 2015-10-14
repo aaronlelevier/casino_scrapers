@@ -1,14 +1,13 @@
 <form {{action "return false" this on="submit"}}>
-    <header>
-        {{base-component
-            model=model
-            repository=repository
-            save=attrs.save
-            saveBase="save"
-            cancel=attrs.cancel
-            delete=attrs.delete
-        }}
-    </header>
+
+  {{base-component
+  model=model
+  repository=repository
+  save="save"
+  cancel="cancel"
+  delete="delete"
+  }}
+
 	<section class="docSection container-fluid">
     <div class="row">
       <div class="col-md-12">

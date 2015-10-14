@@ -1,9 +1,11 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import BaseComponent from 'bsrs-ember/components/base-component-new/component';
+import TabMixin from 'bsrs-ember/mixins/components/tab/base';
+import NewMixin from 'bsrs-ember/mixins/components/tab/new';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var LocationLevelNew = BaseComponent.extend(ValidationMixin, {
+var LocationLevelNew = Ember.Component.extend(TabMixin, NewMixin, ValidationMixin, {
+    repository: inject('location-level'),
     nameValidation: validate('model.name'),
     filtered_location_levels: Ember.computed('all_location_levels.[]', function() { //TODO: test model.@each is needed or not?
         var model = this.get('model');

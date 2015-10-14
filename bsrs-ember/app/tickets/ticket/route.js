@@ -4,15 +4,16 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 
 var TicketSingleRoute = TabRoute.extend({
     repository: inject('ticket'),
+    statusRepository: inject('ticket-status'),
     redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
     modelName: Ember.computed(function() { return 'ticket'; }),
-    templateModelField: Ember.computed(function() { return 'number'; }),
+    templateModelField: Ember.computed(function() { return 'subject'; }),
     model(params) {
         let pk = params.ticket_id;
         let repository = this.get('repository');
         let store = this.get('store');
         let ticket = store.find('ticket', pk);
-        let statuses = store.find('ticket-status');
+        let statuses = this.get('statusRepository').fetch();
         let priorities = this.get('store').find('ticket-priority');
         if (!ticket.get('length') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             ticket = repository.findById(pk);

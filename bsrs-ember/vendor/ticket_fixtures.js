@@ -51,6 +51,7 @@ var BSRS_TICKET_FACTORY = (function() {
     };
     factory.prototype.put = function(ticket) {
         var response = this.generate(ticket.id);
+        delete response.number;
         for(var key in ticket) {
             response[key] = ticket[key];
         }

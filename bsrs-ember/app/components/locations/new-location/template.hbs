@@ -1,12 +1,12 @@
 <form {{action "return false" this on="submit"}}>
+
   {{base-component-new
-    model=model
-    repository=repository
-    save=attrs.save
-    saveBase="save"
-    cancel=attrs.cancel
-    delete=attrs.delete
+  model=model
+  repository=repository
+  save="save"
+  cancel="cancel"
   }}
+
 	<section class="docSection container-fluid">
 		<section>
 			<h2 class="col-sm-12">{{t "admin.location-level.label.credentials"}}</h2>

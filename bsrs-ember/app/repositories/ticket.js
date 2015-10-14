@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 import inject from 'bsrs-ember/utilities/deserializer';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
@@ -8,18 +9,25 @@ var PREFIX = config.APP.NAMESPACE;
 var TICKET_URL = PREFIX + '/tickets/';
 
 var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
+    uuid: injectUUID('uuid'),
     type: Ember.computed(function() { return 'ticket'; }),
     url: Ember.computed(function() { return TICKET_URL; }),
     TicketDeserializer: inject('ticket'),
     deserializer: Ember.computed.alias('TicketDeserializer'),
+    create() {
+        let pk = this.get('uuid').v4();
+        return this.store.push('ticket', {id: pk});
+    },
     insert(model) {
         return PromiseMixin.xhr(TICKET_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });
     },
     update(model) {
         return PromiseMixin.xhr(TICKET_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });   
     },
     findticketChildren(search) {

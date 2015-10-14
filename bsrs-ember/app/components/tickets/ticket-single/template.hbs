@@ -1,12 +1,13 @@
 <form {{action "return false" this on="submit"}}>
+
   {{base-component
   model=model
   repository=repository
-  save=attrs.save
-  saveBase="save"
-  cancel=attrs.cancel
-  delete=attrs.delete
+  save="save"
+  cancel="cancel"
+  delete="delete"
   }}
+  
   <section class="docSection container-fluid">
     <div class="row">
       <div class="col-md-12">
@@ -20,35 +21,28 @@
         <section>
           <div class="row">
             <div class="col-md-12">
-              {{#form-group title="ticket.label.number" for="number"}}
-              {{input type="text" placeholder=(t "ticket.label.number") value=model.number class="form-control t-ticket-number" id="ticket_number"}}
-              {{#validation-error-field submitted=submitted field="number" className="t-number-validation-error" model=model validation=numberValidation}}invalid number{{/validation-error-field}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
               {{#form-group title="ticket.label.subject" for="subject"}}
               {{input type="text" placeholder=(t "ticket.label.subject") value=model.subject class="form-control t-ticket-subject" id="ticket_subject"}}
-              {{#validation-error-field submitted=submitted field="subject" className="validation validation-under t-subject-validation-error" model=model validation=subjectValidation}}{{t "validation.invalid"}} {{t "ticket.label.subject"}}{{/validation-error-field}}
+              {{#validation-error-field submitted=submitted field="subject" className="validation validation-under t-subject-validation-error" model=model validation=subjectValidation}}invalid subject{{/validation-error-field}}
               {{/form-group}}
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
-              <select class="t-ticket-status form-control ticket-status" onchange={{action (action "changed" model) value="target.value"}}>
-              {{#each statuses as |ticketStatus|}}
-              <option value={{ticketStatus.id}} selected={{is-equal model.status.id ticketStatus.id}}>{{t ticketStatus.name}}</option>
-              {{/each}}
+              <select class="form-control t-ticket-status" onchange={{action "changed" value="target.value"}}>
+                {{#each statuses as |status|}}
+                <option value={{status.id}} selected={{is-equal model.status.id status.id}}>{{status.name}}</option>
+                {{/each}}
               </select>
+              {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
               <select class="t-ticket-priority form-control ticket-priority" onchange={{action (action "changedPriority" model) value="target.value"}}>
-              {{#each priorities as |ticketPriority|}}
-              <option value={{ticketPriority.id}} selected={{is-equal model.priority.id ticketPriority.id}}>{{t ticketPriority.name}}</option>
-              {{/each}}
+                {{#each priorities as |ticketPriority|}}
+                <option value={{ticketPriority.id}} selected={{is-equal model.priority.id ticketPriority.id}}>{{t ticketPriority.name}}</option>
+                {{/each}}
               </select>
             </div>
           </div>

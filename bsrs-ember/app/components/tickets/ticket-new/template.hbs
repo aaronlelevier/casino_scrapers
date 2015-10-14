@@ -1,0 +1,27 @@
+<form {{action "return false" this on="submit"}}>
+
+  {{base-component-new
+  model=model
+  repository=repository
+  save="save"
+  cancel="cancel"
+  }}
+
+	<section class="docSection container-fluid">
+		<section>
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group title="ticket.label.subject" for="subject"}}
+          {{input type="text" placeholder=(t "ticket.label.subject") value=model.subject class="form-control t-ticket-subject"}}
+          {{/form-group}}
+        </div>
+      </div>
+      <select class="form-control t-ticket-status" onchange={{action "changed" value="target.value"}}>
+        {{#each statuses as |status|}}
+        <option value={{status.id}} selected={{is-equal model.status.id status.id}}>{{status.name}}</option>
+        {{/each}}
+      </select>
+      {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
+		</section>
+	</section>
+</form>

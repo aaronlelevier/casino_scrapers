@@ -1,8 +1,7 @@
 import Ember from 'ember';
 import {ValidationMixin} from 'ember-cli-simple-validation/mixins/validate';
-import BaseComponent from 'bsrs-ember/components/base-component/component';
 
-var ParentValidationComponent = BaseComponent.extend(ValidationMixin, {
+var ParentValidationComponent = Ember.Component.extend(ValidationMixin, {
     eventbus: Ember.inject.service(),
     _setup: Ember.on('init', function() {
         this.child_validators = {};

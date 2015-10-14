@@ -1,9 +1,10 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
-import BaseComponent from 'bsrs-ember/components/base-component/component';
+import TabMixin from 'bsrs-ember/mixins/components/tab/base';
+import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 
-var LocationSingle = BaseComponent.extend(ValidationMixin, {
+var LocationSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
     repository: inject('location'),
     nameValidation: validate('model.name'),
     actions: {

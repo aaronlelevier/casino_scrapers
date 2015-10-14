@@ -1,8 +1,11 @@
 import Ember from 'ember';
-import BaseComponent from 'bsrs-ember/components/base-component-new/component';
+import inject from 'bsrs-ember/utilities/inject';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
+import TabMixin from 'bsrs-ember/mixins/components/tab/base';
+import NewMixin from 'bsrs-ember/mixins/components/tab/new';
 
-var PersonNewComponent = BaseComponent.extend(ValidationMixin, {
+var PersonNewComponent = Ember.Component.extend(TabMixin, NewMixin, ValidationMixin, {
+    repository: inject('person'),
     usernameValidation: validate('model.username'),
     passwordValidation: validate('model.password'),
     actions: {
