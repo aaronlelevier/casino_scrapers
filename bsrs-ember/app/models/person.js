@@ -96,7 +96,7 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
         var locale = store.find('locale', {locale: this.get('locale')});
         var locale_fk = locale.objectAt(0) ? locale.objectAt(0).get('id') : '';
 
-        return {
+        var payload = {
             id: this.get('id'),
             username: this.get('username'),
             first_name: this.get('first_name'),
@@ -114,6 +114,10 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
             locale: locale_fk,
             password: this.get('password'),
         };
+        if (!this.get('password')) {
+            delete payload.password;
+        }
+        return payload;
 
     },
     removeRecord() {
