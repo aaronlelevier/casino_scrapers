@@ -30,17 +30,6 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.saveRelated();
         });   
     },
-    findticketChildren(search) {
-        let url = TICKET_URL;
-        search = search ? search.trim() : search;
-        if (search) {
-            url += `?name__icontains=${search}`;
-            PromiseMixin.xhr(url, 'GET').then((response) => {
-                this.get('TicketDeserializer').deserialize(response);
-            });
-            return this.get('store').find('ticket');
-        }
-    },
     find() {
         PromiseMixin.xhr(TICKET_URL, 'GET').then((response) => {
             this.get('TicketDeserializer').deserialize(response);

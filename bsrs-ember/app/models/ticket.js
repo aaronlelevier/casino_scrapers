@@ -6,8 +6,32 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 var TicketModel = Model.extend({
     store: inject('main'),
     number: attr(''),
-    subject: attr(),
+    subject: attr(''),
+    ticket_people_fks: [],
     status_fk: undefined,
+    cc_ids: Ember.computed('cc.[]', function() {
+        return this.get('cc').map((cc) => {
+            return cc.get('id');
+        });
+    }), 
+    cc: Ember.computed('ticket_cc.[]', function() {
+        let store = this.get('store');
+        let ticket_cc = this.get('ticket_cc');
+        let filter = function(person) {
+            let person_pks = this.map(function(join_model) {
+                return join_model.get('person_pk');
+            });
+            return Ember.$.inArray(person.get('id'), person_pks) > -1;
+        };
+        return store.find('person', filter.bind(ticket_cc), ['id']);
+    }),
+    ticket_cc: Ember.computed(function() {
+        let filter = function(join_model) {
+            return join_model.get('ticket_pk') === this.get('id') && !join_model.get('removed');
+        };
+        let store = this.get('store');
+        return store.find('ticket-person', filter.bind(this), ['removed']);
+    }),
     status: Ember.computed('belongs_to.[]', function() {
         let belongs_to = this.get('belongs_to');
         return belongs_to.objectAt(0);
@@ -65,7 +89,8 @@ var TicketModel = Model.extend({
             subject: this.get('subject'),
             request: this.get('request'),
             status: this.get('status.id'),
-            priority: this.get('priority')
+            priority: this.get('priority'),
+            cc: this.get('cc_ids')
         };
     },
     removeRecord() {

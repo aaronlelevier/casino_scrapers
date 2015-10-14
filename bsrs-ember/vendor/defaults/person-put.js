@@ -10,6 +10,7 @@ var BSRS_PERSON_PUT_DEFAULTS_OBJECT = (function() {
             first_name: 'Ice',
             middle_initial: 'F\'in',
             last_name: 'Cube',
+            fullname: 'Ice F\'in Cube',
             employee_id: '1122',
             auth_amount: '0.000',
             auth_currency: this.currency_defaults.id,

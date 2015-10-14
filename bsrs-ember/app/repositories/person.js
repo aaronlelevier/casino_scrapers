@@ -24,8 +24,8 @@ export default Ember.Object.extend(GridRepositoryMixin, {
             model.save();
         });
     },
-    find() {
-        PromiseMixin.xhr(PEOPLE_URL, 'GET').then((response) => {
+    find(search_criteria) {
+        PromiseMixin.xhr(this.format_url(search_criteria), 'GET').then((response) => {
             this.get('PersonDeserializer').deserialize(response);
         });
         return this.get('store').find('person');
@@ -41,5 +41,12 @@ export default Ember.Object.extend(GridRepositoryMixin, {
     delete(id) {
         PromiseMixin.xhr(PEOPLE_URL + id + '/', 'DELETE');
         this.get('store').remove('person', id);
+    },
+    format_url(search_criteria) {
+        let url = PEOPLE_URL;
+        if(typeof filter !== 'undefined') {
+            url += `&fullname__icontains=${search_criteria}`;
+        }
+        return url;
     }
 });

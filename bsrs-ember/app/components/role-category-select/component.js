@@ -2,10 +2,9 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import injectStore from 'bsrs-ember/utilities/store';
 
-var CategoryChildrenSelect = Ember.Component.extend({
-    repository: inject('category'),
+var CategorySelect = Ember.Component.extend({
     store: injectStore('main'),
-    categories_selected: Ember.computed('role.categories.[]', 'role.role_categories.[]', 'role.categories_children.[]', 'role.role_category_fks.[]', function() {
+    categories_selected: Ember.computed('role.role_categories.[]', function() {
         let role = this.get('role');
         return role.get('categories');
     }),
@@ -33,4 +32,4 @@ var CategoryChildrenSelect = Ember.Component.extend({
     }
 });
 
-export default CategoryChildrenSelect;
+export default CategorySelect;

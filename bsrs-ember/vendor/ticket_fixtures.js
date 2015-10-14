@@ -1,6 +1,7 @@
 var BSRS_TICKET_FACTORY = (function() {
-    var factory = function(ticket) {
+    var factory = function(ticket, person) {
         this.ticket = ticket;
+        this.person = person;
     };
     factory.prototype.generate = function(i) {
         var id = i || this.ticket.idOne;
@@ -11,6 +12,7 @@ var BSRS_TICKET_FACTORY = (function() {
             request: this.ticket.requestOne,
             status: this.ticket.statusOneId,
             priority: this.ticket.priorityOneId,
+            cc: [{id: this.person.id, name: this.person.fullname, email: this.person.emails, role: this.person.role}]
         }
     };
     factory.prototype.list = function() {
@@ -47,10 +49,12 @@ var BSRS_TICKET_FACTORY = (function() {
         return {'count':19,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i) {
-        return this.generate(this.ticket.idOne);
+        var detail = this.generate(this.ticket.idOne);
+        return detail;
     };
     factory.prototype.put = function(ticket) {
         var response = this.generate(ticket.id);
+        response.cc = [response.cc[0].id];
         delete response.number;
         for(var key in ticket) {
             response[key] = ticket[key];
@@ -64,13 +68,14 @@ if (typeof window === 'undefined') {
     var objectAssign = require('object-assign');
     var mixin = require('../vendor/mixin');
     var ticket_defaults = require('./defaults/ticket');
+    var person_defaults = require('./defaults/person');
     objectAssign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_TICKET_FACTORY(ticket_defaults);
+    module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults);
 } else {
-    define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/mixin'], function (exports, ticket_defaults, mixin) {
+    define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/mixin'], function (exports, ticket_defaults, person_defaults, mixin) {
         'use strict';
         Object.assign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_TICKET_FACTORY(ticket_defaults);
+        var Factory = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults);
         return {default: Factory};
     });
 }

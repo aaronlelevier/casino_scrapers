@@ -60,7 +60,7 @@ class PersonViewSet(BaseModelViewSet):
 
        Return people based on search
 
-       URL: `/api/admin/people&name__icontains={x}`
+       URL: `/api/admin/people&fullname__icontains={x}`
 
     '''
     error_messages = {

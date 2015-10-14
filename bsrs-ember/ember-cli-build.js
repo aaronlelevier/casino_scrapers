@@ -57,6 +57,7 @@ module.exports = function(environment) {
   app.import('vendor/defaults/third-party.js');
   app.import('vendor/defaults/third-party-status.js');
   app.import('vendor/defaults/ticket.js');
+  app.import('vendor/defaults/ticket-person.js');
   app.import('vendor/defaults/uuid.js');
   app.import('vendor/defaults/global-message.js');
   // Use `app.import` to add additional libraries to the generated

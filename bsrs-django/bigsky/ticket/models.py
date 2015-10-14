@@ -34,7 +34,7 @@ class TicketPriority(BaseNameModel):
 
 class Ticket(BaseModel):
     '''
-    Ticket model
+    Ticket model with auto incrementing number field
     '''
     def no_ticket_models():
         no = Ticket.objects.count()
@@ -42,6 +42,7 @@ class Ticket(BaseModel):
             return 1
         else: 
             return no + 1
+
     status = models.ForeignKey(TicketStatus, null=True)
     priority = models.ForeignKey(TicketPriority, null=True)
     subject = models.TextField(max_length=100, blank=True, null=True)

@@ -3,7 +3,6 @@ import inject from 'bsrs-ember/utilities/inject';
 import injectStore from 'bsrs-ember/utilities/store';
 
 var CategoryChildrenSelect = Ember.Component.extend({
-    repository: inject('category'),
     store: injectStore('main'),
     categories_selected: Ember.computed(function() {
         let category = this.get('category');
