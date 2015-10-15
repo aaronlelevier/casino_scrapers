@@ -258,9 +258,34 @@ test('clicking and typing into selectize for people will fire off xhr request fo
         assert.equal(find('div.option').length, 9);
     });
     let url = PREFIX + DETAIL_URL + "/";
-    let category = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.idOne, name: PEOPLE_DEFAULTS.nameOne});
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_CURRENT_DEFAULTS.id, PEOPLE_DEFAULTS.id]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), TICKETS_URL);
+    });
+});
+
+test('when you deep link to the ticket detail can remove a cc', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 0);
+    });
+    click('div.item > a.remove:eq(0)');
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').get('length'), 0);
+        //TODO: figure out the right UX
+        // assert.equal(find('div.option').length, 1);
+        assert.equal(find('div.item').length, 0);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: []});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);

@@ -1,10 +1,6 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/inject';
-import injectStore from 'bsrs-ember/utilities/store';
 
 var PersonLocationsSelect = Ember.Component.extend({
-    repository: inject('location'),
-    store: injectStore('main'),
     person_locations_selected: Ember.computed('person.person_locations.@each.removed', function() {
         let person = this.get('person');
         return person.get('locations');

@@ -1,14 +1,11 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/inject';
-import injectStore from 'bsrs-ember/utilities/store';
 
 var TicketPeopleMulti = Ember.Component.extend({
-    store: injectStore('main'),
     cc_selected: Ember.computed('ticket.cc.[]', function() {
         let ticket = this.get('ticket');
         return ticket.get('cc');
     }),
-    options: Ember.computed('ticket.cc.[]', 'search', function() {
+    options: Ember.computed('cc_selected.[]', 'search', function() {
         return this.get('ticket_cc_options') && this.get('ticket_cc_options').get('length') > 0 ? this.get('ticket_cc_options') : this.get('cc_selected');
     }),
     find_all_people() {

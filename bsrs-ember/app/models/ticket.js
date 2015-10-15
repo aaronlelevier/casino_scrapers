@@ -48,13 +48,12 @@ var TicketModel = Model.extend({
     }),
     ccIsDirty: Ember.computed('cc.[]', 'cc_ids.[]', 'ticket_people_fks.[]', function() {
         let cc = this.get('cc');
+        let ticket_cc_ids = this.get('ticket_cc_ids');
         let previous_m2m_fks = this.get('ticket_people_fks') || [];
         if(cc.get('length') !== previous_m2m_fks.length) {
-            let current_fk_ids = this.get('cc_ids');
-            return equal(current_fk_ids, previous_m2m_fks) ? false : true;
+            return equal(ticket_cc_ids, previous_m2m_fks) ? false : true;
         }
-        let current_fk_ids = this.get('ticket_cc_ids') || [];
-        return equal(current_fk_ids, previous_m2m_fks) ? false : true;
+        return equal(ticket_cc_ids, previous_m2m_fks) ? false : true;
     }),
     ccIsNotDirty: Ember.computed.not('ccIsDirty'),
     add_person(person_pk) {

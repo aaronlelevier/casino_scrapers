@@ -169,6 +169,7 @@ test('replacing a ticket-person with some other ticket-person still shows the ti
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PEOPLE_DEFAULTS.idTwo);
 });
 
+/*TICKET TO PEOPLE M2M*/
 test('cc property only returns the single matching item even when multiple people (cc) exist', (assert) => {
     store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.idTwo});
     store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
@@ -282,7 +283,7 @@ test('when cc is changed dirty tracking works as expected (replacing)', (assert)
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('when location is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
+test('when person is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
     store.push('person', {id: PEOPLE_DEFAULTS.id});
     store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
     store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, ticket_pk: TICKET_DEFAULTS.idOne});
@@ -297,7 +298,7 @@ test('when location is suddently removed it shows as a dirty relationship (when 
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
 
-test('rollback location will reset the previously used people (cc) when switching from valid cc array to nothing', (assert) => {
+test('rollback ticket will reset the previously used people (cc) when switching from valid cc array to nothing', (assert) => {
     store.push('person', {id: PEOPLE_DEFAULTS.id});
     store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
     store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, ticket_pk: TICKET_DEFAULTS.idOne});
