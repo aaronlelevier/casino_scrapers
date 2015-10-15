@@ -527,21 +527,21 @@ test('starting with a page size greater than 10 will set the selected', function
     });
 });
 
-// test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
-//     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=subject';
-//     xhr(sort_one ,'GET',null,{},200,TICKET_FIXTURES.sorted('subject'));
-//     visit(TICKET_URL);
-//     click('.t-sort-subject-dir');
-//     click('.t-show-save-filterset-modal');
-//     andThen(() => {
-//         isFocused('.ember-modal-dialog input:first');
-//     });
-//     click('.t-grid-search-input');
-//     andThen(() => {
-//         isNotFocused('.ember-modal-dialog input:first');
-//     });
-// });
-//
+test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=subject';
+    xhr(sort_one ,'GET',null,{},200,TICKET_FIXTURES.sorted('subject'));
+    visit(TICKET_URL);
+    click('.t-sort-subject-dir');
+    click('.t-show-save-filterset-modal');
+    andThen(() => {
+        isFocused('.ember-modal-dialog input:first');
+    });
+    click('.t-grid-search-input');
+    andThen(() => {
+        isNotFocused('.ember-modal-dialog input:first');
+    });
+});
+
 // test('amk save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
 //     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=subject';
 //     xhr(sort_one ,'GET',null,{},200,TICKET_FIXTURES.sorted('subject'));

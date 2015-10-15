@@ -1,6 +1,6 @@
 var windowProxy = {
     changeLocation: function(url) {
-        window.location = url;
+        window.document.location = url;
     }
 };
 
