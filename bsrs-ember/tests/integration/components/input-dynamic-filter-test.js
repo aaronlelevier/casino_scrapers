@@ -64,6 +64,6 @@ test('input will pass along empty string value', function(assert) {
         setTimeout(function() {
             assert.equal(stub.hits(), 1);
             done();
-        }, 11);
+        }, 50);//should be 11 sec but if test runner is slow, 11s will fail
     }, 290);
 });
