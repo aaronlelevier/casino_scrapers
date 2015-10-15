@@ -278,8 +278,7 @@ test('when you deep link to the ticket detail can remove a cc', (assert) => {
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('cc').get('length'), 0);
-        //TODO: figure out the right UX
-        // assert.equal(find('div.option').length, 1);
+        assert.equal(find('div.option').length, 1);
         assert.equal(find('div.item').length, 0);
     });
     let url = PREFIX + DETAIL_URL + '/';

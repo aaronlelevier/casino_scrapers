@@ -5,7 +5,7 @@ var TicketPeopleMulti = Ember.Component.extend({
         let ticket = this.get('ticket');
         return ticket.get('cc');
     }),
-    options: Ember.computed('cc_selected.[]', 'search', function() {
+    options: Ember.computed('ticket.cc.[]', 'search', function() {
         return this.get('ticket_cc_options') && this.get('ticket_cc_options').get('length') > 0 ? this.get('ticket_cc_options') : this.get('cc_selected');
     }),
     find_all_people() {
