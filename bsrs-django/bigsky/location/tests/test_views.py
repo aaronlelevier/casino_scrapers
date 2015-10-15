@@ -482,6 +482,21 @@ class LocationUpdateTests(APITestCase):
         self.assertFalse(data['phone_numbers'])
         self.assertFalse(self.location.phone_numbers.all())
 
+    def test_nested_contact_remove_only_endpoints_contacts(self):
+        # Other contacts PHs for examle are unaffected by the nested delete, and only the
+        # person at this endpoint will have thier missing contacts deleted
+        location2 = Location.objects.exclude(name='ca').first()
+        ph = create_contact(PhoneNumber, location2)
+        # Delete ``self.location`` PHs
+        ph = create_contact(PhoneNumber, self.location)
+        serializer = LocationUpdateSerializer(self.location)
+        data = serializer.data
+        data.pop('phone_numbers')
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            data, format='json')
+        # ``location2`` still has thier PHs
+        self.assertTrue(location2.phone_numbers.all())
+
 
 class LocationDeleteTests(APITestCase):
 
