@@ -32,6 +32,22 @@ var extract_cc = function(model, store, uuid) {
     return server_sum;
 };
 
+var extract_ticket_priority = function(model, store) {
+    let priority_id = model.priority;
+    let existing_ticket = store.find('ticket', model.id);
+    if (existing_ticket.get('id') && existing_ticket.get('priority.id') !== priority_id) {
+        existing_ticket.change_priority(priority_id);
+    } else {
+        let new_priority = store.find('ticket-priority', priority_id);
+        let new_priority_tickets = new_priority.get('tickets') || [];
+        let updated_new_priority_tickets = new_priority_tickets.concat(model.id).uniq();
+        new_priority.set('tickets', updated_new_priority_tickets);
+    }
+    delete model.priority;
+    //TODO: implement dirty tracking and priority_fk in the ticket model @toranb
+    // return priority_id;
+};
+
 var extract_ticket_status = function(model, store) {
     let status_id = model.status;
     let existing_ticket = store.find('ticket', model.id);
@@ -40,9 +56,8 @@ var extract_ticket_status = function(model, store) {
     } else {
         let new_status = store.find('ticket-status', status_id);
         let new_status_tickets = new_status.get('tickets') || [];
-        if (new_status_tickets.indexOf(model.id) < 0) {
-            new_status.set('tickets', new_status_tickets.concat(model.id));
-        }
+        let updated_new_status_tickets = new_status_tickets.concat(model.id).uniq();
+        new_status.set('tickets', updated_new_status_tickets);
     }
     delete model.status;
     return status_id;
@@ -63,6 +78,7 @@ var TicketDeserializer = Ember.Object.extend({
         let existing_ticket = store.find('ticket', id);
         if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
             response.status_fk = extract_ticket_status(response, store);
+            extract_ticket_priority(response, store);
             response.ticket_people_fks = extract_cc(response, store, uuid);
             let ticket = store.push('ticket', response);
             ticket.save();
@@ -74,6 +90,7 @@ var TicketDeserializer = Ember.Object.extend({
             let existing_ticket = store.find('ticket', model.id);
             if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
                 model.status_fk = extract_ticket_status(model, store);
+                extract_ticket_priority(model, store);
                 let ticket = store.push('ticket', model);
                 ticket.save();
             }

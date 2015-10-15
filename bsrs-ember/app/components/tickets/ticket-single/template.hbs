@@ -37,9 +37,9 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              <select class="t-ticket-priority form-control ticket-priority" onchange={{action (action "changedPriority" model) value="target.value"}}>
-                {{#each priorities as |ticketPriority|}}
-                <option value={{ticketPriority.id}} selected={{is-equal model.priority.id ticketPriority.id}}>{{t ticketPriority.name}}</option>
+              <select class="t-ticket-priority form-control ticket-priority" onchange={{action "changed_priority" value="target.value"}}>
+                {{#each priorities as |priority|}}
+                <option value={{priority.id}} selected={{is-equal model.priority.id priority.id}}>{{priority.name}}</option>
                 {{/each}}
               </select>
             </div>
