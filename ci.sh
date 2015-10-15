@@ -17,7 +17,7 @@ esac
 shift # past argument or value
 done
 
-if [ "$TEST_EMBER" == "true" ]; 
+if ! [ "$TEST_EMBER" == "false" ]; 
   then
     echo "TEST EMBER: YES"
   else
@@ -157,7 +157,7 @@ echo $(date -u) "NPM INSTALL"
 cd bsrs-ember
 npmInstall
 
-if [ "$TEST_EMBER" == "true" ]; then
+if ! [ "$TEST_EMBER" == "false" ];  then
   echo $(date -u) "EMBER TESTS"
   emberTest
 fi
