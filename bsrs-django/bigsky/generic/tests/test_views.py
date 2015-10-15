@@ -3,11 +3,9 @@ import uuid
 
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
-from django.test import TestCase
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase
-from rest_framework.exceptions import ValidationError
 
 from generic.models import SavedSearch
 from generic.serializers import SavedSearchSerializer

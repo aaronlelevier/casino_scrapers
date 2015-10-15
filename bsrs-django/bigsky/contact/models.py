@@ -1,9 +1,6 @@
-import uuid
-
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 
-from utils import exceptions as excp
 from utils.fields import MyGenericForeignKey
 from utils.models import BaseNameOrderModel, BaseModel
 

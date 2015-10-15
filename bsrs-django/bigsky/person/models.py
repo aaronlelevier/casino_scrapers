@@ -3,7 +3,6 @@ import json
 from datetime import timedelta
 
 from django.db import models, IntegrityError
-from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.utils import timezone
@@ -11,7 +10,7 @@ from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.hashers import make_password
-from django.contrib.auth.hashers import check_password, identify_hasher
+from django.contrib.auth.hashers import identify_hasher
 from django.contrib.contenttypes.fields import GenericRelation
 from django.contrib.postgres.fields import ArrayField
 

@@ -2,6 +2,28 @@
 
 echo $(date -u) "BUILD STARTED!"
 
+while [[ $# > 1 ]]
+do
+key="$1"
+
+case $key in
+  -e|--test_ember)
+  TEST_EMBER="$2"
+  shift # past argument
+  ;;
+  *)
+  ;;
+esac
+shift # past argument or value
+done
+
+if ! [ "$TEST_EMBER" == "false" ]; 
+  then
+    echo "TEST EMBER: YES"
+  else
+    echo "TEST EMBER: NO"
+fi
+
 function npmInstall {
     npm install --no-optional
     NPM_INSTALL=$?
@@ -135,7 +157,7 @@ echo $(date -u) "NPM INSTALL"
 cd bsrs-ember
 npmInstall
 
-if [ "$(uname)" == "Darwin" ]; then
+if ! [ "$TEST_EMBER" == "false" ];  then
   echo $(date -u) "EMBER TESTS"
   emberTest
 fi

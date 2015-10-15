@@ -1,8 +1,6 @@
 from django.test import TestCase
 from django.conf import settings
 
-from model_mommy import mommy
-
 from accounting.models import Currency
 from category.models import Category
 from category.tests import factory

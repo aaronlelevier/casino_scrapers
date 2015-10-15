@@ -3,7 +3,6 @@ import json
 from django.conf import settings
 from django.conf.urls import include, url, patterns
 from django.contrib import admin
-from django.core.urlresolvers import reverse
 from django.contrib.auth import views as auth_views, forms
 from django.contrib.auth.decorators import login_required
 

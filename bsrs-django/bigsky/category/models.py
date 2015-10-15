@@ -4,7 +4,6 @@ from django.db import models
 from django.conf import settings
 
 from accounting.models import Currency
-from utils import choices
 from utils.models import BaseNameModel, BaseManager, BaseModel
 
 

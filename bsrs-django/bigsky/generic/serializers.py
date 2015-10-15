@@ -1,6 +1,5 @@
 from generic.models import SavedSearch
 from utils.serializers import BaseCreateSerializer
-from utils.validators import UniqueForActiveValidator
 
 class SavedSearchSerializer(BaseCreateSerializer):
 

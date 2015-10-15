@@ -25,7 +25,7 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "rm failed"; exit $TEST; fi
 
 wait
 echo "GIT - CLONE REPO"
-git clone -b python3 git@github.com:bigskytech/bsrs.git
+git clone git@github.com:bigskytech/bsrs.git
 TEST=$?; if [ "$TEST" == 1 ]; then echo "git clone failed"; exit $TEST; fi
 
 

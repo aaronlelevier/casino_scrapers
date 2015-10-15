@@ -1,8 +1,6 @@
 from django.test import TestCase
 
 from accounting.models import Currency
-from category.models import Category
-from contact.models import PhoneNumber, Email, Address
 from third_party.tests import factory
 from third_party.models import ThirdParty, ThirdPartyStatus
 

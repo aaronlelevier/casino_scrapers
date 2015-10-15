@@ -1,8 +1,4 @@
 from django.core.exceptions import ObjectDoesNotExist
-# TODO: 
-# Could reference this as a check that the field_args are
-#   part of the Django ORM ``QUERY_TERMS``
-from django.db.models.sql.constants import QUERY_TERMS
 
 from rest_framework import viewsets, exceptions, status
 from rest_framework.response import Response

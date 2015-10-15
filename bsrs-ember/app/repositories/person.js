@@ -30,13 +30,11 @@ export default Ember.Object.extend(GridRepositoryMixin, {
             url += `?fullname__icontains=${search_criteria}`;
         }
         PromiseMixin.xhr(url, 'GET').then((response) => {
-            if (!response) {
-                this.get('PersonDeserializer').deserialize(response);
-            }
+            this.get('PersonDeserializer').deserialize(response);
         });
         let filterFunc = function(person) {
             let fullname = person.get('fullname');
-            return fullname.toLowerCase().includes(search_criteria.toLowerCase()) === true; 
+            return fullname.toLowerCase().includes(search_criteria.toLowerCase()) > 0;
         };
         //ensure person returned from store has substring in fullname
         return this.get('store').find('person', filterFunc, ['id']);
