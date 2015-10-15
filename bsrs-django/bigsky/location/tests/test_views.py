@@ -6,7 +6,8 @@ from django.db.models import Q
 from rest_framework.test import APITestCase
 from model_mommy import mommy
 
-from contact.models import Address
+from contact.models import Address, PhoneNumber, PhoneNumberType
+from contact.tests.factory import create_contact, create_contacts
 from location.tests.factory import create_location_levels, create_locations
 from location.models import (Location, LocationLevel, LocationStatus,
     LocationType)
@@ -208,6 +209,7 @@ class LocationDetailTests(APITestCase):
     def setUp(self):
         create_locations()
         self.location = Location.objects.get(name='ca')
+        create_contacts(self.location)
         # Login
         self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -250,7 +252,13 @@ class LocationDetailTests(APITestCase):
         )
 
     def test_keys(self):
-        self.assertEqual(len(self.data), 7)
+        self.assertEqual(len(self.data), 10) # b/c ph,email,addresses added
+
+    def test_contact_nested(self):
+        self.assertTrue(self.data['phone_numbers'][0]['id'])
+
+    def test_contact_type_nested(self):
+        self.assertTrue(self.data['phone_numbers'][0]['type']['id'])
 
     ### DETAIL ROUTES
 
@@ -429,6 +437,50 @@ class LocationUpdateTests(APITestCase):
         response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
+
+    ### nested contacts
+
+    def test_nested_contact_create(self):
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertFalse(data['phone_numbers'])
+        ph_type = mommy.make(PhoneNumberType)
+        ph_id = str(uuid.uuid4())
+        data['phone_numbers'] = [{
+            'id': ph_id,
+            'number': '123',
+            'type': str(ph_type.id)
+        }]
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            data, format='json')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['phone_numbers'][0]['id'], str(ph_id))
+
+    def test_nested_contact_update(self):
+        ph = create_contact(PhoneNumber, self.location)
+        serializer = LocationUpdateSerializer(self.location)
+        data = serializer.data
+        new_number = '456'
+        data['phone_numbers'][0]['number'] = new_number
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            data, format='json')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['phone_numbers'][0]['number'], new_number)
+
+    def test_nested_contact_remove(self):
+        ph = create_contact(PhoneNumber, self.location)
+        serializer = LocationUpdateSerializer(self.location)
+        data = serializer.data
+        data.pop('phone_numbers') # field is not required, so doesn't need to be sent from client-side
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            data, format='json')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertFalse(data['phone_numbers'])
+        self.assertFalse(self.location.phone_numbers.all())
 
 
 class LocationDeleteTests(APITestCase):

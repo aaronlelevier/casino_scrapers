@@ -14,7 +14,7 @@ from model_mommy import mommy
 from accounting.models import Currency
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
-from contact.tests.factory import create_person_and_contacts
+from contact.tests.factory import create_contacts
 from location.models import Location, LocationLevel
 from category.models import Category
 from person.models import Person, Role, PersonStatus
@@ -252,7 +252,7 @@ class PersonDetailTests(TestCase):
     def setUp(self):
         self.person = create_person()
         # Contact info
-        create_person_and_contacts(self.person)
+        create_contacts(self.person)
         # Location
         self.location = mommy.make(Location, location_level=self.person.role.location_level)
         self.person.locations.add(self.location)
@@ -352,7 +352,7 @@ class PersonPutTests(APITestCase):
         # Person2 w/ some contact info doesn't affect Person1's Contact
         # counts / updates / deletes
         self.person2 = create_person()
-        create_person_and_contacts(self.person2)
+        create_contacts(self.person2)
 
         serializer = PersonUpdateSerializer(self.person)
         self.data = serializer.data
@@ -555,7 +555,7 @@ class PersonPutTests(APITestCase):
     def test_missing_contact_models(self):
         # If a nested Contact Model is no longer present, then delete 
         # Person FK on Contact Nested Model
-        create_person_and_contacts(self.person)
+        create_contacts(self.person)
         # Post standard data w/o contacts
         self.data["emails"] = []
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),

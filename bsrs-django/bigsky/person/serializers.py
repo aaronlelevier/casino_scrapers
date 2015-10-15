@@ -1,5 +1,3 @@
-import copy
-
 from rest_framework import serializers
 
 from contact.models import PhoneNumber, Address, Email
@@ -12,7 +10,7 @@ from category.serializers import CategoryRoleSerializer
 from person.models import PersonStatus, Person, Role
 from person.validators import RoleLocationValidator
 from utils import create
-from utils.serializers import BaseCreateSerializer
+from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
 
 
 ### ROLE ###
@@ -96,10 +94,10 @@ class PersonListSerializer(serializers.ModelSerializer):
 class PersonDetailSerializer(serializers.ModelSerializer):
 
     status = PersonStatusSerializer()
-    phone_numbers = PhoneNumberSerializer(many=True)
-    addresses = AddressSerializer(many=True)
-    emails = EmailSerializer(many=True)
     locations = LocationIdNameSerializer(many=True)
+    emails = EmailSerializer(required=False, many=True)
+    phone_numbers = PhoneNumberSerializer(required=False, many=True)
+    addresses = AddressSerializer(required=False, many=True)
 
     class Meta:
         model = Person
@@ -107,7 +105,7 @@ class PersonDetailSerializer(serializers.ModelSerializer):
             'emails', 'phone_numbers', 'addresses',)
 
 
-class PersonUpdateSerializer(serializers.ModelSerializer):
+class PersonUpdateSerializer(NestedContactSerializerMixin, serializers.ModelSerializer):
     '''
     Update a ``Person`` and all nested related ``Contact`` Models.
 
@@ -117,47 +115,26 @@ class PersonUpdateSerializer(serializers.ModelSerializer):
         `person.location.location_level == person.role.location.location_level`
 
     '''
-    phone_numbers = PhoneNumberFlatSerializer(many=True)
-    addresses = AddressFlatSerializer(many=True)
-    emails = EmailFlatSerializer(many=True)
     password = serializers.CharField(required=False, style={'input_type': 'password'})
+    emails = EmailFlatSerializer(required=False, many=True)
+    phone_numbers = PhoneNumberFlatSerializer(required=False, many=True)
+    addresses = AddressFlatSerializer(required=False, many=True)
 
     class Meta:
         model = Person
         validators = [RoleLocationValidator('role', 'locations')]
         write_only_fields = ('password',)
-        fields = PERSON_FIELDS + ('password', 'locale', 'locations', 'emails',
-            'phone_numbers', 'addresses',)
+        fields = PERSON_FIELDS + ('password', 'locale', 'locations',
+            'emails', 'phone_numbers', 'addresses',)
 
     def update(self, instance, validated_data):
         # Pasword
+        self.update_password(instance, validated_data)
+        # Contacts
+        return super(PersonUpdateSerializer, self).update(instance, validated_data)
+
+    def update_password(self, instance, validated_data):
         raw_password = validated_data.pop('password', None)
         if raw_password:
             instance.set_password(raw_password)
-        # Contacts
-        phone_numbers = validated_data.pop('phone_numbers', [])
-        addresses = validated_data.pop('addresses', [])
-        emails = validated_data.pop('emails', [])
-        # Update Person
-        instance = create.update_model(instance, validated_data)
-        # Create/Update PhoneNumbers
-        for contacts, model in [(phone_numbers, PhoneNumber), (addresses, Address),
-            (emails, Email)]:
-            # Set of all Contact Id's for the Person.  If not in the set() sent 
-            # over, will remove the FK reference from the Contact Model of that type.
-            contact_ids = set()
-            for c in contacts:
-                c = copy.copy(c)
-                contact_ids.update([c['id']])
-                try:
-                    contact = model.objects.get(id=c['id'])
-                    # Add back ``Person`` and update Contact
-                    c.update({'content_object': instance})
-                    create.update_model(contact, c)
-                except model.DoesNotExist:
-                    new_contact = model.objects.create(content_object=instance, **c)
-            # Remove FK Reference if not in Nested Contact Payload
-            for m in (model.objects.filter(object_id=instance.id)
-                                   .exclude(id__in=[x for x in contact_ids])):
-                m.delete()
-        return instance
+

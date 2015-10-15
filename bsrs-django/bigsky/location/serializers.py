@@ -1,7 +1,15 @@
+import copy
+
 from rest_framework import serializers
 
+from contact.models import PhoneNumber, Address, Email
+from contact.serializers import   (
+    PhoneNumberFlatSerializer, PhoneNumberSerializer,
+    EmailFlatSerializer, EmailSerializer,
+    AddressFlatSerializer, AddressSerializer)
 from location.models import LocationLevel, LocationStatus, LocationType, Location
-from utils.serializers import BaseCreateSerializer
+from utils import create
+from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
 from utils.validators import UniqueForActiveValidator, LocationParentChildValidator
 
 ### LOCATION LEVEL
@@ -84,11 +92,14 @@ class LocationDetailSerializer(serializers.ModelSerializer):
     location_level = LocationLevelDetailSerializer()
     parents = LocationSerializer(many=True)
     children = LocationSerializer(many=True)
+    emails = EmailSerializer(required=False, many=True)
+    phone_numbers = PhoneNumberSerializer(required=False, many=True)
+    addresses = AddressSerializer(required=False, many=True)
 
     class Meta:
         model = Location
         fields = ('id', 'name', 'number', 'location_level', 'status',
-            'parents', 'children',)
+            'parents', 'children', 'emails', 'phone_numbers', 'addresses',)
 
 
 class LocationCreateSerializer(BaseCreateSerializer):
@@ -99,7 +110,11 @@ class LocationCreateSerializer(BaseCreateSerializer):
         fields = ('id', 'name', 'number', 'status', 'location_level',)
 
 
-class LocationUpdateSerializer(serializers.ModelSerializer):
+class LocationUpdateSerializer(NestedContactSerializerMixin, serializers.ModelSerializer):
+
+    emails = EmailFlatSerializer(required=False, many=True)
+    phone_numbers = PhoneNumberFlatSerializer(required=False, many=True)
+    addresses = AddressFlatSerializer(required=False, many=True)
 
     class Meta:
         model = Location
@@ -109,4 +124,4 @@ class LocationUpdateSerializer(serializers.ModelSerializer):
             LocationParentChildValidator('location_level', 'children')
         ]
         fields = ('id', 'name', 'number', 'status', 'location_level',
-            'parents', 'children',)
+            'parents', 'children', 'emails', 'phone_numbers', 'addresses',)

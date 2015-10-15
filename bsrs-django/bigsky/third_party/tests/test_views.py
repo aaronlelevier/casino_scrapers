@@ -4,6 +4,7 @@ import uuid
 from rest_framework.test import APITestCase
 
 from contact.models import Email, EmailType
+from contact.tests.factory import create_contact
 from person.tests.factory import PASSWORD, create_person
 from third_party.models import ThirdParty
 from third_party.serializers import ThirdPartyCreateUpdateSerializer
@@ -61,6 +62,18 @@ class ThirdPartyTests(APITestCase):
             EmailType.objects.get(id=data['emails'][0]['type']['id']),
             EmailType
         )
+
+    def test_nested_contact(self):
+        email = create_contact(Email, self.third_party)
+        response = self.client.get('/api/admin/third-parties/{}/'.format(self.third_party.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['emails'][0]['id'])
+
+    def test_nested_contact_type(self):
+        email = create_contact(Email, self.third_party)
+        response = self.client.get('/api/admin/third-parties/{}/'.format(self.third_party.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['emails'][0]['type']['id'])
 
     ### UPDATE
 

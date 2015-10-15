@@ -4,25 +4,25 @@ from contact.serializers import   (
     EmailFlatSerializer, EmailSerializer,
     AddressFlatSerializer, AddressSerializer)
 from third_party.models import ThirdParty
-from utils.serializers import BaseCreateSerializer
+from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
 
 
 THIRD_PARTY_FIELDS = ('id', 'name', 'number', 'status',)
 
 
-class ThirdPartyListSerializer(BaseCreateSerializer):
+class ThirdPartySerializer(BaseCreateSerializer):
 
     class Meta:
         model = ThirdParty
         fields = THIRD_PARTY_FIELDS
 
 
-class ThirdPartyCreateUpdateSerializer(BaseCreateSerializer):
+class ThirdPartyCreateUpdateSerializer(NestedContactSerializerMixin, BaseCreateSerializer):
 
     categories = CategoryIDNameSerializer(many=True, read_only=True)
-    phone_numbers = PhoneNumberFlatSerializer(many=True, read_only=True)
-    addresses = AddressFlatSerializer(many=True, read_only=True)
-    emails = EmailFlatSerializer(many=True, read_only=True)
+    emails = EmailFlatSerializer(required=False, many=True)
+    phone_numbers = PhoneNumberFlatSerializer(required=False, many=True)
+    addresses = AddressFlatSerializer(required=False, many=True)
 
     class Meta:
         model = ThirdParty
@@ -32,13 +32,6 @@ class ThirdPartyCreateUpdateSerializer(BaseCreateSerializer):
 
 class ThirdPartyDetailSerializer(ThirdPartyCreateUpdateSerializer):
 
-    phone_numbers = PhoneNumberSerializer(many=True)
-    addresses = AddressSerializer(many=True)
-    emails = EmailSerializer(many=True)
-
-
-class ThirdPartySerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = ThirdParty
-        fields = THIRD_PARTY_FIELDS
+    emails = EmailSerializer(required=False, many=True)
+    phone_numbers = PhoneNumberSerializer(required=False, many=True)
+    addresses = AddressSerializer(required=False, many=True)

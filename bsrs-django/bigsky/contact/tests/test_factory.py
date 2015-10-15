@@ -15,11 +15,7 @@ class FactoryTests(TestCase):
         self.assertIsInstance(email, Email)
 
     def test_create_person_and_contacts(self):
-        person = factory.create_person_and_contacts()
+        person = create_person()
+        factory.create_contacts(person)
         self.assertIsInstance(person, Person)
         self.assertIsInstance(Address.objects.get(object_id=person.id), Address)
-
-    def test_create_location_and_contacts(self):
-        location = factory.create_location_and_contacts()
-        self.assertIsInstance(location, Location)
-        self.assertIsInstance(Email.objects.get(object_id=location.id), Email)
