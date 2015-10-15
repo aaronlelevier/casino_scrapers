@@ -1,4 +1,4 @@
-from django.test import TransactionTestCase, TestCase
+from django.test import TransactionTestCase
 
 from accounting.models import Currency
 from location.models import LocationLevel, Location

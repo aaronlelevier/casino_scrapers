@@ -5,7 +5,6 @@ from rest_framework.test import APITestCase
 
 from contact.models import PhoneNumber, Address, Email
 from contact.tests.factory import create_contact, create_person_and_contacts
-from person.models import Person
 from person.tests.factory import PASSWORD, create_person, create_role
 
 

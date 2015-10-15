@@ -1,7 +1,6 @@
 from datetime import date
 
 from django.test import TestCase
-from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
 from django.core.exceptions import ValidationError
 

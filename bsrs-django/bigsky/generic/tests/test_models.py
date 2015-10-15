@@ -1,8 +1,4 @@
-import os
-from os.path import dirname, join
-
 from django.test import TestCase
-from django.core.files.uploadedfile import SimpleUploadedFile
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.contrib.auth.models import ContentType
 
@@ -10,7 +6,6 @@ from model_mommy import mommy
 from rest_framework.exceptions import ValidationError
 
 from generic.models import MainSetting, Attachment, SavedSearch
-from location.models import LocationLevel
 from person.tests.factory import create_single_person
 
 

@@ -4,7 +4,6 @@ import json
 from django.core.exceptions import PermissionDenied
 from django.db.models.loading import get_model
 from django.http import HttpResponse
-from django.views.generic import View
 
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated

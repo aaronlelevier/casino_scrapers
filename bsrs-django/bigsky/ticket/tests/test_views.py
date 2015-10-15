@@ -2,7 +2,6 @@ import json
 import uuid
 import random
 
-from model_mommy import mommy
 from rest_framework.test import APITestCase
 
 from ticket.models import Ticket

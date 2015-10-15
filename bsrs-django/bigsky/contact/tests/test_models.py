@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.contrib.auth.models import ContentType
 
 from model_mommy import mommy
 
@@ -9,7 +8,6 @@ from contact.tests.factory import create_contact
 from location.models import Location
 from person.models import Person
 from person.tests.factory import create_person
-from utils import exceptions as excp
 
 
 class PhoneNumberTests(TestCase):

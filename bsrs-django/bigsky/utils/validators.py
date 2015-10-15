@@ -1,9 +1,6 @@
-import re
-
 from rest_framework.exceptions import ValidationError
 
 from django.utils.translation import ugettext_lazy as _
-from django.core.exceptions import ValidationError as DjangoValidationError
 
 
 class UniqueForActiveValidator(object):

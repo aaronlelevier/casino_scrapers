@@ -2,7 +2,6 @@ import json
 import uuid
 import copy
 import random
-import sys
 import codecs
 
 from django.test import TestCase

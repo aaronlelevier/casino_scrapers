@@ -3,11 +3,11 @@ import random
 import string
 
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select, WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from helpers import (
-    LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
+    LoginMixin, FillInHelper, JavascriptMixin,
     NavPage, GeneralElementsPage, Wait, ModelPage
 )
 
