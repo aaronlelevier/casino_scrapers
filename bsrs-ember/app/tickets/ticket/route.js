@@ -23,7 +23,7 @@ var TicketSingleRoute = TabRoute.extend({
         let statuses = this.get('statusRepository').fetch();
         let priorities = this.get('store').find('ticket-priority');
         let peopleRepo = this.get('peopleRepo');
-        let ticket_cc_options = search ? peopleRepo.find(search) : [];
+        let ticket_cc_options = search ? peopleRepo.findTicketPeople(search) : [];
         if (!ticket.get('length') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             ticket = repository.findById(pk);
         }

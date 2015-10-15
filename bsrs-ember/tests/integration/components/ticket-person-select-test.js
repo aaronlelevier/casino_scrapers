@@ -33,38 +33,36 @@ test('should render a selectbox when the options are empty (initial state of sel
     assert.equal($component.find('div.option').length, 0);
 });
 
-test('should render a selectbox with bound options and multiple set to true after type ahead for search', function(assert) {
+test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let ticket_cc_options = store.find('person');
     this.set('ticket', ticket);
     this.set('ticket_cc_options', ticket_cc_options);
     this.set('search', 'x');
     this.render(hbs`{{ticket-person-multi-select ticket=ticket search=search ticket_cc_options=ticket_cc_options}}`);
     let $component = this.$('.t-ticket-people-select');
-    assert.equal($component.prop('multiple'), true);
     assert.equal($component.find('div.item').length, 2);
     assert.equal($component.find('div.option').length, 1);
 });
 
-test('should render a selectbox with bound options and multiple set to true after type ahead for search', function(assert) {
-    let one = store.push('person', {id: 'abcde4'});
-    let two = store.push('person', {id: 'abcde5'});
-    let three = store.push('person', {id: 'abcde6'});
-    let ticket_cc_options = Ember.ArrayProxy.extend({
-        content: Ember.computed(function() {
-            return Ember.A(this.get('source'));
-        })
-    }).create({
-        source: [one, two, three]
-    });
-    this.set('ticket', ticket);
-    this.set('ticket_cc_options', ticket_cc_options);
-    this.set('search', 'abcde');
-    this.render(hbs`{{ticket-person-multi-select ticket=ticket search=search ticket_cc_options=ticket_cc_options}}`);
-    let $component = this.$('.t-ticket-people-select');
-    assert.equal($component.prop('multiple'), true);
-    assert.equal($component.find('div.item').length, 2);
-    assert.equal($component.find('div.option').length, 3);
-});
+// test('should render a selectbox with bound options after type ahead for search with search params for people', function(assert) {
+//     let one = store.push('person', {id: 'abcde4'});
+//     let two = store.push('person', {id: 'abcde5'});
+//     let three = store.push('person', {id: 'abcde6'});
+//     let ticket_cc_options = Ember.ArrayProxy.extend({
+//         content: Ember.computed(function() {
+//             return Ember.A(this.get('source'));
+//         })
+//     }).create({
+//         source: [one, two, three]
+//     });
+//     this.set('ticket', ticket);
+//     this.set('ticket_cc_options', ticket_cc_options);
+//     this.set('search', 'abcde');
+//     this.render(hbs`{{ticket-person-multi-select ticket=ticket search=search ticket_cc_options=ticket_cc_options}}`);
+//     let $component = this.$('.t-ticket-people-select');
+//     assert.equal($component.find('div.item').length, 2);
+//     assert.equal($component.find('div.option').length, 3);
+// });
 
 test('should render a selectbox with bound options and multiple set to true after type ahead for search', function(assert) {
     let ticket_cc_options = store.find('person');

@@ -33,7 +33,6 @@
                 <option value={{status.id}} selected={{is-equal model.status.id status.id}}>{{status.name}}</option>
                 {{/each}}
               </select>
-              {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
             </div>
           </div>
           <div class="row">

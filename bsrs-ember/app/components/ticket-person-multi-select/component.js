@@ -4,24 +4,12 @@ import injectStore from 'bsrs-ember/utilities/store';
 
 var TicketPeopleMulti = Ember.Component.extend({
     store: injectStore('main'),
-    cc_selected: Ember.computed(function() {
-        return this.get('ticket.cc') || [];
+    cc_selected: Ember.computed('ticket.cc.[]', function() {
+        let ticket = this.get('ticket');
+        return ticket.get('cc');
     }),
-    options: Ember.computed('ticket_cc_options.[]', function() {
-        return Ember.ArrayProxy.extend({
-            content: Ember.computed(function() {
-                let remote = this.get('remote');
-                let selected = this.get('selected');
-                selected.forEach(function(item) {
-                    remote.pushObject(item);
-                });
-                return Ember.A(remote);
-            })
-        }).create({
-            remote: this.get('ticket_cc_options'),
-            selected: this.get('cc_selected')
-        });
-
+    options: Ember.computed('ticket.cc.[]', 'search', function() {
+        return this.get('ticket_cc_options') && this.get('ticket_cc_options').get('length') > 0 ? this.get('ticket_cc_options') : this.get('cc_selected');
     }),
     find_all_people() {
         let search_criteria = this.get('search_criteria');

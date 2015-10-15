@@ -94,7 +94,7 @@ test('visiting the ticket detail url from the list url should push a tab into th
     });
 });
 
-test('sco clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+test('clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
     let ticket_list_data = TICKET_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
     visit(ticket_URL);
@@ -245,7 +245,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     });
 });
 
-test('sco clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and fire off an xhr request', (assert) => {
+test('clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and fire off an xhr request', (assert) => {
     xhr(endpoint + '?page=1','GET',null,{},200,TICKET_FIXTURES.list());
     visit(ticket_URL);
     andThen(() => {
