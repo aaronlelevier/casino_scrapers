@@ -27,7 +27,7 @@ const DOC_TYPE = 'ticket';
 
 let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr;
 
-module('Acceptance | tab ticket test amk', {
+module('Acceptance | tab ticket test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
