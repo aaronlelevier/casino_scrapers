@@ -1,17 +1,21 @@
 import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import ROLE_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/role-category';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
+import random from 'bsrs-ember/models/random';
 
 var store, uuid;
 
 module('unit: role test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:role', 'model:category', 'model:location-level', 'model:role-category', 'model:uuid']);
+        random.uuid = function() { return Ember.uuid(); };
+    },
+    afterEach() {
+        random.uuid = function() { return 'abc123'; };
     }
 });
 
@@ -37,10 +41,10 @@ test('role can be related to one or many people', (assert) => {
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     let related = role.get('people');
-    role.set('people', related.concat([PEOPLE_DEFAULTS.idOne]));
-    assert.deepEqual(role.get('people'), [PEOPLE_DEFAULTS.idOne]);
-    assert.ok(role.get('isDirty'));
-    assert.ok(role.get('isDirtyOrRelatedDirty'));
+    role.set('people', related.concat([CATEGORY_DEFAULTS.idOne]));
+    assert.deepEqual(role.get('people'), [CATEGORY_DEFAULTS.idOne]);
+    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 /*ROLE TO LOCATION LEVEL 1-to-Many RELATIONSHIP*/
@@ -205,33 +209,222 @@ test('saving an undefined location level on a previously dirty role will clean t
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('category pushing into store from selectize will refire categoryIsDirty method', (assert) => {
-    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne]});
-    let role_category = store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne});
-    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
-    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne});
-    let category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo});
+/*ROLE TO CATEGORY M2M*/
+test('categories property only returns the single matching item even when multiple categories exist', (assert) => {
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idTwo});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne]});
+    role.add_category(CATEGORY_DEFAULTS.idTwo);
     let categories = role.get('categories');
-    categories.pushObject(category_two);
-    role.add_category(category_two.get('id'));
-    assert.equal(role.get('categoryIsDirty'), true);
-    role.saveRelated();
-    assert.equal(role.get('categoryIsDirty'), false);
-    assert.deepEqual(role.get('role_category_fks'), [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.abc]);
+    assert.equal(categories.get('length'), 1);
+    assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idTwo);
 });
 
-test('category removing from store from selectize will refire categoryIsDirty method', (assert) => {
-    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.idTwo]});
-    let role_category = store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne});
-    let role_category_two = store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idTwo, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idTwo});
-    let location_level = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, roles: [ROLE_DEFAULTS.idOne]});
-    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne});
-    let category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo});
+test('categories property returns multiple matching items when multiple categories exist', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idTwo});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idTwo, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.idTwo]});
     let categories = role.get('categories');
-    categories.removeObject(category_two);
-    role.remove_category(category_two.get('id'));
-    assert.equal(role.get('categoryIsDirty'), true);
+    assert.equal(categories.get('length'), 2);
+    assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idTwo);
+});
+
+test('categories property will update when add category is invoked and add new m2m join model (starting w/ empty array)', (assert) => {
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: []});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    assert.equal(role.get('categories').get('length'), 0);
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    role.add_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.equal(role.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+});
+
+test('categories property will update when add category is invoked and add new m2m join model', (assert) => {
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne]});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    let category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    role.add_category(CATEGORY_DEFAULTS.idTwo);
+    assert.equal(role.get('categories').get('length'), 2);
+    assert.equal(role.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(role.get('categories').objectAt(1).get('id'), CATEGORY_DEFAULTS.idTwo);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+});
+
+test('categories property will update when the m2m array suddenly removes the category', (assert) => {
+    let m2m = store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne]});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    assert.equal(role.get('categories').get('length'), 1);
+    role.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(role.get('categories').get('length'), 0);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+});
+
+test('when category is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idTwo, category_fk: CATEGORY_DEFAULTS.idTwo, role_fk: ROLE_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.idTwo]});
+    assert.equal(role.get('categories').get('length'), 2);
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    role.remove_category(CATEGORY_DEFAULTS.idTwo);
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+});
+
+test('when categories is changed dirty tracking works as expected (removing)', (assert) => {
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne]});
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsNotDirty'));
+    role.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(role.get('categories').get('length'), 0);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+    role.rollbackRelated();
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    role.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(role.get('categories').get('length'), 0);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+    role.rollbackRelated();
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('when categories is changed dirty tracking works as expected (replacing)', (assert) => {
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne]});
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsNotDirty'));
+    role.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.equal(role.get('categories').get('length'), 0);
+    role.add_category(CATEGORY_DEFAULTS.idTwo);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.equal(role.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idTwo);
+    role.rollbackRelated();
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(role.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    role.remove_category(CATEGORY_DEFAULTS.idOne);
+    role.add_category(CATEGORY_DEFAULTS.idTwo);
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+    role.rollbackRelated();
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(role.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+});
+
+
+test('rollback role will reset the previously used people (categories) when switching from valid categories array to nothing', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idTwo, category_fk: CATEGORY_DEFAULTS.idTwo, role_fk: ROLE_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.idTwo]});
+    assert.equal(role.get('categories').get('length'), 2);
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    role.remove_category(CATEGORY_DEFAULTS.idTwo);
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+    role.rollbackRelated();
+    assert.equal(role.get('categories').get('length'), 2);
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    role.remove_category(CATEGORY_DEFAULTS.idTwo);
+    role.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(role.get('categories').get('length'), 0);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+    role.rollbackRelated();
+    assert.equal(role.get('categories').get('length'), 2);
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(role.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(role.get('categories').objectAt(1).get('id'), CATEGORY_DEFAULTS.idTwo);
+});
+
+test('rollback categories will reset the previous people (categories) when switching from one category to another and saving in between each step', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('category', {id: CATEGORY_DEFAULTS.unusedId});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idTwo, category_fk: CATEGORY_DEFAULTS.idTwo, role_fk: ROLE_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.idTwo]});
+    assert.equal(role.get('categories').get('length'), 2);
+    role.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+    role.save();
     role.saveRelated();
-    assert.equal(role.get('categoryIsDirty'), false);
-    assert.deepEqual(role.get('role_category_fks'), [ROLE_CATEGORY_DEFAULTS.idTwo]);
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+    role.add_category(CATEGORY_DEFAULTS.unusedId);
+    assert.equal(role.get('categories').get('length'), 2);
+    assert.ok(role.get('categoryIsDirty'));
+    assert.ok(role.get('isDirtyOrRelatedDirty'));
+    role.save();
+    role.saveRelated();
+    assert.equal(role.get('categories').get('length'), 2);
+    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('categoryIsNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('categories_ids computed returns a flat list of ids for each category', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idTwo, category_fk: CATEGORY_DEFAULTS.idTwo, role_fk: ROLE_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.idTwo]});
+    assert.equal(role.get('categories').get('length'), 2);
+    assert.deepEqual(role.get('categories_ids'), [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]);
+    role.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.deepEqual(role.get('categories_ids'), [CATEGORY_DEFAULTS.idTwo]);
+});
+
+test('role_categories_ids computed returns a flat list of ids for each category', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idOne, category_fk: CATEGORY_DEFAULTS.idOne, role_fk: ROLE_DEFAULTS.idOne});
+    store.push('role-category', {id: ROLE_CATEGORY_DEFAULTS.idTwo, category_fk: CATEGORY_DEFAULTS.idTwo, role_fk: ROLE_DEFAULTS.idOne});
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, role_category_fks: [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.idTwo]});
+    assert.equal(role.get('categories').get('length'), 2);
+    assert.deepEqual(role.get('role_categories_ids'), [ROLE_CATEGORY_DEFAULTS.idOne, ROLE_CATEGORY_DEFAULTS.idTwo]);
+    role.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(role.get('categories').get('length'), 1);
+    assert.deepEqual(role.get('role_categories_ids'), [ROLE_CATEGORY_DEFAULTS.idTwo]);
 });

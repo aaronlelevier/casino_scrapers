@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import set_filter_model_attrs from 'bsrs-ember/utilities/filter-model-attrs';
+import inject from 'bsrs-ember/utilities/inject';
 
 var nameRoute = function(route) {
     return route.get('constructor.ClassMixin.ownerConstructor').toString();
@@ -7,6 +8,7 @@ var nameRoute = function(route) {
 
 var GridViewRoute = Ember.Route.extend({
     pagination: Ember.inject.service(),
+    filtersetRepository: inject('filterset'),
     init: function() {
         this.filterModel = Ember.Object.create();
         this._super();
@@ -29,6 +31,8 @@ var GridViewRoute = Ember.Route.extend({
         }
     },
     model: function(params, transition) {
+        let filtersetRepository = this.get('filtersetRepository');
+        let filtersets = filtersetRepository.fetch();
         let name = nameRoute(this);
         let query = transition.queryParams;
         let page = parseInt(query.page, 10) || 1;
@@ -36,12 +40,13 @@ var GridViewRoute = Ember.Route.extend({
         let requested = this.get('pagination').requested(name, page);
         set_filter_model_attrs(this.filterModel, query.find);
         let model = repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size);
-        return {model: model, requested: requested};
+        return {model: model, requested: requested, filtersets: filtersets};
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
         controller.set('requested', hash.requested);
         controller.set('filterModel', this.filterModel);
+        controller.set('filtersets', hash.filtersets);
     }
 });
 

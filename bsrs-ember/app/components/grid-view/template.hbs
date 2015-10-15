@@ -1,13 +1,13 @@
 <div class="rowTable">
     <header class="container-fluid">
         <div class="row">
-
-
             <div class="col-md-12">
                 <div class="pull-right btn-group btn-group-sm">
-                    {{#if hasActiveFilterSet}}<button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>Save Filter</button>{{/if}}
+                    {{#if hasActiveFilterSet}}
+                        <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>Save Filter</button>
+                    {{/if}}
                     {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
-                    {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+                        {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
                     {{/link-to}}
                 </div>
             </div>
@@ -28,13 +28,16 @@
     {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
     {{/focus-tether-dialog}}
     {{/if}}
-    <section class="docSection docSectionWithFooter container-fluid">
+    <section class="docSection docSectionWithFooter container-fluid t-grid-wrap">
         <div class="row">
 			<div class="col-md-12">
 				<section style="padding-bottom: 0">
 					<div class="row card-title">
                         <h1 class="col-md-8">
                             <span class="t-grid-title">{{grid_title}}</span>
+                            {{#if (filters-applied sort find search)}}
+                            <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>Reset all options</span>
+                            {{/if}}
                             {{#unless model.isLoaded}}
                             {{grid-loading-graphic}}
                             {{/unless}}
@@ -42,7 +45,10 @@
                         <div class="col-md-4 text-center search-wrap pull-right">
                             {{grid-search-input placeholder=search_placeholder keyup="keyup"}}
                         </div>
-					</div>
+                        <div class="col-md-12 filtersets t-filterset-wrap">
+                            {{filterset-navigation filtersets=filtersets route=routePath}}
+                        </div>
+                    </div>
 				</section>
 			</div>
         </div>
@@ -80,9 +86,6 @@
         <div class="row">
             <div class="col-md-2">
                 <span class="pull-left t-page-count">{{model.count}} {{plural}}</span>
-                {{#if (filters-applied sort find search)}}
-                <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>Reset all options</span>
-                {{/if}}
             </div>
             <div class="col-md-8">
                 <nav class="text-center">

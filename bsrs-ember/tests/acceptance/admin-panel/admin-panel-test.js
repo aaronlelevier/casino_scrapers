@@ -29,14 +29,14 @@ test('admin panel displays correct headers and section headers', function(assert
     });
 });
 
-test('admin panel shows bootstrapped filter set as links into the application for a given section', function(assert) {
-    visit(ADMIN_URL);
-    andThen(() => {
-        let people_section = find(ADMINPANEL + ' > section:eq(1)');
-        assert.equal(people_section.find('.t-admin-people-index-navigation li').length, 2);
-        assert.equal(people_section.find('.t-admin-people-index-navigation li:eq(0) a').prop('href').slice(21), '/admin/people/index?sort=title');
-        assert.equal(people_section.find('.t-admin-people-index-navigation li:eq(1) a').prop('href').slice(21), '/admin/people/index?find=username%3Awa');
-        assert.equal(people_section.find('.t-admin-roles-index-navigation li').length, 1);
-        assert.equal(people_section.find('.t-admin-roles-index-navigation li:eq(0) a').prop('href').slice(21), '/admin/roles/index?page_size=25');
-    });
-});
+// test('admin panel shows bootstrapped filter set as links into the application for a given section', function(assert) {
+//     visit(ADMIN_URL);
+//     andThen(() => {
+//         let people_section = find(ADMINPANEL + ' > section:eq(1)');
+//         assert.equal(people_section.find('.t-admin-people-index-navigation li').length, 2);
+//         assert.equal(people_section.find('.t-admin-people-index-navigation li:eq(0) a').prop('href').slice(21), '/admin/people/index?sort=title');
+//         assert.equal(people_section.find('.t-admin-people-index-navigation li:eq(1) a').prop('href').slice(21), '/admin/people/index?find=username%3Awa');
+//         assert.equal(people_section.find('.t-admin-roles-index-navigation li').length, 1);
+//         assert.equal(people_section.find('.t-admin-roles-index-navigation li:eq(0) a').prop('href').slice(21), '/admin/roles/index?page_size=25');
+//     });
+// });

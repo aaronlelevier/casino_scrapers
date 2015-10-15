@@ -552,8 +552,8 @@ test('save filterset will fire off xhr and add item to the sidebar navigation', 
     let routePath = 'admin.categories.index';
     let url = window.location.toString();
     let query = url.slice(url.indexOf('?'));
-    let section = '.t-side-menu > section:eq(3)';
-    let navigation = '.t-admin-categories-index-navigation li';
+    let section = '.t-grid-wrap';
+    let navigation = '.t-filterset-wrap li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
     visit(CATEGORY_URL);
     click('.t-sort-name-dir');
@@ -574,7 +574,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
     let name = 'foobar';
     let routePath = 'admin.categories.index';
     let query = '?foo=bar';
-    let navigation = '.t-admin-categories-index-navigation li';
+    let navigation = '.t-filterset-wrap li';
     let payload = {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query};
     visit(CATEGORY_URL);
     clearAll(store, 'filterset');
@@ -582,13 +582,13 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
         store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
     });
     andThen(() => {
-        let section = find('.t-side-menu > section:eq(3)');
+        let section = find('.t-grid-wrap');
         assert.equal(section.find(navigation).length, 1);
     });
     xhr('/api/admin/saved-searches/' + UUID.value + '/', 'DELETE', null, {}, 204, {});
     click(navigation + '> a > .t-remove-filterset:eq(0)');
     andThen(() => {
-        let section = find('.t-side-menu > section:eq(3)');
+        let section = find('.t-grid-wrap');
         assert.equal(section.find(navigation).length, 0);
     });
 });

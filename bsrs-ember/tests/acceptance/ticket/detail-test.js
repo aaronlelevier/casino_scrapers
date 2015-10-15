@@ -8,10 +8,12 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import PEOPLE_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -23,7 +25,7 @@ const CANCEL_BTN = '.t-cancel-btn';
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 
-let application, store, endpoint, list_xhr;
+let application, store, endpoint, list_xhr, random_uuid;
 
 module('Acceptance | detail test', {
     beforeEach() {
@@ -32,9 +34,11 @@ module('Acceptance | detail test', {
         endpoint = PREFIX + BASE_URL + '/';
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, TICKET_FIXTURES.list());
         xhr(endpoint + TICKET_DEFAULTS.idOne + '/', 'GET', null, {}, 200, TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne));
+        random.uuid = function() { return Ember.uuid(); };
     },
     afterEach() {
         Ember.run(application, 'destroy');
+        random.uuid = function() { return 'abc123'; };
     }
 });
 
@@ -233,33 +237,56 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-// test('sco clicking and typing into selectize for people will fire off xhr request for all people', (assert) => {
+// test('clicking and typing into selectize for people will fire off xhr request for all people', (assert) => {
 //     visit(DETAIL_URL);
 //     andThen(() => {
 //         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-//         assert.equal(ticket.get('cc').length, 1);
+//         assert.equal(ticket.get('cc').get('length'), 1);
 //         assert.equal(find('div.item').length, 1);
 //         assert.equal(find('div.option').length, 0);
 //     });
-//     let people_endpoint = PREFIX + '/admin/people/' + '&fullname__icontains=a';
+//     let people_endpoint = PREFIX + '/admin/people/' + '?fullname__icontains=a';
 //     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
 //     fillIn('.selectize-input input', 'a');
 //     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
 //     click('.t-ticket-people-select div.option:eq(0)');
 //     andThen(() => {
 //         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-//         assert.equal(ticket.get('ticket_category_fks').length, 1);
-//         assert.equal(ticket.get('categories').get('length'), 2);
+//         assert.equal(ticket.get('ticket_people_fks').length, 1);
 //         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 //         assert.equal(find('div.item').length, 2);
-//         assert.equal(find('div.option').length, 8);
+//         assert.equal(find('div.option').length, 9);
 //     });
 //     let url = PREFIX + DETAIL_URL + "/";
-//     let category = PEOPLE_FIXTURES.put({id: PEOPLE_DEFAULTS.idOne, name: PEOPLE_DEFAULTS.nameOne});
-//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne});
+//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_CURRENT_DEFAULTS.id, PEOPLE_DEFAULTS.id]});
 //     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
 //     click(SAVE_BTN);
 //     andThen(() => {
-//         assert.equal(currentURL(), ticket_URL);
+//         assert.equal(currentURL(), TICKETS_URL);
 //     });
 // });
+
+test('when you deep link to the ticket detail can remove a cc', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 0);
+    });
+    click('div.item > a.remove:eq(0)');
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').get('length'), 0);
+        // assert.equal(find('div.option').length, 1); @toranb need help from scott
+        assert.equal(find('div.item').length, 0);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: []});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), TICKETS_URL);
+    });
+});

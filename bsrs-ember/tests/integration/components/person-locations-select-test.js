@@ -38,6 +38,18 @@ test('should render a selectbox with bound options and multiple set to true', fu
     assert.equal($component.find('div.option').length, 0);
 });
 
+test('should render a selectbox with bound options after type ahead for search', function(assert) {
+    let person_locations_children = store.find('location');
+    this.set('person', person);
+    this.set('model', person.get('locations'));
+    this.set('person_locations_children', person_locations_children);
+    this.set('search', 'x');
+    this.render(hbs`{{person-locations-select model=model person=person person_locations_children=person_locations_children}}`);
+    let $component = this.$('.t-person-locations-select');
+    assert.equal($component.find('div.item').length, 2);
+    assert.equal($component.find('div.option').length, 2);
+});
+
 // test('input has a debouce that prevents each keystroke from publishing a message', function(assert) {
 //     var done = assert.async();
 //     this.set('person', person);

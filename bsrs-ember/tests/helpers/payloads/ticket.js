@@ -6,6 +6,7 @@ var ticket_payload = {
     id: UUID.value,
     subject: TICKET_DEFAULTS.subjectOne,
     status: TICKET_DEFAULTS.statusOneId,
+    priority: TICKET_DEFAULTS.priorityOneId,
     cc: []
 };
 

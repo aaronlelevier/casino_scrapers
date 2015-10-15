@@ -6,6 +6,7 @@ var TicketSingleRoute = TabRoute.extend({
     repository: inject('ticket'),
     peopleRepo: inject('person'),
     statusRepository: inject('ticket-status'),
+    priorityRepository: inject('ticket-priority'),
     redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
     modelName: Ember.computed(function() { return 'ticket'; }),
     templateModelField: Ember.computed(function() { return 'subject'; }),
@@ -17,13 +18,14 @@ var TicketSingleRoute = TabRoute.extend({
     model(params, transition) {
         let pk = params.ticket_id;
         let repository = this.get('repository');
+        let statusRepository = this.get('statusRepository');
+        let priorityRepository = this.get('priorityRepository');
         let search = transition.queryParams.search;
-        let store = this.get('store');
-        let ticket = store.find('ticket', pk);
-        let statuses = this.get('statusRepository').fetch();
-        let priorities = this.get('store').find('ticket-priority');
+        let ticket = repository.fetch(pk);
+        let statuses = statusRepository.fetch();
+        let priorities = priorityRepository.fetch();
         let peopleRepo = this.get('peopleRepo');
-        let ticket_cc = search ? peopleRepo.find(search) : [];
+        let ticket_cc_options = search ? peopleRepo.findTicketPeople(search) : [];
         if (!ticket.get('length') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             ticket = repository.findById(pk);
         }
@@ -33,7 +35,7 @@ var TicketSingleRoute = TabRoute.extend({
             statuses: statuses,
             priorities: priorities,
             search: search,
-            ticket_cc: ticket_cc
+            ticket_cc_options: ticket_cc_options
         });
     },
     setupController: function(controller, hash) {
@@ -42,7 +44,7 @@ var TicketSingleRoute = TabRoute.extend({
         controller.set('statuses', hash.statuses);
         controller.set('priorities', hash.priorities);
         controller.set('search', hash.search);
-        controller.set('ticket_cc', hash.ticket_cc);
+        controller.set('ticket_cc_options', hash.ticket_cc_options);
     },
 });
 

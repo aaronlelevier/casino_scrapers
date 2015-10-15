@@ -59,3 +59,48 @@ test('on change will modify the underlying status property on ticket', function(
     assert.equal($component.find('option:selected').val(), TICKET_DEFAULTS.statusOneId);
     assert.equal(ticket.get('status.id'), TICKET_DEFAULTS.statusOneId);
 });
+
+test('each priority shows up as a valid select option', function(assert) {
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let priorities = store.find('ticket-priority');
+    this.set('model', ticket);
+    this.set('priorities', priorities);
+    this.render(hbs`{{tickets/ticket-new model=model priorities=priorities}}`);
+    let $component = this.$('.t-ticket-priority');
+    assert.equal($component.find('option').length, 2);
+    assert.equal($component.find('option:eq(0)').val(), TICKET_DEFAULTS.priorityOneId);
+    assert.equal($component.find('option:eq(1)').val(), TICKET_DEFAULTS.priorityTwoId);
+    assert.equal($component.find('option:eq(0)').text(), TICKET_DEFAULTS.priorityOne);
+    assert.equal($component.find('option:eq(1)').text(), TICKET_DEFAULTS.priorityTwo);
+});
+
+test('the selected priority reflects the priority property on the ticket', function(assert) {
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: []});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let priorities = store.find('ticket-priority');
+    this.set('model', ticket);
+    this.set('priorities', priorities);
+    this.render(hbs`{{tickets/ticket-new model=model priorities=priorities}}`);
+    let $component = this.$('.t-ticket-priority');
+    assert.equal($component.find('option:selected').val(), TICKET_DEFAULTS.priorityTwoId);
+});
+
+test('on change will modify the underlying priority property on ticket', function(assert) {
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: []});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let priorities = store.find('ticket-priority');
+    this.set('model', ticket);
+    this.set('priorities', priorities);
+    this.render(hbs`{{tickets/ticket-new model=model priorities=priorities}}`);
+    let $component = this.$('.t-ticket-priority');
+    assert.equal($component.find('option:selected').val(), TICKET_DEFAULTS.priorityTwoId);
+    Ember.run(function() {
+        $component.val(TICKET_DEFAULTS.priorityOneId).trigger('change');
+    });
+    assert.equal($component.find('option:selected').val(), TICKET_DEFAULTS.priorityOneId);
+    assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityOneId);
+});

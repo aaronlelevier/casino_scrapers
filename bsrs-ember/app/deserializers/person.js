@@ -51,7 +51,6 @@ var extract_role = function(model, store) {
     if (existing_people.indexOf(model.id) === -1) {
         role.set('people', existing_people.concat([model.id]));
     }
-    role.save();
     delete model.role;
     return [role_pk, location_level_fk];
 };

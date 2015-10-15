@@ -45,6 +45,10 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
         });
         return model;
     },
+    fetch(id) {
+        let store = this.get('store');
+        return store.find('ticket', id);
+    },
     delete(id) {
        PromiseMixin.xhr(TICKET_URL + id + '/', 'DELETE');
        this.get('store').remove('ticket', id);

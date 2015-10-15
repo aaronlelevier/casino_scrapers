@@ -1,5 +1,49 @@
 div.rowTable {
     section.docSection{
+        h1{
+            .reset-grid{
+                font-size: 1.1rem;
+                font-weight: normal;
+                text-decoration: underline;
+                cursor: pointer;
+                color: $darkGray;
+                margin-left: 10px;
+            }
+        }
+        .filtersets{
+            clear: both;
+            ul{
+                overflow: auto;
+                margin: 0;
+                padding: 0;
+                li{
+                    list-style: none;
+                    float: left;
+                    margin: 0 5px 0 0;
+                    font-size: 1.1rem;
+                    a{
+                        border: $borderStyle;
+                        border-radius: $borderRadius;
+                        background: $light;
+                        padding: 3px 5px;
+                        display: block;
+                        color: $darkGray;
+                        text-decoration: none;
+                        &:hover{
+                            text-decoration: none;
+                        }
+                        &.active{
+                            border-color: $activeColor;
+                            background-color: $activeColor;
+                            color: $white;
+                        }
+                        i{
+                            margin: 0 0 0 5px;
+                        }
+                    }
+                }
+            }
+        }
         table.table-hover {
             tr:hover td{
                 cursor: pointer;

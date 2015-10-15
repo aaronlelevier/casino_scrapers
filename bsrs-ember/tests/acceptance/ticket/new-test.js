@@ -41,6 +41,7 @@ test('visiting ticket/new', (assert) => {
     });
     fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectOne);
     fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
+    fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(ticket_payload), {}, 201, Ember.$.extend(true, {}, ticket_payload));
     click(SAVE_BTN);
     andThen(() => {
@@ -59,13 +60,21 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-status-validation-error').is(':hidden'));
+        assert.ok(find('.t-priority-validation-error').is(':hidden'));
     });
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-status-validation-error').is(':visible'));
+        assert.ok(find('.t-priority-validation-error').is(':visible'));
     });
     fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.ok(find('.t-priority-validation-error').is(':visible'));
+    });
+    fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
     click(SAVE_BTN);
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     andThen(() => {

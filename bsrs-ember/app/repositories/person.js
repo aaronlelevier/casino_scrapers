@@ -24,8 +24,25 @@ export default Ember.Object.extend(GridRepositoryMixin, {
             model.save();
         });
     },
-    find(search_criteria) {
-        PromiseMixin.xhr(this.format_url(search_criteria), 'GET').then((response) => {
+    findTicketPeople(search_criteria) {
+        let url = PEOPLE_URL;
+        if (search_criteria) {
+            url += `?fullname__icontains=${search_criteria}`;
+        }
+        PromiseMixin.xhr(url, 'GET').then((response) => {
+            if (!response) {
+                this.get('PersonDeserializer').deserialize(response);
+            }
+        });
+        let filterFunc = function(person) {
+            let fullname = person.get('fullname');
+            return fullname.toLowerCase().includes(search_criteria.toLowerCase()) === true; 
+        };
+        //ensure person returned from store has substring in fullname
+        return this.get('store').find('person', filterFunc, ['id']);
+    },
+    find() {
+        PromiseMixin.xhr(PEOPLE_URL, 'GET').then((response) => {
             this.get('PersonDeserializer').deserialize(response);
         });
         return this.get('store').find('person');
@@ -41,12 +58,5 @@ export default Ember.Object.extend(GridRepositoryMixin, {
     delete(id) {
         PromiseMixin.xhr(PEOPLE_URL + id + '/', 'DELETE');
         this.get('store').remove('person', id);
-    },
-    format_url(search_criteria) {
-        let url = PEOPLE_URL;
-        if(typeof filter !== 'undefined') {
-            url += `&fullname__icontains=${search_criteria}`;
-        }
-        return url;
     }
 });

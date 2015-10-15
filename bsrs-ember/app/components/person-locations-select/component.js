@@ -1,10 +1,6 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/inject';
-import injectStore from 'bsrs-ember/utilities/store';
 
 var PersonLocationsSelect = Ember.Component.extend({
-    repository: inject('location'),
-    store: injectStore('main'),
     person_locations_selected: Ember.computed('person.person_locations.@each.removed', function() {
         let person = this.get('person');
         return person.get('locations');
@@ -26,7 +22,7 @@ var PersonLocationsSelect = Ember.Component.extend({
         remove(location) {
             let person = this.get('person');
             let location_pk = location.get('id');
-            person.remove_location(location_pk);
+            person.remove_locations(location_pk);
         },
         update_filter() {
             Ember.run.debounce(this, this.get('find_all_locations'), 300);

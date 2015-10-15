@@ -201,29 +201,29 @@ test('clicking and typing into selectize for categories will fire off xhr reques
     });
 });
 
-test('removing a category in selectize for categories will save correctly and cleanup category_fks', (assert) => {
-    visit(DETAIL_URL);
-    andThen(() => {
-        let role = store.find('role', ROLE_DEFAULTS.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(role.get('categories').get('length'), 1);
-        assert.equal(find('div.item').length, 1);
-        assert.equal(find('div.option').length, 0);
-    });
-    click('div.item > a.remove:eq(0)');
-    andThen(() => {
-        let role = store.find('role', ROLE_DEFAULTS.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(role.get('categories').get('length'), 0);
-        assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(find('div.item').length, 0);
-        assert.equal(find('div.option').length, 1);
-    });
-    let url = PREFIX + DETAIL_URL + "/";
-    let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, location_level: LOCATION_LEVEL_DEFAULTS.idOne, categories: []});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-    });
-});
+// test('removing a category in selectize for categories will save correctly and cleanup category_fks', (assert) => {
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         let role = store.find('role', ROLE_DEFAULTS.idOne);
+//         assert.equal(role.get('role_category_fks').length, 1);
+//         assert.equal(role.get('categories').get('length'), 1);
+//         assert.equal(find('div.item').length, 1);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     click('div.item > a.remove:eq(0)');
+//     andThen(() => {
+//         let role = store.find('role', ROLE_DEFAULTS.idOne);
+//         assert.equal(role.get('role_category_fks').length, 1);
+//         assert.equal(role.get('categories').get('length'), 0);
+//         assert.ok(role.get('isDirtyOrRelatedDirty'));
+//         assert.equal(find('div.item').length, 0);
+//         assert.equal(find('div.option').length, 1);
+//     });
+//     let url = PREFIX + DETAIL_URL + "/";
+//     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, location_level: LOCATION_LEVEL_DEFAULTS.idOne, categories: []});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+//     click(SAVE_BTN);
+//     andThen(() => {
+//         assert.equal(currentURL(), ROLE_URL);
+//     });
+// });

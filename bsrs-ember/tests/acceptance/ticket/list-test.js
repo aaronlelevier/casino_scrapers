@@ -31,6 +31,3 @@ test('visiting /tickets', (assert) => {
         assert.equal(find('.t-grid-data').length, 10);
     });
 });
-
-
-

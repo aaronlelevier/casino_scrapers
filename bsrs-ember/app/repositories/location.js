@@ -36,6 +36,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
             let location_level_fk = location.get('location_level').get('id');
             return location_level_fk === filter.location_level;
         };
+        //TODO: this will return those locations with a certain location level but doesn't include the search parameters
         return this.get('store').find('location', filterFunc, ['id', 'location_level']);
     },
     find(filter) {
