@@ -2,14 +2,7 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
-
-//kill this later?
-function equal(first, second) {
-    if (first instanceof Array && second instanceof Array) {
-        return Ember.$(first).not(second).get().length === 0 && Ember.$(second).not(first).get().length === 0;
-    }
-    return first === second;
-}
+import equal from 'bsrs-ember/utilities/equal';
 
 var TicketModel = Model.extend({
     store: inject('main'),
