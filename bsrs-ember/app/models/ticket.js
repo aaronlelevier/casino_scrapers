@@ -11,6 +11,7 @@ var TicketModel = Model.extend({
     subject: attr(''),
     ticket_people_fks: [],
     status_fk: undefined,
+    priority_fk: undefined,
     cc_ids: Ember.computed('cc.[]', function() {
         return this.get('cc').map((cc) => {
             return cc.get('id');
@@ -94,6 +95,13 @@ var TicketModel = Model.extend({
             this.change_status(status_fk);
         }
     },
+    rollbackPriority() {
+        let priority = this.get('priority');
+        let priority_fk = this.get('priority_fk');
+        if(priority && priority.get('id') !== priority_fk) {
+            this.change_priority(priority_fk);
+        }
+    },
     rollbackCC() {
         let store = this.get('store');
         let previous_m2m_fks = this.get('ticket_people_fks') || [];
@@ -132,16 +140,26 @@ var TicketModel = Model.extend({
         let status = this.get('status');
         if (status) { this.set('status_fk', status.get('id')); }
     },
+    savePriority() {
+        let priority = this.get('priority');
+        if (priority) { this.set('priority_fk', priority.get('id')); }
+    },
     statusIsDirty: Ember.computed('status', 'status_fk', function() {
         let status = this.get('status');
         let status_fk = this.get('status_fk');
         if (status) {
-            return status.get('id') === status_fk ? status.get('isDirty') : true;
+            return status.get('id') === status_fk ? false : true;
         }
-        return status_fk ? true : false;
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'statusIsDirty', 'ccIsDirty', function() {
-        return this.get('isDirty') || this.get('statusIsDirty') || this.get('ccIsDirty');
+    priorityIsDirty: Ember.computed('priority', 'priority_fk', function() {
+        let priority = this.get('priority');
+        let priority_fk = this.get('priority_fk');
+        if (priority) {
+            return priority.get('id') === priority_fk ? false : true;
+        }
+    }),
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', function() {
+        return this.get('isDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     change_status: function(new_status_id) {
@@ -189,10 +207,12 @@ var TicketModel = Model.extend({
     },
     rollbackRelated() {
         this.rollbackStatus();
+        this.rollbackPriority();
         this.rollbackCC();
     },
     saveRelated() {
         this.saveStatus();
+        this.savePriority();
         this.saveCC();
     }
 });

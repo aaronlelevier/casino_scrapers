@@ -47,6 +47,16 @@ test('ticket is dirty or related is dirty when existing status is altered', (ass
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
 
+test('ticket is dirty or related is dirty when existing status is altered (starting w/ nothing)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: undefined});
+    store.push('ticket-status', {id: TICKET_DEFAULTS.statusTwoId, name: TICKET_DEFAULTS.statusTwo, tickets: []});
+    assert.equal(ticket.get('status'), undefined);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_status(TICKET_DEFAULTS.statusTwoId);
+    assert.equal(ticket.get('status.id'), TICKET_DEFAULTS.statusTwoId);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
 test('rollback status will revert and reboot the dirty status to clean', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
     store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
@@ -408,4 +418,53 @@ test('change_priority will remove the ticket id from the prev priority tickets a
     store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo, tickets: []});
     ticket.change_priority(TICKET_DEFAULTS.priorityTwoId);
     assert.deepEqual(priority.get('tickets'), [9]);
+});
+
+test('priority will save correctly as undefined', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: undefined});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: []});
+    ticket.saveRelated();
+    let priority = ticket.get('priority');
+    assert.equal(ticket.get('priority_fk'), undefined);
+});
+
+test('ticket is dirty or related is dirty when existing priority is altered', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo, tickets: []});
+    assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityOneId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_priority(TICKET_DEFAULTS.priorityTwoId);
+    assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityTwoId);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('ticket is dirty or related is dirty when existing priority is altered (starting w/ nothing)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: undefined});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo, tickets: []});
+    assert.equal(ticket.get('priority'), undefined);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_priority(TICKET_DEFAULTS.priorityTwoId);
+    assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityTwoId);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('rollback priority will revert and reboot the dirty priority to clean', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo, tickets: []});
+    assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityOneId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_priority(TICKET_DEFAULTS.priorityTwoId);
+    assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityTwoId);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityOneId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_priority(TICKET_DEFAULTS.priorityTwoId);
+    assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityTwoId);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.saveRelated();
+    assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityTwoId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
