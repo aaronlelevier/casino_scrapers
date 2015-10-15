@@ -61,6 +61,19 @@ var TicketModel = Model.extend({
         }).objectAt(0).get('id');
         store.push('ticket-person', {id: m2m_pk, removed: true});
     },
+    priority: Ember.computed('belongs_to_priority.[]', function() {
+        let belongs_to_priority = this.get('belongs_to_priority');
+        return belongs_to_priority.objectAt(0);
+    }),
+    belongs_to_priority: Ember.computed(function() {
+        let ticket_id = this.get('id');
+        let store = this.get('store');
+        let filter = function(status) {
+            let tickets = status.get('tickets');
+            return Ember.$.inArray(ticket_id, tickets) > -1;
+        };
+        return store.find('ticket-priority', filter, ['tickets']);
+    }),
     status: Ember.computed('belongs_to.[]', function() {
         let belongs_to = this.get('belongs_to');
         return belongs_to.objectAt(0);
@@ -146,13 +159,28 @@ var TicketModel = Model.extend({
         let new_status_tickets = new_status.get('tickets') || [];
         new_status.set('tickets', new_status_tickets.concat(ticket_id));
     },
+    change_priority: function(new_priority_id) {
+        let ticket_id = this.get('id');
+        let store = this.get('store');
+        let old_priority = this.get('priority');
+        if(old_priority) {
+            let old_priority_tickets = old_priority.get('tickets') || [];
+            let updated_old_priority_tickets = old_priority_tickets.filter(function(id) {
+                return id !== ticket_id;
+            });
+            old_priority.set('tickets', updated_old_priority_tickets);
+        }
+        let new_priority = store.find('ticket-priority', new_priority_id);
+        let new_priority_tickets = new_priority.get('tickets') || [];
+        new_priority.set('tickets', new_priority_tickets.concat(ticket_id));
+    },
     serialize() {
         return {
             id: this.get('id'),
             subject: this.get('subject'),
             request: this.get('request'),
             status: this.get('status.id'),
-            priority: this.get('priority'),
+            priority: this.get('priority.id'),
             cc: this.get('cc_ids')
         };
     },

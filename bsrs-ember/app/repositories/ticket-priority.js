@@ -1,0 +1,10 @@
+import Ember from 'ember';
+
+var TicketPriorityRepo = Ember.Object.extend({
+    fetch() {
+        let store = this.get('store');
+        return store.find('ticket-priority');
+    }
+});
+
+export default TicketPriorityRepo;
