@@ -69,6 +69,8 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $TEST; fi
 echo "AFTER MIGRATIONS, LOAD LATEST FIXTURE DATA."
 wait
 ../venv/bin/python manage.py loaddata fixtures/persistent.json
+wait
+../venv/bin/python manage.py loaddata fixtures/persistent_custom.json
 
 
 echo "EMBER"
