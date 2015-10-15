@@ -54,7 +54,7 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "create db failed"; exit $TEST; fi
 
 
 wait
-../venv/bin/python manage.py makemigrations accounting category contact generic location order person session translation utils
+../venv/bin/python manage.py makemigrations accounting category contact generic location order person session third_party ticket translation utils
 TEST=$?; if [ "$TEST" == 1 ]; then echo "makemigrations failed"; exit $TEST; fi
 
 
