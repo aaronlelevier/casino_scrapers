@@ -34,7 +34,7 @@ export default Ember.Object.extend(GridRepositoryMixin, {
         });
         let filterFunc = function(person) {
             let fullname = person.get('fullname');
-            return fullname.toLowerCase().includes(search_criteria.toLowerCase()) > -1;
+            return fullname.toLowerCase().includes(search_criteria.toLowerCase()) > 0;
         };
         //ensure person returned from store has substring in fullname
         return this.get('store').find('person', filterFunc, ['id']);
