@@ -44,8 +44,7 @@ var extract_ticket_priority = function(model, store) {
         new_priority.set('tickets', updated_new_priority_tickets);
     }
     delete model.priority;
-    //TODO: implement dirty tracking and priority_fk in the ticket model @toranb
-    // return priority_id;
+    return priority_id;
 };
 
 var extract_ticket_status = function(model, store) {
@@ -78,7 +77,7 @@ var TicketDeserializer = Ember.Object.extend({
         let existing_ticket = store.find('ticket', id);
         if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
             response.status_fk = extract_ticket_status(response, store);
-            extract_ticket_priority(response, store);
+            response.priority_fk = extract_ticket_priority(response, store);
             response.ticket_people_fks = extract_cc(response, store, uuid);
             let ticket = store.push('ticket', response);
             ticket.save();
@@ -90,7 +89,7 @@ var TicketDeserializer = Ember.Object.extend({
             let existing_ticket = store.find('ticket', model.id);
             if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
                 model.status_fk = extract_ticket_status(model, store);
-                extract_ticket_priority(model, store);
+                model.priority_fk = extract_ticket_priority(model, store);
                 let ticket = store.push('ticket', model);
                 ticket.save();
             }

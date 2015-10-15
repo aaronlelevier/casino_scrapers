@@ -24,7 +24,7 @@ module('unit: ticket deserializer test', {
 });
 
 test('ticket priority will be deserialized into its own store when deserialize list is invoked', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
@@ -49,7 +49,7 @@ test('ticket priority will be deserialized into its own store when deserialize l
 });
 
 test('ticket priority will be deserialized into its own store when deserialize detail is invoked (with existing non-wired priority model)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
@@ -72,7 +72,7 @@ test('ticket priority will be deserialized into its own store when deserialize d
 });
 
 test('ticket priority will be deserialized into its own store when deserialize detail is invoked (with existing already-wired priority model)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [99]});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
@@ -84,7 +84,7 @@ test('ticket priority will be deserialized into its own store when deserialize d
 });
 
 test('ticket priority will be updated when server returns different priority (list)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority_two = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityOne, tickets: []});
@@ -98,12 +98,11 @@ test('ticket priority will be updated when server returns different priority (li
     assert.deepEqual(ticket_priority_two.get('tickets'), [TICKET_DEFAULTS.idOne]);
     assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityTwoId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    // TODO: show this is updated after dirty tracking work is implemented
-    // assert.equal(ticket.get('priority_fk'), TICKET_DEFAULTS.priorityTwoId);
+    assert.equal(ticket.get('priority_fk'), TICKET_DEFAULTS.priorityTwoId);
 });
 
 test('ticket priority will be updated when server returns different priority (detail)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority_two = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityOne, tickets: []});
@@ -115,12 +114,11 @@ test('ticket priority will be updated when server returns different priority (de
     assert.deepEqual(ticket_priority_two.get('tickets'), [TICKET_DEFAULTS.idOne]);
     assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityTwoId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    // TODO: show this is updated after dirty tracking work is implemented
-    // assert.equal(ticket.get('priority_fk'), TICKET_DEFAULTS.priorityTwoId);
+    assert.equal(ticket.get('priority_fk'), TICKET_DEFAULTS.priorityTwoId);
 });
 
 test('ticket status will be deserialized into its own store when deserialize list is invoked', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
@@ -133,7 +131,7 @@ test('ticket status will be deserialized into its own store when deserialize lis
 });
 
 test('ticket status will be deserialized into its own store when deserialize detail is invoked', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
@@ -145,7 +143,7 @@ test('ticket status will be deserialized into its own store when deserialize det
 });
 
 test('ticket status will be updated when server returns same status (list)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
@@ -159,7 +157,7 @@ test('ticket status will be updated when server returns same status (list)', (as
 });
 
 test('ticket status will be updated when server returns same status (single)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
@@ -171,7 +169,7 @@ test('ticket status will be updated when server returns same status (single)', (
 });
 
 test('ticket status will be updated when server returns different status (list)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_status_two = store.push('ticket-status', {id: TICKET_DEFAULTS.statusTwoId, name: TICKET_DEFAULTS.statusOne, tickets: []});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
@@ -206,7 +204,7 @@ test('newly inserted ticket will have non dirty status when deserialize list exe
 });
 
 test('ticket-person m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let response = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
@@ -224,7 +222,7 @@ test('ticket-person m2m is set up correctly using deserialize single (starting w
 });
 
 test('ticket-status m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, ticket_people_fks: [TICKET_PERSON_DEFAULTS.idOne]});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId, ticket_people_fks: [TICKET_PERSON_DEFAULTS.idOne]});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
@@ -246,7 +244,7 @@ test('ticket-status m2m is added after deserialize single (starting with existin
 });
 
 test('ticket-person m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, ticket_people_fks: [TICKET_PERSON_DEFAULTS.idOne]});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId, ticket_people_fks: [TICKET_PERSON_DEFAULTS.idOne]});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
