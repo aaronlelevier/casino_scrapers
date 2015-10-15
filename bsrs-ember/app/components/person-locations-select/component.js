@@ -22,7 +22,7 @@ var PersonLocationsSelect = Ember.Component.extend({
         remove(location) {
             let person = this.get('person');
             let location_pk = location.get('id');
-            person.remove_location(location_pk);
+            person.remove_locations(location_pk);
         },
         update_filter() {
             Ember.run.debounce(this, this.get('find_all_locations'), 300);
