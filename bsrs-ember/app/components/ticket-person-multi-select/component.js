@@ -1,9 +1,6 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/inject';
-import injectStore from 'bsrs-ember/utilities/store';
 
 var TicketPeopleMulti = Ember.Component.extend({
-    store: injectStore('main'),
     cc_selected: Ember.computed('ticket.cc.[]', function() {
         let ticket = this.get('ticket');
         return ticket.get('cc');

@@ -108,7 +108,7 @@ test('ticket-person m2m is set up correctly using deserialize single (starting w
     let original = store.find('ticket', TICKET_DEFAULTS.idOne);
     cc = original.get('cc');
     assert.equal(cc.get('length'), 1);
-    assert.equal(cc.objectAt(0).get('name'), PEOPLE_DEFAULTS.fullname);
+    assert.equal(cc.objectAt(0).get('fullname'), PEOPLE_DEFAULTS.fullname);
     assert.equal(store.find('ticket-person').get('length'), 1);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));

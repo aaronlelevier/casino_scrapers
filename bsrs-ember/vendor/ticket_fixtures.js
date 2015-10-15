@@ -12,7 +12,7 @@ var BSRS_TICKET_FACTORY = (function() {
             request: this.ticket.requestOne,
             status: this.ticket.statusOneId,
             priority: this.ticket.priorityOneId,
-            cc: [{id: this.person.id, name: this.person.fullname, email: this.person.emails, role: this.person.role}]
+            cc: [{id: this.person.id, fullname: this.person.fullname, email: this.person.emails, role: this.person.role}]
         }
     };
     factory.prototype.list = function() {

@@ -10,7 +10,7 @@ var store, uuid;
 
 module('unit: ticket test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-status', 'model:ticket-person', 'model:uuid']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-status', 'model:ticket-priority', 'model:ticket-person', 'model:uuid']);
         random.uuid = function() { return Ember.uuid(); };
     },
     afterEach() {
@@ -169,6 +169,7 @@ test('replacing a ticket-person with some other ticket-person still shows the ti
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PEOPLE_DEFAULTS.idTwo);
 });
 
+/*TICKET TO PEOPLE M2M*/
 test('cc property only returns the single matching item even when multiple people (cc) exist', (assert) => {
     store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.idTwo});
     store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
@@ -282,7 +283,7 @@ test('when cc is changed dirty tracking works as expected (replacing)', (assert)
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('when location is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
+test('when person is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
     store.push('person', {id: PEOPLE_DEFAULTS.id});
     store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
     store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, ticket_pk: TICKET_DEFAULTS.idOne});
@@ -297,7 +298,7 @@ test('when location is suddently removed it shows as a dirty relationship (when 
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
 
-test('rollback location will reset the previously used people (cc) when switching from valid cc array to nothing', (assert) => {
+test('rollback ticket will reset the previously used people (cc) when switching from valid cc array to nothing', (assert) => {
     store.push('person', {id: PEOPLE_DEFAULTS.id});
     store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
     store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id, ticket_pk: TICKET_DEFAULTS.idOne});
@@ -381,4 +382,30 @@ test('ticket_cc_ids computed returns a flat list of ids for each person', (asser
     ticket.remove_person(PEOPLE_DEFAULTS.id);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.deepEqual(ticket.get('ticket_cc_ids'), [TICKET_PERSON_DEFAULTS.idTwo]);
+});
+
+test('priority property returns associated object or undefined', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let priority = ticket.get('priority');
+    assert.equal(priority.get('id'), TICKET_DEFAULTS.priorityOneId);
+    assert.equal(priority.get('name'), TICKET_DEFAULTS.priorityOne);
+    priority.set('tickets', []);
+    priority = ticket.get('priority');
+    assert.equal(priority, undefined);
+});
+
+test('change_priority will append the ticket id to the new priority tickets array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [9]});
+    ticket.change_priority(TICKET_DEFAULTS.priorityOneId);
+    assert.deepEqual(priority.get('tickets'), [9, TICKET_DEFAULTS.idOne]);
+});
+
+test('change_priority will remove the ticket id from the prev priority tickets array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [9, TICKET_DEFAULTS.idOne]});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo, tickets: []});
+    ticket.change_priority(TICKET_DEFAULTS.priorityTwoId);
+    assert.deepEqual(priority.get('tickets'), [9]);
 });

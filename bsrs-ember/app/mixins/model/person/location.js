@@ -36,7 +36,7 @@ var LocationMixin = Ember.Mixin.create({
         let uuid = this.get('uuid');
         store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
     },
-    remove_location(location_pk) {
+    remove_locations(location_pk) {
         let store = this.get('store');
         let m2m_pk = this.get('person_locations').filter((m2m) => {
             return m2m.get('location_pk') === location_pk;

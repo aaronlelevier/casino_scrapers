@@ -2,22 +2,33 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
+import equal from 'bsrs-ember/utilities/equal';
 
 var RoleModel = Model.extend({
     store: inject('main'),
     uuid: injectUUID('uuid'),
     name: attr(''),
-    people: attr([]),
+    people: [],
     role_type: attr(),
     cleanupLocation: false,
     location_level_fk: undefined, 
     role_category_fks: [],
+    role_categories_ids: Ember.computed('role_categories.[]', function() {
+        return this.get('role_categories').map((role_category) => {
+            return role_category.get('id');
+        }); 
+    }),
     role_categories: Ember.computed('role_category_fks.[]', function() {
         let filter = (join_model) => {
             return join_model.get('role_fk') === this.get('id') && !join_model.get('removed');
         };
         let store = this.get('store');
         return store.find('role-category', filter.bind(this), ['removed']);
+    }),
+    categories_ids: Ember.computed('categories.[]', function() {
+        return this.get('categories').map((category) => {
+            return category.get('id');
+        });
     }),
     categories: Ember.computed('role_categories.[]', function() {
         let role_categories = this.get('role_categories');
@@ -30,12 +41,34 @@ var RoleModel = Model.extend({
         return this.get('store').find('category', filter.bind(role_categories), ['id']);
     }),
     categoryIsDirty: Ember.computed('role_category_fks.[]', 'categories.[]', function() {
-        let role_category_fks = this.get('role_category_fks');
         let categories = this.get('categories');
-        if (categories) {
-            return categories.get('length') !== role_category_fks.length ? true : false;
+        let role_categories_ids = this.get('role_categories_ids');
+        let previous_m2m_fks = this.get('role_category_fks') || [];
+        if(categories.get('length') !== previous_m2m_fks.length) {
+            return equal(role_categories_ids, previous_m2m_fks) ? false : true;
         }
+        return equal(role_categories_ids, previous_m2m_fks) ? false : true;
     }),
+    categoryIsNotDirty: Ember.computed.not('categoryIsDirty'),
+    rollbackCategories() {
+        let store = this.get('store');
+        let previous_m2m_fks = this.get('role_category_fks') || [];
+
+        let m2m_to_throw_out = store.find('role-category', function(join_model) {
+            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
+        }, ['id']);
+
+        m2m_to_throw_out.forEach(function(join_model) {
+            join_model.set('removed', true);
+        });
+
+        previous_m2m_fks.forEach(function(pk) {
+            var m2m_to_keep = store.find('role-category', pk);
+            if (m2m_to_keep.get('id')) {
+                m2m_to_keep.set('removed', undefined);
+            }
+        });
+    },
     add_category(category_pk) {
         let uuid = this.get('uuid');
         let store = this.get('store');
@@ -44,7 +77,9 @@ var RoleModel = Model.extend({
     remove_category(category_pk) {
         let uuid = this.get('uuid');
         let store = this.get('store');
-        let m2m_pk = this.get('role_categories').objectAt(0).get('id');
+        let m2m_pk = this.get('role_categories').filter((m2m) => {
+            return m2m.get('category_fk') === category_pk;
+        }).objectAt(0).get('id');
         store.push('role-category', {id: m2m_pk, removed: true});
     },
     location_level: Ember.computed('location_levels.[]', function() {
@@ -87,15 +122,12 @@ var RoleModel = Model.extend({
             location_level_id = location_level.get('id');
         }
         let categories = this.get('categories');
-        let category_ids = categories.map((category) => {
-            return category.get('id');
-        });
         return {
             id: this.get('id'),
             name: this.get('name'),
             role_type: this.get('role_type'),
             location_level: location_level_id || null,
-            categories: category_ids 
+            categories: this.get('categories_ids') 
         };
     },
     removeRecord() {
@@ -103,6 +135,7 @@ var RoleModel = Model.extend({
     },
     rollbackRelated() {
         this.rollbackLocationLevel();
+        this.rollbackCategories();
     },
     saveRelated() {
         this.saveLocationLevel();
