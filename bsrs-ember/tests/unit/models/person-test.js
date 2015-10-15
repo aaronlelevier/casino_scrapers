@@ -579,7 +579,7 @@ test('when person has role suddenly assigned it shows as a dirty relationship (s
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     role.set('people', [PEOPLE_DEFAULTS.id]);
     assert.ok(person.get('isNotDirty'));
-    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('when person has role suddently assigned it shows as a dirty relationship (starting empty array)', (assert) => {
@@ -589,7 +589,7 @@ test('when person has role suddently assigned it shows as a dirty relationship (
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     role.set('people', [PEOPLE_DEFAULTS.id]);
     assert.ok(person.get('isNotDirty'));
-    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('when person has role suddently assigned it shows as a dirty relationship (starting with legit value)', (assert) => {
@@ -599,7 +599,7 @@ test('when person has role suddently assigned it shows as a dirty relationship (
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     role.set('people', [PEOPLE_DEFAULTS.unusedId, PEOPLE_DEFAULTS.id]);
     assert.ok(person.get('isNotDirty'));
-    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('when person has role suddently removed it shows as a dirty relationship', (assert) => {

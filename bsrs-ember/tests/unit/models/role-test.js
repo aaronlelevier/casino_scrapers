@@ -43,8 +43,8 @@ test('role can be related to one or many people', (assert) => {
     let related = role.get('people');
     role.set('people', related.concat([CATEGORY_DEFAULTS.idOne]));
     assert.deepEqual(role.get('people'), [CATEGORY_DEFAULTS.idOne]);
-    assert.ok(role.get('isDirty'));
-    assert.ok(role.get('isDirtyOrRelatedDirty'));
+    assert.ok(role.get('isNotDirty'));
+    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 /*ROLE TO LOCATION LEVEL 1-to-Many RELATIONSHIP*/

@@ -14,7 +14,7 @@ var RoleModel = Model.extend({
     store: inject('main'),
     uuid: injectUUID('uuid'),
     name: attr(''),
-    people: attr([]),
+    people: [],
     role_type: attr(),
     cleanupLocation: false,
     location_level_fk: undefined, 
