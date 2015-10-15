@@ -49,7 +49,6 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             locale_id: 'a7ae2835-ee7c-4604-92f7-045f3994936e',
             locale2_id: '51905ba8-024f-4739-ae5c-2d90ffc3f726',
             unusedId: BSRS_PERSON_UNUSED_ID,
-            anotherId: 'e65dc236-5c35-477d-a77c-f01b1e8a00f5',
             sorted_username: BSRS_PERSON_SORTED_USERNAME
         };
     };
