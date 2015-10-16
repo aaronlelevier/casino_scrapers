@@ -5,6 +5,7 @@ from django.conf import settings
 from django.utils.encoding import python_2_unicode_compatible
 from django.core.exceptions import ValidationError as DjangoValidationError
 
+from PIL import Image
 from rest_framework.exceptions import ValidationError
 
 from person.models import Person
@@ -130,8 +131,8 @@ class Attachment(BaseModel):
     model_id = models.UUIDField(help_text="UUID of the Model Instance that "
                                           "the Attachment is related to.")
     filename = models.CharField(max_length=100, blank=True)
-    file = models.FileField(upload_to=upload_to, null=True, blank=True)
     is_image = models.BooleanField(blank=True, default=False)
+    file = models.FileField(upload_to=upload_to, null=True, blank=True)
     image_full = models.ImageField(upload_to=upload_to, null=True, blank=True)
     image_medium = models.ImageField(upload_to=upload_to_images_medium, null=True, blank=True)
     image_thumbnail = models.ImageField(upload_to=upload_to_images_thumbnail, null=True, blank=True)
@@ -155,11 +156,30 @@ class Attachment(BaseModel):
             self.is_image = True
             # Save Image Sizes
             self.image_full = self.file
-            # Set file=None b/c we are storing an Image
-            self.file = None
 
-        return super(Attachment, self).save(*args, **kwargs)
+            self.image_medium.name = "/".join(['attachments/images/medium', self.filename])
+            self.save_alt_image(location=self.image_medium.name, size=(100, 100))
 
+            self.image_thumbnail.name = "/".join(['attachments/images/thumbnails', self.filename])
+            self.save_alt_image(location=self.image_thumbnail.name, size=(50, 50))
+
+        super(Attachment, self).save(*args, **kwargs)
+
+    def save_alt_image(self, location, size):
+        try:
+            with Image.open(self.image_full) as im:
+                im = im.resize(size, Image.ANTIALIAS)
+                
+                tail, head = os.path.split(os.path.join(settings.MEDIA_ROOT, location))
+                if not os.path.exists(tail):
+                    os.makedirs(tail)
+                
+                im.save(os.path.join(tail, head))
+        except OSError:
+            # ``SimpleUploadedFile`` in test will raise this error b/c ``self.file``
+            # is not an actual file object.
+            pass
+        
     @property
     def _filename(self):
         try:
