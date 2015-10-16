@@ -39,5 +39,4 @@ _*.rst
 venv/
 
 # attachments
-bsrs-django/bigsky/source/attachments/files/
-bsrs-django/bigsky/source/attachments/images/
+**/attachments/images/
