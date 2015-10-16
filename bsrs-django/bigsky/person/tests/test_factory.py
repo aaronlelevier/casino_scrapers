@@ -47,7 +47,7 @@ class FactoryTests(TransactionTestCase):
 
     def test_multiple_person_create(self):
         # Will `get_or_create` Person Obj, so confirm at least 2 exist
-        factory.create_person(_many=2)
+        factory.create_person(_many=5)
         self.assertTrue(Person.objects.count() >= 2)
 
     def test_many_with_username(self):

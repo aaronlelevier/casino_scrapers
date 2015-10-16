@@ -22,6 +22,7 @@ DATABASES = {
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [
+    '--nologcapture',
     '--with-coverage',
     '--cover-package=accounting,category,contact,generic,location,order,person,session,third_party,ticket,translation,utils',
 ]

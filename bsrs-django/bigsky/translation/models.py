@@ -119,7 +119,7 @@ class TranslationManager(BaseManager):
 
     def export_csv(self, id):
         '''
-        Test `export_csv` Boiler-plate
+        # Boiler-plate code for exporting a `Translation` record
 
         .. code-block:: python
 

@@ -173,7 +173,7 @@ class Attachment(BaseModel):
 
     def _validate_file_size(self):
         try:
-            if self.file._file._size > settings.MAX_UPLOAD_SIZE:
+            if self.file.size > settings.MAX_UPLOAD_SIZE:
                 raise DjangoValidationError("File size: {} to big".format(
                     self.file._file._size))
         except AttributeError:
