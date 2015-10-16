@@ -130,11 +130,11 @@ var TicketModel = Model.extend({
                 previous_m2m_fks.pushObject(join_model.get('id'));
             } 
         });
-        previous_m2m_fks.forEach((fk) => {
-            if (Ember.$.inArray(fk, ticket_cc_ids) === -1) {
-                previous_m2m_fks.removeObject(fk);
+        for (let i=previous_m2m_fks.length-1; i>=0; i--) {
+            if (Ember.$.inArray(previous_m2m_fks[i], ticket_cc_ids) === -1) {
+                previous_m2m_fks.removeObject(previous_m2m_fks[i]);
             } 
-        });
+        }
     },
     saveStatus() {
         let status = this.get('status');

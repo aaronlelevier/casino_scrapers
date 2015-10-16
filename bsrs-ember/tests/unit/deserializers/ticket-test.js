@@ -226,7 +226,7 @@ test('ticket-status m2m is added after deserialize single (starting with existin
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     let m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
-    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, name: PEOPLE_DEFAULTS.fullname});
+    let person = store.push('person', {id: PEOPLE_DEFAULTS.id, fullname: PEOPLE_DEFAULTS.fullname});
     assert.equal(ticket.get('cc.length'), 1);
     let response = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
     let second_person = PEOPLE_FIXTURES.get(PEOPLE_DEFAULTS.unusedId);
@@ -236,8 +236,8 @@ test('ticket-status m2m is added after deserialize single (starting with existin
     let original = store.find('ticket', TICKET_DEFAULTS.idOne);
     let cc = original.get('cc');
     assert.equal(cc.get('length'), 2);
-    assert.equal(cc.objectAt(0).get('name'), PEOPLE_DEFAULTS.fullname);
-    assert.equal(cc.objectAt(1).get('name'), PEOPLE_DEFAULTS.fullname);
+    assert.equal(cc.objectAt(0).get('fullname'), PEOPLE_DEFAULTS.fullname);
+    assert.equal(cc.objectAt(1).get('fullname'), PEOPLE_DEFAULTS.fullname);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-person').get('length'), 2);
