@@ -120,6 +120,8 @@ cd ../../builds/persistent/
 
 wait
 echo "UWSGI - START/RELOAD"
+sudo fuser -k 8003/tcp
+wait
 sudo /usr/local/lib/persistent/uwsgi/uwsgi --ini uwsgi.ini
 sudo touch /tmp/bigsky-master-persistent.pid
 TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $TEST; fi

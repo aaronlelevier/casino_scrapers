@@ -117,6 +117,8 @@ cd ../../builds/deploy/
 
 wait
 echo "UWSGI - START/RELOAD"
+sudo fuser -k 8002/tcp
+wait
 sudo /usr/local/lib/deploy/uwsgi/uwsgi --ini uwsgi.ini
 sudo touch /tmp/bigsky-master-deploy.pid
 TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $TEST; fi
