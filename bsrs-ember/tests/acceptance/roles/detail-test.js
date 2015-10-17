@@ -192,7 +192,7 @@ test('clicking and typing into selectize for categories will fire off xhr reques
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(find('div.item').length, 2);
-        assert.equal(find('div.option').length, 8);
+        assert.equal(find('div.option').length, 1);
     });
     let url = PREFIX + DETAIL_URL + "/";
     let category = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne});
@@ -225,11 +225,11 @@ test('can remove and add back same category', (assert) => {
         let join_model_id = role.get('role_category_fks')[0];
         let join_model = store.find('role-category', join_model_id);
         assert.equal(join_model.get('removed'), true);
-        //TODO: figure out why categories is 2. Simple store has a duplicate. Digging into the push method in store.js doesn't reveal anything either
-        // assert.equal(role.get('categories').get('length'), 1);
+        //TODO: figure out why categories is 2 without hash_table in method. Simple store has a duplicate. Digging into the push method in store.js doesn't reveal anything either
+        assert.equal(role.get('categories').get('length'), 1);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(find('div.item').length, 1);
-        assert.equal(find('div.option').length, 9);
+        assert.equal(find('div.option').length, 0);
     });
     let url = PREFIX + DETAIL_URL + "/";
     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne]});
@@ -290,10 +290,10 @@ test('starting with multiple categories, can remove all categories (while not po
     andThen(() => {
         let role = store.find('role', ROLE_DEFAULTS.idOne);
         assert.equal(role.get('role_category_fks').length, 2);
-        // assert.equal(role.get('categories').get('length'), 1);
+        assert.equal(role.get('categories').get('length'), 1);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(find('div.item').length, 1);
-        assert.equal(find('div.option').length, 9);
+        assert.equal(find('div.option').length, 2);
     });
     let url = PREFIX + DETAIL_URL + "/";
     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne]});
@@ -330,11 +330,33 @@ test('search will filter down on people in store correctly by removing and addin
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(find('div.item').length, 2);
-        assert.equal(find('div.option').length, 9);
+        assert.equal(find('div.option').length, 0);
     });
     let url = PREFIX + DETAIL_URL + "/";
     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne, 'abc123']});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
+
+test('clicking and typing into selectize for categories will not filter if spacebar pressed', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.selectize-input input', ' ');
+    triggerEvent('.selectize-input input', 'keyup', SPACEBAR);
+    andThen(() => {
+        assert.equal(find('div.option').length, 0);
+    });
+    andThen(() => {
+        let role = store.find('role', ROLE_DEFAULTS.idOne);
+        assert.equal(role.get('categories').get('length'), 1);
+        // assert.equal(find('div.item').length, 1);//firefox clears out input?
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);
+    let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     click(SAVE_BTN);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

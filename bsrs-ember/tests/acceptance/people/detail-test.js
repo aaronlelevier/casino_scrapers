@@ -1092,31 +1092,6 @@ test('when you deep link to the person detail view you can alter the locations a
     });
 });
 
-test('deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', (assert) => {
-    clearxhr(list_xhr);
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
-    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
-    visit(DETAIL_URL);
-    andThen(() => {
-        let locations = store.find('location');
-        assert.equal(locations.get('length'), 1);
-        assert.equal(find('div.item').length, 1);
-        assert.equal(find('div.option').length, 0);
-    });
-    fillIn('.selectize-input input', 'a');
-    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-    andThen(() => {
-        let filterFunc = function(location) {
-            let location_level_fk = location.get('location_level').get('id');
-            return location_level_fk === LOCATION_LEVEL_DEFAULTS.idOne;
-        };
-        let locations = store.find('location', filterFunc, ['id', 'location_level']);
-        assert.equal(locations.get('length'), 10);
-        assert.equal(find('div.item').length, 1);
-        assert.equal(find('div.option').length, 9);
-    });
-});
-
 test('when you change a related role it will change the related locations as well', (assert) => {
     clearxhr(list_xhr);
     let people_list_data_mod = PEOPLE_FIXTURES.list();
@@ -1229,3 +1204,179 @@ test('when you change a related role it will change the related locations as wel
         });
     });
 });
+
+test('deep link to person and clicking in the person-locations-select component will fire off xhr to get locations with one location to start with', (assert) => {
+    clearxhr(list_xhr);
+    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+    xhr(locations_endpoint, 'GET', null, {}, 200, LOCATION_FIXTURES.list());
+    visit(DETAIL_URL);
+    andThen(() => {
+        let locations = store.find('location');
+        assert.equal(locations.get('length'), 1);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 0);
+    });
+    fillIn('.selectize-input input', 'a');
+    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+    andThen(() => {
+        let filterFunc = function(location) {
+            let location_level_fk = location.get('location_level').get('id');
+            return location_level_fk === LOCATION_LEVEL_DEFAULTS.idOne;
+        };
+        let locations = store.find('location', filterFunc, ['id', 'location_level']);
+        assert.equal(locations.get('length'), 10);
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 9);
+    });
+});
+
+// test('can remove and add back same location', (assert) => {
+//     visit(DETAIL_URL);
+//     click('div.item > a.remove:eq(0)');
+//     andThen(() => {
+//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+//         assert.equal(ticket.get('cc').get('length'), 0);
+//         assert.equal(find('div.item').length, 0);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=Mel';
+//     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
+//     fillIn('.selectize-input input', 'Mel');
+//     triggerEvent('.selectize-input input', 'keyup', LETTER_M);
+//     click('.t-ticket-people-select div.option:eq(0)');
+//     andThen(() => {
+//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+//         assert.equal(ticket.get('ticket_people_fks').length, 1);
+//         assert.equal(ticket.get('cc').get('length'), 1);
+//         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+//         assert.equal(find('div.item').length, 1);
+//         assert.equal(find('div.option').length, 9);
+//     });
+//     let url = PREFIX + DETAIL_URL + "/";
+//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+//     click(SAVE_BTN);
+//     andThen(() => {
+//         assert.equal(currentURL(), TICKETS_URL);
+//     });
+// });
+
+// test('when you deep link to the ticket detail can remove a cc', (assert) => {
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+//         assert.equal(ticket.get('cc').get('length'), 1);
+//         assert.equal(find('div.item').length, 1);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     click('div.item > a.remove:eq(0)');
+//     andThen(() => {
+//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+//         assert.equal(ticket.get('cc').get('length'), 0);
+//         assert.equal(find('div.option').length, 0);
+//         assert.equal(find('div.item').length, 0);
+//     });
+//     let url = PREFIX + DETAIL_URL + '/';
+//     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: []});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     click(SAVE_BTN);
+//     andThen(() => {
+//         assert.equal(currentURL(), TICKETS_URL);
+//     });
+// });
+
+// test('starting with multiple cc, can remove all ccs (while not populating options) and add back', (assert) => {
+//     detail_data.cc = [...detail_data.cc, PEOPLE_FIXTURES.get(PEOPLE_DEFAULTS.idTwo)];
+//     detail_data.cc[1].fullname = PEOPLE_DEFAULTS.fullname + 'i';
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+//         assert.equal(ticket.get('cc').get('length'), 2);
+//         assert.equal(find('div.item').length, 2);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
+//     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
+//     click('div.item > a.remove:eq(0)');
+//     click('div.item > a.remove:eq(0)');
+//     andThen(() => {
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     fillIn('.selectize-input input', 'a');
+//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
+//     click('.t-ticket-people-select div.option:eq(0)');
+//     andThen(() => {
+//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+//         assert.equal(ticket.get('ticket_people_fks').length, 2);
+//         assert.equal(ticket.get('cc').get('length'), 1);
+//         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+//         assert.equal(find('div.item').length, 1);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     let url = PREFIX + DETAIL_URL + "/";
+//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_CURRENT_DEFAULTS.id]});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+//     click(SAVE_BTN);
+//     andThen(() => {
+//         assert.equal(currentURL(), TICKETS_URL);
+//     });
+// });
+
+// test('search will filter down on people in store correctly by removing and adding a cc back', (assert) => {
+//     detail_data.cc = [...detail_data.cc, PEOPLE_FIXTURES.get(PEOPLE_DEFAULTS.idTwo)];
+//     detail_data.cc[1].fullname = PEOPLE_DEFAULTS.fullname + ' scooter';
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+//         assert.equal(ticket.get('cc').get('length'), 2);
+//         assert.equal(find('div.item').length, 2);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=sc';
+//     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
+//     click('div.item > a.remove:eq(1)');
+//     andThen(() => {
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     fillIn('.selectize-input input', 'sc');
+//     triggerEvent('.selectize-input input', 'keyup', LETTER_S);
+//     click('.t-ticket-people-select div.option:eq(0)');
+//     andThen(() => {
+//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+//         assert.equal(ticket.get('ticket_people_fks').length, 2);
+//         assert.equal(ticket.get('cc').get('length'), 2);
+//         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+//         assert.equal(find('div.item').length, 2);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     let url = PREFIX + DETAIL_URL + "/";
+//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id, PEOPLE_DEFAULTS.idTwo]});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+//     click(SAVE_BTN);
+//     andThen(() => {
+//         assert.equal(currentURL(), TICKETS_URL);
+//     });
+// });
+
+// test('clicking and typing into selectize for people will not filter if spacebar pressed', (assert) => {
+//     visit(DETAIL_URL);
+//     fillIn('.selectize-input input', ' ');
+//     triggerEvent('.selectize-input input', 'keyup', SPACEBAR);
+//     andThen(() => {
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     andThen(() => {
+//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+//         assert.equal(ticket.get('cc').get('length'), 1);
+//         // assert.equal(find('div.item').length, 1);//firefox clears out input?
+//     });
+//     let url = PREFIX + DETAIL_URL + '/';
+//     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     click(SAVE_BTN);
+//     andThen(() => {
+//         assert.equal(currentURL(), TICKETS_URL);
+//     });
+// });

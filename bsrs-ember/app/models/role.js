@@ -42,7 +42,7 @@ var RoleModel = Model.extend({
         //         return true;
         //     }
         // };
-        // return this.get('store').find('category', filter.bind(role_categories), ['id']);
+        // return this.get('store').find('category', filter.bind(role_categories), []);
     }),
     role_categories_ids: Ember.computed('role_categories.[]', function() {
         return this.get('role_categories').map((role_category) => {

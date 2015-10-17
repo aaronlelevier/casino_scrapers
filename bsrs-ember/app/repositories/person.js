@@ -24,20 +24,21 @@ export default Ember.Object.extend(GridRepositoryMixin, {
             model.save();
         });
     },
-    findTicketPeople(search_criteria) {
+    findTicketPeople(search) {
         let url = PEOPLE_URL;
-        if (search_criteria) {
-            url += `?fullname__icontains=${search_criteria}`;
+        search = search ? search.trim() : search;
+        if (search) {
+            url += `?fullname__icontains=${search}`;
+            PromiseMixin.xhr(url, 'GET').then((response) => {
+                this.get('PersonDeserializer').deserialize(response);
+            });
+            let filterFunc = function(person) {
+                let fullname = person.get('fullname');
+                return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1;
+            };
+            //ensure person returned from store has substring in fullname
+            return this.get('store').find('person', filterFunc, ['id']);
         }
-        PromiseMixin.xhr(url, 'GET').then((response) => {
-            this.get('PersonDeserializer').deserialize(response);
-        });
-        let filterFunc = function(person) {
-            let fullname = person.get('fullname');
-            return fullname.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
-        };
-        //ensure person returned from store has substring in fullname
-        return this.get('store').find('person', filterFunc, ['id']);
     },
     find() {
         PromiseMixin.xhr(PEOPLE_URL, 'GET').then((response) => {

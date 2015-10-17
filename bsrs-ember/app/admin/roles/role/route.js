@@ -22,7 +22,7 @@ var RoleRoute = TabRoute.extend({
         let categoryRepo = this.get('categoryRepo');
         let all_role_types = this.get('store').find('role-type');
         let all_location_levels = this.get('store').find('location-level');
-        let categories_children = categoryRepo.findCategoryChildren(search) || [];
+        let categories_children = search ? categoryRepo.findCategoryChildren(search) : [];
         let role = this.get('store').find('role', role_pk);
         if (!role.get('length') || role.get('isNotDirtyOrRelatedNotDirty')) {
             role = repository.findById(role_pk);

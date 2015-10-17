@@ -233,7 +233,7 @@ test('when you deep link to the category detail can remove child from category',
     andThen(() => {
         let category = store.find('category', CATEGORY_DEFAULTS.idNew);
         assert.equal(category.get('children_fks').get('length'), 0);
-        assert.equal(find('div.option').length, 10);
+        assert.equal(find('div.option').length, 3);
         assert.equal(find('div.item').length, 0);
     });
     click(SAVE_BTN);
@@ -300,7 +300,7 @@ test('clicking and typing into selectize for categories children will fire off x
     andThen(() => {
         let category = store.find('category', CATEGORY_DEFAULTS.idNew);
         assert.equal(category.get('children_fks').get('length'), 1);
-        assert.equal(find('div.option').length, 9);
+        assert.equal(find('div.option').length, 2);
         assert.equal(find('div.item').length, 1);
     });
     click(SAVE_BTN);

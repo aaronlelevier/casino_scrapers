@@ -397,3 +397,25 @@ test('search will filter down on people in store correctly by removing and addin
         assert.equal(currentURL(), TICKETS_URL);
     });
 });
+
+test('clicking and typing into selectize for people will not filter if spacebar pressed', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.selectize-input input', ' ');
+    triggerEvent('.selectize-input input', 'keyup', SPACEBAR);
+    andThen(() => {
+        assert.equal(find('div.option').length, 0);
+    });
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').get('length'), 1);
+        // assert.equal(find('div.item').length, 1);//firefox clears out input?
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), TICKETS_URL);
+    });
+});
