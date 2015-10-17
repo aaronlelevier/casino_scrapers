@@ -23,6 +23,7 @@ const SUBMIT_BTN = '.submit_btn';
 const SAVE_BTN = '.t-save-btn';
 const CANCEL_BTN = '.t-cancel-btn';
 const LETTER_A = {keyCode: 65};
+const LETTER_M = {keyCode: 77};
 const LETTER_S = {keyCode: 83};
 const SPACEBAR = {keyCode: 32};
 
@@ -247,7 +248,7 @@ test('clicking and typing into selectize for people will fire off xhr request fo
         assert.equal(find('div.item').length, 1);
         assert.equal(find('div.option').length, 0);
     });
-    let people_endpoint = PREFIX + '/admin/people/' + '?fullname__icontains=a';
+    let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
     fillIn('.selectize-input input', 'a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
@@ -261,6 +262,37 @@ test('clicking and typing into selectize for people will fire off xhr request fo
     });
     let url = PREFIX + DETAIL_URL + "/";
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_CURRENT_DEFAULTS.id, PEOPLE_DEFAULTS.id]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    click(SAVE_BTN);
+    andThen(() => {
+        assert.equal(currentURL(), TICKETS_URL);
+    });
+});
+
+test('can remove and add back same cc', (assert) => {
+    visit(DETAIL_URL);
+    click('div.item > a.remove:eq(0)');
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').get('length'), 0);
+        assert.equal(find('div.item').length, 0);
+        assert.equal(find('div.option').length, 0);
+    });
+    let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=Mel';
+    xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
+    fillIn('.selectize-input input', 'Mel');
+    triggerEvent('.selectize-input input', 'keyup', LETTER_M);
+    click('.t-ticket-people-select div.option:eq(0)');
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('ticket_people_fks').length, 1);
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.equal(find('div.item').length, 1);
+        assert.equal(find('div.option').length, 9);
+    });
+    let url = PREFIX + DETAIL_URL + "/";
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     click(SAVE_BTN);
     andThen(() => {
@@ -303,7 +335,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
         assert.equal(find('div.item').length, 2);
         assert.equal(find('div.option').length, 0);
     });
-    let people_endpoint = PREFIX + '/admin/people/' + '?fullname__icontains=a';
+    let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
     click('div.item > a.remove:eq(0)');
     click('div.item > a.remove:eq(0)');
@@ -340,7 +372,7 @@ test('search will filter down on people in store correctly by removing and addin
         assert.equal(find('div.item').length, 2);
         assert.equal(find('div.option').length, 0);
     });
-    let people_endpoint = PREFIX + '/admin/people/' + '?fullname__icontains=sc';
+    let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=sc';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
     click('div.item > a.remove:eq(1)');
     andThen(() => {

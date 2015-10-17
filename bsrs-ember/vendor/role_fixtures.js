@@ -4,7 +4,6 @@ var BSRS_ROLE_FACTORY = (function() {
         this.category_fixtures = category_fixtures.default || category_fixtures;
         this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
     };
-
     factory.prototype.generate = function(i) {
         return {
             id: i,
@@ -34,6 +33,7 @@ var BSRS_ROLE_FACTORY = (function() {
                 rando_uuid = rando_uuid + i;
             }
             var role = this.generate(rando_uuid);
+            delete role.categories;
             role.name = 'zap' + i;
             response.push(role);
         }
@@ -49,6 +49,7 @@ var BSRS_ROLE_FACTORY = (function() {
         for (var i=11; i <= 19; i++) {
             var uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04';
             var role = this.generate(uuid + i);
+            delete role.categories;
             role.name = 'xav' + i;
             response.push(role);
         }
@@ -60,7 +61,7 @@ var BSRS_ROLE_FACTORY = (function() {
     };
     factory.prototype.put = function(role) {
         var response = this.generate(role.id);
-        response.location_level = response.location_level.id;
+        response.location_level = this.location_level_fixtures.detail().id;
         response.categories = [response.categories[0].id];
         for (var key in role) {
             response[key] = role[key];

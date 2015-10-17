@@ -6,7 +6,15 @@ var RoleCategorySelect = Ember.Component.extend({
         return role.get('categories');
     }),
     options: Ember.computed('role.categories.[]', 'search', function() {
-        return this.get('categories_children') && this.get('categories_children').get('length') > 0 ? this.get('categories_children') : this.get('categories_selected');
+        let categories_selected = this.get('categories_selected');
+        let categories_children = this.get('categories_children');
+        if (!categories_children || categories_children.get('length') === 0) { 
+            return categories_selected; 
+        }
+        categories_selected.map((selected) => {
+            categories_children.pushObject(selected); 
+        });
+        return categories_children;
     }),
     find_all_categories() {
         let search_criteria = this.get('search_criteria');
