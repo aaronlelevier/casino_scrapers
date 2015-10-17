@@ -22,7 +22,7 @@ var LocationMixin = Ember.Mixin.create({
             });
             return Ember.$.inArray(location.get('id'), location_pks) > -1;
         };
-        return store.find('location', filter.bind(person_locations), ['id']);
+        return store.find('location', filter.bind(person_locations), []);
     }),
     person_locations: Ember.computed(function() {
         let store = this.get('store');

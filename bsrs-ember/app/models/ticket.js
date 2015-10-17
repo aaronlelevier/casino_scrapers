@@ -25,7 +25,7 @@ var TicketModel = Model.extend({
             });
             return Ember.$.inArray(person.get('id'), person_pks) > -1;
         };
-        return this.get('store').find('person', filter.bind(ticket_cc), ['id']);
+        return this.get('store').find('person', filter.bind(ticket_cc), []);
     }),
     ticket_cc_ids: Ember.computed('ticket_cc.[]', function() {
         return this.get('ticket_cc').map((cc) => {
