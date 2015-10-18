@@ -10,12 +10,12 @@ import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_roles_url;
 const ROLE_URL = BASE_URL + '/index';
 const ROLE_NEW_URL = BASE_URL + '/new';
-const SAVE_BTN = '.t-save-btn' ;
 
 let application, store, payload, list_xhr;
 
@@ -59,7 +59,7 @@ test('visiting role/new', (assert) => {
     fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
     fillIn('.t-role-type', ROLE_DEFAULTS.roleTypeGeneral);
     fillIn('.t-location-level', ROLE_DEFAULTS.locationLevelOne);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
         assert.equal(store.find('role').get('length'), 4);
@@ -81,7 +81,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
     });
     fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
@@ -91,7 +91,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     clearxhr(list_xhr);
     visit(ROLE_NEW_URL);
     fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), ROLE_NEW_URL);
@@ -112,7 +112,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     visit(ROLE_NEW_URL);
     fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), ROLE_NEW_URL);
@@ -133,7 +133,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
     visit(ROLE_NEW_URL);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         assert.equal(store.find('role').get('length'), 3);
     });

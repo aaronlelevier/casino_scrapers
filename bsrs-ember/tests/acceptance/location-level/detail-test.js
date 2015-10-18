@@ -8,15 +8,13 @@ import config from 'bsrs-ember/config/environment';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location_level_fixtures';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
 const DISTRICT_DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idDistrict;
-const SUBMIT_BTN = '.submit_btn';
-const SAVE_BTN = '.t-save-btn';
-const CANCEL_BTN = '.t-cancel-btn';
 
 let application, store, endpoint, endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
 
@@ -74,7 +72,7 @@ test('visiting admin/location-level', (assert) => {
     let list = LOCATION_LEVEL_FIXTURES.list();
     list.results[0].name = LOCATION_LEVEL_DEFAULTS.nameRegion;
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
@@ -112,7 +110,7 @@ test('a location level child can be selected and persisted', (assert) => {
     });
     let list = LOCATION_LEVEL_FIXTURES.list();
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
@@ -123,13 +121,13 @@ test('a location level child can be selected and persisted', (assert) => {
 test('when editing name to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-location-level-name', '');
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
     });
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').is(':hidden'), false);
@@ -139,7 +137,7 @@ test('when editing name to invalid, it checks for validation', (assert) => {
     let payload = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameAnother, children: LOCATION_LEVEL_DEFAULTS.companyChildren});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameAnother);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
     });
@@ -154,7 +152,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
-    click(CANCEL_BTN);
+    generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
     });
@@ -164,7 +162,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
-    click(CANCEL_BTN);
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -185,7 +183,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
-    click(CANCEL_BTN);
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -205,7 +203,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when click delete, location level is deleted and removed from store', (assert) => {
     visit(DETAIL_URL);
     xhr(endpoint_detail, 'DELETE', null, {}, 204, {});
-    click('.t-delete-btn');
+    generalPage.delete();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne).get('length'), undefined);

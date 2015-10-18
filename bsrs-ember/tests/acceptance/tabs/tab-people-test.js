@@ -19,8 +19,6 @@ const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const NEW_URL = BASE_PEOPLE_URL + '/new';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const ROLE_URL = BASE_ROLE_URL + '/index';
-const SUBMIT_BTN = '.submit_btn';
-const SAVE_BTN = '.t-save-btn';
 
 let application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
 

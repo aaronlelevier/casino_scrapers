@@ -12,13 +12,13 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
 const PEOPLE_NEW_URL = BASE_PEOPLE_URL + '/new';
-const SAVE_BTN = '.t-save-btn';
 
 var application, store, payload, detail_xhr, list_xhr;
 
@@ -59,7 +59,7 @@ test('visiting /people/new and creating a new person', (assert) => {
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
     fillIn('.t-person-role-select', PEOPLE_DEFAULTS.role);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(store.find('person').get('length'), 2);
@@ -82,20 +82,20 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-username-validation-error').is(':hidden'));
         assert.ok(find('.t-password-validation-error').is(':hidden'));
     });
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.ok(find('.t-username-validation-error').is(':visible'));
         assert.ok(find('.t-password-validation-error').is(':visible'));
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.ok(find('.t-username-validation-error').is(':hidden'));
     });
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
     fillIn('.t-person-role-select', PEOPLE_DEFAULTS.role);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -106,7 +106,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     clearxhr(list_xhr);
     visit(PEOPLE_NEW_URL);
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_NEW_URL);
@@ -128,7 +128,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     clearxhr(detail_xhr);
     visit(PEOPLE_NEW_URL);
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_NEW_URL);
@@ -151,7 +151,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
     clearxhr(detail_xhr);
     visit(PEOPLE_NEW_URL);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         assert.equal(store.find('person').get('length'), 1);
     });

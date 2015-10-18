@@ -9,13 +9,13 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_categories_url;
 const CATEGORIES_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + UUID.value;
 const CATEGORY_NEW_URL = BASE_URL + '/new';
-const SAVE_BTN = '.t-save-btn';
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 
@@ -65,7 +65,7 @@ test('visiting /category/new', (assert) => {
     fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
     fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
     fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
         let category = store.find('category', UUID.value);
@@ -94,7 +94,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':hidden'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
@@ -104,7 +104,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         assert.ok(find('.t-name-validation-error').is(':hidden'));
@@ -114,7 +114,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
     fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         assert.ok(find('.t-name-validation-error').is(':hidden'));
@@ -124,7 +124,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
     fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         assert.ok(find('.t-name-validation-error').is(':hidden'));
@@ -134,7 +134,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
     fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         assert.ok(find('.t-name-validation-error').is(':hidden'));
@@ -145,7 +145,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
     fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
     fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
@@ -156,7 +156,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     clearxhr(list_xhr);
     visit(CATEGORY_NEW_URL);
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), CATEGORY_NEW_URL);
@@ -178,7 +178,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     clearxhr(children_xhr);
     visit(CATEGORY_NEW_URL);
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), CATEGORY_NEW_URL);
@@ -204,7 +204,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     andThen(() => {
         assert.equal(store.find('category').get('length'), 4);
     });
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         assert.equal(store.find('category').get('length'), 3);
     });
@@ -236,7 +236,7 @@ test('when you deep link to the category detail can remove child from category',
         assert.equal(find('div.option').length, 3);
         assert.equal(find('div.item').length, 0);
     });
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
@@ -269,7 +269,7 @@ test('clicking and typing into selectize for categories children will not filter
     fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
     fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
     fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
@@ -303,7 +303,7 @@ test('clicking and typing into selectize for categories children will fire off x
         assert.equal(find('div.option').length, 2);
         assert.equal(find('div.item').length, 1);
     });
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });

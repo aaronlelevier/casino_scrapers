@@ -20,7 +20,6 @@ const DJANGO_DETAIL_URL = PREFIX + BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idLo
 const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idLossDistrict;
 const SUBMIT_BTN = '.submit_btn';
 const ROLE_URL = BASE_ROLE_URL + '/index';
-const SAVE_BTN = '.t-save-btn';
 const NEW_ROUTE = 'admin.location-levels.new';
 const INDEX_ROUTE = 'admin.location-levels.index';
 const DETAIL_ROUTE = 'admin.location-levels.location-level';

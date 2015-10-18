@@ -10,14 +10,12 @@ import config from 'bsrs-ember/config/environment';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_categories_url;
 const CATEGORIES_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + CATEGORY_DEFAULTS.idOne;
-const SUBMIT_BTN = '.submit_btn';
-const SAVE_BTN = '.t-save-btn';
-const CANCEL_BTN = '.t-cancel-btn';
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 
@@ -84,7 +82,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     // let results = list.results[0];
     // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CATEGORY_DEFAULTS);
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
         assert.equal(store.find('category').get('length'), 10);
@@ -100,7 +98,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
 
 test('when you click cancel, you are redirected to the category list view', (assert) => {
     visit(DETAIL_URL);
-    click(CANCEL_BTN);
+    generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
@@ -109,13 +107,13 @@ test('when you click cancel, you are redirected to the category list view', (ass
 test('when editing the category name to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-category-name', '');
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').text().trim(), 'invalid name');
     });
     fillIn('.t-category-description', '');
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-description-validation-error').text().trim(), 'Invalid Description');
@@ -126,7 +124,7 @@ test('when editing the category name to invalid, it checks for validation', (ass
     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
@@ -136,7 +134,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
-    click(CANCEL_BTN);
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -157,7 +155,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 test('when click delete, category is deleted and removed from store', (assert) => {
     visit(DETAIL_URL);
     xhr(PREFIX + BASE_URL + '/' + CATEGORY_DEFAULTS.idOne + '/', 'DELETE', null, {}, 204, {});
-    click('.t-delete-btn');
+    generalPage.delete();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
         assert.equal(store.find('category', CATEGORY_DEFAULTS.idOne).get('length'), undefined);
@@ -175,7 +173,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     fillIn('.t-category-name', '');
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
@@ -185,7 +183,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     fillIn('.t-category-description', '');
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
@@ -195,7 +193,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     fillIn('.t-category-cost-code', '');
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
@@ -205,7 +203,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     fillIn('.t-category-label', '');
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
@@ -215,7 +213,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
     fillIn('.t-category-subcategory-label', '');
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
@@ -234,7 +232,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, description: CATEGORY_DEFAULTS.descriptionMaintenance, 
     label: CATEGORY_DEFAULTS.labelOne, subcategory_label: CATEGORY_DEFAULTS.subCatLabelTwo, cost_amount: CATEGORY_DEFAULTS.costAmountOne, cost_code: CATEGORY_DEFAULTS.costCodeOne});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
@@ -264,7 +262,7 @@ test('clicking and typing into selectize for categories children will fire off x
     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, children: [CATEGORY_DEFAULTS.idChild, CATEGORY_DEFAULTS.idTwo]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
@@ -291,7 +289,7 @@ test('clicking and typing into selectize for categories children will fire off x
 //     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
 //     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, children: []});
 //     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-//     click(SAVE_BTN);
+//     generalPage.save();
 //     andThen(() => {
 //         assert.equal(currentURL(), CATEGORIES_URL);
 //     });
@@ -320,7 +318,7 @@ test('clicking and typing into selectize for categories children will not filter
     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, children: [CATEGORY_DEFAULTS.idChild]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
@@ -335,7 +333,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
     });
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
@@ -345,7 +343,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -366,7 +364,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);

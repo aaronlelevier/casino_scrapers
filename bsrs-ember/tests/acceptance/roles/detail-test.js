@@ -13,13 +13,12 @@ import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_roles_url;
 const ROLE_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + ROLE_DEFAULTS.idOne;
-const SUBMIT_BTN = '.submit_btn';
-const SAVE_BTN = '.t-save-btn';
 const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
 const LETTER_R = {keyCode: 82};
@@ -85,7 +84,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     list.results[0].role_type = ROLE_DEFAULTS.roleTypeContractor;
     list.results[0].location_level = ROLE_DEFAULTS.locationLevelTwo;
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
         let role = store.find('role').objectAt(0);  
@@ -99,7 +98,7 @@ test('when you change a related location level it will be persisted correctly', 
     let location_level = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameRegion});
     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, location_level: location_level.id});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
@@ -114,7 +113,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
     });
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
@@ -124,7 +123,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     fillIn('.t-role-name', ROLE_DEFAULTS.namePut);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -146,7 +145,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     visit(DETAIL_URL);
     fillIn('.t-role-name', ROLE_DEFAULTS.nameTwo);
     fillIn('.t-location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -166,7 +165,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when click delete, role is deleted and removed from store', (assert) => {
     visit(DETAIL_URL);
     xhr(PREFIX + BASE_URL + '/' + ROLE_DEFAULTS.idOne + '/', 'DELETE', null, {}, 204, {});
-    click('.t-delete-btn');
+    generalPage.delete();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
         assert.equal(store.find('role', ROLE_DEFAULTS.idOne).get('length'), undefined);
@@ -198,7 +197,7 @@ test('clicking and typing into selectize for categories will fire off xhr reques
     let category = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne});
     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, location_level: LOCATION_LEVEL_DEFAULTS.idOne, categories: [category.id, CATEGORY_DEFAULTS.idTwo]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
@@ -234,7 +233,7 @@ test('can remove and add back same category', (assert) => {
     let url = PREFIX + DETAIL_URL + "/";
     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
@@ -261,7 +260,7 @@ test('removing a category in selectize for categories will save correctly and cl
     let url = PREFIX + DETAIL_URL + "/";
     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, location_level: LOCATION_LEVEL_DEFAULTS.idOne, categories: []});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
@@ -298,7 +297,7 @@ test('starting with multiple categories, can remove all categories (while not po
     let url = PREFIX + DETAIL_URL + "/";
     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
@@ -335,7 +334,7 @@ test('search will filter down on people in store correctly by removing and addin
     let url = PREFIX + DETAIL_URL + "/";
     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne, 'abc123']});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
@@ -357,7 +356,7 @@ test('clicking and typing into selectize for categories will not filter if space
     let response = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);
     let payload = ROLE_FIXTURES.put({id: ROLE_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });

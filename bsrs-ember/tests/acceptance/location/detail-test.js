@@ -9,13 +9,12 @@ import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_DEFAULTS.idOne;
-const SUBMIT_BTN = '.submit_btn';
-const SAVE_BTN = '.t-save-btn';
 
 let application, store, endpoint, list_xhr;
 
@@ -68,7 +67,7 @@ test('visiting admin/location', (assert) => {
     let list = LOCATION_FIXTURES.list();
     list.results[0].name = LOCATION_DEFAULTS.storeNameTwo;
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         let location = store.find('location', LOCATION_DEFAULTS.idOne);
@@ -79,7 +78,7 @@ test('visiting admin/location', (assert) => {
 test('when editing name to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-location-name', '');
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
@@ -89,7 +88,7 @@ test('when editing name to invalid, it checks for validation', (assert) => {
     let response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
     let payload = LOCATION_FIXTURES.put({id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeNameTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
     });
@@ -104,7 +103,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
     });
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
     });
@@ -114,7 +113,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     clearxhr(list_xhr);
     visit(DETAIL_URL);
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -136,7 +135,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     visit(DETAIL_URL);
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeNameTwo);
     fillIn('.t-location-level', LOCATION_LEVEL_DEFAULTS.idTwo);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -156,7 +155,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when click delete, location is deleted and removed from store', (assert) => {
     visit(DETAIL_URL);
     xhr(PREFIX + BASE_URL + '/' + LOCATION_DEFAULTS.idOne + '/', 'DELETE', null, {}, 204, {});
-    click('.t-delete-btn');
+    generalPage.delete();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(store.find('location', LOCATION_DEFAULTS.idOne).get('length'), undefined);
@@ -186,7 +185,7 @@ test('changing location level will update related location level locations array
     let response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
     let payload = LOCATION_FIXTURES.put({location_level: LOCATION_LEVEL_DEFAULTS.idTwo});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
     });
@@ -203,7 +202,7 @@ test('changing location level to none will dirty the location model', (assert) =
     let response = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
     let payload = LOCATION_FIXTURES.put({location_level: undefined});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
     });

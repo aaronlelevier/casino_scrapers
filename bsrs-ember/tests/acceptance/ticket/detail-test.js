@@ -14,14 +14,13 @@ import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
+import page from 'bsrs-ember/tests/pages/tickets';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKETS_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + TICKET_DEFAULTS.idOne;
-const SUBMIT_BTN = '.submit_btn';
-const SAVE_BTN = '.t-save-btn';
-const CANCEL_BTN = '.t-cancel-btn';
 const LETTER_A = {keyCode: 65};
 const LETTER_M = {keyCode: 77};
 const LETTER_S = {keyCode: 83};
@@ -29,7 +28,7 @@ const SPACEBAR = {keyCode: 32};
 
 let application, store, endpoint, list_xhr, detail_xhr, detail_data, random_uuid;
 
-module('Acceptance | detail test', {
+module('sco Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -46,7 +45,7 @@ module('Acceptance | detail test', {
 });
 
 test('clicking a tickets subject will redirect to the given detail view', (assert) => {
-    visit(TICKETS_URL);
+    page.visit();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
@@ -58,7 +57,7 @@ test('clicking a tickets subject will redirect to the given detail view', (asser
 
 test('when you deep link to the ticket detail view you get bound attrs', (assert) => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
@@ -71,9 +70,9 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, subject: TICKET_DEFAULTS.subjectTwo, status: TICKET_DEFAULTS.statusTwoId, priority: TICKET_DEFAULTS.priorityTwoId});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectTwo);
-    fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityTwoId);
-    fillIn('.t-ticket-status', TICKET_DEFAULTS.statusTwoId);
+    page.subject(TICKET_DEFAULTS.subjectTwo);
+    page.priority(TICKET_DEFAULTS.priorityTwoId);
+    page.status(TICKET_DEFAULTS.statusTwoId);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.ok(ticket.get('isDirty'));
@@ -83,46 +82,43 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
     list.results[0].status = TICKET_DEFAULTS.statusOneId;
     list.results[0].priority = TICKET_DEFAULTS.priorityOneId;
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
         assert.equal(store.find('ticket').get('length'), 10);
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        // assert.equal(ticket.get('subject'), TICKET_DEFAULTS.subjectTwo);
-        // assert.equal(ticket.get('status'), TICKET_DEFAULTS.statusTwoId);
-        // assert.equal(ticket.get('priority'), TICKET_DEFAULTS.priorityTwoId);
         assert.ok(ticket.get('isNotDirty'));
     });
 });
 
 test('when you click cancel, you are redirected to the ticket list view', (assert) => {
-    visit(DETAIL_URL);
-    click(CANCEL_BTN);
+    page.visitDetail();
+    generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
 });
 
 test('when editing the ticket subject to invalid, it checks for validation', (assert) => {
-    visit(DETAIL_URL);
-    fillIn('.t-ticket-subject', '');
-    click(SAVE_BTN);
+    page.visitDetail();
+    page.subject('');
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-subject-validation-error').text().trim(), 'invalid subject');
     });
-    fillIn('.t-ticket-subject', '');
-    click(SAVE_BTN);
+    page.subject('');
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-subject-validation-error').text().trim(), 'invalid subject');
     });
-    fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectTwo);
+    page.subject(TICKET_DEFAULTS.subjectTwo);
     let url = PREFIX + DETAIL_URL + "/";
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, subject: TICKET_DEFAULTS.subjectTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
@@ -130,9 +126,9 @@ test('when editing the ticket subject to invalid, it checks for validation', (as
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
-    fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectTwo);
-    click(CANCEL_BTN);
+    page.visitDetail();
+    page.subject(TICKET_DEFAULTS.subjectTwo);
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -151,9 +147,9 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 });
 
 test('when click delete, ticket is deleted and removed from store', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     xhr(PREFIX + BASE_URL + '/' + TICKET_DEFAULTS.idOne + '/', 'DELETE', null, {}, 204, {});
-    click('.t-delete-btn');
+    generalPage.delete();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
         assert.equal(store.find('ticket', TICKET_DEFAULTS.idOne).get('length'), undefined);
@@ -161,32 +157,32 @@ test('when click delete, ticket is deleted and removed from store', (assert) => 
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-subject-validation-error').is(':hidden'));
     });
-    fillIn('.t-ticket-subject', '');
-    click(SAVE_BTN);
+    page.subject('');
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-subject-validation-error').is(':visible'));
     });
-    fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectOne);
-    fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
-    fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
+    page.subject(TICKET_DEFAULTS.subjectOne);
+    page.priority(TICKET_DEFAULTS.priorityOneId);
+    page.status(TICKET_DEFAULTS.statusOneId);
     let url = PREFIX + DETAIL_URL + '/';
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, subject: TICKET_DEFAULTS.subjectOne, status: TICKET_DEFAULTS.statusOneId, priority: TICKET_DEFAULTS.priorityOneId});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
 });
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
-    visit(TICKETS_URL);
+    page.visit();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
@@ -194,7 +190,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     andThen(() => {
         assert.equal(currentURL(),DETAIL_URL);
     });
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
@@ -202,9 +198,9 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     clearxhr(list_xhr);
-    visit(DETAIL_URL);
-    fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectTwo);
-    click('.t-cancel-btn');
+    page.visitDetail();
+    page.subject(TICKET_DEFAULTS.subjectTwo);
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -223,9 +219,9 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
-    visit(DETAIL_URL);
-    fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectTwo);
-    click('.t-cancel-btn');
+    page.visitDetail();
+    page.subject(TICKET_DEFAULTS.subjectTwo);
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
@@ -241,7 +237,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 test('clicking and typing into selectize for people will fire off xhr request for all people', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('cc').get('length'), 1);
@@ -263,14 +259,14 @@ test('clicking and typing into selectize for people will fire off xhr request fo
     let url = PREFIX + DETAIL_URL + "/";
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_CURRENT_DEFAULTS.id, PEOPLE_DEFAULTS.id]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
 });
 
 test('can remove and add back same cc', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     click('div.item > a.remove:eq(0)');
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
@@ -294,14 +290,14 @@ test('can remove and add back same cc', (assert) => {
     let url = PREFIX + DETAIL_URL + "/";
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
 });
 
 test('when you deep link to the ticket detail can remove a cc', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('cc').get('length'), 1);
@@ -319,7 +315,7 @@ test('when you deep link to the ticket detail can remove a cc', (assert) => {
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: []});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
@@ -328,7 +324,7 @@ test('when you deep link to the ticket detail can remove a cc', (assert) => {
 test('starting with multiple cc, can remove all ccs (while not populating options) and add back', (assert) => {
     detail_data.cc = [...detail_data.cc, PEOPLE_FIXTURES.get(PEOPLE_DEFAULTS.idTwo)];
     detail_data.cc[1].fullname = PEOPLE_DEFAULTS.fullname + 'i';
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('cc').get('length'), 2);
@@ -356,7 +352,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     let url = PREFIX + DETAIL_URL + "/";
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_CURRENT_DEFAULTS.id]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
@@ -365,7 +361,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
 test('search will filter down on people in store correctly by removing and adding a cc back', (assert) => {
     detail_data.cc = [...detail_data.cc, PEOPLE_FIXTURES.get(PEOPLE_DEFAULTS.idTwo)];
     detail_data.cc[1].fullname = PEOPLE_DEFAULTS.fullname + ' scooter';
-    visit(DETAIL_URL);
+    page.visitDetail();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('cc').get('length'), 2);
@@ -392,14 +388,14 @@ test('search will filter down on people in store correctly by removing and addin
     let url = PREFIX + DETAIL_URL + "/";
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id, PEOPLE_DEFAULTS.idTwo]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
 });
 
 test('clicking and typing into selectize for people will not filter if spacebar pressed', (assert) => {
-    visit(DETAIL_URL);
+    page.visitDetail();
     fillIn('.selectize-input input', ' ');
     triggerEvent('.selectize-input input', 'keyup', SPACEBAR);
     andThen(() => {
@@ -414,7 +410,7 @@ test('clicking and typing into selectize for people will not filter if spacebar 
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
     });
