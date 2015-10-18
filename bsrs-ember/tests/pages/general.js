@@ -6,6 +6,10 @@ var GeneralPage = PageObject.build({
   cancel: clickable('.t-cancel-btn'),
   delete: clickable('.t-delete-btn'),
   submit: clickable('.submit_btn'),
+  clickModalCancel: clickable('.t-modal-footer .t-modal-cancel-btn'),
+  clickModalRollback: clickable('.t-modal-footer .t-modal-rollback-btn'),
+  modalIsVisible: PageObject.isVisible('.t-modal'),
+  modalIsHidden: PageObject.isHidden('.t-modal'),
 });
 
 export default GeneralPage;

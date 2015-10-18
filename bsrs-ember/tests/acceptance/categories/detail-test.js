@@ -11,6 +11,8 @@ import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import page from 'bsrs-ember/tests/pages/category';
+import selectize from 'bsrs-ember/tests/pages/selectize';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_categories_url;
@@ -52,22 +54,22 @@ test('when you deep link to the category detail view you get bound attrs', (asse
         assert.equal(currentURL(), DETAIL_URL);
         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
         assert.ok(category.get('isNotDirty'));
-        assert.equal(find('.t-category-name').val(), CATEGORY_DEFAULTS.nameOne);
-        assert.equal(find('.t-category-description').val(), CATEGORY_DEFAULTS.descriptionRepair);
-        assert.equal(find('.t-category-label').val(), CATEGORY_DEFAULTS.labelOne);
-        assert.equal(find('.t-amount').val(), CATEGORY_DEFAULTS.costAmountOne);
-        assert.equal(find('.t-category-cost-code').val(), CATEGORY_DEFAULTS.costCodeOne);
+        assert.equal(page.nameInput(), CATEGORY_DEFAULTS.nameOne);
+        assert.equal(page.descriptionInput(), CATEGORY_DEFAULTS.descriptionRepair);
+        assert.equal(page.labelInput(), CATEGORY_DEFAULTS.labelOne);
+        assert.equal(page.amountInput(), CATEGORY_DEFAULTS.costAmountOne);
+        assert.equal(page.costCodeInput(), CATEGORY_DEFAULTS.costCodeOne);
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo, description: CATEGORY_DEFAULTS.descriptionMaintenance, 
     label: CATEGORY_DEFAULTS.labelTwo, cost_amount: CATEGORY_DEFAULTS.costAmountTwo, cost_code: CATEGORY_DEFAULTS.costCodeTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
-    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
-    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelTwo);
-    fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountTwo);
-    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeTwo);
+    page.nameFill(CATEGORY_DEFAULTS.nameTwo);
+    page.descriptionFill(CATEGORY_DEFAULTS.descriptionMaintenance);
+    page.labelFill(CATEGORY_DEFAULTS.labelTwo);
+    page.amountFill(CATEGORY_DEFAULTS.costAmountTwo);
+    page.costCodeFill(CATEGORY_DEFAULTS.costCodeTwo);
     andThen(() => {
         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
         assert.ok(category.get('isDirty'));
@@ -106,20 +108,20 @@ test('when you click cancel, you are redirected to the category list view', (ass
 
 test('when editing the category name to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-category-name', '');
+    page.nameFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').text().trim(), 'invalid name');
     });
-    fillIn('.t-category-description', '');
+    page.descriptionFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-description-validation-error').text().trim(), 'Invalid Description');
     });
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
-    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionRepair);
+    page.nameFill(CATEGORY_DEFAULTS.nameTwo);
+    page.descriptionFill(CATEGORY_DEFAULTS.descriptionRepair);
     let url = PREFIX + DETAIL_URL + "/";
     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo});
@@ -133,21 +135,21 @@ test('when editing the category name to invalid, it checks for validation', (ass
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
+    page.nameFill(CATEGORY_DEFAULTS.nameTwo);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
             assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
         });
     });
-    click('.t-modal-footer .t-modal-cancel-btn');
+    generalPage.clickModalCancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-category-name').val(), CATEGORY_DEFAULTS.nameTwo);
-            assert.equal(find('.t-modal').is(':hidden'), true);
+            assert.ok(generalPage.modalIsHidden());
         });
     });
 });
@@ -172,7 +174,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':hidden'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
-    fillIn('.t-category-name', '');
+    page.nameFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -182,7 +184,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':hidden'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
-    fillIn('.t-category-description', '');
+    page.descriptionFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -192,7 +194,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':hidden'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
-    fillIn('.t-category-cost-code', '');
+    page.costCodeFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -202,7 +204,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':hidden'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
-    fillIn('.t-category-label', '');
+    page.labelFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -212,7 +214,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':visible'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
-    fillIn('.t-category-subcategory-label', '');
+    page.subLabelFill('');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -222,11 +224,11 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':visible'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
-    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
-    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
-    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
-    fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
+    page.nameFill(CATEGORY_DEFAULTS.nameOne);
+    page.descriptionFill(CATEGORY_DEFAULTS.descriptionMaintenance);
+    page.labelFill(CATEGORY_DEFAULTS.labelOne);
+    page.costCodeFill(CATEGORY_DEFAULTS.costCodeOne);
+    page.subLabelFill(CATEGORY_DEFAULTS.subCatLabelTwo);
     let url = PREFIX + DETAIL_URL + '/';
     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, description: CATEGORY_DEFAULTS.descriptionMaintenance, 
@@ -249,9 +251,9 @@ test('clicking and typing into selectize for categories children will fire off x
     });
     let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-    fillIn('.selectize-input input', 'a');
+    selectize.input('a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-    click('.t-category-children-select div.option:eq(0)');
+    page.clickSelectizeOption();
     andThen(() => {
         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
         assert.equal(category.get('children_fks').get('length'), 2);
@@ -304,7 +306,7 @@ test('clicking and typing into selectize for categories children will not filter
         // assert.equal(find('div.item').length, 1);
         assert.equal(find('div.option').length, 0);
     });
-    fillIn('.selectize-input input', ' ');
+    selectize.input(' ');
     triggerEvent('.selectize-input input', 'keyup', SPACEBAR);
     andThen(() => {
         assert.equal(find('div.option').length, 0);
@@ -342,36 +344,36 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
+    page.nameFill(CATEGORY_DEFAULTS.nameTwo);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
             assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
         });
     });
-    click('.t-modal-footer .t-modal-cancel-btn');
+    generalPage.clickModalCancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-category-name').val(), CATEGORY_DEFAULTS.nameTwo);
-            assert.equal(find('.t-modal').is(':hidden'), true);
+            assert.ok(generalPage.modalIsHidden());
         });
     });
 });
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameTwo);
+    page.nameFill(CATEGORY_DEFAULTS.nameTwo);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
         });
     });
-    click('.t-modal-footer .t-modal-rollback-btn');
+    generalPage.clickModalRollback();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), CATEGORIES_URL);

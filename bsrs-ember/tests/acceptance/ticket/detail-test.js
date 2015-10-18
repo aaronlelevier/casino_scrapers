@@ -16,6 +16,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import selectize from 'bsrs-ember/tests/pages/selectize';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -62,9 +63,9 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
         assert.equal(currentURL(), DETAIL_URL);
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.ok(ticket.get('isNotDirty'));
-        assert.equal(find('.t-ticket-subject').val(), TICKET_DEFAULTS.subjectOne);
-        assert.equal(find('.t-ticket-priority').val(), TICKET_DEFAULTS.priorityOneId);
-        assert.equal(find('.t-ticket-status').val(), TICKET_DEFAULTS.statusOneId);
+        assert.equal(page.subjectInput(), TICKET_DEFAULTS.subjectOne);
+        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOneId);
+        assert.equal(page.statusInput(), TICKET_DEFAULTS.statusOneId);
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
@@ -132,16 +133,16 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
             assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
         });
     });
-    click('.t-modal-footer .t-modal-cancel-btn');
+    generalPage.clickModalCancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-ticket-subject').val(), TICKET_DEFAULTS.subjectTwo);
-            assert.equal(find('.t-modal').is(':hidden'), true);
+            assert.equal(page.subjectInput(), TICKET_DEFAULTS.subjectTwo);
+            assert.ok(generalPage.modalIsHidden());
         });
     });
 });
@@ -204,16 +205,16 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
             assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
         });
     });
-    click('.t-modal-footer .t-modal-cancel-btn');
+    generalPage.clickModalCancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-ticket-subject').val(), TICKET_DEFAULTS.subjectTwo);
-            assert.equal(find('.t-modal').is(':hidden'), true);
+            assert.equal(page.subjectInput(), TICKET_DEFAULTS.subjectTwo);
+            assert.ok(generalPage.modalIsHidden());
         });
     });
 });
@@ -225,10 +226,10 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
         });
     });
-    click('.t-modal-footer .t-modal-rollback-btn');
+    generalPage.clickModalRollback();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), TICKETS_URL);
@@ -246,9 +247,9 @@ test('clicking and typing into selectize for people will fire off xhr request fo
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    fillIn('.selectize-input input', 'a');
+    selectize.input('a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-    click('.t-ticket-people-select div.option:eq(0)');
+    page.clickSelectizeOption();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 1);
@@ -267,7 +268,7 @@ test('clicking and typing into selectize for people will fire off xhr request fo
 
 test('can remove and add back same cc', (assert) => {
     page.visitDetail();
-    click('div.item > a.remove:eq(0)');
+    selectize.remove();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('cc').get('length'), 0);
@@ -276,9 +277,9 @@ test('can remove and add back same cc', (assert) => {
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=Mel';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    fillIn('.selectize-input input', 'Mel');
+    selectize.input('Mel');
     triggerEvent('.selectize-input input', 'keyup', LETTER_M);
-    click('.t-ticket-people-select div.option:eq(0)');
+    page.clickSelectizeOption();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 1);
@@ -304,7 +305,7 @@ test('when you deep link to the ticket detail can remove a cc', (assert) => {
         assert.equal(find('div.item').length, 1);
         assert.equal(find('div.option').length, 0);
     });
-    click('div.item > a.remove:eq(0)');
+    selectize.remove();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('cc').get('length'), 0);
@@ -333,14 +334,14 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    click('div.item > a.remove:eq(0)');
-    click('div.item > a.remove:eq(0)');
+    selectize.remove();
+    selectize.remove();
     andThen(() => {
         assert.equal(find('div.option').length, 0);
     });
-    fillIn('.selectize-input input', 'a');
+    selectize.input('a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-    click('.t-ticket-people-select div.option:eq(0)');
+    page.clickSelectizeOption();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 2);
@@ -370,13 +371,13 @@ test('search will filter down on people in store correctly by removing and addin
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=sc';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    click('div.item > a.remove:eq(1)');
+    selectize.removeSecond();
     andThen(() => {
         assert.equal(find('div.option').length, 0);
     });
-    fillIn('.selectize-input input', 'sc');
+    selectize.input('sc');
     triggerEvent('.selectize-input input', 'keyup', LETTER_S);
-    click('.t-ticket-people-select div.option:eq(0)');
+    page.clickSelectizeOption();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 2);
@@ -396,7 +397,7 @@ test('search will filter down on people in store correctly by removing and addin
 
 test('clicking and typing into selectize for people will not filter if spacebar pressed', (assert) => {
     page.visitDetail();
-    fillIn('.selectize-input input', ' ');
+    selectize.input(' ');
     triggerEvent('.selectize-input input', 'keyup', SPACEBAR);
     andThen(() => {
         assert.equal(find('div.option').length, 0);

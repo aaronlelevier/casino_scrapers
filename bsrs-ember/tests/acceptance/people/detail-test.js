@@ -26,6 +26,7 @@ import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import selectize from 'bsrs-ember/tests/pages/selectize';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
@@ -491,16 +492,16 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
             assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
         });
     });
-    click('.t-modal-footer .t-modal-cancel-btn');
+    generalPage.clickModalCancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS_PUT.username);
-            assert.equal(find('.t-modal').is(':hidden'), true);
+            assert.ok(generalPage.modalIsHidden());
         });
     });
 });
@@ -512,10 +513,10 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
         });
     });
-    click('.t-modal-footer .t-modal-rollback-btn');
+    generalPage.clickModalRollback();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
@@ -532,10 +533,10 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
         });
     });
-    click('.t-modal-footer .t-modal-rollback-btn');
+    generalPage.clickModalRollback();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
@@ -553,10 +554,10 @@ test('when user changes an attribute on address and clicks cancel we prompt them
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
         });
     });
-    click('.t-modal-footer .t-modal-rollback-btn');
+    generalPage.clickModalRollback();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
@@ -574,10 +575,10 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
         });
     });
-    click('.t-modal-footer .t-modal-rollback-btn');
+    generalPage.clickModalRollback();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
@@ -595,10 +596,10 @@ test('when user removes an address clicks cancel we prompt them with a modal and
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
         });
     });
-    click('.t-modal-footer .t-modal-rollback-btn');
+    generalPage.clickModalRollback();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);
@@ -900,10 +901,10 @@ test('when you deep link to the person detail view you can alter the role and ro
         andThen(() => {
             waitFor(() => {
                 assert.equal(currentURL(), DETAIL_URL + '?role_change=' + ROLE_DEFAULTS.idTwo);
-                assert.equal(find('.t-modal').is(':visible'), true);
+                assert.ok(generalPage.modalIsVisible());
             });
         });
-        click('.t-modal-footer .t-modal-rollback-btn');
+        generalPage.clickModalRollback();
         andThen(() => {
             waitFor(() => {
                 assert.equal(currentURL(), PEOPLE_URL);
@@ -1037,7 +1038,7 @@ test('when you deep link to the person detail view you can remove a location', (
         let person_location = store.find('person-location', {person_pk: PEOPLE_DEFAULTS.id});
         assert.equal(person_location.get('length'), 1);
     });
-    click('div.item > a.remove:eq(0)');
+    selectize.remove();
     andThen(() => {
         let person = store.find('person', PEOPLE_DEFAULTS.id);
         assert.equal(person.get('locations').get('length'), 0);
@@ -1072,10 +1073,10 @@ test('when you deep link to the person detail view you can alter the locations a
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL + '?search=a');
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
         });
     });
-    click('.t-modal-footer .t-modal-rollback-btn');
+    generalPage.clickModalRollback();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), PEOPLE_URL);

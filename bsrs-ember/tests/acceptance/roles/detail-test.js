@@ -14,6 +14,7 @@ import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import selectize from 'bsrs-ember/tests/pages/selectize';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_roles_url;
@@ -127,16 +128,16 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
             assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
         });
     });
-    click('.t-modal-footer .t-modal-cancel-btn');
+    generalPage.clickModalCancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
             assert.equal(find('.t-role-name').val(), ROLE_DEFAULTS.namePut);
-            assert.equal(find('.t-modal').is(':hidden'), true);
+            assert.ok(generalPage.modalIsHidden());
         });
     });
 });
@@ -149,10 +150,10 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-modal').is(':visible'), true);
+            assert.ok(generalPage.modalIsVisible());
         });
     });
-    click('.t-modal-footer .t-modal-rollback-btn');
+    generalPage.clickModalRollback();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), ROLE_URL);
@@ -182,7 +183,7 @@ test('clicking and typing into selectize for categories will fire off xhr reques
     });
     let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-    fillIn('.selectize-input input', 'a');
+    selectize.input('a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
     click('.t-role-category-select div.option:eq(0)');
     andThen(() => {
@@ -205,7 +206,7 @@ test('clicking and typing into selectize for categories will fire off xhr reques
 
 test('can remove and add back same category', (assert) => {
     visit(DETAIL_URL);
-    click('div.item > a.remove:eq(0)');
+    selectize.remove();
     andThen(() => {
         let role = store.find('role', ROLE_DEFAULTS.idOne);
         assert.equal(role.get('role_category_fks').length, 1);
@@ -215,7 +216,7 @@ test('can remove and add back same category', (assert) => {
     });
     let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair';
     xhr(category_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-    fillIn('.selectize-input input', 'repair');
+    selectize.input('repair');
     triggerEvent('.selectize-input input', 'keyup', LETTER_R);
     click('.t-role-category-select div.option:eq(0)');
     andThen(() => {
@@ -248,7 +249,7 @@ test('removing a category in selectize for categories will save correctly and cl
         assert.equal(find('div.item').length, 1);
         assert.equal(find('div.option').length, 0);
     });
-    click('div.item > a.remove:eq(0)');
+    selectize.remove();
     andThen(() => {
         let role = store.find('role', ROLE_DEFAULTS.idOne);
         assert.equal(role.get('role_category_fks').length, 1);
@@ -278,12 +279,12 @@ test('starting with multiple categories, can remove all categories (while not po
     });
     let category_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
     xhr(category_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-    click('div.item > a.remove:eq(0)');
-    click('div.item > a.remove:eq(0)');
+    selectize.remove();
+    selectize.remove();
     andThen(() => {
         assert.equal(find('div.option').length, 0);
     });
-    fillIn('.selectize-input input', 'a');
+    selectize.input('a');
     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
     click('.t-role-category-select div.option:eq(0)');
     andThen(() => {
@@ -316,11 +317,11 @@ test('search will filter down on people in store correctly by removing and addin
     });
     let category_endpoint = PREFIX + '/admin/categories/?name__icontains=scooter';
     xhr(category_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-    click('div.item > a.remove:eq(1)');
+    selectize.removeSecond();
     andThen(() => {
         assert.equal(find('div.option').length, 0);
     });
-    fillIn('.selectize-input input', 'scooter');
+    selectize.input('scooter');
     triggerEvent('.selectize-input input', 'keyup', LETTER_S);
     click('.t-role-category-select div.option:eq(0)');
     andThen(() => {
@@ -342,7 +343,7 @@ test('search will filter down on people in store correctly by removing and addin
 
 test('clicking and typing into selectize for categories will not filter if spacebar pressed', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.selectize-input input', ' ');
+    selectize.input(' ');
     triggerEvent('.selectize-input input', 'keyup', SPACEBAR);
     andThen(() => {
         assert.equal(find('div.option').length, 0);
