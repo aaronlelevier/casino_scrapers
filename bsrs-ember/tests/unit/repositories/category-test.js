@@ -34,16 +34,6 @@ test('findCategoryChildren will format url correctly for search criteria and ret
     assert.equal(category_array_proxy.get('length'), 2);
 });
 
-test('findCategoryChildren will trim search', (assert) => {
-    store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: 'abc'});
-    store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: 'abcd'});
-    store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: 'xyz'});
-    store.push('category', {id: CATEGORY_DEFAULTS.anotherId, name: 'mmm'});
-    let subject = CategoryRepository.create({store: store});
-    let category_array_proxy = subject.findCategoryChildren(' abc ');
-    assert.equal(category_array_proxy.get('length'), 2);
-});
-
 test('findCategoryChildren will lower case search', (assert) => {
     store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: 'abc'});
     store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: 'abcd'});

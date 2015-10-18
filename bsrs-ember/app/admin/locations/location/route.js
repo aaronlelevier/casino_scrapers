@@ -21,7 +21,6 @@ var LocationRoute = TabRoute.extend({
             model: location,
             all_location_levels: all_location_levels,
             all_statuses: all_statuses,
-            repository: repository
         });
 
     },
@@ -29,7 +28,6 @@ var LocationRoute = TabRoute.extend({
         controller.set('model', hash.model);
         controller.set('all_location_levels', hash.all_location_levels);
         controller.set('all_statuses', hash.all_statuses);
-        controller.set('repository', hash.repository);
     }
 });
 

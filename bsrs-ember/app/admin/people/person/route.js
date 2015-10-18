@@ -55,7 +55,6 @@ var PersonRoute = TabRoute.extend({
         }
         return Ember.RSVP.hash({
             model: person,
-            repository: repository,
             model_id: person_pk,
             phone_number_types: phone_number_type_repo.find(),
             countries: country_repo.find(),
@@ -73,7 +72,6 @@ var PersonRoute = TabRoute.extend({
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('repository', hash.repository);
         controller.set('phone_number_types', hash.phone_number_types);
         controller.set('default_phone_number_type', hash.default_phone_number_type);
         controller.set('address_types', hash.address_types);

@@ -18,13 +18,11 @@ var PersonNew = TabNewRoute.extend({
         let roles = this.get('store').find('role');
         return Ember.RSVP.hash({
             model: this.get('store').push('person', {id: pk}),
-            repository: repository,
             roles: roles
         });
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('repository', hash.repository);
         controller.set('roles', hash.roles);
     },
     actions: {

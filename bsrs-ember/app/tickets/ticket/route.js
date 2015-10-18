@@ -31,7 +31,6 @@ var TicketSingleRoute = TabRoute.extend({
         }
         return Ember.RSVP.hash({
             model: ticket,
-            repository: repository,
             statuses: statuses,
             priorities: priorities,
             search: search,
@@ -40,7 +39,6 @@ var TicketSingleRoute = TabRoute.extend({
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('repository', hash.repository);
         controller.set('statuses', hash.statuses);
         controller.set('priorities', hash.priorities);
         controller.set('search', hash.search);

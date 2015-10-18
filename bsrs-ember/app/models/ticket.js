@@ -131,7 +131,7 @@ var TicketModel = Model.extend({
             } 
         });
         //remove
-        for (let i=previous_m2m_fks.length-1; i>=0; i--) {
+        for (let i=previous_m2m_fks.length-1; i>=0; --i) {
             if (Ember.$.inArray(previous_m2m_fks[i], ticket_cc_ids) === -1) {
                 previous_m2m_fks.removeObject(previous_m2m_fks[i]);
             } 
