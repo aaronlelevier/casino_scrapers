@@ -25,7 +25,15 @@ var TicketSingleRoute = TabRoute.extend({
         let statuses = statusRepository.fetch();
         let priorities = priorityRepository.fetch();
         let peopleRepo = this.get('peopleRepo');
-        let ticket_cc_options = search ? peopleRepo.findTicketPeople(search) : [];
+
+        let ticket_cc_options = [];
+        if (search) {  
+            ticket_cc_options = peopleRepo.findTicketPeople(search) || [];
+            let cc = ticket.get('cc');
+            for (let i = 0, length=cc.get('length'); i < length; ++i) {
+                ticket_cc_options.pushObject(cc.objectAt(i));
+            }
+        }
         if (!ticket.get('length') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             ticket = repository.findById(pk);
         }
