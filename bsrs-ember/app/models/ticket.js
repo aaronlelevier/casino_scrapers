@@ -13,24 +13,18 @@ var TicketModel = Model.extend({
     status_fk: undefined,
     priority_fk: undefined,
     cc_ids: Ember.computed('cc.[]', function() {
-        return this.get('cc').map((cc) => {
-            return cc.get('id');
-        });
+        return this.get('cc').mapBy('id');
     }),
     cc: Ember.computed('ticket_cc.[]', function() {
         let ticket_cc = this.get('ticket_cc');
         let filter = function(person) {
-            let person_pks = this.map(function(join_model) {
-                return join_model.get('person_pk');
-            });
+            let person_pks = this.mapBy('person_pk');
             return Ember.$.inArray(person.get('id'), person_pks) > -1;
         };
         return this.get('store').find('person', filter.bind(ticket_cc), []);
     }),
     ticket_cc_ids: Ember.computed('ticket_cc.[]', function() {
-        return this.get('ticket_cc').map((cc) => {
-            return cc.get('id');
-        }); 
+        return this.get('ticket_cc').mapBy('id'); 
     }),
     ticket_cc: Ember.computed(function() {
         let filter = function(join_model) {

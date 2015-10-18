@@ -16,9 +16,7 @@ var AddressMixin = Ember.Mixin.create({
         return store.find('address', filter.bind(this), ['removed']);
     }),
     address_ids: Ember.computed('addresses.[]', function() {
-        return this.get('addresses').map((address) => {
-            return address.get('id');
-        });
+        return this.get('addresses').mapBy('id');
     }),
     saveAddresses() {
         this.cleanupAddresses();

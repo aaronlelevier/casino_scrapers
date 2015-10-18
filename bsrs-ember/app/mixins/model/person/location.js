@@ -9,17 +9,13 @@ var LocationMixin = Ember.Mixin.create({
         }
     }),
     location_ids: Ember.computed('locations.[]', function() {
-        return this.get('locations').map((location) => {
-            return location.get('id');
-        });
+        return this.get('locations').mapBy('id');
     }),
     locations: Ember.computed('person_locations.[]', function() {
         let store = this.get('store');
         let person_locations = this.get('person_locations');
         let filter = function(location) {
-            let location_pks = this.map(function(join_model) {
-                return join_model.get('location_pk');
-            });
+            let location_pks = this.mapBy('location_pk');
             return Ember.$.inArray(location.get('id'), location_pks) > -1;
         };
         return store.find('location', filter.bind(person_locations), []);

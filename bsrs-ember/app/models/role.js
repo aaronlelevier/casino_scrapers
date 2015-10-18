@@ -14,9 +14,7 @@ var RoleModel = Model.extend({
     location_level_fk: undefined, 
     role_category_fks: [],
     categories_ids: Ember.computed('categories.[]', function() {
-        return this.get('categories').map((category) => {
-            return category.get('id');
-        }).uniq();
+        return this.get('categories').mapBy('id').uniq();
     }),
     categories: Ember.computed('role_categories.[]', function() {
         let role_categories = this.get('role_categories');
@@ -45,9 +43,7 @@ var RoleModel = Model.extend({
         // return this.get('store').find('category', filter.bind(role_categories), []);
     }),
     role_categories_ids: Ember.computed('role_categories.[]', function() {
-        return this.get('role_categories').map((role_category) => {
-            return role_category.get('id');
-        }); 
+        return this.get('role_categories').mapBy('id'); 
     }),
     role_categories: Ember.computed(function() {
         let filter = (join_model) => {

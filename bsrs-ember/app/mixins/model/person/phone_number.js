@@ -16,9 +16,7 @@ var PhoneNumberMixin = Ember.Mixin.create({
         return store.find('phonenumber', filter.bind(this), ['removed']);
     }),
     phone_number_ids: Ember.computed('phone_numbers.[]', function() {
-        return this.get('phone_numbers').map((ph_num) => {
-            return ph_num.get('id');
-        });
+        return this.get('phone_numbers').mapBy('id');
     }),
     phoneNumbersIsDirty: Ember.computed('phone_numbers.[]', 'phone_numbers.@each.{isDirty,number,type}', function() {
         let phone_number_dirty = false;
