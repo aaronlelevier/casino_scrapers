@@ -1,4 +1,4 @@
-var BSRS_TICKET_STATUS_DEFAULTS_OBJECT = (function() {
+var BSRS_TICKET_PEOPLE_DEFAULTS_OBJECT = (function() {
     var factory = function() {
     };
     factory.prototype.defaults = function() {
@@ -12,11 +12,11 @@ var BSRS_TICKET_STATUS_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    module.exports = new BSRS_TICKET_STATUS_DEFAULTS_OBJECT().defaults();
+    module.exports = new BSRS_TICKET_PEOPLE_DEFAULTS_OBJECT().defaults();
 } else {
     define('bsrs-ember/vendor/defaults/ticket-person', ['exports'], function (exports) {
         'use strict';
-        return new BSRS_TICKET_STATUS_DEFAULTS_OBJECT().defaults();
+        return new BSRS_TICKET_PEOPLE_DEFAULTS_OBJECT().defaults();
     });
 }
 

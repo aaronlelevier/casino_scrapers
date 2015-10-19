@@ -1,6 +1,34 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 
+var extract_categories = function(model, store, uuid) {
+    let server_sum = [];
+    let prevented_duplicate_m2m = [];
+    let all_ticket_categories = store.find('ticket-category');
+    model.categories.forEach((category) => {
+        let ticket_categories = all_ticket_categories.filter((m2m) => {
+            return m2m.get('category_pk') === category.id && m2m.get('ticket_pk') === model.id;
+        });
+        if(ticket_categories.length === 0) {
+            let pk = uuid.v4();
+            server_sum.push(pk);
+            store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
+            store.push('category', category);  
+        }else{
+            prevented_duplicate_m2m.push(ticket_categories[0].get('id'));
+        }
+    });
+    server_sum.push(...prevented_duplicate_m2m);
+    let m2m_to_remove = all_ticket_categories.filter((m2m) => {
+        return Ember.$.inArray(m2m.get('id'), server_sum) < 0;
+    });
+    m2m_to_remove.forEach((m2m) => {
+        store.push('ticket-category', {id: m2m.get('id'), removed: true});
+    });
+    delete model.categories;
+    return server_sum;
+};
+
 var extract_cc = function(model, store, uuid) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
@@ -79,6 +107,7 @@ var TicketDeserializer = Ember.Object.extend({
             response.status_fk = extract_ticket_status(response, store);
             response.priority_fk = extract_ticket_priority(response, store);
             response.ticket_people_fks = extract_cc(response, store, uuid);
+            response.ticket_categories_fks = extract_categories(response, store, uuid);
             let ticket = store.push('ticket', response);
             ticket.save();
         }

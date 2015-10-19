@@ -3,36 +3,28 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import equal from 'bsrs-ember/utilities/equal';
+import CcMixin from 'bsrs-ember/mixins/model/ticket/cc';
+import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 
-var TicketModel = Model.extend({
+var TicketModel = Model.extend(CcMixin, CategoriesMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
     number: attr(''),
     subject: attr(''),
     ticket_people_fks: [],
+    ticket_categories_fks: [],
     status_fk: undefined,
     priority_fk: undefined,
-    cc_ids: Ember.computed('cc.[]', function() {
-        return this.get('cc').mapBy('id');
+    categoriesIsDirty: Ember.computed('categories.[]', 'categories_ids.[]', 'ticket_categories_fks.[]', function() {
+        let categories = this.get('categories');
+        let ticket_categories_ids = this.get('ticket_categories_ids');
+        let previous_m2m_fks = this.get('ticket_categories_fks') || [];
+        if(categories.get('length') !== previous_m2m_fks.length) {
+            return equal(ticket_categories_ids, previous_m2m_fks) ? false : true;
+        }
+        return equal(ticket_categories_ids, previous_m2m_fks) ? false : true;
     }),
-    cc: Ember.computed('ticket_cc.[]', function() {
-        let ticket_cc = this.get('ticket_cc');
-        let filter = function(person) {
-            let person_pks = this.mapBy('person_pk');
-            return Ember.$.inArray(person.get('id'), person_pks) > -1;
-        };
-        return this.get('store').find('person', filter.bind(ticket_cc), []);
-    }),
-    ticket_cc_ids: Ember.computed('ticket_cc.[]', function() {
-        return this.get('ticket_cc').mapBy('id'); 
-    }),
-    ticket_cc: Ember.computed(function() {
-        let filter = function(join_model) {
-            return join_model.get('ticket_pk') === this.get('id') && !join_model.get('removed');
-        };
-        let store = this.get('store');
-        return store.find('ticket-person', filter.bind(this), ['removed']);
-    }),
+    categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
     ccIsDirty: Ember.computed('cc.[]', 'cc_ids.[]', 'ticket_people_fks.[]', function() {
         let cc = this.get('cc');
         let ticket_cc_ids = this.get('ticket_cc_ids');
@@ -43,18 +35,6 @@ var TicketModel = Model.extend({
         return equal(ticket_cc_ids, previous_m2m_fks) ? false : true;
     }),
     ccIsNotDirty: Ember.computed.not('ccIsDirty'),
-    add_person(person_pk) {
-        let uuid = this.get('uuid');
-        let store = this.get('store');
-        store.push('ticket-person', {id: uuid.v4(), ticket_pk: this.get('id'), person_pk: person_pk});
-    },
-    remove_person(person_pk) {
-        let store = this.get('store');
-        let m2m_pk = this.get('ticket_cc').filter((m2m) => {
-            return m2m.get('person_pk') === person_pk;
-        }).objectAt(0).get('id');
-        store.push('ticket-person', {id: m2m_pk, removed: true});
-    },
     priority: Ember.computed('belongs_to_priority.[]', function() {
         let belongs_to_priority = this.get('belongs_to_priority');
         return belongs_to_priority.objectAt(0);
@@ -95,42 +75,6 @@ var TicketModel = Model.extend({
             this.change_priority(priority_fk);
         }
     },
-    rollbackCC() {
-        let store = this.get('store');
-        let previous_m2m_fks = this.get('ticket_people_fks') || [];
-
-        let m2m_to_throw_out = store.find('ticket-person', function(join_model) {
-            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
-        }, ['removed']);
-
-        m2m_to_throw_out.forEach(function(join_model) {
-            join_model.set('removed', true);
-        });
-
-        previous_m2m_fks.forEach(function(pk) {
-            var m2m_to_keep = store.find('ticket-person', pk);
-            if (m2m_to_keep.get('id')) {
-                m2m_to_keep.set('removed', undefined);
-            }
-        });
-    },
-    saveCC() {
-        let ticket_cc = this.get('ticket_cc');
-        let ticket_cc_ids = this.get('ticket_cc_ids') || [];
-        let previous_m2m_fks = this.get('ticket_people_fks') || [];
-        //add
-        ticket_cc.forEach((join_model) => {
-            if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
-                previous_m2m_fks.pushObject(join_model.get('id'));
-            } 
-        });
-        //remove
-        for (let i=previous_m2m_fks.length-1; i>=0; --i) {
-            if (Ember.$.inArray(previous_m2m_fks[i], ticket_cc_ids) === -1) {
-                previous_m2m_fks.removeObject(previous_m2m_fks[i]);
-            } 
-        }
-    },
     saveStatus() {
         let status = this.get('status');
         if (status) { this.set('status_fk', status.get('id')); }
@@ -153,8 +97,8 @@ var TicketModel = Model.extend({
             return priority.get('id') === priority_fk ? false : true;
         }
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', function() {
-        return this.get('isDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', function() {
+        return this.get('isDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     change_status: function(new_status_id) {
@@ -194,7 +138,8 @@ var TicketModel = Model.extend({
             request: this.get('request'),
             status: this.get('status.id'),
             priority: this.get('priority.id'),
-            cc: this.get('cc_ids')
+            cc: this.get('cc_ids'),
+            categories: this.get('categories_ids'),
         };
     },
     removeRecord() {
@@ -204,11 +149,13 @@ var TicketModel = Model.extend({
         this.rollbackStatus();
         this.rollbackPriority();
         this.rollbackCC();
+        this.rollbackCategories();
     },
     saveRelated() {
         this.saveStatus();
         this.savePriority();
         this.saveCC();
+        this.saveCategories();
     }
 });
 

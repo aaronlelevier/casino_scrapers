@@ -7,7 +7,8 @@ var ticket_payload = {
     subject: TICKET_DEFAULTS.subjectOne,
     status: TICKET_DEFAULTS.statusOneId,
     priority: TICKET_DEFAULTS.priorityOneId,
-    cc: []
+    cc: [],
+    categories: []
 };
 
 var required_ticket_payload = Ember.$.extend(true, {}, ticket_payload);

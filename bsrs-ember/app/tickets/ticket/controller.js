@@ -2,8 +2,9 @@ import Ember from 'ember';
 import TabActionMixin from 'bsrs-ember/mixins/controller/tab-actions';
 
 var TicketController = Ember.Controller.extend(TabActionMixin, {
-    queryParams: ['search'],
+    queryParams: ['search', 'search_category'],
     search: undefined,
+    search_category: undefined,
 });
 export default TicketController;
 

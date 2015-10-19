@@ -2,9 +2,12 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
+import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
+import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import TicketDeserializer from 'bsrs-ember/deserializers/ticket';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import random from 'bsrs-ember/models/random';
@@ -14,7 +17,7 @@ let store, subject, uuid;
 module('unit: ticket deserializer test', {
     beforeEach() {
         random.uuid = function() { return Ember.uuid(); };
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-status', 'model:ticket-priority', 'model:person', 'model:uuid']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:person', 'model:category', 'model:uuid']);
         uuid = this.container.lookup('model:uuid');
         subject = TicketDeserializer.create({store: store, uuid: uuid});
     },
@@ -203,6 +206,7 @@ test('newly inserted ticket will have non dirty status when deserialize list exe
     assert.equal(ticket.get('status_fk'), TICKET_DEFAULTS.statusTwoId);
 });
 
+/*TICKET PERSON M2M*/
 test('ticket-person m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
@@ -279,4 +283,83 @@ test('ticket-person m2m added even when ticket did not exist before the deserial
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-person').get('length'), 1);
+});
+
+/*TICKET CATEGORY M2M*/
+test('ticket-category m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let response = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    let categories = ticket.get('categories');
+    assert.equal(categories.get('length'), 0);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    subject.deserialize(response, TICKET_DEFAULTS.idOne);
+    let original = store.find('ticket', TICKET_DEFAULTS.idOne);
+    categories = original.get('categories');
+    assert.equal(categories.get('length'), 1);
+    assert.equal(categories.objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(store.find('ticket-category').get('length'), 1);
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('ticket-status m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne]});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let m2m = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne});
+    assert.equal(ticket.get('categories.length'), 1);
+    let response = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    let second_category = CATEGORY_FIXTURES.get(CATEGORY_DEFAULTS.unusedId);
+    response.categories = [CATEGORY_FIXTURES.get(), second_category];
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    subject.deserialize(response, TICKET_DEFAULTS.idOne);
+    let original = store.find('ticket', TICKET_DEFAULTS.idOne);
+    let categories = original.get('categories');
+    assert.equal(categories.get('length'), 2);
+    assert.equal(categories.objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('ticket-category').get('length'), 2);
+});
+
+test('ticket-category m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId, priority_fk: TICKET_DEFAULTS.priorityOneId, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne]});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let m2m = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne});
+    assert.equal(ticket.get('categories').get('length'), 1);
+    let response = TICKET_FIXTURES.generate(TICKET_DEFAULTS.id);
+    let second_category = CATEGORY_FIXTURES.get(CATEGORY_DEFAULTS.unusedId);
+    let third_category = CATEGORY_FIXTURES.get(CATEGORY_DEFAULTS.idTwo);
+    response.categories = [second_category, third_category];
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    subject.deserialize(response, TICKET_DEFAULTS.idOne);
+    let original = store.find('ticket', TICKET_DEFAULTS.idOne);
+    let categories = original.get('categories');
+    assert.equal(categories.get('length'), 2);
+    assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.unusedId);
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idTwo);
+    assert.ok(original.get('isNotDirty'));
+    assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('ticket-category').get('length'), 3);
+});
+
+test('ticket-category m2m added even when ticket did not exist before the deserializer executes', (assert) => {
+    let response = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    response.categories = [CATEGORY_FIXTURES.get()];
+    subject.deserialize(response, TICKET_DEFAULTS.idOne);
+    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    let categories = ticket.get('categories');
+    assert.equal(categories.get('length'), 1);
+    assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('ticket-category').get('length'), 1);
 });
