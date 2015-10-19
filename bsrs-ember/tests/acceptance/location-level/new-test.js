@@ -9,15 +9,13 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
-const SUBMIT_BTN = '.submit_btn';
-const SAVE_BTN = '.t-save-btn';
-const CANCEL_BTN = '.t-cancel-btn';
 
 let application, store, payload, list_xhr, endpoint;
 
@@ -59,7 +57,7 @@ test('visiting /location-level/new', (assert) => {
         assert.equal(find('.t-location-level-location-level-select > option').length, 8);
     });
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameAnother);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(store.find('location-level').get('length'), 9);
@@ -80,12 +78,12 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
     });
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':visible'));
     });
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
     });
@@ -95,7 +93,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     clearxhr(list_xhr);
     visit(LOCATION_LEVEL_NEW_URL);
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
-    click(CANCEL_BTN);
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
@@ -116,7 +114,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     visit(LOCATION_LEVEL_NEW_URL);
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
-    click(CANCEL_BTN);
+    generalPage.cancel();
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
@@ -138,7 +136,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
     visit(LOCATION_LEVEL_NEW_URL);
-    click('.t-cancel-btn');
+    generalPage.cancel();
     andThen(() => {
         assert.equal(store.find('location-level').get('length'), 8);
     });

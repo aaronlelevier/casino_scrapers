@@ -33,3 +33,13 @@ test('findTicketPeople will format url correctly for search criteria and return 
     let people_array_proxy = subject.findTicketPeople('abc');
     assert.equal(people_array_proxy.get('length'), 2);
 });
+
+test('findTicketPeople will lower case search', (assert) => {
+    store.push('person', {id: PEOPLE_DEFAULTS.idOne, fullname: 'abc'});
+    store.push('person', {id: PEOPLE_DEFAULTS.idTwo, fullname: 'abcd'});
+    store.push('person', {id: PEOPLE_DEFAULTS.unusedId, fullname: 'xyz'});
+    store.push('person', {id: PEOPLE_DEFAULTS.anotherId, fullname: 'mmm'});
+    let subject = PeopleRepository.create({store: store});
+    let people_array_proxy = subject.findTicketPeople('Abc');
+    assert.equal(people_array_proxy.get('length'), 2);
+});

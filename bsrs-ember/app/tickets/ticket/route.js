@@ -5,6 +5,7 @@ import TabRoute from 'bsrs-ember/route/tab/route';
 var TicketSingleRoute = TabRoute.extend({
     repository: inject('ticket'),
     peopleRepo: inject('person'),
+    categoryRepository: inject('category'),
     statusRepository: inject('ticket-status'),
     priorityRepository: inject('ticket-priority'),
     redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
@@ -14,6 +15,9 @@ var TicketSingleRoute = TabRoute.extend({
         search: {
             refreshModel: true
         },
+        search_category: {
+            refreshModel: true
+        },
     },
     model(params, transition) {
         let pk = params.ticket_id;
@@ -21,30 +25,52 @@ var TicketSingleRoute = TabRoute.extend({
         let statusRepository = this.get('statusRepository');
         let priorityRepository = this.get('priorityRepository');
         let search = transition.queryParams.search;
+        let search_category = transition.queryParams.search_category;
         let ticket = repository.fetch(pk);
         let statuses = statusRepository.fetch();
         let priorities = priorityRepository.fetch();
-        let peopleRepo = this.get('peopleRepo');
-        let ticket_cc_options = search ? peopleRepo.findTicketPeople(search) : [];
+
+        let ticket_cc_options = [];
+        if (search) {  
+            let peopleRepo = this.get('peopleRepo');
+            ticket_cc_options = peopleRepo.findTicketPeople(search) || [];
+            let cc = ticket.get('cc');
+            for (let i = 0, length=cc.get('length'); i < length; ++i) {
+                ticket_cc_options.pushObject(cc.objectAt(i));
+            }
+        }
+
+        let ticket_category_options = [];
+        if (search_category) {  
+            let categoryRepo = this.get('categoryRepository');
+            ticket_category_options = categoryRepo.findTicketCategories(search_category) || [];
+            let categories = ticket.get('categories');
+            for (let i = 0, length=categories.get('length'); i < length; ++i) {
+                ticket_category_options.pushObject(categories.objectAt(i));
+            }
+        }
+
         if (!ticket.get('length') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             ticket = repository.findById(pk);
         }
         return Ember.RSVP.hash({
             model: ticket,
-            repository: repository,
             statuses: statuses,
             priorities: priorities,
             search: search,
-            ticket_cc_options: ticket_cc_options
+            search_category: search_category,
+            ticket_cc_options: ticket_cc_options,
+            ticket_category_options: ticket_category_options,
         });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('repository', hash.repository);
         controller.set('statuses', hash.statuses);
         controller.set('priorities', hash.priorities);
         controller.set('search', hash.search);
+        controller.set('search_category', hash.search_category);
         controller.set('ticket_cc_options', hash.ticket_cc_options);
+        controller.set('ticket_category_options', hash.ticket_category_options);
     },
 });
 

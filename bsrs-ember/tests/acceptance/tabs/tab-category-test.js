@@ -10,6 +10,7 @@ import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_CATEGORY_URL = BASEURLS.base_categories_url;
@@ -19,7 +20,6 @@ const NEW_URL = BASE_CATEGORY_URL + '/new';
 const DETAIL_URL = BASE_CATEGORY_URL + '/' + CATEGORY_DEFAULTS.idOne;
 const SUBMIT_BTN = '.submit_btn';
 const ROLE_URL = BASE_ROLE_URL + '/index';
-const SAVE_BTN = '.t-save-btn';
 const NEW_ROUTE = 'admin.categories.new';
 const INDEX_ROUTE = 'admin.categories.index';
 const DETAIL_ROUTE = 'admin.categories.category';

@@ -3,11 +3,11 @@ import random
 import string
 
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 from helpers import (
-    LoginMixin, FillInHelper, JavascriptMixin,
+    LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
     NavPage, GeneralElementsPage, Wait, ModelPage
 )
 
@@ -43,33 +43,33 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         )
         tickets = ticket_page.find_list_data()
         # Get to "ticket create view"
-        # ticket_new_link = ticket_page.find_new_link()
-        # ticket_new_link.click()
-#         # # Enter info and hit "save"
-#         # ticket_name = rand_chars()
-#         # ticket_number = rand_chars()
-#         # ticket_level = rand_chars()
-#         # ticket = InputHelper(ticket_name=ticket_name, ticket_number=ticket_number)
-#         # self._fill_in(ticket)
-#         # ticket_level_input = Select(self.driver.find_element_by_id("ticket_ticket_level_select"))
-#         # ticket_level_input.select_by_index(1)
-#         # self.gen_elem_page.click_save_btn()
-#         # # Go to newly created ticket's Detail view
-#         # self.driver_wait.find_elements_by_class_name(ticket_page.list_data)
-#         # self.driver.refresh()
-#         # ticket_list_view = ticket_page.find_list_name()
-#         # ticket_page.click_name_in_list(ticket_name, ticket_list_view)
-#         # ### UPDATE
-#         # # Go to ticket Detail view, Change name and hit "save"
-#         # ticket_page.find_wait_and_assert_elem("t-ticket-name", ticket_name)
-#         # ticket_name = rand_chars()
-#         # ticket = InputHelper(ticket_name=ticket_name)
-#         # self._fill_in(ticket, True)
-#         # self.gen_elem_page.click_save_btn()
-#         # # List view contains new name
-#         # tickets = ticket_page.find_list_data()
-#         # ticket_list_view = ticket_page.find_list_name()
-#         # ticket_page.click_name_in_list(ticket_name, ticket_list_view)
+        ticket_new_link = ticket_page.find_new_link()
+        ticket_new_link.click()
+        # Enter info and hit "save"
+        ticket_subject = rand_chars()
+        ticket = InputHelper(ticket_subject=ticket_subject)
+        self._fill_in_using_class(ticket)
+        ticket_status_input = Select(self.driver.find_element_by_class_name("t-ticket-status"))
+        ticket_status_input.select_by_index(1)
+        ticket_priority_input = Select(self.driver.find_element_by_class_name("t-ticket-priority"))
+        ticket_priority_input.select_by_index(1)
+        self.gen_elem_page.click_save_btn()
+        # Go to newly created ticket's Detail view
+        self.driver_wait.find_elements_by_class_name(ticket_page.list_data)
+        self.driver.refresh()
+        ticket_list_view = ticket_page.find_list_name()
+        ticket_page.click_name_in_list(ticket_subject, ticket_list_view)
+        ### UPDATE
+        # Go to ticket Detail view, Change subject and hit "save"
+        # ticket_page.find_wait_and_assert_elem("t-ticket-subject", ticket_subject)
+        # ticket_subject = rand_chars()
+        # ticket = InputHelper(ticket_subject=ticket_subject)
+        # self._fill_in_using_class(ticket)
+        # self.gen_elem_page.click_save_btn()
+        # # List view contains new subject
+        # tickets = ticket_page.find_list_data()
+        # ticket_list_view = ticket_page.find_list_name()
+        # ticket_page.click_name_in_list(ticket_subject, ticket_list_view)
 #         # ### DELETE
 #         # # Go to ticket Detail view click Delete
 #         # self.gen_elem_page.click_dropdown_delete()

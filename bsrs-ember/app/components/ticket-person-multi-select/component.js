@@ -6,15 +6,7 @@ var TicketPeopleMulti = Ember.Component.extend({
         return ticket.get('cc');
     }),
     options: Ember.computed('ticket.cc.[]', function() {
-        let cc_selected = this.get('cc_selected');
-        let ticket_cc_options = this.get('ticket_cc_options');
-        if (!ticket_cc_options || ticket_cc_options.get('length') === 0) { 
-            return cc_selected; 
-        }
-        cc_selected.map((selected) => {
-            ticket_cc_options.pushObject(selected); 
-        });
-        return ticket_cc_options;
+        return this.get('ticket_cc_options') && this.get('ticket_cc_options').get('length') > 0 ? this.get('ticket_cc_options') : this.get('cc_selected');
     }),
     find_all_people() {
         let search_criteria = this.get('search_criteria');

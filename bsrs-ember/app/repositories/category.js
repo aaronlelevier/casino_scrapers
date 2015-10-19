@@ -24,13 +24,29 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
     },
     findCategoryChildren(search) {
         let url = CATEGORY_URL;
+        url += `?name__icontains=${search}`;
+        PromiseMixin.xhr(url, 'GET').then((response) => {
+            this.get('CategoryDeserializer').deserialize(response);
+        });
+        let filterFunc = function(category) {
+            let name = category.get('name');
+            return name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+        };
+        return this.get('store').find('category', filterFunc, []);
+    },
+    findTicketCategories(search) {
+        let url = CATEGORY_URL;
         search = search ? search.trim() : search;
         if (search) {
             url += `?name__icontains=${search}`;
             PromiseMixin.xhr(url, 'GET').then((response) => {
                 this.get('CategoryDeserializer').deserialize(response);
             });
-            return this.get('store').find('category');
+            let filterFunc = function(category) {
+                let name = category.get('name');
+                return name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+            };
+            return this.get('store').find('category', filterFunc, []);
         }
     },
     find() {

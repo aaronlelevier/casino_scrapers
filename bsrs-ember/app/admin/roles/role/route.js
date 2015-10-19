@@ -17,21 +17,28 @@ var RoleRoute = TabRoute.extend({
     templateModelField: Ember.computed(function() { return 'name'; }),
     model(params, transition) {
         let role_pk = params.role_id;
-        let search = transition.queryParams.search;
         let repository = this.get('repository');
         let categoryRepo = this.get('categoryRepo');
         let all_role_types = this.get('store').find('role-type');
         let all_location_levels = this.get('store').find('location-level');
-        let categories_children = categoryRepo.findCategoryChildren(search) || [];
         let role = this.get('store').find('role', role_pk);
         if (!role.get('length') || role.get('isNotDirtyOrRelatedNotDirty')) {
             role = repository.findById(role_pk);
+        }
+        let search = transition.queryParams.search;
+        search = search ? search.trim() : search;
+        let categories_children = [];
+        if (search) {  
+            categories_children = categoryRepo.findCategoryChildren(search) || [];
+            let role_categories_selected = role.get('categories') || [];
+            for (let i = 0, length=role_categories_selected.get('length'); i < length; ++i) {
+                categories_children.pushObject(role_categories_selected.objectAt(i));
+            }
         }
         return Ember.RSVP.hash({
             model: role,
             all_role_types: all_role_types,
             all_location_levels: all_location_levels,
-            repository: repository,
             categories_children: categories_children,
             search: search
         });
@@ -40,7 +47,6 @@ var RoleRoute = TabRoute.extend({
         controller.set('model', hash.model);
         controller.set('all_role_types', hash.all_role_types);
         controller.set('all_location_levels', hash.all_location_levels);
-        controller.set('repository', hash.repository);
         controller.set('categories_children', hash.categories_children);
         controller.set('search', hash.search);
     } 

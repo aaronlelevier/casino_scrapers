@@ -16,12 +16,10 @@ var LocationLevelRoute = TabRoute.extend({
         }
         return Ember.RSVP.hash({
             model: location_level,
-            repository: repository
         });
     }, 
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('repository', hash.repository);
     }
 });
 

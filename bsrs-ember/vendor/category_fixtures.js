@@ -2,6 +2,14 @@ var BSRS_CATEGORY_FACTORY = (function() {
     var factory = function(category_defaults) {
         this.category_defaults = category_defaults
     };
+    factory.prototype.get = function(i) {
+        //right now function used for roles & tickets
+        return {
+            id: i || this.category_defaults.idOne,
+            name: this.category_defaults.nameOne,
+            status: this.category_defaults.status
+        }
+    },
     factory.prototype.generate = function(i) {
         return {
             id: i,

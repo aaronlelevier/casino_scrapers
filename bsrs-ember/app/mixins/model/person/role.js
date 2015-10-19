@@ -31,9 +31,7 @@ var RoleMixin = Ember.Mixin.create({
         }
         //remove person-locations that are part of the old role to ensure locationIsNotDirty
         let person_locations = this.get('person_locations');
-        let person_location_ids = person_locations.map((person_location) => {
-            return person_location.get('id');
-        });
+        let person_location_ids = person_locations.mapBy('id');
         let person_location_fks = this.get('person_location_fks');
         person_location_ids.forEach((id) => {
             store.find('person-location', id).set('removed', true);

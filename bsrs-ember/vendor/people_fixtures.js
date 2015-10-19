@@ -14,7 +14,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         //right now function used for tickets
         return {
             id: i || this.person_defaults.id,
-            name: this.person_defaults.fullname,
+            fullname: this.person_defaults.fullname,
             email: this.person_defaults.emails,
             role: this.person_defaults.role,
         }

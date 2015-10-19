@@ -3,14 +3,16 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
+import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
 import random from 'bsrs-ember/models/random';
 
 var store, uuid;
 
 module('unit: ticket test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-status', 'model:ticket-priority', 'model:ticket-person', 'model:uuid']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:ticket-person', 'model:ticket-category', 'model:uuid']);
         random.uuid = function() { return Ember.uuid(); };
     },
     afterEach() {
@@ -394,6 +396,222 @@ test('ticket_cc_ids computed returns a flat list of ids for each person', (asser
     assert.deepEqual(ticket.get('ticket_cc_ids'), [TICKET_PERSON_DEFAULTS.idTwo]);
 });
 
+/*TICKET TO CATEGORIES M2M*/
+test('categories property only returns the single matching item even when multiple people (categories) exist', (assert) => {
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne]});
+    ticket.add_category(CATEGORY_DEFAULTS.idTwo);
+    let categories = ticket.get('categories');
+    assert.equal(categories.get('length'), 1);
+    assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idTwo);
+});
+
+test('categories property returns multiple matching items when multiple people (categories) exist', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, category_pk: CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo]});
+    let categories = ticket.get('categories');
+    assert.equal(categories.get('length'), 2);
+    assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idTwo);
+});
+
+test('categories property will update when the m2m array suddenly has the category pk (starting w/ empty array)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: []});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    assert.equal(ticket.get('categories').get('length'), 0);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.add_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.equal(ticket.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('categories property will update when the m2m array suddenly has the category pk', (assert) => {
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne]});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    let category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.add_category(CATEGORY_DEFAULTS.idTwo);
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.equal(ticket.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').objectAt(1).get('id'), CATEGORY_DEFAULTS.idTwo);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('categories property will update when the m2m array suddenly removes the category', (assert) => {
+    let m2m = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne]});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    assert.equal(ticket.get('categories').get('length'), 1);
+    ticket.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').get('length'), 0);
+});
+
+test('when categories is changed dirty tracking works as expected (removing)', (assert) => {
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+    let category = store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne]});
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    ticket.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').get('length'), 0);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').get('length'), 0);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('when categories is changed dirty tracking works as expected (replacing)', (assert) => {
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne]});
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    ticket.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.equal(ticket.get('categories').get('length'), 0);
+    ticket.add_category(CATEGORY_DEFAULTS.idTwo);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.equal(ticket.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idTwo);
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_category(CATEGORY_DEFAULTS.idOne);
+    ticket.add_category(CATEGORY_DEFAULTS.idTwo);
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('when category is suddently removed it shows as a dirty relationship (when it has multiple locations to begin with)', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, category_pk: CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo]});
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_category(CATEGORY_DEFAULTS.idTwo);
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('rollback ticket will reset the previously used people (categories) when switching from valid categories array to nothing', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, category_pk: CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo]});
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_category(CATEGORY_DEFAULTS.idTwo);
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_category(CATEGORY_DEFAULTS.idTwo);
+    ticket.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').get('length'), 0);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').objectAt(1).get('id'), CATEGORY_DEFAULTS.idTwo);
+});
+
+test('rollback categories will reset the previous people (categories) when switching from one category to another and saving in between each step', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('category', {id: CATEGORY_DEFAULTS.unusedId});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, category_pk: CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo]});
+    assert.equal(ticket.get('categories').get('length'), 2);
+    ticket.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.save();
+    ticket.saveRelated();
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.add_category(CATEGORY_DEFAULTS.unusedId);
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.ok(ticket.get('categoriesIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.save();
+    ticket.saveRelated();
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.ok(ticket.get('categoriesIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('categories_ids computed returns a flat list of ids for each category', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, category_pk: CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo]});
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.deepEqual(ticket.get('categories_ids'), [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]);
+    ticket.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.deepEqual(ticket.get('categories_ids'), [CATEGORY_DEFAULTS.idTwo]);
+});
+
+test('ticket_categories_ids computed returns a flat list of ids for each category', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, category_pk: CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo]});
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.deepEqual(ticket.get('ticket_categories_ids'), [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo]);
+    ticket.remove_category(CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').get('length'), 1);
+    assert.deepEqual(ticket.get('ticket_categories_ids'), [TICKET_CATEGORY_DEFAULTS.idTwo]);
+});
+/*END TICKET CATEGORY M2M*/
+
 test('priority property returns associated object or undefined', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
     store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
@@ -468,3 +686,4 @@ test('rollback priority will revert and reboot the dirty priority to clean', (as
     assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityTwoId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
+

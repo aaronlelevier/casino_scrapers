@@ -18,14 +18,12 @@ var RoleNewRoute = TabRoute.extend({
         let model = this.get('store').push('role', {id: pk, role_type: default_role_type});
         return Ember.RSVP.hash({
             model: model,
-            repository: repository,
             all_role_types: all_role_types,
             all_location_levels: all_location_levels
         });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('repository', hash.repository);
         controller.set('all_role_types', hash.all_role_types);
         controller.set('all_location_levels', hash.all_location_levels);
     }

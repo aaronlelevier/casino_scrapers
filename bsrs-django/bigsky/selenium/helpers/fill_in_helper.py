@@ -12,6 +12,15 @@ class FillInHelper(object):
                 inputrr.clear()
             inputrr.send_keys(v)
 
+    def _fill_in_using_class(self, model, clear=False):
+        for k, v in model.__dict__.items():
+            dom_key = k.replace('_', '-')
+            setattr(self, k + '_input', self.driver.find_element_by_class_name('t-{}'.format(dom_key)))
+            inputrr = getattr(self, k + '_input')
+            if clear == True:
+                inputrr.clear()
+            inputrr.send_keys(v)
+
 
 class FillInDictHelper(object):
     '''

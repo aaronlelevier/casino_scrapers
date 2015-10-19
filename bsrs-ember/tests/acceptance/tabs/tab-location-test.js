@@ -19,7 +19,6 @@ const NEW_URL = BASE_LOCATION_URL + '/new';
 const DETAIL_URL = BASE_LOCATION_URL + '/' + LOCATION_DEFAULTS.idOne;
 const SUBMIT_BTN = '.submit_btn';
 const ROLE_URL = BASE_ROLE_URL + '/index';
-const SAVE_BTN = '.t-save-btn';
 const NEW_ROUTE = 'admin.locations.new';
 const INDEX_ROUTE = 'admin.locations.index';
 const DETAIL_ROUTE = 'admin.locations.location';

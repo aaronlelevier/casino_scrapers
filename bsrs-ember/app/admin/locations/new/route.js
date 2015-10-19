@@ -16,13 +16,11 @@ var LocationNewRoute = TabRoute.extend({
         let model = this.get('store').push('location', {id: pk});
         return Ember.RSVP.hash({
             model: model,
-            repository: repository,
             all_location_levels: all_location_levels
         });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('repository', hash.repository);
         controller.set('all_location_levels', hash.all_location_levels);
     }
 });

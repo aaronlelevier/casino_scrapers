@@ -14,9 +14,13 @@ var CategorySingleRoute = TabRoute.extend({
     templateModelField: Ember.computed(function() { return 'name'; }),
     model(params, transition) {
         let pk = params.category_id;
-        let search = transition.queryParams.search;
         let repository = this.get('repository');
-        let categories_children = repository.findCategoryChildren(search) || [];
+        let categories_children = [];
+        let search = transition.queryParams.search;
+        search = search ? search.trim() : search;
+        if (search) {  
+            categories_children = repository.findCategoryChildren(search);
+        }
         let category = this.get('store').find('category', pk);
         if (!category.get('length') || category.get('isNotDirtyOrRelatedNotDirty')) { 
             category = repository.findById(pk);
@@ -25,14 +29,12 @@ var CategorySingleRoute = TabRoute.extend({
             model: category,
             categories_children: categories_children,
             search: search,
-            repository: repository
         });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
         controller.set('categories_children', hash.categories_children);
         controller.set('search', hash.search);
-        controller.set('repository', hash.repository);
     },
 });
 

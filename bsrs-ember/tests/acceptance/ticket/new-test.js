@@ -9,6 +9,7 @@ import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import {ticket_payload, required_ticket_payload} from 'bsrs-ember/tests/helpers/payloads/ticket';
+import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -16,7 +17,6 @@ const TICKET_URL = BASE_URL + '/index';
 const TICKET_NEW_URL = BASE_URL + '/new';
 const TICKET_LIST_URL = PREFIX + BASE_URL + '/?page=1';
 const TICKET_POST_URL = PREFIX + BASE_URL + '/';
-const SAVE_BTN = '.t-save-btn';
 
 let application, store;
 
@@ -43,7 +43,7 @@ test('visiting ticket/new', (assert) => {
     fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
     fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(ticket_payload), {}, 201, Ember.$.extend(true, {}, ticket_payload));
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(store.find('ticket').get('length'), 1);
@@ -62,20 +62,20 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-status-validation-error').is(':hidden'));
         assert.ok(find('.t-priority-validation-error').is(':hidden'));
     });
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-status-validation-error').is(':visible'));
         assert.ok(find('.t-priority-validation-error').is(':visible'));
     });
     fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
-    click(SAVE_BTN);
+    generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-priority-validation-error').is(':visible'));
     });
     fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
-    click(SAVE_BTN);
+    generalPage.save();
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
