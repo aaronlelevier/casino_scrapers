@@ -15,18 +15,18 @@ def django_app():
     execute_from_command_line(['manage.py'] + ['runserver'] + ['0.0.0.0:8001'] + ['--noreload'])
 
 
-def run_selenium_test(args):
-    result = subprocess.call(args)
-    if result > 0:
-        raise Exception("{} selenium test(s) failed".format(result))
-
-
 def run_selenium_tests():
     os.environ['browser'] = 'firefox'
 
     run_selenium_test(['python', 'selenium/admin-crud-tests.py'])
     run_selenium_test(['python', 'selenium/grid-tests.py'])
     run_selenium_test(['python', 'selenium/crud-tests.py'])
+
+
+def run_selenium_test(args):
+    result = subprocess.call(args)
+    if result > 0:
+        raise Exception("{} selenium test(s) failed".format(result))
 
 
 def sleep_based_on_platform():

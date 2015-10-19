@@ -11,4 +11,4 @@ wait
 ./manage.py loaddata fixtures/states.json
 ./manage.py loaddata fixtures/jenkins.json
 ./manage.py loaddata fixtures/jenkins_custom.json
-./manage.py loaddata fixtures/jenkins_tickets.json
+./manage.py loaddata fixtures/tickets.json
