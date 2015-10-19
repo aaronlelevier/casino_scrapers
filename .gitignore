@@ -40,3 +40,4 @@ venv/
 
 # attachments
 **/attachments/images/
+bsrs-django/bigsky/source/attachments/files/es_*

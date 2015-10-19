@@ -33,6 +33,9 @@ https://github.com/toranb/osx-workstation/blob/master/installer
 
 ### Jenkins Ports
 
-* 8000 - Python 2 - deploy.sh
-* 8002 - Python 2 - persistent.sh
-* 8003 - Python 3 - deploy.sh (on python3 branch)
+| Port | Build      | Service |
+| ---- | ---------- | ------- |
+| 8002 | Deploy     | uWSGI   |
+| 8003 | Persistent | uWSGI   |
+| 8007 | Deploy     | Nginx   |
+| 8008 | Persistent | Nginx   |
