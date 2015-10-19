@@ -50,3 +50,11 @@ class NestedContactSerializerMixin(object):
                 m.delete()
 
         return instance
+
+
+class RemovePasswordSerializerMixin(object):
+
+    def to_representation(self, instance):
+        data = super(RemovePasswordSerializerMixin, self).to_representation(instance)
+        data.pop('password', None)
+        return data

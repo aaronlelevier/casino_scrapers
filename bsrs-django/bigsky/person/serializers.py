@@ -10,7 +10,8 @@ from category.serializers import CategoryRoleSerializer
 from person.models import PersonStatus, Person, Role
 from person.validators import RoleLocationValidator
 from utils import create
-from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
+from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
+    RemovePasswordSerializerMixin)
 
 
 ### ROLE ###
@@ -65,7 +66,7 @@ PERSON_FIELDS = (
 )
 
 
-class PersonCreateSerializer(BaseCreateSerializer):
+class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
     '''
     Base Create serializer because ``Role`` needed before second step 
     of configuration for the ``Person``.
@@ -105,7 +106,8 @@ class PersonDetailSerializer(serializers.ModelSerializer):
             'emails', 'phone_numbers', 'addresses',)
 
 
-class PersonUpdateSerializer(NestedContactSerializerMixin, serializers.ModelSerializer):
+class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSerializerMixin,
+    serializers.ModelSerializer):
     '''
     Update a ``Person`` and all nested related ``Contact`` Models.
 
@@ -137,4 +139,3 @@ class PersonUpdateSerializer(NestedContactSerializerMixin, serializers.ModelSeri
         raw_password = validated_data.pop('password', None)
         if raw_password:
             instance.set_password(raw_password)
-

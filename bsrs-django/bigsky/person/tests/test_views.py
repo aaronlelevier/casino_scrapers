@@ -200,9 +200,10 @@ class PersonCreateTests(APITestCase):
             str(Person.objects.get(username=self.data['username']).pk)
         )
 
-    def test_create_no_password_in_response(self):
+    def test_password_not_in_response(self):
         response = self.client.post('/api/admin/people/', self.data, format='json')
-        self.assertNotIn('password', response)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertNotIn('password', data)
 
 
 class PersonListTests(TestCase):
@@ -245,6 +246,9 @@ class PersonListTests(TestCase):
         response = self.client.get('/api/admin/people/?page_size={}'.format(number))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(len(data['results']), number)
+
+    def test_password_not_in_response(self):
+        self.assertNotIn('password', self.data)
 
 
 class PersonDetailTests(TestCase):
@@ -315,6 +319,9 @@ class PersonDetailTests(TestCase):
             self.data['phone_numbers'][0]['id'],
             [str(x) for x in self.person.phone_numbers.values_list('id', flat=True)]
         )
+
+    def test_password_not_in_response(self):
+        self.assertNotIn('password', self.data)
     
     ### DETAIL ROUTES
 
@@ -400,6 +407,12 @@ class PersonPutTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['locale'], str(self.locale.id))
+
+    def test_password_not_in_response(self):
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertNotIn('password', data)
 
     def test_change_password(self):
         new_password = 'new_password'
