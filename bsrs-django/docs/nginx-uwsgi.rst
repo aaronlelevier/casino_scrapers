@@ -154,3 +154,13 @@ Tests with uWSGI
 
     # run compiled "uwsgi"
     ~/misc/uwsgi-2.0.3/uwsgi --http :8003 --wsgi-file bigsky.wsgi
+
+SELinux
+-------
+
+To make permissive for ``http`` based on the `documentation <https://www.nginx.com/blog/nginx-se-linux-changes-upgrading-rhel-6-6/>`_
+add this code:
+
+.. code-block::
+
+    semanage permissive -a httpd_t
