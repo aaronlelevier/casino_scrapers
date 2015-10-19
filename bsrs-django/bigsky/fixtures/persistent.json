@@ -385,7 +385,7 @@
     "created": "2015-10-15T17:58:33.528Z",
     "deleted": null,
     "children": [],
-    "name": "region",
+    "name": "Company",
     "modified": "2015-10-15T17:58:33.528Z"
   },
   "pk": "d375ba6f-b39f-4fac-861d-2007466a9136"
@@ -1547,7 +1547,7 @@
     "inv_options": "new",
     "accept_assign": false,
     "default_auth_currency": "58a59122-b616-4a8f-b2fc-948c2b145002",
-    "name": "HzLXamMsvw"
+    "name": "Hosting Administrator"
   },
   "pk": "2d2acee1-4878-40e7-bb55-de05dd2293e1"
 },

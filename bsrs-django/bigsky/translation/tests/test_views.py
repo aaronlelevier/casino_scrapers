@@ -60,28 +60,65 @@ class TranslationTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
+    ### List
+
     def test_list_multiple_translations(self):
         response = self.client.get('/api/translations/')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertIsInstance(data, dict)
+        self.assertIsInstance(data, list)
+        self.assertTrue(data)
+
+    def test_list_no_en_translation(self):
+        Translation.objects.get(locale__locale='en').delete(override=True)
+        response = self.client.get('/api/translations/')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIsInstance(data, list)
+        self.assertFalse(data)
+
+    def test_list_keys(self):
+        response = self.client.get('/api/translations/')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIn(
+            data[0],
+            Translation.objects.get(locale__locale='en').values
+        )
+
+    ### "/api/admin/translations/{translation-key}/" list_route
+
+    def test_detail_with_key_get(self):
+        key = list(self.translation.values.keys())[0]
+        response = self.client.get('/api/translations/{}/'.format(key))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIn(str(self.translation.id), [d['id'] for d in data])
+        self.assertIn(
+            str(self.translation.locale.id),
+            [d['translations']['locale'] for d in data]
+        )
+        self.assertTrue([d['translations']['text'] for d in data])
+
+    ### "/api/admin/translations/boostrap/{locale}/" list_route
 
     def test_filter(self):
         # Assumes there is a single Locale fixture with the name "en"
-        response = self.client.get('/api/translations/?locale=en')
+        response = self.client.get('/api/translations/bootstrap/en/')
         data = json.loads(response.content.decode('utf8'))
-        self.assertIn('en', data)
+        self.assertTrue(any('en' in d for d in data))
         self.assertEqual(len(data), 1)
 
     def test_filter_multiple_returns(self):
         # Assumes there is an "en" and "en-us" translation. It should 
         # return both.
-        response = self.client.get('/api/translations/?locale=en-us')
+        response = self.client.get('/api/translations/bootstrap/en-us/')
         data = json.loads(response.content.decode('utf8'))
-        self.assertIn('en', data)
-        self.assertIn('en-us', data)
+        self.assertTrue(any('en' in d for d in data))
+        self.assertTrue(any('en-us' in d for d in data))
         self.assertEqual(len(data), 2)
 
     def test_filter_not_found(self):
-        response = self.client.get('/api/translations/?locale=123')
-        self.assertEqual(response.status_code, 404)
+        response = self.client.get('/api/translations/bootstrap/123/')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertFalse(data)
