@@ -25,6 +25,11 @@ def run_selenium_tests():
     if run_result_two > 0:
         raise Exception("{} selenium test(s) failed".format(run_result_two))
 
+    run_result_three = subprocess.call(['python', 'selenium/crud-tests.py'])
+    if run_result_three > 0:
+        raise Exception("{} selenium test(s) failed".format(run_result_three))
+
+
 def sleep_based_on_platform():
     if platform.system() == "Darwin":
         time.sleep(5)
