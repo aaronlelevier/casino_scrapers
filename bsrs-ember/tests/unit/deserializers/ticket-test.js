@@ -297,9 +297,12 @@ test('ticket-category m2m is set up correctly using deserialize single (starting
     subject.deserialize(response, TICKET_DEFAULTS.idOne);
     let original = store.find('ticket', TICKET_DEFAULTS.idOne);
     categories = original.get('categories');
-    assert.equal(categories.get('length'), 1);
+    assert.equal(categories.get('length'), 2);
     assert.equal(categories.objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
-    assert.equal(store.find('ticket-category').get('length'), 1);
+    assert.equal(categories.objectAt(0).get('parent'), null);
+    assert.equal(categories.objectAt(1).get('parent').get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(1).get('parent').get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(store.find('ticket-category').get('length'), 2);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -314,6 +317,7 @@ test('ticket-status m2m is added after deserialize single (starting with existin
     let response = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
     let second_category = CATEGORY_FIXTURES.get(CATEGORY_DEFAULTS.unusedId);
     response.categories = [CATEGORY_FIXTURES.get(), second_category];
+    //TODO: is this true now?
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     subject.deserialize(response, TICKET_DEFAULTS.idOne);
     let original = store.find('ticket', TICKET_DEFAULTS.idOne);
@@ -337,6 +341,7 @@ test('ticket-category m2m is removed when server payload no longer reflects what
     let second_category = CATEGORY_FIXTURES.get(CATEGORY_DEFAULTS.unusedId);
     let third_category = CATEGORY_FIXTURES.get(CATEGORY_DEFAULTS.idTwo);
     response.categories = [second_category, third_category];
+    //TODO: is this true now?
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     subject.deserialize(response, TICKET_DEFAULTS.idOne);
     let original = store.find('ticket', TICKET_DEFAULTS.idOne);
@@ -354,6 +359,7 @@ test('ticket-category m2m added even when ticket did not exist before the deseri
     let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     response.categories = [CATEGORY_FIXTURES.get()];
+    //TODO: is this true now?
     subject.deserialize(response, TICKET_DEFAULTS.idOne);
     let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
     let categories = ticket.get('categories');

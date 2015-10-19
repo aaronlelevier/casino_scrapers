@@ -1,6 +1,11 @@
 import Ember from 'ember';
 
-var CategoryMixin = Ember.Mixin.create({
+var CategoriesMixin = Ember.Mixin.create({
+    top_level_category: Ember.computed('categories.[]', function() {
+        return this.get('categories').filter(function(category) {
+            return category.get('parent') === undefined;
+        }).objectAt(0);
+    }),
     categories_ids: Ember.computed('categories.[]', function() {
         return this.get('categories').mapBy('id');
     }),
@@ -22,6 +27,18 @@ var CategoryMixin = Ember.Mixin.create({
         let store = this.get('store');
         return store.find('ticket-category', filter.bind(this), ['removed']);
     }),
+    change_top_level_category(category_pk) {
+        let store = this.get('store');
+        let ticket_pk = this.get('id');
+        let m2m_models = this.get('ticket_categories').filter((m2m) => {
+            return m2m.get('ticket_pk') === ticket_pk;
+        });
+        m2m_models.forEach((m2m) => {
+            store.push('ticket-category', {id: m2m.get('id'), removed: true});
+        });
+        let uuid = this.get('uuid');
+        store.push('ticket-category', {id: uuid.v4(), ticket_pk: this.get('id'), category_pk: category_pk});
+    },
     add_category(category_pk) {
         let uuid = this.get('uuid');
         let store = this.get('store');
@@ -69,5 +86,5 @@ var CategoryMixin = Ember.Mixin.create({
     },
 });
 
-export default CategoryMixin;
+export default CategoriesMixin;
 

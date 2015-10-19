@@ -13,7 +13,9 @@ var extract_categories = function(model, store, uuid) {
             let pk = uuid.v4();
             server_sum.push(pk);
             store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
-            store.push('category', category);  
+            category.parent_id = category.parent ? category.parent.id : null;
+            delete category.parent;
+            store.push('category', category);
         }else{
             prevented_duplicate_m2m.push(ticket_categories[0].get('id'));
         }

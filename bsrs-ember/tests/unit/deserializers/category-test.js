@@ -39,6 +39,19 @@ test('category deserializer returns correct data with no existing category (list
     assert.ok(categories.objectAt(1).get('isNotDirty'), false);
 });
 
+test('category deserialized with null parent returns correct model with no related parent record', (assert) => {
+    let subject = CategoryDeserializer.create({store: store});
+    let json = [CATEGORY_FIXTURES.generate(CATEGORY_DEFAULTS.idOne), CATEGORY_FIXTURES.generate(CATEGORY_DEFAULTS.unusedId)];
+    json[0].parent = null;
+    json[1].parent = null;
+    let response = {'count':2,'next':null,'previous':null,'results': json};
+    subject.deserialize(response);
+    let categories = store.find('category');
+    assert.equal(categories.get('length'), 2);
+    assert.equal(categories.objectAt(0).get('parent'), null);
+    assert.equal(categories.objectAt(1).get('parent'), null);
+});
+
 test('category deserializer returns correct data with no existing category (detail)', (assert) => {
     let subject = CategoryDeserializer.create({store: store});
     let json = CATEGORY_FIXTURES.generate(CATEGORY_DEFAULTS.idOne);

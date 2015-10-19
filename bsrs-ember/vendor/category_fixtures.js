@@ -2,11 +2,11 @@ var BSRS_CATEGORY_FACTORY = (function() {
     var factory = function(category_defaults) {
         this.category_defaults = category_defaults
     };
-    factory.prototype.get = function(i) {
+    factory.prototype.get = function(i, name) {
         //right now function used for roles & tickets
         return {
             id: i || this.category_defaults.idOne,
-            name: this.category_defaults.nameOne,
+            name: name || this.category_defaults.nameOne,
             status: this.category_defaults.status
         }
     },
@@ -20,12 +20,18 @@ var BSRS_CATEGORY_FACTORY = (function() {
             cost_code: this.category_defaults.costCodeOne,
             label: this.category_defaults.labelOne,
             subcategory_label: this.category_defaults.subCatLabelOne,
-            parent: [],
+            parent: null
             // status: this.category_defaults.statusOne
         }
     },
     factory.prototype.children = function() {
         return [{id: this.category_defaults.idChild, name: this.category_defaults.nameTwo, description: this.category_defaults.descriptionMaintenance}];
+    },
+    factory.prototype.top_level = function() {
+        var parent_one = this.get(this.category_defaults.idOne);
+        var parent_two = this.get(this.category_defaults.idTwo, this.category_defaults.nameTwo);
+        var response = [parent_one, parent_two];
+        return {'count':2,'next':null,'previous':null,'results': response};
     },
     factory.prototype.list = function() {
         var response = [];

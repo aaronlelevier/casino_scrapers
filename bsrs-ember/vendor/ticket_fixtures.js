@@ -1,11 +1,16 @@
 var BSRS_TICKET_FACTORY = (function() {
-    var factory = function(ticket, person, category_fixtures) {
+    var factory = function(ticket, person, category_fixtures, category_defaults) {
         this.ticket = ticket;
         this.person = person;
         this.category_fixtures = category_fixtures;
+        this.category_defaults = category_defaults;
     };
     factory.prototype.generate = function(i) {
         var id = i || this.ticket.idOne;
+        var parent_category = this.category_fixtures.default.get(this.category_defaults.idOne, this.category_defaults.nameOne);
+        var child_category = this.category_fixtures.default.get(this.category_defaults.idTwo, this.category_defaults.nameRepairChild);
+        child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};
+        parent_category.parent = null;
         return {
             id: id,
             number: this.ticket.numberOne,
@@ -14,7 +19,7 @@ var BSRS_TICKET_FACTORY = (function() {
             status: this.ticket.statusOneId,
             priority: this.ticket.priorityOneId,
             cc: [{id: this.person.id, fullname: this.person.fullname, email: this.person.emails, role: this.person.role}],
-            categories: [this.category_fixtures.default.get()]
+            categories: [parent_category, child_category]
         }
     };
     factory.prototype.list = function() {
@@ -75,13 +80,14 @@ if (typeof window === 'undefined') {
     var ticket_defaults = require('./defaults/ticket');
     var person_defaults = require('./defaults/person');
     var category_fixtures = require('../vendor/category_fixtures');
+    var category_defaults = require('./defaults/category');
     objectAssign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, category_fixtures);
+    module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, category_fixtures, category_defaults);
 } else {
-    define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/mixin'], function (exports, ticket_defaults, person_defaults, category_fixtures, mixin) {
+    define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin'], function (exports, ticket_defaults, person_defaults, category_fixtures, category_defaults, mixin) {
         'use strict';
         Object.assign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, category_fixtures);
+        var Factory = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, category_fixtures, category_defaults);
         return {default: Factory};
     });
 }

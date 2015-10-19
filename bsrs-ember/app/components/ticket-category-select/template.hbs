@@ -1,15 +1,11 @@
 {{ember-selectize
   required=true
-  multiple=true
   content=options
   optionValuePath="content.id"
   optionLabelPath="content.name"
   selection=categories_selected
-  add-item="add"
-  remove-item="remove"
+  select-item="selected"
   class="t-ticket-category-select"
   placeholder="type to find more categories"
-  update-filter="update_filter"
-  filter=search_criteria
 }}
 

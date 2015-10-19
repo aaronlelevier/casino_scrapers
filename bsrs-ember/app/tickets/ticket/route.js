@@ -40,15 +40,8 @@ var TicketSingleRoute = TabRoute.extend({
             }
         }
 
-        let ticket_category_options = [];
-        if (search_category) {  
-            let categoryRepo = this.get('categoryRepository');
-            ticket_category_options = categoryRepo.findTicketCategories(search_category) || [];
-            let categories = ticket.get('categories');
-            for (let i = 0, length=categories.get('length'); i < length; ++i) {
-                ticket_category_options.pushObject(categories.objectAt(i));
-            }
-        }
+        let categoryRepo = this.get('categoryRepository');
+        let ticket_category_options = categoryRepo.findTopLevelCategories() || [];
 
         if (!ticket.get('length') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             ticket = repository.findById(pk);

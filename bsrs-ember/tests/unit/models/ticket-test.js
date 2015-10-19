@@ -396,6 +396,75 @@ test('ticket_cc_ids computed returns a flat list of ids for each person', (asser
     assert.deepEqual(ticket.get('ticket_cc_ids'), [TICKET_PERSON_DEFAULTS.idTwo]);
 });
 
+/*TICKET TOP LEVEL CATEGORY*/
+test('top level category returned from route with many to many set up with only the top level category', (assert) => {
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idThree});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
+    store.push('category', {id: CATEGORY_DEFAULTS.idThree, parent_id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne, parent_id: CATEGORY_DEFAULTS.idTwo});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo, parent_id: null});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo, TICKET_CATEGORY_DEFAULTS.idThree]});
+    assert.equal(ticket.get('categories.length'), 3);
+    assert.equal(ticket.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idThree);
+    assert.equal(ticket.get('categories').objectAt(1).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').objectAt(2).get('id'), CATEGORY_DEFAULTS.idTwo);
+    let top = ticket.get('top_level_category');
+    assert.equal(top.get('id'), CATEGORY_DEFAULTS.idTwo);
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo, parent_id: CATEGORY_DEFAULTS.unusedId});
+    store.push('category', {id: CATEGORY_DEFAULTS.unusedId, parent_id: null});
+    store.push('ticket-category', {id: 'xx', ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.unusedId});
+    assert.equal(ticket.get('categories.length'), 4);
+    top = ticket.get('top_level_category');
+    assert.equal(top.get('id'), CATEGORY_DEFAULTS.unusedId);
+});
+
+test('top level category returned from route with many to many set up with only the top level category', (assert) => {
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idThree});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
+    store.push('category', {id: CATEGORY_DEFAULTS.idThree, parent_id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne, parent_id: CATEGORY_DEFAULTS.idTwo});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo, parent_id: null});
+    store.push('category', {id: CATEGORY_DEFAULTS.unusedId, parent_id: null});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo, TICKET_CATEGORY_DEFAULTS.idThree]});
+    assert.equal(ticket.get('categories.length'), 3);
+    assert.equal(ticket.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idThree);
+    assert.equal(ticket.get('categories').objectAt(1).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').objectAt(2).get('id'), CATEGORY_DEFAULTS.idTwo);
+    ticket.change_top_level_category(CATEGORY_DEFAULTS.unusedId);
+    assert.equal(ticket.get('categories.length'), 1);
+    assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.unusedId);
+});
+
+test('rollback categories will also restore the top level category', (assert) => {
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idThree});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
+    store.push('category', {id: CATEGORY_DEFAULTS.idThree, parent_id: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne, parent_id: CATEGORY_DEFAULTS.idTwo});
+    store.push('category', {id: CATEGORY_DEFAULTS.idTwo, parent_id: null});
+    store.push('category', {id: CATEGORY_DEFAULTS.unusedId, parent_id: null});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo, TICKET_CATEGORY_DEFAULTS.idThree]});
+    assert.equal(ticket.get('categories.length'), 3);
+    assert.equal(ticket.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idThree);
+    assert.equal(ticket.get('categories').objectAt(1).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').objectAt(2).get('id'), CATEGORY_DEFAULTS.idTwo);
+    assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idTwo);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_top_level_category(CATEGORY_DEFAULTS.unusedId);
+    assert.equal(ticket.get('categories.length'), 1);
+    assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.unusedId);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('categories.length'), 3);
+    assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idTwo);
+    assert.equal(ticket.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idThree);
+    assert.equal(ticket.get('categories').objectAt(1).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(ticket.get('categories').objectAt(2).get('id'), CATEGORY_DEFAULTS.idTwo);
+});
+
 /*TICKET TO CATEGORIES M2M*/
 test('categories property only returns the single matching item even when multiple people (categories) exist', (assert) => {
     store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});

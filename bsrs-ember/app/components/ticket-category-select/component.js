@@ -1,31 +1,20 @@
 import Ember from 'ember';
 
+//TODO: TopLevel
 var TicketCategories = Ember.Component.extend({
-    categories_selected: Ember.computed('ticket.categories.[]', function() {
+    categories_selected: Ember.computed('ticket.top_level_category', function() {
         let ticket = this.get('ticket');
-        return ticket.get('categories');
+        return ticket.get('top_level_category');
     }),
-    options: Ember.computed('ticket.categories.[]', function() {
-        return this.get('ticket_category_options') && this.get('ticket_category_options').get('length') > 0 ? this.get('ticket_category_options') : this.get('categories_selected');
+    options: Ember.computed('ticket_category_options.[]', 'categories_selected', function() {
+        return this.get('ticket_category_options') && this.get('ticket_category_options').get('length') > 0 
+            ? this.get('ticket_category_options') : Ember.A([this.get('categories_selected')]);
     }),
-    find_all_categories() {
-        let search_criteria = this.get('search_criteria');
-        if (search_criteria) {
-            this.set('search_category', search_criteria);
-        }
-    },
     actions: {
-        add(category) {
+        selected(category) {
             let ticket = this.get('ticket');
-            ticket.add_category(category.get('id'));
+            ticket.change_top_level_category(category.get('id'));
         },
-        remove(category) {
-            let ticket = this.get('ticket');
-            ticket.remove_category(category.get('id'));
-        },
-        update_filter() {
-            Ember.run.debounce(this, this.get('find_all_categories'), 300);
-        }
     }
 });
 

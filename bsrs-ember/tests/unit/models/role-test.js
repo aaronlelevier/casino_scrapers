@@ -5,6 +5,7 @@ import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import ROLE_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/role-category';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
+import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import random from 'bsrs-ember/models/random';
 
 var store, uuid;
@@ -36,15 +37,33 @@ test('role is dirty or related is dirty when model has been updated', (assert) =
     assert.ok(role.get('isNotDirty'));
 });
 
+/*ROLE TO PEOPLE 1-2-Many*/
 test('role can be related to one or many people', (assert) => {
     let role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, role_type: ROLE_DEFAULTS.roleTypeGeneral, people: []});
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     let related = role.get('people');
-    role.set('people', related.concat([CATEGORY_DEFAULTS.idOne]));
-    assert.deepEqual(role.get('people'), [CATEGORY_DEFAULTS.idOne]);
+    role.set('people', related.concat([PEOPLE_DEFAULTS.id]));
+    assert.deepEqual(role.get('people'), [PEOPLE_DEFAULTS.id]);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('there is no leaky state when instantiating role (set)', (assert) => {
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, role_type: ROLE_DEFAULTS.roleTypeGeneral});
+    role.set('people', [PEOPLE_DEFAULTS.id]);
+    assert.deepEqual(role.get('people'), [PEOPLE_DEFAULTS.id]);
+    let role_two = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameOne, role_type: ROLE_DEFAULTS.roleTypeGeneral});
+    assert.deepEqual(role_two.get('people'), []);
+});
+
+test('there is leaky state when instantiating role (pushObject - DO NOT DO THIS)', (assert) => {
+    let role = store.push('role', {id: ROLE_DEFAULTS.idOne, name: ROLE_DEFAULTS.nameOne, role_type: ROLE_DEFAULTS.roleTypeGeneral});
+    let people = role.get('people');
+    people.pushObject(PEOPLE_DEFAULTS.id);
+    assert.deepEqual(role.get('people'), [PEOPLE_DEFAULTS.id]);
+    let role_two = store.push('role', {id: ROLE_DEFAULTS.idTwo, name: ROLE_DEFAULTS.nameOne, role_type: ROLE_DEFAULTS.roleTypeGeneral});
+    assert.deepEqual(role_two.get('people'), [PEOPLE_DEFAULTS.id]);
 });
 
 /*ROLE TO LOCATION LEVEL 1-to-Many RELATIONSHIP*/

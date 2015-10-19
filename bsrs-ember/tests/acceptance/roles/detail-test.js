@@ -173,6 +173,7 @@ test('when click delete, role is deleted and removed from store', (assert) => {
     });
 });
 
+/*ROLE TO CATEGORY M2M*/
 test('clicking and typing into selectize for categories will fire off xhr request for all categories', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {

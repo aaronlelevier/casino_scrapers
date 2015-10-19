@@ -422,6 +422,33 @@ test('clicking and typing into selectize for people will not filter if spacebar 
 });
 
 /*TICKET CATEGORIES M2M*/
+test('selectize options are rendered immediately when enter detail route', (assert) => {
+    let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
+    xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
+    page.visitDetail();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('categories').get('length'), 1);
+        // assert.equal(page.ticketCategorySelected(), 1);
+        assert.equal(page.ticketCategoryOptions(), 1);
+    });
+    var done = assert.async();
+    // andThen(() => {
+    //     let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    //     assert.equal(ticket.get('ticket_categories_fks').length, 1);
+    //     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    //     assert.equal(page.ticketCategorySelected(), 1);
+    //     assert.equal(page.ticketCategoryOptions(), 1);
+    // });
+    // let url = PREFIX + DETAIL_URL + "/";
+    // let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]});
+    // xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    // generalPage.save();
+    // andThen(() => {
+    //     assert.equal(currentURL(), TICKETS_URL);
+    // });
+});
+
 test('clicking and typing into selectize for categories will fire off xhr request for all categories', (assert) => {
     page.visitDetail();
     andThen(() => {
