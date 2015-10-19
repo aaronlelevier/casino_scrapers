@@ -8,6 +8,7 @@ createdb ci
 wait
 ./manage.py migrate
 wait
+./manage.py loaddata fixtures/states.json
 ./manage.py loaddata fixtures/jenkins.json
-wait
 ./manage.py loaddata fixtures/jenkins_custom.json
+./manage.py loaddata fixtures/jenkins_tickets.json

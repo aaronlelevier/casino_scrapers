@@ -14,20 +14,19 @@ def django_app():
     execute_from_command_line(['manage.py'] + ['migrate'])
     execute_from_command_line(['manage.py'] + ['runserver'] + ['0.0.0.0:8001'] + ['--noreload'])
 
+
+def run_selenium_test(args):
+    result = subprocess.call(args)
+    if result > 0:
+        raise Exception("{} selenium test(s) failed".format(result))
+
+
 def run_selenium_tests():
     os.environ['browser'] = 'firefox'
-    
-    run_result = subprocess.call(['python', 'selenium/admin-crud-tests.py'])
-    if run_result > 0:
-        raise Exception("{} selenium test(s) failed".format(run_result))
 
-    run_result_two = subprocess.call(['python', 'selenium/grid-tests.py'])
-    if run_result_two > 0:
-        raise Exception("{} selenium test(s) failed".format(run_result_two))
-
-    run_result_three = subprocess.call(['python', 'selenium/crud-tests.py'])
-    if run_result_three > 0:
-        raise Exception("{} selenium test(s) failed".format(run_result_three))
+    run_selenium_test(['python', 'selenium/admin-crud-tests.py'])
+    run_selenium_test(['python', 'selenium/grid-tests.py'])
+    run_selenium_test(['python', 'selenium/crud-tests.py'])
 
 
 def sleep_based_on_platform():
@@ -35,6 +34,7 @@ def sleep_based_on_platform():
         time.sleep(5)
     else:
         time.sleep(20)
+
 
 if __name__ == '__main__':
     sys.path.append(abspath(join(dirname(__file__))))

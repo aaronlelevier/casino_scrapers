@@ -1,4 +1,6 @@
 cd bsrs-ember
+npm install
+wait
 ./node_modules/ember-cli/bin/ember build --env=production
 
 wait
