@@ -6,7 +6,7 @@ import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
 
-let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, run = Ember.run;
+let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, category_four, run = Ember.run;
 
 moduleForComponent('ticket-category-select', 'integration: ticket-category-select test', {
     integration: true,
@@ -19,7 +19,7 @@ moduleForComponent('ticket-category-select', 'integration: ticket-category-selec
         category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo});
         category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId});
         category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null});
-        category_three = store.push('category', {id: CATEGORY_DEFAULTS.idThree, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: null});
+        category_four = store.push('category', {id: CATEGORY_DEFAULTS.idThree, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: null});
     }
 });
 
@@ -46,7 +46,7 @@ test('should render a selectbox with bound options after type ahead for search',
 test('should render a selectbox with bound options and can change top level category', function(assert) {
     let onlyParents = function(category) {
         return category.get('parent') === undefined;
-    }
+    };
     let ticket_category_options = store.find('category', onlyParents, []);
     this.set('ticket', ticket);
     this.set('ticket_category_options', ticket_category_options);

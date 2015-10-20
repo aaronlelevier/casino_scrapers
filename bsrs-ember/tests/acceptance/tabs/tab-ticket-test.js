@@ -7,14 +7,16 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
+import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_TICKET_URL = BASEURLS.base_tickets_url;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;
-const ticket_URL = BASE_TICKET_URL + '/index';
+const TICKET_URL = BASE_TICKET_URL + '/index';
 const NEW_URL = BASE_TICKET_URL + '/new';
 const DETAIL_URL = BASE_TICKET_URL + '/' + TICKET_DEFAULTS.idOne;
 const ROLE_URL = BASE_ROLE_URL + '/index';
@@ -32,8 +34,12 @@ module('Acceptance | tab ticket test', {
         endpoint = PREFIX + BASE_TICKET_URL + '/';
         ticket_detail_data = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
         detail_xhr = xhr(endpoint + TICKET_DEFAULTS.idOne + '/', 'GET', null, {}, 200, ticket_detail_data);
+        let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
+        xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
+        random.uuid = function() { return Ember.uuid(); };
     },
     afterEach() {
+        random.uuid = function() { return 'abc123'; };
         Ember.run(application, 'destroy');
     }
 });
@@ -72,9 +78,9 @@ test('deep linking the ticket detail url should push a tab into the tab store wi
 test('visiting the ticket detail url from the list url should push a tab into the tab store', (assert) => {
     let ticket_list_data = TICKET_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
-    visit(ticket_URL);
+    visit(TICKET_URL);
     andThen(() => {
-        assert.equal(currentURL(), ticket_URL);
+        assert.equal(currentURL(), TICKET_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
@@ -92,12 +98,12 @@ test('visiting the ticket detail url from the list url should push a tab into th
     });
 });
 
-test('clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+test('clicking on a tab that is not dirty from the list url should take you to the detail url and fire off an xhr request', (assert) => {
     let ticket_list_data = TICKET_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
-    visit(ticket_URL);
+    visit(TICKET_URL);
     andThen(() => {
-        assert.equal(currentURL(), ticket_URL);
+        assert.equal(currentURL(), TICKET_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
@@ -110,9 +116,9 @@ test('clicking on a tab that is not dirty from the list url should take you to t
         assert.equal(tabs.get('length'), 1);
         // assert.equal(find('.t-tab-title:eq(0)').text(), TICKET_DEFAULTS.subjectOne);
     });
-    visit(ticket_URL);
+    visit(TICKET_URL);
     andThen(() => {
-        assert.equal(currentURL(), ticket_URL);
+        assert.equal(currentURL(), TICKET_URL);
     });
     click('.t-tab:eq(0)');
     andThen(() => {
@@ -133,9 +139,9 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
     });
     let ticket_list_data = TICKET_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
-    visit(ticket_URL);
+    visit(TICKET_URL);
     andThen(() => {
-        assert.equal(currentURL(), ticket_URL);
+        assert.equal(currentURL(), TICKET_URL);
     });
     click('.t-tab:eq(0)');
     andThen(() => {
@@ -155,17 +161,17 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectTwo);
     let ticket_list_data = TICKET_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
-    visit(ticket_URL);
+    visit(TICKET_URL);
     andThen(() => {
-        assert.equal(currentURL(), ticket_URL);
-        let ticket = store.find('ticket', UUID.value);
+        assert.equal(currentURL(), TICKET_URL);
+        let ticket = store.find('ticket').objectAt(0);
         assert.equal(ticket.get('subject'), TICKET_DEFAULTS.subjectTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
     });
     click('.t-tab:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), NEW_URL);
-        let ticket = store.find('ticket', UUID.value);
+        let ticket = store.find('ticket').objectAt(0);
         assert.equal(ticket.get('subject'), TICKET_DEFAULTS.subjectTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
     });
@@ -174,9 +180,9 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
 test('clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
     let ticket_list_data = TICKET_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
-    visit(ticket_URL);
+    visit(TICKET_URL);
     andThen(() => {
-        assert.equal(currentURL(), ticket_URL);
+        assert.equal(currentURL(), TICKET_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
@@ -192,9 +198,9 @@ test('clicking on a tab that is dirty from the list url should take you to the d
         assert.equal(find('.t-tab-title:eq(0)').text(), TICKET_DEFAULTS.subjectTwo);
     });
     andThen(() => {
-        visit(ticket_URL);
+        visit(TICKET_URL);
         andThen(() => {
-            assert.equal(currentURL(), ticket_URL);
+            assert.equal(currentURL(), TICKET_URL);
         });
     });
     click('.t-tab:eq(0)');
@@ -209,9 +215,9 @@ test('clicking on a tab that is dirty from the list url should take you to the d
 test('clicking on a tab that is dirty from the role url (or any non related page) should take you to the detail url and not fire off an xhr request', (assert) => {
     let ticket_list_data = TICKET_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
-    visit(ticket_URL);
+    visit(TICKET_URL);
     andThen(() => {
-        assert.equal(currentURL(), ticket_URL);
+        assert.equal(currentURL(), TICKET_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
@@ -245,9 +251,9 @@ test('clicking on a tab that is dirty from the role url (or any non related page
 
 test('clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and fire off an xhr request', (assert) => {
     xhr(endpoint + '?page=1','GET',null,{},200,TICKET_FIXTURES.list());
-    visit(ticket_URL);
+    visit(TICKET_URL);
     andThen(() => {
-        assert.equal(currentURL(), ticket_URL);
+        assert.equal(currentURL(), TICKET_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
@@ -314,10 +320,10 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), TICKET_DEFAULTS.subjectOne);
     });
-    visit(ticket_URL);
+    visit(TICKET_URL);
     click('.t-tab-close:eq(0)');
     andThen(() => {
-        assert.equal(currentURL(), ticket_URL);
+        assert.equal(currentURL(), TICKET_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 0);
     });
@@ -338,10 +344,10 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
         assert.equal(find('.dirty').length, 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), `${TICKET_DEFAULTS.subjectTwo}`);
     });
-    visit(ticket_URL);
+    visit(TICKET_URL);
     click('.t-tab-close:eq(0)');
     andThen(() => {
-        assert.equal(currentURL(), ticket_URL);
+        assert.equal(currentURL(), TICKET_URL);
         waitFor(() => {
             assert.equal(find('.t-modal-body').length, 1);
         });

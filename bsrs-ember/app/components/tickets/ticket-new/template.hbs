@@ -15,6 +15,11 @@
           {{/form-group}}
         </div>
       </div>
+      <div class="row">
+        <div class="col-md-12">
+          {{ticket-category-select ticket=model search_category=search_category ticket_category_options=ticket_category_options}}
+        </div>
+      </div>
       <select class="form-control t-ticket-priority" onchange={{action "changed_priority" value="target.value"}}>
         {{#each priorities as |priority|}}
         <option value={{priority.id}} selected={{is-equal model.priority.id priority.id}}>{{priority.name}}</option>

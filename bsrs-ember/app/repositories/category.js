@@ -37,7 +37,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
     findTopLevelCategories(search) {
         let url = CATEGORY_URL + '?parent__isnull=True';
         PromiseMixin.xhr(url, 'GET').then((response) => {
-            response.forEach(function(category) {
+            response.results.forEach(function(category) {
                 category.parent = null;
             });
             this.get('CategoryDeserializer').deserialize(response);

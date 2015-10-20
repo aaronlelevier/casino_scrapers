@@ -3,7 +3,7 @@ import Ember from 'ember';
 var CategoriesMixin = Ember.Mixin.create({
     top_level_category: Ember.computed('categories.[]', function() {
         return this.get('categories').filter(function(category) {
-            return category.get('parent') === undefined;
+            return category.get('parent_id') === null;
         }).objectAt(0);
     }),
     categories_ids: Ember.computed('categories.[]', function() {

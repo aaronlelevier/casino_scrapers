@@ -3,6 +3,8 @@ from django.db import models
 from utils.models import BaseNameModel, BaseModel, BaseManager
 from utils import choices
 from person.models import Person
+from category.models import Category
+from location.models import Location
 
 
 class TicketStatusManager(BaseManager):
@@ -45,8 +47,10 @@ class Ticket(BaseModel):
 
     status = models.ForeignKey(TicketStatus, null=True)
     priority = models.ForeignKey(TicketPriority, null=True)
-    subject = models.TextField(max_length=100, blank=True, null=True)
+    subject = models.TextField(max_length=100, null=True)
     number = models.IntegerField(default=no_ticket_models)
     cc = models.ManyToManyField(Person, blank=True)
-    assignee = models.ForeignKey(Person, blank=True, null=True, related_name="person_ticket_assignee")
-    request = models.TextField(max_length=100, blank=True, null=True)
+    assignee = models.ForeignKey(Person, null=True, related_name="person_ticket_assignee")
+    request = models.TextField(max_length=100, null=True)
+    category = models.ForeignKey(Category, null=True)
+    location = models.ForeignKey(Location, null=True)

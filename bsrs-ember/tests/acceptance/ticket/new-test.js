@@ -10,6 +10,8 @@ import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import {ticket_payload, required_ticket_payload} from 'bsrs-ember/tests/helpers/payloads/ticket';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
+import selectize from 'bsrs-ember/tests/pages/selectize';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -25,6 +27,8 @@ module('Acceptance | ticket-new', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         xhr(TICKET_LIST_URL, 'GET', null, {}, 200, TICKET_FIXTURES.empty());
+        let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
+        xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
     },
     afterEach() {
         Ember.run(application, 'destroy');

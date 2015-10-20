@@ -257,7 +257,7 @@ test('clicking and typing into selectize for categories children will fire off x
     andThen(() => {
         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
         assert.equal(category.get('children_fks').get('length'), 2);
-        assert.equal(find('div.option').length, 0);
+        assert.equal(find('div.option').length, 1);
         assert.equal(find('div.item').length, 2);
     });
     let url = PREFIX + DETAIL_URL + '/';

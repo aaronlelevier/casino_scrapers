@@ -9,6 +9,7 @@ var CategoryModel = Model.extend({
     label: attr(''),
     cost_amount: attr(''),
     cost_code: attr(''),
+    parent_id: '',
     children_fks: [],
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty');
@@ -24,7 +25,7 @@ var CategoryModel = Model.extend({
             cost_code: this.get('cost_code'),
             label: this.get('label'),
             subcategory_label: this.get('subcategory_label'),
-            parent: [],
+            parent: null,
             children: this.get('children_fks')
         };
     },
@@ -48,7 +49,7 @@ var CategoryModel = Model.extend({
         let filter = function(category) {
             return parent_id === category.get('id');
         };
-        return store.find('category', filter, []);
+        return store.find('category', filter, ['id']);
     }),
     add_child(category_child_id) {
         let children_fks = this.get('children_fks');

@@ -5,6 +5,7 @@ import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 var TicketNewRoute = TabNewRoute.extend({
     repository: inject('ticket'),
     statusRepository: inject('ticket-status'),
+    categoryRepository: inject('category'),
     priorityRepository: inject('ticket-priority'),
     redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
     modelName: Ember.computed(function() { return 'ticket'; }),
@@ -17,16 +18,20 @@ var TicketNewRoute = TabNewRoute.extend({
         let model = repository.create();
         let statuses = statusRepository.fetch();
         let priorities = priorityRepository.fetch();
+        let categoryRepo = this.get('categoryRepository');
+        let ticket_category_options = categoryRepo.findTopLevelCategories() || [];
         return Ember.RSVP.hash({
             model: model,
             statuses: statuses,
-            priorities: priorities
+            priorities: priorities,
+            ticket_category_options: ticket_category_options,
         });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
         controller.set('statuses', hash.statuses);
         controller.set('priorities', hash.priorities);
+        controller.set('ticket_category_options', hash.ticket_category_options);
     }
 });
 

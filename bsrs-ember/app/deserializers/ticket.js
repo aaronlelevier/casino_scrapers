@@ -22,7 +22,7 @@ var extract_categories = function(model, store, uuid) {
     });
     server_sum.push(...prevented_duplicate_m2m);
     let m2m_to_remove = all_ticket_categories.filter((m2m) => {
-        return Ember.$.inArray(m2m.get('id'), server_sum) < 0;
+        return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('ticket_pk') === model.id;
     });
     m2m_to_remove.forEach((m2m) => {
         store.push('ticket-category', {id: m2m.get('id'), removed: true});
@@ -115,12 +115,14 @@ var TicketDeserializer = Ember.Object.extend({
         }
     },
     deserialize_list(response) {
+        let uuid = this.get('uuid');
         let store = this.get('store');
         response.results.forEach((model) => {
             let existing_ticket = store.find('ticket', model.id);
             if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
                 model.status_fk = extract_ticket_status(model, store);
                 model.priority_fk = extract_ticket_priority(model, store);
+                model.ticket_categories_fks = extract_categories(model, store, uuid);
                 let ticket = store.push('ticket', model);
                 ticket.save();
             }

@@ -64,7 +64,7 @@ var BSRS_TICKET_FACTORY = (function() {
     factory.prototype.put = function(ticket) {
         var response = this.generate(ticket.id);
         response.cc = [response.cc[0].id];
-        response.categories = [response.categories[0].id];
+        response.categories = response.categories.map(function(cat) { return cat.id; });
         delete response.number;
         for(var key in ticket) {
             response[key] = ticket[key];
@@ -76,10 +76,10 @@ var BSRS_TICKET_FACTORY = (function() {
 
 if (typeof window === 'undefined') {
     var objectAssign = require('object-assign');
-    var mixin = require('../vendor/mixin');
+    var mixin = require('./mixin');
     var ticket_defaults = require('./defaults/ticket');
     var person_defaults = require('./defaults/person');
-    var category_fixtures = require('../vendor/category_fixtures');
+    var category_fixtures = require('./category_fixtures');
     var category_defaults = require('./defaults/category');
     objectAssign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
     module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, category_fixtures, category_defaults);

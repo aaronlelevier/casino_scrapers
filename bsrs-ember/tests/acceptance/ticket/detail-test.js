@@ -41,6 +41,8 @@ module('Acceptance | detail test', {
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, TICKET_FIXTURES.list());
         detail_xhr = xhr(endpoint + TICKET_DEFAULTS.idOne + '/', 'GET', null, {}, 200, detail_data);
         random.uuid = function() { return Ember.uuid(); };
+        let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
+        xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -409,7 +411,7 @@ test('clicking and typing into selectize for people will not filter if spacebar 
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(page.ticketPeopleSelected(), 1);
-        // assert.equal(page.ticketPeopleOptions(), 0);
+        assert.equal(page.ticketPeopleOptions(), 0);
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
@@ -422,55 +424,25 @@ test('clicking and typing into selectize for people will not filter if spacebar 
 });
 
 /*TICKET CATEGORIES M2M*/
-test('selectize options are rendered immediately when enter detail route', (assert) => {
-    let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
-    xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
+test('selectize options are rendered immediately when enter detail route and can save different top level category', (assert) => {
     page.visitDetail();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('categories').get('length'), 1);
-        // assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 1);
-    });
-    var done = assert.async();
-    // andThen(() => {
-    //     let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-    //     assert.equal(ticket.get('ticket_categories_fks').length, 1);
-    //     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    //     assert.equal(page.ticketCategorySelected(), 1);
-    //     assert.equal(page.ticketCategoryOptions(), 1);
-    // });
-    // let url = PREFIX + DETAIL_URL + "/";
-    // let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]});
-    // xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    // generalPage.save();
-    // andThen(() => {
-    //     assert.equal(currentURL(), TICKETS_URL);
-    // });
-});
-
-test('clicking and typing into selectize for categories will fire off xhr request for all categories', (assert) => {
-    page.visitDetail();
-    andThen(() => {
-        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('categories').get('length'), 1);
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idOne);
+        assert.equal(ticket.get('categories').get('length'), 2);
         assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 0);
+        assert.equal(page.ticketCategoryOptions(), 3);
     });
-    let categories_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
-    xhr(categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-    selectize.inputTwo('a');
-    triggerEvent('.selectize-input:eq(1) input', 'keyup', LETTER_A);
     page.clickCategorySelectizeOption();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('ticket_categories_fks').length, 1);
+        assert.equal(ticket.get('ticket_categories_fks').length, 2);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.ticketCategorySelected(), 2);
-        assert.equal(page.ticketCategoryOptions(), 1);
+        assert.equal(page.ticketCategorySelected(), 1);
+        assert.equal(page.ticketCategoryOptions(), 3);
     });
     let url = PREFIX + DETAIL_URL + "/";
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]});
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idTwo]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -478,151 +450,55 @@ test('clicking and typing into selectize for categories will fire off xhr reques
     });
 });
 
-test('can remove and add back same categories', (assert) => {
+test('selecting new top level category will remove child categories and put only that top level category', (assert) => {
     page.visitDetail();
-    page.removeTicketCategory();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('categories').get('length'), 0);
-        assert.equal(page.ticketCategorySelected(), 0);
-        assert.equal(page.ticketCategoryOptions(), 0);
+        assert.equal(ticket.get('categories').get('length'), 2);
+        // assert.equal(page.ticketCategorySelected(), 0);//WHY IS THIS?
+        assert.equal(page.ticketCategoryOptions(), 3);
     });
-    let categories_endpoint = PREFIX + '/admin/categories/?name__icontains=r';
-    xhr(categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
+    selectize.inputTwo('a');
+    triggerEvent('.selectize-input:eq(1) input', 'keyup', LETTER_A);
+    page.clickCategorySelectizeOption();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('ticket_categories_fks').length, 2);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.ticketCategorySelected(), 1);
+        assert.equal(page.ticketCategoryOptions(), 3);
+    });
+    let url = PREFIX + DETAIL_URL + "/";
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idTwo]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKETS_URL);
+    });
+});
+
+test('can remove and add back same top level category', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('categories').get('length'), 2);
+        assert.equal(page.ticketCategorySelected(), 1);
+        assert.equal(page.ticketCategoryOptions(), 3);
+    });
     selectize.inputTwo('r');
     triggerEvent('.selectize-input:eq(1) input', 'keyup', LETTER_R);
-    page.clickCategorySelectizeOption();
-    andThen(() => {
-        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('ticket_categories_fks').length, 1);
-        assert.equal(ticket.get('categories').get('length'), 1);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 2);
-    });
-    let url = PREFIX + DETAIL_URL + "/";
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne]});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKETS_URL);
-    });
-});
-
-test('when you deep link to the ticket detail can remove a categories', (assert) => {
-    page.visitDetail();
-    andThen(() => {
-        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('categories').get('length'), 1);
-        assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 0);
-    });
-    page.removeTicketCategory();
-    andThen(() => {
-        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('categories').get('length'), 0);
-        assert.equal(page.ticketCategorySelected(), 0);
-        assert.equal(page.ticketCategoryOptions(), 0);
-    });
-    let url = PREFIX + DETAIL_URL + '/';
-    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: []});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKETS_URL);
-    });
-});
-
-test('starting with multiple categories, can remove all categoriess (while not populating options) and add back', (assert) => {
-    detail_data.categories = [...detail_data.categories, CATEGORY_FIXTURES.get(CATEGORY_DEFAULTS.idTwo)];
-    detail_data.categories[1].name = CATEGORY_DEFAULTS.nameOne + 'i';
-    page.visitDetail();
-    andThen(() => {
-        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('categories').get('length'), 2);
-        assert.equal(page.ticketCategorySelected(), 2);
-        assert.equal(page.ticketCategoryOptions(), 0);
-    });
-    let categories_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
-    xhr(categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-    page.removeTicketCategory();
-    page.removeTicketCategory();
-    andThen(() => {
-        assert.equal(page.ticketCategoryOptions(), 0);
-    });
-    selectize.inputTwo('a');
-    triggerEvent('.selectize-input:eq(1) input', 'keyup', LETTER_A);
-    page.clickCategorySelectizeOption();
-    andThen(() => {
-        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('ticket_categories_fks').length, 2);
-        assert.equal(ticket.get('categories').get('length'), 1);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 2);
-    });
-    let url = PREFIX + DETAIL_URL + "/";
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne]});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKETS_URL);
-    });
-});
-
-test('search will filter down on categories in store correctly by removing and adding a categories back', (assert) => {
-    detail_data.categories = [...detail_data.categories, CATEGORY_FIXTURES.get(CATEGORY_DEFAULTS.idTwo)];
-    detail_data.categories[1].name = CATEGORY_DEFAULTS.nameOne + ' scooter';
-    page.visitDetail();
-    andThen(() => {
-        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('categories').get('length'), 2);
-        assert.equal(page.ticketCategorySelected(), 2);
-        assert.equal(page.ticketCategoryOptions(), 0);
-    });
-    let categories_endpoint = PREFIX + '/admin/categories/?name__icontains=sc';
-    xhr(categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-    page.removeSecondTicketCategory();
-    andThen(() => {
-        assert.equal(page.ticketCategoryOptions(), 0);
-    });
-    selectize.inputTwo('sc');
-    triggerEvent('.selectize-input:eq(1) input', 'keyup', LETTER_S);
-    page.clickCategorySelectizeOption();
+    page.clickSameCategorySelectizeOption();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_categories_fks').length, 2);
         assert.equal(ticket.get('categories').get('length'), 2);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.ticketCategorySelected(), 2);
-        assert.equal(page.ticketCategoryOptions(), 0);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(page.ticketCategorySelected(), 1);
+        assert.equal(page.ticketCategoryOptions(), 3);
     });
     let url = PREFIX + DETAIL_URL + "/";
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKETS_URL);
-    });
-});
-
-test('clicking and typing into selectize for categories will not filter if spacebar pressed', (assert) => {
-    page.visitDetail();
-    selectize.inputTwo(' ');
-    triggerEvent('.selectize-input:eq(1) input', 'keyup', SPACEBAR);
-    andThen(() => {
-        assert.equal(page.ticketCategoryOptions(), 0);
-    });
-    andThen(() => {
-        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('categories').get('length'), 1);
-        // assert.equal(find('div.item').length, 1);//firefox clears out input?
-    });
-    let url = PREFIX + DETAIL_URL + '/';
-    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne]});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
