@@ -11,7 +11,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             idParent: 'ec62006b-6275-4aa9-abfa-38b146383d305',
             unusedId: 'ec62006b-6275-4aa9-abfa-38b146383d50',
             nameOne: 'admin.category.name.repair',
-            nameTwo: 'admin.category.name.maintenance',
+            nameTwo: 'admin.category.name.electrical',
             nameThree: 'admin.category.name.loss_prevention', 
             nameRepairChild: 'admin.category.name.plumbing', 
             namePlubmingChild: 'admin.category.name.toilet_leak', 

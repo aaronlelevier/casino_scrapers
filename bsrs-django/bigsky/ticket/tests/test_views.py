@@ -64,6 +64,9 @@ class TicketUpdateTests(APITestCase):
         # Ticket
         create_tickets()
         self.ticket = Ticket.objects.first()
+        self.category = Category.objects.first()
+        self.ticket.categories.add(self.category)
+        self.ticket.save()
         # Data
         serializer = TicketSerializer(self.ticket)
         self.data = serializer.data

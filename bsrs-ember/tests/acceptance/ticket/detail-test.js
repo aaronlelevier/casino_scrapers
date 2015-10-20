@@ -431,19 +431,19 @@ test('selectize options are rendered immediately when enter detail route and can
         assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idOne);
         assert.equal(ticket.get('categories').get('length'), 2);
         assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 3);
+        assert.equal(page.ticketCategoryOptions(), 2);
     });
     page.clickCategorySelectizeOption();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idTwo);
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idThree);
         assert.equal(ticket.get('ticket_categories_fks').length, 2);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 3);
+        assert.equal(page.ticketCategoryOptions(), 2);
     });
     let url = PREFIX + DETAIL_URL + "/";
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idTwo]});
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idThree]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -451,7 +451,7 @@ test('selectize options are rendered immediately when enter detail route and can
     });
 });
 
-test('sco selectize options are rendered immediately when enter detail route with top level cat not in store already', (assert) => {
+test('selectize options are rendered immediately when enter detail route with top level cat not in store already', (assert) => {
     detail_data.categories[0].id = CATEGORY_DEFAULTS.idParent;
     page.visitDetail();
     andThen(() => {
@@ -459,19 +459,19 @@ test('sco selectize options are rendered immediately when enter detail route wit
         assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idParent);
         assert.equal(ticket.get('categories').get('length'), 2);
         assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 4);
+        assert.equal(page.ticketCategoryOptions(), 3);
     });
     page.clickCategorySelectizeOption();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idTwo);
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idThree);
         assert.equal(ticket.get('ticket_categories_fks').length, 2);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 4);
+        assert.equal(page.ticketCategoryOptions(), 3);
     });
     let url = PREFIX + DETAIL_URL + "/";
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idTwo]});
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idThree]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -485,7 +485,7 @@ test('selecting new top level category will remove child categories and put only
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('categories').get('length'), 2);
         assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 3);
+        assert.equal(page.ticketCategoryOptions(), 2);
     });
     selectize.inputTwo('a');
     triggerEvent('.selectize-input:eq(1) input', 'keyup', LETTER_A);
@@ -495,10 +495,10 @@ test('selecting new top level category will remove child categories and put only
         assert.equal(ticket.get('ticket_categories_fks').length, 2);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 3);
+        assert.equal(page.ticketCategoryOptions(), 2);
     });
     let url = PREFIX + DETAIL_URL + "/";
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idTwo]});
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idThree]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -512,7 +512,7 @@ test('can remove and add back same top level category', (assert) => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('categories').get('length'), 2);
         assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 3);
+        assert.equal(page.ticketCategoryOptions(), 2);
     });
     selectize.inputTwo('r');
     triggerEvent('.selectize-input:eq(1) input', 'keyup', LETTER_R);
@@ -523,10 +523,10 @@ test('can remove and add back same top level category', (assert) => {
         assert.equal(ticket.get('categories').get('length'), 2);
         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(page.ticketCategorySelected(), 1);
-        assert.equal(page.ticketCategoryOptions(), 3);
+        assert.equal(page.ticketCategoryOptions(), 2);
     });
     let url = PREFIX + DETAIL_URL + "/";
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo]});
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.unusedId]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
