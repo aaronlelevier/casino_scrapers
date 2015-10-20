@@ -43,6 +43,8 @@ class TicketDetailTests(APITestCase):
         # Ticket
         create_tickets()
         self.ticket = Ticket.objects.first()
+        self.category = Category.objects.first()
+        self.ticket.categories.add(self.category)
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -54,6 +56,7 @@ class TicketDetailTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.ticket.id))
+        self.assertEqual(data['categories'][0]['id'], str(self.category.id))
 
 
 class TicketUpdateTests(APITestCase):
