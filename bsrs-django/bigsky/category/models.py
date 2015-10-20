@@ -94,4 +94,6 @@ class Category(BaseModel):
             self.cost_currency = Currency.objects.default()
 
     def to_dict(self):
-        return {"id": str(self.pk), "name": self.name, "status": self.status}
+        if self.parent:
+            return {"id": str(self.pk), "name": self.name, "status": self.status, "parent": {"id": str(self.parent.pk), "name": self.parent.name}}
+        return {"id": str(self.pk), "name": self.name, "status": self.status, "parent": None}
