@@ -8,7 +8,7 @@ var BSRS_TICKET_FACTORY = (function() {
     factory.prototype.generate = function(i) {
         var id = i || this.ticket.idOne;
         var parent_category = this.category_fixtures.default.get(this.category_defaults.idOne, this.category_defaults.nameOne);
-        var child_category = this.category_fixtures.default.get(this.category_defaults.idTwo, this.category_defaults.nameRepairChild);
+        var child_category = this.category_fixtures.default.get(this.category_defaults.unusedId, this.category_defaults.nameRepairChild);
         child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};
         parent_category.parent = null;
         return {

@@ -436,10 +436,39 @@ test('selectize options are rendered immediately when enter detail route and can
     page.clickCategorySelectizeOption();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idTwo);
         assert.equal(ticket.get('ticket_categories_fks').length, 2);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.equal(page.ticketCategorySelected(), 1);
         assert.equal(page.ticketCategoryOptions(), 3);
+    });
+    let url = PREFIX + DETAIL_URL + "/";
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idTwo]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKETS_URL);
+    });
+});
+
+test('sco selectize options are rendered immediately when enter detail route with top level cat not in store already', (assert) => {
+    detail_data.categories[0].id = CATEGORY_DEFAULTS.idParent;
+    page.visitDetail();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idParent);
+        assert.equal(ticket.get('categories').get('length'), 2);
+        assert.equal(page.ticketCategorySelected(), 1);
+        assert.equal(page.ticketCategoryOptions(), 4);
+    });
+    page.clickCategorySelectizeOption();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idTwo);
+        assert.equal(ticket.get('ticket_categories_fks').length, 2);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.ticketCategorySelected(), 1);
+        assert.equal(page.ticketCategoryOptions(), 4);
     });
     let url = PREFIX + DETAIL_URL + "/";
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, categories: [CATEGORY_DEFAULTS.idTwo]});

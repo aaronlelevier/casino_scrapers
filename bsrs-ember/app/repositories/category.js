@@ -45,7 +45,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
         let filterFunc = function(category) {
             return category.get('parent') === undefined;
         };
-        return this.get('store').find('category', filterFunc, []);
+        return this.get('store').find('category', filterFunc, ['id']);
     },
     find() {
         PromiseMixin.xhr(CATEGORY_URL, 'GET').then((response) => {

@@ -384,7 +384,7 @@ test('ticket-category m2m is removed when server payload no longer reflects what
     let categories = original.get('categories');
     assert.equal(categories.get('length'), 2);
     assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
-    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idTwo);
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.unusedId);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-category').get('length'), 2);
@@ -405,7 +405,7 @@ test('ticket-category m2m is removed when server payload no longer reflects what
     let categories = original.get('categories');
     assert.equal(categories.get('length'), 2);
     assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
-    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idTwo);
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.unusedId);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-category').get('length'), 2);

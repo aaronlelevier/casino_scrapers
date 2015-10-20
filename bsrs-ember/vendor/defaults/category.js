@@ -8,6 +8,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             idTwo: 'ec62006b-6275-4aa9-abfa-38b146383d302',
             idThree: 'ec62006b-6275-4aa9-abfa-38b146383d303',
             idChild: 'ec62006b-6275-4aa9-abfa-38b146383d304',
+            idParent: 'ec62006b-6275-4aa9-abfa-38b146383d305',
             unusedId: 'ec62006b-6275-4aa9-abfa-38b146383d50',
             nameOne: 'admin.category.name.repair',
             nameTwo: 'admin.category.name.maintenance',
