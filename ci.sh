@@ -153,12 +153,6 @@ function runSeleniumTests {
     fi
 }
 
-if ! [ "$(uname)" == "Darwin" ]; then
-  mkdir build
-  cd build/
-  echo `pwd`
-fi
-
 echo $(date -u) "NPM INSTALL"
 cd bsrs-ember
 npmInstall
