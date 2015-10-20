@@ -455,7 +455,7 @@ test('selecting new top level category will remove child categories and put only
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('categories').get('length'), 2);
-        // assert.equal(page.ticketCategorySelected(), 0);//WHY IS THIS?
+        assert.equal(page.ticketCategorySelected(), 1);
         assert.equal(page.ticketCategoryOptions(), 3);
     });
     selectize.inputTwo('a');

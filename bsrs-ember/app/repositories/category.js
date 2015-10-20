@@ -34,20 +34,18 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
         };
         return this.get('store').find('category', filterFunc, []);
     },
-    findTopLevelCategories(search) {
+    findTopLevelCategories() {
         let url = CATEGORY_URL + '?parent__isnull=True';
         PromiseMixin.xhr(url, 'GET').then((response) => {
             response.results.forEach(function(category) {
-                category.parent = null;
+                delete category.parent;
             });
             this.get('CategoryDeserializer').deserialize(response);
         });
-        //TODO: filter categories based on top level
-        // let filterFunc = function(category) {
-        //     let name = category.get('name');
-        //     return name.toLowerCase().indexOf(search.toLowerCase()) > -1;
-        // };
-        return this.get('store').find('category');
+        let filterFunc = function(category) {
+            return category.get('parent') === undefined;
+        };
+        return this.get('store').find('category', filterFunc, []);
     },
     find() {
         PromiseMixin.xhr(CATEGORY_URL, 'GET').then((response) => {
