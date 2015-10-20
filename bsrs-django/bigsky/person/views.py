@@ -99,7 +99,7 @@ class PersonViewSet(BaseModelViewSet):
         return queryset
 
     @list_route(methods=['GET'])
-    def current(self, request, pk=None):
+    def current(self, request):
         instance = get_object_or_404(Person, id=request.user.id)
         serializer = ps.PersonDetailSerializer(instance)
         return Response(serializer.data)
@@ -107,7 +107,7 @@ class PersonViewSet(BaseModelViewSet):
     # TODO
     # add correct authorization to who can use this endpoint
     @list_route(methods=['post'], url_path=r"reset-password/(?P<person_id>[\w\-]+)")
-    def reset_password(self, request, pk=None, person_id=None):
+    def reset_password(self, request, person_id=None):
         person = get_object_or_404(Person, id=person_id)
         self._validate_passwords_match(request.data)
         self._reset_password(person_id, request.data.get('new_password1'))

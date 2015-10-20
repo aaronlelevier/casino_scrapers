@@ -1,3 +1,4 @@
+from rest_framework import serializers
 from rest_framework.exceptions import NotFound
 
 from translation.models import Locale, Translation
@@ -12,7 +13,7 @@ class LocaleSerializer(BaseCreateSerializer):
             'presentation_name', 'rtl',)
 
 
-class TranslationSerializer(BaseCreateSerializer):
+class TranslationSerializer(serializers.ModelSerializer):
 
     locale = LocaleSerializer()
 

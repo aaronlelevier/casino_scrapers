@@ -5,7 +5,7 @@ from translation import models
 
 @admin.register(models.Locale)
 class LocaleAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('id', 'name',)
 
 
 @admin.register(models.Translation)

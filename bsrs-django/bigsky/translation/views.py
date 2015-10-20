@@ -1,5 +1,9 @@
-from rest_framework import viewsets
-from rest_framework.exceptions import NotFound
+import json
+import copy
+
+from rest_framework import viewsets, status
+from rest_framework.decorators import list_route
+from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
@@ -20,11 +24,20 @@ class LocaleViewSet(viewsets.ModelViewSet):
 
 class TranslationViewSet(viewsets.ModelViewSet):
     '''
+    The `list` endpoint, which displays all available Translation keys,
+    uses the `en` locale for all available Keys. *(Main English Language
+    Locale)*.  This is for efficiency, because otherwise we would need
+    to compare all available Translations for all Keys each time.
+
     ## Filters
 
        **1. Filter by Locale.name:**
 
-       URL: `/api/translations/?locale=en`
+       URL: `/api/translations/bootstrap/{locale}/`
+
+       **2. All Translations for a single Translation Key:**
+
+       URL: `/api/translations/{translation-key}/`
     '''
     permission_classes = (IsAuthenticated,)
     serializer_class = TranslationSerializer
@@ -32,7 +45,7 @@ class TranslationViewSet(viewsets.ModelViewSet):
 
     def get_paginated_response(self, data):
         """
-        The response should alwasy be an object.  The key each item in the 
+        The response should always be an object.  The key each item in the 
         object is the Locale, and the value is the Translation ``key:value`` 
         object for that Translation.
         """
@@ -41,13 +54,86 @@ class TranslationViewSet(viewsets.ModelViewSet):
         else:
             raise NotFound
 
-    def get_queryset(self):
+    def list(self, request):
+        try:
+            translation = Translation.objects.get(locale__locale='en')
+        except Translation.DoesNotExist:
+            return Response([])
+        return Response(sorted(translation.values.keys()))
+
+    @list_route(methods=['GET'], url_path=r"bootstrap/(?P<locale>[\w\-\_]+)")
+    def bootstrap(self, request, locale=None):
         queryset = Translation.objects.all()
-        locale = self.request.query_params.get('locale', None)
         if locale is not None:
             queryset = queryset.filter(
                 locale__locale__istartswith=locale[:2]
                 ).extra(
                 where=["CHAR_LENGTH(locale) <= {}".format(len(locale))]
                 )
-        return queryset
+        serializer = TranslationSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+    @list_route(methods=['GET', 'POST'], url_path=r"(?P<key>[\w\.]+)")
+    def get_translations_by_key(self, request, key=None):
+        if request.method == 'GET':
+            translations = Translation.objects.filter(values__has_key=key)
+            return Response([{
+                'id': str(t.id),
+                'translations': {
+                    'locale': str(t.locale.id),
+                    'text': t.values.get(key, ""),
+                    'helper': t.context.get(key, "") if t.context else ""
+                }
+            } for t in translations])
+
+        elif request.method == 'POST':
+            self.final_data = []
+            self.errors = []
+
+            for data in request.data:
+                data = copy.copy(data)
+                print(data)
+                try:
+                    self.locale = self.validate_locale(data)
+                    self.trans, created = Translation.objects.get_or_create(id=data['id'])
+                    self.update_trans(key, data)
+                    self.final_data.append(data)
+                except (KeyError, Locale.DoesNotExist) as e:
+                    self.errors.append(str(e))
+
+            if self.errors:
+                raise ValidationError(*self.errors)
+
+            # Will only be the Response Code of the last Object
+            response_status = self.get_created_status(created)
+
+            return Response(self.final_data, status=response_status)
+
+    def validate_locale(self, data):
+        try:
+            return Locale.objects.get(id=data['translations']['locale'])
+        except Locale.DoesNotExist:
+            raise
+
+    def update_trans(self, key, data):
+        self.trans.locale = self.locale
+
+        if not data['translations']['text']:
+            self.trans.values.pop(key)
+        else:
+            self.trans.values.update({key: data['translations']['text']})
+
+        self.trans.context.update({key: data['translations'].get('helper', '')})
+
+        if not data['translations'].get('helper', ''):
+            self.trans.context.pop(key)
+        else:
+            self.trans.context.update({key: data['translations']['helper']})
+
+        self.trans.save()
+
+    def get_created_status(self, created):
+        if created:
+            return status.HTTP_201_CREATED
+        else:
+            return status.HTTP_200_OK

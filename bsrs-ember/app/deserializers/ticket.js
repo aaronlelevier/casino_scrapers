@@ -5,7 +5,9 @@ var extract_categories = function(model, store, uuid) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
     let all_ticket_categories = store.find('ticket-category');
-    model.categories.forEach((category) => {
+    //TODO: fix this after we get a solid build working @toranb
+    let categories = model.categories || [];
+    categories.forEach((category) => {
         let ticket_categories = all_ticket_categories.filter((m2m) => {
             return m2m.get('category_pk') === category.id && m2m.get('ticket_pk') === model.id;
         });

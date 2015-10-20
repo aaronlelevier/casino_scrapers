@@ -32,28 +32,22 @@ def create_locales():
         'en-us',
         'en-x-sephora'
     ]
-    for l in locales:
-        Locale.objects.create(locale=l, name=l)
+    return [Locale.objects.create(locale=l, name=l)
+            for l in locales]
+
+
+def create_locale(name):
+    return Locale.objects.create(locale=name, name=name)
 
 
 def create_translations():
-    create_locales()
+    locales = create_locales()
 
-    en = Locale.objects.get(locale='en')
-    en_us = Locale.objects.get(locale='en-us')
-    en_x_sephora = Locale.objects.get(locale='en-x-sephora')
+    for locale in locales:
+        dict_ = create_empty_dict()
 
-    dict_ = create_empty_dict()
-
-    def_en = Translation.objects.create(
-        locale = en,
-        values = update_dict_values(dict_)
-    )
-    def_en_us = Translation.objects.create(
-        locale = en_us,
-        values = update_dict_values(dict_)
-    )
-    def_en_x_sephora = Translation.objects.create(
-        locale = en_x_sephora,
-        values = update_dict_values(dict_)
-    )
+        Translation.objects.create(
+            locale = locale,
+            values = update_dict_values(dict_),
+            context = {}
+        )

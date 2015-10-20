@@ -4,7 +4,7 @@ from translation.models import Locale, Translation
 from translation.tests import factory
 
 
-class HelperTests(TestCase):
+class FactoryTests(TestCase):
 
     def test_create_empty_dict(self):
         d = factory.create_empty_dict()
@@ -18,20 +18,17 @@ class HelperTests(TestCase):
         self.assertIsInstance(d, dict)
         self.assertTrue(all(d.values()))
 
-
-class LocaleTests(TestCase):
-
-    def setUp(self):
+    def test_create_locales(self):
         factory.create_locales()
-
-    def test_create(self):
         self.assertEqual(Locale.objects.count(), 3)
 
+    def test_create_locale(self):
+        name = 'bob'
+        locale = factory.create_locale(name)
+        self.assertIsInstance(locale, Locale)
+        self.assertEqual(locale.name, name)
+        self.assertEqual(locale.locale, name)
 
-class TranslationTests(TestCase):
-
-    def setUp(self):
+    def test_create_translations(self):
         factory.create_translations()
-
-    def test_create(self):
         self.assertEqual(Translation.objects.count(), 3)

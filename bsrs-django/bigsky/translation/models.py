@@ -165,9 +165,9 @@ class Translation(BaseModel):
     may be useful in flattening nested dictionaries for this Model.
 
     '''
-    locale = models.ForeignKey(Locale)
-    values = HStoreField()
-    context = HStoreField(blank=True, null=True)
+    locale = models.OneToOneField(Locale, blank=True, null=True)
+    values = HStoreField(default={}, blank=True)
+    context = HStoreField(default={}, blank=True)
     csv = models.FileField(upload_to=translation_file, blank=True, null=True)
 
     objects = TranslationManager()
