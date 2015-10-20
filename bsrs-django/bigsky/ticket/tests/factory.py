@@ -3,6 +3,7 @@ import random
 from utils import create
 
 from ticket.models import Ticket, TicketStatus
+from category.models import Category
 
 
 def create_ticket(subject, request):
