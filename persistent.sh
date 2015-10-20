@@ -7,20 +7,21 @@ echo "CONFIG - SET SCRIPT CONFIGURATION"
 export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
 
 
-echo "PROJECT DIR - CHECK IF PERSISTENT PROJECT DIRECTORY EXISTS"
-if [  ! -d "/www/django/releases/persistent" ]; 
+echo "TEMP DIR - CHECK IF TMP DIR EXISTS"
+TMP_DIR=/mnt/tmpfs/persistent
+if [  ! -d "$TMP_DIR" ];
     then
         echo "DOES NOT EXIST"
-        mkdir /www/django/releases/persistent
+        mkdir $TMP_DIR
     else
         echo "EXISTS"
 fi
-cd /www/django/releases/persistent
+cd $TMP_DIR
 TEST=$?; if [ "$TEST" == 1 ]; then echo "mkdir failed"; exit $TEST; fi
 
 
 echo "GIT - PULL/CLONE REPO"
-if [  -d "/www/django/releases/persistent/bsrs" ]; 
+if [  -d "${TMP_DIR}/bsrs" ];
     then
         echo "BSRS REPO EXISTS"
         cd bsrs
@@ -39,7 +40,7 @@ echo "DJANGO"
 
 cd bsrs-django
 
-if [  -d "/www/django/releases/persistent/bsrs/bsrs-django/venv" ]; 
+if [ -d "${TMP_DIR}/bsrs/bsrs-django/venv" ];
     then
         echo "VIRTUALENV EXISTS"
     else
@@ -114,9 +115,34 @@ echo "DJANGO - COLLECTSTATIC"
 TEST=$?; if [ "$TEST" == 1 ]; then echo "django collectstatic failed"; exit $TEST; fi
 
 
+wait
+
+echo "PROJECT DIR - CHECK IF PERSISTENT PROJECT DIRECTORY EXISTS, \
+ALL /MNT/TMPFS/PERSISTENT/ WILL BE COPIED HERE"
+
+PROJECT_DIR=/www/django/releases/persistent
+if [  ! -d "$PROJECT_DIR" ];
+    then
+        echo "DOES NOT EXIST"
+        mkdir $PROJECT_DIR
+    else
+        echo "EXISTS"
+fi
+cd $PROJECT_DIR
+TEST=$?; if [ "$TEST" == 1 ]; then echo "mkdir failed"; exit $TEST; fi
+
+
+echo "COPY FROM ../TMPFS/ TO ../BUILDS/PERSISTENT/"
+wait
+rm -rf $PROJECT_DIR/bsrs/*
+wait
+cp -R $TMP_DIR/bsrs $PROJECT_DIR/bsrs
+
+wait
+
 echo "RELOAD SERVER SCRIPTS"
 
-cd ../../builds/persistent/
+cd builds/persistent/
 
 wait
 echo "UWSGI - START/RELOAD"
