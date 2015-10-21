@@ -1,7 +1,8 @@
 var BSRS_TICKET_FACTORY = (function() {
-    var factory = function(ticket, person, category_fixtures, category_defaults) {
+    var factory = function(ticket, people_defaults, people_fixtures, category_fixtures, category_defaults) {
         this.ticket = ticket;
-        this.person = person;
+        this.people_defaults = people_defaults.default || people_defaults;
+        this.people_fixtures = people_fixtures.default || people_fixtures;
         this.category_fixtures = category_fixtures.default || category_fixtures;
         this.category_defaults = category_defaults.default || category_defaults;
     };
@@ -18,8 +19,9 @@ var BSRS_TICKET_FACTORY = (function() {
             request: this.ticket.requestOne,
             status: this.ticket.statusOneId,
             priority: this.ticket.priorityOneId,
-            cc: [{id: this.person.id, fullname: this.person.fullname, email: this.person.emails, role: this.person.role}],
-            categories: [parent_category, child_category]
+            cc: [{id: this.people_defaults.id, fullname: this.people_defaults.fullname, email: this.people_defaults.emails, role: this.people_defaults.role}],
+            categories: [parent_category, child_category],
+            requester: this.people_fixtures.get(),
         }
     };
     factory.prototype.list = function() {
@@ -36,6 +38,7 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.request = 'sub' + i;
             ticket.subject = 'diagram' + i;
             delete ticket.cc;
+            delete ticket.requester;
             response.push(ticket);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component
@@ -64,6 +67,7 @@ var BSRS_TICKET_FACTORY = (function() {
     factory.prototype.put = function(ticket) {
         var response = this.generate(ticket.id);
         response.cc = [response.cc[0].id];
+        response.requester = response.requester.id;
         response.categories = response.categories.map(function(cat) { return cat.id; });
         delete response.number;
         for(var key in ticket) {
@@ -80,14 +84,16 @@ if (typeof window === 'undefined') {
     var ticket_defaults = require('./defaults/ticket');
     var person_defaults = require('./defaults/person');
     var category_fixtures = require('../vendor/category_fixtures');
+    var people_fixtures = require('../vendor/people_fixtures');
     var category_defaults = require('../vendor/defaults/category');
     objectAssign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, category_fixtures, category_defaults);
+    module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, category_fixtures, people_fixtures, category_defaults);
 } else {
-    define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin'], function (exports, ticket_defaults, person_defaults, category_fixtures, category_defaults, mixin) {
+    define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/people_fixtures', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin'], 
+           function (exports, ticket_defaults, person_defaults, people_fixtures, category_fixtures, category_defaults, mixin) {
         'use strict';
         Object.assign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, category_fixtures, category_defaults);
+        var Factory = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, category_fixtures, category_defaults);
         return {default: Factory};
     });
 }

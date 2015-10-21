@@ -27,18 +27,12 @@ var CategoriesMixin = Ember.Mixin.create({
         let store = this.get('store');
         return store.find('ticket-category', filter.bind(this), ['removed']);
     }),
-    find_parent_nodes(child_pk) {
-        let store = this.get('store');
-        let parent_ids = [];
-        let parents = function(child_pk) {
-            let child = store.find('category', child_pk);
-            let parent_id = child.get('parent.id');
-            if(parent_id) {
-                parent_ids.push(parent_id);
-                parents(parent_id);
-            }
-        };
-        parents(child_pk);
+    find_parent_nodes(child_pk, parent_ids=[]) {
+        if (!child_pk) { return; }
+        let child = this.get('store').find('category', child_pk);
+        let parent_id = child.get('parent.id');
+        parent_ids.push(child.get('parent.id') || null);
+        this.find_parent_nodes(child.get('parent.id'), parent_ids);
         return parent_ids;
     },
     change_category_tree(category_pk) {

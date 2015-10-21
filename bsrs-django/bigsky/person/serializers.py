@@ -40,6 +40,7 @@ class RoleDetailSerializer(BaseCreateSerializer):
         model = Role
         fields = ('id', 'name', 'role_type', 'location_level', 'categories')
 
+
 class RoleIdNameSerializer(serializers.ModelSerializer):
     "Used for nested serializer data for other serializers."
 

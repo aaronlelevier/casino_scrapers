@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
+import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
 var extract_categories = function(model, store, uuid) {
     let server_sum = [];
@@ -29,6 +30,13 @@ var extract_categories = function(model, store, uuid) {
     });
     delete model.categories;
     return server_sum;
+};
+
+var extract_requester = function(model, store, person_deserializer) {
+    let requester_id = model.requester.id;
+    person_deserializer.deserialize(model.requester, requester_id);
+    delete model.requester;
+    return requester_id;
 };
 
 var extract_cc = function(model, store, uuid) {
@@ -94,14 +102,16 @@ var extract_ticket_status = function(model, store) {
 
 var TicketDeserializer = Ember.Object.extend({
     uuid: inject('uuid'),
+    PersonDeserializer: injectDeserializer('person'),
     deserialize(response, options) {
+        let person_deserializer = this.get('PersonDeserializer');
         if (typeof options === 'undefined') {
             this.deserialize_list(response);
         } else {
-            this.deserialize_single(response, options);
+            this.deserialize_single(response, options, person_deserializer);
         }
     },
-    deserialize_single(response, id) {
+    deserialize_single(response, id, person_deserializer) {
         let uuid = this.get('uuid');
         let store = this.get('store');
         let existing_ticket = store.find('ticket', id);
@@ -109,6 +119,7 @@ var TicketDeserializer = Ember.Object.extend({
             response.status_fk = extract_ticket_status(response, store);
             response.priority_fk = extract_ticket_priority(response, store);
             response.ticket_people_fks = extract_cc(response, store, uuid);
+            response.requester_id = extract_requester(response, store, person_deserializer);
             response.ticket_categories_fks = extract_categories(response, store, uuid);
             let ticket = store.push('ticket', response);
             ticket.save();
