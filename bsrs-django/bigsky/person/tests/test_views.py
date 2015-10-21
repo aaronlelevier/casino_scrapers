@@ -14,7 +14,7 @@ from model_mommy import mommy
 from accounting.models import Currency
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
-from contact.tests.factory import create_contacts
+from contact.tests.factory import create_contact, create_contacts
 from location.models import Location, LocationLevel
 from category.models import Category
 from person.models import Person, Role, PersonStatus
@@ -528,6 +528,21 @@ class PersonPutTests(APITestCase):
             data['emails'][0]['id'],
             [str(x) for x in self.person.emails.values_list('id', flat=True)]            
         )
+
+    def test_update_email_type(self):
+        email = create_contact(Email, self.person)
+        email_type_two = mommy.make(EmailType)
+        self.assertNotEqual(email.type.id, email_type_two.id)
+        self.data['emails'] = [{
+            'id': str(email.id),
+            'type': str(email_type_two.id),
+            'email': email.email,
+        }]
+        response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
+            self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['emails'])
+        self.assertEqual(data['emails'][0]['type'], str(email_type_two.id))
 
     # ADDRESSES
 
