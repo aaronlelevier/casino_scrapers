@@ -12,6 +12,7 @@ class CategoryTests(TestCase):
         factory.create_categories()
         self.type = Category.objects.filter(subcategory_label='trade').first()
         self.trade = Category.objects.filter(label='trade').first()
+        self.child = Category.objects.filter(subcategory_label='sub_issue').first()
 
     def test_label_top_level(self):
         self.assertIsNone(self.type.parent)
@@ -28,3 +29,13 @@ class CategoryTests(TestCase):
         d = self.type.to_dict()
         self.assertIsInstance(d, dict)
         self.assertIn('id', d)
+        self.assertIn('parent', d)
+        self.assertEqual(d['parent'], None)
+
+    def test_to_dict_with_parent(self):
+        d = self.child.to_dict()
+        self.assertIsInstance(d, dict)
+        self.assertIn('id', d)
+        self.assertIn('parent', d)
+        self.assertEqual(d['parent']['id'], str(self.child.parent.pk))
+        self.assertEqual(d['parent']['name'], self.child.parent.name)

@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var TicketTopLevelCategories = Ember.Component.extend({
+var TicketCategories = Ember.Component.extend({
     categories_selected: Ember.computed('ticket.top_level_category', function() {
         let ticket = this.get('ticket');
         return ticket.get('top_level_category');
@@ -11,9 +11,9 @@ var TicketTopLevelCategories = Ember.Component.extend({
     actions: {
         selected(category) {
             let ticket = this.get('ticket');
-            ticket.change_top_level_category(category.get('id'));
-        },
+            ticket.change_category_tree(category.get('id'));
+        }
     }
 });
 
-export default TicketTopLevelCategories;
+export default TicketCategories;

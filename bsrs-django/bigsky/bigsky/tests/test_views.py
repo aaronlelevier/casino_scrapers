@@ -10,6 +10,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from person.models import Person, PersonStatus, Role
+from category.models import Category
 from ticket.models import Ticket, TicketStatus, TicketPriority
 from contact.models import PhoneNumberType, AddressType
 from generic.models import SavedSearch
@@ -97,6 +98,10 @@ class ConfigurationTests(TestCase):
         self.person_status = mommy.make(PersonStatus)
         self.ticket_status = mommy.make(TicketStatus)
         self.ticket_priority = mommy.make(TicketPriority)
+        self.parent_category = Category.objects.all()[0]
+        self.child_category = Category.objects.all()[1]
+        self.child_category.parent = self.parent_category
+        self.child_category.save()
         self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
             endpoint_name="admin.people.index")
         # Login
@@ -140,6 +145,11 @@ class ConfigurationTests(TestCase):
         self.assertIn(str(self.person.role.id), [c["id"] for c in configuration])
         self.assertIn(str(self.person.role.name), [c["name"] for c in configuration])
         self.assertIn(str(self.person.role.location_level.id), [c["location_level"] for c in configuration])
+        self.assertIn(str(self.person.role.categories.first().id), [c["categories"][0]["id"] for c in configuration])
+        self.assertIn(str(self.person.role.categories.first().name), [c["categories"][0]["name"] for c in configuration])
+        self.assertIn(self.person.role.categories.first().status, [c["categories"][0]["status"] for c in configuration])
+        self.assertIn(str(self.person.role.categories.last().parent.id), [c["categories"][1]["parent"]["id"] for c in configuration])
+        self.assertIn(str(self.person.role.categories.last().parent.name), [c["categories"][1]["parent"]["name"] for c in configuration])
         role = Role.objects.first()
         role.location_level = None
         role.save()

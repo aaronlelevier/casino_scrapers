@@ -5,6 +5,7 @@ import random
 from rest_framework.test import APITestCase
 
 from ticket.models import Ticket
+from category.models import Category
 from rest_framework import status
 from ticket.serializers import TicketSerializer
 from ticket.tests.factory import create_tickets
@@ -42,6 +43,8 @@ class TicketDetailTests(APITestCase):
         # Ticket
         create_tickets()
         self.ticket = Ticket.objects.first()
+        self.category = Category.objects.first()
+        self.ticket.categories.add(self.category)
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -53,6 +56,7 @@ class TicketDetailTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.ticket.id))
+        self.assertEqual(data['categories'][0]['id'], str(self.category.id))
 
 
 class TicketUpdateTests(APITestCase):
@@ -63,6 +67,9 @@ class TicketUpdateTests(APITestCase):
         # Ticket
         create_tickets()
         self.ticket = Ticket.objects.first()
+        self.category = Category.objects.first()
+        self.ticket.categories.add(self.category)
+        self.ticket.save()
         # Data
         serializer = TicketSerializer(self.ticket)
         self.data = serializer.data
@@ -97,6 +104,7 @@ class TicketCreateTests(APITestCase):
         # Data
         serializer = TicketSerializer(self.ticket)
         self.data = serializer.data
+        self.categories = Category.objects.all()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -107,9 +115,13 @@ class TicketCreateTests(APITestCase):
         self.data.update({
             'id': str(uuid.uuid4()),
             'number': random.randint(0, 1000),
-            'subject': 'plumbing'
+            'subject': 'plumbing',
+            'categories': [x.id for x in self.categories]
             })
         response = self.client.post('/api/tickets/', self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
-        self.assertIsInstance(Ticket.objects.get(id=data['id']), Ticket)
+        ticket = Ticket.objects.get(id=data['id'])
+        self.assertIsInstance(ticket, Ticket)
+        self.assertEqual(ticket.categories.count(), 2)
+        self.assertEqual(len(data['categories']), 2)

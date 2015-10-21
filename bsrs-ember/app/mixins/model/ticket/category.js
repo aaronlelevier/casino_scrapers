@@ -3,7 +3,7 @@ import Ember from 'ember';
 var CategoriesMixin = Ember.Mixin.create({
     top_level_category: Ember.computed('categories.[]', function() {
         return this.get('categories').filter(function(category) {
-            return category.get('parent_id') === null;
+            return category.get('parent') === undefined;
         }).objectAt(0);
     }),
     categories_ids: Ember.computed('categories.[]', function() {
@@ -27,11 +27,26 @@ var CategoriesMixin = Ember.Mixin.create({
         let store = this.get('store');
         return store.find('ticket-category', filter.bind(this), ['removed']);
     }),
-    change_top_level_category(category_pk) {
+    find_parent_nodes(child_pk) {
+        let store = this.get('store');
+        let parent_ids = [];
+        let parents = function(child_pk) {
+            let child = store.find('category', child_pk);
+            let parent_id = child.get('parent.id');
+            if(parent_id) {
+                parent_ids.push(parent_id);
+                parents(parent_id);
+            }
+        };
+        parents(child_pk);
+        return parent_ids;
+    },
+    change_category_tree(category_pk) {
+        let parent_ids = this.find_parent_nodes(category_pk);
         let store = this.get('store');
         let ticket_pk = this.get('id');
         let m2m_models = this.get('ticket_categories').filter((m2m) => {
-            return m2m.get('ticket_pk') === ticket_pk;
+            return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
         });
         m2m_models.forEach((m2m) => {
             store.push('ticket-category', {id: m2m.get('id'), removed: true});
