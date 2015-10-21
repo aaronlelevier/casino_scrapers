@@ -4,7 +4,8 @@ import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
 var extract_phone_numbers = function(model, store) {
     let phone_number_fks = [];
-    model.phone_numbers.forEach((phone_number) => {
+    let phone_numbers = model.phone_numbers || [];
+    phone_numbers.forEach((phone_number) => {
         phone_number_fks.push(phone_number.id);
         phone_number.person_fk = model.id;
         store.push('phonenumber', phone_number);
@@ -15,7 +16,8 @@ var extract_phone_numbers = function(model, store) {
 
 var extract_addresses = function(model, store) {
     let address_fks = [];
-    model.addresses.forEach((address) => {
+    let addresses = model.addresses || [];
+    addresses.forEach((address) => {
         address_fks.push(address.id);
         address.person_fk = model.id;
         // store.push('address-type', address.type);
@@ -28,19 +30,21 @@ var extract_addresses = function(model, store) {
 
 var extract_role_location_level = function(model, store) {
     let role = store.find('role', model.role);
-    let location_level = role.get('location_level');
-    let location_level_pk = location_level.get('id');
-    if(location_level_pk) {
-        let role_pk = model.role;
-        let location_level = store.find('location-level', location_level_pk);
-        let existing_roles = location_level.get('roles') || [];
-        if (existing_roles.indexOf(role_pk) === -1) {
-            location_level.set('roles', existing_roles.concat([role_pk]));
+    if (role.get('id')) {
+        let location_level = role.get('location_level');
+        let location_level_pk = location_level.get('id');
+        if(location_level_pk) {
+            let role_pk = model.role;
+            let location_level = store.find('location-level', location_level_pk);
+            let existing_roles = location_level.get('roles') || [];
+            if (existing_roles.indexOf(role_pk) === -1) {
+                location_level.set('roles', existing_roles.concat([role_pk]));
+            }
+            location_level.save();
+            role.set('location_level_fk', location_level_pk);
         }
-        location_level.save();
-        role.set('location_level_fk', location_level_pk);
+        return location_level_pk;
     }
-    return location_level_pk;
 };
 
 var extract_role = function(model, store) {
@@ -48,7 +52,7 @@ var extract_role = function(model, store) {
     let role = store.find('role', model.role);
     let location_level_fk = extract_role_location_level(model, store);
     let existing_people = role.get('people') || [];
-    if (existing_people.indexOf(model.id) === -1) {
+    if (role.get('content') && existing_people.indexOf(model.id) === -1) {
         role.set('people', existing_people.concat([model.id]));
     }
     delete model.role;
@@ -59,7 +63,8 @@ var extract_person_location = function(model, store, uuid, location_level_fk, lo
     let server_locations_sum = [];
     let prevented_duplicate_m2m = [];
     let all_person_locations = store.find('person-location');
-    model.locations.forEach((location_json) => {
+    let locations = model.locations || [];
+    locations.forEach((location_json) => {
         let person_locations = all_person_locations.filter((m2m) => {
             return m2m.get('location_pk') === location_json.id && m2m.get('person_pk') === model.id;
         });

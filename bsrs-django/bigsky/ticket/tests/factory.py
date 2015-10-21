@@ -12,6 +12,7 @@ def create_tickets(_many=1):
     '''
     Ticket Subjects 
     '''
+    # categories = mommy.make(Category, _quantity=2)
     for i in range(_many):
         kwargs = {
            'subject' : random_lorem(),

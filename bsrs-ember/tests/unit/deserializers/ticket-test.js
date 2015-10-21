@@ -9,21 +9,50 @@ import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import TicketDeserializer from 'bsrs-ember/deserializers/ticket';
+import PersonDeserializer from 'bsrs-ember/deserializers/person';
+import LocationDeserializer from 'bsrs-ember/deserializers/location';
+import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import random from 'bsrs-ember/models/random';
 
-let store, subject, uuid;
+let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer;
 
 module('unit: ticket deserializer test', {
     beforeEach() {
         random.uuid = function() { return Ember.uuid(); };
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:person', 'model:category', 'model:uuid']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:location','service:person-current','service:translations-fetcher','service:i18n']);
         uuid = this.container.lookup('model:uuid');
-        subject = TicketDeserializer.create({store: store, uuid: uuid});
+        location_level_deserializer = LocationLevelDeserializer.create({store: store});
+        location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
+        person_deserializer = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
+        subject = TicketDeserializer.create({store: store, uuid: uuid, PersonDeserializer: person_deserializer});
     },
     afterEach() {
         random.uuid = function() { return 'abc123'; };
     }
+});
+
+test('ticket requester will be deserialized into its own store when deserialize detail is invoked (with no existing requester)', (assert) => {
+    let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    subject.deserialize(json, json.id);
+    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('requester.id'), PEOPLE_DEFAULTS.id);
+});
+
+test('ticket requester will be deserialized into its own store when deserialize detail is invoked (with existing requester)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId, requester_id: PEOPLE_DEFAULTS.unusedId});
+    store.push('person', {id: PEOPLE_DEFAULTS.unusedId});
+    let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    assert.equal(ticket.get('requester.id'), PEOPLE_DEFAULTS.unusedId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    subject.deserialize(json, json.id);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('requester.id'), PEOPLE_DEFAULTS.id);
 });
 
 test('ticket priority will be deserialized into its own store when deserialize list is invoked', (assert) => {

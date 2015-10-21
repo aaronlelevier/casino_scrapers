@@ -5,8 +5,9 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import equal from 'bsrs-ember/utilities/equal';
 import CcMixin from 'bsrs-ember/mixins/model/ticket/cc';
 import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
+import RequesterMixin from 'bsrs-ember/mixins/model/ticket/requester';
 
-var TicketModel = Model.extend(CcMixin, CategoriesMixin, {
+var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
     number: attr(''),
@@ -41,12 +42,11 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, {
     }),
     belongs_to_priority: Ember.computed(function() {
         let ticket_id = this.get('id');
-        let store = this.get('store');
         let filter = function(status) {
             let tickets = status.get('tickets');
             return Ember.$.inArray(ticket_id, tickets) > -1;
         };
-        return store.find('ticket-priority', filter, ['tickets']);
+        return this.get('store').find('ticket-priority', filter, ['tickets']);
     }),
     status: Ember.computed('belongs_to.[]', function() {
         let belongs_to = this.get('belongs_to');
@@ -97,8 +97,8 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, {
             return priority.get('id') === priority_fk ? false : true;
         }
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', function() {
-        return this.get('isDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'requesterIsDirty', function() {
+        return this.get('isDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty') || this.get('requesterIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     change_status: function(new_status_id) {
@@ -140,6 +140,7 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, {
             priority: this.get('priority.id'),
             cc: this.get('cc_ids'),
             categories: this.get('categories_ids'),
+            requester: this.get('requester.id')
         };
     },
     removeRecord() {
