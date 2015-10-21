@@ -6,16 +6,17 @@ echo "DEPLOY DEPLOY STARTED!"
 echo "CONFIG - SET SCRIPT CONFIGURATION"
 export DJANGO_SETTINGS_MODULE='bigsky.settings.deploy'
 
+PROJECT_DIR=/var/www
 
 echo "PROJECT DIR - CHECK IF DEPLOY PROJECT DIRECTORY EXISTS"
-if [  ! -d "/www/django/releases/deploy" ]; 
+if [  ! -d "${PROJECT_DIR}/deploy" ];
     then
         echo "DOES NOT EXIST"
-        mkdir /www/django/releases/deploy
+        mkdir ${PROJECT_DIR}/deploy
     else
         echo "EXISTS"
 fi
-cd /www/django/releases/deploy
+cd ${PROJECT_DIR}/deploy
 TEST=$?; if [ "$TEST" == 1 ]; then echo "mkdir failed"; exit $TEST; fi
 
 wait
