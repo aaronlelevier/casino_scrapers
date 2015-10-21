@@ -1,13 +1,11 @@
 from model_mommy import mommy
 import random
-from utils import create
+from utils.create import random_lorem
 
 from ticket.models import Ticket, TicketStatus
 from category.models import Category
-
-
-def create_ticket(subject, request):
-    ticket = mommy.make(Ticket, subject=subject, request=request)
+from location.models import Location
+from person.models import Person
 
 
 def create_tickets(_many=1):
@@ -15,6 +13,8 @@ def create_tickets(_many=1):
     Ticket Subjects 
     '''
     for i in range(_many):
-        subject = random.choice(create.LOREM_IPSUM_WORDS.split())
-        request = random.choice(create.LOREM_IPSUM_WORDS.split())
-        create_ticket(subject, request)
+        kwargs = {
+           'subject' : random_lorem(),
+           'request' : random_lorem(),
+        }
+        mommy.make(Ticket, make_m2m=True, **kwargs)
