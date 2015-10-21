@@ -113,6 +113,8 @@ urlpatterns += required(
     )
 )
 
+handler404 = 'bigsky.views.handler404'
+handler500 = 'bigsky.views.handler500'
 
 ### URL HELPERS
 
