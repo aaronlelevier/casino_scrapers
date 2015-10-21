@@ -12,7 +12,7 @@ var store, uuid;
 
 module('unit: ticket test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:ticket-person', 'model:ticket-category', 'model:uuid']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:ticket-person', 'model:ticket-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
         random.uuid = function() { return Ember.uuid(); };
     },
     afterEach() {
@@ -817,3 +817,77 @@ test('rollback priority will revert and reboot the dirty priority to clean', (as
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+test('assignee property returns associated object or undefined', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    store.push('person', {id: TICKET_DEFAULTS.assigneeOneId, name: TICKET_DEFAULTS.assigneeOne, assigned_tickets: [TICKET_DEFAULTS.idOne]});
+    let assignee = ticket.get('assignee');
+    assert.equal(assignee.get('id'), TICKET_DEFAULTS.assigneeOneId);
+    assert.equal(assignee.get('name'), TICKET_DEFAULTS.assigneeOne);
+    assignee.set('assigned_tickets', []);
+    assignee = ticket.get('assignee');
+    assert.equal(assignee, undefined);
+});
+
+test('change_assignee will append the ticket id to the new assignee assigned_tickets array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let assignee = store.push('person', {id: TICKET_DEFAULTS.assigneeOneId, name: TICKET_DEFAULTS.assigneeOne, assigned_tickets: [9]});
+    ticket.change_assignee(TICKET_DEFAULTS.assigneeOneId);
+    assert.deepEqual(assignee.get('assigned_tickets'), [9, TICKET_DEFAULTS.idOne]);
+});
+
+test('change_assignee will remove the ticket id from the prev assignee assigned_tickets array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let assignee = store.push('person', {id: TICKET_DEFAULTS.assigneeOneId, name: TICKET_DEFAULTS.assigneeOne, assigned_tickets: [9, TICKET_DEFAULTS.idOne]});
+    store.push('person', {id: TICKET_DEFAULTS.assigneeTwoId, name: TICKET_DEFAULTS.assigneeTwo, assigned_tickets: []});
+    ticket.change_assignee(TICKET_DEFAULTS.assigneeTwoId);
+    assert.deepEqual(assignee.get('assigned_tickets'), [9]);
+});
+
+test('assignee will save correctly as undefined', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, assignee_fk: undefined});
+    store.push('person', {id: TICKET_DEFAULTS.assigneeOneId, name: TICKET_DEFAULTS.assigneeOne, assigned_tickets: []});
+    ticket.saveRelated();
+    let assignee = ticket.get('assignee');
+    assert.equal(ticket.get('assignee_fk'), undefined);
+});
+
+test('ticket is dirty or related is dirty when existing assignee is altered', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, assignee_fk: TICKET_DEFAULTS.assigneeOneId});
+    store.push('person', {id: TICKET_DEFAULTS.assigneeOneId, name: TICKET_DEFAULTS.assigneeOne, assigned_tickets: [TICKET_DEFAULTS.idOne]});
+    store.push('person', {id: TICKET_DEFAULTS.assigneeTwoId, name: TICKET_DEFAULTS.assigneeTwo, assigned_tickets: []});
+    assert.equal(ticket.get('assignee.id'), TICKET_DEFAULTS.assigneeOneId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_assignee(TICKET_DEFAULTS.assigneeTwoId);
+    assert.equal(ticket.get('assignee.id'), TICKET_DEFAULTS.assigneeTwoId);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('ticket is dirty or related is dirty when existing assignee is altered (starting w/ nothing)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, assignee_fk: undefined});
+    store.push('person', {id: TICKET_DEFAULTS.assigneeTwoId, name: TICKET_DEFAULTS.assigneeTwo, assigned_tickets: []});
+    assert.equal(ticket.get('assignee'), undefined);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_assignee(TICKET_DEFAULTS.assigneeTwoId);
+    assert.equal(ticket.get('assignee.id'), TICKET_DEFAULTS.assigneeTwoId);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('rollback assignee will revert and reboot the dirty assignee to clean', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, assignee_fk: TICKET_DEFAULTS.assigneeOneId});
+    store.push('person', {id: TICKET_DEFAULTS.assigneeOneId, name: TICKET_DEFAULTS.assigneeOne, assigned_tickets: [TICKET_DEFAULTS.idOne]});
+    store.push('person', {id: TICKET_DEFAULTS.assigneeTwoId, name: TICKET_DEFAULTS.assigneeTwo, assigned_tickets: []});
+    assert.equal(ticket.get('assignee.id'), TICKET_DEFAULTS.assigneeOneId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_assignee(TICKET_DEFAULTS.assigneeTwoId);
+    assert.equal(ticket.get('assignee.id'), TICKET_DEFAULTS.assigneeTwoId);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('assignee.id'), TICKET_DEFAULTS.assigneeOneId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_assignee(TICKET_DEFAULTS.assigneeTwoId);
+    assert.equal(ticket.get('assignee.id'), TICKET_DEFAULTS.assigneeTwoId);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.saveRelated();
+    assert.equal(ticket.get('assignee.id'), TICKET_DEFAULTS.assigneeTwoId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
