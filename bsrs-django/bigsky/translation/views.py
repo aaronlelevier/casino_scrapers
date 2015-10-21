@@ -92,11 +92,11 @@ class TranslationViewSet(viewsets.ModelViewSet):
 
             for data in request.data:
                 data = copy.copy(data)
-                print(data)
+
                 try:
                     self.locale = self.validate_locale(data)
-                    self.trans, created = Translation.objects.get_or_create(id=data['id'])
-                    self.update_trans(key, data)
+                    trans, created = Translation.objects.get_or_create(id=data['id'])
+                    self.update_trans(trans, key, data)
                     self.final_data.append(data)
                 except (KeyError, Locale.DoesNotExist) as e:
                     self.errors.append(str(e))
@@ -115,22 +115,22 @@ class TranslationViewSet(viewsets.ModelViewSet):
         except Locale.DoesNotExist:
             raise
 
-    def update_trans(self, key, data):
-        self.trans.locale = self.locale
+    def update_trans(self, trans, key, data):
+        trans.locale = self.locale
 
         if not data['translations']['text']:
-            self.trans.values.pop(key)
+            trans.values.pop(key)
         else:
-            self.trans.values.update({key: data['translations']['text']})
+            trans.values.update({key: data['translations']['text']})
 
-        self.trans.context.update({key: data['translations'].get('helper', '')})
+        trans.context.update({key: data['translations'].get('helper', '')})
 
         if not data['translations'].get('helper', ''):
-            self.trans.context.pop(key)
+            trans.context.pop(key)
         else:
-            self.trans.context.update({key: data['translations']['helper']})
+            trans.context.update({key: data['translations']['helper']})
 
-        self.trans.save()
+        trans.save()
 
     def get_created_status(self, created):
         if created:
