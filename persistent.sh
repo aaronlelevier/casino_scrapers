@@ -6,21 +6,22 @@ echo "PERSISTENT DEPLOY STARTED!"
 echo "CONFIG - SET SCRIPT CONFIGURATION"
 export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
 
+PROJECT_DIR=/var/www
 
 echo "PROJECT DIR - CHECK IF PERSISTENT PROJECT DIRECTORY EXISTS"
-if [  ! -d "/www/django/releases/persistent" ]; 
+if [  ! -d "${PROJECT_DIR}/persistent" ];
     then
         echo "DOES NOT EXIST"
-        mkdir /www/django/releases/persistent
+        mkdir ${PROJECT_DIR}/persistent
     else
         echo "EXISTS"
 fi
-cd /www/django/releases/persistent
+cd ${PROJECT_DIR}/persistent
 TEST=$?; if [ "$TEST" == 1 ]; then echo "mkdir failed"; exit $TEST; fi
 
 
 echo "GIT - PULL/CLONE REPO"
-if [  -d "/www/django/releases/persistent/bsrs" ]; 
+if [  -d "${PROJECT_DIR}/persistent/bsrs" ];
     then
         echo "BSRS REPO EXISTS"
         cd bsrs
@@ -39,7 +40,7 @@ echo "DJANGO"
 
 cd bsrs-django
 
-if [  -d "/www/django/releases/persistent/bsrs/bsrs-django/venv" ]; 
+if [  -d "${PROJECT_DIR}/persistent/bsrs/bsrs-django/venv" ];
     then
         echo "VIRTUALENV EXISTS"
     else
