@@ -3,14 +3,14 @@ from rest_framework import serializers
 from ticket.models import Ticket
 from utils.serializers import BaseCreateSerializer
 from category.serializers import CategoryIDNameSerializer
-from person.serializers import PersonListSerializer
+from person.serializers import PersonTicketSerializer
 from location.serializers import LocationSerializer
 
 
 class TicketListSerializer(BaseCreateSerializer):
 
     categories = CategoryIDNameSerializer(required=True, many=True)
-    assignee = PersonListSerializer(required=False)
+    assignee = PersonTicketSerializer(required=False)
     location = LocationSerializer()
 
     class Meta:
@@ -21,9 +21,9 @@ class TicketListSerializer(BaseCreateSerializer):
 class TicketSerializer(BaseCreateSerializer):
 
     categories = CategoryIDNameSerializer(many=True)
-    assignee = PersonListSerializer()
-    requester = PersonListSerializer()
-    cc = PersonListSerializer(many=True)
+    assignee = PersonTicketSerializer(required=False)
+    requester = PersonTicketSerializer()
+    cc = PersonTicketSerializer(many=True)
     location = LocationSerializer()
 
     class Meta:

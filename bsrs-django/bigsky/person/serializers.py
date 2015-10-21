@@ -93,6 +93,13 @@ class PersonListSerializer(serializers.ModelSerializer):
         fields = PERSON_FIELDS
 
 
+class PersonTicketSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Person
+        fields = ('id', 'first_name', 'middle_initial', 'last_name', 'role', 'title')
+
+
 class PersonDetailSerializer(serializers.ModelSerializer):
 
     status = PersonStatusSerializer()
