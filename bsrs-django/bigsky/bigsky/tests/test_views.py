@@ -75,16 +75,31 @@ class LoginTests(TestCase):
 
 
 class LogoutTests(TestCase):
+    # Only a POST or PUT will be accepted request types to logout a Person
 
     def setUp(self):
         self.password = PASSWORD
         self.person = create_person()
 
-    def test_logout(self):
+    def test_logout_post(self):
         self.client.login(username=self.person.username, password=self.password)
         self.assertIn('_auth_user_id', self.client.session)
-        self.client.get(reverse('logout'))
+        self.client.post(reverse('logout'))
         self.assertNotIn('_auth_user_id', self.client.session)
+
+    def test_logout_put(self):
+        self.client.login(username=self.person.username, password=self.password)
+        self.assertIn('_auth_user_id', self.client.session)
+        self.client.put(reverse('logout'))
+        self.assertNotIn('_auth_user_id', self.client.session)
+
+    def test_logout_wrong_request(self):
+        self.client.login(username=self.person.username, password=self.password)
+        self.assertIn('_auth_user_id', self.client.session)
+        response = self.client.get(reverse('logout'))
+        self.assertEqual(response.status_code, 404)
+        self.assertIn('_auth_user_id', self.client.session)
+
 
 
 class ConfigurationTests(TestCase):
@@ -232,3 +247,14 @@ class ConfigurationTests(TestCase):
         configuration = json.loads(response.context['ticket_priorities'])
         self.assertTrue(len(configuration) > 0)
         self.assertIn(str(self.ticket_priority.id), [c['id'] for c in configuration])
+
+
+class ErrorPageTests(TestCase):
+
+    def test_404(self):
+        response = self.client.get(reverse('404'))
+        self.assertEqual(response.status_code, 404)
+
+    def test_500(self):
+        response = self.client.get(reverse('500'))
+        self.assertEqual(response.status_code, 500)

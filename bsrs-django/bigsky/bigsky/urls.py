@@ -61,6 +61,11 @@ urlpatterns = patterns('',
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 )
 
+# No Requirement
+urlpatterns += patterns('',
+    url(r'^404/$', bigsky_views.handler404, name='404'),
+    url(r'^500/$', bigsky_views.handler500, name='500'),
+)
 
 # Logout Required
 urlpatterns += required(
