@@ -22,6 +22,39 @@ class LocaleViewSet(viewsets.ModelViewSet):
 
 ### TRANSLATION
 
+class TranslationBootstrapViewSet(viewsets.ModelViewSet):
+    '''
+    ## Filters
+       **1. Filter by Locale.name:**
+       URL: `/api/translations/?locale=en`
+    '''
+    permission_classes = (IsAuthenticated,)
+    serializer_class = TranslationSerializer
+    queryset = Translation.objects.all()
+
+    def get_paginated_response(self, data):
+        """
+        The response should alwasy be an object.  The key each item in the 
+        object is the Locale, and the value is the Translation ``key:value`` 
+        object for that Translation.
+        """
+        if data:
+            return Response({next(iter(d)):d[next(iter(d))] for d in data})
+        else:
+            raise NotFound
+
+    def get_queryset(self):
+        queryset = Translation.objects.all()
+        locale = self.request.query_params.get('locale', None)
+        if locale is not None:
+            queryset = queryset.filter(
+                locale__locale__istartswith=locale[:2]
+                ).extra(
+                where=["CHAR_LENGTH(locale) <= {}".format(len(locale))]
+                )
+        return queryset
+
+
 class TranslationViewSet(viewsets.ModelViewSet):
     '''
     The `list` endpoint, which displays all available Translation keys,
@@ -31,24 +64,19 @@ class TranslationViewSet(viewsets.ModelViewSet):
 
     ## Filters
 
-       **1. Filter by Locale.name:**
+       **1. List all Translation Keys for the default Locale site setting:**
 
-       URL: `/api/translations/bootstrap/{locale}/`
+       URL: `/api/admin/translations/`
 
        **2. All Translations for a single Translation Key:**
 
-       URL: `/api/translations/{translation-key}/`
+       URL: `/api/admin/translations/{translation-key}/`
     '''
     permission_classes = (IsAuthenticated,)
     serializer_class = TranslationSerializer
     queryset = Translation.objects.all()
 
     def get_paginated_response(self, data):
-        """
-        The response should always be an object.  The key each item in the 
-        object is the Locale, and the value is the Translation ``key:value`` 
-        object for that Translation.
-        """
         if data:
             return Response({next(iter(d)):d[next(iter(d))] for d in data})
         else:
@@ -60,18 +88,6 @@ class TranslationViewSet(viewsets.ModelViewSet):
         except Translation.DoesNotExist:
             return Response([])
         return Response(sorted(translation.values.keys()))
-
-    @list_route(methods=['GET'], url_path=r"bootstrap/(?P<locale>[\w\-\_]+)")
-    def bootstrap(self, request, locale=None):
-        queryset = Translation.objects.all()
-        if locale is not None:
-            queryset = queryset.filter(
-                locale__locale__istartswith=locale[:2]
-                ).extra(
-                where=["CHAR_LENGTH(locale) <= {}".format(len(locale))]
-                )
-        serializer = TranslationSerializer(queryset, many=True)
-        return Response(serializer.data)
 
     @list_route(methods=['GET', 'POST'], url_path=r"(?P<key>[\w\.]+)")
     def get_translations_by_key(self, request, key=None):

@@ -52,7 +52,8 @@ router.register(r'admin/third-parties', third_party_views.ThirdPartyViewSet)
 router.register(r'tickets', tickets_views.TicketsViewSet)
 # TRANSLATION
 router.register(r'admin/locales', translation_views.LocaleViewSet)
-router.register(r'translations', translation_views.TranslationViewSet)
+router.register(r'admin/translations', translation_views.TranslationViewSet)
+router.register(r'translations', translation_views.TranslationBootstrapViewSet)
 
 # API
 urlpatterns = patterns('',

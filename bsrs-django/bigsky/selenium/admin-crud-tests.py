@@ -41,6 +41,10 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def tearDown(self):
         self.driver.close()
 
+    def test_translated_value(self):
+        """Translation key 'menu.home' -> 'home' in 'en' """
+        self.driver.find_element_by_link_text('Home')
+
     def test_role(self):
         ### CREATE
         # Go to Role Area

@@ -50,6 +50,49 @@ class LocaleTests(APITestCase):
         self.assertEqual(data['name'], new_name)
 
 
+class TranslationBootstrapTests(APITestCase):
+
+    def setUp(self):
+        create_translations()
+        self.translation = Translation.objects.first()
+        self.person = create_person()
+        self.data = TranslationSerializer(self.translation).data
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_list_multiple_translations(self):
+        response = self.client.get('/api/translations/')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIsInstance(data, dict)
+
+    def test_filter(self):
+        # Assumes there is a single Locale fixture with the name "en"
+        locale = 'en'
+        response = self.client.get('/api/translations/?locale={}'.format(locale))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIn(locale, data)
+        self.assertEqual(len(data), 1)
+        for d in data:
+            self.assertTrue(d.startswith(locale))
+
+    def test_filter_multiple_returns(self):
+        # Assumes there is an "en" and "en-us" translation. It should 
+        # return both.
+        response = self.client.get('/api/translations/?locale=en-us')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertIn('en', data)
+        self.assertIn('en-us', data)
+        self.assertEqual(len(data), 2)
+
+    def test_filter_not_found(self):
+        response = self.client.get('/api/translations/?locale=123')
+        self.assertEqual(response.status_code, 404)
+
+
 class TranslationReadTests(APITestCase):
 
     # List, Detail, and Bootstrap
@@ -68,7 +111,7 @@ class TranslationReadTests(APITestCase):
     ### List
 
     def test_list_multiple_translations(self):
-        response = self.client.get('/api/translations/')
+        response = self.client.get('/api/admin/translations/')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(data, list)
@@ -76,14 +119,14 @@ class TranslationReadTests(APITestCase):
 
     def test_list_no_en_translation(self):
         Translation.objects.get(locale__locale='en').delete(override=True)
-        response = self.client.get('/api/translations/')
+        response = self.client.get('/api/admin/translations/')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(data, list)
         self.assertFalse(data)
 
     def test_list_keys(self):
-        response = self.client.get('/api/translations/')
+        response = self.client.get('/api/admin/translations/')
         data = json.loads(response.content.decode('utf8'))
         self.assertIn(
             data[0],
@@ -94,7 +137,7 @@ class TranslationReadTests(APITestCase):
 
     def test_detail_with_key_get(self):
         key = list(self.translation.values.keys())[0]
-        response = self.client.get('/api/translations/{}/'.format(key))
+        response = self.client.get('/api/admin/translations/{}/'.format(key))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertIn(str(self.translation.id), [d['id'] for d in data])
@@ -103,30 +146,6 @@ class TranslationReadTests(APITestCase):
             [d['translations']['locale'] for d in data]
         )
         self.assertTrue([d['translations']['text'] for d in data])
-
-    ### "/api/admin/translations/boostrap/{locale}/" list_route
-
-    def test_filter(self):
-        # Assumes there is a single Locale fixture with the name "en"
-        response = self.client.get('/api/translations/bootstrap/en/')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertTrue(any('en' in d for d in data))
-        self.assertEqual(len(data), 1)
-
-    def test_filter_multiple_returns(self):
-        # Assumes there is an "en" and "en-us" translation. It should 
-        # return both.
-        response = self.client.get('/api/translations/bootstrap/en-us/')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertTrue(any('en' in d for d in data))
-        self.assertTrue(any('en-us' in d for d in data))
-        self.assertEqual(len(data), 2)
-
-    def test_filter_not_found(self):
-        response = self.client.get('/api/translations/bootstrap/123/')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertFalse(data)
 
 
 class TranslationWriteTests(APITestCase):
@@ -178,7 +197,7 @@ class TranslationWriteTests(APITestCase):
     def test_create_single(self):
         init_count = Translation.objects.count()
         self.assertFalse(Translation.objects.filter(values__has_key=self.key).exists())
-        response = self.client.post('/api/translations/{}/'.format(self.key), [self.data], format='json')
+        response = self.client.post('/api/admin/translations/{}/'.format(self.key), [self.data], format='json')
         self.assertEqual(response.status_code, 201)
         self.assertTrue(Translation.objects.filter(values__has_key=self.key).exists())
         # count check
@@ -188,7 +207,7 @@ class TranslationWriteTests(APITestCase):
     def test_create_double(self):
         init_count = Translation.objects.count()
         self.assertFalse(Translation.objects.filter(values__has_key=self.key).exists())
-        response = self.client.post('/api/translations/{}/'.format(self.key),
+        response = self.client.post('/api/admin/translations/{}/'.format(self.key),
             [self.data, self.data_two], format='json')
         self.assertEqual(response.status_code, 201)
         self.assertTrue(Translation.objects.filter(values__has_key=self.key).exists())
@@ -198,17 +217,17 @@ class TranslationWriteTests(APITestCase):
 
     def test_create_validate_locale(self):
         self.data['translations']['locale'] = str(uuid.uuid4())
-        response = self.client.post('/api/translations/{}/'.format(self.key), [self.data], format='json')
+        response = self.client.post('/api/admin/translations/{}/'.format(self.key), [self.data], format='json')
         self.assertEqual(response.status_code, 400)
 
     def test_create_no_text(self):
         self.data['translations'].pop('text','')
-        response = self.client.post('/api/translations/{}/'.format(self.key), [self.data], format='json')
+        response = self.client.post('/api/admin/translations/{}/'.format(self.key), [self.data], format='json')
         self.assertEqual(response.status_code, 400)
 
     def test_create_context_not_required(self):
         self.data['translations'].pop('helper','')
-        response = self.client.post('/api/translations/{}/'.format(self.key), [self.data], format='json')
+        response = self.client.post('/api/admin/translations/{}/'.format(self.key), [self.data], format='json')
         self.assertEqual(response.status_code, 201)
 
     ### Update
@@ -220,7 +239,7 @@ class TranslationWriteTests(APITestCase):
         self.data['id'] = str(self.translation.id)
         self.data['translations']['locale'] = str(self.locale.id)
         # POST
-        response = self.client.post('/api/translations/{}/'.format(key), [self.data], format='json')
+        response = self.client.post('/api/admin/translations/{}/'.format(key), [self.data], format='json')
         self.assertEqual(response.status_code, 200)
         # check
         post_trans = Translation.objects.get(id=self.translation.id)
@@ -240,7 +259,7 @@ class TranslationWriteTests(APITestCase):
         self.data_two['id'] = str(self.translation_two.id)
         self.data_two['translations']['locale'] = str(self.locale_two.id)
         # POST
-        response = self.client.post('/api/translations/{}/'.format(key),
+        response = self.client.post('/api/admin/translations/{}/'.format(key),
             [self.data, self.data_two], format='json')
         self.assertEqual(response.status_code, 200)
         # 1st check
@@ -261,7 +280,7 @@ class TranslationWriteTests(APITestCase):
         self.data['translations']['locale'] = str(self.locale.id)
         self.data['translations']['text'] = ''
         # POST
-        response = self.client.post('/api/translations/{}/'.format(key), [self.data], format='json')
+        response = self.client.post('/api/admin/translations/{}/'.format(key), [self.data], format='json')
         self.assertEqual(response.status_code, 200)
         # check
         trans = Translation.objects.get(id=self.translation.id)
@@ -283,7 +302,7 @@ class TranslationWriteTests(APITestCase):
     #     self.data_two['translations']['locale'] = str(self.locale_two.id)
     #     self.data_two['translations']['text'] = ''
     #     # POST
-    #     response = self.client.post('/api/translations/{}/'.format(key),
+    #     response = self.client.post('/api/admin/translations/{}/'.format(key),
     #         [self.data, self.data_two], format='json')
     #     print(response)
     #     self.assertEqual(response.status_code, 200)

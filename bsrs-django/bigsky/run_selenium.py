@@ -20,7 +20,7 @@ def run_selenium_tests():
 
     run_selenium_test(['python', 'selenium/admin-crud-tests.py'])
     run_selenium_test(['python', 'selenium/grid-tests.py'])
-    run_selenium_test(['python', 'selenium/crud-tests.py'])
+    run_selenium_test(['python', 'selenium/ticket-tests.py'])
 
 
 def run_selenium_test(args):
