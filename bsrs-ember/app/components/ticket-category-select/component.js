@@ -6,7 +6,13 @@ var TicketCategories = Ember.Component.extend({
         return ticket.get('top_level_category');
     }),
     options: Ember.computed('ticket_category_options.[]', 'categories_selected', function() {
-        return this.get('ticket_category_options') && this.get('ticket_category_options').get('length') > 0 ? this.get('ticket_category_options') : Ember.A([this.get('categories_selected')]);
+        if(this.get('ticket_category_options') && this.get('ticket_category_options').get('length') > 0) {
+            return this.get('ticket_category_options');
+        }else if(this.get('categories_selected')) {
+            return Ember.A([this.get('categories_selected')]);
+        }
+        return Ember.A([]);
+        //TODO: regression test the non "new" usage of this
     }),
     actions: {
         selected(category) {

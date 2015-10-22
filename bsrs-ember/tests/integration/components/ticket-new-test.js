@@ -115,3 +115,68 @@ test('on change will modify the underlying priority property on ticket', functio
     assert.equal($component.find('option:selected').val(), TICKET_DEFAULTS.priorityOneId);
     assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityOneId);
 });
+
+test('only one select is rendered when ticket has no categories (and no top level options yet resolved)', function(assert) {
+    let top_level_category_options = Ember.A([]);
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.unusedId});
+    this.set('model', ticket);
+    this.set('top_level_category_options', top_level_category_options);
+    this.render(hbs`{{tickets/ticket-new model=model top_level_category_options=top_level_category_options}}`);
+    let $component = this.$('select.t-ticket-category-select');
+    assert.equal(ticket.get('categories').get('length'), 0);
+    assert.equal($component.length, 1);
+    assert.equal($component.find('div.item').length, 0);
+    assert.equal($component.find('div.option').length, 0);
+});
+
+test('a second select will be rendred after top level category picked', function(assert) {
+    store.clear('category');
+    let onlyParents = function(category) {
+        return category.get('parent') === undefined;
+    };
+    let top_level_category_options = store.find('category', onlyParents, ['id']);
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.unusedId});
+    this.set('model', ticket);
+    this.set('top_level_category_options', top_level_category_options);
+    this.render(hbs`{{tickets/ticket-new model=model top_level_category_options=top_level_category_options}}`);
+    let $components = this.$('select.t-ticket-category-select');
+    let $component = this.$('select.t-ticket-category-select:eq(0)');
+    assert.equal($components.length, 1);
+    assert.equal($component.parent().find('div.item').length, 0);
+    assert.equal($component.parent().find('div.option').length, 0);
+    run(() => {
+        //route finished ajax of top level
+        store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, children_fks: [CATEGORY_DEFAULTS.idTwo], parent_id: null});
+        //this category is the child of unusedId and got serialized by same CategoryDeserializer (thus getting children_fks and parent_fks)
+        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameThree, children_fks: [CATEGORY_DEFAULTS.idThree], parent_id: CATEGORY_DEFAULTS.unusedId});
+    });
+    $components = this.$('select.t-ticket-category-select');
+    $component = this.$('select.t-ticket-category-select:eq(0)');
+    assert.equal($components.length, 1);
+    assert.equal($component.parent().find('div.item').length, 0);
+    assert.equal($component.parent().find('div.option').length, 1);
+    $component.parent().find('.selectize-input input').trigger('click');
+    run(() => {
+        $component.parent().find('div.option:eq(0)').trigger('click').trigger('change');
+    });
+    $components = this.$('select.t-ticket-category-select');
+    $component = this.$('select.t-ticket-category-select:eq(0)');
+    //Rendered Immediately
+    assert.equal($components.length, 2);
+    let $component_middle = this.$('select.t-ticket-category-select:eq(1)');
+    assert.equal($component_middle.length, 1);
+    assert.equal($component.parent().find('div.item').length, 1);
+    assert.equal($component.parent().find('div.option').length, 1);
+    assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.unusedId);
+    assert.equal(ticket.get('categories').get('length'), 1);
+    run(() => {
+        //pretend the ajax for (above) children are now resolved ... (because we selected unusedId-his parent object)
+        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, children_fks: [CATEGORY_DEFAULTS.idThree], parent_id: CATEGORY_DEFAULTS.unusedId}); });
+    $components = this.$('select.t-ticket-category-select');
+    assert.equal($components.length, 2);
+    //pick middle guy
+    // run(() => {
+    //     //preent the leaf node is ajax resolved
+    //     category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo});
+    // });
+});

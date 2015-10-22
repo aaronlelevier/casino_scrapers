@@ -32,6 +32,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
             let name = category.get('name');
             return name.toLowerCase().indexOf(search.toLowerCase()) > -1;
         };
+        //TODO: test case for filter on id
         return this.get('store').find('category', filterFunc, []);
     },
     findTopLevelCategories() {
@@ -39,6 +40,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
         PromiseMixin.xhr(url, 'GET').then((response) => {
             response.results.forEach(function(category) {
                 delete category.parent;
+                //TODO: parent is now ALWAYS in the list payload so ... maybe kill this @toranb
             });
             this.get('CategoryDeserializer').deserialize(response);
         });

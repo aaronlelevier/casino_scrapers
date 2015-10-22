@@ -39,6 +39,13 @@ var extract_requester = function(model, store, person_deserializer) {
     return requester_id;
 };
 
+var extract_assignee = function(assignee_json, store, person_deserializer, ticket_model) {
+    let assignee_id = assignee_json.id;
+    person_deserializer.deserialize(assignee_json, assignee_id);
+    ticket_model.change_assignee(assignee_id);
+    ticket_model.assignee_fk = assignee_id;
+};
+
 var extract_cc = function(model, store, uuid) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
@@ -106,7 +113,7 @@ var TicketDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         let person_deserializer = this.get('PersonDeserializer');
         if (typeof options === 'undefined') {
-            this.deserialize_list(response);
+            this.deserialize_list(response, person_deserializer);
         } else {
             this.deserialize_single(response, options, person_deserializer);
         }
@@ -121,11 +128,14 @@ var TicketDeserializer = Ember.Object.extend({
             response.ticket_people_fks = extract_cc(response, store, uuid);
             response.requester_id = extract_requester(response, store, person_deserializer);
             response.ticket_categories_fks = extract_categories(response, store, uuid);
+            let assignee_json = response.assignee;
+            delete response.assignee;
             let ticket = store.push('ticket', response);
+            extract_assignee(assignee_json, store, person_deserializer, ticket);
             ticket.save();
         }
     },
-    deserialize_list(response) {
+    deserialize_list(response, person_deserializer) {
         let uuid = this.get('uuid');
         let store = this.get('store');
         response.results.forEach((model) => {
@@ -134,7 +144,10 @@ var TicketDeserializer = Ember.Object.extend({
                 model.status_fk = extract_ticket_status(model, store);
                 model.priority_fk = extract_ticket_priority(model, store);
                 model.ticket_categories_fks = extract_categories(model, store, uuid);
+                let assignee_json = model.assignee;
+                delete model.assignee;
                 let ticket = store.push('ticket', model);
+                extract_assignee(assignee_json, store, person_deserializer, ticket);
                 ticket.save();
             }
         });

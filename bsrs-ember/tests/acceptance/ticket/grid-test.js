@@ -21,7 +21,7 @@ const BACKSPACE = {keyCode: 8};
 
 var application, store, endpoint, list_xhr;
 
-module('Acceptance | ticket-grid-list', {
+module('Acceptance | ticket grid test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

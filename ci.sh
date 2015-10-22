@@ -51,7 +51,7 @@ function pipInstall {
     echo "ENABLE SPECIFIC DJANGO SETTINGS FILE HERE B/C AFFECTS PIP INSTALL"
     export DJANGO_SETTINGS_MODULE='bigsky.settings.ci'
     rm -rf venv*
-    virtualenv -p /usr/local/bin/python3.3 venv
+    virtualenv -p /usr/local/bin/python3.4 venv
     source venv/bin/activate
     pip install -r requirements_ci.txt
     PIP_INSTALL=$?

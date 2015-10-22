@@ -1,15 +1,23 @@
 import Ember from 'ember';
 
-var extract_children = (children, store) => {
+var extract_tree = (model, store) => {
     let children_fks = [];
-    //SCOTT: need to think about recursive calls or one level deep and pushing categories in the store
+    let children = model.children;
     if (children) {
+        //need to deserialize children with children_fks_pk and parent_id
         children.forEach((child_model) => {
             children_fks.push(child_model.id);
             store.push('category', child_model);
         });
-        return children_fks;
     }
+    let parent_fk;
+    let parent = model.parent;
+    if (parent) {
+        parent_fk = parent;
+    }
+    delete model.parent;
+    delete model.children;
+    return [children_fks, parent_fk];
 };
 
 var CategoryDeserializer = Ember.Object.extend({
@@ -24,8 +32,7 @@ var CategoryDeserializer = Ember.Object.extend({
         let store = this.get('store');
         let existing_category = store.find('category', id);
         if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
-            response.children_fks = extract_children(response.children, store);
-            delete response.children;
+            [response.children_fks, response.parent_id] = extract_tree(response, store);
             let category = store.push('category', response);
             category.save();
         }
@@ -35,6 +42,7 @@ var CategoryDeserializer = Ember.Object.extend({
         response.results.forEach((model) => {
             let existing_category = store.find('category', model.id);
             if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
+                [model.children_fks, model.parent_id] = extract_tree(model, store);
                 let category = store.push('category', model);
                 category.save();
             }

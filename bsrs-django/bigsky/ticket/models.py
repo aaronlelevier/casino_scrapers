@@ -52,5 +52,5 @@ class Ticket(BaseModel):
     assignee = models.ForeignKey(Person, blank=True, null=True, related_name="person_ticket_assignee")
     request = models.TextField(max_length=100, null=True)
     categories = models.ManyToManyField(Category, blank=True)
-    location = models.ForeignKey(Location, null=True)
+    location = models.ForeignKey(Location)
     requester = models.ForeignKey(Person, blank=True, null=True, related_name="person_ticket_requester")

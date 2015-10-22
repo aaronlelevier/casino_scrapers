@@ -19,6 +19,7 @@ class CategoryListTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
+        self.top_level = Category.objects.get(name="repair")
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -33,6 +34,8 @@ class CategoryListTests(APITestCase):
         response = self.client.get('/api/admin/categories/')
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data['results']) > 0)
+        self.assertFalse(self.top_level.parent)
+        self.assertTrue(self.top_level.children)
 
 
 class CategoryDetailTests(APITestCase):

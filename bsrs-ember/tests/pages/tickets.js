@@ -21,6 +21,8 @@ var TicketPage = PageObject.build({
   clickSelectizeOption: clickable('.t-ticket-people-select div.option:eq(0)'),
   clickSameCategorySelectizeOption: clickable('.t-ticket-category-select div.option:eq(0)'),
   clickCategorySelectizeOption: clickable('.t-ticket-category-select div.option:eq(1)'),
+  clickCategoryNextSelectizeOption: clickable('.t-ticket-category-select:eq(1) div.option:eq(0)'),
+  clickCategoryNextNextSelectizeOption: clickable('.t-ticket-category-select:eq(2) div.option:eq(0)'),
   ticketPeopleSelected: count('.t-ticket-people-select > div.selectize-input > div.item'),
   ticketPeopleOptions: count('.t-ticket-people-select > div.selectize-dropdown-content > div.option'),
   removeTicketPeople: clickable('.t-ticket-people-select > div.selectize-input > div.item > a.remove:eq(0)'),
