@@ -56,11 +56,6 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "pip install failed"; exit $TEST; fi
 
 cd bigsky/
 
-wait
-echo "DJANGO - MIGRATE DATABASE SCHEMA"
-../venv/bin/python manage.py makemigrations accounting category contact generic location order person session third_party ticket translation utils
-TEST=$?; if [ "$TEST" == 1 ]; then echo "makemigrations failed"; exit $TEST; fi
-
 
 wait
 ../venv/bin/python manage.py migrate
