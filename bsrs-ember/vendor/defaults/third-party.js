@@ -4,9 +4,9 @@ var BSRS_THIRD_PARTY_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            idOne: '232z46cf-9fbb-456z-4hc3-59728vu309901',
-            idTwo: '232543cf-cfby-129a-3fc9-1t771c372509',
-            idThree: '232543cf-cfby-129a-3fc9-1t771c372510',
+            idOne: '132z46cf-9fbb-456z-4hc3-59728vu309901',
+            idTwo: '132543cf-cfby-129a-3fc9-1t771c372509',
+            idThree: '132543cf-cfby-129a-3fc9-1t771c372510',
             baseStoreName: 'ABC123',
             nameOne: 'ABC1231 Contractor',
             nameTwo: 'DEF456 Contractor',

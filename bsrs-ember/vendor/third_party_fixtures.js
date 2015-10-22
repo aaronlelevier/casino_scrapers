@@ -1,6 +1,6 @@
 var BSRS_THIRD_PARTY_FACTORY = (function() {
     var factory = function(third_party) {
-        this.third_party = third_party;
+        this.third_party = third_party.default || third_party;
     };
     // factory.prototype.get = function(i) {
     //     return {
@@ -20,6 +20,7 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
     };
     factory.prototype.list = function() {
         var response = [];
+        response.push(this.generate(this.third_party.idOne));
         for (var i=1; i <= 10; i++) {
             var uuid = '4cc31ebe-cad3-44ea-aa33-bbe8d456ed4d';
             if (i < 10) {
@@ -49,9 +50,9 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
     //     }
     //     return {'count':19,'next':null,'previous':null,'results': response};
     // };
-    // factory.prototype.detail = function(i) {
-    //     return this.generate(this.third_party.idOne);
-    // };
+    factory.prototype.detail = function(i) {
+        return this.generate(this.third_party.idOne);
+    };
     // factory.prototype.put = function(third_party) {
     //     var response = this.generate(third_party.id);
     //     response.third_party = this.third_party_fixtures.detail().id;
