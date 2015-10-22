@@ -22,6 +22,7 @@ var BSRS_TICKET_FACTORY = (function() {
             cc: [{id: this.people_defaults.id, fullname: this.people_defaults.fullname, email: this.people_defaults.emails, role: this.people_defaults.role}],
             categories: [parent_category, child_category],
             requester: this.people_fixtures.get(),
+            assignee: this.people_fixtures.get()
         }
     };
     factory.prototype.list = function() {
@@ -68,6 +69,7 @@ var BSRS_TICKET_FACTORY = (function() {
         var response = this.generate(ticket.id);
         response.cc = [response.cc[0].id];
         response.requester = response.requester.id;
+        // @toranb response.assignee = response.assignee.id;
         response.categories = response.categories.map(function(cat) { return cat.id; });
         delete response.number;
         for(var key in ticket) {

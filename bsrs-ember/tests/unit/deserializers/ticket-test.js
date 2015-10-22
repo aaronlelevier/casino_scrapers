@@ -39,7 +39,7 @@ test('ticket requester will be deserialized into its own store when deserialize 
     subject.deserialize(json, json.id);
     let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(ticket.get('requester.id'), PEOPLE_DEFAULTS.id);
+    assert.equal(ticket.get('requester').get('id'), PEOPLE_DEFAULTS.id);
 });
 
 test('ticket requester will be deserialized into its own store when deserialize detail is invoked (with existing requester)', (assert) => {
@@ -52,7 +52,55 @@ test('ticket requester will be deserialized into its own store when deserialize 
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
     subject.deserialize(json, json.id);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(ticket.get('requester.id'), PEOPLE_DEFAULTS.id);
+    assert.equal(ticket.get('requester').get('id'), PEOPLE_DEFAULTS.id);
+});
+
+test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with no existing assignee)(detail)', (assert) => {
+    let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    subject.deserialize(json, json.id);
+    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.id);
+});
+
+test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with existing assignee)(detail)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId, assignee_fk: PEOPLE_DEFAULTS.unusedId});
+    store.push('person', {id: PEOPLE_DEFAULTS.unusedId, assigned_tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.unusedId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    subject.deserialize(json, json.id);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.id);
+});
+
+test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with no existing assignee)(list)', (assert) => {
+    let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    subject.deserialize(response);
+    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.id);
+});
+
+test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with existing assignee)(list)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId, assignee_fk: PEOPLE_DEFAULTS.unusedId});
+    store.push('person', {id: PEOPLE_DEFAULTS.unusedId, assigned_tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.unusedId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    subject.deserialize(response);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.id);
 });
 
 test('ticket priority will be deserialized into its own store when deserialize list is invoked', (assert) => {
