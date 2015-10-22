@@ -186,7 +186,8 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, {
             priority: this.get('priority.id'),
             cc: this.get('cc_ids'),
             categories: this.get('categories_ids'),
-            requester: this.get('requester.id')
+            requester: this.get('requester.id'),
+            assignee: this.get('assignee.id')
         };
     },
     removeRecord() {

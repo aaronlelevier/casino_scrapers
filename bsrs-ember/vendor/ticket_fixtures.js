@@ -69,7 +69,7 @@ var BSRS_TICKET_FACTORY = (function() {
         var response = this.generate(ticket.id);
         response.cc = [response.cc[0].id];
         response.requester = response.requester.id;
-        // @toranb response.assignee = response.assignee.id;
+        response.assignee = response.assignee.id;
         response.categories = response.categories.map(function(cat) { return cat.id; });
         delete response.number;
         for(var key in ticket) {

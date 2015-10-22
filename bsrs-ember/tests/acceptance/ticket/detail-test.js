@@ -32,7 +32,7 @@ const SPACEBAR = {keyCode: 32};
 
 let application, store, endpoint, list_xhr, detail_xhr, detail_data, random_uuid;
 
-module('Acceptance | detail test', {
+module('Acceptance | ticket detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

@@ -13,7 +13,7 @@ const TICKET_URL = BASE_URL + '/index';
 
 let application;
 
-module('Acceptance | ticket-list', {
+module('Acceptance | ticket list test', {
     beforeEach() {
         application = startApp();
         let endpoint = PREFIX + BASE_URL + '/';

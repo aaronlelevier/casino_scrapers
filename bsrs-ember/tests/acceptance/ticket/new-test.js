@@ -23,7 +23,7 @@ const TICKET_POST_URL = PREFIX + BASE_URL + '/';
 
 let application, store, list_xhr;
 
-module('Acceptance | ticket-new', {
+module('Acceptance | ticket new test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
