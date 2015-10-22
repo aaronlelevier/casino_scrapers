@@ -16,6 +16,9 @@ def create_categories():
         trade = mommy.make(Category, name=name,
             subcategory_label='issue', parent=type)
 
+    type.children.add(trade)
+    type.save()
+
     for category in Category.objects.filter(subcategory_label='issue'):
         for i in range(random.randrange(2,7)):
             name = random_lorem(2)

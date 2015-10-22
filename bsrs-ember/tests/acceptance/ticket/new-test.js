@@ -12,6 +12,7 @@ import {ticket_payload, required_ticket_payload} from 'bsrs-ember/tests/helpers/
 import generalPage from 'bsrs-ember/tests/pages/general';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import selectize from 'bsrs-ember/tests/pages/selectize';
+import page from 'bsrs-ember/tests/pages/tickets-new';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -20,13 +21,13 @@ const TICKET_NEW_URL = BASE_URL + '/new';
 const TICKET_LIST_URL = PREFIX + BASE_URL + '/?page=1';
 const TICKET_POST_URL = PREFIX + BASE_URL + '/';
 
-let application, store;
+let application, store, list_xhr;
 
 module('Acceptance | ticket-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        xhr(TICKET_LIST_URL, 'GET', null, {}, 200, TICKET_FIXTURES.empty());
+        list_xhr = xhr(TICKET_LIST_URL, 'GET', null, {}, 200, TICKET_FIXTURES.empty());
         let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
         xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
     },
@@ -36,7 +37,7 @@ module('Acceptance | ticket-new', {
 });
 
 test('visiting ticket/new', (assert) => {
-    visit(TICKET_URL);
+    page.visit();
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
@@ -59,7 +60,7 @@ test('visiting ticket/new', (assert) => {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-    visit(TICKET_URL);
+    page.visit();
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
@@ -85,3 +86,16 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.equal(currentURL(), TICKET_URL);
     });
 });
+
+// test('selecting a top level category will alter the url', (assert) => {
+//     clearxhr(list_xhr);
+//     page.visitNew();
+//     andThen(() => {
+//         assert.equal(find('select.t-ticket-category-select').get('length'), 1);
+//     });
+//     page.clickCategorySelectizeOption();
+//     andThen(() => {
+//         assert.equal(store.find('ticket').get('length'), 1);
+//         assert.equal(find('select.t-ticket-category-select').get('length'), 2);
+//     });
+// });

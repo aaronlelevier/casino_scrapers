@@ -18,7 +18,7 @@ class TicketsViewSet(BaseModelViewSet):
         """
         if self.action == 'list':
             return ts.TicketListSerializer
-        elif self.action == ('create' or 'update' or 'partial_update'):
+        elif self.action in ('create', 'update', 'partial_update'):
             return ts.TicketCreateSerializer
         else:
             return ts.TicketSerializer

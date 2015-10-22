@@ -20,6 +20,8 @@ class TicketListTests(APITestCase):
         self.person = create_person()
         # Ticket
         create_tickets(assignee=self.person)
+        # Category
+        self.category_ids = [str(c.id) for c in Category.objects.all()]
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -41,6 +43,8 @@ class TicketListTests(APITestCase):
         self.assertEqual(assignee_person['last_name'], self.person.last_name)
         self.assertEqual(assignee_person['role'], str(self.person.role.id))
         self.assertEqual(assignee_person['title'], self.person.title)
+        categories = data['results'][0]['categories']
+        self.assertIn(categories[0]['id'], self.category_ids)
 
 
 class TicketDetailTests(APITestCase):
@@ -78,70 +82,64 @@ class TicketDetailTests(APITestCase):
         # self.assertTrue(data['requester']['id'])
 
 
-# class TicketUpdateTests(APITestCase):
+class TicketUpdateTests(APITestCase):
 
-#     def setUp(self):
-#         self.password = PASSWORD
-#         self.person = create_person()
-#         # Ticket
-#         create_tickets()
-#         self.ticket = Ticket.objects.first()
-#         # self.location = Location.objects.first()
-#         category = Category.objects.first()
-#         self.ticket.categories.add(category)
-#         # self.ticket.location.add(self.location)
-#         self.ticket.save()
-#         # Data
-#         serializer = TicketCreateSerializer(self.ticket)
-#         self.data = serializer.data
-#         # Login
-#         self.client.login(username=self.person.username, password=PASSWORD)
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+        # Ticket
+        create_tickets()
+        self.ticket = Ticket.objects.first()
+        # Data
+        serializer = TicketCreateSerializer(self.ticket)
+        self.data = serializer.data
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
 
-#     def tearDown(self):
-#         self.client.logout()
+    def tearDown(self):
+        self.client.logout()
 
-#     def test_no_change(self):
-#         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
-#             self.data, format='json')
-#         self.assertEqual(response.status_code, 200)
+    def test_no_change(self):
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 200)
 
-#     def test_change_name(self):
-#         self.data['subject'] = 'new subject name'
-#         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
-#             self.data, format='json')
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertNotEqual(self.ticket.subject, data['subject'])
+    def test_change_name(self):
+        self.data['subject'] = 'new subject name'
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertNotEqual(self.ticket.subject, data['subject'])
 
 
-# class TicketCreateTests(APITestCase):
+class TicketCreateTests(APITestCase):
 
-#     def setUp(self):
-#         self.password = PASSWORD
-#         self.person = create_person()
-#         # Ticket
-#         create_tickets()
-#         self.ticket = Ticket.objects.first()
-#         # Data
-#         serializer = TicketSerializer(self.ticket)
-#         self.data = serializer.data
-#         self.categories = Category.objects.all()
-#         # Login
-#         self.client.login(username=self.person.username, password=PASSWORD)
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+        # Ticket
+        create_tickets()
+        self.ticket = Ticket.objects.first()
+        # Data
+        serializer = TicketCreateSerializer(self.ticket)
+        self.data = serializer.data
+        self.categories = Category.objects.all()
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
 
-#     def tearDown(self):
-#         self.client.logout()
+    def tearDown(self):
+        self.client.logout()
 
-#     def test_create(self):
-#         self.data.update({
-#             'id': str(uuid.uuid4()),
-#             'number': random.randint(0, 1000),
-#             'subject': 'plumbing',
-#             'categories': [x.id for x in self.categories]
-#             })
-#         response = self.client.post('/api/tickets/', self.data, format='json')
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(response.status_code, 201)
-#         ticket = Ticket.objects.get(id=data['id'])
-#         self.assertIsInstance(ticket, Ticket)
-#         self.assertEqual(ticket.categories.count(), 2)
+    def test_create(self):
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'number': random.randint(0, 1000),
+            'subject': 'plumbing',
+            })
+        response = self.client.post('/api/tickets/', self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
+        ticket = Ticket.objects.get(id=data['id'])
+        self.assertIsInstance(ticket, Ticket)
+        self.assertEqual(ticket.categories.count(), 3)
