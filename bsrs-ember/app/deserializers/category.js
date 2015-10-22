@@ -4,7 +4,6 @@ var extract_tree = (model, store) => {
     let children_fks = [];
     let children = model.children;
     if (children) {
-        //need to deserialize children with children_fks_pk and parent_id
         children.forEach((child_model) => {
             children_fks.push(child_model.id);
             store.push('category', child_model);

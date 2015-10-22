@@ -21,6 +21,18 @@ class TicketTests(TestCase):
         ticket = Ticket.objects.all()
         self.assertEqual(ticket[0].assignee.id, person.id)
 
+    def test_create_tickets_with_optional_requester(self):
+        person = create_person()
+        factory.create_tickets(requester=person)
+        ticket = Ticket.objects.all()
+        self.assertEqual(ticket[0].requester.id, person.id)
+
+    def test_create_tickets_with_optional_cc(self):
+        person = create_person()
+        factory.create_tickets(cc=person)
+        ticket = Ticket.objects.all()
+        self.assertEqual(ticket[0].cc.first().id, person.id)
+
     def test_categories(self):
         factory.create_tickets()
         ticket = Ticket.objects.all()
