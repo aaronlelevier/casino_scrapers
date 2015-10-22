@@ -6,17 +6,19 @@ var extract_tree = (model, store) => {
     if (children) {
         children.forEach((child_model) => {
             children_fks.push(child_model.id);
+            delete child_model.parent;
+            child_model.parent_id = model.id;
             store.push('category', child_model);
         });
     }
-    let parent_fk;
+    let parent_id;
     let parent = model.parent;
     if (parent) {
-        parent_fk = parent;
+        parent_id = parent.id;
     }
     delete model.parent;
     delete model.children;
-    return [children_fks, parent_fk];
+    return [children_fks, parent_id];
 };
 
 var CategoryDeserializer = Ember.Object.extend({

@@ -87,15 +87,21 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-// test('selecting a top level category will alter the url', (assert) => {
+// test('sco selecting a top level category will alter the url', (assert) => {
 //     clearxhr(list_xhr);
 //     page.visitNew();
 //     andThen(() => {
+//         assert.equal(store.find('category').get('length'), 3);
+//         let tickets = store.find('ticket');
+//         assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
 //         assert.equal(find('select.t-ticket-category-select').get('length'), 1);
 //     });
 //     page.clickCategorySelectizeOption();
 //     andThen(() => {
 //         assert.equal(store.find('ticket').get('length'), 1);
+//         assert.equal(store.find('category').get('length'), 3);
+//         let tickets = store.find('ticket');
+//         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
 //         assert.equal(find('select.t-ticket-category-select').get('length'), 2);
 //     });
 // });

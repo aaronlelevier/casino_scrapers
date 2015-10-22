@@ -2,7 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
-var extract_categories = function(model, store, uuid) {
+var extract_categories = function(model, store, uuid, category_deserializer) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
     let all_ticket_categories = store.find('ticket-category');
@@ -14,9 +14,7 @@ var extract_categories = function(model, store, uuid) {
             let pk = uuid.v4();
             server_sum.push(pk);
             store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
-            category.parent_id = category.parent ? category.parent.id : null;
-            delete category.parent;
-            store.push('category', category);
+            category_deserializer.deserialize(category, category.id);
         }else{
             prevented_duplicate_m2m.push(ticket_categories[0].get('id'));
         }
@@ -110,15 +108,17 @@ var extract_ticket_status = function(model, store) {
 var TicketDeserializer = Ember.Object.extend({
     uuid: inject('uuid'),
     PersonDeserializer: injectDeserializer('person'),
+    CategoryDeserializer: injectDeserializer('category'),
     deserialize(response, options) {
         let person_deserializer = this.get('PersonDeserializer');
+        let category_deserializer = this.get('CategoryDeserializer');
         if (typeof options === 'undefined') {
-            this.deserialize_list(response, person_deserializer);
+            this.deserialize_list(response, person_deserializer, category_deserializer);
         } else {
-            this.deserialize_single(response, options, person_deserializer);
+            this.deserialize_single(response, options, person_deserializer, category_deserializer);
         }
     },
-    deserialize_single(response, id, person_deserializer) {
+    deserialize_single(response, id, person_deserializer, category_deserializer) {
         let uuid = this.get('uuid');
         let store = this.get('store');
         let existing_ticket = store.find('ticket', id);
@@ -127,7 +127,7 @@ var TicketDeserializer = Ember.Object.extend({
             response.priority_fk = extract_ticket_priority(response, store);
             response.ticket_people_fks = extract_cc(response, store, uuid);
             response.requester_id = extract_requester(response, store, person_deserializer);
-            response.ticket_categories_fks = extract_categories(response, store, uuid);
+            response.ticket_categories_fks = extract_categories(response, store, uuid, category_deserializer);
             let assignee_json = response.assignee;
             delete response.assignee;
             let ticket = store.push('ticket', response);
@@ -135,7 +135,7 @@ var TicketDeserializer = Ember.Object.extend({
             ticket.save();
         }
     },
-    deserialize_list(response, person_deserializer) {
+    deserialize_list(response, person_deserializer, category_deserializer) {
         let uuid = this.get('uuid');
         let store = this.get('store');
         response.results.forEach((model) => {
@@ -143,7 +143,7 @@ var TicketDeserializer = Ember.Object.extend({
             if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
                 model.status_fk = extract_ticket_status(model, store);
                 model.priority_fk = extract_ticket_priority(model, store);
-                model.ticket_categories_fks = extract_categories(model, store, uuid);
+                model.ticket_categories_fks = extract_categories(model, store, uuid, category_deserializer);
                 let assignee_json = model.assignee;
                 delete model.assignee;
                 let ticket = store.push('ticket', model);

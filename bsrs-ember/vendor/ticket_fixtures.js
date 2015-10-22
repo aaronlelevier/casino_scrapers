@@ -11,6 +11,8 @@ var BSRS_TICKET_FACTORY = (function() {
         var parent_category = this.category_fixtures.get(this.category_defaults.idOne, this.category_defaults.nameOne);
         var child_category = this.category_fixtures.get(this.category_defaults.unusedId, this.category_defaults.nameRepairChild);
         child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};
+        child_category.children = [];
+        parent_category.children = [{id: child_category.id, name: child_category.name}];
         parent_category.parent = null;
         return {
             id: id,

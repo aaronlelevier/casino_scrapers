@@ -38,7 +38,7 @@ var CategoryModel = Model.extend({
             }
             return false;
         };
-        return store.find('category', filter.bind(this), ['children_fks']);
+        return store.find('category', filter.bind(this), ['id']);
     }),
     parent: Ember.computed('parent_belongs_to.[]', function() {
         return this.get('parent_belongs_to').objectAt(0);

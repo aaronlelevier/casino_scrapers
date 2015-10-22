@@ -10,12 +10,13 @@ import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import TicketDeserializer from 'bsrs-ember/deserializers/ticket';
 import PersonDeserializer from 'bsrs-ember/deserializers/person';
+import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import random from 'bsrs-ember/models/random';
 
-let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer;
+let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer, category_deserializer;
 
 module('unit: ticket deserializer test', {
     beforeEach() {
@@ -25,7 +26,8 @@ module('unit: ticket deserializer test', {
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
         person_deserializer = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
-        subject = TicketDeserializer.create({store: store, uuid: uuid, PersonDeserializer: person_deserializer});
+        category_deserializer = CategoryDeserializer.create({store: store});
+        subject = TicketDeserializer.create({store: store, uuid: uuid, PersonDeserializer: person_deserializer, CategoryDeserializer: category_deserializer});
     },
     afterEach() {
         random.uuid = function() { return 'abc123'; };
@@ -375,10 +377,11 @@ test('ticket-category m2m is set up correctly using deserialize single (starting
     let original = store.find('ticket', TICKET_DEFAULTS.idOne);
     categories = original.get('categories');
     assert.equal(categories.get('length'), 2);
-    assert.equal(categories.objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
-    assert.equal(categories.objectAt(0).get('parent'), null);
-    assert.equal(categories.objectAt(1).get('parent').get('id'), CATEGORY_DEFAULTS.idOne);
-    assert.equal(categories.objectAt(1).get('parent').get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(categories.objectAt(0).get('parent').get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(1).get('parent'), null);
+    assert.equal(categories.objectAt(0).get('parent').get('name'), CATEGORY_DEFAULTS.nameOne);
     assert.equal(store.find('ticket-category').get('length'), 2);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
@@ -397,10 +400,10 @@ test('ticket-category m2m is set up correctly using deserialize list (starting w
     let original = store.find('ticket', TICKET_DEFAULTS.idOne);
     categories = original.get('categories');
     assert.equal(categories.get('length'), 2);
-    assert.equal(categories.objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
-    assert.equal(categories.objectAt(0).get('parent'), null);
-    assert.equal(categories.objectAt(1).get('parent').get('id'), CATEGORY_DEFAULTS.idOne);
-    assert.equal(categories.objectAt(1).get('parent').get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(categories.objectAt(1).get('parent'), null);
+    assert.equal(categories.objectAt(0).get('parent').get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(0).get('parent').get('name'), CATEGORY_DEFAULTS.nameOne);
     assert.equal(store.find('ticket-category').get('length'), 2);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));

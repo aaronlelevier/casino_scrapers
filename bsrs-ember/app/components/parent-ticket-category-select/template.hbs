@@ -1,4 +1,5 @@
 {{ticket-category-select ticket=ticket ticket_category_options=top_level_category_options}}
+
 {{#each ticket.categories as |category|}}
   {{#if category.children}}
     {{ticket-category-select ticket=ticket ticket_category_options=category.children}}
