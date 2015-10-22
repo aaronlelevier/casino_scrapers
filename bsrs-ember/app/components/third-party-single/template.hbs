@@ -1,0 +1,54 @@
+<form {{action "return false" this on="submit"}}>
+  {{base-component
+  model=model
+  save="save"
+  cancel="cancel"
+  delete="delete"
+  }}
+  <section class="docSection container-fluid">
+    <div class="row">
+      <div class="col-md-12">
+        <section style="padding-bottom: 0">
+          <div class="row card-title">
+            <h1 class="col-md-12">
+            {{model.name}}
+            {{#if model.number}}
+            ({{model.number}})
+            {{/if}}
+            </h1>
+          </div>
+        </section>
+      </div>
+      <div class="col-md-12">
+        <section>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.third-party.label.name" for="name"}}
+              {{input type="text" placeholder=(t "admin.third-party.label.name") value=model.name class="form-control t-third-party-name" id="third_party_name" required="required"}}
+              {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.third_party.label.name"}}{{/validation-error-field}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.third-party.label.number" for="number"}}
+              {{input type="text" placeholder=(t "admin.third-party.label.number") value=model.number class="form-control t-third-party-number" id="third_party_number" required="required"}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
+              {{#form-group title="admin.third-party.label.status" for="third_party_status"}}
+              <select class="t-third-party-status form-control third_party_status" onchange={{action (action "changedStatus" model) value="target.value"}} id="third_party_status">
+                {{#each all_statuses as |third_party_status|}}
+                <option value={{third_party_status.id}} selected={{is-equal model.third_party_status third_party_status.id}}>{{t third_party_status.name}}</option>
+                {{/each}}
+              </select>
+              {{/form-group}}
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </section>
+</form>
