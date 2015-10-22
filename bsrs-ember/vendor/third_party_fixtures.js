@@ -53,14 +53,14 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
     factory.prototype.detail = function(i) {
         return this.generate(this.third_party.idOne);
     };
-    // factory.prototype.put = function(third_party) {
-    //     var response = this.generate(third_party.id);
-    //     response.third_party = this.third_party_fixtures.detail().id;
-    //     for(var key in third_party) {
-    //         response[key] = third_party[key];
-    //     }
-    //     return response;
-    // };
+    factory.prototype.put = function(third_party) {
+        var response = this.generate(third_party.id);
+        // response.third_party = this.third_party_fixtures.detail().id;    // TODO: does this need to be 'third-pary'
+        for(var key in third_party) {
+            response[key] = third_party[key];
+        }
+        return response;
+    };
     return factory;
 })();
 
@@ -78,5 +78,3 @@ if (typeof window === 'undefined') {
         // return {default: Factory};
     });
 }
-
-

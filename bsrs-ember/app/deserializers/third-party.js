@@ -12,7 +12,7 @@ var ThirdPartyDeserializer = Ember.Object.extend({
         let store = this.get('store');
         let existing_third_party = store.find('third_party', id);
         if (!existing_third_party.get('id') || existing_third_party.get('isNotDirtyOrRelatedNotDirty')) {
-            let third_party = store.push('third_party', response);
+            let third_party = store.push('third-party', response);
             third_party.save();
         }
     },
