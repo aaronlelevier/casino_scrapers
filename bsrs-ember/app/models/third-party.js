@@ -1,13 +1,20 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
+import inject from 'bsrs-ember/utilities/store';
 
 var ThirdPartyModel = Model.extend({
+    store: inject('main'),
     name: attr(),
+    number: attr(),
+    status: attr(),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty');
     }),
     rollbackRelated() {
         // purposely left blank, no related objects
+    },
+    removeRecord() {
+        this.get('store').remove('third-party', this.get('id'));
     },
     serialize() {
         return {

@@ -153,6 +153,8 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.locationlevel.label.general':'General',
             'admin.locationlevel.label.childOrg':'Child Organization(s)',
             'admin.third_party.label.name':'Name',
+            'admin.third_party.label.number':'Number',
+            'admin.third_party.label.status':'Status',
             'validation.valid':'Valid',
             'validation.invalid':'Invalid'
           }

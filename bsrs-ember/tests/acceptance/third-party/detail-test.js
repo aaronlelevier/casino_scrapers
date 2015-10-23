@@ -17,7 +17,7 @@ const DETAIL_URL = BASE_URL + '/' + THIRD_PARTY_DEFAULTS.idOne;
 
 let application, store, endpoint, endpoint_detail, list_xhr, detail_xhr;
 
-module('aaron Acceptance | detail-test', {
+module('Acceptance | detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -43,6 +43,10 @@ test('clicking on a third party name will redirect them to the detail view', (as
     click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
+    });
+    generalPage.cancel();
+    andThen(() => {
+        assert.equal(currentURL(), LIST_URL);
     });
 });
 
@@ -84,15 +88,23 @@ test('visiting admin/third-parties detail and update all fields on the record', 
 test('admin/third-parties detail: when editing name to invalid, it checks for validation', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-third-party-name', '');
+    fillIn('.t-third-party-number', '');
+    fillIn('.t-third-party-status', '');
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
+        assert.equal(find('.t-number-validation-error').text().trim(), 'Invalid Number');
+        assert.equal(find('.t-status-validation-error').text().trim(), 'Invalid Status');
     });
     fillIn('.t-third-party-name', THIRD_PARTY_DEFAULTS.nameTwo);
+    fillIn('.t-third-party-number', THIRD_PARTY_DEFAULTS.numberTwo);
+    fillIn('.t-third-party-status', THIRD_PARTY_DEFAULTS.statusInactive);
     let response = THIRD_PARTY_FIXTURES.detail(THIRD_PARTY_DEFAULTS.idOne);
     let payload = THIRD_PARTY_FIXTURES.put({
-        name: THIRD_PARTY_DEFAULTS.nameTwo
+        name: THIRD_PARTY_DEFAULTS.nameTwo,
+        number: THIRD_PARTY_DEFAULTS.numberTwo,
+        status: THIRD_PARTY_DEFAULTS.statusInactive
     });
     xhr(endpoint_detail, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -100,22 +112,9 @@ test('admin/third-parties detail: when editing name to invalid, it checks for va
         assert.equal(currentURL(), LIST_URL);
         let third_party = store.find('third-party', THIRD_PARTY_DEFAULTS.idOne);
         assert.equal(third_party.get('name'), THIRD_PARTY_DEFAULTS.nameTwo);
+        assert.equal(third_party.get('number'), THIRD_PARTY_DEFAULTS.numberTwo);
+        assert.equal(third_party.get('status'), THIRD_PARTY_DEFAULTS.statusInactive);
         assert.ok(third_party.get('isNotDirty'));
-    });
-});
-
-test('clicking cancel button will take from detail view to list view', (assert) => {
-    visit(LIST_URL);
-    andThen(() => {
-        assert.equal(currentURL(), LIST_URL);
-    });
-    click('.t-grid-data:eq(0)');
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-    });
-    generalPage.cancel();
-    andThen(() => {
-        assert.equal(currentURL(), LIST_URL);
     });
 });
 

@@ -1,10 +1,10 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
+import NewMixin from 'bsrs-ember/mixins/components/tab/new';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var ThirdPartySingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
+var ThirdPartysNewComponent = Ember.Component.extend(TabMixin, NewMixin, ValidationMixin, {
     repository: inject('third-party'),
     nameValidation: validate('model.name'),
     numberValidation: validate('model.number'),
@@ -23,4 +23,4 @@ var ThirdPartySingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMix
     }
 });
 
-export default ThirdPartySingle;
+export default ThirdPartysNewComponent;

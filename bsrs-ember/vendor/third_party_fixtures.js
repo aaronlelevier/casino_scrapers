@@ -65,16 +65,18 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    // var objectAssign = require('object-assign');
-    // var mixin = require('../vendor/mixin');
+    var objectAssign = require('object-assign');
+    var mixin = require('../vendor/mixin');
     var third_party = require('../vendor/defaults/third-party');
-    // objectAssign(BSRS_THIRD_PARTY_FACTORY.prototype, mixin.prototype);
+    objectAssign(BSRS_THIRD_PARTY_FACTORY.prototype, mixin.prototype);
     module.exports = new BSRS_THIRD_PARTY_FACTORY(third_party);
 } else {
-    define('bsrs-ember/vendor/third_party_fixtures', ['exports', 'bsrs-ember/vendor/defaults/third-party'], function (exports, third_party) {
+    define('bsrs-ember/vendor/third_party_fixtures',
+        ['exports', 'bsrs-ember/vendor/defaults/third-party', 'bsrs-ember/vendor/mixin'],
+        function (exports, third_party, mixin) {
         'use strict';
-        // Object.assign(BSRS_THIRD_PARTY_FACTORY.prototype, mixin.prototype);
+        Object.assign(BSRS_THIRD_PARTY_FACTORY.prototype, mixin.prototype);
         return new BSRS_THIRD_PARTY_FACTORY(third_party);
-        // return {default: Factory};
+        return {default: Factory};
     });
 }
