@@ -1,22 +1,24 @@
 import Ember from 'ember';
 
-var extract_tree = (model, store) => {
+var extract_tree = function(model, store) {
     let children_fks = [];
     let children = model.children;
     if (children) {
         children.forEach((child_model) => {
             children_fks.push(child_model.id);
+            delete child_model.parent;
+            child_model.parent_id = model.id;
             store.push('category', child_model);
         });
     }
-    let parent_fk;
+    let parent_id;
     let parent = model.parent;
     if (parent) {
-        parent_fk = parent;
+        parent_id = parent.id;
     }
     delete model.parent;
     delete model.children;
-    return [children_fks, parent_fk];
+    return [children_fks, parent_id];
 };
 
 var CategoryDeserializer = Ember.Object.extend({
@@ -33,6 +35,8 @@ var CategoryDeserializer = Ember.Object.extend({
         if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
             [response.children_fks, response.parent_id] = extract_tree(response, store);
             let category = store.push('category', response);
+            //TODO: concat not to lose previous child fks
+            category.set('children_fks', response.children_fks);
             category.save();
         }
     },
@@ -43,6 +47,8 @@ var CategoryDeserializer = Ember.Object.extend({
             if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
                 [model.children_fks, model.parent_id] = extract_tree(model, store);
                 let category = store.push('category', model);
+                //TODO: concat not to lose previous child fks
+                category.set('children_fks', model.children_fks);
                 category.save();
             }
         });

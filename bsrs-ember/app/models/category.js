@@ -29,7 +29,7 @@ var CategoryModel = Model.extend({
             children: this.get('children_fks')
         };
     },
-    children: Ember.computed(function() {
+    children: Ember.computed('children_fks.[]', function() { //TODO: is this needed to break?
         let store = this.get('store');
         let filter = (category) => {
             let children_fks = this.get('children_fks') || [];
@@ -38,7 +38,7 @@ var CategoryModel = Model.extend({
             }
             return false;
         };
-        return store.find('category', filter.bind(this), ['children_fks']);
+        return store.find('category', filter.bind(this), ['id']);
     }),
     parent: Ember.computed('parent_belongs_to.[]', function() {
         return this.get('parent_belongs_to').objectAt(0);

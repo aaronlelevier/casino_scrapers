@@ -7,6 +7,7 @@ import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
 import repository from 'bsrs-ember/tests/helpers/repository';
+import random from 'bsrs-ember/models/random';
 
 let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, run = Ember.run, category_repo;
 
@@ -23,6 +24,10 @@ moduleForComponent('tickets/ticket-new', 'integration: ticket-new test', {
         category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo});
         category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId});
         category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null});
+        random.uuid = function() { return Ember.uuid(); };
+    },
+    afterEach() {
+        random.uuid = function() { return 'abc123'; };
     }
 });
 
@@ -131,11 +136,12 @@ test('only one select is rendered when ticket has no categories (and no top leve
 
 test('a second select will be rendred after top level category picked', function(assert) {
     store.clear('category');
+    store.clear('ticket-category');
     let onlyParents = function(category) {
         return category.get('parent') === undefined;
     };
     let top_level_category_options = store.find('category', onlyParents, ['id']);
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.unusedId});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
     this.set('model', ticket);
     this.set('top_level_category_options', top_level_category_options);
     this.render(hbs`{{tickets/ticket-new model=model top_level_category_options=top_level_category_options}}`);
@@ -146,22 +152,28 @@ test('a second select will be rendred after top level category picked', function
     assert.equal($component.parent().find('div.option').length, 0);
     run(() => {
         //route finished ajax of top level
-        store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, children_fks: [CATEGORY_DEFAULTS.idTwo], parent_id: null});
+        store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameOne, children_fks: [CATEGORY_DEFAULTS.idTwo], parent_id: null});
         //this category is the child of unusedId and got serialized by same CategoryDeserializer (thus getting children_fks and parent_fks)
-        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameThree, children_fks: [CATEGORY_DEFAULTS.idThree], parent_id: CATEGORY_DEFAULTS.unusedId});
+        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: CATEGORY_DEFAULTS.unusedId});
     });
     $components = this.$('select.t-ticket-category-select');
     $component = this.$('select.t-ticket-category-select:eq(0)');
     assert.equal($components.length, 1);
     assert.equal($component.parent().find('div.item').length, 0);
     assert.equal($component.parent().find('div.option').length, 1);
+
+    category_repo.findById = function() {
+        run(() => {
+            store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameOne, children_fks: [CATEGORY_DEFAULTS.idTwo], parent_id: null});
+            store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: CATEGORY_DEFAULTS.unusedId});
+        });
+    };
     $component.parent().find('.selectize-input input').trigger('click');
     run(() => {
         $component.parent().find('div.option:eq(0)').trigger('click').trigger('change');
     });
     $components = this.$('select.t-ticket-category-select');
     $component = this.$('select.t-ticket-category-select:eq(0)');
-    //Rendered Immediately
     assert.equal($components.length, 2);
     let $component_middle = this.$('select.t-ticket-category-select:eq(1)');
     assert.equal($component_middle.length, 1);
@@ -169,14 +181,19 @@ test('a second select will be rendred after top level category picked', function
     assert.equal($component.parent().find('div.option').length, 1);
     assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.unusedId);
     assert.equal(ticket.get('categories').get('length'), 1);
+
+    category_repo.findById = function() {
+        run(() => {
+            store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, children_fks: [CATEGORY_DEFAULTS.idOne], parent_id: CATEGORY_DEFAULTS.unusedId});
+            store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.namePlumbingChild, parent_id: CATEGORY_DEFAULTS.idTwo});
+        });
+    };
+
+    $component_middle.parent().find('.selectize-input input').trigger('click');
     run(() => {
-        //pretend the ajax for (above) children are now resolved ... (because we selected unusedId-his parent object)
-        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, children_fks: [CATEGORY_DEFAULTS.idThree], parent_id: CATEGORY_DEFAULTS.unusedId}); });
+        $component_middle.parent().find('div.option:eq(0)').trigger('click').trigger('change');
+    });
+
     $components = this.$('select.t-ticket-category-select');
-    assert.equal($components.length, 2);
-    //pick middle guy
-    // run(() => {
-    //     //preent the leaf node is ajax resolved
-    //     category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo});
-    // });
+    assert.equal($components.length, 3);
 });
