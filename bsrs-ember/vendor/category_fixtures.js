@@ -29,7 +29,11 @@ var BSRS_CATEGORY_FACTORY = (function() {
     },
     factory.prototype.top_level = function() {
         var parent_one = this.get(this.category_defaults.idOne);
-        var parent_two = this.get(this.category_defaults.idTwo, this.category_defaults.nameTwo);
+        parent_one.parent = null;
+        parent_one.children = [{id: this.category_defaults.idTwo, id: this.category_defaults.nameTwo}];
+        var parent_two = this.get(this.category_defaults.idThree, this.category_defaults.nameThree);
+        parent_two.parent = null;
+        parent_two.children = [];
         var response = [parent_one, parent_two];
         return {'count':2,'next':null,'previous':null,'results': response};
     },

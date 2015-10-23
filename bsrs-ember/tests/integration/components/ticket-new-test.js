@@ -134,7 +134,7 @@ test('only one select is rendered when ticket has no categories (and no top leve
     assert.equal($component.find('div.option').length, 0);
 });
 
-test('sco a second select will be rendred after top level category picked', function(assert) {
+test('a second select will be rendred after top level category picked', function(assert) {
     store.clear('category');
     store.clear('ticket-category');
     let onlyParents = function(category) {
@@ -161,18 +161,19 @@ test('sco a second select will be rendred after top level category picked', func
     assert.equal($components.length, 1);
     assert.equal($component.parent().find('div.item').length, 0);
     assert.equal($component.parent().find('div.option').length, 1);
+
+    category_repo.findById = function() {
+        run(() => {
+            store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameOne, children_fks: [CATEGORY_DEFAULTS.idTwo], parent_id: null});
+            store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: CATEGORY_DEFAULTS.unusedId});
+        });
+    };
     $component.parent().find('.selectize-input input').trigger('click');
     run(() => {
         $component.parent().find('div.option:eq(0)').trigger('click').trigger('change');
     });
     $components = this.$('select.t-ticket-category-select');
     $component = this.$('select.t-ticket-category-select:eq(0)');
-    //component will still fetch (unless we prevent it??) **still up for debate but if not thing else it prevents "special" attn for the top level
-    run(() => {
-        store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameOne, children_fks: [CATEGORY_DEFAULTS.idTwo], parent_id: null});
-        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: CATEGORY_DEFAULTS.unusedId});
-    });
-    //Rendered Immediately
     assert.equal($components.length, 2);
     let $component_middle = this.$('select.t-ticket-category-select:eq(1)');
     assert.equal($component_middle.length, 1);
@@ -181,18 +182,16 @@ test('sco a second select will be rendred after top level category picked', func
     assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.unusedId);
     assert.equal(ticket.get('categories').get('length'), 1);
 
+    category_repo.findById = function() {
+        run(() => {
+            store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, children_fks: [CATEGORY_DEFAULTS.idOne], parent_id: CATEGORY_DEFAULTS.unusedId});
+            store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.namePlumbingChild, parent_id: CATEGORY_DEFAULTS.idTwo});
+        });
+    };
+
     $component_middle.parent().find('.selectize-input input').trigger('click');
     run(() => {
         $component_middle.parent().find('div.option:eq(0)').trigger('click').trigger('change');
-    });
-    $components = this.$('select.t-ticket-category-select');
-    assert.equal($components.length, 2);
-
-    run(() => {
-        //instead ... django fetch category idTwo (deserializer single)
-        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, children_fks: [CATEGORY_DEFAULTS.idOne], parent_id: CATEGORY_DEFAULTS.unusedId});
-        //the leaf node is ajax resolved
-        store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.namePlumbingChild, parent_id: CATEGORY_DEFAULTS.idTwo});
     });
 
     $components = this.$('select.t-ticket-category-select');

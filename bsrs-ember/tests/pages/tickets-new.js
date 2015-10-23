@@ -12,7 +12,12 @@ const TICKET_NEW_URL = BASE_URL + '/new';
 var TicketPage = PageObject.build({
   visit: visitable(TICKETS_URL),
   visitNew: visitable(TICKET_NEW_URL),
-  clickCategorySelectizeOption: clickable('.t-ticket-category-select div.option:eq(1)'),
+  selectizeComponents: count('select.t-ticket-category-select'),
+  firstSelectizeComponent: clickable('select.t-ticket-category-select:eq(0)'),
+  secondSelectizeComponent: clickable('select.t-ticket-category-select:eq(1)'),
+  thirdSelectizeComponent: clickable('select.t-ticket-category-select:eq(2)'),
+  clickFirstSelectizeCategory: clickable('select.t-ticket-category-select:eq(0):parent:div.option:eq(0)'),
+  clickSecondSelectizeCategory: clickable('select.t-ticket-category-select:eq(1):parent:div.option:eq(0)')
 });
 
 export default TicketPage;
