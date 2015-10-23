@@ -6,6 +6,9 @@ var ThirdPartyModel = Model.extend({
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty');
     }),
+    rollbackRelated() {
+        // purposely left blank, no related objects
+    },
     serialize() {
         return {
             id: this.get('id'),
@@ -13,9 +16,6 @@ var ThirdPartyModel = Model.extend({
             number: this.get('number'),
             status: this.get('status')
         };
-    },
-    rollbackRelated() {
-        // purposely left blank, no related objects
     },
 });
 

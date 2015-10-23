@@ -46,7 +46,6 @@ test('clicking on a third party name will redirect them to the detail view', (as
     });
 });
 
-
 test('visiting admin/third-parties detail and update all fields on the record', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
