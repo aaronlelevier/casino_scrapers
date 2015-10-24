@@ -10,9 +10,12 @@ var BSRS_TICKET_FACTORY = (function() {
         var id = i || this.ticket.idOne;
         var parent_category = this.category_fixtures.get(this.category_defaults.idOne, this.category_defaults.nameOne);
         var child_category = this.category_fixtures.get(this.category_defaults.unusedId, this.category_defaults.nameRepairChild);
+        var unused_child_category = this.category_fixtures.get(this.category_defaults.idChild, this.category_defaults.nameUnused);
+        unused_child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};
         child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};
+        unused_child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};
         child_category.children = [];
-        parent_category.children = [{id: child_category.id, name: child_category.name}];
+        parent_category.children = [{id: child_category.id, name: child_category.name}, {id: unused_child_category.id, name: unused_child_category.name}];
         parent_category.parent = null;
         return {
             id: id,

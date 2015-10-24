@@ -69,11 +69,9 @@ var RoleModel = Model.extend({
         let m2m_to_throw_out = store.find('role-category', function(join_model) {
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
         }, ['id']);
-
         m2m_to_throw_out.forEach(function(join_model) {
             join_model.set('removed', true);
         });
-
         previous_m2m_fks.forEach(function(pk) {
             var m2m_to_keep = store.find('role-category', pk);
             if (m2m_to_keep.get('id')) {

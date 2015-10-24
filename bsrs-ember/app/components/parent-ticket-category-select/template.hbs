@@ -1,7 +1,7 @@
-{{ticket-category-select ticket=ticket ticket_category_options=top_level_category_options selected_category="selected_category"}}
+{{ticket-category-select ticket=ticket selection=ticket.top_level_category ticket_category_options=top_level_category_options selected_category="selected_category"}}
 
-{{#each ticket.categories as |category|}}
+{{#each ticket.categories as |category index|}}
   {{#if category.children}}
-    {{ticket-category-select ticket=ticket ticket_category_options=category.children selected_category="selected_category"}}
+  {{ticket-category-select ticket=ticket index=index ticket_category_options=category.children selected_category="selected_category"}}
   {{/if}}
 {{/each}}

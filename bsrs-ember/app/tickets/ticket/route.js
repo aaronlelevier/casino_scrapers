@@ -41,7 +41,7 @@ var TicketSingleRoute = TabRoute.extend({
         }
 
         let categoryRepo = this.get('categoryRepository');
-        let ticket_category_options = categoryRepo.findTopLevelCategories() || [];
+        let top_level_category_options = categoryRepo.findTopLevelCategories() || [];
 
         if (!ticket.get('length') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             ticket = repository.findById(pk);
@@ -53,7 +53,7 @@ var TicketSingleRoute = TabRoute.extend({
             search: search,
             search_category: search_category,
             ticket_cc_options: ticket_cc_options,
-            ticket_category_options: ticket_category_options,
+            top_level_category_options: top_level_category_options,
         });
     },
     setupController: function(controller, hash) {
@@ -63,7 +63,7 @@ var TicketSingleRoute = TabRoute.extend({
         controller.set('search', hash.search);
         controller.set('search_category', hash.search_category);
         controller.set('ticket_cc_options', hash.ticket_cc_options);
-        controller.set('ticket_category_options', hash.ticket_category_options);
+        controller.set('top_level_category_options', hash.top_level_category_options);
     },
 });
 

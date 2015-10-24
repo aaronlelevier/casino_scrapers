@@ -65,7 +65,7 @@ var CategoriesMixin = Ember.Mixin.create({
         let previous_m2m_fks = this.get('ticket_categories_fks') || [];
         let m2m_to_throw_out = store.find('ticket-category', function(join_model) {
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
-        }, ['removed']);
+        }, ['id']);
         m2m_to_throw_out.forEach(function(join_model) {
             join_model.set('removed', true);
         });
