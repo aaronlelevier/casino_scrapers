@@ -16,6 +16,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             nameRepairChild: 'admin.category.name.plumbing', 
             namePlumbingChild: 'admin.category.name.toilet_leak', 
             nameElectricalChild: 'admin.category.name.outlet', 
+            nameUnused: 'wat', 
             idNew: 'abc123',
             status: 'admin.category.status.active',
             descriptionRepair: 'Interior and Exterior Store Repair',
