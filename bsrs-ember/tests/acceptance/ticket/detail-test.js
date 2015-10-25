@@ -14,6 +14,7 @@ import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
+import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
@@ -570,3 +571,11 @@ test('selecting and removing a top level category will remove children categorie
     });
 });
 
+test('sco location component shows location for ticket and will fire off xhr to fetch locations on search', (assert) => {
+    clearxhr(list_xhr);
+    page.visitDetail();
+    andThen(() => {
+       assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idOne);
+    });
+    //not sure how to do search
+});
