@@ -10,6 +10,8 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
+import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
+import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import {ticket_payload, required_ticket_payload} from 'bsrs-ember/tests/helpers/payloads/ticket';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
@@ -24,8 +26,9 @@ const TICKET_URL = BASE_URL + '/index';
 const TICKET_NEW_URL = BASE_URL + '/new';
 const TICKET_LIST_URL = PREFIX + BASE_URL + '/?page=1';
 const TICKET_POST_URL = PREFIX + BASE_URL + '/';
+const NUMBER_6 = {keyCode: 54};
 
-let application, store, list_xhr;
+let application, store, list_xhr, location_xhr;
 
 module('Acceptance | ticket new test', {
     beforeEach() {
@@ -34,6 +37,11 @@ module('Acceptance | ticket new test', {
         list_xhr = xhr(TICKET_LIST_URL, 'GET', null, {}, 200, TICKET_FIXTURES.empty());
         let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
         xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
+        //Location
+        let locations = [LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idThree, LOCATION_DEFAULTS.storeNameFour), LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idTwo, LOCATION_DEFAULTS.storeNameTwo)];
+        let response = {'count':2,'next':null,'previous':null,'results': locations};
+        location_xhr = xhr(`${PREFIX}/admin/locations/&name__icontains=6`, 'GET', null, {}, 200, response);
+        let $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
     },
     afterEach() {
         random.uuid = function() { return 'abc123'; };
@@ -52,6 +60,14 @@ test('visiting ticket/new', (assert) => {
     fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectOne);
     fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
     fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
+    let $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${$first_component} > .selectize-input`);
+    fillIn(`${$first_component} > .selectize-input input`, '6');
+    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    andThen(() => {
+        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 2);
+    });
+    click(`${$first_component} > .selectize-dropdown div.option:eq(1)`);
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(ticket_payload), {}, 201, Ember.$.extend(true, {}, ticket_payload));
     generalPage.save();
     andThen(() => {
@@ -85,6 +101,11 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-priority-validation-error').is(':visible'));
     });
     fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
+    let $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${$first_component} > .selectize-input`);
+    fillIn(`${$first_component} > .selectize-input input`, '6');
+    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    click(`${$first_component} > .selectize-dropdown div.option:eq(1)`);
     generalPage.save();
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     andThen(() => {
@@ -93,6 +114,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 });
 
 test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+    clearxhr(location_xhr);
     random.uuid = function() { return Ember.uuid(); };
     page.visitNew();
     andThen(() => {
@@ -181,6 +203,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
 test('selecting and removing a top level category will remove children categories already selected', (assert) => {
     random.uuid = function() { return Ember.uuid(); };
     clearxhr(list_xhr);
+    clearxhr(location_xhr);
     page.visitNew();
     andThen(() => {
         let components = page.selectizeComponents();
@@ -258,4 +281,36 @@ test('selecting and removing a top level category will remove children categorie
         assert.equal(components, 1);
     });
 });
-
+test('location new component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
+    page.visitNew();
+    let $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${$first_component} > .selectize-input`);
+    fillIn(`${$first_component} > .selectize-input input`, '6');
+    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    andThen(() => {
+        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 2);
+    });
+    click(`${$first_component} > .selectize-dropdown div.option:eq(1)`);
+    andThen(() => {
+       assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idTwo);
+       let ticket = store.find('ticket');
+       assert.equal(ticket.objectAt(0).get('location.id'), LOCATION_DEFAULTS.idTwo);
+       assert.equal(ticket.objectAt(0).get('location_fk'), undefined);
+       assert.ok(ticket.objectAt(0).get('isDirtyOrRelatedDirty'));
+    });
+    fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectOne);
+    fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
+    fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
+    xhr(TICKET_POST_URL, 'POST', JSON.stringify(ticket_payload), {}, 201, Ember.$.extend(true, {}, ticket_payload));
+    generalPage.save();
+    andThen(() => {
+       assert.equal(currentURL(), TICKET_URL);
+        assert.equal(store.find('ticket').get('length'), 1);
+        let persisted = store.find('ticket', UUID.value);
+        assert.equal(persisted.get('subject'), TICKET_DEFAULTS.subjectOne);
+        assert.equal(persisted.get('status.id'), TICKET_DEFAULTS.statusOneId);
+        assert.equal(persisted.get('location.id'), LOCATION_DEFAULTS.idTwo);
+        assert.equal(persisted.get('location_fk'), LOCATION_DEFAULTS.idTwo);
+        assert.ok(persisted.get('isNotDirty'));
+    });
+});
