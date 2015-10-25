@@ -10,6 +10,7 @@ import config from 'bsrs-ember/config/environment';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
+import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
@@ -29,7 +30,9 @@ const LETTER_A = {keyCode: 65};
 const LETTER_R = {keyCode: 82};
 const LETTER_M = {keyCode: 77};
 const LETTER_S = {keyCode: 83};
+const NUMBER_6 = {keyCode: 54};
 const SPACEBAR = {keyCode: 32};
+const BACKSPACE = {keyCode: 8};
 
 let application, store, endpoint, list_xhr, detail_xhr, detail_data, random_uuid;
 
@@ -559,7 +562,7 @@ test('selecting and removing a top level category will remove children categorie
     //change top level
     let category_reselect = {id: CATEGORY_DEFAULTS.idThree, name: CATEGORY_DEFAULTS.nameThree, parent: null};
     xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idThree}/`, 'GET', null, {}, 200, category_reselect);
-    let $first_component = 'select.t-ticket-category-select:eq(0) + .selectize-control:eq(0)';
+    let $first_component = 'select.t-ticket-category-select:eq(0) + .selectize-control';
     click(`${$first_component} > .selectize-dropdown div.option:eq(1)`);
     andThen(() => {
         let components = page.selectizeComponents();
@@ -571,11 +574,43 @@ test('selecting and removing a top level category will remove children categorie
     });
 });
 
-test('sco location component shows location for ticket and will fire off xhr to fetch locations on search', (assert) => {
-    clearxhr(list_xhr);
+test('location component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
     page.visitDetail();
     andThen(() => {
        assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idOne);
+       let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+       assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
+       assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
+       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
-    //not sure how to do search
+    let locations = [LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idThree, LOCATION_DEFAULTS.storeNameFour), LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idTwo, LOCATION_DEFAULTS.storeNameTwo)];
+    let response = {'count':2,'next':null,'previous':null,'results': locations};
+    xhr(`${PREFIX}/admin/locations/&name__icontains=6`, 'GET', null, {}, 200, response);
+    let $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${$first_component} > .selectize-input`);
+    triggerEvent(`${$first_component} > .selectize-input input`, 'keydown', BACKSPACE);
+    fillIn(`${$first_component} > .selectize-input input`, '6');
+    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    andThen(() => {
+        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 2);
+    });
+    click(`${$first_component} > .selectize-dropdown div.option:eq(1)`);
+    andThen(() => {
+       assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idTwo);
+       let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+       assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
+       assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
+       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response_put = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    response_put.location = {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo};
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, location: LOCATION_DEFAULTS.idTwo});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response_put);
+    generalPage.save();
+    andThen(() => {
+       assert.equal(currentURL(), TICKETS_URL);
+       let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    });
 });

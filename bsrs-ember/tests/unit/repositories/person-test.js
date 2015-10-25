@@ -4,7 +4,6 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PeopleRepository from 'bsrs-ember/repositories/person';
-import PersonDeserializer from 'bsrs-ember/deserializers/person';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
 var store, original_xhr;
