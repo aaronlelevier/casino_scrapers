@@ -19,7 +19,13 @@ class TicketStatus(BaseModel):
 
     objects = TicketStatusManager()
 
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'name': self.name
+        }
 
+        
 class TicketPriorityManager(BaseManager):
 
     def default(self):
@@ -32,7 +38,13 @@ class TicketPriority(BaseModel):
 
     objects = TicketPriorityManager()
 
+    def to_dict(self):
+        return {
+            'id': str(self.id),
+            'name': self.name
+        }
 
+        
 class Ticket(BaseModel):
     '''
     Ticket model with auto incrementing number field
