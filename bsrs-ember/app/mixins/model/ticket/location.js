@@ -1,6 +1,6 @@
 import Ember from 'ember';
 
-var LocationMixin = Ember.Mixin.create({
+var TicketLocationMixin = Ember.Mixin.create({
     location: Ember.computed('belongs_to_location.[]', function() {
         let belongs_to_location = this.get('belongs_to_location');
         return belongs_to_location.objectAt(0);
@@ -41,6 +41,4 @@ var LocationMixin = Ember.Mixin.create({
     },
 });
 
-export default LocationMixin;
-
-
+export default TicketLocationMixin;
