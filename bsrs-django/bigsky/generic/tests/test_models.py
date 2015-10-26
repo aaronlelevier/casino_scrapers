@@ -120,15 +120,15 @@ class AttachmentModelTests(TestCase):
                         file=_file
                     )
 
-    # def test_upload_image(self):
-    #     with open(self.image) as infile:
-    #         _file = SimpleUploadedFile(self.image_filename, infile.read())
-    #         attachment = Attachment.objects.create(
-    #             model_id=self.model.id,
-    #             file=_file
-    #         )
-    #         self.assertTrue(attachment.is_image)
-    #         self.assertTrue(attachment.image_full)
+    def test_upload_image(self):
+        with open(self.image) as infile:
+            _file = SimpleUploadedFile(self.image_filename, infile.read())
+            attachment = Attachment.objects.create(
+                model_id=self.model.id,
+                file=_file
+            )
+            self.assertTrue(attachment.is_image)
+            self.assertTrue(attachment.image_full)
 
     def test_upload_file(self):
         with open(self.file) as infile:
