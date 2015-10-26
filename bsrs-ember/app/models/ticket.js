@@ -157,7 +157,7 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         let new_status_tickets = new_status.get('tickets') || [];
         new_status.set('tickets', new_status_tickets.concat(ticket_id));
     },
-    change_assignee: function(new_assignee_id) {
+    remove_assignee: function() {
         let ticket_id = this.get('id');
         let store = this.get('store');
         let old_assignee = this.get('assignee');
@@ -168,6 +168,11 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
             });
             old_assignee.set('assigned_tickets', updated_old_assignee_tickets);
         }
+    },
+    change_assignee: function(new_assignee_id) {
+        let ticket_id = this.get('id');
+        let store = this.get('store');
+        this.remove_assignee();
         let new_assignee = store.find('person', new_assignee_id);
         let new_assignee_tickets = new_assignee.get('assigned_tickets') || [];
         new_assignee.set('assigned_tickets', new_assignee_tickets.concat(ticket_id));

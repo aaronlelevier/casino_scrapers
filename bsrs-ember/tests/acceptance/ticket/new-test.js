@@ -326,6 +326,34 @@ test('shows assignee for ticket and will fire off xhr to fetch assignee(persons)
     });
 });
 
+test('when hit backspace should remove person from assignee', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(location_xhr);
+    page.visitNew();
+    people_xhr = xhr(`${PREFIX}/admin/people/?search=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
+    let $assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+    click(`${$assignee_component} > .selectize-input`);
+    fillIn(`${$assignee_component} > .selectize-input input`, 'b');
+    triggerEvent(`${$assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
+    click(`${$assignee_component} > .selectize-dropdown div.option:eq(1)`);
+    andThen(() => {
+       assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
+       let ticket = store.findOne('ticket');
+       assert.ok(ticket.get('assignee'));
+       assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
+       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    $assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+    click(`${$assignee_component} > .selectize-input`);
+    fillIn(`${$assignee_component} > .selectize-input input`, '');
+    triggerEvent(`${$assignee_component} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+       let ticket = store.findOne('ticket');
+       assert.ok(!ticket.get('assignee'));
+       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
 test('all required fields persist correctly when the user submits a new ticket form', (assert) => {
     page.visit();
     click('.t-add-new');
