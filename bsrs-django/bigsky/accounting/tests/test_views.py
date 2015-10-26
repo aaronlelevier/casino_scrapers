@@ -33,11 +33,15 @@ class CurrencyTests(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_create(self):
+        code = 'jpy'
         self.data.update({
-            'id': str(uuid.uuid4())
+            'id': str(uuid.uuid4()),
+            'code': code
             })
         response = self.client.post('/api/admin/currencies/', self.data, format='json')
         self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['code'], code.upper())
 
     def test_create_duplicate(self):
         """
@@ -46,4 +50,5 @@ class CurrencyTests(APITestCase):
         ``util.views.BaseModelViewSet.create`` overriden for this behavior.
         """
         response = self.client.post('/api/admin/currencies/', self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 400)

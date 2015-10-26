@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.text import capfirst
 
+from utils.fields import UpperCaseCharField
 from utils.models import BaseModel, BaseManager
 
 
@@ -16,7 +17,7 @@ class Currency(BaseModel):
     "Accepted Currencies"
     name = models.CharField(max_length=50, help_text="US Dollar")
     name_plural = models.CharField(max_length=50, help_text="US Dollars", blank=True)
-    code = models.CharField(max_length=3, help_text="USD")
+    code = UpperCaseCharField(max_length=3, unique=True, help_text="i.e. USD, JPY, etc...")
     symbol = models.CharField(max_length=10, help_text="$")
     symbol_native = models.CharField(max_length=10, help_text="$", blank=True)
     decimal_digits = models.IntegerField(blank=True, default=0)
@@ -25,7 +26,6 @@ class Currency(BaseModel):
     objects = CurrencyManager()
 
     class Meta:
-        ordering = ('id',)
         verbose_name_plural = "Currencies"
 
     def save(self, *args, **kwargs):
@@ -33,7 +33,6 @@ class Currency(BaseModel):
         super(Currency, self).save(*args, **kwargs)
 
     def _update_defaults(self):
-        self.code = self.code.upper()
         if not self.name_plural:
             self.name_plural = capfirst(self.name+'s')
         if not self.symbol_native:
