@@ -85,8 +85,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
             delete person.locations;
             delete person.phone_numbers;
             delete person.addresses;
-            // delete person.role.location_level;
-            // delete person.role.role_type;
             person.username = 'scott' + i;
             person.first_name = 'Scott' + i;
             person.last_name = 'Newcomer' + i;
@@ -117,6 +115,31 @@ var BSRS_PEOPLE_FACTORY = (function() {
             response[key] = person[key];
         }
         return response;
+    };
+    factory.prototype.search = function() {
+        var response = [];
+        for (var i=1; i <= 10; i++) {
+            var uuid = '249543cf-8fea-426a-8bc3-09778cd780';
+            if (i < 10) {
+                uuid = uuid + '0' + i;
+            } else{
+                uuid = uuid + i;
+            }
+            var person = this.generate(uuid);
+            delete person.locations;
+            delete person.phone_numbers;
+            delete person.addresses;
+            person.username = 'boy' + i;
+            person.first_name = 'Boy' + i;
+            person.last_name = 'Man' + i;
+            person.title = i + ' Mob Boss';
+            response.push(person);
+        }
+        //we do a reverse order sort here to verify a real sort occurs in the component
+        var sorted = response.sort(function(a,b) {
+            return b.id - a.id;
+        });
+        return {'count':10,'next':null,'previous':null,'results': sorted};
     };
     return factory;
 })();

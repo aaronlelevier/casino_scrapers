@@ -27,7 +27,10 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
     factory.prototype.defaults = function() {
         return {
             id: BSRS_PERSON_ID,
+            idOne: BSRS_PERSON_ID,
             idTwo: '8b881d03-ac0b-4e4c-9d30-8a1d3d7d0783',
+            idThree: '8b881d03-ac0b-4e4c-9d30-8a1d3d7d0784',
+            idSearch: '249543cf-8fea-426a-8bc3-09778cd78002',
             username: BSRS_PERSON_USERNAME,
             password: BSRS_PERSON_PASSWORD,
             emails: BSRS_PERSON_EMAIL,
@@ -50,7 +53,20 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             locale2_id: '51905ba8-024f-4739-ae5c-2d90ffc3f726',
             unusedId: BSRS_PERSON_UNUSED_ID,
             anotherId: '8aef1a27-f1c5-4721-83c0-9f1fceabd263',
-            sorted_username: BSRS_PERSON_SORTED_USERNAME
+            sorted_username: BSRS_PERSON_SORTED_USERNAME,
+
+            nameOne: 'wanker',
+            nameTwo: 'bonker',
+            nameThree: 'tommy',
+            titleOne: 'Pres',
+            titleTwo: 'Vice Pres',
+            titleThree: 'Manager',
+            usernameOne: 'snewco',
+            usernameTwo: 'tbillups',
+            usernameThree: 'alevier',
+            emailOne: 'snewco@gmail.com',
+            emailTwo: 'tbillups@gmail.com',
+            emailThree: 'alevier@aol.com',
         };
     };
     return factory;
