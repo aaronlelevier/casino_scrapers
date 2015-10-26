@@ -30,4 +30,3 @@ class UpperCaseCharField(models.CharField):
             return value
         else:
             return super(UpperCaseCharField, self).pre_save(model_instance, add)
-

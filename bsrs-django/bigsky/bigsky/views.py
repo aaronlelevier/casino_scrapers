@@ -99,9 +99,6 @@ def handler404(request):
         context_instance=RequestContext(request))
     response.status_code = 404
     return response
-    # return HttpResponse(content='error/404.html',
-    #     content_type='text/html; charset=utf-8', status=404)
-
 
 
 def handler500(request):

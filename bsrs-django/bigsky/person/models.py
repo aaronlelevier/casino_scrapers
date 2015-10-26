@@ -3,6 +3,7 @@ import json
 from datetime import timedelta
 
 from django.db import models, IntegrityError
+from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.utils import timezone
@@ -260,7 +261,7 @@ class Person(BaseModel, AbstractUser):
         help_text="Tuple of (datetime of PW change, old PW)")
     password_history = ArrayField(
         models.CharField(max_length=254),
-        blank=True, default=[])
+        blank=True, default=[], size=settings.MAX_PASSWORDS_STORED)
     # Out-of-the-Office
     proxy_status = models.CharField("Out of the Office Status", max_length=100,
                                     blank=True, null=True)

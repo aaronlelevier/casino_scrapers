@@ -65,3 +65,5 @@ class EmailViewSet(BaseModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = EmailSerializer
     queryset = Email.objects.all()
+    model = Email
+    filter_fields = [f.name for f in model._meta.get_fields()]

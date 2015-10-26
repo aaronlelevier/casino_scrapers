@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.test import TestCase
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
 from django.core.exceptions import ValidationError
 
@@ -12,6 +13,7 @@ from person.models import Person, PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_role
 from translation.models import Locale, Translation
 from translation.tests.factory import create_locales
+from utils import create
 
 
 ### ROLE
@@ -27,9 +29,17 @@ class RoleTests(TestCase):
     def test_name(self):
         self.assertEqual(self.role.group.name, self.role.name)
 
-    def test_to_dict(self):
-        self.assertEqual(self.role.to_dict()["location_level"], str(self.role.location_level.id))
-        self.assertEqual(self.role.to_dict()["categories"][0]["id"], str(self.role.categories.first().id))
+    def test_to_dict_location_level (self):
+        self.assertEqual(
+            self.role.to_dict()["location_level"],
+            str(self.role.location_level.id)
+        )
+
+    def test_to_dict_categories(self):
+        self.assertIn(
+            self.role.to_dict()["categories"][0]["id"],
+            [str(x) for x in self.role.categories.values_list('id', flat=True)]
+        )
 
     def test_update_password_history_length(self):
         self.assertFalse(self.role.password_history_length)
@@ -241,3 +251,11 @@ class PersonPasswordHistoryTests(TestCase):
         with self.assertRaises(ValidationError):
             self.person.set_password('new')
         self.assertEqual(len(self.person.password_history), 2)
+
+    def test_max_passwords_stored(self):
+        self.person.password_history.append([x for x in range(settings.MAX_PASSWORDS_STORED+1)])
+        self.person.save()
+        self.assertEqual(
+            len(self.person.password_history),
+            settings.MAX_PASSWORDS_STORED 
+        )

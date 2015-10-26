@@ -127,7 +127,6 @@ class SelfRefrencingBaseModel(models.Model):
     objects = SelfRefrencingManager()
 
     class Meta:
-        ordering = ('id',)
         abstract = True
 
 
