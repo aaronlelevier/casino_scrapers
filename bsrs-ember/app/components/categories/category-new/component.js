@@ -1,10 +1,10 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import NewMixin from 'bsrs-ember/mixins/components/tab/new';
+import NewTabMixin from 'bsrs-ember/mixins/components/tab/new';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var CategoryNewComponent = Ember.Component.extend(TabMixin, NewMixin, ValidationMixin, {
+var CategoryNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, ValidationMixin, {
     repository: inject('category'),
     nameValidation: validate('model.name'),
     descriptionValidation: validate('model.description'),

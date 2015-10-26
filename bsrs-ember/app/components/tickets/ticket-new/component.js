@@ -1,13 +1,15 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import NewMixin from 'bsrs-ember/mixins/components/tab/new';
+import NewTabMixin from 'bsrs-ember/mixins/components/tab/new';
 import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 
-var TicketNewComponent = Ember.Component.extend(TabMixin, NewMixin, ValidationMixin, {
+var TicketNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, ValidationMixin, {
     repository: inject('ticket'),
     statusValidation: validate('model.status'),
     priorityValidation: validate('model.priority'),
+    assigneeValidation: validate('model.assignee'),
+    locationValidation: validate('model.location'),
     actions: {
         changed_status: function(new_status_id) {
             let ticket = this.get('model');

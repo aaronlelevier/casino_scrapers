@@ -1,0 +1,13 @@
+{{ember-selectize
+  required=true
+  content=options
+  optionValuePath="content.id"
+  optionLabelPath="content.first_name"
+  select-item="selected"
+  selection=assignee_selected
+  class="t-ticket-assignee-select"
+  placeholder="select new assignee"
+  update-filter="update_filter"
+  filter=search_criteria
+}}
+
