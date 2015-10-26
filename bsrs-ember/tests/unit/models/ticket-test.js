@@ -3,6 +3,7 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
 import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
@@ -12,7 +13,7 @@ var store, uuid;
 
 module('unit: ticket test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:ticket-person', 'model:ticket-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:ticket-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
         random.uuid = function() { return Ember.uuid(); };
     },
     afterEach() {
@@ -742,6 +743,7 @@ test('ticket_categories_ids computed returns a flat list of ids for each categor
 });
 /*END TICKET CATEGORY M2M*/
 
+/*TICKET to PRIORITY*/
 test('priority property returns associated object or undefined', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
     store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
@@ -817,6 +819,79 @@ test('rollback priority will revert and reboot the dirty priority to clean', (as
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+/*TICKET to REQUESTER*/
+test('requester property returns associated object or undefined', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let requester = ticket.get('requester');
+    let requester_id = ticket.get('requester_id');
+    assert.equal(requester, undefined);
+    assert.equal(requester_id, undefined);
+});
+
+test('requester can be added starting with no requester', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    store.push('person', {id: PEOPLE_DEFAULTS.id});
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_requester(PEOPLE_DEFAULTS.id);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('requester can be updated with new name and is dirty tracked with _oldState', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, requester_id: PEOPLE_DEFAULTS.id});
+    store.push('person', {id: PEOPLE_DEFAULTS.id});
+    store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_requester(PEOPLE_DEFAULTS.idTwo);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('requester can be updated multiple times with new name and is dirty tracked with _oldState', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, requester_id: PEOPLE_DEFAULTS.id});
+    store.push('person', {id: PEOPLE_DEFAULTS.id});
+    store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_requester(PEOPLE_DEFAULTS.idTwo);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.change_requester(PEOPLE_DEFAULTS.id);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('requester can be updated and saved', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, requester_id: PEOPLE_DEFAULTS.id});
+    store.push('person', {id: PEOPLE_DEFAULTS.id});
+    store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_requester(PEOPLE_DEFAULTS.idTwo);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.save();
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('requester can be saved as undefined', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, requester_id: PEOPLE_DEFAULTS.id});
+    store.push('person', {id: PEOPLE_DEFAULTS.id});
+    store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_requester();
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.save();
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('requester_id', undefined));
+});
+
+test('requester can be updated and rolled back', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, requester_id: PEOPLE_DEFAULTS.id});
+    store.push('person', {id: PEOPLE_DEFAULTS.id});
+    store.push('person', {id: PEOPLE_DEFAULTS.idTwo});
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_requester(PEOPLE_DEFAULTS.idTwo);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollback();
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('requester_id'), PEOPLE_DEFAULTS.id);
+});
+
+/*TICKET to ASSIGNEE*/
 test('assignee property returns associated object or undefined', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
     store.push('person', {id: TICKET_DEFAULTS.assigneeOneId, name: TICKET_DEFAULTS.assigneeOne, assigned_tickets: [TICKET_DEFAULTS.idOne]});
@@ -889,5 +964,78 @@ test('rollback assignee will revert and reboot the dirty assignee to clean', (as
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     ticket.saveRelated();
     assert.equal(ticket.get('assignee.id'), TICKET_DEFAULTS.assigneeTwoId);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+/*TICKET to LOCATION*/
+test('location property returns associated object or undefined', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, location_fk: LOCATION_DEFAULTS.idOne});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne});
+    assert.equal(location.get('id'), LOCATION_DEFAULTS.idOne);
+});
+
+test('change_location will append the ticket id to the new location tickets array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne});
+    let location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo});
+    ticket.change_location(LOCATION_DEFAULTS.idTwo);
+    assert.deepEqual(location.get('tickets'), []);
+    assert.deepEqual(location_two.get('tickets'), [TICKET_DEFAULTS.idOne]);
+});
+
+test('change_location will remove the ticket id from the prev location tickets array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, tickets: [9, TICKET_DEFAULTS.idOne]});
+    store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, tickets: []});
+    ticket.change_location(LOCATION_DEFAULTS.idTwo);
+    assert.deepEqual(location.get('tickets'), [9]);
+});
+
+test('location will save correctly as undefined', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, location_fk: undefined});
+    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, tickets: []});
+    ticket.saveRelated();
+    let location = ticket.get('location');
+    assert.equal(ticket.get('location_fk'), undefined);
+});
+
+test('ticket is dirty or related is dirty when existing location is altered', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, location_fk: LOCATION_DEFAULTS.idOne});
+    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, tickets: [TICKET_DEFAULTS.idOne]});
+    store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, tickets: []});
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_location(LOCATION_DEFAULTS.idTwo);
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('ticket is dirty or related is dirty when existing location is altered (starting w/ nothing)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, location_fk: undefined});
+    store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeName, tickets: []});
+    assert.equal(ticket.get('location'), undefined);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_location(LOCATION_DEFAULTS.idTwo);
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('rollback location will revert and reboot the dirty location to clean', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, location_fk: LOCATION_DEFAULTS.idOne});
+    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, tickets: [TICKET_DEFAULTS.idOne]});
+    store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, tickets: []});
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_location(LOCATION_DEFAULTS.idTwo);
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.change_location(LOCATION_DEFAULTS.idTwo);
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.saveRelated();
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });

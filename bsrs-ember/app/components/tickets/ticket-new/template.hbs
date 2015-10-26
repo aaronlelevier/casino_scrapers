@@ -32,6 +32,18 @@
         {{/each}}
       </select>
       {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
+      <div class="row">
+        <div class="col-md-12">
+          {{input type="text" placeholder=(t "ticket.label.requester") value=model.requester.name class="form-control t-ticket-requester"}}
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          {{#form-group title="admin.ticket.label.location" for="location"}}
+            {{ticket-location-select ticket=model ticket_location_options=ticket_location_options search_location=search_location}}
+          {{/form-group}}
+        </div>
+      </div>
 		</section>
 	</section>
 </form>

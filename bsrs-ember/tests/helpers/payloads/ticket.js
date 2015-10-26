@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
+import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 
 var ticket_payload = {
     id: UUID.value,
@@ -8,7 +9,8 @@ var ticket_payload = {
     status: TICKET_DEFAULTS.statusOneId,
     priority: TICKET_DEFAULTS.priorityOneId,
     cc: [],
-    categories: []
+    categories: [],
+    location: LOCATION_DEFAULTS.idTwo,
 };
 
 var required_ticket_payload = Ember.$.extend(true, {}, ticket_payload);

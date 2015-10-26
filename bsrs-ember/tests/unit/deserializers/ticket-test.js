@@ -5,6 +5,7 @@ import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
 import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
+import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
@@ -16,7 +17,7 @@ import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import random from 'bsrs-ember/models/random';
 
-let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer, category_deserializer;
+let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer, category_deserializer, ticket_priority;
 
 module('unit: ticket deserializer test', {
     beforeEach() {
@@ -28,6 +29,7 @@ module('unit: ticket deserializer test', {
         person_deserializer = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
         category_deserializer = CategoryDeserializer.create({store: store});
         subject = TicketDeserializer.create({store: store, uuid: uuid, PersonDeserializer: person_deserializer, CategoryDeserializer: category_deserializer});
+        ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
     },
     afterEach() {
         random.uuid = function() { return 'abc123'; };
@@ -54,7 +56,7 @@ test('ticket requester will be deserialized into its own store when deserialize 
     let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
     subject.deserialize(json, json.id);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(ticket.get('requester').get('id'), PEOPLE_DEFAULTS.id);
+    assert.equal(ticket.get('requester_id'), PEOPLE_DEFAULTS.id);
 });
 
 test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with no existing assignee)(detail)', (assert) => {
@@ -105,6 +107,96 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.id);
 });
 
+/*TICKET LOCATION 1-2-Many*/
+test('ticket location will be deserialized into its own store when deserialize list is invoked', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId, location_fk: TICKET_DEFAULTS.locationOneId});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    subject.deserialize(response);
+    assert.deepEqual(location.get('tickets'), [TICKET_DEFAULTS.idOne]);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
+});
+
+test('ticket location will be deserialized into its own store when deserialize list is invoked (when ticket did not exist before)', (assert) => {
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    subject.deserialize(response);
+    let location = store.findOne('location'); 
+    assert.deepEqual(location.get('tickets'), [TICKET_DEFAULTS.idOne]);
+    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
+});
+
+test('ticket location will be deserialized into its own store when deserialize detail is invoked (with existing non-wired location model)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId, location_fk: LOCATION_DEFAULTS.idOne});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    subject.deserialize(json, ticket.get('id'));
+    assert.deepEqual(location.get('tickets'), [TICKET_DEFAULTS.idOne]);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
+});
+
+test('ticket location will be deserialized into its own store when deserialize detail is invoked (when ticket did not exist before)', (assert) => {
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    subject.deserialize(json, TICKET_DEFAULTS.idOne);
+    let location = store.findOne('location'); 
+    assert.deepEqual(location.get('tickets'), [TICKET_DEFAULTS.idOne]);
+    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
+});
+
+test('ticket location will be deserialized into its own store when deserialize detail is invoked (with existing already-wired location model)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId, location_fk: LOCATION_DEFAULTS.idOne});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    subject.deserialize(json, ticket.get('id'));
+    assert.deepEqual(location.get('tickets'), [TICKET_DEFAULTS.idOne]);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
+});
+
+test('ticket location will be updated when server returns different location (list)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId, location_fk: LOCATION_DEFAULTS.idOne});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    delete json.cc;
+    json.location = {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo};
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    subject.deserialize(response);
+    assert.deepEqual(location.get('tickets'), []);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
+});
+
+test('ticket location will be updated when server returns different location (detail)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId, location_fk: LOCATION_DEFAULTS.idOne});
+    let ticket_status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName});
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    json.location = {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo};
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    subject.deserialize(json, ticket.get('id'));
+    assert.deepEqual(location.get('tickets'), []);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
+});
+
+/*TICKET PRIORITY 1-2-Many*/
 test('ticket priority will be deserialized into its own store when deserialize list is invoked', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, priority_fk: TICKET_DEFAULTS.priorityOneId});
     let ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});

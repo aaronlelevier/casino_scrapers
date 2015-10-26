@@ -7,6 +7,7 @@ var LocationModel = Model.extend({
     name: attr(''),
     number: attr(''),
     status: attr(),
+    tickets: [],
     location_level_fk: undefined,
     locationLevelIsDirty: Ember.computed('location_levels.@each.isDirty', 'location_level_fk', function() {
         let location_levels = this.get('location_levels');
