@@ -12,7 +12,7 @@ var CategoryNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, Validat
     labelValidation: validate('model.label'),
     subCategoryLabelValidation: validate('model.subcategory_label'),
     actions: {
-        save() {
+        saveNew() {
             this.set('submitted', true);
             if (this.get('valid')) {
                 this._super();

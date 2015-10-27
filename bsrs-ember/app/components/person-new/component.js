@@ -9,7 +9,7 @@ var PersonNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, Validatio
     usernameValidation: validate('model.username'),
     passwordValidation: validate('model.password'),
     actions: {
-        save() {
+        saveNew() {
             this.set('submitted', true);
             if (this.get('valid')) {
                 this._super();
