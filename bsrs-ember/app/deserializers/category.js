@@ -35,7 +35,7 @@ var CategoryDeserializer = Ember.Object.extend({
         if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
             [response.children_fks, response.parent_id] = extract_tree(response, store);
             let category = store.push('category', response);
-            //TODO: concat not to lose previous child fks
+            // TODO: figure out if we should concat this?
             category.set('children_fks', response.children_fks);
             category.save();
         }
@@ -47,7 +47,7 @@ var CategoryDeserializer = Ember.Object.extend({
             if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
                 [model.children_fks, model.parent_id] = extract_tree(model, store);
                 let category = store.push('category', model);
-                //TODO: concat not to lose previous child fks
+                // TODO: figure out if we should concat this?
                 category.set('children_fks', model.children_fks);
                 category.save();
             }
