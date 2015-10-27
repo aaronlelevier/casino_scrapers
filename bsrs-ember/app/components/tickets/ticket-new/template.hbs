@@ -20,11 +20,7 @@
           {{parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options}}
         </div>
       </div>
-      <select class="form-control t-ticket-priority" onchange={{action "changed_priority" value="target.value"}}>
-        {{#each priorities as |priority|}}
-        <option value={{priority.id}} selected={{is-equal model.priority.id priority.id}}>{{priority.name}}</option>
-        {{/each}}
-      </select>
+      {{ticket-priority-select ticket=model priorities=priorities}}
       {{#validation-error-field submitted=submitted field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
       <select class="form-control t-ticket-status" onchange={{action "changed_status" value="target.value"}}>
         {{#each statuses as |status|}}
