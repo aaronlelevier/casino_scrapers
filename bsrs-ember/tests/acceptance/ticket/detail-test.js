@@ -54,7 +54,7 @@ module('Acceptance | ticket detail test', {
     }
 });
 
-test('clicking a tickets subject will redirect to the given detail view', (assert) => {
+test('clicking a ticket will direct to the given detail view', (assert) => {
     page.visit();
     andThen(() => {
         assert.equal(currentURL(), TICKETS_URL);
@@ -72,23 +72,21 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
         assert.equal(currentURL(), DETAIL_URL);
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.ok(ticket.get('isNotDirty'));
-        assert.equal(page.subjectInput(), TICKET_DEFAULTS.subjectOne);
-        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOneId);
+        // assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOneId);
         assert.equal(page.statusInput(), TICKET_DEFAULTS.statusOneId);
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, subject: TICKET_DEFAULTS.subjectTwo, status: TICKET_DEFAULTS.statusTwoId, priority: TICKET_DEFAULTS.priorityTwoId});
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, status: TICKET_DEFAULTS.statusTwoId, priority: TICKET_DEFAULTS.priorityTwoId});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    page.subject(TICKET_DEFAULTS.subjectTwo);
-    page.priority(TICKET_DEFAULTS.priorityTwoId);
+    let $priority_component = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
+    click(`${$priority_component} > .selectize-dropdown div.option:eq(1)`);
     page.status(TICKET_DEFAULTS.statusTwoId);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.ok(ticket.get('isDirty'));
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
     let list = TICKET_FIXTURES.list();
-    list.results[0].subject = TICKET_DEFAULTS.subjectOne;
     list.results[0].status = TICKET_DEFAULTS.statusOneId;
     list.results[0].priority = TICKET_DEFAULTS.priorityOneId;
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
@@ -109,35 +107,36 @@ test('when you click cancel, you are redirected to the ticket list view', (asser
     });
 });
 
-test('when editing the ticket subject to invalid, it checks for validation', (assert) => {
-    page.visitDetail();
-    page.subject('');
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-subject-validation-error').text().trim(), 'invalid subject');
-    });
-    page.subject('');
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-subject-validation-error').text().trim(), 'invalid subject');
-    });
-    page.subject(TICKET_DEFAULTS.subjectTwo);
-    let url = PREFIX + DETAIL_URL + "/";
-    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, subject: TICKET_DEFAULTS.subjectTwo});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKETS_URL);
-    });
-});
+// test('when editing the ticket status to invalid, it checks for validation', (assert) => {
+//     page.visitDetail();
+//     page.status('');
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), DETAIL_URL);
+//         assert.equal(find('.t-status-validation-error').text().trim(), 'invalid number');
+//     });
+//     page.status('');
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), DETAIL_URL);
+//         assert.equal(find('.t-status-validation-error').text().trim(), 'invalid number');
+//     });
+//     page.status(TICKET_DEFAULTS.numberTwo);
+//     let url = PREFIX + DETAIL_URL + "/";
+//     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, status: TICKET_DEFAULTS.numberTwo});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), TICKETS_URL);
+//     });
+// });
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
     clearxhr(list_xhr);
     page.visitDetail();
-    page.subject(TICKET_DEFAULTS.subjectTwo);
+    let $priority_component = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
+    click(`${$priority_component} > .selectize-dropdown div.option:eq(1)`);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -150,7 +149,6 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(page.subjectInput(), TICKET_DEFAULTS.subjectTwo);
             assert.ok(generalPage.modalIsHidden());
         });
     });
@@ -170,20 +168,21 @@ test('validation works and when hit save, we do same post', (assert) => {
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-subject-validation-error').is(':hidden'));
+        assert.ok(find('.t-priority-validation-error').is(':hidden'));
     });
-    page.subject('');
+    let $first_component = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
+    click(`${$first_component} > .selectize-input`);
+    triggerEvent(`${$first_component} > .selectize-input input`, 'keydown', BACKSPACE);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-subject-validation-error').is(':visible'));
+        assert.ok(find('.t-priority-validation-error').is(':visible'));
     });
-    page.subject(TICKET_DEFAULTS.subjectOne);
-    page.priority(TICKET_DEFAULTS.priorityOneId);
+    click(`${$first_component} > .selectize-dropdown div.option:eq(0)`);
     page.status(TICKET_DEFAULTS.statusOneId);
     let url = PREFIX + DETAIL_URL + '/';
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, subject: TICKET_DEFAULTS.subjectOne, status: TICKET_DEFAULTS.statusOneId, priority: TICKET_DEFAULTS.priorityOneId});
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, status: TICKET_DEFAULTS.statusOneId, priority: TICKET_DEFAULTS.priorityOneId});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
@@ -209,7 +208,8 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     clearxhr(list_xhr);
     page.visitDetail();
-    page.subject(TICKET_DEFAULTS.subjectTwo);
+    let $first_component = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
+    click(`${$first_component} > .selectize-dropdown div.option:eq(1)`);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -222,7 +222,6 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(page.subjectInput(), TICKET_DEFAULTS.subjectTwo);
             assert.ok(generalPage.modalIsHidden());
         });
     });
@@ -230,7 +229,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     page.visitDetail();
-    page.subject(TICKET_DEFAULTS.subjectTwo);
+    let $priority_component = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
+    click(`${$priority_component} > .selectize-dropdown div.option:eq(1)`);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -257,9 +257,11 @@ test('clicking and typing into selectize for people will fire off xhr request fo
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    selectize.input('a');
-    triggerEvent('.selectize-input:eq(0) input', 'keyup', LETTER_A);
-    page.clickSelectizeOption();
+    let $cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    click(`${$cc_component} > .selectize-input`);
+    fillIn(`${$cc_component} > .selectize-input input`, 'a');
+    triggerEvent(`${$cc_component} > .selectize-input input`, 'keyup', LETTER_A);
+    click(`${$cc_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 1);
@@ -278,7 +280,9 @@ test('clicking and typing into selectize for people will fire off xhr request fo
 
 test('can remove and add back same cc', (assert) => {
     page.visitDetail();
-    page.removeTicketPeople();
+    let $cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    click(`${$cc_component} > .selectize-input`);
+    triggerEvent(`${$cc_component} > .selectize-input input`, 'keydown', BACKSPACE);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('cc').get('length'), 0);
@@ -287,9 +291,10 @@ test('can remove and add back same cc', (assert) => {
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=Mel';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    selectize.input('Mel');
-    triggerEvent('.selectize-input:eq(0) input', 'keyup', LETTER_M);
-    page.clickSelectizeOption();
+    click(`${$cc_component} > .selectize-input`);
+    fillIn(`${$cc_component} > .selectize-input input`, 'Mel');
+    triggerEvent(`${$cc_component} > .selectize-input input`, 'keyup', LETTER_M);
+    click(`${$cc_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 1);
@@ -315,7 +320,9 @@ test('when you deep link to the ticket detail can remove a cc', (assert) => {
         assert.equal(page.ticketPeopleSelected(), 1);
         assert.equal(page.ticketPeopleOptions(), 0);
     });
-    page.removeTicketPeople();
+    let $cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    click(`${$cc_component} > .selectize-input`);
+    triggerEvent(`${$cc_component} > .selectize-input input`, 'keydown', BACKSPACE);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('cc').get('length'), 0);
@@ -344,14 +351,18 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    page.removeTicketPeople();
-    page.removeTicketPeople();
+    let $cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    click(`${$cc_component} > .selectize-input`);
+    triggerEvent(`${$cc_component} > .selectize-input input`, 'keydown', BACKSPACE);
+    click(`${$cc_component} > .selectize-input`);
+    triggerEvent(`${$cc_component} > .selectize-input input`, 'keydown', BACKSPACE);
     andThen(() => {
         assert.equal(page.ticketPeopleOptions(), 0);
     });
-    selectize.input('a');
-    triggerEvent('.selectize-input:eq(0) input', 'keyup', LETTER_A);
-    page.clickSelectizeOption();
+    click(`${$cc_component} > .selectize-input`);
+    fillIn(`${$cc_component} > .selectize-input input`, 'a');
+    triggerEvent(`${$cc_component} > .selectize-input input`, 'keyup', LETTER_A);
+    click(`${$cc_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 2);
@@ -381,13 +392,15 @@ test('search will filter down on people in store correctly by removing and addin
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=sc';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    page.removeSecondTicketPeople();
+    let $cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    click(`${$cc_component} > .selectize-input`);
+    triggerEvent(`${$cc_component} > .selectize-input input`, 'keydown', BACKSPACE);
     andThen(() => {
         assert.equal(page.ticketPeopleOptions(), 0);
     });
-    selectize.input('sc');
-    triggerEvent('.selectize-input:eq(0) input', 'keyup', LETTER_S);
-    page.clickSelectizeOption();
+    fillIn(`${$cc_component} > .selectize-input input`, 'sc');
+    triggerEvent(`${$cc_component} > .selectize-input input`, 'keyup', LETTER_S);
+    click(`${$cc_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 2);
@@ -407,8 +420,10 @@ test('search will filter down on people in store correctly by removing and addin
 
 test('clicking and typing into selectize for people will not filter if spacebar pressed', (assert) => {
     page.visitDetail();
-    selectize.input(' ');
-    triggerEvent('.selectize-input:eq(0) input', 'keyup', SPACEBAR);
+    let $cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    click(`${$cc_component} > .selectize-input`);
+    fillIn(`${$cc_component} > .selectize-input input`, '');
+    triggerEvent(`${$cc_component} > .selectize-input input`, 'keyup', SPACEBAR);
     andThen(() => {
         assert.equal(page.ticketPeopleOptions(), 0);
     });

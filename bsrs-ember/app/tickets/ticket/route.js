@@ -11,7 +11,7 @@ var TicketSingleRoute = TabRoute.extend({
     priorityRepository: inject('ticket-priority'),
     redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
     modelName: Ember.computed(function() { return 'ticket'; }),
-    templateModelField: Ember.computed(function() { return 'subject'; }),
+    templateModelField: Ember.computed(function() { return 'number'; }),
     queryParams: {
         search: {
             refreshModel: true

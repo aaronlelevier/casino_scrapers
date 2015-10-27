@@ -14,10 +14,7 @@ const SECONDLEVEL = 'select.t-ticket-category-select:eq(1) + .selectize-control'
 var TicketPage = PageObject.build({
   visit: visitable(TICKETS_URL),
   visitDetail: visitable(DETAIL_URL),
-  subjectInput: PageObject.value('.t-ticket-subject'),
-  subject: fillable('.t-ticket-subject'),
-  priority: fillable('.t-ticket-priority'),
-  priorityInput: PageObject.value('.t-ticket-priority'),
+  priorityInput: PageObject.value('.t-ticket-priority-select'),
   status: fillable('.t-ticket-status'),
   statusInput: PageObject.value('.t-ticket-status'),
   clickSelectizeOption: clickable('.t-ticket-people-select div.option:eq(0)'),

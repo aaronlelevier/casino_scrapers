@@ -21,7 +21,6 @@ var BSRS_TICKET_FACTORY = (function() {
         return {
             id: id,
             number: this.ticket.numberOne,
-            subject: this.ticket.subjectOne,
             request: this.ticket.requestOne,
             status: this.ticket.statusOneId,
             priority: this.ticket.priorityOneId,
@@ -44,7 +43,6 @@ var BSRS_TICKET_FACTORY = (function() {
             var ticket = this.generate(uuid);
             ticket.number = 'bye' + i;
             ticket.request = 'sub' + i;
-            ticket.subject = 'diagram' + i;
             delete ticket.cc;
             delete ticket.requester;
             response.push(ticket);
@@ -62,7 +60,6 @@ var BSRS_TICKET_FACTORY = (function() {
             var ticket = this.generate(uuid + i);
             ticket.number = 'gone' + i;
             ticket.request = 'ape' + i;
-            ticket.subject = 'rabbit' + i;
             delete ticket.cc;
             response.push(ticket);
         }
