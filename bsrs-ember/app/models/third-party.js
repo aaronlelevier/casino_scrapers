@@ -10,6 +10,7 @@ var ThirdPartyModel = Model.extend({
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty');
     }),
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     rollbackRelated() {
         // purposely left blank, no related objects
     },
