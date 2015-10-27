@@ -67,6 +67,16 @@ var BSRS_LOCATION_FACTORY = (function() {
         }
         return response;
     };
+    factory.prototype.search = function() {
+        var location_one = this.get(this.location_defaults.idThree, this.location_defaults.storeNameFour);
+        var location_two = this.get(this.location_defaults.idTwo, this.location_defaults.storeNameTwo);
+        var response = [location_one, location_two];
+        //we do a reverse order sort here to verify a real sort occurs in the component
+        var sorted = response.sort(function(a,b) {
+            return b.id - a.id;
+        });
+        return {'count':2,'next':null,'previous':null,'results': sorted};
+    };
     return factory;
 })();
 

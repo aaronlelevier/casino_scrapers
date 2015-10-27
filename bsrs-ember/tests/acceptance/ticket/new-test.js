@@ -41,10 +41,7 @@ module('Acceptance | ticket new test', {
         list_xhr = xhr(TICKET_LIST_URL, 'GET', null, {}, 200, TICKET_FIXTURES.empty());
         let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
         xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
-        //Location
-        let locations = [LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idThree, LOCATION_DEFAULTS.storeNameFour), LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idTwo, LOCATION_DEFAULTS.storeNameTwo)];
-        let response = {'count':2,'next':null,'previous':null,'results': locations};
-        location_xhr = xhr(`${PREFIX}/admin/locations/&name__icontains=6`, 'GET', null, {}, 200, response);
+        location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
     },
     afterEach() {
         random.uuid = function() { return 'abc123'; };
@@ -377,7 +374,7 @@ test('all required fields persist correctly when the user submits a new ticket f
     });
 });
 
-test('when hit backspace should remove person from assignee', (assert) => {
+test('when hit backspace should remove assignee from ticket', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
     page.visitNew();
@@ -418,6 +415,58 @@ test('when hit backspace should remove priority from select component', (assert)
     andThen(() => {
        let ticket = store.findOne('ticket');
        assert.ok(!ticket.get('priority'));
+       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(location_xhr);
+    page.visitNew();
+    location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
+    let $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${$first_component} > .selectize-input`);
+    fillIn(`${$first_component} > .selectize-input input`, '6');
+    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    andThen(() => {
+        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 2);
+    });
+    $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${$first_component} > .selectize-input`);
+    fillIn(`${$first_component} > .selectize-input input`, '');
+    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 0);
+    });
+    $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${$first_component} > .selectize-input`);
+    fillIn(`${$first_component} > .selectize-input input`, '6');
+    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    andThen(() => {
+        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 2);
+    });
+});
+
+test('when hit backspace should remove location from ticket', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(location_xhr);
+    page.visitNew();
+    location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
+    let selector = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    fillIn(`${selector} > .selectize-input input`, '6');
+    triggerEvent(`${selector} > .selectize-input input`, 'keyup', NUMBER_6);
+    click(`${selector} > .selectize-dropdown div.option:eq(1)`);
+    andThen(() => {
+       assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idTwo);
+       let ticket = store.findOne('ticket');
+       assert.ok(ticket.get('location'));
+       assert.equal(ticket.get('location').get('id'), LOCATION_DEFAULTS.idTwo);
+       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+       let ticket = store.findOne('ticket');
+       assert.ok(!ticket.get('location'));
        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
