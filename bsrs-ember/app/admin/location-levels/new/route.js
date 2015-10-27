@@ -12,18 +12,16 @@ var LocationLevelNew = TabRoute.extend({
     model() {
         let pk = this.get('uuid').v4();
         let repository = this.get('repository');
-        let location_level_options = this.get('store').find('location-level');
+        let all_location_levels = this.get('store').find('location-level');
         let model = this.get('store').push('location-level', {id: pk});
         return Ember.RSVP.hash({
             model: model,
-            location_level_options: location_level_options,
-            new: true,
+            all_location_levels: all_location_levels,
         });
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
-        controller.set('location_level_options', hash.location_level_options);
-        controller.set('new', hash.new);
+        controller.set('all_location_levels', hash.all_location_levels);
     }
 });
 

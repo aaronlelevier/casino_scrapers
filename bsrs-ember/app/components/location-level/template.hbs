@@ -1,9 +1,40 @@
-  {{location-level-general 
-    model=model 
-    location_level_options=available_location_levels
-    available_location_level_names=available_location_level_names
-    save=(action attrs.save)
-    cancel=(action attrs.cancel)
-    delete=(action attrs.delete)
+<form {{action "return false" this on="submit"}}>
+
+  {{base-component
+  model=model
+  save="save"
+  cancel="cancel"
+  delete="delete"
   }}
   
+    <section class="docSection container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+				<section style="padding-bottom: 0">
+					<div class="row card-title">
+						<h1 class="col-md-12">{{model.name}}</h1>
+					</div>
+				</section>
+			</div>
+            <div class="col-md-12">
+        		<section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.locationlevel.label.name" for="name"}}
+                                {{input type="text" placeholder=(t "admin.locationlevel.label.name") value=model.name class="form-control t-location-level-name" id="location_level_name" required="required"}}
+                                {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.locationlevel.label.name"}}{{/validation-error-field}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.locationlevel.label.locations"}}
+                                {{location-level-children model=model options=available_location_levels}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+        		</section>
+            </div>
+        </div>
+    </section>
+</form>

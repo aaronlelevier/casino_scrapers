@@ -2,7 +2,7 @@ import Ember from 'ember';
 
 var NewTabMixin = Ember.Mixin.create({
     actions: {
-        saveNew() {
+        save() {
             let model = this.get('model'); 
             let repository = this.get('repository');
             repository.insert(model).then(() => {

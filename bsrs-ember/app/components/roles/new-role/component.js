@@ -18,7 +18,7 @@ var RoleNew = Ember.Component.extend(TabMixin, NewTabMixin, ValidationMixin, {
                 model.set('location_level', val);
             });
         },
-        saveNew() {
+        save() {
             this.set('submitted', true);
             if (this.get('valid')) {
                 this._super();
