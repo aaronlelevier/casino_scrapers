@@ -118,10 +118,6 @@ wait
 echo "UWSGI - START/RELOAD"
 sudo kill -INT `cat /var/run/nginx-persistent.pid`
 wait
-sudo rm /var/run/nginx-persistent.sock
-wait
-sudo rm /var/run/nginx-persistent.pid
-wait
 sudo /usr/local/lib/persistent/uwsgi/uwsgi --ini uwsgi.ini
 TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $TEST; fi
 
