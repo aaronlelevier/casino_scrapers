@@ -80,6 +80,9 @@ class Category(BaseModel):
 
     objects = CategoryManager()
 
+    class Meta:
+        ordering = ('label', 'name',)
+
     def save(self, *args, **kwargs):
         self._update_defalts()
         return super(Category, self).save(*args, **kwargs)

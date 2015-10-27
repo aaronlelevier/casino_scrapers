@@ -253,9 +253,10 @@ class PersonPasswordHistoryTests(TestCase):
         self.assertEqual(len(self.person.password_history), 2)
 
     def test_max_passwords_stored(self):
-        self.person.password_history.append([x for x in range(settings.MAX_PASSWORDS_STORED+1)])
+        for x in range(settings.MAX_PASSWORDS_STORED+1):
+            self.person.password_history.append(create._generate_chars())
         self.person.save()
         self.assertEqual(
             len(self.person.password_history),
-            settings.MAX_PASSWORDS_STORED 
+            settings.MAX_PASSWORDS_STORED
         )

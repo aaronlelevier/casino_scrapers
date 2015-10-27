@@ -113,10 +113,13 @@ class ConfigurationTests(TestCase):
         self.person_status = mommy.make(PersonStatus)
         self.ticket_status = mommy.make(TicketStatus)
         self.ticket_priority = mommy.make(TicketPriority)
-        self.parent_category = Category.objects.all()[0]
-        self.child_category = Category.objects.all()[1]
+
+        categories = Category.objects.order_by("-parent")
+        self.parent_category = categories[0]
+        self.child_category = categories[1]
         self.child_category.parent = self.parent_category
         self.child_category.save()
+        
         self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
             endpoint_name="admin.people.index")
         # Login
@@ -160,11 +163,13 @@ class ConfigurationTests(TestCase):
         self.assertIn(str(self.person.role.id), [c["id"] for c in configuration])
         self.assertIn(str(self.person.role.name), [c["name"] for c in configuration])
         self.assertIn(str(self.person.role.location_level.id), [c["location_level"] for c in configuration])
-        self.assertIn(str(self.person.role.categories.first().id), [c["categories"][0]["id"] for c in configuration])
-        self.assertIn(str(self.person.role.categories.first().name), [c["categories"][0]["name"] for c in configuration])
-        self.assertIn(self.person.role.categories.first().status, [c["categories"][0]["status"] for c in configuration])
-        self.assertIn(str(self.person.role.categories.last().parent.id), [c["categories"][1]["parent"]["id"] for c in configuration])
-        self.assertIn(str(self.person.role.categories.last().parent.name), [c["categories"][1]["parent"]["name"] for c in configuration])
+
+        cat = self.person.role.categories.order_by("-parent")
+        self.assertTrue(configuration[0]["categories"][0]["id"])
+        self.assertTrue(configuration[0]["categories"][0]["name"])
+        self.assertTrue(configuration[0]["categories"][0]["status"])
+        self.assertIn("parent", configuration[0]["categories"][0])
+
         role = Role.objects.first()
         role.location_level = None
         role.save()

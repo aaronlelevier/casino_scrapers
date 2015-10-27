@@ -23,6 +23,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='person',
             name='password_history',
-            field=django.contrib.postgres.fields.ArrayField(default=[], size=5, blank=True, base_field=models.CharField(max_length=254)),
+            field=django.contrib.postgres.fields.ArrayField(base_field=models.CharField(max_length=254), blank=True, size=10, default=[]),
         ),
     ]

@@ -290,6 +290,7 @@ class Person(BaseModel, AbstractUser):
     def save(self, *args, **kwargs):
         self._update_defaults()
         self._validate_locations()
+        self._update_max_passwords_history()
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
@@ -369,6 +370,11 @@ class Person(BaseModel, AbstractUser):
         for l in self.locations.all():
             if l.location_level != self.role.location_level:
                 self.locations.remove(l)
+
+    def _update_max_passwords_history(self):
+        if len(self.password_history) > settings.MAX_PASSWORDS_STORED:
+            setattr(self, 'password_history',
+                self.password_history[len(self.password_history)-settings.MAX_PASSWORDS_STORED:])
 
 
 @receiver(post_save, sender=Person)

@@ -8,13 +8,13 @@ import django.contrib.postgres.fields
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('person', '0004_auto_20151026_1425'),
+        ('person', '0003_auto_20151026_1459'),
     ]
 
     operations = [
         migrations.AlterField(
             model_name='person',
             name='password_history',
-            field=django.contrib.postgres.fields.ArrayField(size=10, blank=True, default=[], base_field=models.CharField(max_length=254)),
+            field=django.contrib.postgres.fields.ArrayField(default=[], size=5, blank=True, base_field=models.CharField(max_length=254)),
         ),
     ]
