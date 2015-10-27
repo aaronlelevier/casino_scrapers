@@ -574,7 +574,7 @@ test('selecting and removing a top level category will remove children categorie
     });
 });
 
-test('location component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
+test('wat location component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
     page.visitDetail();
     andThen(() => {
        assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idOne);
@@ -583,34 +583,54 @@ test('location component shows location for ticket and will fire off xhr to fetc
        assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
-    let locations = [LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idThree, LOCATION_DEFAULTS.storeNameFour), LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idTwo, LOCATION_DEFAULTS.storeNameTwo)];
-    let response = {'count':2,'next':null,'previous':null,'results': locations};
-    xhr(`${PREFIX}/admin/locations/&name__icontains=6`, 'GET', null, {}, 200, response);
-    let $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-    click(`${$first_component} > .selectize-input`);
-    triggerEvent(`${$first_component} > .selectize-input input`, 'keydown', BACKSPACE);
-    fillIn(`${$first_component} > .selectize-input input`, '6');
-    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
+    let selector = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    // click(`${$first_component} > .selectize-input`);
+    // fillIn(`${$first_component} > .selectize-input input`, '');
+    // triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', BACKSPACE);
+    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
     andThen(() => {
-        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 2);
+        assert.equal(find(`${selector} > .selectize-dropdown div.option`).length, 0);
+        var done = assert.async();
     });
-    click(`${$first_component} > .selectize-dropdown div.option:eq(1)`);
-    andThen(() => {
-       assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idTwo);
-       let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-       assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
-       assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
-       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-    let url = PREFIX + DETAIL_URL + '/';
-    let response_put = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
-    response_put.location = {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo};
-    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, location: LOCATION_DEFAULTS.idTwo});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response_put);
-    generalPage.save();
-    andThen(() => {
-       assert.equal(currentURL(), TICKETS_URL);
-       let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    });
+    // click(`${selector} > .selectize-input`);
+    // fillIn(`${selector} > .selectize-input input`, '6');
+    // triggerEvent(`${selector} > .selectize-input input`, 'keyup', NUMBER_6);
+    // andThen(() => {
+    //     assert.equal(find(`${selector} > .selectize-dropdown div.option`).length, 2);
+    // });
+    // let locations = [LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idThree, LOCATION_DEFAULTS.storeNameFour), LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idTwo, LOCATION_DEFAULTS.storeNameTwo)];
+    // let response = {'count':2,'next':null,'previous':null,'results': locations};
+    // xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, response);
+    // let $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    // click(`${$first_component} > .selectize-input`);
+    // triggerEvent(`${$first_component} > .selectize-input input`, 'keydown', BACKSPACE);
+    // andThen(() => {
+    //     assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 0);
+    //     var done = assert.async();
+    // });
+    // fillIn(`${$first_component} > .selectize-input input`, '6');
+    // triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    // andThen(() => {
+    //     assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 2);
+    // });
+    // click(`${$first_component} > .selectize-dropdown div.option:eq(1)`);
+    // andThen(() => {
+    //    assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idTwo);
+    //    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    //    assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
+    //    assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
+    //    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    // });
+    // let url = PREFIX + DETAIL_URL + '/';
+    // let response_put = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    // response_put.location = {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo};
+    // let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, location: LOCATION_DEFAULTS.idTwo});
+    // xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response_put);
+    // generalPage.save();
+    // andThen(() => {
+    //    assert.equal(currentURL(), TICKETS_URL);
+    //    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    //    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    // });
 });
