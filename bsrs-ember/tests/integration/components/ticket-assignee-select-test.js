@@ -29,25 +29,7 @@ test('should render a selectbox when person options are empty (initial state of 
     assert.ok(!ticket.get('assignee'));
 });
 
-// test('sco should render a selectbox with bound options after type ahead for search_assignee', function(assert) {
-//     let ticket_assignee_options = store.find('person');
-//     person_one.set('assigned_tickets', [TICKET_DEFAULTS.idOne]);
-//     this.set('ticket', ticket);
-//     this.set('ticket_assignee_options', ticket_assignee_options);
-//     this.set('search_assignee', '');
-//     this.render(hbs`{{ticket-assignee-select ticket=ticket search_assignee=search_assignee ticket_assignee_options=ticket_assignee_options}}`);
-//     let $component = this.$('.t-ticket-assignee-select');
-//     assert.equal($component.find('div.item').length, 1);
-//     assert.equal($component.find('div.option').length, 3);
-//     assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idOne);
-//     this.$('.selectize-input input').trigger('click');
-//     this.$('.selectize-input input').trigger({keyCode: 8}).trigger('keydown');
-//     assert.equal($component.find('div.item').length, 0);
-//     assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idOne);
-//     var done = assert.async();
-// });
-
-test('if delete selected assignee, you cant change selected assignee', function(assert) {
+test('should render a selectbox with bound options after type ahead for search_assignee', function(assert) {
     let ticket_assignee_options = store.find('person');
     person_one.set('assigned_tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
@@ -121,7 +103,6 @@ test('should be able to select new person when ticket already has a person', fun
     assert.equal($component.find('div.option').length, 3);
     assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idTwo);
 });
-
 
 // test('input has a debouce that prevents each keystroke from publishing a message', function(assert) {
 //     var done = assert.async();

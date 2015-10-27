@@ -9,6 +9,8 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             numberOne: '123zz',
             requestOne: 'working',
             numberTwo: '456zz',
+            subjectOne: 'Plumbing Fixtures',
+            subjectTwo: 'Roof Repair',
             statusOneId: '5ab9b1fb-c624-4214-bb4c-16567b3d37e6',
             statusOne: 'ticket.status.new',
             statusTwoId: 'e30f3033-ae2a-4af6-9d3a-ea7c98056c1d',
@@ -48,6 +50,7 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             requestOneGrid: 'sub1',
             requestLastGrid: 'ape11',
             requestLastPage2Grid: 'ape19',
+            subjectOneGrid: 'diagram1',
             requestFourGrid: 'sub4',
             requestOtherGrid: 'sub10',
             requestFourteenGrid: 'ape14'

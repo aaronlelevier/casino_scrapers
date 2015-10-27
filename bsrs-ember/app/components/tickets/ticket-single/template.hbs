@@ -12,7 +12,7 @@
       <div class="col-md-12">
         <section style="padding-bottom: 0">
           <div class="row card-title">
-            <h1 class="col-md-12">{{model.priority.name}}</h1>
+            <h1 class="col-md-12">{{model.subject}}</h1>
           </div>
         </section>
       </div>
@@ -20,18 +20,28 @@
         <section>
           <div class="row">
             <div class="col-md-12">
+              {{#form-group title="ticket.label.subject" for="subject"}}
+              {{input type="text" placeholder=(t "ticket.label.subject") value=model.subject class="form-control t-ticket-subject" id="ticket_subject"}}
+              {{#validation-error-field submitted=submitted field="subject" className="validation validation-under t-subject-validation-error" model=model validation=subjectValidation}}invalid subject{{/validation-error-field}}
+              {{/form-group}}
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-12">
               <select class="form-control t-ticket-status" onchange={{action "changed" value="target.value"}}>
                 {{#each statuses as |status|}}
                 <option value={{status.id}} selected={{is-equal model.status.id status.id}}>{{status.name}}</option>
                 {{/each}}
               </select>
-              {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
-              {{ticket-priority-select ticket=model priorities=priorities}}
-              {{#validation-error-field submitted=submitted field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
+              <select class="t-ticket-priority form-control ticket-priority" onchange={{action "changed_priority" value="target.value"}}>
+                {{#each priorities as |priority|}}
+                <option value={{priority.id}} selected={{is-equal model.priority.id priority.id}}>{{priority.name}}</option>
+                {{/each}}
+              </select>
             </div>
           </div>
           <div class="row">

@@ -19,7 +19,7 @@ var TicketNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, Validatio
             let ticket = this.get('model');
             ticket.change_priority(new_priority_id);
         },
-        saveNew: function() {
+        save: function() {
             this.set('submitted', true);
             if (this.get('valid')) {
                 this._super();

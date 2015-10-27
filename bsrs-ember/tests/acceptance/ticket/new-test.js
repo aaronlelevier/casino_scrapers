@@ -52,61 +52,61 @@ module('Acceptance | ticket new test', {
     }
 });
 
-// test('validation works and when hit save, we do same post', (assert) => {
-//     page.visit();
-//     click('.t-add-new');
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL);
-//         assert.ok(find('.t-status-validation-error').is(':hidden'));
-//         assert.ok(find('.t-priority-validation-error').is(':hidden'));
-//         assert.ok(find('.t-assignee-validation-error').is(':hidden'));
-//         assert.ok(find('.t-location-validation-error').is(':hidden'));
-//     });
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL);
-//         assert.ok(find('.t-status-validation-error').is(':visible'));
-//         assert.ok(find('.t-priority-validation-error').is(':visible'));
-//         assert.ok(find('.t-assignee-validation-error').is(':visible'));
-//         assert.ok(find('.t-location-validation-error').is(':visible'));
-//     });
-//     fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL);
-//         assert.ok(find('.t-priority-validation-error').is(':visible'));
-//         assert.ok(find('.t-assignee-validation-error').is(':visible'));
-//         assert.ok(find('.t-location-validation-error').is(':visible'));
-//     });
-//     fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL);
-//         assert.ok(find('.t-assignee-validation-error').is(':visible'));
-//         assert.ok(find('.t-location-validation-error').is(':visible'));
-//     });
-//     people_xhr = xhr(`${PREFIX}/admin/people/?search=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-//     let $assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-//     click(`${$assignee_component} > .selectize-input`);
-//     fillIn(`${$assignee_component} > .selectize-input input`, 'b');
-//     triggerEvent(`${$assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
-//     click(`${$assignee_component} > .selectize-dropdown div.option:eq(1)`);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b');
-//         assert.ok(find('.t-location-validation-error').is(':visible'));
-//     });
-//     let $location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-//     click(`${$location_component} > .selectize-input`);
-//     fillIn(`${$location_component} > .selectize-input input`, '6');
-//     triggerEvent(`${$location_component} > .selectize-input input`, 'keyup', NUMBER_6);
-//     click(`${$location_component} > .selectize-dropdown div.option:eq(1)`);
-//     generalPage.save();
-//     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_URL);
-//     });
-// });
+test('validation works and when hit save, we do same post', (assert) => {
+    page.visit();
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.ok(find('.t-status-validation-error').is(':hidden'));
+        assert.ok(find('.t-priority-validation-error').is(':hidden'));
+        assert.ok(find('.t-assignee-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-validation-error').is(':hidden'));
+    });
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.ok(find('.t-status-validation-error').is(':visible'));
+        assert.ok(find('.t-priority-validation-error').is(':visible'));
+        assert.ok(find('.t-assignee-validation-error').is(':visible'));
+        assert.ok(find('.t-location-validation-error').is(':visible'));
+    });
+    fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.ok(find('.t-priority-validation-error').is(':visible'));
+        assert.ok(find('.t-assignee-validation-error').is(':visible'));
+        assert.ok(find('.t-location-validation-error').is(':visible'));
+    });
+    fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.ok(find('.t-assignee-validation-error').is(':visible'));
+        assert.ok(find('.t-location-validation-error').is(':visible'));
+    });
+    people_xhr = xhr(`${PREFIX}/admin/people/?search=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
+    let $assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+    click(`${$assignee_component} > .selectize-input`);
+    fillIn(`${$assignee_component} > .selectize-input input`, 'b');
+    triggerEvent(`${$assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
+    click(`${$assignee_component} > .selectize-dropdown div.option:eq(1)`);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b');
+        assert.ok(find('.t-location-validation-error').is(':visible'));
+    });
+    let $location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${$location_component} > .selectize-input`);
+    fillIn(`${$location_component} > .selectize-input input`, '6');
+    triggerEvent(`${$location_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    click(`${$location_component} > .selectize-dropdown div.option:eq(1)`);
+    generalPage.save();
+    xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
 
 // test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
 //     clearxhr(location_xhr);
@@ -354,49 +354,51 @@ test('when hit backspace should remove person from assignee', (assert) => {
     });
 });
 
-// test('all required fields persist correctly when the user submits a new ticket form', (assert) => {
-//     page.visit();
-//     click('.t-add-new');
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL);
-//         assert.equal(store.find('ticket').get('length'), 1);
-//         assert.ok(store.find('ticket', UUID.value).get('isNotDirty'));
-//     });
-//     people_xhr = xhr(`${PREFIX}/admin/people/?search=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-//     let $assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-//     click(`${$assignee_component} > .selectize-input`);
-//     fillIn(`${$assignee_component} > .selectize-input input`, 'b');
-//     triggerEvent(`${$assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
-//     click(`${$assignee_component} > .selectize-dropdown div.option:eq(1)`);
-//     andThen(() => {
-//        assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
-//        let ticket = store.findOne('ticket');
-//        assert.ok(ticket.get('assignee'));
-//        assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
-//        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//     });
-//     fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
-//     fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
-//     let $location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-//     click(`${$location_component} > .selectize-input`);
-//     fillIn(`${$location_component} > .selectize-input input`, '6');
-//     triggerEvent(`${$location_component} > .selectize-input input`, 'keyup', NUMBER_6);
-//     andThen(() => {
-//         assert.equal(find(`${$location_component} > .selectize-dropdown div.option`).length, 2);
-//     });
-//     click(`${$location_component} > .selectize-dropdown div.option:eq(1)`);
-//     xhr(TICKET_POST_URL, 'POST', JSON.stringify(ticket_payload), {}, 201, Ember.$.extend(true, {}, ticket_payload));
-//     generalPage.save();
-//     andThen(() => {
-//        assert.equal(currentURL(), TICKET_URL);
-//         assert.equal(store.find('ticket').get('length'), 1);
-//         let persisted = store.find('ticket', UUID.value);
-//         assert.ok(persisted.get('assignee'));
-//         assert.equal(persisted.get('assignee.id'), PEOPLE_DEFAULTS.idSearch);
-//         assert.ok(persisted.get('location'));
-//         assert.equal(persisted.get('location.id'), LOCATION_DEFAULTS.idTwo);
-//         assert.equal(persisted.get('status.id'), TICKET_DEFAULTS.statusOneId);
-//         assert.ok(persisted.get('isNotDirty'));
-//         assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
-//     });
-// });
+test('all required fields persist correctly when the user submits a new ticket form', (assert) => {
+    page.visit();
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.equal(store.find('ticket').get('length'), 1);
+        assert.ok(store.find('ticket', UUID.value).get('isNotDirty'));
+    });
+    people_xhr = xhr(`${PREFIX}/admin/people/?search=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
+    let $assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+    click(`${$assignee_component} > .selectize-input`);
+    fillIn(`${$assignee_component} > .selectize-input input`, 'b');
+    triggerEvent(`${$assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
+    click(`${$assignee_component} > .selectize-dropdown div.option:eq(1)`);
+    andThen(() => {
+       assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
+       let ticket = store.findOne('ticket');
+       assert.ok(ticket.get('assignee'));
+       assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
+       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectOne);
+    fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
+    fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
+    let $location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${$location_component} > .selectize-input`);
+    fillIn(`${$location_component} > .selectize-input input`, '6');
+    triggerEvent(`${$location_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    andThen(() => {
+        assert.equal(find(`${$location_component} > .selectize-dropdown div.option`).length, 2);
+    });
+    click(`${$location_component} > .selectize-dropdown div.option:eq(1)`);
+    xhr(TICKET_POST_URL, 'POST', JSON.stringify(ticket_payload), {}, 201, Ember.$.extend(true, {}, ticket_payload));
+    generalPage.save();
+    andThen(() => {
+       assert.equal(currentURL(), TICKET_URL);
+        assert.equal(store.find('ticket').get('length'), 1);
+        let persisted = store.find('ticket', UUID.value);
+        assert.ok(persisted.get('assignee'));
+        assert.equal(persisted.get('assignee.id'), PEOPLE_DEFAULTS.idSearch);
+        assert.ok(persisted.get('location'));
+        assert.equal(persisted.get('location.id'), LOCATION_DEFAULTS.idTwo);
+        assert.equal(persisted.get('subject'), TICKET_DEFAULTS.subjectOne);
+        assert.equal(persisted.get('status.id'), TICKET_DEFAULTS.statusOneId);
+        assert.ok(persisted.get('isNotDirty'));
+        assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});

@@ -7,8 +7,8 @@ import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/vali
 var TicketSingleComponent = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
     repository: inject('ticket'),
     numberValidation: validate('model.number'),
-    priorityValidation: validate('model.priority'),
-    statusValidation: validate('model.status'),
+    subjectValidation: validate('model.subject'),
+    // priorityValidation: validate('model.priority'),
     actions: {
         save() {
             this.set('submitted', true);

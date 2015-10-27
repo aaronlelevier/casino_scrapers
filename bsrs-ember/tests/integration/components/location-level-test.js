@@ -34,30 +34,28 @@ moduleForComponent('location-level', 'integration: location-level test', {
 });
 
 test('should render component and prevent duplicate name entries', function(assert) {
-    assert.equal(1,1);
-    // this.set('model', location_level);
-    // this.set('options', location_levels);
-    // this.render(hbs`{{location-level-general model=model}}`);
-    // var $component = this.$('.t-location-level-name');
-    // assert.equal($component.val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
-    // var $select = this.$('.t-location-level-location-level-select');
-    // assert.equal($select.find('div.option').length, 0);
-    // assert.equal($select.find('div.item').length, 7);
+    this.set('model', location_level);
+    this.set('options', location_levels);
+    this.render(hbs`{{location-level model=model}}`);
+    var $component = this.$('.t-location-level-name');
+    assert.equal($component.val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+    var $select = this.$('.t-location-level-location-level-select');
+    assert.equal($select.find('div.option').length, 0);
+    assert.equal($select.find('div.item').length, 7);
 });
 
 test('validation should prevent duplicate location level names', function(assert) {
-    assert.equal(1,1);
-    // this.set('model', location_level);
-    // this.set('options', location_levels);
-    // this.render(hbs`{{location-level-general model=model}}`);
-    // var $component = this.$('.t-location-level-name');
-    // assert.equal($component.val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
-    // var $select = this.$('.t-location-level-location-level-select');
-    // var $input = this.$('.t-location-level-name');
-    // $input.val(LOCATION_LEVEL_DEFAULTS.nameRegion).trigger('change');  
-    // $component = this.$('.t-name-validation-error');
-    // assert.ok($component.is(':visible'));
-    // $input.val('admin.locationlevel.regions').trigger('change');  
-    // $component = this.$('.t-name-validation-error');
-    // assert.ok($component.is(':hidden'));
+    this.set('model', location_level);
+    this.set('options', location_levels);
+    this.render(hbs`{{location-level model=model}}`);
+    var $component = this.$('.t-location-level-name');
+    assert.equal($component.val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+    var $select = this.$('.t-location-level-location-level-select');
+    var $input = this.$('.t-location-level-name');
+    $input.val(LOCATION_LEVEL_DEFAULTS.nameRegion).trigger('change');  
+    $component = this.$('.t-name-validation-error');
+    assert.ok($component.is(':visible'));
+    $input.val('admin.locationlevel.regions').trigger('change');  
+    $component = this.$('.t-name-validation-error');
+    assert.ok($component.is(':hidden'));
 });
