@@ -78,7 +78,8 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
     });
-    fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
+    let priority_selector = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
+    click(`${priority_selector} > .selectize-dropdown div.option:eq(0)`);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
@@ -326,34 +327,6 @@ test('shows assignee for ticket and will fire off xhr to fetch assignee(persons)
     });
 });
 
-test('when hit backspace should remove person from assignee', (assert) => {
-    clearxhr(list_xhr);
-    clearxhr(location_xhr);
-    page.visitNew();
-    people_xhr = xhr(`${PREFIX}/admin/people/?search=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-    let $assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-    click(`${$assignee_component} > .selectize-input`);
-    fillIn(`${$assignee_component} > .selectize-input input`, 'b');
-    triggerEvent(`${$assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
-    click(`${$assignee_component} > .selectize-dropdown div.option:eq(1)`);
-    andThen(() => {
-       assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
-       let ticket = store.findOne('ticket');
-       assert.ok(ticket.get('assignee'));
-       assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
-       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-    $assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-    click(`${$assignee_component} > .selectize-input`);
-    fillIn(`${$assignee_component} > .selectize-input input`, '');
-    triggerEvent(`${$assignee_component} > .selectize-input input`, 'keydown', BACKSPACE);
-    andThen(() => {
-       let ticket = store.findOne('ticket');
-       assert.ok(!ticket.get('assignee'));
-       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    });
-});
-
 test('all required fields persist correctly when the user submits a new ticket form', (assert) => {
     page.visit();
     click('.t-add-new');
@@ -377,7 +350,8 @@ test('all required fields persist correctly when the user submits a new ticket f
     });
     fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectOne);
     fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
-    fillIn('.t-ticket-priority', TICKET_DEFAULTS.priorityOneId);
+    let priority_selector = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
+    click(`${priority_selector} > .selectize-dropdown div.option:eq(0)`);
     let $location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
     click(`${$location_component} > .selectize-input`);
     fillIn(`${$location_component} > .selectize-input input`, '6');
@@ -400,5 +374,50 @@ test('all required fields persist correctly when the user submits a new ticket f
         assert.equal(persisted.get('status.id'), TICKET_DEFAULTS.statusOneId);
         assert.ok(persisted.get('isNotDirty'));
         assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when hit backspace should remove person from assignee', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(location_xhr);
+    page.visitNew();
+    people_xhr = xhr(`${PREFIX}/admin/people/?search=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
+    let selector = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+    fillIn(`${selector} > .selectize-input input`, 'b');
+    triggerEvent(`${selector} > .selectize-input input`, 'keyup', LETTER_B);
+    click(`${selector} > .selectize-dropdown div.option:eq(1)`);
+    andThen(() => {
+       assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
+       let ticket = store.findOne('ticket');
+       assert.ok(ticket.get('assignee'));
+       assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
+       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+       let ticket = store.findOne('ticket');
+       assert.ok(!ticket.get('assignee'));
+       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when hit backspace should remove priority from select component', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(location_xhr);
+    page.visitNew();
+    let selector = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
+    click(`${selector} > .selectize-dropdown div.option:eq(0)`);
+    andThen(() => {
+       assert.equal(find('.t-ticket-priority-select').val(), TICKET_DEFAULTS.priorityOneId);
+       let ticket = store.findOne('ticket');
+       assert.ok(ticket.get('priority'));
+       assert.equal(ticket.get('priority').get('id'), TICKET_DEFAULTS.priorityOneId);
+       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+       let ticket = store.findOne('ticket');
+       assert.ok(!ticket.get('priority'));
+       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
