@@ -1,14 +1,9 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
-import prevent_duplicate_name from 'bsrs-ember/validation/prevent_duplicate_name';
-import TabMixin from 'bsrs-ember/mixins/components/tab/base';
-import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 
-var LocationLevelComponent = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
+var LocationLevelComponent = Ember.Component.extend({
     repository: inject('location-level'),
     classNames: ['wrapper', 'form'],
-    nameValidation: validate('model.name', prevent_duplicate_name),
     available_location_levels: Ember.computed(function() {
         let repository = this.get('repository');
         let location_level_id = this.get('model.id');
@@ -25,14 +20,6 @@ var LocationLevelComponent = Ember.Component.extend(TabMixin, EditMixin, Validat
         });
         return name_arr;
     }),
-    actions: {
-        save() {
-            this.set('submitted', true);
-            if (this.get('valid')) {
-                this._super();
-            }
-        }
-    }
 });
 
 export default LocationLevelComponent;
