@@ -918,6 +918,21 @@ test('change_assignee will remove the ticket id from the prev assignee assigned_
     assert.deepEqual(assignee.get('assigned_tickets'), [9]);
 });
 
+test('remove_assignee will remove the ticket id from the assignee assigned_tickets array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let assignee = store.push('person', {id: TICKET_DEFAULTS.assigneeOneId, name: TICKET_DEFAULTS.assigneeOne, assigned_tickets: [9, TICKET_DEFAULTS.idOne]});
+    assert.deepEqual(assignee.get('assigned_tickets'), [9, TICKET_DEFAULTS.idOne]);
+    ticket.remove_assignee();
+    assert.deepEqual(assignee.get('assigned_tickets'), [9]);
+});
+
+test('remove_assignee will do nothing if the ticket has no assignee', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    assert.ok(!ticket.get('assignee'));
+    ticket.remove_assignee();
+    assert.ok(!ticket.get('assignee'));
+});
+
 test('assignee will save correctly as undefined', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, assignee_fk: undefined});
     store.push('person', {id: TICKET_DEFAULTS.assigneeOneId, name: TICKET_DEFAULTS.assigneeOne, assigned_tickets: []});
