@@ -40,9 +40,8 @@ var TicketNewRoute = TabNewRoute.extend({
         let ticket_location_options = this.get('locationRepo').findTicket(search_location);
 
         let search_assignee = transition.queryParams.search_assignee;
-        let ticket_assignee_options = [];
         let peopleRepo = this.get('peopleRepo');
-        ticket_assignee_options = peopleRepo.findTicketAssignee(search_assignee) || [];
+        let ticket_assignee_options = peopleRepo.findTicketAssignee(search_assignee);
 
         return Ember.RSVP.hash({
             model: model,

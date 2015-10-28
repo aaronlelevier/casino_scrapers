@@ -1021,6 +1021,21 @@ test('change_location will remove the ticket id from the prev location tickets a
     assert.deepEqual(location.get('tickets'), [9]);
 });
 
+test('remove_location will remove the ticket id from the location tickets array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, tickets: [9, TICKET_DEFAULTS.idOne]});
+    assert.deepEqual(location.get('tickets'), [9, TICKET_DEFAULTS.idOne]);
+    ticket.remove_location();
+    assert.deepEqual(location.get('tickets'), [9]);
+});
+
+test('remove_location will do nothing if the ticket has no location', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    assert.ok(!ticket.get('location'));
+    ticket.remove_location();
+    assert.ok(!ticket.get('location'));
+});
+
 test('location will save correctly as undefined', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, location_fk: undefined});
     store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, tickets: []});

@@ -575,7 +575,7 @@ test('selecting and removing a top level category will remove children categorie
     });
 });
 
-test('location component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
+test('wat location component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
     page.visitDetail();
     andThen(() => {
        assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idOne);
