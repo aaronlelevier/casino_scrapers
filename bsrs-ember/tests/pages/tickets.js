@@ -40,7 +40,7 @@ var TicketPage = PageObject.build({
   ticketTopLevelCategoryOptions: count(`${TOPLEVEL} > .selectize-dropdown div.option`),
   ticketSecondLevelCategorySelected: count(`${SECONDLEVEL} > .selectize-input div.item`),
   ticketSecondLevelCategoryOptions: count(`${SECONDLEVEL} > .selectize-dropdown div.option`),
-  
+
   locationSelectComponent: clickable(),
 });
 

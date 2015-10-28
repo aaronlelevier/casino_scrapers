@@ -11,9 +11,11 @@
                         {{/form-group}}
                     </div>
                     <div class="col-md-12">
-                        {{#form-group title="admin.ticket.label.priority" for="priority"}}
-                            {{ticket-priority-select ticket=model priorities=priorities}}
-                        {{/form-group}}
+                        <select class="t-ticket-priority form-control ticket-priority" onchange={{action "changed_priority" value="target.value"}}>
+                            {{#each priorities as |priority|}}
+                            <option value={{priority.id}} selected={{is-equal model.priority.id priority.id}}>{{priority.name}}</option>
+                            {{/each}}
+                        </select>
                     </div>
                     <div class="col-md-12">
                         {{#form-group title="admin.ticket.label.status" for="status"}}
