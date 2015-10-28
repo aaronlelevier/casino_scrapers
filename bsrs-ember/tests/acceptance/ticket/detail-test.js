@@ -257,9 +257,10 @@ test('clicking and typing into selectize for people will fire off xhr request fo
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    selectize.input('a');
-    triggerEvent('.selectize-input:eq(0) input', 'keyup', LETTER_A);
-    page.clickSelectizeOption();
+    let cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    fillIn(`${cc_component} > .selectize-input input`, 'a');
+    triggerEvent(`${cc_component} > .selectize-input input`, 'keyup', LETTER_A);
+    click(`${cc_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 1);
@@ -287,9 +288,10 @@ test('can remove and add back same cc', (assert) => {
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=Mel';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    selectize.input('Mel');
-    triggerEvent('.selectize-input:eq(0) input', 'keyup', LETTER_M);
-    page.clickSelectizeOption();
+    let cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    fillIn(`${cc_component} > .selectize-input input`, 'Mel');
+    triggerEvent(`${cc_component} > .selectize-input input`, 'keyup', LETTER_M);
+    click(`${cc_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 1);
@@ -315,7 +317,8 @@ test('when you deep link to the ticket detail can remove a cc', (assert) => {
         assert.equal(page.ticketPeopleSelected(), 1);
         assert.equal(page.ticketPeopleOptions(), 0);
     });
-    page.removeTicketPeople();
+    let cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    click(`${cc_component} > .selectize-input > div.item > a.remove:eq(0)`);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('cc').get('length'), 0);
@@ -344,14 +347,15 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    page.removeTicketPeople();
-    page.removeTicketPeople();
+    let cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    click(`${cc_component} > .selectize-input > div.item > a.remove:eq(0)`);
+    click(`${cc_component} > .selectize-input > div.item > a.remove:eq(0)`);
     andThen(() => {
         assert.equal(page.ticketPeopleOptions(), 0);
     });
-    selectize.input('a');
-    triggerEvent('.selectize-input:eq(0) input', 'keyup', LETTER_A);
-    page.clickSelectizeOption();
+    fillIn(`${cc_component} > .selectize-input input`, 'a');
+    triggerEvent(`${cc_component} > .selectize-input input`, 'keyup', LETTER_A);
+    click(`${cc_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 2);
@@ -381,13 +385,14 @@ test('search will filter down on people in store correctly by removing and addin
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=sc';
     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-    page.removeSecondTicketPeople();
+    let cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    click(`${cc_component} > .selectize-input > div.item > a.remove:eq(1)`);
     andThen(() => {
         assert.equal(page.ticketPeopleOptions(), 0);
     });
-    selectize.input('sc');
-    triggerEvent('.selectize-input:eq(0) input', 'keyup', LETTER_S);
-    page.clickSelectizeOption();
+    fillIn(`${cc_component} > .selectize-input input`, 'sc');
+    triggerEvent(`${cc_component} > .selectize-input input`, 'keyup', LETTER_S);
+    click(`${cc_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(ticket.get('ticket_people_fks').length, 2);
@@ -407,8 +412,9 @@ test('search will filter down on people in store correctly by removing and addin
 
 test('clicking and typing into selectize for people will not filter if spacebar pressed', (assert) => {
     page.visitDetail();
-    selectize.input(' ');
-    triggerEvent('.selectize-input:eq(0) input', 'keyup', SPACEBAR);
+    let cc_component = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+    fillIn(`${cc_component} > .selectize-input input`, ' ');
+    triggerEvent(`${cc_component} > .selectize-input input`, 'keyup', SPACEBAR);
     andThen(() => {
         assert.equal(page.ticketPeopleOptions(), 0);
     });
@@ -480,8 +486,8 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.equal(components, 3);
     });
     //select same
-    let $first_component = 'select.t-ticket-category-select:eq(0) + .selectize-control';
-    click(`${$first_component} > .selectize-dropdown div.option:eq(0)`);
+    let first_component = 'select.t-ticket-category-select:eq(0) + .selectize-control';
+    click(`${first_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let components = page.selectizeComponents();
         assert.equal(store.find('ticket').get('length'), 1);
@@ -496,8 +502,8 @@ test('selecting a top level category will alter the url and can cancel/discard c
     let category_two = {id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameUnused, parent: {id: CATEGORY_DEFAULTS.nameOne}};
     category_two.children = [{id: CATEGORY_DEFAULTS.idWatChild, name: CATEGORY_DEFAULTS.nameWatChild}];
     xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
-    let $second_component = 'select.t-ticket-category-select:eq(1) + .selectize-control';
-    click(`${$second_component} > .selectize-dropdown div.option:eq(0)`);
+    let second_component = 'select.t-ticket-category-select:eq(1) + .selectize-control';
+    click(`${second_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let components = page.selectizeComponents();
         let tickets = store.find('ticket');
@@ -575,14 +581,22 @@ test('selecting and removing a top level category will remove children categorie
     });
 });
 
-test('wat location component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
+
+/*TICKET TO LOCATION*/
+test('location component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
     page.visitDetail();
     andThen(() => {
-       assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idOne);
-       let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-       assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
-       assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
-       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idOne);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idOne);
+        assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idOne);
+        assert.equal(ticket.get('categories').get('length'), 2);
+        assert.equal(page.ticketTopLevelCategorySelected(), 1);
+        assert.equal(page.ticketTopLevelCategoryOptions(), 2);
+        assert.equal(page.ticketSecondLevelCategorySelected(), 1);
+        assert.equal(page.ticketSecondLevelCategoryOptions(), 2);
     });
     xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
     let selector = 'select.t-ticket-location-select:eq(0) + .selectize-control';
@@ -612,11 +626,17 @@ test('wat location component shows location for ticket and will fire off xhr to 
     });
     click(`${selector} > .selectize-dropdown div.option:eq(1)`);
     andThen(() => {
-       assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idTwo);
-       let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-       assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
-       assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
-       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idTwo);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
+        assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idOne);
+        assert.equal(ticket.get('categories').get('length'), 2);
+        assert.equal(page.ticketTopLevelCategorySelected(), 1);
+        assert.equal(page.ticketTopLevelCategoryOptions(), 2);
+        assert.equal(page.ticketSecondLevelCategorySelected(), 1);
+        assert.equal(page.ticketSecondLevelCategoryOptions(), 2);
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response_put = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
@@ -625,8 +645,8 @@ test('wat location component shows location for ticket and will fire off xhr to 
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response_put);
     generalPage.save();
     andThen(() => {
-       assert.equal(currentURL(), TICKETS_URL);
-       let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(currentURL(), TICKETS_URL);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
 });

@@ -301,26 +301,26 @@ test('shows assignee for ticket and will fire off xhr to fetch assignee(persons)
     clearxhr(location_xhr);
     page.visitNew();
     people_xhr = xhr(`${PREFIX}/admin/people/?search=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-    let $first_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-    click(`${$first_component} > .selectize-input`);
-    fillIn(`${$first_component} > .selectize-input input`, 'b');
-    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', LETTER_B);
+    let assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+    click(`${assignee_component} > .selectize-input`);
+    fillIn(`${assignee_component} > .selectize-input input`, 'b');
+    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
     andThen(() => {
-        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 10);
+        assert.equal(find(`${assignee_component} > .selectize-dropdown div.option`).length, 10);
     });
-    $first_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-    click(`${$first_component} > .selectize-input`);
-    fillIn(`${$first_component} > .selectize-input input`, '');
-    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', BACKSPACE);
+    assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+    click(`${assignee_component} > .selectize-input`);
+    fillIn(`${assignee_component} > .selectize-input input`, '');
+    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', BACKSPACE);
     andThen(() => {
-        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 0);
+        assert.equal(find(`${assignee_component} > .selectize-dropdown div.option`).length, 0);
     });
-    $first_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-    click(`${$first_component} > .selectize-input`);
-    fillIn(`${$first_component} > .selectize-input input`, 'b');
-    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', LETTER_B);
+    assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+    click(`${assignee_component} > .selectize-input`);
+    fillIn(`${assignee_component} > .selectize-input input`, 'b');
+    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
     andThen(() => {
-        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 10);
+        assert.equal(find(`${assignee_component} > .selectize-dropdown div.option`).length, 10);
     });
 });
 
@@ -333,11 +333,11 @@ test('all required fields persist correctly when the user submits a new ticket f
         assert.ok(store.find('ticket', UUID.value).get('isNotDirty'));
     });
     people_xhr = xhr(`${PREFIX}/admin/people/?search=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-    let $assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-    click(`${$assignee_component} > .selectize-input`);
-    fillIn(`${$assignee_component} > .selectize-input input`, 'b');
-    triggerEvent(`${$assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
-    click(`${$assignee_component} > .selectize-dropdown div.option:eq(1)`);
+    let assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+    click(`${assignee_component} > .selectize-input`);
+    fillIn(`${assignee_component} > .selectize-input input`, 'b');
+    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
+    click(`${assignee_component} > .selectize-dropdown div.option:eq(1)`);
     andThen(() => {
        assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
        let ticket = store.findOne('ticket');
@@ -349,14 +349,14 @@ test('all required fields persist correctly when the user submits a new ticket f
     fillIn('.t-ticket-status', TICKET_DEFAULTS.statusOneId);
     let priority_selector = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
     click(`${priority_selector} > .selectize-dropdown div.option:eq(0)`);
-    let $location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-    click(`${$location_component} > .selectize-input`);
-    fillIn(`${$location_component} > .selectize-input input`, '6');
-    triggerEvent(`${$location_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${location_component} > .selectize-input`);
+    fillIn(`${location_component} > .selectize-input input`, '6');
+    triggerEvent(`${location_component} > .selectize-input input`, 'keyup', NUMBER_6);
     andThen(() => {
-        assert.equal(find(`${$location_component} > .selectize-dropdown div.option`).length, 2);
+        assert.equal(find(`${location_component} > .selectize-dropdown div.option`).length, 2);
     });
-    click(`${$location_component} > .selectize-dropdown div.option:eq(1)`);
+    click(`${location_component} > .selectize-dropdown div.option:eq(1)`);
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(ticket_payload), {}, 201, Ember.$.extend(true, {}, ticket_payload));
     generalPage.save();
     andThen(() => {
