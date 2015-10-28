@@ -11,6 +11,7 @@ import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_DEFAULTS_PUT from 'bsrs-ember/vendor/defaults/person-put';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
@@ -20,7 +21,7 @@ const NEW_URL = BASE_PEOPLE_URL + '/new';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const ROLE_URL = BASE_ROLE_URL + '/index';
 
-let application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
+let application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid;
 
 module('Acceptance | tab people test', {
     beforeEach() {
@@ -29,8 +30,10 @@ module('Acceptance | tab people test', {
         endpoint = PREFIX + BASE_PEOPLE_URL + '/';
         people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
         detail_xhr = xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
+        original_uuid = random.uuid;
     },
     afterEach() {
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -141,6 +144,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
 });
 
 test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+    random.uuid = function() { return UUID.value; };
     clearxhr(detail_xhr);
     visit(NEW_URL);
     andThen(() => {

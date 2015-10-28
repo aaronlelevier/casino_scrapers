@@ -11,13 +11,14 @@ import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_roles_url;
 const ROLE_URL = BASE_URL + '/index';
 const ROLE_NEW_URL = BASE_URL + '/new';
 
-let application, store, payload, list_xhr;
+let application, store, payload, list_xhr, original_uuid;
 
 module('Acceptance | role-new', {
     beforeEach() {
@@ -32,8 +33,11 @@ module('Acceptance | role-new', {
         store = application.__container__.lookup('store:main');
         let endpoint = PREFIX + BASE_URL + '/';
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ROLE_FIXTURES.empty());
+        original_uuid = random.uuid;
+        random.uuid = function() { return UUID.value; };
     },
     afterEach() {
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });

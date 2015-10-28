@@ -13,17 +13,12 @@ import ADDRESS_DEFAULTS from 'bsrs-ember/vendor/defaults/address';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/person-location';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
-import random from 'bsrs-ember/models/random';
 
 var store, uuid;
 
 module('unit: person test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'model:person-location', 'service:currency','service:person-current','service:translations-fetcher','service:i18n', 'model:uuid']);
-        random.uuid = function() { return Ember.uuid(); };
-    },
-    afterEach() {
-        random.uuid = function() { return 'abc123'; };
     }
 });
 

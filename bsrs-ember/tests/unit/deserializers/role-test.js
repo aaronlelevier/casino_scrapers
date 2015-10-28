@@ -9,7 +9,6 @@ import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import RoleDeserializer from 'bsrs-ember/deserializers/role';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import random from 'bsrs-ember/models/random';
 
 let store, uuid, category_deserializer, subject;
 
@@ -19,9 +18,6 @@ module('unit: role deserializer test', {
         category_deserializer = CategoryDeserializer.create({store: store});
         uuid = this.container.lookup('model:uuid');
         subject = RoleDeserializer.create({store: store, uuid: uuid, CategoryDeserializer: category_deserializer});
-    },
-    afterEach() {
-        random.uuid = function() { return 'abc123'; };
     }
 });
 

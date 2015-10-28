@@ -27,6 +27,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import selectize from 'bsrs-ember/tests/pages/selectize';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
@@ -36,7 +37,7 @@ const DETAIL_URL = BASE_PEOPLE_URL + '/' + PEOPLE_DEFAULTS.id;
 const LETTER_A = {keyCode: 65};
 const BACKSPACE = {keyCode: 8};
 
-var application, store, list_xhr, people_detail_data, endpoint, detail_xhr;
+var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid;
 
 module('Acceptance | detail test', {
     beforeEach() {
@@ -47,8 +48,10 @@ module('Acceptance | detail test', {
         people_detail_data = PEOPLE_FIXTURES.detail(PEOPLE_DEFAULTS.id);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
         detail_xhr = xhr(endpoint + PEOPLE_DEFAULTS.id + '/', 'GET', null, {}, 200, people_detail_data);
+        original_uuid = random.uuid;
     },
     afterEach() {
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -323,6 +326,7 @@ test('address without a valid address or zip code are ignored and removed on sav
 });
 
 test('when editing phone numbers and addresses to invalid, it checks for validation', (assert) => {
+    random.uuid = function() { return UUID.value; };
     visit(DETAIL_URL);
     fillIn('.t-person-username', '');
     click('.t-add-btn:eq(0)');
@@ -629,6 +633,7 @@ test('when click delete, person is deleted and removed from store', (assert) => 
 });
 
 test('when you deep link to the person detail view you can add a new phone number', (assert) => {
+    random.uuid = function() { return UUID.value; };
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -659,6 +664,7 @@ test('when you deep link to the person detail view you can add a new phone numbe
 });
 
 test('when you deep link to the person detail view you can add a new address', (assert) => {
+    random.uuid = function() { return UUID.value; };
     visit(DETAIL_URL);
     andThen(() => {
         var person = store.find('person', PEOPLE_DEFAULTS.id);
@@ -779,6 +785,7 @@ test('when you deep link to the person detail view you can add and remove a new 
 });
 
 test('when you deep link to the person detail view you can change the phone number type and add a new phone number', (assert) => {
+    random.uuid = function() { return UUID.value; };
     visit(DETAIL_URL);
     fillIn('.t-input-multi-phone select:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     click('.t-add-btn:eq(0)');
@@ -801,6 +808,7 @@ test('when you deep link to the person detail view you can change the phone numb
 });
 
 test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
+    random.uuid = function() { return UUID.value; };
     visit(DETAIL_URL);
     fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
     click('.t-add-address-btn:eq(0)');
@@ -823,6 +831,7 @@ test('when you deep link to the person detail view you can change the address ty
 });
 
 test('when you deep link to the person detail view you can add and save a new phone number with validation', (assert) => {
+    random.uuid = function() { return UUID.value; };
     visit(DETAIL_URL);
     click('.t-add-btn:eq(0)');
     andThen(() => {
@@ -848,6 +857,7 @@ test('when you deep link to the person detail view you can add and save a new ph
 });
 
 test('when you deep link to the person detail view you can add and save a new address with validation', (assert) => {
+    random.uuid = function() { return UUID.value; };
     visit(DETAIL_URL);
     click('.t-add-address-btn:eq(0)');
     andThen(() => {

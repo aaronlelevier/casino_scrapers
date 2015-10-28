@@ -6,21 +6,14 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
-import random from 'bsrs-ember/models/random';
 
 var store;
 
 module('unit: parent-ticket-category-select component test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:ticket-category', 'model:uuid', 'service:eventbus']);
-        // eventbus = this.container.lookup('service:eventbus');
-        random.uuid = function() { return Ember.uuid(); };
-    },
-    afterEach() {
-        random.uuid = function() { return 'abc123'; };
     }
 });
-
 
 test('component is not valid when the only category (on the ticket model) has children', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});

@@ -25,7 +25,7 @@ const INDEX_ROUTE = 'tickets.index';
 const DETAIL_ROUTE = 'tickets.ticket';
 const DOC_TYPE = 'ticket';
 
-let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr;
+let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr, original_uuid;
 
 module('Acceptance | tab ticket test', {
     beforeEach() {
@@ -36,10 +36,10 @@ module('Acceptance | tab ticket test', {
         detail_xhr = xhr(endpoint + TICKET_DEFAULTS.idOne + '/', 'GET', null, {}, 200, ticket_detail_data);
         let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
         xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
-        random.uuid = function() { return Ember.uuid(); };
+        original_uuid = random.uuid;
     },
     afterEach() {
-        random.uuid = function() { return 'abc123'; };
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -150,6 +150,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
 });
 
 test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+    random.uuid = function() { return 'abc123'; };
     clearxhr(detail_xhr);
     visit(NEW_URL);
     andThen(() => {

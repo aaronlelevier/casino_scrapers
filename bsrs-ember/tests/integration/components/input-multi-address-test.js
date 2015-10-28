@@ -14,7 +14,6 @@ import ADDRESS_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import STATE_DEFAULTS from 'bsrs-ember/vendor/defaults/state';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
-import UUID from 'bsrs-ember/vendor/defaults/uuid';
 
 var store, default_type;
 
@@ -61,7 +60,7 @@ test('click add btn will append blank entry to list of entries and binds value t
     assert.equal($component.find('.t-address-state').length, 1);
     assert.equal($component.find('.t-address-state option').length, 3);
     assert.equal($component.find('.t-address-country option').length, 3);
-    assert.equal(model.objectAt(0).get('id'), UUID.value);
+    assert.equal(model.objectAt(0).get('id').length, 36);
     assert.equal(model.objectAt(0).get('type'), ADDRESS_TYPE_DEFAULTS.officeId);
     assert.equal(model.objectAt(0).get('person_id'), PEOPLE_DEFAULTS.id);
     assert.equal(model.objectAt(0).get('address'), undefined);

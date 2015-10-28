@@ -7,17 +7,12 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
 import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
-import random from 'bsrs-ember/models/random';
 
 var store, uuid;
 
 module('unit: ticket test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:ticket-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
-        random.uuid = function() { return Ember.uuid(); };
-    },
-    afterEach() {
-        random.uuid = function() { return 'abc123'; };
     }
 });
 
