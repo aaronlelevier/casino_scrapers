@@ -467,15 +467,17 @@ test('selectize options are rendered immediately when enter detail route and can
 });
 
 test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+    //add 'wat' to children
+    detail_data.categories[1].children.push({id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameUnused});
     page.visitDetail();
     andThen(() => {
         let components = page.selectizeComponents();
-        assert.equal(store.find('category').get('length'), 6);
+        assert.equal(store.find('category').get('length'), 5);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
         assert.ok(tickets.objectAt(0).get('isNotDirtyOrRelatedNotDirty'));
         assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));
-        assert.equal(components, 2);
+        assert.equal(components, 3);
     });
     //select same
     let $first_component = 'select.t-ticket-category-select:eq(0) + .selectize-control';
@@ -488,26 +490,25 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
         assert.ok(tickets.objectAt(0).get('isNotDirtyOrRelatedNotDirty'));
         assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));
-        assert.equal(components, 2);
+        assert.equal(components, 3);
     });
-    //select wat from second level
+    //select electrical from second level
     let category_two = {id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameUnused, parent: {id: CATEGORY_DEFAULTS.nameOne}};
     category_two.children = [{id: CATEGORY_DEFAULTS.idWatChild, name: CATEGORY_DEFAULTS.nameWatChild}];
-    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idChild}/`, 'GET', null, {}, 200, category_two);
+    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
     let $second_component = 'select.t-ticket-category-select:eq(1) + .selectize-control';
-    click(`${$second_component} > .selectize-dropdown div.option:eq(1)`);
+    click(`${$second_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let components = page.selectizeComponents();
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
-        assert.equal(store.find('category').get('length'), 7);
+        assert.equal(store.find('category').get('length'), 6);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
         assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 0);
         assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
         assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
-        //ensure new component in DOM with wats' children
-        assert.equal(components, 3);
+        assert.equal(components, 2);
     });
     generalPage.cancel();
     andThen(() => {
@@ -525,13 +526,13 @@ test('selecting a top level category will alter the url and can cancel/discard c
             let components = page.selectizeComponents();
             let tickets = store.find('ticket');
             assert.equal(tickets.get('length'), 1);
-            assert.equal(store.find('category').get('length'), 7);
+            assert.equal(store.find('category').get('length'), 6);
             assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
             assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
-            assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 1);
+            assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 0);
             assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
             assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
-            assert.equal(components, 3);
+            assert.equal(components, 2);
         });
     });
     generalPage.cancel();
@@ -555,7 +556,7 @@ test('selecting and removing a top level category will remove children categorie
     page.visitDetail();
     andThen(() => {
         let components = page.selectizeComponents();
-        assert.equal(store.find('category').get('length'), 6);
+        assert.equal(store.find('category').get('length'), 4);
         let tickets = store.find('ticket');
         assert.equal(components, 2);
     });
@@ -583,18 +584,33 @@ test('location component shows location for ticket and will fire off xhr to fetc
        assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
-    let locations = [LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idThree, LOCATION_DEFAULTS.storeNameFour), LOCATION_FIXTURES.get(LOCATION_DEFAULTS.idTwo, LOCATION_DEFAULTS.storeNameTwo)];
-    let response = {'count':2,'next':null,'previous':null,'results': locations};
-    xhr(`${PREFIX}/admin/locations/&name__icontains=6`, 'GET', null, {}, 200, response);
-    let $first_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-    click(`${$first_component} > .selectize-input`);
-    triggerEvent(`${$first_component} > .selectize-input input`, 'keydown', BACKSPACE);
-    fillIn(`${$first_component} > .selectize-input input`, '6');
-    triggerEvent(`${$first_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
+    let selector = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    click(`${selector} > .selectize-input`);
+    fillIn(`${selector} > .selectize-input input`, '');
+    triggerEvent(`${selector} > .selectize-input input`, 'keyup', BACKSPACE);
+    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
     andThen(() => {
-        assert.equal(find(`${$first_component} > .selectize-dropdown div.option`).length, 2);
+        assert.equal(find(`${selector} > .selectize-dropdown div.option`).length, 0);
     });
-    click(`${$first_component} > .selectize-dropdown div.option:eq(1)`);
+    click(`${selector} > .selectize-input`);
+    fillIn(`${selector} > .selectize-input input`, '6');
+    triggerEvent(`${selector} > .selectize-input input`, 'keyup', NUMBER_6);
+    andThen(() => {
+        assert.equal(find(`${selector} > .selectize-dropdown div.option`).length, 2);
+    });
+    click(`${selector} > .selectize-input`);
+    fillIn(`${selector} > .selectize-input input`, '');//this is required
+    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        assert.equal(find(`${selector} > .selectize-dropdown div.option`).length, 2);
+    });
+    fillIn(`${selector} > .selectize-input input`, '6');
+    triggerEvent(`${selector} > .selectize-input input`, 'keyup', NUMBER_6);
+    andThen(() => {
+        assert.equal(find(`${selector} > .selectize-dropdown div.option`).length, 2);
+    });
+    click(`${selector} > .selectize-dropdown div.option:eq(1)`);
     andThen(() => {
        assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idTwo);
        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);

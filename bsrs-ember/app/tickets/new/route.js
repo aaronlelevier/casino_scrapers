@@ -37,11 +37,7 @@ var TicketNewRoute = TabNewRoute.extend({
         let transition = arguments[1];
 
         let search_location = transition.queryParams.search_location;
-        let ticket_location_options = [];
-        if (search_location) {  
-            let locationRepo = this.get('locationRepo');
-            ticket_location_options = locationRepo.findTicket(search_location) || [];
-        }
+        let ticket_location_options = this.get('locationRepo').findTicket(search_location);
 
         let search_assignee = transition.queryParams.search_assignee;
         let ticket_assignee_options = [];

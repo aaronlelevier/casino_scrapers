@@ -203,7 +203,7 @@ test('selecting and removing a top level category will remove children categorie
     page.visitNew();
     andThen(() => {
         let components = page.selectizeComponents();
-        assert.equal(store.find('category').get('length'), 4);
+        assert.equal(store.find('category').get('length'), 3);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
         assert.equal(components, 1);
@@ -217,7 +217,7 @@ test('selecting and removing a top level category will remove children categorie
     andThen(() => {
         let components = page.selectizeComponents();
         assert.equal(store.find('ticket').get('length'), 1);
-        assert.equal(store.find('category').get('length'), 5);
+        assert.equal(store.find('category').get('length'), 4);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
