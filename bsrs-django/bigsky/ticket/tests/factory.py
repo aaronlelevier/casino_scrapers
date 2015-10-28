@@ -11,18 +11,9 @@ from category.tests.factory import create_categories
 
 
 def create_tickets(cc=None, requester=None, assignee=None, _many=1):
-    '''
-    Ticket Subjects 
-    '''
-
-    if not cc:
-        cc = create_person()
-
-    if not assignee:
-        assignee = create_person()
-
-    if not requester:
-        requester = create_person()
+    cc = cc or create_person()
+    assignee = assignee or create_person()
+    requester = requester or create_person()
 
     create_categories()
     categories = Category.objects.all()
@@ -30,11 +21,11 @@ def create_tickets(cc=None, requester=None, assignee=None, _many=1):
     
     for i in range(_many):
         kwargs = {
-           'subject' : random_lorem(),
-           'request' : random_lorem(),
-           'assignee' : assignee,
-           'requester' : requester,
-           'categories' : categories,
+           'subject': random_lorem(),
+           'request': random_lorem(),
+           'assignee': assignee,
+           'requester': requester,
+           'categories': categories,
         }
         ticket = mommy.make(Ticket, make_m2m=True, **kwargs)
         ticket.cc.add(cc)

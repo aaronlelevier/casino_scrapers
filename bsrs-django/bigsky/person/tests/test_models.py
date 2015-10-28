@@ -10,8 +10,8 @@ from model_mommy import mommy
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
-from person.tests.factory import PASSWORD, create_person, create_role
-from translation.models import Locale, Translation
+from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
+from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create
 
@@ -98,8 +98,7 @@ class PersonManagerTests(TestCase):
     def test_create_user(self):
         people_count = Person.objects.count()
         role = create_role()
-        person = Person.objects.create_user('myusername', 'myemail@mail.com',
-            'password', role=role)
+        create_single_person()
         self.assertEqual(Person.objects.count(), people_count+1)
 
 

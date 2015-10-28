@@ -11,7 +11,7 @@ def create_categories():
     type = mommy.make(Category, name='repair',
         subcategory_label='trade')
     
-    for i in range(random.randrange(2,5)):
+    for i in range(random.randrange(2, 5)):
         name = random_lorem(1)
         trade = mommy.make(Category, name=name,
             subcategory_label='issue', parent=type)
@@ -20,7 +20,7 @@ def create_categories():
     type.save()
 
     for category in Category.objects.filter(subcategory_label='issue'):
-        for i in range(random.randrange(2,7)):
+        for i in range(random.randrange(2, 7)):
             name = random_lorem(2)
-            issue = mommy.make(Category, name=name,
+            mommy.make(Category, name=name,
                 subcategory_label='sub_issue', parent=category)

@@ -1,4 +1,7 @@
+from __future__ import absolute_import
+
 import random
+
 from selenium.webdriver.common.keys import Keys
 
 

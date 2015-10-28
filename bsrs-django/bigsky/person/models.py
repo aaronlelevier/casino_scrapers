@@ -71,8 +71,8 @@ class Role(BaseModel):
     password_special_char_required = models.BooleanField(
         blank=True, default=False)
     password_char_types = models.CharField(max_length=100,
-                                           help_text="Password characters allowed")  # TODO: This field will need to be accessed when
-    # someone for the role saves their PW to validate it.
+        help_text="Password characters allowed")  # TODO: This field will need to be accessed when
+                                                  # someone for the role saves their PW to validate it.
     password_expire = models.IntegerField(blank=True, default=90,
                                           help_text="Number of days after setting password that it will expire."
                                           "If '0', password will never expire.")
@@ -160,7 +160,7 @@ class Role(BaseModel):
     def _update_defaults(self):
         if not self.group:
             try:
-                self.group, created = Group.objects.get_or_create(
+                self.group, _ = Group.objects.get_or_create(
                     name=self.name)
             except IntegrityError:
                 raise
@@ -247,9 +247,6 @@ class Person(BaseModel, AbstractUser):
     middle_initial = models.CharField(max_length=1, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     # Passwords
-    # TODO: use django default 1x PW logic here?
-    # https://github.com/django/django/blob/master/django/contrib/auth/views.py
-    # (line #214)
     password_length = models.PositiveIntegerField(blank=True, null=True,
                                                   help_text="Store the length of the current password.")
     password_expire_date = models.DateField(blank=True, null=True,
@@ -272,7 +269,7 @@ class Person(BaseModel, AbstractUser):
     proxy_user = models.ForeignKey("self", related_name='coveringuser',
                                    blank=True, null=True)
     # TODO: add logs for:
-    #   pw_chage_log, login_activity, user_history
+    #   pw_change_log, login_activity, user_history
     phone_numbers = GenericRelation(PhoneNumber)
     addresses = GenericRelation(Address)
     emails = GenericRelation(Email)

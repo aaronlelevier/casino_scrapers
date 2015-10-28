@@ -28,7 +28,7 @@ class RoleViewSet(BaseModelViewSet):
         elif self.action == ('update' or 'partial_update'):
             return ps.RoleUpdateSerializer
         else:
-             return ps.RoleSerializer
+            return ps.RoleSerializer
 
 
 class PersonStatusViewSet(BaseModelViewSet):
@@ -110,7 +110,7 @@ class PersonViewSet(BaseModelViewSet):
     def reset_password(self, request, person_id=None):
         person = get_object_or_404(Person, id=person_id)
         self._validate_passwords_match(request.data)
-        self._reset_password(person_id, request.data.get('new_password1'))
+        self._reset_password(person, request.data.get('new_password1'))
         return Response(status=status.HTTP_200_OK)
 
     def _validate_passwords_match(self, data):
@@ -123,7 +123,7 @@ class PersonViewSet(BaseModelViewSet):
         if new_password1 != new_password2:
             raise ValidationError(self.error_messages['password_mismatch'])
 
-    def _reset_password(self, person_id, password):
-        instance = Person.objects.get(id=person_id)
-        instance.set_password(password)
-        instance.save()
+    @staticmethod
+    def _reset_password(person, password):
+        person.set_password(password)
+        person.save()

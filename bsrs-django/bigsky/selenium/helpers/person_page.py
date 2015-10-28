@@ -21,7 +21,7 @@ class PersonPage(ModelPage):
         :Return: new_person; incremented count for the page.
         """
         try:
-            all_people = self.find_list_data()
+            self.find_list_data()
         except AssertionError:
             pass
         list_view_elements = self.find_list_name()

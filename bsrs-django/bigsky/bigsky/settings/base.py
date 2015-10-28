@@ -1,6 +1,5 @@
 import os
-import sys
-import datetime
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -151,7 +150,8 @@ CORS_ORIGIN_ALLOW_ALL = False
 CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8000$', ) #staging
 
 # get w/ Aaron to understand what settings people run for local dev
-# CORS_ORIGIN_REGEX_WHITELIST = ('^https?://localhost:\d{4}$', '^https?://192\.168\.\d{1,3}\.\d{1,3}:\d{4}$', )
+# CORS_ORIGIN_REGEX_WHITELIST = ('^https?://localhost:\d{4}$',
+#    '^https?://192\.168\.\d{1,3}\.\d{1,3}:\d{4}$', )
 
 
 ################

@@ -2,7 +2,6 @@ from django.test import TestCase
 
 from contact.tests import factory
 from contact.models import Email, Address
-from location.models import Location
 from person.models import Person
 from person.tests.factory import create_person
 

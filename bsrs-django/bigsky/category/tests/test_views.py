@@ -209,8 +209,8 @@ class CategoryFilterTests(APITestCase):
         self.assertEqual(data['count'], self.trade.children.count())
 
     def test_filter_by_name(self):
-        cat = mommy.make(Category, name="cat")
-        dog = mommy.make(Category, name="dog")
+        mommy.make(Category, name="cat")
+        mommy.make(Category, name="dog")
         name = "dog"
         response = self.client.get('/api/admin/categories/?name__icontains={}'.format(name))
         data = json.loads(response.content.decode('utf8'))

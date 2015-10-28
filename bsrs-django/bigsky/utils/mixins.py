@@ -29,8 +29,27 @@ class OrderingQuerySetMixin(object):
 
     `StackOverflow link <http://stackoverflow.com/questions/3409047/django-orm-case-insensitive-order-by>`_
     """
+    def get_queryset(self):
+        queryset = self.queryset
+        ordering = self.request.query_params.get('ordering', None)
 
-    def get_field(self, param):
+        if ordering:
+            queryset = self._get_ordered_queryset(queryset, ordering)
+
+        return queryset
+
+    def _get_ordered_queryset(self, queryset, ordering):
+        select_dict = {}
+        order_by_list = []
+
+        for param in ordering.split(','):
+            field, asc = self._get_field(param)
+            select_dict[self._get_key(field)] = self._get_value(field)
+            order_by_list.append(self._get_asc_desc_value(field, asc))
+
+        return queryset.extra(select=select_dict).order_by(*order_by_list)
+
+    def _get_field(self, param):
         """
         :Return: (Field name only w/o '-', Boolean if field is ASC)
         """
@@ -39,31 +58,11 @@ class OrderingQuerySetMixin(object):
         else:
             return (param, True)
 
-    def get_key(self, field):
+    def _get_key(self, field):
         return "lower_{}".format(field)
 
-    def get_value(self, field):
+    def _get_value(self, field):
         return "lower({})".format(field)
 
-    def get_asc_desc_value(self, field, asc):
-        return "{}{}".format("" if asc else "-", self.get_key(field))
-
-    def get_ordered_queryset(self, queryset, ordering):
-        select_dict = {}
-        order_by_list = []
-
-        for param in ordering.split(','):
-            field, asc = self.get_field(param)
-            select_dict[self.get_key(field)] = self.get_value(field)
-            order_by_list.append(self.get_asc_desc_value(field, asc))
-
-        return queryset.extra(select=select_dict).order_by(*order_by_list)
-
-    def get_queryset(self):
-        queryset = self.queryset
-        ordering = self.request.query_params.get('ordering', None)
-
-        if ordering:
-            queryset = self.get_ordered_queryset(queryset, ordering)
-
-        return queryset
+    def _get_asc_desc_value(self, field, asc):
+        return "{}{}".format("" if asc else "-", self._get_key(field))

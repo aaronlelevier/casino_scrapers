@@ -1,13 +1,13 @@
+from __future__ import absolute_import
+
 import unittest
 import random
 import string
 
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select, WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 
 from helpers import (
-    LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
+    LoginMixin, FillInHelper, JavascriptMixin,
     NavPage, GeneralElementsPage, Wait, ModelPage
 )
 
@@ -41,7 +41,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             list_name = "t-ticket-subject",
             list_data = "t-grid-data"
         )
-        tickets = ticket_page.find_list_data()
+        ticket_page.find_list_data()
         # Get to "ticket create view"
         ticket_new_link = ticket_page.find_new_link()
         ticket_new_link.click()

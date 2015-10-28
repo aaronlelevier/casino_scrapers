@@ -1,8 +1,8 @@
 from django.test import TransactionTestCase
 
 from accounting.models import Currency
-from location.models import LocationLevel, Location
-from person.models import Person, Role, PersonStatus
+from location.models import LocationLevel
+from person.models import Person, Role
 from person.tests import factory
 
 

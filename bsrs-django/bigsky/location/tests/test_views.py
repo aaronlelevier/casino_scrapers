@@ -9,8 +9,7 @@ from model_mommy import mommy
 from contact.models import Address, PhoneNumber, PhoneNumberType
 from contact.tests.factory import create_contact, create_contacts
 from location.tests.factory import create_location_levels, create_locations
-from location.models import (Location, LocationLevel, LocationStatus,
-    LocationType)
+from location.models import Location, LocationLevel, LocationStatus
 from location.serializers import (LocationCreateSerializer,
     LocationUpdateSerializer)
 from person.tests.factory import create_person, PASSWORD
@@ -486,14 +485,13 @@ class LocationUpdateTests(APITestCase):
         # Other contacts PHs for examle are unaffected by the nested delete, and only the
         # person at this endpoint will have thier missing contacts deleted
         location2 = Location.objects.exclude(name='ca').first()
-        ph = create_contact(PhoneNumber, location2)
+        create_contact(PhoneNumber, location2)
         # Delete ``self.location`` PHs
-        ph = create_contact(PhoneNumber, self.location)
+        create_contact(PhoneNumber, self.location)
         serializer = LocationUpdateSerializer(self.location)
         data = serializer.data
         data.pop('phone_numbers')
-        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
-            data, format='json')
+        self.client.put('/api/admin/locations/{}/'.format(self.location.id), data, format='json')
         # ``location2`` still has thier PHs
         self.assertTrue(location2.phone_numbers.all())
 
@@ -672,10 +670,10 @@ class DRFFiltersTests(APITestCase):
         )
 
     def test_location_level_filter_by_name(self):
-        # 3 locations total: [c, ca, cat]
-        c = mommy.make(Location, number=_generate_chars(),
+        # 3 locations total: [c, ca, cat]  # 'ca' already exists
+        mommy.make(Location, number=_generate_chars(),
             location_level=self.location_level, name='c')
-        cat = mommy.make(Location, number=_generate_chars(),
+        mommy.make(Location, number=_generate_chars(),
             location_level=self.location_level, name='cat')
         # filter by "c" gets 3
         name = "c"

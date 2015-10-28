@@ -2,7 +2,6 @@ import json
 import uuid
 import copy
 import random
-import codecs
 
 from django.test import TestCase
 from django.db.models.functions import Lower
@@ -12,22 +11,20 @@ from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
 from accounting.models import Currency
+from category.models import Category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_contact, create_contacts
 from location.models import Location, LocationLevel
-from category.models import Category
-from person.models import Person, Role, PersonStatus
-from person.serializers import PersonUpdateSerializer, RoleSerializer, RoleDetailSerializer, RoleUpdateSerializer
+from person.models import Person, Role
+from person.serializers import (PersonUpdateSerializer, RoleSerializer,
+    RoleUpdateSerializer)
 from person.tests.factory import (
     PASSWORD, create_person, create_role, create_roles, create_single_person,
     create_all_people)
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create, choices
-
-
-reader = codecs.getreader("utf-8")
 
 
 ### ROLE ###
@@ -693,7 +690,7 @@ class PersonSearchTests(APITransactionTestCase):
         self.assertEqual(data["count"], users_count)
 
 
-class PersonSearchOrderingTests(TestCase):
+class PersonSearchOrderingTests(APITransactionTestCase):
 
     def setUp(self):
         # Role

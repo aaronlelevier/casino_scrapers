@@ -1,11 +1,11 @@
+from __future__ import absolute_import
+
 import unittest
 import random
 import string
-import time
 
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select, WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
 
 from helpers import (
@@ -212,7 +212,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.find_new_link().click()
         username = "lmno_"+rand_chars()
         password = "bobber-foo"
-        role = "RNfkmZFxsz"
         person = InputHelper(username=username, password=password)
         role_input = Select(self.driver.find_element_by_id("person-role"))
         role_input.select_by_index(1)
@@ -227,7 +226,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         title = "myTitle"
         new_phone_one = "888-999-7878"
         new_phone_two = "888-999-7899"
-        new_password = "bobber-bar"
         person = InputHelper(first_name=first_name, middle_initial=middle_initial,
                 last_name=last_name, employee_id=employee_id,
                 title=title)
@@ -248,7 +246,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         except NoSuchElementException:
             pass
 
-        all_people = person_page.find_list_data()
+        person_page.find_list_data()
         self.driver.refresh()
         new_person = person_page.click_name_in_list(username, new_person=None)
         try:
@@ -268,7 +266,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_delete_btn()
         self.driver.refresh()
         person = self.driver_wait.find_elements_by_class_name(person_page.list_data) #person_page.find_list_data(just_refreshed=True)
-        person_list_view = person_page.find_list_name()
+        person_page.find_list_name()
 
         # # TODO: 
         # This is failing because a Grid View page # allows you to go to that page,

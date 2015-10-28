@@ -31,7 +31,8 @@ class ModelPage(JavascriptMixin):
     def find_list_data(self, just_refreshed=False):
         return self.wait_for_xhr_request(self.list_data, plural=True, just_refreshed=just_refreshed)
 
-    def click_name_in_list(self, name, list_view_elements):
+    @staticmethod
+    def click_name_in_list(name, list_view_elements):
         new_location = None
         for row in list_view_elements:
             if row.text and row.text == name:
