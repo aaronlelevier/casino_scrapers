@@ -20,14 +20,10 @@
           {{parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options}}
         </div>
       </div>
-      {{ticket-priority-select ticket=model priorities=priorities}}
-      {{#validation-error-field submitted=submitted field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
-      <select class="form-control t-ticket-status" onchange={{action "changed_status" value="target.value"}}>
-        {{#each statuses as |status|}}
-        <option value={{status.id}} selected={{is-equal model.status.id status.id}}>{{status.name}}</option>
-        {{/each}}
-      </select>
-      {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
+        {{ticket-priority-select ticket=model priorities=priorities}}
+        {{#validation-error-field submitted=submitted field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
+        {{ticket-status-select ticket=model statuses=statuses}}
+        {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
       <div class="row">
         <div class="col-md-12">
           {{input type="text" placeholder=(t "ticket.label.requester") value=model.requester.name class="form-control t-ticket-requester"}}

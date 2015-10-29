@@ -24,29 +24,29 @@ var TicketNewRoute = TabNewRoute.extend({
             refreshModel: true
         },
     },
+    priorities: Ember.computed(function() {
+        return this.get('priorityRepository').fetch();
+    }),
+    statuses: Ember.computed(function() {
+        return this.get('statusRepository').fetch();
+    }),
+    model_fetch: Ember.computed(function() {
+        return this.get('repository').create();
+    }),
     model() {
-        let repository = this.get('repository');
-        let statusRepository = this.get('statusRepository');
-        let priorityRepository = this.get('priorityRepository');
-        let model = repository.create();
-        let statuses = statusRepository.fetch();
-        let priorities = priorityRepository.fetch();
+        let model = this.get('model_fetch');
+        let statuses = this.get('statuses');
+        let priorities = this.get('priorities');
         let categoryRepo = this.get('categoryRepository');
         let top_level_category_options = categoryRepo.findTopLevelCategories() || [];
-
         let transition = arguments[1];
 
         let search_location = transition.queryParams.search_location;
-        let ticket_location_options = [];
-        if (search_location) {  
-            let locationRepo = this.get('locationRepo');
-            ticket_location_options = locationRepo.findTicket(search_location) || [];
-        }
+        let ticket_location_options = this.get('locationRepo').findTicket(search_location);
 
         let search_assignee = transition.queryParams.search_assignee;
-        let ticket_assignee_options = [];
         let peopleRepo = this.get('peopleRepo');
-        ticket_assignee_options = peopleRepo.findTicketAssignee(search_assignee) || [];
+        let ticket_assignee_options = peopleRepo.findTicketAssignee(search_assignee);
 
         return Ember.RSVP.hash({
             model: model,

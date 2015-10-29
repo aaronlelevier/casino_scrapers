@@ -7,17 +7,12 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
 import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
-import random from 'bsrs-ember/models/random';
 
 var store, uuid;
 
 module('unit: ticket test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:ticket-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n']);
-        random.uuid = function() { return Ember.uuid(); };
-    },
-    afterEach() {
-        random.uuid = function() { return 'abc123'; };
     }
 });
 
@@ -39,6 +34,7 @@ test('ticket is dirty or related is dirty when model has been updated', (assert)
     assert.ok(ticket.get('isNotDirty'));
 });
 
+/*TICKET TO STATUS*/
 test('ticket is dirty or related is dirty when existing status is altered', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
     store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
@@ -114,6 +110,22 @@ test('status will save correctly as undefined', (assert) => {
     assert.equal(ticket.get('status_fk'), undefined);
 });
 
+test('remove_status will remove the ticket id from the priority tickets array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [9, TICKET_DEFAULTS.idOne]});
+    assert.deepEqual(status.get('tickets'), [9, TICKET_DEFAULTS.idOne]);
+    ticket.remove_status();
+    assert.deepEqual(status.get('tickets'), [9]);
+});
+
+test('remove_status will do nothing if the ticket has no priority', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    assert.ok(!ticket.get('status'));
+    ticket.remove_status();
+    assert.ok(!ticket.get('status'));
+});
+
+/*TICKET TO CC*/
 test('cc property should return all associated cc or empty array', (assert) => {
     let m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_people_fks: [TICKET_PERSON_DEFAULTS.idOne]});
@@ -1019,6 +1031,21 @@ test('change_location will remove the ticket id from the prev location tickets a
     store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo, tickets: []});
     ticket.change_location(LOCATION_DEFAULTS.idTwo);
     assert.deepEqual(location.get('tickets'), [9]);
+});
+
+test('remove_location will remove the ticket id from the location tickets array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let location = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName, tickets: [9, TICKET_DEFAULTS.idOne]});
+    assert.deepEqual(location.get('tickets'), [9, TICKET_DEFAULTS.idOne]);
+    ticket.remove_location();
+    assert.deepEqual(location.get('tickets'), [9]);
+});
+
+test('remove_location will do nothing if the ticket has no location', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    assert.ok(!ticket.get('location'));
+    ticket.remove_location();
+    assert.ok(!ticket.get('location'));
 });
 
 test('location will save correctly as undefined', (assert) => {

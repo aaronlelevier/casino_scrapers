@@ -15,13 +15,11 @@ import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import random from 'bsrs-ember/models/random';
 
 let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer, category_deserializer, ticket_priority;
 
 module('unit: ticket deserializer test', {
     beforeEach() {
-        random.uuid = function() { return Ember.uuid(); };
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:location','service:person-current','service:translations-fetcher','service:i18n']);
         uuid = this.container.lookup('model:uuid');
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
@@ -30,9 +28,6 @@ module('unit: ticket deserializer test', {
         category_deserializer = CategoryDeserializer.create({store: store});
         subject = TicketDeserializer.create({store: store, uuid: uuid, PersonDeserializer: person_deserializer, CategoryDeserializer: category_deserializer});
         ticket_priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [TICKET_DEFAULTS.idOne]});
-    },
-    afterEach() {
-        random.uuid = function() { return 'abc123'; };
     }
 });
 

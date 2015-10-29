@@ -28,13 +28,13 @@ export default Ember.Object.extend(GridRepositoryMixin, {
         let url = PEOPLE_URL;
         search = search ? search.trim() : search;
         if (search) {
-            url += `?search=${search}`;
+            url += `?fullname__icontains=${search}`;
             PromiseMixin.xhr(url, 'GET').then((response) => {
                 this.get('PersonDeserializer').deserialize(response);
             });
             let filterFunc = function(person) {
-                let first_name = person.get('first_name');
-                return first_name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+                let full_name = person.get('first_name');
+                return full_name.toLowerCase().indexOf(search.toLowerCase()) > -1;
             };
             return this.get('store').find('person', filterFunc, ['id']);
         }
