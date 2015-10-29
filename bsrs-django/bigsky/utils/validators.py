@@ -107,3 +107,12 @@ def contains_lower_char(chars):
 def contains_special_char(chars):
     regex = r'[^\w\s]'
     return regex_check_contains(regex, chars)
+
+
+def contains_no_whitespaces(chars):
+    regex = r'[\s]'
+    whitespaces = regex_check_contains(regex, chars)
+    if not whitespaces:
+        return True
+    else:
+        return False

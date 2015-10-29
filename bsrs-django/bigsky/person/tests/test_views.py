@@ -929,6 +929,16 @@ class PasswordTests(APITestCase):
             .format(self.person.id), data, format='json')
         self.assertEqual(response.status_code, 400)
 
+    def test_password_space_not_allowed(self):
+        new_password = 'new password'
+        data = {
+            'new_password1': new_password,
+            'new_password2': new_password
+        }
+        response = self.client.post("/api/admin/people/reset-password/{}/"
+            .format(self.person.id), data, format='json')
+        self.assertEqual(response.status_code, 400)
+
     def test_reset_password(self):
         new_password = 'new_password'
         data = {

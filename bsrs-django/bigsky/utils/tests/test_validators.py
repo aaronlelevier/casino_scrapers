@@ -1,7 +1,7 @@
 from django.test import TestCase
 
 from utils.validators import (regex_check_contains, contains_digit, contains_upper_char,
-    contains_lower_char, contains_special_char)
+    contains_lower_char, contains_special_char, contains_no_whitespaces)
 
 
 DIGITS = "Bobby123"
@@ -15,6 +15,9 @@ NO_LOWER_CHARS = "JOHNSON"
 
 SPECIAL_CHARS = "specialchar:$"
 NO_SPECIAL_CHARS = "nospecialchars"
+
+WHITESPACE = "joe tassone"
+NO_WHITESPACE = "joe"
 
 
 class ValidatorTests(TestCase):
@@ -54,3 +57,9 @@ class ValidatorTests(TestCase):
 
     def test_contains_special_char_false(self):
         self.assertFalse(contains_special_char(NO_SPECIAL_CHARS))
+
+    def test_contains_no_whitespaces_true(self):
+        self.assertTrue(contains_no_whitespaces(NO_WHITESPACE))
+
+    def test_contains_no_whitespaces_false(self):
+        self.assertFalse(contains_no_whitespaces(WHITESPACE))

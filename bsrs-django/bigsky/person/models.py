@@ -25,8 +25,8 @@ from translation.models import Locale
 from utils import choices, create
 from utils.models import (BaseNameModel, BaseModel, BaseManager, BaseStatusModel,
     BaseStatusManager)
-from utils.validators import (contains_digit, contains_upper_char,
-    contains_lower_char, contains_special_char)
+from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
+    contains_special_char, contains_no_whitespaces)
 
 
 class RoleManager(BaseManager):
@@ -47,14 +47,14 @@ class Role(BaseModel):
     group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29, blank=True,
-                                 choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
+        choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
     # Required
     name = models.CharField(max_length=100, unique=True, help_text="Will be set to the Group Name")
     categories = models.ManyToManyField(Category, blank=True) 
     # Optional
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
-                                     help_text='Allow document creation for all locations')
+        help_text='Allow document creation for all locations')
     modules = models.TextField(blank=True)
     dashboad_links = models.TextField(blank=True)
     tabs = models.TextField(blank=True)
@@ -71,22 +71,16 @@ class Role(BaseModel):
     password_upper_char_required = models.BooleanField(blank=True, default=False)
     password_special_char_required = models.BooleanField(blank=True, default=False)
 
-    # TODO:
-    # Can this be a RegexField?
-    password_char_types = models.CharField(max_length=100,
-        help_text="Password characters allowed")  # TODO: This field will need to be accessed when
-                                                  # someone for the role saves their PW to validate it.
-
     password_expire = models.IntegerField(blank=True, default=90,
-                                          help_text="Number of days after setting password that it will expire."
-                                          "If '0', password will never expire.")
+      help_text="Number of days after setting password that it will expire."
+                "If '0', password will never expire.")
     password_expire_alert = models.BooleanField(blank=True, default=True,
-                                                help_text="Does the Person want to be alerted 'pre pw expiring'. "
-                                                "Alerts start 3 days before password expires.")
+        help_text="Does the Person want to be alerted 'pre pw expiring'. "
+                  "Alerts start 3 days before password expires.")
     password_expired_login_count = models.IntegerField(blank=True, null=True)
     # Proxy
     proxy_set = models.BooleanField(blank=True, default=False,
-                                    help_text="Users in this Role can set their own proxy")
+        help_text="Users in this Role can set their own proxy")
     # Default Settings
     # that set the Person settings for these fields when first
     # adding a Person to a Role
@@ -188,7 +182,8 @@ class Role(BaseModel):
     def run_password_validators(self, password):
         responses = []
         validators = [self._validate_contains_digit, self._validate_contains_upper_char,
-            self._validate_contains_lower_char, self._validate_contains_special_char]
+            self._validate_contains_lower_char, self._validate_contains_special_char,
+            self._validate_no_whitespaces]
 
         for validator in validators:
             responses.append(validator(password))
@@ -215,6 +210,10 @@ class Role(BaseModel):
         if self.password_special_char_required:
             return contains_special_char(password)
         return True
+
+    @staticmethod
+    def _validate_no_whitespaces(password):
+        return contains_no_whitespaces(password)
 
     def _password_chars_error_message(self):
         return "Required characters: {digit} {upper_char} {lower_char} {special_char}".format(
