@@ -1,7 +1,7 @@
 import json
 import uuid
 
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 
 from person.tests.factory import create_person, PASSWORD
 from translation.models import Locale, Translation

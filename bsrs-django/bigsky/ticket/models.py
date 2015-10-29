@@ -1,6 +1,6 @@
 from django.db import models
 
-from utils.models import BaseNameModel, BaseModel, BaseManager
+from utils.models import BaseModel, BaseManager
 from utils import choices
 from person.models import Person
 from category.models import Category
@@ -10,7 +10,7 @@ from location.models import Location
 class TicketStatusManager(BaseManager):
 
     def default(self):
-        obj, created = self.get_or_create(name=choices.TICKET_STATUS_CHOICES[0][0])
+        obj, _ = self.get_or_create(name=choices.TICKET_STATUS_CHOICES[0][0])
         return obj
 
 
@@ -29,7 +29,7 @@ class TicketStatus(BaseModel):
 class TicketPriorityManager(BaseManager):
 
     def default(self):
-        obj, created = self.get_or_create(name=choices.TICKET_PRIORITY_CHOICES[0][0])
+        obj, _ = self.get_or_create(name=choices.TICKET_PRIORITY_CHOICES[0][0])
         return obj
     
 

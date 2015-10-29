@@ -2,15 +2,14 @@ import json
 import uuid
 import random
 
+from rest_framework import status
 from rest_framework.test import APITestCase
 
-from ticket.models import Ticket
-from location.models import Location
 from category.models import Category
-from rest_framework import status
-from ticket.serializers import TicketSerializer, TicketListSerializer, TicketCreateSerializer
-from ticket.tests.factory import create_tickets
 from person.tests.factory import PASSWORD, create_person
+from ticket.models import Ticket
+from ticket.serializers import TicketCreateSerializer
+from ticket.tests.factory import create_tickets
 
 
 class TicketListTests(APITestCase):

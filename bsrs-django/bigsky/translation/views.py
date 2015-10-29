@@ -1,4 +1,3 @@
-import json
 import copy
 
 from rest_framework import viewsets, status

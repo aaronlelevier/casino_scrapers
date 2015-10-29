@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.postgres.fields import ArrayField
 
 
 class MyGenericForeignKey(GenericForeignKey):

@@ -1,13 +1,10 @@
 from model_mommy import mommy
-import random
-from utils.create import random_lorem
 
-from ticket.models import Ticket, TicketStatus
-from location.models import Location
-from person.models import Person
-from person.tests.factory import create_person
 from category.models import Category
 from category.tests.factory import create_categories
+from person.tests.factory import create_person
+from ticket.models import Ticket
+from utils.create import random_lorem
 
 
 def create_tickets(cc=None, requester=None, assignee=None, _many=1):

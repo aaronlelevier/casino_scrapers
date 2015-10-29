@@ -1,11 +1,34 @@
 Notes
 =====
 
+
+Meteor
+------
+universal Js
+
+problems with MongoDB - instead S3 buckets
+
+Casandra - document DB
+
+Client access to the DB, and PW present in the Client
+
+Their own package manager - instant friction w/ other package managers
+
+owned by a company
+
+
+
+Package Manager
+---------------
+jspm
+
+
 BaseCamp
 --------
 Work w/ Toran for coordinating Django stuff
 
 Dates are thought of somewhat more as reminder dates than due dates
+
 
 Vagrant Random Commands
 -----------------------
@@ -15,12 +38,14 @@ Vagrant Random Commands
     # restart vagrant
     sudo shutdown -r now
 
+
 Vagrant
 -------
 2 parts:
 
     1. what are the servers dependencies to run the web app at all?
     2. how do I copy the django server over n symlink nginx?
+
 
 UUID
 ----
