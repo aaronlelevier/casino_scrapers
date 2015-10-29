@@ -266,10 +266,9 @@ class PersonManager(UserManager):
 
 @python_2_unicode_compatible
 class Person(BaseModel, AbstractUser):
-
     '''
-    "pw" : password
-    "ooto" : out-of-the-office
+    :pw: password
+    :ooto: out-of-the-office
     '''
     # Keys
     role = models.ForeignKey(Role)
@@ -300,8 +299,8 @@ class Person(BaseModel, AbstractUser):
                                             "Based upon the ``password_expire`` days set on the Role.")
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
     # TODO: add functionality to populate this field
-    password_change = models.TextField( blank=True, null=True,
-        help_text="Tuple of (datetime of PW change, old PW)")
+    password_change = models.DateTimeField( blank=True, null=True,
+        help_text="DateTime of last password change")
     password_history = ArrayField(
         models.CharField(max_length=254),
         blank=True, default=[], size=settings.MAX_PASSWORDS_STORED)
@@ -312,8 +311,8 @@ class Person(BaseModel, AbstractUser):
                                         max_length=100, blank=True, null=True)
     proxy_end_date = models.DateField("Out of the Office Status End Date", max_length=100,
                                       blank=True, null=True)
-    proxy_user = models.ForeignKey("self", related_name='coveringuser',
-                                   blank=True, null=True)
+    proxy_user = models.ForeignKey("self", related_name='coveringuser', blank=True, null=True)
+
     # TODO: add logs for:
     #   pw_change_log, login_activity, user_history
     phone_numbers = GenericRelation(PhoneNumber)
@@ -376,6 +375,8 @@ class Person(BaseModel, AbstractUser):
 
         if new_password not in self.password_history:
             self.password_history.append(new_password)
+
+        self.password_change = timezone.now()
 
     def _get_locale(self, locale):
         """Resolve the Locale using the Accept-Language Header. If not 

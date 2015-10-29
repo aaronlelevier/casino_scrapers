@@ -319,3 +319,13 @@ class PersonPasswordHistoryTests(TestCase):
             len(self.person.password_history),
             settings.MAX_PASSWORDS_STORED
         )
+
+    def test_password_change(self):
+        init_password_change = self.person.password_change
+        new_password = create._generate_chars()
+        self.person.set_password(new_password)
+        post_password_change = self.person.password_change
+        self.assertNotEqual(
+            init_password_change,
+            post_password_change
+        )
