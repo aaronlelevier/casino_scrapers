@@ -24,16 +24,21 @@ var TicketNewRoute = TabNewRoute.extend({
             refreshModel: true
         },
     },
+    priorities: Ember.computed(function() {
+        return this.get('priorityRepository').fetch();
+    }),
+    statuses: Ember.computed(function() {
+        return this.get('statusRepository').fetch();
+    }),
+    model_fetch: Ember.computed(function() {
+        return this.get('repository').create();
+    }),
     model() {
-        let repository = this.get('repository');
-        let statusRepository = this.get('statusRepository');
-        let priorityRepository = this.get('priorityRepository');
-        let model = repository.create();
-        let statuses = statusRepository.fetch();
-        let priorities = priorityRepository.fetch();
+        let model = this.get('model_fetch');
+        let statuses = this.get('statuses');
+        let priorities = this.get('priorities');
         let categoryRepo = this.get('categoryRepository');
         let top_level_category_options = categoryRepo.findTopLevelCategories() || [];
-
         let transition = arguments[1];
 
         let search_location = transition.queryParams.search_location;

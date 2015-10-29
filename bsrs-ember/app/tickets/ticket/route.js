@@ -24,17 +24,21 @@ var TicketSingleRoute = TabRoute.extend({
         let categoryRepo = this.get('categoryRepository');
         return categoryRepo.findTopLevelCategories();
     }),
+    priorities: Ember.computed(function() {
+        return this.get('priorityRepository').fetch();
+    }),
+    statuses: Ember.computed(function() {
+        return this.get('statusRepository').fetch();
+    }),
     model(params, transition) {
         let pk = params.ticket_id;
         let repository = this.get('repository');
-        let statusRepository = this.get('statusRepository');
-        let priorityRepository = this.get('priorityRepository');
         let search = transition.queryParams.search;
         let search_location = transition.queryParams.search_location;
         let ticket = repository.fetch(pk);
-        let statuses = statusRepository.fetch();
+        let statuses = this.get('statuses');
+        let priorities = this.get('priorities');
 
-        let priorities = priorityRepository.fetch();
         let top_level_category_options = this.get('top_level_category_options');
 
         let ticket_cc_options = [];

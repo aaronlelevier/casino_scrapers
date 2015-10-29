@@ -1,0 +1,10 @@
+{{ember-selectize
+  required=true
+  content=statuses
+  optionValuePath="content.id"
+  optionLabelPath="content.name"
+  selection=ticket.status
+  select-item="selected"
+  class="t-ticket-status-select"
+  placeholder="select one status"
+}}

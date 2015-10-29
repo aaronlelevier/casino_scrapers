@@ -8,7 +8,7 @@ var TicketSingleComponent = Ember.Component.extend(TabMixin, EditMixin, Validati
     repository: inject('ticket'),
     numberValidation: validate('model.number'),
     subjectValidation: validate('model.subject'),
-    // priorityValidation: validate('model.priority'),
+    priorityValidation: validate('model.priority'),
     actions: {
         save() {
             this.set('submitted', true);

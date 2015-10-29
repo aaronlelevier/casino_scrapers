@@ -11,19 +11,15 @@
                         {{/form-group}}
                     </div>
                     <div class="col-md-12">
-                        <select class="t-ticket-priority form-control ticket-priority" onchange={{action "changed_priority" value="target.value"}}>
-                            {{#each priorities as |priority|}}
-                            <option value={{priority.id}} selected={{is-equal model.priority.id priority.id}}>{{priority.name}}</option>
-                            {{/each}}
-                        </select>
+                        {{#form-group title="admin.ticket.label.priority" for="priority"}}
+                        {{ticket-priority-select ticket=model priorities=priorities}}
+                        {{#validation-error-field submitted=submitted field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
+                        {{/form-group}}
                     </div>
                     <div class="col-md-12">
                         {{#form-group title="admin.ticket.label.status" for="status"}}
-                            <select class="form-control t-ticket-status" onchange={{action "changed" value="target.value"}}>
-                                {{#each statuses as |status|}}
-                                <option value={{status.id}} selected={{is-equal model.status.id status.id}}>{{status.name}}</option>
-                                {{/each}}
-                            </select>
+                        {{ticket-status-select ticket=model statuses=statuses}}
+                        {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
                         {{/form-group}}
                     </div>
                     <div class="col-md-12">
