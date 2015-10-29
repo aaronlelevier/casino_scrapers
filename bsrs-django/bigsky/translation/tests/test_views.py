@@ -304,7 +304,6 @@ class TranslationWriteTests(APITestCase):
     #     # POST
     #     response = self.client.post('/api/admin/translations/{}/'.format(key),
     #         [self.data, self.data_two], format='json')
-    #     print(response)
     #     self.assertEqual(response.status_code, 200)
     #     # 1st check
     #     trans = Translation.objects.get(id=self.translation.id)

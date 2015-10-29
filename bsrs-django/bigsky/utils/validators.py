@@ -1,7 +1,11 @@
+import re
+
 from rest_framework.exceptions import ValidationError
 
 from django.utils.translation import ugettext_lazy as _
 
+
+### DRF Validators
 
 class UniqueForActiveValidator(object):
     """Validate that the ``value`` being sent over is Unique 
@@ -72,3 +76,34 @@ class LocationParentChildValidator(object):
             # if "values" is None it will raise a TypeError here 
             # b/c we can't iterate over None
             pass
+
+
+### REGEX VALIDATORS
+
+def regex_check_contains(regex, chars):
+    pattern = re.compile(regex)
+    match = re.search(pattern, chars)
+    if match:
+        return True
+    else:
+        return False
+
+
+def contains_digit(chars):
+    regex = r'\d+'
+    return regex_check_contains(regex, chars)
+
+
+def contains_upper_char(chars):
+    regex = r'[A-Z]'
+    return regex_check_contains(regex, chars)
+
+
+def contains_lower_char(chars):
+    regex = r'[a-z]'
+    return regex_check_contains(regex, chars)
+
+
+def contains_special_char(chars):
+    regex = r'[^\w\s]'
+    return regex_check_contains(regex, chars)

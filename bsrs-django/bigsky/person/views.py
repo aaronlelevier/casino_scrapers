@@ -1,5 +1,6 @@
-from django.shortcuts import get_object_or_404
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db.models import Q
+from django.shortcuts import get_object_or_404
 from django.utils.translation import ugettext, ugettext_lazy as _
 
 from rest_framework import permissions, status
@@ -110,7 +111,9 @@ class PersonViewSet(BaseModelViewSet):
     def reset_password(self, request, person_id=None):
         person = get_object_or_404(Person, id=person_id)
         self._validate_passwords_match(request.data)
-        self._reset_password(person, request.data.get('new_password1'))
+        password = request.data.get('new_password1')
+        self._validate_role_password_constraints(person, password)
+        self._reset_password(person, password)
         return Response(status=status.HTTP_200_OK)
 
     def _validate_passwords_match(self, data):
@@ -127,3 +130,10 @@ class PersonViewSet(BaseModelViewSet):
     def _reset_password(person, password):
         person.set_password(password)
         person.save()
+
+    @staticmethod
+    def _validate_role_password_constraints(person, password):
+        try:
+            person.role.run_password_validators(password)
+        except DjangoValidationError as e:
+            raise ValidationError(e)

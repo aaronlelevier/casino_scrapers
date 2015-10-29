@@ -25,6 +25,8 @@ from translation.models import Locale
 from utils import choices, create
 from utils.models import (BaseNameModel, BaseModel, BaseManager, BaseStatusModel,
     BaseStatusManager)
+from utils.validators import (contains_digit, contains_upper_char,
+    contains_lower_char, contains_special_char)
 
 
 class RoleManager(BaseManager):
@@ -63,16 +65,18 @@ class Role(BaseModel):
         base_field=models.PositiveIntegerField(
             help_text="Will be NULL if password length has never been changed."),
         blank=True, default=[])
+
     password_digit_required = models.BooleanField(blank=True, default=False)
-    password_lower_char_required = models.BooleanField(
-        blank=True, default=False)
-    password_upper_char_required = models.BooleanField(
-        blank=True, default=False)
-    password_special_char_required = models.BooleanField(
-        blank=True, default=False)
+    password_lower_char_required = models.BooleanField(blank=True, default=False)
+    password_upper_char_required = models.BooleanField(blank=True, default=False)
+    password_special_char_required = models.BooleanField(blank=True, default=False)
+
+    # TODO:
+    # Can this be a RegexField?
     password_char_types = models.CharField(max_length=100,
         help_text="Password characters allowed")  # TODO: This field will need to be accessed when
                                                   # someone for the role saves their PW to validate it.
+
     password_expire = models.IntegerField(blank=True, default=90,
                                           help_text="Number of days after setting password that it will expire."
                                           "If '0', password will never expire.")
@@ -122,7 +126,7 @@ class Role(BaseModel):
     # Messages
     # TODO: are these "Email" or "SMS" messages, or any particular type?
     msg_address = models.BooleanField(blank=True, default=False,
-                                      help_text="Enable Addressing")
+        help_text="whether users in this role are allowed to change the CC field on a ticket or work order")
     msg_viewall = models.BooleanField(blank=True, default=False)
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
@@ -178,6 +182,49 @@ class Role(BaseModel):
                 self.__original_values['password_min_length'])
             self.__original_values[
                 'password_min_length'] = self.password_min_length
+
+    # Password Validators: start
+
+    def run_password_validators(self, password):
+        responses = []
+        validators = [self._validate_contains_digit, self._validate_contains_upper_char,
+            self._validate_contains_lower_char, self._validate_contains_special_char]
+
+        for validator in validators:
+            responses.append(validator(password))
+
+        if not all(responses):
+            raise ValidationError(self._password_chars_error_message())
+
+    def _validate_contains_digit(self, password):
+        if self.password_digit_required:
+            return contains_digit(password)
+        return True
+
+    def _validate_contains_upper_char(self, password):
+        if self.password_upper_char_required:
+            return contains_upper_char(password)
+        return True
+
+    def _validate_contains_lower_char(self, password):
+        if self.password_lower_char_required:
+            return contains_lower_char(password)
+        return True
+
+    def _validate_contains_special_char(self, password):
+        if self.password_special_char_required:
+            return contains_special_char(password)
+        return True
+
+    def _password_chars_error_message(self):
+        return "Required characters: {digit} {upper_char} {lower_char} {special_char}".format(
+            digit = "0-9" if self.password_digit_required else "",
+            upper_char = "A-Z" if self.password_upper_char_required else "",
+            lower_char = "a-z" if self.password_lower_char_required else "",
+            special_char = "$%!@" if self.password_special_char_required else "" 
+        )
+
+    # Password Validators: end
 
 
 class ProxyRole(BaseModel):
