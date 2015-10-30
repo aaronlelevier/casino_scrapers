@@ -26,7 +26,7 @@ var ParentTicketCategorySelectComponent = Ember.Component.extend({
         }
         let parent = ticket.get('top_level_category');
         let tree = this.construct_category_tree(ticket, parent);
-        return tree.pop().get('children').get('length') < 1;
+        return tree ? !tree.pop().get('has_children') : true;
     }),
     actions: {
         selected_category(category_pk) {

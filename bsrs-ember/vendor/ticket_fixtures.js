@@ -9,15 +9,21 @@ var BSRS_TICKET_FACTORY = (function() {
     };
     factory.prototype.generate = function(i) {
         var id = i || this.ticket.idOne;
-        var parent_category = this.category_fixtures.get(this.category_defaults.idOne, this.category_defaults.nameOne);
+
         var child_category = this.category_fixtures.get(this.category_defaults.unusedId, this.category_defaults.nameRepairChild);
+        child_category.children = [];
+        child_category.has_children = false;
+        child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};
+
         var unused_child_category = this.category_fixtures.get(this.category_defaults.idTwo, this.category_defaults.nameTwo);
         unused_child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};
-        child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};
         unused_child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};
-        child_category.children = [];
+
+        var parent_category = this.category_fixtures.get(this.category_defaults.idOne, this.category_defaults.nameOne);
         parent_category.children = [{id: child_category.id, name: child_category.name}, {id: unused_child_category.id, name: unused_child_category.name}];
+        parent_category.has_children = true;
         parent_category.parent = null;
+
         return {
             id: id,
             number: this.ticket.numberOne,

@@ -36,7 +36,7 @@ const BACKSPACE = {keyCode: 8};
 
 let application, store, endpoint, list_xhr, detail_xhr, detail_data, random_uuid, original_uuid;
 
-module('Acceptance | ticket detail test', {
+module('sco Acceptance | ticket detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
