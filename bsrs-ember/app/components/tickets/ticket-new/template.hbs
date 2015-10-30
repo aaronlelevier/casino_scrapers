@@ -17,6 +17,9 @@
       </div>
       <div class="row">
         <div class="col-md-12">
+          {{#if submitted}}
+          <span class="validation validation-under t-category-validation-error {{if valid 'hidden' ''}}">invalid category</span>
+          {{/if}}
           {{parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options}}
         </div>
       </div>

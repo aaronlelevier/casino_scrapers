@@ -32,7 +32,7 @@ const NUMBER_6 = {keyCode: 54};
 const LETTER_B = {keyCode: 66};
 const BACKSPACE = {keyCode: 8};
 
-let application, store, list_xhr, location_xhr, people_xhr, original_uuid;
+let application, store, list_xhr, location_xhr, people_xhr, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter;
 
 module('sco Acceptance | ticket new test', {
     beforeEach() {
@@ -42,17 +42,27 @@ module('sco Acceptance | ticket new test', {
         let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
         xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
         location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
-        original_uuid = random.uuid;
-        random.uuid = function() { return UUID.value; };
+        let category = {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent: null, has_children: true};
+        category.children = [{id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, has_children: true}, {id: CATEGORY_DEFAULTS.unusedId , name: CATEGORY_DEFAULTS.nameUnused, has_children: false}];
+        category_one_xhr = xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idOne}/`, 'GET', null, {}, 200, category);
+        let category_two = {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent: {id: CATEGORY_DEFAULTS.idOne}, has_children: true};
+        category_two.children = [{id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, has_children:false}];
+        category_two_xhr = xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
+        let category_three = {id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, parent: {id: CATEGORY_DEFAULTS.idTwo}, has_children: false};
+        category_three_xhr = xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idChild}/`, 'GET', null, {}, 200, category_three);
+        counter = 0;
     },
     afterEach() {
-        random.uuid = original_uuid;
+        counter = 0;
         Ember.run(application, 'destroy');
     }
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
     page.visit();
+    andThen(() => {
+        patchRandom(counter);
+    });
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
@@ -60,6 +70,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-priority-validation-error').is(':hidden'));
         assert.ok(find('.t-assignee-validation-error').is(':hidden'));
         assert.ok(find('.t-location-validation-error').is(':hidden'));
+        assert.equal(find('.t-category-validation-error').length, 0);
     });
     generalPage.save();
     andThen(() => {
@@ -68,6 +79,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-priority-validation-error').is(':visible'));
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
+        assert.ok(find('.t-category-validation-error').is(':visible'));
     });
     page.statusClickOptionOne();
     generalPage.save();
@@ -76,6 +88,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-priority-validation-error').is(':visible'));
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
+        assert.ok(find('.t-category-validation-error').is(':visible'));
     });
     page.priorityClickOptionOne();
     generalPage.save();
@@ -83,6 +96,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
+        assert.ok(find('.t-category-validation-error').is(':visible'));
     });
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
     page.assigneeFillIn('b');
@@ -93,11 +107,33 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b');
         assert.ok(find('.t-location-validation-error').is(':visible'));
+        assert.ok(find('.t-category-validation-error').is(':visible'));
     });
     page.locationFillIn('6');
     let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
     triggerEvent(`${location_component} > .selectize-input input`, 'keyup', NUMBER_6);
     page.locationClickOptionTwo();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.ok(find('.t-category-validation-error').is(':visible'));
+    });
+    page.categoryClickOptionOne();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.equal(find('.t-category-validation-error').length, 1);
+        // assert.ok(find('.t-category-validation-error').is(':visible'));//??? sco
+    });
+    page.categoryTwoClickOptionOne();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.equal(find('.t-category-validation-error').length, 1);
+        assert.ok(find('.t-category-validation-error').is(':visible'));
+    });
+    page.categoryThreeClickOptionOne();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.ok(find('.t-category-validation-error').is(':hidden'));
+    });
     generalPage.save();
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     andThen(() => {
@@ -106,9 +142,11 @@ test('validation works and when hit save, we do same post', (assert) => {
 });
 
 test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+    page.visit();
+    patchRandom(counter);
+    click('.t-add-new');
     clearxhr(location_xhr);
-    random.uuid = function() { return Ember.uuid(); };
-    page.visitNew();
+    clearxhr(category_three_xhr);
     andThen(() => {
         let components = page.selectizeComponents();
         assert.equal(store.find('category').get('length'), 3);
@@ -118,34 +156,28 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));
         assert.equal(components, 1);
     });
-    let category = {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent: null, has_children: true};
-    category.children = [{id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, has_children: true}];
-    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idOne}/`, 'GET', null, {}, 200, category);
-    let location_component = 'select.t-ticket-category-select:eq(0) + .selectize-control';
-    click(`${location_component} > .selectize-dropdown div.option:eq(0)`);
+    let category_first_component = 'select.t-ticket-category-select:eq(0) + .selectize-control';
+    click(`${category_first_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let components = page.selectizeComponents();
         assert.equal(store.find('ticket').get('length'), 1);
-        assert.equal(store.find('category').get('length'), 3);
+        assert.equal(store.find('category').get('length'), 4);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
         assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
         assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
         assert.equal(components, 2);
     });
-    let category_two = {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent: {id: CATEGORY_DEFAULTS.nameOne}, has_children: true};
-    category_two.children = [{id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, has_children: false}];
-    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
-    let $second_component = 'select.t-ticket-category-select:eq(1) + .selectize-control';
-    click(`${$second_component} > .selectize-dropdown div.option:eq(0)`);
+    let $category_second_component = 'select.t-ticket-category-select:eq(1) + .selectize-control';
+    click(`${$category_second_component} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let components = page.selectizeComponents();
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
-        assert.equal(store.find('category').get('length'), 4);
+        assert.equal(store.find('category').get('length'), 5);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
         assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 1);
         assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
         assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
@@ -167,9 +199,9 @@ test('selecting a top level category will alter the url and can cancel/discard c
             let components = page.selectizeComponents();
             let tickets = store.find('ticket');
             assert.equal(tickets.get('length'), 1);
-            assert.equal(store.find('category').get('length'), 4);
+            assert.equal(store.find('category').get('length'), 5);
             assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
-            assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 1);
+            assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
             assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 1);
             assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
             assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
@@ -193,7 +225,6 @@ test('selecting a top level category will alter the url and can cancel/discard c
 });
 
 test('selecting and removing a top level category will remove children categories already selected', (assert) => {
-    random.uuid = function() { return Ember.uuid(); };
     clearxhr(list_xhr);
     clearxhr(location_xhr);
     page.visitNew();
@@ -205,9 +236,6 @@ test('selecting and removing a top level category will remove children categorie
         assert.equal(components, 1);
     });
     //first select
-    let category = {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent: null};
-    category.children = [{id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo}, {id: CATEGORY_DEFAULTS.unusedId , name: CATEGORY_DEFAULTS.nameUnused}];
-    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idOne}/`, 'GET', null, {}, 200, category);
     page.categoryClickOptionOne();
     andThen(() => {
         let components = page.selectizeComponents();
@@ -219,9 +247,6 @@ test('selecting and removing a top level category will remove children categorie
         assert.equal(components, 2);
     });
     //second select
-    let category_two = {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent: {id: CATEGORY_DEFAULTS.idOne}};
-    category_two.children = [{id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild}];
-    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
     page.categoryTwoClickOptionOne();
     andThen(() => {
         let components = page.selectizeComponents();
@@ -232,8 +257,6 @@ test('selecting and removing a top level category will remove children categorie
         assert.equal(components, 3);
     });
     //third select
-    let category_three = {id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, parent: {id: CATEGORY_DEFAULTS.idTwo}};
-    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idChild}/`, 'GET', null, {}, 200, category_three);
     page.categoryThreeClickOptionOne();
     andThen(() => {
         let components = page.selectizeComponents();
@@ -275,6 +298,9 @@ test('selecting and removing a top level category will remove children categorie
 test('shows assignee for ticket and will fire off xhr to fetch assignee(persons) on search to change assignee', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
     page.visitNew();
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
     page.assigneeFillIn('b');
@@ -295,56 +321,13 @@ test('shows assignee for ticket and will fire off xhr to fetch assignee(persons)
     });
 });
 
-test('all required fields persist correctly when the user submits a new ticket form', (assert) => {
-    page.visit();
-    click('.t-add-new');
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL);
-        assert.equal(store.find('ticket').get('length'), 1);
-        assert.ok(store.find('ticket', UUID.value).get('isNotDirty'));
-    });
-    people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-    page.assigneeFillIn('b');
-    let assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
-    page.assigneeClickOptionTwo();
-    andThen(() => {
-       assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
-       let ticket = store.findOne('ticket');
-       assert.ok(ticket.get('assignee'));
-       assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
-       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-    fillIn('.t-ticket-subject', TICKET_DEFAULTS.subjectOne);
-    page.statusClickOptionOne();
-    page.priorityClickOptionOne();
-    let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-    page.locationFillIn('6');
-    triggerEvent(`${location_component} > .selectize-input input`, 'keyup', NUMBER_6);
-    andThen(() => {
-        assert.equal(find(`${location_component} > .selectize-dropdown div.option`).length, 2);
-    });
-    page.locationClickOptionTwo();
-    xhr(TICKET_POST_URL, 'POST', JSON.stringify(ticket_payload), {}, 201, Ember.$.extend(true, {}, ticket_payload));
-    generalPage.save();
-    andThen(() => {
-       assert.equal(currentURL(), TICKET_URL);
-        assert.equal(store.find('ticket').get('length'), 1);
-        let persisted = store.find('ticket', UUID.value);
-        assert.ok(persisted.get('assignee'));
-        assert.equal(persisted.get('assignee.id'), PEOPLE_DEFAULTS.idSearch);
-        assert.ok(persisted.get('location'));
-        assert.equal(persisted.get('location.id'), LOCATION_DEFAULTS.idTwo);
-        assert.equal(persisted.get('subject'), TICKET_DEFAULTS.subjectOne);
-        assert.equal(persisted.get('status.id'), TICKET_DEFAULTS.statusOneId);
-        assert.ok(persisted.get('isNotDirty'));
-        assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
-    });
-});
 
 test('when hit backspace should remove assignee from ticket', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
     page.visitNew();
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
     let selector = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
@@ -370,6 +353,9 @@ test('when hit backspace should remove assignee from ticket', (assert) => {
 test('should be able to add and remove priority but not remove div options', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
     page.visitNew();
     page.priorityClickOptionOne();
     andThen(() => {
@@ -394,6 +380,9 @@ test('should be able to add and remove priority but not remove div options', (as
 test('should be able to add and remove status but not remove div options', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
     page.visitNew();
     page.statusClickOptionOne();
     andThen(() => {
@@ -417,6 +406,9 @@ test('should be able to add and remove status but not remove div options', (asse
 /*TICKET TO LOCATION 1 to Many*/
 test('selecting new location will not affect other selectize components and will only render one tab', (assert) => {
     clearxhr(list_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
     page.visitNew();
     page.priorityClickOptionOne();
     page.locationFillIn('6');
@@ -431,6 +423,9 @@ test('selecting new location will not affect other selectize components and will
 
 test('location new component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
     clearxhr(list_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
     page.visitNew();
     page.locationFillIn('6');
     let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
@@ -451,6 +446,9 @@ test('location new component shows location for ticket and will fire off xhr to 
 test('removes location dropdown on search to change location', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
     page.visitNew();
     location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
     let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
@@ -474,6 +472,9 @@ test('removes location dropdown on search to change location', (assert) => {
 test('when hit backspace should remove location from ticket', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
     page.visitNew();
     location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
     page.locationFillIn('6');
@@ -492,5 +493,56 @@ test('when hit backspace should remove location from ticket', (assert) => {
        let ticket = store.findOne('ticket');
        assert.ok(!ticket.get('location'));
        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('all required fields persist correctly when the user submits a new ticket form', (assert) => {
+    page.visit();
+    andThen(() => {
+        patchRandom(counter);
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.equal(store.find('ticket').get('length'), 1);
+        assert.ok(store.find('ticket', UUID.value).get('isNotDirty'));
+    });
+    people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
+    page.assigneeFillIn('b');
+    let assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
+    page.assigneeClickOptionTwo();
+    andThen(() => {
+       assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
+       let ticket = store.findOne('ticket');
+       assert.ok(ticket.get('assignee'));
+       assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
+       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    page.statusClickOptionOne();
+    page.priorityClickOptionOne();
+    page.locationFillIn('6');
+    let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+    triggerEvent(`${location_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    andThen(() => {
+        assert.equal(find(`${location_component} > .selectize-dropdown div.option`).length, 2);
+    });
+    page.locationClickOptionTwo();
+    page.categoryClickOptionOne();
+    page.categoryTwoClickOptionOne();
+    page.categoryThreeClickOptionOne();
+    xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+    generalPage.save();
+    andThen(() => {
+       assert.equal(currentURL(), TICKET_URL);
+        assert.equal(store.find('ticket').get('length'), 1);
+        let persisted = store.find('ticket', UUID.value);
+        assert.ok(persisted.get('assignee'));
+        assert.equal(persisted.get('assignee.id'), PEOPLE_DEFAULTS.idSearch);
+        assert.ok(persisted.get('location'));
+        assert.equal(persisted.get('location.id'), LOCATION_DEFAULTS.idTwo);
+        assert.equal(persisted.get('status.id'), TICKET_DEFAULTS.statusOneId);
+        assert.ok(persisted.get('isNotDirty'));
+        assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
     });
 });

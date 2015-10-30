@@ -3,6 +3,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
+import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 
 var ticket_payload = {
     id: UUID.value,
@@ -10,7 +11,7 @@ var ticket_payload = {
     status: TICKET_DEFAULTS.statusOneId,
     priority: TICKET_DEFAULTS.priorityOneId,
     cc: [],
-    categories: [],
+    categories: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo, CATEGORY_DEFAULTS.idChild],
     assignee: PEOPLE_DEFAULTS.idSearch,
     location: LOCATION_DEFAULTS.idTwo
 };
