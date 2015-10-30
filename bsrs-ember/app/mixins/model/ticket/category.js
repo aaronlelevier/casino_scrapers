@@ -77,21 +77,38 @@ var CategoriesMixin = Ember.Mixin.create({
         });
     },
     saveCategories() {
-        let ticket_categories = this.get('ticket_categories');
-        let ticket_categories_ids = this.get('ticket_categories_ids') || [];
-        let previous_m2m_fks = this.get('ticket_categories_fks') || [];
-        //add
-        ticket_categories.forEach((join_model) => {
-            if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
-                previous_m2m_fks.pushObject(join_model.get('id'));
-            } 
+        let saved_m2m_pks = [];
+        let store = this.get('store');
+        let categories = this.get('categories');
+        categories.forEach((category) => {
+            let filter = function(category_model, join_model) {
+                let removed = join_model.get('removed');
+                let ticket_pk = join_model.get('ticket_pk');
+                let category_pk = join_model.get('category_pk');
+                return ticket_pk === this.get('id') &&
+                    category_pk === category_model.get('id') && !removed;
+            };
+            let m2m = store.find('ticket-category', filter.bind(this, category), ['removed']);
+            m2m.forEach(function(join_model) {
+                saved_m2m_pks.push(join_model.get('id'));
+            });
         });
-        //remove
-        for (let i=previous_m2m_fks.length-1; i>=0; --i) {
-            if (Ember.$.inArray(previous_m2m_fks[i], ticket_categories_ids) === -1) {
-                previous_m2m_fks.removeObject(previous_m2m_fks[i]);
-            } 
-        }
+        this.set('ticket_categories_fks', saved_m2m_pks);
+        // let ticket_categories = this.get('ticket_categories');
+        // let ticket_categories_ids = this.get('ticket_categories_ids') || [];
+        // let previous_m2m_fks = this.get('ticket_categories_fks') || [];
+        // //add
+        // ticket_categories.forEach((join_model) => {
+        //     if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
+        //         previous_m2m_fks.pushObject(join_model.get('id'));
+        //     } 
+        // });
+        // //remove
+        // for (let i=previous_m2m_fks.length-1; i>=0; --i) {
+        //     if (Ember.$.inArray(previous_m2m_fks[i], ticket_categories_ids) === -1) {
+        //         previous_m2m_fks.removeObject(previous_m2m_fks[i]);
+        //     } 
+        // }
     },
 });
 
