@@ -1,15 +1,35 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 
-# VIEWS
+class CheckIdCreateMixin(object):
+    """
+    Trying to Post a duplicate returns a 400 and not a 500 Server Error
+    """
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # custom: start
+        try:
+            _id = serializer.data['id']
+            self.queryset.get(id=_id)
+        except (KeyError, ObjectDoesNotExist):
+            pass
+        else:
+            raise ValidationError("ID: {} already exists.".format(_id))
+        # custom: end
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class DestroyModelMixin(object):
-
     """
     Destroy a model instance, extended to handle `override` kwarg.
     """
-
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         override = request.data.get('override', None)
@@ -20,14 +40,15 @@ class DestroyModelMixin(object):
         instance.delete(override)
 
 
-# QUERYSETS
-
 class OrderingQuerySetMixin(object):
-
     """
-    Return a case-insensitive ordered queryset.
+    Return a case-insensitive ordered queryset. 
+
+    **Only works for fields on the Model. Does not work for related fields.**
 
     `StackOverflow link <http://stackoverflow.com/questions/3409047/django-orm-case-insensitive-order-by>`_
+
+    :param: 'ordering'
     """
     def get_queryset(self):
         queryset = self.queryset
@@ -66,3 +87,34 @@ class OrderingQuerySetMixin(object):
 
     def _get_asc_desc_value(self, field, asc):
         return "{}{}".format("" if asc else "-", self._get_key(field))
+
+
+class FilterRelatedMixin(object):
+    """
+    Allow filterable by 'IN' keyword.
+
+    ``filter_fields``: A list of filterable fields that uses the 
+    Django ORM sytax. Must be defined on the ModelViewSet that is 
+    implementing this feature.
+    """
+    queryset = None
+    filter_fields = None
+
+    def get_queryset(self):
+        queryset = super(FilterRelatedMixin, self).get_queryset()
+
+        if self.filter_fields:
+            kwargs = {}
+
+            for param in self.request.query_params:
+                if param.split("__")[0] in self.filter_fields:
+                    if param.split("__")[-1] == "in":
+                        value = self.request.query_params.get(param).split(',')
+                    else:
+                        value = self.request.query_params.get(param)
+
+                    kwargs.update({param: value})
+
+            queryset = queryset.filter(**kwargs)
+
+        return queryset
