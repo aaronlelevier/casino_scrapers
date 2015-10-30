@@ -5,9 +5,9 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 from utils.mixins import (CheckIdCreateMixin, DestroyModelMixin, OrderingQuerySetMixin,
-    FilterRelatedMixin)
+    FilterRelatedMixin, RelatedOrderingQuerySetMixin)
 
 
 class BaseModelViewSet(CheckIdCreateMixin, DestroyModelMixin, FilterRelatedMixin,
-    OrderingQuerySetMixin, viewsets.ModelViewSet):
+    OrderingQuerySetMixin, RelatedOrderingQuerySetMixin, viewsets.ModelViewSet):
     pass

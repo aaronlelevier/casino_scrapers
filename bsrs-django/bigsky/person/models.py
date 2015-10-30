@@ -51,7 +51,6 @@ class Role(BaseModel):
     # Required
     name = models.CharField(max_length=100, unique=True, help_text="Will be set to the Group Name")
     categories = models.ManyToManyField(Category, blank=True) 
-    # Optional
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
         help_text='Allow document creation for all locations')

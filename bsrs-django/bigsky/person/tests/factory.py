@@ -16,15 +16,21 @@ PASSWORD = '1234'
 LOCATION_LEVEL = 'region'
 CATEGORY = 'repair'
 
-def create_role():
-    "Single Role needed to create Person with Login privileges."
+def create_role(name=None, location_level=None):
+    """
+    Single Role needed to create Person with Login privileges.
+    """
+    name = name or create._generate_chars()
 
     Currency.objects.default()
-    location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
+
+    if not location_level:
+        location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
+    
     categories = mommy.make(Category, _quantity=2)
 
-    return mommy.make(Role, name=create._generate_chars(),
-        location_level=location_level, categories=categories)
+    return mommy.make(Role, name=name, location_level=location_level,
+        categories=categories)
 
 
 def create_roles():
@@ -64,9 +70,6 @@ def update_login_person(person):
 
 def create_person(username=None, role=None, _many=1):
     '''
-    # TODO: Change this method name to ``create_people`` b/c can
-        create more than 1!
-        
     Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )
 
     Return: the last user created from the `forloop`

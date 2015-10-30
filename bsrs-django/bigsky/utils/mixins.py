@@ -42,16 +42,17 @@ class DestroyModelMixin(object):
 
 class OrderingQuerySetMixin(object):
     """
-    Return a case-insensitive ordered queryset. 
+    Return a case-insensitive ordered queryset for non-related Fields. 
 
     **Only works for fields on the Model. Does not work for related fields.**
 
     `StackOverflow link <http://stackoverflow.com/questions/3409047/django-orm-case-insensitive-order-by>`_
 
-    :param: 'ordering'
+    :param: ordering
     """
     def get_queryset(self):
-        queryset = self.queryset
+        queryset = super(OrderingQuerySetMixin, self).get_queryset()
+
         ordering = self.request.query_params.get('ordering', None)
 
         if ordering:
@@ -87,6 +88,24 @@ class OrderingQuerySetMixin(object):
 
     def _get_asc_desc_value(self, field, asc):
         return "{}{}".format("" if asc else "-", self._get_key(field))
+
+
+class RelatedOrderingQuerySetMixin(object):
+    """
+    Return a case-sensitive ordered queryset for Related Fields.
+
+    :param: related_ordering
+    """
+    def get_queryset(self):
+        queryset = super(RelatedOrderingQuerySetMixin, self).get_queryset()
+
+        ordering = self.request.query_params.get('related_ordering', None)
+
+        if ordering:
+            params = ordering.split(',')
+            queryset = queryset.order_by(*params)
+
+        return queryset
 
 
 class FilterRelatedMixin(object):

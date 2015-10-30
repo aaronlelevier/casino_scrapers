@@ -2,13 +2,15 @@ import json
 import uuid
 import random
 
-from rest_framework.test import APITestCase, APITransactionTestCase
-
 from django.db.models.functions import Lower
+
+from model_mommy import mommy
+from rest_framework.test import APITestCase, APITransactionTestCase
 
 from accounting.models import Currency
 from accounting.serializers import CurrencySerializer
-from person.models import Person
+from location.models import LocationLevel
+from person.models import Person, Role
 from person.tests.factory import create_single_person, create_role, create_roles, PASSWORD
 from utils import create
 
@@ -147,6 +149,78 @@ class OrderingQuerySetMixinTests(APITransactionTestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
+
+
+class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
+
+    def setUp(self):
+        # Role
+        self.store = mommy.make(LocationLevel, name='store')
+        self.department = mommy.make(LocationLevel, name='department')
+
+        self.role_admin = create_role(name="admin", location_level=self.store)
+        self.role_mgr = create_role(name="Manager", location_level=self.store)
+        self.role_staff = create_role(name="staff", location_level=self.department)
+
+        self.admin = create_single_person(role=self.role_admin)
+        self.mgr = create_single_person(role=self.role_mgr)
+        self.staff = create_single_person(role=self.role_staff)
+
+        # Login
+        self.person = Person.objects.first()
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_setup_data(self):
+        self.assertEqual(LocationLevel.objects.count(), 2)
+        self.assertEqual(Role.objects.count(), 3)
+        self.assertEqual(Person.objects.count(), 3)
+
+    def test_list(self):
+        params = ["role__name"]
+        response = self.client.get('/api/admin/people/?related_ordering={}'
+            .format(','.join(params)))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['results'][0]['role'],
+            str(Person.objects.order_by(*params).first().role.id)
+        )
+
+    def test_list_reverse(self):
+        params = ["-role__name"]
+        response = self.client.get('/api/admin/people/?related_ordering={}'
+            .format(','.join(params)))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['results'][0]['role'],
+            str(Person.objects.order_by(*params).first().role.id)
+        )
+
+    def test_list_multiple(self):
+        params = ["role__name", "role__location_level__name"]
+        response = self.client.get('/api/admin/people/?related_ordering={}'
+            .format(','.join(params)))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['results'][0]['role'],
+            str(Person.objects.order_by(*params).first().role.id)
+        )
+
+    def test_list_reverse_multiple(self):
+        params = ["-role__name", "role__location_level__name"]
+        response = self.client.get('/api/admin/people/?related_ordering={}'
+            .format(','.join(params)))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['results'][0]['role'],
+            str(Person.objects.order_by(*params).first().role.id)
+        )
 
 
 class FilterRelatedMixinMixin(APITransactionTestCase):
