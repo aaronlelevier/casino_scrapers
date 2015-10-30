@@ -1,7 +1,8 @@
 from rest_framework.permissions import IsAuthenticated
 
 from ticket.models import Ticket
-from ticket.serializers import TicketSerializer, TicketCreateSerializer, TicketListSerializer
+from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
+    TicketListSerializer)
 from utils.views import BaseModelViewSet
 from ticket import serializers as ts
 

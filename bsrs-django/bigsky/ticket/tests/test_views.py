@@ -104,12 +104,12 @@ class TicketUpdateTests(APITestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_change_name(self):
-        self.data['subject'] = 'new subject name'
+        self.data['request'] = 'new request name'
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertNotEqual(self.ticket.subject, data['subject'])
+        self.assertNotEqual(self.ticket.request, data['request'])
 
 
 class TicketCreateTests(APITestCase):
@@ -134,7 +134,7 @@ class TicketCreateTests(APITestCase):
         self.data.update({
             'id': str(uuid.uuid4()),
             'number': random.randint(0, 1000),
-            'subject': 'plumbing',
+            'request': 'plumbing',
             })
         response = self.client.post('/api/tickets/', self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
