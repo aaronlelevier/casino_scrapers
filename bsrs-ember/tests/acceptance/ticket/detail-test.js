@@ -57,7 +57,7 @@ module('Acceptance | ticket detail test', {
         detail_data = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, TICKET_FIXTURES.list());
         detail_xhr = xhr(endpoint + TICKET_DEFAULTS.idOne + '/', 'GET', null, {}, 200, detail_data);
-        //category xhrs
+        //category xhrs...some here for reference to use in tests for right now
         let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
         xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
         // let category = {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent: null, has_children: true};
@@ -241,31 +241,6 @@ test('when click delete, ticket is deleted and removed from store', (assert) => 
         assert.equal(store.find('ticket', TICKET_DEFAULTS.idOne).get('length'), undefined);
     });
 });
-
-// // // test('validation works and when hit save, we do same post', (assert) => {
-// // //     page.visitDetail();
-// // //     andThen(() => {
-// // //         assert.equal(currentURL(), DETAIL_URL);
-// // //         assert.ok(find('.t-subject-validation-error').is(':hidden'));
-// // //     });
-// // //     page.subject('');
-// // //     generalPage.save();
-// // //     andThen(() => {
-// // //         assert.equal(currentURL(), DETAIL_URL);
-// // //         assert.ok(find('.t-subject-validation-error').is(':visible'));
-// // //     });
-// // //     page.subject(TICKET_DEFAULTS.subjectOne);
-// // //     page.priority(TICKET_DEFAULTS.priorityOneId);
-// // //     page.statusFillIn(TICKET_DEFAULTS.statusOneId);
-// // //     let url = PREFIX + DETAIL_URL + '/';
-// // //     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
-// // //     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, subject: TICKET_DEFAULTS.subjectOne, status: TICKET_DEFAULTS.statusOneId, priority: TICKET_DEFAULTS.priorityOneId});
-// // //     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-// // //     generalPage.save();
-// // //     andThen(() => {
-// // //         assert.equal(currentURL(), TICKET_URL);
-// // //     });
-// // // });
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
     page.visit();
@@ -627,6 +602,26 @@ test('selecting and removing a top level category will remove children categorie
     });
 });
 
+test('clicking and typing into selectize for categories will not filter if spacebar pressed', (assert) => {
+    page.visitDetail();
+    fillIn(`${CATEGORY_ONE} > .selectize-input input`, ' ');
+    triggerEvent(`${CATEGORY_ONE} > .selectize-input input`, 'keyup', SPACEBAR);
+    andThen(() => {
+        assert.equal(page.ticketPeopleOptions(), 0);
+    });
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(page.ticketPeopleSelected(), 1);
+        assert.equal(page.ticketPeopleOptions(), 0);
+    });
+    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
 
 /*TICKET TO LOCATION*/
 test('location component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
@@ -688,6 +683,38 @@ test('location component shows location for ticket and will fire off xhr to fetc
     });
 });
 
+test('clicking and typing into selectize for location will not filter if spacebar pressed', (assert) => {
+    page.visitDetail();
+    fillIn(`${LOCATION} > .selectize-input input`, ' ');
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', SPACEBAR);
+    andThen(() => {
+        assert.equal(page.ticketPeopleOptions(), 0);
+    });
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(page.ticketPeopleSelected(), 1);
+        assert.equal(page.ticketPeopleOptions(), 0);
+    });
+    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
+
+test('when hit backspace should remove location from ticket', (assert) => {
+    clearxhr(list_xhr);
+    page.visitDetail();
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(!ticket.get('location'));
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+});
+
 /*TICKET TO PRIORITY*/
 test('should render with correct selected/options and be able to select and remove but not remove div options', (assert) => {
     clearxhr(list_xhr);
@@ -746,5 +773,97 @@ test('should render with correct selected/options and be able to select and remo
        assert.ok(!ticket.get('status'));
        assert.ok(ticket.get('isDirtyOrRelatedDirty'));//sco this is a change from before where if there was no status, it would not be dirty.  It should be dirty
        assert.equal(page.statusOptionLength(), 8);
+    });
+});
+
+/*TICKET TO ASSIGNEE*/
+test('assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), PEOPLE_DEFAULTS.idOne);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('assignee.id'), PEOPLE_DEFAULTS.idOne);
+        assert.equal(ticket.get('assignee_fk'), PEOPLE_DEFAULTS.idOne);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idOne);
+        assert.equal(page.ticketTopLevelCategorySelected(), 1);
+        assert.equal(page.ticketTopLevelCategoryOptions(), 2);
+        assert.equal(page.ticketSecondLevelCategorySelected(), 1);
+        assert.equal(page.ticketSecondLevelCategoryOptions(), 2);
+    });
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        assert.equal(find(`${ASSIGNEE} > .selectize-dropdown div.option`).length, 0);
+    });
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=Man`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
+    fillIn(`${ASSIGNEE} > .selectize-input input`, 'Man');
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_A);
+    andThen(() => {
+        assert.equal(find(`${ASSIGNEE} > .selectize-dropdown div.option`).length, 10);
+    });
+    fillIn(`${ASSIGNEE} > .selectize-input input`, '');//this is required
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        assert.equal(find(`${ASSIGNEE} > .selectize-dropdown div.option`).length, 10);
+    });
+    fillIn(`${ASSIGNEE} > .selectize-input input`, 'Man');
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_A);
+    andThen(() => {
+        assert.equal(find(`${ASSIGNEE} > .selectize-dropdown div.option`).length, 10);
+    });
+    page.assigneeClickOptionTwo();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), PEOPLE_DEFAULTS.idSearch);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('assignee.id'), PEOPLE_DEFAULTS.idSearch);
+        assert.equal(ticket.get('assignee_fk'), PEOPLE_DEFAULTS.idOne);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        //ensure categories has not changed
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idOne);
+        assert.equal(ticket.get('categories').get('length'), 3);
+        assert.equal(page.ticketTopLevelCategorySelected(), 1);
+        assert.equal(page.ticketTopLevelCategoryOptions(), 2);
+        assert.equal(page.ticketSecondLevelCategorySelected(), 1);
+        assert.equal(page.ticketSecondLevelCategoryOptions(), 2);
+    });
+    let response_put = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    response_put.assignee = {id: PEOPLE_DEFAULTS.idTwo, name: PEOPLE_DEFAULTS.storeNameTwo};
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, assignee: PEOPLE_DEFAULTS.idSearch});
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
+
+test('clicking and typing into selectize for assignee will not filter if spacebar pressed', (assert) => {
+    page.visitDetail();
+    page.assigneeFillIn(' ');
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', SPACEBAR);
+    andThen(() => {
+        assert.equal(page.ticketPeopleOptions(), 0);
+    });
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(page.ticketPeopleSelected(), 1);
+        assert.equal(page.ticketPeopleOptions(), 0);
+    });
+    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
+
+test('when hit backspace should remove assignee from ticket', (assert) => {
+    clearxhr(list_xhr);
+    page.visitDetail();
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(!ticket.get('assignee'));
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
 });

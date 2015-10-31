@@ -29,7 +29,7 @@
                         {{/form-group}}
                     </div>
                     <div class="col-md-12">
-                        {{#form-group title="admin.ticket.label.cc" for="cc"}}
+                        {{#form-group title="admin.ticket.label.assignee" for="cc"}}
                           {{ticket-assignee-select ticket=model ticket_assignee_options=ticket_assignee_options search_assignee=search_assignee}}
                           {{#validation-error-field submitted=submitted field="assignee" className="validation validation-under t-assignee-validation-error" model=model validation=assigneeValidation}}invalid assignee{{/validation-error-field}}
                         {{/form-group}}

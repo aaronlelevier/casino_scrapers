@@ -31,6 +31,7 @@ const TICKET_POST_URL = PREFIX + BASE_URL + '/';
 const NUMBER_6 = {keyCode: 54};
 const LETTER_B = {keyCode: 66};
 const BACKSPACE = {keyCode: 8};
+const SPACEBAR = {keyCode: 32};
 const TOPLEVEL = 'select.t-ticket-category-select:eq(0) + .selectize-control';
 const PRIORITY = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
 const LOCATION = 'select.t-ticket-location-select:eq(0) + .selectize-control';
@@ -330,6 +331,24 @@ test('shows assignee for ticket and will fire off xhr to fetch assignee(persons)
     });
 });
 
+test('clicking and typing into selectize for assignee will not filter if spacebar pressed', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(location_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
+    page.visitNew();
+    fillIn(`${ASSIGNEE} > .selectize-input input`, ' ');
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', SPACEBAR);
+    andThen(() => {
+        assert.equal(page.ticketPeopleOptions(), 0);
+    });
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(page.ticketPeopleSelected(), 0);
+        assert.equal(page.ticketPeopleOptions(), 0);
+    });
+});
 
 test('when hit backspace should remove assignee from ticket', (assert) => {
     clearxhr(list_xhr);
