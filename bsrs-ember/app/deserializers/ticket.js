@@ -76,21 +76,19 @@ var extract_cc = function(model, store, uuid) {
 };
 
 var extract_ticket_location = function(model, store) {
-    let location_pk;
-    if (model.location) {
-        location_pk = model.location.id;
-    } else {
-        let ticket = store.find('ticket', model.id);
-        if (ticket.get('location')) {
-            ticket.set('location_fk', undefined);
-            let location = ticket.get('location');
-            let mutated_array = location.get('ticket_array').filter((ticket) => {
+    let location_pk = model.location.id;
+    let ticket = store.find('ticket', model.id);
+    if (ticket.get('location')) {
+        ticket.set('location_fk', undefined);
+        let location = ticket.get('location');
+        if (location) {
+            let mutated_array = location.get('tickets').filter((ticket) => {
                 return ticket !== model.id;
             });
             location.set('tickets', mutated_array);
         }
-        return undefined;
     }
+
     if(location_pk) {
         let location = store.find('location', model.location.id);
         let existing_tickets = location.get('tickets') || [];
@@ -111,12 +109,13 @@ var extract_ticket_priority = function(model, store) {
     let existing_ticket = store.find('ticket', model.id);
     if (existing_ticket.get('id') && existing_ticket.get('priority.id') !== priority_id) {
         existing_ticket.change_priority(priority_id);
-    } else {
-        let new_priority = store.find('ticket-priority', priority_id);
-        let new_priority_tickets = new_priority.get('tickets') || [];
-        let updated_new_priority_tickets = new_priority_tickets.concat(model.id).uniq();
-        new_priority.set('tickets', updated_new_priority_tickets);
     }
+
+    let new_priority = store.find('ticket-priority', priority_id);
+    let new_priority_tickets = new_priority.get('tickets') || [];
+    let updated_new_priority_tickets = new_priority_tickets.concat(model.id).uniq();
+    new_priority.set('tickets', updated_new_priority_tickets);
+
     delete model.priority;
     return priority_id;
 };

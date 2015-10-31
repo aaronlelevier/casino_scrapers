@@ -78,6 +78,7 @@ class Category(BaseModel):
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
     status = models.BooleanField(blank=True, default=True)
+    has_children = models.BooleanField(blank=True, default=False)
 
     objects = CategoryManager()
 
@@ -93,6 +94,11 @@ class Category(BaseModel):
             self.label = settings.TOP_LEVEL_CATEGORY_LABEL
         else:
             self.label = self.parent.subcategory_label
+
+        if self.children.all().exists():
+            self.has_children = True
+        else:
+            self.has_children = False
             
         if not self.cost_currency:
             self.cost_currency = Currency.objects.default()

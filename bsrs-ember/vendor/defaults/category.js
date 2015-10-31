@@ -10,6 +10,8 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             idChild: 'ec62006b-6275-4aa9-abfa-38b146383d304',
             idWatChild: 'ec62006b-6275-4aa9-abfa-38b146383d306',
             idParent: 'ec62006b-6275-4aa9-abfa-38b146383d305',
+            idPlumbing: 'ec62006b-6275-4aa9-abfa-38b146383d306',
+            idPlumbingChild: 'ec62006b-6275-4aa9-abfa-38b146383d307',
             unusedId: 'ec62006b-6275-4aa9-abfa-38b146383d50',
             nameOne: 'admin.category.name.repair',
             nameTwo: 'admin.category.name.electrical',

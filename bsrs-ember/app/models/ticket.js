@@ -88,6 +88,8 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         let assignee_fk = this.get('assignee_fk');
         if(assignee && assignee.get('id') !== assignee_fk) {
             this.change_assignee(assignee_fk);
+        }else if(!assignee) {
+            this.remove_assignee(assignee_fk);
         }
     },
     rollbackPriority() {
@@ -95,6 +97,8 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         let priority_fk = this.get('priority_fk');
         if(priority && priority.get('id') !== priority_fk) {
             this.change_priority(priority_fk);
+        }else if(!priority){
+            this.remove_priority(priority_fk);
         }
     },
     saveStatus() {
@@ -115,6 +119,10 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         if (status) {
             return status.get('id') === status_fk ? false : true;
         }
+        if(!status && status_fk) {
+            return true;
+        }
+        return false;
     }),
     assigneeIsDirty: Ember.computed('assignee', 'assignee_fk', function() {
         let assignee = this.get('assignee');
@@ -122,6 +130,10 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         if(assignee) {
             return assignee.get('id') === assignee_fk ? false : true;
         }
+        if(!assignee && assignee_fk) {
+            return true;
+        }
+        return false;
     }),
     priorityIsDirty: Ember.computed('priority', 'priority_fk', function() {
         let priority = this.get('priority');
@@ -129,6 +141,11 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         if (priority) {
             return priority.get('id') === priority_fk ? false : true;
         }
+        //need if else rather than ternary b/c if neither priority or priority fk, then not dirty (new template)
+        if(!priority && priority_fk) {
+            return true;
+        }
+        return false;
     }),
     locationIsDirty: Ember.computed('location', 'location_fk', function() {
         let location = this.get('location');
@@ -136,6 +153,11 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         if (location) {
             return location.get('id') === location_fk ? false : true;
         }
+        //needed when cleared out, esp if not there
+        if(!location && location_fk) {
+            return true;
+        }
+        return false;
     }),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'requesterIsDirty', 'locationIsDirty', function() {
         return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty') || this.get('requesterIsDirty') || this.get('locationIsDirty');
@@ -199,7 +221,9 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         this.remove_status();
         let new_status = store.find('ticket-status', new_status_id);
         let new_status_tickets = new_status.get('tickets') || [];
-        new_status.set('tickets', new_status_tickets.concat(ticket_id));
+        if (new_status_tickets) {
+            new_status.set('tickets', new_status_tickets.concat(ticket_id));
+        }
     },
     serialize() {
         return {
