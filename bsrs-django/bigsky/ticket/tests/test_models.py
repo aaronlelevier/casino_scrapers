@@ -1,5 +1,9 @@
 from django.test import TestCase
+from django.conf import settings
 
+from model_mommy import mommy
+
+from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketCategory,
     TicketActivity)
 from ticket.tests.factory import create_tickets
@@ -34,6 +38,37 @@ class TicketTests(TestCase):
         two = Ticket.objects.get(number=2)
         self.assertIsInstance(two, Ticket)
 
+    def test_defaults(self):
+        ticket = Ticket.objects.first()
+        ticket.status = None
+        ticket.priority = None
+        ticket.save()
 
-class TicketCategory(TestCase):
-    pass
+        self.assertIsInstance(ticket.status, TicketStatus)
+        self.assertIsInstance(ticket.priority, TicketPriority)
+
+
+class TicketActivityTests(TestCase):
+    
+    def setUp(self):
+        self.person = create_single_person()
+        self.activity = mommy.make(TicketActivity, person=self.person)
+
+    def test_create(self):
+        self.assertIsInstance(self.activity, TicketActivity)
+
+    def test_weigh_default(self):
+        self.assertEqual(
+            self.activity.weight,
+            settings.ACTIVITY_DEFAULT_WEIGHT
+        )
+
+    def test_weight_category(self):
+        category = mommy.make(TicketCategory)
+        self.activity.category = category
+        self.activity.save()
+
+        self.assertEqual(
+            self.activity.weight,
+            category.weight
+        )

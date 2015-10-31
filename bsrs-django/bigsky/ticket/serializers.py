@@ -8,7 +8,7 @@ from location.serializers import LocationSerializer
 
 
 TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee', 'cc',
-    'categories', )
+    'requester', 'categories', 'attachments', 'request',)
 
 
 class TicketListSerializer(serializers.ModelSerializer):
@@ -19,7 +19,7 @@ class TicketListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS
+        fields = TICKET_FIELDS + ('number',)
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -32,12 +32,11 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number', 'requester', 'cc',)
+        fields = TICKET_FIELDS + ('number',)
 
 
 class TicketCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Ticket
-        fields = ('id', 'location', 'status', 'priority', 'assignee', 'cc',
-            'requester', 'categories', 'attachments',)
+        fields = TICKET_FIELDS

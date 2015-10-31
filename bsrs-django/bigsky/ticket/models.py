@@ -47,8 +47,8 @@ class Ticket(BaseModel):
 
     # Keys
     location = models.ForeignKey(Location)
-    status = models.ForeignKey(TicketStatus, blank=True)
-    priority = models.ForeignKey(TicketPriority, blank=True)
+    status = models.ForeignKey(TicketStatus, blank=True, null=True)
+    priority = models.ForeignKey(TicketPriority, blank=True, null=True)
     assignee = models.ForeignKey(Person, blank=True, null=True,
         related_name="assignee_tickets")
     cc = models.ManyToManyField(Person, blank=True)
