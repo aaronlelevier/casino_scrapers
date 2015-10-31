@@ -12,7 +12,6 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
     store: inject('main'),
     uuid: injectUUID('uuid'),
     number: attr(''),
-    subject: attr(''),
     requester_id: attr(),
     ticket_people_fks: [],
     ticket_categories_fks: [],
@@ -228,7 +227,6 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
     serialize() {
         return {
             id: this.get('id'),
-            subject: this.get('subject'),
             request: this.get('request'),
             status: this.get('status.id'),
             priority: this.get('priority.id'),

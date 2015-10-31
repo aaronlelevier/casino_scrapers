@@ -7,7 +7,6 @@ import { ValidationMixin, validate } from 'ember-cli-simple-validation/mixins/va
 var TicketSingleComponent = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
     repository: inject('ticket'),
     numberValidation: validate('model.number'),
-    subjectValidation: validate('model.subject'),
     assigneeValidation: validate('model.assignee'),
     priorityValidation: validate('model.priority'),
     locationValidation: validate('model.location'),
@@ -19,12 +18,12 @@ var TicketSingleComponent = Ember.Component.extend(TabMixin, EditMixin, Validati
             return;
         }
         let children_ids = children.mapBy('id');
-        let index = ticket.get('categories_ids').reduce(function(found, category_pk) {
+        let index = ticket.get('categories_ids').reduce((found, category_pk) => {
             return found > -1 ? found : Ember.$.inArray(category_pk, children_ids);
         }, -1);
         let child = children.objectAt(index);
         this.construct_category_tree(ticket, child, child_nodes);
-        return child_nodes.filter(function(node) {
+        return child_nodes.filter((node) => {
             return node !== undefined;
         });
     },

@@ -28,7 +28,6 @@ var BSRS_TICKET_FACTORY = (function() {
         return {
             id: id,
             number: this.ticket.numberOne,
-            subject: this.ticket.subjectOne,
             request: this.ticket.requestOne,
             status: this.ticket.statusOneId,
             priority: this.ticket.priorityOneId,

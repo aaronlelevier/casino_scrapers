@@ -63,13 +63,6 @@
                             <section>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        {{#form-group title="ticket.label.subject" for="subject"}}
-                                        {{input type="text" placeholder=(t "ticket.label.subject") value=model.subject class="form-control t-ticket-subject" id="ticket_subject"}}
-                                        {{/form-group}}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
                                       {{#if submitted}}
                                       <span class="validation validation-under t-category-validation-error {{if valid 'hidden' ''}}">invalid category</span>
                                       {{/if}}

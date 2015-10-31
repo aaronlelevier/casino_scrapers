@@ -7,7 +7,6 @@ import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 
 var ticket_payload = {
     id: UUID.value,
-    subject: TICKET_DEFAULTS.subjectOne,
     status: TICKET_DEFAULTS.statusOneId,
     priority: TICKET_DEFAULTS.priorityOneId,
     cc: [],
@@ -18,7 +17,6 @@ var ticket_payload = {
 
 var ticket_payload_detail = {
     id: TICKET_DEFAULTS.idOne,
-    subject: TICKET_DEFAULTS.subjectOne,
     request: TICKET_DEFAULTS.requestOne,
     status: TICKET_DEFAULTS.statusOneId,
     priority: TICKET_DEFAULTS.priorityOneId,
@@ -31,7 +29,6 @@ var ticket_payload_detail = {
 
 var ticket_payload_detail_one_category = {
     id: TICKET_DEFAULTS.idOne,
-    subject: TICKET_DEFAULTS.subjectTwo,
     request: TICKET_DEFAULTS.requestOne,
     status: TICKET_DEFAULTS.statusTwoId,
     priority: TICKET_DEFAULTS.priorityTwoId,

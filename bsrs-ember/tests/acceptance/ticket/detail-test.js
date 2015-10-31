@@ -74,7 +74,7 @@ module('Acceptance | ticket detail test', {
     }
 });
 
-test('clicking a tickets subject will redirect to the given detail view', (assert) => {
+test('clicking a tickets will redirect to the given detail view', (assert) => {
     page.visit();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
@@ -92,13 +92,9 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
         assert.equal(currentURL(), DETAIL_URL);
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.ok(ticket.get('isNotDirty'));
-        assert.equal(page.subjectInput(), TICKET_DEFAULTS.subjectOne);
         assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOneId);
         assert.equal(page.statusInput(), TICKET_DEFAULTS.statusOneId);
     });
-    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
-    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail_one_category), {}, 200, response);
-    page.subject(TICKET_DEFAULTS.subjectTwo);
     page.priorityClickOptionTwo();
     page.statusClickOptionTwo();
     let category_three = {id: CATEGORY_DEFAULTS.idThree, name: CATEGORY_DEFAULTS.nameThree, parent: null, has_children: false};
@@ -106,11 +102,12 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
     page.categoryClickOptionTwo();
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.ok(ticket.get('isDirty'));
-        assert.equal(page.subjectInput(), TICKET_DEFAULTS.subjectTwo);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwoId);
         assert.equal(page.statusInput(), TICKET_DEFAULTS.statusTwoId);
     });
+    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail_one_category), {}, 200, response);
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, TICKET_FIXTURES.list());
     generalPage.save();
     andThen(() => {
