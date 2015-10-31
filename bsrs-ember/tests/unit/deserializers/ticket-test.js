@@ -18,7 +18,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer, category_deserializer, ticket_priority, ticket_status, ticket;
 
-module('sco unit: ticket deserializer test', {
+module('unit: ticket deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:location','service:person-current','service:translations-fetcher','service:i18n']);
         uuid = this.container.lookup('model:uuid');

@@ -10,8 +10,8 @@ var BSRS_TICKET_FACTORY = (function() {
     factory.prototype.generate = function(i) {
         var id = i || this.ticket.idOne;
 
-        var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, has_children: false};
         var child_category = this.category_fixtures.get(this.category_defaults.idPlumbing, this.category_defaults.nameRepairChild);
+        var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent: {id: child_category.id, name: child_category.name}, has_children: false};
         child_category.children = [child_child_category];
         child_category.has_children = true;
         child_category.parent = {id: this.category_defaults.idOne, name: this.category_defaults.nameOne};

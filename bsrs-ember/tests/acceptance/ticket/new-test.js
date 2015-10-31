@@ -31,10 +31,20 @@ const TICKET_POST_URL = PREFIX + BASE_URL + '/';
 const NUMBER_6 = {keyCode: 54};
 const LETTER_B = {keyCode: 66};
 const BACKSPACE = {keyCode: 8};
+const TOPLEVEL = 'select.t-ticket-category-select:eq(0) + .selectize-control';
+const PRIORITY = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
+const LOCATION = 'select.t-ticket-location-select:eq(0) + .selectize-control';
+const ASSIGNEE = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+const CC = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+const CATEGORY_ONE = 'select.t-ticket-category-select:eq(0) + .selectize-control';
+const CATEGORY_TWO = 'select.t-ticket-category-select:eq(1) + .selectize-control';
+const CATEGORY_THREE = 'select.t-ticket-category-select:eq(2) + .selectize-control';
+const STATUS = 'select.t-ticket-status-select:eq(0) + .selectize-control';
+const SECONDLEVEL = 'select.t-ticket-category-select:eq(1) + .selectize-control';
 
 let application, store, list_xhr, location_xhr, people_xhr, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter;
 
-module('sco Acceptance | ticket new test', {
+module('Acceptance | ticket new test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -42,12 +52,15 @@ module('sco Acceptance | ticket new test', {
         let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
         xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.top_level());
         location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
+        //repair with child of electrical and wat
         let category = {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent: null, has_children: true};
         category.children = [{id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, has_children: true}, {id: CATEGORY_DEFAULTS.unusedId , name: CATEGORY_DEFAULTS.nameUnused, has_children: false}];
         category_one_xhr = xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idOne}/`, 'GET', null, {}, 200, category);
+        //electrical
         let category_two = {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent: {id: CATEGORY_DEFAULTS.idOne}, has_children: true};
         category_two.children = [{id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, has_children:false}];
         category_two_xhr = xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
+        //electrical child = outlet
         let category_three = {id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, parent: {id: CATEGORY_DEFAULTS.idTwo}, has_children: false};
         category_three_xhr = xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idChild}/`, 'GET', null, {}, 200, category_three);
         counter = 0;
@@ -100,8 +113,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
     page.assigneeFillIn('b');
-    let assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_B);
     page.assigneeClickOptionTwo();
     generalPage.save();
     andThen(() => {
@@ -110,8 +122,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
     page.locationFillIn('6');
-    let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-    triggerEvent(`${location_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', NUMBER_6);
     page.locationClickOptionTwo();
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
@@ -157,8 +168,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));
         assert.equal(components, 1);
     });
-    let category_first_component = 'select.t-ticket-category-select:eq(0) + .selectize-control';
-    click(`${category_first_component} > .selectize-dropdown div.option:eq(0)`);
+    click(`${CATEGORY_ONE} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let components = page.selectizeComponents();
         assert.equal(store.find('ticket').get('length'), 1);
@@ -170,8 +180,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
         assert.equal(components, 2);
     });
-    let $category_second_component = 'select.t-ticket-category-select:eq(1) + .selectize-control';
-    click(`${$category_second_component} > .selectize-dropdown div.option:eq(0)`);
+    click(`${CATEGORY_TWO} > .selectize-dropdown div.option:eq(0)`);
     andThen(() => {
         let components = page.selectizeComponents();
         let tickets = store.find('ticket');
@@ -305,18 +314,17 @@ test('shows assignee for ticket and will fire off xhr to fetch assignee(persons)
     page.visitNew();
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
     page.assigneeFillIn('b');
-    let assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_B);
     andThen(() => {
         assert.equal(page.assigneeOptionLength(), 10);
     });
     page.assigneeFillIn('');
-    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', BACKSPACE);
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(page.assigneeOptionLength(), 0);
     });
     page.assigneeFillIn('b');
-    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_B);
     andThen(() => {
         assert.equal(page.assigneeOptionLength(), 10);
     });
@@ -331,9 +339,8 @@ test('when hit backspace should remove assignee from ticket', (assert) => {
     clearxhr(category_three_xhr);
     page.visitNew();
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-    let selector = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
     page.assigneeFillIn('b');
-    triggerEvent(`${selector} > .selectize-input input`, 'keyup', LETTER_B);
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_B);
     page.assigneeClickOptionTwo();
     andThen(() => {
         assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
@@ -342,7 +349,7 @@ test('when hit backspace should remove assignee from ticket', (assert) => {
         assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
-    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keydown', BACKSPACE);
     andThen(() => {
         let ticket = store.findOne('ticket');
         assert.ok(!ticket.get('assignee'));
@@ -367,8 +374,7 @@ test('should be able to add and remove priority but not remove div options', (as
         assert.equal(page.priorityOptionLength(), 4);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
-    let selector = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
-    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
+    triggerEvent(`${PRIORITY} > .selectize-input input`, 'keydown', BACKSPACE);
     andThen(() => {
         let ticket = store.findOne('ticket');
         assert.ok(!ticket.get('priority'));
@@ -394,8 +400,7 @@ test('should be able to add and remove status but not remove div options', (asse
         assert.equal(page.statusOptionLength(), 8);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
-    let selector = 'select.t-ticket-status-select:eq(0) + .selectize-control';
-    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
+    triggerEvent(`${STATUS} > .selectize-input input`, 'keydown', BACKSPACE);
     andThen(() => {
         let ticket = store.findOne('ticket');
         assert.ok(!ticket.get('status'));
@@ -413,8 +418,7 @@ test('selecting new location will not affect other selectize components and will
     page.visitNew();
     page.priorityClickOptionOne();
     page.locationFillIn('6');
-    let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-    triggerEvent(`${location_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', NUMBER_6);
     page.locationClickOptionTwo();
     andThen(() => {
         assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOneId);
@@ -429,10 +433,9 @@ test('location new component shows location for ticket and will fire off xhr to 
     clearxhr(category_three_xhr);
     page.visitNew();
     page.locationFillIn('6');
-    let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-    triggerEvent(`${location_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', NUMBER_6);
     andThen(() => {
-        assert.equal(find(`${location_component} > .selectize-dropdown div.option`).length, 2);
+        assert.equal(find(`${LOCATION} > .selectize-dropdown div.option`).length, 2);
     });
     page.locationClickOptionTwo();
     andThen(() => {
@@ -452,19 +455,18 @@ test('removes location dropdown on search to change location', (assert) => {
     clearxhr(category_three_xhr);
     page.visitNew();
     location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
-    let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
     page.locationFillIn('6');
-    triggerEvent(`${location_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', NUMBER_6);
     andThen(() => {
         assert.equal(page.locationOptionLength(), 2);
     });
     page.locationFillIn('');
-    triggerEvent(`${location_component} > .selectize-input input`, 'keyup', BACKSPACE);
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(page.locationOptionLength(), 0);
     });
     page.locationFillIn('6');
-    triggerEvent(`${location_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', NUMBER_6);
     andThen(() => {
         assert.equal(page.locationOptionLength(), 2);
     });
@@ -479,8 +481,7 @@ test('when hit backspace should remove location from ticket', (assert) => {
     page.visitNew();
     location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
     page.locationFillIn('6');
-    let selector = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-    triggerEvent(`${selector} > .selectize-input input`, 'keyup', NUMBER_6);
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', NUMBER_6);
     page.locationClickOptionTwo();
     andThen(() => {
         assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idTwo);
@@ -489,7 +490,7 @@ test('when hit backspace should remove location from ticket', (assert) => {
         assert.equal(ticket.get('location').get('id'), LOCATION_DEFAULTS.idTwo);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
-    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keydown', BACKSPACE);
     andThen(() => {
         let ticket = store.findOne('ticket');
         assert.ok(!ticket.get('location'));
@@ -510,8 +511,7 @@ test('all required fields persist correctly when the user submits a new ticket f
     });
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
     page.assigneeFillIn('b');
-    let assignee_component = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
-    triggerEvent(`${assignee_component} > .selectize-input input`, 'keyup', LETTER_B);
+    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_B);
     page.assigneeClickOptionTwo();
     andThen(() => {
         assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
@@ -529,11 +529,10 @@ test('all required fields persist correctly when the user submits a new ticket f
         assert.equal(ticket.get('priority.id'), TICKET_DEFAULTS.priorityOneId);
     });
     page.locationFillIn('6');
-    let location_component = 'select.t-ticket-location-select:eq(0) + .selectize-control';
-    triggerEvent(`${location_component} > .selectize-input input`, 'keyup', NUMBER_6);
+    triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', NUMBER_6);
     andThen(() => {
         //ensure route doesn't change current selections
-        assert.equal(find(`${location_component} > .selectize-dropdown div.option`).length, 2);
+        assert.equal(find(`${LOCATION} > .selectize-dropdown div.option`).length, 2);
         let ticket = store.find('ticket', UUID.value);
         assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
         assert.equal(ticket.get('status.id'), TICKET_DEFAULTS.statusOneId);
