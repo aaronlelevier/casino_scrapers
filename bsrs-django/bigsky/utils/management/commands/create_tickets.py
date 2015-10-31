@@ -9,8 +9,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         people = Person.objects.all()[:3]
-        create_tickets(
-            cc=people[0],
-            requester=people[1],
-            assignee=people[2]
-        )
+        create_tickets(_many=2)
