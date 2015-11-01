@@ -22,7 +22,7 @@ const BACKSPACE = {keyCode: 8};
 
 var application, store, endpoint, list_xhr, original_uuid;
 
-module('sco Acceptance | ticket grid test', {
+module('Acceptance | ticket grid test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

@@ -141,6 +141,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.equal(find('.t-category-validation-error').length, 1);
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
+    clearxhr(category_three_xhr);
     page.categoryThreeClickOptionOne();
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
@@ -238,6 +239,11 @@ test('selecting a top level category will alter the url and can cancel/discard c
 test('selecting and removing a top level category will remove children categories already selected', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
+    //clear out first xhr to change unusedId has_children to true
+    clearxhr(category_one_xhr);
+    let category = {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent: null, has_children: true};
+    category.children = [{id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, has_children: true}, {id: CATEGORY_DEFAULTS.unusedId , name: CATEGORY_DEFAULTS.nameUnused, has_children: true}];
+    category_one_xhr = xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idOne}/`, 'GET', null, {}, 200, category);
     page.visitNew();
     andThen(() => {
         let components = page.selectizeComponents();
@@ -268,6 +274,7 @@ test('selecting and removing a top level category will remove children categorie
         assert.equal(components, 3);
     });
     //third select
+    clearxhr(category_three_xhr);
     page.categoryThreeClickOptionOne();
     andThen(() => {
         let components = page.selectizeComponents();
@@ -292,8 +299,6 @@ test('selecting and removing a top level category will remove children categorie
         assert.equal(components, 3);
     });
     //change top level
-    let category_reselect = {id: CATEGORY_DEFAULTS.idThree, name: CATEGORY_DEFAULTS.nameThree, parent: null};
-    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idThree}/`, 'GET', null, {}, 200, category_reselect);
     page.categoryClickOptionTwo();
     andThen(() => {
         let components = page.selectizeComponents();
@@ -560,6 +565,7 @@ test('all required fields persist correctly when the user submits a new ticket f
     page.locationClickOptionTwo();
     page.categoryClickOptionOne();
     page.categoryTwoClickOptionOne();
+    clearxhr(category_three_xhr);
     page.categoryThreeClickOptionOne();
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     generalPage.save();
