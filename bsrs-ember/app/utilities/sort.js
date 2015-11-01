@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 var MultiSort = Ember.Object.extend().reopenClass({
-    run: function(items, options) {
+    run: function(items, options, related_fields) {
         let size = MultiSort.size(options);
         let operations = MultiSort.transform(options);
         return items.sort(function(a, b) {
@@ -9,7 +9,7 @@ var MultiSort = Ember.Object.extend().reopenClass({
             while(sorted === 0 && pass < size){
                 let sortBy = MultiSort.precedence(operations, pass);
                 let direction = operations[sortBy];
-                sorted = MultiSort.sort(a, b, direction, sortBy);
+                sorted = MultiSort.sort(a, b, direction, sortBy, related_fields);
                 pass++;
             }
             return sorted;
@@ -43,9 +43,20 @@ var MultiSort = Ember.Object.extend().reopenClass({
             }
         }
     },
-    sort: function(a, b, d, column) {
-        let _a = Ember.get(a, column) || '';
-        let _b = Ember.get(b, column) || '';
+    sort: function(a, b, d, column, related_fields) {
+        let _a;
+        let _b;
+        if(related_fields && related_fields.lookup[column]) {
+            let field = `${column}.${related_fields.lookup[column].field}`;
+            _a = Ember.get(a, field) || '';
+        }else{
+            _a = Ember.get(a, column) || '';
+        }
+        if(related_fields && related_fields.lookup[column]) {
+            _b = Ember.get(b, `${column}.${related_fields.lookup[column].field}`) || '';
+        }else{
+            _b = Ember.get(b, column) || '';
+        }
         d = d !== null ? d : 1;
         a = MultiSort.isNumber(_a) ? _a*1 : _a.toLowerCase();
         b = MultiSort.isNumber(_b) ? _b*1 : _b.toLowerCase();

@@ -50,7 +50,6 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             requestOneGrid: 'sub1',
             requestLastGrid: 'ape11',
             requestLastPage2Grid: 'ape19',
-            subjectOneGrid: 'diagram1',
             requestFourGrid: 'sub4',
             requestOtherGrid: 'sub10',
             requestFourteenGrid: 'ape14'
