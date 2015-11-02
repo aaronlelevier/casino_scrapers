@@ -21,8 +21,8 @@ def create_ticket():
 
     ticket = Ticket.objects.create(
         location = random.choice(Location.objects.all()),
-        status = mommy.make(TicketStatus),
-        priority = mommy.make(TicketPriority),
+        status = random.choice(TicketStatus.objects.all()),
+        priority = random.choice(TicketPriority.objects.all()),
         assignee = create_single_person(),
         requester = create_single_person(),
         request = _generate_chars()
