@@ -28,13 +28,13 @@ var PersonRoute = TabRoute.extend({
     modelName: Ember.computed(function() { return 'person'; }),
     templateModelField: Ember.computed(function() { return 'fullname'; }),
     model(params, transition) {
-        let person_pk = params.person_id;
-        let location_repo = this.get('location_repo');
-        let country_repo = this.get('country_repo');
-        let state_repo = this.get('state_repo');
-        let status_repo = this.get('status_repo');
-        let role_repo = this.get('role_repo');
-        let repository = this.get('repository');
+        const person_pk = params.person_id;
+        const location_repo = this.get('location_repo');
+        const country_repo = this.get('country_repo');
+        const state_repo = this.get('state_repo');
+        const status_repo = this.get('status_repo');
+        const role_repo = this.get('role_repo');
+        const repository = this.get('repository');
         let person = this.get('store').find('person', person_pk);
         if (!person.get('length') || person.get('isNotDirtyOrRelatedNotDirty')) {
             person = repository.findById(person_pk);

@@ -16,12 +16,15 @@ var TicketSingleRoute = TabRoute.extend({
         search: {
             refreshModel: true
         },
+        search_assignee: {
+            refreshModel: true
+        },
         search_location: {
             refreshModel: true
         },
     },
     top_level_category_options: Ember.computed(function() {
-        let categoryRepo = this.get('categoryRepository');
+        const categoryRepo = this.get('categoryRepository');
         return categoryRepo.findTopLevelCategories();
     }),
     priorities: Ember.computed(function() {
@@ -31,18 +34,26 @@ var TicketSingleRoute = TabRoute.extend({
         return this.get('statusRepository').fetch();
     }),
     model(params, transition) {
-        let pk = params.ticket_id;
-        let repository = this.get('repository');
+        const pk = params.ticket_id;
+        const repository = this.get('repository');
+        const peopleRepo = this.get('peopleRepo');
         let search = transition.queryParams.search;
         let search_location = transition.queryParams.search_location;
+        let search_assignee = transition.queryParams.search_assignee;
         let ticket = repository.fetch(pk);
         let statuses = this.get('statuses');
         let priorities = this.get('priorities');
 
         let top_level_category_options = this.get('top_level_category_options');
 
+        let ticket_assignee_options = [];
+        ticket_assignee_options = peopleRepo.findTicketAssignee(search_assignee) || [];
+        let assignee = ticket.get('assignee');
+        if (assignee) {
+            ticket_assignee_options.pushObject(assignee);
+        }
+
         let ticket_cc_options = [];
-        let peopleRepo = this.get('peopleRepo');
         ticket_cc_options = peopleRepo.findTicketPeople(search) || [];
         let cc = ticket.get('cc') || [];
         for (let i = 0, length=cc.get('length'); i < length; ++i) {
@@ -57,7 +68,8 @@ var TicketSingleRoute = TabRoute.extend({
             ticket_location_options.pushObject(location);
         }
 
-        if (!ticket.get('length') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
+        if (!ticket.get('content') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
+            //NOTE: if not dirty on search change, then will bring in new data
             ticket = repository.findById(pk);
         }
         return Ember.RSVP.hash({
@@ -66,7 +78,9 @@ var TicketSingleRoute = TabRoute.extend({
             priorities: priorities,
             search: search,
             search_location: search_location,
+            search_assignee: search_assignee,
             ticket_cc_options: ticket_cc_options,
+            ticket_assignee_options: ticket_assignee_options,
             ticket_location_options: ticket_location_options,
             top_level_category_options: top_level_category_options,
         });
@@ -77,7 +91,9 @@ var TicketSingleRoute = TabRoute.extend({
         controller.set('priorities', hash.priorities);
         controller.set('search', hash.search);
         controller.set('search_location', hash.search_location);
+        controller.set('search_assignee', hash.search_assignee);
         controller.set('ticket_cc_options', hash.ticket_cc_options);
+        controller.set('ticket_assignee_options', hash.ticket_assignee_options);
         controller.set('ticket_location_options', hash.ticket_location_options);
         controller.set('top_level_category_options', hash.top_level_category_options);
     },

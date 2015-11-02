@@ -33,7 +33,7 @@ export default Ember.Object.extend(GridRepositoryMixin, {
                 this.get('PersonDeserializer').deserialize(response);
             });
             let filterFunc = function(person) {
-                let full_name = person.get('first_name');
+                let full_name = person.get('fullname');
                 return full_name.toLowerCase().indexOf(search.toLowerCase()) > -1;
             };
             return this.get('store').find('person', filterFunc, ['id']);

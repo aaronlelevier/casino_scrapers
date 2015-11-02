@@ -17,7 +17,7 @@ module('unit: ticket test', {
 });
 
 test('ticket is dirty or related is dirty when model has been updated', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, number: TICKET_DEFAULTS.numberOne, subject: TICKET_DEFAULTS.subjectOne, status_fk: TICKET_DEFAULTS.statusOneId});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, number: TICKET_DEFAULTS.numberOne, status_fk: TICKET_DEFAULTS.statusOneId});
     store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [TICKET_DEFAULTS.idOne]});
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -27,11 +27,6 @@ test('ticket is dirty or related is dirty when model has been updated', (assert)
     ticket.set('number', TICKET_DEFAULTS.numberOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    ticket.set('subject', TICKET_DEFAULTS.subjectTwo);
-    assert.ok(ticket.get('isDirty'));
-    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    ticket.set('subject', TICKET_DEFAULTS.subjectOne);
-    assert.ok(ticket.get('isNotDirty'));
 });
 
 /*TICKET TO STATUS*/
@@ -1095,4 +1090,21 @@ test('rollback location will revert and reboot the dirty location to clean', (as
     ticket.saveRelated();
     assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('there is no leaky state when instantiating ticket (set)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, name: TICKET_DEFAULTS.nameOne});
+    ticket.set('ticket_categories_fks', [TICKET_CATEGORY_DEFAULTS.idOne]);
+    assert.deepEqual(ticket.get('ticket_categories_fks'), [TICKET_CATEGORY_DEFAULTS.idOne]);
+    let ticket_two = store.push('ticket', {id: TICKET_DEFAULTS.idTwo, name: TICKET_DEFAULTS.nameOne});
+    assert.deepEqual(ticket_two.get('ticket_categories_fks'), []);
+});
+
+test('there is leaky state when instantiating ticket (pushObject - DO NOT DO THIS)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, name: TICKET_DEFAULTS.nameOne});
+    let ticket_category = ticket.get('ticket_categories_fks');
+    ticket_category.pushObject(TICKET_CATEGORY_DEFAULTS.idOne);
+    assert.deepEqual(ticket.get('ticket_categories_fks'), [TICKET_CATEGORY_DEFAULTS.idOne]);
+    let ticket_two = store.push('ticket', {id: TICKET_DEFAULTS.idTwo, name: TICKET_DEFAULTS.nameOne});
+    assert.deepEqual(ticket_two.get('ticket_categories_fks'), [TICKET_CATEGORY_DEFAULTS.idOne]);
 });
