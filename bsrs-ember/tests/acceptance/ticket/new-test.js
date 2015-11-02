@@ -84,7 +84,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-priority-validation-error').is(':hidden'));
         assert.ok(find('.t-assignee-validation-error').is(':hidden'));
         assert.ok(find('.t-location-validation-error').is(':hidden'));
-        assert.equal(find('.t-category-validation-error').length, 0);
+        assert.ok(find('.t-category-validation-error').is(':hidden'));
     });
     generalPage.save();
     andThen(() => {
@@ -133,7 +133,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
         assert.equal(find('.t-category-validation-error').length, 1);
-        // assert.ok(find('.t-category-validation-error').is(':visible'));//??? sco
+        assert.ok(find('.t-category-validation-error').is(':visible'));
     });
     page.categoryTwoClickOptionOne();
     andThen(() => {
