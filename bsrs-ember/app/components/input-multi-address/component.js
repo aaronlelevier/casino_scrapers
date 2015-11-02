@@ -21,10 +21,10 @@ var MultiAddressComponent = ChildValidationComponent.extend(CustomValidMixin, {
             });
         },
         append() {
-            var id = this.get('uuid').v4();
-            var type = this.get('default_type').get('id');
-            var related_field = this.get('related_field');
-            var related_pk = this.get('related_pk');
+            const id = this.get('uuid').v4();
+            const type = this.get('default_type').get('id');
+            const related_field = this.get('related_field');
+            const related_pk = this.get('related_pk');
             var model = {id: id, type: type};
             model[related_field] = related_pk;
             this.get('model').push(model);
@@ -34,7 +34,7 @@ var MultiAddressComponent = ChildValidationComponent.extend(CustomValidMixin, {
         },
         changeState(state, val) {
             Ember.run(() => {
-                var state_id = parseInt(val, 10);
+                const state_id = parseInt(val, 10);
                 state.set('state', state_id);
             });
         },
