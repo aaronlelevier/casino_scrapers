@@ -22,6 +22,9 @@ class TicketStatus(BaseNameModel):
 
     objects = TicketStatusManager()
 
+    class Meta:
+        verbose_name_plural = "Ticket Statuses"
+
         
 class TicketPriorityManager(BaseManager):
 
@@ -33,6 +36,9 @@ class TicketPriorityManager(BaseManager):
 class TicketPriority(BaseNameModel):
 
     objects = TicketPriorityManager()
+
+    class Meta:
+        verbose_name_plural = "Ticket Priorities"
 
         
 class Ticket(BaseModel):

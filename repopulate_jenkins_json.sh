@@ -18,6 +18,8 @@ wait
 wait
 ./manage.py dumpdata --indent=2 > fixtures/jenkins.json
 wait
+./manage.py loaddata fixtures/jenkins_custom.json
+wait
 ./manage.py create_tickets
 wait
-./manage.py dumpdata --indent=2 > fixtures/tickets.json
+./manage.py dumpdata ticket.Ticket --indent=2 > fixtures/tickets.json

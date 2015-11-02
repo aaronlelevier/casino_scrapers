@@ -16,13 +16,19 @@ from utils.create import random_lorem, _generate_chars
 
 
 def create_ticket():
-    create_locations()
-    create_categories()
+    if not Location.objects.all().exists():
+        create_locations()
+
+    if not Category.objects.all().exists():
+        create_categories()
+        
+    create_ticket_statuses()
+    create_ticket_priorites()
 
     ticket = Ticket.objects.create(
         location = random.choice(Location.objects.all()),
-        status = mommy.make(TicketStatus),
-        priority = mommy.make(TicketPriority),
+        status = random.choice(TicketStatus.objects.all()),
+        priority = random.choice(TicketPriority.objects.all()),
         assignee = create_single_person(),
         requester = create_single_person(),
         request = _generate_chars()
@@ -34,6 +40,32 @@ def create_ticket():
 
 def create_tickets(_many=1):
     return [create_ticket() for x in range(_many)]
+
+
+def create_ticket_statuses():
+    statuses = [
+        'ticket.status.draft',
+        'ticket.status.denied',
+        'ticket.status.problem_solved',
+        'ticket.status.complete',
+        'ticket.status.deferred',
+        'ticket.status.new',
+        'ticket.status.in_progress',
+        'ticket.status.unsatisfactory_completion'
+    ]
+    for status in statuses:
+        TicketStatus.objects.get_or_create(name=status)
+
+
+def create_ticket_priorites():
+    priorities = [
+        'ticket.priority.medium',
+        'ticket.priority.low',
+        'ticket.priority.high',
+        'ticket.priority.emergency'
+    ]
+    for priority in priorities:
+        TicketPriority.objects.get_or_create(name=priority)
 
 
 def create_ticket_category(name=_generate_chars(),

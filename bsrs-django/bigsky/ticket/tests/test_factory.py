@@ -6,7 +6,8 @@ from location.models import Location
 from person.models import Person
 from person.tests.factory import create_person
 from ticket.models import Ticket, TicketStatus, TicketPriority, TicketCategory
-from ticket.tests.factory import create_ticket, create_tickets, create_ticket_category
+from ticket.tests.factory import (create_ticket, create_tickets, create_ticket_category,
+    create_ticket_statuses, create_ticket_priorites)
 
 
 class CreateTicketTests(TestCase):
@@ -57,6 +58,24 @@ class CreateTicketsTests(TestCase):
         tickets = create_tickets(_many=2)
         self.assertEqual(len(tickets), 2)
         self.assertIsInstance(tickets[0], Ticket)
+
+
+class CreateStatusTests(TestCase):
+
+    def setUp(self):
+        create_ticket_statuses()
+
+    def test_create(self):
+        self.assertTrue(TicketStatus.objects.all())
+
+
+class CreatePriorityTests(TestCase):
+
+    def setUp(self):
+        create_ticket_priorites()
+
+    def test_create(self):
+        self.assertTrue(TicketPriority.objects.all())
 
 
 class CreateTicketsCategory(TestCase):
