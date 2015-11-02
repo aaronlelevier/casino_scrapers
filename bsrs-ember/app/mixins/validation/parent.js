@@ -18,7 +18,7 @@ var ParentValidationComponent = Ember.Component.extend(ValidationMixin, {
         let unique_validation = child.get('elementId');
         this.child_validators[unique_validation] = valid;
     },
-    all_components_valid: function() {
+    all_components_valid: function() { //maybe pull this out now that we see it used 3x
         var value = true;
         Object.keys(this.child_validators).forEach((key) => {
             value = this.child_validators[key] && value;
