@@ -14,7 +14,7 @@ var LocationLevelComponent = Ember.Component.extend({
     }),
     available_location_level_names: Ember.computed('available_location_levels.[]', function() {
         const available_location_levels = this.get('available_location_levels');
-        let name_arr = [];
+        const name_arr = [];
         available_location_levels.forEach((loc_level) => {
             name_arr.push(loc_level.get('name'));
         });
