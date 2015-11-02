@@ -58,19 +58,20 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         )
         role_page.find_new_link().click()
         # New Role Data
-        name = rand_chars()
+        name = "a"+rand_chars()
         role = InputHelper(name=name)
         self._fill_in(role)
         self.gen_elem_page.click_save_btn()
         # new Role in List view
         role = role_page.find_list_data()
         self.driver.refresh()
+        self.wait_for_xhr_request("t-sort-name-dir").click()
         role_list_view = role_page.find_list_name()
         role_page.click_name_in_list(name, role_list_view)
         ### UPDATE
         # Go to the first Role's Detail view
         role_page.find_wait_and_assert_elem("t-role-name", name)
-        role_name = rand_chars()
+        role_name = "a"+rand_chars()
         role = InputHelper(role_name=role_name)
         self._fill_in(role, clear=True)
         self.gen_elem_page.click_save_btn()
