@@ -1,4 +1,4 @@
-from django.test import TransactionTestCase
+from django.test import TestCase
 
 from model_mommy import mommy
 
@@ -8,7 +8,7 @@ from person.models import Person, Role
 from person.tests import factory
 
 
-class FactoryTests(TransactionTestCase):
+class FactoryTests(TestCase):
 
     def test_create_role(self):
         init_count = Role.objects.count()

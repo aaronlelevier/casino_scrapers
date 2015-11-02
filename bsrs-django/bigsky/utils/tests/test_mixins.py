@@ -162,9 +162,9 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
         self.role_mgr = create_role(name="Manager", location_level=self.store)
         self.role_staff = create_role(name="staff", location_level=self.department)
 
-        self.admin = create_single_person(role=self.role_admin)
-        self.mgr = create_single_person(role=self.role_mgr)
-        self.staff = create_single_person(role=self.role_staff)
+        self.admin = create_single_person(name=self.role_admin.name, role=self.role_admin)
+        self.mgr = create_single_person(name=self.role_mgr.name, role=self.role_mgr)
+        self.staff = create_single_person(name=self.role_staff.name, role=self.role_staff)
 
         # Login
         self.person = Person.objects.first()

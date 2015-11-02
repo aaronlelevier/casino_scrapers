@@ -3,6 +3,7 @@ import uuid
 import copy
 
 from django.test import TestCase
+from django.contrib.auth.models import ContentType
 
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
@@ -630,6 +631,7 @@ class PersonSearchTests(APITransactionTestCase):
 
     def tearDown(self):
         self.client.logout()
+        ContentType.objects.clear_cache()
 
     def test_search(self):
         letters = "aa"

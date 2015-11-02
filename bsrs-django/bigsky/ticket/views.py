@@ -12,6 +12,8 @@ class TicketsViewSet(BaseModelViewSet):
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     permission_classes = (IsAuthenticated,)
+    model = Ticket
+    filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
         """
