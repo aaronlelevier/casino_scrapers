@@ -95,10 +95,7 @@ class Category(BaseModel):
         else:
             self.label = self.parent.subcategory_label
 
-        if self.children.all().exists():
-            self.has_children = True
-        else:
-            self.has_children = False
+        self.has_children = self.children.all().exists()
             
         if not self.cost_currency:
             self.cost_currency = Currency.objects.default()
