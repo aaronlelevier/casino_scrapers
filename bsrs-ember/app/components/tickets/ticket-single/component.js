@@ -44,11 +44,11 @@ var TicketSingleComponent = Ember.Component.extend(TabMixin, EditMixin, Validati
             }
         },
         changed: function(new_status_id) {
-            let ticket = this.get('model');
+            const ticket = this.get('model');
             ticket.change_status(new_status_id);
         },
         changed_priority(new_priority_id) {
-            let ticket = this.get('model');
+            const ticket = this.get('model');
             ticket.change_priority(new_priority_id);
         }
     } 

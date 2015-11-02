@@ -24,7 +24,7 @@ var TicketSingleRoute = TabRoute.extend({
         },
     },
     top_level_category_options: Ember.computed(function() {
-        let categoryRepo = this.get('categoryRepository');
+        const categoryRepo = this.get('categoryRepository');
         return categoryRepo.findTopLevelCategories();
     }),
     priorities: Ember.computed(function() {
@@ -34,9 +34,9 @@ var TicketSingleRoute = TabRoute.extend({
         return this.get('statusRepository').fetch();
     }),
     model(params, transition) {
-        let pk = params.ticket_id;
-        let repository = this.get('repository');
-        let peopleRepo = this.get('peopleRepo');
+        const pk = params.ticket_id;
+        const repository = this.get('repository');
+        const peopleRepo = this.get('peopleRepo');
         let search = transition.queryParams.search;
         let search_location = transition.queryParams.search_location;
         let search_assignee = transition.queryParams.search_assignee;
