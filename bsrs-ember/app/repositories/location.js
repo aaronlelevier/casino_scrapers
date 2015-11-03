@@ -34,7 +34,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
             });
             let filterFunc = function(location) {
                 let name = location.get('name');
-                return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1;
+                return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1 && !location.get('new');
             };
             return this.get('store').find('location', filterFunc, ['id']);
         }

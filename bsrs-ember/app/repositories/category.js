@@ -30,7 +30,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
         });
         let filterFunc = function(category) {
             let name = category.get('name');
-            return name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+            return name.toLowerCase().indexOf(search.toLowerCase()) > -1 && !category.get('new');
         };
         //TODO: test case for filter on id
         return this.get('store').find('category', filterFunc, []);

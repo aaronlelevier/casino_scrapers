@@ -50,3 +50,13 @@ test('findTicket will lower case search', (assert) => {
     let location_array_proxy = subject.findTicket('Abc');
     assert.equal(location_array_proxy.get('length'), 2);
 });
+
+test('findTicket will return locations without a new flag', (assert) => {
+    store.push('location', {id: LOCATION_DEFAULTS.idOne, name: 'abc', new: true});
+    store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: 'abcd'});
+    store.push('location', {id: LOCATION_DEFAULTS.unusedId, name: 'xyz'});
+    store.push('location', {id: LOCATION_DEFAULTS.anotherId, name: 'mmm'});
+    let subject = LocationRepository.create({store: store});
+    let location_array_proxy = subject.findTicket('Abc');
+    assert.equal(location_array_proxy.get('length'), 1);
+});

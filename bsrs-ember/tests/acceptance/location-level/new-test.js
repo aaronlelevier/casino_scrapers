@@ -59,16 +59,18 @@ test('visiting /location-level/new', (assert) => {
         assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
         assert.equal(store.find('location-level').get('length'), 9);
         assert.equal(find('.t-location-level-location-level-select > option').length, 8);
+        let location_level = store.find('location-level', UUID.value);
+        assert.ok(location_level.get('new'));
     });
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameAnother);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(store.find('location-level').get('length'), 9);
-        let locationLevel = store.find('location-level', UUID.value);
-        assert.equal(locationLevel.get('id'), UUID.value);
-        assert.equal(locationLevel.get('name'), LOCATION_LEVEL_DEFAULTS.nameAnother);
-        assert.ok(locationLevel.get('isNotDirty'));
+        let location_level = store.find('location-level', UUID.value);
+        assert.equal(location_level.get('new'), undefined);
+        assert.equal(location_level.get('name'), LOCATION_LEVEL_DEFAULTS.nameAnother);
+        assert.ok(location_level.get('isNotDirty'));
     });
 });
 
