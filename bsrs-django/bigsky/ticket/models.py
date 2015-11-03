@@ -80,7 +80,7 @@ class Ticket(BaseModel):
 
 class TicketCategory(BaseNameModel):
 
-    weight = models.PositiveIntegerField()
+    weight = models.PositiveIntegerField(blank=True, default=1)
 
 
 class TicketActivity(models.Model):
