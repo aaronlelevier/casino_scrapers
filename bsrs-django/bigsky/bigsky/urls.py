@@ -7,6 +7,7 @@ from django.contrib.auth import views as auth_views, forms
 from django.contrib.auth.decorators import login_required
 
 from rest_framework import routers
+from rest_framework.routers import Route, SimpleRouter
 
 from accounting import views as accounting_views
 from bigsky import views as bigsky_views
@@ -50,24 +51,13 @@ router.register(r'admin/roles', person_views.RoleViewSet)
 router.register(r'admin/third-parties', third_party_views.ThirdPartyViewSet)
 # Tickets
 router.register(r'tickets', tickets_views.TicketsViewSet)
-# router.register(r'tickets-activitites', tickets_views.TicketActivityViewSet)
 # TRANSLATION
 router.register(r'admin/locales', translation_views.LocaleViewSet)
 router.register(r'admin/translations', translation_views.TranslationViewSet)
 router.register(r'translations', translation_views.TranslationBootstrapViewSet)
 
 
-# API
-urlpatterns = patterns('',
-    url(r'^api/', include(router.urls)),
-    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-)
-
-
-from rest_framework.routers import Route, DynamicDetailRoute, SimpleRouter
-
 class CustomReadOnlyRouter(SimpleRouter):
-
     routes = [
         Route(
             url=r'^{prefix}/{lookup}/activity/$',
@@ -79,8 +69,13 @@ class CustomReadOnlyRouter(SimpleRouter):
 
 custom_router = CustomReadOnlyRouter()
 custom_router.register('tickets', tickets_views.TicketActivityViewSet)
-urlpatterns += patterns('',
+
+
+# API
+urlpatterns = patterns('',
+    url(r'^api/', include(router.urls)),
     url(r'^api/', include(custom_router.urls)),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 )
 
 

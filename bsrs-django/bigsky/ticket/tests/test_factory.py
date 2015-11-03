@@ -90,6 +90,12 @@ class CreateTicketActivityTests(TestCase):
         obj = factory.create_ticket_activity()
         self.assertIsInstance(obj, TicketActivity)
 
+    def test_create_for_ticket(self):
+        ticket = factory.create_ticket()
+        ticket_activity = factory.create_ticket_activity(ticket=ticket)
+        self.assertIsInstance(ticket_activity, TicketActivity)
+        self.assertEqual(ticket_activity.ticket, ticket)
+
 
 class CreateTicketsActivityTypesTests(TestCase):
 

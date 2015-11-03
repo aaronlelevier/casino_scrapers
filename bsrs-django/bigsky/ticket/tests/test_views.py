@@ -7,9 +7,9 @@ from rest_framework.test import APITestCase
 
 from category.models import Category
 from person.tests.factory import PASSWORD, create_person
-from ticket.models import Ticket
+from ticket.models import Ticket, TicketActivity, TicketActivityType
 from ticket.serializers import TicketCreateSerializer
-from ticket.tests.factory import create_ticket
+from ticket.tests.factory import create_ticket, create_ticket_activity
 
 
 class TicketListTests(APITestCase):
@@ -148,3 +148,51 @@ class TicketCreateTests(APITestCase):
 
         ticket = Ticket.objects.get(id=data['id'])
         self.assertIsInstance(ticket, Ticket)
+
+
+class TicketActivityViewSetTests(APITestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_person()
+        # Ticket
+        self.ticket = create_ticket()
+        self.ticket_two = create_ticket()
+        # TicketActivity (Both for the 1st Ticket, Ticket-Two has no Activities !!)
+        self.ticket_activity = create_ticket_activity(ticket=self.ticket)
+        self.ticket_activity_two = create_ticket_activity(ticket=self.ticket)
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_get(self):
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+        self.assertEqual(response.status_code, 200)
+
+    def test_ticket_count(self):
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 2)
+
+    def test_ticket_details(self):
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+        data = json.loads(response.content.decode('utf8'))
+        
+        activity = TicketActivity.objects.get(id=data['results'][0]['id'])
+        self.assertIsInstance(activity, TicketActivity)
+        self.assertIsInstance(TicketActivityType.objects.get(id=data['results'][0]['type']), TicketActivityType)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['person'], str(activity.person.id))
+        self.assertEqual(data['results'][0]['comment'], activity.comment)
+
+    def test_ticket_two(self):
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket_two.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 0)
+
+    def test_post(self):
+        response = self.client.post('/api/tickets/{}/activity/'.format(self.ticket.id), {}, format='json')
+        self.assertEqual(response.status_code, 405)

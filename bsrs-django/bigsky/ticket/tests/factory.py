@@ -76,9 +76,9 @@ def create_ticket_priorites():
         TicketPriority.objects.get_or_create(name=priority)
 
 
-def create_ticket_activity(type=None, comment=None):
+def create_ticket_activity(ticket=None, type=None, comment=None):
     type = create_ticket_activity_type(name=type)
-    ticket = create_ticket()
+    ticket = ticket or create_ticket()
 
     return mommy.make(TicketActivity,
         type = type,
