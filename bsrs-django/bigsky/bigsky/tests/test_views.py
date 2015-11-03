@@ -164,7 +164,9 @@ class ConfigurationTests(TestCase):
         self.assertTrue(configuration[0]["categories"][0]["id"])
         self.assertTrue(configuration[0]["categories"][0]["name"])
         self.assertTrue(configuration[0]["categories"][0]["status"])
+        self.assertIn("has_children", configuration[0]["categories"][0])
         self.assertIn("parent", configuration[0]["categories"][0])
+        self.assertIn("has_children", configuration[0]["categories"][1])
 
         role = Role.objects.first()
         role.location_level = None

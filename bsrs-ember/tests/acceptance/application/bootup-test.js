@@ -161,6 +161,12 @@ test('on boot we should fetch and load the role configuration', function(assert)
         var category_models = store.find('category');
         assert.equal(role_models.get('length'), 3);
         assert.equal(category_models.get('length'), 3);
+        assert.equal(category_models.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+        assert.equal(category_models.objectAt(1).get('id'), CATEGORY_DEFAULTS.idTwo);
+        assert.equal(category_models.objectAt(2).get('id'), CATEGORY_DEFAULTS.idThree);
+        assert.ok(category_models.objectAt(0).get('has_children'));
+        assert.ok(!category_models.objectAt(1).get('has_children'));
+        assert.ok(category_models.objectAt(2).get('has_children'));
         assert.equal(role_models.objectAt(0).get('id'), ROLE_DEFAULTS.idOne);
         assert.equal(role_models.objectAt(0).get('name'), t(ROLE_DEFAULTS.nameOne));
         assert.equal(role_models.objectAt(0).get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);

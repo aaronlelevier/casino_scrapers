@@ -6,12 +6,16 @@ from category.models import Category
 from utils.create import random_lorem
 
 
-def create_categories():
+def create_categories(_many=0):
     # Repair
     type = mommy.make(Category, name='repair',
         subcategory_label='trade')
-    
-    for i in range(random.randrange(2, 5)):
+     
+    num_of_cat = random.randrange(2,5)
+    if _many > 0:
+        num_of_cat = _many
+
+    for i in range(0, num_of_cat):
         name = random_lorem(1)
         trade = mommy.make(Category, name=name,
             subcategory_label='issue', parent=type)

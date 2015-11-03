@@ -5,7 +5,7 @@ from utils.serializers import BaseCreateSerializer
 ### CATEGORY
 
 CATEGORY_FIELDS = ('id', 'name', 'description', 'label',
-    'cost_amount', 'cost_currency', 'cost_code',)
+    'cost_amount', 'cost_currency', 'cost_code', 'has_children')
 
 
 class CategoryIDNameSerializer(BaseCreateSerializer):
@@ -14,7 +14,7 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
     '''
     class Meta:
         model = Category
-        fields = ('id', 'name',)
+        fields = ('id', 'name', 'has_children')
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):
@@ -23,7 +23,7 @@ class CategoryRoleSerializer(BaseCreateSerializer):
     '''
     class Meta:
         model = Category
-        fields = ('id', 'name', 'status',)
+        fields = ('id', 'name', 'status', 'has_children')
 
 
 class CategoryListSerializer(BaseCreateSerializer):
