@@ -4,11 +4,11 @@ import Address from 'bsrs-ember/models/address';
 import AddressDefaults from 'bsrs-ember/vendor/defaults/address-type';
 import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
 import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
-import {validateEach} from 'ember-cli-simple-validation/mixins/validate';
+import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
 import addressNameValidation from 'bsrs-ember/validation/address_name';
 import postalCodeValidation from 'bsrs-ember/validation/postal_code';
 
-var MultiAddressComponent = ChildValidationComponent.extend(CustomValidMixin, {
+var MultiAddressComponent = ChildValidationComponent.extend(ValidationMixin, CustomValidMixin, {
     uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi-address t-input-multi-address'],
