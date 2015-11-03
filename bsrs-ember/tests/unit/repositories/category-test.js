@@ -63,3 +63,13 @@ test('findTopLevelCategories will format url correctly for search criteria and r
     let category_array_proxy = subject.findTopLevelCategories();
     assert.equal(category_array_proxy.get('length'), 2);
 });
+
+test('findTopLevelCategories will exclude children when parent category is not yet loaded', (assert) => {
+    store.push('category', {id: CATEGORY_DEFAULTS.anotherId, name: 'mmm', parent_id: CATEGORY_DEFAULTS.idOne});
+    let subject = CategoryRepository.create({store: store});
+    let category_array_proxy = subject.findTopLevelCategories();
+    assert.equal(category_array_proxy.get('length'), 0);
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: 'abc'});
+    assert.equal(category_array_proxy.get('length'), 1);
+    assert.equal(category_array_proxy.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+});

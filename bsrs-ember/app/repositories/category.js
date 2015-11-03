@@ -44,14 +44,10 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
     findTopLevelCategories() {
         let url = CATEGORY_URL + '?parent__isnull=True';
         PromiseMixin.xhr(url, 'GET').then((response) => {
-            response.results.forEach(function(category) {
-                delete category.parent;
-                //TODO: parent is now ALWAYS in the list payload so ... maybe kill this @toranb
-            });
             this.get('CategoryDeserializer').deserialize(response);
         });
         let filterFunc = function(category) {
-            return category.get('parent') === undefined;
+            return category.get('parent_id') === undefined;
         };
         return this.get('store').find('category', filterFunc, ['id']);
     },

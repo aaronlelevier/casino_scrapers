@@ -10,7 +10,7 @@ var CategoryModel = Model.extend(NewMixin, {
     label: attr(''),
     cost_amount: attr(''),
     cost_code: attr(''),
-    parent_id: '',
+    parent_id: undefined,
     children_fks: [],
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty');
