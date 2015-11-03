@@ -40,3 +40,4 @@ class CategoryTests(TestCase):
         self.assertIn('parent', d)
         self.assertEqual(d['parent']['id'], str(self.child.parent.pk))
         self.assertEqual(d['parent']['name'], self.child.parent.name)
+        self.assertEqual(self.child.has_children, False)
