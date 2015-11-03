@@ -10,6 +10,7 @@ import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_third_parties_url;
@@ -19,7 +20,7 @@ const DJANGO_THIRD_PARTY_URL = PREFIX + '/admin/third-parties/';
 const DETAIL_URL = BASE_URL + '/' + THIRD_PARTY_DEFAULTS.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_THIRD_PARTY_URL + THIRD_PARTY_DEFAULTS.idOne + '/';
 
-let application, store, payload, list_xhr;
+let application, original_uuid, store, payload, list_xhr;
 
 module('Acceptance | third-party-new', {
     beforeEach() {
@@ -32,9 +33,12 @@ module('Acceptance | third-party-new', {
             number: THIRD_PARTY_DEFAULTS.numberOne,
             status: THIRD_PARTY_DEFAULTS.statusActive
         };
+        original_uuid = random.uuid;
+        random.uuid = function() { return UUID.value; };
     },
     afterEach() {
         payload = null;
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });

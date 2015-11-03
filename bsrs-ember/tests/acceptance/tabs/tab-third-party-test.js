@@ -10,6 +10,7 @@ import THIRD_PARTY_FIXTURES from 'bsrs-ember/vendor/third_party_fixtures';
 import PERSON_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import THIRD_PARTY_DEFAULTS from 'bsrs-ember/vendor/defaults/third-party';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_THIRD_PARTY_URL = BASEURLS.base_third_parties_url;
@@ -24,7 +25,7 @@ const DOC_TYPE = 'third-party';
 const BASE_PERSON_URL = BASEURLS.base_people_url;
 const PERSON_URL = BASE_PERSON_URL + '/index';
 
-let application, store, list_xhr, third_party_detail_data, endpoint, detail_xhr;
+let application, store, list_xhr, third_party_detail_data, endpoint, detail_xhr, original_uuid;
 
 module('Acceptance | tab third-party test', {
     beforeEach() {
@@ -33,8 +34,10 @@ module('Acceptance | tab third-party test', {
         endpoint = PREFIX + BASE_THIRD_PARTY_URL + '/';
         var third_party_detail_data = THIRD_PARTY_FIXTURES.detail(THIRD_PARTY_DEFAULTS.idOne);
         detail_xhr = xhr(endpoint + THIRD_PARTY_DEFAULTS.idOne + '/', 'GET', null, {}, 200, third_party_detail_data);
+        original_uuid = random.uuid;
     },
     afterEach() {
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -145,6 +148,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
 });
 
 test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+    random.uuid = function() { return UUID.value; };
     clearxhr(detail_xhr);
     visit(NEW_URL);
     andThen(() => {
@@ -243,7 +247,7 @@ test('clicking on a tab that is dirty from the person url (or any non related pa
 });
 
 test('clicking on a tab that is not dirty from the person url (or any non related page) \
-     should take you to the detail url and fire off an xhr request', (assert) => {
+    should take you to the detail url and fire off an xhr request', (assert) => {
     xhr(endpoint, 'GET', null, {}, 200, THIRD_PARTY_FIXTURES.list());
     visit(THIRD_PARTY_URL);
     andThen(() => {

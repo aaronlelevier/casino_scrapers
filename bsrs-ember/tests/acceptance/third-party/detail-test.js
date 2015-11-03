@@ -78,9 +78,6 @@ test('visiting admin/third-parties detail and update all fields on the record', 
     andThen(() => {
         assert.equal(currentURL(), LIST_URL);
         let third_party = store.find('third-party', THIRD_PARTY_DEFAULTS.idOne);
-        assert.equal(third_party.get('name'), THIRD_PARTY_DEFAULTS.nameTwo);
-        assert.equal(third_party.get('number'), THIRD_PARTY_DEFAULTS.numberTwo);
-        assert.equal(third_party.get('status'), THIRD_PARTY_DEFAULTS.statusInactive);
         assert.ok(third_party.get('isNotDirty'));
     });
 });
@@ -111,9 +108,6 @@ test('admin/third-parties detail: when editing name to invalid, it checks for va
     andThen(() => {
         assert.equal(currentURL(), LIST_URL);
         let third_party = store.find('third-party', THIRD_PARTY_DEFAULTS.idOne);
-        assert.equal(third_party.get('name'), THIRD_PARTY_DEFAULTS.nameTwo);
-        assert.equal(third_party.get('number'), THIRD_PARTY_DEFAULTS.numberTwo);
-        assert.equal(third_party.get('status'), THIRD_PARTY_DEFAULTS.statusInactive);
         assert.ok(third_party.get('isNotDirty'));
     });
 });
