@@ -1,13 +1,34 @@
 import Ember from 'ember';
 
 var CategoriesMixin = Ember.Mixin.create({
+    construct_category_tree(category, child_nodes=[]) {
+        child_nodes.push(category);
+        const children = category ? category.get('children') : [];
+        if(children.get('length') === 0) {
+            return;
+        }
+        const children_ids = children.mapBy('id');
+        const index = this.get('categories_ids').reduce((found, category_pk) => {
+            return found > -1 ? found : Ember.$.inArray(category_pk, children_ids);
+        }, -1);
+        const child = children.objectAt(index);
+        this.construct_category_tree(child, child_nodes);
+        return child_nodes.filter((node) => {
+            return node !== undefined;
+        });
+    },
     top_level_category: Ember.computed('categories.[]', function() {
-        return this.get('categories').filter(function(category) {
+        return this.get('categories').filter((category) => {
             return category.get('parent') === undefined;
         }).objectAt(0);
     }),
     categories_ids: Ember.computed('categories.[]', function() {
         return this.get('categories').mapBy('id');
+    }),
+    sorted_categories: Ember.computed('top_level_category', 'categories.[]', function() {
+        const top_level_category = this.get('top_level_category');
+        const categories = this.construct_category_tree(top_level_category);
+        return categories;
     }),
     categories: Ember.computed('ticket_categories.[]', function() {
         let ticket_categories = this.get('ticket_categories');
@@ -34,6 +55,17 @@ var CategoriesMixin = Ember.Mixin.create({
         parent_ids.push(child.get('parent.id') || null);
         this.find_parent_nodes(child.get('parent.id'), parent_ids);
         return parent_ids;
+    },
+    remove_categories_down_tree(category_pk) {
+        let parent_ids = this.find_parent_nodes(category_pk);
+        let store = this.get('store');
+        let ticket_pk = this.get('id');
+        let m2m_models = this.get('ticket_categories').filter((m2m) => {
+            return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
+        });
+        m2m_models.forEach((m2m) => {
+            store.push('ticket-category', {id: m2m.get('id'), removed: true});
+        });
     },
     change_category_tree(category_pk) {
         let parent_ids = this.find_parent_nodes(category_pk);

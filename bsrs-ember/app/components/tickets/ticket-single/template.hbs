@@ -61,10 +61,9 @@
                             <section>
                                 <div class="row">
                                     <div class="col-md-12">
-                                      {{#if submitted}}
-                                      <span class="validation validation-under t-category-validation-error {{if valid_categories 'hidden' ''}}">invalid category</span>
-                                      {{/if}}
-                                      {{parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options}}
+                                      {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
+                                        <span class="validation validation-under t-category-validation-error {{child-validation submitted child_valid}}">invalid category</span>
+                                      {{/parent-ticket-category-select}}
                                     </div>
                                 </div>
                                 <div class="row">

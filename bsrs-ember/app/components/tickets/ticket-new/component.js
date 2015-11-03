@@ -12,7 +12,7 @@ var TicketNewComponent = ParentValidationComponent.extend(TabMixin, NewTabMixin,
     priorityValidation: validate('model.priority'),
     assigneeValidation: validate('model.assignee'),
     locationValidation: validate('model.location'),
-    all_child_components_valid: function() {
+    all_child_components_valid() {
         let value = true;
         Object.keys(this.child_validators).forEach((key) => {
             value = this.child_validators[key] && value;
@@ -23,15 +23,15 @@ var TicketNewComponent = ParentValidationComponent.extend(TabMixin, NewTabMixin,
         return legit && children === verified;
     },
     actions: {
-        changed_status: function(new_status_id) {
+        changed_status(new_status_id) {
             const ticket = this.get('model');
             ticket.change_status(new_status_id);
         },
-        changed_priority: function(new_priority_id) {
+        changed_priority(new_priority_id) {
             const ticket = this.get('model');
             ticket.change_priority(new_priority_id);
         },
-        save: function() {
+        save() {
             this.set('submitted', true);
             if (this.all_child_components_valid()) {
                 this._super();

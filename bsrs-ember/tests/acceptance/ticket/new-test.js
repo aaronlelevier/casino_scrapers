@@ -310,6 +310,75 @@ test('selecting and removing a top level category will remove children categorie
     });
 });
 
+test('when hit backspace should remove category from ticket', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(location_xhr);
+    page.visitNew();
+    andThen(() => {
+        let components = page.selectizeComponents();
+        assert.equal(store.find('category').get('length'), 4);
+        let tickets = store.find('ticket');
+        assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
+        assert.equal(components, 1);
+    });
+    //first select
+    page.categoryClickOptionOne();
+    andThen(() => {
+        let components = page.selectizeComponents();
+        assert.equal(store.find('ticket').get('length'), 1);
+        assert.equal(store.find('category').get('length'), 5);
+        let tickets = store.find('ticket');
+        assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
+        assert.equal(components, 2);
+    });
+    //second select
+    page.categoryTwoClickOptionOne();
+    andThen(() => {
+        let components = page.selectizeComponents();
+        let tickets = store.find('ticket');
+        assert.equal(tickets.get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 1);
+        assert.equal(components, 3);
+    });
+    //third select
+    clearxhr(category_three_xhr);
+    page.categoryThreeClickOptionOne();
+    andThen(() => {
+        let components = page.selectizeComponents();
+        let tickets = store.find('ticket');
+        assert.equal(tickets.get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').get('length'), 3);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 1);
+        assert.equal(components, 3);
+    });
+    triggerEvent(`${CATEGORY_THREE} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(!ticket.get('location'));
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        let components = page.selectizeComponents();
+        assert.equal(components, 3);
+    });
+    triggerEvent(`${CATEGORY_TWO} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(!ticket.get('location'));
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        let components = page.selectizeComponents();
+        assert.equal(components, 2);
+    });
+    triggerEvent(`${CATEGORY_ONE} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(!ticket.get('location'));
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        let components = page.selectizeComponents();
+        assert.equal(components, 1);
+    });
+});
+
 /*TICKET TO ASSIGNEE*/
 test('shows assignee for ticket and will fire off xhr to fetch assignee(persons) on search to change assignee', (assert) => {
     clearxhr(list_xhr);
