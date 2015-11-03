@@ -110,7 +110,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_new_link = location_page.find_new_link()
         location_new_link.click()
         # Enter info and hit "save"
-        location_name = rand_chars()
+        location_name = 'aaa' + rand_chars()
         location_number = rand_chars()
         location_level = rand_chars()
         location = InputHelper(location_name=location_name, location_number=location_number)
