@@ -10,6 +10,7 @@ import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
@@ -17,7 +18,7 @@ const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
 
-let application, store, payload, list_xhr, endpoint;
+let application, store, payload, list_xhr, endpoint, original_uuid;
 
 module('Acceptance | location-level-new', {
     beforeEach() {
@@ -30,9 +31,12 @@ module('Acceptance | location-level-new', {
             name: LOCATION_LEVEL_DEFAULTS.nameAnother,
             children: LOCATION_LEVEL_DEFAULTS.newTemplateChildren
         };
+        original_uuid = random.uuid;
+        random.uuid = function() { return UUID.value; };
     },
     afterEach() {
         payload = null;
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });

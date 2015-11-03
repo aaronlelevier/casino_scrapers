@@ -1,15 +1,35 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from rest_framework import status
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 
-# VIEWS
+class CheckIdCreateMixin(object):
+    """
+    Trying to Post a duplicate returns a 400 and not a 500 Server Error
+    """
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        # custom: start
+        try:
+            _id = serializer.data['id']
+            self.queryset.get(id=_id)
+        except (KeyError, ObjectDoesNotExist):
+            pass
+        else:
+            raise ValidationError("ID: {} already exists.".format(_id))
+        # custom: end
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
 
 class DestroyModelMixin(object):
-
     """
     Destroy a model instance, extended to handle `override` kwarg.
     """
-
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
         override = request.data.get('override', None)
@@ -20,17 +40,38 @@ class DestroyModelMixin(object):
         instance.delete(override)
 
 
-# QUERYSETS
-
 class OrderingQuerySetMixin(object):
-
     """
-    Return a case-insensitive ordered queryset.
+    Return a case-insensitive ordered queryset for non-related Fields. 
+
+    **Only works for fields on the Model. Does not work for related fields.**
 
     `StackOverflow link <http://stackoverflow.com/questions/3409047/django-orm-case-insensitive-order-by>`_
-    """
 
-    def get_field(self, param):
+    :param: ordering
+    """
+    def get_queryset(self):
+        queryset = super(OrderingQuerySetMixin, self).get_queryset()
+
+        ordering = self.request.query_params.get('ordering', None)
+
+        if ordering:
+            queryset = self._get_ordered_queryset(queryset, ordering)
+
+        return queryset
+
+    def _get_ordered_queryset(self, queryset, ordering):
+        select_dict = {}
+        order_by_list = []
+
+        for param in ordering.split(','):
+            field, asc = self._get_field(param)
+            select_dict[self._get_key(field)] = self._get_value(field)
+            order_by_list.append(self._get_asc_desc_value(field, asc))
+
+        return queryset.extra(select=select_dict).order_by(*order_by_list)
+
+    def _get_field(self, param):
         """
         :Return: (Field name only w/o '-', Boolean if field is ASC)
         """
@@ -39,31 +80,60 @@ class OrderingQuerySetMixin(object):
         else:
             return (param, True)
 
-    def get_key(self, field):
+    def _get_key(self, field):
         return "lower_{}".format(field)
 
-    def get_value(self, field):
+    def _get_value(self, field):
         return "lower({})".format(field)
 
-    def get_asc_desc_value(self, field, asc):
-        return "{}{}".format("" if asc else "-", self.get_key(field))
+    def _get_asc_desc_value(self, field, asc):
+        return "{}{}".format("" if asc else "-", self._get_key(field))
 
-    def get_ordered_queryset(self, queryset, ordering):
-        select_dict = {}
-        order_by_list = []
 
-        for param in ordering.split(','):
-            field, asc = self.get_field(param)
-            select_dict[self.get_key(field)] = self.get_value(field)
-            order_by_list.append(self.get_asc_desc_value(field, asc))
+class RelatedOrderingQuerySetMixin(object):
+    """
+    Return a case-sensitive ordered queryset for Related Fields.
 
-        return queryset.extra(select=select_dict).order_by(*order_by_list)
-
+    :param: related_ordering
+    """
     def get_queryset(self):
-        queryset = self.queryset
-        ordering = self.request.query_params.get('ordering', None)
+        queryset = super(RelatedOrderingQuerySetMixin, self).get_queryset()
+
+        ordering = self.request.query_params.get('related_ordering', None)
 
         if ordering:
-            queryset = self.get_ordered_queryset(queryset, ordering)
+            params = ordering.split(',')
+            queryset = queryset.order_by(*params)
+
+        return queryset
+
+
+class FilterRelatedMixin(object):
+    """
+    Allow filterable by 'IN' keyword.
+
+    ``filter_fields``: A list of filterable fields that uses the 
+    Django ORM sytax. Must be defined on the ModelViewSet that is 
+    implementing this feature.
+    """
+    queryset = None
+    filter_fields = None
+
+    def get_queryset(self):
+        queryset = super(FilterRelatedMixin, self).get_queryset()
+
+        if self.filter_fields:
+            kwargs = {}
+
+            for param in self.request.query_params:
+                if param.split("__")[0] in self.filter_fields:
+                    if param.split("__")[-1] == "in":
+                        value = self.request.query_params.get(param).split(',')
+                    else:
+                        value = self.request.query_params.get(param)
+
+                    kwargs.update({param: value})
+
+            queryset = queryset.filter(**kwargs)
 
         return queryset

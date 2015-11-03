@@ -1,8 +1,9 @@
 import Ember from 'ember';
-import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
+import NewMixin from 'bsrs-ember/mixins/model/new';
+import { attr, Model } from 'ember-cli-simple-store/model';
 
-var LocationLevel = Model.extend({
+var LocationLevel = Model.extend(NewMixin, {
     store: inject('main'),
     name: attr(''),
     locations: attr([]),

@@ -10,6 +10,7 @@ import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
@@ -24,7 +25,7 @@ const INDEX_ROUTE = 'admin.locations.index';
 const DETAIL_ROUTE = 'admin.locations.location';
 const DOC_TYPE = 'location';
 
-let application, store, list_xhr, location_detail_data, endpoint, detail_xhr;
+let application, store, list_xhr, location_detail_data, endpoint, detail_xhr, original_uuid;
 
 module('Acceptance | tab location test', {
     beforeEach() {
@@ -33,8 +34,10 @@ module('Acceptance | tab location test', {
         endpoint = PREFIX + BASE_LOCATION_URL + '/';
         location_detail_data = LOCATION_FIXTURES.detail(LOCATION_DEFAULTS.idOne);
         detail_xhr = xhr(endpoint + LOCATION_DEFAULTS.idOne + '/', 'GET', null, {}, 200, location_detail_data);
+        original_uuid = random.uuid;
     },
     afterEach() {
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -145,6 +148,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
 });
 
 test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+    random.uuid = function() { return UUID.value; };
     clearxhr(detail_xhr);
     visit(NEW_URL);
     andThen(() => {

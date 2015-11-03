@@ -127,7 +127,6 @@ class SelfRefrencingBaseModel(models.Model):
     objects = SelfRefrencingManager()
 
     class Meta:
-        ordering = ('id',)
         abstract = True
 
 
@@ -149,7 +148,7 @@ class LocationStatusManager(BaseManager):
     '''
 
     def default(self):
-        obj, created = self.get_or_create(name=settings.DEFAULT_LOCATION_STATUS)
+        obj, _ = self.get_or_create(name=settings.DEFAULT_LOCATION_STATUS)
         return obj
 
 
@@ -170,7 +169,7 @@ class LocationTypeManager(BaseManager):
     ''' '''
 
     def default(self):
-        obj, created = self.get_or_create(name=settings.DEFAULT_LOCATION_TYPE)
+        obj, _ = self.get_or_create(name=settings.DEFAULT_LOCATION_TYPE)
         return obj
 
 

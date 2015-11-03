@@ -66,9 +66,13 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $TEST; fi
 
 echo "AFTER MIGRATIONS, LOAD LATEST FIXTURE DATA."
 wait
+../venv/bin/python manage.py loaddata fixtures/states.json
+wait
 ../venv/bin/python manage.py loaddata fixtures/jenkins.json
 wait
 ../venv/bin/python manage.py loaddata fixtures/jenkins_custom.json
+wait
+../venv/bin/python manage.py loaddata fixtures/tickets.json
 
 
 echo "EMBER"
@@ -118,10 +122,9 @@ cd ../../builds/deploy/
 
 wait
 echo "UWSGI - START/RELOAD"
-sudo fuser -k 8002/tcp
+sudo kill -INT `cat /var/run/nginx-deploy.pid`
 wait
 sudo /usr/local/lib/deploy/uwsgi/uwsgi --ini uwsgi.ini
-sudo touch /tmp/bigsky-master-deploy.pid
 TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $TEST; fi
 
 

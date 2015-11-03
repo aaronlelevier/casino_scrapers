@@ -1,14 +1,10 @@
-import copy
-
 from rest_framework import serializers
 
-from contact.models import PhoneNumber, Address, Email
 from contact.serializers import   (
     PhoneNumberFlatSerializer, PhoneNumberSerializer,
     EmailFlatSerializer, EmailSerializer,
     AddressFlatSerializer, AddressSerializer)
 from location.models import LocationLevel, LocationStatus, LocationType, Location
-from utils import create
 from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
 from utils.validators import UniqueForActiveValidator, LocationParentChildValidator
 

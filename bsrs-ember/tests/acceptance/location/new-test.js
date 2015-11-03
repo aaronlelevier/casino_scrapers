@@ -11,6 +11,7 @@ import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
@@ -20,7 +21,7 @@ const DJANGO_LOCATION_URL = PREFIX + '/admin/locations/';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_DEFAULTS.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_URL + LOCATION_DEFAULTS.idOne + '/';
 
-let application, store, payload, list_xhr;
+let application, store, payload, list_xhr, original_uuid;
 
 module('Acceptance | location-new', {
     beforeEach() {
@@ -35,9 +36,12 @@ module('Acceptance | location-new', {
             children: [],
             parents: []
         };
+        original_uuid = random.uuid;
+        random.uuid = function() { return UUID.value; };
     },
     afterEach() {
         payload = null;
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });

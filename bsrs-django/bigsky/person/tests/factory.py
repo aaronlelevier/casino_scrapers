@@ -8,7 +8,7 @@ from accounting.models import Currency
 from location.models import LocationLevel, Location
 from category.models import Category
 from location.tests.factory import create_locations
-from person.models import Person, PersonStatus, Role
+from person.models import Person, Role
 from utils import create
 
 
@@ -16,14 +16,21 @@ PASSWORD = '1234'
 LOCATION_LEVEL = 'region'
 CATEGORY = 'repair'
 
-def create_role():
-    "Single Role needed to create Person with Login privileges."
+def create_role(name=None, location_level=None):
+    """
+    Single Role needed to create Person with Login privileges.
+    """
+    name = name or create._generate_chars()
 
-    currency = Currency.objects.default()
-    location_level, created = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
+    Currency.objects.default()
+
+    if not location_level:
+        location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
+    
     categories = mommy.make(Category, _quantity=2)
 
-    return mommy.make(Role, name=create._generate_chars(), location_level=location_level, categories=categories)
+    return mommy.make(Role, name=name, location_level=location_level,
+        categories=categories)
 
 
 def create_roles():
@@ -44,24 +51,6 @@ def create_roles():
     return Role.objects.all()
 
 
-"""
-from person.models import Person
-[p.delete(override=True) for p in Person.objects.exclude(username="aaron")]
-
-./manage.py dumpdata --indent=2 > fixtures/persistent.json
-
-export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
-wait
-dropdb persistent
-wait
-createdb persistent
-wait
-./manage.py migrate
-wait
-./manage.py loaddata fixtures/persistent.json
-
-"""
-
 def create_single_person(name=None, role=None):
     name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
     role = role or create_role()
@@ -81,9 +70,6 @@ def update_login_person(person):
 
 def create_person(username=None, role=None, _many=1):
     '''
-    # TODO: Change this method name to ``create_people`` b/c can
-        create more than 1!
-        
     Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )
 
     Return: the last user created from the `forloop`

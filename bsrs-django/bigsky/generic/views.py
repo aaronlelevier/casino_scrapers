@@ -17,7 +17,7 @@ from utils.views import BaseModelViewSet
 ### API
 
 class SavedSearchViewSet(BaseModelViewSet):
-    
+
     permission_classes = (IsAuthenticated,)
     serializer_class = SavedSearchSerializer
     queryset = SavedSearch.objects.all()
@@ -25,7 +25,7 @@ class SavedSearchViewSet(BaseModelViewSet):
     def perform_create(self, serializer):
         serializer.save(person=self.request.user)
 
-        
+
 class ExportData(APIView):
     """
     Parse the requested CSV report requested from the Person.

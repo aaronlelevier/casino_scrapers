@@ -11,6 +11,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_roles_url;
@@ -19,7 +20,7 @@ const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
 
-var application, store, endpoint, list_xhr;
+var application, store, endpoint, list_xhr, original_uuid;
 
 module('Acceptance | role-grid-list', {
     beforeEach() {
@@ -27,8 +28,10 @@ module('Acceptance | role-grid-list', {
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/?page=1';
         list_xhr = xhr(endpoint ,'GET',null,{},200,ROLE_FIXTURES.list());
+        original_uuid = random.uuid;
     },
     afterEach() {
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -132,6 +135,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 });
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
+    random.uuid = function() { return UUID.value; };
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=role_type,name';
     xhr(sort_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type,name'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=name';
@@ -226,6 +230,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
+    random.uuid = function() { return UUID.value; };
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=role_type,name';
     xhr(sort_two ,"GET",null,{},200,ROLE_FIXTURES.sorted('role_type,name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
@@ -251,6 +256,7 @@ test('multiple sort options appear in the query string as expected', function(as
 });
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
+    random.uuid = function() { return UUID.value; };
     var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=name,role_type';
     xhr(sort_four ,"GET",null,{},200,ROLE_FIXTURES.sorted('name,role_type'));
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-name,role_type';
@@ -544,6 +550,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 });
 
 test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
+    random.uuid = function() { return UUID.value; };
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,ROLE_FIXTURES.sorted('name'));
     let name = 'foobar';

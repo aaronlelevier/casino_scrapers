@@ -64,22 +64,18 @@ var LocationMixin = Ember.Mixin.create({
         let store = this.get('store');
         let locations = this.get('locations');
         let previous_m2m_fks = this.get('person_location_fks');
-
         let m2m_to_throw_out = store.find('person-location', function(join_model) {
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
         }, ['removed']);
-
         m2m_to_throw_out.forEach(function(join_model) {
             join_model.set('removed', true);
         });
-
         previous_m2m_fks.forEach(function(pk) {
             var m2m_to_keep = store.find('person-location', pk);
             if (m2m_to_keep.get('id')) {
                 m2m_to_keep.set('removed', undefined);
             }
         });
-
         this.resetPersonLocationFks();
     },
     resetPersonLocationFks(options) {

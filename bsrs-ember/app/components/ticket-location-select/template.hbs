@@ -1,0 +1,13 @@
+{{ember-selectize
+  required=true
+  content=options
+  updateSelection=false
+  optionValuePath="content.id"
+  optionLabelPath="content.name"
+  selection=ticket_location_selected
+  select-item="selected"
+  class="t-ticket-location-select"
+  placeholder="type to find more locations"
+  update-filter="update_filter"
+  filter=search_criteria
+}}

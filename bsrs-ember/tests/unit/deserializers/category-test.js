@@ -68,13 +68,13 @@ test('category deserialized with null parent returns correct model with one with
     let subject = CategoryDeserializer.create({store: store});
     let json = [CATEGORY_FIXTURES.generate(CATEGORY_DEFAULTS.idOne), CATEGORY_FIXTURES.generate(CATEGORY_DEFAULTS.unusedId)];
     json[0].parent = null;
-    json[1].parent = CATEGORY_DEFAULTS.idOne;
+    json[1].parent = {id: CATEGORY_DEFAULTS.idOne};
     let response = {'count':2,'next':null,'previous':null,'results': json};
     subject.deserialize(response);
     let categories = store.find('category');
     assert.equal(categories.get('length'), 2);
     assert.deepEqual(categories.objectAt(0).get('parent'), undefined);
-    assert.deepEqual(categories.objectAt(1).get('parent.id'), CATEGORY_DEFAULTS.idOne);
+    assert.deepEqual(categories.objectAt(1).get('parent').get('id'), CATEGORY_DEFAULTS.idOne);
 });
 
 test('category deserialized with null parent returns correct model with no related parent record (detail)', (assert) => {

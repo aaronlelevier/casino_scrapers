@@ -9,7 +9,6 @@ import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import RoleDeserializer from 'bsrs-ember/deserializers/role';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import random from 'bsrs-ember/models/random';
 
 let store, uuid, category_deserializer, subject;
 
@@ -19,9 +18,6 @@ module('unit: role deserializer test', {
         category_deserializer = CategoryDeserializer.create({store: store});
         uuid = this.container.lookup('model:uuid');
         subject = RoleDeserializer.create({store: store, uuid: uuid, CategoryDeserializer: category_deserializer});
-    },
-    afterEach() {
-        random.uuid = function() { return 'abc123'; };
     }
 });
 
@@ -52,7 +48,7 @@ test('location level and category will correctly be deserialized into its own st
     let category = store.find('category', CATEGORY_DEFAULTS.idOne);
     assert.deepEqual(role.get('role_category_fks'), []);
     let role_two = store.find('role', ROLE_DEFAULTS.unusedId);
-    assert.deepEqual(role_two.get('role_category_fks'), ['abc123']);
+    assert.deepEqual(role_two.get('role_category_fks').length, 1);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role_two.get('isNotDirty'));
     assert.ok(category.get('isNotDirty'));
@@ -157,7 +153,7 @@ test('role category will correctly be deserialized when server returns role with
     subject.deserialize(response, ROLE_DEFAULTS.idOne);
     let original = store.find('category', CATEGORY_DEFAULTS.idOne);
     assert.ok(role.get('isNotDirty'));
-    assert.deepEqual(role.get('role_category_fks'), [ROLE_CATEGORY_DEFAULTS.abc, ROLE_CATEGORY_DEFAULTS.idOne]);
+    assert.deepEqual(role.get('role_category_fks').length, 2);
     assert.equal(role.get('categories').get('length'), 2);
 });
 

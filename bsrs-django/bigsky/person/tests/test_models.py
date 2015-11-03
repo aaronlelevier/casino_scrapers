@@ -1,6 +1,7 @@
 from datetime import date
 
 from django.test import TestCase
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
 from django.core.exceptions import ValidationError
 
@@ -9,9 +10,12 @@ from model_mommy import mommy
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
-from person.tests.factory import PASSWORD, create_person, create_role
-from translation.models import Locale, Translation
+from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
+from translation.models import Locale
 from translation.tests.factory import create_locales
+from utils import create
+from utils.tests.test_validators import (DIGITS, NO_DIGITS, UPPER_CHARS, NO_UPPER_CHARS,
+    LOWER_CHARS, NO_LOWER_CHARS, SPECIAL_CHARS, NO_SPECIAL_CHARS)
 
 
 ### ROLE
@@ -27,9 +31,23 @@ class RoleTests(TestCase):
     def test_name(self):
         self.assertEqual(self.role.group.name, self.role.name)
 
-    def test_to_dict(self):
-        self.assertEqual(self.role.to_dict()["location_level"], str(self.role.location_level.id))
-        self.assertEqual(self.role.to_dict()["categories"][0]["id"], str(self.role.categories.first().id))
+    def test_to_dict_location_level (self):
+        self.assertEqual(
+            self.role.to_dict()["location_level"],
+            str(self.role.location_level.id)
+        )
+
+    def test_to_dict_categories(self):
+        self.assertIn(
+            self.role.to_dict()["categories"][0]["id"],
+            [str(x) for x in self.role.categories.values_list('id', flat=True)]
+        )
+
+
+class RolePasswordTests(TestCase):
+
+    def setUp(self):
+        self.role = create_role()
 
     def test_update_password_history_length(self):
         self.assertFalse(self.role.password_history_length)
@@ -47,6 +65,58 @@ class RoleTests(TestCase):
             self.role.password_history_length,
             [first_pw_len, second_pw_len]
         )
+
+    def test_validate_contains_digit(self):
+        self.assertFalse(self.role.password_digit_required)
+        self.assertTrue(self.role._validate_contains_digit(NO_DIGITS))
+        self.assertIsNone(self.role.run_password_validators(NO_DIGITS))
+
+        self.role.password_digit_required = True
+        self.role.save()
+
+        self.assertFalse(self.role._validate_contains_digit(NO_DIGITS))
+        self.assertTrue(self.role._validate_contains_digit(DIGITS))
+        with self.assertRaises(ValidationError):
+            self.role.run_password_validators(NO_DIGITS)
+
+    def test_validate_contains_upper(self):
+        self.assertFalse(self.role.password_upper_char_required)
+        self.assertTrue(self.role._validate_contains_upper_char(UPPER_CHARS))
+        self.assertIsNone(self.role.run_password_validators(NO_UPPER_CHARS))
+
+        self.role.password_upper_char_required = True
+        self.role.save()
+
+        self.assertFalse(self.role._validate_contains_upper_char(NO_UPPER_CHARS))
+        self.assertTrue(self.role._validate_contains_upper_char(UPPER_CHARS))
+        with self.assertRaises(ValidationError):
+            self.role.run_password_validators(NO_UPPER_CHARS)
+
+    def test_validate_contains_lower(self):
+        self.assertFalse(self.role.password_lower_char_required)
+        self.assertTrue(self.role._validate_contains_lower_char(LOWER_CHARS))
+        self.assertIsNone(self.role.run_password_validators(NO_LOWER_CHARS))
+
+        self.role.password_lower_char_required = True
+        self.role.save()
+
+        self.assertFalse(self.role._validate_contains_lower_char(NO_LOWER_CHARS))
+        self.assertTrue(self.role._validate_contains_lower_char(LOWER_CHARS))
+        with self.assertRaises(ValidationError):
+            self.role.run_password_validators(NO_LOWER_CHARS)
+
+    def test_validate_contains_special(self):
+        self.assertFalse(self.role.password_special_char_required)
+        self.assertTrue(self.role._validate_contains_special_char(SPECIAL_CHARS))
+        self.assertIsNone(self.role.run_password_validators(NO_SPECIAL_CHARS))
+
+        self.role.password_special_char_required = True
+        self.role.save()
+
+        self.assertFalse(self.role._validate_contains_special_char(NO_SPECIAL_CHARS))
+        self.assertTrue(self.role._validate_contains_special_char(SPECIAL_CHARS))
+        with self.assertRaises(ValidationError):
+            self.role.run_password_validators(NO_SPECIAL_CHARS)
 
 
 ### PERSON STATUS
@@ -88,8 +158,7 @@ class PersonManagerTests(TestCase):
     def test_create_user(self):
         people_count = Person.objects.count()
         role = create_role()
-        person = Person.objects.create_user('myusername', 'myemail@mail.com',
-            'password', role=role)
+        create_single_person()
         self.assertEqual(Person.objects.count(), people_count+1)
 
 
@@ -241,3 +310,22 @@ class PersonPasswordHistoryTests(TestCase):
         with self.assertRaises(ValidationError):
             self.person.set_password('new')
         self.assertEqual(len(self.person.password_history), 2)
+
+    def test_max_passwords_stored(self):
+        for x in range(settings.MAX_PASSWORDS_STORED+1):
+            self.person.password_history.append(create._generate_chars())
+        self.person.save()
+        self.assertEqual(
+            len(self.person.password_history),
+            settings.MAX_PASSWORDS_STORED
+        )
+
+    def test_password_change(self):
+        init_password_change = self.person.password_change
+        new_password = create._generate_chars()
+        self.person.set_password(new_password)
+        post_password_change = self.person.password_change
+        self.assertNotEqual(
+            init_password_change,
+            post_password_change
+        )

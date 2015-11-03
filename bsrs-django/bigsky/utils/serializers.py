@@ -58,3 +58,16 @@ class RemovePasswordSerializerMixin(object):
         data = super(RemovePasswordSerializerMixin, self).to_representation(instance)
         data.pop('password', None)
         return data
+
+
+### Fields
+
+class UpperCaseSerializerField(serializers.CharField):
+
+    def __init__(self, *args, **kwargs):
+        super(UpperCaseSerializerField, self).__init__(*args, **kwargs)
+
+    def to_representation(self, value):
+        value = super(UpperCaseSerializerField, self).to_representation(value)
+        if value:
+            return value.upper()

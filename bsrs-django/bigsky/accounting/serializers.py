@@ -1,9 +1,10 @@
 from accounting.models import Currency
-from utils.serializers import BaseCreateSerializer
+from utils.serializers import BaseCreateSerializer, UpperCaseSerializerField
 
-### CURRENCY
 
 class CurrencySerializer(BaseCreateSerializer):
+
+    code = UpperCaseSerializerField()
 
     class Meta:
         model = Currency

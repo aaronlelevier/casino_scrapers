@@ -1,0 +1,11 @@
+{{ember-selectize
+  required=true
+  content=priorities
+  updateSelection=false
+  optionValuePath="content.id"
+  optionLabelPath="content.name"
+  selection=ticket.priority
+  select-item="selected"
+  class="t-ticket-priority-select"
+  placeholder="select one priority"
+}}

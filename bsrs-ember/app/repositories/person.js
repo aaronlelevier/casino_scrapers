@@ -24,6 +24,23 @@ export default Ember.Object.extend(GridRepositoryMixin, {
             model.save();
         });
     },
+    findTicketAssignee(search) {
+        let url = PEOPLE_URL;
+        search = search ? search.trim() : search;
+        if (search) {
+            url += `?fullname__icontains=${search}`;
+            PromiseMixin.xhr(url, 'GET').then((response) => {
+                this.get('PersonDeserializer').deserialize(response);
+            });
+            let filterFunc = function(person) {
+                let full_name = person.get('fullname');
+                return full_name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+            };
+            return this.get('store').find('person', filterFunc, ['id']);
+        }
+        return Ember.A([]);
+    },
+    //TODO: refactor to one method that has text search across multiple fields
     findTicketPeople(search) {
         let url = PEOPLE_URL;
         search = search ? search.trim() : search;

@@ -2,8 +2,18 @@ import Ember from 'ember';
 
 var TicketCategories = Ember.Component.extend({
     categories_selected: Ember.computed('ticket.top_level_category', function() {
+        let index = this.get('index');
         let ticket = this.get('ticket');
-        return ticket.get('top_level_category');
+        let categories = ticket.get('categories');
+        let top_level_category = ticket.get('top_level_category');
+        index++;
+        if (!index) {
+            return top_level_category;
+        } else {
+            if (categories) {
+                return ticket.get('categories').objectAt(`${index}`);
+            }
+        }
     }),
     options: Ember.computed('ticket_category_options.[]', 'categories_selected', function() {
         if(this.get('ticket_category_options') && this.get('ticket_category_options').get('length') > 0) {
@@ -17,7 +27,14 @@ var TicketCategories = Ember.Component.extend({
     actions: {
         selected(category) {
             let ticket = this.get('ticket');
-            ticket.change_category_tree(category.get('id'));
+            if (category) {
+                let category_id = category.get('id');
+                ticket.change_category_tree(category_id);
+                this.sendAction('selected_category', category);
+            }else{
+                let category_remove = this.get('categories_selected');
+                ticket.remove_categories_down_tree(category_remove.get('id'));
+            }
         }
     }
 });

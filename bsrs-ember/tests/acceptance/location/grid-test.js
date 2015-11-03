@@ -12,6 +12,7 @@ import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
@@ -21,7 +22,7 @@ const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
 
-var application, store, endpoint, list_xhr;
+var application, store, endpoint, list_xhr, original_uuid;
 
 module('Acceptance | location-grid-list', {
     beforeEach() {
@@ -29,8 +30,10 @@ module('Acceptance | location-grid-list', {
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/?page=1';
         list_xhr = xhr(endpoint ,"GET",null,{},200,LOCATION_FIXTURES.list());
+        original_uuid = random.uuid;
     },
     afterEach() {
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -547,6 +550,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 });
 
 test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
+    random.uuid = function() { return UUID.value; };
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
     xhr(sort_one ,'GET',null,{},200,LOCATION_FIXTURES.sorted('name'));
     let name = 'foobar';

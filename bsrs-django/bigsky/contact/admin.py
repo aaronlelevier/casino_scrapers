@@ -4,7 +4,7 @@ from contact import models
 
 
 @admin.register(models.PhoneNumberType)
-class PhoneNumberAdmin(admin.ModelAdmin):
+class PhoneNumberTypeAdmin(admin.ModelAdmin):
     pass
 
 

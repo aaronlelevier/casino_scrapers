@@ -1,12 +1,16 @@
 import Ember from 'ember';
 
 var EditMixin = Ember.Mixin.create({
-    actions: { 
+    actions: {
         save() {
-            let model = this.get('model'); 
+            let model = this.get('model');
+            let persisted = model.get('new');
             let repository = this.get('repository');
-            repository.update(model).then(() => {
-                this.attrs.save(this.tab());
+            let action = persisted === true ? 'insert' : 'update';
+            repository[action](model).then(() => {
+                let tab = this.tab();
+                tab.set('saveModel', persisted);
+                this.attrs.save(tab);
             });
         },
         delete() {

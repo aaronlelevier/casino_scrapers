@@ -1,7 +1,7 @@
 import json
 import uuid
 
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 
 from person.tests.factory import create_person, PASSWORD
 from translation.models import Locale, Translation
@@ -304,7 +304,6 @@ class TranslationWriteTests(APITestCase):
     #     # POST
     #     response = self.client.post('/api/admin/translations/{}/'.format(key),
     #         [self.data, self.data_two], format='json')
-    #     print(response)
     #     self.assertEqual(response.status_code, 200)
     #     # 1st check
     #     trans = Translation.objects.get(id=self.translation.id)

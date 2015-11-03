@@ -3,6 +3,7 @@ import Application from '../../app';
 import config from 'bsrs-ember/config/environment';
 import windowProxy from 'bsrs-ember/utilities/window-proxy';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
+import random from 'bsrs-ember/models/random';
 import t from './t';
 
 function alterPageSize(app, selector, size) {
@@ -10,6 +11,19 @@ function alterPageSize(app, selector, size) {
     Ember.$(selector).find('option[value="' + size + '"]').prop('selected',true).trigger('change');
   });
   return app.testHelpers.wait();
+}
+
+function patchRandom(app, counter) {
+  Ember.run(function() {
+    random.uuid = function() { 
+        counter++;
+        if (counter === 1) {
+            return 'abc123';
+        }else{
+            return Ember.uuid();
+        }
+    };
+  });
 }
 
 function filterGrid(app, column, text) {
@@ -65,6 +79,7 @@ Ember.Test.registerAsyncHelper('saveFilterSet', saveFilterSet);
 Ember.Test.registerAsyncHelper('alterPageSize', alterPageSize);
 Ember.Test.registerAsyncHelper('filterGrid', filterGrid);
 Ember.Test.registerHelper('visitSync', visitSync);
+Ember.Test.registerHelper('patchRandom', patchRandom);
 
 export default function startApp(attrs) {
     var application;

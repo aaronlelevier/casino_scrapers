@@ -1,3 +1,5 @@
+import sys
+
 from .base import *
 
 
@@ -9,7 +11,7 @@ INSTALLED_APPS = INSTALLED_APPS + LOCAL_APPS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2', 
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': os.environ.get('BSRS_DB_LOCAL_NAME', 'ci'),
         'USER': os.environ.get('BSRS_DB_LOCAL_USER', 'bsdev'),
         'PASSWORD': os.environ.get('BSRS_DB_LOCAL_NAME', 'tango'),

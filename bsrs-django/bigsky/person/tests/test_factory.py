@@ -1,14 +1,16 @@
-from django.test import TransactionTestCase
+from django.test import TestCase
+
+from model_mommy import mommy
 
 from accounting.models import Currency
-from location.models import LocationLevel, Location
-from person.models import Person, Role, PersonStatus
+from location.models import LocationLevel
+from person.models import Person, Role
 from person.tests import factory
 
 
-class FactoryTests(TransactionTestCase):
+class FactoryTests(TestCase):
 
-    def test_create_role_new(self):
+    def test_create_role(self):
         init_count = Role.objects.count()
         role = factory.create_role()
         self.assertIsInstance(role, Role)
@@ -16,12 +18,23 @@ class FactoryTests(TransactionTestCase):
         self.assertEqual(init_count+1, Role.objects.count())
         self.assertEqual(role.location_level.name, factory.LOCATION_LEVEL)
 
+    def test_create_role_with_name(self):
+        name = "Admin"
+        role = factory.create_role(name=name)
+        self.assertIsInstance(role, Role)
+        self.assertEqual(role.name, name)
+
     def create_role_exists(self):
         factory.create_roles()
         self.assertEqual(
             Role.objects.count(),
             LocationLevel.objects.count()
         )
+
+    def create_role_with_location_level(self):
+        location_level = mommy.make(LocationLevel)
+        role = create_role(location_level=location_level)
+        self.assertEqual(role.location_level.name, location_level.name)
 
     def test_create_single_person(self):
         role = factory.create_role()

@@ -19,11 +19,3 @@ class UrlTests(TestCase):
             Person._meta.ordering,
             [x for x in default_model_ordering().values()]
         )
-
-    def test_default_model_ordering_all_values_populated(self):
-        ordering = default_model_ordering()
-        for k,v in ordering.items():
-            try:
-                assert v
-            except AssertionError:
-                raise

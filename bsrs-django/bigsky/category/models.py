@@ -4,7 +4,7 @@ from django.db import models
 from django.conf import settings
 
 from accounting.models import Currency
-from utils.models import BaseNameModel, BaseManager, BaseModel
+from utils.models import BaseManager, BaseModel
 
 
 class CategoryManager(BaseManager):
@@ -14,13 +14,14 @@ class CategoryManager(BaseManager):
         models = []
         for category in Category.objects.all():
             if category.parent:
-                models.append({"source": category.parent.name, "target": category.name, "type": "suit"})
+                models.append({"source": category.parent.name,
+                    "target": category.name, "type": "suit"})
         return json.dumps(models)
 
     @property
     def d3_json_tree(self):
         """
-        TODO: 
+        TODO:
 
         - Only works for the first level of Children currently.
         - To use with this tempalate: `d3_tree.html`
@@ -30,12 +31,12 @@ class CategoryManager(BaseManager):
                 array = []
                 for category in Category.objects.filter(parent__isnull=True):
                     array.append({
-                            "id": str(category.id),
-                            "name": category.name,
-                            "parent": "null" if not category.parent else category.parent.name,
-                            "children": [],
-                            "checked": False
-                        })
+                        "id": str(category.id),
+                        "name": category.name,
+                        "parent": "null" if not category.parent else category.parent.name,
+                        "children": [],
+                        "checked": False
+                    })
                 categories(array)
             else:
                 for i, arr in enumerate(array):
@@ -46,12 +47,12 @@ class CategoryManager(BaseManager):
                         children = category.children.all()
                         for child in children:
                             array[i]["children"].append({
-                                    "id": str(child.id),
-                                    "name": child.name,
-                                    "parent": category.name,
-                                    "children": [],
-                                    "checked": False
-                                })
+                                "id": str(child.id),
+                                "name": child.name,
+                                "parent": category.name,
+                                "children": [],
+                                "checked": False
+                            })
                             categories(array)
             return array
 
@@ -77,8 +78,12 @@ class Category(BaseModel):
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
     status = models.BooleanField(blank=True, default=True)
+    has_children = models.BooleanField(blank=True, default=False)
 
     objects = CategoryManager()
+
+    class Meta:
+        ordering = ('label', 'name',)
 
     def save(self, *args, **kwargs):
         self._update_defalts()
@@ -89,6 +94,8 @@ class Category(BaseModel):
             self.label = settings.TOP_LEVEL_CATEGORY_LABEL
         else:
             self.label = self.parent.subcategory_label
+
+        self.has_children = self.children.all().exists()
             
         if not self.cost_currency:
             self.cost_currency = Currency.objects.default()

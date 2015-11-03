@@ -18,9 +18,9 @@ def django_app():
 def run_selenium_tests():
     os.environ['browser'] = 'firefox'
 
-    run_selenium_test(['python', 'selenium/admin-crud-tests.py'])
-    run_selenium_test(['python', 'selenium/grid-tests.py'])
-    run_selenium_test(['python', 'selenium/ticket-tests.py'])
+    run_selenium_test(['python', 'selenium_tests/admin_crud.py'])
+    run_selenium_test(['python', 'selenium_tests/grid.py'])
+    run_selenium_test(['python', 'selenium_tests/ticket.py'])
 
 
 def run_selenium_test(args):

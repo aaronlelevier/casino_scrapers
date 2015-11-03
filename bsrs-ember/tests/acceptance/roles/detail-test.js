@@ -2,7 +2,6 @@ import Ember from 'ember';
 import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
-import random from 'bsrs-ember/models/random';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
@@ -35,10 +34,8 @@ module('Acceptance | role-detail', {
         detail_data = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ROLE_FIXTURES.list());
         xhr(endpoint + ROLE_DEFAULTS.idOne + '/', 'GET', null, {}, 200, detail_data);
-        random.uuid = function() { return Ember.uuid(); };
     },
     afterEach() {
-        random.uuid = function() { return 'abc123'; };
         Ember.run(application, 'destroy');
     }
 });

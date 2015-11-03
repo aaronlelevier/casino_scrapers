@@ -4,10 +4,11 @@ var BSRS_LOCATION_FACTORY = (function() {
         this.location_level_defaults = location_level_defaults;
         this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
     };
-    factory.prototype.get = function(i) {
+    factory.prototype.get = function(i, name) {
+        var name = name || this.location_defaults.storeName;
         return {
             id: i || this.location_defaults.idOne,
-            name: this.location_defaults.storeName,
+            name: name,
             number: this.location_defaults.storeName,
             location_level: this.location_level_fixtures.detail()
         }
@@ -65,6 +66,16 @@ var BSRS_LOCATION_FACTORY = (function() {
             response[key] = location[key];
         }
         return response;
+    };
+    factory.prototype.search = function() {
+        var location_one = this.get(this.location_defaults.idThree, this.location_defaults.storeNameFour);
+        var location_two = this.get(this.location_defaults.idTwo, this.location_defaults.storeNameTwo);
+        var response = [location_one, location_two];
+        //we do a reverse order sort here to verify a real sort occurs in the component
+        var sorted = response.sort(function(a,b) {
+            return b.id - a.id;
+        });
+        return {'count':2,'next':null,'previous':null,'results': sorted};
     };
     return factory;
 })();

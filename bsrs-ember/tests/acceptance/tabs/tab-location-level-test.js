@@ -10,6 +10,7 @@ import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location_level_fixtures';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
@@ -25,7 +26,7 @@ const INDEX_ROUTE = 'admin.location-levels.index';
 const DETAIL_ROUTE = 'admin.location-levels.location-level';
 const DOC_TYPE = 'location-level';
 
-let application, store, list_xhr, location_detail_data, endpoint, detail_xhr;
+let application, store, list_xhr, location_detail_data, endpoint, detail_xhr, original_uuid;
 
 module('Acceptance | tab location-level test', {
     beforeEach() {
@@ -35,8 +36,10 @@ module('Acceptance | tab location-level test', {
         location_detail_data = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idLossDistrict);
         location_detail_data.name = LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict;
         detail_xhr = xhr(DJANGO_DETAIL_URL, 'GET', null, {}, 200, location_detail_data);
+        original_uuid = random.uuid;
     },
     afterEach() {
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -147,6 +150,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
 });
 
 test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+    random.uuid = function() { return UUID.value; };
     clearxhr(detail_xhr);
     visit(NEW_URL);
     andThen(() => {
