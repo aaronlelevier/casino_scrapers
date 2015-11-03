@@ -148,7 +148,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
 });
 
 test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
-    random.uuid = function() { return 'abc123'; };
+    random.uuid = function() { return UUID.value; };
     clearxhr(detail_xhr);
     visit(NEW_URL);
     andThen(() => {

@@ -9,7 +9,7 @@ var nameRoute = function(route) {
 var GridViewRoute = Ember.Route.extend({
     pagination: Ember.inject.service(),
     filtersetRepository: inject('filterset'),
-    init: function() {
+    init() {
         this.filterModel = Ember.Object.create();
         this._super();
     },
@@ -30,7 +30,7 @@ var GridViewRoute = Ember.Route.extend({
             refreshModel: true
         }
     },
-    model: function(params, transition) {
+    model(params, transition) {
         let filtersetRepository = this.get('filtersetRepository');
         let filtersets = filtersetRepository.fetch();
         let name = nameRoute(this);
