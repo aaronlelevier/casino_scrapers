@@ -122,6 +122,9 @@ class TicketActivity(models.Model):
         help_text="Person who did the TicketActivity")
     comment = models.CharField(max_length=1000, blank=True, null=True)
 
+    def __str__(self):
+        return "{}: {}".format(self.ticket.number, self.id)
+
     @property
     def weight(self):
         if not self.type:

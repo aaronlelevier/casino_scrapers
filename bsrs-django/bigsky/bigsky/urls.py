@@ -50,16 +50,39 @@ router.register(r'admin/roles', person_views.RoleViewSet)
 router.register(r'admin/third-parties', third_party_views.ThirdPartyViewSet)
 # Tickets
 router.register(r'tickets', tickets_views.TicketsViewSet)
+# router.register(r'tickets-activitites', tickets_views.TicketActivityViewSet)
 # TRANSLATION
 router.register(r'admin/locales', translation_views.LocaleViewSet)
 router.register(r'admin/translations', translation_views.TranslationViewSet)
 router.register(r'translations', translation_views.TranslationBootstrapViewSet)
+
 
 # API
 urlpatterns = patterns('',
     url(r'^api/', include(router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 )
+
+
+from rest_framework.routers import Route, DynamicDetailRoute, SimpleRouter
+
+class CustomReadOnlyRouter(SimpleRouter):
+
+    routes = [
+        Route(
+            url=r'^{prefix}/{lookup}/activity/$',
+           mapping={'get': 'list'},
+           name='{basename}-detail',
+           initkwargs={'suffix': 'Detail'}
+        ),
+    ]
+
+custom_router = CustomReadOnlyRouter()
+custom_router.register('tickets', tickets_views.TicketActivityViewSet)
+urlpatterns += patterns('',
+    url(r'^api/', include(custom_router.urls)),
+)
+
 
 # No Requirement
 urlpatterns += patterns('',
@@ -109,7 +132,7 @@ urlpatterns += required(
         url(r'', include('generic.urls')),
         # This URL must be the last Django URL defined, or else the URLs defined 
         # below it won't resolve, and this URL will catch the URL request.
-        url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),
+        url(r'^$', bigsky_views.IndexView.as_view(), name='index'),
     )
 )
 

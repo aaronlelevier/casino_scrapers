@@ -5,9 +5,8 @@ from model_mommy import mommy
 
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
-    TicketActivity)
+    TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from ticket.tests.factory import create_tickets
-from utils import choices
 
 
 class TicketStatusManagerTests(TestCase):
@@ -15,7 +14,7 @@ class TicketStatusManagerTests(TestCase):
     def test_default(self):
         default = TicketStatus.objects.default()
         self.assertIsInstance(default, TicketStatus)
-        self.assertEqual(default.name, choices.TICKET_STATUS_CHOICES[0][0])
+        self.assertEqual(default.name, TICKET_STATUSES[0])
 
 
 class TicketPriorityTests(TestCase):
@@ -23,7 +22,7 @@ class TicketPriorityTests(TestCase):
     def test_default(self):
         default = TicketPriority.objects.default()
         self.assertIsInstance(default, TicketPriority)
-        self.assertEqual(default.name, choices.TICKET_PRIORITY_CHOICES[0][0])
+        self.assertEqual(default.name, TICKET_PRIORITIES[0])
 
 
 class TicketTests(TestCase):

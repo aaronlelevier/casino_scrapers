@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ticket.models import Ticket
+from ticket.models import Ticket, TicketActivity
 from utils.serializers import BaseCreateSerializer
 from category.serializers import CategoryIDNameSerializer
 from person.serializers import PersonTicketSerializer
@@ -40,3 +40,10 @@ class TicketCreateSerializer(BaseCreateSerializer):
     class Meta:
         model = Ticket
         fields = TICKET_FIELDS
+
+
+class TicketActivitySerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = TicketActivity
+        fields = ('id', 'created', 'type', 'ticket', 'person', 'comment',)
