@@ -29,14 +29,6 @@ var TicketSingleComponent = ParentValidationComponent.extend(TabMixin, EditMixin
             if (this.all_child_components_valid()) {
                 this._super();
             }
-        },
-        changed: function(new_status_id) {
-            const ticket = this.get('model');
-            ticket.change_status(new_status_id);
-        },
-        changed_priority(new_priority_id) {
-            const ticket = this.get('model');
-            ticket.change_priority(new_priority_id);
         }
     } 
 });
