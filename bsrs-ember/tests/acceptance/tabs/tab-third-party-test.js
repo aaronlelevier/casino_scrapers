@@ -74,6 +74,7 @@ test('deep linking the third-party detail url should push a tab into the tab sto
 });
 
 test('visiting the third_party detail url from the list url should push a tab into the tab store', (assert) => {
+    random.uuid = function() { return UUID.value; };
     let third_party_list_data = THIRD_PARTY_FIXTURES.list();
     list_xhr = xhr(endpoint, 'GET', null, {}, 200, third_party_list_data);
     visit(THIRD_PARTY_URL);
@@ -246,8 +247,7 @@ test('clicking on a tab that is dirty from the person url (or any non related pa
     });
 });
 
-test('clicking on a tab that is not dirty from the person url (or any non related page) \
-    should take you to the detail url and fire off an xhr request', (assert) => {
+test('clicking on a tab that is not dirty from the person url (or any non related page) should take you to the detail url and fire off an xhr request', (assert) => {
     xhr(endpoint, 'GET', null, {}, 200, THIRD_PARTY_FIXTURES.list());
     visit(THIRD_PARTY_URL);
     andThen(() => {

@@ -21,7 +21,7 @@ def get_text_excluding_children(driver, element):
     """, element)
 
 def rand_chars(number=10):
-    return ''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
+    return "a"+''.join([str(random.choice(string.ascii_letters)) for x in range(number)])
 
 
 class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
@@ -58,7 +58,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         )
         role_page.find_new_link().click()
         # New Role Data
-        name = "a"+rand_chars()
+        name = rand_chars()
         role = InputHelper(name=name)
         self._fill_in(role)
         self.gen_elem_page.click_save_btn()
@@ -71,7 +71,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         ### UPDATE
         # Go to the first Role's Detail view
         role_page.find_wait_and_assert_elem("t-role-name", name)
-        role_name = "a"+rand_chars()
+        role_name = rand_chars()
         role = InputHelper(role_name=role_name)
         self._fill_in(role, clear=True)
         self.gen_elem_page.click_save_btn()
@@ -110,7 +110,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_new_link = location_page.find_new_link()
         location_new_link.click()
         # Enter info and hit "save"
-        location_name = 'aaa' + rand_chars()
+        location_name = rand_chars()
         location_number = rand_chars()
         location_level = rand_chars()
         location = InputHelper(location_name=location_name, location_number=location_number)
