@@ -5,15 +5,15 @@ from generic.models import Attachment
 from location.models import Location
 from person.models import Person
 from person.tests.factory import create_person
-from ticket.models import Ticket, TicketStatus, TicketPriority, TicketCategory
-from ticket.tests.factory import (create_ticket, create_tickets, create_ticket_category,
-    create_ticket_statuses, create_ticket_priorites)
+from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
+    TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
+from ticket.tests import factory
 
 
 class CreateTicketTests(TestCase):
 
     def setUp(self):
-        self.ticket = create_ticket()
+        self.ticket = factory.create_ticket()
 
     def test_location(self):
         self.assertIsInstance(self.ticket.location, Location)
@@ -50,36 +50,50 @@ class CreateTicketTests(TestCase):
 class CreateTicketsTests(TestCase):
 
     def test_default(self):
-        tickets = create_tickets()
+        tickets = factory.create_tickets()
         self.assertEqual(len(tickets), 1)
         self.assertIsInstance(tickets[0], Ticket)
 
     def test_many(self):
-        tickets = create_tickets(_many=2)
+        tickets = factory.create_tickets(_many=2)
         self.assertEqual(len(tickets), 2)
         self.assertIsInstance(tickets[0], Ticket)
 
 
 class CreateStatusTests(TestCase):
 
-    def setUp(self):
-        create_ticket_statuses()
+    def test_single(self):
+        obj = factory.create_ticket_status()
+        self.assertIsInstance(obj, TicketStatus)
+        self.assertIn(obj.name, TICKET_STATUSES)
 
-    def test_create(self):
-        self.assertTrue(TicketStatus.objects.all())
+    def test_multiple(self):
+        factory.create_ticket_statuses()
+        self.assertTrue(TicketStatus.objects.count() > 1)
 
 
 class CreatePriorityTests(TestCase):
 
-    def setUp(self):
-        create_ticket_priorites()
+    def test_single(self):
+        obj = factory.create_ticket_priority()
+        self.assertIsInstance(obj, TicketPriority)
+        self.assertIn(obj.name, TICKET_PRIORITIES)
 
-    def test_create(self):
+    def test_multiple(self):
+        factory.create_ticket_priorites()
         self.assertTrue(TicketPriority.objects.all())
 
 
-class CreateTicketsCategory(TestCase):
+class CreateTicketActivityTests(TestCase):
 
     def test_create(self):
-        category = create_ticket_category()
-        self.assertIsInstance(category, TicketCategory)
+        obj = factory.create_ticket_activity()
+        self.assertIsInstance(obj, TicketActivity)
+
+
+class CreateTicketsActivityTypesTests(TestCase):
+
+    def test_create(self):
+        obj = factory.create_ticket_activity_type()
+        self.assertIsInstance(obj, TicketActivityType)
+        self.assertIn(obj.name, TICKET_ACTIVITY_TYPES)

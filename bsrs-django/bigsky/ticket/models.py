@@ -8,13 +8,24 @@ from generic.models import Attachment
 from location.models import Location
 from person.models import Person
 from utils.models import BaseModel, BaseManager, BaseNameModel
-from utils import choices
+
+
+TICKET_STATUSES = [
+    'ticket.status.draft',
+    'ticket.status.denied',
+    'ticket.status.problem_solved',
+    'ticket.status.complete',
+    'ticket.status.deferred',
+    'ticket.status.new',
+    'ticket.status.in_progress',
+    'ticket.status.unsatisfactory_completion'
+]
 
 
 class TicketStatusManager(BaseManager):
 
     def default(self):
-        obj, _ = self.get_or_create(name=choices.TICKET_STATUS_CHOICES[0][0])
+        obj, _ = self.get_or_create(name=TICKET_STATUSES[0])
         return obj
 
 
@@ -25,11 +36,19 @@ class TicketStatus(BaseNameModel):
     class Meta:
         verbose_name_plural = "Ticket Statuses"
 
+
+TICKET_PRIORITIES = [
+    'ticket.priority.medium',
+    'ticket.priority.low',
+    'ticket.priority.high',
+    'ticket.priority.emergency'
+]
+
         
 class TicketPriorityManager(BaseManager):
 
     def default(self):
-        obj, _ = self.get_or_create(name=choices.TICKET_PRIORITY_CHOICES[0][0])
+        obj, _ = self.get_or_create(name=TICKET_PRIORITIES[0])
         return obj
     
 
@@ -40,7 +59,7 @@ class TicketPriority(BaseNameModel):
     class Meta:
         verbose_name_plural = "Ticket Priorities"
 
-        
+
 class Ticket(BaseModel):
 
     def no_ticket_models():
@@ -78,7 +97,15 @@ class Ticket(BaseModel):
             self.priority = TicketPriority.objects.default()
 
 
-class TicketCategory(BaseNameModel):
+TICKET_ACTIVITY_TYPES = [
+    'assignee',
+    'cc_remove',
+    'cc_add'
+    'create'
+]
+
+
+class TicketActivityType(BaseNameModel):
 
     weight = models.PositiveIntegerField(blank=True, default=1)
 
@@ -89,15 +116,15 @@ class TicketActivity(models.Model):
     """
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     created = models.DateTimeField(auto_now_add=True)
+    type = models.ForeignKey(TicketActivityType, blank=True, null=True)
     ticket = models.ForeignKey(Ticket, related_name="activities")
     person = models.ForeignKey(Person, related_name="ticket_activities",
         help_text="Person who did the TicketActivity")
     comment = models.CharField(max_length=1000, blank=True, null=True)
-    category = models.ForeignKey(TicketCategory, blank=True, null=True)
 
     @property
     def weight(self):
-        if not self.category:
+        if not self.type:
             return settings.ACTIVITY_DEFAULT_WEIGHT
         else:
-            return self.category.weight
+            return self.type.weight

@@ -4,7 +4,7 @@ from django.conf import settings
 from model_mommy import mommy
 
 from person.tests.factory import create_single_person
-from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketCategory,
+from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity)
 from ticket.tests.factory import create_tickets
 from utils import choices
@@ -64,11 +64,11 @@ class TicketActivityTests(TestCase):
         )
 
     def test_weight_category(self):
-        category = mommy.make(TicketCategory)
-        self.activity.category = category
+        type = mommy.make(TicketActivityType)
+        self.activity.type = type
         self.activity.save()
 
         self.assertEqual(
             self.activity.weight,
-            category.weight
+            type.weight
         )
