@@ -6,7 +6,7 @@ from rest_framework import status
 from rest_framework.test import APITestCase
 
 from category.models import Category
-from person.tests.factory import PASSWORD, create_person
+from person.tests.factory import PASSWORD, create_single_person
 from ticket.models import Ticket, TicketActivity, TicketActivityType
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory import create_ticket, create_ticket_activity
@@ -124,7 +124,7 @@ class TicketCreateTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
-        self.person = create_person()
+        self.person = create_single_person()
         # Ticket
         self.ticket = create_ticket()
         # Data
@@ -154,7 +154,7 @@ class TicketActivityViewSetTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
-        self.person = create_person()
+        self.person = create_single_person()
         # Ticket
         self.ticket = create_ticket()
         self.ticket_two = create_ticket()
@@ -179,7 +179,7 @@ class TicketActivityViewSetTests(APITestCase):
     def test_ticket_details(self):
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
         data = json.loads(response.content.decode('utf8'))
-        
+
         activity = TicketActivity.objects.get(id=data['results'][0]['id'])
         self.assertIsInstance(activity, TicketActivity)
         self.assertIsInstance(TicketActivityType.objects.get(id=data['results'][0]['type']), TicketActivityType)
@@ -196,3 +196,55 @@ class TicketActivityViewSetTests(APITestCase):
     def test_post(self):
         response = self.client.post('/api/tickets/{}/activity/'.format(self.ticket.id), {}, format='json')
         self.assertEqual(response.status_code, 405)
+
+    def test_paginate(self):
+        # page 1
+        response = self.client.get('/api/tickets/{}/activity/?page=1'.format(self.ticket.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 2)
+        # page 2
+        response = self.client.get('/api/tickets/{}/activity/?page=2'.format(self.ticket.id))
+        self.assertEqual(response.status_code, 404)
+
+    def test_filter_field(self):
+        person = self.ticket_activity.person
+        response = self.client.get('/api/tickets/{}/activity/?person={}'
+            .format(self.ticket.id, person.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], TicketActivity.objects.filter(person=person).count())
+
+    def test_filter_field_none(self):
+        person = create_single_person()
+        response = self.client.get('/api/tickets/{}/activity/?person={}'
+            .format(self.ticket.id, person.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], TicketActivity.objects.filter(person=person).count())
+
+    def test_filter_related(self):
+        person = self.ticket_activity.person
+
+        response = self.client.get('/api/tickets/{}/activity/?person__username={}'
+            .format(self.ticket.id, person.username))
+        
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['count'],
+            TicketActivity.objects.filter(person__username=person.username).count()
+        )
+
+    def test_filter_related_with_arg(self):
+        letter = "a"
+
+        response = self.client.get('/api/tickets/{}/activity/?person__username__icontains={}'
+            .format(self.ticket.id, letter))
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['count'],
+            TicketActivity.objects.filter(person__username__icontains=letter).count()
+        )

@@ -29,7 +29,7 @@ class TicketsViewSet(BaseModelViewSet):
             return ts.TicketSerializer
 
 
-class TicketActivityViewSet(viewsets.ModelViewSet):
+class TicketActivityViewSet(BaseModelViewSet):
 
     queryset = TicketActivity.objects.all()
     serializer_class = TicketActivitySerializer
