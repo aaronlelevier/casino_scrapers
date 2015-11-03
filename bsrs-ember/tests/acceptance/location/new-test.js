@@ -54,6 +54,8 @@ test('visiting /location/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), LOCATION_NEW_URL);
         assert.equal(store.find('location').get('length'), 1);
+        const location = store.find('location', UUID.value);
+        assert.ok(location.get('new'));
     });
     fillIn('.t-location-name', LOCATION_DEFAULTS.storeName);
     fillIn('.t-location-number', LOCATION_DEFAULTS.storeNumber);
@@ -63,7 +65,7 @@ test('visiting /location/new', (assert) => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(store.find('location').get('length'), 1);
         let location = store.find('location', UUID.value);
-        assert.equal(location.get('id'), UUID.value);
+        assert.equal(location.get('new'), undefined);
         assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
         assert.equal(location.get('number'), LOCATION_DEFAULTS.storeNumber);
         //assert.equal(location.get('location_level'), LOCATION_DEFAULTS.location_level);

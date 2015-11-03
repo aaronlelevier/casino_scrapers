@@ -61,7 +61,9 @@ test('visiting /category/new', (assert) => {
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
+        let category = store.find('category', UUID.value);
         assert.equal(store.find('category').get('length'), 4);
+        assert.ok(category.get('new'));
     });
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
     fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
@@ -73,6 +75,7 @@ test('visiting /category/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
         let category = store.find('category', UUID.value);
+        assert.equal(category.get('new'), undefined);
         assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameOne);
         assert.equal(category.get('description'), CATEGORY_DEFAULTS.descriptionMaintenance);
         assert.equal(category.get('label'), CATEGORY_DEFAULTS.labelOne);

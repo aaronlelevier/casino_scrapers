@@ -520,7 +520,6 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.equal(components, 3);
     });
     //select electrical from second level
-    //TODO: select boxes out of order now with idTwo at bottom
     let category_two = {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent: {id: CATEGORY_DEFAULTS.idOne}, has_children: true};
     category_two.children = [{id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, has_children:false}];
     xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
@@ -606,15 +605,55 @@ test('clicking and typing into selectize for categories will not filter if space
     triggerEvent(`${CATEGORY_ONE} > .selectize-input input`, 'keyup', SPACEBAR);
     andThen(() => {
         assert.equal(page.ticketPeopleOptions(), 0);
-    });
-    andThen(() => {
-        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.equal(page.ticketPeopleSelected(), 1);
-        assert.equal(page.ticketPeopleOptions(), 0);
     });
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
+
+test('backspace will remove each respective category', (assert) => {
+    page.visitDetail();
+    triggerEvent(`${CATEGORY_THREE} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.equal(ticket.get('categories').get('length'), 2);
+        let components = page.selectizeComponents();
+        assert.equal(components, 3);
+    });
+    triggerEvent(`${CATEGORY_TWO} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.equal(ticket.get('categories').get('length'), 1);
+        let components = page.selectizeComponents();
+        assert.equal(components, 2);
+    });
+    triggerEvent(`${CATEGORY_ONE} > .selectize-input input`, 'keydown', BACKSPACE);
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.equal(ticket.get('categories').get('length'), 0);
+        let components = page.selectizeComponents();
+        assert.equal(components, 1);
+    });
+    let category = {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent: null, has_children: true};
+    category.children = [{id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, has_children: true}, {id: CATEGORY_DEFAULTS.unusedId , name: CATEGORY_DEFAULTS.nameUnused, has_children: false}];
+    category_one_xhr = xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idOne}/`, 'GET', null, {}, 200, category);
+    let category_two = {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent: {id: CATEGORY_DEFAULTS.idOne}, has_children: true};
+    category_two.children = [{id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, has_children:false}];
+    category_two_xhr = xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
+    page.categoryClickOptionOne();
+    page.categoryTwoClickOptionOne();
+    page.categoryThreeClickOptionOne();
+    let payload = ticket_payload_detail;
+    payload.categories = [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo, CATEGORY_DEFAULTS.idChild];
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);

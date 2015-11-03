@@ -59,6 +59,8 @@ test('visiting /people/new and creating a new person', (assert) => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.equal(store.find('person').get('length'), 2);
         assert.equal(find('.t-person-role-select option:eq(0)').text(), 'Select One');
+        var person = store.find('person').objectAt(1);
+        assert.ok(person.get('new'));
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
@@ -69,6 +71,7 @@ test('visiting /people/new and creating a new person', (assert) => {
         assert.equal(store.find('person').get('length'), 2);
         var person = store.find('person').objectAt(1);
         assert.equal(person.get('id'), UUID.value);
+        assert.equal(person.get('new'), undefined);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), '');
         assert.equal(person.get('role').get('id'), PEOPLE_DEFAULTS.role);

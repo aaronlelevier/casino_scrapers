@@ -3,8 +3,9 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import equal from 'bsrs-ember/utilities/equal';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
-var RoleModel = Model.extend({
+var RoleModel = Model.extend(NewMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
     name: attr(''),
@@ -30,17 +31,6 @@ var RoleModel = Model.extend({
                 return true;
             }
         });
-        // let filter = function(category) {
-        //     let categories_fk = this.map((join_model) => {
-        //         return join_model.get('category_fk');
-        //     });
-        //     let id = category.get('id');
-        //     if (!hash_table.hasOwnProperty(id) && Ember.$.inArray(id, categories_fk) > -1) {
-        //         hash_table[id] = true;
-        //         return true;
-        //     }
-        // };
-        // return this.get('store').find('category', filter.bind(role_categories), []);
     }),
     role_categories_ids: Ember.computed('role_categories.[]', function() {
         return this.get('role_categories').mapBy('id'); 

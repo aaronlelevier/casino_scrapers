@@ -52,7 +52,9 @@ var CategoriesMixin = Ember.Mixin.create({
         if (!child_pk) { return; }
         let child = this.get('store').find('category', child_pk);
         let parent_id = child.get('parent.id');
-        parent_ids.push(child.get('parent.id') || null);
+        if (parent_id) {
+            parent_ids.push(parent_id);
+        }
         this.find_parent_nodes(child.get('parent.id'), parent_ids);
         return parent_ids;
     },

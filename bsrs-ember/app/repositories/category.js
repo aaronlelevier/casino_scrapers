@@ -2,6 +2,7 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
 var PREFIX = config.APP.NAMESPACE;
@@ -10,8 +11,13 @@ var CATEGORY_URL = PREFIX + '/admin/categories/';
 var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'category'; }),
     url: Ember.computed(function() { return CATEGORY_URL; }),
+    uuid: injectUUID('uuid'),
     CategoryDeserializer: inject('category'),
     deserializer: Ember.computed.alias('CategoryDeserializer'),
+    create(role_type) {
+        let pk = this.get('uuid').v4();
+        return this.store.push('category', {id: pk, new: true});
+    },
     insert(model) {
         return PromiseMixin.xhr(CATEGORY_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
@@ -30,7 +36,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
         });
         let filterFunc = function(category) {
             let name = category.get('name');
-            return name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+            return name.toLowerCase().indexOf(search.toLowerCase()) > -1 && !category.get('new');
         };
         //TODO: test case for filter on id
         return this.get('store').find('category', filterFunc, []);

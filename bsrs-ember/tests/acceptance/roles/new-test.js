@@ -59,6 +59,8 @@ test('visiting role/new', (assert) => {
         assert.equal(find('.t-role-type option:eq(0)').text(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(find('.t-role-type option:eq(1)').text(), ROLE_DEFAULTS.roleTypeContractor);
         assert.ok(store.find('role').objectAt(1).get('isNotDirty'));
+        const role = store.find('role', UUID.value);
+        assert.ok(role.get('new'));
     });
     fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
     fillIn('.t-role-type', ROLE_DEFAULTS.roleTypeGeneral);
@@ -68,6 +70,7 @@ test('visiting role/new', (assert) => {
         assert.equal(currentURL(), ROLE_URL);
         assert.equal(store.find('role').get('length'), 4);
         let role = store.find('role', UUID.value);
+        assert.equal(role.get('new'), undefined);
         assert.equal(role.get('name'), ROLE_DEFAULTS.nameOne);
         assert.equal(role.get('role_type'), ROLE_DEFAULTS.roleTypeGeneral);
         assert.equal(role.get('location_level.id'), ROLE_DEFAULTS.locationLevelOne);

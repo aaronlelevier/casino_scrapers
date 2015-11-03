@@ -51,9 +51,8 @@ export default Ember.Object.extend(GridRepositoryMixin, {
             });
             let filterFunc = function(person) {
                 let fullname = person.get('fullname');
-                return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1;
+                return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1 && !person.get('new');
             };
-            //ensure person returned from store has substring in fullname
             return this.get('store').find('person', filterFunc, []);
         }
     },

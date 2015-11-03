@@ -4,10 +4,10 @@ import PhoneNumber from 'bsrs-ember/models/phonenumber';
 import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
 import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
-import {validateEach} from 'ember-cli-simple-validation/mixins/validate';
+import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
 import { phoneIsAllowedRegion, phoneIsValidFormat } from 'bsrs-ember/validation/phone';
 
-var InputMultiPhone = ChildValidationComponent.extend(CustomValidMixin, {
+var InputMultiPhone = ChildValidationComponent.extend(ValidationMixin, CustomValidMixin, {
     uuid: inject('uuid'),
     tagName: 'div',
     classNames: ['input-multi t-input-multi-phone'],

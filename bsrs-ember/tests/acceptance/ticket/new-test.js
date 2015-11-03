@@ -154,7 +154,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-//ROLLBACK NOT WORKING AFTER ADDED isDirty stuff to assignee/status/priority
 test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
     page.visit();
     patchRandom(counter);
@@ -166,7 +165,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.equal(store.find('category').get('length'), 4);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
-        // assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
+        // assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));//
         assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));
         assert.equal(components, 1);
     });
@@ -176,9 +175,9 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.equal(store.find('ticket').get('length'), 1);
         assert.equal(store.find('category').get('length'), 5);
         let tickets = store.find('ticket');
+        // assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
-        assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
         assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
         assert.equal(components, 2);
     });
@@ -236,7 +235,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
     });
 });
 
-test('selecting and removing a top level category will remove children categories already selected', (assert) => {
+test('selecting category tree and removing a top level category will remove children categories already selected', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
     //clear out first xhr to change unusedId has_children to true
@@ -600,7 +599,9 @@ test('all required fields persist correctly when the user submits a new ticket f
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.equal(store.find('ticket').get('length'), 1);
-        assert.ok(store.find('ticket', UUID.value).get('isNotDirty'));
+        const ticket = store.find('ticket', UUID.value);
+        assert.ok(ticket.get('isNotDirty'));
+        assert.ok(ticket.get('new'));
     });
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
     page.assigneeFillIn('b');
@@ -643,6 +644,7 @@ test('all required fields persist correctly when the user submits a new ticket f
         assert.equal(store.find('ticket').get('length'), 1);
         let persisted = store.find('ticket', UUID.value);
         assert.ok(persisted.get('assignee'));
+        assert.equal(persisted.get('new'), undefined);
         assert.equal(persisted.get('assignee.id'), PEOPLE_DEFAULTS.idSearch);
         assert.ok(persisted.get('location'));
         assert.equal(persisted.get('location.id'), LOCATION_DEFAULTS.idTwo);
