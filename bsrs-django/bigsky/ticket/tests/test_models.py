@@ -6,7 +6,7 @@ from model_mommy import mommy
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
-from ticket.tests.factory import create_tickets
+from ticket.tests.factory import create_ticket, create_tickets
 
 
 class TicketStatusManagerTests(TestCase):
@@ -51,9 +51,11 @@ class TicketActivityTests(TestCase):
     
     def setUp(self):
         self.person = create_single_person()
+        self.person_two = create_single_person()
+        self.ticket = create_ticket()
         self.activity = mommy.make(TicketActivity, person=self.person)
 
-    def test_create(self):
+    def test_setup(self):
         self.assertIsInstance(self.activity, TicketActivity)
 
     def test_weigh_default(self):
@@ -71,3 +73,31 @@ class TicketActivityTests(TestCase):
             self.activity.weight,
             type.weight
         )
+
+    def test_log_create(self):
+        name = 'create'
+        type, _ = TicketActivityType.objects.get_or_create(name=name)
+        
+        ticket_activity = TicketActivity.objects.create(type=type, ticket=self.ticket,
+            person=self.person)
+
+        self.assertIsInstance(ticket_activity, TicketActivity)
+        self.assertEqual(ticket_activity.type.name, name)
+
+    def test_log_assignee(self):
+        name = 'assignee'
+        type, _ = TicketActivityType.objects.get_or_create(name='assignee')
+        
+        ticket_activity = TicketActivity.objects.create(
+            type=type,
+            person=self.person,
+            ticket=self.ticket,
+            content={
+                'from': str(self.person.id),
+                'to': str(self.person_two.id)
+            }
+        )
+
+        self.assertIsInstance(ticket_activity, TicketActivity)
+        self.assertEqual(ticket_activity.type.name, name)
+        self.assertTrue(TicketActivity.objects.filter(content__from=str(self.person.id)).exists())

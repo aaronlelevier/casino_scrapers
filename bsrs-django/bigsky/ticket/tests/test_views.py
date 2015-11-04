@@ -3,7 +3,7 @@ import uuid
 import random
 
 from rest_framework import status
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APITransactionTestCase
 
 from category.models import Category
 from person.tests.factory import PASSWORD, create_single_person
@@ -137,17 +137,18 @@ class TicketCreateTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_create(self):
+    def test_ticket(self):
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing',
-            })
+        })
+
         response = self.client.post('/api/tickets/', self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 201)
 
-        ticket = Ticket.objects.get(id=data['id'])
-        self.assertIsInstance(ticket, Ticket)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(self.data['id'], data['id'])
+        self.assertEqual(self.data['request'], data['request'])
 
 
 class TicketActivityViewSetTests(APITestCase):
@@ -185,7 +186,7 @@ class TicketActivityViewSetTests(APITestCase):
         self.assertIsInstance(TicketActivityType.objects.get(id=data['results'][0]['type']), TicketActivityType)
         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
         self.assertEqual(data['results'][0]['person'], str(activity.person.id))
-        self.assertEqual(data['results'][0]['comment'], activity.comment)
+        self.assertEqual(data['results'][0]['content'], activity.content)
 
     def test_ticket_two(self):
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket_two.id))
@@ -248,3 +249,50 @@ class TicketActivityViewSetTests(APITestCase):
             data['count'],
             TicketActivity.objects.filter(person__username__icontains=letter).count()
         )
+
+
+class TicketAndTicketActivityTests(APITransactionTestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_single_person()
+        # Ticket
+        self.ticket = create_ticket()
+        # Data
+        serializer = TicketCreateSerializer(self.ticket)
+        self.data = serializer.data
+        self.categories = Category.objects.all()
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_log_create(self):
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        name = 'create'
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'request': 'plumbing',
+        })
+
+        response = self.client.post('/api/tickets/', self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+
+    def test_log_assignee(self):
+        self.assertEqual(TicketActivityType.objects.count(), 0)
+        name = 'assignee'
+        new_assingee = create_single_person()
+        self.assertNotEqual(self.data['assignee'], str(new_assingee.id))
+        self.data['assignee'] = str(new_assingee.id)
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+        
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertTrue(TicketActivity.objects.filter(content__from=str(self.ticket.assignee.id)).exists())

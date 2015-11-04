@@ -1,10 +1,10 @@
 from rest_framework import serializers
 
-from ticket.models import Ticket, TicketActivity
-from utils.serializers import BaseCreateSerializer
 from category.serializers import CategoryIDNameSerializer
-from person.serializers import PersonTicketSerializer
 from location.serializers import LocationSerializer
+from person.serializers import PersonTicketSerializer
+from ticket.models import Ticket, TicketActivity, TicketActivityType
+from utils.serializers import BaseCreateSerializer
 
 
 TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee', 'cc',
@@ -41,9 +41,13 @@ class TicketCreateSerializer(BaseCreateSerializer):
         model = Ticket
         fields = TICKET_FIELDS
 
+    def to_representation(self, obj):
+        obj = super(TicketCreateSerializer, self).to_representation(obj)
+        return dict(obj)
+
 
 class TicketActivitySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TicketActivity
-        fields = ('id', 'created', 'type', 'ticket', 'person', 'comment',)
+        fields = ('id', 'created', 'type', 'ticket', 'person', 'content',)
