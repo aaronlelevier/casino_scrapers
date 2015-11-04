@@ -22,7 +22,6 @@ class TicketListTests(APITestCase):
         # Category
         self.category_ids = [str(x) for x in Category.objects.values_list('id', flat=True)]
         self.category_names = [str(x) for x in Category.objects.values_list('name', flat=True)]
-        self.category_has_children = [x for x in Category.objects.values_list('has_children', flat=True)]
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -48,7 +47,7 @@ class TicketListTests(APITestCase):
         categories = data['results'][0]['categories']
         self.assertIn(categories[0]['id'], self.category_ids)
         self.assertIn(categories[0]['name'], self.category_names)
-        self.assertIn(categories[0]['has_children'], self.category_has_children)
+        self.assertIsNotNone(categories[0]['has_children'])
 
 
 class TicketDetailTests(APITestCase):
@@ -64,7 +63,6 @@ class TicketDetailTests(APITestCase):
         self.ticket.save()
         self.category_ids = [str(c.id) for c in Category.objects.all()]
         self.category_names = [str(x) for x in Category.objects.values_list('name', flat=True)]
-        self.category_has_children = [x for x in Category.objects.values_list('has_children', flat=True)]
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -86,7 +84,7 @@ class TicketDetailTests(APITestCase):
         categories = data['categories'][0]
         self.assertIn(categories['id'], self.category_ids)
         self.assertIn(categories['name'], self.category_names)
-        self.assertIn(categories['has_children'], self.category_has_children)
+        self.assertIsNotNone(categories['has_children'])
 
 
 class TicketUpdateTests(APITestCase):
