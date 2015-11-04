@@ -40,27 +40,20 @@ class CreateTicketModelMixin(object):
         TicketActivity.objects.create(type=type, ticket=ticket, person=person)
 
 
-class UpdateTicketModelMixin(object):
+class TicketUpdateLogger(object):
     """
-    Update a model instance.
+    Log specific changes to the ``Ticket`` as ``TicketActivity` records
+    when the ``Ticket`` is updated.
     """
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
-        instance = self.get_object()
-        # store initial instance data before it gets updated
-        self.init_ticket = copy.copy(model_to_dict(instance))
-        # perform update
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
-        serializer.is_valid(raise_exception=True)
-        self.perform_update(serializer)
-        # set other required instance variables, and run 'TicketActivity' log checks
+
+    def __init__(self, instance, person, init_ticket, post_ticket):
         self.instance = instance
-        self.person = request.user
-        self.post_ticket = copy.copy(serializer.data)
-        self.run_check_ticket_changes()
-        return Response(serializer.data)
+        self.person = person
+        self.init_ticket = init_ticket
+        self.post_ticket = post_ticket
 
     def run_check_ticket_changes(self):
+        "Run all log checks for the Ticket."
         self.check_assignee_change()
 
     def check_assignee_change(self):
@@ -78,3 +71,25 @@ class UpdateTicketModelMixin(object):
                     'to': str(post_assignee)
                 }
             )
+
+
+class UpdateTicketModelMixin(object):
+    """
+    Add ``TicketActivityLogger`` to standard DRF ``UpdateModelMixin``
+    """
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        # store initial instance data before it gets updated
+        init_ticket = copy.copy(model_to_dict(instance))
+        # perform update
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        # set other required instance variables, and run 'TicketActivity' log checks
+        post_ticket = copy.copy(serializer.data)
+
+        log = TicketUpdateLogger(instance, request.user, init_ticket, post_ticket)
+        log.run_check_ticket_changes()
+
+        return Response(serializer.data)
