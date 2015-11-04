@@ -4,7 +4,28 @@ from django.db import models
 from django.conf import settings
 
 from accounting.models import Currency
-from utils.models import BaseManager, BaseModel
+from utils.models import BaseModel, BaseManager, BaseNameModel
+
+
+CATEGORY_STATUSES = [
+    'category.status.active',
+    'category.status.inactive',
+]
+
+
+class CategoryStatusManager(BaseManager):
+
+    def default(self):
+        obj, _ = self.get_or_create(name=CATEGORY_STATUSES[0])
+        return obj
+
+
+class CategoryStatus(BaseNameModel):
+
+    objects = CategoryStatusManager()
+
+    class Meta:
+        verbose_name_plural = "Category Statuses"
 
 
 class CategoryManager(BaseManager):
@@ -77,7 +98,7 @@ class Category(BaseModel):
     cost_currency = models.ForeignKey(Currency, blank=True, null=True)
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
-    status = models.BooleanField(blank=True, default=True)
+    # status = models.ForeignKey(CategoryStatus, blank=True, null=True)
     @property
     def has_children(self):
         return self.children.all().exists()
@@ -102,5 +123,5 @@ class Category(BaseModel):
 
     def to_dict(self):
         if self.parent:
-            return {"id": str(self.pk), "name": self.name, "status": self.status, "parent": {"id": str(self.parent.pk), "name": self.parent.name}, "has_children": self.has_children}
-        return {"id": str(self.pk), "name": self.name, "status": self.status, "parent": None, "has_children": self.has_children}
+            return {"id": str(self.pk), "name": self.name, "parent": {"id": str(self.parent.pk), "name": self.parent.name}, "has_children": self.has_children}
+        return {"id": str(self.pk), "name": self.name, "parent": None, "has_children": self.has_children}
