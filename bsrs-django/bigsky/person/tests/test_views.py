@@ -563,7 +563,6 @@ class PersonPutTests(APITestCase):
     # PHONE NUMBERS
 
     def test_update_person_and_create_phone_number(self):
-        self.assertFalse(self.data['phone_numbers'])
         self.data['phone_numbers'] = [{
             'id': str(uuid.uuid4()),
             'type': str(self.phone_number_type.id),

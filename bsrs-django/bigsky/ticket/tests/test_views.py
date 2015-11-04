@@ -7,9 +7,10 @@ from rest_framework.test import APITestCase, APITransactionTestCase
 
 from category.models import Category
 from person.tests.factory import PASSWORD, create_single_person
-from ticket.models import Ticket, TicketActivity, TicketActivityType
+from ticket.models import Ticket, TicketActivity, TicketActivityType, TICKET_ACTIVITY_TYPES
 from ticket.serializers import TicketCreateSerializer
-from ticket.tests.factory import create_ticket, create_ticket_activity
+from ticket.tests.factory import (create_ticket, create_ticket_activity,
+    create_ticket_activity_type)
 
 
 class TicketListTests(APITestCase):
@@ -185,7 +186,7 @@ class TicketActivityViewSetTests(APITestCase):
         self.assertIsInstance(activity, TicketActivity)
         self.assertIsInstance(TicketActivityType.objects.get(id=data['results'][0]['type']), TicketActivityType)
         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
-        self.assertEqual(data['results'][0]['person'], str(activity.person.id))
+        self.assertEqual(data['results'][0]['person']['id'], str(activity.person.id))
         self.assertEqual(data['results'][0]['content'], activity.content)
 
     def test_ticket_two(self):
@@ -249,6 +250,70 @@ class TicketActivityViewSetTests(APITestCase):
             data['count'],
             TicketActivity.objects.filter(person__username__icontains=letter).count()
         )
+
+
+class TicketActivityViewSetReponseTests(APITestCase):
+
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_single_person()
+        # Ticket
+        self.ticket = create_ticket()
+        # TicketActivityTypes
+        [create_ticket_activity_type(name=name) for name in TICKET_ACTIVITY_TYPES]
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_create(self):
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='create')
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertFalse(data['results'][0]['content'])
+
+    def test_assignee(self):
+        from_assignee = self.ticket.assignee
+        to_assignee = create_single_person()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='assignee',
+            content={'from': str(from_assignee.id), 'to': str(to_assignee.id)})
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['content']['to']['id'], str(to_assignee.id))
+        self.assertEqual(data['results'][0]['content']['from']['id'], str(from_assignee.id))
+
+    def test_cc_add(self):
+        cc = create_single_person()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_add',
+            content={'0': str(cc.id)})
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(len(data['results'][0]['content']), 1)
+        self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(cc.id))
+
+    def test_cc_remove(self):
+        cc = create_single_person()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_remove',
+            content={'0': str(cc.id)})
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(len(data['results'][0]['content']), 1)
+        self.assertEqual(data['results'][0]['content']['removed'][0]['id'], str(cc.id))
 
 
 class TicketAndTicketActivityTests(APITransactionTestCase):

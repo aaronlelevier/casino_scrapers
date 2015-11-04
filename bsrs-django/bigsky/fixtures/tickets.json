@@ -458,5 +458,49 @@
     ]
   },
   "pk": "ff3a3b81-e7b1-4b5c-b9c2-25b38ba27df2"
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "1813f356-e729-406c-b91b-23a259273ef6",
+  "fields": {
+    "modified": "2015-11-04T20:05:08.360Z",
+    "weight": 1,
+    "created": "2015-11-04T17:33:28.854Z",
+    "deleted": null,
+    "name": "cc_add"
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "3741095b-095e-44e9-a6d3-258f7736175f",
+  "fields": {
+    "modified": "2015-11-04T20:05:43.462Z",
+    "weight": 1,
+    "created": "2015-11-04T20:05:43.462Z",
+    "deleted": null,
+    "name": "create"
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "a03db6ea-3f23-427d-9ed7-60617af53f6f",
+  "fields": {
+    "modified": "2015-11-04T19:08:37.963Z",
+    "weight": 1,
+    "created": "2015-11-04T19:08:37.963Z",
+    "deleted": null,
+    "name": "cc_remove"
+  }
+},
+{
+  "model": "ticket.ticketactivitytype",
+  "pk": "fb653c74-4c40-4998-a7e6-5e5731b76530",
+  "fields": {
+    "modified": "2015-11-04T20:05:43.465Z",
+    "weight": 1,
+    "created": "2015-11-04T20:05:43.465Z",
+    "deleted": null,
+    "name": "assignee"
+  }
 }
 ]

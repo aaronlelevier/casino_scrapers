@@ -65,6 +65,13 @@ PERSON_FIELDS = (
 )
 
 
+class PersonSimpleSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Person
+        fields = ('id', 'first_name', 'middle_initial', 'last_name',)
+
+
 class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
     '''
     Base Create serializer because ``Role`` needed before second step 
