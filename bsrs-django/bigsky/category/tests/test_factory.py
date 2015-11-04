@@ -16,6 +16,8 @@ class CategoryTests(TestCase):
 
     def test_parents(self):
         self.assertTrue(self.trade.parent)
+        self.assertIsNotNone(self.trade.status)
+        self.assertIsNotNone(self.type.has_children)
 
     def test_children(self):
         self.assertTrue(self.trade.children)

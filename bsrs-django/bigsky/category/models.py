@@ -98,7 +98,7 @@ class Category(BaseModel):
     cost_currency = models.ForeignKey(Currency, blank=True, null=True)
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
-    # status = models.ForeignKey(CategoryStatus, blank=True, null=True)
+    status = models.ForeignKey(CategoryStatus, blank=True, null=True)
     @property
     def has_children(self):
         return self.children.all().exists()

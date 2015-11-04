@@ -20,7 +20,7 @@ class CategoryListTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.top_level = Category.objects.get(name="repair")
+        self.top_level = Category.objects.filter(name="repair").first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -41,7 +41,7 @@ class CategoryListTests(APITestCase):
     def test_data_has_children(self):
         Category.objects.all().delete()
         create_categories(_many=1)
-        first = Category.objects.get(name="repair") 
+        first = Category.objects.filter(name="repair").first()
         response = self.client.get('/api/admin/categories/')
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data['results']) > 0)

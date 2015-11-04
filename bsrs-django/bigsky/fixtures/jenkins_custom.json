@@ -583,25 +583,5 @@
     "name": "ticket.priority.emergency",
     "deleted": null
   }
-},
-{
-  "fields": {
-    "deleted": null,
-    "created": "2015-11-04T02:47:54.056Z",
-    "name": "Active",
-    "modified": "2015-11-04T02:47:54.056Z"
-  },
-  "pk": "440e2133-44d5-44d1-a2b7-786775d3ef60",
-  "model": "category.categorystatus"
-},
-{
-  "fields": {
-    "deleted": null,
-    "created": "2015-11-04T02:48:01.315Z",
-    "name": "Inactive",
-    "modified": "2015-11-04T02:48:01.315Z"
-  },
-  "pk": "5284502c-0da5-48c3-b4ec-1014086d3337",
-  "model": "category.categorystatus"
 }
 ]
