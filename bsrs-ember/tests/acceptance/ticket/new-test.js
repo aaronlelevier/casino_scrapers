@@ -33,7 +33,6 @@ const LETTER_B = {keyCode: 66};
 const BACKSPACE = {keyCode: 8};
 const SPACEBAR = {keyCode: 32};
 const TOPLEVEL = 'select.t-ticket-category-select:eq(0) + .selectize-control';
-const PRIORITY = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
 const LOCATION = 'select.t-ticket-location-select:eq(0) + .selectize-control';
 const ASSIGNEE = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
 const CC = 'select.t-ticket-people-select:eq(0) + .selectize-control';
@@ -95,6 +94,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-location-validation-error').is(':visible'));
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
+    page.statusClickDropdown();
     page.statusClickOptionOne();
     generalPage.save();
     andThen(() => {
@@ -104,6 +104,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-location-validation-error').is(':visible'));
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
+    page.priorityClickDropdown();
     page.priorityClickOptionOne();
     generalPage.save();
     andThen(() => {
@@ -449,58 +450,6 @@ test('when hit backspace should remove assignee from ticket', (assert) => {
     });
 });
 
-/*TICKET TO PRIORITY*/
-test('should be able to add and remove priority but not remove div options', (assert) => {
-    clearxhr(list_xhr);
-    clearxhr(location_xhr);
-    clearxhr(category_one_xhr);
-    clearxhr(category_two_xhr);
-    clearxhr(category_three_xhr);
-    page.visitNew();
-    page.priorityClickOptionOne();
-    andThen(() => {
-        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOneId);
-        let ticket = store.findOne('ticket');
-        assert.ok(ticket.get('priority'));
-        assert.equal(ticket.get('priority').get('id'), TICKET_DEFAULTS.priorityOneId);
-        assert.equal(page.priorityOptionLength(), 4);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-    triggerEvent(`${PRIORITY} > .selectize-input input`, 'keydown', BACKSPACE);
-    andThen(() => {
-        let ticket = store.findOne('ticket');
-        assert.ok(!ticket.get('priority'));
-        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(page.priorityOptionLength(), 4);
-    });
-});
-
-/*TICKET TO STATUS*/
-test('should be able to add and remove status but not remove div options', (assert) => {
-    clearxhr(list_xhr);
-    clearxhr(location_xhr);
-    clearxhr(category_one_xhr);
-    clearxhr(category_two_xhr);
-    clearxhr(category_three_xhr);
-    page.visitNew();
-    page.statusClickOptionOne();
-    andThen(() => {
-        assert.equal(page.statusInput(), TICKET_DEFAULTS.statusOneId);
-        let ticket = store.findOne('ticket');
-        assert.ok(ticket.get('status'));
-        assert.equal(ticket.get('status').get('id'), TICKET_DEFAULTS.statusOneId);
-        assert.equal(page.statusOptionLength(), 8);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-    triggerEvent(`${STATUS} > .selectize-input input`, 'keydown', BACKSPACE);
-    andThen(() => {
-        let ticket = store.findOne('ticket');
-        assert.ok(!ticket.get('status'));
-        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(page.statusOptionLength(), 8);
-    });
-});
-
 /*TICKET TO LOCATION 1 to Many*/
 test('selecting new location will not affect other selectize components and will only render one tab', (assert) => {
     clearxhr(list_xhr);
@@ -508,12 +457,13 @@ test('selecting new location will not affect other selectize components and will
     clearxhr(category_two_xhr);
     clearxhr(category_three_xhr);
     page.visitNew();
+    page.priorityClickDropdown();
     page.priorityClickOptionOne();
     page.locationFillIn('6');
     triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', NUMBER_6);
     page.locationClickOptionTwo();
     andThen(() => {
-        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOneId);
+        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOne);
         assert.equal(find('.t-tab').length, 1);
     });
 });
@@ -614,7 +564,9 @@ test('all required fields persist correctly when the user submits a new ticket f
         assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
+    page.statusClickDropdown();
     page.statusClickOptionOne();
+    page.priorityClickDropdown();
     page.priorityClickOptionOne();
     andThen(() => {
         let ticket = store.find('ticket', UUID.value);

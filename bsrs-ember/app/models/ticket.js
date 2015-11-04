@@ -175,7 +175,7 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         let new_assignee_tickets = new_assignee.get('assigned_tickets') || [];
         new_assignee.set('assigned_tickets', new_assignee_tickets.concat(ticket_id));
     },
-    remove_priority() {
+    change_priority(new_priority_id) {
         let ticket_id = this.get('id');
         let store = this.get('store');
         let old_priority = this.get('priority');
@@ -186,16 +186,11 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
             });
             old_priority.set('tickets', updated_old_priority_tickets);
         }
-    },
-    change_priority(new_priority_id) {
-        let ticket_id = this.get('id');
-        let store = this.get('store');
-        this.remove_priority();
         let new_priority = store.find('ticket-priority', new_priority_id);
         let new_priority_tickets = new_priority.get('tickets') || [];
         new_priority.set('tickets', new_priority_tickets.concat(ticket_id));
     },
-    remove_status() {
+    change_status(new_status_id) {
         let ticket_id = this.get('id');
         let store = this.get('store');
         let old_status = this.get('status');
@@ -206,11 +201,6 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
             });
             old_status.set('tickets', updated_old_status_tickets);
         }
-    },
-    change_status(new_status_id) {
-        let ticket_id = this.get('id');
-        let store = this.get('store');
-        this.remove_status();
         let new_status = store.find('ticket-status', new_status_id);
         let new_status_tickets = new_status.get('tickets') || [];
         if (new_status_tickets) {

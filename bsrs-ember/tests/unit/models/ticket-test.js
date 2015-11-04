@@ -105,21 +105,6 @@ test('status will save correctly as undefined', (assert) => {
     assert.equal(ticket.get('status_fk'), undefined);
 });
 
-test('remove_status will remove the ticket id from the priority tickets array', function(assert) {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    let status = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: [9, TICKET_DEFAULTS.idOne]});
-    assert.deepEqual(status.get('tickets'), [9, TICKET_DEFAULTS.idOne]);
-    ticket.remove_status();
-    assert.deepEqual(status.get('tickets'), [9]);
-});
-
-test('remove_status will do nothing if the ticket has no priority', function(assert) {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    assert.ok(!ticket.get('status'));
-    ticket.remove_status();
-    assert.ok(!ticket.get('status'));
-});
-
 /*TICKET TO CC*/
 test('cc property should return all associated cc or empty array', (assert) => {
     let m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
@@ -828,21 +813,6 @@ test('change_priority will remove the ticket id from the prev priority tickets a
     store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo, tickets: []});
     ticket.change_priority(TICKET_DEFAULTS.priorityTwoId);
     assert.deepEqual(priority.get('tickets'), [9]);
-});
-
-test('remove_priority will remove the ticket id from the priority tickets array', function(assert) {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    let priority = store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: [9, TICKET_DEFAULTS.idOne]});
-    assert.deepEqual(priority.get('tickets'), [9, TICKET_DEFAULTS.idOne]);
-    ticket.remove_priority();
-    assert.deepEqual(priority.get('tickets'), [9]);
-});
-
-test('remove_priority will do nothing if the ticket has no priority', function(assert) {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    assert.ok(!ticket.get('priority'));
-    ticket.remove_priority();
-    assert.ok(!ticket.get('priority'));
 });
 
 test('priority will save correctly as undefined', (assert) => {

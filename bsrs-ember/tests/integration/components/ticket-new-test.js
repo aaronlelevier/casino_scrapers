@@ -34,45 +34,8 @@ test('each status shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('statuses', statuses);
     this.render(hbs`{{tickets/ticket-new model=model statuses=statuses}}`);
-    let $component = this.$('.t-ticket-status-select');
-    assert.equal($component.find('div.option:eq(0)').attr('data-value'), TICKET_DEFAULTS.statusOneId);
-    assert.equal($component.find('div.option:eq(1)').attr('data-value'), TICKET_DEFAULTS.statusTwoId);
-    assert.equal($component.find('div.option:eq(0)').text(), TICKET_DEFAULTS.statusOne);
-    assert.equal($component.find('div.option:eq(1)').text(), TICKET_DEFAULTS.statusTwo);
-});
-
-test('the selected status reflects the status property on the ticket', function(assert) {
-    store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: []});
-    store.push('ticket-status', {id: TICKET_DEFAULTS.statusTwoId, name: TICKET_DEFAULTS.statusTwo, tickets: [TICKET_DEFAULTS.idOne]});
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    let statuses = store.find('ticket-status');
-    this.set('model', ticket);
-    this.set('statuses', statuses);
-    this.render(hbs`{{tickets/ticket-new model=model statuses=statuses}}`);
-    let $component = this.$('.t-ticket-status-select');
-    assert.equal($component.find('option:selected').val(), TICKET_DEFAULTS.statusTwoId);
-});
-
-test('on change will modify the underlying status property on ticket', function(assert) {
-    store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne, tickets: []});
-    store.push('ticket-status', {id: TICKET_DEFAULTS.statusTwoId, name: TICKET_DEFAULTS.statusTwo, tickets: [TICKET_DEFAULTS.idOne]});
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    let statuses = store.find('ticket-status');
-    this.set('model', ticket);
-    this.set('statuses', statuses);
-    this.render(hbs`{{tickets/ticket-new model=model statuses=statuses}}`);
-    let selector = 'select.t-ticket-status-select:eq(0) + .selectize-control';
-    let $component = this.$(selector);
-    assert.equal($component.find('div.item').attr('data-value'), TICKET_DEFAULTS.statusTwoId);
-    assert.equal(ticket.get('status').get('id'), TICKET_DEFAULTS.statusTwoId);
-    this.$(`${selector} > .selectize-input`).trigger('click');
-    run(() => {
-        this.$(`${selector} > .selectize-dropdown div.option:eq(0)`).trigger('click').trigger('change');
-    });
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 2);
-    assert.equal($component.find('div.item').attr('data-value'), TICKET_DEFAULTS.statusOneId);
-    assert.equal(ticket.get('status').get('id'), TICKET_DEFAULTS.statusOneId);
+    let $component = this.$('.t-ticket-status-power-select');
+    assert.equal($component.length, 1);
 });
 
 test('each priority shows up as a valid select option', function(assert) {
@@ -83,49 +46,8 @@ test('each priority shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('priorities', priorities);
     this.render(hbs`{{tickets/ticket-new model=model priorities=priorities}}`);
-    let $component = this.$('.t-ticket-priority-select');
-    assert.equal($component.find('div.item').length, 0);
-    assert.equal($component.find('div.option').length, 2);
-    assert.equal($component.find('div.option:eq(0)').attr('data-value'), TICKET_DEFAULTS.priorityOneId);
-    assert.equal($component.find('div.option:eq(1)').attr('data-value'), TICKET_DEFAULTS.priorityTwoId);
-    assert.equal($component.find('div.option:eq(0)').text(), TICKET_DEFAULTS.priorityOne);
-    assert.equal($component.find('div.option:eq(1)').text(), TICKET_DEFAULTS.priorityTwo);
-});
-
-test('the selected priority reflects the priority property on the ticket', function(assert) {
-    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: []});
-    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo, tickets: [TICKET_DEFAULTS.idOne]});
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    let priorities = store.find('ticket-priority');
-    this.set('model', ticket);
-    this.set('priorities', priorities);
-    this.render(hbs`{{tickets/ticket-new model=model priorities=priorities}}`);
-    let $component = this.$('.t-ticket-priority-select');
-    assert.equal($component.find('div.item').attr('data-value'), TICKET_DEFAULTS.priorityTwoId);
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 2);
-});
-
-test('on change will modify the underlying priority property on ticket', function(assert) {
-    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne, tickets: []});
-    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo, tickets: [TICKET_DEFAULTS.idOne]});
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    let priorities = store.find('ticket-priority');
-    this.set('model', ticket);
-    this.set('priorities', priorities);
-    this.render(hbs`{{tickets/ticket-new model=model priorities=priorities}}`);
-    let selector = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
-    let $component = this.$(selector);
-    assert.equal($component.find('div.item').attr('data-value'), TICKET_DEFAULTS.priorityTwoId);
-    assert.equal(ticket.get('priority').get('id'), TICKET_DEFAULTS.priorityTwoId);
-    this.$(`${selector} > .selectize-input`).trigger('click');
-    run(() => {
-        this.$(`${selector} > .selectize-dropdown div.option:eq(0)`).trigger('click').trigger('change');
-    });
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 2);
-    assert.equal($component.find('div.item').attr('data-value'), TICKET_DEFAULTS.priorityOneId);
-    assert.equal(ticket.get('priority').get('id'), TICKET_DEFAULTS.priorityOneId);
+    let $component = this.$('.t-ticket-priority-power-select');
+    assert.equal($component.length, 1);
 });
 
 test('only one select is rendered when ticket has no categories (and no top level options yet resolved)', function(assert) {

@@ -92,17 +92,19 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
         assert.equal(currentURL(), DETAIL_URL);
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.ok(ticket.get('isNotDirty'));
-        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOneId);
-        assert.equal(page.statusInput(), TICKET_DEFAULTS.statusOneId);
+        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOne);
+        assert.equal(page.statusInput(), TICKET_DEFAULTS.statusOne);
     });
+    page.priorityClickDropdown();
     page.priorityClickOptionTwo();
+    page.statusClickDropdown();
     page.statusClickOptionTwo();
     page.categoryClickOptionTwo();//since leaf node, will not fire off xhr
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwoId);
-        assert.equal(page.statusInput(), TICKET_DEFAULTS.statusTwoId);
+        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwo);
+        assert.equal(page.statusInput(), TICKET_DEFAULTS.statusTwo);
     });
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail_one_category), {}, 200, response);
@@ -128,38 +130,14 @@ test('validation works and when hit save, we do same post', (assert) => {
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-status-validation-error').is(':hidden'));
-        assert.ok(find('.t-priority-validation-error').is(':hidden'));
         assert.ok(find('.t-assignee-validation-error').is(':hidden'));
         assert.ok(find('.t-location-validation-error').is(':hidden'));
         assert.ok(find('.t-category-validation-error').is(':hidden'));
-    });
-    triggerEvent(`${STATUS} > .selectize-input input`, 'keydown', BACKSPACE);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-status-validation-error').is(':visible'));
-        assert.ok(find('.t-priority-validation-error').is(':hidden'));
-        assert.ok(find('.t-assignee-validation-error').is(':hidden'));
-        assert.ok(find('.t-location-validation-error').is(':hidden'));
-        // assert.equal(find('.t-category-validation-error').length, 0);
-    });
-    triggerEvent(`${PRIORITY} > .selectize-input input`, 'keydown', BACKSPACE);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-status-validation-error').is(':visible'));
-        assert.ok(find('.t-priority-validation-error').is(':visible'));
-        assert.ok(find('.t-assignee-validation-error').is(':hidden'));
-        assert.ok(find('.t-location-validation-error').is(':hidden'));
-        // assert.equal(find('.t-category-validation-error').length, 0);
     });
     triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keydown', BACKSPACE);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-status-validation-error').is(':visible'));
-        assert.ok(find('.t-priority-validation-error').is(':visible'));
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':hidden'));
         // assert.equal(find('.t-category-validation-error').length, 0);
@@ -168,8 +146,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-status-validation-error').is(':visible'));
-        assert.ok(find('.t-priority-validation-error').is(':visible'));
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
         // assert.equal(find('.t-category-validation-error').length, 0);
@@ -192,7 +168,9 @@ test('validation works and when hit save, we do same post', (assert) => {
     triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', LETTER_A);
     //click remaining
     page.locationClickOptionOne();
+    page.priorityClickDropdown();
     page.priorityClickOptionOne();
+    page.statusClickDropdown();
     page.statusClickOptionOne();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL + '?search_assignee=Mel&search_location=a');
@@ -208,6 +186,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
     clearxhr(list_xhr);
     page.visitDetail();
+    page.priorityClickDropdown();
     page.priorityClickOptionTwo();
     generalPage.cancel();
     andThen(() => {
@@ -221,7 +200,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwoId);
+            assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwo);
             assert.ok(generalPage.modalIsHidden());
         });
     });
@@ -254,8 +233,8 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     page.visitDetail();
-    click(`${PRIORITY} > .selectize-dropdown div.option:eq(1)`);
-    // page.priorityClickOptionTwo;
+    page.priorityClickDropdown();
+    page.priorityClickOptionTwo();
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -749,67 +728,6 @@ test('when hit backspace should remove location from ticket', (assert) => {
         let ticket = store.findOne('ticket');
         assert.ok(!ticket.get('location'));
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-});
-
-/*TICKET TO PRIORITY*/
-test('should render with correct selected/options and be able to select and remove but not remove div options', (assert) => {
-    clearxhr(list_xhr);
-    page.visitDetail();
-    andThen(() => {
-       assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityOneId);
-       let ticket = store.findOne('ticket');
-       assert.ok(ticket.get('priority'));
-       assert.equal(ticket.get('priority').get('id'), TICKET_DEFAULTS.priorityOneId);
-       assert.equal(page.priorityOptionLength(), 4);
-       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    });
-    page.priorityClickOptionTwo();
-    andThen(() => {
-       assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwoId);
-       let ticket = store.findOne('ticket');
-       assert.ok(ticket.get('priority'));
-       assert.equal(ticket.get('priority').get('id'), TICKET_DEFAULTS.priorityTwoId);
-       assert.equal(page.priorityOptionLength(), 4);
-       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-    triggerEvent(`${PRIORITY} > .selectize-input input`, 'keydown', BACKSPACE);
-    andThen(() => {
-       let ticket = store.findOne('ticket');
-       assert.ok(!ticket.get('priority'));
-       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-       assert.equal(page.priorityOptionLength(), 4);
-    });
-});
-
-/*TICKET TO STATUS*/
-test('should render with correct selected/options and be able to select and remove but not remove div options', (assert) => {
-    clearxhr(list_xhr);
-    page.visitDetail();
-    andThen(() => {
-       assert.equal(page.statusInput(), TICKET_DEFAULTS.statusOneId);
-       let ticket = store.findOne('ticket');
-       assert.ok(ticket.get('status'));
-       assert.equal(ticket.get('status').get('id'), TICKET_DEFAULTS.statusOneId);
-       assert.equal(page.statusOptionLength(), 8);
-       assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    });
-    page.statusClickOptionTwo();
-    andThen(() => {
-       assert.equal(page.statusInput(), TICKET_DEFAULTS.statusTwoId);
-       let ticket = store.findOne('ticket');
-       assert.ok(ticket.get('status'));
-       assert.equal(ticket.get('status').get('id'), TICKET_DEFAULTS.statusTwoId);
-       assert.equal(page.statusOptionLength(), 8);
-       assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-    let selector = 'select.t-ticket-status-select:eq(0) + .selectize-control';
-    triggerEvent(`${selector} > .selectize-input input`, 'keydown', BACKSPACE);
-    andThen(() => {
-       let ticket = store.findOne('ticket');
-       assert.ok(!ticket.get('status'));
-       assert.ok(ticket.get('isDirtyOrRelatedDirty'));//sco this is a change from before where if there was no status, it would not be dirty.  It should be dirty
-       assert.equal(page.statusOptionLength(), 8);
     });
 });
 

@@ -1,0 +1,9 @@
+{{#power-select
+  class="t-ticket-status-power-select"
+  options=statuses
+  selected=ticket.status
+  onchange=(action "selected")
+  as |status|
+}}
+  {{status.name}}
+{{/power-select}}

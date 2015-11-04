@@ -1,0 +1,9 @@
+{{#power-select
+  class="t-ticket-priority-power-select"
+  options=priorities
+  selected=ticket.priority
+  onchange=(action "selected")
+  as |priority|
+}}
+  {{priority.name}}
+{{/power-select}}

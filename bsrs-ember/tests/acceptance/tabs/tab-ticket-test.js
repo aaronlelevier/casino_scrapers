@@ -28,7 +28,7 @@ const DOC_TYPE = 'ticket';
 
 let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr, original_uuid;
 
-module('Acceptance | tab ticket test', {
+module('sco Acceptance | tab ticket test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -157,6 +157,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), 'New ticket');
     });
+    page.priorityClickDropdown();
     page.priorityClickOptionTwo();
     let ticket_list_data = TICKET_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
@@ -171,7 +172,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     andThen(() => {
         assert.equal(currentURL(), NEW_URL);
         let ticket = store.find('ticket').objectAt(0);
-        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwoId);
+        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
     });
 });
@@ -186,11 +187,12 @@ test('clicking on a tab that is dirty from the list url should take you to the d
         assert.equal(tabs.get('length'), 0);
     });
     click('.t-grid-data:eq(0)');
+    page.priorityClickDropdown();
     page.priorityClickOptionTwo();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwoId);
+        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
@@ -204,7 +206,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     click('.t-tab:eq(0)');
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwoId);
+        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -220,11 +222,12 @@ test('clicking on a tab that is dirty from the role url (or any non related page
         assert.equal(tabs.get('length'), 0);
     });
     click('.t-grid-data:eq(0)');
+    page.priorityClickDropdown();
     page.priorityClickOptionTwo();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwoId);
+        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
@@ -240,7 +243,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     click('.t-tab:eq(0)');
     andThen(() => {
         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwoId);
+        assert.equal(page.priorityInput(), TICKET_DEFAULTS.priorityTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -283,6 +286,7 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
     });
+    page.priorityClickDropdown();
     page.priorityClickOptionTwo();
     andThen(() => {
         assert.equal(find('.dirty').length, 1);
@@ -331,6 +335,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
     });
+    page.priorityClickDropdown();
     page.priorityClickOptionTwo();
     andThen(() => {
         assert.equal(find('.dirty').length, 1);

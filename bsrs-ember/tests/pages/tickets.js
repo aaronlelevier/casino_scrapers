@@ -1,5 +1,5 @@
 import PageObject from '../page-object';
-let { value, visitable, fillable, clickable, count } = PageObject;
+let { value, visitable, fillable, clickable, count, text } = PageObject;
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
@@ -10,14 +10,16 @@ const TICKETS_URL = BASE_URL + '/index';
 const NEW_URL = BASE_URL + '/new';
 const DETAIL_URL = BASE_URL + '/' + TICKET_DEFAULTS.idOne;
 const TOPLEVEL = 'select.t-ticket-category-select:eq(0) + .selectize-control';
-const PRIORITY = 'select.t-ticket-priority-select:eq(0) + .selectize-control';
+const PRIORITY = '.t-ticket-priority-power-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const PRIORITY_DROPDOWN = '.t-ticket-priority-power-select-dropdown > .ember-power-select-options';
 const LOCATION = 'select.t-ticket-location-select:eq(0) + .selectize-control';
 const ASSIGNEE = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
 const CC = 'select.t-ticket-people-select:eq(0) + .selectize-control';
 const CATEGORY_ONE = 'select.t-ticket-category-select:eq(0) + .selectize-control';
 const CATEGORY_TWO = 'select.t-ticket-category-select:eq(1) + .selectize-control';
 const CATEGORY_THREE = 'select.t-ticket-category-select:eq(2) + .selectize-control';
-const STATUS = 'select.t-ticket-status-select:eq(0) + .selectize-control';
+const STATUS = '.t-ticket-status-power-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const STATUS_DROPDOWN = '.t-ticket-status-power-select-dropdown > .ember-power-select-options';
 const SECONDLEVEL = 'select.t-ticket-category-select:eq(1) + .selectize-control';
 
 var TicketPage = PageObject.build({
@@ -59,15 +61,17 @@ var TicketPage = PageObject.build({
   locationOptionLength: count(`${LOCATION} > .selectize-dropdown div.option`),
 
   priorityFillIn: fillable(`${PRIORITY} > .selectize-input input`),
-  priorityInput: value(`select.t-ticket-priority-select:eq(0) > option`),
-  priorityClickOptionOne: clickable(`${PRIORITY} > .selectize-dropdown div.option:eq(0)`),
-  priorityClickOptionTwo: clickable(`${PRIORITY} > .selectize-dropdown div.option:eq(1)`),
+  priorityInput: text(`${PRIORITY}`),
+  priorityClickDropdown: clickable(`${PRIORITY}`),
+  priorityClickOptionOne: clickable(`${PRIORITY_DROPDOWN} > .ember-power-select-option:contains(${TICKET_DEFAULTS.priorityOne})`),
+  priorityClickOptionTwo: clickable(`${PRIORITY_DROPDOWN} > .ember-power-select-option:contains(${TICKET_DEFAULTS.priorityTwo})`),
   priorityOptionLength: count(`${PRIORITY} > .selectize-dropdown div.option`),
 
   statusFillIn: fillable(`${STATUS} > .selectize-input input`),
-  statusInput: value(`select.t-ticket-status-select:eq(0) > option`),
-  statusClickOptionOne: clickable(`${STATUS} > .selectize-dropdown div.option:eq(0)`),
-  statusClickOptionTwo: clickable(`${STATUS} > .selectize-dropdown div.option:eq(1)`),
+  statusInput: text(`${STATUS}`),
+  statusClickDropdown: clickable(`${STATUS}`),
+  statusClickOptionOne: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${TICKET_DEFAULTS.statusOne})`),
+  statusClickOptionTwo: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${TICKET_DEFAULTS.statusTwo})`),
   statusOptionLength: count(`${STATUS} > .selectize-dropdown div.option`),
 
   assigneeFillIn: fillable(`${ASSIGNEE} > .selectize-input input`),
