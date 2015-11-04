@@ -55,6 +55,8 @@ class TicketUpdateLogger(object):
     def run_check_ticket_changes(self):
         "Run all log checks for the Ticket."
         self.check_assignee_change()
+        self.check_cc_add()
+        self.check_cc_remove()
 
     def check_assignee_change(self):
         init_assignee = self.init_ticket.get('assignee', None)
@@ -71,6 +73,31 @@ class TicketUpdateLogger(object):
                     'to': str(post_assignee)
                 }
             )
+
+    def check_cc_add(self):
+        init_cc = set(self.init_ticket.get('cc', []))
+        post_cc = set(self.post_ticket.get('cc', []))
+
+        new_cc = post_cc - init_cc
+        if new_cc:
+            self.log_cc_change('cc_add', new_cc)
+
+    def check_cc_remove(self):
+        init_cc = set(self.init_ticket.get('cc', []))
+        post_cc = set(self.post_ticket.get('cc', []))
+
+        removed_cc = init_cc - post_cc
+        if removed_cc:
+            self.log_cc_change('cc_remove', removed_cc)
+
+    def log_cc_change(self, name, changed_cc):
+        type, _ = TicketActivityType.objects.get_or_create(name=name)
+        TicketActivity.objects.create(
+            type=type,
+            person=self.person,
+            ticket=self.instance,
+            content={str(i): str(cc) for i, cc in enumerate(changed_cc)}
+        )
 
 
 class UpdateTicketModelMixin(object):

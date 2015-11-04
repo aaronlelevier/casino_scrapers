@@ -99,10 +99,10 @@ class Ticket(BaseModel):
 
 
 TICKET_ACTIVITY_TYPES = [
+    'create',
     'assignee',
-    'cc_remove',
-    'cc_add'
-    'create'
+    'cc_add',
+    'cc_remove'
 ]
 
 
