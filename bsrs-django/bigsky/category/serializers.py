@@ -1,5 +1,6 @@
 from category.models import Category
 from utils.serializers import BaseCreateSerializer
+from rest_framework import serializers
 
 
 ### CATEGORY
@@ -12,10 +13,15 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
     '''
     Leaf Node Serializer, no public API Endpoint
     '''
+
     class Meta:
         model = Category
-        fields = ('id', 'name', 'parent', 'has_children')
+        fields = ('id', 'name', 'parent', 'children', 'has_children')
 
+    def to_representation(self, obj):
+        data = super(CategoryIDNameSerializer, self).to_representation(obj)
+        data['children_fks'] = data.pop('children', [])
+        return data
 
 class CategoryRoleSerializer(BaseCreateSerializer):
     '''

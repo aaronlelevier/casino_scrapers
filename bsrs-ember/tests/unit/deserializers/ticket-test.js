@@ -412,9 +412,15 @@ test('ticket-category m2m added including parent id for categories without a fat
     assert.equal(store.find('ticket-category').get('length'), 3);
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 3);
+    assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
     assert.equal(categories.objectAt(0).get('parent_id'), null);
+    assert.deepEqual(categories.objectAt(0).get('children_fks'), [CATEGORY_DEFAULTS.idPlumbing, CATEGORY_DEFAULTS.idTwo]);
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idPlumbing);
     assert.equal(categories.objectAt(1).get('parent_id'), CATEGORY_DEFAULTS.idOne);
+    assert.deepEqual(categories.objectAt(1).get('children_fks'), [CATEGORY_DEFAULTS.idPlumbingChild]);
+    assert.equal(categories.objectAt(2).get('id'), CATEGORY_DEFAULTS.idPlumbingChild);
     assert.equal(categories.objectAt(2).get('parent_id'), CATEGORY_DEFAULTS.idPlumbing);
+    assert.deepEqual(categories.objectAt(2).get('children_fks'), []);
 });
 
 test('ticket-person m2m added even when ticket did not exist before the deserializer executes', (assert) => {
