@@ -3,6 +3,7 @@ let { value, visitable, fillable, clickable, count, text } = PageObject;
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
+import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -15,16 +16,17 @@ const PRIORITY_DROPDOWN = '.t-ticket-priority-power-select-dropdown > .ember-pow
 const LOCATION = 'select.t-ticket-location-select:eq(0) + .selectize-control';
 const ASSIGNEE = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
 const CC = 'select.t-ticket-people-select:eq(0) + .selectize-control';
-const CATEGORY_ONE = 'select.t-ticket-category-select:eq(0) + .selectize-control';
-const CATEGORY_TWO = 'select.t-ticket-category-select:eq(1) + .selectize-control';
-const CATEGORY_THREE = 'select.t-ticket-category-select:eq(2) + .selectize-control';
+const CATEGORY_ONE = '.t-ticket-category-power-select:eq(0) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_TWO = '.t-ticket-category-power-select:eq(1) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_THREE = '.t-ticket-category-power-select:eq(2) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_DROPDOWN = '.t-ticket-category-power-select-dropdown > .ember-power-select-options';
 const STATUS = '.t-ticket-status-power-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const STATUS_DROPDOWN = '.t-ticket-status-power-select-dropdown > .ember-power-select-options';
 const SECONDLEVEL = 'select.t-ticket-category-select:eq(1) + .selectize-control';
 
 var TicketPage = PageObject.build({
   visitNew: visitable(NEW_URL),
-  selectizeComponents: count('select.t-ticket-category-select'),
+  selectizeComponents: count('.t-ticket-category-power-select'),
   firstSelectizeComponent: clickable('select.t-ticket-category-select:eq(0)'),
   secondSelectizeComponent: clickable('select.t-ticket-category-select:eq(1)'),
   thirdSelectizeComponent: clickable('select.t-ticket-category-select:eq(2)'),
@@ -38,21 +40,26 @@ var TicketPage = PageObject.build({
 
   categoryFillIn: fillable(`${CATEGORY_ONE} > .selectize-input input`),
   categoryInput: value(`select.t-ticket-category-select:eq(0) > option`),
-  categoryClickOptionOne: clickable(`${CATEGORY_ONE} > .selectize-dropdown div.option:eq(0)`),
-  categoryClickOptionTwo: clickable(`${CATEGORY_ONE} > .selectize-dropdown div.option:eq(1)`),
-  categoryOptionLength: count(`${CATEGORY_ONE} > .selectize-dropdown div.option`),
 
-  categoryTwoFillIn: fillable(`${CATEGORY_TWO} > .selectize-input input`),
-  categoryTwoInput: value(`select.t-ticket-category-select:eq(1) > option`),
-  categoryTwoClickOptionOne: clickable(`${CATEGORY_TWO} > .selectize-dropdown div.option:eq(0)`),
-  categoryTwoClickOptionTwo: clickable(`${CATEGORY_TWO} > .selectize-dropdown div.option:eq(1)`),
-  categoryTwoOptionLength: count(`${CATEGORY_TWO} > .selectize-dropdown div.option`),
+  categoryOneClickDropdown: clickable(`${CATEGORY_ONE}`),
+  categoryOneInput: text(`${CATEGORY_ONE}`),
+  categoryOneClickOptionOne: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameOne})`),
+  categoryOneClickOptionTwo: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameThree})`),
+  categoryOneOptionLength: count(`${CATEGORY_DROPDOWN} > li`),
 
-  categoryThreeFillIn: fillable(`${CATEGORY_THREE} > .selectize-input input`),
-  categoryThreeInput: value(`select.t-ticket-category-select:eq(2) > option`),
-  categoryThreeClickOptionOne: clickable(`${CATEGORY_THREE} > .selectize-dropdown div.option:eq(0)`),
-  categoryThreeClickOptionTwo: clickable(`${CATEGORY_THREE} > .selectize-dropdown div.option:eq(1)`),
-  categoryThreeOptionLength: count(`${CATEGORY_THREE} > .selectize-dropdown div.option`),
+  categoryTwoInput: text(`${CATEGORY_TWO}`),
+  categoryTwoClickDropdown: clickable(`${CATEGORY_TWO}`),
+  categoryTwoClickOptionOne: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameTwo})`),
+  categoryTwoClickOptionTwo: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameUnused})`),
+  categoryTwoClickOptionPlumbing: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameRepairChild})`),
+  categoryTwoClickOptionElectrical: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameTwo})`),
+  categoryTwoClickOptionSecurity: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameLossPreventionChild})`),
+  categoryTwoOptionLength: count(`${CATEGORY_DROPDOWN} > li`),
+
+  categoryThreeInput: text(`${CATEGORY_THREE}`),
+  categoryThreeClickDropdown: clickable(`${CATEGORY_THREE}`),
+  categoryThreeClickOptionOne: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameElectricalChild})`),
+  categoryThreeOptionLength: count(`${CATEGORY_DROPDOWN} > li`),
 
   locationFillIn: fillable(`${LOCATION} > .selectize-input input`),
   locationInput: value(`select.t-ticket-location-select:eq(0) > option`),
@@ -95,10 +102,8 @@ var TicketPage = PageObject.build({
   ticketPeopleOptions: count('.t-ticket-people-select > div.selectize-dropdown-content > div.option'),
   removeTicketPeople: clickable('.t-ticket-people-select > div.selectize-input > div.item > a.remove:eq(0)'),
   removeSecondTicketPeople: clickable('.t-ticket-people-select > div.selectize-input > div.item > a.remove:eq(1)'),
-  ticketTopLevelCategorySelected: count(`${TOPLEVEL} > .selectize-input div.item`),
-  ticketTopLevelCategoryOptions: count(`${TOPLEVEL} > .selectize-dropdown div.option`),
-  ticketSecondLevelCategorySelected: count(`${SECONDLEVEL} > .selectize-input div.item`),
-  ticketSecondLevelCategoryOptions: count(`${SECONDLEVEL} > .selectize-dropdown div.option`),
+  // ticketSecondLevelCategorySelected: count(`${SECONDLEVEL} > .selectize-input div.item`),
+  // ticketSecondLevelCategoryOptions: count(`${SECONDLEVEL} > .selectize-dropdown div.option`),
 
   locationSelectComponent: clickable(),
 });

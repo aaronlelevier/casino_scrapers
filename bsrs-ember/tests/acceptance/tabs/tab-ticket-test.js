@@ -28,7 +28,7 @@ const DOC_TYPE = 'ticket';
 
 let application, store, list_xhr, ticket_detail_data, endpoint, detail_xhr, original_uuid;
 
-module('sco Acceptance | tab ticket test', {
+module('Acceptance | tab ticket test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

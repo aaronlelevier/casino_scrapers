@@ -412,6 +412,16 @@ test('top level category returned from route with many to many set up with only 
     assert.equal(top.get('id'), CATEGORY_DEFAULTS.unusedId);
 });
 
+test('top level category returned when parent_id is undefined (race condition for parent not yet loaded)', (assert) => {
+    store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+    store.push('category', {id: CATEGORY_DEFAULTS.idOne, parent_id: CATEGORY_DEFAULTS.idTwo});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_categories_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo, TICKET_CATEGORY_DEFAULTS.idThree]});
+    assert.equal(ticket.get('categories.length'), 1);
+    assert.equal(ticket.get('categories').objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    let top = ticket.get('top_level_category');
+    assert.ok(!top);
+});
+
 test('changing top level category will reset category tree', (assert) => {
     store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idThree});
     store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});

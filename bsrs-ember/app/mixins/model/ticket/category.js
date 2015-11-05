@@ -19,13 +19,14 @@ var CategoriesMixin = Ember.Mixin.create({
     },
     top_level_category: Ember.computed('categories.[]', function() {
         return this.get('categories').filter((category) => {
-            return category.get('parent') === undefined;
+            return category.get('parent_id') === undefined || category.get('parent_id') === null;
         }).objectAt(0);
     }),
     categories_ids: Ember.computed('categories.[]', function() {
         return this.get('categories').mapBy('id');
     }),
-    sorted_categories: Ember.computed('top_level_category', 'categories.[]', function() {
+    sorted_categories: Ember.computed('top_level_category', function() {
+        // debugger;
         const top_level_category = this.get('top_level_category');
         const categories = this.construct_category_tree(top_level_category);
         return categories;
@@ -81,6 +82,7 @@ var CategoriesMixin = Ember.Mixin.create({
         });
         let uuid = this.get('uuid');
         store.push('ticket-category', {id: uuid.v4(), ticket_pk: this.get('id'), category_pk: category_pk});
+        //also update children_fks [] on the category to "refresh" children computed :)
     },
     add_category(category_pk) {
         let uuid = this.get('uuid');

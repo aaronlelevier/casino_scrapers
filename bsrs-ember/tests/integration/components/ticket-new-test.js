@@ -9,6 +9,9 @@ import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category
 import repository from 'bsrs-ember/tests/helpers/repository';
 
 let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, run = Ember.run, category_repo;
+const CATEGORY_ONE = '.t-ticket-category-power-select:eq(0) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_TWO = '.t-ticket-category-power-select:eq(1) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_THREE = '.t-ticket-category-power-select:eq(2) > .ember-basic-dropdown > .ember-power-select-trigger';
 
 moduleForComponent('tickets/ticket-new', 'integration: ticket-new test', {
     integration: true,
@@ -56,7 +59,7 @@ test('only one select is rendered when ticket has no categories (and no top leve
     this.set('model', ticket);
     this.set('top_level_category_options', top_level_category_options);
     this.render(hbs`{{tickets/ticket-new model=model top_level_category_options=top_level_category_options}}`);
-    let $component = this.$('select.t-ticket-category-select');
+    let $component = this.$('.t-ticket-category-power-select');
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.equal($component.length, 1);
     assert.equal($component.find('div.item').length, 0);
@@ -74,55 +77,80 @@ test('a second select will be rendred after top level category picked', function
     this.set('model', ticket);
     this.set('top_level_category_options', top_level_category_options);
     this.render(hbs`{{tickets/ticket-new model=model top_level_category_options=top_level_category_options}}`);
-    let $components = this.$('select.t-ticket-category-select');
-    let $component = this.$('select.t-ticket-category-select:eq(0)');
+    let $components = this.$('.t-ticket-category-power-select');
+    let $component = this.$('.t-ticket-category-power-select:eq(0)');
+    run(() => { 
+        this.$(`${CATEGORY_ONE}`).click(); 
+    });
+    assert.equal($('.ember-power-select-dropdown').length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 1);
+    assert.equal($('li.ember-power-select-option').text(), 'No results found');
     assert.equal($components.length, 1);
-    assert.equal($component.parent().find('div.item').length, 0);
-    assert.equal($component.parent().find('div.option').length, 0);
     run(() => {
         //route finished ajax of top level
-        store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameOne, children_fks: [CATEGORY_DEFAULTS.idTwo], parent_id: null});
+        store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameOne, children_fks: [CATEGORY_DEFAULTS.idTwo], parent_id: null, has_children: true});
         //this category is the child of unusedId and got serialized by same CategoryDeserializer (thus getting children_fks and parent_fks)
-        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: CATEGORY_DEFAULTS.unusedId});
+        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: CATEGORY_DEFAULTS.unusedId, has_children: true});
     });
-    $components = this.$('select.t-ticket-category-select');
-    $component = this.$('select.t-ticket-category-select:eq(0)');
+    run(() => { 
+        //open and close the dropdown
+        this.$(`${CATEGORY_ONE}`).click(); 
+        this.$(`${CATEGORY_ONE}`).click(); 
+    });
+    assert.equal($('.ember-power-select-dropdown').length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 1);
+    assert.equal($('li.ember-power-select-option').text().trim(), CATEGORY_DEFAULTS.nameOne);
     assert.equal($components.length, 1);
-    assert.equal($component.parent().find('div.item').length, 0);
-    assert.equal($component.parent().find('div.option').length, 1);
-
     category_repo.findById = function() {
         run(() => {
-            store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameOne, children_fks: [CATEGORY_DEFAULTS.idTwo], parent_id: null});
-            store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: CATEGORY_DEFAULTS.unusedId});
+            store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameOne, children_fks: [CATEGORY_DEFAULTS.idTwo], parent_id: null, has_children: true});
+            store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: CATEGORY_DEFAULTS.unusedId, has_children: true});
         });
     };
-    $component.parent().find('.selectize-input input').trigger('click');
-    run(() => {
-        $component.parent().find('div.option:eq(0)').trigger('click').trigger('change');
+    run(() => { 
+        $(`.ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameOne})`).click();
     });
-    $components = this.$('select.t-ticket-category-select');
-    $component = this.$('select.t-ticket-category-select:eq(0)');
+    $components = this.$('.t-ticket-category-power-select');
     assert.equal($components.length, 2);
-    let $component_middle = this.$('select.t-ticket-category-select:eq(1)');
-    assert.equal($component_middle.length, 1);
-    assert.equal($component.parent().find('div.item').length, 1);
-    assert.equal($component.parent().find('div.option').length, 1);
+    let $component_two = this.$('.t-ticket-category-power-select:eq(1)');
+    run(() => { 
+        this.$(`${CATEGORY_TWO}`).click(); 
+    });
+    assert.equal($('.ember-power-select-dropdown').length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 1);
+    assert.equal($('li.ember-power-select-option').text().trim(), CATEGORY_DEFAULTS.nameRepairChild);
+    run(() => { 
+        $(`.ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameRepairChild})`).click();
+    });
+    $components = this.$('.t-ticket-category-power-select');
+    assert.equal($components.length, 2);
     assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.unusedId);
-    assert.equal(ticket.get('categories').get('length'), 1);
-
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.equal(ticket.get('sorted_categories').objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(ticket.get('sorted_categories').objectAt(1).get('name'), CATEGORY_DEFAULTS.nameRepairChild);
+    run(() => {
+        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, children_fks: [CATEGORY_DEFAULTS.idOne], parent_id: CATEGORY_DEFAULTS.unusedId, has_children: true});
+        store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.namePlumbingChild, parent_id: CATEGORY_DEFAULTS.idTwo, has_children: false});
+    });
     category_repo.findById = function() {
         run(() => {
-            store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, children_fks: [CATEGORY_DEFAULTS.idOne], parent_id: CATEGORY_DEFAULTS.unusedId});
-            store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.namePlumbingChild, parent_id: CATEGORY_DEFAULTS.idTwo});
+            store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameRepairChild, children_fks: [CATEGORY_DEFAULTS.idOne], parent_id: CATEGORY_DEFAULTS.unusedId, has_children: true});
+            store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.namePlumbingChild, parent_id: CATEGORY_DEFAULTS.idTwo, has_children: false});
         });
     };
-
-    $component_middle.parent().find('.selectize-input input').trigger('click');
-    run(() => {
-        $component_middle.parent().find('div.option:eq(0)').trigger('click').trigger('change');
+    $components = this.$('.t-ticket-category-power-select');
+    assert.equal($components.length, 3);
+    run(() => { 
+        this.$(`${CATEGORY_THREE}`).click(); 
     });
-    $components = this.$('select.t-ticket-category-select');
-    //TODO: figure out why...prob b/c changed cat defaults to something different
-    // assert.equal($components.length, 3);
+    assert.equal($('.ember-power-select-dropdown').length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 1);
+    assert.equal($('li.ember-power-select-option').text().trim(), CATEGORY_DEFAULTS.namePlumbingChild);
+    run(() => { 
+        $(`.ember-power-select-option:contains(${CATEGORY_DEFAULTS.namePlumbingChild})`).click();
+    });
+    assert.equal(ticket.get('categories').get('length'), 3);
+    assert.equal(ticket.get('sorted_categories').objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(ticket.get('sorted_categories').objectAt(1).get('name'), CATEGORY_DEFAULTS.nameRepairChild);
+    assert.equal(ticket.get('sorted_categories').objectAt(2).get('name'), CATEGORY_DEFAULTS.namePlumbingChild);
 });
