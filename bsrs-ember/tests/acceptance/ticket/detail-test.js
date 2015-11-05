@@ -61,7 +61,7 @@ module('Acceptance | ticket detail test', {
     }
 });
 
-test('clicking a tickets will redirect to the given detail view', (assert) => {
+test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working', (assert) => {
     page.visit();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
@@ -69,6 +69,12 @@ test('clicking a tickets will redirect to the given detail view', (assert) => {
     click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
+    });
+    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
     });
 });
 

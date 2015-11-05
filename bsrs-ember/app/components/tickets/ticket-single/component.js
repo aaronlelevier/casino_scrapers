@@ -2,11 +2,11 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
-import StrictMixin from 'bsrs-ember/mixins/validation/strict';
+import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
 import { validate } from 'ember-cli-simple-validation/mixins/validate';
 import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 
-var TicketSingleComponent = ParentValidationComponent.extend(StrictMixin, TabMixin, EditMixin, {
+var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
     child_components: ['parent-ticket-category-select'],
     repository: inject('ticket'),
     numberValidation: validate('model.number'),
