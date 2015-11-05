@@ -42,6 +42,16 @@ test('ticket requester will be deserialized into its own store when deserialize 
     assert.equal(ticket.get('requester').get('id'), PEOPLE_DEFAULTS.id);
 });
 
+test('ticket will be deserialized without error when requester as null (not a required field currently)', (assert) => {
+    assert.equal(ticket.get('requester'), undefined);
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    delete json.requester;
+    json.requester = null;
+    subject.deserialize(json, json.id);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('requester'), undefined);
+});
+
 test('ticket requester will be deserialized into its own store when deserialize detail is invoked (with existing requester)', (assert) => {
     store.push('person', {id: PEOPLE_DEFAULTS.unusedId});
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));

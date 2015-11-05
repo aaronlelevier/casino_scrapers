@@ -31,9 +31,12 @@ var extract_categories = function(model, store, uuid, category_deserializer) {
 };
 
 var extract_requester = function(model, store, person_deserializer) {
-    let requester_id = model.requester.id;
-    person_deserializer.deserialize(model.requester, requester_id);
-    delete model.requester;
+    let requester_id;
+    if(model.requester) {
+        requester_id = model.requester.id;
+        person_deserializer.deserialize(model.requester, requester_id);
+        delete model.requester;
+    }
     return requester_id;
 };
 
