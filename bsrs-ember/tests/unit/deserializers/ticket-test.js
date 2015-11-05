@@ -402,7 +402,7 @@ test('ticket-person m2m is removed when server payload no longer reflects what s
 
 test('ticket-category m2m added including parent id for categories without a fat parent model', (assert) => {
     store.clear('ticket');
-    let response = TICKET_FIXTURES.generate_correct(TICKET_DEFAULTS.idOne);
+    let response = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
     response.cc = [PEOPLE_FIXTURES.get()];
     subject.deserialize(response, TICKET_DEFAULTS.idOne);
     let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
@@ -441,11 +441,13 @@ test('ticket-category m2m is set up correctly using deserialize single (starting
     let original = store.find('ticket', TICKET_DEFAULTS.idOne);
     categories = original.get('categories');
     assert.equal(categories.get('length'), 3);
-    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idOne);
-    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.nameOne);
-    assert.equal(categories.objectAt(0).get('parent').get('id'), CATEGORY_DEFAULTS.idOne);
-    assert.equal(categories.objectAt(1).get('parent'), null);
-    assert.equal(categories.objectAt(0).get('parent').get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.ok(!categories.objectAt(0).get('parent_id'));
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idPlumbing);
+    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.nameRepairChild);
+    assert.equal(categories.objectAt(1).get('parent_id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(1).get('parent').get('name'), CATEGORY_DEFAULTS.nameOne);
     assert.equal(store.find('ticket-category').get('length'), 3);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
@@ -461,10 +463,13 @@ test('ticket-category m2m is set up correctly using deserialize list (starting w
     let original = store.find('ticket', TICKET_DEFAULTS.idOne);
     categories = original.get('categories');
     assert.equal(categories.get('length'), 3);
-    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.nameOne);
-    assert.equal(categories.objectAt(1).get('parent'), null);
-    assert.equal(categories.objectAt(0).get('parent').get('id'), CATEGORY_DEFAULTS.idOne);
-    assert.equal(categories.objectAt(0).get('parent').get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
+    assert.ok(!categories.objectAt(0).get('parent_id'));
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idPlumbing);
+    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.nameRepairChild);
+    assert.equal(categories.objectAt(1).get('parent_id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(1).get('parent').get('name'), CATEGORY_DEFAULTS.nameOne);
     assert.equal(store.find('ticket-category').get('length'), 3);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
@@ -483,8 +488,8 @@ test('ticket-status m2m is added after deserialize single (starting with existin
     let categories = original.get('categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
-    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.namePlumbingChild);
-    assert.equal(categories.objectAt(2).get('name'), CATEGORY_DEFAULTS.nameRepairChild);
+    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.nameRepairChild);
+    assert.equal(categories.objectAt(2).get('name'), CATEGORY_DEFAULTS.namePlumbingChild);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-category').get('length'), 3);
@@ -504,8 +509,8 @@ test('ticket-status m2m is added after deserialize list (starting with existing 
     let categories = original.get('categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('name'), CATEGORY_DEFAULTS.nameOne);
-    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.namePlumbingChild);
-    assert.equal(categories.objectAt(2).get('name'), CATEGORY_DEFAULTS.nameRepairChild);
+    assert.equal(categories.objectAt(1).get('name'), CATEGORY_DEFAULTS.nameRepairChild);
+    assert.equal(categories.objectAt(2).get('name'), CATEGORY_DEFAULTS.namePlumbingChild);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-category').get('length'), 3);
@@ -524,8 +529,8 @@ test('ticket-category m2m is removed when server payload no longer reflects what
     let categories = original.get('categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
-    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idPlumbingChild);
-    assert.equal(categories.objectAt(2).get('id'), CATEGORY_DEFAULTS.idPlumbing);
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idPlumbing);
+    assert.equal(categories.objectAt(2).get('id'), CATEGORY_DEFAULTS.idPlumbingChild);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-category').get('length'), 3);
@@ -545,8 +550,8 @@ test('ticket-category m2m is removed when server payload no longer reflects what
     let categories = original.get('categories');
     assert.equal(categories.get('length'), 3);
     assert.equal(categories.objectAt(0).get('id'), CATEGORY_DEFAULTS.idOne);
-    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idPlumbingChild);
-    assert.equal(categories.objectAt(2).get('id'), CATEGORY_DEFAULTS.idPlumbing);
+    assert.equal(categories.objectAt(1).get('id'), CATEGORY_DEFAULTS.idPlumbing);
+    assert.equal(categories.objectAt(2).get('id'), CATEGORY_DEFAULTS.idPlumbingChild);
     assert.ok(original.get('isNotDirty'));
     assert.ok(original.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-category').get('length'), 3);
