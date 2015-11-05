@@ -42,3 +42,11 @@ Common Commands
     # start / stop on Centos
 
     sudo service salt-minion start
+
+    # install a package
+
+    sudo salt '*' pkg.install vim
+
+    # install a state
+
+    sudo salt '*' state.sls <package>
