@@ -91,5 +91,19 @@ Logs
 
 .. code-block::
 
+
+    # Nginx - this is the default path, but configurable in "nginx.conf"
+
     sudo vi /var/log/nginx/error.log
+
+    # uWSGI - configurable in "uwsgi.ini"
+
+    sudo vi /var/log/uwsgi/bigsky-persistent.log
+
+
+Nginx Not able to connect with uWSGI
+------------------------------------
+
+Went to ``/var/run/nginx-deploy.sock`` and ``/var/run/nginx-deploy.pid`` and removed these files.
+Then restarted *uWSGI* and *nginx* and the issue was solved.
 
