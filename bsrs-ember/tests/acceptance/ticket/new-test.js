@@ -36,10 +36,6 @@ const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown > .ember-pow
 const LOCATION_DROPDOWN = '.t-ticket-location-select-dropdown > .ember-power-select-options';
 const ASSIGNEE = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
 const CC = 'select.t-ticket-people-select:eq(0) + .selectize-control';
-const CATEGORY_ONE = 'select.t-ticket-category-select:eq(0) + .selectize-control';
-const CATEGORY_TWO = 'select.t-ticket-category-select:eq(1) + .selectize-control';
-const CATEGORY_THREE = 'select.t-ticket-category-select:eq(2) + .selectize-control';
-const SECONDLEVEL = 'select.t-ticket-category-select:eq(1) + .selectize-control';
 const SEARCH = '.ember-power-select-search input';
 
 let application, store, list_xhr, location_xhr, people_xhr, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter;

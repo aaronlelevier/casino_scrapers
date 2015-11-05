@@ -10,7 +10,6 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKETS_URL = BASE_URL + '/index';
 const NEW_URL = BASE_URL + '/new';
 const DETAIL_URL = BASE_URL + '/' + TICKET_DEFAULTS.idOne;
-const TOPLEVEL = 'select.t-ticket-category-select:eq(0) + .selectize-control';
 const PRIORITY = '.t-ticket-priority-power-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const PRIORITY_DROPDOWN = '.t-ticket-priority-power-select-dropdown > .ember-power-select-options';
 const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown > .ember-power-select-trigger';
@@ -84,7 +83,6 @@ var TicketPage = PageObject.build({
   assigneeOptionLength: count(`${ASSIGNEE} > .selectize-dropdown div.option`),
 
   clickSelectizeOption: clickable('.t-ticket-people-select div.option:eq(0)'),
-  clickSameCategorySelectizeOption: clickable('.t-ticket-category-select div.option:eq(0)'),
 
   ticketPeopleSelected: count('.t-ticket-people-select > div.selectize-input > div.item'),
   ticketPeopleOptions: count('.t-ticket-people-select > div.selectize-dropdown-content > div.option'),
