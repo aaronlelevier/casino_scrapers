@@ -48,6 +48,7 @@ class TicketListTests(APITestCase):
         self.assertIn(categories[0]['id'], self.category_ids)
         self.assertIn(categories[0]['name'], self.category_names)
         self.assertIsNotNone(categories[0]['has_children'])
+        self.assertIsNotNone(categories[0]['parent'])
 
 
 class TicketDetailTests(APITestCase):
@@ -85,6 +86,7 @@ class TicketDetailTests(APITestCase):
         self.assertIn(categories['id'], self.category_ids)
         self.assertIn(categories['name'], self.category_names)
         self.assertIsNotNone(categories['has_children'])
+        self.assertIsNotNone(categories['parent'])
 
 
 class TicketUpdateTests(APITestCase):

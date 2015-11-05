@@ -8,7 +8,7 @@ import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category
 
 let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, category_four, run = Ember.run;
 
-moduleForComponent('ticket-category-select', 'integration: ticket-category-select test', {
+moduleForComponent('ticket-category-power-select', 'integration: ticket-category-power-select test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:category', 'model:ticket-category']);
@@ -23,24 +23,36 @@ moduleForComponent('ticket-category-select', 'integration: ticket-category-selec
     }
 });
 
-test('should render a selectbox when the options are empty (initial state of selectize)', function(assert) {
+test('should render a selectbox when the options are empty (initial state of power-select)', function(assert) {
+    store.clear('category');
+    store.clear('ticket-category');
+    ticket.set('ticket_category_fks', []);
     let ticket_category_options = Ember.A([]);
     this.set('ticket', ticket);
     this.set('ticket_category_options', ticket_category_options);
-    this.render(hbs`{{ticket-category-select ticket=ticket ticket_category_options=ticket_category_options}}`);
-    let $component = this.$('.t-ticket-category-select');
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 1);
+    this.render(hbs`{{ticket-category-power-select ticket=ticket ticket_category_options=ticket_category_options}}`);
+    let $component = this.$('.t-ticket-category-power-select');
+    assert.equal($component.find('.ember-power-select-trigger').text().trim(), '');
+    run(() => { 
+        this.$('.ember-power-select-trigger').click(); 
+    });
+    assert.equal($('.ember-power-select-dropdown').length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 1);
+    assert.equal($('li.ember-power-select-option').text(), 'No results found');
 });
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let ticket_category_options = store.find('category');
     this.set('ticket', ticket);
     this.set('ticket_category_options', ticket_category_options);
-    this.render(hbs`{{ticket-category-select ticket=ticket ticket_category_options=ticket_category_options}}`);
-    let $component = this.$('.t-ticket-category-select');
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 4);
+    this.render(hbs`{{ticket-category-power-select ticket=ticket ticket_category_options=ticket_category_options}}`);
+    let $component = this.$('.t-ticket-category-power-select');
+    assert.equal($component.find('.ember-power-select-trigger').text().trim(), CATEGORY_DEFAULTS.nameThree);
+    run(() => { 
+        this.$('.ember-power-select-trigger').click(); 
+    });
+    assert.equal($('.ember-power-select-dropdown').length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 4);
 });
 
 test('should render a selectbox with bound options and can change top level category', function(assert) {
@@ -50,17 +62,23 @@ test('should render a selectbox with bound options and can change top level cate
     let ticket_category_options = store.find('category', onlyParents, []);
     this.set('ticket', ticket);
     this.set('ticket_category_options', ticket_category_options);
-    this.render(hbs`{{ticket-category-select ticket=ticket ticket_category_options=ticket_category_options}}`);
-    let $component = this.$('.t-ticket-category-select');
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 2);
-    assert.equal(ticket.get('top_level_category.id'), CATEGORY_DEFAULTS.unusedId);
-    this.$('.selectize-input input').trigger('click');
+    this.render(hbs`{{ticket-category-power-select ticket=ticket ticket_category_options=ticket_category_options}}`);
+    let $component = this.$('.t-ticket-category-power-select');
+    assert.equal($component.find('.ember-power-select-trigger').text().trim(), CATEGORY_DEFAULTS.nameThree);
+    assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.unusedId);
     run(() => { 
-        $component.find('div.option:eq(1)').trigger('click').trigger('change'); 
+        this.$('.ember-power-select-trigger').click(); 
     });
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 2);
+    assert.equal($('.ember-power-select-dropdown').length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 2);
+    run(() => { 
+        $(`.ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameRepairChild})`).click();
+    });
+    run(() => { 
+        this.$('.ember-power-select-trigger').click(); 
+    });
+    assert.equal($('.ember-power-select-dropdown').length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 2);
     assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idThree);
 });
 
@@ -80,4 +98,3 @@ test('should render a selectbox with bound options and can change top level cate
 //         }, 15);
 //     }, 290);
 // });
-

@@ -14,7 +14,7 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
     '''
     class Meta:
         model = Category
-        fields = ('id', 'name', 'has_children')
+        fields = ('id', 'name', 'parent', 'has_children')
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):
@@ -23,7 +23,7 @@ class CategoryRoleSerializer(BaseCreateSerializer):
     '''
     class Meta:
         model = Category
-        fields = ('id', 'name', 'status', 'has_children')
+        fields = ('id', 'name', 'status', 'parent', 'has_children')
 
 
 class CategoryListSerializer(BaseCreateSerializer):

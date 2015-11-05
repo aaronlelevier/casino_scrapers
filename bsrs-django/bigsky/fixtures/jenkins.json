@@ -445,7 +445,7 @@
   "pk": "5321cf97-a4f3-4bc1-a3d8-974649e9c497",
   "model": "category.category",
   "fields": {
-    "name": "repair",
+    "name": "loss prevention",
     "cost_amount": "0.0000",
     "status": "771cdb5f-b3da-4555-b673-4155d562b692",
     "subcategory_label": "trade",

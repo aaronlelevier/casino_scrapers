@@ -1,0 +1,8 @@
+{{#power-select
+  options=ticket_category_options
+  selected=categories_selected
+  class="t-ticket-category-power-select"
+  onchange=(action "selected")
+  as |category|}}
+  {{category.name}}
+{{/power-select}}
