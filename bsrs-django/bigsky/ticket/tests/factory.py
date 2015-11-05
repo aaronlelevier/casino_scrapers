@@ -1,7 +1,4 @@
-import uuid
 import random
-
-from django.conf import settings
 
 from model_mommy import mommy
 
@@ -12,7 +9,7 @@ from location.tests.factory import create_locations
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
-from utils.create import random_lorem, _generate_chars
+from utils.create import _generate_chars
 
 
 def create_ticket():
@@ -76,7 +73,7 @@ def create_ticket_priorites():
         TicketPriority.objects.get_or_create(name=priority)
 
 
-def create_ticket_activity(ticket=None, type=None, comment=None):
+def create_ticket_activity(ticket=None, type=None, content=None):
     type = create_ticket_activity_type(name=type)
     ticket = ticket or create_ticket()
 
@@ -84,7 +81,7 @@ def create_ticket_activity(ticket=None, type=None, comment=None):
         type = type,
         ticket = ticket,
         person = ticket.requester,
-        comment = comment
+        content = content
     )
 
 

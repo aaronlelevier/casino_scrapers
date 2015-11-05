@@ -251,6 +251,11 @@ class PersonTests(TestCase):
             str(default_locale.id)
         )
 
+    def test_to_simple_dict(self):
+        ret = self.person.to_simple_dict()
+        self.assertEqual(len(ret), 4)
+        self.assertEqual(ret['id'], str(self.person.id))
+
     def test_get_locale_user(self):
         # setup
         create_locales()

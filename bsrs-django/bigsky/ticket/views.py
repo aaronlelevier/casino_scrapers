@@ -1,15 +1,14 @@
-from rest_framework import viewsets
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated
 
+from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
 from ticket.models import Ticket, TicketActivity
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
     TicketListSerializer, TicketActivitySerializer)
 from utils.views import BaseModelViewSet
-from ticket import serializers as ts
 
 
-class TicketsViewSet(BaseModelViewSet):
+class TicketViewSet(CreateTicketModelMixin, UpdateTicketModelMixin, BaseModelViewSet):
 
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
@@ -22,11 +21,11 @@ class TicketsViewSet(BaseModelViewSet):
         set the serializer based on the method
         """
         if self.action == 'list':
-            return ts.TicketListSerializer
+            return TicketListSerializer
         elif self.action in ('create', 'update', 'partial_update'):
-            return ts.TicketCreateSerializer
+            return TicketCreateSerializer
         else:
-            return ts.TicketSerializer
+            return TicketSerializer
 
 
 class TicketActivityViewSet(BaseModelViewSet):

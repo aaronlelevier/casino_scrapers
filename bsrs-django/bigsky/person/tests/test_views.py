@@ -511,8 +511,6 @@ class PersonPutTests(APITestCase):
     # EMAILS
 
     def test_update_email_add_to_person(self):
-        [e.delete(override=True) for e in self.person.emails.all()]
-        self.assertFalse(self.data['emails'])
         self.data['emails'] = [{
             'id': str(uuid.uuid4()),
             'type': str(self.email_type.id),
@@ -563,7 +561,6 @@ class PersonPutTests(APITestCase):
     # PHONE NUMBERS
 
     def test_update_person_and_create_phone_number(self):
-        self.assertFalse(self.data['phone_numbers'])
         self.data['phone_numbers'] = [{
             'id': str(uuid.uuid4()),
             'type': str(self.phone_number_type.id),
