@@ -23,8 +23,8 @@ test('categories_selected will always return the correct category object based o
     let category_rando = store.push('category', {id: CATEGORY_DEFAULTS.idWatChild, name: CATEGORY_DEFAULTS.nameWatChild, parent_id: CATEGORY_DEFAULTS.unusedId, children_fks: [CATEGORY_DEFAULTS.idLossPreventionChild], has_children: true});
     let category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: undefined, children_fks: [CATEGORY_DEFAULTS.idTwo], has_children: true});
     let subject_one = TicketCategories.create({ticket: ticket, index: undefined});
-    let subject_two = TicketCategories.create({ticket: ticket, index: 0});
-    let subject_three = TicketCategories.create({ticket: ticket, index: 1});
+    let subject_two = TicketCategories.create({ticket: ticket, index: 1});
+    let subject_three = TicketCategories.create({ticket: ticket, index: 2});
 
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.equal(subject_one.get('categories_selected'), undefined);
