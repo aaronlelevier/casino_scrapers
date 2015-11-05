@@ -44,7 +44,7 @@ Router.map(function() {
         this.route('third-parties', function() {
             this.route('index');
             this.route('new');
-            this.route('third-party');
+            this.route('third-party', {path: '/:third_party_id'});
         });
     });
     this.route('tickets', function() {

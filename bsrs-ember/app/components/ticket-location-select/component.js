@@ -20,10 +20,11 @@ var TicketLocation = Ember.Component.extend({
     },
     actions: {
         selected(location) {
+            let ticket = this.get('ticket');
             if (location) {
-                let ticket = this.get('ticket');
-                let location_pk = location.get('id');
-                ticket.change_location(location_pk);
+                ticket.change_location(location.get('id'));
+            }else{
+                ticket.remove_location();
             }
         },
         update_filter() {

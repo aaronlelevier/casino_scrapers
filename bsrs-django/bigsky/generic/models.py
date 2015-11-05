@@ -17,7 +17,7 @@ from utils.models import BaseModel, BaseManager, BaseSettingModel
 class SavedSearchManager(BaseManager):
 
     def person_saved_searches(self, person):
-        """Used for bootsrapping the Person's SavedSearch's in the 
+        """Used for bootsrapping the Person's SavedSearch's in the
         bootsrap config."""
         return [x.to_dict() for x in self.filter(person=person)]
 
@@ -169,17 +169,17 @@ class Attachment(BaseModel):
         try:
             with Image.open(self.image_full) as im:
                 im = im.resize(size, Image.ANTIALIAS)
-                
+
                 tail, head = os.path.split(os.path.join(settings.MEDIA_ROOT, location))
                 if not os.path.exists(tail):
                     os.makedirs(tail)
-                
+
                 im.save(os.path.join(tail, head))
         except OSError:
             # ``SimpleUploadedFile`` in test will raise this error b/c ``self.file``
             # is not an actual file object.
             pass
-        
+
     @property
     def _filename(self):
         try:

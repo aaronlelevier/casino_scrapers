@@ -7,11 +7,11 @@ def create_location_levels():
     '''
     ``district_lp`` = district loss prevention
     '''
-    region = mommy.make(LocationLevel, name='region')
-    district = mommy.make(LocationLevel, name='district')
-    district_lp = mommy.make(LocationLevel, name='district_lp')
-    store = mommy.make(LocationLevel, name='store')
-    department = mommy.make(LocationLevel, name='department')
+    region, _ = LocationLevel.objects.get_or_create(name='region')
+    district, _ = LocationLevel.objects.get_or_create(name='district')
+    district_lp, _ = LocationLevel.objects.get_or_create(name='district_lp')
+    store, _ = LocationLevel.objects.get_or_create(name='store')
+    department, _ = LocationLevel.objects.get_or_create(name='department')
     # JOIN's
     region.children.add(district)
     region.children.add(district_lp)

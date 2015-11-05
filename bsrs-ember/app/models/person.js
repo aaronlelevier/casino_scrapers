@@ -8,8 +8,9 @@ import AddressMixin from 'bsrs-ember/mixins/model/person/address';
 import RoleMixin from 'bsrs-ember/mixins/model/person/role';
 import LocationMixin from 'bsrs-ember/mixins/model/person/location';
 import config from 'bsrs-ember/config/environment';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
-var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, {
+var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, NewMixin, {
     uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),

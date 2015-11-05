@@ -9,7 +9,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.encoding import python_2_unicode_compatible
 
-from utils.models import BaseModel, BaseManager, BaseQuerySet
+from utils.models import BaseModel, BaseManager
 
 
 class LocaleManager(BaseManager):

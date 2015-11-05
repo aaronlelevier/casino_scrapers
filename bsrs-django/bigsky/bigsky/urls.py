@@ -7,6 +7,7 @@ from django.contrib.auth import views as auth_views, forms
 from django.contrib.auth.decorators import login_required
 
 from rest_framework import routers
+from rest_framework.routers import Route, SimpleRouter
 
 from accounting import views as accounting_views
 from bigsky import views as bigsky_views
@@ -55,11 +56,28 @@ router.register(r'admin/locales', translation_views.LocaleViewSet)
 router.register(r'admin/translations', translation_views.TranslationViewSet)
 router.register(r'translations', translation_views.TranslationBootstrapViewSet)
 
+
+class CustomReadOnlyRouter(SimpleRouter):
+    routes = [
+        Route(
+            url=r'^{prefix}/{lookup}/activity/$',
+           mapping={'get': 'list'},
+           name='{basename}-detail',
+           initkwargs={'suffix': 'Detail'}
+        ),
+    ]
+
+custom_router = CustomReadOnlyRouter()
+custom_router.register('tickets', tickets_views.TicketActivityViewSet)
+
+
 # API
 urlpatterns = patterns('',
     url(r'^api/', include(router.urls)),
+    url(r'^api/', include(custom_router.urls)),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 )
+
 
 # No Requirement
 urlpatterns += patterns('',

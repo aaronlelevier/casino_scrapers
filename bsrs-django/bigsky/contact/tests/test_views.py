@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 
 from contact.models import PhoneNumber, Address, Email
 from contact.tests.factory import create_contact
-from person.tests.factory import PASSWORD, create_person, create_role
+from person.tests.factory import PASSWORD, create_person
 
 
 class PhoneNumberViewSetTests(APITestCase):
@@ -52,10 +52,7 @@ class PhoneNumberTypeViewSetTests(APITestCase):
         self.assertEqual(data['type']['id'], str(self.type.pk))
 
     def test_list(self):
-        # have 2 ph #'s total
-        ph2 = create_contact(PhoneNumber, self.person)
-        type2 = ph2.type
-
+        create_contact(PhoneNumber, self.person)
         response = self.client.get('/api/admin/phone-number-types/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))

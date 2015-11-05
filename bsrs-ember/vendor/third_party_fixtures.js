@@ -1,6 +1,6 @@
 var BSRS_THIRD_PARTY_FACTORY = (function() {
     var factory = function(third_party) {
-        this.third_party = third_party;
+        this.third_party = third_party.default || third_party;
     };
     // factory.prototype.get = function(i) {
     //     return {
@@ -20,6 +20,7 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
     };
     factory.prototype.list = function() {
         var response = [];
+        response.push(this.generate(this.third_party.idOne));
         for (var i=1; i <= 10; i++) {
             var uuid = '4cc31ebe-cad3-44ea-aa33-bbe8d456ed4d';
             if (i < 10) {
@@ -49,33 +50,33 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
     //     }
     //     return {'count':19,'next':null,'previous':null,'results': response};
     // };
-    // factory.prototype.detail = function(i) {
-    //     return this.generate(this.third_party.idOne);
-    // };
-    // factory.prototype.put = function(third_party) {
-    //     var response = this.generate(third_party.id);
-    //     response.third_party = this.third_party_fixtures.detail().id;
-    //     for(var key in third_party) {
-    //         response[key] = third_party[key];
-    //     }
-    //     return response;
-    // };
+    factory.prototype.detail = function(i) {
+        return this.generate(i);
+    };
+    factory.prototype.put = function(third_party) {
+        var response = this.generate(third_party.id);
+        // response.third_party = this.third_party_fixtures.detail().id;    // TODO: does this need to be 'third-pary'
+        for(var key in third_party) {
+            response[key] = third_party[key];
+        }
+        return response;
+    };
     return factory;
 })();
 
 if (typeof window === 'undefined') {
-    // var objectAssign = require('object-assign');
-    // var mixin = require('../vendor/mixin');
+    var objectAssign = require('object-assign');
+    var mixin = require('../vendor/mixin');
     var third_party = require('../vendor/defaults/third-party');
-    // objectAssign(BSRS_THIRD_PARTY_FACTORY.prototype, mixin.prototype);
+    objectAssign(BSRS_THIRD_PARTY_FACTORY.prototype, mixin.prototype);
     module.exports = new BSRS_THIRD_PARTY_FACTORY(third_party);
 } else {
-    define('bsrs-ember/vendor/third_party_fixtures', ['exports', 'bsrs-ember/vendor/defaults/third-party'], function (exports, third_party) {
+    define('bsrs-ember/vendor/third_party_fixtures',
+        ['exports', 'bsrs-ember/vendor/defaults/third-party', 'bsrs-ember/vendor/mixin'],
+        function (exports, third_party, mixin) {
         'use strict';
-        // Object.assign(BSRS_THIRD_PARTY_FACTORY.prototype, mixin.prototype);
+        Object.assign(BSRS_THIRD_PARTY_FACTORY.prototype, mixin.prototype);
         return new BSRS_THIRD_PARTY_FACTORY(third_party);
-        // return {default: Factory};
+        return {default: Factory};
     });
 }
-
-

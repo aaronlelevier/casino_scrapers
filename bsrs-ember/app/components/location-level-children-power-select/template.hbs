@@ -1,0 +1,9 @@
+{{#power-select
+  multiple=true
+  options=options
+  selected=model.children
+  class="t-location-level-location-level-select-power"
+  onchange=(action (mut model.children))
+  as |name|}}
+  {{name}}
+{{/power-select}}

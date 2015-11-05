@@ -20,7 +20,11 @@ var TicketAssignee = Ember.Component.extend({
     actions: {
         selected(person) {
             let ticket = this.get('ticket');
-            ticket.change_assignee(person.get('id'));
+            if (person) {
+                ticket.change_assignee(person.get('id'));
+            } else {
+                ticket.remove_assignee();
+            }
         },
         update_filter() {
             Ember.run.debounce(this, this.get('find_all_people'), 300);

@@ -1,5 +1,6 @@
 import json
 import uuid
+import random
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase
@@ -19,7 +20,7 @@ class CategoryListTests(APITestCase):
         self.person = create_person()
         # Category
         create_categories()
-        self.top_level = Category.objects.get(name="repair")
+        self.top_level = Category.objects.filter(name="repair").first()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -36,6 +37,16 @@ class CategoryListTests(APITestCase):
         self.assertTrue(len(data['results']) > 0)
         self.assertFalse(self.top_level.parent)
         self.assertTrue(self.top_level.children)
+
+    def test_data_has_children(self):
+        Category.objects.all().delete()
+        create_categories(_many=1)
+        first = Category.objects.filter(name="repair").first()
+        response = self.client.get('/api/admin/categories/')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(len(data['results']) > 0)
+        self.assertIn(str(first.id), [c['id'] for c in data['results']]) 
+        self.assertIn(first.has_children, [c['has_children'] for c in data['results']]) 
 
 
 class CategoryDetailTests(APITestCase):
@@ -62,7 +73,19 @@ class CategoryDetailTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data), 0)
 
-    def test_parent(self):
+    def test_parents_have_children(self):
+        response = self.client.get('/api/admin/categories/{}/'.format(self.type.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(None, data['parent'])
+        self.assertIsNotNone(data['has_children'])
+
+    def test_children_do_not_have_children(self):
+        response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(str(self.trade.parent.id), data['parent']['id'])
+        self.assertIsNotNone(data['has_children'])
+
+    def test_has_parent(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(str(self.trade.parent.id), data['parent']['id'])
@@ -209,8 +232,8 @@ class CategoryFilterTests(APITestCase):
         self.assertEqual(data['count'], self.trade.children.count())
 
     def test_filter_by_name(self):
-        cat = mommy.make(Category, name="cat")
-        dog = mommy.make(Category, name="dog")
+        mommy.make(Category, name="cat")
+        mommy.make(Category, name="dog")
         name = "dog"
         response = self.client.get('/api/admin/categories/?name__icontains={}'.format(name))
         data = json.loads(response.content.decode('utf8'))

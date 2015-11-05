@@ -1,4 +1,3 @@
-import json
 import copy
 
 from rest_framework import viewsets, status
@@ -9,11 +8,12 @@ from rest_framework.response import Response
 
 from translation.models import Locale, Translation
 from translation.serializers import LocaleSerializer, TranslationSerializer
-
+from utils.mixins import DestroyModelMixin
+from utils.views import BaseModelViewSet
 
 ### LOCALE
 
-class LocaleViewSet(viewsets.ModelViewSet):
+class LocaleViewSet(BaseModelViewSet):
 
     permission_classes = (IsAuthenticated,)
     serializer_class = LocaleSerializer
@@ -55,7 +55,7 @@ class TranslationBootstrapViewSet(viewsets.ModelViewSet):
         return queryset
 
 
-class TranslationViewSet(viewsets.ModelViewSet):
+class TranslationViewSet(DestroyModelMixin, viewsets.ModelViewSet):
     '''
     The `list` endpoint, which displays all available Translation keys,
     uses the `en` locale for all available Keys. *(Main English Language

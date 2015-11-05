@@ -1,11 +1,10 @@
 from model_mommy import mommy
 
-from accounting.models import Currency
 from category.models import Category
 from category.tests.factory import create_categories
 from contact.models import PhoneNumber, Email, Address
 from contact.tests.factory import create_contact
-from third_party.models import ThirdParty, ThirdPartyStatus
+from third_party.models import ThirdParty
 from utils import create
 
 

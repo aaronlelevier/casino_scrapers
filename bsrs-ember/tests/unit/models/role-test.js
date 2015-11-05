@@ -6,17 +6,12 @@ import ROLE_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/role-category';
 import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
-import random from 'bsrs-ember/models/random';
 
 var store, uuid;
 
 module('unit: role test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:role', 'model:category', 'model:location-level', 'model:role-category', 'model:uuid']);
-        random.uuid = function() { return Ember.uuid(); };
-    },
-    afterEach() {
-        random.uuid = function() { return 'abc123'; };
     }
 });
 

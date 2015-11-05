@@ -15,13 +15,13 @@ from accounting.models import Currency
 from category.models import Category
 from contact.models import PhoneNumberType, AddressType
 from generic.models import SavedSearch
-from person.models import Role, PersonStatus, Person
+from person.models import Role, PersonStatus
 from ticket.models import TicketStatus, TicketPriority
 from location.models import (Location, LocationLevel, LocationStatus,
     State, Country)
 from translation.models import Locale
 from utils import choices
-from utils.helpers import model_to_json, choices_to_json, current_locale
+from utils.helpers import model_to_json, choices_to_json
 
 
 class IndexView(TemplateView):
@@ -77,7 +77,7 @@ def logout(request):
 
 
 def relationships_view(request):
-    """"Display a list of links for Models that have relationships, 
+    """"Display a list of links for Models that have relationships,
     and route to the d3js views for each model."""
     models = []
     for model in [Category, Location, LocationLevel, Role]:

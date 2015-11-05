@@ -1,8 +1,9 @@
 {{ember-selectize
   required=true
   content=options
+  updateSelection=false
   optionValuePath="content.id"
-  optionLabelPath="content.first_name"
+  optionLabelPath="content.fullname"
   select-item="selected"
   selection=assignee_selected
   class="t-ticket-assignee-select"

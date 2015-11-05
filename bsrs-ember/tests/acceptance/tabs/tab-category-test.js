@@ -11,6 +11,7 @@ import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_CATEGORY_URL = BASEURLS.base_categories_url;
@@ -25,7 +26,7 @@ const INDEX_ROUTE = 'admin.categories.index';
 const DETAIL_ROUTE = 'admin.categories.category';
 const DOC_TYPE = 'category';
 
-let application, store, list_xhr, category_detail_data, endpoint, detail_xhr;
+let application, store, list_xhr, category_detail_data, endpoint, detail_xhr, original_uuid;
 
 module('Acceptance | tab category test', {
     beforeEach() {
@@ -34,8 +35,10 @@ module('Acceptance | tab category test', {
         endpoint = PREFIX + BASE_CATEGORY_URL + '/';
         category_detail_data = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
         detail_xhr = xhr(endpoint + CATEGORY_DEFAULTS.idOne + '/', 'GET', null, {}, 200, category_detail_data);
+        original_uuid = random.uuid;
     },
     afterEach() {
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -146,6 +149,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
 });
 
 test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+    random.uuid = function() { return UUID.value; };
     clearxhr(detail_xhr);
     visit(NEW_URL);
     andThen(() => {

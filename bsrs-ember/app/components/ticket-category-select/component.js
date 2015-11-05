@@ -26,11 +26,15 @@ var TicketCategories = Ember.Component.extend({
     }),
     actions: {
         selected(category) {
-            let category_id = category.get('id');
             let ticket = this.get('ticket');
-            ticket.change_category_tree(category_id);
-            //TODO: detail route not resolving/or pushing down the resolved ticket model (still object proxy)
-            this.sendAction('selected_category', category_id);
+            if (category) {
+                let category_id = category.get('id');
+                ticket.change_category_tree(category_id);
+                this.sendAction('selected_category', category);
+            }else{
+                let category_remove = this.get('categories_selected');
+                ticket.remove_categories_down_tree(category_remove.get('id'));
+            }
         }
     }
 });

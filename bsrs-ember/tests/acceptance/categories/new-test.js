@@ -10,6 +10,7 @@ import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_categories_url;
@@ -19,7 +20,7 @@ const CATEGORY_NEW_URL = BASE_URL + '/new';
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 
-let application, store, payload, list_xhr, children_xhr;
+let application, store, payload, list_xhr, children_xhr, original_uuid;
 
 module('Acceptance | category-new', {
     beforeEach() {
@@ -40,11 +41,14 @@ module('Acceptance | category-new', {
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CATEGORY_FIXTURES.empty());
         let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
         children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
+        original_uuid = random.uuid;
+        random.uuid = function() { return UUID.value; };
     },
     afterEach() {
         payload = null;
         list_xhr = null;
         children_xhr = null;
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -57,7 +61,9 @@ test('visiting /category/new', (assert) => {
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
+        let category = store.find('category', UUID.value);
         assert.equal(store.find('category').get('length'), 4);
+        assert.ok(category.get('new'));
     });
     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
     fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
@@ -69,6 +75,7 @@ test('visiting /category/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
         let category = store.find('category', UUID.value);
+        assert.equal(category.get('new'), undefined);
         assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameOne);
         assert.equal(category.get('description'), CATEGORY_DEFAULTS.descriptionMaintenance);
         assert.equal(category.get('label'), CATEGORY_DEFAULTS.labelOne);

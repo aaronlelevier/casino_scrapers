@@ -131,7 +131,7 @@ class TesterPermissionTests(TestCase):
 class TesterPermissionAlreadyCreatedTests(TransactionTestCase):
 
     def test_perms(self):
-        self.model_name = Tester.__name__.lower() # returns: 'tester'
+        self.model_name = Tester._meta.verbose_name.lower() # returns: 'tester'
         self.ct = ContentType.objects.get(app_label="utils", model=self.model_name)
 
         create._create_model_view_permissions()

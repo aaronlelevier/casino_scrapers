@@ -22,9 +22,21 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
     searched_content: Ember.computed('find', 'page', 'sort', 'search', 'model.[]', function() {
         var search = this.get('search') ? this.get('search').trim() : '';
         var regex = new RegExp(search);
+        let related_fields = this.get('related_fields');
+        var lookup = {};
+        if(related_fields) {
+            for (let i=0, len=related_fields.length; i<len; i++) {
+                lookup[related_fields[i].model] = related_fields[i];
+            }
+        }
         var filter = this.get('searchable').map(function(property) {
             return this.get('model').filter(function(object) {
-                var value = object.get(property) ? object.get(property).toLowerCase() : null;
+                let value;
+                if(lookup[property]) {
+                    value = object.get(property) ? object.get(property).get(lookup[property].field).toLowerCase() : null;
+                }else {
+                    value = object.get(property) ? object.get(property).toLowerCase() : null;
+                }
                 return regex.test(value);
             });
         }.bind(this));
@@ -39,8 +51,20 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
                 let property = option.split(':')[0];
                 let propertyValue = option.split(':')[1];
                 let findRegex = new RegExp(propertyValue);
+                let related_fields = this.get('related_fields');
+                var lookup = {};
+                if(related_fields) {
+                    for (let i=0, len=related_fields.length; i<len; i++) {
+                        lookup[related_fields[i].model] = related_fields[i];
+                    }
+                }
                 return this.get('model').filter(function(object) {
-                    var value = object.get(property) ? object.get(property).toLowerCase() : null;
+                    let value;
+                    if(lookup[property]) {
+                        value = object.get(property) ? object.get(property).get(lookup[property].field).toLowerCase() : null;
+                    }else {
+                        value = object.get(property) ? object.get(property).toLowerCase() : null;
+                    }
                     return findRegex.test(value);
                 });
             }.bind(this));
@@ -62,7 +86,14 @@ var GridViewComponent = Ember.Component.extend(FilterBy, UpdateFind, SortBy, {
         let sort = this.get('sort') || '';
         let options = sort.length > 0 ? sort.split(',') : this.get('defaultSort');
         let found_content = this.get('found_content');
-        return MultiSort.run(found_content, options);
+        let related_fields = this.get('related_fields');
+        var lookup = {};
+        if(related_fields) {
+            for (let i=0, len=related_fields.length; i<len; i++) {
+                lookup[related_fields[i].model] = related_fields[i];
+            }
+        }
+        return MultiSort.run(found_content, options, {lookup:lookup});
     }),
     paginated_content: Ember.computed('sorted_content.[]', function() {
         let requested = this.get('requested');

@@ -13,7 +13,7 @@ var TicketLocationMixin = Ember.Mixin.create({
         };
         return this.get('store').find('location', filter, ['tickets']);
     }),
-    change_location: function(new_location_id) {
+    remove_location() {
         let ticket_id = this.get('id');
         let store = this.get('store');
         let old_location = this.get('location');
@@ -24,6 +24,11 @@ var TicketLocationMixin = Ember.Mixin.create({
             });
             old_location.set('tickets', updated_old_location_tickets);
         }
+    },
+    change_location: function(new_location_id) {
+        let ticket_id = this.get('id');
+        let store = this.get('store');
+        this.remove_location();
         let new_location = store.find('location', new_location_id);
         let new_location_tickets = new_location.get('tickets') || [];
         new_location.set('tickets', new_location_tickets.concat(ticket_id));

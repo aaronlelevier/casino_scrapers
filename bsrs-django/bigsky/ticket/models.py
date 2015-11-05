@@ -1,68 +1,133 @@
-from django.db import models
+import uuid
 
-from utils.models import BaseNameModel, BaseModel, BaseManager
-from utils import choices
-from person.models import Person
+from django.db import models
+from django.conf import settings
+
 from category.models import Category
+from generic.models import Attachment
 from location.models import Location
+from person.models import Person
+from utils.models import BaseModel, BaseManager, BaseNameModel
+
+
+TICKET_STATUSES = [
+    'ticket.status.draft',
+    'ticket.status.denied',
+    'ticket.status.problem_solved',
+    'ticket.status.complete',
+    'ticket.status.deferred',
+    'ticket.status.new',
+    'ticket.status.in_progress',
+    'ticket.status.unsatisfactory_completion'
+]
 
 
 class TicketStatusManager(BaseManager):
 
     def default(self):
-        obj, created = self.get_or_create(name=choices.TICKET_STATUS_CHOICES[0][0])
+        obj, _ = self.get_or_create(name=TICKET_STATUSES[0])
         return obj
 
 
-class TicketStatus(BaseModel):
-    name = models.CharField(max_length=50, default=choices.TICKET_STATUS_CHOICES[0][0])
+class TicketStatus(BaseNameModel):
 
     objects = TicketStatusManager()
 
-    def to_dict(self):
-        return {
-            'id': str(self.id),
-            'name': self.name
-        }
+    class Meta:
+        verbose_name_plural = "Ticket Statuses"
+
+
+TICKET_PRIORITIES = [
+    'ticket.priority.medium',
+    'ticket.priority.low',
+    'ticket.priority.high',
+    'ticket.priority.emergency'
+]
 
         
 class TicketPriorityManager(BaseManager):
 
     def default(self):
-        obj, created = self.get_or_create(name=choices.TICKET_PRIORITY_CHOICES[0][0])
+        obj, _ = self.get_or_create(name=TICKET_PRIORITIES[0])
         return obj
     
 
-class TicketPriority(BaseModel):
-    name = models.CharField(max_length=50, default=choices.TICKET_STATUS_CHOICES[0][0])
+class TicketPriority(BaseNameModel):
 
     objects = TicketPriorityManager()
 
-    def to_dict(self):
-        return {
-            'id': str(self.id),
-            'name': self.name
-        }
+    class Meta:
+        verbose_name_plural = "Ticket Priorities"
 
-        
+
 class Ticket(BaseModel):
-    '''
-    Ticket model with auto incrementing number field
-    '''
+
     def no_ticket_models():
-        no = Ticket.objects.count()
-        if no == None:
+        """Auto incrementing number field"""
+        count = Ticket.objects_all.count()
+        if not count:
             return 1
         else: 
-            return no + 1
+            return count + 1
 
-    status = models.ForeignKey(TicketStatus)
-    priority = models.ForeignKey(TicketPriority)
-    subject = models.TextField(max_length=100, null=True)
-    number = models.IntegerField(default=no_ticket_models)
-    cc = models.ManyToManyField(Person, blank=True)
-    assignee = models.ForeignKey(Person, blank=True, null=True, related_name="person_ticket_assignee")
-    request = models.TextField(max_length=100, null=True)
-    categories = models.ManyToManyField(Category, blank=True)
+    # Keys
     location = models.ForeignKey(Location)
-    requester = models.ForeignKey(Person, blank=True, null=True, related_name="person_ticket_requester")
+    status = models.ForeignKey(TicketStatus, blank=True, null=True)
+    priority = models.ForeignKey(TicketPriority, blank=True, null=True)
+    assignee = models.ForeignKey(Person, blank=True, null=True,
+        related_name="assignee_tickets")
+    cc = models.ManyToManyField(Person, blank=True)
+    requester = models.ForeignKey(Person, blank=True, null=True,
+        related_name="requester_tickets")
+    categories = models.ManyToManyField(Category, blank=True)
+    attachments = models.ManyToManyField(Attachment, related_name="tickets", blank=True)
+    # Fields
+    request = models.CharField(max_length=1000, blank=True, null=True)
+    # Auto-fields
+    number = models.IntegerField(blank=True, default=no_ticket_models)
+
+    def save(self, *args, **kwargs):
+        self._update_defaults()
+        return super(Ticket, self).save(*args, **kwargs)
+
+    def _update_defaults(self):
+        if not self.status:
+            self.status = TicketStatus.objects.default()
+        if not self.priority:
+            self.priority = TicketPriority.objects.default()
+
+
+TICKET_ACTIVITY_TYPES = [
+    'assignee',
+    'cc_remove',
+    'cc_add'
+    'create'
+]
+
+
+class TicketActivityType(BaseNameModel):
+
+    weight = models.PositiveIntegerField(blank=True, default=1)
+
+
+class TicketActivity(models.Model):
+    """
+    Log table for all Activities related to the Ticket.
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    created = models.DateTimeField(auto_now_add=True)
+    type = models.ForeignKey(TicketActivityType, blank=True, null=True)
+    ticket = models.ForeignKey(Ticket, related_name="activities")
+    person = models.ForeignKey(Person, related_name="ticket_activities",
+        help_text="Person who did the TicketActivity")
+    comment = models.CharField(max_length=1000, blank=True, null=True)
+
+    def __str__(self):
+        return "{}: {}".format(self.ticket.number, self.id)
+
+    @property
+    def weight(self):
+        if not self.type:
+            return settings.ACTIVITY_DEFAULT_WEIGHT
+        else:
+            return self.type.weight

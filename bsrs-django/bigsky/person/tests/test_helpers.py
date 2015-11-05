@@ -15,7 +15,7 @@ class HelperTests(TestCase):
     def test_update_group(self):
         # ``init_count`` == 1 ; b/c when a Role is created, the
         # Person is auto-enrolled in the Group for that Role.
-        init_count = self.person.groups.count() 
+        init_count = self.person.groups.count()
         self.assertIsInstance(self.person.groups.first(), Group)
         # Add to initial Group
         helpers.update_group(person=self.person, group=self.role1.group)

@@ -1,40 +1,97 @@
-from model_mommy import mommy
+import uuid
 import random
-from utils.create import random_lorem
 
-from ticket.models import Ticket, TicketStatus
-from location.models import Location
-from person.models import Person
-from person.tests.factory import create_person
+from django.conf import settings
+
+from model_mommy import mommy
+
 from category.models import Category
 from category.tests.factory import create_categories
+from location.models import Location
+from location.tests.factory import create_locations
+from person.tests.factory import create_single_person
+from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
+    TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
+from utils.create import random_lorem, _generate_chars
 
 
-def create_tickets(cc=None, requester=None, assignee=None, _many=1):
-    '''
-    Ticket Subjects 
-    '''
+def create_ticket():
+    if not Location.objects.all().exists():
+        create_locations()
 
-    if not cc:
-        cc = create_person()
+    if not Category.objects.all().exists():
+        create_categories()
+        
+    create_ticket_statuses()
+    create_ticket_priorites()
 
-    if not assignee:
-        assignee = create_person()
+    ticket = Ticket.objects.create(
+        location = random.choice(Location.objects.all()),
+        status = random.choice(TicketStatus.objects.all()),
+        priority = random.choice(TicketPriority.objects.all()),
+        assignee = create_single_person(),
+        requester = create_single_person(),
+        request = _generate_chars()
+    )
+    ticket.cc.add(create_single_person())
+    ticket.categories.add(Category.objects.first())
+    return ticket
 
-    if not requester:
-        requester = create_person()
 
-    create_categories()
-    categories = Category.objects.all()
-    categories = categories[:3]
-    
-    for i in range(_many):
-        kwargs = {
-           'subject' : random_lorem(),
-           'request' : random_lorem(),
-           'assignee' : assignee,
-           'requester' : requester,
-           'categories' : categories,
-        }
-        ticket = mommy.make(Ticket, make_m2m=True, **kwargs)
-        ticket.cc.add(cc)
+def create_tickets(_many=1):
+    return [create_ticket() for x in range(_many)]
+
+
+def create_ticket_status(name=None):
+    if not name:
+        name = random.choice(TICKET_STATUSES)
+
+    obj, _ = TicketStatus.objects.get_or_create(name=name)
+
+    return obj
+
+
+def create_ticket_statuses():
+    for status in TICKET_STATUSES:
+        TicketStatus.objects.get_or_create(name=status)
+
+
+def create_ticket_priority(name=None):
+    if not name:
+        name = random.choice(TICKET_PRIORITIES)
+
+    obj, _ = TicketPriority.objects.get_or_create(name=name)
+
+    return obj
+
+
+def create_ticket_priorites():
+    priorities = [
+        'ticket.priority.medium',
+        'ticket.priority.low',
+        'ticket.priority.high',
+        'ticket.priority.emergency'
+    ]
+    for priority in priorities:
+        TicketPriority.objects.get_or_create(name=priority)
+
+
+def create_ticket_activity(ticket=None, type=None, comment=None):
+    type = create_ticket_activity_type(name=type)
+    ticket = ticket or create_ticket()
+
+    return mommy.make(TicketActivity,
+        type = type,
+        ticket = ticket,
+        person = ticket.requester,
+        comment = comment
+    )
+
+
+def create_ticket_activity_type(name=None, weight=1):
+    if not name:
+        name = random.choice(TICKET_ACTIVITY_TYPES)
+
+    obj, _ = TicketActivityType.objects.get_or_create(name=name, weight=weight)
+
+    return obj

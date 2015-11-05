@@ -2,6 +2,7 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
 var PREFIX = config.APP.NAMESPACE;
@@ -10,8 +11,13 @@ var ROLE_URL = PREFIX + '/admin/roles/';
 var RoleRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'role'; }),
     url: Ember.computed(function() { return ROLE_URL; }),
+    uuid: injectUUID('uuid'),
     RoleDeserializer: inject('role'),
     deserializer: Ember.computed.alias('RoleDeserializer'),
+    create(role_type) {
+        let pk = this.get('uuid').v4();
+        return this.store.push('role', {id: pk, role_type: role_type, new: true});
+    },
     insert(model) {
         return PromiseMixin.xhr(ROLE_URL, 'POST', { data: JSON.stringify(model.serialize()) }).then(() => {
            model.save(); 

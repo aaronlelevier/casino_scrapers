@@ -25,6 +25,8 @@ from translation.models import Locale
 from utils import choices, create
 from utils.models import (BaseNameModel, BaseModel, BaseManager, BaseStatusModel,
     BaseStatusManager)
+from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
+    contains_special_char, contains_no_whitespaces)
 
 
 class RoleManager(BaseManager):
@@ -45,14 +47,13 @@ class Role(BaseModel):
     group = models.OneToOneField(Group, blank=True, null=True)
     location_level = models.ForeignKey(LocationLevel, null=True, blank=True)
     role_type = models.CharField(max_length=29, blank=True,
-                                 choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
+        choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
     # Required
     name = models.CharField(max_length=100, unique=True, help_text="Will be set to the Group Name")
     categories = models.ManyToManyField(Category, blank=True) 
-    # Optional
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
-                                     help_text='Allow document creation for all locations')
+        help_text='Allow document creation for all locations')
     modules = models.TextField(blank=True)
     dashboad_links = models.TextField(blank=True)
     tabs = models.TextField(blank=True)
@@ -63,26 +64,22 @@ class Role(BaseModel):
         base_field=models.PositiveIntegerField(
             help_text="Will be NULL if password length has never been changed."),
         blank=True, default=[])
+
     password_digit_required = models.BooleanField(blank=True, default=False)
-    password_lower_char_required = models.BooleanField(
-        blank=True, default=False)
-    password_upper_char_required = models.BooleanField(
-        blank=True, default=False)
-    password_special_char_required = models.BooleanField(
-        blank=True, default=False)
-    password_char_types = models.CharField(max_length=100,
-                                           help_text="Password characters allowed")  # TODO: This field will need to be accessed when
-    # someone for the role saves their PW to validate it.
+    password_lower_char_required = models.BooleanField(blank=True, default=False)
+    password_upper_char_required = models.BooleanField(blank=True, default=False)
+    password_special_char_required = models.BooleanField(blank=True, default=False)
+
     password_expire = models.IntegerField(blank=True, default=90,
-                                          help_text="Number of days after setting password that it will expire."
-                                          "If '0', password will never expire.")
+      help_text="Number of days after setting password that it will expire."
+                "If '0', password will never expire.")
     password_expire_alert = models.BooleanField(blank=True, default=True,
-                                                help_text="Does the Person want to be alerted 'pre pw expiring'. "
-                                                "Alerts start 3 days before password expires.")
+        help_text="Does the Person want to be alerted 'pre pw expiring'. "
+                  "Alerts start 3 days before password expires.")
     password_expired_login_count = models.IntegerField(blank=True, null=True)
     # Proxy
     proxy_set = models.BooleanField(blank=True, default=False,
-                                    help_text="Users in this Role can set their own proxy")
+        help_text="Users in this Role can set their own proxy")
     # Default Settings
     # that set the Person settings for these fields when first
     # adding a Person to a Role
@@ -122,7 +119,7 @@ class Role(BaseModel):
     # Messages
     # TODO: are these "Email" or "SMS" messages, or any particular type?
     msg_address = models.BooleanField(blank=True, default=False,
-                                      help_text="Enable Addressing")
+        help_text="whether users in this role are allowed to change the CC field on a ticket or work order")
     msg_viewall = models.BooleanField(blank=True, default=False)
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
@@ -160,7 +157,7 @@ class Role(BaseModel):
     def _update_defaults(self):
         if not self.group:
             try:
-                self.group, created = Group.objects.get_or_create(
+                self.group, _ = Group.objects.get_or_create(
                     name=self.name)
             except IntegrityError:
                 raise
@@ -178,6 +175,54 @@ class Role(BaseModel):
                 self.__original_values['password_min_length'])
             self.__original_values[
                 'password_min_length'] = self.password_min_length
+
+    # Password Validators: start
+
+    def run_password_validators(self, password):
+        responses = []
+        validators = [self._validate_contains_digit, self._validate_contains_upper_char,
+            self._validate_contains_lower_char, self._validate_contains_special_char,
+            self._validate_no_whitespaces]
+
+        for validator in validators:
+            responses.append(validator(password))
+
+        if not all(responses):
+            raise ValidationError(self._password_chars_error_message())
+
+    def _validate_contains_digit(self, password):
+        if self.password_digit_required:
+            return contains_digit(password)
+        return True
+
+    def _validate_contains_upper_char(self, password):
+        if self.password_upper_char_required:
+            return contains_upper_char(password)
+        return True
+
+    def _validate_contains_lower_char(self, password):
+        if self.password_lower_char_required:
+            return contains_lower_char(password)
+        return True
+
+    def _validate_contains_special_char(self, password):
+        if self.password_special_char_required:
+            return contains_special_char(password)
+        return True
+
+    @staticmethod
+    def _validate_no_whitespaces(password):
+        return contains_no_whitespaces(password)
+
+    def _password_chars_error_message(self):
+        return "Required characters: {digit} {upper_char} {lower_char} {special_char}".format(
+            digit = "0-9" if self.password_digit_required else "",
+            upper_char = "A-Z" if self.password_upper_char_required else "",
+            lower_char = "a-z" if self.password_lower_char_required else "",
+            special_char = "$%!@" if self.password_special_char_required else "" 
+        )
+
+    # Password Validators: end
 
 
 class ProxyRole(BaseModel):
@@ -220,10 +265,9 @@ class PersonManager(UserManager):
 
 @python_2_unicode_compatible
 class Person(BaseModel, AbstractUser):
-
     '''
-    "pw" : password
-    "ooto" : out-of-the-office
+    :pw: password
+    :ooto: out-of-the-office
     '''
     # Keys
     role = models.ForeignKey(Role)
@@ -247,9 +291,6 @@ class Person(BaseModel, AbstractUser):
     middle_initial = models.CharField(max_length=1, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)
     # Passwords
-    # TODO: use django default 1x PW logic here?
-    # https://github.com/django/django/blob/master/django/contrib/auth/views.py
-    # (line #214)
     password_length = models.PositiveIntegerField(blank=True, null=True,
                                                   help_text="Store the length of the current password.")
     password_expire_date = models.DateField(blank=True, null=True,
@@ -257,8 +298,8 @@ class Person(BaseModel, AbstractUser):
                                             "Based upon the ``password_expire`` days set on the Role.")
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
     # TODO: add functionality to populate this field
-    password_change = models.TextField( blank=True, null=True,
-        help_text="Tuple of (datetime of PW change, old PW)")
+    password_change = models.DateTimeField( blank=True, null=True,
+        help_text="DateTime of last password change")
     password_history = ArrayField(
         models.CharField(max_length=254),
         blank=True, default=[], size=settings.MAX_PASSWORDS_STORED)
@@ -269,10 +310,10 @@ class Person(BaseModel, AbstractUser):
                                         max_length=100, blank=True, null=True)
     proxy_end_date = models.DateField("Out of the Office Status End Date", max_length=100,
                                       blank=True, null=True)
-    proxy_user = models.ForeignKey("self", related_name='coveringuser',
-                                   blank=True, null=True)
+    proxy_user = models.ForeignKey("self", related_name='coveringuser', blank=True, null=True)
+
     # TODO: add logs for:
-    #   pw_chage_log, login_activity, user_history
+    #   pw_change_log, login_activity, user_history
     phone_numbers = GenericRelation(PhoneNumber)
     addresses = GenericRelation(Address)
     emails = GenericRelation(Email)
@@ -290,6 +331,7 @@ class Person(BaseModel, AbstractUser):
     def save(self, *args, **kwargs):
         self._update_defaults()
         self._validate_locations()
+        self._update_max_passwords_history()
         return super(Person, self).save(*args, **kwargs)
 
     def to_dict(self, locale):
@@ -333,6 +375,8 @@ class Person(BaseModel, AbstractUser):
         if new_password not in self.password_history:
             self.password_history.append(new_password)
 
+        self.password_change = timezone.now()
+
     def _get_locale(self, locale):
         """Resolve the Locale using the Accept-Language Header. If not 
         found, use the system default Locale.
@@ -369,6 +413,11 @@ class Person(BaseModel, AbstractUser):
         for l in self.locations.all():
             if l.location_level != self.role.location_level:
                 self.locations.remove(l)
+
+    def _update_max_passwords_history(self):
+        if len(self.password_history) > settings.MAX_PASSWORDS_STORED:
+            setattr(self, 'password_history',
+                self.password_history[len(self.password_history)-settings.MAX_PASSWORDS_STORED:])
 
 
 @receiver(post_save, sender=Person)

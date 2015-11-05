@@ -1,15 +1,16 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/store';
 import { attr, Model } from 'ember-cli-simple-store/model';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
-var CategoryModel = Model.extend({
+var CategoryModel = Model.extend(NewMixin, {
     store: inject('main'),
     name: attr(''),
     description: attr(''),
     label: attr(''),
     cost_amount: attr(''),
     cost_code: attr(''),
-    parent_id: '',
+    parent_id: undefined,
     children_fks: [],
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty');

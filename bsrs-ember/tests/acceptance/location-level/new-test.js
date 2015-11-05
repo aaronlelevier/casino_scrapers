@@ -10,6 +10,7 @@ import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
@@ -17,7 +18,7 @@ const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
 
-let application, store, payload, list_xhr, endpoint;
+let application, store, payload, list_xhr, endpoint, original_uuid;
 
 module('Acceptance | location-level-new', {
     beforeEach() {
@@ -30,9 +31,12 @@ module('Acceptance | location-level-new', {
             name: LOCATION_LEVEL_DEFAULTS.nameAnother,
             children: LOCATION_LEVEL_DEFAULTS.newTemplateChildren
         };
+        original_uuid = random.uuid;
+        random.uuid = function() { return UUID.value; };
     },
     afterEach() {
         payload = null;
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -55,16 +59,18 @@ test('visiting /location-level/new', (assert) => {
         assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
         assert.equal(store.find('location-level').get('length'), 9);
         assert.equal(find('.t-location-level-location-level-select > option').length, 8);
+        let location_level = store.find('location-level', UUID.value);
+        assert.ok(location_level.get('new'));
     });
     fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameAnother);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(store.find('location-level').get('length'), 9);
-        let locationLevel = store.find('location-level', UUID.value);
-        assert.equal(locationLevel.get('id'), UUID.value);
-        assert.equal(locationLevel.get('name'), LOCATION_LEVEL_DEFAULTS.nameAnother);
-        assert.ok(locationLevel.get('isNotDirty'));
+        let location_level = store.find('location-level', UUID.value);
+        assert.equal(location_level.get('new'), undefined);
+        assert.equal(location_level.get('name'), LOCATION_LEVEL_DEFAULTS.nameAnother);
+        assert.ok(location_level.get('isNotDirty'));
     });
 });
 

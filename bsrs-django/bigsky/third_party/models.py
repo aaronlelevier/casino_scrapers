@@ -5,7 +5,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from accounting.models import Currency
 from category.models import Category
 from contact.models import PhoneNumber, Address, Email
-from utils.models import BaseNameModel, BaseModel, BaseManager
+from utils.models import BaseNameModel, BaseManager
 
 
 class ThirdPartyStatusManager(BaseManager):

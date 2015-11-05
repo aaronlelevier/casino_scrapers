@@ -42,3 +42,13 @@ test('findTicketPeople will lower case search', (assert) => {
     let people_array_proxy = subject.findTicketPeople('Abc');
     assert.equal(people_array_proxy.get('length'), 2);
 });
+
+test('findTicketPeople will exclude models with new flag', (assert) => {
+    store.push('person', {id: PEOPLE_DEFAULTS.idOne, fullname: 'abc', new: true});
+    store.push('person', {id: PEOPLE_DEFAULTS.idTwo, fullname: 'abcd'});
+    store.push('person', {id: PEOPLE_DEFAULTS.unusedId, fullname: 'xyz'});
+    store.push('person', {id: PEOPLE_DEFAULTS.anotherId, fullname: 'mmm'});
+    let subject = PeopleRepository.create({store: store});
+    let people_array_proxy = subject.findTicketPeople('Abc');
+    assert.equal(people_array_proxy.get('length'), 1);
+});

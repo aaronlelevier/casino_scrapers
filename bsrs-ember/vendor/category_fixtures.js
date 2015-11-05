@@ -30,9 +30,12 @@ var BSRS_CATEGORY_FACTORY = (function() {
     factory.prototype.top_level = function() {
         var parent_one = this.get(this.category_defaults.idOne);
         parent_one.parent = null;
-        parent_one.children = [{id: this.category_defaults.idTwo, id: this.category_defaults.nameTwo}];
+        parent_one.has_children = true;
+        parent_one.children = [{id: this.category_defaults.idTwo, name: this.category_defaults.nameTwo}, 
+            {id: this.category_defaults.idPlumbing, name: this.category_defaults.nameRepairChild, has_children: true}];
         var parent_two = this.get(this.category_defaults.idThree, this.category_defaults.nameThree);
         parent_two.parent = null;
+        parent_two.has_children = false;
         parent_two.children = [];
         var response = [parent_one, parent_two];
         return {'count':2,'next':null,'previous':null,'results': response};

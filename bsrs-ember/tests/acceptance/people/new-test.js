@@ -13,6 +13,7 @@ import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
@@ -20,7 +21,7 @@ const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
 const PEOPLE_NEW_URL = BASE_PEOPLE_URL + '/new';
 
-var application, store, payload, detail_xhr, list_xhr;
+var application, store, payload, detail_xhr, list_xhr, original_uuid;
 
 module('Acceptance | people-new', {
     beforeEach() {
@@ -38,11 +39,14 @@ module('Acceptance | people-new', {
         var people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
             role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: [], locations: []};
         detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
+        original_uuid = random.uuid;
+        random.uuid = function() { return UUID.value; };
     },
     afterEach() {
         payload = null;
-        Ember.run(application, 'destroy');
         detail_xhr = null;
+        random.uuid = original_uuid;
+        Ember.run(application, 'destroy');
     }
 });
 
@@ -55,6 +59,8 @@ test('visiting /people/new and creating a new person', (assert) => {
         assert.equal(currentURL(), PEOPLE_NEW_URL);
         assert.equal(store.find('person').get('length'), 2);
         assert.equal(find('.t-person-role-select option:eq(0)').text(), 'Select One');
+        var person = store.find('person').objectAt(1);
+        assert.ok(person.get('new'));
     });
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
@@ -65,6 +71,7 @@ test('visiting /people/new and creating a new person', (assert) => {
         assert.equal(store.find('person').get('length'), 2);
         var person = store.find('person').objectAt(1);
         assert.equal(person.get('id'), UUID.value);
+        assert.equal(person.get('new'), undefined);
         assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
         assert.equal(person.get('password'), '');
         assert.equal(person.get('role').get('id'), PEOPLE_DEFAULTS.role);

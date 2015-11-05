@@ -5,13 +5,13 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import random from 'bsrs-ember/models/random';
 import config from 'bsrs-ember/config/environment';
 import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
 import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;
@@ -25,7 +25,7 @@ const INDEX_ROUTE = 'admin.roles.index';
 const DETAIL_ROUTE = 'admin.roles.role';
 const DOC_TYPE = 'role';
 
-let application, store, list_xhr, role_detail_data, endpoint, detail_xhr;
+let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, original_uuid;
 
 module('Acceptance | tab role test', {
     beforeEach() {
@@ -34,10 +34,10 @@ module('Acceptance | tab role test', {
         endpoint = PREFIX + BASE_ROLE_URL + '/';
         role_detail_data = ROLE_FIXTURES.detail(ROLE_DEFAULTS.idOne);
         detail_xhr = xhr(endpoint + ROLE_DEFAULTS.idOne + '/', 'GET', null, {}, 200, role_detail_data);
-        random.uuid = function() { return Ember.uuid(); };
+        original_uuid = random.uuid;
     },
     afterEach() {
-        random.uuid = function() { return 'abc123'; };
+        random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
 });
@@ -148,6 +148,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
 });
 
 test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+    random.uuid = function() { return UUID.value; };
     clearxhr(detail_xhr);
     visit(NEW_URL);
     andThen(() => {

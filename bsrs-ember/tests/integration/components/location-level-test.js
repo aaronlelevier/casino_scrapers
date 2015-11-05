@@ -33,29 +33,27 @@ moduleForComponent('location-level', 'integration: location-level test', {
     }
 });
 
-test('should render component and prevent duplicate name entries', function(assert) {
+test('should render component with child select that has correct options and selected option', function(assert) {
     this.set('model', location_level);
-    this.set('options', location_levels);
-    this.render(hbs`{{location-level model=model}}`);
-    var $component = this.$('.t-location-level-name');
-    assert.equal($component.val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+    this.set('location_level_options', location_levels);
+    this.render(hbs`{{location-level-general model=model location_level_options=location_level_options}}`);
     var $select = this.$('.t-location-level-location-level-select');
-    assert.equal($select.find('div.option').length, 0);
+    assert.equal($select.find('div.option').length, 1);
     assert.equal($select.find('div.item').length, 7);
 });
 
-test('validation should prevent duplicate location level names', function(assert) {
+test('validation should enforce basic location name property', function(assert) {
     this.set('model', location_level);
-    this.set('options', location_levels);
-    this.render(hbs`{{location-level model=model}}`);
+    this.set('location_level_options', location_levels);
+    this.render(hbs`{{location-level-general model=model location_level_options=location_level_options}}`);
     var $component = this.$('.t-location-level-name');
+    let $validation = this.$('.t-name-validation-error');
+    assert.ok($validation.is(':hidden'));
     assert.equal($component.val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
-    var $select = this.$('.t-location-level-location-level-select');
-    var $input = this.$('.t-location-level-name');
-    $input.val(LOCATION_LEVEL_DEFAULTS.nameRegion).trigger('change');  
-    $component = this.$('.t-name-validation-error');
-    assert.ok($component.is(':visible'));
-    $input.val('admin.locationlevel.regions').trigger('change');  
-    $component = this.$('.t-name-validation-error');
-    assert.ok($component.is(':hidden'));
+    $component.val('').trigger('input');
+    $validation = this.$('.t-name-validation-error');
+    assert.ok($validation.is(':visible'));
+    $component.val(LOCATION_LEVEL_DEFAULTS.nameRegion).trigger('input');
+    $validation = this.$('.t-name-validation-error');
+    assert.ok($validation.is(':hidden'));
 });

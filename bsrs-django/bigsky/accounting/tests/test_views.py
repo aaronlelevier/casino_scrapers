@@ -42,13 +42,3 @@ class CurrencyTests(APITestCase):
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['code'], code.upper())
-
-    def test_create_duplicate(self):
-        """
-        Trying to Post a duplicate returns a 400 and not a 500 Server Error
-        
-        ``util.views.BaseModelViewSet.create`` overriden for this behavior.
-        """
-        response = self.client.post('/api/admin/currencies/', self.data, format='json')
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 400)

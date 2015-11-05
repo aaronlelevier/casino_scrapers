@@ -8,7 +8,7 @@ from utils.models import BaseModel, BaseManager
 class CurrencyManager(BaseManager):
 
     def default(self):
-        obj, created = self.get_or_create(name="US Dollar", code="USD",
+        obj, _ = self.get_or_create(name="US Dollar", code="USD",
             symbol="$", decimal_digits=2, rounding=0)
         return obj
 
