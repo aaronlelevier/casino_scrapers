@@ -8,7 +8,7 @@ from ticket.models import Ticket, TicketActivity, TicketActivityType
 from utils.serializers import BaseCreateSerializer
 
 
-TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee', 'cc',
+TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
     'requester', 'categories', 'attachments', 'request',)
 
 
@@ -33,7 +33,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number',)
+        fields = TICKET_FIELDS + ('number', 'cc')
 
 
 class TicketCreateSerializer(BaseCreateSerializer):
