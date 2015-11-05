@@ -6,7 +6,6 @@ var TicketCategories = Ember.Component.extend({
         let ticket = this.get('ticket');
         let categories = ticket.get('sorted_categories');
         let top_level_category = ticket.get('top_level_category');
-        index++;
         if (!index) {
             return top_level_category;
         } else {

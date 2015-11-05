@@ -2,7 +2,7 @@
 
 {{#each ticket.sorted_categories as |category index|}}
   {{#if category.children}}
-  {{ticket-category-power-select ticket=ticket index=index category=category ticket_category_options=category.children selected_category="selected_category"}}
+  {{ticket-category-power-select ticket=ticket index=(plus-one index) category=category ticket_category_options=category.children selected_category="selected_category"}}
   {{/if}}
 {{/each}}
 
