@@ -45,13 +45,13 @@ TICKET_PRIORITIES = [
     'ticket.priority.emergency'
 ]
 
-        
+
 class TicketPriorityManager(BaseManager):
 
     def default(self):
         obj, _ = self.get_or_create(name=TICKET_PRIORITIES[0])
         return obj
-    
+
 
 class TicketPriority(BaseNameModel):
 
@@ -68,7 +68,7 @@ class Ticket(BaseModel):
         count = Ticket.objects_all.count()
         if not count:
             return 1
-        else: 
+        else:
             return count + 1
 
     # Keys

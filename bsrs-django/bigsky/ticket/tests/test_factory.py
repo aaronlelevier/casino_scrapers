@@ -1,10 +1,8 @@
 from django.test import TestCase
 
 from category.models import Category
-from generic.models import Attachment
 from location.models import Location
 from person.models import Person
-from person.tests.factory import create_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from ticket.tests import factory

@@ -6,8 +6,7 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
 
-from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
-    TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
+from ticket.models import TicketActivityType, TicketActivity
 
 
 class CreateTicketModelMixin(object):
@@ -35,7 +34,8 @@ class CreateTicketModelMixin(object):
 
     # custom methods not in DRF
 
-    def _create_activity_type(self, ticket, person):
+    @staticmethod
+    def _create_activity_type(ticket, person):
         type, _ = TicketActivityType.objects.get_or_create(name='create')
         TicketActivity.objects.create(type=type, ticket=ticket, person=person)
 

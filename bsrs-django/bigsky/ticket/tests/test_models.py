@@ -5,7 +5,7 @@ from model_mommy import mommy
 
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
-    TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
+    TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES)
 from ticket.tests.factory import create_ticket, create_tickets
 
 

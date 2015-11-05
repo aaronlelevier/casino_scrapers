@@ -1,6 +1,5 @@
 import json
 import uuid
-import random
 
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
