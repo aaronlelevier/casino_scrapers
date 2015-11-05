@@ -30,7 +30,8 @@ input[type="text"]:disabled {
 	}
 }//input
 
-.form-control{
+.form-control,
+.ember-power-select .ember-power-select-trigger{
 	border-radius: $borderRadius;
 	border-color: $gray;
 	color: $dark;
@@ -38,10 +39,73 @@ input[type="text"]:disabled {
 		// border-color: $hoverColor;
 	}
 	&:focus{
+		outline: none !important;
 		border-color: $activeColor;
 		z-index: 3;
 	}
 }
+.ember-power-select{
+	.ember-power-select-trigger{
+		min-height: 34px;
+		background-image: none;
+		&:after{
+			content: ' ';
+		    display: block;
+		    position: absolute;
+		    top: 50%;
+		    right: 15px;
+		    margin-top: -3px;
+		    width: 0;
+		    height: 0;
+		    border-style: solid;
+		    border-width: 5px 5px 0 5px;
+		    border-color: $darkGray transparent transparent transparent;
+		}
+	}
+	&.opened{
+		.ember-power-select-trigger {
+		    border-color: $activeColor;
+		    outline: 0;
+		    -webkit-box-shadow: none;
+		    box-shadow: none;
+			border-radius: $borderRadiusTop;
+			background-image: none !important;
+			&:after{
+				content: ' ';
+			    display: block;
+			    position: absolute;
+			    top: 50%;
+			    right: 15px;
+			    margin-top: -3px;
+			    width: 0;
+			    height: 0;
+			    border-style: solid;
+			    border-width: 0 5px 5px 5px;
+			    border-color: transparent transparent $darkGray transparent;
+			}
+		}
+	}
+}
+#ember-basic-dropdown-wormhole{
+	.ember-power-select-dropdown{
+		border-color: $activeColor;
+	    border-radius: $borderRadius;
+		&.below{
+			border-radius: $borderRadiusBottom;
+		}
+		&.above{
+			border-radius: $borderRadiusBottom;
+		}
+	}
+	.ember-power-select-search input{
+		border: $borderStyle;
+	}
+	.ember-power-select-option.highlighted{
+		background-color: $hoverColor;
+	}
+}
+
+
 .input-group-addon:first-child{
 	border-radius: $borderRadiusLeft;
 }

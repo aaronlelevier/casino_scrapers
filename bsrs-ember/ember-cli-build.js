@@ -11,9 +11,7 @@ var es5Shim = funnel('node_modules/es5-shim', {
 
 module.exports = function(environment) {
   var app = new EmberApp({
-    'ember-cli-selectize': {
-      theme: 'bootstrap3'
-    },
+    
     'markers': {
       enabled: true,
       kinds: ['TODO']
