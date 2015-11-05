@@ -7,4 +7,4 @@ class Command(BaseCommand):
     help = 'create all People objects in database for testing'
 
     def handle(self, *args, **options):
-        create_single_person()
+        create_single_person(name='aaron')

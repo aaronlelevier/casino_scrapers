@@ -85,3 +85,11 @@ Node
     sudo yum install python-{requests,urllib3,six}
     sudo yum in stall openssl-devel
 
+
+Logs
+----
+
+.. code-block::
+
+    sudo vi /var/log/nginx/error.log
+
