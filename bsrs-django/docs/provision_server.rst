@@ -32,11 +32,6 @@ How to provision?
     /www/django/releases
     # permissions for this dir = drwxr-xr-x
 
-    # Postgres 
-    # (b/c pip install will fail w/o it b/c psycogp2)
-    postgresql-9.1
-    postgresql-server-dev-9.1
-
 
 Build Node
 ----------

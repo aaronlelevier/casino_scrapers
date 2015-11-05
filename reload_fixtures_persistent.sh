@@ -10,6 +10,8 @@ createdb persistent
 wait
 ./manage.py migrate
 wait
-./manage.py loaddata fixtures/persistent.json
+./manage.py create_single_person
+wait
+./manage.py dumpdata --indent=2 > fixtures/persistent.json
 wait
 ./manage.py loaddata fixtures/persistent_custom.json
