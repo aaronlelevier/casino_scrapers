@@ -144,290 +144,303 @@ class TicketCreateTests(APITestCase):
         })
 
         response = self.client.post('/api/tickets/', self.data, format='json')
-        data = json.loads(response.content.decode('utf8'))
 
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(self.data['id'], data['id'])
+        self.assertEqual(self.data['request'], data['request'])
+
+    def test_ticket_no_cc(self):
+        self.data.pop('cc', None)
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'request': 'plumbing',
+        })
+
+        response = self.client.post('/api/tickets/', self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 201)
         self.assertEqual(self.data['id'], data['id'])
         self.assertEqual(self.data['request'], data['request'])
 
 
-# class TicketActivityViewSetTests(APITestCase):
+class TicketActivityViewSetTests(APITestCase):
 
-#     def setUp(self):
-#         self.password = PASSWORD
-#         self.person = create_single_person()
-#         # Ticket
-#         self.ticket = create_ticket()
-#         self.ticket_two = create_ticket()
-#         # TicketActivity (Both for the 1st Ticket, Ticket-Two has no Activities !!)
-#         self.ticket_activity = create_ticket_activity(ticket=self.ticket)
-#         self.ticket_activity_two = create_ticket_activity(ticket=self.ticket)
-#         # Login
-#         self.client.login(username=self.person.username, password=PASSWORD)
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_single_person()
+        # Ticket
+        self.ticket = create_ticket()
+        self.ticket_two = create_ticket()
+        # TicketActivity (Both for the 1st Ticket, Ticket-Two has no Activities !!)
+        self.ticket_activity = create_ticket_activity(ticket=self.ticket)
+        self.ticket_activity_two = create_ticket_activity(ticket=self.ticket)
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
 
-#     def tearDown(self):
-#         self.client.logout()
+    def tearDown(self):
+        self.client.logout()
 
-#     def test_get(self):
-#         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-#         self.assertEqual(response.status_code, 200)
+    def test_get(self):
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+        self.assertEqual(response.status_code, 200)
 
-#     def test_ticket_count(self):
-#         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], 2)
+    def test_ticket_count(self):
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 2)
 
-#     def test_ticket_details(self):
-#         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-#         data = json.loads(response.content.decode('utf8'))
+    def test_ticket_details(self):
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+        data = json.loads(response.content.decode('utf8'))
 
-#         activity = TicketActivity.objects.get(id=data['results'][0]['id'])
-#         self.assertIsInstance(activity, TicketActivity)
-#         self.assertIsInstance(TicketActivityType.objects.get(id=data['results'][0]['type']), TicketActivityType)
-#         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
-#         self.assertEqual(data['results'][0]['person']['id'], str(activity.person.id))
-#         self.assertEqual(data['results'][0]['content'], activity.content)
+        activity = TicketActivity.objects.get(id=data['results'][0]['id'])
+        self.assertIsInstance(activity, TicketActivity)
+        self.assertIsInstance(TicketActivityType.objects.get(id=data['results'][0]['type']), TicketActivityType)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['person']['id'], str(activity.person.id))
+        self.assertEqual(data['results'][0]['content'], activity.content)
 
-#     def test_ticket_two(self):
-#         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket_two.id))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], 0)
+    def test_ticket_two(self):
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket_two.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 0)
 
-#     def test_post(self):
-#         response = self.client.post('/api/tickets/{}/activity/'.format(self.ticket.id), {}, format='json')
-#         self.assertEqual(response.status_code, 405)
+    def test_post(self):
+        response = self.client.post('/api/tickets/{}/activity/'.format(self.ticket.id), {}, format='json')
+        self.assertEqual(response.status_code, 405)
 
-#     def test_paginate(self):
-#         # page 1
-#         response = self.client.get('/api/tickets/{}/activity/?page=1'.format(self.ticket.id))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], 2)
-#         # page 2
-#         response = self.client.get('/api/tickets/{}/activity/?page=2'.format(self.ticket.id))
-#         self.assertEqual(response.status_code, 404)
+    def test_paginate(self):
+        # page 1
+        response = self.client.get('/api/tickets/{}/activity/?page=1'.format(self.ticket.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 2)
+        # page 2
+        response = self.client.get('/api/tickets/{}/activity/?page=2'.format(self.ticket.id))
+        self.assertEqual(response.status_code, 404)
 
-#     def test_filter_field(self):
-#         person = self.ticket_activity.person
-#         response = self.client.get('/api/tickets/{}/activity/?person={}'
-#             .format(self.ticket.id, person.id))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], TicketActivity.objects.filter(person=person).count())
+    def test_filter_field(self):
+        person = self.ticket_activity.person
+        response = self.client.get('/api/tickets/{}/activity/?person={}'
+            .format(self.ticket.id, person.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], TicketActivity.objects.filter(person=person).count())
 
-#     def test_filter_field_none(self):
-#         person = create_single_person()
-#         response = self.client.get('/api/tickets/{}/activity/?person={}'
-#             .format(self.ticket.id, person.id))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], TicketActivity.objects.filter(person=person).count())
+    def test_filter_field_none(self):
+        person = create_single_person()
+        response = self.client.get('/api/tickets/{}/activity/?person={}'
+            .format(self.ticket.id, person.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], TicketActivity.objects.filter(person=person).count())
 
-#     def test_filter_related(self):
-#         person = self.ticket_activity.person
+    def test_filter_related(self):
+        person = self.ticket_activity.person
 
-#         response = self.client.get('/api/tickets/{}/activity/?person__username={}'
-#             .format(self.ticket.id, person.username))
+        response = self.client.get('/api/tickets/{}/activity/?person__username={}'
+            .format(self.ticket.id, person.username))
         
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(
-#             data['count'],
-#             TicketActivity.objects.filter(person__username=person.username).count()
-#         )
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['count'],
+            TicketActivity.objects.filter(person__username=person.username).count()
+        )
 
-#     def test_filter_related_with_arg(self):
-#         letter = "a"
+    def test_filter_related_with_arg(self):
+        letter = "a"
 
-#         response = self.client.get('/api/tickets/{}/activity/?person__username__icontains={}'
-#             .format(self.ticket.id, letter))
+        response = self.client.get('/api/tickets/{}/activity/?person__username__icontains={}'
+            .format(self.ticket.id, letter))
 
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(
-#             data['count'],
-#             TicketActivity.objects.filter(person__username__icontains=letter).count()
-#         )
-
-
-# class TicketActivityViewSetReponseTests(APITestCase):
-
-#     def setUp(self):
-#         self.password = PASSWORD
-#         self.person = create_single_person()
-#         # Ticket
-#         self.ticket = create_ticket()
-#         # TicketActivityTypes
-#         [create_ticket_activity_type(name=name) for name in TICKET_ACTIVITY_TYPES]
-#         # Login
-#         self.client.login(username=self.person.username, password=PASSWORD)
-
-#     def tearDown(self):
-#         self.client.logout()
-
-#     def test_create(self):
-#         ticket_activity = create_ticket_activity(ticket=self.ticket, type='create')
-
-#         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], 1)
-#         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
-#         self.assertFalse(data['results'][0]['content'])
-
-#     def test_assignee(self):
-#         from_assignee = self.ticket.assignee
-#         to_assignee = create_single_person()
-#         ticket_activity = create_ticket_activity(ticket=self.ticket, type='assignee',
-#             content={'from': str(from_assignee.id), 'to': str(to_assignee.id)})
-
-#         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], 1)
-#         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
-#         self.assertEqual(data['results'][0]['content']['to']['id'], str(to_assignee.id))
-#         self.assertEqual(data['results'][0]['content']['from']['id'], str(from_assignee.id))
-
-#     def test_cc_add(self):
-#         cc = create_single_person()
-#         ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_add',
-#             content={'0': str(cc.id)})
-
-#         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], 1)
-#         self.assertEqual(len(data['results'][0]['content']), 1)
-#         self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(cc.id))
-
-#     def test_cc_remove(self):
-#         cc = create_single_person()
-#         ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_remove',
-#             content={'0': str(cc.id)})
-
-#         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], 1)
-#         self.assertEqual(len(data['results'][0]['content']), 1)
-#         self.assertEqual(data['results'][0]['content']['removed'][0]['id'], str(cc.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['count'],
+            TicketActivity.objects.filter(person__username__icontains=letter).count()
+        )
 
 
-# class TicketAndTicketActivityTests(APITransactionTestCase):
+class TicketActivityViewSetReponseTests(APITestCase):
 
-#     def setUp(self):
-#         self.password = PASSWORD
-#         self.person = create_single_person()
-#         # Ticket
-#         self.ticket = create_ticket()
-#         # Data
-#         serializer = TicketCreateSerializer(self.ticket)
-#         self.data = serializer.data
-#         self.categories = Category.objects.all()
-#         # Login
-#         self.client.login(username=self.person.username, password=PASSWORD)
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_single_person()
+        # Ticket
+        self.ticket = create_ticket()
+        # TicketActivityTypes
+        [create_ticket_activity_type(name=name) for name in TICKET_ACTIVITY_TYPES]
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
 
-#     def tearDown(self):
-#         self.client.logout()
+    def tearDown(self):
+        self.client.logout()
 
-#     def test_log_create(self):
-#         self.assertEqual(TicketActivity.objects.count(), 0)
-#         name = 'create'
-#         self.data.update({
-#             'id': str(uuid.uuid4()),
-#             'request': 'plumbing',
-#         })
+    def test_create(self):
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='create')
 
-#         response = self.client.post('/api/tickets/', self.data, format='json')
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
 
-#         self.assertEqual(TicketActivity.objects.count(), 1)
-#         activity = TicketActivity.objects.first()
-#         self.assertEqual(activity.type.name, name)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertFalse(data['results'][0]['content'])
 
-#     def test_log_assignee(self):
-#         self.assertEqual(TicketActivityType.objects.count(), 0)
-#         name = 'assignee'
-#         new_assingee = create_single_person()
-#         self.assertNotEqual(self.data['assignee'], str(new_assingee.id))
-#         self.data['assignee'] = str(new_assingee.id)
+    def test_assignee(self):
+        from_assignee = self.ticket.assignee
+        to_assignee = create_single_person()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='assignee',
+            content={'from': str(from_assignee.id), 'to': str(to_assignee.id)})
 
-#         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
-        
-#         self.assertEqual(response.status_code, 200)
-#         self.assertEqual(TicketActivity.objects.count(), 1)
-#         activity = TicketActivity.objects.first()
-#         self.assertEqual(activity.type.name, name)
-#         self.assertTrue(TicketActivity.objects.filter(content__from=str(self.ticket.assignee.id)).exists())
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
 
-#     def test_cc_add(self):
-#         self.assertEqual(TicketActivity.objects.count(), 0)
-#         name = 'cc_add'
-#         new_cc = create_single_person()
-#         self.data['cc'].append(str(new_cc.id))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['content']['to']['id'], str(to_assignee.id))
+        self.assertEqual(data['results'][0]['content']['from']['id'], str(from_assignee.id))
 
-#         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+    def test_cc_add(self):
+        cc = create_single_person()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_add',
+            content={'0': str(cc.id)})
 
-#         self.assertEqual(TicketActivity.objects.count(), 1)
-#         activity = TicketActivity.objects.first()
-#         self.assertEqual(activity.type.name, name)
-#         self.assertEqual(activity.content['0'], str(new_cc.id))
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
 
-#     def test_cc_remove(self):
-#         # ticket
-#         init_cc = self.ticket.cc.first()
-#         self.assertEqual(self.ticket.cc.count(), 1)
-#         # ticket activity
-#         self.assertEqual(TicketActivity.objects.count(), 0)
-#         name = 'cc_remove'
-#         self.data['cc'] = []
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(len(data['results'][0]['content']), 1)
+        self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(cc.id))
 
-#         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+    def test_cc_remove(self):
+        cc = create_single_person()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_remove',
+            content={'0': str(cc.id)})
 
-#         self.assertEqual(TicketActivity.objects.count(), 1)
-#         activity = TicketActivity.objects.first()
-#         self.assertEqual(activity.type.name, name)
-#         self.assertEqual(activity.content['0'], str(init_cc.id))
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
 
-#     def test_cc_add_and_remove(self):
-#         self.assertEqual(TicketActivity.objects.count(), 0)
-#         init_cc = self.ticket.cc.first()
-#         new_cc = create_single_person()
-#         self.data['cc'] = [str(new_cc.id)]
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(len(data['results'][0]['content']), 1)
+        self.assertEqual(data['results'][0]['content']['removed'][0]['id'], str(cc.id))
 
-#         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
 
-#         self.assertEqual(TicketActivity.objects.count(), 2)
-#         # cc_add record
-#         name = 'cc_add'
-#         activity = TicketActivity.objects.get(type__name=name)
-#         self.assertEqual(activity.content['0'], str(new_cc.id))
-#         # cc_remove record
-#         name = 'cc_remove'
-#         activity = TicketActivity.objects.get(type__name=name)
-#         self.assertEqual(activity.content['0'], str(init_cc.id))
+class TicketAndTicketActivityTests(APITransactionTestCase):
 
-#     def test_cc_add_multiple(self):
-#         self.assertEqual(TicketActivity.objects.count(), 0)
-#         name = 'cc_add'
-#         new_cc = create_single_person()
-#         new_cc_two = create_single_person()
-#         self.data['cc'].append(str(new_cc.id))
-#         self.data['cc'].append(str(new_cc_two.id))
+    def setUp(self):
+        self.password = PASSWORD
+        self.person = create_single_person()
+        # Ticket
+        self.ticket = create_ticket()
+        # Data
+        serializer = TicketCreateSerializer(self.ticket)
+        self.data = serializer.data
+        self.categories = Category.objects.all()
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
 
-#         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+    def tearDown(self):
+        self.client.logout()
 
-#         self.assertEqual(TicketActivity.objects.count(), 1)
-#         activity = TicketActivity.objects.first()
-#         self.assertEqual(activity.type.name, name)
-#         self.assertEqual(len(activity.content), 2)
-#         self.assertIn(
-#             str(new_cc.id),
-#             [str(activity.content[k]) for k,v in activity.content.items()]
-#         )
-#         self.assertIn(
-#             str(new_cc_two.id),
-#             [str(activity.content[k]) for k,v in activity.content.items()]
-#         )
+    def test_log_create(self):
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        name = 'create'
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'request': 'plumbing',
+        })
 
+        response = self.client.post('/api/tickets/', self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+
+    def test_log_assignee(self):
+        self.assertEqual(TicketActivityType.objects.count(), 0)
+        name = 'assignee'
+        new_assingee = create_single_person()
+        self.assertNotEqual(self.data['assignee'], str(new_assingee.id))
+        self.data['assignee'] = str(new_assingee.id)
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertTrue(TicketActivity.objects.filter(content__from=str(self.ticket.assignee.id)).exists())
+
+    def test_cc_add(self):
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        name = 'cc_add'
+        new_cc = create_single_person()
+        self.data['cc'].append(str(new_cc.id))
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertEqual(activity.content['0'], str(new_cc.id))
+
+    def test_cc_remove(self):
+        # ticket
+        init_cc = self.ticket.cc.first()
+        self.assertEqual(self.ticket.cc.count(), 1)
+        # ticket activity
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        name = 'cc_remove'
+        self.data['cc'] = []
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertEqual(activity.content['0'], str(init_cc.id))
+
+    def test_cc_add_and_remove(self):
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        init_cc = self.ticket.cc.first()
+        new_cc = create_single_person()
+        self.data['cc'] = [str(new_cc.id)]
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 2)
+        # cc_add record
+        name = 'cc_add'
+        activity = TicketActivity.objects.get(type__name=name)
+        self.assertEqual(activity.content['0'], str(new_cc.id))
+        # cc_remove record
+        name = 'cc_remove'
+        activity = TicketActivity.objects.get(type__name=name)
+        self.assertEqual(activity.content['0'], str(init_cc.id))
+
+    def test_cc_add_multiple(self):
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        name = 'cc_add'
+        new_cc = create_single_person()
+        new_cc_two = create_single_person()
+        self.data['cc'].append(str(new_cc.id))
+        self.data['cc'].append(str(new_cc_two.id))
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertEqual(len(activity.content), 2)
+        self.assertIn(
+            str(new_cc.id),
+            [str(activity.content[k]) for k,v in activity.content.items()]
+        )
+        self.assertIn(
+            str(new_cc_two.id),
+            [str(activity.content[k]) for k,v in activity.content.items()]
+        )
