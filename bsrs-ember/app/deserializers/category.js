@@ -14,7 +14,7 @@ var extract_tree = function(model, store) {
     let parent_id;
     let parent = model.parent;
     if (parent) {
-        parent_id = parent.id;
+        parent_id = parent.id ? parent.id : parent;
     }
     delete model.parent;
     delete model.children;

@@ -30,7 +30,7 @@ var CategoryModel = Model.extend(NewMixin, {
             children: this.get('children_fks')
         };
     },
-    children: Ember.computed('children_fks.[]', function() { //TODO: is this needed to break?
+    children: Ember.computed('children_fks.[]', function() {
         let store = this.get('store');
         let filter = (category) => {
             let children_fks = this.get('children_fks') || [];

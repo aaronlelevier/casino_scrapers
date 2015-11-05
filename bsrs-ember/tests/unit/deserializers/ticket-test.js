@@ -400,6 +400,23 @@ test('ticket-person m2m is removed when server payload no longer reflects what s
     assert.equal(store.find('ticket-person').get('length'), 3);
 });
 
+test('ticket-category m2m added including parent id for categories without a fat parent model', (assert) => {
+    store.clear('ticket');
+    let response = TICKET_FIXTURES.generate_correct(TICKET_DEFAULTS.idOne);
+    response.cc = [PEOPLE_FIXTURES.get()];
+    subject.deserialize(response, TICKET_DEFAULTS.idOne);
+    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('ticket-person').get('length'), 1);
+    assert.equal(store.find('ticket-category').get('length'), 3);
+    let categories = ticket.get('categories');
+    assert.equal(categories.get('length'), 3);
+    assert.equal(categories.objectAt(0).get('parent_id'), null);
+    assert.equal(categories.objectAt(1).get('parent_id'), CATEGORY_DEFAULTS.idOne);
+    assert.equal(categories.objectAt(2).get('parent_id'), CATEGORY_DEFAULTS.idPlumbing);
+});
+
 test('ticket-person m2m added even when ticket did not exist before the deserializer executes', (assert) => {
     store.clear('ticket');
     let response = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
