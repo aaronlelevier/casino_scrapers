@@ -414,51 +414,6 @@ test('shows assignee for ticket and will fire off xhr to fetch assignee(persons)
     });
 });
 
-test('clicking and typing into selectize for assignee will not filter if spacebar pressed', (assert) => {
-    clearxhr(list_xhr);
-    clearxhr(location_xhr);
-    clearxhr(category_one_xhr);
-    clearxhr(category_two_xhr);
-    clearxhr(category_three_xhr);
-    page.visitNew();
-    fillIn(`${ASSIGNEE} > .selectize-input input`, ' ');
-    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', SPACEBAR);
-    andThen(() => {
-        assert.equal(page.ticketPeopleOptions(), 0);
-    });
-    andThen(() => {
-        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-        assert.equal(page.ticketPeopleSelected(), 0);
-        assert.equal(page.ticketPeopleOptions(), 0);
-    });
-});
-
-test('when hit backspace should remove assignee from ticket', (assert) => {
-    clearxhr(list_xhr);
-    clearxhr(location_xhr);
-    clearxhr(category_one_xhr);
-    clearxhr(category_two_xhr);
-    clearxhr(category_three_xhr);
-    page.visitNew();
-    people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-    page.assigneeFillIn('b');
-    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_B);
-    page.assigneeClickOptionTwo();
-    andThen(() => {
-        assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
-        let ticket = store.findOne('ticket');
-        assert.ok(ticket.get('assignee'));
-        assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keydown', BACKSPACE);
-    andThen(() => {
-        let ticket = store.findOne('ticket');
-        assert.ok(!ticket.get('assignee'));
-        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    });
-});
-
 /*TICKET TO LOCATION 1 to Many*/
 test('selecting new location will not affect other selectize components and will only render one tab', (assert) => {
     clearxhr(list_xhr);
@@ -520,32 +475,6 @@ test('removes location dropdown on search to change location', (assert) => {
     triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', NUMBER_6);
     andThen(() => {
         assert.equal(page.locationOptionLength(), 2);
-    });
-});
-
-test('when hit backspace should remove location from ticket', (assert) => {
-    clearxhr(list_xhr);
-    clearxhr(location_xhr);
-    clearxhr(category_one_xhr);
-    clearxhr(category_two_xhr);
-    clearxhr(category_three_xhr);
-    page.visitNew();
-    location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
-    page.locationFillIn('6');
-    triggerEvent(`${LOCATION} > .selectize-input input`, 'keyup', NUMBER_6);
-    page.locationClickOptionTwo();
-    andThen(() => {
-        assert.equal(find('.t-ticket-location-select').val(), LOCATION_DEFAULTS.idTwo);
-        let ticket = store.findOne('ticket');
-        assert.ok(ticket.get('location'));
-        assert.equal(ticket.get('location').get('id'), LOCATION_DEFAULTS.idTwo);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    });
-    triggerEvent(`${LOCATION} > .selectize-input input`, 'keydown', BACKSPACE);
-    andThen(() => {
-        let ticket = store.findOne('ticket');
-        assert.ok(!ticket.get('location'));
-        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 

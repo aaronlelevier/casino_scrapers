@@ -15,7 +15,7 @@ module('unit: ticket-category-power-select component test', {
     }
 });
 
-test('sco categories_selected will always return the correct category object based on index', function(assert) {
+test('categories_selected will always return the correct category object based on index', function(assert) {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
     let category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo, children_fks: [], has_children: false});
     let category_huh = store.push('category', {id: CATEGORY_DEFAULTS.idLossPreventionChild, name: CATEGORY_DEFAULTS.nameLossPreventionChild, parent_id: CATEGORY_DEFAULTS.idWatChild, children_fks: [], has_children: false});

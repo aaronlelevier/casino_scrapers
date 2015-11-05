@@ -1,0 +1,15 @@
+{{#power-select
+  multiple=true
+  options=ticket_cc_options
+  selected=ticket.cc
+  add-item="add"
+  remove-item="remove"
+  class="t-ticket-cc-select"
+  search="update_filter"
+  filter=search_criteria
+  onchange=(action "add")
+  as |person|
+}}
+  {{person.fullname}}
+{{/power-select}}
+
