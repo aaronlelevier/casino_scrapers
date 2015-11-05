@@ -23,9 +23,9 @@ var TicketPeopleMulti = Ember.Component.extend({
             let ticket = this.get('ticket');
             ticket.remove_person(person.get('id'));
         },
-        update_filter() {
+        update_filter(search) {
             // Ember.run.debounce(this, this.get('find_all_people'), 300);
-            this.set('search', search_criteria);
+            this.set('search', search);
         }
     }
 });

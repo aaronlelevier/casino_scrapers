@@ -6,6 +6,9 @@ import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 
 let store, ticket, location_one, location_two, location_three, run = Ember.run;
+const PowerSelect = '.ember-power-select-trigger';
+const DROPDOWN = '.ember-power-select-dropdown';
+const COMPONENT = '.t-ticket-location-select';
 
 moduleForComponent('ticket-location-select', 'integration: ticket-location-select test', {
     integration: true,
@@ -23,9 +26,14 @@ test('should render a selectbox when location options are empty (initial state o
     this.set('ticket', ticket);
     this.set('ticket_location_options', ticket_location_options);
     this.render(hbs`{{ticket-location-select ticket=ticket ticket_location_options=ticket_location_options}}`);
-    let $component = this.$('.t-ticket-location-select');
-    assert.equal($component.find('div.item').length, 0);
-    assert.equal($component.find('div.option').length, 0);
+    let $component = this.$(`${COMPONENT}`);
+    run(() => { 
+        this.$(`${PowerSelect}`).click(); 
+    });
+    assert.equal($(`${DROPDOWN}`).length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 1);
+    assert.equal($('li.ember-power-select-option').text(), 'Type to search');
+    assert.ok(!ticket.get('location'));
 });
 
 test('should render a selectbox with bound options after type ahead for search_location', function(assert) {
@@ -35,9 +43,16 @@ test('should render a selectbox with bound options after type ahead for search_l
     this.set('ticket_location_options', ticket_location_options);
     this.set('search_location', 'x');
     this.render(hbs`{{ticket-location-select ticket=ticket search_location=search_location ticket_location_options=ticket_location_options}}`);
-    let $component = this.$('.t-ticket-location-select');
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 3);
+    let $component = this.$(`${COMPONENT}`);
+    run(() => { 
+        this.$(`${PowerSelect}`).click(); 
+    });
+    assert.equal($(`${DROPDOWN}`).length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 3);
+    assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), LOCATION_DEFAULTS.storeName);
+    assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), LOCATION_DEFAULTS.storeNameTwo);
+    assert.equal($('li.ember-power-select-option:eq(2)').text().trim(), LOCATION_DEFAULTS.storeNameThree);
+    assert.equal($(`${PowerSelect}`).text().trim(), LOCATION_DEFAULTS.storeName);
 });
 
 test('should be able to select new location when one doesnt exist', function(assert) {
@@ -46,16 +61,17 @@ test('should be able to select new location when one doesnt exist', function(ass
     this.set('ticket_location_options', ticket_location_options);
     this.set('search_location', 'x');
     this.render(hbs`{{ticket-location-select ticket=ticket search_location=search_location ticket_location_options=ticket_location_options}}`);
-    let $component = this.$('.t-ticket-location-select');
-    assert.equal($component.find('div.item').length, 0);
-    assert.equal($component.find('div.option').length, 3);
-    this.$('.selectize-input input').trigger('click');
-    this.$('.selectize-input input').val('a').trigger('change');
+    let $component = this.$(`${COMPONENT}`);
     run(() => { 
-        $component.find('div.option:eq(0)').trigger('click').trigger('change'); 
+        this.$(`${PowerSelect}`).click(); 
     });
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 3);
+    assert.equal($(`${DROPDOWN}`).length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 3);
+    run(() => { 
+        $(`.ember-power-select-option:contains(${LOCATION_DEFAULTS.storeName})`).click(); 
+    });
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), LOCATION_DEFAULTS.storeName);
+    assert.equal(ticket.get('location').get('id'), LOCATION_DEFAULTS.idOne);
 });
 
 test('should be able to select new location when ticket already has a location', function(assert) {
@@ -65,16 +81,23 @@ test('should be able to select new location when ticket already has a location',
     this.set('ticket_location_options', ticket_location_options);
     this.set('search_location', 'x');
     this.render(hbs`{{ticket-location-select ticket=ticket search_location=search_location ticket_location_options=ticket_location_options}}`);
-    let $component = this.$('.t-ticket-location-select');
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 3);
-    this.$('.selectize-input input').trigger('click');
-    this.$('.selectize-input input').val('a').trigger('change');
+    let $component = this.$(`${COMPONENT}`);
     run(() => { 
-        $component.find('div.option:eq(1)').trigger('click').trigger('change'); 
+        this.$(`${PowerSelect}`).click(); 
     });
-    assert.equal($component.find('div.item').length, 1);
-    assert.equal($component.find('div.option').length, 3);
+    assert.equal($(`${DROPDOWN}`).length, 1);
+    assert.equal($('.ember-basic-dropdown-content').length, 1);
+    assert.equal($('.ember-power-select-options > li').length, 3);
+    run(() => { 
+        $(`.ember-power-select-option:contains(${LOCATION_DEFAULTS.storeNameTwo})`).click(); 
+    });
+    assert.equal($(`${DROPDOWN}`).length, 0);
+    assert.equal($('.ember-basic-dropdown-content').length, 0);
+    assert.equal($('.ember-power-select-options > li').length, 0);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), LOCATION_DEFAULTS.storeNameTwo);
+    assert.equal(ticket.get('location').get('id'), LOCATION_DEFAULTS.idTwo);
+    assert.deepEqual(location_one.get('tickets'), []);
+    assert.deepEqual(location_two.get('tickets'), [TICKET_DEFAULTS.idOne]);
 });
 
 // test('input has a debouce that prevents each keystroke from publishing a message', function(assert) {

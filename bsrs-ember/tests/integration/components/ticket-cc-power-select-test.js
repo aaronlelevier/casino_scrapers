@@ -7,6 +7,9 @@ import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
 
 let store, m2m, m2m_two, ticket, person_one, person_two, person_three, run = Ember.run;
+const PowerSelect = '.ember-power-select-trigger';
+const DROPDOWN = '.ember-power-select-dropdown';
+const COMPONENT = '.t-ticket-cc-select';
 
 moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-select test', {
     integration: true,
@@ -27,11 +30,11 @@ test('should render a selectbox when with options selected (initial state of sel
     this.set('ticket_cc_options', ticket_cc_options);
     this.set('search', '');
     this.render(hbs`{{ticket-cc-power-select ticket=ticket search=search ticket_cc_options=ticket_cc_options}}`);
-    let $component = this.$('.t-ticket-cc-select');
+    let $component = this.$(`${COMPONENT}`);
     run(() => { 
-        this.$('.ember-power-select-trigger').click(); 
+        this.$(`${PowerSelect}`).click(); 
     });
-    assert.equal($('.ember-power-select-dropdown').length, 1);
+    assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
 });
 
@@ -41,18 +44,18 @@ test('should render a selectbox with bound options after type ahead for search',
     this.set('ticket_cc_options', ticket_cc_options);
     this.set('search', 'x');
     this.render(hbs`{{ticket-cc-power-select ticket=ticket search=search ticket_cc_options=ticket_cc_options}}`);
-    let $component = this.$('.t-ticket-cc-select');
+    let $component = this.$(`${COMPONENT}`);
     run(() => { 
-        this.$('.ember-power-select-trigger').click(); 
+        this.$(`${PowerSelect}`).click(); 
     });
-    assert.equal($('.ember-power-select-dropdown').length, 1);
+    assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     assert.equal($('li.ember-power-select-option:eq(0)').text().trim(), PEOPLE_DEFAULTS.fullname);
     assert.equal($('li.ember-power-select-option:eq(1)').text().trim(), 'Scooter McGavin');
     assert.equal($('li.ember-power-select-option:eq(2)').text().trim(), 'Aaron Wat');
-    assert.equal($('.ember-power-select-trigger > span').length, 2);
-    assert.ok($(`.ember-power-select-trigger > span.ember-power-select-multiple-option:contains(${PEOPLE_DEFAULTS.fullname})`));
-    assert.ok($(`.ember-power-select-trigger > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
+    assert.equal($(`${PowerSelect} > span`).length, 2);
+    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${PEOPLE_DEFAULTS.fullname})`));
+    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
 });
 
 // test('should render a selectbox with bound options after type ahead for search with search params for people', function(assert) {
@@ -70,7 +73,7 @@ test('should render a selectbox with bound options after type ahead for search',
 //     this.set('ticket_cc_options', ticket_cc_options);
 //     this.set('search', 'abcde');
 //     this.render(hbs`{{ticket-cc-power-select ticket=ticket search=search ticket_cc_options=ticket_cc_options}}`);
-//     let $component = this.$('.t-ticket-cc-select');
+//     let $component = this.$(`${COMPONENT}`);
 //     assert.equal($component.find('div.item').length, 2);
 //     assert.equal($component.find('div.option').length, 3);
 // });
@@ -81,7 +84,7 @@ test('should render a selectbox with bound options after type ahead for search',
 //     this.set('ticket_cc_options', ticket_cc_options);
 //     this.set('search', 'x');
 //     this.render(hbs`{{ticket-cc-power-select ticket=ticket search=search ticket_cc_options=ticket_cc_options}}`);
-//     let $component = this.$('.t-ticket-cc-select');
+//     let $component = this.$(`${COMPONENT}`);
 //     assert.equal($component.find('div.item').length, 2);
 //     assert.equal($component.find('div.option').length, 1);
 //     this.$('.selectize-input input').trigger('click');

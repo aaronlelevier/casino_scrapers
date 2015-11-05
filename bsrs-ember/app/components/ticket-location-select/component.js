@@ -27,8 +27,10 @@ var TicketLocation = Ember.Component.extend({
                 ticket.remove_location();
             }
         },
-        update_filter() {
-            Ember.run.debounce(this, this.get('find_all_locations'), 300);
+        update_filter(search) {
+            if (Ember.isBlank(search)) { return []; }
+            // Ember.run.debounce(this, this.get('find_all_locations'), 300);
+            this.set('search_location', search);
         }
     }
 });

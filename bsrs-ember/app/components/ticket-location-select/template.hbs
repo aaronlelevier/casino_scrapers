@@ -1,13 +1,10 @@
-{{ember-selectize
-  required=true
-  content=options
-  updateSelection=false
-  optionValuePath="content.id"
-  optionLabelPath="content.name"
-  selection=ticket_location_selected
-  select-item="selected"
+{{#power-select
+  selected=ticket_location_selected
+  options=options
   class="t-ticket-location-select"
-  placeholder="type to find more locations"
-  update-filter="update_filter"
-  filter=search_criteria
+  search=(action "update_filter")
+  onchange=(action "selected")
+  as |location|
 }}
+  {{location.name}}
+{{/power-select}}
