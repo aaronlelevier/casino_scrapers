@@ -31,6 +31,8 @@ db:
     - db_password: tango
     - db_port: 5432
     - user: tomcat
+    - require:
+      - pkg: postgresql93
 
 postgres-user-bsdev:
   postgres_user.present:
