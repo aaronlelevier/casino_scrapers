@@ -43,6 +43,10 @@ class TicketActivityViewSet(BaseModelViewSet):
             raise MethodNotAllowed
 
     def list(self, request, *args, **kwargs):
+        """
+        This List Endpoint should always be filtered for TicketActivities for
+        a single Ticket.
+        """
         queryset = self.filter_queryset(self.get_queryset())
         # custom: start
         pk = kwargs.get('pk', None)

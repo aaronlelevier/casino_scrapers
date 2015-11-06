@@ -102,7 +102,10 @@ TICKET_ACTIVITY_TYPES = [
     'create',
     'assignee',
     'cc_add',
-    'cc_remove'
+    'cc_remove',
+    'status',
+    'priority',
+    'category'
 ]
 
 

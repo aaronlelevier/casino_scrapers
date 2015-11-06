@@ -63,13 +63,7 @@ def create_ticket_priority(name=None):
 
 
 def create_ticket_priorites():
-    priorities = [
-        'ticket.priority.medium',
-        'ticket.priority.low',
-        'ticket.priority.high',
-        'ticket.priority.emergency'
-    ]
-    for priority in priorities:
+    for priority in TICKET_PRIORITIES:
         TicketPriority.objects.get_or_create(name=priority)
 
 
