@@ -34,6 +34,7 @@ test('should render a selectbox when status options are empty (initial state of 
     assert.equal($('.ember-power-select-options > li').length, 1);
     assert.equal($('li.ember-power-select-option').text(), 'No results found');
     assert.ok(!ticket.get('status'));
+    assert.notOk($('.ember-power-select-search').text());
 });
 
 test('should render a selectbox with bound options', function(assert) {

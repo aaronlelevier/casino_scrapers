@@ -2,6 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 
@@ -32,7 +33,8 @@ test('should render a selectbox when location options are empty (initial state o
     });
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
-    assert.equal($('li.ember-power-select-option').text(), 'Type to search');
+    assert.equal($('li.ember-power-select-option').text(), GLOBALMSG.power_search);
+    assert.equal(this.$('.ember-power-select-placeholder').text(), GLOBALMSG.location_power_select);
     assert.ok(!ticket.get('location'));
 });
 
