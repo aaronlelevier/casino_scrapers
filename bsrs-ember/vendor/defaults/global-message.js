@@ -3,7 +3,11 @@ var BSRS_GLOBAL_MESSAGE_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            modal_unsaved_msg: 'You have unsaved changes. Are you sure?'
+            modal_unsaved_msg: 'You have unsaved changes. Are you sure?',
+            category_power_select: 'Please select a category',
+            assignee_power_select: 'Please select an assignee',
+            location_power_select: 'Please select a location',
+            power_search: 'Type to search'
         };
     };
     return factory;

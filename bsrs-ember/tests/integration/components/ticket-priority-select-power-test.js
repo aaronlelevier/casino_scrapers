@@ -35,6 +35,7 @@ test('should render a selectbox when priority options are empty (initial state o
     assert.equal($('.ember-power-select-options > li').length, 1);
     assert.equal($('li.ember-power-select-option').text(), 'No results found');
     assert.ok(!ticket.get('priority'));
+    assert.notOk($('.ember-power-select-search').text());
 });
 
 test('should render a selectbox with bound options', function(assert) {

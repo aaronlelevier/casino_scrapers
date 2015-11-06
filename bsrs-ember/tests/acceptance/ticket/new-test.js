@@ -35,6 +35,7 @@ const SPACEBAR = {keyCode: 32};
 const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const LOCATION_DROPDOWN = '.t-ticket-location-select-dropdown > .ember-power-select-options';
 const ASSIGNEE = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+const ASSIGNEE_DROPDOWN = '.t-ticket-assignee-select-dropdown > .ember-power-select-options';
 const CC = 'select.t-ticket-people-select:eq(0) + .selectize-control';
 const SEARCH = '.ember-power-select-search input';
 
@@ -110,8 +111,8 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-    page.assigneeFillIn('b');
-    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_B);
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, 'b');
     page.assigneeClickOptionTwo();
     generalPage.save();
     andThen(() => {
@@ -385,28 +386,70 @@ test('when selecting a new parent cateogry it should remove previously selected 
 });
 
 /*TICKET TO ASSIGNEE*/
-test('shows assignee for ticket and will fire off xhr to fetch assignee(persons) on search to change assignee', (assert) => {
+test('assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
     clearxhr(category_one_xhr);
     clearxhr(category_two_xhr);
     clearxhr(category_three_xhr);
     page.visitNew();
-    people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-    page.assigneeFillIn('b');
-    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_B);
     andThen(() => {
-        assert.equal(page.assigneeOptionLength(), 10);
+        assert.equal(page.assigneeInput(), GLOBALMSG.assignee_power_select);
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('assignee.id'), undefined);
+        assert.equal(ticket.get('assignee_fk'), undefined);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     });
-    page.assigneeFillIn('');
-    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', BACKSPACE);
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, 'b');
     andThen(() => {
-        assert.equal(page.assigneeOptionLength(), 0);
-    });
-    page.assigneeFillIn('b');
-    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_B);
-    andThen(() => {
+        assert.equal(page.assigneeInput(), GLOBALMSG.assignee_power_select);
         assert.equal(page.assigneeOptionLength(), 10);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PEOPLE_DEFAULTS.nameBoy} ${PEOPLE_DEFAULTS.lastNameBoy}`);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PEOPLE_DEFAULTS.nameBoy2} ${PEOPLE_DEFAULTS.lastNameBoy2}`);
+    });
+    page.assigneeClickOptionOne();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PEOPLE_DEFAULTS.nameBoy} ${PEOPLE_DEFAULTS.lastNameBoy}`);
+    });
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, '');
+    andThen(() => {
+        assert.equal(page.assigneeOptionLength(), 1);
+        assert.equal(page.assigneeInput(), `${PEOPLE_DEFAULTS.nameBoy} ${PEOPLE_DEFAULTS.lastNameBoy}`);
+    });
+    fillIn(`${SEARCH}`, 'b');
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PEOPLE_DEFAULTS.nameBoy} ${PEOPLE_DEFAULTS.lastNameBoy}`);
+        assert.equal(page.assigneeOptionLength(), 10);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PEOPLE_DEFAULTS.nameBoy} ${PEOPLE_DEFAULTS.lastNameBoy}`);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PEOPLE_DEFAULTS.nameBoy2} ${PEOPLE_DEFAULTS.lastNameBoy2}`);
+    });
+    page.assigneeClickOptionTwo();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PEOPLE_DEFAULTS.nameBoy2} ${PEOPLE_DEFAULTS.lastNameBoy2}`);
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('assignee.id'), PEOPLE_DEFAULTS.idSearch);
+        assert.equal(ticket.get('assignee_fk'), undefined);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    //search specific assignee
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy1`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, 'Boy1');
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PEOPLE_DEFAULTS.nameBoy2} ${PEOPLE_DEFAULTS.lastNameBoy2}`);
+        assert.equal(page.assigneeOptionLength(), 2);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PEOPLE_DEFAULTS.nameBoy} ${PEOPLE_DEFAULTS.lastNameBoy}`);
+    });
+    page.assigneeClickOptionOne();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PEOPLE_DEFAULTS.nameBoy} ${PEOPLE_DEFAULTS.lastNameBoy}`);
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('assignee.id'), PEOPLE_DEFAULTS.idBoy);
+        assert.equal(ticket.get('assignee_fk'), undefined);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
 });
 
@@ -488,11 +531,11 @@ test('all required fields persist correctly when the user submits a new ticket f
         assert.ok(ticket.get('new'));
     });
     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
-    page.assigneeFillIn('b');
-    triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_B);
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, 'b');
     page.assigneeClickOptionTwo();
     andThen(() => {
-        assert.equal(find('.t-ticket-assignee-select').val(), PEOPLE_DEFAULTS.idSearch);
+        assert.equal(page.assigneeInput(), `${PEOPLE_DEFAULTS.nameBoy2} ${PEOPLE_DEFAULTS.lastNameBoy2}`);
         let ticket = store.findOne('ticket');
         assert.ok(ticket.get('assignee'));
         assert.equal(ticket.get('assignee').get('id'), PEOPLE_DEFAULTS.idSearch);

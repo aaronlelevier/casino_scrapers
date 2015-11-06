@@ -1,14 +1,11 @@
-{{ember-selectize
-  required=true
-  content=options
-  updateSelection=false
-  optionValuePath="content.id"
-  optionLabelPath="content.fullname"
-  select-item="selected"
-  selection=assignee_selected
+{{#power-select
+  selected=ticket_assignee_selected
+  options=options
   class="t-ticket-assignee-select"
-  placeholder="select new assignee"
-  update-filter="update_filter"
-  filter=search_criteria
+  search=(action "update_filter")
+  onchange=(action "selected")
+  placeholder="Please select an assignee"
+  as |assignee|
 }}
-
+  {{assignee.fullname}}
+{{/power-select}}
