@@ -1,3 +1,5 @@
+#top.sls
 base:
   '*':
-  - git
+    - nginx
+    - postgres
