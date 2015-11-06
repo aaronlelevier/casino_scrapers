@@ -45,7 +45,7 @@ const SEARCH = '.ember-power-select-search input';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter;
 
-module('sco Acceptance | ticket detail test', {
+module('Acceptance | ticket detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -121,56 +121,26 @@ test('when you click cancel, you are redirected to the ticket list view', (asser
     });
 });
 
-test('validation works and when hit save, we do same post', (assert) => {
+test('validation works for non required fields and when hit save, we do same post', (assert) => {
+    //assignee, requester, cc, request
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-assignee-validation-error').is(':hidden'));
-        assert.ok(find('.t-location-validation-error').is(':hidden'));
-        assert.ok(find('.t-category-validation-error').is(':hidden'));
     });
     triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keydown', BACKSPACE);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
-        assert.ok(find('.t-location-validation-error').is(':hidden'));
-        // assert.equal(find('.t-category-validation-error').length, 0);
     });
-    //TODO: selectize removal option in docs
-    // triggerEvent(`${LOCATION} > .selectize-input input`, 'keydown', BACKSPACE);
-    // generalPage.save();
-    // andThen(() => {
-    //     assert.equal(currentURL(), DETAIL_URL);
-    //     assert.ok(find('.t-assignee-validation-error').is(':visible'));
-    //     assert.ok(find('.t-location-validation-error').is(':visible'));
-    //     // assert.equal(find('.t-category-validation-error').length, 0);
-    // });
-    //done removing
     //assignee
     let people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=Mel`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
     page.assigneeFillIn('Mel');
     triggerEvent(`${ASSIGNEE} > .selectize-input input`, 'keyup', LETTER_M);
     page.assigneeClickOptionOne();
-    // generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL + '?search_assignee=Mel');
-        // assert.ok(find('.t-location-validation-error').is(':visible'));
-        // assert.ok(find('.t-category-validation-error').is(':visible'));
-    });
-    //location
-    xhr(`${PREFIX}/admin/locations/?name__icontains=a`, 'GET', null, {}, 200, LOCATION_FIXTURES.search());
-    page.locationClickDropdown();
-    fillIn(`${SEARCH}`, 'a');
-    //click remaining
-    page.locationClickOptionOne();
-    page.priorityClickDropdown();
-    page.priorityClickOptionOne();
-    page.statusClickDropdown();
-    page.statusClickOptionOne();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL + '?search_assignee=Mel&search_location=a');
-        // assert.ok(find('.t-category-validation-error').is(':visible'));
     });
     generalPage.save();
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
@@ -497,7 +467,7 @@ test('power select options are rendered immediately when enter detail route and 
     });
 });
 
-// test('sco selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+// test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
 //     page.visitDetail();
 //     andThen(() => {
 //         //override electrical to have children
@@ -689,25 +659,24 @@ test('location component shows location for ticket and will fire off xhr to fetc
     fillIn(`${SEARCH}`, '');
     andThen(() => {
         assert.equal(page.locationOptionLength(), 1);
-        assert.equal(find(`${LOCATION_DROPDOWN}`).text().trim(), 'Type to search');
+        assert.equal(find(`${LOCATION_DROPDOWN}`).text().trim(), LOCATION_DEFAULTS.storeNameTwo);
     });
-    //TODO: figure out how to cache break to search again
-    // fillIn(`${SEARCH}`, '6');
-    // andThen(() => {
-    //     assert.equal(page.locationInput(), LOCATION_DEFAULTS.storeNameTwo);
-    //     assert.equal(page.locationOptionLength(), 2);
-    // });
-    // page.locationClickOptionTwo();
-    // andThen(() => {
-    //     assert.equal(page.locationInput(), LOCATION_DEFAULTS.idTwo);
-    //     let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-    //     assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
-    //     assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
-    //     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    //     //ensure categories has not changed
-    //     assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idOne);
-    //     assert.equal(ticket.get('categories').get('length'), 3);
-    // });
+    fillIn(`${SEARCH}`, '6');
+    andThen(() => {
+        assert.equal(page.locationInput(), LOCATION_DEFAULTS.storeNameTwo);
+        assert.equal(page.locationOptionLength(), 2);
+    });
+    page.locationClickOptionTwo();
+    andThen(() => {
+        assert.equal(page.locationInput(), LOCATION_DEFAULTS.storeNameTwo);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('location.id'), LOCATION_DEFAULTS.idTwo);
+        assert.equal(ticket.get('location_fk'), LOCATION_DEFAULTS.idOne);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        //ensure categories has not changed
+        assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idOne);
+        assert.equal(ticket.get('categories').get('length'), 3);
+    });
     let response_put = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
     response_put.location = {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo};
     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, location: LOCATION_DEFAULTS.idTwo});
