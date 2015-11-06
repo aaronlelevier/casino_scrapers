@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 var TicketAssignee = Ember.Component.extend({
-    assignee_selected: Ember.computed('ticket.assignee', function() {
+    ticket_assignee_selected: Ember.computed('ticket.assignee', function() {
         let ticket = this.get('ticket');
         return ticket.get('assignee');
     }),
@@ -13,9 +13,8 @@ var TicketAssignee = Ember.Component.extend({
             return Ember.A([this.get('assignee_selected')]);
         }
     }),
-    find_all_people() {
-        let search_criteria = this.get('search_criteria');
-        this.set('search_assignee', search_criteria);
+    find_all_people(search) {
+        this.set('search_assignee', search);
     },
     actions: {
         selected(person) {
@@ -26,8 +25,8 @@ var TicketAssignee = Ember.Component.extend({
                 ticket.remove_assignee();
             }
         },
-        update_filter() {
-            Ember.run.debounce(this, this.get('find_all_people'), 300);
+        update_filter(search) {
+            Ember.run.debounce(this, this.get('find_all_people'), search, 300);
         }
     }
 });

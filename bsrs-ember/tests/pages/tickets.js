@@ -5,6 +5,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
+import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKETS_URL = BASE_URL + '/index';
@@ -14,7 +15,8 @@ const PRIORITY = '.t-ticket-priority-power-select > .ember-basic-dropdown > .emb
 const PRIORITY_DROPDOWN = '.t-ticket-priority-power-select-dropdown > .ember-power-select-options';
 const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const LOCATION_DROPDOWN = '.t-ticket-location-select-dropdown > .ember-power-select-options';
-const ASSIGNEE = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
+const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const ASSIGNEE_DROPDOWN = '.t-ticket-assignee-select-dropdown > .ember-power-select-options';
 const CC = 'select.t-ticket-people-select:eq(0) + .selectize-control';
 const CATEGORY_ONE = '.t-ticket-category-power-select:eq(0) > .ember-basic-dropdown > .ember-power-select-trigger';
 const CATEGORY_TWO = '.t-ticket-category-power-select:eq(1) > .ember-basic-dropdown > .ember-power-select-trigger';
@@ -52,16 +54,11 @@ var TicketPage = PageObject.build({
   categoryThreeClickOptionOne: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameElectricalChild})`),
   categoryThreeOptionLength: count(`${CATEGORY_DROPDOWN} > li`),
 
-  // locationFillIn: fillable(`${LOCATION} > .selectize-input input`),
-  // locationInput: value(`select.t-ticket-location-select:eq(0) > option`),
-  // locationClickOptionOne: clickable(`${LOCATION} > .selectize-dropdown div.option:eq(0)`),
-  // locationClickOptionTwo: clickable(`${LOCATION} > .selectize-dropdown div.option:eq(1)`),
-  // locationOptionLength: count(`${LOCATION} > .selectize-dropdown div.option`),
-
   locationInput: text(`${LOCATION}`),
   locationClickDropdown: clickable(`${LOCATION}`),
   locationClickOptionOne: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LOCATION_DEFAULTS.storeName})`),
   locationClickOptionTwo: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LOCATION_DEFAULTS.storeNameTwo})`),
+  locationClickIdThree: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LOCATION_DEFAULTS.storeNameThree})`),
   locationOptionLength: count(`${LOCATION_DROPDOWN} > li`),
 
   priorityInput: text(`${PRIORITY}`),
@@ -76,11 +73,13 @@ var TicketPage = PageObject.build({
   statusClickOptionTwo: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${TICKET_DEFAULTS.statusTwo})`),
   statusOptionLength: count(`${STATUS} > .selectize-dropdown div.option`),
 
-  assigneeFillIn: fillable(`${ASSIGNEE} > .selectize-input input`),
-  assigneeInput: value(`select.t-ticket-assignee-select:eq(0) > option`),
-  assigneeClickOptionOne: clickable(`${ASSIGNEE} > .selectize-dropdown div.option:eq(0)`),
-  assigneeClickOptionTwo: clickable(`${ASSIGNEE} > .selectize-dropdown div.option:eq(1)`),
-  assigneeOptionLength: count(`${ASSIGNEE} > .selectize-dropdown div.option`),
+  assigneeInput: text(`${ASSIGNEE}`),
+  assigneeClickDropdown: clickable(`${ASSIGNEE}`),
+  // assigneeClickOptionOne: clickable(`${ASSIGNEE_DROPDOWN} > .ember-power-select-option:contains(${PEOPLE_DEFAULTS.name})`),
+  assigneeClickOptionOne: clickable(`${ASSIGNEE_DROPDOWN} > .ember-power-select-option:eq(0)`),
+  assigneeClickOptionTwo: clickable(`${ASSIGNEE_DROPDOWN} > .ember-power-select-option:eq(1)`),
+  // assigneeClickIdThree: clickable(`${ASSIGNEE_DROPDOWN} > .ember-power-select-option:contains(${PEOPLE_DEFAULTS.storeNameThree})`),
+  assigneeOptionLength: count(`${ASSIGNEE_DROPDOWN} > li`),
 
   clickSelectizeOption: clickable('.t-ticket-people-select div.option:eq(0)'),
 

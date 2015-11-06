@@ -14,9 +14,8 @@ var TicketLocation = Ember.Component.extend({
         }
         return Ember.A([]);
     }),
-    find_all_locations: function() {
-        let search_criteria = this.get('search_criteria');
-        this.set('search_location', search_criteria);
+    find_all_locations(search) {
+        this.set('search_location', search);
     },
     actions: {
         selected(location) {
@@ -28,8 +27,7 @@ var TicketLocation = Ember.Component.extend({
             }
         },
         update_filter(search) {
-            // Ember.run.debounce(this, this.get('find_all_locations'), 300);
-            this.set('search_location', search);
+            Ember.run.debounce(this, this.get('find_all_locations'), search, 300);
         }
     }
 });

@@ -50,7 +50,7 @@ var TicketSingleRoute = TabRoute.extend({
         ticket_assignee_options = peopleRepo.findTicketAssignee(search_assignee) || [];
         let assignee = ticket.get('assignee');
         if (assignee) {
-            ticket_assignee_options.pushObject(assignee);
+            ticket_assignee_options.push(assignee);
         }
 
         let ticket_cc_options = [];

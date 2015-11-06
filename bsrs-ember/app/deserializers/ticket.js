@@ -165,7 +165,9 @@ var TicketDeserializer = Ember.Object.extend({
             let assignee_json = response.assignee;
             delete response.assignee;
             let ticket = store.push('ticket', response);
-            extract_assignee(assignee_json, store, person_deserializer, ticket);
+            if (assignee_json) {
+                extract_assignee(assignee_json, store, person_deserializer, ticket);
+            }
             ticket.save();
         }
     },
