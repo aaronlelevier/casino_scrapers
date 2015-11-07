@@ -54,36 +54,30 @@ class TicketUpdateLogger(object):
 
     def run_check_ticket_changes(self):
         "Run all log checks for the Ticket."
-        self.check_cc_add()
-        self.check_cc_remove()
-        self.check_from_to_change('assignee')
-        self.check_from_to_change('status')
-        self.check_from_to_change('priority')
+        self.check_cc_add_or_remove()
+        self.check_from_to_changes()
 
-    def check_cc_add(self):
+    def check_cc_add_or_remove(self):
         init_cc = set(self.init_ticket.get('cc', []))
         post_cc = set(self.post_ticket.get('cc', []))
 
         new_cc = post_cc - init_cc
         if new_cc:
-            self.log_cc_change('cc_add', new_cc)
-
-    def check_cc_remove(self):
-        init_cc = set(self.init_ticket.get('cc', []))
-        post_cc = set(self.post_ticket.get('cc', []))
+            self.log_list_change('cc_add', new_cc)
 
         removed_cc = init_cc - post_cc
         if removed_cc:
-            self.log_cc_change('cc_remove', removed_cc)
+            self.log_list_change('cc_remove', removed_cc)
 
-    def log_cc_change(self, name, changed_cc):
+    def log_list_change(self, name, changed):
         type, _ = TicketActivityType.objects.get_or_create(name=name)
-        TicketActivity.objects.create(
-            type=type,
-            person=self.person,
-            ticket=self.instance,
-            content={str(i): str(cc) for i, cc in enumerate(changed_cc)}
-        )
+        content = {str(i): str(cc) for i, cc in enumerate(changed)}
+        self.log_ticket_activity(type, content)
+
+    def check_from_to_changes(self):
+        fields = ['assignee', 'status', 'priority']
+        for field in fields:
+            self.check_from_to_change(field)
 
     def check_from_to_change(self, field):
         init_field = self.init_ticket.get(field, None)
@@ -91,17 +85,18 @@ class TicketUpdateLogger(object):
 
         if init_field != post_field:
             type, _ = TicketActivityType.objects.get_or_create(name=field)
-            self.log_from_to_change(type, init_field, post_field)
+            content = {
+                'from': str(init_field),
+                'to': str(post_field)
+            }
+            self.log_ticket_activity(type, content)
 
-    def log_from_to_change(self, type, init, post):
+    def log_ticket_activity(self, type, content):
         TicketActivity.objects.create(
             type=type,
             person=self.person,
             ticket=self.instance,
-            content={
-                'from': str(init),
-                'to': str(post)
-            }
+            content=content
         )
 
 
