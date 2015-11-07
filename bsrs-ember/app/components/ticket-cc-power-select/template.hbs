@@ -1,13 +1,11 @@
 {{#power-select
   multiple=true
-  options=ticket_cc_options
-  selected=ticket.cc
-  add-item="add"
-  remove-item="remove"
+  selected=cc_selected
+  options=options
   class="t-ticket-cc-select"
-  search="update_filter"
-  filter=search_criteria
+  search=(action "update_filter")
   onchange=(action "add")
+  searchPlaceholder="Type a person"
   as |person|
 }}
   {{person.fullname}}

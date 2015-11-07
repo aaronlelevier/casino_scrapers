@@ -14,9 +14,9 @@ var TicketNewRoute = TabNewRoute.extend({
     //TODO: tab tests say 'New ticket', not 'New Ticket'
     templateModelField: Ember.computed(function() { return 'Ticket'; }),
     queryParams: {
-        // search: {
-        //     refreshModel: true
-        // },
+        search_cc: {
+            refreshModel: true
+        },
         search_location: {
             refreshModel: true
         },
@@ -48,6 +48,9 @@ var TicketNewRoute = TabNewRoute.extend({
         let peopleRepo = this.get('peopleRepo');
         let ticket_assignee_options = peopleRepo.findTicketAssignee(search_assignee);
 
+        let search_cc = transition.queryParams.search_cc;
+        let ticket_cc_options = peopleRepo.findTicketPeople(search_cc);
+
         return Ember.RSVP.hash({
             model: model,
             statuses: statuses,
@@ -55,6 +58,7 @@ var TicketNewRoute = TabNewRoute.extend({
             top_level_category_options: top_level_category_options,
             ticket_location_options: ticket_location_options,
             ticket_assignee_options: ticket_assignee_options,
+            ticket_cc_options: ticket_cc_options,
             search_location: search_location,
             search_assignee: search_assignee,
         });
@@ -66,8 +70,10 @@ var TicketNewRoute = TabNewRoute.extend({
         controller.set('top_level_category_options', hash.top_level_category_options);
         controller.set('ticket_location_options', hash.ticket_location_options);
         controller.set('ticket_assignee_options', hash.ticket_assignee_options);
+        controller.set('ticket_cc_options', hash.ticket_cc_options);
         controller.set('search_location', hash.search_location);
         controller.set('search_assignee', hash.search_assignee);
+        controller.set('search_cc', hash.search_cc);
     }
 });
 

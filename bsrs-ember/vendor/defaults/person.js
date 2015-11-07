@@ -31,6 +31,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             idTwo: '8b881d03-ac0b-4e4c-9d30-8a1d3d7d0783',
             idThree: '8b881d03-ac0b-4e4c-9d30-8a1d3d7d0784',
             idBoy: '249543cf-8fea-426a-8bc3-09778cd78001',
+            idDonald: 'b783a238-5631-4623-8d24-81a672bb4ea0',
             idSearch: '249543cf-8fea-426a-8bc3-09778cd78002',
             username: BSRS_PERSON_USERNAME,
             password: BSRS_PERSON_PASSWORD,
@@ -56,6 +57,8 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             anotherId: '8aef1a27-f1c5-4721-83c0-9f1fceabd263',
             sorted_username: BSRS_PERSON_SORTED_USERNAME,
 
+            donald_first_name: 'Donald',
+            donald: 'Donald Trump',
             nameOne: 'wanker',
             nameTwo: 'bonker',
             nameThree: 'tommy',

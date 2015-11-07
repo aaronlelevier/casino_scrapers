@@ -13,7 +13,7 @@ var TicketSingleRoute = TabRoute.extend({
     modelName: Ember.computed(function() { return 'ticket'; }),
     templateModelField: Ember.computed(function() { return 'subject'; }),
     queryParams: {
-        search: {
+        search_cc: {
             refreshModel: true
         },
         search_assignee: {
@@ -37,7 +37,7 @@ var TicketSingleRoute = TabRoute.extend({
         const pk = params.ticket_id;
         const repository = this.get('repository');
         const peopleRepo = this.get('peopleRepo');
-        let search = transition.queryParams.search;
+        let search_cc = transition.queryParams.search_cc;
         let search_location = transition.queryParams.search_location;
         let search_assignee = transition.queryParams.search_assignee;
         let ticket = repository.fetch(pk);
@@ -53,12 +53,11 @@ var TicketSingleRoute = TabRoute.extend({
             ticket_assignee_options.push(assignee);
         }
 
-        let ticket_cc_options = [];
-        ticket_cc_options = peopleRepo.findTicketPeople(search) || [];
-        let cc = ticket.get('cc') || [];
-        for (let i = 0, length=cc.get('length'); i < length; ++i) {
-            ticket_cc_options.pushObject(cc.objectAt(i));
-        }
+        let ticket_cc_options = peopleRepo.findTicketPeople(search_cc);
+        // let cc = ticket.get('cc') || [];
+        // for (let i = 0, length=cc.get('length'); i < length; ++i) {
+        //     ticket_cc_options.pushObject(cc.objectAt(i));
+        // }
 
         let ticket_location_options = [];
         let locationRepo = this.get('locationRepo');
@@ -76,7 +75,7 @@ var TicketSingleRoute = TabRoute.extend({
             model: ticket,
             statuses: statuses,
             priorities: priorities,
-            search: search,
+            search_cc: search_cc,
             search_location: search_location,
             search_assignee: search_assignee,
             ticket_cc_options: ticket_cc_options,
@@ -89,7 +88,7 @@ var TicketSingleRoute = TabRoute.extend({
         controller.set('model', hash.model);
         controller.set('statuses', hash.statuses);
         controller.set('priorities', hash.priorities);
-        controller.set('search', hash.search);
+        controller.set('search_cc', hash.search_cc);
         controller.set('search_location', hash.search_location);
         controller.set('search_assignee', hash.search_assignee);
         controller.set('ticket_cc_options', hash.ticket_cc_options);

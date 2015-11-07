@@ -40,7 +40,9 @@ const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown > .ember-pow
 const LOCATION_DROPDOWN = '.t-ticket-location-select-dropdown > .ember-power-select-options';
 const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const ASSIGNEE_DROPDOWN = '.t-ticket-assignee-select-dropdown > .ember-power-select-options';
-const CC = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+const CC = '.t-ticket-cc-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const CC_DROPDOWN = '.t-ticket-cc-select-dropdown > .ember-power-select-options';
+const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const STATUS = 'select.t-ticket-status-select:eq(0) + .selectize-control';
 const SEARCH = '.ember-power-select-search input';
 
@@ -70,6 +72,7 @@ test('clicking a tickets will redirect to the given detail view and can save to 
     click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.first_name), 2);
     });
     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 200, response);
@@ -217,34 +220,86 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-// /*TICKET PEOPLE M2M*/
-// test('clicking and typing into selectize for people will fire off xhr request for all people', (assert) => {
-//     page.visitDetail();
-//     andThen(() => {
-//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-//         assert.equal(ticket.get('cc').get('length'), 1);
-//         assert.equal(page.ticketPeopleSelected(), 1);
-//         assert.equal(page.ticketPeopleOptions(), 0);
-//     });
-//     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-//     xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
-//     fillIn(`${CC} > .selectize-input input`, 'a');
-//     triggerEvent(`${CC} > .selectize-input input`, 'keyup', LETTER_A);
-//     click(`${CC} > .selectize-dropdown div.option:eq(0)`);
-//     andThen(() => {
-//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-//         assert.equal(ticket.get('ticket_people_fks').length, 1);
-//         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//         assert.equal(page.ticketPeopleSelected(), 2);
-//         assert.equal(page.ticketPeopleOptions(), 0);
-//     });
-//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_CURRENT_DEFAULTS.id, PEOPLE_DEFAULTS.id]});
-//     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_URL);
-//     });
-// });
+/*TICKET CC M2M*/
+test('clicking and typing into selectize for people will fire off xhr request for all people', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.first_name);
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.first_name), 2);
+    });
+    let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
+    xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
+    page.ccClickDropdown();
+    fillIn(`${CC_SEARCH}`, 'a');
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.first_name), 2);
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PEOPLE_DEFAULTS.donald);
+    });
+    page.ccClickDonald();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').get('length'), 2);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.donald_first_name);
+        assert.equal(ticket.get('cc').objectAt(1).get('first_name'), PEOPLE_DEFAULTS.first_name);
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.donald), 2);
+        assert.equal(page.ccTwoSelected().indexOf(PEOPLE_DEFAULTS.first_name), 2);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    page.ccClickDropdown();
+    fillIn(`${CC_SEARCH}`, '');
+    andThen(() => {
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+    });
+    fillIn(`${CC_SEARCH}`, 'a');
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.donald), 2);
+        assert.equal(page.ccTwoSelected().indexOf(PEOPLE_DEFAULTS.first_name), 2);
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PEOPLE_DEFAULTS.donald);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').get('length'), 2);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.donald_first_name);
+        assert.equal(ticket.get('cc').objectAt(1).get('first_name'), PEOPLE_DEFAULTS.first_name);
+    });
+    //search specific cc
+    page.ccClickDropdown();//not sure why I need this
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
+    fillIn(`${CC_SEARCH}`, 'Boy');
+    page.ccClickDropdown();
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.donald), 2);
+        assert.equal(page.ccTwoSelected().indexOf(PEOPLE_DEFAULTS.first_name), 2);
+        assert.equal(page.ccOptionLength(), 10);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), `${PEOPLE_DEFAULTS.nameBoy} ${PEOPLE_DEFAULTS.lastNameBoy}`);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').get('length'), 2);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.donald_first_name);
+        assert.equal(ticket.get('cc').objectAt(1).get('first_name'), PEOPLE_DEFAULTS.first_name);
+    });
+    page.ccClickOptionOne();
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.donald), 2);
+        assert.equal(page.ccTwoSelected().indexOf(PEOPLE_DEFAULTS.first_name), 2);
+        assert.equal(page.ccThreeSelected().indexOf(PEOPLE_DEFAULTS.nameBoy), 2);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.donald_first_name);
+        assert.equal(ticket.get('cc').objectAt(1).get('first_name'), PEOPLE_DEFAULTS.first_name);
+        assert.equal(ticket.get('cc').objectAt(2).get('id'), PEOPLE_DEFAULTS.idBoy);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    let response_put = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    response_put.cc = {id: PEOPLE_DEFAULTS.idThree, name: PEOPLE_DEFAULTS.storeNameThree};
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.idDonald, PEOPLE_DEFAULTS.idOne, PEOPLE_DEFAULTS.idBoy]});
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
 
 // test('can remove and add back same cc', (assert) => {
 //     page.visitDetail();
@@ -371,26 +426,23 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 //     });
 // });
 
-// test('clicking and typing into selectize for people will not filter if spacebar pressed', (assert) => {
-//     page.visitDetail();
-//     fillIn(`${CC} > .selectize-input input`, ' ');
-//     triggerEvent(`${CC} > .selectize-input input`, 'keyup', SPACEBAR);
-//     andThen(() => {
-//         assert.equal(page.ticketPeopleOptions(), 0);
-//     });
-//     andThen(() => {
-//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-//         assert.equal(page.ticketPeopleSelected(), 1);
-//         assert.equal(page.ticketPeopleOptions(), 0);
-//     });
-//     let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
-//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.id]});
-//     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_URL);
-//     });
-// });
+test('clicking and typing into selectize for people will not filter if spacebar pressed', (assert) => {
+    page.visitDetail();
+    page.ccClickDropdown();
+    fillIn(`${CC_SEARCH}`, ' ');
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.first_name), 2);
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.no_results);
+    });
+    let response = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idOne);
+    let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PEOPLE_DEFAULTS.idOne]});
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
 
 /*TICKET CATEGORIES M2M*/
 test('categories are in order based on text', (assert) => {
@@ -654,10 +706,10 @@ test('location component shows location for ticket and will fire off xhr to fetc
         assert.equal(page.locationOptionLength(), 2);
         assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LOCATION_DEFAULTS.storeNameFour);
         assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(1)`).text().trim(), LOCATION_DEFAULTS.storeNameTwo);
-        page.locationClickOptionTwo();
-        andThen(() => {
-            assert.equal(page.locationInput(), LOCATION_DEFAULTS.storeNameTwo);
-        });
+    });
+    page.locationClickOptionTwo();
+    andThen(() => {
+        assert.equal(page.locationInput(), LOCATION_DEFAULTS.storeNameTwo);
     });
     page.locationClickDropdown();
     fillIn(`${SEARCH}`, '');

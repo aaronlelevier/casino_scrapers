@@ -36,7 +36,9 @@ const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown > .ember-pow
 const LOCATION_DROPDOWN = '.t-ticket-location-select-dropdown > .ember-power-select-options';
 const ASSIGNEE = 'select.t-ticket-assignee-select:eq(0) + .selectize-control';
 const ASSIGNEE_DROPDOWN = '.t-ticket-assignee-select-dropdown > .ember-power-select-options';
-const CC = 'select.t-ticket-people-select:eq(0) + .selectize-control';
+const CC = '.t-ticket-cc-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const CC_DROPDOWN = '.t-ticket-cc-select-dropdown > .ember-power-select-options';
+const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const SEARCH = '.ember-power-select-search input';
 
 let application, store, list_xhr, location_xhr, people_xhr, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter;
@@ -583,5 +585,72 @@ test('all required fields persist correctly when the user submits a new ticket f
         assert.equal(persisted.get('status.id'), TICKET_DEFAULTS.statusOneId);
         assert.ok(persisted.get('isNotDirty'));
         assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+/*TICKET CC M2M*/
+test('clicking and typing into selectize for people will fire off xhr request for all people', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(location_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
+    page.visitNew();
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(!ticket.get('cc.length'));
+    });
+    let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
+    xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
+    page.ccClickDropdown();
+    fillIn(`${CC_SEARCH}`, 'a');
+    andThen(() => {
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PEOPLE_DEFAULTS.donald);
+    });
+    page.ccClickDonald();
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.donald_first_name);
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.donald), 2);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    page.ccClickDropdown();
+    fillIn(`${CC_SEARCH}`, '');
+    andThen(() => {
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+    });
+    fillIn(`${CC_SEARCH}`, 'a');
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.donald), 2);
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PEOPLE_DEFAULTS.donald);
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.donald_first_name);
+    });
+    //search specific cc
+    page.ccClickDropdown();//not sure why I need this
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy`, 'GET', null, {}, 200, PEOPLE_FIXTURES.search());
+    fillIn(`${CC_SEARCH}`, 'Boy');
+    page.ccClickDropdown();
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.donald), 2);
+        assert.equal(page.ccOptionLength(), 10);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), `${PEOPLE_DEFAULTS.nameBoy} ${PEOPLE_DEFAULTS.lastNameBoy}`);
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.donald_first_name);
+    });
+    page.ccClickOptionOne();
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.donald), 2);
+        assert.equal(page.ccTwoSelected().indexOf(PEOPLE_DEFAULTS.nameBoy), 2);
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.donald_first_name);
+        assert.equal(ticket.get('cc').objectAt(1).get('id'), PEOPLE_DEFAULTS.idBoy);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     });
 });

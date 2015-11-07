@@ -11,13 +11,18 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKETS_URL = BASE_URL + '/index';
 const NEW_URL = BASE_URL + '/new';
 const DETAIL_URL = BASE_URL + '/' + TICKET_DEFAULTS.idOne;
+const CC = '.t-ticket-cc-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const CCS = `${CC} > .ember-power-select-multiple-option`;
+const CC_ONE = `${CCS}:eq(0)`;
+const CC_TWO = `${CCS}:eq(1)`;
+const CC_THREE = `${CCS}:eq(2)`;
+const CC_DROPDOWN = '.t-ticket-cc-select-dropdown > .ember-power-select-options';
 const PRIORITY = '.t-ticket-priority-power-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const PRIORITY_DROPDOWN = '.t-ticket-priority-power-select-dropdown > .ember-power-select-options';
 const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const LOCATION_DROPDOWN = '.t-ticket-location-select-dropdown > .ember-power-select-options';
 const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const ASSIGNEE_DROPDOWN = '.t-ticket-assignee-select-dropdown > .ember-power-select-options';
-const CC = 'select.t-ticket-people-select:eq(0) + .selectize-control';
 const CATEGORY_ONE = '.t-ticket-category-power-select:eq(0) > .ember-basic-dropdown > .ember-power-select-trigger';
 const CATEGORY_TWO = '.t-ticket-category-power-select:eq(1) > .ember-basic-dropdown > .ember-power-select-trigger';
 const CATEGORY_THREE = '.t-ticket-category-power-select:eq(2) > .ember-basic-dropdown > .ember-power-select-trigger';
@@ -27,11 +32,18 @@ const STATUS_DROPDOWN = '.t-ticket-status-power-select-dropdown > .ember-power-s
 
 var TicketPage = PageObject.build({
   visitNew: visitable(NEW_URL),
-
   visit: visitable(TICKETS_URL),
   visitDetail: visitable(DETAIL_URL),
-  subjectInput: value('.t-ticket-subject'),
-  subject: fillable('.t-ticket-subject'),
+
+  ccClickDropdown: clickable(`${CC}`),
+  ccInput: text(`${CC}`),
+  ccSelected: text(`${CC_ONE}`),
+  ccTwoSelected: text(`${CC_TWO}`),
+  ccThreeSelected: text(`${CC_THREE}`),
+  ccClickDonald: clickable(`${CC_DROPDOWN} > .ember-power-select-option:contains(${PEOPLE_DEFAULTS.donald})`),
+  ccClickOptionOne: clickable(`${CC_DROPDOWN} > .ember-power-select-option:contains(${PEOPLE_DEFAULTS.nameBoy} Man)`),
+  ccClickOptionTwo: clickable(`${CC_DROPDOWN} > .ember-power-select-option:contains(${PEOPLE_DEFAULTS.nameThree})`),
+  ccOptionLength: count(`${CC_DROPDOWN} > li`),
 
   selectizeComponents: count('.t-ticket-category-power-select'),
   categoryOneClickDropdown: clickable(`${CATEGORY_ONE}`),
@@ -80,15 +92,6 @@ var TicketPage = PageObject.build({
   assigneeClickOptionTwo: clickable(`${ASSIGNEE_DROPDOWN} > .ember-power-select-option:eq(1)`),
   // assigneeClickIdThree: clickable(`${ASSIGNEE_DROPDOWN} > .ember-power-select-option:contains(${PEOPLE_DEFAULTS.storeNameThree})`),
   assigneeOptionLength: count(`${ASSIGNEE_DROPDOWN} > li`),
-
-  clickSelectizeOption: clickable('.t-ticket-people-select div.option:eq(0)'),
-
-  ticketPeopleSelected: count('.t-ticket-people-select > div.selectize-input > div.item'),
-  ticketPeopleOptions: count('.t-ticket-people-select > div.selectize-dropdown-content > div.option'),
-  removeTicketPeople: clickable('.t-ticket-people-select > div.selectize-input > div.item > a.remove:eq(0)'),
-  removeSecondTicketPeople: clickable('.t-ticket-people-select > div.selectize-input > div.item > a.remove:eq(1)'),
-
-  locationSelectComponent: clickable(),
 });
 
 export default TicketPage;

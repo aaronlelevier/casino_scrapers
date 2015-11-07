@@ -53,7 +53,7 @@ export default Ember.Object.extend(GridRepositoryMixin, {
                 let fullname = person.get('fullname');
                 return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1 && !person.get('new');
             };
-            return this.get('store').find('person', filterFunc, []);
+            return this.get('store').find('person', filterFunc, ['id']);
         }
     },
     find() {
