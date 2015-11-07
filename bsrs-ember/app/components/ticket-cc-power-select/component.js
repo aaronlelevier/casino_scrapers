@@ -1,10 +1,10 @@
 import Ember from 'ember';
 
 var TicketPeopleMulti = Ember.Component.extend({
-    // cc_selected: Ember.computed('ticket.cc.[]', function() {
-    //     let ticket = this.get('ticket');
-    //     return ticket.get('cc');
-    // }),
+    cc_selected: Ember.computed('ticket.cc.[]', function() {
+        let ticket = this.get('ticket');
+        return ticket.get('cc');
+    }),
     // options: Ember.computed('ticket.cc.[]', 'ticket_cc_options.[]', 'search_cc', function() {
     //     // let cc = Ember.A([]);
     //     // let cc_options = this.get('ticket_cc_options');

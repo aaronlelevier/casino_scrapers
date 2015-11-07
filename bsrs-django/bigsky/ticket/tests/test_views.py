@@ -78,6 +78,7 @@ class TicketDetailTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.ticket.id))
+        self.assertEqual(data['cc'][0]['id'], str(self.ticket.cc.first().id))
         self.assertIn(data['categories'][0]['id'], self.category_ids)
         self.assertEqual(str(data['assignee']['id']), str(self.person.id))
         self.assertEqual(data['assignee']['first_name'], self.person.first_name)
