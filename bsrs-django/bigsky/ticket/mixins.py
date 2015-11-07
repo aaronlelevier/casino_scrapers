@@ -56,10 +56,11 @@ class TicketUpdateLogger(object):
         "Run all log checks for the Ticket."
         self.check_cc_add_or_remove()
         self.check_from_to_changes()
+        self.check_category_change()
 
     def check_cc_add_or_remove(self):
-        init_cc = set(self.init_ticket.get('cc', []))
-        post_cc = set(self.post_ticket.get('cc', []))
+        init_cc = set(self.init_ticket.get('cc', set()))
+        post_cc = set(self.post_ticket.get('cc', set()))
 
         new_cc = post_cc - init_cc
         if new_cc:
@@ -71,7 +72,7 @@ class TicketUpdateLogger(object):
 
     def log_list_change(self, name, changed):
         type, _ = TicketActivityType.objects.get_or_create(name=name)
-        content = {str(i): str(cc) for i, cc in enumerate(changed)}
+        content = {str(i): str(id) for i, id in enumerate(changed)}
         self.log_ticket_activity(type, content)
 
     def check_from_to_changes(self):
@@ -89,6 +90,24 @@ class TicketUpdateLogger(object):
                 'from': str(init_field),
                 'to': str(post_field)
             }
+            self.log_ticket_activity(type, content)
+
+    def check_category_change(self):
+        init_categories = set(self.init_ticket.get('categories', set()))
+        post_categories = set(self.post_ticket.get('categories', set()))
+
+        changed_categories = init_categories ^ post_categories
+        if changed_categories:
+            type, _ = TicketActivityType.objects.get_or_create(name='categories')
+
+            content = {}
+
+            for i, id in enumerate(init_categories):
+                content.update({'from_{}'.format(i): str(id)})
+
+            for i, id in enumerate(post_categories):
+                content.update({'to_{}'.format(i): str(id)})
+
             self.log_ticket_activity(type, content)
 
     def log_ticket_activity(self, type, content):

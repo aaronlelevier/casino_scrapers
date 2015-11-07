@@ -1,5 +1,8 @@
+import copy
+
 from rest_framework import serializers
 
+from category.models import Category
 from category.serializers import CategoryIDNameSerializer
 from location.serializers import LocationSerializer
 from person.models import Person
@@ -56,6 +59,10 @@ class TicketActivitySerializer(serializers.ModelSerializer):
         """
         Handle different data structures based on TicketActivityType. These will be
         loaded as fixtures, so all TicketActivityType will be present here.
+
+        TODO
+        ----
+        Make ``data['content'] to_representation() into a class to simplify.
         """
         data = super(TicketActivitySerializer, self).to_representation(obj)
 
@@ -82,5 +89,26 @@ class TicketActivitySerializer(serializers.ModelSerializer):
                 for id in person_ids:
                     person = Person.objects.get(id=id)
                     data['content']['removed'].append(person.to_simple_dict())
+
+            elif data['type'] == types.get(name='categories').id:
+                # From
+                from_categories = list(v for k,v in data['content'].items() if k.startswith('from_'))
+                data['content'].update({'from': []})
+                for id in from_categories:
+                    category = Category.objects.get(id=id)
+                    data['content']['from'].append(category.to_simple_dict())
+
+                for i, _ in enumerate(data['content']['from']):
+                    data['content'].pop('from_{}'.format(i))
+
+                # To
+                to_categories = list(v for k,v in data['content'].items() if k.startswith('to_'))
+                data['content'].update({'to': []})
+                for id in to_categories:
+                    category = Category.objects.get(id=id)
+                    data['content']['to'].append(category.to_simple_dict())
+
+                for i, _ in enumerate(data['content']['from']):
+                    data['content'].pop('to_{}'.format(i))
 
         return data
