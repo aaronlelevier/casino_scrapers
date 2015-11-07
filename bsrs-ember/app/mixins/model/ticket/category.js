@@ -25,8 +25,7 @@ var CategoriesMixin = Ember.Mixin.create({
     categories_ids: Ember.computed('categories.[]', function() {
         return this.get('categories').mapBy('id');
     }),
-    sorted_categories: Ember.computed('top_level_category', function() {
-        // debugger;
+    sorted_categories: Ember.computed('categories.[]', 'top_level_category', function() {
         const top_level_category = this.get('top_level_category');
         const categories = this.construct_category_tree(top_level_category);
         return categories;
@@ -72,32 +71,32 @@ var CategoriesMixin = Ember.Mixin.create({
     },
     change_category_tree(category_pk) {
         let parent_ids = this.find_parent_nodes(category_pk);
-        let store = this.get('store');
-        let ticket_pk = this.get('id');
+        const store = this.get('store');
+        const ticket_pk = this.get('id');
+        //remove all m2m join models that don't relate to this category pk
         let m2m_models = this.get('ticket_categories').filter((m2m) => {
             return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
         });
         m2m_models.forEach((m2m) => {
             store.push('ticket-category', {id: m2m.get('id'), removed: true});
         });
-        let uuid = this.get('uuid');
+        const uuid = this.get('uuid');
         store.push('ticket-category', {id: uuid.v4(), ticket_pk: this.get('id'), category_pk: category_pk});
-        //also update children_fks [] on the category to "refresh" children computed :)
     },
     add_category(category_pk) {
-        let uuid = this.get('uuid');
-        let store = this.get('store');
+        const uuid = this.get('uuid');
+        const store = this.get('store');
         store.push('ticket-category', {id: uuid.v4(), ticket_pk: this.get('id'), category_pk: category_pk});
     },
     remove_category(category_pk) {
-        let store = this.get('store');
+        const store = this.get('store');
         let m2m_pk = this.get('ticket_categories').filter((m2m) => {
             return m2m.get('category_pk') === category_pk;
         }).objectAt(0).get('id');
         store.push('ticket-category', {id: m2m_pk, removed: true});
     },
     rollbackCategories() {
-        let store = this.get('store');
+        const store = this.get('store');
         let previous_m2m_fks = this.get('ticket_categories_fks') || [];
         let m2m_to_throw_out = store.find('ticket-category', function(join_model) {
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
