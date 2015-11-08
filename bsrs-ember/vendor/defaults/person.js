@@ -62,6 +62,7 @@ var BSRS_PERSON_DEFAULTS_OBJECT = (function() {
             nameOne: 'wanker',
             nameTwo: 'bonker',
             nameThree: 'tommy',
+            nameMel: 'Mel1 Gibson1',
             nameBoy: 'Boy1',
             nameBoy2: 'Boy2',
             lastNameOne: 'A',

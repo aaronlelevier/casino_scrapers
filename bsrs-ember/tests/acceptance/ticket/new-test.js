@@ -43,7 +43,7 @@ const SEARCH = '.ember-power-select-search input';
 
 let application, store, list_xhr, location_xhr, people_xhr, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter;
 
-module('Acceptance | ticket new test', {
+module('sco Acceptance | ticket new test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -652,5 +652,39 @@ test('clicking and typing into selectize for people will fire off xhr request fo
         assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.donald_first_name);
         assert.equal(ticket.get('cc').objectAt(1).get('id'), PEOPLE_DEFAULTS.idBoy);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+});
+
+test('can remove and add back same cc and save empty cc', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(location_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
+    page.visitNew();
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(!ticket.get('cc.length'));
+    });
+    let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
+    xhr(people_endpoint, 'GET', null, {}, 200, PEOPLE_FIXTURES.list());
+    page.ccClickDropdown();
+    fillIn(`${CC_SEARCH}`, 'a');
+    andThen(() => {
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PEOPLE_DEFAULTS.donald);
+    });
+    page.ccClickDonald();
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PEOPLE_DEFAULTS.donald_first_name);
+        assert.equal(page.ccSelected().indexOf(PEOPLE_DEFAULTS.donald), 2);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    page.ccOneRemove();
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('cc').get('length'), 0);
     });
 });

@@ -1,10 +1,10 @@
 {{#power-select
   multiple=true
-  selected=cc_selected
+  selected=ticket.cc
   options=ticket_cc_options
   class="t-ticket-cc-select"
   search=(action "update_filter")
-  onchange=(action "add")
+  onchange=(action "change_cc")
   searchPlaceholder="Type a person"
   as |person|
 }}
