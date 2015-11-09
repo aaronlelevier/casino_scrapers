@@ -1,10 +1,14 @@
+import copy
+
 from rest_framework import serializers
 
+from category.models import Category
 from category.serializers import CategoryIDNameSerializer
 from location.serializers import LocationSerializer
 from person.models import Person
 from person.serializers import PersonSimpleSerializer, PersonTicketSerializer
-from ticket.models import Ticket, TicketActivity, TicketActivityType
+from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
+    TicketActivityType)
 from utils.serializers import BaseCreateSerializer
 
 
@@ -12,20 +16,14 @@ TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
     'requester', 'categories', 'attachments', 'request',)
 
 
-class TicketBaseSerializer(serializers.ModelSerializer):
+class TicketCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Ticket
         fields = TICKET_FIELDS
 
 
-class TicketCreateSerializer(BaseCreateSerializer):
-    class Meta:
-        model = Ticket
-        fields = TICKET_FIELDS + ('cc',)
-
-
-class TicketListSerializer(TicketBaseSerializer):
+class TicketListSerializer(serializers.ModelSerializer):
 
     categories = CategoryIDNameSerializer(many=True)
     assignee = PersonTicketSerializer(required=False)
@@ -36,7 +34,7 @@ class TicketListSerializer(TicketBaseSerializer):
         fields = TICKET_FIELDS + ('number',)
 
 
-class TicketSerializer(TicketBaseSerializer):
+class TicketSerializer(serializers.ModelSerializer):
 
     categories = CategoryIDNameSerializer(many=True)
     assignee = PersonTicketSerializer(required=False)
@@ -61,6 +59,10 @@ class TicketActivitySerializer(serializers.ModelSerializer):
         """
         Handle different data structures based on TicketActivityType. These will be
         loaded as fixtures, so all TicketActivityType will be present here.
+
+        TODO
+        ----
+        Make ``data['content'] to_representation() into a class to simplify.
         """
         data = super(TicketActivitySerializer, self).to_representation(obj)
 
@@ -87,5 +89,26 @@ class TicketActivitySerializer(serializers.ModelSerializer):
                 for id in person_ids:
                     person = Person.objects.get(id=id)
                     data['content']['removed'].append(person.to_simple_dict())
+
+            elif data['type'] == types.get(name='categories').id:
+                # From
+                from_categories = list(v for k,v in data['content'].items() if k.startswith('from_'))
+                data['content'].update({'from': []})
+                for id in from_categories:
+                    category = Category.objects.get(id=id)
+                    data['content']['from'].append(category.to_simple_dict())
+
+                for i, _ in enumerate(data['content']['from']):
+                    data['content'].pop('from_{}'.format(i))
+
+                # To
+                to_categories = list(v for k,v in data['content'].items() if k.startswith('to_'))
+                data['content'].update({'to': []})
+                for id in to_categories:
+                    category = Category.objects.get(id=id)
+                    data['content']['to'].append(category.to_simple_dict())
+
+                for i, _ in enumerate(data['content']['from']):
+                    data['content'].pop('to_{}'.format(i))
 
         return data

@@ -54,49 +54,68 @@ class TicketUpdateLogger(object):
 
     def run_check_ticket_changes(self):
         "Run all log checks for the Ticket."
-        self.check_assignee_change()
-        self.check_cc_add()
-        self.check_cc_remove()
+        self.check_cc_add_or_remove()
+        self.check_from_to_changes()
+        self.check_category_change()
 
-    def check_assignee_change(self):
-        init_assignee = self.init_ticket.get('assignee', None)
-        post_assignee = self.post_ticket.get('assignee', None)
-
-        if init_assignee != post_assignee:
-            type, _ = TicketActivityType.objects.get_or_create(name='assignee')
-            TicketActivity.objects.create(
-                type=type,
-                person=self.person,
-                ticket=self.instance,
-                content={
-                    'from': str(init_assignee),
-                    'to': str(post_assignee)
-                }
-            )
-
-    def check_cc_add(self):
-        init_cc = set(self.init_ticket.get('cc', []))
-        post_cc = set(self.post_ticket.get('cc', []))
+    def check_cc_add_or_remove(self):
+        init_cc = set(self.init_ticket.get('cc', set()))
+        post_cc = set(self.post_ticket.get('cc', set()))
 
         new_cc = post_cc - init_cc
         if new_cc:
-            self.log_cc_change('cc_add', new_cc)
-
-    def check_cc_remove(self):
-        init_cc = set(self.init_ticket.get('cc', []))
-        post_cc = set(self.post_ticket.get('cc', []))
+            self.log_list_change('cc_add', new_cc)
 
         removed_cc = init_cc - post_cc
         if removed_cc:
-            self.log_cc_change('cc_remove', removed_cc)
+            self.log_list_change('cc_remove', removed_cc)
 
-    def log_cc_change(self, name, changed_cc):
+    def log_list_change(self, name, changed):
         type, _ = TicketActivityType.objects.get_or_create(name=name)
+        content = {str(i): str(id) for i, id in enumerate(changed)}
+        self.log_ticket_activity(type, content)
+
+    def check_from_to_changes(self):
+        fields = ['assignee', 'status', 'priority']
+        for field in fields:
+            self.check_from_to_change(field)
+
+    def check_from_to_change(self, field):
+        init_field = self.init_ticket.get(field, None)
+        post_field = self.post_ticket.get(field, None)
+
+        if init_field != post_field:
+            type, _ = TicketActivityType.objects.get_or_create(name=field)
+            content = {
+                'from': str(init_field),
+                'to': str(post_field)
+            }
+            self.log_ticket_activity(type, content)
+
+    def check_category_change(self):
+        init_categories = set(self.init_ticket.get('categories', set()))
+        post_categories = set(self.post_ticket.get('categories', set()))
+
+        changed_categories = init_categories ^ post_categories
+        if changed_categories:
+            type, _ = TicketActivityType.objects.get_or_create(name='categories')
+
+            content = {}
+
+            for i, id in enumerate(init_categories):
+                content.update({'from_{}'.format(i): str(id)})
+
+            for i, id in enumerate(post_categories):
+                content.update({'to_{}'.format(i): str(id)})
+
+            self.log_ticket_activity(type, content)
+
+    def log_ticket_activity(self, type, content):
         TicketActivity.objects.create(
             type=type,
             person=self.person,
             ticket=self.instance,
-            content={str(i): str(cc) for i, cc in enumerate(changed_cc)}
+            content=content
         )
 
 

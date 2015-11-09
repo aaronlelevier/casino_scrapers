@@ -6,10 +6,11 @@ from rest_framework.test import APITestCase, APITransactionTestCase
 
 from category.models import Category
 from person.tests.factory import PASSWORD, create_single_person
-from ticket.models import Ticket, TicketActivity, TicketActivityType, TICKET_ACTIVITY_TYPES
+from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
+    TicketActivityType, TICKET_ACTIVITY_TYPES)
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
-    create_ticket_activity_type)
+    create_ticket_activity_type, create_ticket_status, create_ticket_priority)
 
 
 class TicketListTests(APITestCase):
@@ -143,20 +144,6 @@ class TicketCreateTests(APITestCase):
         self.client.logout()
 
     def test_ticket(self):
-        self.data.update({
-            'id': str(uuid.uuid4()),
-            'request': 'plumbing',
-        })
-
-        response = self.client.post('/api/tickets/', self.data, format='json')
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(response.status_code, 201)
-        self.assertEqual(self.data['id'], data['id'])
-        self.assertEqual(self.data['request'], data['request'])
-
-    def test_ticket_no_cc(self):
-        self.data.pop('cc', None)
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing',
@@ -333,6 +320,53 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(len(data['results'][0]['content']), 1)
         self.assertEqual(data['results'][0]['content']['removed'][0]['id'], str(cc.id))
 
+    def test_status(self):
+        from_status = self.ticket.status
+        to_status = create_ticket_status('ticket.status.new')
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='status',
+            content={'from': str(from_status.id), 'to': str(to_status.id)})
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['content']['from'], str(from_status.id))
+        self.assertEqual(data['results'][0]['content']['to'], str(to_status.id))
+
+    def test_priority(self):
+        from_priority = self.ticket.priority
+        to_priority = create_ticket_priority('ticket.priority.new')
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='priority',
+            content={'from': str(from_priority.id), 'to': str(to_priority.id)})
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['content']['from'], str(from_priority.id))
+        self.assertEqual(data['results'][0]['content']['to'], str(to_priority.id))
+
+    def test_categories(self):
+        from_category = self.ticket.categories.first()
+        to_category = Category.objects.exclude(id=from_category.id).first()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
+            content={'from_0': str(from_category.id), 'to_0': str(to_category.id)})
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['content']['from'][0]['id'], str(from_category.id))
+        self.assertEqual(data['results'][0]['content']['to'][0]['id'], str(to_category.id))
+        # old keys gone
+        with self.assertRaises(KeyError):
+            data['results'][0]['content']['from_0']
+        with self.assertRaises(KeyError):
+            data['results'][0]['content']['to_0']
+
 
 class TicketAndTicketActivityTests(APITransactionTestCase):
 
@@ -351,7 +385,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_log_create(self):
+    def test_create(self):
         self.assertEqual(TicketActivity.objects.count(), 0)
         name = 'create'
         self.data.update({
@@ -365,7 +399,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         activity = TicketActivity.objects.first()
         self.assertEqual(activity.type.name, name)
 
-    def test_log_assignee(self):
+    def test_assignee(self):
         self.assertEqual(TicketActivityType.objects.count(), 0)
         name = 'assignee'
         new_assingee = create_single_person()
@@ -374,11 +408,16 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
 
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
 
+        # response
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['assignee'], str(new_assingee.id))
+        # TicketActivity
         self.assertEqual(response.status_code, 200)
         self.assertEqual(TicketActivity.objects.count(), 1)
         activity = TicketActivity.objects.first()
         self.assertEqual(activity.type.name, name)
         self.assertTrue(TicketActivity.objects.filter(content__from=str(self.ticket.assignee.id)).exists())
+        self.assertTrue(TicketActivity.objects.filter(content__to=str(new_assingee.id)).exists())
 
     def test_cc_add(self):
         self.assertEqual(TicketActivity.objects.count(), 0)
@@ -449,3 +488,66 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
             str(new_cc_two.id),
             [str(activity.content[k]) for k,v in activity.content.items()]
         )
+
+    def test_status(self):
+        self.assertEqual(TicketActivityType.objects.count(), 0)
+        name = 'status'
+        new_status = create_ticket_status('my-new-status')
+        self.assertNotEqual(self.data['status'], str(new_status.id))
+        self.data['status'] = str(new_status.id)
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        # response
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['status'], str(new_status.id))
+        # TicketActivity
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertTrue(TicketActivity.objects.filter(content__from=str(self.ticket.status.id)).exists())
+        self.assertTrue(TicketActivity.objects.filter(content__to=str(new_status.id)).exists())
+
+    def test_priority(self):
+        self.assertEqual(TicketActivityType.objects.count(), 0)
+        name = 'priority'
+        new_priority = create_ticket_priority('my-new-priority')
+        self.assertNotEqual(self.data['priority'], str(new_priority.id))
+        self.data['priority'] = str(new_priority.id)
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        # response
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['priority'], str(new_priority.id))
+        # TicketActivity
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertTrue(TicketActivity.objects.filter(content__from=str(self.ticket.priority.id)).exists())
+        self.assertTrue(TicketActivity.objects.filter(content__to=str(new_priority.id)).exists())
+
+    def test_categories(self):
+        self.assertEqual(TicketActivityType.objects.count(), 0)
+        name = 'categories'
+        new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()
+        self.assertEqual(self.ticket.categories.count(), 1)
+        self.assertNotEqual(self.data['categories'][0], str(new_category.id))
+        # data
+        init_categories = self.data['categories']
+        post_categories = self.data['categories'] = [str(new_category.id)]
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        # response
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['categories'][0], str(new_category.id))
+        # TicketActivity
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertTrue(TicketActivity.objects.filter(content__from_0=str(init_categories[0])).exists())
+        self.assertTrue(TicketActivity.objects.filter(content__to_0=str(post_categories[0])).exists())

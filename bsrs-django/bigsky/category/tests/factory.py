@@ -2,7 +2,7 @@ import random
 
 from model_mommy import mommy
 
-from category.models import Category, CATEGORY_STATUSES,CategoryStatus
+from category.models import Category, CATEGORY_STATUSES, CategoryStatus
 from utils.create import random_lorem
 
 
@@ -11,7 +11,6 @@ def create_categories(_many=0):
     # Repair
     type = mommy.make(Category, name='repair',
         subcategory_label='trade', status=random.choice(CategoryStatus.objects.all()))
-     
     
     num_of_cat = random.randrange(2,5)
     if _many > 0:

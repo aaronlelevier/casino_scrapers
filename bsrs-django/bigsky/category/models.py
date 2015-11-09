@@ -123,5 +123,28 @@ class Category(BaseModel):
 
     def to_dict(self):
         if self.parent:
-            return {"id": str(self.pk), "name": self.name, "status": str(self.status), "parent": {"id": str(self.parent.pk), "name": self.parent.name}, "has_children": self.has_children}
-        return {"id": str(self.pk), "name": self.name, "status": str(self.status), "parent": None, "has_children": self.has_children}
+            return {
+                "id": str(self.pk),
+                "name": self.name,
+                "status": str(self.status),
+                "parent": {
+                    "id": str(self.parent.pk),
+                    "name": self.parent.name
+                },
+                "has_children": self.has_children
+            }
+        else:
+            return {
+                "id": str(self.pk),
+                "name": self.name,
+                "status": str(self.status),
+                "parent": None,
+                "has_children": self.has_children
+            }
+
+    def to_simple_dict(self):
+        return {
+            'id': str(self.id),
+            'name': self.name,
+            'parent': str(self.parent)
+        }

@@ -1,6 +1,7 @@
+from rest_framework import serializers
+
 from category.models import Category
 from utils.serializers import BaseCreateSerializer
-from rest_framework import serializers
 
 
 ### CATEGORY
@@ -22,6 +23,7 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
         data = super(CategoryIDNameSerializer, self).to_representation(obj)
         data['children_fks'] = data.pop('children', [])
         return data
+
 
 class CategoryRoleSerializer(BaseCreateSerializer):
     '''
