@@ -31,7 +31,10 @@ def create_ticket():
         request = _generate_chars()
     )
     ticket.cc.add(create_single_person())
-    ticket.categories.add(Category.objects.first())
+    top_level_category = Category.objects.filter(parent__isnull=True).first()
+    ticket.categories.add(top_level_category)
+    for child in top_level_category.children.all():
+        ticket.categories.add(child)
     return ticket
 
 
