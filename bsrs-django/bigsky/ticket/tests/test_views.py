@@ -365,24 +365,24 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['from'], str(from_priority.id))
         self.assertEqual(data['results'][0]['content']['to'], str(to_priority.id))
 
-    def test_categories(self):
-        from_category = self.ticket.categories.first()
-        to_category = Category.objects.exclude(id=from_category.id).first()
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
-            content={'from_0': str(from_category.id), 'to_0': str(to_category.id)})
+    # def test_categories(self):
+    #     from_category = self.ticket.categories.first()
+    #     to_category = Category.objects.exclude(id=from_category.id).first()
+    #     ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
+    #         content={'from_0': str(from_category.id), 'to_0': str(to_category.id)})
 
-        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+    #     response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
 
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
-        self.assertEqual(data['results'][0]['content']['from'][0]['id'], str(from_category.id))
-        self.assertEqual(data['results'][0]['content']['to'][0]['id'], str(to_category.id))
-        # old keys gone
-        with self.assertRaises(KeyError):
-            data['results'][0]['content']['from_0']
-        with self.assertRaises(KeyError):
-            data['results'][0]['content']['to_0']
+    #     data = json.loads(response.content.decode('utf8'))
+    #     self.assertEqual(data['count'], 1)
+    #     self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+    #     self.assertEqual(data['results'][0]['content']['from'][0]['id'], str(from_category.id))
+    #     self.assertEqual(data['results'][0]['content']['to'][0]['id'], str(to_category.id))
+    #     # old keys gone
+    #     with self.assertRaises(KeyError):
+    #         data['results'][0]['content']['from_0']
+    #     with self.assertRaises(KeyError):
+    #         data['results'][0]['content']['to_0']
 
 
 class TicketAndTicketActivityTests(APITransactionTestCase):
