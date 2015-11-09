@@ -106,3 +106,7 @@ def create_ticket_activity_type(name=None, weight=1):
     obj, _ = TicketActivityType.objects.get_or_create(name=name, weight=weight)
 
     return obj
+
+
+def create_ticket_activity_types():
+    return [create_ticket_activity_type(name=name) for name in TICKET_ACTIVITY_TYPES]

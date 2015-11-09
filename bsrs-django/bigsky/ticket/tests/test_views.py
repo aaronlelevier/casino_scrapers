@@ -12,7 +12,8 @@ from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
     TicketActivityType, TICKET_ACTIVITY_TYPES)
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
-    create_ticket_activity_type, create_ticket_status, create_ticket_priority)
+    create_ticket_activity_type, create_ticket_activity_types,
+    create_ticket_status, create_ticket_priority)
 
 
 class TicketListTests(APITestCase):
@@ -282,7 +283,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
         # Ticket
         self.ticket = create_ticket()
         # TicketActivityTypes
-        [create_ticket_activity_type(name=name) for name in TICKET_ACTIVITY_TYPES]
+        create_ticket_activity_types()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -365,24 +366,24 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['from'], str(from_priority.id))
         self.assertEqual(data['results'][0]['content']['to'], str(to_priority.id))
 
-    # def test_categories(self):
-    #     from_category = self.ticket.categories.first()
-    #     to_category = Category.objects.exclude(id=from_category.id).first()
-    #     ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
-    #         content={'from_0': str(from_category.id), 'to_0': str(to_category.id)})
+    def test_categories(self):
+        from_category = self.ticket.categories.first()
+        to_category = Category.objects.exclude(id=from_category.id).first()
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
+            content={'from_0': str(from_category.id), 'to_0': str(to_category.id)})
 
-    #     response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
 
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertEqual(data['count'], 1)
-    #     self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
-    #     self.assertEqual(data['results'][0]['content']['from'][0]['id'], str(from_category.id))
-    #     self.assertEqual(data['results'][0]['content']['to'][0]['id'], str(to_category.id))
-    #     # old keys gone
-    #     with self.assertRaises(KeyError):
-    #         data['results'][0]['content']['from_0']
-    #     with self.assertRaises(KeyError):
-    #         data['results'][0]['content']['to_0']
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['content']['from'][0]['id'], str(from_category.id))
+        self.assertEqual(data['results'][0]['content']['to'][0]['id'], str(to_category.id))
+        # old keys gone
+        with self.assertRaises(KeyError):
+            data['results'][0]['content']['from_0']
+        with self.assertRaises(KeyError):
+            data['results'][0]['content']['to_0']
 
 
 class TicketAndTicketActivityTests(APITransactionTestCase):
@@ -392,6 +393,8 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.person = create_single_person()
         # Ticket
         self.ticket = create_ticket()
+        # TicketActivityType
+        create_ticket_activity_types()
         # Data
         serializer = TicketCreateSerializer(self.ticket)
         self.data = serializer.data
@@ -403,8 +406,8 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.client.logout()
 
     def test_create(self):
-        self.assertEqual(TicketActivity.objects.count(), 0)
         name = 'create'
+        self.assertEqual(TicketActivity.objects.count(), 0)
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing',
@@ -417,8 +420,8 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(activity.type.name, name)
 
     def test_assignee(self):
-        self.assertEqual(TicketActivityType.objects.count(), 0)
         name = 'assignee'
+        self.assertEqual(TicketActivity.objects.count(), 0)
         new_assingee = create_single_person()
         self.assertNotEqual(self.data['assignee'], str(new_assingee.id))
         self.data['assignee'] = str(new_assingee.id)
@@ -437,8 +440,8 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertTrue(TicketActivity.objects.filter(content__to=str(new_assingee.id)).exists())
 
     def test_cc_add(self):
-        self.assertEqual(TicketActivity.objects.count(), 0)
         name = 'cc_add'
+        self.assertEqual(TicketActivity.objects.count(), 0)
         new_cc = create_single_person()
         self.data['cc'].append(str(new_cc.id))
 
@@ -450,12 +453,12 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(activity.content['0'], str(new_cc.id))
 
     def test_cc_remove(self):
+        name = 'cc_remove'
         # ticket
         init_cc = self.ticket.cc.first()
         self.assertEqual(self.ticket.cc.count(), 1)
         # ticket activity
         self.assertEqual(TicketActivity.objects.count(), 0)
-        name = 'cc_remove'
         self.data['cc'] = []
 
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
@@ -484,8 +487,8 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(activity.content['0'], str(init_cc.id))
 
     def test_cc_add_multiple(self):
-        self.assertEqual(TicketActivity.objects.count(), 0)
         name = 'cc_add'
+        self.assertEqual(TicketActivity.objects.count(), 0)
         new_cc = create_single_person()
         new_cc_two = create_single_person()
         self.data['cc'].append(str(new_cc.id))
@@ -507,8 +510,8 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         )
 
     def test_status(self):
-        self.assertEqual(TicketActivityType.objects.count(), 0)
         name = 'status'
+        self.assertEqual(TicketActivity.objects.count(), 0)
         new_status = create_ticket_status('my-new-status')
         self.assertNotEqual(self.data['status'], str(new_status.id))
         self.data['status'] = str(new_status.id)
@@ -527,8 +530,8 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertTrue(TicketActivity.objects.filter(content__to=str(new_status.id)).exists())
 
     def test_priority(self):
-        self.assertEqual(TicketActivityType.objects.count(), 0)
         name = 'priority'
+        self.assertEqual(TicketActivity.objects.count(), 0)
         new_priority = create_ticket_priority('my-new-priority')
         self.assertNotEqual(self.data['priority'], str(new_priority.id))
         self.data['priority'] = str(new_priority.id)
@@ -549,7 +552,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_categories(self):
         name = 'categories'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        ticket_activity_type = create_ticket_activity_type(name=name)
+        # ticket_activity_type = create_ticket_activity_type(name=name)
         # Only one Category on the Ticket
         # [c.delete(override=True) for c in self.ticket.categories.all()[1:]]
         new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()

@@ -7,6 +7,7 @@ from category.serializers import CategoryIDNameSerializer
 from location.serializers import LocationSerializer
 from person.models import Person
 from person.serializers import PersonSimpleSerializer, PersonTicketSerializer
+from ticket.helpers import TicketActivityToRepresentation
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
     TicketActivityType)
 from utils.serializers import BaseCreateSerializer
@@ -47,36 +48,6 @@ class TicketSerializer(serializers.ModelSerializer):
         fields = TICKET_FIELDS + ('number', 'cc',)
 
 
-class TicketActivityData(object):
-
-    def __init__(self, data):
-        self.data = copy.deepcopy(data)
-        self.types = TicketActivityType.objects.all()
-
-    def get_data(self):
-        if self.data['type'] == self.types.get(name='assignee').id:
-            self.set_assignee_data()
-        elif self.data['type'] == self.types.get(name='cc_add').id:
-            self.set_content_list_data(key='added')
-        elif self.data['type'] == self.types.get(name='cc_remove').id:
-            self.set_content_list_data(key='removed')
-
-        return self.data
-
-    def set_assignee_data(self):
-        for k,v in self.data['content'].items():
-            person = Person.objects.get(id=v)
-            self.data['content'][k] = person.to_simple_dict()
-
-    def set_content_list_data(self, key):
-        person_ids = list(self.data['content'].values())
-        self.data['content'] = {key: []}
-
-        for id in person_ids:
-            person = Person.objects.get(id=id)
-            self.data['content'][key].append(person.to_simple_dict())
-
-
 class TicketActivitySerializer(serializers.ModelSerializer):
 
     person = PersonSimpleSerializer()
@@ -93,7 +64,7 @@ class TicketActivitySerializer(serializers.ModelSerializer):
         data = super(TicketActivitySerializer, self).to_representation(obj)
 
         if data['content']:
-            activity_data = TicketActivityData(data)
+            activity_data = TicketActivityToRepresentation(data)
             data = activity_data.get_data()
 
             # person_ids = list(data['content'].values())
