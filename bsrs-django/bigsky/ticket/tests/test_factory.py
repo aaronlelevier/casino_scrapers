@@ -28,11 +28,11 @@ class CreateTicketTests(TestCase):
     def test_cc(self):
         self.assertIsInstance(self.ticket.cc.all()[0], Person)
 
+    def test_category(self):
+        self.assertIsInstance(self.ticket.cc.all()[0], Person)
+
     def test_requester(self):
         self.assertIsInstance(self.ticket.requester, Person)
-
-    def test_categories(self):
-        self.assertIsInstance(self.ticket.categories.all()[0], Category)
 
     # TODO: need to create a factory method to get this test to pass.
     # def test_attachments(self):
@@ -43,6 +43,17 @@ class CreateTicketTests(TestCase):
 
     def test_number(self):
         self.assertIsInstance(self.ticket.number, int)
+
+
+class ConstructTreeTests(TestCase):
+
+    def setUp(self):
+        self.ticket = factory.create_ticket(multiple_categories=True)
+
+    def test_categories(self):
+        top_level = Category.objects.filter(parent__isnull=True).first()
+        self.categories = factory.construct_tree(top_level, [])
+        self.assertTrue(len(self.categories) >= 2)
 
 
 class CreateTicketsTests(TestCase):

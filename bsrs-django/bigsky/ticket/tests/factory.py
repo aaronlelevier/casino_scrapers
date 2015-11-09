@@ -12,7 +12,16 @@ from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityT
 from utils.create import _generate_chars
 
 
-def create_ticket(single_category=False):
+def construct_tree(category, tree):
+    tree.append(category)
+    if not category.has_children:
+        return 
+    child_category = category.children.first()
+    construct_tree(child_category, tree)
+    return tree
+
+
+def create_ticket(multiple_categories=False):
     if not Location.objects.all().exists():
         create_locations()
 
@@ -35,12 +44,14 @@ def create_ticket(single_category=False):
     ticket.cc.add(cc)
 
     top_level_category = Category.objects.filter(parent__isnull=True).first()
-    ticket.categories.add(top_level_category)
     
-    if not single_category:
-        for child in top_level_category.children.all():
-            ticket.categories.add(child)
-    
+    if multiple_categories:
+        tree = construct_tree(top_level_category, [])
+        for category in tree:
+            ticket.categories.add(category)
+    else:
+        ticket.categories.add(top_level_category)
+
     return ticket
 
 

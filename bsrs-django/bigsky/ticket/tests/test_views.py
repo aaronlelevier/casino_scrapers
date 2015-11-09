@@ -20,7 +20,7 @@ class TicketListTests(APITestCase):
     def setUp(self):
         self.password = PASSWORD
         # Ticket
-        self.ticket = create_ticket()
+        self.ticket = create_ticket(multiple_categories=True)
         self.person = self.ticket.assignee
         # Category
         self.category_ids = [str(x) for x in Category.objects.values_list('id', flat=True)]
@@ -53,6 +53,7 @@ class TicketListTests(APITestCase):
         self.assertIsNotNone(categories[0]['has_children'])
         self.assertIsNotNone(categories[0]['parent'])
         self.assertIsNotNone(categories[0]['children_fks'])
+        self.assertNotIn('cc', categories[0])
 
 
 class TicketDetailTests(APITestCase):
@@ -390,7 +391,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.password = PASSWORD
         self.person = create_single_person()
         # Ticket
-        self.ticket = create_ticket(single_category=True)
+        self.ticket = create_ticket()
         # Data
         serializer = TicketCreateSerializer(self.ticket)
         self.data = serializer.data
