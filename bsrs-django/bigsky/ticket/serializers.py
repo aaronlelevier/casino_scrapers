@@ -67,48 +67,4 @@ class TicketActivitySerializer(serializers.ModelSerializer):
             activity_data = TicketActivityToRepresentation(data)
             data = activity_data.get_data()
 
-            # person_ids = list(data['content'].values())
-            # people = Person.objects.filter(id__in=person_ids)
-            # types = TicketActivityType.objects.all()
-
-            # if data['type'] == types.get(name='assignee').id:
-            #     for k,v in data['content'].items():
-            #         person = people.get(id=v)
-            #         data['content'][k] = person.to_simple_dict()
-
-            # elif data['type'] == types.get(name='cc_add').id:
-            #     person_ids = list(data['content'].values())
-            #     data['content'] = {'added': []}
-            #     for id in person_ids:
-            #         person = Person.objects.get(id=id)
-            #         data['content']['added'].append(person.to_simple_dict())
-
-            # elif data['type'] == types.get(name='cc_remove').id:
-            #     person_ids = list(data['content'].values())
-            #     data['content'] = {'removed': []}
-            #     for id in person_ids:
-            #         person = Person.objects.get(id=id)
-            #         data['content']['removed'].append(person.to_simple_dict())
-
-            # elif data['type'] == types.get(name='categories').id:
-            #     # From
-            #     from_categories = list(v for k,v in data['content'].items() if k.startswith('from_'))
-            #     data['content'].update({'from': []})
-            #     for id in from_categories:
-            #         category = Category.objects.get(id=id)
-            #         data['content']['from'].append(category.to_simple_dict())
-
-            #     for i, _ in enumerate(data['content']['from']):
-            #         data['content'].pop('from_{}'.format(i))
-
-            #     # To
-            #     to_categories = list(v for k,v in data['content'].items() if k.startswith('to_'))
-            #     data['content'].update({'to': []})
-            #     for id in to_categories:
-            #         category = Category.objects.get(id=id)
-            #         data['content']['to'].append(category.to_simple_dict())
-
-            #     for i, _ in enumerate(data['content']['from']):
-            #         data['content'].pop('to_{}'.format(i))
-
         return data
