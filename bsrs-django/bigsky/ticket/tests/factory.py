@@ -11,6 +11,14 @@ from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityT
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from utils.create import _generate_chars
 
+def construct_tree(category, tree):
+    tree.append(category)
+    if category.has_children == False:
+        return 
+    child_category = category.children.all().first()
+    construct_tree(child_category, tree)
+    return tree
+
 
 def create_ticket():
     if not Location.objects.all().exists():
@@ -32,9 +40,9 @@ def create_ticket():
     )
     ticket.cc.add(create_single_person())
     top_level_category = Category.objects.filter(parent__isnull=True).first()
-    ticket.categories.add(top_level_category)
-    for child in top_level_category.children.all():
-        ticket.categories.add(child)
+    tree = construct_tree(top_level_category, [])
+    for category in tree:
+        ticket.categories.add(category)
     return ticket
 
 

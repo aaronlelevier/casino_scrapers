@@ -50,6 +50,7 @@ class TicketListTests(APITestCase):
         self.assertIsNotNone(categories[0]['has_children'])
         self.assertIsNotNone(categories[0]['parent'])
         self.assertIsNotNone(categories[0]['children_fks'])
+        self.assertNotIn('cc', categories[0])
 
 
 class TicketDetailTests(APITestCase):
