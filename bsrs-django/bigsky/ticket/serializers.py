@@ -12,28 +12,18 @@ from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
 from utils.serializers import BaseCreateSerializer
 
 
-TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee', 'cc',
+TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
     'requester', 'categories', 'attachments', 'request',)
 
 
-class TicketBaseSerializer(BaseCreateSerializer):
-
-    cc = serializers.PrimaryKeyRelatedField(
-        queryset=Person.objects.all(),
-        many=True,
-        required=False
-        )
+class TicketCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS
+        fields = TICKET_FIELDS + ('cc', )
 
 
-class TicketCreateSerializer(TicketBaseSerializer):
-    pass
-
-
-class TicketListSerializer(TicketBaseSerializer):
+class TicketListSerializer(serializers.ModelSerializer):
 
     categories = CategoryIDNameSerializer(many=True)
     assignee = PersonTicketSerializer(required=False)
@@ -44,7 +34,7 @@ class TicketListSerializer(TicketBaseSerializer):
         fields = TICKET_FIELDS + ('number',)
 
 
-class TicketSerializer(TicketBaseSerializer):
+class TicketSerializer(serializers.ModelSerializer):
 
     categories = CategoryIDNameSerializer(many=True)
     assignee = PersonTicketSerializer(required=False)
@@ -54,7 +44,7 @@ class TicketSerializer(TicketBaseSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number',)
+        fields = TICKET_FIELDS + ('number', 'cc',)
 
 
 class TicketActivitySerializer(serializers.ModelSerializer):
