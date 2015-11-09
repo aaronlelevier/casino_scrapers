@@ -4,6 +4,8 @@ import uuid
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 
+from model_mommy import mommy
+
 from category.models import Category
 from person.tests.factory import PASSWORD, create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
@@ -144,6 +146,20 @@ class TicketCreateTests(APITestCase):
         self.client.logout()
 
     def test_ticket(self):
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'request': 'plumbing',
+        })
+
+        response = self.client.post('/api/tickets/', self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(self.data['id'], data['id'])
+        self.assertEqual(self.data['request'], data['request'])
+
+    def test_ticket_no_cc(self):
+        self.data.pop('cc', None)
         self.data.update({
             'id': str(uuid.uuid4()),
             'request': 'plumbing',
@@ -374,7 +390,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.password = PASSWORD
         self.person = create_single_person()
         # Ticket
-        self.ticket = create_ticket()
+        self.ticket = create_ticket(single_category=True)
         # Data
         serializer = TicketCreateSerializer(self.ticket)
         self.data = serializer.data
@@ -530,13 +546,16 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertTrue(TicketActivity.objects.filter(content__to=str(new_priority.id)).exists())
 
     def test_categories(self):
-        self.assertEqual(TicketActivityType.objects.count(), 0)
         name = 'categories'
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        ticket_activity_type = create_ticket_activity_type(name=name)
+        # Only one Category on the Ticket
+        # [c.delete(override=True) for c in self.ticket.categories.all()[1:]]
         new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()
-        self.assertEqual(self.ticket.categories.count(), 1)
+        self.assertEqual(len(self.data['categories']), 1)
         self.assertNotEqual(self.data['categories'][0], str(new_category.id))
         # data
-        init_categories = self.data['categories']
+        init_categories = self.data['categories'] = [str(self.ticket.categories.first().id)]
         post_categories = self.data['categories'] = [str(new_category.id)]
 
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')

@@ -12,7 +12,7 @@ from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityT
 from utils.create import _generate_chars
 
 
-def create_ticket():
+def create_ticket(single_category=False):
     if not Location.objects.all().exists():
         create_locations()
 
@@ -30,11 +30,17 @@ def create_ticket():
         requester = create_single_person(),
         request = _generate_chars()
     )
-    ticket.cc.add(create_single_person())
+
+    cc = create_single_person()
+    ticket.cc.add(cc)
+
     top_level_category = Category.objects.filter(parent__isnull=True).first()
     ticket.categories.add(top_level_category)
-    for child in top_level_category.children.all():
-        ticket.categories.add(child)
+    
+    if not single_category:
+        for child in top_level_category.children.all():
+            ticket.categories.add(child)
+    
     return ticket
 
 
