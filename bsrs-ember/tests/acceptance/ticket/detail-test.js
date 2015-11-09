@@ -186,6 +186,21 @@ test('when click delete, ticket is deleted and removed from store', (assert) => 
     });
 });
 
+test('visiting detail should set the category even when it has no children', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(detail_xhr);
+    let solo_data = TICKET_FIXTURES.detail(TICKET_DEFAULTS.idTwo);
+    solo_data.categories = [{id: CATEGORY_DEFAULTS.idSolo, name: CATEGORY_DEFAULTS.nameSolo, children_fks: [], has_children: false, parent: null}];
+    xhr(endpoint + TICKET_DEFAULTS.idTwo + '/', 'GET', null, {}, 200, solo_data);
+    visit(BASE_URL + '/' + TICKET_DEFAULTS.idTwo);
+    andThen(() => {
+        assert.equal(currentURL(), BASE_URL + '/' + TICKET_DEFAULTS.idTwo);
+        let components = page.selectizeComponents();
+        assert.equal(components, 1);
+        assert.equal(page.categoryOneInput(), CATEGORY_DEFAULTS.nameSolo);
+    });
+});
+
 test('clicking cancel button will take from detail view to list view', (assert) => {
     page.visit();
     andThen(() => {
