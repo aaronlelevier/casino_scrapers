@@ -6,11 +6,13 @@ from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from ticket.tests import factory
+from person.tests.factory import create_single_person
 
 
 class CreateTicketTests(TestCase):
 
     def setUp(self):
+        create_single_person()
         self.ticket = factory.create_ticket()
 
     def test_location(self):
@@ -48,6 +50,7 @@ class CreateTicketTests(TestCase):
 class ConstructTreeTests(TestCase):
 
     def setUp(self):
+        create_single_person()
         self.ticket = factory.create_ticket(multiple_categories=True)
 
     def test_categories(self):
@@ -59,11 +62,13 @@ class ConstructTreeTests(TestCase):
 class CreateTicketsTests(TestCase):
 
     def test_default(self):
+        create_single_person()
         tickets = factory.create_tickets()
         self.assertEqual(len(tickets), 1)
         self.assertIsInstance(tickets[0], Ticket)
 
     def test_many(self):
+        create_single_person()
         tickets = factory.create_tickets(_many=2)
         self.assertEqual(len(tickets), 2)
         self.assertIsInstance(tickets[0], Ticket)
@@ -96,10 +101,12 @@ class CreatePriorityTests(TestCase):
 class CreateTicketActivityTests(TestCase):
 
     def test_create(self):
+        create_single_person()
         obj = factory.create_ticket_activity()
         self.assertIsInstance(obj, TicketActivity)
 
     def test_create_for_ticket(self):
+        create_single_person()
         ticket = factory.create_ticket()
         ticket_activity = factory.create_ticket_activity(ticket=ticket)
         self.assertIsInstance(ticket_activity, TicketActivity)

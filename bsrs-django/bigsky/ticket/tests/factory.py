@@ -2,6 +2,7 @@ import random
 
 from model_mommy import mommy
 
+from person.models import Person
 from category.models import Category
 from category.tests.factory import create_categories
 from location.models import Location
@@ -25,9 +26,6 @@ def create_ticket(multiple_categories=False):
     if not Location.objects.all().exists():
         create_locations()
 
-    if not Category.objects.all().exists():
-        create_categories()
-        
     create_ticket_statuses()
     create_ticket_priorites()
 
@@ -35,12 +33,12 @@ def create_ticket(multiple_categories=False):
         location = random.choice(Location.objects.all()),
         status = random.choice(TicketStatus.objects.all()),
         priority = random.choice(TicketPriority.objects.all()),
-        assignee = create_single_person(),
-        requester = create_single_person(),
+        assignee = random.choice(Person.objects.all()),
+        requester = random.choice(Person.objects.all()),
         request = _generate_chars()
     )
 
-    cc = create_single_person()
+    cc = random.choice(Person.objects.all())
     ticket.cc.add(cc)
 
     top_level_category = Category.objects.filter(parent__isnull=True).first()
