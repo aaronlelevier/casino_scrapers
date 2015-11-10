@@ -22,7 +22,7 @@ def construct_tree(category, tree):
     return tree
 
 
-def create_ticket(multiple_categories=False):
+def create_ticket():
     if not Location.objects.all().exists():
         create_locations()
 
@@ -42,19 +42,15 @@ def create_ticket(multiple_categories=False):
     ticket.cc.add(cc)
 
     top_level_category = Category.objects.filter(parent__isnull=True).first()
-    
-    if multiple_categories:
-        tree = construct_tree(top_level_category, [])
-        for category in tree:
-            ticket.categories.add(category)
-    else:
-        ticket.categories.add(top_level_category)
+    tree = construct_tree(top_level_category, [])
+    for category in tree:
+        ticket.categories.add(category)
 
     return ticket
 
 
 def create_tickets(_many=1):
-    return [create_ticket(multiple_categories=True) for x in range(_many)]
+    return [create_ticket() for x in range(_many)]
 
 
 def create_ticket_status(name=None):
