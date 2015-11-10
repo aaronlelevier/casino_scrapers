@@ -46,7 +46,6 @@ class CategoryListTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data['results']) > 0)
         self.assertIn(str(first.id), [c['id'] for c in data['results']]) 
-        self.assertIn(first.has_children, [c['has_children'] for c in data['results']]) 
 
 
 class CategoryDetailTests(APITestCase):
@@ -77,13 +76,11 @@ class CategoryDetailTests(APITestCase):
         response = self.client.get('/api/admin/categories/{}/'.format(self.type.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(None, data['parent'])
-        self.assertIsNotNone(data['has_children'])
 
     def test_children_do_not_have_children(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(str(self.trade.parent.id), data['parent']['id'])
-        self.assertIsNotNone(data['has_children'])
 
     def test_has_parent(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))

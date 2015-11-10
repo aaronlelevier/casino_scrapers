@@ -99,9 +99,6 @@ class Category(BaseModel):
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
     status = models.ForeignKey(CategoryStatus, blank=True, null=True)
-    @property
-    def has_children(self):
-        return self.children.all().exists()
 
     objects = CategoryManager()
 
@@ -131,7 +128,6 @@ class Category(BaseModel):
                     "id": str(self.parent.pk),
                     "name": self.parent.name
                 },
-                "has_children": self.has_children
             }
         else:
             return {
@@ -139,7 +135,6 @@ class Category(BaseModel):
                 "name": self.name,
                 "status": str(self.status),
                 "parent": None,
-                "has_children": self.has_children
             }
 
     def to_simple_dict(self):

@@ -30,7 +30,7 @@ const CATEGORY_DROPDOWN = '.t-ticket-category-power-select-dropdown > .ember-pow
 const STATUS = '.t-ticket-status-power-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const STATUS_DROPDOWN = '.t-ticket-status-power-select-dropdown > .ember-power-select-options';
 
-var TicketPage = PageObject.build({
+var TicketPage = PageObject.create({
   visitNew: visitable(NEW_URL),
   visit: visitable(TICKETS_URL),
   visitDetail: visitable(DETAIL_URL),

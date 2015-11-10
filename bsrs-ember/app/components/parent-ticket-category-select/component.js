@@ -12,11 +12,11 @@ var ParentTicketCategorySelect = ChildValidationComponent.extend({
         }
         let parent = ticket.get('top_level_category');
         let tree = ticket.construct_category_tree(parent);
-        return tree ? !tree.pop().get('has_children') : true;
+        return tree ? tree.pop().get('children_fks').length === 0 : true;
     }),
     actions: {
         selected_category(category) {
-            if (!category.get('has_children')) {
+            if (category.get('children_fks').length === 0) {
                 return;
             }
             this.get('repository').findById(category.get('id'));

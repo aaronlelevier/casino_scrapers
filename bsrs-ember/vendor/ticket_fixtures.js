@@ -11,13 +11,11 @@ var BSRS_TICKET_FACTORY = (function() {
         var id = i || this.ticket.idOne;
 
         var child_category = this.category_fixtures.get(this.category_defaults.idPlumbing, this.category_defaults.nameRepairChild);
-        var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent: child_category.id, has_children: false, children_fks: []};
-        child_category.has_children = true;
+        var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent: child_category.id, children_fks: []};
         child_category.children_fks = [this.category_defaults.idPlumbingChild];
         child_category.parent = this.category_defaults.idOne;
 
         var parent_category = this.category_fixtures.get(this.category_defaults.idOne, this.category_defaults.nameOne);
-        parent_category.has_children = true;
         parent_category.children_fks = [this.category_defaults.idPlumbing, this.category_defaults.idTwo];
         parent_category.parent = null;
         

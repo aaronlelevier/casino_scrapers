@@ -28,6 +28,7 @@ class TicketPriorityTests(TestCase):
 class TicketTests(TestCase):
 
     def setUp(self):
+        create_single_person()
         create_tickets(_many=2)
 
     def test_number(self):
