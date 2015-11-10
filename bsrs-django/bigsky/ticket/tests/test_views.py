@@ -51,7 +51,6 @@ class TicketListTests(APITestCase):
         categories = data['results'][0]['categories']
         self.assertIn(categories[0]['id'], self.category_ids)
         self.assertIn(categories[0]['name'], self.category_names)
-        self.assertIsNotNone(categories[0]['has_children'])
         self.assertIsNotNone(categories[0]['parent'])
         self.assertIsNotNone(categories[0]['children_fks'])
         self.assertNotIn('cc', categories[0])
@@ -94,7 +93,6 @@ class TicketDetailTests(APITestCase):
         categories = data['categories'][0]
         self.assertIn(categories['id'], self.category_ids)
         self.assertIn(categories['name'], self.category_names)
-        self.assertIsNotNone(categories['has_children'])
         self.assertIsNotNone(categories['parent'])
         self.assertIsNotNone(categories['children_fks'])
 

@@ -14,8 +14,8 @@ from utils.create import _generate_chars
 
 def construct_tree(category, tree):
     tree.append(category)
-    if not category.has_children:
-        return 
+    if not category.children.all():
+        return category 
     child_category = category.children.first()
     construct_tree(child_category, tree)
     return tree

@@ -17,7 +17,6 @@ class CategoryTests(TestCase):
     def test_label_top_level(self):
         self.assertIsNone(self.type.parent)
         self.assertEqual(self.type.label, settings.TOP_LEVEL_CATEGORY_LABEL)
-        self.assertEqual(self.type.has_children, True)
 
     def test_label_none_top_level(self):
         self.assertIsNotNone(self.trade.parent)
@@ -40,4 +39,3 @@ class CategoryTests(TestCase):
         self.assertIn('parent', d)
         self.assertEqual(d['parent']['id'], str(self.child.parent.pk))
         self.assertEqual(d['parent']['name'], self.child.parent.name)
-        self.assertEqual(self.child.has_children, False)

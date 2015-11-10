@@ -69,7 +69,6 @@ class RoleViewSetTests(APITestCase):
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
         self.assertIn(data['categories'][0]['id'], [str(c.id) for c in self.categories])
         self.assertIn(data['categories'][0]['name'], [str(c.name) for c in self.categories])
-        self.assertIn(data['categories'][0]['has_children'], [c.has_children for c in self.categories])
         self.assertIn(data['categories'][0]['parent'], [c.parent for c in self.categories])
 
     def test_create(self):

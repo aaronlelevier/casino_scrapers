@@ -29,7 +29,7 @@ class CreateTicketTests(TestCase):
         self.assertIsInstance(self.ticket.cc.all()[0], Person)
 
     def test_category(self):
-        self.assertIsInstance(self.ticket.cc.all()[0], Person)
+        self.assertIsInstance(self.ticket.categories.all()[0], Category)
 
     def test_requester(self):
         self.assertIsInstance(self.ticket.requester, Person)
