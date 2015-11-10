@@ -16,6 +16,16 @@ createdb ci
 wait
 python manage.py migrate && python manage.py loaddata fixtures/states.json
 wait
+./manage.py loaddata fixtures/currency.json
+./manage.py loaddata fixtures/category.json
+./manage.py loaddata fixtures/third_party.json
+wait
+./manage.py create_all_people
+wait
+rm -rf fixtures/jenkins.json
+wait
+./manage.py dumpdata --indent=2 > fixtures/jenkins.json
+wait
 python manage.py loaddata fixtures/jenkins.json && python manage.py loaddata fixtures/jenkins_custom.json
 wait
 ./manage.py create_tickets

@@ -54,7 +54,7 @@ def create_ticket(multiple_categories=False):
 
 
 def create_tickets(_many=1):
-    return [create_ticket() for x in range(_many)]
+    return [create_ticket(multiple_categories=True) for x in range(_many)]
 
 
 def create_ticket_status(name=None):
