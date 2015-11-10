@@ -2,7 +2,7 @@ import PageObject from '../page-object';
 
 let { visitable, fillable, clickable } = PageObject;
 
-var CategoryPage = PageObject.build({
+var CategoryPage = PageObject.create({
   visit: visitable('/'),
   nameFill: fillable('.t-category-name'),
   nameInput: PageObject.value('.t-category-name'),

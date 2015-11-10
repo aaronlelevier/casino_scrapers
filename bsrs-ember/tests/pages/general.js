@@ -1,7 +1,7 @@
 import PageObject from '../page-object';
 let { visitable, clickable } = PageObject;
 
-var GeneralPage = PageObject.build({
+var GeneralPage = PageObject.create({
   save: clickable('.t-save-btn'),
   cancel: clickable('.t-cancel-btn'),
   delete: clickable('.t-delete-btn'),
