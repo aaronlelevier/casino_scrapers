@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils.text import capfirst
 
 from model_mommy import mommy
 
@@ -43,11 +44,31 @@ class CurrencyTests(TestCase):
     def test_verbose_name_plural(self):
         self.assertEqual(Currency._meta.verbose_name_plural, "Currencies")
 
-    def test_update_defaults(self):
-        self.assertEqual(self.default.code, self.default.code.upper())
-        self.assertIsNotNone(self.default.name_plural)
-        self.assertIsNotNone(self.default.symbol_native)
+    def test_update_defaults_name_plural(self):
+        self.default.name_plural = None
 
-    def test_to_dict(self):
+        self.default.save()
+
+        self.assertEqual(self.default.name_plural, capfirst(self.default.name+'s'))
+
+    def test_update_defaults_symbol_native(self):
+        self.default.symbol_native = None
+
+        self.default.save()
+
+        self.assertEqual(self.default.symbol_native, self.default.symbol)
+
+    def test_to_dict_isinstance(self):
         self.assertIsInstance(self.default.to_dict(), dict)
-        self.assertIn('id', self.default.to_dict())
+
+    def test_to_dict_data(self):
+        data = self.default.to_dict()
+
+        self.assertEqual(data['id'], str(self.default.id))
+        self.assertEqual(data['name'], self.default.name)
+        self.assertEqual(data['name_plural'], self.default.name_plural)
+        self.assertEqual(data['code'], self.default.code)
+        self.assertEqual(data['symbol'], self.default.symbol)
+        self.assertEqual(data['symbol_native'], self.default.symbol_native)
+        self.assertEqual(data['decimal_digits'], self.default.decimal_digits)
+        self.assertEqual(data['rounding'], self.default.rounding)
