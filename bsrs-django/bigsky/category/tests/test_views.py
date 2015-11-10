@@ -128,8 +128,51 @@ class CategoryDetailTests(APITestCase):
 
     def test_data(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.trade.id))
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertTrue(len(data), 0)
+        category = Category.objects.get(id=data['id'])
+        self.assertEqual(data['id'], str(category.id))
+        self.assertEqual(data['name'], category.name)
+        self.assertEqual(data['description'], category.description)
+        self.assertEqual(data['label'], category.label)
+        self.assertEqual(data['subcategory_label'], category.subcategory_label)
+        self.assertEqual(data['cost_amount'], str(category.cost_amount))
+        self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
+        self.assertEqual(data['cost_code'], category.cost_code)
+
+    def test_data_parent(self):
+        category = Category.objects.filter(label='issue').first()
+        self.assertIsNotNone(category.parent)
+
+        response = self.client.get('/api/admin/categories/{}/'.format(category.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], str(category.id))
+        self.assertIsInstance(data['parent'], dict)
+        self.assertEqual(data['parent']['id'], str(category.parent.id))
+        self.assertEqual(data['parent']['name'], str(category.parent.name))
+        self.assertIn('parent', data['parent'])
+        self.assertIn('children_fks', data['parent'])
+        self.assertNotIn('children', data['parent'])
+        self.assertIsInstance(data['parent']['children_fks'], list)
+
+    def test_data_children(self):
+        category = self.trade
+        self.assertTrue(category.children.all())
+
+        response = self.client.get('/api/admin/categories/{}/'.format(category.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], str(category.id))
+        self.assertIsInstance(data['children'], list)
+        child = data['children'][0]
+        self.assertIsInstance(child, dict)
+        self.assertEqual(child['id'], str(category.children.first().id))
+        self.assertEqual(child['name'], category.children.first().name)
+        self.assertIn('parent', child)
+        self.assertIn('children_fks', child)
+        self.assertNotIn('children', child)
+        self.assertIsInstance(child['children_fks'], list)
 
     def test_parents_have_children(self):
         response = self.client.get('/api/admin/categories/{}/'.format(self.type.id))
@@ -263,6 +306,9 @@ class CategoryCreateTests(APITestCase):
 
 
 class CategoryFilterTests(APITestCase):
+
+    # NOTE: These tests are testing the ``FilterRelatedMixin`` with Categories
+    # needed API endpoints
 
     def setUp(self):
         self.password = PASSWORD

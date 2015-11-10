@@ -11,9 +11,6 @@ CATEGORY_FIELDS = ('id', 'name', 'description', 'label',
 
 
 class CategoryIDNameSerializer(BaseCreateSerializer):
-    '''
-    Leaf Node Serializer, no public API Endpoint
-    '''
 
     class Meta:
         model = Category
@@ -26,9 +23,7 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
 
 
 class CategoryRoleSerializer(BaseCreateSerializer):
-    '''
-    Serializer for Role detail
-    '''
+
     class Meta:
         model = Category
         fields = ('id', 'name', 'status', 'parent',)
