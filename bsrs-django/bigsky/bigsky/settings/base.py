@@ -50,6 +50,7 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
+# Turn on for debug mode
 # INTERNAL_IPS = (
 #        '127.0.0.1',
 #         )
