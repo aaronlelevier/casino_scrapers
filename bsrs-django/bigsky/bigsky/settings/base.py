@@ -50,9 +50,9 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-INTERNAL_IPS = (
-       '127.0.0.1',
-        )
+# INTERNAL_IPS = (
+#        '127.0.0.1',
+#         )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
