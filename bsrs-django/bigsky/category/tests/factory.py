@@ -6,24 +6,24 @@ from category.models import Category, CATEGORY_STATUSES, CategoryStatus
 from utils.create import random_lorem
 
 
-def create_categories(_many=0):
+def create_categories(_many=None):
     create_category_statuses()
     # Repair
     type = mommy.make(Category, name='repair',
         subcategory_label='trade', status=random.choice(CategoryStatus.objects.all()))
     
-    num_of_cat = random.randrange(2,5)
-    if _many > 0:
+    if _many:
         num_of_cat = _many
+    else:
+        num_of_cat = random.randrange(2,5)
 
     for i in range(0, num_of_cat):
         name = random_lorem(1)
         status = random.choice(CategoryStatus.objects.all())
-        trade = mommy.make(Category, name=name,
+        issue = mommy.make(Category, name=name,
             subcategory_label='issue', parent=type, status=status)
 
-    type.children.add(trade)
-    type.save()
+    type.children.add(issue)
 
     for category in Category.objects.filter(subcategory_label='issue'):
         for i in range(random.randrange(2, 7)):

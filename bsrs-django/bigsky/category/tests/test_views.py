@@ -2,6 +2,8 @@ import json
 import uuid
 import random
 
+from django.conf import settings
+
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
@@ -29,23 +31,80 @@ class CategoryListTests(APITestCase):
 
     def test_response(self):
         response = self.client.get('/api/admin/categories/')
+
         self.assertEqual(response.status_code, 200)
 
-    def test_data(self):
+    def test_top_level(self):
         response = self.client.get('/api/admin/categories/')
+
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data['results']) > 0)
         self.assertFalse(self.top_level.parent)
         self.assertTrue(self.top_level.children)
 
-    def test_data_has_children(self):
+    def test_has_children(self):
         Category.objects.all().delete()
         create_categories(_many=1)
         first = Category.objects.filter(name="repair").first()
+
         response = self.client.get('/api/admin/categories/')
+
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data['results']) > 0)
-        self.assertIn(str(first.id), [c['id'] for c in data['results']]) 
+        self.assertIn(str(first.id), [c['id'] for c in data['results']])
+
+    def test_data(self):
+        response = self.client.get('/api/admin/categories/')
+
+        # data
+        data = json.loads(response.content.decode('utf8'))
+        data = data['results'][0]
+        # db object
+        category = Category.objects.get(id=data['id'])
+
+        self.assertEqual(data['id'], str(category.id))
+        self.assertEqual(data['name'], category.name)
+        self.assertEqual(data['description'], category.description)
+        self.assertEqual(data['label'], category.label)
+        self.assertEqual(data['cost_amount'], str(category.cost_amount))
+        self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
+        self.assertEqual(data['cost_code'], category.cost_code)
+
+    def test_data_parent(self):
+        response = self.client.get('/api/admin/categories/')
+
+        # data
+        data = json.loads(response.content.decode('utf8'))
+        data = data['results'][0]
+        # db object
+        category = Category.objects.get(id=data['id'])
+
+        self.assertIsInstance(data['parent'], dict)
+        self.assertEqual(data['parent']['id'], str(category.parent.id))
+        self.assertEqual(data['parent']['name'], str(category.parent.name))
+        self.assertIn('parent', data['parent'])
+        self.assertIn('children_fks', data['parent'])
+        self.assertNotIn('children', data['parent'])
+        self.assertIsInstance(data['parent']['children_fks'], list)
+
+    def test_data_children(self):
+        response = self.client.get('/api/admin/categories/?page_size=999')
+
+        # data
+        data = json.loads(response.content.decode('utf8'))
+        data = data['results'][-3]
+        # db object
+        category = Category.objects.get(id=data['id'])
+
+        self.assertIsInstance(data['children'], list)
+        child = data['children'][0]
+        self.assertIsInstance(child, dict)
+        self.assertEqual(child['id'], str(category.children.first().id))
+        self.assertEqual(child['name'], category.children.first().name)
+        self.assertIn('parent', child)
+        self.assertIn('children_fks', child)
+        self.assertNotIn('children', child)
+        self.assertIsInstance(child['children_fks'], list)
 
 
 class CategoryDetailTests(APITestCase):
