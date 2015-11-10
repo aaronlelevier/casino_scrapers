@@ -50,3 +50,12 @@ Common Commands
     # install a state
 
     sudo salt '*' state.sls <package>
+
+
+Formula
+-------
+
+`Adding a formula directory manually <https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html#adding-a-formula-directory-manually>`_
+
+Recommended by SaltStack that the formulas be *Git cloned* so as to guard against
+unexpected changes.
