@@ -5,11 +5,19 @@ from utils.fields import UpperCaseCharField
 from utils.models import BaseModel, BaseManager
 
 
+DEFAULT_CURRENCY = {
+    'name': 'US Dollar',
+    'code': 'USD',
+    'symbol': '$',
+    'decimal_digits': 2,
+    'rounding': 0
+}
+
+
 class CurrencyManager(BaseManager):
 
     def default(self):
-        obj, _ = self.get_or_create(name="US Dollar", code="USD",
-            symbol="$", decimal_digits=2, rounding=0)
+        obj, _ = self.get_or_create(**DEFAULT_CURRENCY)
         return obj
 
 

@@ -489,7 +489,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_cc_add_multiple(self):
         name = 'cc_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_cc = create_single_person()
+        new_cc = self.person
         new_cc_two = create_single_person()
         self.data['cc'].append(str(new_cc.id))
         self.data['cc'].append(str(new_cc_two.id))
