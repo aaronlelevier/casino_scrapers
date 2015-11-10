@@ -490,7 +490,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_cc_add_multiple(self):
         name = 'cc_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_cc = self.person
+        new_cc = create_single_person()
         new_cc_two = create_single_person()
         self.data['cc'].append(str(new_cc.id))
         self.data['cc'].append(str(new_cc_two.id))
@@ -500,12 +500,11 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(TicketActivity.objects.count(), 1)
         activity = TicketActivity.objects.first()
         self.assertEqual(activity.type.name, name)
-        #Aaron to review...sco
-        # self.assertEqual(len(activity.content), 1)
-        # self.assertIn(
-        #     str(new_cc.id),
-        #     [str(activity.content[k]) for k,v in activity.content.items()]
-        # )
+        self.assertEqual(len(activity.content), 2)
+        self.assertIn(
+            str(new_cc.id),
+            [str(activity.content[k]) for k,v in activity.content.items()]
+        )
         self.assertIn(
             str(new_cc_two.id),
             [str(activity.content[k]) for k,v in activity.content.items()]
