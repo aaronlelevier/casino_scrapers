@@ -33,12 +33,11 @@ export default Ember.Object.extend(GridRepositoryMixin, {
                 this.get('PersonDeserializer').deserialize(response);
             });
             let filterFunc = function(person) {
-                let full_name = person.get('fullname');
-                return full_name.toLowerCase().indexOf(search.toLowerCase()) > -1;
+                let fullname = person.get('fullname');
+                return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1 && !person.get('new');
             };
             return this.get('store').find('person', filterFunc, ['id']);
         }
-        return Ember.A([]);
     },
     //TODO: refactor to one method that has text search across multiple fields
     findTicketPeople(search) {
