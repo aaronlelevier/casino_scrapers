@@ -22,7 +22,7 @@ class TicketListTests(APITestCase):
         self.password = PASSWORD
         # Ticket
         create_single_person()
-        self.ticket = create_ticket(multiple_categories=True)
+        self.ticket = create_ticket()
         self.person = self.ticket.assignee
         # Category
         self.category_ids = [str(x) for x in Category.objects.values_list('id', flat=True)]
@@ -555,9 +555,9 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(TicketActivity.objects.count(), 0)
         # ticket_activity_type = create_ticket_activity_type(name=name)
         # Only one Category on the Ticket
-        # [c.delete(override=True) for c in self.ticket.categories.all()[1:]]
+        [c.delete(override=True) for c in self.ticket.categories.all()[:self.ticket.categories.count()-1]]
         new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()
-        self.assertEqual(len(self.data['categories']), 1)
+        self.assertEqual(len(self.data['categories']), 3)
         self.assertNotEqual(self.data['categories'][0], str(new_category.id))
         # data
         init_categories = self.data['categories'] = [str(self.ticket.categories.first().id)]

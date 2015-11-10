@@ -94,8 +94,10 @@ var BSRS_PEOPLE_FACTORY = (function() {
         }
         return {'count':18,'next':null,'previous':null,'results': response};
     };
-    factory.prototype.detail = function(i) {
+    factory.prototype.detail = function(i, username) {
         var person = this.generate(i);
+        var current_username = person.username;
+        person.username = username || current_username;
         person.acceptassign = false;
         person.phone_numbers = this.phone_number_fixtures.get();
         person.addresses = this.address_fixtures.get();

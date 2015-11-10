@@ -6,6 +6,25 @@ import translations from 'bsrs-ember/vendor/translation_fixtures';
 import random from 'bsrs-ember/models/random';
 import t from './t';
 
+function ajax(app, url, verb, data, headers, status, response) {
+  Ember.run(function() {
+    Ember.$.fauxjax.removeExisting(url, verb);
+    var request = { url: url , method: verb };
+    if (data) { 
+        request.data = data;
+        request.contentType = 'application/json';
+    }
+    Ember.$.fauxjax.new({
+      request: request,
+      response: {
+        status: status,
+        content: response
+      }
+    });
+  });
+  return app.testHelpers.wait();
+}
+
 function alterPageSize(app, selector, size) {
   Ember.run(function() {
     Ember.$(selector).find('option[value="' + size + '"]').prop('selected',true).trigger('change');
@@ -74,6 +93,7 @@ function saveFilterSet(app, name, controller) {
   });
 }
 
+Ember.Test.registerAsyncHelper('ajax', ajax);
 Ember.Test.registerAsyncHelper('clearAll', clearAll);
 Ember.Test.registerAsyncHelper('saveFilterSet', saveFilterSet);
 Ember.Test.registerAsyncHelper('alterPageSize', alterPageSize);

@@ -51,7 +51,7 @@ class ConstructTreeTests(TestCase):
 
     def setUp(self):
         create_single_person()
-        self.ticket = factory.create_ticket(multiple_categories=True)
+        self.ticket = factory.create_ticket()
 
     def test_categories(self):
         top_level = Category.objects.filter(parent__isnull=True).first()

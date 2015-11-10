@@ -21,7 +21,7 @@ const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
 const PEOPLE_NEW_URL = BASE_PEOPLE_URL + '/new';
 
-var application, store, payload, detail_xhr, list_xhr, original_uuid;
+var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint;
 
 module('Acceptance | people-new', {
     beforeEach() {
@@ -35,8 +35,8 @@ module('Acceptance | people-new', {
         store = application.__container__.lookup('store:main');
         var endpoint = PREFIX + BASE_PEOPLE_URL + '/';
         list_xhr = xhr(endpoint + '?page=1','GET',null,{},200,PEOPLE_FIXTURES.empty());
-        var detailEndpoint = PREFIX + BASE_PEOPLE_URL + '/';
-        var people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
+        detailEndpoint = PREFIX + BASE_PEOPLE_URL + '/';
+        people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
             role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: [], locations: []};
         detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
         original_uuid = random.uuid;
@@ -51,8 +51,8 @@ module('Acceptance | people-new', {
 });
 
 test('visiting /people/new and creating a new person', (assert) => {
+    clearxhr(detail_xhr);
     var response = Ember.$.extend(true, {}, payload);
-    xhr(PREFIX + BASE_PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(PEOPLE_URL);
     click('.t-add-new');
     andThen(() => {
@@ -65,6 +65,8 @@ test('visiting /people/new and creating a new person', (assert) => {
     fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
     fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
     fillIn('.t-person-role-select', PEOPLE_DEFAULTS.role);
+    ajax(PREFIX + BASE_PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
+    ajax(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
