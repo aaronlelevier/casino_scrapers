@@ -23,7 +23,16 @@ class PhoneNumberTests(TestCase):
         self.assertIsInstance(self.ph.type, PhoneNumberType)
         self.assertIsInstance(self.ph.content_object, Person)
 
-    # ### BaseContactModel tests
+    def test_ordering(self):
+        create_contact(PhoneNumber, self.person)
+        self.assertTrue(PhoneNumber.objects.count() > 1)
+
+        self.assertEqual(
+            PhoneNumber.objects.first().id,
+            PhoneNumber.objects.order_by('number').first().id
+        )
+
+    ### BaseContactModel tests
 
     def test_content_object_person(self):
         self.assertIsInstance(self.ph.content_object, Person)
@@ -35,6 +44,7 @@ class PhoneNumberTests(TestCase):
         ph = PhoneNumber.objects.get(object_id=self.person.id)
         self.assertIsInstance(ph, PhoneNumber)
         self.assertEqual(ph.content_object, self.person)
+        self.assertEqual(ph.object_id, self.person.id)
 
 
 class AddressTests(TestCase):
@@ -42,10 +52,14 @@ class AddressTests(TestCase):
     def setUp(self):
         self.person = create_person()
 
-    def test_address(self):
-        address = create_contact(Address, self.person)
-        self.assertIsInstance(address, Address)
-        self.assertIsInstance(address.type, AddressType)
+    def test_ordering(self):
+        create_contact(Address, self.person)
+        create_contact(Address, self.person)
+
+        self.assertEqual(
+            Address.objects.first().id,
+            Address.objects.order_by('address').first().id
+        )
 
 
 class EmailTests(TestCase):
@@ -53,7 +67,11 @@ class EmailTests(TestCase):
     def setUp(self):
         self.person = create_person()
 
-    def test_email(self):
-        email = create_contact(Email, self.person)
-        self.assertIsInstance(email, Email)
-        self.assertIsInstance(email.type, EmailType)
+    def test_ordering(self):
+        create_contact(Email, self.person)
+        create_contact(Email, self.person)
+
+        self.assertEqual(
+            Email.objects.first().id,
+            Email.objects.order_by('email').first().id
+        )
