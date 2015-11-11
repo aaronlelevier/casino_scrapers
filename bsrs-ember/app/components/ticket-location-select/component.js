@@ -5,10 +5,7 @@ var TicketLocation = Ember.Component.extend({
         let options = this.get('ticket_location_options');
         if (options && options.get('length') > 0) {
             return options;
-        } else if(this.get('ticket_location_selected')) {
-            return Ember.A([this.get('ticket_location_selected')]);
         }
-        return Ember.A([]);
     }),
     find_all_locations(search) {
         this.set('search_location', search);
