@@ -39,3 +39,17 @@ class CategoryTests(TestCase):
         self.assertIn('parent', d)
         self.assertEqual(d['parent']['id'], str(self.child.parent.pk))
         self.assertEqual(d['parent']['name'], self.child.parent.name)
+
+    def test_to_simple_dict(self):
+        d = self.type.to_simple_dict()
+
+        self.assertEqual(d['id'], str(self.type.id))
+        self.assertEqual(d['name'], self.type.name)
+        self.assertIsNone(d['parent'])
+
+    def test_to_simple_dict_with_parent(self):
+        d = self.child.to_simple_dict()
+
+        self.assertEqual(d['id'], str(self.child.id))
+        self.assertEqual(d['name'], self.child.name)
+        self.assertEqual(d['parent'], str(self.child.parent.id))
