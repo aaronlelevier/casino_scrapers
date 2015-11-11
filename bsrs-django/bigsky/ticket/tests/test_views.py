@@ -270,6 +270,29 @@ class TicketCreateTests(APITestCase):
         self.assertEqual(self.data['id'], data['id'])
         self.assertEqual(self.data['request'], data['request'])
 
+    def test_data(self):
+        self.data.pop('cc', None)
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'request': 'plumbing',
+        })
+
+        response = self.client.post('/api/tickets/', self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+        ticket = Ticket.objects.get(id=data['id'])
+
+        self.assertEqual(data['id'], str(ticket.id))
+        self.assertEqual(data['location'], str(ticket.location.id))
+        self.assertEqual(data['status'], str(ticket.status.id))
+        self.assertEqual(data['priority'], str(ticket.priority.id))
+        self.assertEqual(data['assignee'], str(ticket.assignee.id))
+        self.assertEqual(data['requester'], str(ticket.requester.id))
+        self.assertIn(data['categories'][0],
+            [str(id) for id in ticket.categories.values_list('id', flat=True)])
+        self.assertEqual(data['attachments'],
+            list(ticket.attachments.values_list('id', flat=True)))
+        self.assertEqual(data['request'], ticket.request)
+
 
 class TicketActivityViewSetTests(APITestCase):
 
