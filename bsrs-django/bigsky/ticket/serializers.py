@@ -26,9 +26,9 @@ class TicketCreateSerializer(BaseCreateSerializer):
 
 class TicketListSerializer(serializers.ModelSerializer):
 
+    location = LocationSerializer()
     categories = CategoryIDNameSerializer(many=True)
     assignee = PersonTicketSerializer(required=False)
-    location = LocationSerializer()
 
     class Meta:
         model = Ticket
