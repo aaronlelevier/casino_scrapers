@@ -31,8 +31,8 @@ router.register(r'admin/currencies', accounting_views.CurrencyViewSet)
 # CATEGORY
 router.register(r'admin/categories', category_views.CategoryViewSet)
 # CONTACT
-router.register(r'admin/phone-number-types', contact_views.PhoneNumberTypeViewSet)
 router.register(r'admin/phone-numbers', contact_views.PhoneNumberViewSet)
+router.register(r'admin/phone-number-types', contact_views.PhoneNumberTypeViewSet)
 router.register(r'admin/addresses', contact_views.AddressViewSet)
 router.register(r'admin/address-types', contact_views.AddressTypeViewSet)
 router.register(r'admin/emails', contact_views.EmailViewSet)
