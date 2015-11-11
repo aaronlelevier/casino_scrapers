@@ -341,6 +341,9 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(len(data['results'][0]['content']), 1)
         self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(cc.id))
+        self.assertEqual(data['results'][0]['content']['added'][0]['first_name'], cc.first_name)
+        self.assertEqual(data['results'][0]['content']['added'][0]['middle_initial'], cc.middle_initial)
+        self.assertEqual(data['results'][0]['content']['added'][0]['last_name'], cc.last_name)
 
     def test_cc_remove(self):
         cc = create_single_person()
@@ -353,6 +356,9 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(len(data['results'][0]['content']), 1)
         self.assertEqual(data['results'][0]['content']['removed'][0]['id'], str(cc.id))
+        self.assertEqual(data['results'][0]['content']['removed'][0]['first_name'], cc.first_name)
+        self.assertEqual(data['results'][0]['content']['removed'][0]['middle_initial'], cc.middle_initial)
+        self.assertEqual(data['results'][0]['content']['removed'][0]['last_name'], cc.last_name)
 
     def test_status(self):
         from_status = self.ticket.status
@@ -394,7 +400,11 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
         self.assertEqual(data['results'][0]['content']['from'][0]['id'], str(from_category.id))
+        self.assertEqual(data['results'][0]['content']['from'][0]['parent'], str(from_category.parent.id))
+        self.assertEqual(data['results'][0]['content']['from'][0]['name'], from_category.name)
         self.assertEqual(data['results'][0]['content']['to'][0]['id'], str(to_category.id))
+        self.assertEqual(data['results'][0]['content']['to'][0]['parent'], str(to_category.parent.id))
+        self.assertEqual(data['results'][0]['content']['to'][0]['name'], to_category.name)
         # old keys gone
         with self.assertRaises(KeyError):
             data['results'][0]['content']['from_0']

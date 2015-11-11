@@ -141,5 +141,5 @@ class Category(BaseModel):
         return {
             'id': str(self.id),
             'name': self.name,
-            'parent': str(self.parent)
+            'parent': str(self.parent.id)
         }
