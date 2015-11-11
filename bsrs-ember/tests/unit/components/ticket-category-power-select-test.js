@@ -1,7 +1,7 @@
 import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import TicketCategories from 'bsrs-ember/components/ticket-category-power-select/component';
+import TicketCategories from 'bsrs-ember/components/ticket-category-select/component';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
@@ -9,7 +9,7 @@ import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category
 
 var store;
 
-module('unit: ticket-category-power-select component test', {
+module('unit: ticket-category-select component test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:ticket-category', 'model:uuid']);
     }

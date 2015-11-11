@@ -17,18 +17,18 @@ const CC_ONE = `${CCS}:eq(0)`;
 const CC_TWO = `${CCS}:eq(1)`;
 const CC_THREE = `${CCS}:eq(2)`;
 const CC_DROPDOWN = '.t-ticket-cc-select-dropdown > .ember-power-select-options';
-const PRIORITY = '.t-ticket-priority-power-select > .ember-basic-dropdown > .ember-power-select-trigger';
-const PRIORITY_DROPDOWN = '.t-ticket-priority-power-select-dropdown > .ember-power-select-options';
+const PRIORITY = '.t-ticket-priority-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const PRIORITY_DROPDOWN = '.t-ticket-priority-select-dropdown > .ember-power-select-options';
 const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const LOCATION_DROPDOWN = '.t-ticket-location-select-dropdown > .ember-power-select-options';
 const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown > .ember-power-select-trigger';
 const ASSIGNEE_DROPDOWN = '.t-ticket-assignee-select-dropdown > .ember-power-select-options';
-const CATEGORY_ONE = '.t-ticket-category-power-select:eq(0) > .ember-basic-dropdown > .ember-power-select-trigger';
-const CATEGORY_TWO = '.t-ticket-category-power-select:eq(1) > .ember-basic-dropdown > .ember-power-select-trigger';
-const CATEGORY_THREE = '.t-ticket-category-power-select:eq(2) > .ember-basic-dropdown > .ember-power-select-trigger';
-const CATEGORY_DROPDOWN = '.t-ticket-category-power-select-dropdown > .ember-power-select-options';
-const STATUS = '.t-ticket-status-power-select > .ember-basic-dropdown > .ember-power-select-trigger';
-const STATUS_DROPDOWN = '.t-ticket-status-power-select-dropdown > .ember-power-select-options';
+const CATEGORY_ONE = '.t-ticket-category-select:eq(0) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_TWO = '.t-ticket-category-select:eq(1) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_THREE = '.t-ticket-category-select:eq(2) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_DROPDOWN = '.t-ticket-category-select-dropdown > .ember-power-select-options';
+const STATUS = '.t-ticket-status-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const STATUS_DROPDOWN = '.t-ticket-status-select-dropdown > .ember-power-select-options';
 
 var TicketPage = PageObject.create({
   visitNew: visitable(NEW_URL),
@@ -49,7 +49,7 @@ var TicketPage = PageObject.create({
   ccOptionLength: count(`${CC_DROPDOWN} > li`),
   ccsSelected: count(`${CCS}`),
 
-  selectizeComponents: count('.t-ticket-category-power-select'),
+  selectizeComponents: count('.t-ticket-category-select'),
   categoryOneClickDropdown: clickable(`${CATEGORY_ONE}`),
   categoryOneInput: text(`${CATEGORY_ONE}`),
   categoryOneClickOptionOne: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameOne})`),

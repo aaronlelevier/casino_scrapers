@@ -6,10 +6,10 @@ import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 
 let store, ticket, priority_one, priority_two, priority_three, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
-const COMPONENT = '.t-ticket-priority-power-select';
+const COMPONENT = '.t-ticket-priority-select';
 const DROPDOWN = '.ember-power-select-dropdown';
 
-moduleForComponent('ticket-priority-select-power', 'integration: ticket-priority-select test', {
+moduleForComponent('ticket-priority-select', 'integration: ticket-priority-select test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-priority']);
@@ -24,7 +24,7 @@ test('should render a selectbox when priority options are empty (initial state o
     let priorities = Ember.A([]);
     this.set('ticket', ticket);
     this.set('priorities', priorities);
-    this.render(hbs`{{ticket-priority-select-power ticket=ticket priorities=priorities}}`);
+    this.render(hbs`{{ticket-priority-select ticket=ticket priorities=priorities}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), '');
     run(() => { 
@@ -43,7 +43,7 @@ test('should render a selectbox with bound options', function(assert) {
     priority_one.set('tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
     this.set('priorities', priorities);
-    this.render(hbs`{{ticket-priority-select-power ticket=ticket priorities=priorities}}`);
+    this.render(hbs`{{ticket-priority-select ticket=ticket priorities=priorities}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.priorityOne);
     run(() => { 
@@ -60,7 +60,7 @@ test('should be able to select new priority when one doesnt exist', function(ass
     let priorities = store.find('ticket-priority');
     this.set('ticket', ticket);
     this.set('priorities', priorities);
-    this.render(hbs`{{ticket-priority-select-power ticket=ticket priorities=priorities}}`);
+    this.render(hbs`{{ticket-priority-select ticket=ticket priorities=priorities}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), '');
     run(() => { 
@@ -85,7 +85,7 @@ test('should be able to select same priority when ticket already has a priority'
     priority_one.set('tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
     this.set('priorities', priorities);
-    this.render(hbs`{{ticket-priority-select-power ticket=ticket priorities=priorities}}`);
+    this.render(hbs`{{ticket-priority-select ticket=ticket priorities=priorities}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.priorityOne);
     run(() => { 
@@ -110,7 +110,7 @@ test('should be able to select new priority when ticket already has a priority',
     priority_one.set('tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
     this.set('priorities', priorities);
-    this.render(hbs`{{ticket-priority-select-power ticket=ticket priorities=priorities}}`);
+    this.render(hbs`{{ticket-priority-select ticket=ticket priorities=priorities}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.priorityOne);
     run(() => { 

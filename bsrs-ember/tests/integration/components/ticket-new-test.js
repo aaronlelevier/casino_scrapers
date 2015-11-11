@@ -9,9 +9,9 @@ import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category
 import repository from 'bsrs-ember/tests/helpers/repository';
 
 let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, run = Ember.run, category_repo;
-const CATEGORY_ONE = '.t-ticket-category-power-select:eq(0) > .ember-basic-dropdown > .ember-power-select-trigger';
-const CATEGORY_TWO = '.t-ticket-category-power-select:eq(1) > .ember-basic-dropdown > .ember-power-select-trigger';
-const CATEGORY_THREE = '.t-ticket-category-power-select:eq(2) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_ONE = '.t-ticket-category-select:eq(0) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_TWO = '.t-ticket-category-select:eq(1) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_THREE = '.t-ticket-category-select:eq(2) > .ember-basic-dropdown > .ember-power-select-trigger';
 
 moduleForComponent('tickets/ticket-new', 'integration: ticket-new test', {
     integration: true,
@@ -37,7 +37,7 @@ test('each status shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('statuses', statuses);
     this.render(hbs`{{tickets/ticket-new model=model statuses=statuses}}`);
-    let $component = this.$('.t-ticket-status-power-select');
+    let $component = this.$('.t-ticket-status-select');
     assert.equal($component.length, 1);
 });
 
@@ -49,7 +49,7 @@ test('each priority shows up as a valid select option', function(assert) {
     this.set('model', ticket);
     this.set('priorities', priorities);
     this.render(hbs`{{tickets/ticket-new model=model priorities=priorities}}`);
-    let $component = this.$('.t-ticket-priority-power-select');
+    let $component = this.$('.t-ticket-priority-select');
     assert.equal($component.length, 1);
 });
 
@@ -59,7 +59,7 @@ test('only one select is rendered when ticket has no categories (and no top leve
     this.set('model', ticket);
     this.set('top_level_category_options', top_level_category_options);
     this.render(hbs`{{tickets/ticket-new model=model top_level_category_options=top_level_category_options}}`);
-    let $component = this.$('.t-ticket-category-power-select');
+    let $component = this.$('.t-ticket-category-select');
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.equal($component.length, 1);
     assert.equal($component.find('div.item').length, 0);
@@ -77,8 +77,8 @@ test('a second select will be rendred after top level category picked', function
     this.set('model', ticket);
     this.set('top_level_category_options', top_level_category_options);
     this.render(hbs`{{tickets/ticket-new model=model top_level_category_options=top_level_category_options}}`);
-    let $components = this.$('.t-ticket-category-power-select');
-    let $component = this.$('.t-ticket-category-power-select:eq(0)');
+    let $components = this.$('.t-ticket-category-select');
+    let $component = this.$('.t-ticket-category-select:eq(0)');
     run(() => { 
         this.$(`${CATEGORY_ONE}`).click(); 
     });
@@ -110,9 +110,9 @@ test('a second select will be rendred after top level category picked', function
     run(() => { 
         $(`.ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameOne})`).click();
     });
-    $components = this.$('.t-ticket-category-power-select');
+    $components = this.$('.t-ticket-category-select');
     assert.equal($components.length, 2);
-    let $component_two = this.$('.t-ticket-category-power-select:eq(1)');
+    let $component_two = this.$('.t-ticket-category-select:eq(1)');
     run(() => { 
         this.$(`${CATEGORY_TWO}`).click(); 
     });
@@ -122,7 +122,7 @@ test('a second select will be rendred after top level category picked', function
     run(() => { 
         $(`.ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameRepairChild})`).click();
     });
-    $components = this.$('.t-ticket-category-power-select');
+    $components = this.$('.t-ticket-category-select');
     assert.equal($components.length, 2);
     assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.unusedId);
     assert.equal(ticket.get('categories').get('length'), 2);
@@ -138,7 +138,7 @@ test('a second select will be rendred after top level category picked', function
             store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.namePlumbingChild, parent_id: CATEGORY_DEFAULTS.idTwo});
         });
     };
-    $components = this.$('.t-ticket-category-power-select');
+    $components = this.$('.t-ticket-category-select');
     assert.equal($components.length, 3);
     run(() => { 
         this.$(`${CATEGORY_THREE}`).click(); 

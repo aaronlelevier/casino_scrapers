@@ -6,10 +6,10 @@ import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 
 let store, ticket, status_one, status_two, status_three, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
-const COMPONENT = '.t-ticket-status-power-select';
+const COMPONENT = '.t-ticket-status-select';
 const DROPDOWN = '.ember-power-select-dropdown';
 
-moduleForComponent('ticket-status-select-power', 'integration: ticket-status-select test', {
+moduleForComponent('ticket-status-select', 'integration: ticket-status-select test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status']);
@@ -24,7 +24,7 @@ test('should render a selectbox when status options are empty (initial state of 
     let statuses = Ember.A([]);
     this.set('ticket', ticket);
     this.set('statuses', statuses);
-    this.render(hbs`{{ticket-status-select-power ticket=ticket statuses=statuses}}`);
+    this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), '');
     run(() => { 
@@ -42,7 +42,7 @@ test('should render a selectbox with bound options', function(assert) {
     status_one.set('tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
     this.set('statuses', statuses);
-    this.render(hbs`{{ticket-status-select-power ticket=ticket statuses=statuses}}`);
+    this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.statusOne);
     run(() => { 
@@ -58,7 +58,7 @@ test('should be able to select new status when one doesnt exist', function(asser
     let statuses = store.find('ticket-status');
     this.set('ticket', ticket);
     this.set('statuses', statuses);
-    this.render(hbs`{{ticket-status-select-power ticket=ticket statuses=statuses}}`);
+    this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), '');
     run(() => { 
@@ -81,7 +81,7 @@ test('should be able to select same status when ticket already has a status', fu
     status_one.set('tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
     this.set('statuses', statuses);
-    this.render(hbs`{{ticket-status-select-power ticket=ticket statuses=statuses}}`);
+    this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.statusOne);
     run(() => { 
@@ -104,7 +104,7 @@ test('should be able to select new status when ticket already has a status', fun
     status_one.set('tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
     this.set('statuses', statuses);
-    this.render(hbs`{{ticket-status-select-power ticket=ticket statuses=statuses}}`);
+    this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.statusOne);
     run(() => { 
