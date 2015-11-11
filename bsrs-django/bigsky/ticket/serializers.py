@@ -37,10 +37,10 @@ class TicketListSerializer(serializers.ModelSerializer):
 
 class TicketSerializer(serializers.ModelSerializer):
 
-    categories = CategoryIDNameSerializer(many=True)
-    assignee = PersonTicketSerializer(required=False)
     location = LocationSerializer()
+    assignee = PersonTicketSerializer(required=False)
     requester = PersonTicketSerializer()
+    categories = CategoryIDNameSerializer(many=True)
     cc = PersonTicketSerializer(many=True)
 
     class Meta:

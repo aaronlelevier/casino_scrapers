@@ -53,7 +53,7 @@ class TicketListTests(APITestCase):
         self.assertEqual(ticket['request'], self.ticket.request)
         self.assertEqual(ticket['number'], self.ticket.number)
 
-    def test_data_nested_location(self):
+    def test_data_location(self):
         response = self.client.get('/api/tickets/')
 
         data = json.loads(response.content.decode('utf8'))
@@ -65,7 +65,7 @@ class TicketListTests(APITestCase):
         self.assertEqual(location['location_level'],
             str(self.ticket.location.location_level.id))
 
-    def test_data_nested_categories(self):
+    def test_data_categories(self):
         response = self.client.get('/api/tickets/')
 
         data = json.loads(response.content.decode('utf8'))
@@ -76,7 +76,7 @@ class TicketListTests(APITestCase):
         self.assertIn('parent', category)
         self.assertIn('children_fks', category)
 
-    def test_data_nested_assignee(self):
+    def test_data_assignee(self):
         response = self.client.get('/api/tickets/')
 
         data = json.loads(response.content.decode('utf8'))
@@ -112,24 +112,86 @@ class TicketDetailTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_detail(self):
+    def test_response(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_data(self):
+        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
+
         data = json.loads(response.content.decode('utf8'))
+
         self.assertEqual(data['id'], str(self.ticket.id))
-        self.assertEqual(data['cc'][0]['id'], str(self.ticket.cc.first().id))
-        self.assertIn(data['categories'][0]['id'], self.category_ids)
-        self.assertEqual(str(data['assignee']['id']), str(self.person.id))
-        self.assertEqual(data['assignee']['first_name'], self.person.first_name)
-        self.assertEqual(data['assignee']['middle_initial'], self.person.middle_initial)
-        self.assertEqual(data['assignee']['last_name'], self.person.last_name)
-        self.assertEqual(data['assignee']['role'], str(self.person.role.id))
-        self.assertEqual(data['assignee']['title'], self.person.title)
-        categories = data['categories'][0]
-        self.assertIn(categories['id'], self.category_ids)
-        self.assertIn(categories['name'], self.category_names)
-        self.assertIsNotNone(categories['parent'])
-        self.assertIsNotNone(categories['children_fks'])
+        self.assertEqual(data['status'], str(self.ticket.status.id))
+        self.assertEqual(data['priority'], str(self.ticket.priority.id))
+        self.assertEqual(data['attachments'],
+            list(self.ticket.attachments.values_list('id', flat=True)))
+        self.assertEqual(data['request'], self.ticket.request)
+        self.assertEqual(data['number'], self.ticket.number)
+
+    def test_location(self):
+        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        location = data['location']
+
+        self.assertEqual(location['id'], str(self.ticket.location.id))
+        self.assertEqual(location['name'], self.ticket.location.name)
+        self.assertEqual(location['number'], self.ticket.location.number)
+        self.assertEqual(location['location_level'],
+            str(self.ticket.location.location_level.id))
+
+    def test_assignee(self):
+        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        assignee = data['assignee']
+
+        self.assertEqual(assignee['id'], str(self.ticket.assignee.id))
+        self.assertEqual(assignee['first_name'], self.ticket.assignee.first_name)
+        self.assertEqual(assignee['middle_initial'], self.ticket.assignee.middle_initial)
+        self.assertEqual(assignee['last_name'], self.ticket.assignee.last_name)
+        self.assertEqual(assignee['title'], self.ticket.assignee.title)
+        self.assertEqual(assignee['role'], str(self.ticket.assignee.role.id))
+
+    def test_requester(self):
+        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        requester = data['requester']
+
+        self.assertEqual(requester['id'], str(self.ticket.requester.id))
+        self.assertEqual(requester['first_name'], self.ticket.requester.first_name)
+        self.assertEqual(requester['middle_initial'], self.ticket.requester.middle_initial)
+        self.assertEqual(requester['last_name'], self.ticket.requester.last_name)
+        self.assertEqual(requester['title'], self.ticket.requester.title)
+        self.assertEqual(requester['role'], str(self.ticket.requester.role.id))
+
+    def test_data_categories(self):
+        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        category = data['categories'][0]
+
+        self.assertIn('id', category)
+        self.assertIn('name', category)
+        self.assertIn('parent', category)
+        self.assertIn('children_fks', category)
+
+    def test_cc(self):
+        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        data_cc = data['cc'][0]
+        cc = self.ticket.cc.first()
+
+        self.assertEqual(data_cc['id'], str(cc.id))
+        self.assertEqual(data_cc['first_name'], cc.first_name)
+        self.assertEqual(data_cc['middle_initial'], cc.middle_initial)
+        self.assertEqual(data_cc['last_name'], cc.last_name)
+        self.assertEqual(data_cc['title'], cc.title)
+        self.assertEqual(data_cc['role'], str(cc.role.id))
 
 
 class TicketUpdateTests(APITestCase):
