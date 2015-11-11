@@ -46,14 +46,33 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         ticket_new_link = ticket_page.find_new_link()
         ticket_new_link.click()
         # Enter info and hit "save"
-    ## NEED LOCATION SELECT BOX FOR SAVE TO WORK
-        # ticket_subject = rand_chars()
-        # ticket = InputHelper(ticket_subject=ticket_subject)
+        
+        #will enter once get component in place
+        # ticket_request = rand_chars()
+        # ticket = InputHelper(ticket_request=ticket_request)
         # self._fill_in_using_class(ticket)
-        # ticket_status_input = Select(self.driver.find_element_by_class_name("t-ticket-status"))
-        # ticket_status_input.select_by_index(1)
-        # ticket_priority_input = Select(self.driver.find_element_by_class_name("t-ticket-priority"))
-        # ticket_priority_input.select_by_index(1)
+
+        ticket_priority_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', normalize-space(@class), ' '), 't-ticket-priority-select')]/div/div")
+        ticket_priority_input.click()
+        priority_option = self.driver.find_element_by_class_name("highlighted")
+        priority_option.click()
+        ticket_status_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', normalize-space(@class), ' '), 't-ticket-status-select')]/div/div")
+        ticket_status_input.click()
+        status_option = self.driver.find_element_by_class_name("highlighted")
+        status_option.click()
+        ticket_location = self.driver.find_element_by_xpath("//*[contains(concat(' ', normalize-space(@class), ' '), 't-ticket-location-select')]/div/div")
+        ticket_location.click()
+        ticket_location_input = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/div/input")
+        ticket_location_input.send_keys("a")
+        self.wait_for_xhr_request_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]")
+        location_option = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]")
+        location_option.click()
+        # option = self.driver_wait.find_elements_by_class_name("ember-power-select-option")
+        # option.click()[:1]
+        # location_two_option = self.driver.find_element_by_class_name("highlighted")
+        # location_two_option.click()
+        # location_option = self.driver.find_element_by_class_name("highlighted")
+        # location_option.click()
         # self.gen_elem_page.click_save_btn()
         # # Go to newly created ticket's Detail view
         # self.driver_wait.find_elements_by_class_name(ticket_page.list_data)
