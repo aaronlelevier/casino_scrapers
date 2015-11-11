@@ -36,6 +36,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected'), undefined);
     assert.equal(subject_two.get('categories_selected'), undefined);
     assert.equal(subject_three.get('categories_selected'), undefined);
+    assert.equal(ticket.get('ticket_categories').get('length'), 0);
+    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 0);
 
     Ember.run(function() {
         ticket.change_category_tree(category_top_level.get('id'));
@@ -47,6 +49,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected').get('id'), category_top_level.get('id'));
     assert.equal(subject_two.get('categories_selected'), undefined);
     assert.equal(subject_three.get('categories_selected'), undefined);
+    assert.equal(ticket.get('ticket_categories').get('length'), 1);
+    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 1);
 
     Ember.run(function() {
         ticket.change_category_tree(category_two.get('id'));
@@ -59,6 +63,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected').get('id'), category_top_level.get('id'));
     assert.equal(subject_two.get('categories_selected').get('id'), category_two.get('id'));
     assert.equal(subject_three.get('categories_selected'), undefined);
+    assert.equal(ticket.get('ticket_categories').get('length'), 2);
+    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 2);
 
     Ember.run(function() {
         ticket.change_category_tree(category_one.get('id'));
@@ -72,6 +78,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected').get('id'), category_top_level.get('id'));
     assert.equal(subject_two.get('categories_selected').get('id'), category_two.get('id'));
     assert.equal(subject_three.get('categories_selected').get('id'), category_one.get('id'));
+    assert.equal(ticket.get('ticket_categories').get('length'), 3);
+    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 3);
 
     Ember.run(function() {
         //select rando in place of category_two
@@ -85,4 +93,20 @@ test('categories_selected will always return the correct category object based o
     assert.equal(subject_one.get('categories_selected').get('id'), category_top_level.get('id'));
     assert.equal(subject_two.get('categories_selected').get('id'), category_rando.get('id'));
     assert.equal(subject_three.get('categories_selected'), undefined);
+    assert.equal(ticket.get('ticket_categories').get('length'), 2);
+    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 4);
+
+    Ember.run(function() {
+        ticket.change_category_tree(category_two.get('id'));
+    });
+
+    assert.equal(ticket.get('categories').get('length'), 2);
+    assert.equal(ticket.get('sorted_categories').get('length'), 2);
+    assert.equal(ticket.get('sorted_categories').objectAt(0).get('id'), category_top_level.get('id'));
+    assert.equal(ticket.get('sorted_categories').objectAt(1).get('id'), category_two.get('id'));
+    assert.equal(subject_one.get('categories_selected').get('id'), category_top_level.get('id'));
+    assert.equal(subject_two.get('categories_selected').get('id'), category_two.get('id'));
+    assert.equal(subject_three.get('categories_selected'), undefined);
+    assert.equal(ticket.get('ticket_categories').get('length'), 2);
+    assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 4);
 });

@@ -68,6 +68,7 @@ var TicketPage = PageObject.create({
   categoryThreeInput: text(`${CATEGORY_THREE}`),
   categoryThreeClickDropdown: clickable(`${CATEGORY_THREE}`),
   categoryThreeClickOptionOne: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameElectricalChild})`),
+  categoryThreeClickOptionToilet: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CATEGORY_DEFAULTS.namePlumbingChild})`),
   categoryThreeOptionLength: count(`${CATEGORY_DROPDOWN} > li`),
 
   locationInput: text(`${LOCATION}`),

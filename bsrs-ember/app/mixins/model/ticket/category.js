@@ -48,6 +48,13 @@ var CategoriesMixin = Ember.Mixin.create({
         let store = this.get('store');
         return store.find('ticket-category', filter.bind(this), ['removed']);
     }),
+    ticket_categories_with_removed: Ember.computed(function() {
+        let filter = function(join_model) {
+            return join_model.get('ticket_pk') === this.get('id');
+        };
+        let store = this.get('store');
+        return store.find('ticket-category', filter.bind(this), ['removed']);
+    }),
     find_parent_nodes(child_pk, parent_ids=[]) {
         if (!child_pk) { return; }
         let child = this.get('store').find('category', child_pk);
@@ -74,14 +81,21 @@ var CategoriesMixin = Ember.Mixin.create({
         const store = this.get('store');
         const ticket_pk = this.get('id');
         //remove all m2m join models that don't relate to this category pk
-        let m2m_models = this.get('ticket_categories').filter((m2m) => {
+        const m2m_models = this.get('ticket_categories').filter((m2m) => {
             return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
         });
         m2m_models.forEach((m2m) => {
             store.push('ticket-category', {id: m2m.get('id'), removed: true});
         });
-        const uuid = this.get('uuid');
-        store.push('ticket-category', {id: uuid.v4(), ticket_pk: this.get('id'), category_pk: category_pk});
+        const matching_m2m = this.get('ticket_categories_with_removed').filter((m2m) => {
+            return m2m.get('ticket_pk') === ticket_pk && category_pk === m2m.get('category_pk') && m2m.get('removed') === true;
+        }).objectAt(0); 
+        if (matching_m2m) {
+            store.push('ticket-category', {id: matching_m2m.get('id'), removed: undefined});
+        }else{
+            const uuid = this.get('uuid');
+            store.push('ticket-category', {id: uuid.v4(), ticket_pk: this.get('id'), category_pk: category_pk});
+        }
     },
     add_category(category_pk) {
         const uuid = this.get('uuid');
