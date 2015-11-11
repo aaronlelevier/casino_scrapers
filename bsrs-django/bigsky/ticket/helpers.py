@@ -9,17 +9,20 @@ class TicketActivityToRepresentation(object):
 
     def __init__(self, data):
         self.data = copy.deepcopy(data)
-        self.types = TicketActivityType.objects.all()
+        self.type = TicketActivityType.objects.get(id=self.data['type'])
 
     def get_data(self):
-        if self.data['type'] == self.types.get(name='assignee').id:
-            self.set_assignee_data()
-        elif self.data['type'] == self.types.get(name='cc_add').id:
-            self.set_person_list_data_with_key(key='added')
-        elif self.data['type'] == self.types.get(name='cc_remove').id:
-            self.set_person_list_data_with_key(key='removed')
-        elif self.data['type'] == self.types.get(name='categories').id:
-            self.set_category_data()
+        if self.data['content']:
+            if self.type.name == 'assignee':
+                self.set_assignee_data()
+            elif self.type.name == 'cc_add':
+                self.set_person_list_data_with_key(key='added')
+            elif self.type.name == 'cc_remove':
+                self.set_person_list_data_with_key(key='removed')
+            elif self.type.name == 'categories':
+                self.set_category_data()
+
+        self.data.update({'type': self.type.name})
 
         return self.data
 

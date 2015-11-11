@@ -208,7 +208,7 @@ class TicketActivityViewSetTests(APITestCase):
 
         activity = TicketActivity.objects.get(id=data['results'][0]['id'])
         self.assertIsInstance(activity, TicketActivity)
-        self.assertIsInstance(TicketActivityType.objects.get(id=data['results'][0]['type']), TicketActivityType)
+        self.assertIsInstance(TicketActivityType.objects.get(name=data['results'][0]['type']), TicketActivityType)
         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
         self.assertEqual(data['results'][0]['person']['id'], str(activity.person.id))
         self.assertEqual(data['results'][0]['content'], activity.content)
@@ -290,6 +290,15 @@ class TicketActivityViewSetReponseTests(APITestCase):
 
     def tearDown(self):
         self.client.logout()
+
+    def test_type(self):
+        type = 'create'
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type=type)
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['results'][0]['type'], type)
 
     def test_create(self):
         ticket_activity = create_ticket_activity(ticket=self.ticket, type='create')

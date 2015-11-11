@@ -63,8 +63,7 @@ class TicketActivitySerializer(serializers.ModelSerializer):
         """
         data = super(TicketActivitySerializer, self).to_representation(obj)
 
-        if data['content']:
-            activity_data = TicketActivityToRepresentation(data)
-            data = activity_data.get_data()
+        activity_data = TicketActivityToRepresentation(data)
+        data = activity_data.get_data()
 
         return data
