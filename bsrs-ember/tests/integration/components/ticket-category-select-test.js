@@ -10,9 +10,9 @@ import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category
 let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, category_four, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
-const COMPONENT = '.t-ticket-category-power-select';
+const COMPONENT = '.t-ticket-category-select';
 
-moduleForComponent('ticket-category-power-select', 'integration: ticket-category-power-select test', {
+moduleForComponent('ticket-category-select', 'integration: ticket-category-select test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:category', 'model:ticket-category']);
@@ -34,7 +34,7 @@ test('should render a selectbox when the options are empty (initial state of pow
     let ticket_category_options = Ember.A([]);
     this.set('ticket', ticket);
     this.set('ticket_category_options', ticket_category_options);
-    this.render(hbs`{{ticket-category-power-select ticket=ticket ticket_category_options=ticket_category_options}}`);
+    this.render(hbs`{{ticket-category-select ticket=ticket ticket_category_options=ticket_category_options}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { 
         this.$(`${PowerSelect}`).click(); 
@@ -48,7 +48,7 @@ test('should render a selectbox with bound options after type ahead for search',
     let ticket_category_options = store.find('category');
     this.set('ticket', ticket);
     this.set('ticket_category_options', ticket_category_options);
-    this.render(hbs`{{ticket-category-power-select ticket=ticket ticket_category_options=ticket_category_options}}`);
+    this.render(hbs`{{ticket-category-select ticket=ticket ticket_category_options=ticket_category_options}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), CATEGORY_DEFAULTS.nameThree);
     run(() => { 
@@ -65,7 +65,7 @@ test('should render a selectbox with bound options and can change top level cate
     let ticket_category_options = store.find('category', onlyParents, []);
     this.set('ticket', ticket);
     this.set('ticket_category_options', ticket_category_options);
-    this.render(hbs`{{ticket-category-power-select ticket=ticket ticket_category_options=ticket_category_options}}`);
+    this.render(hbs`{{ticket-category-select ticket=ticket ticket_category_options=ticket_category_options}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), CATEGORY_DEFAULTS.nameThree);
     assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.unusedId);

@@ -503,93 +503,154 @@ test('power select options are rendered immediately when enter detail route and 
     });
 });
 
-// test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
-//     page.visitDetail();
-//     andThen(() => {
-//         //override electrical to have children
-//         store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent: CATEGORY_DEFAULTS.idOne, has_children: true, children_fks: [CATEGORY_DEFAULTS.idChild]});
-//         let components = page.selectizeComponents();
-//         assert.equal(store.find('category').get('length'), 5);
-//         let tickets = store.find('ticket');
-//         assert.equal(tickets.objectAt(0).get('categories').get('length'), 3);
-//         assert.ok(tickets.objectAt(0).get('isNotDirtyOrRelatedNotDirty'));
-//         assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));
-//         assert.equal(components, 3);
-//     });
-//     //select same
-//     page.categoryOneClickDropdown();
-//     page.categoryOneClickOptionOne();
-//     andThen(() => {
-//         let components = page.selectizeComponents();
-//         assert.equal(store.find('ticket').get('length'), 1);
-//         let tickets = store.find('ticket');
-//         assert.equal(tickets.objectAt(0).get('categories').get('length'), 3);
-//         assert.equal(tickets.objectAt(0).get('sorted_categories').objectAt(0).get('children').get('length'), 2);
-//         assert.ok(tickets.objectAt(0).get('isNotDirtyOrRelatedNotDirty'));
-//         assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));
-//         assert.equal(components, 3);
-//     });
-//     //select electrical from second level
-//     let category_two = {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent: {id: CATEGORY_DEFAULTS.idOne}, has_children: true};
-//     category_two.children = [{id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, has_children:false}];
-//     xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
-//     page.categoryTwoClickDropdown();
-//     page.categoryTwoClickOptionOne();
-//     andThen(() => {
-//         let components = page.selectizeComponents();
-//         let tickets = store.find('ticket');
-//         assert.equal(tickets.get('length'), 1);
-//         assert.equal(store.find('category').get('length'), 6);
-//         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
-//         assert.equal(tickets.objectAt(0).get('sorted_categories').objectAt(0).get('children').get('length'), 2);
-//         assert.equal(tickets.objectAt(0).get('sorted_categories').objectAt(1).get('children').get('length'), 1);
-//         assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
-//         assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
-//         assert.equal(components, 3);
-//     });
-//     page.categoryThreeClickDropdown();
-//     page.categoryThreeClickOptionOne();
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//             assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
-//         });
-//     });
-//     generalPage.clickModalCancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.ok(generalPage.modalIsHidden());
-//             let components = page.selectizeComponents();
-//             let tickets = store.find('ticket');
-//             assert.equal(tickets.get('length'), 1);
-//             assert.equal(store.find('category').get('length'), 6);
-//             assert.equal(tickets.objectAt(0).get('categories').get('length'), 3);
-//             assert.equal(tickets.objectAt(0).get('sorted_categories').objectAt(0).get('children').get('length'), 2);
-//             assert.equal(tickets.objectAt(0).get('sorted_categories').objectAt(1).get('children').get('length'), 1);
-//             assert.equal(tickets.objectAt(0).get('sorted_categories').objectAt(2).get('children').get('length'), 0);
-//             assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
-//             assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
-//             assert.equal(components, 3);
-//         });
-//     });
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//             assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
-//         });
-//     });
-//     generalPage.clickModalRollback();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), TICKET_URL);
-//         });
-//     });
-// });
+test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        //override electrical to have children
+        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.idOne, children_fks: [CATEGORY_DEFAULTS.idChild]});
+        let components = page.selectizeComponents();
+        assert.equal(store.find('category').get('length'), 5);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('categories').get('length'), 3);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(ticket.get('categoriesIsNotDirty'));
+        assert.equal(components, 3);
+    });
+    //select same
+    page.categoryOneClickDropdown();
+    page.categoryOneClickOptionOne();
+    andThen(() => {
+        let components = page.selectizeComponents();
+        assert.equal(store.find('ticket').get('length'), 1);
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(ticket.get('categories').get('length'), 3);
+        assert.equal(ticket.get('sorted_categories').get('length'), 3);
+        assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
+        assert.equal(ticket.get('sorted_categories').objectAt(2).get('children').get('length'), 0);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(ticket.get('categoriesIsNotDirty'));
+        assert.equal(components, 3);
+    });
+    //select electrical from second level
+    let category_two = {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent: {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne}, children_fks: [CATEGORY_DEFAULTS.idChild]};
+    category_two.children = [{id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, children_fks: []}];
+    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
+    page.categoryTwoClickDropdown();
+    page.categoryTwoClickOptionElectrical();
+    andThen(() => {
+        let components = page.selectizeComponents();
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.equal(store.find('category').get('length'), 6);
+        assert.equal(ticket.get('categories').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.ok(ticket.get('categoriesIsDirty'));
+        assert.equal(components, 3);
+    });
+    page.categoryThreeClickDropdown();
+    page.categoryThreeClickOptionOne();
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible());
+            assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
+        });
+    });
+    generalPage.clickModalCancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsHidden());
+            let components = page.selectizeComponents();
+            let tickets = store.find('ticket');
+            assert.equal(store.find('category').get('length'), 6);
+            assert.equal(tickets.get('length'), 1);
+            let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+            assert.equal(ticket.get('categories').get('length'), 3);
+            assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
+            assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
+            assert.equal(ticket.get('sorted_categories').objectAt(2).get('children').get('length'), 0);
+            assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+            assert.ok(ticket.get('categoriesIsDirty'));
+            assert.equal(components, 3);
+        });
+    });
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible());
+            assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
+        });
+    });
+    generalPage.clickModalRollback();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), TICKET_URL);
+        });
+    });
+});
+
+test('changing tree and reverting tree should not show as dirty', (assert) => {
+    clearxhr(list_xhr);
+    page.visitDetail();
+    andThen(() => {
+        //override electrical to have children
+        store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.idOne, children_fks: [CATEGORY_DEFAULTS.idChild]});
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(ticket.get('categoriesIsNotDirty'));
+    });
+    //select same
+    page.categoryOneClickDropdown();
+    page.categoryOneClickOptionOne();
+    andThen(() => {
+        let components = page.selectizeComponents();
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(ticket.get('categoriesIsNotDirty'));
+    });
+    //select electrical from second level
+    let category_two = {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent: {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne}, children_fks: [CATEGORY_DEFAULTS.idChild]};
+    category_two.children = [{id: CATEGORY_DEFAULTS.idChild, name: CATEGORY_DEFAULTS.nameElectricalChild, children_fks: []}];
+    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idTwo}/`, 'GET', null, {}, 200, category_two);
+    page.categoryTwoClickDropdown();
+    page.categoryTwoClickOptionElectrical();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.ok(ticket.get('categoriesIsDirty'));
+    });
+    page.categoryThreeClickDropdown();
+    page.categoryThreeClickOptionOne();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.ok(ticket.get('categoriesIsDirty'));
+    });
+    let category_plumb = {id: CATEGORY_DEFAULTS.idPlumbing, name: CATEGORY_DEFAULTS.nameRepairChild, parent: {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne}, children_fks: [CATEGORY_DEFAULTS.idPlumbingChild]};
+    category_plumb.children = [{id: CATEGORY_DEFAULTS.idPlumbingChild, name: CATEGORY_DEFAULTS.namePlumbingChild, children_fks: []}];
+    xhr(`${PREFIX}/admin/categories/${CATEGORY_DEFAULTS.idPlumbing}/`, 'GET', null, {}, 200, category_plumb);
+    page.categoryTwoClickDropdown();
+    page.categoryTwoClickOptionPlumbing();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.ok(ticket.get('categoriesIsDirty'));
+    });
+    page.categoryThreeClickDropdown();
+    //reset tree back to original
+    page.categoryThreeClickOptionToilet();
+    andThen(() => {
+        let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(ticket.get('categoriesIsNotDirty'));
+    });
+});
 
 test('selecting and removing a top level category will remove children categories already selected', (assert) => {
     clearxhr(list_xhr);

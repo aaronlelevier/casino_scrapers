@@ -13,13 +13,13 @@
                     </div>
                     <div class="col-md-12">
                         {{#form-group title="admin.ticket.label.priority" for="priority"}}
-                          {{ticket-priority-select-power ticket=model priorities=priorities}}
+                          {{ticket-priority-select ticket=model priorities=priorities}}
                           {{#validation-error-field submitted=submitted field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
                         {{/form-group}}
                     </div>
                     <div class="col-md-12">
                         {{#form-group title="admin.ticket.label.status" for="status"}}
-                        {{ticket-status-select-power ticket=model statuses=statuses}}
+                        {{ticket-status-select ticket=model statuses=statuses}}
                         {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
                         {{/form-group}}
                     </div>
