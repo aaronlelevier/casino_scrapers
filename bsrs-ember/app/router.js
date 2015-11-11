@@ -50,7 +50,9 @@ Router.map(function() {
     this.route('tickets', function() {
         this.route('index');
         this.route('new');
-        this.route('ticket', {path: '/:ticket_id'});
+        this.route('ticket', {path: '/:ticket_id'}, function() {
+            this.route('activity', {path: '/'});
+        });
     });
     this.route('work-orders');
     this.route('purchase-orders');

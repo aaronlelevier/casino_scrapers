@@ -3,7 +3,7 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
+import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 
@@ -17,7 +17,7 @@ module('Acceptance | ticket list test', {
     beforeEach() {
         application = startApp();
         let endpoint = PREFIX + BASE_URL + '/';
-        xhr(endpoint,'GET', null, {}, 200, TICKET_FIXTURES.list() );
+        xhr(endpoint,'GET', null, {}, 200, TF.list() );
     },
     afterEach() {
         Ember.run(application, 'destroy');

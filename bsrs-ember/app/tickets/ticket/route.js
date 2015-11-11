@@ -54,10 +54,6 @@ var TicketSingleRoute = TabRoute.extend({
         }
 
         let ticket_cc_options = peopleRepo.findTicketPeople(search_cc);
-        // let cc = ticket.get('cc') || [];
-        // for (let i = 0, length=cc.get('length'); i < length; ++i) {
-        //     ticket_cc_options.pushObject(cc.objectAt(i));
-        // }
 
         let ticket_location_options = [];
         let locationRepo = this.get('locationRepo');

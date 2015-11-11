@@ -3,8 +3,8 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import TICKET_FIXTURES from 'bsrs-ember/vendor/ticket_fixtures';
-import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
+import TF from 'bsrs-ember/vendor/ticket_fixtures';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -27,7 +27,7 @@ module('Acceptance | ticket grid test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/?page=1';
-        list_xhr = xhr(endpoint, 'GET', null, {}, 200, TICKET_FIXTURES.list());
+        list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
         original_uuid = random.uuid;
     },
     afterEach() {
@@ -42,8 +42,8 @@ test('initial load should only show first 10 records ordered by id with correct 
         assert.equal(currentURL(), TICKET_URL);
         //assert.equal(find('.t-grid-title').text(), 'Tickets');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority').text(), TICKET_DEFAULTS.priorityOne);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority').text(), TD.priorityOne);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -55,13 +55,13 @@ test('initial load should only show first 10 records ordered by id with correct 
 
 test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', function(assert) {
     var page_two = PREFIX + BASE_URL + '/?page=2';
-    xhr(page_two ,"GET",null,{},200,TICKET_FIXTURES.list_two());
+    xhr(page_two ,"GET",null,{},200,TF.list_two());
     visit(TICKET_URL);
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -73,7 +73,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -85,7 +85,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
     var page_two = PREFIX + BASE_URL + '/?page=2';
-    xhr(page_two ,"GET",null,{},200,TICKET_FIXTURES.list_two());
+    xhr(page_two ,"GET",null,{},200,TF.list_two());
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
@@ -135,81 +135,81 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,priority';
-    xhr(sort_two ,"GET",null,{},200,TICKET_FIXTURES.sorted('request,priority'));
+    xhr(sort_two ,"GET",null,{},200,TF.sorted('request,priority'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=priority';
-    xhr(page_two ,"GET",null,{},200,TICKET_FIXTURES.sorted('priority'));
+    xhr(page_two ,"GET",null,{},200,TF.sorted('priority'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority';
-    xhr(sort_one ,"GET",null,{},200,TICKET_FIXTURES.sorted('priority'));
+    xhr(sort_one ,"GET",null,{},200,TF.sorted('priority'));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     click('.t-sort-priority-dir');
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL + '?sort=priority');
         assert.equal(find('.t-grid-data').length, 10);
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL + '?page=2&sort=priority');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
     click('.t-sort-request-dir');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?sort=request%2Cpriority');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
 });
 
 test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=request&search=14';
-    xhr(search_two ,"GET",null,{},200,TICKET_FIXTURES.searched('14', 'request'));
+    xhr(search_two ,"GET",null,{},200,TF.searched('14', 'request'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=request';
-    xhr(page_two ,"GET",null,{},200,TICKET_FIXTURES.searched('', 'request', 2));
+    xhr(page_two ,"GET",null,{},200,TF.searched('', 'request', 2));
     var page_one = PREFIX + BASE_URL + '/?page=1&ordering=request';
-    xhr(page_one ,"GET",null,{},200,TICKET_FIXTURES.searched('', 'request'));
+    xhr(page_one ,"GET",null,{},200,TF.searched('', 'request'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=request&search=4';
-    xhr(sort_one ,"GET",null,{},200,TICKET_FIXTURES.searched('4', 'request'));
+    xhr(sort_one ,"GET",null,{},200,TF.searched('4', 'request'));
     var search_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(search_one ,"GET",null,{},200,TICKET_FIXTURES.searched('4', 'id'));
+    xhr(search_one ,"GET",null,{},200,TF.searched('4', 'id'));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=4');
         assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestFourGrid);
-        assert.equal(find('.t-grid-data:eq(1) .t-ticket-request').text(), TICKET_DEFAULTS.requestFourteenGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestFourGrid);
+        assert.equal(find('.t-grid-data:eq(1) .t-ticket-request').text(), TD.requestFourteenGrid);
     });
     click('.t-sort-request-dir');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=4&sort=request');
         assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestFourteenGrid);
-        assert.equal(find('.t-grid-data:eq(1) .t-ticket-request').text(), TICKET_DEFAULTS.requestFourGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestFourteenGrid);
+        assert.equal(find('.t-grid-data:eq(1) .t-ticket-request').text(), TD.requestFourGrid);
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=&sort=request');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?page=2&search=&sort=request');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOtherGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOtherGrid);
     });
     fillIn('.t-grid-search-input', '14');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
@@ -217,57 +217,57 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=14&sort=request');
         assert.equal(find('.t-grid-data').length, 1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestFourteenGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestFourteenGrid);
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,priority';
-    xhr(sort_two ,"GET",null,{},200,TICKET_FIXTURES.sorted('request,priority'));
+    xhr(sort_two ,"GET",null,{},200,TF.sorted('request,priority'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority';
-    xhr(sort_one ,"GET",null,{},200,TICKET_FIXTURES.sorted('priority'));
+    xhr(sort_one ,"GET",null,{},200,TF.sorted('priority'));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     click('.t-sort-priority-dir');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?sort=priority');
         assert.equal(find('.t-grid-data').length, 10);
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     click('.t-sort-request-dir');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?sort=request%2Cpriority');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
 });
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
     var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=priority,request';
-    xhr(sort_four ,"GET",null,{},200,TICKET_FIXTURES.sorted('priority,request'));
+    xhr(sort_four ,"GET",null,{},200,TF.sorted('priority,request'));
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-priority,request';
-    xhr(sort_three ,"GET",null,{},200,TICKET_FIXTURES.sorted('-priority,request'));
+    xhr(sort_three ,"GET",null,{},200,TF.sorted('-priority,request'));
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=request,priority';
-    xhr(sort_two ,"GET",null,{},200,TICKET_FIXTURES.sorted('request,priority'));
+    xhr(sort_two ,"GET",null,{},200,TF.sorted('request,priority'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority';
-    xhr(sort_one ,"GET",null,{},200,TICKET_FIXTURES.sorted('priority'));
+    xhr(sort_one ,"GET",null,{},200,TF.sorted('priority'));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-priority-dir').hasClass('fa-sort'));
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort'));
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
         assert.equal(find('.t-reset-grid').length, 0);
     });
     click('.t-sort-priority-dir');
@@ -276,7 +276,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-priority-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort'));
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     click('.t-sort-request-dir');
     andThen(() => {
@@ -284,7 +284,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-priority-dir').hasClass('fa-sort-asc'));
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestLastGrid);
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
     click('.t-sort-priority-dir');
     andThen(() => {
@@ -292,7 +292,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-priority-dir').hasClass('fa-sort-desc'));
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestLastPage2Grid);
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastPage2Grid);
     });
     click('.t-sort-priority-dir');
     andThen(() => {
@@ -300,32 +300,32 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-priority-dir').hasClass('fa-sort-asc'));
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
 });
 
 test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
     let find_two = PREFIX + BASE_URL + '/?page=1&request__icontains=ape&priority__icontains=a';
-    xhr(find_two ,"GET",null,{},200,TICKET_FIXTURES.sorted('request:ape,priority:a'));
+    xhr(find_two ,"GET",null,{},200,TF.sorted('request:ape,priority:a'));
     let find_one = PREFIX + BASE_URL + '/?page=1&request__icontains=ape';
-    xhr(find_one ,"GET",null,{},200,TICKET_FIXTURES.fulltext('request:ape', 1));
+    xhr(find_one ,"GET",null,{},200,TF.fulltext('request:ape', 1));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     filterGrid('request', 'ape');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=request%3Aape');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestLastGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
     filterGrid('priority', 'a');
     andThen(() => {
@@ -337,13 +337,13 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TICKET_DEFAULTS.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
 });
 
 test('loading screen shown before any xhr and hidden after', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority';
-    xhr(sort_one ,"GET",null,{},200,TICKET_FIXTURES.sorted('priority'));
+    xhr(sort_one ,"GET",null,{},200,TF.sorted('priority'));
     visitSync(TICKET_URL);
     Ember.run.later(function() {
         assert.equal(find('.t-grid-data').length, 0);
@@ -377,11 +377,11 @@ test('when a full text filter is selected the input inside the modal is focused'
 
 test('full text searched columns will have a special on css class when active', function(assert) {
     let find_three = PREFIX + BASE_URL + '/?page=1&request__icontains=&priority__icontains=7';
-    xhr(find_three ,"GET",null,{},200,TICKET_FIXTURES.sorted('priority:7'));
+    xhr(find_three ,"GET",null,{},200,TF.sorted('priority:7'));
     let find_two = PREFIX + BASE_URL + '/?page=1&request__icontains=num&priority__icontains=7';
-    xhr(find_two ,"GET",null,{},200,TICKET_FIXTURES.sorted('request:num,priority:7'));
+    xhr(find_two ,"GET",null,{},200,TF.sorted('request:num,priority:7'));
     let find_one = PREFIX + BASE_URL + '/?page=1&request__icontains=num';
-    xhr(find_one ,"GET",null,{},200,TICKET_FIXTURES.fulltext('request:num', 1));
+    xhr(find_one ,"GET",null,{},200,TF.fulltext('request:num', 1));
     visit(TICKET_URL);
     andThen(() => {
         assert.ok(!find('.t-filter-priority').hasClass('on'));
@@ -406,11 +406,11 @@ test('full text searched columns will have a special on css class when active', 
 
 test('after you reset the grid the filter model will also be reset', function(assert) {
     let option_three = PREFIX + BASE_URL + '/?page=1&ordering=priority&search=4&priority__icontains=4';
-    xhr(option_three ,'GET',null,{},200,TICKET_FIXTURES.sorted('priority:4'));
+    xhr(option_three ,'GET',null,{},200,TF.sorted('priority:4'));
     let option_two = PREFIX + BASE_URL + '/?page=1&ordering=priority&search=4';
-    xhr(option_two ,'GET',null,{},200,TICKET_FIXTURES.sorted('priority:4'));
+    xhr(option_two ,'GET',null,{},200,TF.sorted('priority:4'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(option_one ,'GET',null,{},200,TICKET_FIXTURES.searched('4', 'id'));
+    xhr(option_one ,'GET',null,{},200,TF.searched('4', 'id'));
     visit(TICKET_URL);
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
@@ -438,7 +438,7 @@ test('after you reset the grid the filter model will also be reset', function(as
 
 test('count is shown and updated as the user filters down the list from django', function(assert) {
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(option_one ,'GET',null,{},200,TICKET_FIXTURES.searched('4', 'id'));
+    xhr(option_one ,'GET',null,{},200,TF.searched('4', 'id'));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(find('.t-grid-data').length, 10);
@@ -462,11 +462,11 @@ test('count is shown and updated as the user filters down the list from django',
 
 test('picking a different number of pages will alter the query string and xhr', function(assert) {
     let option_two = PREFIX + BASE_URL + '/?page=1&page_size=10';
-    xhr(option_two, 'GET',null,{},200,TICKET_FIXTURES.paginated(10));
+    xhr(option_two, 'GET',null,{},200,TF.paginated(10));
     let option_one = PREFIX + BASE_URL + '/?page=1&page_size=25';
-    xhr(option_one, 'GET',null,{},200,TICKET_FIXTURES.paginated(25));
+    xhr(option_one, 'GET',null,{},200,TF.paginated(25));
     let page_two = PREFIX + BASE_URL + '/?page=2';
-    xhr(page_two, 'GET',null,{},200,TICKET_FIXTURES.list_two());
+    xhr(page_two, 'GET',null,{},200,TF.list_two());
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
@@ -517,7 +517,7 @@ test('picking a different number of pages will alter the query string and xhr', 
 test('starting with a page size greater than 10 will set the selected', function(assert) {
     clearxhr(list_xhr);
     let option_one = PREFIX + BASE_URL + '/?page=1&page_size=25';
-    xhr(option_one, 'GET',null,{},200,TICKET_FIXTURES.paginated(25));
+    xhr(option_one, 'GET',null,{},200,TF.paginated(25));
     visit(TICKET_URL + '?page_size=25');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?page_size=25');
@@ -532,7 +532,7 @@ test('starting with a page size greater than 10 will set the selected', function
 
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority';
-    xhr(sort_one ,'GET',null,{},200,TICKET_FIXTURES.sorted('priority'));
+    xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
     visit(TICKET_URL);
     click('.t-sort-priority-dir');
     click('.t-show-save-filterset-modal');
@@ -548,7 +548,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 // test('amk save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
 //     random.uuid = function() { return UUID.value; };
 //     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority';
-//     xhr(sort_one ,'GET',null,{},200,TICKET_FIXTURES.sorted('priority'));
+//     xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
 //     let priority = 'foobar';
 //     let routePath = 'admin.tickets.index';
 //     let url = window.location.toString();
@@ -596,7 +596,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 //
 // test('save filterset button only available when a dynamic filter is present', function(assert) {
 //     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority';
-//     xhr(sort_one ,'GET',null,{},200,TICKET_FIXTURES.sorted('priority'));
+//     xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
 //     visit(TICKET_URL);
 //     andThen(() => {
 //         assert.equal(find('.t-show-save-filterset-modal').length, 0);

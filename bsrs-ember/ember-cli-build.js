@@ -32,6 +32,7 @@ module.exports = function(environment) {
   app.import('vendor/role_fixtures.js');
   app.import('vendor/third_party_fixtures.js');
   app.import('vendor/ticket_fixtures.js');
+  app.import('vendor/ticket_activity_fixtures.js');
   app.import('vendor/category_fixtures.js');
   app.import('vendor/translation_fixtures.js');
   app.import('vendor/defaults/address-type.js');
