@@ -3,7 +3,7 @@ import sys
 from .base import *
 
 
-LOCAL_APPS = (
+LOCAL_APPS += (
     'django_extensions',
     )
 
