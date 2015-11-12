@@ -1,8 +1,8 @@
+/*jshint node:true*/
 /* global require, module */
 
 var EmberApp = require('ember-cli/lib/broccoli/ember-app');
 var funnel = require('broccoli-funnel');
-var broccoliLeasot = require('broccoli-leasot');
 
 var es5Shim = funnel('node_modules/es5-shim', {
   files: ['es5-shim.js'],
@@ -11,11 +11,6 @@ var es5Shim = funnel('node_modules/es5-shim', {
 
 module.exports = function(environment) {
   var app = new EmberApp({
-    
-    'markers': {
-      enabled: true,
-      kinds: ['TODO']
-    },
     'fingerprint': {
       prepend: '/static/'
     },
