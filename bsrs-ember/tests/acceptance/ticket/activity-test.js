@@ -13,6 +13,7 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
+import PD from 'bsrs-ember/vendor/defaults/person';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
@@ -48,6 +49,8 @@ test('ticket detail shows the activity list including event data (assignee)', (a
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-activity-list-item').length, 2);
+        assert.equal(find('.t-activity-list-item:eq(0)').text(), `${PD.first_name} changed the assignee from ${PD.nameBoy} to ${PD.nameBoy2}`);
+        assert.equal(find('.t-activity-list-item:eq(1)').text(), `${PD.first_name} changed the assignee from ${PD.nameBoy} to ${PD.nameBoy2}`);
     });
 });
 

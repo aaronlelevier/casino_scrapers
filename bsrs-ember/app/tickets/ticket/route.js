@@ -3,6 +3,7 @@ import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
 
 var TicketSingleRoute = TabRoute.extend({
+    activityRepository: inject('activity'),
     repository: inject('ticket'),
     peopleRepo: inject('person'),
     locationRepo: inject('location'),
@@ -67,6 +68,9 @@ var TicketSingleRoute = TabRoute.extend({
             //NOTE: if not dirty on search change, then will bring in new data
             ticket = repository.findById(pk);
         }
+
+        let activities = this.get('activityRepository').find('ticket', 'tickets', pk);
+
         return Ember.RSVP.hash({
             model: ticket,
             statuses: statuses,
@@ -78,6 +82,7 @@ var TicketSingleRoute = TabRoute.extend({
             ticket_assignee_options: ticket_assignee_options,
             ticket_location_options: ticket_location_options,
             top_level_category_options: top_level_category_options,
+            activities: activities
         });
     },
     setupController: function(controller, hash) {
@@ -91,6 +96,7 @@ var TicketSingleRoute = TabRoute.extend({
         controller.set('ticket_assignee_options', hash.ticket_assignee_options);
         controller.set('ticket_location_options', hash.ticket_location_options);
         controller.set('top_level_category_options', hash.top_level_category_options);
+        controller.set('activities', hash.activities);
     },
 });
 
