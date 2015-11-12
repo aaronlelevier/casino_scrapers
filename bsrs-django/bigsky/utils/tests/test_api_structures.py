@@ -1,3 +1,4 @@
+import os
 import importlib
 import inspect
 
@@ -10,7 +11,35 @@ from rest_framework.viewsets import ModelViewSet
 from accounting.serializers import CurrencySerializer
 from category.serializers import CategoryListSerializer
 from person.views import PersonViewSet
-from utils.api_structures import SerializerData, AppsAndViewSets
+from utils.api_structures import SerializerDataFileWriter, SerializerData, AppsAndViewSets
+
+
+class SerializerDataFileWriterTests(TestCase):
+
+    def setUp(self):
+        dirname = "/Users/alelevier/Desktop"
+        name = 'test.txt'
+        self.filename = os.path.join(dirname, name)
+
+    def tearDown(self):
+        os.remove(self.filename)
+        self.assertFalse(os.path.isfile(self.filename))
+
+    def test_isfile(self):
+        myfile = SerializerDataFileWriter(self.filename, 'w')
+        myfile.write('bob')
+        myfile.close()
+
+        self.assertTrue(os.path.isfile(self.filename))
+
+    def test_write(self):
+        text = 'bob'
+        myfile = SerializerDataFileWriter(self.filename, 'w')
+        myfile.write(text)
+        myfile.close()
+
+        with open(self.filename, 'r') as f:
+            self.assertEqual(f.read(), "{}\n".format(text))
 
 
 class SerializerDataTests(TestCase):

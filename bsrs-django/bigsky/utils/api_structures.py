@@ -14,6 +14,25 @@ from category.serializers import CategoryListSerializer
 from category.views import CategoryViewSet
 
 
+class SerializerDataFileWriter(object):
+    "Adds newline onto the end of all writes."
+
+    def __init__(self, name, mode='r'):
+        self.file = open(name, mode)
+
+    def __enter__ (self):
+        return self.file
+
+    def __exit__ (self, exc_type, exc_value, traceback):
+        self.file.close()
+
+    def close(self):
+        self.file.close()
+
+    def write(self, string):
+        self.file.writelines(string + '\n')
+
+
 class SerializerData(object):
 
     def __init__(self, serializer):

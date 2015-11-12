@@ -7,7 +7,7 @@ LOCAL_APPS += (
     'django_extensions',
     )
 
-INSTALLED_APPS = INSTALLED_APPS + LOCAL_APPS
+INSTALLED_APPS = set(INSTALLED_APPS + LOCAL_APPS)
 
 DATABASES = {
     'default': {
