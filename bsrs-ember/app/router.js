@@ -26,6 +26,11 @@ Router.map(function() {
         this.route('notifications');
         this.route('assignments');
         this.route('approvals');
+        this.route('translations', function() {
+            this.route('index');
+            this.route('new');
+            this.route('translation', {path: '/:translation_key'});
+        });
         this.route('people', function() {
             this.route('index');
             this.route('new');

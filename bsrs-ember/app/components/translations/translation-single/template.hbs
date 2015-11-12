@@ -1,0 +1,47 @@
+<form {{action "return false" this on="submit"}}>
+    {{base-component
+        model=model
+        save="save"
+        cancel="cancel"
+        delete="delete"
+    }}
+    <section class="docSection container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <section style="padding-bottom: 0">
+                    <div class="row card-title">
+                        <h1 class="col-md-12">
+                            {{model.key}}<br>
+                            <small>{{t model.key}}</small><br>
+                            <small>{{t model.helper}}</small>
+                        </h1>
+                    </div>
+                </section>
+            </div>
+            <div class="col-md-12">
+                <section>
+                    {{#each model.locales as |locale|}}
+                    <h2>{{locale.locale}}</h2>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.translation.label.translation" for="translation"}}
+                            {{input type="text" placeholder=(t "admin.translation.label.translation") value=locale.translation class="form-control t-translation-translation"}}
+                            {{#validation-error-field submitted=submitted field="translation" className="validation validation-under t-translation-validation-error" model=model validation=translationValidation}}{{t "validation.invalid"}} {{t "admin.translation.label.translation"}}{{/validation-error-field}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.translation.label.helper" for="helper"}}
+                            {{input type="text" placeholder=(t "admin.translation.label.translation") value=locale.helper class="form-control t-translation-helper"}}
+                            {{#validation-error-field submitted=submitted field="helper" className="validation validation-under t-helper-validation-error" model=model validation=helperValidation}}{{t "validation.invalid"}} {{t "admin.translation.label.helper"}}{{/validation-error-field}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <br><br>
+                    {{/each}}
+                </section>
+            </div>
+        </div>
+    </section>
+</form>

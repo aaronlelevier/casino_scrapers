@@ -152,6 +152,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.locationlevel.label.name':'Name',
             'admin.locationlevel.label.general':'General',
             'admin.locationlevel.label.childOrg':'Child Organization(s)',
+            'admin.translation.other':'Translations',
             'admin.third_party.label.name':'Name',
             'admin.third_party.label.number':'Number',
             'admin.third_party.label.status':'Status',

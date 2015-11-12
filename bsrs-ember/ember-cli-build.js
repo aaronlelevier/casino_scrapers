@@ -20,6 +20,7 @@ module.exports = function(environment) {
   app.import('bower_components/fauxjax-toranb/dist/fauxjax.min.js');
   app.import('vendor/mixin.js');
   app.import('vendor/address_fixtures.js');
+  app.import('vendor/admin_translation_fixtures.js');
   app.import('vendor/location_fixtures.js');
   app.import('vendor/location_level_fixtures.js');
   app.import('vendor/people_fixtures.js');
@@ -53,6 +54,7 @@ module.exports = function(environment) {
   app.import('vendor/defaults/ticket.js');
   app.import('vendor/defaults/ticket-person.js');
   app.import('vendor/defaults/ticket-category.js');
+  app.import('vendor/defaults/translation.js');
   app.import('vendor/defaults/uuid.js');
   app.import('vendor/defaults/global-message.js');
   // Use `app.import` to add additional libraries to the generated
