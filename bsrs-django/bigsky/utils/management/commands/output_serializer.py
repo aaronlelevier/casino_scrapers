@@ -48,10 +48,10 @@ def serialize_data(serializer_class=CategoryListSerializer):
 
 
 def format_data(data):
-    data = json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+    # data = json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
     # or 
-    # pp = pprint.PrettyPrinter(indent=2)
-    # pp.pformat(data)
+    pp = pprint.PrettyPrinter(indent=2)
+    data = pp.pformat(data)
 
     return data
 
