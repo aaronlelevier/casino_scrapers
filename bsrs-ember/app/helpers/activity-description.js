@@ -4,10 +4,10 @@ export default Ember.Helper.helper(function(params) {
     let activity = params[0];
     let type = activity.get('type');
     let person = activity.get('person');
-    if(type === 'assignee') {
-        let to = activity.get('to');
-        let from = activity.get('from');
-        return `${person.fullname} changed the assignee from ${to.fullname} to ${from.fullname}`;
+    if(type !== 'create') {
+        let to = activity.get('to.name');
+        let from = activity.get('from.name');
+        return `${person.fullname} changed the ${type} from ${to} to ${from}`;
     }
     return `${person.fullname} created this ticket`;
 });

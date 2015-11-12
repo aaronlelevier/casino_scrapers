@@ -55,7 +55,7 @@ test('ticket detail shows the activity list including event data (assignee)', (a
     });
 });
 
-test('ticket detail does not show the activity list without a matching ticket for the activity', (assert) => {
+test('ticket detail does not show the activity list without a matching ticket for the activity (assignee)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only(TD.idTwo));
     page.visitDetail();
     andThen(() => {
@@ -64,12 +64,42 @@ test('ticket detail does not show the activity list without a matching ticket fo
     });
 });
 
-test('ticket detail shows created at date', (assert) => {
+test('ticket detail shows the activity list including event data (create)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only());
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} created this ticket`);
+    });
+});
+
+test('ticket detail does not show the activity list without a matching ticket for the activity (create)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only(TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
+
+test('ticket detail shows the activity list including event data (status)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo}`);
+    });
+});
+
+test('ticket detail does not show the activity list without a matching ticket for the activity (status)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only(TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
     });
 });
