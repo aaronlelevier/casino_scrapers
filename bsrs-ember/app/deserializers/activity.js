@@ -7,6 +7,12 @@ var extract_to_and_from = function(store, model) {
         store.push(`activity/${model.type}`, model.content.from);
         model.to_fk = model.content.to.id;
         model.from_fk = model.content.from.id;
+    }else if (content && content.added) {
+        let type = model.type.dasherize();
+        content.added.forEach(function(cc) {
+            cc.activities = [model.id];
+            store.push(`activity/${type}`, cc);
+        });
     }else if(content) {
         model.to_fk = model.content.to;
         model.from_fk = model.content.from;

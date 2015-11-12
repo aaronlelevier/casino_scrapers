@@ -36,6 +36,13 @@ var ActivityModel = Ember.Object.extend({
             return person.get('id') === person_fk;
         };
         return this.get('store').find(`activity/person`, filter, []);
+    }),
+    added: Ember.computed(function() {
+        const activity_id = this.get('id');
+        const filter = function(cc) {
+            return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
+        };
+        return this.get('store').find('activity/cc-add', filter, ['activities']);
     })
 });
 

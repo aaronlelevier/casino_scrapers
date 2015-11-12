@@ -103,3 +103,22 @@ test('ticket detail does not show the activity list without a matching ticket fo
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
     });
 });
+
+test('ticket detail shows the activity list including event data (cc_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} added person1 to CC`);
+    });
+});
+
+test('ticket detail does not show the activity list without a matching ticket for the activity (cc_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2, TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});

@@ -56,6 +56,25 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         delete activity.content;
         return activity;
     },
+    factory.prototype.get_cc_add = function(i, count, ticket_pk) {
+        var added = [];
+        for (var j=1; j <= count; j++) {
+            var person = {id: j, fullname: 'person' + j};
+            added.push(person);
+        }
+        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var activity = {id: i, type: 'cc_add', created: Date.now(), ticket: ticket_id};
+        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
+        activity.content = {added: added};
+        return activity;
+    },
+    factory.prototype.get_cc_add_json = function(i, count, ticket_pk) {
+        var activity = this.get_cc_add(i, count, ticket_pk);
+        activity.person_fk = activity.person.id;
+        delete activity.person;
+        delete activity.content;
+        return activity;
+    },
     factory.prototype.created_only = function(ticket_pk) {
         var response = [];
         var uuid = '649447cc-1a19-4d8d-829b-bfb81cb5ece1';
@@ -79,6 +98,12 @@ var TICKET_ACTIVITY_FACTORY = (function() {
             var activity = this.get_status(uuid+i, ticket_pk);
             response.push(activity);
         }
+        return {'count':2,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.cc_add_only = function(count, ticket_pk) {
+        var uuid = '949447cc-1a19-4d8d-829b-bfb81cb5ece1';
+        var activity = this.get_cc_add(uuid, count, ticket_pk);
+        var response = [activity];
         return {'count':2,'next':null,'previous':null,'results': response};
     };
     return factory;
