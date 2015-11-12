@@ -6,6 +6,7 @@ import importlib
 import inspect
 
 from django.conf import settings
+from django.utils.text import capfirst
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import ModelSerializer, ListSerializer
@@ -14,10 +15,11 @@ from category.serializers import CategoryListSerializer
 from category.views import CategoryViewSet
 
 
-class SerializerDataFileWriter(object):
+class ViewSetFileWriter(object):
     "Adds newline onto the end of all writes."
 
-    def __init__(self, name, mode='r'):
+    def __init__(self, name, mode='r', viewset=None):
+        self.viewset = viewset
         self.file = open(name, mode)
 
     def __enter__ (self):
@@ -85,10 +87,6 @@ class AppsAndViewSets(object):
     def __init__(self):
         pass
 
-    @property
-    def serializer_actions(self):
-        return ['list', 'retrieve', 'update', 'create']
-
     @staticmethod
     def get_local_apps():
         return settings.LOCAL_APPS
@@ -104,18 +102,37 @@ class AppsAndViewSets(object):
 
         return viewsets
 
-    def get_serializers_for_viewset(self, viewset):
-        viewset = viewset()
 
+class ViewSetHandler(object):
+
+    def __init__(self, viewset):
+        self.viewset = viewset()
+
+    @property
+    def name(self):
+        "Returns viewset name as a string"
+        return self.viewset.__class__.__name__
+
+    @property
+    def model(self):
+        "Returns the viewset's model name as a sting"
+        return self.viewset.model().__class__.__name__
+
+    @property
+    def serializer_actions(self):
+        return ['list', 'retrieve', 'update', 'create']
+
+    def get_serializers(self):
         serializers = []
         for action in self.serializer_actions:
-            viewset.action = action
-            serializer = viewset.get_serializer_class()
+            self.viewset.action = action
+            serializer = self.viewset.get_serializer_class()
             serializers.append(serializer)
-
         return serializers
 
-
+    def get_serializer_for_action(self, action):
+        self.viewset.action = action
+        return self.viewset.get_serializer_class()
 
 
 # def create_file(action, data):

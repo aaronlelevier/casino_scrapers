@@ -4,6 +4,7 @@ import inspect
 
 from django.test import TestCase
 from django.conf import settings
+from django.utils.text import capfirst
 
 from rest_framework.serializers import ModelSerializer
 from rest_framework.viewsets import ModelViewSet
@@ -11,10 +12,11 @@ from rest_framework.viewsets import ModelViewSet
 from accounting.serializers import CurrencySerializer
 from category.serializers import CategoryListSerializer
 from person.views import PersonViewSet
-from utils.api_structures import SerializerDataFileWriter, SerializerData, AppsAndViewSets
+from utils.api_structures import (ViewSetFileWriter, SerializerData,
+    AppsAndViewSets, ViewSetHandler)
 
 
-class SerializerDataFileWriterTests(TestCase):
+class ViewSetFileWriterTests(TestCase):
 
     def setUp(self):
         dirname = "/Users/alelevier/Desktop"
@@ -26,7 +28,7 @@ class SerializerDataFileWriterTests(TestCase):
         self.assertFalse(os.path.isfile(self.filename))
 
     def test_isfile(self):
-        myfile = SerializerDataFileWriter(self.filename, 'w')
+        myfile = ViewSetFileWriter(self.filename, 'w')
         myfile.write('bob')
         myfile.close()
 
@@ -34,7 +36,7 @@ class SerializerDataFileWriterTests(TestCase):
 
     def test_write(self):
         text = 'bob'
-        myfile = SerializerDataFileWriter(self.filename, 'w')
+        myfile = ViewSetFileWriter(self.filename, 'w')
         myfile.write(text)
         myfile.close()
 
@@ -90,16 +92,6 @@ class AppsAndViewSetsTests(TestCase):
     def setUp(self):
         self.apps_and_viewsets = AppsAndViewSets()
 
-    def test_serializer_actions(self):
-        actions = ['list', 'retrieve', 'update', 'create']
-
-        self.assertEqual(
-            len(actions),
-            len(self.apps_and_viewsets.serializer_actions)
-        )
-        for action in actions:
-            self.assertIn(action, self.apps_and_viewsets.serializer_actions)
-
     def test_get_local_apps(self):
         apps = self.apps_and_viewsets.get_local_apps()
 
@@ -122,12 +114,51 @@ class AppsAndViewSetsTests(TestCase):
         self.assertIn(inspected_viewset, viewsets)
         self.assertTrue(issubclass(viewsets[0], ModelViewSet))
 
-    def test_get_serializers_for_viewset(self):
-        serializers = self.apps_and_viewsets.get_serializers_for_viewset(PersonViewSet)
+
+class ViewSetHandlerTests(TestCase):
+
+    def setUp(self):
+        self.viewset_handler = ViewSetHandler(PersonViewSet)
+
+    def test_name(self):
+        self.assertEqual(
+            self.viewset_handler.name,
+            PersonViewSet().__class__.__name__
+        )
+
+    def test_model(self):
+        self.assertEqual(
+            self.viewset_handler.model,
+            PersonViewSet().model().__class__.__name__
+        )
+
+    def test_serializer_actions(self):
+        actions = ['list', 'retrieve', 'update', 'create']
+
+        self.assertEqual(
+            len(actions),
+            len(self.viewset_handler.serializer_actions)
+        )
+        for action in actions:
+            self.assertIn(action, self.viewset_handler.serializer_actions)
+
+    def test_get_serializers(self):
+        serializers = self.viewset_handler.get_serializers()
 
         self.assertEqual(
             len(serializers),
-            len(self.apps_and_viewsets.serializer_actions),
+            len(self.viewset_handler.serializer_actions),
         )
         for serializer in serializers:
             self.assertTrue(issubclass(serializer, ModelSerializer))
+
+    def test_get_serializer_for_action(self):
+        action = 'list'
+        viewset = PersonViewSet()
+        viewset.action = action
+        list_serializer = viewset.get_serializer_class()
+
+        self.assertEqual(
+            list_serializer,
+            self.viewset_handler.get_serializer_for_action(action)
+        )
