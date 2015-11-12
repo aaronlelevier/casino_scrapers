@@ -7,7 +7,7 @@ import string
 from selenium import webdriver
 
 from helpers import (
-    LoginMixin, FillInHelper, JavascriptMixin,
+    LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
     NavPage, GeneralElementsPage, Wait, ModelPage
 )
 
@@ -38,7 +38,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         ticket_page = ModelPage(
             driver = self.driver,
             new_link = "t-add-new",
-            list_name = "t-ticket-subject",
+            list_name = "t-ticket-request",
             list_data = "t-grid-data"
         )
         ticket_page.find_list_data()
@@ -48,10 +48,9 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         # Enter info and hit "save"
         
         #will enter once get component in place
-        # ticket_request = rand_chars()
-        # ticket = InputHelper(ticket_request=ticket_request)
-        # self._fill_in_using_class(ticket)
-
+        ticket_request = rand_chars()
+        ticket = InputHelper(ticket_request=ticket_request)
+        self._fill_in_using_class(ticket)
         ticket_priority_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-priority-select ')]/div/div")
         ticket_priority_input.click()
         priority_option = self.driver.find_element_by_class_name("highlighted")
@@ -95,43 +94,46 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         self.wait_for_xhr_request_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]", debounce=True)
         category_three_option = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]")
         category_three_option.click()
-        import time; time.sleep(5)
-        # ticket_category_three = self.driver.find_element_by_xpath("//*[contains(concat(' ', normalize-space(@class), ' '), 't-ticket-category-select')][3]/div/div")
-        # ticket_category_three.click()
-        # ticket_category_three_input = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/div/input")
-        # ticket_category_three_input.send_keys("a")
-        # self.wait_for_xhr_request_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]", debounce=True)
-        # category_three_option = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]")
-        # category_three_option.click()
-        # self.gen_elem_page.click_save_btn()
-        # # Go to newly created ticket's Detail view
-        # self.driver_wait.find_elements_by_class_name(ticket_page.list_data)
-        # self.driver.refresh()
-        # ticket_list_view = ticket_page.find_list_name()
-        # ticket_page.click_name_in_list(ticket_subject, ticket_list_view)
+        self.gen_elem_page.click_save_btn()
+        # Go to newly created ticket's Detail view
+        ticket_page.find_list_data()
+        self.driver.refresh()
+        ticket_list_view = ticket_page.find_list_name()
+        new_ticket = ticket_page.click_name_in_list_pages(ticket_request, new_model=None)
+        try:
+            new_ticket.click()
+        except AttributeError as e:
+            raise e("new ticket not found")
         ### UPDATE
-        # Go to ticket Detail view, Change subject and hit "save"
-        # ticket_page.find_wait_and_assert_elem("t-ticket-subject", ticket_subject)
-        # ticket_subject = rand_chars()
-        # ticket = InputHelper(ticket_subject=ticket_subject)
-        # self._fill_in_using_class(ticket)
-        # self.gen_elem_page.click_save_btn()
-        # # List view contains new subject
-        # tickets = ticket_page.find_list_data()
-        # ticket_list_view = ticket_page.find_list_name()
-        # ticket_page.click_name_in_list(ticket_subject, ticket_list_view)
-#         # ### DELETE
-#         # # Go to ticket Detail view click Delete
-#         # self.gen_elem_page.click_dropdown_delete()
-#         # self.gen_elem_page.click_delete_btn()
-#         # # check Role is deleted
-#         # self.driver.refresh()
-#         tickets = ticket_page.find_list_data()
-#         ticket_list_view = ticket_page.find_list_name()
-#         self.assertNotIn(
-#             ticket_number,
-#             [r.text for r in ticket_list_view]
-#         )
+        # Go to ticket Detail view, Change request and hit "save"
+        ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request)
+        ticket_request_two = rand_chars()
+        self.driver.find_element_by_class_name("t-ticket-request").clear()
+        ticket = InputHelper(ticket_request=ticket_request_two)
+        self._fill_in_using_class(ticket)
+        self.gen_elem_page.click_save_btn()
+        # # List view contains new request
+        ticket_page.find_list_data()
+        self.driver.refresh()
+        ticket_list_view_two = ticket_page.find_list_name()
+        new_ticket_two = ticket_page.click_name_in_list_pages(ticket_request_two, new_model=None)
+        try:
+            new_ticket_two.click()
+        except AttributeError as e:
+            raise e("new ticket not found")
+        ### DELETE
+        # Go to Ticket Detail view click Delete
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        # check Ticket is deleted
+        self.driver.refresh()
+        tickets = ticket_page.find_list_data()
+        ticket_list_view = ticket_page.find_list_name()
+        # this needs to be improved to look through all the pages
+        self.assertNotIn(
+            ticket_request_two,
+            [r.text for r in ticket_list_view]
+        )
 
 
 if __name__ == "__main__":

@@ -34,6 +34,37 @@ class ModelPage(JavascriptMixin):
     def find_power_select_data(self, xpath, just_refreshed=False):
         return self.wait_for_xhr_request(xpath, plural=True, just_refreshed=just_refreshed)
 
+    def _loop_over_names(self, name, new_model, count):
+        """Loop over names in the list.
+        :Return: new_model; incremented count for the page.
+        """
+        try:
+            self.find_list_data()
+        except AssertionError:
+            pass
+        list_view_elements = self.find_list_name()
+        for row in list_view_elements:
+            if row.text and row.text == name:
+                new_model = row
+        count += 1
+        return (new_model, count)
+
+    def click_name_in_list_pages(self, name, new_model):
+        pagination = self.wait_for_xhr_request("t-pages")
+        element_list = pagination.find_elements_by_class_name("t-page")
+        element_list_len = len(element_list)
+        count = 0
+        while count < element_list_len:
+            new_model, count = self._loop_over_names(name, new_model, count)
+            if new_model:
+                break
+            pagination = self.driver.find_element_by_class_name("t-pages")
+            element_list = pagination.find_elements_by_class_name("t-page")
+            print(count)
+            next_elem = element_list[count]
+            next_elem.find_element_by_xpath("a").click()
+        return new_model
+
     @staticmethod
     def click_name_in_list(name, list_view_elements):
         new_location = None

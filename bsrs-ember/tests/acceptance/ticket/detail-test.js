@@ -108,6 +108,7 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
         assert.equal(page.priorityInput(), TD.priorityTwo);
         assert.equal(page.statusInput(), TD.statusTwo);
     });
+    page.requestFillIn(TD.requestOneGrid);
     let response = TF.detail(TD.idOne);
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail_one_category), {}, 200, response);
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());

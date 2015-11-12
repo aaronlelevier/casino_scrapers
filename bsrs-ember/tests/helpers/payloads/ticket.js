@@ -29,7 +29,7 @@ var ticket_payload_detail = {
 
 var ticket_payload_detail_one_category = {
     id: TICKET_DEFAULTS.idOne,
-    request: TICKET_DEFAULTS.requestOne,
+    request: TICKET_DEFAULTS.requestOneGrid,
     status: TICKET_DEFAULTS.statusTwoId,
     priority: TICKET_DEFAULTS.priorityTwoId,
     cc: [PEOPLE_DEFAULTS.idOne],

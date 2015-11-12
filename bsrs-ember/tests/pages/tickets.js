@@ -97,6 +97,8 @@ var TicketPage = PageObject.create({
   assigneeClickOptionTwo: clickable(`${ASSIGNEE_DROPDOWN} > .ember-power-select-option:eq(1)`),
   // assigneeClickIdThree: clickable(`${ASSIGNEE_DROPDOWN} > .ember-power-select-option:contains(${PEOPLE_DEFAULTS.storeNameThree})`),
   assigneeOptionLength: count(`${ASSIGNEE_DROPDOWN} > li`),
+
+  requestFillIn: fillable('.t-ticket-request'),
 });
 
 export default TicketPage;
