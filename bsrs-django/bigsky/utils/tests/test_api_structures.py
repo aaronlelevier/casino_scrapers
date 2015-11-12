@@ -158,6 +158,8 @@ class ViewSetFileWriterTests(TestCase):
         dirname = "/Users/alelevier/Desktop"
         name = 'test.txt'
         self.filename = os.path.join(dirname, name)
+        # debug file settings
+        self.maxDiff = None
 
     def tearDown(self):
         os.remove(self.filename)
@@ -179,6 +181,83 @@ class ViewSetFileWriterTests(TestCase):
         with open(self.filename, 'r') as f:
             self.assertEqual(f.read(), "{}\n".format(text))
 
+    def test_write_line(self):
+        myfile = ViewSetFileWriter(self.filename)
+        myfile.write_line()
+        myfile.close()
+
+        with open(self.filename, 'r') as f:
+            self.assertEqual(f.read(), "\n\n")
+
+    def test_write_viewset(self):
+        # viewset
+        viewset = PersonViewSet
+        viewset_handler = ViewSetHandler(viewset)
+        # action blocks
+        action_blocks = ""
+        for action in viewset_handler.serializer_actions:
+            action_blocks += "### {}\n".format(
+                viewset_handler.formatted_action(action))
+            action_blocks += "```python\n"
+
+            serializer = viewset_handler.get_serializer_for_action(action)
+            action_blocks += "{}\n".format(
+                viewset_handler.formatted_serializer_data(serializer))
+
+            action_blocks += "```\n\n"
+        # file
+        myfile = ViewSetFileWriter(self.filename, viewset=viewset)
+        myfile.write_viewset()
+        myfile.close()
+
+        with open(self.filename, 'r') as f:
+            self.assertEqual(
+                f.read(),
+                """# {name}\n## {model}\n{action_blocks}""".format(
+                    name=viewset_handler.name,
+                    model=viewset_handler.model,
+                    action_blocks=action_blocks
+                )
+            )
+
+    def test_write_viewset_name(self):
+        # viewset
+        viewset = PersonViewSet
+        viewset_handler = ViewSetHandler(viewset)
+        # file
+        myfile = ViewSetFileWriter(self.filename, viewset=viewset)
+        myfile.write_viewset_name()
+        myfile.close()
+
+        with open(self.filename, 'r') as f:
+            self.assertEqual(f.read(), "# {}\n".format(viewset_handler.name))
+
+    def test_write_viewset_model(self):
+        # viewset
+        viewset = PersonViewSet
+        viewset_handler = ViewSetHandler(viewset)
+        # file
+        myfile = ViewSetFileWriter(self.filename, viewset=viewset)
+        myfile.write_viewset_model()
+        myfile.close()
+
+        with open(self.filename, 'r') as f:
+            self.assertEqual(f.read(), "## {}\n".format(viewset_handler.model))
+
+    def test_write_viewset_action(self):
+        # viewset
+        action = 'list'
+        viewset = PersonViewSet
+        viewset_handler = ViewSetHandler(viewset)
+        # file
+        myfile = ViewSetFileWriter(self.filename, viewset=viewset)
+        myfile.write_viewset_action(action)
+        myfile.close()
+
+        with open(self.filename, 'r') as f:
+            self.assertEqual(f.read(), "### {}\n".format(
+                viewset_handler.formatted_action(action)))
+
     def test_write_code_block_start(self):
         myfile = ViewSetFileWriter(self.filename)
         myfile.write_code_block_start()
@@ -193,4 +272,4 @@ class ViewSetFileWriterTests(TestCase):
         myfile.close()
 
         with open(self.filename, 'r') as f:
-            self.assertEqual(f.read(), "```\n\n\n")
+            self.assertEqual(f.read(), "```\n\n")

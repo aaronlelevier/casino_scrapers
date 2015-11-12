@@ -146,57 +146,36 @@ class ViewSetFileWriter(object):
     def write(self, string):
         self.file.writelines(string + '\n')
 
+    def write_line(self):
+        self.write("\n")
+
     def write_viewset(self):
-        self.write()
+        self.write_viewset_name()
+        self.write_viewset_model()
+        
+        for action in self.viewset.serializer_actions:
+            # action: start
+            # self.write("### {}".format(self.viewset.formatted_action(action)))
+            self.write_viewset_action(action)
+            
+            self.write_code_block_start()
+            # write serializer
+            serializer = self.viewset.get_serializer_for_action(action)
+            self.write(self.viewset.formatted_serializer_data(serializer))
+            # action: end
+            self.write_code_block_end()
+
+    def write_viewset_name(self):
+        self.write("# {}".format(self.viewset.name))
+
+    def write_viewset_model(self):
+        self.write("## {}".format(self.viewset.model))
+
+    def write_viewset_action(self, action):
+        self.write("### {}".format(self.viewset.formatted_action(action)))
 
     def write_code_block_start(self, lang='python'):
         self.write("```{}".format(lang))
 
     def write_code_block_end(self):
-        self.write("```\n\n")
-
-
-# def create_file(action, data):
-#     filename = 'test.md'
-#     path = '/Users/alelevier/Desktop'
-
-#     with open(os.path.join(path, filename), 'w') as f:
-#         f.write("```json")
-#         f.write("\n")
-#         f.write(format_data(data))
-#         f.write("\n")
-#         f.write("```")
-
-
-def format_data(data):
-    # data = json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
-    # or 
-    pp = pprint.PrettyPrinter(indent=2)
-    data = pp.pformat(data)
-
-    return data
-
-
-def write_serializer_data():
-    viewset_class = CategoryViewSet
-    viewset = viewset_class()
-
-    filename = 'test.md'
-    path = '/Users/alelevier/Desktop'
-    with open(os.path.join(path, filename), 'w') as f:
-        f.write("# CategoryViewSet\n\n")
-
-        actions = ['list', 'retrieve']
-        for action in actions:
-            setattr(viewset, 'action', action)
-            serializer = viewset.get_serializer_class()
-            data = serialize_data(serializer)
-
-            f.write("### {}\n".format(action))
-            f.write("\n")
-            f.write("```json")
-            f.write("\n")
-            f.write(format_data(data))
-            f.write("\n")
-            f.write("```")
-            f.write("\n\n")
+        self.write("```\n")
