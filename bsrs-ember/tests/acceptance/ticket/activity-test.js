@@ -49,8 +49,8 @@ test('ticket detail shows the activity list including event data (assignee)', (a
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-activity-list-item').length, 2);
-        assert.equal(find('.t-activity-list-item:eq(0)').text(), `${PD.first_name} changed the assignee from ${PD.nameBoy} to ${PD.nameBoy2}`);
-        assert.equal(find('.t-activity-list-item:eq(1)').text(), `${PD.first_name} changed the assignee from ${PD.nameBoy} to ${PD.nameBoy2}`);
+        assert.equal(find('.t-activity-list-item:eq(0)').text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2}`);
+        assert.equal(find('.t-activity-list-item:eq(1)').text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2}`);
     });
 });
 

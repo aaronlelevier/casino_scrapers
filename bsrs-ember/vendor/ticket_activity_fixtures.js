@@ -12,8 +12,8 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         for (var i=1; i <= 2; i++) {
             var uuid = '749447cc-1a19-4d8d-829b-bfb81cb5ece';
             var activity = {id: uuid + i, type: 'assignee', created: Date.now(), ticket: ticket_id};
-            activity.person = {id: this.person_defaults.idOne, first_name: this.person_defaults.first_name, last_name: this.person_defaults.last_name, middle_initial: this.person_defaults.middle_initial};
-            activity.content = {to: {id: this.person_defaults.idSearch, first_name: this.person_defaults.nameBoy, last_name: this.person_defaults.lastNameBoy, middle_initial: 'to'}, from: {id: this.person_defaults.idBoy, first_name: this.person_defaults.nameBoy2, last_name: this.person_defaults.lastNameBoy2, middle_initial: 'from'}};
+            activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
+            activity.content = {to: {id: this.person_defaults.idSearch, fullname: this.person_defaults.fullnameBoy}, from: {id: this.person_defaults.idBoy, fullname: this.person_defaults.fullnameBoy2}};
             response.push(activity);
         }
         return {'count':2,'next':null,'previous':null,'results': response};

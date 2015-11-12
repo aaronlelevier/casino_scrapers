@@ -355,6 +355,12 @@ class Person(BaseModel, AbstractUser):
             'last_name': self.last_name
         }
 
+    def to_simple_fullname_dict(self):
+        return {
+            'id': str(self.id),
+            'fullname': self.fullname
+        }
+
     @property
     def _password_expire_date(self):
         return timezone.now().date() + timedelta(days=self.role.password_expire)

@@ -440,13 +440,9 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
         self.assertEqual(data['results'][0]['content']['from']['id'], str(from_assignee.id))
-        self.assertEqual(data['results'][0]['content']['from']['first_name'], from_assignee.first_name)
-        self.assertEqual(data['results'][0]['content']['from']['middle_initial'], from_assignee.middle_initial)
-        self.assertEqual(data['results'][0]['content']['from']['last_name'], from_assignee.last_name)
+        self.assertEqual(data['results'][0]['content']['from']['fullname'], from_assignee.fullname)
         self.assertEqual(data['results'][0]['content']['to']['id'], str(to_assignee.id))
-        self.assertEqual(data['results'][0]['content']['to']['first_name'], to_assignee.first_name)
-        self.assertEqual(data['results'][0]['content']['to']['middle_initial'], to_assignee.middle_initial)
-        self.assertEqual(data['results'][0]['content']['to']['last_name'], to_assignee.last_name)
+        self.assertEqual(data['results'][0]['content']['to']['fullname'], to_assignee.fullname)
 
     def test_cc_add(self):
         cc = create_single_person()
