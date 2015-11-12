@@ -37,7 +37,7 @@ class TicketActivityToRepresentation(object):
 
         for id in person_ids:
             person = Person.objects.get(id=id)
-            self.data['content'][key].append(person.to_simple_dict())
+            self.data['content'][key].append(person.to_simple_fullname_dict())
 
     def set_category_data(self):
         self.set_category_with_key('from')
