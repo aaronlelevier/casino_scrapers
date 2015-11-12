@@ -51,6 +51,7 @@ module.exports = function(environment) {
   app.import('vendor/defaults/third-party.js');
   app.import('vendor/defaults/third-party-status.js');
   app.import('vendor/defaults/ticket.js');
+  app.import('vendor/defaults/ticket_activity.js');
   app.import('vendor/defaults/ticket-person.js');
   app.import('vendor/defaults/ticket-category.js');
   app.import('vendor/defaults/uuid.js');

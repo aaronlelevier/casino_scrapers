@@ -24,6 +24,7 @@ test('activity deserializer returns correct data with assignee', (assert) => {
     assert.equal(store.find('activity').objectAt(0).get('to').get('id'), PD.idSearch);
     assert.equal(store.find('activity').objectAt(0).get('from').get('id'), PD.idBoy);
     assert.notOk(store.find('activity').objectAt(0).get('content'));
+    assert.equal(store.find('activity').objectAt(0).get('type'), 'assignee');
     //TODO: assert other property values for to/from
 });
 
@@ -36,6 +37,15 @@ test('activity deserializer returns correct activity/person', (assert) => {
     assert.equal(store.find('activity').objectAt(0).get('person').get('id'), PD.idOne);
 });
 
+test('activity with only created is deserialized correctly', (assert) => {
+    let subject = ActivityDeserializer.create({store: store});
+    let response = TA_FIXTURES.created_only();
+    subject.deserialize(response);
+    assert.equal(store.find('activity').get('length'), 1);
+    assert.equal(store.find('activity/person').get('length'), 1);
+    assert.equal(store.find('activity').objectAt(0).get('person').get('id'), PD.idOne);
+    assert.equal(store.find('activity').objectAt(0).get('type'), 'create');
+});
 
 //existing, then deserialize over the top
 //push in payload w/ assignee and cc_? and both persist and are wired up correctly

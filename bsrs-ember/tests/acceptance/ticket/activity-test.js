@@ -25,6 +25,7 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + TD.idOne;
 const TICKET_PUT_URL = PREFIX + DETAIL_URL + '/';
+const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid;
 
@@ -44,13 +45,13 @@ module('Acceptance | ticket activity test', {
 });
 
 test('ticket detail shows the activity list including event data (assignee)', (assert) => {
-    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only(TD.idOne));
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-activity-list-item').length, 2);
-        assert.equal(find('.t-activity-list-item:eq(0)').text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2}`);
-        assert.equal(find('.t-activity-list-item:eq(1)').text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2}`);
     });
 });
 
@@ -59,6 +60,16 @@ test('ticket detail does not show the activity list without a matching ticket fo
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-activity-list-item').length, 0);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
+
+test('ticket detail shows created at date', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} created this ticket`);
     });
 });

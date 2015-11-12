@@ -1,10 +1,12 @@
 import Ember from 'ember';
 
 var extract_to_and_from = function(store, model) {
-   store.push(`activity/${model.type}`, model.content.to);
-   store.push(`activity/${model.type}`, model.content.from);
-   model.to_fk = model.content.to.id;
-   model.from_fk = model.content.from.id;
+    if (model.content) {
+        store.push(`activity/${model.type}`, model.content.to);
+        store.push(`activity/${model.type}`, model.content.from);
+        model.to_fk = model.content.to.id;
+        model.from_fk = model.content.from.id;
+    }
 };
 
 var extract_person = function(store, model) {
