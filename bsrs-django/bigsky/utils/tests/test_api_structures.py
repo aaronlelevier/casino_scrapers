@@ -158,8 +158,8 @@ class ViewSetFileWriterTests(TestCase):
         dirname = "/Users/alelevier/Desktop"
         name = 'test.txt'
         self.filename = os.path.join(dirname, name)
-        # debug file settings
-        self.maxDiff = None
+        # debug file settings (uncomment if needed for debugging)
+        # self.maxDiff = None
 
     def tearDown(self):
         os.remove(self.filename)
