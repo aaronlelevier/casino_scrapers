@@ -16,34 +16,6 @@ from utils.api_structures import (ViewSetFileWriter, SerializerData,
     AppsAndViewSets, ViewSetHandler)
 
 
-class ViewSetFileWriterTests(TestCase):
-
-    def setUp(self):
-        dirname = "/Users/alelevier/Desktop"
-        name = 'test.txt'
-        self.filename = os.path.join(dirname, name)
-
-    def tearDown(self):
-        os.remove(self.filename)
-        self.assertFalse(os.path.isfile(self.filename))
-
-    def test_isfile(self):
-        myfile = ViewSetFileWriter(self.filename, 'w')
-        myfile.write('bob')
-        myfile.close()
-
-        self.assertTrue(os.path.isfile(self.filename))
-
-    def test_write(self):
-        text = 'bob'
-        myfile = ViewSetFileWriter(self.filename, 'w')
-        myfile.write(text)
-        myfile.close()
-
-        with open(self.filename, 'r') as f:
-            self.assertEqual(f.read(), "{}\n".format(text))
-
-
 class SerializerDataTests(TestCase):
 
     def test_top_level(self):
@@ -132,6 +104,22 @@ class ViewSetHandlerTests(TestCase):
             PersonViewSet().model().__class__.__name__
         )
 
+    def test_formatted_action(self):
+        action = 'list'
+        self.assertEqual(
+            self.viewset_handler.formatted_action(action),
+            capfirst(action)
+        )
+
+    def test_formatted_serializer_data(self):
+        serializer = CurrencySerializer
+        serializer_data = SerializerData(serializer)
+
+        self.assertEqual(
+            serializer_data.formated_data,
+            self.viewset_handler.formatted_serializer_data(serializer)
+        )
+
     def test_serializer_actions(self):
         actions = ['list', 'retrieve', 'update', 'create']
 
@@ -162,3 +150,47 @@ class ViewSetHandlerTests(TestCase):
             list_serializer,
             self.viewset_handler.get_serializer_for_action(action)
         )
+
+
+class ViewSetFileWriterTests(TestCase):
+
+    def setUp(self):
+        dirname = "/Users/alelevier/Desktop"
+        name = 'test.txt'
+        self.filename = os.path.join(dirname, name)
+
+    def tearDown(self):
+        os.remove(self.filename)
+        self.assertFalse(os.path.isfile(self.filename))
+
+    def test_isfile(self):
+        myfile = ViewSetFileWriter(self.filename)
+        myfile.write('bob')
+        myfile.close()
+
+        self.assertTrue(os.path.isfile(self.filename))
+
+    def test_write(self):
+        text = 'bob'
+        myfile = ViewSetFileWriter(self.filename)
+        myfile.write(text)
+        myfile.close()
+
+        with open(self.filename, 'r') as f:
+            self.assertEqual(f.read(), "{}\n".format(text))
+
+    def test_write_code_block_start(self):
+        myfile = ViewSetFileWriter(self.filename)
+        myfile.write_code_block_start()
+        myfile.close()
+
+        with open(self.filename, 'r') as f:
+            self.assertEqual(f.read(), "```python\n")
+
+    def test_write_code_block_end(self):
+        myfile = ViewSetFileWriter(self.filename)
+        myfile.write_code_block_end()
+        myfile.close()
+
+        with open(self.filename, 'r') as f:
+            self.assertEqual(f.read(), "```\n\n\n")

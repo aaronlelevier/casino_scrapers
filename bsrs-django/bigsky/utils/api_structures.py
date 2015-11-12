@@ -15,26 +15,6 @@ from category.serializers import CategoryListSerializer
 from category.views import CategoryViewSet
 
 
-class ViewSetFileWriter(object):
-    "Adds newline onto the end of all writes."
-
-    def __init__(self, name, mode='r', viewset=None):
-        self.viewset = viewset
-        self.file = open(name, mode)
-
-    def __enter__ (self):
-        return self.file
-
-    def __exit__ (self, exc_type, exc_value, traceback):
-        self.file.close()
-
-    def close(self):
-        self.file.close()
-
-    def write(self, string):
-        self.file.writelines(string + '\n')
-
-
 class SerializerData(object):
 
     def __init__(self, serializer):
@@ -45,6 +25,14 @@ class SerializerData(object):
     def data(self):
         self.construct_data()
         return self._data
+
+    @property
+    def formated_data(self):
+        # data = json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+        # or 
+        pp = pprint.PrettyPrinter(indent=2)
+        data = pp.pformat(self.data)
+        return data
 
     def construct_data(self):
         serializer = self.serializer()
@@ -73,14 +61,6 @@ class SerializerData(object):
     def construct_top_level_data(self, k, v):
         self._data.update({k: v.__class__.__name__})
 
-    @property
-    def formated_data(data):
-        # data = json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
-        # or 
-        pp = pprint.PrettyPrinter(indent=2)
-        data = pp.pformat(self.data)
-        return data
-
 
 class AppsAndViewSets(object):
 
@@ -108,6 +88,9 @@ class ViewSetHandler(object):
     def __init__(self, viewset):
         self.viewset = viewset()
 
+    # These properties will return strings to be used by
+    # the ``ViewSetFileWriter``
+
     @property
     def name(self):
         "Returns viewset name as a string"
@@ -117,6 +100,15 @@ class ViewSetHandler(object):
     def model(self):
         "Returns the viewset's model name as a sting"
         return self.viewset.model().__class__.__name__
+
+    def formatted_action(self, action):
+        return capfirst(action)
+
+    def formatted_serializer_data(self, serializer):
+        serializer_data = SerializerData(serializer)
+        return serializer_data.formated_data
+
+    # Supporting Methods
 
     @property
     def serializer_actions(self):
@@ -133,6 +125,35 @@ class ViewSetHandler(object):
     def get_serializer_for_action(self, action):
         self.viewset.action = action
         return self.viewset.get_serializer_class()
+
+
+class ViewSetFileWriter(object):
+    "Adds newline onto the end of all writes."
+
+    def __init__(self, name, mode='w', viewset=None):
+        self.viewset = ViewSetHandler(viewset) if viewset else None
+        self.file = open(name, mode)
+
+    def __enter__ (self):
+        return self.file
+
+    def __exit__ (self, exc_type, exc_value, traceback):
+        self.file.close()
+
+    def close(self):
+        self.file.close()
+
+    def write(self, string):
+        self.file.writelines(string + '\n')
+
+    def write_viewset(self):
+        self.write()
+
+    def write_code_block_start(self, lang='python'):
+        self.write("```{}".format(lang))
+
+    def write_code_block_end(self):
+        self.write("```\n\n")
 
 
 # def create_file(action, data):
