@@ -28,16 +28,16 @@ var CCMixin = Ember.Mixin.create({
         store.push('ticket-person', {id: uuid.v4(), ticket_pk: this.get('id'), person_pk: person_pk});
     },
     remove_person(person_pk) {
-        let store = this.get('store');
-        let m2m_pk = this.get('ticket_cc').filter((m2m) => {
+        const store = this.get('store');
+        const m2m_pk = this.get('ticket_cc').filter((m2m) => {
             return m2m.get('person_pk') === person_pk;
         }).objectAt(0).get('id');
         store.push('ticket-person', {id: m2m_pk, removed: true});
     },
     rollbackCC() {
-        let store = this.get('store');
-        let previous_m2m_fks = this.get('ticket_people_fks') || [];
-        let m2m_to_throw_out = store.find('ticket-person', function(join_model) {
+        const store = this.get('store');
+        const previous_m2m_fks = this.get('ticket_people_fks') || [];
+        const m2m_to_throw_out = store.find('ticket-person', function(join_model) {
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
         }, ['removed']);
         m2m_to_throw_out.forEach(function(join_model) {
@@ -51,9 +51,9 @@ var CCMixin = Ember.Mixin.create({
         });
     },
     saveCC() {
-        let ticket_cc = this.get('ticket_cc');
-        let ticket_cc_ids = this.get('ticket_cc_ids') || [];
-        let previous_m2m_fks = this.get('ticket_people_fks') || [];
+        const ticket_cc = this.get('ticket_cc');
+        const ticket_cc_ids = this.get('ticket_cc_ids') || [];
+        const previous_m2m_fks = this.get('ticket_people_fks') || [];
         //add
         ticket_cc.forEach((join_model) => {
             if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {

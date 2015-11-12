@@ -69,7 +69,7 @@ var extract_cc = function(model, store, uuid) {
     });
     server_sum.push(...prevented_duplicate_m2m);
     let m2m_to_remove = all_ticket_people.filter((m2m) => {
-        return Ember.$.inArray(m2m.get('id'), server_sum) < 0;
+        return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('ticket_pk') === model.id;
     });
     m2m_to_remove.forEach((m2m) => {
         store.push('ticket-person', {id: m2m.get('id'), removed: true});
