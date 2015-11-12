@@ -146,36 +146,35 @@ class ViewSetFileWriter(object):
     def write(self, string):
         self.file.writelines(string + '\n')
 
-    def write_line(self):
-        self.write("\n")
-
     def write_viewset(self):
-        self.write_viewset_name()
-        self.write_viewset_model()
+        self.write(self.viewset_name)
+        self.write(self.viewset_model)
         
         for action in self.viewset.serializer_actions:
-            # action: start
-            # self.write("### {}".format(self.viewset.formatted_action(action)))
-            self.write_viewset_action(action)
-            
-            self.write_code_block_start()
-            # write serializer
-            serializer = self.viewset.get_serializer_for_action(action)
-            self.write(self.viewset.formatted_serializer_data(serializer))
-            # action: end
-            self.write_code_block_end()
+            self.write(self.viewset_action(action))
+            self.write(self.code_block_start)
+            self.write(self.viewset_serializer_data_for_action(action))
+            self.write(self.code_block_end)
 
-    def write_viewset_name(self):
-        self.write("# {}".format(self.viewset.name))
+    @property
+    def viewset_name(self):
+        return "# {}".format(self.viewset.name)
 
-    def write_viewset_model(self):
-        self.write("## {}".format(self.viewset.model))
+    @property
+    def viewset_model(self):
+        return "## {}".format(self.viewset.model)
 
-    def write_viewset_action(self, action):
-        self.write("### {}".format(self.viewset.formatted_action(action)))
+    @property
+    def code_block_start(self):
+        return "```python"
 
-    def write_code_block_start(self, lang='python'):
-        self.write("```{}".format(lang))
+    @property
+    def code_block_end(self):
+        return "```\n"
 
-    def write_code_block_end(self):
-        self.write("```\n")
+    def viewset_action(self, action):
+        return "### {}".format(self.viewset.formatted_action(action))
+
+    def viewset_serializer_data_for_action(self, action):
+        serializer = self.viewset.get_serializer_for_action(action)
+        return self.viewset.formatted_serializer_data(serializer)

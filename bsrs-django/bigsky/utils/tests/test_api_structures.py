@@ -181,14 +181,6 @@ class ViewSetFileWriterTests(TestCase):
         with open(self.filename, 'r') as f:
             self.assertEqual(f.read(), "{}\n".format(text))
 
-    def test_write_line(self):
-        myfile = ViewSetFileWriter(self.filename)
-        myfile.write_line()
-        myfile.close()
-
-        with open(self.filename, 'r') as f:
-            self.assertEqual(f.read(), "\n\n")
-
     def test_write_viewset(self):
         # viewset
         viewset = PersonViewSet
@@ -220,56 +212,55 @@ class ViewSetFileWriterTests(TestCase):
                 )
             )
 
-    def test_write_viewset_name(self):
-        # viewset
+    def test_viewset_name(self):
         viewset = PersonViewSet
         viewset_handler = ViewSetHandler(viewset)
-        # file
+
         myfile = ViewSetFileWriter(self.filename, viewset=viewset)
-        myfile.write_viewset_name()
-        myfile.close()
 
-        with open(self.filename, 'r') as f:
-            self.assertEqual(f.read(), "# {}\n".format(viewset_handler.name))
+        self.assertEqual(myfile.viewset_name, "# {}".format(viewset_handler.name))
 
-    def test_write_viewset_model(self):
-        # viewset
+    def test_viewset_model(self):
         viewset = PersonViewSet
         viewset_handler = ViewSetHandler(viewset)
-        # file
+
         myfile = ViewSetFileWriter(self.filename, viewset=viewset)
-        myfile.write_viewset_model()
-        myfile.close()
 
-        with open(self.filename, 'r') as f:
-            self.assertEqual(f.read(), "## {}\n".format(viewset_handler.model))
+        self.assertEqual(myfile.viewset_model, "## {}".format(viewset_handler.model))
 
-    def test_write_viewset_action(self):
+    def test_viewset_action(self):
         # viewset
         action = 'list'
         viewset = PersonViewSet
         viewset_handler = ViewSetHandler(viewset)
         # file
         myfile = ViewSetFileWriter(self.filename, viewset=viewset)
-        myfile.write_viewset_action(action)
-        myfile.close()
 
-        with open(self.filename, 'r') as f:
-            self.assertEqual(f.read(), "### {}\n".format(
-                viewset_handler.formatted_action(action)))
+        self.assertEqual(
+            myfile.viewset_action(action),
+            "### {}".format(viewset_handler.formatted_action(action))
+        )
 
-    def test_write_code_block_start(self):
-        myfile = ViewSetFileWriter(self.filename)
-        myfile.write_code_block_start()
-        myfile.close()
+    def test_viewset_serializer_data_for_action(self):
+        # viewset
+        action = 'list'
+        viewset = PersonViewSet
+        viewset_handler = ViewSetHandler(viewset)
+        serializer = viewset_handler.get_serializer_for_action(action)
+        # file
+        myfile = ViewSetFileWriter(self.filename, viewset=viewset)
 
-        with open(self.filename, 'r') as f:
-            self.assertEqual(f.read(), "```python\n")
+        self.assertEqual(
+            myfile.viewset_serializer_data_for_action(action),
+            viewset_handler.formatted_serializer_data(serializer)
+        )
 
-    def test_write_code_block_end(self):
-        myfile = ViewSetFileWriter(self.filename)
-        myfile.write_code_block_end()
-        myfile.close()
+    def test_code_block_start(self):
+        myfile = ViewSetFileWriter(self.filename, viewset=PersonViewSet)
 
-        with open(self.filename, 'r') as f:
-            self.assertEqual(f.read(), "```\n\n")
+        self.assertEqual(myfile.code_block_start, "```python")
+
+    def test_code_block_end(self):
+        myfile = ViewSetFileWriter(self.filename, viewset=PersonViewSet)
+
+        self.assertEqual(myfile.code_block_end, "```\n")
