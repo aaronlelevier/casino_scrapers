@@ -32,13 +32,6 @@ class RoleViewSet(BaseModelViewSet):
             return ps.RoleSerializer
 
 
-class PersonStatusViewSet(BaseModelViewSet):
-    
-    queryset = PersonStatus.objects.all()
-    serializer_class = ps.PersonStatusSerializer
-    permission_classes = (permissions.IsAuthenticated,)
-
-
 ### PERSON
 
 class PersonViewSet(BaseModelViewSet):
