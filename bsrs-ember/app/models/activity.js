@@ -12,7 +12,7 @@ var ActivityModel = Ember.Object.extend({
         const filter = function(dynamic) {
             return dynamic.get('id') === to_fk;
         };
-        const related = type === 'status' ? 'ticket-status' : `activity/${type}`;
+        const related = type === 'status' ? 'ticket-status' : type === 'priority' ? 'ticket-priority' : `activity/${type}`;
         return this.get('store').find(related, filter, []);
     }),
     from: Ember.computed('belongs_from.[]', function() {
@@ -24,7 +24,7 @@ var ActivityModel = Ember.Object.extend({
         const filter = function(dynamic) {
             return dynamic.get('id') === from_fk;
         };
-        const related = type === 'status' ? 'ticket-status' : `activity/${type}`;
+        const related = type === 'status' ? 'ticket-status' : type === 'priority' ? 'ticket-priority' : `activity/${type}`;
         return this.get('store').find(related, filter, []);
     }),
     person: Ember.computed('belongs_person.[]', function() {

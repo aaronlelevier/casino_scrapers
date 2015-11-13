@@ -29,7 +29,7 @@ const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid;
 
-module('sco Acceptance | ticket activity test', {
+module('Acceptance | ticket activity test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -97,6 +97,27 @@ test('ticket detail shows the activity list including event data (status)', (ass
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (status)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only(TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
+
+test('ticket detail shows the activity list including event data (priority)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo}`);
+    });
+});
+
+test('ticket detail does not show the activity list without a matching ticket for the activity (priority)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only(TD.idTwo));
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);

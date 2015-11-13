@@ -8,7 +8,10 @@ var BSRS_TICKET_ACTIVITY_DEFAULTS_OBJECT = (function() {
             idCreate: '649447cc-1a19-4d8d-829b-bfb81cb5ece1',
             idStatusOne: '849447cc-1a19-4d8d-829b-bfb81cb5ece1',
             idStatusTwo: '849447cc-1a19-4d8d-829b-bfb81cb5ece2',
-            idStatusThree: '849447cc-1a19-4d8d-829b-bfb81cb5ece3',
+            idStatusThree: '049447cc-1a19-4d8d-829b-bfb81cb5ece3',
+            idPriorityOne: '049447cc-1a19-4d8d-829b-bfb81cb5ece1',
+            idPriorityTwo: '049447cc-1a19-4d8d-829b-bfb81cb5ece2',
+            idPriorityThree: '849447cc-1a19-4d8d-829b-bfb81cb5ece3',
             idCcAddOne: '949447cc-1a19-4d8d-829b-bfb81cb5ece1',
             idCcRemoveOne: '149447cc-1a19-4d8d-829b-bfb81cb5ecc1',
         };

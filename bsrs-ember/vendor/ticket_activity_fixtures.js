@@ -47,8 +47,24 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         activity.content = {to: this.ticket_defaults.statusOneId, from: this.ticket_defaults.statusTwoId};
         return activity;
     },
+    factory.prototype.get_priority = function(i, ticket_pk) {
+        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var activity = {id: i, type: 'priority', created: Date.now(), ticket: ticket_id};
+        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
+        activity.content = {to: this.ticket_defaults.priorityOneId, from: this.ticket_defaults.priorityTwoId};
+        return activity;
+    },
     factory.prototype.get_status_json = function(i, ticket_pk) {
         var activity = this.get_status(i, ticket_pk);
+        activity.to_fk = activity.content.to;
+        activity.from_fk = activity.content.from;
+        activity.person_fk = activity.person.id;
+        delete activity.person;
+        delete activity.content;
+        return activity;
+    },
+    factory.prototype.get_priority_json = function(i, ticket_pk) {
+        var activity = this.get_priority(i, ticket_pk);
         activity.to_fk = activity.content.to;
         activity.from_fk = activity.content.from;
         activity.person_fk = activity.person.id;
@@ -98,6 +114,15 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         for (var i=1; i <= 3; i++) {
             var uuid = '849447cc-1a19-4d8d-829b-bfb81cb5ece';
             var activity = this.get_status(uuid+i, ticket_pk);
+            response.push(activity);
+        }
+        return {'count':2,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.priority_only = function(ticket_pk) {
+        var response = [];
+        for (var i=1; i <= 3; i++) {
+            var uuid = '049447cc-1a19-4d8d-829b-bfb81cb5ece';
+            var activity = this.get_priority(uuid+i, ticket_pk);
             response.push(activity);
         }
         return {'count':2,'next':null,'previous':null,'results': response};

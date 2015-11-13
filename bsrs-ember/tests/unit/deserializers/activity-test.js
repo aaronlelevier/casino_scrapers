@@ -10,7 +10,7 @@ var store;
 
 module('unit: activity deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
+        store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
     }
 });
 
@@ -63,6 +63,25 @@ test('activity with only status is deserialized correctly', (assert) => {
     assert.equal(store.find('activity').objectAt(2).get('type'), 'status');
     assert.equal(store.find('activity').objectAt(0).get('to').get('id'), TD.statusOneId);
     assert.equal(store.find('activity').objectAt(0).get('from').get('id'), TD.statusTwoId);
+    assert.notOk(store.find('activity').objectAt(0).get('content'));
+});
+
+test('activity with only priority is deserialized correctly', (assert) => {
+    store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
+    store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwo});
+    let subject = ActivityDeserializer.create({store: store});
+    let response = TA_FIXTURES.priority_only();
+    subject.deserialize(response);
+    assert.equal(store.find('activity').get('length'), 3);
+    assert.equal(store.find('activity/person').get('length'), 1);
+    assert.equal(store.find('activity').objectAt(0).get('person').get('id'), PD.idOne);
+    assert.equal(store.find('activity').objectAt(0).get('type'), 'priority');
+    assert.equal(store.find('activity').objectAt(1).get('person').get('id'), PD.idOne);
+    assert.equal(store.find('activity').objectAt(1).get('type'), 'priority');
+    assert.equal(store.find('activity').objectAt(2).get('person').get('id'), PD.idOne);
+    assert.equal(store.find('activity').objectAt(2).get('type'), 'priority');
+    assert.equal(store.find('activity').objectAt(0).get('to').get('id'), TD.priorityOneId);
+    assert.equal(store.find('activity').objectAt(0).get('from').get('id'), TD.priorityTwoId);
     assert.notOk(store.find('activity').objectAt(0).get('content'));
 });
 
