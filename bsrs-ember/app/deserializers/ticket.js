@@ -47,7 +47,7 @@ var extract_assignee = function(assignee_json, store, person_deserializer, ticke
     ticket_model.assignee_fk = assignee_id;
 };
 
-var extract_cc = function(model, store, uuid) {
+var extract_cc = function(model, store, uuid, person_deserializer) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
     let all_ticket_people = store.find('ticket-person');
@@ -61,7 +61,7 @@ var extract_cc = function(model, store, uuid) {
             let pk = uuid.v4();
             server_sum.push(pk);
             store.push('ticket-person', {id: pk, ticket_pk: model.id, person_pk: cc.id});  
-            store.push('person', cc);  
+            person_deserializer.deserialize(cc, cc.id);
         }else{
             //check 
             prevented_duplicate_m2m.push(ticket_people[0].get('id'));
@@ -159,7 +159,7 @@ var TicketDeserializer = Ember.Object.extend({
             response.status_fk = extract_ticket_status(response, store);
             response.priority_fk = extract_ticket_priority(response, store);
             response.location_fk = extract_ticket_location(response, store);
-            response.ticket_people_fks = extract_cc(response, store, uuid);
+            response.ticket_people_fks = extract_cc(response, store, uuid, person_deserializer);
             response.requester_id = extract_requester(response, store, person_deserializer);
             response.ticket_categories_fks = extract_categories(response, store, uuid, category_deserializer);
             let assignee_json = response.assignee;

@@ -5,9 +5,9 @@ export default Ember.Helper.helper(function(params) {
     const type = activity.get('type');
     const person = activity.get('person');
     if(type === 'create') {
-        return `${person.fullname} created this ticket about `;
+        return ` created this ticket about `;
     }else if(type === 'cc_add') {
-        let message = `${person.fullname} added `;
+        let message = ` added `;
         const added = activity.get('added');
         const length = added.get('length');
         added.forEach((cc, index) => {
@@ -18,7 +18,7 @@ export default Ember.Helper.helper(function(params) {
         });
         return `${message} to CC about `;
     }else if(type === 'cc_remove') {
-        let message = `${person.fullname} removed `;
+        let message = ` removed `;
         const removed = activity.get('removed');
         const length = removed.get('length');
         removed.forEach((cc, index) => {
@@ -31,5 +31,5 @@ export default Ember.Helper.helper(function(params) {
     }
     const to = activity.get('to.name');
     const from = activity.get('from.name');
-    return `${person.fullname} changed the ${type} from ${to} to ${from} about `;
+    return ` changed the ${type} from ${to} to ${from} about `;
 });

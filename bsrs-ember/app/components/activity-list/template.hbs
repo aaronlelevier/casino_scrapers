@@ -1,3 +1,5 @@
 {{#each model as |activity|}}
-<div class="t-activity-list-item">{{activity-description activity}}{{moment-from-now activity.created}}</div>
+<div class="t-activity-list-item">
+  {{#link-to "admin.people.person" activity.person.id}}{{activity.person.fullname}}{{/link-to}}{{activity-description activity}}{{moment-from-now activity.created}}
+</div>
 {{/each}}

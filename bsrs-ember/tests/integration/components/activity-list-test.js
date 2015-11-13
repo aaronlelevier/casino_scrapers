@@ -18,7 +18,7 @@ moduleForComponent('activity-list', 'integration: activity-list', {
     }
 });
 
-test('sco activity list will dynamically generate a mix of activity types', function(assert) {
+test('activity list will dynamically generate a mix of activity types', function(assert) {
     let person_to_and_from_json = TAF.get_assignee_person_and_to_from_json(TAD.idAssigneeOne);
     store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
     store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwo});
@@ -42,10 +42,10 @@ test('sco activity list will dynamically generate a mix of activity types', func
     this.render(hbs`{{activity-list model=model}}`);
     let $component = this.$(`${ACTIVITY_ITEMS}`);
     assert.equal($component.length, 6);
-    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} created this ticket about 3 months ago`);
-    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2} about a month ago`);
-    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(2)`).text(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo} about a month ago`);
-    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(3)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo} about 2 months ago`);
-    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(4)`).text(), `${PD.fullname} added person1, person2 to CC about 15 days ago`);
-    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(5)`).text(), `${PD.fullname} removed person1, person2 from CC about 15 days ago`);
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} created this ticket about 3 months ago`);
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2} about a month ago`);
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo} about a month ago`);
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(3)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo} about 2 months ago`);
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(4)`).text().trim(), `${PD.fullname} added person1, person2 to CC about 15 days ago`);
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(5)`).text().trim(), `${PD.fullname} removed person1, person2 from CC about 15 days ago`);
 });
