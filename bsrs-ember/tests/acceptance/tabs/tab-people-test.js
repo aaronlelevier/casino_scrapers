@@ -23,7 +23,7 @@ const ROLE_URL = BASE_ROLE_URL + '/index';
 
 let application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid;
 
-module('sco Acceptance | tab people test', {
+module('Acceptance | tab people test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
