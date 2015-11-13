@@ -155,8 +155,8 @@ class ViewSetHandlerTests(TestCase):
 class ViewSetFileWriterTests(TestCase):
 
     def setUp(self):
-        dirname = "/Users/alelevier/Desktop"
-        name = 'test.txt'
+        dirname = os.path.dirname(__file__)
+        name = 'test.md'
         self.filename = os.path.join(dirname, name)
         # debug file settings (uncomment if needed for debugging)
         # self.maxDiff = None
