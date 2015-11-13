@@ -1,15 +1,21 @@
 import Ember from 'ember';
 
 var extract_to_and_from = function(store, model) {
-    let content = model.content;
+    const content = model.content;
     if (content && content.to && content.to.id) {
         store.push(`activity/${model.type}`, model.content.to);
         store.push(`activity/${model.type}`, model.content.from);
         model.to_fk = model.content.to.id;
         model.from_fk = model.content.from.id;
     }else if (content && content.added) {
-        let type = model.type.dasherize();
-        content.added.forEach(function(cc) {
+        const type = model.type.dasherize();
+        content.added.forEach((cc) => {
+            cc.activities = [model.id];
+            store.push(`activity/${type}`, cc);
+        });
+    }else if (content && content.removed) {
+        const type = model.type.dasherize();
+        content.removed.forEach((cc) => {
             cc.activities = [model.id];
             store.push(`activity/${type}`, cc);
         });
@@ -28,7 +34,7 @@ var extract_person = function(store, model) {
 
 var ActivityDeserializer = Ember.Object.extend({
     deserialize(response, type) {
-        let store = this.get('store');
+        const store = this.get('store');
         response.results.forEach((model) => {
             extract_to_and_from(store, model);
             extract_person(store, model);

@@ -29,7 +29,7 @@ const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid;
 
-module('Acceptance | ticket activity test', {
+module('sco Acceptance | ticket activity test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -116,6 +116,25 @@ test('ticket detail shows the activity list including event data (cc_add)', (ass
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (cc_add)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2, TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
+
+test('ticket detail shows the activity list including event data (cc_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} removed person1 from CC`);
+    });
+});
+
+test('ticket detail does not show the activity list without a matching ticket for the activity (cc_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);

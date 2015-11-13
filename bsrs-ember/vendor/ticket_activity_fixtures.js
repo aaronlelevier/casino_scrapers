@@ -56,20 +56,22 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         delete activity.content;
         return activity;
     },
-    factory.prototype.get_cc_add = function(i, count, ticket_pk) {
-        var added = [];
+    factory.prototype.get_cc_add_remove = function(i, count, type, ticket_pk) {
+        var added_removed = [];
         for (var j=1; j <= count; j++) {
             var person = {id: j, fullname: 'person' + j};
-            added.push(person);
+            added_removed.push(person);
         }
         var ticket_id = ticket_pk || this.ticket_defaults.idOne;
-        var activity = {id: i, type: 'cc_add', created: Date.now(), ticket: ticket_id};
+        var activity = {id: i, type: type, created: Date.now(), ticket: ticket_id};
         activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
-        activity.content = {added: added};
+        var key = type === 'cc_add' ? 'added' : 'removed';
+        activity.content = {};
+        activity.content[key] = added_removed;
         return activity;
     },
-    factory.prototype.get_cc_add_json = function(i, count, ticket_pk) {
-        var activity = this.get_cc_add(i, count, ticket_pk);
+    factory.prototype.get_cc_add_remove_json = function(i, count, type, ticket_pk) {
+        var activity = this.get_cc_add_remove(i, count, type, ticket_pk);
         activity.person_fk = activity.person.id;
         delete activity.person;
         delete activity.content;
@@ -102,7 +104,13 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     };
     factory.prototype.cc_add_only = function(count, ticket_pk) {
         var uuid = '949447cc-1a19-4d8d-829b-bfb81cb5ece1';
-        var activity = this.get_cc_add(uuid, count, ticket_pk);
+        var activity = this.get_cc_add_remove(uuid, count, 'cc_add', ticket_pk);
+        var response = [activity];
+        return {'count':2,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.cc_remove_only = function(count, ticket_pk) {
+        var uuid = '149447cc-1a19-4d8d-829b-bfb81cb5ecc1';
+        var activity = this.get_cc_add_remove(uuid, count, 'cc_remove', ticket_pk);
         var response = [activity];
         return {'count':2,'next':null,'previous':null,'results': response};
     };

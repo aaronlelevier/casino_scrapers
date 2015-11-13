@@ -9,7 +9,7 @@ var store;
 
 module('unit: activity test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status']);
+        store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status']);
     }
 });
 
@@ -107,4 +107,25 @@ test('added returns associated array of cc or empty array (cc_add type)', (asser
     one.set('activities', []);
     added = activity.get('added');
     assert.equal(added.get('length'), 0);
+});
+
+test('remove returns associated array of cc or empty array (cc_removed type)', (assert) => {
+    let activity = store.push('activity', {id: TAD.idCcAddOne, type: 'cc_remove'});
+    let three = store.push('activity/cc-remove', {id: 3, fullname: 'm', activities: [TAD.idCcAddOne]});
+    store.push('activity/cc-remove', {id: 2, fullname: 'n', activities: []});
+    let one = store.push('activity/cc-remove', {id: 1, fullname: 'o', activities: [999, TAD.idCcAddOne]});
+    let removed = activity.get('removed');
+    assert.equal(removed.get('length'), 2);
+    assert.equal(removed.objectAt(0).get('id'), 3);
+    assert.equal(removed.objectAt(0).get('fullname'), 'm');
+    assert.equal(removed.objectAt(1).get('id'), 1);
+    assert.equal(removed.objectAt(1).get('fullname'), 'o');
+    three.set('activities', []);
+    removed = activity.get('removed');
+    assert.equal(removed.get('length'), 1);
+    assert.equal(removed.objectAt(0).get('id'), 1);
+    assert.equal(removed.objectAt(0).get('fullname'), 'o');
+    one.set('activities', []);
+    removed = activity.get('removed');
+    assert.equal(removed.get('length'), 0);
 });

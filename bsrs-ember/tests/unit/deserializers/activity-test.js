@@ -10,7 +10,7 @@ var store;
 
 module('unit: activity deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:activity/cc-add', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
+        store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
     }
 });
 
@@ -79,6 +79,22 @@ test('activity with only cc_add is deserialized correctly', (assert) => {
     assert.equal(store.find('activity').objectAt(0).get('added').get('length'), 2);
     assert.equal(store.find('activity').objectAt(0).get('added').objectAt(0).get('id'), 1);
     assert.equal(store.find('activity').objectAt(0).get('added').objectAt(1).get('id'), 2);
+    assert.notOk(store.find('activity').objectAt(0).get('content'));
+});
+
+test('activity with only cc_remove is deserialized correctly', (assert) => {
+    let subject = ActivityDeserializer.create({store: store});
+    let response = TA_FIXTURES.cc_remove_only(2);
+    subject.deserialize(response);
+    assert.equal(store.find('activity').get('length'), 1);
+    assert.equal(store.find('activity/person').get('length'), 1);
+    assert.equal(store.find('activity').objectAt(0).get('person').get('id'), PD.idOne);
+    assert.equal(store.find('activity').objectAt(0).get('type'), 'cc_remove');
+    assert.equal(store.find('activity').objectAt(0).get('to'), undefined);
+    assert.equal(store.find('activity').objectAt(0).get('from'), undefined);
+    assert.equal(store.find('activity').objectAt(0).get('removed').get('length'), 2);
+    assert.equal(store.find('activity').objectAt(0).get('removed').objectAt(0).get('id'), 1);
+    assert.equal(store.find('activity').objectAt(0).get('removed').objectAt(1).get('id'), 2);
     assert.notOk(store.find('activity').objectAt(0).get('content'));
 });
 

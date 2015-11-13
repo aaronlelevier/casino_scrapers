@@ -43,6 +43,13 @@ var ActivityModel = Ember.Object.extend({
             return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
         };
         return this.get('store').find('activity/cc-add', filter, ['activities']);
+    }),
+    removed: Ember.computed(function() {
+        const activity_id = this.get('id');
+        const filter = function(cc) {
+            return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
+        };
+        return this.get('store').find('activity/cc-remove', filter, ['activities']);
     })
 });
 
