@@ -50,8 +50,8 @@ test('ticket detail shows the activity list including event data (assignee)', (a
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2}`);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2} about a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy} to ${PD.fullnameBoy2} about a month ago`);
     });
 });
 
@@ -70,7 +70,7 @@ test('ticket detail shows the activity list including event data (create)', (ass
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} created this ticket`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} created this ticket about 3 months ago`);
     });
 });
 
@@ -89,9 +89,9 @@ test('ticket detail shows the activity list including event data (status)', (ass
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo}`);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo}`);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo} about a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo} about a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text(), `${PD.fullname} changed the status from ${TD.statusOne} to ${TD.statusTwo} about a month ago`);
     });
 });
 
@@ -110,9 +110,9 @@ test('ticket detail shows the activity list including event data (priority)', (a
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo}`);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo}`);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo} about 2 months ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo} about 2 months ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo} about 2 months ago`);
     });
 });
 
@@ -131,7 +131,7 @@ test('ticket detail shows the activity list including event data (cc_add)', (ass
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} added person1 to CC`);
+        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} added person1 to CC about 15 days ago`);
     });
 });
 
@@ -150,7 +150,7 @@ test('ticket detail shows the activity list including event data (cc_remove)', (
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} removed person1 from CC`);
+        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} removed person1 from CC about 15 days ago`);
     });
 });
 

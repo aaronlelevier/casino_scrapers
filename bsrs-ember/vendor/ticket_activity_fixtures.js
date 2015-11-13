@@ -7,8 +7,9 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         return {'count':0,'next':null,'previous':null,'results': []};
     };
     factory.prototype.get_create = function(i, ticket_pk) {
+        var d = new Date();
         var ticket_id = ticket_pk || this.ticket_defaults.idOne;
-        var activity = {id: i, type: 'create', created: Date.now(), ticket: ticket_id};
+        var activity = {id: i, type: 'create', created: d.setDate(d.getDate()-90), ticket: ticket_id};
         activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
         activity.content = null;
         return activity;
@@ -21,8 +22,9 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         return activity;
     },
     factory.prototype.get_assignee = function(i, ticket_pk) {
+        var d = new Date();
         var ticket_id = ticket_pk || this.ticket_defaults.idOne;
-        var activity = {id: i, type: 'assignee', created: Date.now(), ticket: ticket_id};
+        var activity = {id: i, type: 'assignee', created: d.setDate(d.getDate()-45), ticket: ticket_id};
         activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
         activity.content = {to: {id: this.person_defaults.idSearch, fullname: this.person_defaults.fullnameBoy}, from: {id: this.person_defaults.idBoy, fullname: this.person_defaults.fullnameBoy2}};
         return activity;
@@ -41,15 +43,17 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         return {person: activity.person, to: activity.content.to, from: activity.content.from};
     },
     factory.prototype.get_status = function(i, ticket_pk) {
+        var d = new Date();
         var ticket_id = ticket_pk || this.ticket_defaults.idOne;
-        var activity = {id: i, type: 'status', created: Date.now(), ticket: ticket_id};
+        var activity = {id: i, type: 'status', created: d.setDate(d.getDate()-30), ticket: ticket_id};
         activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
         activity.content = {to: this.ticket_defaults.statusOneId, from: this.ticket_defaults.statusTwoId};
         return activity;
     },
     factory.prototype.get_priority = function(i, ticket_pk) {
+        var d = new Date();
         var ticket_id = ticket_pk || this.ticket_defaults.idOne;
-        var activity = {id: i, type: 'priority', created: Date.now(), ticket: ticket_id};
+        var activity = {id: i, type: 'priority', created: d.setDate(d.getDate()-60), ticket: ticket_id};
         activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
         activity.content = {to: this.ticket_defaults.priorityOneId, from: this.ticket_defaults.priorityTwoId};
         return activity;
@@ -73,13 +77,14 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         return activity;
     },
     factory.prototype.get_cc_add_remove = function(i, count, type, ticket_pk) {
+        var d = new Date();
         var added_removed = [];
         for (var j=1; j <= count; j++) {
             var person = {id: j, fullname: 'person' + j};
             added_removed.push(person);
         }
         var ticket_id = ticket_pk || this.ticket_defaults.idOne;
-        var activity = {id: i, type: type, created: Date.now(), ticket: ticket_id};
+        var activity = {id: i, type: type, created: d.setDate(d.getDate()-15), ticket: ticket_id};
         activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
         var key = type === 'cc_add' ? 'added' : 'removed';
         activity.content = {};
