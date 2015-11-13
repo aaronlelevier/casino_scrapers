@@ -159,8 +159,8 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'validation.invalid':'Invalid',
             'activity.ticket.assignee':'changed the {{type}} from ${{to}} $to ${{from}} ${{timestamp}}',
             'activity.ticket.create':'created this ticket ${{timestamp}}',
-            'activity.ticket.cc_add':'added ${{to}} $to CC ${{timestamp}}',
-            'activity.ticket.cc_remove':'removed ${{to}} $from CC ${{timestamp}}',
+            'activity.ticket.cc_add':'added ${{added}} $to CC ${{timestamp}}',
+            'activity.ticket.cc_remove':'removed ${{removed}} $from CC ${{timestamp}}',
           }
         }
       break;

@@ -19,7 +19,7 @@ export default Ember.Helper.helper(function(params, addon) {
                 message = message + ', ';
             }
         });
-        return i18n.t('activity.ticket.cc_add', {to:message, timestamp:timestamp});
+        return i18n.t('activity.ticket.cc_add', {added:message, timestamp:timestamp});
     }else if(type === 'cc_remove') {
         let message = '';
         const removed = activity.get('removed');
@@ -30,7 +30,7 @@ export default Ember.Helper.helper(function(params, addon) {
                 message = message + ', ';
             }
         });
-        return i18n.t('activity.ticket.cc_remove', {to:message, timestamp:timestamp});
+        return i18n.t('activity.ticket.cc_remove', {removed:message, timestamp:timestamp});
     }
     const to = activity.get('to.name');
     const from = activity.get('from.name');
