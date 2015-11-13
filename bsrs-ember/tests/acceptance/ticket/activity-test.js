@@ -104,6 +104,27 @@ test('ticket detail does not show the activity list without a matching ticket fo
     });
 });
 
+test('ticket detail shows the activity list including event data (priority)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text(), `${PD.fullname} changed the priority from ${TD.priorityOne} to ${TD.priorityTwo}`);
+    });
+});
+
+test('ticket detail does not show the activity list without a matching ticket for the activity (priority)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only(TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
+
 test('ticket detail shows the activity list including event data (cc_add)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
     page.visitDetail();
@@ -116,6 +137,25 @@ test('ticket detail shows the activity list including event data (cc_add)', (ass
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (cc_add)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2, TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
+
+test('ticket detail shows the activity list including event data (cc_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text(), `${PD.fullname} removed person1 from CC`);
+    });
+});
+
+test('ticket detail does not show the activity list without a matching ticket for the activity (cc_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);

@@ -47,6 +47,13 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         activity.content = {to: this.ticket_defaults.statusOneId, from: this.ticket_defaults.statusTwoId};
         return activity;
     },
+    factory.prototype.get_priority = function(i, ticket_pk) {
+        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var activity = {id: i, type: 'priority', created: Date.now(), ticket: ticket_id};
+        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
+        activity.content = {to: this.ticket_defaults.priorityOneId, from: this.ticket_defaults.priorityTwoId};
+        return activity;
+    },
     factory.prototype.get_status_json = function(i, ticket_pk) {
         var activity = this.get_status(i, ticket_pk);
         activity.to_fk = activity.content.to;
@@ -56,20 +63,31 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         delete activity.content;
         return activity;
     },
-    factory.prototype.get_cc_add = function(i, count, ticket_pk) {
-        var added = [];
-        for (var j=1; j <= count; j++) {
-            var person = {id: j, fullname: 'person' + j};
-            added.push(person);
-        }
-        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
-        var activity = {id: i, type: 'cc_add', created: Date.now(), ticket: ticket_id};
-        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
-        activity.content = {added: added};
+    factory.prototype.get_priority_json = function(i, ticket_pk) {
+        var activity = this.get_priority(i, ticket_pk);
+        activity.to_fk = activity.content.to;
+        activity.from_fk = activity.content.from;
+        activity.person_fk = activity.person.id;
+        delete activity.person;
+        delete activity.content;
         return activity;
     },
-    factory.prototype.get_cc_add_json = function(i, count, ticket_pk) {
-        var activity = this.get_cc_add(i, count, ticket_pk);
+    factory.prototype.get_cc_add_remove = function(i, count, type, ticket_pk) {
+        var added_removed = [];
+        for (var j=1; j <= count; j++) {
+            var person = {id: j, fullname: 'person' + j};
+            added_removed.push(person);
+        }
+        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var activity = {id: i, type: type, created: Date.now(), ticket: ticket_id};
+        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
+        var key = type === 'cc_add' ? 'added' : 'removed';
+        activity.content = {};
+        activity.content[key] = added_removed;
+        return activity;
+    },
+    factory.prototype.get_cc_add_remove_json = function(i, count, type, ticket_pk) {
+        var activity = this.get_cc_add_remove(i, count, type, ticket_pk);
         activity.person_fk = activity.person.id;
         delete activity.person;
         delete activity.content;
@@ -100,9 +118,24 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         }
         return {'count':2,'next':null,'previous':null,'results': response};
     };
+    factory.prototype.priority_only = function(ticket_pk) {
+        var response = [];
+        for (var i=1; i <= 3; i++) {
+            var uuid = '049447cc-1a19-4d8d-829b-bfb81cb5ece';
+            var activity = this.get_priority(uuid+i, ticket_pk);
+            response.push(activity);
+        }
+        return {'count':2,'next':null,'previous':null,'results': response};
+    };
     factory.prototype.cc_add_only = function(count, ticket_pk) {
         var uuid = '949447cc-1a19-4d8d-829b-bfb81cb5ece1';
-        var activity = this.get_cc_add(uuid, count, ticket_pk);
+        var activity = this.get_cc_add_remove(uuid, count, 'cc_add', ticket_pk);
+        var response = [activity];
+        return {'count':2,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.cc_remove_only = function(count, ticket_pk) {
+        var uuid = '149447cc-1a19-4d8d-829b-bfb81cb5ecc1';
+        var activity = this.get_cc_add_remove(uuid, count, 'cc_remove', ticket_pk);
         var response = [activity];
         return {'count':2,'next':null,'previous':null,'results': response};
     };

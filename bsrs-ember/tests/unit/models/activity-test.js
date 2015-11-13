@@ -9,7 +9,7 @@ var store;
 
 module('unit: activity test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status']);
+        store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status', 'model:ticket-priority']);
     }
 });
 
@@ -74,6 +74,37 @@ test('from returns associated model or undefined (status type)', (assert) => {
     assert.equal(from, undefined);
 });
 
+test('to returns associated model or undefined (priority type)', (assert) => {
+    let activity = store.push('activity', {id: TAD.idPriorityOne, type: 'priority', to_fk: TD.priorityTwoId, from_fk: TD.priorityOneId});
+    store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
+    store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwo});
+    let to = activity.get('to');
+    assert.equal(to.get('id'), TD.priorityTwoId);
+    assert.equal(to.get('name'), TD.priorityTwo);
+    activity.set('to_fk', TD.priorityOneId);
+    to = activity.get('to');
+    assert.equal(to.get('id'), TD.priorityOneId);
+    activity.set('to_fk', 9);
+    to = activity.get('to');
+    assert.equal(to, undefined);
+});
+
+test('from returns associated model or undefined (priority type)', (assert) => {
+    let activity = store.push('activity', {id: TAD.idPriorityOne, type: 'priority', to_fk: TD.priorityTwoId, from_fk: TD.priorityOneId});
+    store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
+    store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwo});
+    let from = activity.get('from');
+    assert.ok(from);
+    assert.equal(from.get('id'), TD.priorityOneId);
+    assert.equal(from.get('name'), TD.priorityOne);
+    activity.set('from_fk', TD.priorityTwoId);
+    from = activity.get('from');
+    assert.equal(from.get('id'), TD.priorityTwoId);
+    activity.set('from_fk', 9);
+    from = activity.get('from');
+    assert.equal(from, undefined);
+});
+
 test('person returns associated model or undefined', (assert) => {
     let activity = store.push('activity', {id: TAD.idCreate, type: 'assignee', person_fk: PD.idOne});
     store.push('activity/person', {id: PD.idOne, fullname: PD.fullname});
@@ -107,4 +138,25 @@ test('added returns associated array of cc or empty array (cc_add type)', (asser
     one.set('activities', []);
     added = activity.get('added');
     assert.equal(added.get('length'), 0);
+});
+
+test('remove returns associated array of cc or empty array (cc_removed type)', (assert) => {
+    let activity = store.push('activity', {id: TAD.idCcAddOne, type: 'cc_remove'});
+    let three = store.push('activity/cc-remove', {id: 3, fullname: 'm', activities: [TAD.idCcAddOne]});
+    store.push('activity/cc-remove', {id: 2, fullname: 'n', activities: []});
+    let one = store.push('activity/cc-remove', {id: 1, fullname: 'o', activities: [999, TAD.idCcAddOne]});
+    let removed = activity.get('removed');
+    assert.equal(removed.get('length'), 2);
+    assert.equal(removed.objectAt(0).get('id'), 3);
+    assert.equal(removed.objectAt(0).get('fullname'), 'm');
+    assert.equal(removed.objectAt(1).get('id'), 1);
+    assert.equal(removed.objectAt(1).get('fullname'), 'o');
+    three.set('activities', []);
+    removed = activity.get('removed');
+    assert.equal(removed.get('length'), 1);
+    assert.equal(removed.objectAt(0).get('id'), 1);
+    assert.equal(removed.objectAt(0).get('fullname'), 'o');
+    one.set('activities', []);
+    removed = activity.get('removed');
+    assert.equal(removed.get('length'), 0);
 });
