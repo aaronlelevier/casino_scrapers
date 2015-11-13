@@ -11,9 +11,10 @@ from rest_framework.viewsets import ModelViewSet
 
 from accounting.serializers import CurrencySerializer
 from category.serializers import CategoryListSerializer
+from person.models import Person
 from person.views import PersonViewSet
 from utils.api_structures import (ViewSetFileWriter, SerializerData,
-    AppsAndViewSets, ViewSetHandler)
+    ModulesAndMembers, ViewSetHandler)
 
 
 class SerializerDataTests(TestCase):
@@ -59,32 +60,49 @@ class SerializerDataTests(TestCase):
         )
 
 
-class AppsAndViewSetsTests(TestCase):
+class ModulesAndMembersTests(TestCase):
 
-    def setUp(self):
-        self.apps_and_viewsets = AppsAndViewSets()
+    def test_get_all_classes(self):
+        x = ModulesAndMembers()
 
-    def test_get_local_apps(self):
-        apps = self.apps_and_viewsets.get_local_apps()
+        classes = x.get_all_classes()
 
-        self.assertEqual(len(apps), len(settings.LOCAL_APPS))
-        for app in apps:
-            self.assertIn(app, settings.LOCAL_APPS)
+        for class_ in classes:
+            self.assertTrue(issubclass(class_, ModelViewSet))
 
-    def test_get_viewsets_for_app(self):
-        app = self.apps_and_viewsets.get_local_apps()[0]
+    def test_get_modules(self):
+        x = ModulesAndMembers()
 
-        viewsets = self.apps_and_viewsets.get_viewsets_for_app(app)
+        modules = x.get_modules()
+
+        self.assertIsNotNone(importlib.find_loader(modules[0].__name__))
+
+    def test_get_classes_for_module(self):
+        x = ModulesAndMembers()
+        module = x.get_modules()[0]
+
+        classes = x.get_classes_for_module(module)
 
         # expect
-        module = importlib.import_module('{}.views'.format(app))
         for name, obj in inspect.getmembers(module):
             if inspect.isclass(obj) and issubclass(obj, ModelViewSet):
                 inspected_viewset = obj
                 break
         # test
-        self.assertIn(inspected_viewset, viewsets)
-        self.assertTrue(issubclass(viewsets[0], ModelViewSet))
+        self.assertIn(inspected_viewset, classes)
+        self.assertTrue(issubclass(classes[0], ModelViewSet))
+
+    def test_obj_issubclass(self):
+        x = ModulesAndMembers()
+        self.assertTrue(x.obj_issubclass(PersonViewSet))
+
+    def test_obj_issubclass_false(self):
+        x = ModulesAndMembers()
+        self.assertFalse(x.obj_issubclass(Person))
+
+    def test_obj_issubclass_serializers(self):
+        x = ModulesAndMembers(module_type='serializers')
+        self.assertTrue(x.obj_issubclass(CurrencySerializer))
 
 
 class ViewSetHandlerTests(TestCase):

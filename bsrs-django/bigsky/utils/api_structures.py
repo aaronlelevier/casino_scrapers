@@ -4,6 +4,7 @@ import json
 import pprint
 import importlib
 import inspect
+import itertools
 
 from django.conf import settings
 from django.utils.text import capfirst
@@ -28,10 +29,10 @@ class SerializerData(object):
 
     @property
     def formated_data(self):
-        # data = json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
+        data = json.dumps(self.data, sort_keys=True, indent=4, separators=(',', ': '))
         # or 
-        pp = pprint.PrettyPrinter(indent=2)
-        data = pp.pformat(self.data)
+        # pp = pprint.PrettyPrinter(indent=2)
+        # data = pp.pformat(self.data)
         return data
 
     def construct_data(self):
@@ -62,34 +63,57 @@ class SerializerData(object):
         self._data.update({k: v.__class__.__name__})
 
 
-class AppsAndViewSets(object):
+class ModulesAndMembers(object):
 
-    def __init__(self):
-        pass
+    def __init__(self, module_type='views'):
+        """
+        :module_type: i.e. 'views', 'serializers', etc...
+        """
+        self.module_type = module_type
+    
+    def get_all_classes(self):
+        modules = self.get_modules()
+        all_classes = []
 
-    @staticmethod
-    def get_local_apps():
-        return settings.LOCAL_APPS
+        for module in modules:
+            all_classes.append(self.get_classes_for_module(module))
 
-    @staticmethod
-    def get_viewsets_for_app(app):
-        module = importlib.import_module('{}.views'.format(app))
+        chain = itertools.chain(*all_classes)
+        return list(chain)
 
-        viewsets = []
+    def get_modules(self):
+        modules = []
+
+        for app in settings.LOCAL_APPS:
+            try:
+                modules.append(importlib.import_module(
+                    '{}.{}'.format(app, self.module_type)))
+            except ImportError:
+                pass
+
+        return modules
+
+    def get_classes_for_module(self, module):
+        classes = []
+
         for name, obj in inspect.getmembers(module):
-            if inspect.isclass(obj) and issubclass(obj, ModelViewSet):
-                viewsets.append(obj)
+            if inspect.isclass(obj) and self.obj_issubclass(obj):
+                classes.append(obj)
 
-        return viewsets
+        return classes
+
+    def obj_issubclass(self, obj):
+        if self.module_type == 'views':
+            return issubclass(obj, ModelViewSet)
+        elif self.module_type == 'serializers':
+            return any([issubclass(obj, ModelSerializer),
+                       issubclass(obj, ListSerializer)])
 
 
 class ViewSetHandler(object):
 
     def __init__(self, viewset):
         self.viewset = viewset()
-
-    # These properties will return strings to be used by
-    # the ``ViewSetFileWriter``
 
     @property
     def name(self):
