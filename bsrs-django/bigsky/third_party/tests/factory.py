@@ -3,7 +3,7 @@ from model_mommy import mommy
 from category.models import Category
 from category.tests.factory import create_categories
 from contact.models import PhoneNumber, Email, Address
-from contact.tests.factory import create_contact
+from contact.tests.factory import create_contacts
 from third_party.models import ThirdParty
 from utils import create
 
@@ -21,7 +21,6 @@ def create_third_party(number=1):
         third_party = mommy.make(ThirdParty, name=name, number=number,
             categories=categories)
 
-        for contact in [PhoneNumber, Email, Address]:
-            create_contact(contact, third_party)
+        create_contacts(third_party)
 
     return third_party
