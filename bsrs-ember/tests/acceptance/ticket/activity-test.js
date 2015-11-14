@@ -66,10 +66,10 @@ test('can deep link to new assignee', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
     });
-    ajax(`/api/admin/people/${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
+    ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
     click('.t-to-from-new');
     andThen(() => {
-        assert.equal(currentURL(), `/admin/people/${PD.idSearch}`);
+        assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
     });
 });
 
@@ -80,10 +80,10 @@ test('can deep link to old assignee', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
     });
-    ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+    ajax(`/api/admin/people/${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
     click('.t-to-from-old');
     andThen(() => {
-        assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
+        assert.equal(currentURL(), `/admin/people/${PD.idSearch}`);
     });
 });
 
