@@ -132,6 +132,7 @@ function dropAndCreateDB {
 function migrateData {
     ./manage.py migrate
     wait
+    ./manage.py loaddata fixtures/translations.json
     ./manage.py loaddata fixtures/states.json
     ./manage.py loaddata fixtures/jenkins.json
     ./manage.py loaddata fixtures/jenkins_custom.json
