@@ -104,6 +104,15 @@ class ModulesAndMembersTests(TestCase):
         x = ModulesAndMembers(module_type='serializers')
         self.assertTrue(x.obj_issubclass(CurrencySerializer))
 
+    def test_get_class_in_modules(self):
+        x = ModulesAndMembers('serializers')
+        class_str = "AddressTypeSerializer"
+        modules = x.get_modules()
+
+        ret = x.get_class_in_modules(class_str, modules)
+
+        self.assertTrue(issubclass(ret, ModelSerializer))
+
 
 class ViewSetHandlerTests(TestCase):
 

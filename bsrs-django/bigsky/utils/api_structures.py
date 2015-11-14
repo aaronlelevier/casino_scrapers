@@ -109,6 +109,19 @@ class ModulesAndMembers(object):
             return any([issubclass(obj, ModelSerializer),
                        issubclass(obj, ListSerializer)])
 
+    @staticmethod
+    def get_class_in_modules(class_str, modules):
+        """
+        :class_str: str - class that is being searched for
+        """
+        for m in modules:
+            try:
+                class_ = getattr(m, class_str)
+            except AttributeError:
+                pass
+            else:
+                return class_
+
 
 class ViewSetHandler(object):
 
