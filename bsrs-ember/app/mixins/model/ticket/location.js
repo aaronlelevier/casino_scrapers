@@ -1,10 +1,7 @@
 import Ember from 'ember';
 
 var TicketLocationMixin = Ember.Mixin.create({
-    location: Ember.computed('belongs_to_location.[]', function() {
-        let belongs_to_location = this.get('belongs_to_location');
-        return belongs_to_location.objectAt(0);
-    }),
+    location: Ember.computed.alias('belongs_to_location.firstObject'),
     belongs_to_location: Ember.computed('location_fk', function() {
         let ticket_id = this.get('id');
         let filter = function(location) {
