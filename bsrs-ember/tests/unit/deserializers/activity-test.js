@@ -96,8 +96,8 @@ test('activity with only cc_add is deserialized correctly', (assert) => {
     assert.equal(store.find('activity').objectAt(0).get('to'), undefined);
     assert.equal(store.find('activity').objectAt(0).get('from'), undefined);
     assert.equal(store.find('activity').objectAt(0).get('added').get('length'), 2);
-    assert.equal(store.find('activity').objectAt(0).get('added').objectAt(0).get('id'), 1);
-    assert.equal(store.find('activity').objectAt(0).get('added').objectAt(1).get('id'), 2);
+    assert.equal(store.find('activity').objectAt(0).get('added').objectAt(0).get('id'), PD.idBoy);
+    assert.equal(store.find('activity').objectAt(0).get('added').objectAt(1).get('id'), PD.idSearch);
     assert.notOk(store.find('activity').objectAt(0).get('content'));
 });
 
@@ -112,8 +112,8 @@ test('activity with only cc_remove is deserialized correctly', (assert) => {
     assert.equal(store.find('activity').objectAt(0).get('to'), undefined);
     assert.equal(store.find('activity').objectAt(0).get('from'), undefined);
     assert.equal(store.find('activity').objectAt(0).get('removed').get('length'), 2);
-    assert.equal(store.find('activity').objectAt(0).get('removed').objectAt(0).get('id'), 1);
-    assert.equal(store.find('activity').objectAt(0).get('removed').objectAt(1).get('id'), 2);
+    assert.equal(store.find('activity').objectAt(0).get('removed').objectAt(0).get('id'), PD.idBoy);
+    assert.equal(store.find('activity').objectAt(0).get('removed').objectAt(1).get('id'), PD.idSearch);
     assert.notOk(store.find('activity').objectAt(0).get('content'));
 });
 
