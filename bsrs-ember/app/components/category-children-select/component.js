@@ -1,53 +1,39 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import injectStore from 'bsrs-ember/utilities/store';
 
 var CategoryChildrenSelect = Ember.Component.extend({
-    store: injectStore('main'),
-    categories_selected: Ember.computed(function() {
+    categories_selected: Ember.computed('category.children.[]', function() {
         let category = this.get('category');
-        return category.get('children') || [];
+        return category.get('children');
     }),
-    options: Ember.computed('categories_selected.[]', 'search', function() {
-        let category = this.get('category');
-        let categories_selected = this.get('categories_selected');
-        let categories_children = this.get('categories_children') || [];
-        let mix = categories_selected.map((category) => {
-            return Ember.$.extend(true, {}, category);
-        });
-        return Ember.ArrayProxy.extend({
-          content: Ember.computed(function () {
-            let mix = this.get('source');
-            categories_children.forEach((cat) => {
-                if (cat.get('id') !== category.get('id')) {
-                    mix.pushObject(cat);
-                }
-            });
-            return mix;
-          }).property('categories_children.[]')
-        }).create({
-          source: mix
-        });
-    }),
-    find_all_categories() {
-        let search_criteria = this.get('search_criteria');
-        if (search_criteria) {
-            this.set('search', search_criteria);
+    options: Ember.computed('category.children.[]', 'search', 'categories_children.[]', function() {
+        let options = this.get('categories_children');
+        if (options && options.get('length') > 0) {
+            return options;
         }
+    }),
+    find_all_categories(search) {
+        this.set('search', search);
     },
     actions: {
-        add(category_child) {
-            let category = this.get('category');
-            let category_id = category_child.get('id');
-            category.add_child(category_id);
+        change_children(new_categories) {
+            const category = this.get('category');
+            const old_children = category.get('children');
+            const old_children_ids = old_children.mapBy('id');
+            const new_children_ids = new_categories.mapBy('id');
+            new_categories.forEach((cat) => {
+                if (Ember.$.inArray(cat.get('id'), old_children_ids) < 0) {
+                    category.add_child(cat.get('id'));
+                } 
+            });
+            old_children.forEach((old_cat) => {
+                if (Ember.$.inArray(old_cat.get('id'), new_children_ids) < 0) {
+                    category.remove_child(old_cat.get('id'));
+                }
+            });
         },
-        remove(category_child) {
-            let category = this.get('category');
-            let category_id = category_child.get('id');
-            category.remove_child(category_id);
-        },
-        update_filter() {
-            Ember.run.debounce(this, this.get('find_all_categories'), 300);
+        update_filter(search) {
+            Ember.run.debounce(this, this.get('find_all_categories'), search, 300);
         }
     }
 });

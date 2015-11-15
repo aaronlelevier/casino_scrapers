@@ -4,11 +4,12 @@ import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
-import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
+import CD from 'bsrs-ember/vendor/defaults/category';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
+import page from 'bsrs-ember/tests/pages/category';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
 
@@ -19,6 +20,9 @@ const DETAIL_URL = BASE_URL + '/' + UUID.value;
 const CATEGORY_NEW_URL = BASE_URL + '/new';
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
+const CATEGORY = '.t-category-children-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_DROPDOWN = '.t-category-children-select-dropdown > .ember-power-select-options';
+const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let application, store, payload, list_xhr, children_xhr, original_uuid;
 
@@ -26,12 +30,12 @@ module('Acceptance | category-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
-            name: CATEGORY_DEFAULTS.nameOne,
-            description: CATEGORY_DEFAULTS.descriptionMaintenance,
-            cost_amount: CATEGORY_DEFAULTS.costAmountOne,
-            cost_code: CATEGORY_DEFAULTS.costCodeOne,
-            label: CATEGORY_DEFAULTS.labelOne,
-            subcategory_label: CATEGORY_DEFAULTS.subCatLabelTwo,
+            name: CD.nameOne,
+            description: CD.descriptionMaintenance,
+            cost_amount: CD.costAmountOne,
+            cost_code: CD.costCodeOne,
+            label: CD.labelOne,
+            subcategory_label: CD.subCatLabelTwo,
             parent: null,
             children: []
         };
@@ -62,26 +66,25 @@ test('visiting /category/new', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
         let category = store.find('category', UUID.value);
-        assert.equal(store.find('category').get('length'), 4);
         assert.ok(category.get('new'));
     });
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
-    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
-    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
-    fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
-    fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
-    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
+    fillIn('.t-category-name', CD.nameOne);
+    fillIn('.t-category-description', CD.descriptionMaintenance);
+    fillIn('.t-category-label', CD.labelOne);
+    fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
+    fillIn('.t-amount', CD.costAmountOne);
+    fillIn('.t-category-cost-code', CD.costCodeOne);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
         let category = store.find('category', UUID.value);
         assert.equal(category.get('new'), undefined);
-        assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameOne);
-        assert.equal(category.get('description'), CATEGORY_DEFAULTS.descriptionMaintenance);
-        assert.equal(category.get('label'), CATEGORY_DEFAULTS.labelOne);
-        assert.equal(category.get('subcategory_label'), CATEGORY_DEFAULTS.subCatLabelTwo);
-        assert.equal(category.get('cost_amount'), CATEGORY_DEFAULTS.costAmountOne);
-        assert.equal(category.get('cost_code'), CATEGORY_DEFAULTS.costCodeOne);
+        assert.equal(category.get('name'), CD.nameOne);
+        assert.equal(category.get('description'), CD.descriptionMaintenance);
+        assert.equal(category.get('label'), CD.labelOne);
+        assert.equal(category.get('subcategory_label'), CD.subCatLabelTwo);
+        assert.equal(category.get('cost_amount'), CD.costAmountOne);
+        assert.equal(category.get('cost_code'), CD.costCodeOne);
         assert.ok(category.get('isNotDirty'));
     });
 });
@@ -110,7 +113,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':visible'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
+    fillIn('.t-category-name', CD.nameOne);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
@@ -120,7 +123,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':visible'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
-    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
+    fillIn('.t-category-description', CD.descriptionMaintenance);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
@@ -130,7 +133,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':visible'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
-    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
+    fillIn('.t-category-cost-code', CD.costCodeOne);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
@@ -140,7 +143,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':visible'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
-    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
+    fillIn('.t-category-label', CD.labelOne);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_NEW_URL);
@@ -150,8 +153,8 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':hidden'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
-    fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
-    fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
+    fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
+    fillIn('.t-amount', CD.costAmountOne);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
@@ -162,7 +165,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     clearxhr(children_xhr);
     clearxhr(list_xhr);
     visit(CATEGORY_NEW_URL);
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
+    fillIn('.t-category-name', CD.nameOne);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -175,7 +178,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), CATEGORY_NEW_URL);
-            assert.equal(find('.t-category-name').val(), CATEGORY_DEFAULTS.nameOne);
+            assert.equal(find('.t-category-name').val(), CD.nameOne);
             assert.equal(find('.t-modal').is(':hidden'), true);
         });
     });
@@ -184,7 +187,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     clearxhr(children_xhr);
     visit(CATEGORY_NEW_URL);
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
+    fillIn('.t-category-name', CD.nameOne);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -209,39 +212,49 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     clearxhr(children_xhr);
     visit(CATEGORY_NEW_URL);
     andThen(() => {
-        assert.equal(store.find('category').get('length'), 4);
+        assert.equal(store.find('category').get('length'), 1);
     });
     generalPage.cancel();
     andThen(() => {
-        assert.equal(store.find('category').get('length'), 3);
+        assert.equal(store.find('category').get('length'), 0);
     });
 });
 
-test('when you deep link to the category detail can remove child from category', (assert) => {
+test('when you deep link to the category detail can add and remove child from category', (assert) => {
     let response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(CATEGORY_NEW_URL);
     andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idNew);
+        let category = store.find('category', CD.idNew);
         assert.equal(category.get('children').get('length'), 0);
         assert.equal(find('div.item').length, 0);
         assert.equal(find('div.option').length, 0);
     });
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
-    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
-    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
-    fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
-    fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
-    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
-    fillIn('.selectize-input input', 'a');
-    triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-    click('.t-category-children-select div.option:eq(0)');
-    click('div.item > a.remove:eq(0)');
+    fillIn('.t-category-name', CD.nameOne);
+    fillIn('.t-category-description', CD.descriptionMaintenance);
+    fillIn('.t-category-label', CD.labelOne);
+    fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
+    fillIn('.t-amount', CD.costAmountOne);
+    fillIn('.t-category-cost-code', CD.costCodeOne);
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, 'a');
     andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idNew);
+        assert.equal(page.categoryOptionLength(), 10); 
+        const category = store.findOne('category');
+        assert.equal(category.get('children').get('length'), 0);
         assert.equal(category.get('children_fks').get('length'), 0);
-        assert.equal(find('div.option').length, 3);
-        assert.equal(find('div.item').length, 0);
+    });
+    page.categoryClickOptionTwo();
+    andThen(() => {
+        const category = store.findOne('category');
+        assert.equal(category.get('children').get('length'), 1);
+        assert.equal(category.get('children_fks').get('length'), 1);
+    });
+    page.categoryOneRemove();
+    andThen(() => {
+        const category = store.findOne('category');
+        assert.equal(category.get('children').get('length'), 0);
+        assert.equal(category.get('children_fks').get('length'), 0);
     });
     generalPage.save();
     andThen(() => {
@@ -255,63 +268,60 @@ test('clicking and typing into selectize for categories children will not filter
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(CATEGORY_NEW_URL);
     andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idNew);
+        let category = store.find('category', CD.idNew);
         assert.equal(category.get('children').get('length'), 0);
         assert.equal(find('div.item').length, 0);
         assert.equal(find('div.option').length, 0);
     });
-    fillIn('.selectize-input input', ' ');
-    triggerEvent('.selectize-input input', 'keyup', SPACEBAR);
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, ' ');
     andThen(() => {
-        assert.equal(find('div.option').length, 0);
+        assert.equal(page.categoryOptionLength(), 1); 
     });
     andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idNew);
+        let category = store.find('category', CD.idNew);
         assert.equal(category.get('children_fks').get('length'), 0);
-        // assert.equal(find('div.item').length, 1);//firefox clears out input?
     });
-    fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
-    fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
-    fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
-    fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
-    fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
-    fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
+    fillIn('.t-category-name', CD.nameOne);
+    fillIn('.t-category-description', CD.descriptionMaintenance);
+    fillIn('.t-category-label', CD.labelOne);
+    fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
+    fillIn('.t-amount', CD.costAmountOne);
+    fillIn('.t-category-cost-code', CD.costCodeOne);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
 });
 
-// //TODO: figure out why has to be last test...leeky vars cause previous two tests to have children in payload
-// test('clicking and typing into selectize for categories children will fire off xhr request for all categories', (assert) => {
-//     let payload_new = Ember.$.extend(true, {}, payload);
-//     payload_new.children = [CATEGORY_DEFAULTS.idOne];
-//     let response = Ember.$.extend(true, {}, payload_new);
-//     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload_new), {}, 201, response);
-//     visit(CATEGORY_NEW_URL);
-//     andThen(() => {
-//         let category = store.find('category', CATEGORY_DEFAULTS.idNew);
-//         assert.equal(category.get('children').get('length'), 0);
-//         assert.equal(find('div.item').length, 0);
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     fillIn('.t-category-name', CATEGORY_DEFAULTS.nameOne);
-//     fillIn('.t-category-description', CATEGORY_DEFAULTS.descriptionMaintenance);
-//     fillIn('.t-category-label', CATEGORY_DEFAULTS.labelOne);
-//     fillIn('.t-category-subcategory-label', CATEGORY_DEFAULTS.subCatLabelTwo);
-//     fillIn('.t-amount', CATEGORY_DEFAULTS.costAmountOne);
-//     fillIn('.t-category-cost-code', CATEGORY_DEFAULTS.costCodeOne);
-//     fillIn('.selectize-input input', 'a');
-//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-//     click('.t-category-children-select div.option:eq(0)');
-//     andThen(() => {
-//         let category = store.find('category', CATEGORY_DEFAULTS.idNew);
-//         assert.equal(category.get('children_fks').get('length'), 1);
-//         assert.equal(find('div.option').length, 2);
-//         assert.equal(find('div.item').length, 1);
-//     });
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), CATEGORIES_URL);
-//     });
-// });
+test('clicking and typing into selectize for categories children will fire off xhr request for all categories', (assert) => {
+    let payload_new = Ember.$.extend(true, {}, payload);
+    payload_new.children = [CD.idTwo];
+    let response = Ember.$.extend(true, {}, payload_new);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload_new), {}, 201, response);
+    visit(CATEGORY_NEW_URL);
+    andThen(() => {
+        let category = store.find('category', CD.idNew);
+        assert.equal(category.get('children').get('length'), 0);
+        assert.equal(find('div.item').length, 0);
+        assert.equal(find('div.option').length, 0);
+    });
+    fillIn('.t-category-name', CD.nameOne);
+    fillIn('.t-category-description', CD.descriptionMaintenance);
+    fillIn('.t-category-label', CD.labelOne);
+    fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
+    fillIn('.t-amount', CD.costAmountOne);
+    fillIn('.t-category-cost-code', CD.costCodeOne);
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, 'a');
+    page.categoryClickOptionTwo();
+    andThen(() => {
+        let category = store.find('category', CD.idNew);
+        assert.equal(category.get('children_fks').get('length'), 1);
+        assert.equal(category.get('children').get('length'), 1);
+    });
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});

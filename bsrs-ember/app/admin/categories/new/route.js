@@ -15,12 +15,8 @@ var CategoryNewRoute = TabRoute.extend({
     model() {
         let transition = arguments[1];
         let repository = this.get('repository');
-        let categories_children = [];
         let search = transition.queryParams.search;
-        search = search ? search.trim() : search;
-        if (search) {  
-            categories_children = repository.findCategoryChildren(search);
-        }
+        let categories_children = repository.findCategoryChildren(search);
         let model = repository.create();
         return Ember.RSVP.hash({
             model: model,

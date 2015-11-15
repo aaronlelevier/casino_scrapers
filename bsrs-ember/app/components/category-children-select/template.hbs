@@ -1,16 +1,12 @@
-{{ember-selectize
-  required=true
+{{#power-select
   multiple=true
-  content=options
-  updateSelection=false
-  optionValuePath="content.id"
-  optionLabelPath="content.name"
-  selection=categories_selected
-  add-item="add"
-  remove-item="remove"
+  selected=categories_selected
+  options=options
+  search=(action "update_filter")
+  onchange=(action "change_children")
   class="t-category-children-select"
-  placeholder="type to find more categories"
-  update-filter="update_filter"
-  filter=search_criteria
+  searchPlaceholder="Type a category"
+  as |category|
 }}
-
+  {{category.name}}
+{{/power-select}}

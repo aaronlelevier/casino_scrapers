@@ -1,9 +1,10 @@
 {{#power-select
   selected=categories_selected
-  options=ticket_category_options
+  options=options
   class="t-ticket-category-select"
   onchange=(action "selected")
   placeholder="Please select a category"
-  as |category|}}
+  as |category|
+}}
   {{category.name}}
 {{/power-select}}

@@ -500,7 +500,7 @@ test('power select options are rendered immediately when enter detail route and 
             });
         });
     });
-    let payload = TF.put({id: TD.idOne, categories: [CD.idThree, CD.idLossPreventionChild]});
+    let payload = TF.put({id: TD.idOne, categories: [CD.idLossPreventionChild, CD.idThree]});
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -712,7 +712,7 @@ test('when selecting a new parent category it should remove previously selected 
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
     let payload = ticket_payload_detail;
-    payload.categories = [CD.idOne, CD.idTwo, CD.idChild];
+    payload.categories = [CD.idTwo, CD.idOne, CD.idChild];
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, {});
     generalPage.save();
     andThen(() => {
