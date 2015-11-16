@@ -15,6 +15,7 @@ from utils.views import BaseModelViewSet
 
 class LocaleViewSet(BaseModelViewSet):
 
+    model = Locale
     permission_classes = (IsAuthenticated,)
     serializer_class = LocaleSerializer
     queryset = Locale.objects.all()
@@ -28,6 +29,7 @@ class TranslationBootstrapViewSet(viewsets.ModelViewSet):
        **1. Filter by Locale.name:**
        URL: `/api/translations/?locale=en`
     '''
+    model = Translation
     permission_classes = (IsAuthenticated,)
     serializer_class = TranslationSerializer
     queryset = Translation.objects.all()
@@ -72,6 +74,7 @@ class TranslationViewSet(DestroyModelMixin, viewsets.ModelViewSet):
 
        URL: `/api/admin/translations/{translation-key}/`
     '''
+    model = Translation
     permission_classes = (IsAuthenticated,)
     serializer_class = TranslationSerializer
     queryset = Translation.objects.all()

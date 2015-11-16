@@ -10,10 +10,10 @@ from utils.views import BaseModelViewSet
 
 class TicketViewSet(CreateTicketModelMixin, UpdateTicketModelMixin, BaseModelViewSet):
 
+    model = Ticket
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     permission_classes = (IsAuthenticated,)
-    model = Ticket
     filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
@@ -30,17 +30,17 @@ class TicketViewSet(CreateTicketModelMixin, UpdateTicketModelMixin, BaseModelVie
 
 class TicketActivityViewSet(BaseModelViewSet):
 
+    model = TicketActivity
     queryset = TicketActivity.objects.all()
     serializer_class = TicketActivitySerializer
     permission_classes = (IsAuthenticated,)
-    model = TicketActivity
     filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):
         if self.action == 'list':
             return TicketActivitySerializer
         else:
-            raise MethodNotAllowed
+            raise MethodNotAllowed(method=self.action)
 
     def list(self, request, *args, **kwargs):
         """

@@ -8,9 +8,9 @@ from utils.views import BaseModelViewSet
 
 class ThirdPartyViewSet(BaseModelViewSet):
 
+    model = ThirdParty
     permission_classes = (IsAuthenticated,)
     queryset = ThirdParty.objects.all()
-    model = ThirdParty
     filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):

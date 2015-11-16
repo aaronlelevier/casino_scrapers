@@ -18,6 +18,7 @@ from utils.views import BaseModelViewSet
 
 class SavedSearchViewSet(BaseModelViewSet):
 
+    model = SavedSearch
     permission_classes = (IsAuthenticated,)
     serializer_class = SavedSearchSerializer
     queryset = SavedSearch.objects.all()
