@@ -16,10 +16,9 @@ module.exports = function(environment) {
     },
   });
 
-  if(app.env === 'production') {
-      app.import('vendor/defaults/uuid.js');
-      app.import('vendor/defaults/global-message.js');
-  }else{
+  app.import('vendor/defaults/uuid.js');
+  app.import('vendor/defaults/global-message.js');
+  if(app.env !== 'production') {
       app.import('vendor/timemachine.js', {exports: {'vendor/timemachine': ['default']}});
       app.import('bower_components/fauxjax-toranb/dist/fauxjax.min.js');
       app.import('vendor/mixin.js');
