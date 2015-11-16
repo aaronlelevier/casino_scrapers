@@ -61,7 +61,7 @@ class CustomReadOnlyRouter(SimpleRouter):
     routes = [
         Route(
             url=r'^{prefix}/{lookup}/activity/$',
-           mapping={'get': 'list'},
+            mapping={'get': 'list', 'post': 'create'},
            name='{basename}-detail',
            initkwargs={'suffix': 'Detail'}
         ),

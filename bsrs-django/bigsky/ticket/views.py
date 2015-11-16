@@ -1,10 +1,12 @@
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 
 from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
-from ticket.models import Ticket, TicketActivity
+from ticket.models import Ticket, TicketActivity, TicketActivityType
+from person.models import Person
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
-    TicketListSerializer, TicketActivitySerializer)
+    TicketListSerializer, TicketActivitySerializer, TicketActivityCreateSerializer)
 from utils.views import BaseModelViewSet
 
 
@@ -39,6 +41,8 @@ class TicketActivityViewSet(BaseModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return TicketActivitySerializer
+        elif self.action == 'create':
+            return TicketActivityCreateSerializer
         else:
             raise MethodNotAllowed(method=self.action)
 
@@ -60,3 +64,4 @@ class TicketActivityViewSet(BaseModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+
