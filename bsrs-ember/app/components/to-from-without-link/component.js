@@ -14,10 +14,6 @@ var toFrom = Ember.Component.extend({
             return this.get('activity').get('person').get('fullname');
         }
     }),
-    firstVar: Ember.computed(function() {}),
-    secondVar: Ember.computed(function() {}),
-    middle: Ember.computed(function() {}),
-    timestamp: Ember.computed(function() {}),
 });
 
 export default toFrom;

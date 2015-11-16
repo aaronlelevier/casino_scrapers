@@ -22,10 +22,6 @@ var ccAddRemove = Ember.Component.extend({
         }
         return ccs;
     }),
-    firstVar: Ember.computed(function() {}),
-    secondVar: Ember.computed(function() {}),
-    middle: Ember.computed(function() {}),
-    timestamp: Ember.computed(function() {}),
 });
 
 export default ccAddRemove;
