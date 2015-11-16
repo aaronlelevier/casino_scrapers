@@ -10,7 +10,7 @@ var ticket_payload = {
     status: TICKET_DEFAULTS.statusOneId,
     priority: TICKET_DEFAULTS.priorityOneId,
     cc: [],
-    categories: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idTwo, CATEGORY_DEFAULTS.idChild],
+    categories: [CATEGORY_DEFAULTS.idTwo, CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idChild],
     assignee: PEOPLE_DEFAULTS.idSearch,
     location: LOCATION_DEFAULTS.idTwo
 };
@@ -21,7 +21,7 @@ var ticket_payload_detail = {
     status: TICKET_DEFAULTS.statusOneId,
     priority: TICKET_DEFAULTS.priorityOneId,
     cc: [PEOPLE_DEFAULTS.idOne],
-    categories: [CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idPlumbing, CATEGORY_DEFAULTS.idPlumbingChild],
+    categories: [CATEGORY_DEFAULTS.idPlumbing, CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idPlumbingChild],
     requester: PEOPLE_DEFAULTS.idOne,
     assignee: PEOPLE_DEFAULTS.idOne,
     location: LOCATION_DEFAULTS.idOne,

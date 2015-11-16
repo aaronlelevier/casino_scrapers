@@ -151,8 +151,7 @@ class Role(BaseModel):
     def to_dict(self):
         if not self.location_level:
             return {"id": str(self.pk), "name": self.name}
-        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id), 
-                "categories": [c.to_simple_dict() for c in self.categories.filter(parent__isnull=True)]}
+        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
 
     def _update_defaults(self):
         if not self.group:

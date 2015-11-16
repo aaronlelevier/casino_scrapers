@@ -14,6 +14,12 @@ var TicketCategories = Ember.Component.extend({
             }
         }
     }),
+    options: Ember.computed('ticket_category_options.[]', function() {
+        let options = this.get('ticket_category_options');
+        if (options && options.get('length') > 0) {
+            return options;
+        }
+    }),
     actions: {
         selected(category) {
             let ticket = this.get('ticket');

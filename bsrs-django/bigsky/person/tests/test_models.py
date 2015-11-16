@@ -37,12 +37,6 @@ class RoleTests(TestCase):
             str(self.role.location_level.id)
         )
 
-    def test_to_dict_categories(self):
-        self.assertIn(
-            self.role.to_dict()["categories"][0]["id"],
-            [str(x) for x in self.role.categories.values_list('id', flat=True)]
-        )
-
 
 class RolePasswordTests(TestCase):
 

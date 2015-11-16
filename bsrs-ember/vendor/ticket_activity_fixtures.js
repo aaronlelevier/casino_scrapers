@@ -80,7 +80,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         var d = new Date();
         var added_removed = [];
         for (var j=1; j <= count; j++) {
-            var person = {id: j, fullname: 'person' + j};
+            var person = {id: '249543cf-8fea-426a-8bc3-09778cd7800' + j, fullname: this.person_defaults.fullnameBoy};
             added_removed.push(person);
         }
         var ticket_id = ticket_pk || this.ticket_defaults.idOne;

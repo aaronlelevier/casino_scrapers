@@ -130,12 +130,28 @@ function dropAndCreateDB {
 }
 
 function migrateData {
-    ./manage.py migrate
+    python manage.py migrate && python manage.py loaddata fixtures/states.json
     wait
-    ./manage.py loaddata fixtures/states.json
-    ./manage.py loaddata fixtures/jenkins.json
-    ./manage.py loaddata fixtures/jenkins_custom.json
-    ./manage.py loaddata fixtures/tickets.json
+    ./manage.py loaddata fixtures/translations.json
+    ./manage.py loaddata fixtures/currency.json
+    ./manage.py loaddata fixtures/category.json
+    ./manage.py loaddata fixtures/third_party.json
+    wait
+    ./manage.py create_all_people
+    wait
+    rm -rf fixtures/jenkins.json
+    wait
+    ./manage.py dumpdata --indent=2 > fixtures/jenkins.json
+    wait
+    python manage.py loaddata fixtures/jenkins.json && python manage.py loaddata fixtures/jenkins_custom.json
+    wait
+    ./manage.py create_tickets
+    wait
+    rm -rf fixtures/tickets.json
+    wait
+    ./manage.py dumpdata ticket.Ticket --indent=2 > fixtures/tickets.json
+    wait
+    python manage.py loaddata fixtures/tickets.json
 
     MIGRATE_DATA=$?
     if [ "$MIGRATE_DATA" == 1 ]; then

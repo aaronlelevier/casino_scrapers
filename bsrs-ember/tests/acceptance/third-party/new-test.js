@@ -26,7 +26,7 @@ module('Acceptance | third-party-new', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        list_xhr = xhr(DJANGO_THIRD_PARTY_URL, "GET", null, {}, 200, THIRD_PARTY_FIXTURES.empty());
+        list_xhr = xhr(`${DJANGO_THIRD_PARTY_URL}?page=1`, "GET", null, {}, 200, THIRD_PARTY_FIXTURES.empty());
         payload = {
             id: UUID.value,
             name: THIRD_PARTY_DEFAULTS.nameOne,
@@ -44,7 +44,6 @@ module('Acceptance | third-party-new', {
 });
 
 test('visit /third-parties/new and do a create', (assert) => {
-    // assert.equal(1,2);
     let response = Ember.$.extend(true, {}, payload);
     xhr(DJANGO_THIRD_PARTY_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(THIRD_PARTY_URL);

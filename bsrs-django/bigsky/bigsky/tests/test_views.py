@@ -161,10 +161,6 @@ class ConfigurationTests(TestCase):
         self.assertIn(str(self.person.role.name), [c["name"] for c in configuration])
         self.assertIn(str(self.person.role.location_level.id), [c["location_level"] for c in configuration])
 
-        self.assertTrue(configuration[0]["categories"][0]["id"])
-        self.assertTrue(configuration[0]["categories"][0]["name"])
-        self.assertIn("parent", configuration[0]["categories"][0])
-
         role = Role.objects.first()
         role.location_level = None
         role.save()

@@ -45,21 +45,23 @@ var CategoryModel = Model.extend(NewMixin, {
         return this.get('parent_belongs_to').objectAt(0);
     }),
     parent_belongs_to: Ember.computed('parent_id', function() {
-        let parent_id = this.get('parent_id');
-        let store = this.get('store');
-        let filter = function(category) {
+        const parent_id = this.get('parent_id');
+        const store = this.get('store');
+        const filter = function(category) {
             return parent_id === category.get('id');
         };
         return store.find('category', filter, ['id']);
     }),
     add_child(category_child_id) {
         let children_fks = this.get('children_fks');
-        children_fks.push(category_child_id);
+        this.set('children_fks', children_fks.concat(category_child_id)); 
     },
     remove_child(category_child_id) {
-        let children_fks = this.get('children_fks');
-        let indx = children_fks.indexOf(category_child_id);
-        children_fks.splice(indx, 1);
+        const children_fks = this.get('children_fks');
+        let new_children_fks = children_fks.filter((fk) => {
+            return fk !== category_child_id;
+        });
+        this.set('children_fks', new_children_fks); 
     },
     removeRecord() {
         this.get('store').remove('category', this.get('id'));

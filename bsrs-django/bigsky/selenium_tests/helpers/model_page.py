@@ -60,7 +60,6 @@ class ModelPage(JavascriptMixin):
                 break
             pagination = self.driver.find_element_by_class_name("t-pages")
             element_list = pagination.find_elements_by_class_name("t-page")
-            print(count)
             next_elem = element_list[count]
             next_elem.find_element_by_xpath("a").click()
         return new_model

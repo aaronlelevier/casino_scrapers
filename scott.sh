@@ -16,6 +16,7 @@ createdb ci
 wait
 python manage.py migrate && python manage.py loaddata fixtures/states.json
 wait
+./manage.py loaddata fixtures/translations.json
 ./manage.py loaddata fixtures/currency.json
 ./manage.py loaddata fixtures/category.json
 ./manage.py loaddata fixtures/third_party.json

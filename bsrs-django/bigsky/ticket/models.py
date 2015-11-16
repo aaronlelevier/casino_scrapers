@@ -127,7 +127,7 @@ class TicketActivity(models.Model):
     content = HStoreField(blank=True, null=True)
     
     class Meta:
-        ordering = ('created',)
+        ordering = ('-created',)
 
     def __str__(self):
         return "{}: {}".format(self.ticket.number, self.id)
