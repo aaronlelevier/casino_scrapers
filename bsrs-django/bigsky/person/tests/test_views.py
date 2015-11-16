@@ -57,19 +57,27 @@ class RoleViewSetTests(APITestCase):
         response = self.client.get('/api/admin/roles/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
-        roles = data['results']
-        self.assertEqual(roles[0]['id'], str(self.role.pk))
-        self.assertEqual(roles[0]['location_level'], str(self.location.location_level.id))
+        role = data['results'][0]
+        self.assertEqual(role['id'], str(self.role.pk))
+        self.assertEqual(role['name'], self.role.name)
+        self.assertEqual(role['role_type'], self.role.role_type)
+        self.assertEqual(role['location_level'], str(self.location.location_level.id))
 
     def test_detail(self):
         response = self.client.get('/api/admin/roles/{}/'.format(self.role.pk))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.role.pk))
+        self.assertEqual(data['name'], self.role.name)
+        self.assertEqual(data['role_type'], self.role.role_type)
         self.assertEqual(data['location_level'], str(self.location.location_level.id))
-        self.assertIn(data['categories'][0]['id'], [str(c.id) for c in self.categories])
-        self.assertIn(data['categories'][0]['name'], [str(c.name) for c in self.categories])
-        self.assertIn(data['categories'][0]['parent'], [c.parent for c in self.categories])
+        self.assertIn(
+            data['categories'][0]['id'],
+            [str(c.id) for c in self.role.categories.all()]
+        )
+        self.assertIn('name', data['categories'][0])
+        self.assertIn('status', data['categories'][0])
+        self.assertIn('parent', data['categories'][0])
 
     def test_create(self):
         role_data = {
@@ -94,12 +102,12 @@ class RoleViewSetTests(APITestCase):
         response = self.client.put('/api/admin/roles/{}/'.format(self.role.id),
             role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        new_role_data = json.loads(response.content.decode('utf8'))
-        self.assertNotEqual(self.role.name, new_role_data['name'])
-        self.assertIn(
-            category.id,
-            Role.objects.get(id=self.data['id']).categories.values_list('id', flat=True)
-            )
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['name'], role_data['name'])
+        self.assertEqual(data['id'], str(self.role.id))
+        self.assertEqual(data['role_type'], self.role.role_type)
+        self.assertEqual(data['location_level'], str(self.role.location_level.id))
+        self.assertIsInstance(data['categories'], list)
 
     def test_update_location_level(self):
         role_data = copy.copy(self.data)
@@ -120,19 +128,6 @@ class RoleViewSetTests(APITestCase):
 
 ### PERSON ###
 
-class PersonAuthTests(TestCase):
-
-    def setUp(self):
-        self.person = create_person()
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def test_login(self):
-        self.assertIn('_auth_user_id', self.client.session)
-
-    def tearDown(self):
-        self.client.logout()
-
-
 class PersonAccessTests(TestCase):
 
     def setUp(self):
@@ -141,14 +136,18 @@ class PersonAccessTests(TestCase):
     def test_access_user(self):
         # verify we can access user records correctly as a super user
         self.client.login(username=self.person.username, password=PASSWORD)
+
         response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
+
         self.assertEqual(response.status_code, 200)
         self.assertEqual(self.client.session['_auth_user_id'], str(self.person.id))
 
     def test_noaccess_user(self):
         # verify we can't acccess users as a normal user
         self.client.login(username='noaccess_user', password='noaccess_password')
+
         response = self.client.get('/api/admin/people/{}/'.format(self.person.pk))
+
         self.assertEqual(response.status_code, 403)
 
 
@@ -203,6 +202,16 @@ class PersonCreateTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertNotIn('password', data)
 
+    def test_data(self):
+        response = self.client.post('/api/admin/people/', self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        person = Person.objects.get(id=data['id'])
+
+        self.assertEqual(data['id'], str(person.id))
+        self.assertEqual(data['username'], person.username)
+        self.assertEqual(data['role'], str(person.role.id))
+
 
 class PersonListTests(TestCase):
 
@@ -229,11 +238,6 @@ class PersonListTests(TestCase):
         self.assertTrue(self.data['results'][0]['role'])
         self.assertIsInstance(Role.objects.get(id=self.data['results'][0]['role']), Role)
 
-    def test_auth_amount(self):
-        results = self.data['results'][0]
-        self.assertEqual(results['auth_amount'], "{0:.4f}".format(self.person.auth_amount))
-        self.assertEqual(results['auth_currency'], str(self.person.auth_currency.id))
-
     def test_max_paginate_by_default(self):
         response = self.client.get('/api/admin/people/')
         data = json.loads(self.response.content.decode('utf8'))
@@ -247,6 +251,26 @@ class PersonListTests(TestCase):
 
     def test_password_not_in_response(self):
         self.assertNotIn('password', self.data)
+
+    def test_data(self):
+        data = self.data['results'][0]
+        person = Person.objects.get(id=data['id'])
+
+        self.assertEqual(data['id'], str(person.id))
+        self.assertEqual(data['username'], person.username)
+        self.assertEqual(data['first_name'], person.first_name)
+        self.assertEqual(data['middle_initial'], person.middle_initial)
+        self.assertEqual(data['last_name'], person.last_name)
+        self.assertEqual(data['status']['id'], str(person.status.id))
+        self.assertEqual(data['status']['name'], person.status.name)
+        self.assertEqual(data['role'], str(person.role.id))
+        self.assertEqual(data['title'], person.title)
+        self.assertEqual(data['employee_id'], person.employee_id)
+
+    def test_data_auth_amount(self):
+        results = self.data['results'][0]
+        self.assertEqual(results['auth_amount'], "{0:.4f}".format(self.person.auth_amount))
+        self.assertEqual(results['auth_currency'], str(self.person.auth_currency.id))
 
 
 class PersonDetailTests(TestCase):
@@ -286,31 +310,71 @@ class PersonDetailTests(TestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['locale'], str(self.person.locale.id))
 
-    def test_location(self):
-        self.assertTrue(self.data['locations'])
-        location = Location.objects.get(id=self.data['locations'][0]['id'])
-        location_level = LocationLevel.objects.get(id=self.data['locations'][0]['location_level']['id'])
-        self.assertIsInstance(location, Location)
-        self.assertIsInstance(location_level, LocationLevel)
+    def test_data(self):
+        self.assertEqual(self.data['id'], str(self.person.id))
+        self.assertEqual(self.data['username'], self.person.username)
+        self.assertEqual(self.data['first_name'], self.person.first_name)
+        self.assertEqual(self.data['middle_initial'], self.person.middle_initial)
+        self.assertEqual(self.data['last_name'], self.person.last_name)
+        self.assertEqual(self.data['role'], str(self.person.role.id))
+        self.assertEqual(self.data['title'], self.person.title)
+        self.assertEqual(self.data['employee_id'], self.person.employee_id)
 
-    def test_emails(self):
-        self.assertTrue(self.data['emails'])
-        email = Email.objects.get(id=self.data['emails'][0]['id'])
-        self.assertIsInstance(email, Email)
-
-    def test_phone_numbers(self):
-        self.assertTrue(self.data['phone_numbers'])
-        ph = PhoneNumber.objects.get(id=self.data['phone_numbers'][0]['id'])
-        self.assertIsInstance(ph, PhoneNumber)
-
-    def test_addresses(self):
-        self.assertTrue(self.data['addresses'])
-        address = Address.objects.get(id=self.data['addresses'][0]['id'])
-        self.assertIsInstance(address, Address)
-
-    def test_auth_amount(self):
+    def test_data_auth_amount(self):
         self.assertEqual(self.data['auth_amount'], "{0:.4f}".format(self.person.auth_amount))
         self.assertEqual(self.data['auth_currency'], str(self.person.auth_currency.id))
+
+    def test_data_status(self):
+        self.assertEqual(self.data['status']['id'], str(self.person.status.id))
+        self.assertEqual(self.data['status']['name'], self.person.status.name)
+
+    def test_data_location(self):
+        self.assertTrue(self.data['locations'])
+
+        location = Location.objects.get(id=self.data['locations'][0]['id'])
+        location_level = LocationLevel.objects.get(
+            id=self.data['locations'][0]['location_level']['id'])
+
+        self.assertEqual(self.data['locations'][0]['id'], str(location.id))
+        self.assertEqual(self.data['locations'][0]['name'], location.name)
+        self.assertEqual(self.data['locations'][0]['number'], location.number)
+        self.assertEqual(self.data['locations'][0]['location_level']['id'],
+            str(location.location_level.id))
+        self.assertEqual(self.data['locations'][0]['location_level']['name'],
+            location.location_level.name)
+
+    def test_data_emails(self):
+        self.assertTrue(self.data['emails'])
+        email = Email.objects.get(id=self.data['emails'][0]['id'])
+        
+        self.assertEqual(self.data['emails'][0]['id'], str(email.id))
+        self.assertEqual(self.data['emails'][0]['type']['id'], str(email.type.id))
+        self.assertEqual(self.data['emails'][0]['type']['name'], email.type.name)
+        self.assertEqual(self.data['emails'][0]['email'], email.email)
+
+    def test_data_phone_numbers(self):
+        self.assertTrue(self.data['phone_numbers'])
+        phone = PhoneNumber.objects.get(id=self.data['phone_numbers'][0]['id'])
+        
+        phone_data = self.data['phone_numbers'][0]
+        self.assertEqual(phone_data['id'], str(phone.id))
+        self.assertEqual(phone_data['type']['id'], str(phone.type.id))
+        self.assertEqual(phone_data['type']['name'], phone.type.name)
+        self.assertEqual(phone_data['number'], phone.number)
+
+    def test_data_addresses(self):
+        self.assertTrue(self.data['addresses'])
+        address = Address.objects.get(id=self.data['addresses'][0]['id'])
+
+        address_data = self.data['addresses'][0]
+        self.assertEqual(address_data['id'], str(address.id))
+        self.assertEqual(address_data['type']['id'], str(address.type.id))
+        self.assertEqual(address_data['type']['name'], address.type.name)
+        self.assertEqual(address_data['address'], address.address)
+        self.assertEqual(address_data['city'], address.city)
+        self.assertEqual(address_data['state'], address.state)
+        self.assertEqual(address_data['country'], address.country)
+        self.assertEqual(address_data['postal_code'], address.postal_code)
 
     def test_person_fk(self):
         self.assertIn(
@@ -368,10 +432,22 @@ class PersonPutTests(APITestCase):
     def test_auth_amount(self):
         new_auth_amount = '1234.1010'
         self.data['auth_amount'] = new_auth_amount
+        
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
+        
         self.assertEqual(new_auth_amount, data['auth_amount'])
+        self.assertEqual(data['id'], str(self.person.id))
+        self.assertEqual(data['username'], self.person.username)
+        self.assertEqual(data['first_name'], self.person.first_name)
+        self.assertEqual(data['middle_initial'], self.person.middle_initial)
+        self.assertEqual(data['last_name'], self.person.last_name)
+        self.assertEqual(data['status'], str(self.person.status.id))
+        self.assertEqual(data['role'], str(self.person.role.id))
+        self.assertEqual(data['title'], self.person.title)
+        self.assertEqual(data['employee_id'], self.person.employee_id)
+        self.assertEqual(data['auth_currency'], str(self.person.auth_currency.id))
 
     def test_no_change(self):
         # Confirm the ``self.data`` structure is correct
@@ -504,7 +580,6 @@ class PersonPutTests(APITestCase):
             location.id,
             Person.objects.get(id=self.data['id']).locations.values_list('id', flat=True)
             )
-
 
     ### RELATED CONTACT MODELS
 

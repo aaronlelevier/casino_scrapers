@@ -49,9 +49,9 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
        LocationLevel ID: `{pk}`
     '''
+    model = LocationLevel
     permission_classes = (IsAuthenticated,)
     queryset = LocationLevel.objects.all()
-    model = LocationLevel
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -70,6 +70,7 @@ class LocationLevelViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
 class LocationStatusViewSet(BaseModelViewSet):
 
+    model = LocationStatus
     permission_classes = (IsAuthenticated,)
     serializer_class = ls.LocationStatusSerializer
     queryset = LocationStatus.objects.all()
@@ -77,6 +78,7 @@ class LocationStatusViewSet(BaseModelViewSet):
 
 class LocationTypeViewSet(BaseModelViewSet):
 
+    model = LocationType
     permission_classes = (IsAuthenticated,)
     serializer_class = ls.LocationTypeSerializer
     queryset = LocationType.objects.all()
@@ -133,9 +135,9 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
        LocationLevel ID where: `person.role.location_level == location.location_level`
     
     '''
+    model = Location
     permission_classes = (IsAuthenticated,)
     queryset = Location.objects.all()
-    model = Location
     filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):

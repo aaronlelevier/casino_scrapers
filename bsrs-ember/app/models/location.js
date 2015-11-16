@@ -22,12 +22,7 @@ var LocationModel = Model.extend(NewMixin, {
         return false;
     }),
     locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
-    location_level: Ember.computed('location_levels.[]', function() {
-        var location_levels = this.get('location_levels');
-        if(location_levels.get('length') > 0) {
-            return location_levels.objectAt(0);
-        }
-    }),
+    location_level: Ember.computed.alias('location_levels.firstObject'),
     location_levels: Ember.computed(function() {
         var filter = function(location_level) {
             var location_pks = location_level.get('locations') || [];

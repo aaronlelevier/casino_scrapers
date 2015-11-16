@@ -1,4 +1,5 @@
 var TICKET_FIXTURES = require('../../vendor/ticket_fixtures.js');
+var TICKET_ACTIVITY_FIXTURES = require('../../vendor/ticket_activity_fixtures.js');
 
 module.exports = function(app) {
   var express = require('express');
@@ -30,6 +31,10 @@ module.exports = function(app) {
 
   adminTicketsRouter.get('/:id', function(req, res) {
     res.send(TICKET_FIXTURES.detail(req.params.id));
+  });
+
+  adminTicketsRouter.get('/:id/activity', function(req, res) {
+    res.send(TICKET_ACTIVITY_FIXTURES.assignee_only());
   });
 
   adminTicketsRouter.put('/:id', function(req, res) {

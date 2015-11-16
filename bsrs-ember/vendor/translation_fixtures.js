@@ -153,11 +153,17 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.locationlevel.label.general':'General',
             'admin.locationlevel.label.childOrg':'Child Organization(s)',
             'admin.translation.other':'Translations',
+            'admin.third_party.one':'Third Party',
+            'admin.third_party.other':'Third Parties',
             'admin.third_party.label.name':'Name',
             'admin.third_party.label.number':'Number',
             'admin.third_party.label.status':'Status',
             'validation.valid':'Valid',
-            'validation.invalid':'Invalid'
+            'validation.invalid':'Invalid',
+            'activity.ticket.assignee':'changed the {{type}} from ${{to}} $to ${{from}} ${{timestamp}}',
+            'activity.ticket.create':'created this ticket ${{timestamp}}',
+            'activity.ticket.cc_add':'added ${{added}} $to CC ${{timestamp}}',
+            'activity.ticket.cc_remove':'removed ${{removed}} $from CC ${{timestamp}}',
           }
         }
       break;
@@ -205,7 +211,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.approval.other':'Homologaciones',
             'admin.template.one':'model',
             'admin.template.other':'Plantillas',
-            'admin.role.one':'Rol',
+            'admin.role.one':'Role',
             'admin.role.other':'Roles',
             'admin.role.label.name':'Nombre de rol',
             'admin.role.label.role_type':'Tipo de Papel',

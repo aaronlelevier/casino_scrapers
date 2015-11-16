@@ -2,12 +2,12 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
-// import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
+import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
 var PREFIX = config.APP.NAMESPACE;
 var THIRD_PARTY_URL = PREFIX + '/admin/third-parties/';
 
-var ThirdPartyRepo = Ember.Object.extend({
+var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'third-party'; }),
     url: Ember.computed(function() { return THIRD_PARTY_URL; }),
     ThirdPartyDeserializer: inject('third-party'),

@@ -1,88 +1,44 @@
 import os
-import sys
-import json
-import pprint
+from os.path import dirname, join
+import shutil
 
 from django.core.management.base import BaseCommand
 
-from rest_framework import serializers
+from rest_framework.exceptions import MethodNotAllowed
 
-from category.serializers import CategoryListSerializer
-from category.views import CategoryViewSet
-
-
-serializer = CategoryListSerializer()
-
-
-def serialize_data(serializer_class=CategoryListSerializer):
-    serializer = serializer_class()
-
-    data = {}
-    for k,v in serializer.get_fields().items():
-        if isinstance(v, serializers.ModelSerializer):
-            nested = {}
-            for key, value in v.get_fields().items():
-                nested.update({key: value.__class__.__name__})
-            data.update({k: nested})
-        elif isinstance(v, serializers.ListSerializer):
-            nested = {}
-            for key, value in v._kwargs['child'].get_fields().items():
-                nested.update({key: value.__class__.__name__})
-            data.update({k: nested})
-        else:
-            data.update({k: v.__class__.__name__})
-
-    return data
-
-
-# def create_file(action, data):
-#     filename = 'test.md'
-#     path = '/Users/alelevier/Desktop'
-
-#     with open(os.path.join(path, filename), 'w') as f:
-#         f.write("```json")
-#         f.write("\n")
-#         f.write(format_data(data))
-#         f.write("\n")
-#         f.write("```")
-
-
-def format_data(data):
-    data = json.dumps(data, sort_keys=True, indent=4, separators=(',', ': '))
-    # or 
-    # pp = pprint.PrettyPrinter(indent=2)
-    # pp.pformat(data)
-
-    return data
-
-
-def write_serializer_data():
-    viewset_class = CategoryViewSet
-    viewset = viewset_class()
-
-    filename = 'test.md'
-    path = '/Users/alelevier/Desktop'
-    with open(os.path.join(path, filename), 'w') as f:
-        f.write("# CategoryViewSet\n\n")
-
-        actions = ['list', 'retrieve']
-        for action in actions:
-            setattr(viewset, 'action', action)
-            serializer = viewset.get_serializer_class()
-            data = serialize_data(serializer)
-
-            f.write("### {}\n".format(action))
-            f.write("\n")
-            f.write("```json")
-            f.write("\n")
-            f.write(format_data(data))
-            f.write("\n")
-            f.write("```")
-            f.write("\n\n")
+from utils.api_structures import ModulesAndMembers, ViewSetFileWriter
 
 
 class Command(BaseCommand):
-    help = 'Write the structure of a serializer to a file'
+    help = "Write the structure of the project serializers to: \
+'docs/serializers'."
 
     def handle(self, *args, **options):
-        write_serializer_data()
+        # bsrs-django/bigsky/utils/management/commands/
+        project_dir = dirname(dirname(dirname(dirname(dirname(__file__)))))
+        serializers_dir = join(project_dir, "docs/serializers")
+
+        # remove prior docs
+        shutil.rmtree(serializers_dir)
+        # rebuild dir
+        os.makedirs(serializers_dir)
+
+        x = ModulesAndMembers()
+        views = x.get_modules()
+
+        for view in views:
+            viewsets = x.get_classes_for_module(view)
+
+            view_dir = join(serializers_dir, view.__name__)
+            os.makedirs(view_dir)
+
+            for viewset in viewsets:
+                if hasattr(viewset, 'model'):
+                    filename = join(view_dir, "{}.md".format(viewset.__name__))
+
+                    try:
+                        file_writer = ViewSetFileWriter(filename, viewset=viewset)
+                        file_writer.write_viewset()
+                        file_writer.close()
+                    except MethodNotAllowed:
+                        pass

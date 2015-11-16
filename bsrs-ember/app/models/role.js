@@ -82,11 +82,7 @@ var RoleModel = Model.extend(NewMixin, {
         }).objectAt(0).get('id');
         store.push('role-category', {id: m2m_pk, removed: true});
     },
-    location_level: Ember.computed('location_levels.[]', function() {
-        let location_levels = this.get('location_levels');
-        let has_location_level = location_levels.get('length') > 0;
-        if (has_location_level) { return location_levels.objectAt(0); }
-    }),
+    location_level: Ember.computed.alias('location_levels.firstObject'),
     location_levels: Ember.computed(function() {
         let filter = (location_level) => {
             let role_pks = location_level.get('roles') || [];

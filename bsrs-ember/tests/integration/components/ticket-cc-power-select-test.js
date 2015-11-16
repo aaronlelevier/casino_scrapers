@@ -26,7 +26,7 @@ moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-selec
     }
 });
 
-test('should render a selectbox when with options selected (initial state of selectize)', function(assert) {
+test('should render a selectbox when with options selected (initial state)', function(assert) {
     store.clear('ticket-person');
     let ticket_cc_options = Ember.A([]);
     this.set('ticket', ticket);
@@ -63,7 +63,7 @@ test('should render a selectbox with bound options after type ahead for search_c
     assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
 });
 
-test('should render a selectbox with bound options after type ahead for search_cc with search_cc params for people', function(assert) {
+test('should render power select with bound options after type ahead for search_cc with search_cc params for people', function(assert) {
     let one = store.push('person', {id: 'abcde4', first_name: 'a', last_name: 'b'});
     let two = store.push('person', {id: 'abcde5', first_name: 'c', last_name: 'd'});
     let three = store.push('person', {id: 'abcde6', first_name: 'e', last_name: 'f'});

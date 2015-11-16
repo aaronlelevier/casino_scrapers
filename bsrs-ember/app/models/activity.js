@@ -12,7 +12,8 @@ var ActivityModel = Ember.Object.extend({
         const filter = function(dynamic) {
             return dynamic.get('id') === to_fk;
         };
-        return this.get('store').find(`activity/${type}`, filter, []);
+        const related = type === 'status' ? 'ticket-status' : type === 'priority' ? 'ticket-priority' : `activity/${type}`;
+        return this.get('store').find(related, filter, []);
     }),
     from: Ember.computed('belongs_from.[]', function() {
         return this.get('belongs_from').objectAt(0);
@@ -23,7 +24,8 @@ var ActivityModel = Ember.Object.extend({
         const filter = function(dynamic) {
             return dynamic.get('id') === from_fk;
         };
-        return this.get('store').find(`activity/${type}`, filter, []);
+        const related = type === 'status' ? 'ticket-status' : type === 'priority' ? 'ticket-priority' : `activity/${type}`;
+        return this.get('store').find(related, filter, []);
     }),
     person: Ember.computed('belongs_person.[]', function() {
         return this.get('belongs_person').objectAt(0);
@@ -34,6 +36,20 @@ var ActivityModel = Ember.Object.extend({
             return person.get('id') === person_fk;
         };
         return this.get('store').find(`activity/person`, filter, []);
+    }),
+    added: Ember.computed(function() {
+        const activity_id = this.get('id');
+        const filter = function(cc) {
+            return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
+        };
+        return this.get('store').find('activity/cc-add', filter, ['activities']);
+    }),
+    removed: Ember.computed(function() {
+        const activity_id = this.get('id');
+        const filter = function(cc) {
+            return Ember.$.inArray(activity_id, cc.get('activities')) > -1;
+        };
+        return this.get('store').find('activity/cc-remove', filter, ['activities']);
     })
 });
 

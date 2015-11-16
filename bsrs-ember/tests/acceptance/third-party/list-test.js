@@ -17,7 +17,7 @@ module('Acceptance | third-party-list', {
     beforeEach() {
         application = startApp();
         let endpoint = PREFIX + BASE_URL + '/';
-        xhr(endpoint,'GET', null, {}, 200, THIRD_PARTY_FIXTURES.list() );
+        xhr(endpoint + '?page=1', 'GET', null, {}, 200, THIRD_PARTY_FIXTURES.list() );
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -28,7 +28,7 @@ test('visiting /third-parties', (assert) => {
     visit(THIRD_PARTY_URL);
     andThen(() => {
         assert.equal(currentURL(), THIRD_PARTY_URL);
-        assert.equal(find('.t-grid-data').length, 11); // should be 10 w/ the Grid View
+        assert.equal(find('.t-grid-data').length, 10);
     });
 });
 

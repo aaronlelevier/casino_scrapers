@@ -9,7 +9,8 @@ from model_mommy import mommy
 from contact.models import Address, PhoneNumber, PhoneNumberType
 from contact.tests.factory import create_contact, create_contacts
 from location.tests.factory import create_location_levels, create_locations
-from location.models import Location, LocationLevel, LocationStatus
+from location.models import (Location, LocationLevel, LocationStatus,
+    LocationType)
 from location.serializers import (LocationCreateSerializer,
     LocationUpdateSerializer)
 from person.tests.factory import create_person, PASSWORD
@@ -35,20 +36,35 @@ class LocationLevelTests(APITestCase):
 
     ### LIST
 
-    def test_list(self):
+    def test_list_response(self):
         response = self.client.get('/api/admin/location-levels/')
+
         self.assertEqual(response.status_code, 200)
+
+    def test_list_data(self):
+        response = self.client.get('/api/admin/location-levels/')
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertIsInstance(
-            LocationLevel.objects.get(id=data['results'][0]['id']),
-            LocationLevel
-        )
+        location_level = LocationLevel.objects.get(id=data['results'][0]['id'])
+        
+        self.assertEqual(data['results'][0]['id'], str(location_level.id))
+        self.assertEqual(data['results'][0]['name'], location_level.name)
 
     ### GET
 
-    def test_get(self):
+    def test_get_response(self):
         response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
+        
         self.assertEqual(response.status_code, 200)
+
+    def test_get_data(self):
+        response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
+        
+        data = json.loads(response.content.decode('utf8'))
+        location_level = LocationLevel.objects.get(id=data['id'])
+
+        self.assertEqual(data['id'], str(location_level.id))
+        self.assertEqual(data['name'], location_level.name)
 
     def test_get_parents(self):
         response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
@@ -57,6 +73,8 @@ class LocationLevelTests(APITestCase):
             LocationLevel.objects.get(id=data['parents'][0]['id']),
             self.district.parents.all()
         )
+        parent = self.district.parents.get(id=data['parents'][0]['id'])
+        self.assertEqual(data['parents'][0]['name'], parent.name)
 
     def test_get_children(self):
         response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
@@ -76,11 +94,18 @@ class LocationLevelTests(APITestCase):
             'name': new_name,
             'children': [str(child_location_level.id)]
         }
+
         response = self.client.post('/api/admin/location-levels/', data, format='json')
+
         self.assertEqual(response.status_code, 201)
         data = json.loads(response.content.decode('utf8'))
-        self.assertIsInstance(LocationLevel.objects.get(id=data['id']), LocationLevel)
-        self.assertEqual(data['children'][0], str(child_location_level.id))
+        new_location_level = LocationLevel.objects.get(id=data['id'])
+        self.assertEqual(data['id'], str(new_location_level.id))
+        self.assertEqual(data['name'], new_location_level.name)
+        self.assertIn(
+            data['children'][0],
+            [str(id) for id in new_location_level.children.values_list('id', flat=True)]
+        )
 
     ### UPDATE
 
@@ -180,27 +205,29 @@ class LocationListTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_list(self):
+    def test_response(self):
         self.assertEqual(self.response.status_code, 200)
 
-    def test_list_status(self):
-        self.assertIsInstance(
-            LocationStatus.objects.get(id=self.data['results'][0]['status']['id']),
-            LocationStatus
-        )
+    def test_data(self):
+        location = Location.objects.get(
+            id=self.data['results'][0]['id'])
 
-    def test_list_location_level(self):
-        self.assertIsInstance(
-            LocationLevel.objects.get(id=self.data['results'][0]['location_level']['id']),
-            LocationLevel
-        )
+        self.assertEqual(self.data['results'][0]['name'], location.name)
+        self.assertEqual(self.data['results'][0]['number'], location.number)
 
-    def test_keys(self):
-        self.assertEqual(len(self.data_location), 5)
+    def test_data_status(self):
+        status = LocationStatus.objects.get(
+            id=self.data['results'][0]['status']['id'])
 
-    def test_nested(self):
-        self.assertTrue(self.data_location['status']['id'])
-        self.assertTrue(self.data_location['location_level']['id'])
+        self.assertEqual(self.data['results'][0]['status']['id'], str(status.id))
+        self.assertEqual(self.data['results'][0]['status']['name'], status.name)
+
+    def test_data_location_level(self):
+        location_level = LocationLevel.objects.get(
+            id=self.data['results'][0]['location_level']['id'])
+
+        self.assertEqual(self.data['results'][0]['location_level']['name'],
+            location_level.name)
 
 
 class LocationDetailTests(APITestCase):
@@ -221,6 +248,12 @@ class LocationDetailTests(APITestCase):
 
     def test_get(self):
         self.assertEqual(self.response.status_code, 200)
+
+    def test_data(self):
+        self.assertEqual(self.data['id'], str(self.location.id))
+        self.assertEqual(self.data['name'], self.location.name)
+        self.assertEqual(self.data['number'], self.location.number)
+        self.assertEqual(self.data['status'], str(self.location.status.id))
 
     def test_location_level(self):
         self.assertIsInstance(
@@ -644,53 +677,4 @@ class LocationSearchTests(APITestCase):
         self.assertEqual(
             data['results'][0]['id'],
             str(address.object_id)
-        )
-
-
-class DRFFiltersTests(APITestCase):
-
-    def setUp(self):
-        create_locations()
-        self.location = Location.objects.get(name='ca')
-        self.location_level = self.location.location_level
-        # Login
-        self.person = create_person()
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_location_level_filter(self):
-        response = self.client.get('/api/admin/locations/?location_level={}'
-            .format(self.location_level.id))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data['count'],
-            Location.objects.filter(location_level=self.location_level).count()
-        )
-
-    def test_location_level_filter_by_name(self):
-        # 3 locations total: [c, ca, cat]  # 'ca' already exists
-        mommy.make(Location, number=_generate_chars(),
-            location_level=self.location_level, name='c')
-        mommy.make(Location, number=_generate_chars(),
-            location_level=self.location_level, name='cat')
-        # filter by "c" gets 3
-        name = "c"
-        response = self.client.get('/api/admin/locations/?location_level={}&name__icontains={}'
-            .format(self.location_level.id, name))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data['count'],
-            Location.objects.filter(location_level=self.location_level, name__icontains=name).count()
-        )
-
-        # filter by "ca" gets 2
-        name = "ca"
-        response = self.client.get('/api/admin/locations/?location_level={}&name__icontains={}'
-            .format(self.location_level.id, name))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data['count'],
-            Location.objects.filter(location_level=self.location_level, name__icontains=name).count()
         )

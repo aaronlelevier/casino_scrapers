@@ -151,8 +151,7 @@ class Role(BaseModel):
     def to_dict(self):
         if not self.location_level:
             return {"id": str(self.pk), "name": self.name}
-        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id), 
-                "categories": [c.to_simple_dict() for c in self.categories.filter(parent__isnull=True)]}
+        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
 
     def _update_defaults(self):
         if not self.group:
@@ -353,6 +352,12 @@ class Person(BaseModel, AbstractUser):
             'first_name': self.first_name,
             'middle_initial': self.middle_initial,
             'last_name': self.last_name
+        }
+
+    def to_simple_fullname_dict(self):
+        return {
+            'id': str(self.id),
+            'fullname': self.fullname
         }
 
     @property

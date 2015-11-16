@@ -58,24 +58,6 @@ class SavedSearchTests(TestCase):
         self.assertIsInstance(ret[0], dict)
 
 
-
-class MainSettingTests(TestCase):
-    # Only testing one ``Setting` Model b/c they are inheriting
-    # from the same Base Model
-
-    def setUp(self):
-        self.person = create_single_person()
-
-    def test_setting(self):
-        ct = ContentType.objects.get(app_label='person', model='person')
-        s = MainSetting.objects.create(
-            content_type=ct,
-            object_id=self.person.id,
-            content_object=self.person
-            )
-        self.assertEqual(s.content_object, self.person)
-
-
 class AttachmentModelTests(TestCase):
 
     def setUp(self):

@@ -2,7 +2,7 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
 
-var CategorySingleRoute = TabRoute.extend({
+var CategorySingle = TabRoute.extend({
     repository: inject('category'),
     queryParams: {
         search: {
@@ -38,4 +38,4 @@ var CategorySingleRoute = TabRoute.extend({
     },
 });
 
-export default CategorySingleRoute;
+export default CategorySingle;

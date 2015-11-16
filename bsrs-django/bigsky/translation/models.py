@@ -83,7 +83,6 @@ class TranslationManager(BaseManager):
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         return os.path.join(current_dir, 'source/translation')
 
-
     def import_csv(self, language):
         '''
         # Boiler-plate code for creating a new `Translation` record

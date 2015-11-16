@@ -17,6 +17,7 @@ class RoleViewSet(BaseModelViewSet):
     """
     API endpoint that allows roles to be viewed or edited.
     """
+    model = Role
     queryset = Role.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
 
@@ -30,13 +31,6 @@ class RoleViewSet(BaseModelViewSet):
             return ps.RoleUpdateSerializer
         else:
             return ps.RoleSerializer
-
-
-class PersonStatusViewSet(BaseModelViewSet):
-    
-    queryset = PersonStatus.objects.all()
-    serializer_class = ps.PersonStatusSerializer
-    permission_classes = (permissions.IsAuthenticated,)
 
 
 ### PERSON
@@ -63,9 +57,9 @@ class PersonViewSet(BaseModelViewSet):
         'password_missing': _("Please enter the new password twice.")
     }
 
+    model = Person
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
-    model = Person
     filter_fields = [f.name for f in model._meta.get_fields()]
 
     def get_serializer_class(self):

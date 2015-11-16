@@ -29,7 +29,7 @@ class TicketActivityToRepresentation(object):
     def set_assignee_data(self):
         for k,v in self.data['content'].items():
             person = Person.objects.get(id=v)
-            self.data['content'][k] = person.to_simple_dict()
+            self.data['content'][k] = person.to_simple_fullname_dict()
 
     def set_person_list_data_with_key(self, key):
         person_ids = list(self.data['content'].values())
@@ -37,7 +37,7 @@ class TicketActivityToRepresentation(object):
 
         for id in person_ids:
             person = Person.objects.get(id=id)
-            self.data['content'][key].append(person.to_simple_dict())
+            self.data['content'][key].append(person.to_simple_fullname_dict())
 
     def set_category_data(self):
         self.set_category_with_key('from')

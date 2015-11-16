@@ -62,6 +62,15 @@ class SavedSearchTests(APITestCase):
         new_data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['endpoint_uri'], new_data['endpoint_uri'])
 
+    def test_data(self):
+        response = self.client.get('/api/admin/saved-searches/{}/'.format(self.saved_search.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], str(self.saved_search.id))
+        self.assertEqual(data['name'], self.saved_search.name)
+        self.assertEqual(data['endpoint_name'], self.saved_search.endpoint_name)
+        self.assertEqual(data['endpoint_uri'], self.saved_search.endpoint_uri)
+
 #     ### util.UniqueForActiveValidator - two key tests
 
     def test_unique_for_active_two_keys(self):

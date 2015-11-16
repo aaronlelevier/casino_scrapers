@@ -440,13 +440,9 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
         self.assertEqual(data['results'][0]['content']['from']['id'], str(from_assignee.id))
-        self.assertEqual(data['results'][0]['content']['from']['first_name'], from_assignee.first_name)
-        self.assertEqual(data['results'][0]['content']['from']['middle_initial'], from_assignee.middle_initial)
-        self.assertEqual(data['results'][0]['content']['from']['last_name'], from_assignee.last_name)
+        self.assertEqual(data['results'][0]['content']['from']['fullname'], from_assignee.fullname)
         self.assertEqual(data['results'][0]['content']['to']['id'], str(to_assignee.id))
-        self.assertEqual(data['results'][0]['content']['to']['first_name'], to_assignee.first_name)
-        self.assertEqual(data['results'][0]['content']['to']['middle_initial'], to_assignee.middle_initial)
-        self.assertEqual(data['results'][0]['content']['to']['last_name'], to_assignee.last_name)
+        self.assertEqual(data['results'][0]['content']['to']['fullname'], to_assignee.fullname)
 
     def test_cc_add(self):
         cc = create_single_person()
@@ -459,9 +455,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(len(data['results'][0]['content']), 1)
         self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(cc.id))
-        self.assertEqual(data['results'][0]['content']['added'][0]['first_name'], cc.first_name)
-        self.assertEqual(data['results'][0]['content']['added'][0]['middle_initial'], cc.middle_initial)
-        self.assertEqual(data['results'][0]['content']['added'][0]['last_name'], cc.last_name)
+        self.assertEqual(data['results'][0]['content']['added'][0]['fullname'], cc.fullname)
 
     def test_cc_remove(self):
         cc = create_single_person()
@@ -474,9 +468,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['count'], 1)
         self.assertEqual(len(data['results'][0]['content']), 1)
         self.assertEqual(data['results'][0]['content']['removed'][0]['id'], str(cc.id))
-        self.assertEqual(data['results'][0]['content']['removed'][0]['first_name'], cc.first_name)
-        self.assertEqual(data['results'][0]['content']['removed'][0]['middle_initial'], cc.middle_initial)
-        self.assertEqual(data['results'][0]['content']['removed'][0]['last_name'], cc.last_name)
+        self.assertEqual(data['results'][0]['content']['removed'][0]['fullname'], cc.fullname)
 
     def test_status(self):
         from_status = self.ticket.status

@@ -95,7 +95,8 @@ var BSRS_PEOPLE_FACTORY = (function() {
         return {'count':18,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i, username) {
-        var person = this.generate(i);
+        var j = i || this.person_defaults.idOne;
+        var person = this.generate(j);
         var current_username = person.username;
         person.username = username || current_username;
         person.acceptassign = false;

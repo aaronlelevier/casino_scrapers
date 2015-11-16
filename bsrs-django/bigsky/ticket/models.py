@@ -125,6 +125,9 @@ class TicketActivity(models.Model):
     person = models.ForeignKey(Person, related_name="ticket_activities",
         help_text="Person who did the TicketActivity")
     content = HStoreField(blank=True, null=True)
+    
+    class Meta:
+        ordering = ('-created',)
 
     def __str__(self):
         return "{}: {}".format(self.ticket.number, self.id)

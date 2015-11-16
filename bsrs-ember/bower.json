@@ -5,8 +5,7 @@
     "ember-cli-shims": "0.0.6",
     "ember-cli-test-loader": "0.2.1",
     "ember-load-initializers": "0.1.7",
-    "ember-resolver": "~0.1.20",
-    "loader.js": "ember-cli/loader.js#3.2.1",
+    "loader.js": "ember-cli/loader.js#3.3.0",
     "qunit": "~1.20.0",
     "ember-qunit-notifications": "0.1.0",
     "ember-qunit": "0.4.16",
@@ -21,6 +20,8 @@
     "jquery": "~2.1.4",
     "selectize": "~0.12.1",
     "tether": "~0.7.2",
-    "font-awesome": "~4.3.0"
+    "font-awesome": "~4.3.0",
+    "moment": ">= 2.8.0",
+    "moment-timezone": ">= 0.1.0"
   }
 }

@@ -15,48 +15,50 @@ module.exports = function(environment) {
       prepend: '/static/'
     },
   });
-
-  //app.import('bower_components/ember/ember-template-compiler.js');
-  app.import('bower_components/fauxjax-toranb/dist/fauxjax.min.js');
-  app.import('vendor/mixin.js');
-  app.import('vendor/address_fixtures.js');
-  app.import('vendor/admin_translation_fixtures.js');
-  app.import('vendor/location_fixtures.js');
-  app.import('vendor/location_level_fixtures.js');
-  app.import('vendor/people_fixtures.js');
-  app.import('vendor/phone_number_fixtures.js');
-  app.import('vendor/role_fixtures.js');
-  app.import('vendor/third_party_fixtures.js');
-  app.import('vendor/ticket_fixtures.js');
-  app.import('vendor/ticket_activity_fixtures.js');
-  app.import('vendor/category_fixtures.js');
-  app.import('vendor/translation_fixtures.js');
-  app.import('vendor/defaults/address-type.js');
-  app.import('vendor/defaults/address.js');
-  app.import('vendor/defaults/country.js');
-  app.import('vendor/defaults/currencies.js');
-  app.import('vendor/defaults/category.js');
-  app.import('vendor/defaults/location.js');
-  app.import('vendor/defaults/location-level.js');
-  app.import('vendor/defaults/location-status.js');
-  app.import('vendor/defaults/person.js');
-  app.import('vendor/defaults/person-current.js');
-  app.import('vendor/defaults/person-location.js');
-  app.import('vendor/defaults/person-put.js');
-  app.import('vendor/defaults/phone-number.js');
-  app.import('vendor/defaults/phone-number-type.js');
-  app.import('vendor/defaults/role.js');
-  app.import('vendor/defaults/role-category.js');
-  app.import('vendor/defaults/state.js');
-  app.import('vendor/defaults/status.js');
-  app.import('vendor/defaults/third-party.js');
-  app.import('vendor/defaults/third-party-status.js');
-  app.import('vendor/defaults/ticket.js');
-  app.import('vendor/defaults/ticket-person.js');
-  app.import('vendor/defaults/ticket-category.js');
-  app.import('vendor/defaults/translation.js');
   app.import('vendor/defaults/uuid.js');
   app.import('vendor/defaults/global-message.js');
+  if(app.env !== 'production') {
+      app.import('vendor/timemachine.js', {exports: {'vendor/timemachine': ['default']}});
+      app.import('bower_components/fauxjax-toranb/dist/fauxjax.min.js');
+      app.import('vendor/mixin.js');
+      app.import('vendor/address_fixtures.js');
+      app.import('vendor/admin_translation_fixtures.js');
+      app.import('vendor/location_fixtures.js');
+      app.import('vendor/location_level_fixtures.js');
+      app.import('vendor/people_fixtures.js');
+      app.import('vendor/phone_number_fixtures.js');
+      app.import('vendor/role_fixtures.js');
+      app.import('vendor/third_party_fixtures.js');
+      app.import('vendor/ticket_fixtures.js');
+      app.import('vendor/ticket_activity_fixtures.js');
+      app.import('vendor/category_fixtures.js');
+      app.import('vendor/translation_fixtures.js');
+      app.import('vendor/defaults/address-type.js');
+      app.import('vendor/defaults/address.js');
+      app.import('vendor/defaults/country.js');
+      app.import('vendor/defaults/currencies.js');
+      app.import('vendor/defaults/category.js');
+      app.import('vendor/defaults/location.js');
+      app.import('vendor/defaults/location-level.js');
+      app.import('vendor/defaults/location-status.js');
+      app.import('vendor/defaults/person.js');
+      app.import('vendor/defaults/person-current.js');
+      app.import('vendor/defaults/person-location.js');
+      app.import('vendor/defaults/person-put.js');
+      app.import('vendor/defaults/phone-number.js');
+      app.import('vendor/defaults/phone-number-type.js');
+      app.import('vendor/defaults/role.js');
+      app.import('vendor/defaults/role-category.js');
+      app.import('vendor/defaults/state.js');
+      app.import('vendor/defaults/status.js');
+      app.import('vendor/defaults/third-party.js');
+      app.import('vendor/defaults/third-party-status.js');
+      app.import('vendor/defaults/ticket.js');
+      app.import('vendor/defaults/ticket_activity.js');
+      app.import('vendor/defaults/ticket-person.js');
+      app.import('vendor/defaults/ticket-category.js');
+      app.import('vendor/defaults/translation.js');
+  }
   // Use `app.import` to add additional libraries to the generated
   // output files.
   //

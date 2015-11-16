@@ -9,8 +9,9 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from model_mommy import mommy
 
+from generic.models import MainSetting
 from person.models import Role, PersonStatus
-from person.tests.factory import create_person, create_role
+from person.tests.factory import create_single_person, create_role
 from translation.models import Locale
 from utils import create, choices, helpers
 from utils.models import Tester
@@ -33,7 +34,7 @@ class HelperTests(TestCase):
 
     def test_current_local_default(self):
         self.assertEqual(Locale.objects.count(), 0)
-        user = create_person()
+        user = create_single_person()
         current_locale_json = helpers.current_locale(user)
         current_locale_python = json.loads(current_locale_json)
         self.assertEqual(
@@ -45,7 +46,7 @@ class HelperTests(TestCase):
     def test_current_locale_user(self):
         # setup
         locale = Locale.objects.system_default()
-        user = create_person()
+        user = create_single_person()
         user.locale = locale
         user.save()
         # test
@@ -145,7 +146,7 @@ class TesterPermissionAlreadyCreatedTests(TransactionTestCase):
 class UpdateTests(TestCase):
 
     def setUp(self):
-        self.person = create_person()
+        self.person = create_single_person()
         self.role1 = create_role()
         self.role2 = create_role()
 
@@ -171,3 +172,20 @@ class BaseStatusModelTests(TestCase):
 
         status2 = PersonStatus.objects.get(id=status2.id)
         self.assertFalse(status2.default)
+
+
+class MainSettingTests(TestCase):
+    # Only testing one ``Setting` Model b/c they are inheriting
+    # from the same Base Model
+
+    def setUp(self):
+        self.person = create_single_person()
+
+    def test_setting(self):
+        ct = ContentType.objects.get(app_label='person', model='person')
+        s = MainSetting.objects.create(
+            content_type=ct,
+            object_id=self.person.id,
+            content_object=self.person
+            )
+        self.assertEqual(s.content_object, self.person)

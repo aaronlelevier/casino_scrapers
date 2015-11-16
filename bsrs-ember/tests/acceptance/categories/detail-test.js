@@ -12,7 +12,6 @@ import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/category';
-import selectize from 'bsrs-ember/tests/pages/selectize';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_categories_url;
@@ -20,6 +19,9 @@ const CATEGORIES_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + CATEGORY_DEFAULTS.idOne;
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
+const CATEGORY = '.t-category-children-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_DROPDOWN = '.t-category-children-select-dropdown > .ember-power-select-options';
+const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 let application, store, endpoint, list_xhr;
 
@@ -240,35 +242,33 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-// test('brokensco clicking and typing into selectize for categories children will fire off xhr request for all categories', (assert) => {
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-//         assert.equal(category.get('children_fks').length, 1);
-//         assert.equal(category.get('children').get('length'), 1);
-//         // assert.equal(find('div.item').length, 1);//firefox problems
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
-//     xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-//     selectize.input('a');
-//     triggerEvent('.selectize-input input', 'keyup', LETTER_A);
-//     page.clickSelectizeOption();
-//     andThen(() => {
-//         let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-//         assert.equal(category.get('children_fks').get('length'), 2);
-//         assert.equal(find('div.option').length, 1);
-//         assert.equal(find('div.item').length, 2);
-//     });
-//     let url = PREFIX + DETAIL_URL + '/';
-//     let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-//     let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, children: [CATEGORY_DEFAULTS.idChild, CATEGORY_DEFAULTS.idTwo]});
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), CATEGORIES_URL);
-//     });
-// });
+test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        assert.equal(category.get('children_fks').length, 1);
+        assert.equal(category.get('children').get('length'), 1);
+        assert.equal(find('div.option').length, 0);
+    });
+    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, 'a');
+    page.categoryClickOptionThree();
+    andThen(() => {
+        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        assert.equal(category.get('children_fks').get('length'), 2);
+        assert.equal(page.categoriesSelected(), 2);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
+    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, children: [CATEGORY_DEFAULTS.idChild, CATEGORY_DEFAULTS.idThree]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
 
 // //TODO: seems like performance issue with firefox; other tests have no problems
 // test('when you deep link to the category detail can remove child from category', (assert) => {
