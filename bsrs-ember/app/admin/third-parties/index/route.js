@@ -1,11 +1,8 @@
-import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import GridViewRoute from 'bsrs-ember/mixins/route/components/grid';
 
-var ThirdPartyRoute = Ember.Route.extend({
-    repository: inject('third-party'),
-    model() {
-        return this.get('repository').find();
-    }
+var ThirdPartyIndexRoute = GridViewRoute.extend({
+    repository: inject('third-party')
 });
 
-export default ThirdPartyRoute;
+export default ThirdPartyIndexRoute;
