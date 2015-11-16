@@ -20,6 +20,7 @@ module.exports = function(environment) {
       app.import('vendor/defaults/uuid.js');
       app.import('vendor/defaults/global-message.js');
   }else{
+      app.import('vendor/timemachine.js', {exports: {'vendor/timemachine': ['default']}});
       app.import('bower_components/fauxjax-toranb/dist/fauxjax.min.js');
       app.import('vendor/mixin.js');
       app.import('vendor/address_fixtures.js');
