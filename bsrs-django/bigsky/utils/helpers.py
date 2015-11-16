@@ -17,3 +17,7 @@ def current_locale(user):
     else:
         locale = Locale.objects.system_default()
     return json.dumps(locale.to_dict())
+
+
+def generate_uuid(base_id, incr=0):
+    return "{}{:03d}".format(base_id, incr)
