@@ -35,7 +35,28 @@ https://github.com/toranb/osx-workstation/blob/master/installer
 
 | Port | Build      | Service |
 | ---- | ---------- | ------- |
-| 8002 | Deploy     | uWSGI   |
-| 8003 | Persistent | uWSGI   |
 | 8007 | Deploy     | Nginx   |
 | 8008 | Persistent | Nginx   |
+
+
+### Fixture Data
+
+Fixture data should be predictable.  If Fixtures are going to be dynamically generated, then they need to have **static** UUIDs using this function: [generate_uuid](https://github.com/bigskytech/bsrs/blob/master/bsrs-django/bigsky/utils/helpers.py).
+
+##### Naming conventions of `<fixtures.json>`
+
+Follow the same naming convention for outputting the fixture.
+  - A whole app should be `fixtures/<app_name>.json`
+  - example: `fixtures/person.json`
+
+For a single Model in an App, it should also follow same naming convention for outputting the fixture.
+  - A single model should be `fixtures/<app_name.Model_name>.json`
+  - example: `fixtures/person.Role.json`
+
+##### Fixture Generation
+
+Follow these two conventions:
+
+A. If no dependencies, can generate as normal.
+
+B. If has Foreign Keys to other Fixtures, then these need to be statically generated using the above function, so they are predictable, and won't cause any duplicate key errrors.

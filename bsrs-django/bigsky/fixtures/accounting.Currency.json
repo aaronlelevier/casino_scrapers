@@ -1,0 +1,66 @@
+[
+{
+  "fields": {
+    "code": "USD",
+    "name": "US Dollar",
+    "created": "2015-10-01T22:00:23.524Z",
+    "deleted": null,
+    "symbol": "$",
+    "modified": "2015-10-01T22:00:23.524Z",
+    "symbol_native": "$",
+    "decimal_digits": 2,
+    "rounding": 0,
+    "name_plural": "US Dollars"
+  },
+  "model": "accounting.currency",
+  "pk": "baa98c7d-42d1-4909-9910-53a9991f959a"
+},
+{
+  "fields": {
+    "code": "CNY",
+    "name": "Chinese Yuan",
+    "created": "2015-08-31T15:56:01.504Z",
+    "deleted": null,
+    "symbol": "CN\u00a5",
+    "modified": "2015-08-31T15:56:01.504Z",
+    "symbol_native": "CN\u00a5",
+    "decimal_digits": 2,
+    "rounding": 0,
+    "name_plural": "Chinese Yuan"
+  },
+  "model": "accounting.currency",
+  "pk": "67a1d56f-e9a3-4fa5-a6e4-afac651b05de"
+},
+{
+  "fields": {
+    "code": "CAD",
+    "name": "Canadian Dollar",
+    "created": "2015-08-31T15:44:41.280Z",
+    "deleted": null,
+    "symbol": "CA$",
+    "modified": "2015-08-31T15:53:09.613Z",
+    "symbol_native": "$",
+    "decimal_digits": 2,
+    "rounding": 0,
+    "name_plural": "Canadian Dollars"
+  },
+  "model": "accounting.currency",
+  "pk": "a773083a-54e8-4f41-84f8-e5b49bee3d0a"
+},
+{
+  "fields": {
+    "code": "EUR",
+    "name": "Euro",
+    "created": "2015-08-31T15:54:30.210Z",
+    "deleted": null,
+    "symbol": "\u20ac",
+    "modified": "2015-08-31T15:54:30.210Z",
+    "symbol_native": "\u20ac",
+    "decimal_digits": 2,
+    "rounding": 0,
+    "name_plural": "Euros"
+  },
+  "model": "accounting.currency",
+  "pk": "ad7c3339-7c12-4193-82c7-8fcb333b1ad6"
+}
+]

@@ -1,19 +1,220 @@
 [
 {
   "fields": {
-    "description": null,
-    "parent": null,
-    "created": "2015-09-08T21:01:21.222Z",
     "deleted": null,
-    "subcategory_label": "trade",
-    "modified": "2015-09-08T21:01:21.222Z",
+    "modified": "2015-11-17T18:04:22.290Z",
+    "name": "category.status.active",
+    "created": "2015-11-17T18:04:22.290Z"
+  },
+  "model": "category.categorystatus",
+  "pk": "20f530c4-ce6c-4724-9cfd-37a16e787000"
+},
+{
+  "fields": {
+    "deleted": null,
+    "modified": "2015-11-17T18:04:22.293Z",
+    "name": "category.status.inactive",
+    "created": "2015-11-17T18:04:22.293Z"
+  },
+  "model": "category.categorystatus",
+  "pk": "20f530c4-ce6c-4724-9cfd-37a16e787001"
+},
+{
+  "fields": {
+    "parent": null,
     "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.297Z",
+    "subcategory_label": "trade",
+    "name": "repair",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787000",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.297Z",
     "label": "type",
-    "cost_code": null,
-    "cost_currency": "2c969193-0896-42cd-9531-f42717397248",
-    "name": "repair"
+    "deleted": null,
+    "cost_code": null
   },
   "model": "category.category",
-  "pk": "6812bb07-5c8a-4a31-b72e-e47d1d6abaa3"
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787001"
+},
+{
+  "fields": {
+    "parent": "24f530c4-ce6c-4724-9cfd-37a16e787001",
+    "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.302Z",
+    "subcategory_label": "issue",
+    "name": "plumbing",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787000",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.302Z",
+    "label": "trade",
+    "deleted": null,
+    "cost_code": null
+  },
+  "model": "category.category",
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787002"
+},
+{
+  "fields": {
+    "parent": "24f530c4-ce6c-4724-9cfd-37a16e787001",
+    "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.306Z",
+    "subcategory_label": "issue",
+    "name": "electrical",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787000",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.306Z",
+    "label": "trade",
+    "deleted": null,
+    "cost_code": null
+  },
+  "model": "category.category",
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787003"
+},
+{
+  "fields": {
+    "parent": "24f530c4-ce6c-4724-9cfd-37a16e787003",
+    "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.312Z",
+    "subcategory_label": "sub_issue",
+    "name": "nec aliquet",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787000",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.312Z",
+    "label": "issue",
+    "deleted": null,
+    "cost_code": null
+  },
+  "model": "category.category",
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787004"
+},
+{
+  "fields": {
+    "parent": "24f530c4-ce6c-4724-9cfd-37a16e787003",
+    "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.315Z",
+    "subcategory_label": "sub_issue",
+    "name": "suscipit habitant",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787000",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.315Z",
+    "label": "issue",
+    "deleted": null,
+    "cost_code": null
+  },
+  "model": "category.category",
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787005"
+},
+{
+  "fields": {
+    "parent": "24f530c4-ce6c-4724-9cfd-37a16e787003",
+    "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.319Z",
+    "subcategory_label": "sub_issue",
+    "name": "a auctor",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787001",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.319Z",
+    "label": "issue",
+    "deleted": null,
+    "cost_code": null
+  },
+  "model": "category.category",
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787006"
+},
+{
+  "fields": {
+    "parent": "24f530c4-ce6c-4724-9cfd-37a16e787002",
+    "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.324Z",
+    "subcategory_label": "sub_issue",
+    "name": "id egestas",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787001",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.324Z",
+    "label": "issue",
+    "deleted": null,
+    "cost_code": null
+  },
+  "model": "category.category",
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787007"
+},
+{
+  "fields": {
+    "parent": "24f530c4-ce6c-4724-9cfd-37a16e787002",
+    "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.327Z",
+    "subcategory_label": "sub_issue",
+    "name": "congue augue",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787001",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.327Z",
+    "label": "issue",
+    "deleted": null,
+    "cost_code": null
+  },
+  "model": "category.category",
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787008"
+},
+{
+  "fields": {
+    "parent": "24f530c4-ce6c-4724-9cfd-37a16e787002",
+    "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.330Z",
+    "subcategory_label": "sub_issue",
+    "name": "congue morbi",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787000",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.330Z",
+    "label": "issue",
+    "deleted": null,
+    "cost_code": null
+  },
+  "model": "category.category",
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787009"
+},
+{
+  "fields": {
+    "parent": "24f530c4-ce6c-4724-9cfd-37a16e787002",
+    "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.333Z",
+    "subcategory_label": "sub_issue",
+    "name": "porta scelerisque",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787000",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.333Z",
+    "label": "issue",
+    "deleted": null,
+    "cost_code": null
+  },
+  "model": "category.category",
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787010"
+},
+{
+  "fields": {
+    "parent": "24f530c4-ce6c-4724-9cfd-37a16e787002",
+    "cost_amount": "0.0000",
+    "modified": "2015-11-17T18:04:22.336Z",
+    "subcategory_label": "sub_issue",
+    "name": "sollicitudin blandit",
+    "status": "20f530c4-ce6c-4724-9cfd-37a16e787000",
+    "description": null,
+    "cost_currency": "baa98c7d-42d1-4909-9910-53a9991f959a",
+    "created": "2015-11-17T18:04:22.336Z",
+    "label": "issue",
+    "deleted": null,
+    "cost_code": null
+  },
+  "model": "category.category",
+  "pk": "24f530c4-ce6c-4724-9cfd-37a16e787011"
 }
 ]
