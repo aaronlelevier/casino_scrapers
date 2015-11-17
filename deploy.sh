@@ -66,15 +66,17 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $TEST; fi
 
 echo "AFTER MIGRATIONS, LOAD LATEST FIXTURE DATA."
 wait
-../venv/bin/python manage.py loaddata fixtures/translations.json
-wait
-../venv/bin/python manage.py loaddata fixtures/states.json
-wait
-../venv/bin/python manage.py loaddata fixtures/jenkins.json
-wait
-../venv/bin/python manage.py loaddata fixtures/jenkins_custom.json
-wait
-../venv/bin/python manage.py loaddata fixtures/tickets.json
+../venv/bin/python manage.py loaddata fixtures/location.State.json
+../venv/bin/python manage.py loaddata fixtures/translation.json
+../venv/bin/python manage.py loaddata fixtures/accounting.Currency.json
+../venv/bin/python manage.py loaddata fixtures/contact.PhoneNumberType.json
+../venv/bin/python manage.py loaddata fixtures/contact.AddressType.json
+../venv/bin/python manage.py loaddata fixtures/category.json
+../venv/bin/python manage.py loaddata fixtures/third_party.json
+../venv/bin/python manage.py loaddata fixtures/auth.json
+../venv/bin/python manage.py loaddata fixtures/location.json
+../venv/bin/python manage.py loaddata fixtures/person.json
+../venv/bin/python manage.py loaddata fixtures/ticket.json
 
 
 echo "EMBER"
