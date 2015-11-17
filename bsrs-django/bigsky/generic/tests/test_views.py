@@ -1,6 +1,9 @@
+import os
+from os.path import dirname, join
 import json
 import uuid
 
+from django.test.client import MULTIPART_CONTENT, BOUNDARY, encode_multipart
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
 
@@ -130,3 +133,32 @@ class ExportDataTests(APITestCase):
             'attachment; filename="{name}.csv"'.format(
                 name=model._meta.verbose_name_plural)
         )
+
+
+class AttachmentTests(APITestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+
+        base_dir = dirname(dirname(dirname(__file__)))
+
+        self.file = join(base_dir, "source/attachments/test_in/es.csv")
+        self.file_filename = os.path.split(self.file)[1]
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_create(self):
+        with open(self.file) as data:
+            post_data = {
+                'id': str(uuid.uuid4()),
+                'filename': self.file_filename,
+                'file': data
+            }
+            response = self.client.post("/api/admin/attachments/",
+                encode_multipart(BOUNDARY, post_data),
+                content_type=MULTIPART_CONTENT)
+
+            self.assertEqual(response.status_code, 201)

@@ -9,6 +9,7 @@ from PIL import Image
 from rest_framework.exceptions import ValidationError
 
 from person.models import Person
+from ticket.models import Ticket
 from utils.models import BaseModel, BaseManager, BaseSettingModel
 
 
@@ -128,8 +129,7 @@ class Attachment(BaseModel):
 
     `MIME Types reference <http://www.sitepoint.com/web-foundations/mime-types-complete-list/>`_
     """
-    model_id = models.UUIDField(help_text="UUID of the Model Instance that "
-                                          "the Attachment is related to.")
+    ticket = models.ForeignKey(Ticket, related_name='attachments', blank=True, null=True)
     filename = models.CharField(max_length=100, blank=True)
     is_image = models.BooleanField(blank=True, default=False)
     file = models.FileField(upload_to=upload_to, null=True, blank=True)
