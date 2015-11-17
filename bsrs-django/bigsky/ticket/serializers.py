@@ -67,17 +67,3 @@ class TicketActivitySerializer(serializers.ModelSerializer):
         data = activity_data.get_data()
 
         return data
-
-
-from rest_framework.fields import DictField
-from rest_framework.exceptions import ValidationError
-def required_comment(content):
-    if not 'comment' in content or not content['comment']:
-        raise ValidationError('Comment must be specified')
-
-class TicketActivityCreateSerializer(BaseCreateSerializer):
-
-    content = DictField(validators=[required_comment])
-
-    class Meta:
-        model = TicketActivity

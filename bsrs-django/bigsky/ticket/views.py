@@ -6,7 +6,7 @@ from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
 from ticket.models import Ticket, TicketActivity, TicketActivityType
 from person.models import Person
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
-    TicketListSerializer, TicketActivitySerializer, TicketActivityCreateSerializer)
+    TicketListSerializer, TicketActivitySerializer)
 from utils.views import BaseModelViewSet
 
 
@@ -41,8 +41,6 @@ class TicketActivityViewSet(BaseModelViewSet):
     def get_serializer_class(self):
         if self.action == 'list':
             return TicketActivitySerializer
-        elif self.action == 'create':
-            return TicketActivityCreateSerializer
         else:
             raise MethodNotAllowed(method=self.action)
 

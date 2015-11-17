@@ -5,8 +5,9 @@ from django.forms.models import model_to_dict
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
+from django.db import transaction, IntegrityError
 
-from ticket.models import TicketActivityType, TicketActivity
+from ticket.models import TicketActivityType, TicketActivity, Ticket
 
 
 class CreateTicketModelMixin(object):
@@ -126,6 +127,10 @@ class UpdateTicketModelMixin(object):
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
+        if 'comment' in request.data:
+            comment = request.data.pop('comment', [])
+            type_of, _ = TicketActivityType.objects.get_or_create(name='comment')
+            TicketActivity.objects.create(type=type_of, person=request.user, ticket=instance, content={'comment': comment})
         # store initial instance data before it gets updated
         init_ticket = copy.copy(model_to_dict(instance))
         # perform update
