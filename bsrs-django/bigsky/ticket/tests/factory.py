@@ -11,6 +11,7 @@ from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from utils.create import _generate_chars
+from utils.helpers import generate_uuid
 
 
 def construct_tree(category, tree):
@@ -22,6 +23,9 @@ def construct_tree(category, tree):
     return tree
 
 
+TICKET_BASE_ID = "40f530c4-ce6c-4724-9cfd-37a16e787"
+
+
 def create_ticket():
     if not Location.objects.first():
         create_locations()
@@ -30,7 +34,10 @@ def create_ticket():
     priorities = create_ticket_priorites()
     people = Person.objects.all()
 
+    incr = Ticket.objects.count()
+
     ticket = Ticket.objects.create(
+        id = generate_uuid(TICKET_BASE_ID, incr+1),
         location = random.choice(Location.objects.all()),
         status = random.choice(statuses),
         priority = random.choice(priorities),

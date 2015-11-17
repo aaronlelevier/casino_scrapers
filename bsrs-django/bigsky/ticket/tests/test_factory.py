@@ -8,6 +8,7 @@ from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityT
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from ticket.tests import factory
 from person.tests.factory import create_single_person
+from utils.helpers import generate_uuid
 
 
 class CreateTicketTests(TestCase):
@@ -77,6 +78,16 @@ class CreateTicketsTests(TestCase):
         tickets = factory.create_tickets(_many=2)
         self.assertEqual(len(tickets), 2)
         self.assertIsInstance(tickets[0], Ticket)
+
+    def test_generate_uuid(self):
+        incr = Ticket.objects.count()
+
+        ret = factory.create_ticket()
+
+        self.assertEqual(
+            str(ret.id),
+            generate_uuid(factory.TICKET_BASE_ID, incr+1)
+        )
 
 
 class CreateStatusTests(TestCase):
