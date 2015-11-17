@@ -9,6 +9,26 @@ export default Ember.Helper.helper(function(params, addon) {
     const person = activity.get('person');
     if(type === 'create') {
         return i18n.t('activity.ticket.create', {timestamp:timestamp});
+    }else if(type === 'categories') {
+        let message_to = '';
+        let message_from = '';
+        const to = activity.get('categories_to');
+        const length_to = to.get('length');
+        to.forEach((cat, index) => {
+            message_to = message_to + cat.get('name');
+            if(index + 1 < length_to) {
+                message_to = message_to + '/';
+            }
+        });
+        const from = activity.get('categories_from');
+        const length_from = from.get('length');
+        from.forEach((cat, index) => {
+            message_from = message_from + cat.get('name');
+            if(index + 1 < length_from) {
+                message_from = message_from + '/';
+            }
+        });
+        return i18n.t('activity.ticket.categories', {to:message_to, from:message_from, timestamp:timestamp});
     }else if(type === 'cc_add') {
         let message = '';
         const added = activity.get('added');

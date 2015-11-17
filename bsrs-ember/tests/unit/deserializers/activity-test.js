@@ -4,18 +4,20 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import CD from 'bsrs-ember/vendor/defaults/category';
 import ActivityDeserializer from 'bsrs-ember/deserializers/activity';
 
-var store;
+var store, subject, uuid;
 
 module('unit: activity deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
+        store = module_registry(this.container, this.registry, ['model:uuid', 'model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person', 'model:activity/category-to', 'model:activity/category-from']);
+        uuid = this.container.lookup('model:uuid');
+        subject = ActivityDeserializer.create({store:store, uuid:uuid});
     }
 });
 
 test('activity deserializer returns correct data with assignee', (assert) => {
-    let subject = ActivityDeserializer.create({store: store});
     let response = TA_FIXTURES.assignee_only(TD.idOne);
     subject.deserialize(response);
     assert.equal(store.find('activity').get('length'), 2);
@@ -29,7 +31,6 @@ test('activity deserializer returns correct data with assignee', (assert) => {
 });
 
 test('activity deserializer returns correct activity/person', (assert) => {
-    let subject = ActivityDeserializer.create({store: store});
     let response = TA_FIXTURES.assignee_only(TD.idOne);
     subject.deserialize(response);
     assert.equal(store.find('activity').get('length'), 2);
@@ -38,7 +39,6 @@ test('activity deserializer returns correct activity/person', (assert) => {
 });
 
 test('activity with only created is deserialized correctly', (assert) => {
-    let subject = ActivityDeserializer.create({store: store});
     let response = TA_FIXTURES.created_only();
     subject.deserialize(response);
     assert.equal(store.find('activity').get('length'), 1);
@@ -50,7 +50,6 @@ test('activity with only created is deserialized correctly', (assert) => {
 test('activity with only status is deserialized correctly', (assert) => {
     store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
     store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwo});
-    let subject = ActivityDeserializer.create({store: store});
     let response = TA_FIXTURES.status_only();
     subject.deserialize(response);
     assert.equal(store.find('activity').get('length'), 3);
@@ -69,7 +68,6 @@ test('activity with only status is deserialized correctly', (assert) => {
 test('activity with only priority is deserialized correctly', (assert) => {
     store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne});
     store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwo});
-    let subject = ActivityDeserializer.create({store: store});
     let response = TA_FIXTURES.priority_only();
     subject.deserialize(response);
     assert.equal(store.find('activity').get('length'), 3);
@@ -86,7 +84,6 @@ test('activity with only priority is deserialized correctly', (assert) => {
 });
 
 test('activity with only cc_add is deserialized correctly', (assert) => {
-    let subject = ActivityDeserializer.create({store: store});
     let response = TA_FIXTURES.cc_add_only(2);
     subject.deserialize(response);
     assert.equal(store.find('activity').get('length'), 1);
@@ -102,7 +99,6 @@ test('activity with only cc_add is deserialized correctly', (assert) => {
 });
 
 test('activity with only cc_remove is deserialized correctly', (assert) => {
-    let subject = ActivityDeserializer.create({store: store});
     let response = TA_FIXTURES.cc_remove_only(2);
     subject.deserialize(response);
     assert.equal(store.find('activity').get('length'), 1);
@@ -117,12 +113,20 @@ test('activity with only cc_remove is deserialized correctly', (assert) => {
     assert.notOk(store.find('activity').objectAt(0).get('content'));
 });
 
-test('activity with only comment is deserialized correctly', (assert) => {
-    let subject = ActivityDeserializer.create({store: store});
+test('activity with comment is deserialized correctly', (assert) => {
     let response = TA_FIXTURES.comment_only();
     subject.deserialize(response);
     assert.equal(store.find('activity').get('length'), 1);
     assert.equal(store.find('activity').objectAt(0).get('comment'), TD.commentOne);
+    assert.notOk(store.find('activity').objectAt(0).get('content'));
+});
+
+test('activity with categories is deserialized correctly', (assert) => {
+    let response = TA_FIXTURES.categories_only();
+    subject.deserialize(response);
+    assert.equal(store.find('activity').get('length'), 1);
+    assert.equal(store.find('activity').objectAt(0).get('categories_to').objectAt(0).get('name'), CD.nameOne);
+    assert.equal(store.find('activity').objectAt(0).get('categories_from').objectAt(0).get('name'), CD.nameTwo);
     assert.notOk(store.find('activity').objectAt(0).get('content'));
 });
 

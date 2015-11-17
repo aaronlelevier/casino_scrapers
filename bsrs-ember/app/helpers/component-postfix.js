@@ -5,6 +5,8 @@ export default Ember.Helper.helper((params) => {
         return 'to-from';
     }else if (params[0] === 'comment') {
         return 'comment-activity';
+    }else if (params[0] === 'categories') {
+        return 'categories-activity';
     }else if(params[0] === 'create'){
         return 'create-activity'; 
     }else if(params[0] === 'priority' || params[0] === 'status'){

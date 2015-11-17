@@ -1,24 +1,41 @@
 var TICKET_ACTIVITY_FACTORY = (function() {
-    var factory = function(person_defaults, ticket_defaults) {
-        this.person_defaults = person_defaults;
-        this.ticket_defaults = ticket_defaults;
+    var factory = function(pd, td, cd) {
+        this.pd = pd;
+        this.td = td;
+        this.cd = cd;
     };
     factory.prototype.empty = function() {
         return {'count':0,'next':null,'previous':null,'results': []};
     };
     factory.prototype.get_comment = function(i, ticket_pk) {
         var d = new Date();
-        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var ticket_id = ticket_pk || this.td.idOne;
         var activity = {id: i, type: 'comment', created: d.setDate(d.getDate()-90), ticket: ticket_id};
-        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
-        activity.content = {'comment': this.ticket_defaults.commentOne};
+        activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
+        activity.content = {'comment': this.td.commentOne};
+        return activity;
+    },
+    factory.prototype.get_category = function(i, ticket_pk) {
+        var d = new Date();
+        var ticket_id = ticket_pk || this.td.idOne;
+        var activity = {id: i, type: 'categories', created: d.setDate(d.getDate()-90), ticket: ticket_id};
+        activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
+        activity.content = {to: [{id: this.cd.idOne, name: this.cd.nameOne}], from: [{id: this.cd.idTwo, name: this.cd.nameTwo}]};
+        return activity;
+    },
+    factory.prototype.get_category_multiple = function(i, ticket_pk) {
+        var d = new Date();
+        var ticket_id = ticket_pk || this.td.idOne;
+        var activity = {id: i, type: 'categories', created: d.setDate(d.getDate()-90), ticket: ticket_id};
+        activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
+        activity.content = {to: [{id: this.cd.idOne, name: this.cd.nameOne}, {id: this.cd.idThree, name: this.cd.nameThree}], from: [{id: this.cd.idTwo, name: this.cd.nameTwo}, {id: this.cd.idChild, name: this.cd.namePlumbingChild}]};
         return activity;
     },
     factory.prototype.get_create = function(i, ticket_pk) {
         var d = new Date();
-        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var ticket_id = ticket_pk || this.td.idOne;
         var activity = {id: i, type: 'create', created: d.setDate(d.getDate()-90), ticket: ticket_id};
-        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
+        activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
         activity.content = null;
         return activity;
     },
@@ -31,10 +48,10 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     },
     factory.prototype.get_assignee = function(i, ticket_pk) {
         var d = new Date();
-        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var ticket_id = ticket_pk || this.td.idOne;
         var activity = {id: i, type: 'assignee', created: d.setDate(d.getDate()-45), ticket: ticket_id};
-        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
-        activity.content = {to: {id: this.person_defaults.idSearch, fullname: this.person_defaults.fullnameBoy}, from: {id: this.person_defaults.idBoy, fullname: this.person_defaults.fullnameBoy2}};
+        activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
+        activity.content = {to: {id: this.pd.idSearch, fullname: this.pd.fullnameBoy}, from: {id: this.pd.idBoy, fullname: this.pd.fullnameBoy2}};
         return activity;
     },
     factory.prototype.get_assignee_json = function(i, ticket_pk) {
@@ -52,18 +69,18 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     },
     factory.prototype.get_status = function(i, ticket_pk) {
         var d = new Date();
-        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var ticket_id = ticket_pk || this.td.idOne;
         var activity = {id: i, type: 'status', created: d.setDate(d.getDate()-30), ticket: ticket_id};
-        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
-        activity.content = {to: this.ticket_defaults.statusOneId, from: this.ticket_defaults.statusTwoId};
+        activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
+        activity.content = {to: this.td.statusOneId, from: this.td.statusTwoId};
         return activity;
     },
     factory.prototype.get_priority = function(i, ticket_pk) {
         var d = new Date();
-        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var ticket_id = ticket_pk || this.td.idOne;
         var activity = {id: i, type: 'priority', created: d.setDate(d.getDate()-60), ticket: ticket_id};
-        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
-        activity.content = {to: this.ticket_defaults.priorityOneId, from: this.ticket_defaults.priorityTwoId};
+        activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
+        activity.content = {to: this.td.priorityOneId, from: this.td.priorityTwoId};
         return activity;
     },
     factory.prototype.get_status_json = function(i, ticket_pk) {
@@ -88,12 +105,12 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         var d = new Date();
         var added_removed = [];
         for (var j=1; j <= count; j++) {
-            var person = {id: '249543cf-8fea-426a-8bc3-09778cd7800' + j, fullname: this.person_defaults.fullnameBoy};
+            var person = {id: '249543cf-8fea-426a-8bc3-09778cd7800' + j, fullname: this.pd.fullnameBoy};
             added_removed.push(person);
         }
-        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var ticket_id = ticket_pk || this.td.idOne;
         var activity = {id: i, type: type, created: d.setDate(d.getDate()-15), ticket: ticket_id};
-        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
+        activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
         var key = type === 'cc_add' ? 'added' : 'removed';
         activity.content = {};
         activity.content[key] = added_removed;
@@ -122,6 +139,23 @@ var TICKET_ACTIVITY_FACTORY = (function() {
             response.push(activity);
         }
         return {'count':count,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.categories_only = function(ticket_pk, count) {
+        var response = [];
+        var count = count || 1;
+        for (var i=1; i<=count; i++) {
+            var uuid = '759447cc-1a19-4d8d-829b-bfb81cb6fdz';
+            var activity = this.get_category(uuid+i, ticket_pk);
+            response.push(activity);
+        }
+        return {'count':count,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.categories_multiple_only = function(ticket_pk) {
+        var response = [];
+        var uuid = '859447cc-1a19-5d8d-929b-bfb81cb6fdz';
+        var activity = this.get_category_multiple(uuid, ticket_pk);
+        response.push(activity);
+        return {'count':1,'next':null,'previous':null,'results': response};
     };
     factory.prototype.assignee_only = function(ticket_pk) {
         var response = [];
@@ -166,13 +200,13 @@ var TICKET_ACTIVITY_FACTORY = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    var person_defaults = require('../vendor/defaults/person');
-    var ticket_defaults = require('../vendor/defaults/ticket');
-    module.exports = new TICKET_ACTIVITY_FACTORY(person_defaults, ticket_defaults);
+    var pd = require('../vendor/defaults/person');
+    var td = require('../vendor/defaults/ticket');
+    module.exports = new TICKET_ACTIVITY_FACTORY(pd, td);
 } else {
-    define('bsrs-ember/vendor/ticket_activity_fixtures', ['exports', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/ticket'], function (exports, person_defaults, ticket_defaults) {
+    define('bsrs-ember/vendor/ticket_activity_fixtures', ['exports', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/category'], function (exports, pd, td, cd) {
         'use strict';
-        var Factory = new TICKET_ACTIVITY_FACTORY(person_defaults, ticket_defaults);
+        var Factory = new TICKET_ACTIVITY_FACTORY(pd, td, cd);
         return {default: Factory};
     });
 }

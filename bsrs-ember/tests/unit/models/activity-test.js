@@ -3,13 +3,14 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import CD from 'bsrs-ember/vendor/defaults/category';
 import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 
 var store;
 
 module('unit: activity test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status', 'model:ticket-priority']);
+        store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status', 'model:ticket-priority', 'model:activity/category-to', 'model:activity/category-from']);
     }
 });
 
@@ -103,6 +104,16 @@ test('from returns associated model or undefined (priority type)', (assert) => {
     activity.set('from_fk', 9);
     from = activity.get('from');
     assert.equal(from, undefined);
+});
+
+test('category returns associated model or undefined', (assert) => {
+    let activity = store.push('activity', {id: TAD.idCategoryOne, type: 'categories'});
+    store.push('activity/category-to', {id: CD.idOne, name: CD.nameOne, parent: null, activities: [TAD.idCategoryOne]});
+    store.push('activity/category-from', {id: CD.idTwo, name: CD.nameTwo, parent: CD.nameOne, activities: [TAD.idCategoryOne]});
+    let categories_to = activity.get('categories_to');
+    let categories_from = activity.get('categories_from');
+    assert.equal(categories_to.objectAt(0).get('id'), CD.idOne);
+    assert.equal(categories_from.objectAt(0).get('id'), CD.idTwo);
 });
 
 test('person returns associated model or undefined', (assert) => {

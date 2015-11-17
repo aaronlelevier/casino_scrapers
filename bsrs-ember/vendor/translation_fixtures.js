@@ -160,6 +160,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.third_party.label.status':'Status',
             'validation.valid':'Valid',
             'validation.invalid':'Invalid',
+            'activity.ticket.categories':'changed the category from ${{from}} $to ${{to}} ${{timestamp}}',
             'activity.ticket.to_from':'changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}',
             'activity.ticket.create':'created this ticket ${{timestamp}}',
             'activity.ticket.cc_add':'added ${{added}} $to CC ${{timestamp}}',
