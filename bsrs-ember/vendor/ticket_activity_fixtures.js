@@ -6,6 +6,14 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     factory.prototype.empty = function() {
         return {'count':0,'next':null,'previous':null,'results': []};
     };
+    factory.prototype.get_comment = function(i, ticket_pk) {
+        var d = new Date();
+        var ticket_id = ticket_pk || this.ticket_defaults.idOne;
+        var activity = {id: i, type: 'comment', created: d.setDate(d.getDate()-90), ticket: ticket_id};
+        activity.person = {id: this.person_defaults.idOne, fullname: this.person_defaults.fullname};
+        activity.content = {'comment': this.ticket_defaults.commentOne};
+        return activity;
+    },
     factory.prototype.get_create = function(i, ticket_pk) {
         var d = new Date();
         var ticket_id = ticket_pk || this.ticket_defaults.idOne;
@@ -104,6 +112,16 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         var activity = this.get_create(uuid, ticket_pk);
         response.push(activity);
         return {'count':1,'next':null,'previous':null,'results': response};
+    };
+    factory.prototype.comment_only = function(ticket_pk, count) {
+        var response = [];
+        var count = count || 1;
+        for (var i=1; i<=count; i++) {
+            var uuid = '649447cc-1a19-4d8d-829b-bfb81cb5ecw';
+            var activity = this.get_comment(uuid+i, ticket_pk);
+            response.push(activity);
+        }
+        return {'count':count,'next':null,'previous':null,'results': response};
     };
     factory.prototype.assignee_only = function(ticket_pk) {
         var response = [];

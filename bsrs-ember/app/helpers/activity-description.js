@@ -31,8 +31,11 @@ export default Ember.Helper.helper(function(params, addon) {
             }
         });
         return i18n.t('activity.ticket.cc_remove', {removed:message, timestamp:timestamp});
+    }else if(type === 'comment') {
+        const comment = activity.get('comment');
+        return i18n.t('activity.ticket.comment', {timestamp:timestamp, comment:comment});    
     }
     const to = activity.get('to.name');
     const from = activity.get('from.name');
-    return i18n.t('activity.ticket.assignee', {type:type, to:to, from:from, timestamp:timestamp});
+    return i18n.t('activity.ticket.to_from', {type:type, to:to, from:from, timestamp:timestamp});
 });

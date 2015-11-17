@@ -9,6 +9,7 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             numberOne: '123zz',
             requestOne: 'working',
             commentOne: 'yeah commments are cool',
+            commentTwo: 'yeah commmentTwo is awesome',
             numberTwo: '456zz',
             subjectOne: 'Plumbing Fixtures',
             subjectTwo: 'Roof Repair',

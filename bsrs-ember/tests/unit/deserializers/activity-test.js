@@ -117,5 +117,14 @@ test('activity with only cc_remove is deserialized correctly', (assert) => {
     assert.notOk(store.find('activity').objectAt(0).get('content'));
 });
 
+test('activity with only comment is deserialized correctly', (assert) => {
+    let subject = ActivityDeserializer.create({store: store});
+    let response = TA_FIXTURES.comment_only();
+    subject.deserialize(response);
+    assert.equal(store.find('activity').get('length'), 1);
+    assert.equal(store.find('activity').objectAt(0).get('comment'), TD.commentOne);
+    assert.notOk(store.find('activity').objectAt(0).get('content'));
+});
+
 //existing, then deserialize over the top
 //push in payload w/ assignee and cc_? and both persist and are wired up correctly

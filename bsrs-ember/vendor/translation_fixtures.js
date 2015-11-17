@@ -160,10 +160,11 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.third_party.label.status':'Status',
             'validation.valid':'Valid',
             'validation.invalid':'Invalid',
-            'activity.ticket.assignee':'changed the {{type}} from ${{to}} $to ${{from}} ${{timestamp}}',
+            'activity.ticket.to_from':'changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}',
             'activity.ticket.create':'created this ticket ${{timestamp}}',
             'activity.ticket.cc_add':'added ${{added}} $to CC ${{timestamp}}',
             'activity.ticket.cc_remove':'removed ${{removed}} $from CC ${{timestamp}}',
+            'activity.ticket.comment':'commented ${{timestamp}} ${{comment}}',
           }
         }
       break;

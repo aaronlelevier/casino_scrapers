@@ -1,4 +1,9 @@
 import Ember from 'ember';
+var extract_comment = function(model) {
+    if (model.content && model.content.comment) {
+        model.comment = model.content.comment;
+    }
+};
 
 var extract_to_and_from = function(store, model) {
     const content = model.content;
@@ -36,6 +41,7 @@ var ActivityDeserializer = Ember.Object.extend({
     deserialize(response, type) {
         const store = this.get('store');
         response.results.forEach((model) => {
+            extract_comment(model);
             extract_to_and_from(store, model);
             extract_person(store, model);
             store.push('activity', model);
