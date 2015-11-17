@@ -41,9 +41,7 @@ var CategoryModel = Model.extend(NewMixin, {
         };
         return store.find('category', filter.bind(this), ['id']);
     }),
-    parent: Ember.computed('parent_belongs_to.[]', function() {
-        return this.get('parent_belongs_to').objectAt(0);
-    }),
+    parent: Ember.computed.alias('parent_belongs_to.firstObject'),
     parent_belongs_to: Ember.computed('parent_id', function() {
         const parent_id = this.get('parent_id');
         const store = this.get('store');

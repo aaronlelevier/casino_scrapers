@@ -105,7 +105,8 @@ TICKET_ACTIVITY_TYPES = [
     'cc_remove',
     'status',
     'priority',
-    'categories'
+    'categories',
+    'comment'
 ]
 
 

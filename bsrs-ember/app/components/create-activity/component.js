@@ -11,7 +11,6 @@ var createActivity = Ember.Component.extend({
             return this.get('activity').get('person').get('fullname');
         }
     }),
-    timestamp: Ember.computed(function() {}),
 });
 
 export default createActivity;
