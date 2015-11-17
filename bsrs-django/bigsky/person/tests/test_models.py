@@ -149,12 +149,6 @@ class PersonManagerTests(TestCase):
     def test_objects_all(self):
         self.assertEqual(Person.objects_all.count(), 2)
 
-    def test_create_user(self):
-        people_count = Person.objects.count()
-        role = create_role()
-        create_single_person()
-        self.assertEqual(Person.objects.count(), people_count+1)
-
 
 class PersonTests(TestCase):
 

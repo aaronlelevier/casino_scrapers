@@ -19,7 +19,7 @@ class FactoryTests(TestCase):
             str(email.id),
             generate_uuid(factory.EMAIL_BASE_ID)
         )
-        self.assertEqual(email.content_object, person)
+        self.assertEqual(str(email.content_object.id), str(person.id))
 
     def test_create_contacts(self):
         person = create_person()
@@ -29,15 +29,15 @@ class FactoryTests(TestCase):
         # phone_number
         self.assertEqual(PhoneNumber.objects.count(), 1)
         phone_number = PhoneNumber.objects.first()
-        self.assertEqual(phone_number.content_object, person)
+        self.assertEqual(str(phone_number.content_object.id), str(person.id))
         # address
         self.assertEqual(Address.objects.count(), 1)
         address = Address.objects.first()
-        self.assertEqual(address.content_object, person)
+        self.assertEqual(str(address.content_object.id), str(person.id))
         # email
         self.assertEqual(Email.objects.count(), 1)
         email = Email.objects.first()
-        self.assertEqual(email.content_object, person)
+        self.assertEqual(str(email.content_object.id), str(person.id))
 
     def test_get_create_contact_method(self):
         ret = factory.get_create_contact_method(Email)

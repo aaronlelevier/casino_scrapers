@@ -7,7 +7,6 @@ from utils.create import random_lorem
 from utils.helpers import generate_uuid
 
 
-
 CATEGORY_BASE_ID = "24f530c4-ce6c-4724-9cfd-37a16e787"
 
 

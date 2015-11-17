@@ -5,17 +5,19 @@ from django.db import IntegrityError
 from model_mommy import mommy
 
 from accounting.models import Currency
-from location.models import LocationLevel, Location
 from category.models import Category
-from location.tests.factory import create_locations
 from category.tests.factory import create_categories
+from location.models import LocationLevel, Location
+from location.tests.factory import create_locations
 from person.models import Person, Role
 from utils import create
+from utils.helpers import generate_uuid
 
 
 PASSWORD = '1234'
 LOCATION_LEVEL = 'region'
 CATEGORY = 'repair'
+
 
 def create_role(name=None, location_level=None):
     """
@@ -60,15 +62,27 @@ def create_roles():
     return Role.objects.all()
 
 
+PERSON_BASE_ID = "30f530c4-ce6c-4724-9cfd-37a16e787"
+
 def create_single_person(name=None, role=None):
     name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
     role = role or create_role()
 
+    incr = Person.objects.count()
+
     try:
         return Person.objects.get(username=name)
     except Person.DoesNotExist:
-        return Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
-            first_name=name, last_name=name, title=name, role=role)
+        return Person.objects.create_user(
+            id=generate_uuid(PERSON_BASE_ID, incr+1),
+            username=name,
+            email='myemail@mail.com',
+            password=PASSWORD,
+            first_name=name,
+            last_name=name,
+            title=name,
+            role=role
+        )
 
 
 def update_login_person(person):

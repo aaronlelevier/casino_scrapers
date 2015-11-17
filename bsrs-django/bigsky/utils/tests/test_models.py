@@ -188,4 +188,4 @@ class MainSettingTests(TestCase):
             object_id=self.person.id,
             content_object=self.person
             )
-        self.assertEqual(s.content_object, self.person)
+        self.assertEqual(str(s.content_object.id), str(self.person.id))

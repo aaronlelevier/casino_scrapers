@@ -6,6 +6,7 @@ from accounting.models import Currency
 from location.models import LocationLevel
 from person.models import Person, Role
 from person.tests import factory
+from utils.helpers import generate_uuid
 
 
 class FactoryTests(TestCase):
@@ -40,6 +41,17 @@ class FactoryTests(TestCase):
         role = factory.create_role()
         person = factory.create_single_person('bob', role)
         self.assertIsInstance(person, Person)
+
+    def test_create_single_person__generate_uuid(self):
+        incr = Person.objects.count()
+
+        person = factory.create_single_person()
+
+        self.assertIsInstance(person, Person)
+        self.assertEqual(
+            str(person.id),
+            generate_uuid(factory.PERSON_BASE_ID, incr+1)
+        )
 
     def test_update_login_person(self):
         person = factory.create_person()

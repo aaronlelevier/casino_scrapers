@@ -43,8 +43,8 @@ class PhoneNumberTests(TestCase):
     def test_generic_fd_get(self):
         ph = PhoneNumber.objects.get(object_id=self.person.id)
         self.assertIsInstance(ph, PhoneNumber)
-        self.assertEqual(ph.content_object, self.person)
-        self.assertEqual(ph.object_id, self.person.id)
+        self.assertEqual(str(ph.content_object.id), str(self.person.id))
+        self.assertEqual(str(ph.object_id), str(self.person.id))
 
 
 class AddressTests(TestCase):
