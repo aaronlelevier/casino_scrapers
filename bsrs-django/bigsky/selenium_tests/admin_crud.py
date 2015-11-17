@@ -211,7 +211,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         )
         # Go to Create Person view
         person_page.find_new_link().click()
-        username = "lmno_"+rand_chars()
+        username = "almno_"+rand_chars()
         password = "bobber-foo"
         person = InputHelper(username=username, password=password)
         role_input = Select(self.driver.find_element_by_id("person-role"))

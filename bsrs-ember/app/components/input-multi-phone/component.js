@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import PhoneNumber from 'bsrs-ember/models/phonenumber';
-import PhoneNumberDefaults from 'bsrs-ember/vendor/defaults/phone-number-type';
 import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
 import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
 import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
