@@ -58,7 +58,7 @@ test('should render a selectbox with bound options after type ahead for search_c
     assert.equal($(`${OPTION}:eq(0)`).text().trim(), PEOPLE_DEFAULTS.fullname);
     assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'Scooter McGavin');
     assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'Aaron Wat');
-    assert.equal($(`${PowerSelect} > span`).length, 2);
+    assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
     assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${PEOPLE_DEFAULTS.fullname})`));
     assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
 });
@@ -87,7 +87,7 @@ test('should render power select with bound options after type ahead for search_
     assert.equal($(`${OPTION}:eq(0)`).text().trim(), 'a b');
     assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'c d');
     assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'e f');
-    assert.equal($(`${PowerSelect} > span`).length, 2);
+    assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
     assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${PEOPLE_DEFAULTS.fullname})`));
     assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
 });

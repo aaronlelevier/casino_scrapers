@@ -57,7 +57,7 @@ test('should render a selectbox with bound options after type ahead for search',
     assert.equal($(`${OPTION}:eq(0)`).text().trim(), CD.nameOne);
     assert.equal($(`${OPTION}:eq(1)`).text().trim(), CD.nameTwo);
     assert.equal($(`${OPTION}:eq(2)`).text().trim(), CD.nameThree);
-    assert.equal($(`${PowerSelect} > span`).length, 2);
+    assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
     assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${CD.nameOne})`));
 });
 
@@ -85,7 +85,7 @@ test('should render power select with bound options after type ahead for search 
     assert.equal($(`${OPTION}:eq(0)`).text().trim(), 'a');
     assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'c');
     assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'e');
-    assert.equal($(`${PowerSelect} > span`).length, 2);
+    assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
     //TODO: need translations to fail this test
     assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${CD.nameOne})`));
 });
