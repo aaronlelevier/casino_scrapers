@@ -7,6 +7,7 @@ from rest_framework.test import APITestCase, APITransactionTestCase
 from model_mommy import mommy
 
 from category.models import Category
+from category.tests.factory import create_categories
 from person.tests.factory import PASSWORD, create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
     TicketActivityType, TICKET_ACTIVITY_TYPES)
@@ -20,6 +21,7 @@ class TicketListTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
+        create_categories()
         create_single_person()
         # Ticket
         self.ticket = create_ticket()
@@ -95,6 +97,7 @@ class TicketDetailTests(APITestCase):
     def setUp(self):
         self.password = PASSWORD
         # Ticket
+        create_categories()
         create_single_person()
         self.ticket = create_ticket()
         self.person = self.ticket.assignee
@@ -199,6 +202,7 @@ class TicketUpdateTests(APITestCase):
     def setUp(self):
         self.password = PASSWORD
         # Ticket
+        create_categories()
         create_single_person()
         self.ticket = create_ticket()
         self.person = self.ticket.assignee
@@ -230,6 +234,7 @@ class TicketCreateTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
+        create_categories()
         self.person = create_single_person()
         # Ticket
         self.ticket = create_ticket()
@@ -298,6 +303,7 @@ class TicketActivityViewSetTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
+        create_categories()
         self.person = create_single_person()
         # Ticket
         self.ticket = create_ticket()
@@ -398,6 +404,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
+        create_categories()
         self.person = create_single_person()
         # Ticket
         self.ticket = create_ticket()
@@ -526,6 +533,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
 
     def setUp(self):
         self.password = PASSWORD
+        create_categories()
         self.person = create_single_person()
         # Ticket
         self.ticket = create_ticket()

@@ -47,7 +47,7 @@ class CategoryListTests(APITestCase):
         create_categories(_many=1)
         first = Category.objects.filter(name="repair").first()
 
-        response = self.client.get('/api/admin/categories/')
+        response = self.client.get('/api/admin/categories/?page_size=1000')
 
         data = json.loads(response.content.decode('utf8'))
         self.assertTrue(len(data['results']) > 0)

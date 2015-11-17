@@ -3,6 +3,7 @@ from django.conf import settings
 
 from model_mommy import mommy
 
+from category.tests.factory import create_categories
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES)
@@ -28,6 +29,7 @@ class TicketPriorityTests(TestCase):
 class TicketTests(TestCase):
 
     def setUp(self):
+        create_categories()
         create_single_person()
         create_tickets(_many=2)
 
@@ -51,6 +53,7 @@ class TicketTests(TestCase):
 class TicketActivityTests(TestCase):
     
     def setUp(self):
+        create_categories()
         self.person = create_single_person()
         self.person_two = create_single_person()
         self.ticket = create_ticket()

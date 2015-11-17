@@ -10,6 +10,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category
+from category.tests.factory import create_categories
 from contact.models import PhoneNumberType, AddressType
 from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus, State, Country
@@ -23,6 +24,7 @@ class IndexTests(TestCase):
 
     def setUp(self):
         self.password = PASSWORD
+        create_categories()
         self.person = create_person()
 
     def test_logged_in(self):
@@ -60,6 +62,7 @@ class LoginTests(TestCase):
 
     def setUp(self):
         self.password = PASSWORD
+        create_categories()
         self.person = create_person()
 
     def test_login_unauthenticated(self):
@@ -78,6 +81,7 @@ class LogoutTests(TestCase):
 
     def setUp(self):
         self.password = PASSWORD
+        create_categories()
         self.person = create_person()
 
     def test_logout_post(self):
@@ -104,6 +108,7 @@ class ConfigurationTests(TestCase):
 
     def setUp(self):
         self.password = PASSWORD
+        create_categories()
         self.person = create_person()
         self.phone_number_types = mommy.make(PhoneNumberType)
         self.location_levels = mommy.make(LocationLevel)

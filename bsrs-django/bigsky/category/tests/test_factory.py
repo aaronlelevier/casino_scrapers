@@ -1,6 +1,7 @@
 import random
 
 from django.test import TransactionTestCase
+from django.contrib.auth.models import ContentType
 
 from model_mommy import mommy
 
@@ -30,6 +31,9 @@ class CategoryTests(TransactionTestCase):
             subcategory_label='issue',
             parent=self.type
         )
+
+    def tearDown(self):
+        ContentType.objects.clear_cache()
 
     def test_trade(self):
         self.assertTrue(Category.objects.filter(label='trade'))
