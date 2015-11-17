@@ -1,6 +1,7 @@
 from django.test import TestCase
 
 from category.models import Category
+from category.tests.factory import create_categories
 from location.models import Location
 from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
@@ -12,6 +13,7 @@ from person.tests.factory import create_single_person
 class CreateTicketTests(TestCase):
 
     def setUp(self):
+        create_categories()
         create_single_person()
         self.ticket = factory.create_ticket()
 
@@ -50,6 +52,7 @@ class CreateTicketTests(TestCase):
 class ConstructTreeTests(TestCase):
 
     def setUp(self):
+        create_categories()
         create_single_person()
         self.ticket = factory.create_ticket()
 
@@ -61,14 +64,16 @@ class ConstructTreeTests(TestCase):
 
 class CreateTicketsTests(TestCase):
 
-    def test_default(self):
+    def setUp(self):
+        create_categories()
         create_single_person()
+
+    def test_default(self):
         tickets = factory.create_tickets()
         self.assertEqual(len(tickets), 1)
         self.assertIsInstance(tickets[0], Ticket)
 
     def test_many(self):
-        create_single_person()
         tickets = factory.create_tickets(_many=2)
         self.assertEqual(len(tickets), 2)
         self.assertIsInstance(tickets[0], Ticket)
@@ -100,13 +105,15 @@ class CreatePriorityTests(TestCase):
 
 class CreateTicketActivityTests(TestCase):
 
-    def test_create(self):
+    def setUp(self):
+        create_categories()
         create_single_person()
+
+    def test_create(self):
         obj = factory.create_ticket_activity()
         self.assertIsInstance(obj, TicketActivity)
 
     def test_create_for_ticket(self):
-        create_single_person()
         ticket = factory.create_ticket()
         ticket_activity = factory.create_ticket_activity(ticket=ticket)
         self.assertIsInstance(ticket_activity, TicketActivity)

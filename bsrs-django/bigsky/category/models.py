@@ -9,7 +9,7 @@ from utils.models import BaseModel, BaseManager, BaseNameModel
 
 CATEGORY_STATUSES = [
     'category.status.active',
-    'category.status.inactive',
+    'category.status.inactive'
 ]
 
 
@@ -114,6 +114,8 @@ class Category(BaseModel):
             self.label = settings.TOP_LEVEL_CATEGORY_LABEL
         else:
             self.label = self.parent.subcategory_label
+        if not self.status:
+            self.status = CategoryStatus.objects.default()
 
         if not self.cost_currency:
             self.cost_currency = Currency.objects.default()

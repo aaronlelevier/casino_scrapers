@@ -23,22 +23,23 @@ def construct_tree(category, tree):
 
 
 def create_ticket():
-    if not Location.objects.all().exists():
+    if not Location.objects.first():
         create_locations()
 
-    create_ticket_statuses()
-    create_ticket_priorites()
+    statuses = create_ticket_statuses()
+    priorities = create_ticket_priorites()
+    people = Person.objects.all()
 
     ticket = Ticket.objects.create(
         location = random.choice(Location.objects.all()),
-        status = random.choice(TicketStatus.objects.all()),
-        priority = random.choice(TicketPriority.objects.all()),
-        assignee = random.choice(Person.objects.all()),
-        requester = random.choice(Person.objects.all()),
+        status = random.choice(statuses),
+        priority = random.choice(priorities),
+        assignee = random.choice(people),
+        requester = random.choice(people),
         request = _generate_chars()
     )
 
-    cc = random.choice(Person.objects.all())
+    cc = random.choice(people)
     ticket.cc.add(cc)
 
     top_level_category = Category.objects.filter(parent__isnull=True).first()
@@ -63,8 +64,7 @@ def create_ticket_status(name=None):
 
 
 def create_ticket_statuses():
-    for status in TICKET_STATUSES:
-        TicketStatus.objects.get_or_create(name=status)
+    return [create_ticket_status(s) for s in TICKET_STATUSES]
 
 
 def create_ticket_priority(name=None):
@@ -77,8 +77,7 @@ def create_ticket_priority(name=None):
 
 
 def create_ticket_priorites():
-    for priority in TICKET_PRIORITIES:
-        TicketPriority.objects.get_or_create(name=priority)
+    return [create_ticket_priority(p) for p in TICKET_PRIORITIES]
 
 
 def create_ticket_activity(ticket=None, type=None, content=None):

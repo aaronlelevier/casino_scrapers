@@ -1,16 +1,35 @@
-from django.test import TestCase
+import random
+
+from django.test import TransactionTestCase
+
+from model_mommy import mommy
 
 from category.tests import factory
 from category.models import Category, CategoryStatus, CATEGORY_STATUSES
 from utils.helpers import generate_uuid
 
 
-class CategoryTests(TestCase):
+class CategoryTests(TransactionTestCase):
 
     def setUp(self):
-        factory.create_categories()
-        self.type = Category.objects.filter(subcategory_label='trade').first()
-        self.trade = Category.objects.filter(label='trade').first()
+        self.statuses = factory.create_category_statuses()
+
+        incr = Category.objects.count()
+        self.type = mommy.make(
+            Category,
+            id=generate_uuid(factory.CATEGORY_BASE_ID, incr),
+            name='repair',
+            subcategory_label='trade'
+        )
+
+        incr = Category.objects.count()
+        self.trade = mommy.make(
+            Category,
+            id=generate_uuid(factory.CATEGORY_BASE_ID, incr+1),
+            name='plumbing',
+            subcategory_label='issue',
+            parent=self.type
+        )
 
     def test_trade(self):
         self.assertTrue(Category.objects.filter(label='trade'))
@@ -23,21 +42,19 @@ class CategoryTests(TestCase):
         self.assertTrue(self.trade.children)
 
     def test_category_status_base_id(self):
-        factory.create_category_statuses()
-        statuses = CategoryStatus.objects.order_by('id')
         incr = 1
 
         self.assertEqual(
-            str(statuses[incr].id),
+            str(self.statuses[incr].id),
             generate_uuid(factory.CATEGORY_STATUS_BASE_ID, incr)
         )
 
     def test_create_category_statuses(self):
-        factory.create_category_statuses()
+        statuses = factory.create_category_statuses()
 
         self.assertEqual(
             len(CATEGORY_STATUSES),
-            CategoryStatus.objects.count()
+            len(statuses)
         )
 
     def test_create_category_status(self):
