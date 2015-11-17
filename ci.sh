@@ -80,27 +80,20 @@ function productionEmberBuild {
 }
 
 function copyEmberAssetsToDjango {
-    rm -rf -rf assets
-    rm -rf -rf templates/index.html
+    rm -rf ember/*
+    rm -rf static/*
+    rm -rf templates/index.html
     wait
-    rm -rf ../../bsrs-django/bigsky/ember/*
-
     cp -r ../../bsrs-ember/dist/assets ember/assets
     cp -r ../../bsrs-ember/dist/fonts ember/fonts
+    cp -r ../../bsrs-ember/dist/index.html templates
     COPY_EMBER_ASSETS=$?
     if [ "$COPY_EMBER_ASSETS" == 1 ]; then
       echo "copy of assets from ember to django failed"
       exit $COPY_EMBER_ASSETS
     fi
 
-    cp -r ../../bsrs-ember/dist/index.html templates
-    COPY_INDEX_HTML=$?
-    if [ "$COPY_INDEX_HTML" == 1 ]; then
-      echo "copy of index.html from ember to django failed"
-      exit $COPY_INDEX_HTML
-    fi
-
-    rm -rf static/*
+    wait
     ./manage.py collectstatic --noinput
     DJANGO_COLLECT_STATIC=$?
     if [ "$DJANGO_COLLECT_STATIC" == 1 ]; then
@@ -130,33 +123,32 @@ function dropAndCreateDB {
 }
 
 function migrateData {
-    python manage.py migrate && python manage.py loaddata fixtures/states.json
-    wait
-    ./manage.py loaddata fixtures/translations.json
-    ./manage.py loaddata fixtures/currency.json
-    ./manage.py loaddata fixtures/category.json
-    ./manage.py loaddata fixtures/third_party.json
-    wait
-    ./manage.py create_all_people
-    wait
-    rm -rf fixtures/jenkins.json
-    wait
-    ./manage.py dumpdata --indent=2 > fixtures/jenkins.json
-    wait
-    python manage.py loaddata fixtures/jenkins.json && python manage.py loaddata fixtures/jenkins_custom.json
-    wait
-    ./manage.py create_tickets
-    wait
-    rm -rf fixtures/tickets.json
-    wait
-    ./manage.py dumpdata ticket.Ticket --indent=2 > fixtures/tickets.json
-    wait
-    python manage.py loaddata fixtures/tickets.json
+    ./manage.py migrate
 
     MIGRATE_DATA=$?
     if [ "$MIGRATE_DATA" == 1 ]; then
       echo "selenium test failed"
       exit $MIGRATE_DATA
+    fi
+}
+
+function loadFixtures {
+    ./manage.py loaddata fixtures/location.State.json
+    ./manage.py loaddata fixtures/translation.json
+    ./manage.py loaddata fixtures/accounting.Currency.json
+    ./manage.py loaddata fixtures/contact.PhoneNumberType.json
+    ./manage.py loaddata fixtures/contact.AddressType.json
+    ./manage.py loaddata fixtures/category.json
+    ./manage.py loaddata fixtures/third_party.json
+    ./manage.py loaddata fixtures/auth.json
+    ./manage.py loaddata fixtures/location.json
+    ./manage.py loaddata fixtures/person.json
+    ./manage.py loaddata fixtures/ticket.json
+
+    LOAD_FIXTURES=$?
+    if [ "$LOAD_FIXTURES" == 1 ]; then
+      echo "load fixtures failed"
+      exit $LOAD_FIXTURES
     fi
 }
 
@@ -169,27 +161,32 @@ function runSeleniumTests {
     fi
 }
 
-echo $(date -u) "NPM INSTALL"
 cd bsrs-ember
+
+echo $(date -u) "NPM INSTALL"
 npmInstall
 
-echo $(date -u) "PIP INSTALL"
 cd ../bsrs-django
+
+echo $(date -u) "PIP INSTALL"
 pipInstall
 
 cd ../bsrs-ember
+
 if ! [ "$TEST_EMBER" == "false" ];  then
   echo $(date -u) "EMBER TESTS"
   emberTest &
   emberPID=$!
 fi
 
-echo $(date -u) "DJANGO TESTS"
 cd ../bsrs-django/bigsky
+
+echo $(date -u) "EMBER / DJANGO TESTS"
 djangoTest &
 djangoPID=$!
 
 wait $djangoPID
+echo $(date -u) "DJANGO TESTS COMPLETE"
 djangoFinalResult=$?
 if [ "$djangoFinalResult" == 1 ]; then
     echo "DJANGO TESTS FAILED"
@@ -197,28 +194,36 @@ if [ "$djangoFinalResult" == 1 ]; then
 fi
 
 wait $emberPID
+echo $(date -u) "EMBER TESTS COMPLETE"
 emberFinalResult=$?
 if [ "$emberFinalResult" == 1 ]; then
     echo "EMBER TESTS FAILED"
     exit 1
 fi
 
+cd ../../bsrs-ember
+
 wait
 echo $(date -u) "BUILD EMBER"
-cd ../../bsrs-ember
 productionEmberBuild
 
+cd ../bsrs-django/bigsky
+
+wait
 echo $(date -u) "COLLECT STATIC ASSETS"
-cd ../bsrs-django
-cd bigsky
 copyEmberAssetsToDjango
 
+wait
 echo $(date -u) "DROP AND CREATE DATABASE"
 dropAndCreateDB
 
 wait
 echo $(date -u) "DJANGO MIGRATE DATABASE"
 migrateData
+
+wait
+echo $(date -u) "LOAD FIXTURES"
+loadFixtures
 
 wait
 echo $(date -u) "SELENIUM TESTS"

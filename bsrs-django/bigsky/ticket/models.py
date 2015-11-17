@@ -5,7 +5,6 @@ from django.conf import settings
 from django.contrib.postgres.fields import HStoreField
 
 from category.models import Category
-from generic.models import Attachment
 from location.models import Location
 from person.models import Person
 from utils.models import BaseModel, BaseManager, BaseNameModel
@@ -81,7 +80,6 @@ class Ticket(BaseModel):
     requester = models.ForeignKey(Person, blank=True, null=True,
         related_name="requester_tickets")
     categories = models.ManyToManyField(Category, blank=True)
-    attachments = models.ManyToManyField(Attachment, related_name="tickets", blank=True)
     # Fields
     request = models.CharField(max_length=1000, blank=True, null=True)
     # Auto-fields

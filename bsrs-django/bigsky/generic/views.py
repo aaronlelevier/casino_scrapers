@@ -9,8 +9,8 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 
-from generic.models import SavedSearch
-from generic.serializers import SavedSearchSerializer
+from generic.models import SavedSearch, Attachment
+from generic.serializers import SavedSearchSerializer, AttachmentSerializer
 from utils.views import BaseModelViewSet
 
 
@@ -25,6 +25,14 @@ class SavedSearchViewSet(BaseModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(person=self.request.user)
+
+
+class AttachmentViewSet(BaseModelViewSet):
+
+    model = Attachment
+    permission_classes = (IsAuthenticated,)
+    serializer_class = AttachmentSerializer
+    queryset = Attachment.objects.all()
 
 
 class ExportData(APIView):

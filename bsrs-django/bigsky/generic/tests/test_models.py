@@ -9,9 +9,11 @@ from django.contrib.auth.models import ContentType
 from model_mommy import mommy
 from rest_framework.exceptions import ValidationError
 
+from category.tests.factory import create_categories
 from generic.models import MainSetting, Attachment, SavedSearch
 from location.models import LocationLevel
 from person.tests.factory import create_single_person
+from ticket.tests.factory import create_ticket
 
 
 class SavedSearchTests(TestCase):
@@ -63,7 +65,9 @@ class AttachmentModelTests(TestCase):
     def setUp(self):
         # this can be any Model here, ``Attachment`` just requires a
         # model UUID to reference b/c the attachments are assoc. w/ models.
-        self.model = mommy.make(LocationLevel)
+        create_categories()
+        create_single_person()
+        self.ticket = create_ticket()
 
         # test upload file save in source control
         base_dir = dirname(dirname(dirname(__file__)))
@@ -82,7 +86,7 @@ class AttachmentModelTests(TestCase):
         with open(self.image) as infile:
             _file = SimpleUploadedFile(self.image_filename, infile.read())
             attachment = Attachment.objects.create(
-                model_id=self.model.id,
+                ticket=self.ticket,
                 file=_file
             )
             self.assertIsInstance(attachment, Attachment)
@@ -98,7 +102,7 @@ class AttachmentModelTests(TestCase):
                     _file = SimpleUploadedFile(self.image_filename, infile.read())
                     _file.size = 1 # Force file size w/ ``SimpleUploadedFile``
                     attachment = Attachment.objects.create(
-                        model_id=self.model.id,
+                        ticket=self.ticket,
                         file=_file
                     )
 
@@ -106,7 +110,7 @@ class AttachmentModelTests(TestCase):
         with open(self.image) as infile:
             _file = SimpleUploadedFile(self.image_filename, infile.read())
             attachment = Attachment.objects.create(
-                model_id=self.model.id,
+                ticket=self.ticket,
                 file=_file
             )
             self.assertTrue(attachment.is_image)
@@ -116,7 +120,7 @@ class AttachmentModelTests(TestCase):
         with open(self.file) as infile:
             _file = SimpleUploadedFile(self.file_filename, infile.read())
             attachment = Attachment.objects.create(
-                model_id=self.model.id,
+                ticket=self.ticket,
                 file=_file
             )
             self.assertFalse(attachment.is_image)
