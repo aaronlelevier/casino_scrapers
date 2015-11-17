@@ -333,7 +333,7 @@ class TicketActivityViewSetTests(APITestCase):
     def test_ticket_count(self):
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 3)
+        self.assertEqual(data['count'], 2)
 
     def test_ticket_details(self):
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
@@ -357,7 +357,7 @@ class TicketActivityViewSetTests(APITestCase):
         response = self.client.get('/api/tickets/{}/activity/?page=1'.format(self.ticket.id))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 3)
+        self.assertEqual(data['count'], 2)
         # page 2
         response = self.client.get('/api/tickets/{}/activity/?page=2'.format(self.ticket.id))
         self.assertEqual(response.status_code, 404)
