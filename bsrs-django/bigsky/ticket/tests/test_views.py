@@ -320,7 +320,6 @@ class TicketActivityViewSetTests(APITestCase):
         # TicketActivity (Both for the 1st Ticket, Ticket-Two has no Activities !!)
         self.ticket_activity = create_ticket_activity(ticket=self.ticket)
         self.ticket_activity_two = create_ticket_activity(ticket=self.ticket)
-        self.ticket_activity_three = create_ticket_activity(ticket=self.ticket, type='comment', content={'comment': 'scot'})
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -352,28 +351,6 @@ class TicketActivityViewSetTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 0)
-
-    # def test_post_comment(self):
-    #     serializer = TicketActivityCreateSerializer(self.ticket_activity_three)
-    #     data = serializer.data
-    #     data.update({
-    #         'id': str(uuid.uuid4())
-    #     })
-    #     response = self.client.post('/api/tickets/{}/activity/'.format(self.ticket.id), data, format='json')
-    #     self.assertEqual(response.status_code, 201)
-    #     self.assertIsNotNone(response.data['content']['comment'])
-
-    # def test_post_no_comment(self):
-    #     serializer = TicketActivityCreateSerializer(self.ticket_activity_three)
-    #     data = serializer.data
-    #     data.update({
-    #         'id': str(uuid.uuid4()),
-    #         'content': {
-    #                 'comment': ''
-    #             }
-    #     })
-    #     response = self.client.post('/api/tickets/{}/activity/'.format(self.ticket.id), data, format='json')
-    #     self.assertEqual(response.status_code, 400)
 
     def test_paginate(self):
         # page 1
