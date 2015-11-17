@@ -197,7 +197,7 @@ class TicketDetailTests(APITestCase):
         self.assertEqual(data_cc['role'], str(cc.role.id))
 
 
-class TicketUpdateTests(APITransactionTestCase):
+class TicketUpdateTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
@@ -236,7 +236,6 @@ class TicketUpdateTests(APITransactionTestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertNotIn('comment', data)
-        # need to add assertion for TicketActivity created with comment in content
 
 
 class TicketCreateTests(APITestCase):
@@ -317,9 +316,11 @@ class TicketActivityViewSetTests(APITestCase):
         # Ticket
         self.ticket = create_ticket()
         self.ticket_two = create_ticket()
+        self.ticket_three = create_ticket()
         # TicketActivity (Both for the 1st Ticket, Ticket-Two has no Activities !!)
         self.ticket_activity = create_ticket_activity(ticket=self.ticket)
         self.ticket_activity_two = create_ticket_activity(ticket=self.ticket)
+        self.ticket_activity_with_comment = create_ticket_activity(ticket=self.ticket_three, content={'comment': 'with comment'})
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -352,6 +353,12 @@ class TicketActivityViewSetTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], 0)
 
+    def test_ticket_three(self):
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket_three.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['results'][0]['content']['comment'], 'with comment')
+
     def test_paginate(self):
         # page 1
         response = self.client.get('/api/tickets/{}/activity/?page=1'.format(self.ticket.id))
@@ -368,7 +375,7 @@ class TicketActivityViewSetTests(APITestCase):
             .format(self.ticket.id, person.id))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], TicketActivity.objects.filter(person=person).count())
+        self.assertEqual(data['count'], TicketActivity.objects.filter(person=person).filter(ticket=self.ticket.id).count())
 
     def test_filter_field_none(self):
         person = create_single_person()
@@ -388,20 +395,18 @@ class TicketActivityViewSetTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
-            TicketActivity.objects.filter(person__username=person.username).count()
+            TicketActivity.objects.filter(person__username=person.username).filter(ticket=self.ticket.id).count()
         )
 
     def test_filter_related_with_arg(self):
         letter = "a"
-
         response = self.client.get('/api/tickets/{}/activity/?person__username__icontains={}'
             .format(self.ticket.id, letter))
-
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(
             data['count'],
-            TicketActivity.objects.filter(person__username__icontains=letter).count()
+            TicketActivity.objects.filter(person__username__icontains=letter).filter(ticket=self.ticket.id).count()
         )
 
 
@@ -648,7 +653,6 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(TicketActivity.objects.count(), 1)
         activity = TicketActivity.objects.first()
         self.assertEqual(activity.type.name, name)
-        self.assertEqual(len(activity.content), 2)
         self.assertIn(
             str(new_cc.id),
             [str(activity.content[k]) for k,v in activity.content.items()]

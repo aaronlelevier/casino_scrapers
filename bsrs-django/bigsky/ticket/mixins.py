@@ -5,9 +5,8 @@ from django.forms.models import model_to_dict
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.settings import api_settings
-from django.db import transaction, IntegrityError
 
-from ticket.models import TicketActivityType, TicketActivity, Ticket
+from ticket.models import TicketActivityType, TicketActivity
 
 
 class CreateTicketModelMixin(object):
