@@ -7,7 +7,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import {ticket_payload, required_ticket_payload, ticket_payload_detail, ticket_payload_detail_one_category} from 'bsrs-ember/tests/helpers/payloads/ticket';
+import {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail, ticket_payload_detail_one_category} from 'bsrs-ember/tests/helpers/payloads/ticket';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import PEOPLE_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
 import PF from 'bsrs-ember/vendor/people_fixtures';
@@ -82,6 +82,21 @@ test('clicking a tickets will redirect to the given detail view and can save to 
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
+    });
+});
+
+test('you can add a comment and post it', (assert) => {
+    clearxhr(list_xhr);
+    page.visitDetail();
+    page.commentFillIn(TD.commentOne);
+    let response = TF.detail(TD.idOne);
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        let ticket = store.find('ticket', TD.idOne);
+        assert.ok(ticket.get('isNotDirty'));
     });
 });
 

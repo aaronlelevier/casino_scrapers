@@ -199,7 +199,7 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         }
     },
     serialize() {
-        return {
+        let payload = {
             id: this.get('id'),
             request: this.get('request'),
             status: this.get('status.id'),
@@ -210,6 +210,10 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
             assignee: this.get('assignee.id'),
             location: this.get('location.id')
         };
+        if (this.get('comment')) {
+            payload.comment = this.get('comment');
+        }
+        return payload;
     },
     removeRecord() {
         this.get('store').remove('ticket', this.get('id'));

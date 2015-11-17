@@ -99,6 +99,7 @@ var TicketPage = PageObject.create({
   assigneeOptionLength: count(`${ASSIGNEE_DROPDOWN} > li`),
 
   requestFillIn: fillable('.t-ticket-request'),
+  commentFillIn: fillable('.t-ticket-comment'),
 });
 
 export default TicketPage;

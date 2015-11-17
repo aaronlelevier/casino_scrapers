@@ -1,45 +1,58 @@
 import Ember from 'ember';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
-import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
-import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
-import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
+import PD from 'bsrs-ember/vendor/defaults/person';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
+import LD from 'bsrs-ember/vendor/defaults/location';
+import CD from 'bsrs-ember/vendor/defaults/category';
 
 var ticket_payload = {
     id: UUID.value,
-    status: TICKET_DEFAULTS.statusOneId,
-    priority: TICKET_DEFAULTS.priorityOneId,
+    status: TD.statusOneId,
+    priority: TD.priorityOneId,
     cc: [],
-    categories: [CATEGORY_DEFAULTS.idTwo, CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idChild],
-    assignee: PEOPLE_DEFAULTS.idSearch,
-    location: LOCATION_DEFAULTS.idTwo
+    categories: [CD.idTwo, CD.idOne, CD.idChild],
+    assignee: PD.idSearch,
+    location: LD.idTwo
 };
 
 var ticket_payload_detail = {
-    id: TICKET_DEFAULTS.idOne,
-    request: TICKET_DEFAULTS.requestOne,
-    status: TICKET_DEFAULTS.statusOneId,
-    priority: TICKET_DEFAULTS.priorityOneId,
-    cc: [PEOPLE_DEFAULTS.idOne],
-    categories: [CATEGORY_DEFAULTS.idPlumbing, CATEGORY_DEFAULTS.idOne, CATEGORY_DEFAULTS.idPlumbingChild],
-    requester: PEOPLE_DEFAULTS.idOne,
-    assignee: PEOPLE_DEFAULTS.idOne,
-    location: LOCATION_DEFAULTS.idOne,
+    id: TD.idOne,
+    request: TD.requestOne,
+    status: TD.statusOneId,
+    priority: TD.priorityOneId,
+    cc: [PD.idOne],
+    categories: [CD.idPlumbing, CD.idOne, CD.idPlumbingChild],
+    requester: PD.idOne,
+    assignee: PD.idOne,
+    location: LD.idOne,
+};
+
+var ticket_payload_with_comment = {
+    id: TD.idOne,
+    request: TD.requestOne,
+    status: TD.statusOneId,
+    priority: TD.priorityOneId,
+    cc: [PD.idOne],
+    categories: [CD.idPlumbing, CD.idOne, CD.idPlumbingChild],
+    requester: PD.idOne,
+    assignee: PD.idOne,
+    location: LD.idOne,
+    comment: TD.commentOne,
 };
 
 var ticket_payload_detail_one_category = {
-    id: TICKET_DEFAULTS.idOne,
-    request: TICKET_DEFAULTS.requestOneGrid,
-    status: TICKET_DEFAULTS.statusTwoId,
-    priority: TICKET_DEFAULTS.priorityTwoId,
-    cc: [PEOPLE_DEFAULTS.idOne],
-    categories: [CATEGORY_DEFAULTS.idThree],
-    requester: PEOPLE_DEFAULTS.idOne,
-    assignee: PEOPLE_DEFAULTS.idOne,
-    location: LOCATION_DEFAULTS.idOne,
+    id: TD.idOne,
+    request: TD.requestOneGrid,
+    status: TD.statusTwoId,
+    priority: TD.priorityTwoId,
+    cc: [PD.idOne],
+    categories: [CD.idThree],
+    requester: PD.idOne,
+    assignee: PD.idOne,
+    location: LD.idOne,
 };
 
 var required_ticket_payload = Ember.$.extend(true, {}, ticket_payload);
 delete required_ticket_payload.subject;
 
-export {ticket_payload, required_ticket_payload, ticket_payload_detail, ticket_payload_detail_one_category};
+export {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail, ticket_payload_detail_one_category};

@@ -8,6 +8,7 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b056789',
             numberOne: '123zz',
             requestOne: 'working',
+            commentOne: 'yeah commments are cool',
             numberTwo: '456zz',
             subjectOne: 'Plumbing Fixtures',
             subjectTwo: 'Roof Repair',
