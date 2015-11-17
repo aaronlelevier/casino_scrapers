@@ -19,7 +19,7 @@ const CATEGORIES_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + CATEGORY_DEFAULTS.idOne;
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
-const CATEGORY = '.t-category-children-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-category-children-select-dropdown > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 

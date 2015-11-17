@@ -37,11 +37,11 @@ const LETTER_S = {keyCode: 83};
 const NUMBER_6 = {keyCode: 54};
 const SPACEBAR = {keyCode: 32};
 const BACKSPACE = {keyCode: 8};
-const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const LOCATION = '.t-ticket-location-select > .ember-basic-dropdown-trigger';
 const LOCATION_DROPDOWN = '.t-ticket-location-select-dropdown > .ember-power-select-options';
-const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const ASSIGNEE = '.t-ticket-assignee-select > .ember-basic-dropdown-trigger';
 const ASSIGNEE_DROPDOWN = '.t-ticket-assignee-select-dropdown > .ember-power-select-options';
-const CC = '.t-ticket-cc-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const CC = '.t-ticket-cc-select > .ember-basic-dropdown-trigger';
 const CC_DROPDOWN = '.t-ticket-cc-select-dropdown > .ember-power-select-options';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
 const STATUS = 'select.t-ticket-status-select:eq(0) + .selectize-control';
@@ -378,7 +378,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     });
 });
 
-test('starting with multiple cc, can remove all ccs (while not populating options) and add back', (assert) => {
+test('toran starting with multiple cc, can remove all ccs (while not populating options) and add back', (assert) => {
     detail_data.cc = [...detail_data.cc, PF.get(PD.idTwo)];
     detail_data.cc[1].fullname = PD.fullname + 'i';
     page.visitDetail();
@@ -404,7 +404,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
         assert.equal(page.ccsSelected(), 0);
     });
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=Mel';
-    xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
+    ajax(people_endpoint, 'GET', null, {}, 200, PF.list());
     page.ccClickDropdown();//don't know why I have to do this
     fillIn(`${CC_SEARCH}`, 'Mel');
     andThen(() => {
@@ -421,7 +421,7 @@ test('starting with multiple cc, can remove all ccs (while not populating option
         assert.equal(page.ccsSelected(), 1);
     });
     let payload = TF.put({id: TD.idOne, cc: [PD.idTwo]});
-    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
+    ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);

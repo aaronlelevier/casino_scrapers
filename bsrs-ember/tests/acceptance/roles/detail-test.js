@@ -25,7 +25,7 @@ const LETTER_A = {keyCode: 65};
 const LETTER_S = {keyCode: 83};
 const LETTER_R = {keyCode: 82};
 const SPACEBAR = {keyCode: 32};
-const CATEGORY = '.t-role-category-select > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 

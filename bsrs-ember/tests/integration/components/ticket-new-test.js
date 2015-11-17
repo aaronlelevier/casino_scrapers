@@ -9,9 +9,9 @@ import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category
 import repository from 'bsrs-ember/tests/helpers/repository';
 
 let store, m2m, m2m_two, m2m_three, ticket, category_one, category_two, category_three, run = Ember.run, category_repo;
-const CATEGORY_ONE = '.t-ticket-category-select:eq(0) > .ember-basic-dropdown > .ember-power-select-trigger';
-const CATEGORY_TWO = '.t-ticket-category-select:eq(1) > .ember-basic-dropdown > .ember-power-select-trigger';
-const CATEGORY_THREE = '.t-ticket-category-select:eq(2) > .ember-basic-dropdown > .ember-power-select-trigger';
+const CATEGORY_ONE = '.t-ticket-category-select:eq(0) > .ember-basic-dropdown-trigger';
+const CATEGORY_TWO = '.t-ticket-category-select:eq(1) > .ember-basic-dropdown-trigger';
+const CATEGORY_THREE = '.t-ticket-category-select:eq(2) > .ember-basic-dropdown-trigger';
 
 moduleForComponent('tickets/ticket-new', 'integration: ticket-new test', {
     integration: true,
