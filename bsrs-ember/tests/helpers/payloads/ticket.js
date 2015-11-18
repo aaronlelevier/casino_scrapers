@@ -12,7 +12,7 @@ var ticket_payload = {
     cc: [],
     categories: [CD.idTwo, CD.idOne, CD.idChild],
     assignee: PD.idSearch,
-    location: LD.idTwo
+    location: LD.idTwo,
 };
 
 var ticket_payload_detail = {
@@ -49,7 +49,7 @@ var ticket_payload_detail_one_category = {
     categories: [CD.idThree],
     requester: PD.idOne,
     assignee: PD.idOne,
-    location: LD.idOne,
+    location: LD.idOne
 };
 
 var required_ticket_payload = Ember.$.extend(true, {}, ticket_payload);
