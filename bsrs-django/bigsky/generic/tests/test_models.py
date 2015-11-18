@@ -1,5 +1,6 @@
 import os
 from os.path import dirname, join
+import shutil
 
 from django.test import TestCase
 from django.core.exceptions import ValidationError as DjangoValidationError
@@ -70,20 +71,28 @@ class AttachmentModelTests(TestCase):
         self.ticket = create_ticket()
 
         # test upload file save in source control
-        base_dir = dirname(dirname(dirname(__file__)))
+        self.base_dir = dirname(dirname(dirname(__file__)))
 
-        self.image = join(base_dir, "source/attachments/test_in/test-mountains.jpg")
+        self.image = join(self.base_dir, "source/test_in/aaron.jpeg")
         self.image_filename = os.path.split(self.image)[1]
 
-        self.file = join(base_dir, "source/attachments/test_in/es-generic.csv")
+        self.file = join(self.base_dir, "source/test_in/es.csv")
         self.file_filename = os.path.split(self.file)[1]
+
+    def tearDown(self):
+        # remove test attachements after running test
+        path = join(self.base_dir, "source/attachments")
+        try:
+            shutil.rmtree(path)
+        except FileNotFoundError:
+            pass
 
     def test_files_exist(self):
         self.assertTrue(os.path.isfile(self.image))
         self.assertTrue(os.path.isfile(self.file))
 
     def test_create(self):
-        with open(self.image) as infile:
+        with open(self.image, 'rb') as infile:
             _file = SimpleUploadedFile(self.image_filename, infile.read())
             attachment = Attachment.objects.create(
                 ticket=self.ticket,
@@ -97,7 +106,7 @@ class AttachmentModelTests(TestCase):
 
     def test_upload_size(self):
         with self.settings(MAX_UPLOAD_SIZE=0):
-            with open(self.image) as infile:
+            with open(self.image, 'rb') as infile:
                 with self.assertRaises(DjangoValidationError):
                     _file = SimpleUploadedFile(self.image_filename, infile.read())
                     _file.size = 1 # Force file size w/ ``SimpleUploadedFile``
@@ -107,7 +116,7 @@ class AttachmentModelTests(TestCase):
                     )
 
     def test_upload_image(self):
-        with open(self.image) as infile:
+        with open(self.image, 'rb') as infile:
             _file = SimpleUploadedFile(self.image_filename, infile.read())
             attachment = Attachment.objects.create(
                 ticket=self.ticket,
@@ -117,7 +126,7 @@ class AttachmentModelTests(TestCase):
             self.assertTrue(attachment.image_full)
 
     def test_upload_file(self):
-        with open(self.file) as infile:
+        with open(self.file, 'rb') as infile:
             _file = SimpleUploadedFile(self.file_filename, infile.read())
             attachment = Attachment.objects.create(
                 ticket=self.ticket,

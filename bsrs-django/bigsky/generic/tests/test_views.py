@@ -145,14 +145,11 @@ class AttachmentTests(APITestCase):
 
         self.base_dir = dirname(dirname(dirname(__file__)))
         # file
-        self.file = join(self.base_dir, "source/attachments/test_in/es.csv")
+        self.file = join(self.base_dir, "source/test_in/es.csv")
         self.file_filename = os.path.split(self.file)[1]
 
-        self.image = join(self.base_dir, "source/attachments/test_in/aaron.jpeg")
+        self.image = join(self.base_dir, "source/test_in/aaron.jpeg")
         self.image_filename = os.path.split(self.image)[1]
-        # image: This is a 1x1 black png
-        # self.image = BytesIO(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\rIDATx\x9cc````\x00\x00\x00\x05\x00\x01\xa5\xf6E@\x00\x00\x00\x00IEND\xaeB`\x82')
-        # self.image_filename = 'test.png'
 
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -160,8 +157,8 @@ class AttachmentTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
+        # remove test attachements after running test
         path = join(self.base_dir, "source/attachments")
-        # path = "/Users/alelevier/Documents/bsrs/bsrs-django/bigsky/source/attachments/files"
         try:
             shutil.rmtree(path)
         except FileNotFoundError:
