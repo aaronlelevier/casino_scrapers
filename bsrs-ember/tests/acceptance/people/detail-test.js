@@ -6,7 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
-import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
+import SD from 'bsrs-ember/vendor/defaults/status';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -26,14 +26,15 @@ import AD from 'bsrs-ember/vendor/defaults/address';
 import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import page from 'bsrs-ember/tests/pages/person';
 import selectize from 'bsrs-ember/tests/pages/selectize';
 import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
-const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
-const DETAIL_URL = BASE_PEOPLE_URL + '/' + PD.id;
+const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
+const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
 const LETTER_A = {keyCode: 65};
 const BACKSPACE = {keyCode: 8};
 
@@ -101,9 +102,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), AD.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), AD.zipTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), AD.countryTwo);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(0)').val(), STATUS_DEFAULTS.activeId);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(1)').val(), STATUS_DEFAULTS.inactiveId);
-        assert.equal(find('.t-statuses-select').find('.t-status-option:eq(2)').val(), STATUS_DEFAULTS.expiredId);
+        assert.equal(page.statusInput(), SD.activeName);
         assert.equal(find('.t-locale-select').find('.t-locale-option:eq(0)').val(), "");
         assert.equal(find('.t-locale-select').find('.t-locale-option:eq(1)').val(), "en");
         assert.equal(find('.t-locale-select').find('.t-locale-option:eq(2)').val(), "es");
@@ -1390,3 +1389,36 @@ test('deep link to person and clicking in the person-locations-select component 
 //         assert.equal(currentURL(), TICKETS_URL);
 //     });
 // });
+
+/* STATUS */
+test('can change status to inactive for person and save (power select)', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(page.statusInput(), SD.activeName);
+    });
+    page.statusClickDropdown();
+    andThen(() => {
+        assert.equal(page.statusOptionLength(), 3);
+        assert.equal(page.statusOne(), SD.activeName);
+        assert.equal(page.statusTwo(), SD.inactiveName);
+        assert.equal(page.statusThree(), SD.expiredName);
+        const person = store.find('person', PD.idOne);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    page.statusClickOptionTwo();
+    andThen(() => {
+        const person = store.find('person', PD.idOne);
+        assert.equal(person.get('status_fk'), SD.activeId);
+        assert.equal(person.get('status.id'), SD.inactiveId);
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.statusInput(), SD.inactiveName);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let payload = PF.put({id: PD.idOne, status: SD.inactiveId});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+     
+});

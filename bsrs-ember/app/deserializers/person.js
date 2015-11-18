@@ -2,6 +2,15 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
+var extract_status = (model, store) => {
+    const status = store.find('status', model.status);
+    let existing_people = status.get('people') || [];
+    existing_people = existing_people.indexOf(model.id) > -1 ? existing_people : existing_people.concat(model.id);
+    status.set('people', existing_people);
+    model.status_fk = status.get('id');
+    delete model.status;
+};
+
 var extract_phone_numbers = function(model, store) {
     let phone_number_fks = [];
     let phone_numbers = model.phone_numbers || [];
@@ -115,13 +124,13 @@ var PersonDeserializer = Ember.Object.extend({
         let store = this.get('store');
         let person_check = store.find('person', id);
         let location_level_fk;
-        //prevent updating person if dirty
         if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
             model.phone_number_fks = extract_phone_numbers(model, store);
             model.address_fks = extract_addresses(model, store);
             [model.role_fk, location_level_fk] = extract_role(model, store);
             model.person_location_fks = extract_person_location(model, store, uuid, location_level_fk, location_deserializer);
             model.locale_fk = extract_locale(model, store);
+            extract_status(model, store);
             let person = store.push('person', model);
             person.save();
         }
@@ -130,9 +139,9 @@ var PersonDeserializer = Ember.Object.extend({
         let store = this.get('store');
         response.results.forEach((model) => {
             let person_check = store.find('person', model.id);
-            //prevent updating person if dirty
             if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
                 extract_role(model, store);
+                extract_status(model, store);
                 let person = store.push('person', model);
                 person.save();
             }

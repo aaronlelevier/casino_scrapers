@@ -103,13 +103,7 @@
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-							{{#form-group title="admin.person.label.status"}}
-							<select class="form-control t-statuses-select">
-								{{#each statuses as |status|}}
-								<option class="t-status-option" value="{{status.id}}">{{t status.name}}</option>
-								{{/each}}
-							</select>
-							{{/form-group}}
+              {{person-status-select person=model statuses=statuses}}
 						</div>
 					</div>
 					<div class="row">

@@ -30,10 +30,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             title : this.person_defaults.title,
             employee_id : this.person_defaults.employee_id,
             auth_amount : this.person_defaults.auth_amount,
-            status : {
-                'id': this.status_defaults.activeId,
-                'name': 'admin.person.status.active'
-            },
+            status : this.status_defaults.activeId,
             role: this.role_fixtures.get(),
             emails: this.person_defaults.emails,
             locations: [],
