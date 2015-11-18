@@ -23,6 +23,7 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
     auth_amount: attr(''),
     locale: attr(''),
     role_fk: attr(),
+    status_fk: '',
     phone_number_fks: [],
     address_fks: [],
     person_location_fks: [],
@@ -41,13 +42,52 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
             }.bind(this));
         }
     },
+    rollbackStatus() {
+        let status = this.get('status');
+        let status_fk = this.get('status_fk');
+        if(status && status.get('id') !== status_fk) {
+            this.change_status(status_fk);
+        }
+    },
+    saveStatus() {
+        let status = this.get('status');
+        if (status) { this.set('status_fk', status.get('id')); }
+    },
+    statusIsDirty: Ember.computed('status', 'status_fk', function() {
+        let status = this.get('status');
+        let status_fk = this.get('status_fk');
+        if (status) {
+            return status.get('id') === status_fk ? false : true;
+        }
+    }),
+    change_status(status_id) {
+        let store = this.get('store');
+        const id = this.get('id');
+        const old_status = this.get('status');
+        const people_ids = old_status.get('people');
+        let updated_old_status_people = people_ids.filter((id) => {
+            return id !== id; 
+        });
+        old_status.set('people', updated_old_status_people);
+        const new_status = store.find('status', status_id);
+        const new_status_people = new_status.get('people') || [];
+        new_status.set('people', new_status_people.concat(id));
+    },
+    status: Ember.computed.alias('belongs_to_status.firstObject'),
+    belongs_to_status: Ember.computed(function() {
+        const status_fk = this.get('status_fk');
+        const filter = (status) => {
+            return Ember.$.inArray(this.get('id'), status.get('people')) > -1;
+        };
+        return this.get('store').find('status', filter, ['people']);
+    }),
     fullname: Ember.computed('first_name', 'last_name', function() {
         var first_name = this.get('first_name');
         var last_name = this.get('last_name');
         return first_name + ' ' + last_name;
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     clearPassword() {
@@ -59,6 +99,7 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
         this.saveRole();
         this.saveLocations();
         this.clearPassword();
+        this.saveStatus();
     },
     rollbackRelated() {
         this.changeLocale();
@@ -66,6 +107,7 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
         this.rollbackAddresses();
         this.rollbackRole();
         this.rollbackLocations();
+        this.rollbackStatus();
     },
     createSerialize() {
         return {
@@ -77,7 +119,6 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
     },
     serialize() {
         var store = this.get('store');
-        var status_id = store.findOne('status').get('id');
         var phone_numbers = this.get('phone_numbers').filter(function(num) {
             if(num.get('invalid_number')) {
                 return;
@@ -106,7 +147,7 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
             title: this.get('title'),
             employee_id: this.get('employee_id'),
             auth_amount: this.get('auth_amount'),
-            status: status_id,
+            status: this.get('status').get('id'),
             role: this.get('role').get('id'),
             emails: [],
             locations: this.get('location_ids'),
