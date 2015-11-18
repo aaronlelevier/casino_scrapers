@@ -3,7 +3,6 @@ import json
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
-from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.contenttypes.fields import GenericRelation
 
 from contact.models import PhoneNumber, Address, Email
@@ -238,7 +237,6 @@ class LocationManager(SelfRefrencingManager):
         return self.get_queryset().get_level_parents(location, level_id)
 
 
-@python_2_unicode_compatible
 class Location(SelfRefrencingBaseModel, BaseModel):
     '''
     Physical Store ``Locations`` that have a ``LocationLevel``.

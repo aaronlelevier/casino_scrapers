@@ -2,7 +2,6 @@ import os
 
 from django.db import models
 from django.conf import settings
-from django.utils.encoding import python_2_unicode_compatible
 from django.core.exceptions import ValidationError as DjangoValidationError
 
 from PIL import Image
@@ -23,7 +22,6 @@ class SavedSearchManager(BaseManager):
         return [x.to_dict() for x in self.filter(person=person)]
 
 
-@python_2_unicode_compatible
 class SavedSearch(BaseModel):
     """
     So the Person can save their searches for any model.
@@ -118,7 +116,6 @@ def upload_to_images_thumbnail(instance, filename):
 
 ### ATTACHMENT
 
-@python_2_unicode_compatible
 class Attachment(BaseModel):
     """
     Stores a File or Image w/ multiple sizes locations in a single model.

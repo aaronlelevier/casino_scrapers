@@ -7,7 +7,6 @@ from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser, UserManager, Group
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.contrib.auth.hashers import make_password
@@ -41,7 +40,6 @@ class RoleManager(BaseManager):
         return json.dumps(models)
 
 
-@python_2_unicode_compatible
 class Role(BaseModel):
     # keys
     group = models.OneToOneField(Group, blank=True, null=True)
@@ -262,7 +260,6 @@ class PersonManager(UserManager):
         return PersonQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
 
 
-@python_2_unicode_compatible
 class Person(BaseModel, AbstractUser):
     '''
     :pw: password

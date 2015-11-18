@@ -7,7 +7,6 @@ import uuid
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes.fields import GenericForeignKey
 
@@ -31,7 +30,6 @@ class BaseManager(models.Manager):
         return BaseQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
 
 
-@python_2_unicode_compatible
 class BaseModel(models.Model):
     '''
     All Model inheritance will start with this model.  It uses 
@@ -73,7 +71,6 @@ class Tester(BaseModel):
     pass
     
 
-@python_2_unicode_compatible
 class BaseNameModel(BaseModel):
     name = models.CharField(max_length=100, unique=True)
 
@@ -140,7 +137,6 @@ class BaseStatusModel(BaseNameModel):
         return True
 
 
-@python_2_unicode_compatible
 class BaseSettingModel(BaseModel):
     '''
     ``Setting`` records will be either Standard or Custom. and be set 

@@ -7,7 +7,6 @@ from django.contrib.postgres.fields import HStoreField
 from django.conf import settings
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.utils.encoding import python_2_unicode_compatible
 
 from utils.models import BaseModel, BaseManager
 
@@ -30,7 +29,6 @@ class LocaleManager(BaseManager):
         self.exclude(id=id).filter(default=True).update(default=False)
 
 
-@python_2_unicode_compatible
 class Locale(BaseModel):
     locale = models.SlugField(help_text="Example values: en, en-US, en-x-Sephora")
     default = models.BooleanField(blank=True, default=False)
@@ -155,7 +153,6 @@ def translation_file(instance, filename):
     return '/'.join(['translations', filename])
 
 
-@python_2_unicode_compatible
 class Translation(BaseModel):
     '''
     :values: contains all translations for the Locale

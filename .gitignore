@@ -34,6 +34,7 @@ coverage/
 .ctags
 _*.rst
 *-out.csv
+bsrs-django/bigsky/source/attachments/files/es-generic_*.csv
 
 # virtualenv
 venv/
