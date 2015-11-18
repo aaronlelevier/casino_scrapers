@@ -30,11 +30,11 @@ bower_components/
 .sass-cache/
 connect.lock/
 coverage/
-
 .ctags
+
+# personal doc files
 _*.rst
-*-out.csv
-bsrs-django/bigsky/source/attachments/files/es-generic_*.csv
+_*.md
 
 # virtualenv
 venv/
@@ -42,3 +42,5 @@ venv/
 # attachments
 **/attachments/images/
 bsrs-django/bigsky/source/attachments/files/es_*
+bsrs-django/bigsky/source/attachments/files/es-generic_*.csv
+*-out.csv
