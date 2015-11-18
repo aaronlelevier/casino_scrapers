@@ -5,6 +5,7 @@ import uuid
 from io import BytesIO
 import shutil
 
+from django.conf import settings
 from django.test.client import MULTIPART_CONTENT, BOUNDARY, encode_multipart
 from django.core.urlresolvers import reverse
 from django.db.models.loading import get_model
@@ -12,7 +13,7 @@ from django.db.models.loading import get_model
 from model_mommy import mommy
 from rest_framework.test import APITestCase
 
-from generic.models import SavedSearch
+from generic.models import SavedSearch, Attachment
 from generic.serializers import SavedSearchSerializer
 from person.tests.factory import PASSWORD, create_single_person, create_role, create_person
 
@@ -142,19 +143,29 @@ class AttachmentTests(APITestCase):
     def setUp(self):
         self.person = create_single_person()
 
-        base_dir = dirname(dirname(dirname(__file__)))
+        self.base_dir = dirname(dirname(dirname(__file__)))
         # file
-        self.file = join(base_dir, "source/attachments/test_in/es.csv")
+        self.file = join(self.base_dir, "source/attachments/test_in/es.csv")
         self.file_filename = os.path.split(self.file)[1]
+
+        self.image = join(self.base_dir, "source/attachments/test_in/aaron.jpeg")
+        self.image_filename = os.path.split(self.image)[1]
         # image: This is a 1x1 black png
-        self.image = BytesIO(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\rIDATx\x9cc````\x00\x00\x00\x05\x00\x01\xa5\xf6E@\x00\x00\x00\x00IEND\xaeB`\x82')
-        self.image_filename = 'test.png'
+        # self.image = BytesIO(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\rIDATx\x9cc````\x00\x00\x00\x05\x00\x01\xa5\xf6E@\x00\x00\x00\x00IEND\xaeB`\x82')
+        # self.image_filename = 'test.png'
 
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
+
+        path = join(self.base_dir, "source/attachments")
+        # path = "/Users/alelevier/Documents/bsrs/bsrs-django/bigsky/source/attachments/files"
+        try:
+            shutil.rmtree(path)
+        except FileNotFoundError:
+            pass
 
     def test_create_file(self):
         id = str(uuid.uuid4())
@@ -164,28 +175,39 @@ class AttachmentTests(APITestCase):
                 'filename': self.file_filename,
                 'file': data
             }
+
             response = self.client.post("/api/admin/attachments/", post_data)
-                # encode_multipart(BOUNDARY, post_data),
-                # content_type=MULTIPART_CONTENT)
 
             self.assertEqual(response.status_code, 201)
             data = json.loads(response.content.decode('utf8'))
             self.assertEqual(data['id'], id)
             self.assertEqual(data['filename'], self.file_filename)
+            # verify file save location
+            attachment = Attachment.objects.get(id=id)
+            self.assertIn(
+                "attachments/files/{}".format(self.file_filename.split(".")[0]),
+                str(attachment.file)
+            )
 
     def test_create_image(self):
         id = str(uuid.uuid4())
-        post_data = {
-            'id': id,
-            'filename': self.image_filename,
-            'file': self.image
-        }
+        with open(self.image, 'rb') as data:
+            # data = data.read()
+            post_data = {
+                'id': id,
+                'filename': self.image_filename,
+                'file': data
+            }
 
-        response = self.client.post("/api/admin/attachments/", post_data)
-            # encode_multipart(BOUNDARY, post_data),
-            # content_type=MULTIPART_CONTENT)
+            response = self.client.post("/api/admin/attachments/", post_data)
 
-        self.assertEqual(response.status_code, 201)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['id'], id)
-        self.assertEqual(data['filename'], self.image_filename)
+            self.assertEqual(response.status_code, 201)
+            data = json.loads(response.content.decode('utf8'))
+            self.assertEqual(data['id'], id)
+            self.assertEqual(data['filename'], self.image_filename)
+            # verify file save location
+            attachment = Attachment.objects.get(id=id)
+            self.assertIn(
+                "attachments/images/full/{}".format(self.image_filename.split(".")[0]),
+                str(attachment.file)
+            )
