@@ -77,6 +77,7 @@ wait
 ../venv/bin/python manage.py loaddata fixtures/location.json
 ../venv/bin/python manage.py loaddata fixtures/person.json
 ../venv/bin/python manage.py loaddata fixtures/ticket.json
+TEST=$?; if [ "$TEST" == 1 ]; then echo "load fixtures failed"; exit $TEST; fi
 
 
 echo "EMBER"
