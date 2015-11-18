@@ -17,10 +17,12 @@ wait
 ./manage.py loaddata fixtures/contact.AddressType.json
 ./manage.py loaddata fixtures/category.json
 ./manage.py loaddata fixtures/third_party.json
+./manage.py loaddata fixtures/auth.json
+./manage.py loaddata fixtures/location.json
 wait
 ./manage.py create_all_people
 wait
-./manage.py dumpdata --indent=2 > fixtures/jenkins.json
+./manage.py dumpdata person --indent=2 > fixtures/person.json
 wait
 ./manage.py create_tickets
 wait
