@@ -35,9 +35,10 @@ def create_ticket():
     people = Person.objects.all()
 
     incr = Ticket.objects.count()
+    id = generate_uuid(TICKET_BASE_ID, incr+1)
 
     ticket = Ticket.objects.create(
-        id = generate_uuid(TICKET_BASE_ID, incr+1),
+        id = id,
         location = random.choice(Location.objects.all()),
         status = random.choice(statuses),
         priority = random.choice(priorities),

@@ -69,12 +69,13 @@ def create_single_person(name=None, role=None):
     role = role or create_role()
 
     incr = Person.objects.count()
+    id = generate_uuid(PERSON_BASE_ID, incr+1)
 
     try:
         return Person.objects.get(username=name)
     except Person.DoesNotExist:
         return Person.objects.create_user(
-            id=generate_uuid(PERSON_BASE_ID, incr+1),
+            id=id,
             username=name,
             email='myemail@mail.com',
             password=PASSWORD,

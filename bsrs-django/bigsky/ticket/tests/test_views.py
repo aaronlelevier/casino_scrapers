@@ -354,6 +354,7 @@ class TicketActivityViewSetTests(APITestCase):
         self.assertEqual(data['count'], 0)
 
     def test_ticket_three(self):
+        # print(self.ticket_three.id)
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket_three.id))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))

@@ -75,7 +75,7 @@ class AttachmentModelTests(TestCase):
         self.image = join(base_dir, "source/attachments/test_in/test-mountains.jpg")
         self.image_filename = os.path.split(self.image)[1]
 
-        self.file = join(base_dir, "source/attachments/test_in/es.csv")
+        self.file = join(base_dir, "source/attachments/test_in/es-generic.csv")
         self.file_filename = os.path.split(self.file)[1]
 
     def test_files_exist(self):
