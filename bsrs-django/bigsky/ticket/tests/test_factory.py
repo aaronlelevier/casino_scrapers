@@ -1,3 +1,5 @@
+import sys
+
 from django.test import TestCase
 
 from category.models import Category
@@ -80,6 +82,12 @@ class CreateTicketsTests(TestCase):
         self.assertIsInstance(tickets[0], Ticket)
 
     def test_generate_uuid(self):
+        """
+        'test' is removed from ``sys.argv`` in order to trigger the static
+        generator for UUIDs.
+        """
+        global sys
+        sys.argv = ''
         incr = Ticket.objects.count()
 
         ret = factory.create_ticket()

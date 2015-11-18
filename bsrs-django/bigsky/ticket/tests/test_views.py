@@ -307,7 +307,7 @@ class TicketCreateTests(APITestCase):
         self.assertEqual(data['request'], ticket.request)
 
 
-class TicketActivityViewSetTests(APITestCase):
+class TicketActivityViewSetTests(APITransactionTestCase):
 
     def setUp(self):
         self.password = PASSWORD
@@ -316,11 +316,11 @@ class TicketActivityViewSetTests(APITestCase):
         # Ticket
         self.ticket = create_ticket()
         self.ticket_two = create_ticket()
-        self.ticket_three = create_ticket()
+        # self.ticket_three = create_ticket()
         # TicketActivity (Both for the 1st Ticket, Ticket-Two has no Activities !!)
         self.ticket_activity = create_ticket_activity(ticket=self.ticket)
         self.ticket_activity_two = create_ticket_activity(ticket=self.ticket)
-        self.ticket_activity_with_comment = create_ticket_activity(ticket=self.ticket_three, content={'comment': 'with comment'})
+        # self.ticket_activity_with_comment = create_ticket_activity(ticket=self.ticket_three, content={'comment': 'with comment'})
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -354,8 +354,12 @@ class TicketActivityViewSetTests(APITestCase):
         self.assertEqual(data['count'], 0)
 
     def test_ticket_three(self):
-        # print(self.ticket_three.id)
-        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket_three.id))
+        activity_type = create_ticket_activity_type("comment")
+        create_ticket_activity(ticket=self.ticket, type=activity_type,
+            content={'comment': 'with comment'})
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+        
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['results'][0]['content']['comment'], 'with comment')

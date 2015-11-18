@@ -1,4 +1,6 @@
 import random
+import sys
+import uuid
 
 from model_mommy import mommy
 
@@ -34,8 +36,11 @@ def create_ticket():
     priorities = create_ticket_priorites()
     people = Person.objects.all()
 
-    incr = Ticket.objects.count()
-    id = generate_uuid(TICKET_BASE_ID, incr+1)
+    if 'test' in sys.argv:
+        id = uuid.uuid4()
+    else:
+        incr = Ticket.objects.count()
+        id = generate_uuid(TICKET_BASE_ID, incr+1)
 
     ticket = Ticket.objects.create(
         id = id,
