@@ -96,21 +96,6 @@ class SelfRefrencingManager(BaseManager):
     def get_all_parents(self, child, first_child_id=None, all_parents=None):
         return self.get_queryset().get_all_parents(child, first_child_id, all_parents)
 
-    @property
-    def d3_json(self):
-        """
-        Output the Models' self referencing structure to JSON for d3js. Note: "type": "suite" 
-        is a default argument for the code, but can be used to change the colors of the arrows.
-
-        `d3js reference <http://bl.ocks.org/mbostock/1153292#index.html>`_
-        """
-        links = []
-        for level in self.all():
-            if level.children:
-                for child in level.children.all():
-                    links.append({"source": level.name, "target": child.name, "type": "suit"})
-        return json.dumps(links)
-
 
 class SelfRefrencingBaseModel(models.Model):
     '''

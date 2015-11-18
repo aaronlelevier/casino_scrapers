@@ -102,15 +102,10 @@ urlpatterns += required(
 )
 
 
-relationship_patterns = patterns('',
-    url(r'^$', bigsky_views.relationships_view, name='relationships_index'),
-    url(r'^model/(?P<app_name>\w+)/(?P<model_name>\w+)/$', bigsky_views.model_relationships, name='relationships_model'),
-)
 if settings.DEBUG:
     import debug_toolbar
     urlpatterns += patterns('',
         url(r'^__debug__/', include(debug_toolbar.urls)),
-        url(r'^relationships/', include(relationship_patterns)),
     )
 
 # Login Required

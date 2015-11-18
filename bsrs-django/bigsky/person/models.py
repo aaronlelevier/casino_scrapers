@@ -28,18 +28,6 @@ from utils.validators import (contains_digit, contains_upper_char, contains_lowe
     contains_special_char, contains_no_whitespaces)
 
 
-class RoleManager(BaseManager):
-
-    @property
-    def d3_json(self):
-        models = []
-        for role in self.all():
-            for person in role.person_set.all():
-                models.append(
-                    {"source": role.name, "target": person.username, "type": "suit"})
-        return json.dumps(models)
-
-
 class Role(BaseModel):
     # keys
     group = models.OneToOneField(Group, blank=True, null=True)
@@ -122,9 +110,6 @@ class Role(BaseModel):
     msg_copy_email = models.BooleanField(blank=True, default=False)
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
-
-    # Manager
-    objects = RoleManager()
 
     __original_values = {}
 

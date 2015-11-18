@@ -76,24 +76,6 @@ def logout(request):
     return HttpResponseRedirect(reverse('login'))
 
 
-def relationships_view(request):
-    """"Display a list of links for Models that have relationships,
-    and route to the d3js views for each model."""
-    models = []
-    for model in [Category, Location, LocationLevel, Role]:
-        models.append({
-            'app_name': model.__module__.split('.')[0],
-            'model_name': model.__name__
-        })
-    return render(request, "relationships.html", {"models": models})
-
-
-def model_relationships(request, app_name, model_name):
-    """Display a d3js relationship diagram."""
-    model = get_model(app_name, model_name)
-    return render(request, "d3.html", {"json": model.objects.d3_json})
-
-
 def handler404(request):
     response = render_to_response('error/404.html', {},
         context_instance=RequestContext(request))
