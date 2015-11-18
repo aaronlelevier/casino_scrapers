@@ -175,42 +175,42 @@ test('when click delete, role is deleted and removed from store', (assert) => {
     });
 });
 
-/*ROLE TO CATEGORY M2M*/
-test('clicking and typing into selectize for categories will fire off xhr request for all categories', (assert) => {
-    visit(DETAIL_URL);
-    andThen(() => {
-        let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(page.categoriesSelected(), 1);
-    });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
-    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
-    page.categoryClickDropdown();
-    fillIn(`${CATEGORY_SEARCH}`, 'a');
-    andThen(() => {
-        assert.equal(page.categoryOptionLength(), 10); 
-        assert.equal(page.categoriesSelected(), 1);
-        const role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(role.get('categories').get('length'), 1);
-    });
-    page.categoryClickOptionThree();
-    andThen(() => {
-        let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(role.get('categories').get('length'), 2);
-        assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoriesSelected(), 2);
-    });
-    let url = PREFIX + DETAIL_URL + '/';
-    let category = CF.put({id: CD.idOne, name: CD.nameOne});
-    let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [category.id, CD.idThree]});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-    });
-});
+// /*ROLE TO CATEGORY M2M*/
+// test('clicking and typing into selectize for categories will fire off xhr request for all categories', (assert) => {
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         let role = store.find('role', RD.idOne);
+//         assert.equal(role.get('role_category_fks').length, 1);
+//         assert.equal(page.categoriesSelected(), 1);
+//     });
+//     let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
+//     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+//     page.categoryClickDropdown();
+//     fillIn(`${CATEGORY_SEARCH}`, 'a');
+//     andThen(() => {
+//         assert.equal(page.categoryOptionLength(), 10); 
+//         assert.equal(page.categoriesSelected(), 1);
+//         const role = store.find('role', RD.idOne);
+//         assert.equal(role.get('role_category_fks').length, 1);
+//         assert.equal(role.get('categories').get('length'), 1);
+//     });
+//     page.categoryClickOptionThree();
+//     andThen(() => {
+//         let role = store.find('role', RD.idOne);
+//         assert.equal(role.get('role_category_fks').length, 1);
+//         assert.equal(role.get('categories').get('length'), 2);
+//         assert.ok(role.get('isDirtyOrRelatedDirty'));
+//         assert.equal(page.categoriesSelected(), 2);
+//     });
+//     let url = PREFIX + DETAIL_URL + '/';
+//     let category = CF.put({id: CD.idOne, name: CD.nameOne});
+//     let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [category.id, CD.idThree]});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), ROLE_URL);
+//     });
+// });
 
 // power-select PR needed
 //test('can remove and add back same category', (assert) => {
