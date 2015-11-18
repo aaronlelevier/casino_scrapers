@@ -93,6 +93,17 @@ function saveFilterSet(app, name, controller) {
   });
 }
 
+function uploadFile(app, name, action, file, model) {
+  Ember.run(function() {
+      var component = app.__container__.lookup(`component:${name}`);
+      component.set('model', model);
+      component.files = function() { return [file]; };
+      component.send(action);
+  });
+  return app.testHelpers.wait();
+}
+
+Ember.Test.registerAsyncHelper('uploadFile', uploadFile);
 Ember.Test.registerAsyncHelper('ajax', ajax);
 Ember.Test.registerAsyncHelper('clearAll', clearAll);
 Ember.Test.registerAsyncHelper('saveFilterSet', saveFilterSet);
