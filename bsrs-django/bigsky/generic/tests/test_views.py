@@ -2,6 +2,8 @@ import os
 from os.path import dirname, join
 import json
 import uuid
+from io import BytesIO
+import shutil
 
 from django.test.client import MULTIPART_CONTENT, BOUNDARY, encode_multipart
 from django.core.urlresolvers import reverse
@@ -141,24 +143,49 @@ class AttachmentTests(APITestCase):
         self.person = create_single_person()
 
         base_dir = dirname(dirname(dirname(__file__)))
-
+        # file
         self.file = join(base_dir, "source/attachments/test_in/es.csv")
         self.file_filename = os.path.split(self.file)[1]
+        # image: This is a 1x1 black png
+        self.image = BytesIO(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\rIDATx\x9cc````\x00\x00\x00\x05\x00\x01\xa5\xf6E@\x00\x00\x00\x00IEND\xaeB`\x82')
+        self.image_filename = 'test.png'
+
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
 
-    def test_create(self):
+    def test_create_file(self):
+        id = str(uuid.uuid4())
         with open(self.file) as data:
             post_data = {
-                'id': str(uuid.uuid4()),
+                'id': id,
                 'filename': self.file_filename,
                 'file': data
             }
-            response = self.client.post("/api/admin/attachments/",
-                encode_multipart(BOUNDARY, post_data),
-                content_type=MULTIPART_CONTENT)
+            response = self.client.post("/api/admin/attachments/", post_data)
+                # encode_multipart(BOUNDARY, post_data),
+                # content_type=MULTIPART_CONTENT)
 
             self.assertEqual(response.status_code, 201)
+            data = json.loads(response.content.decode('utf8'))
+            self.assertEqual(data['id'], id)
+            self.assertEqual(data['filename'], self.file_filename)
+
+    def test_create_image(self):
+        id = str(uuid.uuid4())
+        post_data = {
+            'id': id,
+            'filename': self.image_filename,
+            'file': self.image
+        }
+
+        response = self.client.post("/api/admin/attachments/", post_data)
+            # encode_multipart(BOUNDARY, post_data),
+            # content_type=MULTIPART_CONTENT)
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], id)
+        self.assertEqual(data['filename'], self.image_filename)

@@ -41,6 +41,7 @@ venv/
 
 # attachments
 **/attachments/images/
-bsrs-django/bigsky/source/attachments/files/es_*
-bsrs-django/bigsky/source/attachments/files/es-generic_*.csv
+**/attachments/files/
+
+# translation output-files
 *-out.csv

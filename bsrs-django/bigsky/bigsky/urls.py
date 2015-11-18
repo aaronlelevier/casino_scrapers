@@ -2,6 +2,7 @@ import json
 
 from django.conf import settings
 from django.conf.urls import include, url, patterns
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth import views as auth_views, forms
 from django.contrib.auth.decorators import login_required
@@ -84,7 +85,7 @@ urlpatterns = patterns('',
 urlpatterns += patterns('',
     url(r'^404/$', bigsky_views.handler404, name='404'),
     url(r'^500/$', bigsky_views.handler500, name='500'),
-)
+) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # Logout Required
 urlpatterns += required(
