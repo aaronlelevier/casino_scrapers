@@ -47,15 +47,6 @@ class RoleIdNameSerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-### PERSON STATUS ###
-
-class PersonStatusSerializer(serializers.ModelSerializer):
-    
-    class Meta:
-        model = PersonStatus
-        fields = ('id', 'name')
-
-
 ### PERSON ###
 
 PERSON_FIELDS = (
@@ -91,8 +82,6 @@ class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer
 
 class PersonListSerializer(serializers.ModelSerializer):
 
-    status = PersonStatusSerializer()
-
     class Meta:
         model = Person
         fields = PERSON_FIELDS
@@ -107,7 +96,6 @@ class PersonTicketSerializer(serializers.ModelSerializer):
 
 class PersonDetailSerializer(serializers.ModelSerializer):
 
-    status = PersonStatusSerializer()
     locations = LocationIdNameSerializer(many=True)
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)

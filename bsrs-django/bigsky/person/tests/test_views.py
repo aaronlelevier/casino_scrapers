@@ -232,7 +232,7 @@ class PersonListTests(TestCase):
         self.assertEqual(self.response.status_code, 200)
 
     def test_status(self):
-        self.assertTrue(self.data['results'][0]['status']['id'])
+        self.assertTrue(self.data['results'][0]['status'])
 
     def test_role(self):
         self.assertTrue(self.data['results'][0]['role'])
@@ -261,8 +261,7 @@ class PersonListTests(TestCase):
         self.assertEqual(data['first_name'], person.first_name)
         self.assertEqual(data['middle_initial'], person.middle_initial)
         self.assertEqual(data['last_name'], person.last_name)
-        self.assertEqual(data['status']['id'], str(person.status.id))
-        self.assertEqual(data['status']['name'], person.status.name)
+        self.assertEqual(data['status'], str(person.status.id))
         self.assertEqual(data['role'], str(person.role.id))
         self.assertEqual(data['title'], person.title)
         self.assertEqual(data['employee_id'], person.employee_id)
@@ -325,8 +324,7 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['auth_currency'], str(self.person.auth_currency.id))
 
     def test_data_status(self):
-        self.assertEqual(self.data['status']['id'], str(self.person.status.id))
-        self.assertEqual(self.data['status']['name'], self.person.status.name)
+        self.assertEqual(self.data['status'], str(self.person.status.id))
 
     def test_data_location(self):
         self.assertTrue(self.data['locations'])
