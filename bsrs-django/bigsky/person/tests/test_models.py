@@ -169,9 +169,20 @@ class PersonTests(TestCase):
         self.person._update_defaults()
         self.assertIsNotNone(self.person.status)
         self.assertIsNotNone(self.person.password_expire_date)
+
+    def test_fullname(self):
         self.assertEqual(
             self.person.fullname,
             self.person.first_name + ' ' + self.person.last_name
+        )
+        init_fullname = self.person.first_name + ' ' + self.person.last_name
+
+        self.person.last_name = self.person.last_name+'wat'
+        self.person.save()
+
+        self.assertEqual(
+            self.person.fullname,
+            init_fullname+'wat'
         )
 
     def test_password_expire_date(self):

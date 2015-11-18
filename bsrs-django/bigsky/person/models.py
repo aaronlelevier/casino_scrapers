@@ -417,8 +417,8 @@ class Person(BaseModel, AbstractUser):
             self.auth_currency = self.role.default_auth_currency
         if not self.password_expire_date:
             self.password_expire_date = self._password_expire_date
-        if not self.fullname:
-            self.fullname = self.first_name + ' ' + self.last_name
+
+        self.fullname = self.first_name + ' ' + self.last_name
 
     def _validate_locations(self):
         """Remove invalid Locations from the Person based on
