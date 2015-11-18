@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 from category.models import Category
 from category.serializers import CategoryIDNameSerializer
+from generic.serializers import Attachment
 from location.serializers import LocationSerializer
 from person.models import Person
 from person.serializers import PersonSimpleSerializer, PersonTicketSerializer
@@ -18,6 +19,9 @@ TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
 
 
 class TicketCreateSerializer(BaseCreateSerializer):
+
+    attachments = serializers.PrimaryKeyRelatedField(
+        queryset=Attachment.objects.all(), many=True, required=False)
 
     class Meta:
         model = Ticket

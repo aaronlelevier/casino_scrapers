@@ -269,6 +269,19 @@ class TicketCreateTests(APITestCase):
         self.assertEqual(self.data['id'], data['id'])
         self.assertEqual(self.data['request'], data['request'])
 
+    def test_attachments_field_not_required(self):
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'request': 'plumbing',
+        })
+        self.data.pop('attachments', None)
+        self.assertNotIn('attachments', self.data)
+
+        response = self.client.post('/api/tickets/', self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(response.status_code, 201)
+
     def test_ticket_no_cc(self):
         self.data.pop('cc', None)
         self.data.update({
