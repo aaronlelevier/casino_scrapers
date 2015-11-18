@@ -157,12 +157,13 @@ class AttachmentTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
+        # COMMENT OUT: b/c saving thumbnails will fail on Jenkins if this is run
         # remove test attachements after running test
-        path = join(self.base_dir, "source/attachments")
-        try:
-            shutil.rmtree(path)
-        except FileNotFoundError:
-            pass
+        # path = join(self.base_dir, "source/attachments")
+        # try:
+        #     shutil.rmtree(path)
+        # except FileNotFoundError:
+        #     pass
 
     def test_create_file(self):
         id = str(uuid.uuid4())

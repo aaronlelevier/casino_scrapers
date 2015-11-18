@@ -79,13 +79,14 @@ class AttachmentModelTests(TestCase):
         self.file = join(self.base_dir, "source/test_in/es.csv")
         self.file_filename = os.path.split(self.file)[1]
 
-    def tearDown(self):
-        # remove test attachements after running test
-        path = join(self.base_dir, "source/attachments")
-        try:
-            shutil.rmtree(path)
-        except FileNotFoundError:
-            pass
+    # COMMENT OUT: b/c saving thumbnails will fail on Jenkins if this is run
+    # def tearDown(self):
+    #     # remove test attachements after running test
+    #     path = join(self.base_dir, "source/attachments")
+    #     try:
+    #         shutil.rmtree(path)
+    #     except FileNotFoundError:
+    #         pass
 
     def test_files_exist(self):
         self.assertTrue(os.path.isfile(self.image))
