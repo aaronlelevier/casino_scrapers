@@ -12,6 +12,4 @@ wait
 wait
 ./manage.py create_single_person
 wait
-./manage.py dumpdata --indent=2 > fixtures/persistent.json
-wait
-./manage.py loaddata fixtures/persistent_custom.json
+./manage.py dumpdata --indent=2 > fixtures/persistent/persistent.json
