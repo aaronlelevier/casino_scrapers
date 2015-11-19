@@ -12,7 +12,7 @@ var store, uuid;
 
 module('unit: ticket test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:ticket-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:ticket-file']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:category', 'model:ticket-status', 'model:ticket-priority', 'model:location', 'model:ticket-person', 'model:ticket-category', 'model:uuid', 'service:person-current', 'service:translations-fetcher', 'service:i18n', 'model:ticket-attachment']);
     }
 });
 
@@ -1142,13 +1142,13 @@ test('there is leaky state when instantiating ticket (pushObject - DO NOT DO THI
     assert.deepEqual(ticket_two.get('ticket_categories_fks'), [TICKET_CATEGORY_DEFAULTS.idOne]);
 });
 
-test('files property returns associated array or empty array', (assert) => {
+test('attachments property returns associated array or empty array', (assert) => {
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    assert.equal(ticket.get('files').get('length'), 0);
-    store.push('ticket-file', {id: 8, ticket_fk: TICKET_DEFAULTS.idOne});
-    assert.equal(ticket.get('files').get('length'), 1);
-    store.push('ticket-file', {id: 9, ticket_fk: TICKET_DEFAULTS.idTwo});
-    assert.equal(ticket.get('files').get('length'), 1);
-    store.push('ticket-file', {id: 7, ticket_fk: TICKET_DEFAULTS.idOne});
-    assert.equal(ticket.get('files').get('length'), 2);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    store.push('ticket-attachment', {id: 8, ticket_fk: TICKET_DEFAULTS.idOne});
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    store.push('ticket-attachment', {id: 9, ticket_fk: TICKET_DEFAULTS.idTwo});
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    store.push('ticket-attachment', {id: 7, ticket_fk: TICKET_DEFAULTS.idOne});
+    assert.equal(ticket.get('attachments').get('length'), 2);
 });

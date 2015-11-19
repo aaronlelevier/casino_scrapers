@@ -9,7 +9,7 @@ var AttachmentRepo = Ember.Object.extend({
     upload(file, ticket_fk) {
         let store = this.get('store');
         let id = this.get('uuid').v4();
-        let attached = store.push('ticket-file', {id: id, ticket_fk: ticket_fk, uploaded: false});
+        let attached = store.push('ticket-attachment', {id: id, ticket_fk: ticket_fk, uploaded: false});
         let data = new FormData();
         data.append('id', id);
         data.append('filename', file.name);

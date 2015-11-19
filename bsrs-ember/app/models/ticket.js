@@ -198,12 +198,12 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
             new_status.set('tickets', new_status_tickets.concat(ticket_id));
         }
     },
-    files: Ember.computed(function() {
+    attachments: Ember.computed(function() {
         const ticket_id = this.get('id');
         const filter = function(file) {
             return file.get('ticket_fk') === ticket_id;
         };
-        return this.get('store').find('ticket-file', filter, ['ticket_fk']);
+        return this.get('store').find('ticket-attachment', filter, ['ticket_fk']);
     }),
     serialize() {
         let payload = {

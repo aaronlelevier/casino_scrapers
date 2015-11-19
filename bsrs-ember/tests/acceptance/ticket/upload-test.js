@@ -41,14 +41,14 @@ module('Acceptance | ticket file upload test', {
     }
 });
 
-test('upload will post form data, show progress and on save append the attachment', (assert) => {
+test('toran upload will post form data, show progress and on save append the attachment', (assert) => {
     let model = store.find('ticket', TD.idOne);
     let image = {name: 'toranb.png', type: 'image/png', size: 234000};
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(PROGRESS_BAR).length, 0);
-        assert.equal(store.find('ticket-file').get('length'), 0);
+        assert.equal(store.find('ticket-attachment').get('length'), 0);
     });
     ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {id: UUID.value});
     uploadFile('tickets/ticket-single', 'upload', image, model);
@@ -57,13 +57,19 @@ test('upload will post form data, show progress and on save append the attachmen
         assert.equal(find(PROGRESS_BAR).length, 1);
         assert.ok(find(PROGRESS_BAR).is(':visible'));
         assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
-        assert.equal(store.find('ticket-file').get('length'), 1);
-        // assert.equal(model.get('attachments').get('length'), 0);
+        assert.equal(store.find('ticket-attachment').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
+        assert.equal(model.get('isDirty'), false);
+        // assert.equal(model.get('isDirtyOrRelatedDirty'), true);
     });
     ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_attachment), {}, 200, TF.detail(TD.idOne));
     ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
+        assert.equal(store.find('ticket-attachment').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
+        assert.equal(model.get('isDirty'), false);
+        assert.equal(model.get('isDirtyOrRelatedDirty'), false);
     });
 });
