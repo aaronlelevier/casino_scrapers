@@ -34,22 +34,22 @@ var BSRS_THIRD_PARTY_FACTORY = (function() {
             response.push(third_party);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component
-        // var sorted = response.sort(function(a,b) {
-        //     return b.id - a.id;
-        // });
+        var sorted = response.sort(function(a,b) {
+            return b.id - a.id;
+        });
         return {'count':19,'next':null,'previous':null,'results': response};
     };
-    // factory.prototype.list_two = function() {
-    //     var response = [];
-    //     for (var i=11; i <= 19; i++) {
-    //         var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
-    //         var third_party = this.generate(uuid + i);
-    //         third_party.name = 'vzoname' + i;
-    //         third_party.number = 'sconumber' + i;
-    //         response.push(third_party);
-    //     }
-    //     return {'count':19,'next':null,'previous':null,'results': response};
-    // };
+    factory.prototype.list_two = function() {
+        var response = [];
+        for (var i=11; i <= 18; i++) {
+            var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
+            var third_party = this.generate(uuid + i);
+            third_party.name = 'vzoname' + i;
+            third_party.number = 'sconumber' + i;
+            response.push(third_party);
+        }
+        return {'count':19,'next':null,'previous':null,'results': response};
+    };
     factory.prototype.detail = function(i) {
         return this.generate(i);
     };

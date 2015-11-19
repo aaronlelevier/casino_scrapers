@@ -1,26 +1,37 @@
 import Ember from 'ember';
 
+var extract_status = (model, store) => {
+    const status = store.find('status', model.status);
+    let existing_people = status.get('people') || [];
+    existing_people = existing_people.indexOf(model.id) > -1 ? existing_people : existing_people.concat(model.id);
+    status.set('people', existing_people);
+    model.status_fk = status.get('id');
+    delete model.status;
+};
+
 var ThirdPartyDeserializer = Ember.Object.extend({
-    deserialize(response, options) {
+    deserialize(model, options) {
         if (typeof options === 'undefined') {
-            this.deserialize_list(response);
+            this.deserialize_list(model);
         } else {
-            this.deserialize_single(response, options);
+            this.deserialize_single(model, options);
         }
     },
-    deserialize_single(response, id) {
+    deserialize_single(model, id) {
         let store = this.get('store');
         let existing_third_party = store.find('third-party', id);
         if (!existing_third_party.get('id') || existing_third_party.get('isNotDirtyOrRelatedNotDirty')) {
-            let third_party = store.push('third-party', response);
+            extract_status(model, store);
+            let third_party = store.push('third-party', model);
             third_party.save();
         }
     },
-    deserialize_list(response) {
+    deserialize_list(model) {
         let store = this.get('store');
-        response.results.forEach((model) => {
+        model.results.forEach((model) => {
             let existing_third_party = store.find('third-party', model.id);
             if (!existing_third_party.get('id') || existing_third_party.get('isNotDirtyOrRelatedNotDirty')) {
+                extract_status(model, store);
                 let third_party = store.push('third-party', model);
                 third_party.save();
             }

@@ -39,14 +39,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              {{#form-group title="admin.third_party.label.status" for="third_party_status"}}
-              <select class="t-third-party-status form-control third_party_status" onchange={{action (action "changedStatus" model) value="target.value"}} id="third_party_status">
-                {{#each all_statuses as |third_party_status|}}
-                <option value={{third_party_status.id}} selected={{is-equal model.third_party_status third_party_status.id}}>{{t third_party_status.name}}</option>
-                {{/each}}
-              </select>
-              {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}{{t "validation.invalid"}} {{t "admin.third_party.label.status"}}{{/validation-error-field}}
-              {{/form-group}}
+              {{person-status-select person=model statuses=statuses}}
             </div>
           </div>
         </section>

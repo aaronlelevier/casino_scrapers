@@ -15,11 +15,13 @@ var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, {
     insert(model) {
         return PromiseMixin.xhr(THIRD_PARTY_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });
     },
     update(model) {
         return PromiseMixin.xhr(THIRD_PARTY_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });
     },
     // peek(filter, computed_keys) {

@@ -82,13 +82,11 @@ var TicketPage = PageObject.create({
   priorityClickDropdown: clickable(`${PRIORITY}`),
   priorityClickOptionOne: clickable(`${PRIORITY_DROPDOWN} > .ember-power-select-option:contains(${TD.priorityOne})`),
   priorityClickOptionTwo: clickable(`${PRIORITY_DROPDOWN} > .ember-power-select-option:contains(${TD.priorityTwo})`),
-  priorityOptionLength: count(`${PRIORITY} > .selectize-dropdown div.option`),
 
   statusInput: text(`${STATUS}`),
   statusClickDropdown: clickable(`${STATUS}`),
   statusClickOptionOne: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${TD.statusOne})`),
   statusClickOptionTwo: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${TD.statusTwo})`),
-  statusOptionLength: count(`${STATUS} > .selectize-dropdown div.option`),
 
   assigneeInput: text(`${ASSIGNEE}`),
   assigneeClickDropdown: clickable(`${ASSIGNEE}`),

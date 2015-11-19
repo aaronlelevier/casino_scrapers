@@ -26,7 +26,7 @@ var GridViewController = Ember.Controller.extend({
         return configuration.get('order') || ['id'];
     }),
     actions: {
-        save_filterset: function(name) {
+        save_filterset(name) {
             let path = this.get('routePath');
             let url = window.location.toString();
             let repository = this.get('repository');

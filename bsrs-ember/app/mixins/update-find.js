@@ -5,7 +5,7 @@ var UpdateFind = Ember.Mixin.create({
         find = find || '';
         let newFind = '';
         let hash = column + ':' + value;
-        let keysOnlyArray = find.split(',').map(function(criteria) {
+        let keysOnlyArray = find.split(',').map((criteria) => {
             return criteria.split(':')[0];
         });
         if(Ember.$.inArray(column, keysOnlyArray) === -1) {

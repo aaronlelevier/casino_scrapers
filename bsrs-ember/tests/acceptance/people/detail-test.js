@@ -1420,5 +1420,4 @@ test('can change status to inactive for person and save (power select)', (assert
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
     });
-     
 });

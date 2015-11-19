@@ -8,6 +8,7 @@ var ThirdPartysNewComponent = Ember.Component.extend(TabMixin, NewMixin, Validat
     repository: inject('third-party'),
     nameValidation: validate('model.name'),
     numberValidation: validate('model.number'),
+    statusValidation: validate('model.status'),
     actions: {
         save() {
             this.set('submitted', true);

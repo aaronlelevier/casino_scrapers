@@ -1,7 +1,7 @@
 import Ember from 'ember';
 
 var FilterBy = Ember.Mixin.create({
-    toggle: function(column) {
+    toggle(column) {
         let css_column = column ? column.replace('_', '-') : '';
         if(column && this.get('toggleFilter')) {
             if('.t-filter-' + css_column !== this.get('targetFilter')) {
