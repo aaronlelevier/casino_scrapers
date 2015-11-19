@@ -40,6 +40,18 @@ var ticket_payload_with_comment = {
     comment: TD.commentOne,
 };
 
+var ticket_payload_with_attachment = {
+    id: TD.idOne,
+    request: TD.requestOne,
+    status: TD.statusOneId,
+    priority: TD.priorityOneId,
+    cc: [PD.idOne],
+    categories: [CD.idPlumbingChild],
+    requester: PD.idOne,
+    assignee: PD.idOne,
+    location: LD.idOne
+};
+
 var ticket_payload_detail_one_category = {
     id: TD.idOne,
     request: TD.requestOneGrid,
@@ -55,4 +67,4 @@ var ticket_payload_detail_one_category = {
 var required_ticket_payload = Ember.$.extend(true, {}, ticket_payload);
 delete required_ticket_payload.subject;
 
-export {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail, ticket_payload_detail_one_category};
+export {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail, ticket_payload_detail_one_category, ticket_payload_with_attachment};
