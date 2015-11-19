@@ -77,7 +77,7 @@ class AttachmentModelTests(TestCase):
         self.file = join(self.base_dir, "source/test_in/es.csv")
         self.file_filename = os.path.split(self.file)[1]
 
-        self.image = join(self.base_dir, "source/test_in/test-mountains.jpg")
+        self.image = join(self.base_dir, "source/test_in/aaron.jpeg")
         self.image_filename = os.path.split(self.image)[1]
 
     def tearDown(self):
@@ -119,8 +119,11 @@ class AttachmentModelTests(TestCase):
                 ticket=self.ticket,
                 file=_file
             )
+            self.assertTrue(attachment.file)
             self.assertTrue(attachment.is_image)
             self.assertTrue(attachment.image_full)
+            self.assertTrue(attachment.image_medium)
+            self.assertTrue(attachment.image_thumbnail)
 
     def test_upload_file(self):
         with open(self.file, 'rb') as infile:

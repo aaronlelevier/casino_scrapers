@@ -3,6 +3,8 @@ import os
 from django.db import models
 from django.conf import settings
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 from PIL import Image
 from rest_framework.exceptions import ValidationError
@@ -149,16 +151,7 @@ class Attachment(BaseModel):
         name, extension = os.path.splitext(self.file.name)
 
         if extension in IMAGE_EXTENSIONS:
-            # Mark as Image
             self.is_image = True
-            # Save Image Sizes
-            self.image_full = self.file
-
-            self.image_medium.name = "/".join(['attachments/images/medium', self.filename])
-            self.save_alt_image(location=self.image_medium.name, size=(100, 100))
-
-            self.image_thumbnail.name = "/".join(['attachments/images/thumbnails', self.filename])
-            self.save_alt_image(location=self.image_thumbnail.name, size=(50, 50))
 
         super(Attachment, self).save(*args, **kwargs)
 
@@ -195,3 +188,19 @@ class Attachment(BaseModel):
                     self.file._file._size))
         except AttributeError:
             pass
+
+
+@receiver(post_save, sender=Attachment)
+def create_medium_and_thumbnail_images(sender, instance=None, created=False, **kwargs):
+    if instance.is_image and not instance.image_full:
+        with open(os.path.join(settings.MEDIA_ROOT, str(instance.file)), 'rb'):
+
+            instance.image_full = instance.file
+
+            instance.image_medium.name = "/".join(['attachments/images/medium', instance.filename])
+            instance.save_alt_image(location=instance.image_medium.name, size=(100, 100))
+
+            instance.image_thumbnail.name = "/".join(['attachments/images/thumbnails', instance.filename])
+            instance.save_alt_image(location=instance.image_thumbnail.name, size=(50, 50))
+
+            instance.save()

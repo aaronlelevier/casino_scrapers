@@ -205,3 +205,15 @@ class AttachmentTests(APITestCase):
             "attachments/images/full/{}".format(simple_png.name),
             str(attachment.file)
         )
+        self.assertEqual(
+            "attachments/images/full/{}".format(simple_png.name),
+            str(attachment.image_full)
+        )
+        self.assertEqual(
+            "attachments/images/medium/{}".format(simple_png.name),
+            str(attachment.image_medium)
+        )
+        self.assertEqual(
+            "attachments/images/thumbnails/{}".format(simple_png.name),
+            str(attachment.image_thumbnail)
+        )
