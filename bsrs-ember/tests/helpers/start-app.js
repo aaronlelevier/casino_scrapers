@@ -14,6 +14,11 @@ function ajax(app, url, verb, data, headers, status, response) {
         request.data = data;
         request.contentType = 'application/json';
     }
+    if(data && data instanceof FormData) {
+        request.data = data;
+        request.processData = false;
+        request.contentType = false;
+    }
     Ember.$.fauxjax.new({
       request: request,
       response: {

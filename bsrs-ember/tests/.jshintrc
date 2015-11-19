@@ -1,5 +1,6 @@
 {
   "predef": [
+    "FormData",
     "uploadFile",
     "ajax",
     "patchRandom",
