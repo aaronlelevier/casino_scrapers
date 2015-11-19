@@ -16,6 +16,7 @@ from rest_framework.test import APITestCase
 from generic.models import SavedSearch, Attachment
 from generic.serializers import SavedSearchSerializer
 from person.tests.factory import PASSWORD, create_single_person, create_role, create_person
+from utils.tests.helpers import remove_attachment_test_files
 
 
 class SavedSearchTests(APITestCase):
@@ -155,15 +156,7 @@ class AttachmentTests(APITestCase):
         self.client.logout()
 
         # remove test attachements after running test
-        path = join(self.base_dir, "source/attachments")
-
-        for (dirpath, dirnames, filenames) in os.walk(path):
-            for name in filenames:
-                if name != '.gitignore':
-                    try:
-                        os.remove(join(dirpath, name))
-                    except AttributeError:
-                        pass
+        remove_attachment_test_files()
 
     def test_create_file(self):
         id = str(uuid.uuid4())

@@ -165,6 +165,9 @@ CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:80
 ### CATEGORY
 TOP_LEVEL_CATEGORY_LABEL = 'type'
 
+### GENERIC
+ATTACHMENTS_DIRECTORY = os.path.join(BASE_DIR, "source/attachments")
+
 ### LOCATION
 DEFAULT_LOCATION_STATUS = 'Open'
 DEFAULT_LOCATION_TYPE = 'big_store'

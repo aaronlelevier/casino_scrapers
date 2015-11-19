@@ -15,6 +15,7 @@ from generic.models import MainSetting, Attachment, SavedSearch
 from location.models import LocationLevel
 from person.tests.factory import create_single_person
 from ticket.tests.factory import create_ticket
+from utils.tests.helpers import remove_attachment_test_files
 
 
 class SavedSearchTests(TestCase):
@@ -81,15 +82,7 @@ class AttachmentModelTests(TestCase):
 
     def tearDown(self):
         # remove test attachements after running test
-        path = join(self.base_dir, "source/attachments")
-        
-        for (dirpath, dirnames, filenames) in os.walk(path):
-            for name in filenames:
-                if name != '.gitignore':
-                    try:
-                        os.remove(join(dirpath, name))
-                    except AttributeError:
-                        pass
+        remove_attachment_test_files()
 
     def test_files_exist(self):
         self.assertTrue(os.path.isfile(self.image))

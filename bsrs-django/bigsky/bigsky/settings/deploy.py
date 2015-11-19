@@ -13,3 +13,5 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+MEDIA_ROOT = "/var/www/media/deploy/"
