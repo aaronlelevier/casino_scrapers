@@ -41,9 +41,9 @@ module('Acceptance | ticket file upload test', {
     }
 });
 
-test('toran upload will post form data, show progress and on save append the attachment', (assert) => {
+test('upload will post form data, show progress and on save append the attachment', (assert) => {
     let model = store.find('ticket', TD.idOne);
-    let image = {name: 'toranb.png', type: 'image/png', size: 234000};
+    let image = {name: 'foo.png', type: 'image/png', size: 234000};
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);

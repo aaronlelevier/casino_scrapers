@@ -16,6 +16,8 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
     requester_id: attr(),
     ticket_people_fks: [],
     ticket_categories_fks: [],
+    previous_attachments_fks: [],
+    ticket_attachments_fks: [],
     status_fk: undefined,
     priority_fk: undefined,
     location_fk: undefined,
@@ -181,6 +183,34 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         let new_priority_tickets = new_priority.get('tickets') || [];
         new_priority.set('tickets', new_priority_tickets.concat(ticket_id));
     },
+    attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
+    attachmentsIsDirty: Ember.computed('attachments.[]', 'previous_attachments_fks.[]', function() {
+        let attachments = this.get('attachments');
+        let previous_attachments_fks = this.get('previous_attachments_fks') || [];
+        if(attachments.get('length') !== previous_attachments_fks.length) {
+            return true;
+        }
+    }),
+    attachments: Ember.computed('ticket_attachments_fks.[]', function() {
+        const related_fks = this.get('ticket_attachments_fks');
+        const filter = function(attachment) {
+            return Ember.$.inArray(attachment.get('id'), related_fks) > -1;
+        };
+        return this.get('store').find('ticket-attachment', filter, []);
+    }),
+    remove_attachment(attachment_id) {
+        let ticket_id = this.get('id');
+        let current_fks = this.get('ticket_attachments_fks') || [];
+        let updated_fks = current_fks.filter(function(id) {
+            return id !== attachment_id;
+        });
+        this.set('ticket_attachments_fks', updated_fks);
+    },
+    add_attachment(attachment_id) {
+        let ticket_id = this.get('id');
+        let current_fks = this.get('ticket_attachments_fks') || [];
+        this.set('ticket_attachments_fks', current_fks.concat(attachment_id).uniq());
+    },
     change_status(new_status_id) {
         let ticket_id = this.get('id');
         let store = this.get('store');
@@ -198,13 +228,6 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
             new_status.set('tickets', new_status_tickets.concat(ticket_id));
         }
     },
-    attachments: Ember.computed(function() {
-        const ticket_id = this.get('id');
-        const filter = function(file) {
-            return file.get('ticket_fk') === ticket_id;
-        };
-        return this.get('store').find('ticket-attachment', filter, ['ticket_fk']);
-    }),
     serialize() {
         let payload = {
             id: this.get('id'),

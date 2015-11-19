@@ -6,10 +6,11 @@ var PREFIX = config.APP.NAMESPACE;
 
 var AttachmentRepo = Ember.Object.extend({
     uuid: inject('uuid'),
-    upload(file, ticket_fk) {
+    upload(file, ticket) {
         let store = this.get('store');
         let id = this.get('uuid').v4();
-        let attached = store.push('ticket-attachment', {id: id, ticket_fk: ticket_fk, uploaded: false});
+        let attached = store.push('ticket-attachment', {id: id, uploaded: false});
+        ticket.add_attachment(id);
         let data = new FormData();
         data.append('id', id);
         data.append('filename', file.name);

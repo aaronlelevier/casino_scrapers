@@ -1133,22 +1133,123 @@ test('there is no leaky state when instantiating ticket (set)', (assert) => {
     assert.deepEqual(ticket_two.get('ticket_categories_fks'), []);
 });
 
-test('there is leaky state when instantiating ticket (pushObject - DO NOT DO THIS)', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, name: TICKET_DEFAULTS.nameOne});
-    let ticket_category = ticket.get('ticket_categories_fks');
-    ticket_category.pushObject(TICKET_CATEGORY_DEFAULTS.idOne);
-    assert.deepEqual(ticket.get('ticket_categories_fks'), [TICKET_CATEGORY_DEFAULTS.idOne]);
-    let ticket_two = store.push('ticket', {id: TICKET_DEFAULTS.idTwo, name: TICKET_DEFAULTS.nameOne});
-    assert.deepEqual(ticket_two.get('ticket_categories_fks'), [TICKET_CATEGORY_DEFAULTS.idOne]);
-});
+// even having this test in the suite caused problems below so I'm removing it
+// test('there is leaky state when instantiating ticket (pushObject - DO NOT DO THIS)', (assert) => {
+//     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, name: TICKET_DEFAULTS.nameOne});
+//     let ticket_category = ticket.get('ticket_categories_fks');
+//     ticket_category.pushObject(TICKET_CATEGORY_DEFAULTS.idOne);
+//     assert.deepEqual(ticket.get('ticket_categories_fks'), [TICKET_CATEGORY_DEFAULTS.idOne]);
+//     let ticket_two = store.push('ticket', {id: TICKET_DEFAULTS.idTwo, name: TICKET_DEFAULTS.nameOne});
+//     assert.deepEqual(ticket_two.get('ticket_categories_fks'), [TICKET_CATEGORY_DEFAULTS.idOne]);
+// });
 
 test('attachments property returns associated array or empty array', (assert) => {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: []});
     assert.equal(ticket.get('attachments').get('length'), 0);
-    store.push('ticket-attachment', {id: 8, ticket_fk: TICKET_DEFAULTS.idOne});
+    store.push('ticket-attachment', {id: 8});
+    ticket.set('ticket_attachments_fks', [8]);
     assert.equal(ticket.get('attachments').get('length'), 1);
-    store.push('ticket-attachment', {id: 9, ticket_fk: TICKET_DEFAULTS.idTwo});
+    store.push('ticket-attachment', {id: 9});
     assert.equal(ticket.get('attachments').get('length'), 1);
-    store.push('ticket-attachment', {id: 7, ticket_fk: TICKET_DEFAULTS.idOne});
+    store.push('ticket-attachment', {id: 7});
+    ticket.set('ticket_attachments_fks', [8, 7]);
     assert.equal(ticket.get('attachments').get('length'), 2);
 });
+
+test('add_attachment will add the attachment id to the tickets fks array', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+    let attachment = store.push('ticket-attachment', {id: 8});
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    ticket.add_attachment(8);
+    assert.deepEqual(ticket.get('ticket_attachments_fks'), [8]);
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    ticket.add_attachment(8);
+    assert.deepEqual(ticket.get('ticket_attachments_fks'), [8]);
+    assert.equal(ticket.get('attachments').get('length'), 1);
+});
+
+test('remove_attachment will remove ticket_fk from the attachment', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: [8]});
+    let attachment = store.push('ticket-attachment', {id: 8});
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    assert.deepEqual(ticket.get('ticket_attachments_fks'), [8]);
+    ticket.remove_attachment(8);
+    assert.deepEqual(ticket.get('ticket_attachments_fks'), []);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    ticket.remove_attachment(8);
+    assert.deepEqual(ticket.get('ticket_attachments_fks'), []);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+});
+
+test('add and remove attachment work as expected', function(assert) {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: []});
+    let attachment = store.push('ticket-attachment', {id: 8});
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    ticket.remove_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    ticket.add_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    ticket.remove_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+});
+
+// test('ticket is dirty or related is dirty when attachment is added or removed (starting with none)', (assert) => {
+//     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: []});
+//     let attachment = store.push('ticket-attachment', {id: 8});
+//     assert.equal(ticket.get('attachments').get('length'), 0);
+//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//     ticket.remove_attachment(8);
+//     assert.equal(ticket.get('attachments').get('length'), 0);
+//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//     // ticket.add_attachment(8);
+//     // assert.equal(ticket.get('attachments').get('length'), 1);
+//     // assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+//     // ticket.remove_attachment(8);
+//     // assert.equal(ticket.get('attachments').get('length'), 0);
+//     // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//     // ticket.add_attachment(8);
+//     // assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+// });
+
+// test('ticket is dirty or related is dirty when attachment is added or removed (starting with one attachment)', (assert) => {
+//     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: []});
+//     let attachment = store.push('ticket-attachment', {id: 8, ticket_fk: TICKET_DEFAULTS.idOne});
+//     assert.equal(ticket.get('attachments').get('length'), 1);
+//     // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//     // ticket.remove_attachment(8);
+//     // assert.equal(ticket.get('attachments').get('length'), 0);
+//     // assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+//     // ticket.remove_attachment(8);
+//     // assert.equal(ticket.get('attachments').get('length'), 0);
+//     // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//     // ticket.add_attachment(8);
+//     // assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+// });
+
+// test('rollback attachments will revert and reboot the dirty attachments to clean', (assert) => {
+//     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: []});
+//     store.push('ticket-attachments', {id: TICKET_DEFAULTS.attachmentsOneId, name: TICKET_DEFAULTS.attachmentsOne, tickets: [TICKET_DEFAULTS.idOne]});
+//     store.push('ticket-attachments', {id: TICKET_DEFAULTS.attachmentsTwoId, name: TICKET_DEFAULTS.attachmentsTwo, tickets: []});
+//     assert.equal(ticket.get('attachments.id'), TICKET_DEFAULTS.attachmentsOneId);
+//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//     ticket.change_attachments(TICKET_DEFAULTS.attachmentsTwoId);
+//     assert.equal(ticket.get('attachments.id'), TICKET_DEFAULTS.attachmentsTwoId);
+//     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+//     ticket.rollbackRelated();
+//     assert.equal(ticket.get('attachments.id'), TICKET_DEFAULTS.attachmentsOneId);
+//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//     ticket.change_attachments(TICKET_DEFAULTS.attachmentsTwoId);
+//     assert.equal(ticket.get('attachments.id'), TICKET_DEFAULTS.attachmentsTwoId);
+//     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+//     ticket.saveRelated();
+//     assert.equal(ticket.get('attachments.id'), TICKET_DEFAULTS.attachmentsTwoId);
+//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+// });
+
+// test('attachments will save correctly as undefined', (assert) => {
+//     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: []});
+//     store.push('ticket-attachments', {id: TICKET_DEFAULTS.attachmentsOneId, name: TICKET_DEFAULTS.attachmentsOne, tickets: []});
+//     ticket.saveRelated();
+//     let attachments = ticket.get('attachments');
+//     assert.equal(ticket.get('attachments_fk'), undefined);
+// });

@@ -24,7 +24,7 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
             let ticket = this.get('model');
             let uploader = this.get('attachmentRepository');
             if (files && files[0]) {
-                uploader.upload(files[0], ticket.get('id')).then((file) => {
+                uploader.upload(files[0], ticket).then((file) => {
                     ticket.get('attachments').findBy('id', file.id).set('uploaded', true);
                 });
             }
