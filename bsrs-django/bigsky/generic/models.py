@@ -193,14 +193,12 @@ class Attachment(BaseModel):
 @receiver(post_save, sender=Attachment)
 def create_medium_and_thumbnail_images(sender, instance=None, created=False, **kwargs):
     if instance.is_image and not instance.image_full:
-        with open(os.path.join(settings.MEDIA_ROOT, str(instance.file)), 'rb'):
+        instance.image_full = instance.file
 
-            instance.image_full = instance.file
+        instance.image_medium.name = "/".join(['attachments/images/medium', instance.filename])
+        instance.save_alt_image(location=instance.image_medium.name, size=(100, 100))
 
-            instance.image_medium.name = "/".join(['attachments/images/medium', instance.filename])
-            instance.save_alt_image(location=instance.image_medium.name, size=(100, 100))
+        instance.image_thumbnail.name = "/".join(['attachments/images/thumbnails', instance.filename])
+        instance.save_alt_image(location=instance.image_thumbnail.name, size=(50, 50))
 
-            instance.image_thumbnail.name = "/".join(['attachments/images/thumbnails', instance.filename])
-            instance.save_alt_image(location=instance.image_thumbnail.name, size=(50, 50))
-
-            instance.save()
+        instance.save()
