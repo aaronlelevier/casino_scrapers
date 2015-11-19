@@ -25,11 +25,11 @@ let application, store, original_uuid;
 module('Acceptance | ticket file upload test', {
     beforeEach() {
         application = startApp();
-        store = application.__container__.lookup('store:main');
-        let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
-        xhr(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
-        xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
-        xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+        // store = application.__container__.lookup('store:main');
+        // let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
+        // xhr(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+        // xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
+        // xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };
     },
