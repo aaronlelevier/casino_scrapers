@@ -122,8 +122,6 @@ class AttachmentModelTests(TestCase):
             self.assertTrue(attachment.file)
             self.assertTrue(attachment.is_image)
             self.assertTrue(attachment.image_full)
-            self.assertTrue(attachment.image_medium)
-            self.assertTrue(attachment.image_thumbnail)
 
     def test_upload_file(self):
         with open(self.file, 'rb') as infile:
