@@ -156,10 +156,14 @@ class AttachmentTests(APITestCase):
 
         # remove test attachements after running test
         path = join(self.base_dir, "source/attachments")
-        try:
-            shutil.rmtree(path)
-        except FileNotFoundError:
-            pass
+
+        for (dirpath, dirnames, filenames) in os.walk(path):
+            for name in filenames:
+                if name != '.gitignore':
+                    try:
+                        os.remove(join(dirpath, name))
+                    except AttributeError:
+                        pass
 
     def test_create_file(self):
         id = str(uuid.uuid4())

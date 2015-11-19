@@ -39,9 +39,5 @@ _*.md
 # virtualenv
 venv/
 
-# attachments
-**/attachments/images/
-**/attachments/files/
-
 # translation output-files
 *-out.csv
