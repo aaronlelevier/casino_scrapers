@@ -73,20 +73,19 @@ class AttachmentModelTests(TestCase):
         # test upload file save in source control
         self.base_dir = dirname(dirname(dirname(__file__)))
 
-        self.image = join(self.base_dir, "source/test_in/aaron.jpeg")
-        self.image_filename = os.path.split(self.image)[1]
-
         self.file = join(self.base_dir, "source/test_in/es.csv")
         self.file_filename = os.path.split(self.file)[1]
 
-    # COMMENT OUT: b/c saving thumbnails will fail on Jenkins if this is run
-    # def tearDown(self):
-    #     # remove test attachements after running test
-    #     path = join(self.base_dir, "source/attachments")
-    #     try:
-    #         shutil.rmtree(path)
-    #     except FileNotFoundError:
-    #         pass
+        self.image = join(self.base_dir, "source/test_in/test-mountains.jpg")
+        self.image_filename = os.path.split(self.image)[1]
+
+    def tearDown(self):
+        # remove test attachements after running test
+        path = join(self.base_dir, "source/attachments")
+        try:
+            shutil.rmtree(path)
+        except FileNotFoundError:
+            pass
 
     def test_files_exist(self):
         self.assertTrue(os.path.isfile(self.image))

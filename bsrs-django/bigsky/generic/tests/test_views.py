@@ -148,22 +148,18 @@ class AttachmentTests(APITestCase):
         self.file = join(self.base_dir, "source/test_in/es.csv")
         self.file_filename = os.path.split(self.file)[1]
 
-        self.image = join(self.base_dir, "source/test_in/aaron.jpeg")
-        self.image_filename = os.path.split(self.image)[1]
-
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
         self.client.logout()
 
-        # COMMENT OUT: b/c saving thumbnails will fail on Jenkins if this is run
         # remove test attachements after running test
-        # path = join(self.base_dir, "source/attachments")
-        # try:
-        #     shutil.rmtree(path)
-        # except FileNotFoundError:
-        #     pass
+        path = join(self.base_dir, "source/attachments")
+        try:
+            shutil.rmtree(path)
+        except FileNotFoundError:
+            pass
 
     def test_create_file(self):
         id = str(uuid.uuid4())
@@ -189,23 +185,26 @@ class AttachmentTests(APITestCase):
 
     def test_create_image(self):
         id = str(uuid.uuid4())
-        with open(self.image, 'rb') as data:
-            # data = data.read()
-            post_data = {
-                'id': id,
-                'filename': self.image_filename,
-                'file': data
-            }
 
-            response = self.client.post("/api/admin/attachments/", post_data)
+        # This is a 1x1 black png
+        simple_png = BytesIO(b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01\x08\x06\x00\x00\x00\x1f\x15\xc4\x89\x00\x00\x00\rIDATx\x9cc````\x00\x00\x00\x05\x00\x01\xa5\xf6E@\x00\x00\x00\x00IEND\xaeB`\x82')
+        simple_png.name = 'test.png'
 
-            self.assertEqual(response.status_code, 201)
-            data = json.loads(response.content.decode('utf8'))
-            self.assertEqual(data['id'], id)
-            self.assertEqual(data['filename'], self.image_filename)
-            # verify file save location
-            attachment = Attachment.objects.get(id=id)
-            self.assertIn(
-                "attachments/images/full/{}".format(self.image_filename.split(".")[0]),
-                str(attachment.file)
-            )
+        post_data = {
+            'id': id,
+            'filename': simple_png.name,
+            'file': simple_png
+        }
+
+        response = self.client.post("/api/admin/attachments/", post_data)
+
+        self.assertEqual(response.status_code, 201)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], id)
+        self.assertEqual(data['filename'], simple_png.name)
+        # verify file save location
+        attachment = Attachment.objects.get(id=id)
+        self.assertEqual(
+            "attachments/images/full/{}".format(simple_png.name),
+            str(attachment.file)
+        )
