@@ -247,8 +247,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         except NoSuchElementException:
             pass
 
-        person_page.find_list_data()
         self.driver.refresh()
+        person_page.find_list_data()
         new_person = person_page.click_name_in_list(username, new_person=None)
         try:
             new_person.click()
