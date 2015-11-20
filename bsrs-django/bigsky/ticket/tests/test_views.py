@@ -50,8 +50,6 @@ class TicketListTests(APITestCase):
         self.assertEqual(ticket['status'], str(self.ticket.status.id))
         self.assertEqual(ticket['priority'], str(self.ticket.priority.id))
         self.assertEqual(ticket['requester'], str(self.ticket.requester.id))
-        self.assertEqual(ticket['attachments'],
-            list(self.ticket.attachments.values_list('id', flat=True)))
         self.assertEqual(ticket['request'], self.ticket.request)
         self.assertEqual(ticket['number'], self.ticket.number)
 
