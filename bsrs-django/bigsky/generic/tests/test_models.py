@@ -88,7 +88,23 @@ class AttachmentModelTests(TestCase):
         self.assertTrue(os.path.isfile(self.image))
         self.assertTrue(os.path.isfile(self.file))
 
-    def test_create(self):
+    def test_upload_file(self):
+        with open(self.file, 'rb') as infile:
+            _file = SimpleUploadedFile(self.file_filename, infile.read())
+            attachment = Attachment.objects.create(
+                ticket=self.ticket,
+                file=_file
+            )
+            self.assertIsInstance(attachment, Attachment)
+            self.assertEqual(attachment.ticket, self.ticket)
+            self.assertEqual(attachment.filename, self.file_filename)
+            self.assertFalse(attachment.is_image)
+            self.assertTrue(attachment.file)
+            self.assertFalse(attachment.image_full)
+            self.assertFalse(attachment.image_medium)
+            self.assertFalse(attachment.image_thumbnail)
+
+    def test_upload_image(self):
         with open(self.image, 'rb') as infile:
             _file = SimpleUploadedFile(self.image_filename, infile.read())
             attachment = Attachment.objects.create(
@@ -96,10 +112,13 @@ class AttachmentModelTests(TestCase):
                 file=_file
             )
             self.assertIsInstance(attachment, Attachment)
-            self.assertEqual(
-                attachment.filename,
-                self.image_filename # test-mountains.jpg
-            )
+            self.assertEqual(attachment.ticket, self.ticket)
+            self.assertEqual(attachment.filename, self.image_filename)
+            self.assertTrue(attachment.is_image)
+            self.assertTrue(attachment.file)
+            self.assertTrue(attachment.image_full)
+            self.assertFalse(attachment.image_medium)
+            self.assertFalse(attachment.image_thumbnail)
 
     def test_upload_size(self):
         with self.settings(MAX_UPLOAD_SIZE=0):
@@ -111,24 +130,3 @@ class AttachmentModelTests(TestCase):
                         ticket=self.ticket,
                         file=_file
                     )
-
-    def test_upload_image(self):
-        with open(self.image, 'rb') as infile:
-            _file = SimpleUploadedFile(self.image_filename, infile.read())
-            attachment = Attachment.objects.create(
-                ticket=self.ticket,
-                file=_file
-            )
-            self.assertTrue(attachment.file)
-            self.assertTrue(attachment.is_image)
-            self.assertTrue(attachment.image_full)
-
-    def test_upload_file(self):
-        with open(self.file, 'rb') as infile:
-            _file = SimpleUploadedFile(self.file_filename, infile.read())
-            attachment = Attachment.objects.create(
-                ticket=self.ticket,
-                file=_file
-            )
-            self.assertFalse(attachment.is_image)
-            self.assertFalse(attachment.image_full)
