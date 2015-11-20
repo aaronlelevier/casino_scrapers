@@ -133,15 +133,17 @@ class ThirdPartyTests(APITestCase):
             self.data, format='json')
         self.assertEqual(response.status_code, 200)
 
-    def test_update_change_name(self):
-        self.data['number'] = '123-232-2322'
+    def test_update_number(self):
+        init_number = self.data['number']
+        post_number = '123-232-2322'
+        self.data['number'] = post_number
+
         response = self.client.put('/api/admin/third-parties/{}/'.format(self.third_party.id),
             self.data, format='json')
+
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertNotEqual(self.third_party.number, data['number'])
-        self.assertIsInstance(Email.objects.get(id=data['emails'][0]['id']), Email)
-        self.assertIsInstance(EmailType.objects.get(id=data['emails'][0]['type']), EmailType)
+        self.assertEqual(data['number'], post_number)
 
     ### CREATE
 
