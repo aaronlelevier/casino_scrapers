@@ -2,6 +2,7 @@ import copy
 
 from category.models import Category
 from person.models import Person
+from generic.models import Attachment
 from ticket.models import TicketActivityType
 
 
@@ -19,6 +20,10 @@ class TicketActivityToRepresentation(object):
                 self.set_person_list_data_with_key(key='added')
             elif self.type.name == 'cc_remove':
                 self.set_person_list_data_with_key(key='removed')
+            elif self.type.name == 'attachment_add':
+                self.set_attachment_list_data_with_key(key='added')
+            elif self.type.name == 'attachment_remove':
+                self.set_attachment_list_data_with_key(key='removed')
             elif self.type.name == 'categories':
                 self.set_category_data()
 
@@ -38,6 +43,14 @@ class TicketActivityToRepresentation(object):
         for id in person_ids:
             person = Person.objects.get(id=id)
             self.data['content'][key].append(person.to_simple_fullname_dict())
+
+    def set_attachment_list_data_with_key(self, key):
+        attachment_ids = list(self.data['content'].values())
+        self.data['content'] = {key: []}
+
+        for id in attachment_ids:
+            attachment = Attachment.objects.get(id=id)
+            self.data['content'][key].append(attachment.to_dict())
 
     def set_category_data(self):
         self.set_category_with_key('from')

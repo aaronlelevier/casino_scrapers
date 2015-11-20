@@ -195,3 +195,9 @@ class Attachment(BaseModel):
                     self.file._file._size))
         except AttributeError:
             pass
+
+    def to_dict(self):
+        return {
+            "id": str(self.id),
+            "filename": self.filename,
+        }

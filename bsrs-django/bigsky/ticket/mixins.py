@@ -46,17 +46,27 @@ class TicketUpdateLogger(object):
     when the ``Ticket`` is updated.
     """
 
-    def __init__(self, instance, person, init_ticket, post_ticket):
+    def __init__(self, instance, person, init_ticket=None, post_ticket=None, content=None):
         self.instance = instance
         self.person = person
         self.init_ticket = init_ticket
         self.post_ticket = post_ticket
+        self.content = content
 
     def run_check_ticket_changes(self):
         "Run all log checks for the Ticket."
         self.check_cc_add_or_remove()
         self.check_from_to_changes()
         self.check_category_change()
+
+    def run_check_attachment_change(self):
+        "Run all log checks for the Ticket."
+        self.check_attachment_change()
+
+    def check_attachment_change(self):
+        self.log_list_change('attachment_add', self.content)
+        # if self.type == 'attachment_remove':
+        #     self.log_list_change('attachment_remove', self.content)
 
     def check_cc_add_or_remove(self):
         init_cc = set(self.init_ticket.get('cc', set()))
@@ -123,6 +133,7 @@ class UpdateTicketModelMixin(object):
     """
     Add ``TicketActivityLogger`` to standard DRF ``UpdateModelMixin``
     """
+
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
@@ -130,6 +141,10 @@ class UpdateTicketModelMixin(object):
             comment = request.data.pop('comment', [])
             type_of, _ = TicketActivityType.objects.get_or_create(name='comment')
             TicketActivity.objects.create(type=type_of, person=request.user, ticket=instance, content={'comment': comment})
+        if request.data['attachments'] != []:
+            attachment_add = set(request.data.pop('attachments', set()))
+            log = TicketUpdateLogger(instance, request.user, content=attachment_add)
+            log.run_check_attachment_change()
         # store initial instance data before it gets updated
         init_ticket = copy.copy(model_to_dict(instance))
         # perform update
