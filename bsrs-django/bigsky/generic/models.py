@@ -99,19 +99,17 @@ def upload_to(instance, filename):
     name, extension = os.path.splitext(filename)
 
     if extension in IMAGE_EXTENSIONS:
-        dir_ = 'images/full'
+        return '/'.join([settings.IMAGE_FULL_SUB_PATH, filename])
     else:
-        dir_ = 'files'
-
-    return '/'.join(['attachments/{}'.format(dir_), filename])
+        return '/'.join([settings.FILES_SUB_PATH, filename])
 
 
 def upload_to_images_medium(instance, filename):
-    return '/'.join(['attachments/images/medium', filename])
+    return '/'.join([settings.IMAGE_MEDIUM_SUB_PATH, filename])
 
 
 def upload_to_images_thumbnail(instance, filename):
-    return '/'.join(['attachments/images/thumbnails', filename])
+    return '/'.join([settings.IMAGE_THUMBNAIL_SUB_PATH, filename])
 
 
 ### ATTACHMENT

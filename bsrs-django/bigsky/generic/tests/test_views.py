@@ -176,7 +176,7 @@ class AttachmentTests(APITestCase):
             # verify file save location
             attachment = Attachment.objects.get(id=id)
             self.assertIn(
-                "attachments/files/{}".format(self.file_filename.split(".")[0]),
+                "/".join([settings.FILES_SUB_PATH, self.file_filename.split(".")[0]]),
                 str(attachment.file)
             )
 
@@ -202,10 +202,10 @@ class AttachmentTests(APITestCase):
         # verify file save location
         attachment = Attachment.objects.get(id=id)
         self.assertEqual(
-            "attachments/images/full/{}".format(simple_png.name),
+            "/".join([settings.IMAGE_FULL_SUB_PATH, simple_png.name]),
             str(attachment.file)
         )
         self.assertEqual(
-            "attachments/images/full/{}".format(simple_png.name),
+            "/".join([settings.IMAGE_FULL_SUB_PATH, simple_png.name]),
             str(attachment.image_full)
         )
