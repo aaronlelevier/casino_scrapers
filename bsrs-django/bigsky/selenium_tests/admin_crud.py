@@ -198,77 +198,77 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
             [r.text for r in location_level_list_view]
         )
 
-    def test_person(self):
-        ### CREATE
-        # Go to Person Area
-        self.nav_page.find_people_link().click()
-        # Create Person Page Object
-        person_page = PersonPage(
-            driver = self.driver,
-            new_link = "t-add-new",
-            list_name = "t-person-username",
-            list_data = "t-grid-data"
-        )
-        # Go to Create Person view
-        person_page.find_new_link().click()
-        username = "almno_"+rand_chars()
-        password = "bobber-foo"
-        person = InputHelper(username=username, password=password)
-        role_input = Select(self.driver.find_element_by_id("person-role"))
-        role_input.select_by_index(1)
-        self._fill_in(person)
-        self.gen_elem_page.click_save_btn()
-        ### UPDATE
-        person_page.find_wait_and_assert_elem("t-person-username", username)
-        first_name = "scooter"
-        middle_initial = "B"
-        last_name = "McGavine"
-        employee_id = "1234"
-        title = "myTitle"
-        new_phone_one = "888-999-7878"
-        new_phone_two = "888-999-7899"
-        person = InputHelper(first_name=first_name, middle_initial=middle_initial,
-                last_name=last_name, employee_id=employee_id,
-                title=title)
-        self._fill_in(person)
-        add_phone_number_btn = self.gen_elem_page.find_add_btn()
-        add_phone_number_btn.click()
-        person_page.find_ph_new_entry_send_keys(new_phone_one)
-        add_phone_number_btn.click()
-        all_phone_number_inputs = person_page.find_all_ph_new_entries()
-        last_phone_number_input = all_phone_number_inputs[1]
-        last_phone_number_input.send_keys(new_phone_two)
-        person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
+    # def test_person(self):
+    #     ### CREATE
+    #     # Go to Person Area
+    #     self.nav_page.find_people_link().click()
+    #     # Create Person Page Object
+    #     person_page = PersonPage(
+    #         driver = self.driver,
+    #         new_link = "t-add-new",
+    #         list_name = "t-person-username",
+    #         list_data = "t-grid-data"
+    #     )
+    #     # Go to Create Person view
+    #     person_page.find_new_link().click()
+    #     username = "almno_"+rand_chars()
+    #     password = "bobber-foo"
+    #     person = InputHelper(username=username, password=password)
+    #     role_input = Select(self.driver.find_element_by_id("person-role"))
+    #     role_input.select_by_index(1)
+    #     self._fill_in(person)
+    #     self.gen_elem_page.click_save_btn()
+    #     ### UPDATE
+    #     person_page.find_wait_and_assert_elem("t-person-username", username)
+    #     first_name = "scooter"
+    #     middle_initial = "B"
+    #     last_name = "McGavine"
+    #     employee_id = "1234"
+    #     title = "myTitle"
+    #     new_phone_one = "888-999-7878"
+    #     new_phone_two = "888-999-7899"
+    #     person = InputHelper(first_name=first_name, middle_initial=middle_initial,
+    #             last_name=last_name, employee_id=employee_id,
+    #             title=title)
+    #     self._fill_in(person)
+    #     add_phone_number_btn = self.gen_elem_page.find_add_btn()
+    #     add_phone_number_btn.click()
+    #     person_page.find_ph_new_entry_send_keys(new_phone_one)
+    #     add_phone_number_btn.click()
+    #     all_phone_number_inputs = person_page.find_all_ph_new_entries()
+    #     last_phone_number_input = all_phone_number_inputs[1]
+    #     last_phone_number_input.send_keys(new_phone_two)
+    #     person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
 
-        # b/c first save won't work if the 'password' is still attached to the person.
-        self.gen_elem_page.click_save_btn()
-        try:
-            self.gen_elem_page.click_save_btn()
-        except NoSuchElementException:
-            pass
+    #     # b/c first save won't work if the 'password' is still attached to the person.
+    #     self.gen_elem_page.click_save_btn()
+    #     try:
+    #         self.gen_elem_page.click_save_btn()
+    #     except NoSuchElementException:
+    #         pass
 
-        person_page.find_list_data()
-        self.driver.refresh()
-        person_page.find_list_data()
-        new_person = person_page.click_name_in_list(username, new_person=None)
-        try:
-            new_person.click()
-        except AttributeError as e:
-            raise e("new person not found")
-        person_page.find_wait_and_assert_elem("t-person-username", username)
-        person_page.find_and_assert_elems(username=username, first_name=first_name,
-            middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
-        self.driver.refresh()
-        person_page.find_wait_and_assert_elem("t-person-username", username)
-        person_page.find_and_assert_elems(username=username, first_name=first_name,
-            middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
-        ### DELETE
-        person_page.find_wait_and_assert_elem("t-person-username", username)
-        self.gen_elem_page.click_dropdown_delete()
-        self.gen_elem_page.click_delete_btn()
-        self.driver.refresh()
-        person = self.driver_wait.find_elements_by_class_name(person_page.list_data) #person_page.find_list_data(just_refreshed=True)
-        person_page.find_list_name()
+    #     person_page.find_list_data()
+    #     self.driver.refresh()
+    #     person_page.find_list_data()
+    #     new_person = person_page.click_name_in_list(username, new_person=None)
+    #     try:
+    #         new_person.click()
+    #     except AttributeError as e:
+    #         raise e("new person not found")
+    #     person_page.find_wait_and_assert_elem("t-person-username", username)
+    #     person_page.find_and_assert_elems(username=username, first_name=first_name,
+    #         middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
+    #     self.driver.refresh()
+    #     person_page.find_wait_and_assert_elem("t-person-username", username)
+    #     person_page.find_and_assert_elems(username=username, first_name=first_name,
+    #         middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
+    #     ### DELETE
+    #     person_page.find_wait_and_assert_elem("t-person-username", username)
+    #     self.gen_elem_page.click_dropdown_delete()
+    #     self.gen_elem_page.click_delete_btn()
+    #     self.driver.refresh()
+    #     person = self.driver_wait.find_elements_by_class_name(person_page.list_data) #person_page.find_list_data(just_refreshed=True)
+    #     person_page.find_list_name()
 
         # # TODO: 
         # This is failing because a Grid View page # allows you to go to that page,
