@@ -1,3 +1,5 @@
+import selenium
+
 from .model_page import ModelPage
 
 
@@ -71,5 +73,7 @@ class PersonPage(ModelPage):
                 element_list = pagination.find_elements_by_tag_name("a")
                 next_elem = element_list[count]
                 next_elem.click()
+            except selenium.common.exceptions.ElementNotVisibleException:
+                pass
             except IndexError:
                 assert new_person == None

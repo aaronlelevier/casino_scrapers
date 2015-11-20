@@ -78,6 +78,10 @@ class Wait(object):
     def find_element_by_class_name(self, element):
         return element
 
+    @wait_elemment(By.TAG_NAME)
+    def find_element_by_tag_name(self, element):
+        return element
+
     ### PLURAL
 
     @wait_elemments(By.CLASS_NAME)
