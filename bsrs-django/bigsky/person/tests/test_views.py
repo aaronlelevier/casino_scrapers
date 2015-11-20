@@ -265,6 +265,8 @@ class PersonListTests(TestCase):
         self.assertEqual(data['role'], str(person.role.id))
         self.assertEqual(data['title'], person.title)
         self.assertEqual(data['employee_id'], person.employee_id)
+        self.assertIn('last_login', data)
+        self.assertIn('date_joined', data)
 
     def test_data_auth_amount(self):
         results = self.data['results'][0]

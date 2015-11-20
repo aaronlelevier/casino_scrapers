@@ -278,7 +278,6 @@ class Person(BaseModel, AbstractUser):
                                             help_text="Date that the Person's password will expire next. "
                                             "Based upon the ``password_expire`` days set on the Role.")
     password_one_time = models.CharField(max_length=255, blank=True, null=True)
-    # TODO: add functionality to populate this field
     password_change = models.DateTimeField( blank=True, null=True,
         help_text="DateTime of last password change")
     password_history = ArrayField(
@@ -293,8 +292,8 @@ class Person(BaseModel, AbstractUser):
                                       blank=True, null=True)
     proxy_user = models.ForeignKey("self", related_name='coveringuser', blank=True, null=True)
 
-    # TODO: add logs for:
-    #   pw_change_log, login_activity, user_history
+    # TODO: add logs for: user_history
+
     phone_numbers = GenericRelation(PhoneNumber)
     addresses = GenericRelation(Address)
     emails = GenericRelation(Email)
