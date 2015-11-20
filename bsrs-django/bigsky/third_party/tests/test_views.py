@@ -2,16 +2,16 @@ import json
 import uuid
 
 from rest_framework.test import APITestCase
+from model_mommy import mommy
 
-from category.models import Category
-from category.tests.factory import create_categories
-from contact.models import Email, EmailType, PhoneNumber, Address
-from contact.serializers import EmailFlatSerializer
-from contact.tests.factory import create_contact, create_contacts
+from contact.models import (Email, EmailType, PhoneNumber, PhoneNumberType,
+    Address, AddressType)
+from contact.tests.factory import create_contact
 from person.tests.factory import PASSWORD, create_person
 from third_party.models import ThirdParty
-from third_party.serializers import ThirdPartyCreateUpdateSerializer
+from third_party.serializers import ThirdPartyUpdateSerializer
 from third_party.tests.factory import create_third_party
+from utils import create
 
 
 class ThirdPartyTests(APITestCase):
@@ -22,7 +22,7 @@ class ThirdPartyTests(APITestCase):
         # ThirdParty
         self.third_party = create_third_party()
         # Data
-        serializer = ThirdPartyCreateUpdateSerializer(self.third_party)
+        serializer = ThirdPartyUpdateSerializer(self.third_party)
         self.data = serializer.data
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -128,10 +128,20 @@ class ThirdPartyTests(APITestCase):
 
     ### UPDATE
 
-    def test_update_no_change(self):
+    def test_update_data(self):
         response = self.client.put('/api/admin/third-parties/{}/'.format(self.third_party.id),
             self.data, format='json')
+
         self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], str(self.third_party.id))
+        self.assertEqual(data['name'], self.third_party.name)
+        self.assertEqual(data['number'], self.third_party.number)
+        self.assertEqual(data['status'], str(self.third_party.status.id))
+        self.assertIn('emails', data)
+        self.assertIn('phone_numbers', data)
+        self.assertIn('addresses', data)
+        self.assertIn('categories', data)
 
     def test_update_number(self):
         init_number = self.data['number']
@@ -144,6 +154,72 @@ class ThirdPartyTests(APITestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['number'], post_number)
+
+    # related model updates
+
+    def test_update_create_email(self):
+        id = str(uuid.uuid4())
+        email_type = mommy.make(EmailType)
+        self.data['emails'] = [{
+            'id': id,
+            'type': str(email_type.id),
+            'email': 'mail@mail.com',
+        }]
+
+        response = self.client.put('/api/admin/third-parties/{}/'.format(self.third_party.id),
+            self.data, format='json')
+
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['emails'])
+        self.assertEqual(data['emails'][0]['id'], self.data['emails'][0]['id'])
+        self.assertEqual(data['emails'][0]['type'], self.data['emails'][0]['type'])
+        self.assertEqual(data['emails'][0]['email'], self.data['emails'][0]['email'])
+
+    def test_update_create_address(self):
+        address_type = mommy.make(AddressType)
+        id = str(uuid.uuid4())
+        self.data['addresses'] = [{
+            'id': id,
+            'type': str(address_type.id),
+            'address': '123 My St.',
+            'city': 'Omaha',
+            'state': 'NE',
+            'postal_code': '92126',
+            'country': 'United States',
+        }]
+
+        response = self.client.put('/api/admin/third-parties/{}/'.format(self.third_party.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['addresses'])
+        self.assertEqual(data['addresses'][0]['id'], self.data['addresses'][0]['id'])
+        self.assertEqual(data['addresses'][0]['type'], self.data['addresses'][0]['type'])
+        self.assertEqual(data['addresses'][0]['address'], self.data['addresses'][0]['address'])
+        self.assertEqual(data['addresses'][0]['city'], self.data['addresses'][0]['city'])
+        self.assertEqual(data['addresses'][0]['state'], self.data['addresses'][0]['state'])
+        self.assertEqual(data['addresses'][0]['postal_code'], self.data['addresses'][0]['postal_code'])
+        self.assertEqual(data['addresses'][0]['country'], self.data['addresses'][0]['country'])
+
+    def test_update_create_phone_number(self):
+        phone_number_type = mommy.make(PhoneNumberType)
+        id = str(uuid.uuid4())
+        self.data['phone_numbers'] = [{
+            'id': id,
+            'type': str(phone_number_type.id),
+            'number': create._generate_ph(),
+        }]
+
+        response = self.client.put('/api/admin/third-parties/{}/'.format(self.third_party.id),
+            self.data, format='json')
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertTrue(data['phone_numbers'])
+        self.assertEqual(data['phone_numbers'][0]['id'], self.data['phone_numbers'][0]['id'])
+        self.assertEqual(data['phone_numbers'][0]['type'], self.data['phone_numbers'][0]['type'])
+        self.assertEqual(data['phone_numbers'][0]['number'], self.data['phone_numbers'][0]['number'])
+
 
     ### CREATE
 

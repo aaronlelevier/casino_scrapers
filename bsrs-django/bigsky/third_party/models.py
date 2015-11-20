@@ -11,7 +11,7 @@ from utils.models import BaseNameModel, BaseManager
 class ThirdPartyStatusManager(BaseManager):
 
     def default(self):
-        obj, created = self.get_or_create(name=settings.THIRD_PARTY_STATUS_DEFAULT)
+        obj, _ = self.get_or_create(name=settings.THIRD_PARTY_STATUS_DEFAULT)
         return obj
 
 

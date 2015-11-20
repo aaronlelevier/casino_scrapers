@@ -18,6 +18,11 @@ class BaseCreateSerializer(serializers.ModelSerializer):
 
 
 class NestedContactSerializerMixin(object):
+    """
+    Updates nested Contact records on a PUT request for a Model.  The Model 
+    is generic here because Contacts use a Generic ForeignKey, so doesn't 
+    have to be a Person.
+    """
 
     def update(self, instance, validated_data):
         phone_numbers = validated_data.pop('phone_numbers', [])

@@ -1,8 +1,8 @@
 from rest_framework.permissions import IsAuthenticated
 
 from third_party.models import ThirdParty
-from third_party.serializers import (ThirdPartySerializer,
-    ThirdPartyDetailSerializer, ThirdPartyCreateUpdateSerializer)
+from third_party.serializers import (ThirdPartySerializer, ThirdPartyDetailSerializer,
+    ThirdPartyCreateSerializer, ThirdPartyUpdateSerializer)
 from utils.views import BaseModelViewSet
 
 
@@ -17,8 +17,10 @@ class ThirdPartyViewSet(BaseModelViewSet):
         """
         set the serializer based on the method
         """
-        if self.action in ('create', 'update', 'partial_update'):
-            return ThirdPartyCreateUpdateSerializer
+        if self.action == 'create':
+            return ThirdPartyCreateSerializer
+        elif self.action in ('update', 'partial_update'):
+            return ThirdPartyUpdateSerializer
         elif self.action == 'retrieve':
             return ThirdPartyDetailSerializer
         else:

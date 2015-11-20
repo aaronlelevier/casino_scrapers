@@ -22,6 +22,13 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
         return data
 
 
+class CategoryFlatSerializer(BaseCreateSerializer):
+
+    class Meta:
+        model = Category
+        fields = ('id', 'name', 'parent', 'children',)
+
+
 class CategoryRoleSerializer(BaseCreateSerializer):
 
     class Meta:

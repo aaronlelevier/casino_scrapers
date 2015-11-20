@@ -2,7 +2,6 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_categories
-from contact.models import PhoneNumber, Email, Address
 from contact.tests.factory import create_contacts
 from third_party.models import ThirdParty
 from utils import create

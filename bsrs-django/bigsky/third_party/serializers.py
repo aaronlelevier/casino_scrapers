@@ -1,12 +1,13 @@
-from category.serializers import CategoryIDNameSerializer
+from rest_framework import serializers
+
+from category.models import Category
 from contact.serializers import   (
     PhoneNumberFlatSerializer, PhoneNumberSerializer,
     EmailFlatSerializer, EmailSerializer,
     AddressFlatSerializer, AddressSerializer)
 from third_party.models import ThirdParty
-from utils.serializers import BaseCreateSerializer
+from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
 
-from rest_framework import serializers
 
 
 THIRD_PARTY_FIELDS = ('id', 'name', 'number', 'status',)
@@ -19,12 +20,23 @@ class ThirdPartySerializer(serializers.ModelSerializer):
         fields = THIRD_PARTY_FIELDS
 
 
-class ThirdPartyCreateUpdateSerializer(BaseCreateSerializer):
+class ThirdPartyCreateSerializer(BaseCreateSerializer):
 
-    categories = CategoryIDNameSerializer(read_only=True, many=True)
-    emails = EmailFlatSerializer(read_only=True, many=True)
-    phone_numbers = PhoneNumberFlatSerializer(read_only=True, many=True)
-    addresses = AddressFlatSerializer(read_only=True, many=True)
+    class Meta:
+        model = ThirdParty
+        fields = THIRD_PARTY_FIELDS + ('currency',)
+
+
+class ThirdPartyUpdateSerializer(NestedContactSerializerMixin, serializers.ModelSerializer):
+    """
+    Has the ability to create nested Contacts, but not nested Categories. 
+    Only update related categories on the ThirdParty.
+    """
+    categories = serializers.PrimaryKeyRelatedField(
+        queryset=Category.objects.all(), many=True, required=False)
+    emails = EmailFlatSerializer(required=False, many=True)
+    phone_numbers = PhoneNumberFlatSerializer(required=False, many=True)
+    addresses = AddressFlatSerializer(required=False, many=True)
 
     class Meta:
         model = ThirdParty
