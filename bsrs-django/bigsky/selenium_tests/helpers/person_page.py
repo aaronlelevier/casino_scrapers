@@ -40,7 +40,7 @@ class PersonPage(ModelPage):
             new_person, count = self._loop_over_names(name, new_person, count)
             if new_person:
                 break
-            pagination = self.driver.find_element_by_class_name("t-pages")
+            pagination = self.wait_for_xhr_request("t-pages")
             element_list = pagination.find_elements_by_tag_name("a")
             next_elem = element_list[count]
             next_elem.click()
