@@ -23,8 +23,6 @@ from translation import views as translation_views
 from utils.decorators import required, logout_required
 
 
-admin.autodiscover()
-
 router = routers.DefaultRouter()
 
 # ACCOUNTING
