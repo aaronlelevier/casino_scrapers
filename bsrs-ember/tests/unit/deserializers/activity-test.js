@@ -5,13 +5,14 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import GD from 'bsrs-ember/vendor/defaults/general';
 import ActivityDeserializer from 'bsrs-ember/deserializers/activity';
 
 var store, subject, uuid;
 
 module('unit: activity deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:uuid', 'model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person', 'model:activity/category-to', 'model:activity/category-from']);
+        store = module_registry(this.container, this.registry, ['model:uuid', 'model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity', 'model:activity/assignee', 'model:activity/person', 'model:activity/category-to', 'model:activity/category-from', 'model:activity/attachment-add','model:activity/attachment-remove']);
         uuid = this.container.lookup('model:uuid');
         subject = ActivityDeserializer.create({store:store, uuid:uuid});
     }
@@ -110,6 +111,32 @@ test('activity with only cc_remove is deserialized correctly', (assert) => {
     assert.equal(store.find('activity').objectAt(0).get('removed').get('length'), 2);
     assert.equal(store.find('activity').objectAt(0).get('removed').objectAt(0).get('id'), PD.idBoy);
     assert.equal(store.find('activity').objectAt(0).get('removed').objectAt(1).get('id'), PD.idSearch);
+    assert.notOk(store.find('activity').objectAt(0).get('content'));
+});
+
+test('activity with only attachment_add is deserialized correctly', (assert) => {
+    const response = TA_FIXTURES.attachment_add_only(2);
+    subject.deserialize(response);
+    assert.equal(store.find('activity').get('length'), 1);
+    assert.equal(store.find('activity/attachment-add').get('length'), 2);
+    assert.equal(store.find('activity').objectAt(0).get('person').get('id'), PD.idOne);
+    assert.equal(store.find('activity').objectAt(0).get('type'), 'attachment_add');
+    assert.equal(store.find('activity').objectAt(0).get('added_attachment').get('length'), 2);
+    assert.equal(store.find('activity').objectAt(0).get('added_attachment').objectAt(0).get('id'), GD.attachmentIdOne);
+    assert.equal(store.find('activity').objectAt(0).get('added_attachment').objectAt(1).get('id'), GD.attachmentIdTwo);
+    assert.notOk(store.find('activity').objectAt(0).get('content'));
+});
+
+test('activity with only attachment_remove is deserialized correctly', (assert) => {
+    const response = TA_FIXTURES.attachment_remove_only(2);
+    subject.deserialize(response);
+    assert.equal(store.find('activity').get('length'), 1);
+    assert.equal(store.find('activity/attachment-remove').get('length'), 2);
+    assert.equal(store.find('activity').objectAt(0).get('person').get('id'), PD.idOne);
+    assert.equal(store.find('activity').objectAt(0).get('type'), 'attachment_remove');
+    assert.equal(store.find('activity').objectAt(0).get('removed_attachment').get('length'), 2);
+    assert.equal(store.find('activity').objectAt(0).get('removed_attachment').objectAt(0).get('id'), GD.attachmentIdOne);
+    assert.equal(store.find('activity').objectAt(0).get('removed_attachment').objectAt(1).get('id'), GD.attachmentIdTwo);
     assert.notOk(store.find('activity').objectAt(0).get('content'));
 });
 

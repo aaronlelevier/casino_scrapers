@@ -713,6 +713,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         activity = TicketActivity.objects.first()
         self.assertEqual(activity.type.name, name)
         self.assertEqual(activity.content['0'], str(new_attachment.id))
+        self.assertEqual(str(response.data['attachments'][0]), str(new_attachment.id))
 
     def test_status(self):
         name = 'status'

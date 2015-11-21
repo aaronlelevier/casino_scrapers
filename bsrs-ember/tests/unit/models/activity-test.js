@@ -10,7 +10,7 @@ var store;
 
 module('unit: activity test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status', 'model:ticket-priority', 'model:activity/category-to', 'model:activity/category-from']);
+        store = module_registry(this.container, this.registry, ['model:activity', 'model:activity/cc-add', 'model:activity/cc-remove', 'model:activity/assignee', 'model:activity/person', 'model:ticket', 'model:ticket-status', 'model:ticket-priority', 'model:activity/category-to', 'model:activity/category-from', 'model:activity/attachment-add', 'model:activity/attachment-remove']);
     }
 });
 
@@ -170,4 +170,46 @@ test('remove returns associated array of cc or empty array (cc_removed type)', (
     one.set('activities', []);
     removed = activity.get('removed');
     assert.equal(removed.get('length'), 0);
+});
+
+test('added_attachment returns associated array of attachments or empty array (attachment_add type)', (assert) => {
+    let activity = store.push('activity', {id: TAD.idAttachmentAddOne, type: 'attachment_add'});
+    let three = store.push('activity/attachment-add', {id: 3, filename: 'm', activities: [TAD.idAttachmentAddOne]});
+    store.push('activity/attachment-add', {id: 2, filename: 'n', activities: []});
+    let one = store.push('activity/attachment-add', {id: 1, filename: 'o', activities: [999, TAD.idAttachmentAddOne]});
+    let added_attachment = activity.get('added_attachment');
+    assert.equal(added_attachment.get('length'), 2);
+    assert.equal(added_attachment.objectAt(0).get('id'), 3);
+    assert.equal(added_attachment.objectAt(0).get('filename'), 'm');
+    assert.equal(added_attachment.objectAt(1).get('id'), 1);
+    assert.equal(added_attachment.objectAt(1).get('filename'), 'o');
+    three.set('activities', []);
+    added_attachment = activity.get('added_attachment');
+    assert.equal(added_attachment.get('length'), 1);
+    assert.equal(added_attachment.objectAt(0).get('id'), 1);
+    assert.equal(added_attachment.objectAt(0).get('filename'), 'o');
+    one.set('activities', []);
+    added_attachment = activity.get('added_attachment');
+    assert.equal(added_attachment.get('length'), 0);
+});
+
+test('removed_attachment returns associated array of attachments or empty array (attachment_remove type)', (assert) => {
+    let activity = store.push('activity', {id: TAD.idAttachmentRemoveOne, type: 'attachment_remove'});
+    let three = store.push('activity/attachment-remove', {id: 3, filename: 'm', activities: [TAD.idAttachmentRemoveOne]});
+    store.push('activity/attachment-remove', {id: 2, filename: 'n', activities: []});
+    let one = store.push('activity/attachment-remove', {id: 1, filename: 'o', activities: [999, TAD.idAttachmentRemoveOne]});
+    let removed_attachment = activity.get('removed_attachment');
+    assert.equal(removed_attachment.get('length'), 2);
+    assert.equal(removed_attachment.objectAt(0).get('id'), 3);
+    assert.equal(removed_attachment.objectAt(0).get('filename'), 'm');
+    assert.equal(removed_attachment.objectAt(1).get('id'), 1);
+    assert.equal(removed_attachment.objectAt(1).get('filename'), 'o');
+    three.set('activities', []);
+    removed_attachment = activity.get('removed_attachment');
+    assert.equal(removed_attachment.get('length'), 1);
+    assert.equal(removed_attachment.objectAt(0).get('id'), 1);
+    assert.equal(removed_attachment.objectAt(0).get('filename'), 'o');
+    one.set('activities', []);
+    removed_attachment = activity.get('removed_attachment');
+    assert.equal(removed_attachment.get('length'), 0);
 });

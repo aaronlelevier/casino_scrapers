@@ -65,6 +65,7 @@ class TicketUpdateLogger(object):
 
     def check_attachment_change(self):
         self.log_list_change('attachment_add', self.content)
+        # sco: remove to be added soon after talk with Andy
         # if self.type == 'attachment_remove':
         #     self.log_list_change('attachment_remove', self.content)
 

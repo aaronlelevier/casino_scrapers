@@ -25,7 +25,7 @@ var extract_category = function(store, model, uuid) {
     }
 };
 
-var extract_to_and_from = function(store, model) {
+var extract_to_and_from_or_added_removed = function(store, model) {
     const content = model.content;
     if (content && content.to && content.to.id) {
         store.push(`activity/${model.type}`, model.content.to);
@@ -65,7 +65,7 @@ var ActivityDeserializer = Ember.Object.extend({
         response.results.forEach((model) => {
             extract_comment(model);
             extract_category(store, model, uuid);
-            extract_to_and_from(store, model);
+            extract_to_and_from_or_added_removed(store, model);
             extract_person(store, model);
             delete model.content;
             store.push('activity', model);
