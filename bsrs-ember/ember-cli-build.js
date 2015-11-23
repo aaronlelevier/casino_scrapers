@@ -9,8 +9,8 @@ var es5Shim = funnel('node_modules/es5-shim', {
   destDir: '/assets'
 });
 
-module.exports = function(environment) {
-  var app = new EmberApp({
+module.exports = function(defaults) {
+  var app = new EmberApp(defaults, {
     'fingerprint': {
       prepend: '/static/'
     },
