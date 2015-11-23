@@ -201,7 +201,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
 });
 
 //CC
-test('sco ticket detail shows the activity list including event data (cc_add)', (assert) => {
+test('ticket detail shows the activity list including event data (cc_add)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
     page.visitDetail();
     andThen(() => {

@@ -70,92 +70,92 @@ module('Acceptance | ticket new test', {
     }
 });
 
-// test('validation works and when hit save, we do same post', (assert) => {
-//     page.visit();
-//     andThen(() => {
-//         patchRandom(counter);
-//     });
-//     click('.t-add-new');
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL);
-//         assert.ok(find('.t-status-validation-error').is(':hidden'));
-//         assert.ok(find('.t-priority-validation-error').is(':hidden'));
-//         assert.ok(find('.t-assignee-validation-error').is(':hidden'));
-//         assert.ok(find('.t-location-validation-error').is(':hidden'));
-//         assert.ok(find('.t-category-validation-error').is(':hidden'));
-//     });
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL);
-//         assert.ok(find('.t-status-validation-error').is(':visible'));
-//         assert.ok(find('.t-priority-validation-error').is(':visible'));
-//         assert.ok(find('.t-assignee-validation-error').is(':visible'));
-//         assert.ok(find('.t-location-validation-error').is(':visible'));
-//         assert.ok(find('.t-category-validation-error').is(':visible'));
-//     });
-//     page.statusClickDropdown();
-//     page.statusClickOptionOne();
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL);
-//         assert.ok(find('.t-priority-validation-error').is(':visible'));
-//         assert.ok(find('.t-assignee-validation-error').is(':visible'));
-//         assert.ok(find('.t-location-validation-error').is(':visible'));
-//         assert.ok(find('.t-category-validation-error').is(':visible'));
-//     });
-//     page.priorityClickDropdown();
-//     page.priorityClickOptionOne();
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL);
-//         assert.ok(find('.t-assignee-validation-error').is(':visible'));
-//         assert.ok(find('.t-location-validation-error').is(':visible'));
-//         assert.ok(find('.t-category-validation-error').is(':visible'));
-//     });
-//     people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
-//     page.assigneeClickDropdown();
-//     fillIn(`${SEARCH}`, 'b');
-//     page.assigneeClickOptionTwo();
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b');
-//         assert.ok(find('.t-location-validation-error').is(':visible'));
-//         assert.ok(find('.t-category-validation-error').is(':visible'));
-//     });
-//     page.locationClickDropdown();
-//     fillIn(`${SEARCH}`, '6');
-//     page.locationClickOptionTwo();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
-//         assert.ok(find('.t-category-validation-error').is(':visible'));
-//     });
-//     page.categoryOneClickDropdown();
-//     page.categoryOneClickOptionOne();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
-//         assert.equal(find('.t-category-validation-error').length, 1);
-//         assert.ok(find('.t-category-validation-error').is(':visible'));
-//     });
-//     page.categoryTwoClickDropdown();
-//     page.categoryTwoClickOptionOne();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
-//         assert.equal(find('.t-category-validation-error').length, 1);
-//         assert.ok(find('.t-category-validation-error').is(':visible'));
-//     });
-//     clearxhr(category_three_xhr);
-//     page.categoryThreeClickDropdown();
-//     page.categoryThreeClickOptionOne();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
-//         assert.ok(find('.t-category-validation-error').is(':hidden'));
-//     });
-//     generalPage.save();
-//     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_URL);
-//     });
-// });
+test('validation works and when hit save, we do same post', (assert) => {
+    page.visit();
+    andThen(() => {
+        patchRandom(counter);
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.ok(find('.t-status-validation-error').is(':hidden'));
+        assert.ok(find('.t-priority-validation-error').is(':hidden'));
+        assert.ok(find('.t-assignee-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-validation-error').is(':hidden'));
+        assert.ok(find('.t-category-validation-error').is(':hidden'));
+    });
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.ok(find('.t-status-validation-error').is(':visible'));
+        assert.ok(find('.t-priority-validation-error').is(':visible'));
+        assert.ok(find('.t-assignee-validation-error').is(':visible'));
+        assert.ok(find('.t-location-validation-error').is(':visible'));
+        assert.ok(find('.t-category-validation-error').is(':visible'));
+    });
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.ok(find('.t-priority-validation-error').is(':visible'));
+        assert.ok(find('.t-assignee-validation-error').is(':visible'));
+        assert.ok(find('.t-location-validation-error').is(':visible'));
+        assert.ok(find('.t-category-validation-error').is(':visible'));
+    });
+    page.priorityClickDropdown();
+    page.priorityClickOptionOne();
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.ok(find('.t-assignee-validation-error').is(':visible'));
+        assert.ok(find('.t-location-validation-error').is(':visible'));
+        assert.ok(find('.t-category-validation-error').is(':visible'));
+    });
+    people_xhr = xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, 'b');
+    page.assigneeClickOptionTwo();
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b');
+        assert.ok(find('.t-location-validation-error').is(':visible'));
+        assert.ok(find('.t-category-validation-error').is(':visible'));
+    });
+    page.locationClickDropdown();
+    fillIn(`${SEARCH}`, '6');
+    page.locationClickOptionTwo();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.ok(find('.t-category-validation-error').is(':visible'));
+    });
+    page.categoryOneClickDropdown();
+    page.categoryOneClickOptionOne();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.equal(find('.t-category-validation-error').length, 1);
+        assert.ok(find('.t-category-validation-error').is(':visible'));
+    });
+    page.categoryTwoClickDropdown();
+    page.categoryTwoClickOptionOne();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.equal(find('.t-category-validation-error').length, 1);
+        assert.ok(find('.t-category-validation-error').is(':visible'));
+    });
+    clearxhr(category_three_xhr);
+    page.categoryThreeClickDropdown();
+    page.categoryThreeClickOptionOne();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.ok(find('.t-category-validation-error').is(':hidden'));
+    });
+    generalPage.save();
+    xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
 
 test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
     page.visit();
@@ -517,79 +517,77 @@ test('removes location dropdown on search to change location', (assert) => {
     andThen(() => {
         assert.equal(find(`${LOCATION_DROPDOWN}`).text().trim(), 'No results found');
     });
-    //TODO: fix
-    // fillIn(`${SEARCH}`, '6');
-    // andThen(() => {
-    //     assert.equal(page.locationOptionLength(), 2);
-    // });
+    fillIn(`${SEARCH}`, '6');
+    andThen(() => {
+        assert.equal(page.locationOptionLength(), 2);
+    });
 });
 
 /*TICKET CC M2M*/
-//test('clicking and typing into power select for people will fire off xhr request for all people', (assert) => {
-//    clearxhr(list_xhr);
-//    clearxhr(location_xhr);
-//    clearxhr(category_one_xhr);
-//    clearxhr(category_two_xhr);
-//    clearxhr(category_three_xhr);
-//    page.visitNew();
-//    andThen(() => {
-//        let ticket = store.findOne('ticket');
-//        assert.ok(!ticket.get('cc.length'));
-//    });
-//    let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
-//    xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
-//    page.ccClickDropdown();
-//    fillIn(`${CC_SEARCH}`, 'a');
-//    andThen(() => {
-//        assert.equal(page.ccOptionLength(), 1);
-//        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
-//    });
-//    page.ccClickDonald();
-//    andThen(() => {
-//        let ticket = store.findOne('ticket');
-//        assert.equal(ticket.get('cc').get('length'), 1);
-//        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
-//        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
-//        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//    });
-//    page.ccClickDropdown();
-//    fillIn(`${CC_SEARCH}`, '');
-//    andThen(() => {
-//        assert.equal(page.ccOptionLength(), 1);
-//        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
-//    });
-//    fillIn(`${CC_SEARCH}`, 'a');
-//    andThen(() => {
-//        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
-//        assert.equal(page.ccOptionLength(), 1);
-//        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
-//        let ticket = store.findOne('ticket');
-//        assert.equal(ticket.get('cc').get('length'), 1);
-//        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
-//    });
-//    //search specific cc
-//    page.ccClickDropdown();//not sure why I need this
-//    xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy`, 'GET', null, {}, 200, PF.search());
-//    fillIn(`${CC_SEARCH}`, 'Boy');
-//    page.ccClickDropdown();
-//    andThen(() => {
-//        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
-//        assert.equal(page.ccOptionLength(), 10);
-//        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-//        let ticket = store.findOne('ticket');
-//        assert.equal(ticket.get('cc').get('length'), 1);
-//        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
-//    });
-//    page.ccClickOptionOne();
-//    andThen(() => {
-//        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
-//        assert.equal(page.ccTwoSelected().indexOf(PD.nameBoy), 2);
-//        let ticket = store.findOne('ticket');
-//        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
-//        assert.equal(ticket.get('cc').objectAt(1).get('id'), PD.idBoy);
-//        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//    });
-//});
+test('clicking and typing into power select for people will fire off xhr request for all people', (assert) => {
+    clearxhr(list_xhr);
+    clearxhr(location_xhr);
+    clearxhr(category_one_xhr);
+    clearxhr(category_two_xhr);
+    clearxhr(category_three_xhr);
+    page.visitNew();
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.ok(!ticket.get('cc.length'));
+    });
+    let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
+    xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
+    page.ccClickDropdown();
+    fillIn(`${CC_SEARCH}`, 'a');
+    andThen(() => {
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
+    });
+    page.ccClickDonald();
+    andThen(() => {
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
+        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+    page.ccClickDropdown();
+    fillIn(`${CC_SEARCH}`, '');
+    andThen(() => {
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+    });
+    fillIn(`${CC_SEARCH}`, 'a');
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
+        assert.equal(page.ccOptionLength(), 1);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
+    });
+    //search specific cc
+    page.ccClickDropdown();
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy`, 'GET', null, {}, 200, PF.search());
+    fillIn(`${CC_SEARCH}`, 'Boy');
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
+        assert.equal(page.ccOptionLength(), 10);
+        assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('cc').get('length'), 1);
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
+    });
+    page.ccClickOptionOne();
+    andThen(() => {
+        assert.equal(page.ccSelected().indexOf(PD.donald), 2);
+        assert.equal(page.ccTwoSelected().indexOf(PD.nameBoy), 2);
+        let ticket = store.findOne('ticket');
+        assert.equal(ticket.get('cc').objectAt(0).get('first_name'), PD.donald_first_name);
+        assert.equal(ticket.get('cc').objectAt(1).get('id'), PD.idBoy);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    });
+});
 
 test('can remove and add back same cc and save empty cc', (assert) => {
     clearxhr(list_xhr);

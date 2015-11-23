@@ -36,6 +36,7 @@ const BASE_LOCATION_URL = BASEURLS.base_locations_url;
 const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
 const DETAIL_URL = `${BASE_PEOPLE_URL}/${PD.idOne}`;
 const LETTER_A = {keyCode: 65};
+const LETTER_M = {keyCode: 77};
 const BACKSPACE = {keyCode: 8};
 
 var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid;
@@ -1239,12 +1240,12 @@ test('deep link to person and clicking in the person-locations-select component 
     });
 });
 
-// test('can remove and add back same location', (assert) => {
+// test('sco can remove and add back same location', (assert) => {
 //     visit(DETAIL_URL);
 //     click('div.item > a.remove:eq(0)');
 //     andThen(() => {
-//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-//         assert.equal(ticket.get('cc').get('length'), 0);
+//         let person = store.find('person', PD.idOne);
+//         assert.equal(person.get('cc').get('length'), 0);
 //         assert.equal(find('div.item').length, 0);
 //         assert.equal(find('div.option').length, 0);
 //     });
@@ -1252,21 +1253,21 @@ test('deep link to person and clicking in the person-locations-select component 
 //     xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
 //     fillIn('.selectize-input input', 'Mel');
 //     triggerEvent('.selectize-input input', 'keyup', LETTER_M);
-//     click('.t-ticket-people-select div.option:eq(0)');
+//     click('.t-person-people-select div.option:eq(0)');
 //     andThen(() => {
-//         let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
-//         assert.equal(ticket.get('ticket_people_fks').length, 1);
-//         assert.equal(ticket.get('cc').get('length'), 1);
-//         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+//         let person = store.find('person', PD.idOne);
+//         assert.equal(person.get('person_location_fks').length, 1);
+//         assert.equal(person.get('cc').get('length'), 1);
+//         assert.ok(person.get('isDirtyOrRelatedDirty'));
 //         assert.equal(find('div.item').length, 1);
 //         assert.equal(find('div.option').length, 9);
 //     });
 //     let url = PREFIX + DETAIL_URL + "/";
-//     let payload = TICKET_FIXTURES.put({id: TICKET_DEFAULTS.idOne, cc: [PD.id]});
+//     let payload = PF.put({id: PD.idOne, cc: [PD.id]});
 //     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
 //     generalPage.save();
 //     andThen(() => {
-//         assert.equal(currentURL(), TICKETS_URL);
+//         assert.equal(currentURL(), personS_URL);
 //     });
 // });
 
