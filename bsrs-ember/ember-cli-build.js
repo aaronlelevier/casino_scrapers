@@ -38,6 +38,7 @@ module.exports = function(environment) {
       app.import('vendor/defaults/country.js');
       app.import('vendor/defaults/currencies.js');
       app.import('vendor/defaults/category.js');
+      app.import('vendor/defaults/general.js');
       app.import('vendor/defaults/location.js');
       app.import('vendor/defaults/location-level.js');
       app.import('vendor/defaults/location-status.js');

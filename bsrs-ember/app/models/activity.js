@@ -45,6 +45,20 @@ var ActivityModel = Ember.Object.extend({
         };
         return this.get('store').find('activity/cc-remove', filter, ['activities']);
     }),
+    added_attachment: Ember.computed(function() {
+        const activity_id = this.get('id');
+        const filter = function(attachment) {
+            return Ember.$.inArray(activity_id, attachment.get('activities')) > -1;
+        };
+        return this.get('store').find('activity/attachment-add', filter, ['activities']);
+    }),
+    removed_attachment: Ember.computed(function() {
+        const activity_id = this.get('id');
+        const filter = function(attachment) {
+            return Ember.$.inArray(activity_id, attachment.get('activities')) > -1;
+        };
+        return this.get('store').find('activity/attachment-remove', filter, ['activities']);
+    }),
     categories_to: Ember.computed(function() {
         const activity_id = this.get('id');
         const filter = function(category) {

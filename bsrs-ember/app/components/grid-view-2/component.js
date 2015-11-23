@@ -16,7 +16,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
     _teardown: Ember.on('willDestroyElement', function() {
         this.get('eventbus').unsubscribe('bsrs-ember@component:input-dynamic-filter:');
     }),
-    onValueUpdated: function(input, eventName, column, value) {
+    onValueUpdated(input, eventName, column, value) {
         this.set('find', this.update_find_query(column, value, this.get('find')));
     },
     searched_content: Ember.computed('find', 'sort', 'page', 'search', 'model.[]', function() {
@@ -40,7 +40,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
                 return regex.test(value);
             });
         }.bind(this));
-        return filter.reduce(function(a, b) { return a.concat(b); }).uniq();
+        return filter.reduce((a, b) => { return a.concat(b); }).uniq();
     }),
     found_content: Ember.computed('searched_content.[]', function() {
         const find = this.get('find') || '';
@@ -108,7 +108,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
         }
         return pages;
     }),
-    shown_pages: Ember.computed('pages', function() {
+    shown_pages: Ember.computed('pages', 'page', function() {
         const all = this.get('pages');
         const available = all.length;
         const current = parseInt(this.get('page'), 10);
@@ -164,7 +164,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
             this.toggleProperty('savingFilter');
         },
         invokeSaveFilterSet() {
-            this.attrs.save_filterset(this.get('filtersetName'));
+            this.sendAction('save_filterset', this.get('filtersetName'));
             this.toggleProperty('savingFilter');
             this.set('filtersetName', '');
         }

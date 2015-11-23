@@ -165,6 +165,8 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'activity.ticket.create':'created this ticket ${{timestamp}}',
             'activity.ticket.cc_add':'added ${{added}} $to CC ${{timestamp}}',
             'activity.ticket.cc_remove':'removed ${{removed}} $from CC ${{timestamp}}',
+            'activity.ticket.attachment_add':'uploaded ${{count}} files ${{timestamp}} \n ${{added}}',
+            'activity.ticket.attachment_remove':'removed ${{count}} files ${{timestamp}} \n ${{removed}}',
             'activity.ticket.comment':'commented ${{timestamp}} ${{comment}}',
           }
         }

@@ -104,7 +104,9 @@ TICKET_ACTIVITY_TYPES = [
     'status',
     'priority',
     'categories',
-    'comment'
+    'comment',
+    'attachment_add',
+    'attachment_remove',
 ]
 
 

@@ -14,6 +14,7 @@ import CF from 'bsrs-ember/vendor/category_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import GD from 'bsrs-ember/vendor/defaults/general';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import TA_FIXTURES from 'bsrs-ember/vendor/ticket_activity_fixtures';
 import random from 'bsrs-ember/models/random';
@@ -199,6 +200,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
     });
 });
 
+//CC
 test('ticket detail shows the activity list including event data (cc_add)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
     page.visitDetail();
@@ -255,8 +257,8 @@ test('can deep link to cc added (multiple cc_add)', (assert) => {
     });
 });
 
-test('ticket detail does not show the activity list without a matching ticket for the activity (cc_add)', (assert) => {
-    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2, TD.idTwo));
+test('ticket detail does not show the activity list without a matching ticket for the activity (cc_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -319,6 +321,66 @@ test('can deep link to cc removed (multiple cc_remove)', (assert) => {
     });
 });
 
+//ATTACHMENT
+test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2, TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
+
+test('ticket detail shows the activity list including event data (attachment_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} uploaded 1 files 15 days ago \n${GD.nameTicketAttachment}`);
+    });
+});
+
+test('ticket detail shows the activity list including event data (multiple attachment_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} uploaded 2 files 15 days ago \n${GD.nameTicketAttachment} ${GD.nameTicketAttachment}`);
+    });
+});
+
+test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2, TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
+
+test('ticket detail shows the activity list including event data (attachment_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed 1 files 15 days ago \n${GD.nameTicketAttachment}`);
+    });
+});
+
+test('ticket detail shows the activity list including event data (multiple attachment_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed 2 files 15 days ago \n${GD.nameTicketAttachment} ${GD.nameTicketAttachment}`);
+    });
+});
+
+//COMMENT
 test('ticket detail shows the activity comment', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only());
     page.visitDetail();

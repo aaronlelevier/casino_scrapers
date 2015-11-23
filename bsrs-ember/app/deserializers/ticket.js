@@ -164,6 +164,7 @@ var TicketDeserializer = Ember.Object.extend({
             response.ticket_categories_fks = extract_categories(response, store, uuid, category_deserializer);
             let assignee_json = response.assignee;
             delete response.assignee;
+            delete response.attachments;
             let ticket = store.push('ticket', response);
             if (assignee_json) {
                 extract_assignee(assignee_json, store, person_deserializer, ticket);

@@ -70,13 +70,15 @@
                   {{#each searchable as |column|}}
                   <td class="{{grid-row-class noun column}}">{{get item column}}</td>
                   {{/each}}
+                  {{#each nonsearchable as |column|}}
+                  <td class="{{grid-row-class noun column}} {{add-text-right nonsearchable column}}">{{get item column}}</td>
+                  {{/each}}
                   {{/link-to}}
                   {{/each}}
                 </tbody>
             </table>
         </div>
     </section>
-
     <footer class="container-fluid">
         <div class="row">
             <div class="col-md-2">

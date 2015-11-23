@@ -51,6 +51,28 @@ export default Ember.Helper.helper(function(params, addon) {
             }
         });
         return i18n.t('activity.ticket.cc_remove', {removed:message, timestamp:timestamp});
+    }else if(type === 'attachment_add') {
+        let message = '';
+        const added = activity.get('added_attachment');
+        const length = added.get('length');
+        added.forEach((attachment, index) => {
+            message = message + attachment.get('filename');
+            if(index + 1 < length) {
+                message = message + ', ';
+            }
+        });
+        return i18n.t('activity.ticket.attachment_add', {count:length, added:message, timestamp:timestamp});
+    }else if(type === 'attachment_remove') {
+        let message = '';
+        const removed = activity.get('removed_attachment');
+        const length = removed.get('length');
+        removed.forEach((attachment, index) => {
+            message = message + attachment.get('filename');
+            if(index + 1 < length) {
+                message = message + ', ';
+            }
+        });
+        return i18n.t('activity.ticket.attachment_remove', {count:length, removed:message, timestamp:timestamp});
     }else if(type === 'comment') {
         const comment = activity.get('comment');
         return i18n.t('activity.ticket.comment', {timestamp:timestamp, comment:comment});    

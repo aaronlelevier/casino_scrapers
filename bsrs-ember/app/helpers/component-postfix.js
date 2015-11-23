@@ -13,5 +13,7 @@ export default Ember.Helper.helper((params) => {
         return 'to-from-without-link'; 
     }else if(params[0] === 'cc_add' || params[0] === 'cc_remove') {
         return 'cc-add-remove'; 
+    }else if(params[0] === 'attachment_add' || params[0] === 'attachment_remove') {
+        return 'attachment-add-remove'; 
     }
 });

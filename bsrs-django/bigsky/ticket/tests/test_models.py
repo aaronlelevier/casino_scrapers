@@ -8,6 +8,7 @@ from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES)
 from ticket.tests.factory import create_ticket, create_tickets
+from generic.tests.factory import create_attachments
 
 
 class TicketStatusManagerTests(TestCase):
@@ -105,3 +106,36 @@ class TicketActivityTests(TestCase):
         self.assertIsInstance(ticket_activity, TicketActivity)
         self.assertEqual(ticket_activity.type.name, name)
         self.assertTrue(TicketActivity.objects.filter(content__from=str(self.person.id)).exists())
+
+    def test_log_attachment(self):
+        attachment = create_attachments(ticket=self.ticket)
+        type, _ = TicketActivityType.objects.get_or_create(name='attachment_add')
+        
+        ticket_activity = TicketActivity.objects.create(
+            type=type,
+            person=self.person,
+            ticket=self.ticket,
+            content={
+                '0': str(attachment.id),
+            }
+        )
+
+        self.assertIsInstance(ticket_activity, TicketActivity)
+        self.assertEqual(ticket_activity.ticket.id, self.ticket.id)
+        self.assertEqual(ticket_activity.content['0'], attachment.id)
+
+    def test_log_cc_add(self):
+        type, _ = TicketActivityType.objects.get_or_create(name='cc_add')
+        
+        ticket_activity = TicketActivity.objects.create(
+            type=type,
+            person=self.person,
+            ticket=self.ticket,
+            content={
+                '0': str(self.person.id)
+            }
+        )
+
+        self.assertIsInstance(ticket_activity, TicketActivity)
+        self.assertEqual(ticket_activity.ticket.id, self.ticket.id)
+        self.assertEqual(ticket_activity.content['0'], self.person.id)
