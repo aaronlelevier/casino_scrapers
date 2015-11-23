@@ -743,23 +743,24 @@ test('location component shows location for ticket and will fire off xhr to fetc
         assert.equal(ticket.get('location_fk'), LD.idOne);
         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
-        //check category tree
-        page.categoryOneClickDropdown();
+    });
+    // <check category tree>
+    page.categoryOneClickDropdown();
         andThen(() => {
             assert.equal(page.categoryOneInput(), CD.nameOne);
             assert.equal(page.categoryOneOptionLength(), 2);
-            page.categoryTwoClickDropdown();
-            andThen(() => {
-                assert.equal(page.categoryTwoInput(), CD.nameRepairChild);
-                assert.equal(page.categoryTwoOptionLength(), 2);
-                page.categoryThreeClickDropdown();
-                andThen(() => {
-                    assert.equal(page.categoryThreeInput(), CD.namePlumbingChild);
-                    assert.equal(page.categoryThreeOptionLength(), 1);
-                });
-            });
-        });
     });
+    page.categoryTwoClickDropdown();
+    andThen(() => {
+        assert.equal(page.categoryTwoInput(), CD.nameRepairChild);
+        assert.equal(page.categoryTwoOptionLength(), 2);
+    });
+    page.categoryThreeClickDropdown();
+    andThen(() => {
+        assert.equal(page.categoryThreeInput(), CD.namePlumbingChild);
+        assert.equal(page.categoryThreeOptionLength(), 1);
+    });
+    // </check category tree>
     xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
     page.locationClickDropdown();
     fillIn(`${SEARCH}`, '6');
