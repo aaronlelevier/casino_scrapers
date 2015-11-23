@@ -33,7 +33,8 @@ var BSRS_TICKET_FACTORY = (function() {
             categories: [child_category, parent_category, child_child_category],
             requester: this.people_fixtures.get(),
             assignee: this.people_fixtures.get(),
-            location: this.location_fixtures.get()
+            location: this.location_fixtures.get(),
+            attachments: [],
         }
     };
     factory.prototype.list = function() {

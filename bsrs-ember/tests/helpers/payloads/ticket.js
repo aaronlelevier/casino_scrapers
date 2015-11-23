@@ -13,6 +13,7 @@ var ticket_payload = {
     categories: [CD.idTwo, CD.idOne, CD.idChild],
     assignee: PD.idSearch,
     location: LD.idTwo,
+    attachments: [],
 };
 
 var ticket_payload_detail = {
@@ -25,6 +26,7 @@ var ticket_payload_detail = {
     requester: PD.idOne,
     assignee: PD.idOne,
     location: LD.idOne,
+    attachments: [],
 };
 
 var ticket_payload_with_comment = {
@@ -38,6 +40,7 @@ var ticket_payload_with_comment = {
     assignee: PD.idOne,
     location: LD.idOne,
     comment: TD.commentOne,
+    attachments: [],
 };
 
 var ticket_payload_with_attachment = {
@@ -49,7 +52,8 @@ var ticket_payload_with_attachment = {
     categories: [CD.idPlumbingChild],
     requester: PD.idOne,
     assignee: PD.idOne,
-    location: LD.idOne
+    location: LD.idOne,
+    attachments: ["abc123"]
 };
 
 var ticket_payload_detail_one_category = {
@@ -61,7 +65,8 @@ var ticket_payload_detail_one_category = {
     categories: [CD.idThree],
     requester: PD.idOne,
     assignee: PD.idOne,
-    location: LD.idOne
+    location: LD.idOne,
+    attachments: [],
 };
 
 var required_ticket_payload = Ember.$.extend(true, {}, ticket_payload);

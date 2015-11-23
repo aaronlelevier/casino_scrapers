@@ -198,6 +198,9 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         };
         return this.get('store').find('ticket-attachment', filter, []);
     }),
+    attachment_ids: Ember.computed('attachments.[]', function() {
+        return this.get('attachments').mapBy('id');
+    }),
     remove_attachment(attachment_id) {
         let ticket_id = this.get('id');
         let current_fks = this.get('ticket_attachments_fks') || [];
@@ -238,7 +241,8 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
             categories: this.get('categories_ids'),
             requester: this.get('requester_id'),
             assignee: this.get('assignee.id'),
-            location: this.get('location.id')
+            location: this.get('location.id'),
+            attachments: this.get('attachment_ids'),
         };
         if (this.get('comment')) {
             payload.comment = this.get('comment');
