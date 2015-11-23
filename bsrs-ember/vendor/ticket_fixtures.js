@@ -73,6 +73,7 @@ var BSRS_TICKET_FACTORY = (function() {
     factory.prototype.detail = function(i) {
         var pk = i || this.ticket.idOne;
         var detail = this.generate(pk);
+        detail.attachments = [];
         return detail;
     };
     factory.prototype.put = function(ticket) {
