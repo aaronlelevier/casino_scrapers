@@ -5,8 +5,10 @@ from contact.serializers import   (
     EmailFlatSerializer, EmailSerializer,
     AddressFlatSerializer, AddressSerializer)
 from location.models import LocationLevel, LocationStatus, LocationType, Location
+from location.validators import LocationParentChildValidator
 from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
-from utils.validators import UniqueForActiveValidator, LocationParentChildValidator
+from utils.validators import UniqueForActiveValidator
+
 
 ### LOCATION LEVEL
 

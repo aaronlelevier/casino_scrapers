@@ -1,7 +1,48 @@
 from django.test import TestCase
 
+from rest_framework.test import APITestCase
+
+from location.tests.factory import create_locations
+from location.models import Location
+from location.serializers import LocationUpdateSerializer
+from person.tests.factory import create_person, PASSWORD
 from utils.validators import (regex_check_contains, contains_digit, contains_upper_char,
     contains_lower_char, contains_special_char, contains_no_whitespaces)
+
+
+class UniqueForActiveValidatorTests(APITestCase):
+
+    def setUp(self):
+        create_locations()
+        self.location = Location.objects.get(name='ca')
+        # Login
+        self.person = create_person()
+        self.client.login(username=self.person.username, password=PASSWORD)
+        # Data
+        serializer = LocationUpdateSerializer(self.location)
+        self.data = serializer.data
+
+    def test_update_unique_for_active_active(self):
+        self.assertTrue(self.data['number'])
+        self.data['number'] = Location.objects.exclude(number=self.data['number']).first().number
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 400)
+
+    def test_update_unique_for_active_deleted(self):
+        # delete the "old_location", so it will be fine to re-use it's ``number``
+        self.assertTrue(self.data['number'])
+        old_location = Location.objects.exclude(number=self.data['number']).first()
+        old_location.delete()
+        # Requery Update Serializer Data b/c children/parents may have changed 
+        # when the "old_location" was deleted
+        self.location = Location.objects.get(id=self.location.id)
+        self.data = LocationUpdateSerializer(self.location).data
+        # test
+        self.data['number'] = old_location.number
+        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
+            self.data, format='json')
+        self.assertEqual(response.status_code, 200)
 
 
 DIGITS = "Bobby123"
@@ -20,7 +61,7 @@ WHITESPACE = "joe tassone"
 NO_WHITESPACE = "joe"
 
 
-class ValidatorTests(TestCase):
+class RegexValidatorTests(TestCase):
 
     def test_regex_check_contains_true(self):
         regex = r'\d+'

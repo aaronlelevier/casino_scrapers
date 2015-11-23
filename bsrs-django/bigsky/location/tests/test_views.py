@@ -9,13 +9,11 @@ from model_mommy import mommy
 from contact.models import Address, PhoneNumber, PhoneNumberType
 from contact.tests.factory import create_contact, create_contacts
 from location.tests.factory import create_location_levels, create_locations
-from location.models import (Location, LocationLevel, LocationStatus,
-    LocationType)
+from location.models import Location, LocationLevel, LocationStatus
 from location.serializers import (LocationCreateSerializer,
     LocationUpdateSerializer)
 from person.tests.factory import create_person, PASSWORD
 from utils import create
-from utils.create import _generate_chars
 
 
 ### LOCATION LEVEL
@@ -419,15 +417,6 @@ class LocationUpdateTests(APITestCase):
         # ['parents'][0] is equal to an UUID here b/c 'parents' is an UUID Array
         self.assertEqual(data['parents'][0], str(new_location.id))
 
-    def test_update_parents_same_location_level(self):
-        # This should raise a ValidationError (400) b/c Parents/Children can't 
-        # have the same LocationLevel as the Location
-        new_location = mommy.make(Location, location_level=self.location.location_level)
-        self.data['parents'] = [str(new_location.id)]
-        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
-            self.data, format='json')
-        self.assertEqual(response.status_code, 400)
-
     def test_update_children(self):
         new_location = mommy.make(Location)
         self.data['children'] = [str(new_location.id)]
@@ -436,39 +425,6 @@ class LocationUpdateTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['children'][0], str(new_location.id))
-
-    def test_update_children_same_location_level(self):
-        # This should raise a ValidationError (400) b/c Parents/Children can't 
-        # have the same LocationLevel as the Location
-        new_location = mommy.make(Location, location_level=self.location.location_level)
-        self.data['children'] = [str(new_location.id)]
-        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
-            self.data, format='json')
-        self.assertEqual(response.status_code, 400)
-
-    ### util.UniqueForActiveValidator - tests
-
-    def test_update_unique_for_active_active(self):
-        self.assertTrue(self.data['number'])
-        self.data['number'] = Location.objects.exclude(number=self.data['number']).first().number
-        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
-            self.data, format='json')
-        self.assertEqual(response.status_code, 400)
-
-    def test_update_unique_for_active_deleted(self):
-        # delete the "old_location", so it will be fine to re-use it's ``number``
-        self.assertTrue(self.data['number'])
-        old_location = Location.objects.exclude(number=self.data['number']).first()
-        old_location.delete()
-        # Requery Update Serializer Data b/c children/parents may have changed 
-        # when the "old_location" was deleted
-        self.location = Location.objects.get(id=self.location.id)
-        self.data = LocationUpdateSerializer(self.location).data
-        # test
-        self.data['number'] = old_location.number
-        response = self.client.put('/api/admin/locations/{}/'.format(self.location.id),
-            self.data, format='json')
-        self.assertEqual(response.status_code, 200)
 
     ### nested contacts
 
