@@ -20,12 +20,13 @@ class TicketActivityToRepresentation(object):
                 self.set_person_list_data_with_key(key='added')
             elif self.type.name == 'cc_remove':
                 self.set_person_list_data_with_key(key='removed')
-            elif self.type.name == 'attachment_add':
-                self.set_attachment_list_data_with_key(key='added')
-            elif self.type.name == 'attachment_remove':
-                self.set_attachment_list_data_with_key(key='removed')
             elif self.type.name == 'categories':
                 self.set_category_data()
+            elif self.type.name == 'attachment_add':
+                self.set_attachment_list_data_with_key(key='added')
+            # COMMENT OUT: because removal of Attachments is yet to be defined (11-23-2015)
+            # elif self.type.name == 'attachment_remove':
+            #     self.set_attachment_list_data_with_key(key='removed')
 
         self.data.update({'type': self.type.name})
 

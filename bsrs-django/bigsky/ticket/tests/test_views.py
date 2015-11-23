@@ -228,14 +228,6 @@ class TicketUpdateTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(self.ticket.request, data['request'])
 
-    def test_comment_update(self):
-        self.data['comment'] = 'new comment'
-        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
-            self.data, format='json')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertNotIn('comment', data)
-
 
 class TicketCreateTests(APITestCase):
 
@@ -328,11 +320,9 @@ class TicketActivityViewSetTests(APITransactionTestCase):
         # Ticket
         self.ticket = create_ticket()
         self.ticket_two = create_ticket()
-        # self.ticket_three = create_ticket()
         # TicketActivity (Both for the 1st Ticket, Ticket-Two has no Activities !!)
         self.ticket_activity = create_ticket_activity(ticket=self.ticket)
         self.ticket_activity_two = create_ticket_activity(ticket=self.ticket)
-        # self.ticket_activity_with_comment = create_ticket_activity(ticket=self.ticket_three, content={'comment': 'with comment'})
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
@@ -374,6 +364,7 @@ class TicketActivityViewSetTests(APITransactionTestCase):
         
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(len(data['results'][0]['content']), 1)
         self.assertEqual(data['results'][0]['content']['comment'], 'with comment')
 
     def test_paginate(self):
@@ -491,30 +482,6 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(cc.id))
         self.assertEqual(data['results'][0]['content']['added'][0]['fullname'], cc.fullname)
 
-    def test_attachment_add(self):
-        attachment = create_attachments(ticket=self.ticket)
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='attachment_add',
-            content={'0': str(attachment.id)})
-        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(len(data['results'][0]['content']), 1)
-        self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(attachment.id))
-        self.assertEqual(data['results'][0]['content']['added'][0]['filename'], attachment.filename)
-        self.assertNotIn('file', data['results'][0]['content']['added'][0])
-
-    def test_attachment_remove(self):
-        attachment = create_attachments(ticket=self.ticket)
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='attachment_remove',
-            content={'0': str(attachment.id)})
-        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 1)
-        self.assertEqual(len(data['results'][0]['content']), 1)
-        self.assertEqual(data['results'][0]['content']['removed'][0]['id'], str(attachment.id))
-        self.assertEqual(data['results'][0]['content']['removed'][0]['filename'], attachment.filename)
-        self.assertNotIn('file', data['results'][0]['content']['removed'][0])
-
     def test_cc_remove(self):
         cc = create_single_person()
         ticket_activity = create_ticket_activity(ticket=self.ticket, type='cc_remove',
@@ -578,6 +545,47 @@ class TicketActivityViewSetReponseTests(APITestCase):
             data['results'][0]['content']['from_0']
         with self.assertRaises(KeyError):
             data['results'][0]['content']['to_0']
+
+    def test_comment(self):
+        my_comment = 'my random comment'
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
+            content={'comment': my_comment})
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['content']['comment'], my_comment)
+
+    def test_attachment_add(self):
+        attachment = create_attachments(ticket=self.ticket)
+        ticket_activity = create_ticket_activity(ticket=self.ticket, type='attachment_add',
+            content={'0': str(attachment.id)})
+
+        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(len(data['results'][0]['content']), 1)
+        self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(attachment.id))
+        self.assertEqual(data['results'][0]['content']['added'][0]['filename'], attachment.filename)
+        self.assertNotIn('file', data['results'][0]['content']['added'][0])
+
+    # COMMENT OUT: test not needed until the removing of Attachments is further defined
+    # def test_attachment_remove(self):
+    #     attachment = create_attachments(ticket=self.ticket)
+    #     ticket_activity = create_ticket_activity(ticket=self.ticket, type='attachment_remove',
+    #         content={'0': str(attachment.id)})
+
+    #     response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
+
+    #     data = json.loads(response.content.decode('utf8'))
+    #     self.assertEqual(data['count'], 1)
+    #     self.assertEqual(len(data['results'][0]['content']), 1)
+    #     self.assertEqual(data['results'][0]['content']['removed'][0]['id'], str(attachment.id))
+    #     self.assertEqual(data['results'][0]['content']['removed'][0]['filename'], attachment.filename)
+    #     self.assertNotIn('file', data['results'][0]['content']['removed'][0])
 
 
 class TicketAndTicketActivityTests(APITransactionTestCase):
@@ -703,18 +711,6 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
             [str(activity.content[k]) for k,v in activity.content.items()]
         )
 
-    def test_attachment_add(self):
-        name = 'attachment_add'
-        self.assertEqual(TicketActivity.objects.count(), 0)
-        new_attachment = create_attachments(ticket=self.ticket)
-        self.data['attachments'].append(str(new_attachment.id))
-        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
-        self.assertEqual(TicketActivity.objects.count(), 1)
-        activity = TicketActivity.objects.first()
-        self.assertEqual(activity.type.name, name)
-        self.assertEqual(activity.content['0'], str(new_attachment.id))
-        self.assertEqual(str(response.data['attachments'][0]), str(new_attachment.id))
-
     def test_status(self):
         name = 'status'
         self.assertEqual(TicketActivity.objects.count(), 0)
@@ -780,3 +776,34 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(activity.type.name, name)
         self.assertTrue(TicketActivity.objects.filter(content__from_0=str(init_categories[0])).exists())
         self.assertTrue(TicketActivity.objects.filter(content__to_0=str(post_categories[0])).exists())
+
+    def test_comment(self):
+        name = 'comment'
+        my_comment = 'my random comment'
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        self.data['comment'] = my_comment
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        # response
+        data = json.loads(response.content.decode('utf8'))
+        # TicketActivity
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertTrue(TicketActivity.objects.filter(content__comment=my_comment).exists())
+
+    def test_attachment_add(self):
+        name = 'attachment_add'
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        new_attachment = create_attachments(ticket=self.ticket)
+        self.data['attachments'].append(str(new_attachment.id))
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertEqual(activity.content['0'], str(new_attachment.id))
+        self.assertEqual(str(activity.ticket.id), str(self.ticket.id))
