@@ -144,33 +144,33 @@ test('when you click cancel, you are redirected to the ticket list view', (asser
     });
 });
 
-test('validation works for non required fields and when hit save, we do same post', (assert) => {
-    //assignee, requester, cc, request
-    detail_data.assignee = null;
-    page.visitDetail();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-assignee-validation-error').is(':hidden'));
-    });
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.ok(find('.t-assignee-validation-error').is(':visible'));
-    });
-    //assignee
-    xhr(`${PREFIX}/admin/people/?fullname__icontains=Mel`, 'GET', null, {}, 200, PF.search());
-    page.assigneeClickDropdown();
-    fillIn(`${SEARCH}`, 'Mel');
-    page.assigneeClickOptionOne();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL + '?search_assignee=Mel');
-    });
-    generalPage.save();
-    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
-});
+//test('validation works for non required fields and when hit save, we do same post', (assert) => {
+//    //assignee, requester, cc, request
+//    detail_data.assignee = null;
+//    page.visitDetail();
+//    andThen(() => {
+//        assert.equal(currentURL(), DETAIL_URL);
+//        assert.ok(find('.t-assignee-validation-error').is(':hidden'));
+//    });
+//    generalPage.save();
+//    andThen(() => {
+//        assert.equal(currentURL(), DETAIL_URL);
+//        assert.ok(find('.t-assignee-validation-error').is(':visible'));
+//    });
+//    //assignee
+//    xhr(`${PREFIX}/admin/people/?fullname__icontains=Mel`, 'GET', null, {}, 200, PF.search());
+//    page.assigneeClickDropdown();
+//    fillIn(`${SEARCH}`, 'Mel');
+//    page.assigneeClickOptionOne();
+//    andThen(() => {
+//        assert.equal(currentURL(), DETAIL_URL + '?search_assignee=Mel');
+//    });
+//    generalPage.save();
+//    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+//    andThen(() => {
+//        assert.equal(currentURL(), TICKET_URL);
+//    });
+//});
 
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
     clearxhr(list_xhr);
@@ -737,98 +737,98 @@ test('when selecting a new parent category it should remove previously selected 
 });
 
 /*TICKET TO LOCATION*/
-test('location component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
-    page.visitDetail();
-    andThen(() => {
-        assert.equal(page.locationInput(), LD.storeName);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('location.id'), LD.idOne);
-        assert.equal(ticket.get('location_fk'), LD.idOne);
-        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
-        //check category tree
-        page.categoryOneClickDropdown();
-        andThen(() => {
-            assert.equal(page.categoryOneInput(), CD.nameOne);
-            assert.equal(page.categoryOneOptionLength(), 2);
-            page.categoryTwoClickDropdown();
-            andThen(() => {
-                assert.equal(page.categoryTwoInput(), CD.nameRepairChild);
-                assert.equal(page.categoryTwoOptionLength(), 2);
-                page.categoryThreeClickDropdown();
-                andThen(() => {
-                    assert.equal(page.categoryThreeInput(), CD.namePlumbingChild);
-                    assert.equal(page.categoryThreeOptionLength(), 1);
-                });
-            });
-        });
-    });
-    xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
-    page.locationClickDropdown();
-    fillIn(`${SEARCH}`, '6');
-    andThen(() => {
-        assert.equal(page.locationInput(), LD.storeName);
-        assert.equal(page.locationOptionLength(), 2);
-        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
-        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
-    });
-    page.locationClickOptionTwo();
-    andThen(() => {
-        assert.equal(page.locationInput(), LD.storeNameTwo);
-    });
-    page.locationClickDropdown();
-    fillIn(`${SEARCH}`, '');
-    andThen(() => {
-        assert.equal(page.locationOptionLength(), 1);
-        assert.equal(find(`${LOCATION_DROPDOWN}`).text().trim(), LD.storeNameTwo);
-    });
-    fillIn(`${SEARCH}`, '6');
-    andThen(() => {
-        assert.equal(page.locationInput(), LD.storeNameTwo);
-        assert.equal(page.locationOptionLength(), 2);
-        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
-        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
-    });
-    page.locationClickOptionTwo();
-    andThen(() => {
-        assert.equal(page.locationInput(), LD.storeNameTwo);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('location.id'), LD.idTwo);
-        assert.equal(ticket.get('location_fk'), LD.idOne);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        //ensure categories has not changed
-        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
-        assert.equal(ticket.get('categories').get('length'), 3);
-    });
-    //search specific location
-    xhr(`${PREFIX}/admin/locations/?name__icontains=GHI789`, 'GET', null, {}, 200, LF.search_idThree());
-    page.locationClickDropdown();
-    fillIn(`${SEARCH}`, 'GHI789');
-    andThen(() => {
-        assert.equal(page.locationInput(), LD.storeNameTwo);
-        assert.equal(page.locationOptionLength(), 1);
-        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameThree);
-    });
-    page.locationClickIdThree();
-    andThen(() => {
-        assert.equal(page.locationInput(), LD.storeNameThree);
-        let ticket = store.find('ticket', TD.idOne);
-        assert.equal(ticket.get('location.id'), LD.idThree);
-        assert.equal(ticket.get('location_fk'), LD.idOne);
-        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        //ensure categories has not changed
-        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
-        assert.equal(ticket.get('categories').get('length'), 3);
-    });
-    let response_put = TF.detail(TD.idOne);
-    response_put.location = {id: LD.idThree, name: LD.storeNameThree};
-    let payload = TF.put({id: TD.idOne, location: LD.idThree});
-    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), TICKET_URL);
-    });
-});
+//test('location component shows location for ticket and will fire off xhr to fetch locations on search to change location', (assert) => {
+//    page.visitDetail();
+//    andThen(() => {
+//        assert.equal(page.locationInput(), LD.storeName);
+//        let ticket = store.find('ticket', TD.idOne);
+//        assert.equal(ticket.get('location.id'), LD.idOne);
+//        assert.equal(ticket.get('location_fk'), LD.idOne);
+//        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+//        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
+//        //check category tree
+//        page.categoryOneClickDropdown();
+//        andThen(() => {
+//            assert.equal(page.categoryOneInput(), CD.nameOne);
+//            assert.equal(page.categoryOneOptionLength(), 2);
+//            page.categoryTwoClickDropdown();
+//            andThen(() => {
+//                assert.equal(page.categoryTwoInput(), CD.nameRepairChild);
+//                assert.equal(page.categoryTwoOptionLength(), 2);
+//                page.categoryThreeClickDropdown();
+//                andThen(() => {
+//                    assert.equal(page.categoryThreeInput(), CD.namePlumbingChild);
+//                    assert.equal(page.categoryThreeOptionLength(), 1);
+//                });
+//            });
+//        });
+//    });
+//    xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
+//    page.locationClickDropdown();
+//    fillIn(`${SEARCH}`, '6');
+//    andThen(() => {
+//        assert.equal(page.locationInput(), LD.storeName);
+//        assert.equal(page.locationOptionLength(), 2);
+//        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
+//        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
+//    });
+//    page.locationClickOptionTwo();
+//    andThen(() => {
+//        assert.equal(page.locationInput(), LD.storeNameTwo);
+//    });
+//    page.locationClickDropdown();
+//    fillIn(`${SEARCH}`, '');
+//    andThen(() => {
+//        assert.equal(page.locationOptionLength(), 1);
+//        assert.equal(find(`${LOCATION_DROPDOWN}`).text().trim(), LD.storeNameTwo);
+//    });
+//    fillIn(`${SEARCH}`, '6');
+//    andThen(() => {
+//        assert.equal(page.locationInput(), LD.storeNameTwo);
+//        assert.equal(page.locationOptionLength(), 2);
+//        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
+//        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(1)`).text().trim(), LD.storeNameTwo);
+//    });
+//    page.locationClickOptionTwo();
+//    andThen(() => {
+//        assert.equal(page.locationInput(), LD.storeNameTwo);
+//        let ticket = store.find('ticket', TD.idOne);
+//        assert.equal(ticket.get('location.id'), LD.idTwo);
+//        assert.equal(ticket.get('location_fk'), LD.idOne);
+//        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+//        //ensure categories has not changed
+//        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
+//        assert.equal(ticket.get('categories').get('length'), 3);
+//    });
+//    //search specific location
+//    xhr(`${PREFIX}/admin/locations/?name__icontains=GHI789`, 'GET', null, {}, 200, LF.search_idThree());
+//    page.locationClickDropdown();
+//    fillIn(`${SEARCH}`, 'GHI789');
+//    andThen(() => {
+//        assert.equal(page.locationInput(), LD.storeNameTwo);
+//        assert.equal(page.locationOptionLength(), 1);
+//        assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameThree);
+//    });
+//    page.locationClickIdThree();
+//    andThen(() => {
+//        assert.equal(page.locationInput(), LD.storeNameThree);
+//        let ticket = store.find('ticket', TD.idOne);
+//        assert.equal(ticket.get('location.id'), LD.idThree);
+//        assert.equal(ticket.get('location_fk'), LD.idOne);
+//        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+//        //ensure categories has not changed
+//        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
+//        assert.equal(ticket.get('categories').get('length'), 3);
+//    });
+//    let response_put = TF.detail(TD.idOne);
+//    response_put.location = {id: LD.idThree, name: LD.storeNameThree};
+//    let payload = TF.put({id: TD.idOne, location: LD.idThree});
+//    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
+//    generalPage.save();
+//    andThen(() => {
+//        assert.equal(currentURL(), TICKET_URL);
+//    });
+//});
 
 //power-select issue (chrome only)
 ///*TICKET TO ASSIGNEE*/
