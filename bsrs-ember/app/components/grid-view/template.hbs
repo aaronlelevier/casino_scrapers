@@ -13,7 +13,6 @@
             </div>
         </div>
     </header>
-
     {{#if savingFilter}}
     {{#focus-tether-dialog target='.t-show-save-filterset-modal' close='toggleSaveFilterSetModal' clickOutsideToClose=true}}
       <div class="form-group">
@@ -22,7 +21,6 @@
       </div>
     {{/focus-tether-dialog}}
     {{/if}}
-
     {{#if toggleFilter}}
     {{#focus-tether-dialog container-class='column-filter' target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='center left' targetAttachment='center left' offset='0 14px'}}
     {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
@@ -81,7 +79,6 @@
             </table>
         </div>
     </section>
-
     <footer class="container-fluid">
         <div class="row">
             <div class="col-md-2">
