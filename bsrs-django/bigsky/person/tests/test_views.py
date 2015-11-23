@@ -265,8 +265,6 @@ class PersonListTests(TestCase):
         self.assertEqual(data['role'], str(person.role.id))
         self.assertEqual(data['title'], person.title)
         self.assertEqual(data['employee_id'], person.employee_id)
-        self.assertIn('last_login', data)
-        self.assertIn('date_joined', data)
 
     def test_data_auth_amount(self):
         results = self.data['results'][0]
@@ -320,6 +318,8 @@ class PersonDetailTests(TestCase):
         self.assertEqual(self.data['role'], str(self.person.role.id))
         self.assertEqual(self.data['title'], self.person.title)
         self.assertEqual(self.data['employee_id'], self.person.employee_id)
+        self.assertIn('last_login', self.data)
+        self.assertIn('date_joined', self.data)
 
     def test_data_auth_amount(self):
         self.assertEqual(self.data['auth_amount'], "{0:.4f}".format(self.person.auth_amount))

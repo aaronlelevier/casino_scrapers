@@ -84,7 +84,7 @@ class PersonListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS + ('last_login', 'date_joined',)
+        fields = PERSON_FIELDS
 
 
 class PersonTicketSerializer(serializers.ModelSerializer):
@@ -103,7 +103,7 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS + ('locale', 'locations',
+        fields = PERSON_FIELDS + ('locale', 'locations', 'last_login', 'date_joined',
             'emails', 'phone_numbers', 'addresses',)
 
 

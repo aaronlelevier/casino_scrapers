@@ -250,7 +250,7 @@ class TicketCreateTests(APITestCase):
     def test_ticket(self):
         self.data.update({
             'id': str(uuid.uuid4()),
-            'request': 'plumbing',
+            'request': 'plumbing'
         })
 
         response = self.client.post('/api/tickets/', self.data, format='json')
