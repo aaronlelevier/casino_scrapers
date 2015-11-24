@@ -45,158 +45,158 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         """Translation key 'menu.home' -> 'home' in 'en' """
         self.driver.find_element_by_link_text('Home')
 
-    # def test_role(self):
-    #     ### CREATE
-    #     # Go to Role Area
-    #     self.nav_page.find_role_link().click()
-    #     # Create Role Page Object
-    #     role_page = ModelPage(
-    #         driver = self.driver,
-    #         new_link = "t-add-new",
-    #         list_name = "t-role-name",
-    #         list_data = "t-grid-data"
-    #     )
-    #     role_page.find_new_link().click()
-    #     # New Role Data
-    #     name = rand_chars()
-    #     role = InputHelper(name=name)
-    #     self._fill_in(role)
-    #     self.gen_elem_page.click_save_btn()
-    #     # new Role in List view
-    #     role = role_page.find_list_data()
-    #     self.driver.refresh()
-    #     self.wait_for_xhr_request("t-sort-name-dir").click()
-    #     role_list_view = role_page.find_list_name()
-    #     role_page.click_name_in_list(name, role_list_view)
-    #     ### UPDATE
-    #     # Go to the first Role's Detail view
-    #     role_page.find_wait_and_assert_elem("t-role-name", name)
-    #     role_name = rand_chars()
-    #     role = InputHelper(role_name=role_name)
-    #     self._fill_in(role, clear=True)
-    #     self.gen_elem_page.click_save_btn()
-    #     # check name change
-    #     role = role_page.find_list_data()
-    #     self.driver.refresh()
-    #     role_list_view = role_page.find_list_name()
-    #     role_page.click_name_in_list(role_name, role_list_view)
-    #     ### DELETE
-    #     # Go to the first Role's Detail view
-    #     role_page.find_wait_and_assert_elem("t-role-name", role_name)
-    #     # click Delete
-    #     self.gen_elem_page.click_dropdown_delete()
-    #     self.gen_elem_page.click_delete_btn()
-    #     # check Role is deleted
-    #     self.driver.refresh()
-    #     role = role_page.find_list_data()
-    #     role_list_view = role_page.find_list_name()
-    #     self.assertNotIn(
-    #         role_name,
-    #         [r.text for r in role_list_view]
-    #     )
+    def test_role(self):
+        ### CREATE
+        # Go to Role Area
+        self.nav_page.find_role_link().click()
+        # Create Role Page Object
+        role_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-role-name",
+            list_data = "t-grid-data"
+        )
+        role_page.find_new_link().click()
+        # New Role Data
+        name = rand_chars()
+        role = InputHelper(name=name)
+        self._fill_in(role)
+        self.gen_elem_page.click_save_btn()
+        # new Role in List view
+        role = role_page.find_list_data()
+        self.driver.refresh()
+        self.wait_for_xhr_request("t-sort-name-dir").click()
+        role_list_view = role_page.find_list_name()
+        role_page.click_name_in_list(name, role_list_view)
+        ### UPDATE
+        # Go to the first Role's Detail view
+        role_page.find_wait_and_assert_elem("t-role-name", name)
+        role_name = rand_chars()
+        role = InputHelper(role_name=role_name)
+        self._fill_in(role, clear=True)
+        self.gen_elem_page.click_save_btn()
+        # check name change
+        role = role_page.find_list_data()
+        self.driver.refresh()
+        role_list_view = role_page.find_list_name()
+        role_page.click_name_in_list(role_name, role_list_view)
+        ### DELETE
+        # Go to the first Role's Detail view
+        role_page.find_wait_and_assert_elem("t-role-name", role_name)
+        # click Delete
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        # check Role is deleted
+        self.driver.refresh()
+        role = role_page.find_list_data()
+        role_list_view = role_page.find_list_name()
+        self.assertNotIn(
+            role_name,
+            [r.text for r in role_list_view]
+        )
 
-    # def test_location(self):
-    #     ### CREATE
-    #     # Go to Location Area
-    #     self.nav_page.find_location_link().click()
-    #     # Create Location Page Object
-    #     location_page = ModelPage(
-    #         driver = self.driver,
-    #         new_link = "t-add-new",
-    #         list_name = "t-location-name",
-    #         list_data = "t-grid-data"
-    #     )
-    #     # Get to "Location create view"
-    #     location_new_link = location_page.find_new_link()
-    #     location_new_link.click()
-    #     # Enter info and hit "save"
-    #     location_name = rand_chars()
-    #     location_number = rand_chars()
-    #     location_level = rand_chars()
-    #     location = InputHelper(location_name=location_name, location_number=location_number)
-    #     self._fill_in(location)
-    #     location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
-    #     location_level_input.select_by_index(1)
-    #     self.gen_elem_page.click_save_btn()
-    #     # Go to newly created Location's Detail view
-    #     self.driver_wait.find_elements_by_class_name(location_page.list_data)
-    #     self.driver.refresh()
-    #     location_list_view = location_page.find_list_name()
-    #     location_page.click_name_in_list(location_name, location_list_view)
-    #     ### UPDATE
-    #     # Go to Location Detail view, Change name and hit "save"
-    #     location_page.find_wait_and_assert_elem("t-location-name", location_name)
-    #     location_name = rand_chars()
-    #     location = InputHelper(location_name=location_name)
-    #     self._fill_in(location, True)
-    #     self.gen_elem_page.click_save_btn()
-    #     # List view contains new name
-    #     locations = location_page.find_list_data()
-    #     location_list_view = location_page.find_list_name()
-    #     location_page.click_name_in_list(location_name, location_list_view)
-    #     ### DELETE
-    #     # Go to Location Detail view click Delete
-    #     self.gen_elem_page.click_dropdown_delete()
-    #     self.gen_elem_page.click_delete_btn()
-    #     # check Role is deleted
-    #     self.driver.refresh()
-    #     locations = location_page.find_list_data()
-    #     location_list_view = location_page.find_list_name()
-    #     self.assertNotIn(
-    #         location_name,
-    #         [r.text for r in location_list_view]
-    #     )
+    def test_location(self):
+        ### CREATE
+        # Go to Location Area
+        self.nav_page.find_location_link().click()
+        # Create Location Page Object
+        location_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-location-name",
+            list_data = "t-grid-data"
+        )
+        # Get to "Location create view"
+        location_new_link = location_page.find_new_link()
+        location_new_link.click()
+        # Enter info and hit "save"
+        location_name = rand_chars()
+        location_number = rand_chars()
+        location_level = rand_chars()
+        location = InputHelper(location_name=location_name, location_number=location_number)
+        self._fill_in(location)
+        location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
+        location_level_input.select_by_index(1)
+        self.gen_elem_page.click_save_btn()
+        # Go to newly created Location's Detail view
+        self.driver_wait.find_elements_by_class_name(location_page.list_data)
+        self.driver.refresh()
+        location_list_view = location_page.find_list_name()
+        location_page.click_name_in_list(location_name, location_list_view)
+        ### UPDATE
+        # Go to Location Detail view, Change name and hit "save"
+        location_page.find_wait_and_assert_elem("t-location-name", location_name)
+        location_name = rand_chars()
+        location = InputHelper(location_name=location_name)
+        self._fill_in(location, True)
+        self.gen_elem_page.click_save_btn()
+        # List view contains new name
+        locations = location_page.find_list_data()
+        location_list_view = location_page.find_list_name()
+        location_page.click_name_in_list(location_name, location_list_view)
+        ### DELETE
+        # Go to Location Detail view click Delete
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        # check Role is deleted
+        self.driver.refresh()
+        locations = location_page.find_list_data()
+        location_list_view = location_page.find_list_name()
+        self.assertNotIn(
+            location_name,
+            [r.text for r in location_list_view]
+        )
 
-    # def test_location_level(self):
-    #     ### CREATE
-    #     # Go to Role Area
-    #     self.nav_page.find_location_level_link().click()
-    #     # Create LocationLevel Page Object
-    #     location_level_page = ModelPage(
-    #         driver=self.driver,
-    #         new_link = "t-add-new",
-    #         list_name = "t-location-level-name",
-    #         list_data = "t-grid-data"
-    #     )
-    #     # Go to Create view
-    #     location_level_new_link = location_level_page.find_new_link()
-    #     location_level_new_link.click()
-    #     # create new Location Level
-    #     location_level_name = rand_chars()
-    #     location_level = InputHelper(location_level_name=location_level_name)
-    #     self._fill_in(location_level)
-    #     self.gen_elem_page.click_save_btn()
-    #     # new record shows in List view
-    #     location_levels = location_level_page.find_list_data()
-    #     self.driver.refresh()
-    #     location_level_list_view = location_level_page.find_list_name()
-    #     location_level_page.click_name_in_list(location_level_name, location_level_list_view)
-    #     ### UPDATE
-    #     self.driver.refresh()
-    #     location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
-    #     location_level_name = rand_chars()
-    #     location_level = InputHelper(location_level_name=location_level_name)
-    #     self._fill_in(location_level, True)
-    #     self.gen_elem_page.click_save_btn()
-    #     ### List View
-    #     location_levels = location_level_page.find_list_data()
-    #     self.driver.refresh()
-    #     location_level_list_view = location_level_page.find_list_name()
-    #     location_level_page.click_name_in_list(location_level_name, location_level_list_view)
-    #     ### DELETE
-    #     # Go to the first Role's Detail view
-    #     location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
-    #     # click Delete
-    #     self.gen_elem_page.click_dropdown_delete()
-    #     self.gen_elem_page.click_delete_btn()
-    #     # check Role is deleted
-    #     self.driver.refresh()
-    #     location_level = location_level_page.find_list_data()
-    #     location_level_list_view = location_level_page.find_list_name()
-    #     self.assertNotIn(
-    #         location_level_name,
-    #         [r.text for r in location_level_list_view]
-    #     )
+    def test_location_level(self):
+        ### CREATE
+        # Go to Role Area
+        self.nav_page.find_location_level_link().click()
+        # Create LocationLevel Page Object
+        location_level_page = ModelPage(
+            driver=self.driver,
+            new_link = "t-add-new",
+            list_name = "t-location-level-name",
+            list_data = "t-grid-data"
+        )
+        # Go to Create view
+        location_level_new_link = location_level_page.find_new_link()
+        location_level_new_link.click()
+        # create new Location Level
+        location_level_name = rand_chars()
+        location_level = InputHelper(location_level_name=location_level_name)
+        self._fill_in(location_level)
+        self.gen_elem_page.click_save_btn()
+        # new record shows in List view
+        location_levels = location_level_page.find_list_data()
+        self.driver.refresh()
+        location_level_list_view = location_level_page.find_list_name()
+        location_level_page.click_name_in_list(location_level_name, location_level_list_view)
+        ### UPDATE
+        self.driver.refresh()
+        location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
+        location_level_name = rand_chars()
+        location_level = InputHelper(location_level_name=location_level_name)
+        self._fill_in(location_level, True)
+        self.gen_elem_page.click_save_btn()
+        ### List View
+        location_levels = location_level_page.find_list_data()
+        self.driver.refresh()
+        location_level_list_view = location_level_page.find_list_name()
+        location_level_page.click_name_in_list(location_level_name, location_level_list_view)
+        ### DELETE
+        # Go to the first Role's Detail view
+        location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
+        # click Delete
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        # check Role is deleted
+        self.driver.refresh()
+        location_level = location_level_page.find_list_data()
+        location_level_list_view = location_level_page.find_list_name()
+        self.assertNotIn(
+            location_level_name,
+            [r.text for r in location_level_list_view]
+        )
 
     def test_person(self):
         ### CREATE
