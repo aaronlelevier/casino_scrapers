@@ -220,9 +220,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     });
 });
 
-// removed until runloop fix (power-select / basic-dropdown issue below)
-// https://github.com/cibernox/ember-power-select/issues/106
-test('sco when you deep link to the category detail can add and remove child from category', (assert) => {
+test('when you deep link to the category detail can add and remove child from category', (assert) => {
     let response = Ember.$.extend(true, {}, payload);
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(CATEGORY_NEW_URL);
@@ -296,7 +294,7 @@ test('clicking and typing into selectize for categories children will not filter
     });
 });
 
-test('sco clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
+test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
     let payload_new = Ember.$.extend(true, {}, payload);
     payload_new.children = [CD.idTwo];
     let response = Ember.$.extend(true, {}, payload_new);
