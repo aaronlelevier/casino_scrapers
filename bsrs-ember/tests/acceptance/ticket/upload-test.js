@@ -3,6 +3,7 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr} from 'bsrs-ember/tests/helpers/xhr';
+import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
@@ -70,6 +71,42 @@ test('upload will post form data, show progress and on save append the attachmen
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(store.find('ticket-attachment').get('length'), 1);
         assert.equal(model.get('attachments').get('length'), 1);
+        assert.equal(model.get('isDirty'), false);
+        assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('uploading a file, then rolling back should throw out any previously associated attachments', (assert) => {
+    let model = store.find('ticket', TD.idOne);
+    let image = {name: 'foo.png', type: 'image/png', size: 234000};
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(PROGRESS_BAR).length, 0);
+        assert.equal(store.find('ticket-attachment').get('length'), 0);
+        assert.equal(find('.dirty').length, 0);
+    });
+    ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {id: UUID.value});
+    uploadFile('tickets/ticket-single', 'upload', image, model);
+    andThen(() => {
+        assert.equal(store.find('ticket-attachment').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
+        assert.equal(model.get('isDirty'), false);
+        assert.ok(model.get('isDirtyOrRelatedDirty'));
+        assert.equal(find('.dirty').length, 1);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+    visit(TICKET_URL);
+    click('.t-tab-close:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        waitFor(() => {
+            assert.equal(find('.t-modal-body').length, 1);
+        });
+    });
+    click('.t-modal-rollback-btn');
+    andThen(() => {
+        assert.equal(model.get('attachments').get('length'), 0);
         assert.equal(model.get('isDirty'), false);
         assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
     });

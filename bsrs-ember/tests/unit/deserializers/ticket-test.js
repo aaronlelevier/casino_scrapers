@@ -606,7 +606,7 @@ test('ticket-attachment added for each attachment on ticket', (assert) => {
 });
 
 test('ticket-attachment added for each attachment on ticket (when ticket has existing attachments)', (assert) => {
-    ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: [TICKET_DEFAULTS.attachmentTwoId]});
+    ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: [TICKET_DEFAULTS.attachmentTwoId], previous_attachments_fks: [TICKET_DEFAULTS.attachmentTwoId]});
     ticket.save();
     store.push('ticket-attachment', {id: TICKET_DEFAULTS.attachmentTwoId});
     assert.equal(ticket.get('attachments').get('length'), 1);

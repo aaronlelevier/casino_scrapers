@@ -7,8 +7,9 @@ import CcMixin from 'bsrs-ember/mixins/model/ticket/cc';
 import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 import RequesterMixin from 'bsrs-ember/mixins/model/ticket/requester';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
-var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketLocationMixin, {
+var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixin, TicketLocationMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
     number: attr(''),
@@ -282,11 +283,6 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         this.saveCategories();
         this.saveAssignee();
         this.saveAttachments();
-    },
-    save() {
-        this.set('new', undefined);
-        this.set('previous_attachments_fks', this.get('ticket_attachments_fks'));
-        this._super();
     }
 });
 
