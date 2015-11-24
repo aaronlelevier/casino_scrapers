@@ -113,13 +113,13 @@ class TranslationViewSet(DestroyModelMixin, viewsets.ModelViewSet):
             self.final_data = []
             self.errors = []
 
-            for data in request.data:
-                data = copy.copy(data)
+            data = copy.copy(request.data)
+            # import pdb;pdb.set_trace()
 
+            for d in data['locales']:
                 try:
-                    self.locale = self.validate_locale(data)
-                    trans, created = Translation.objects.get_or_create(id=data['id'])
-                    self.update_trans(trans, key, data)
+                    locale = self.validate_locale(d)
+                    self.update_trans(locale, key, data)
                     self.final_data.append(data)
                 except (KeyError, Locale.DoesNotExist) as e:
                     self.errors.append(str(e))
@@ -134,12 +134,12 @@ class TranslationViewSet(DestroyModelMixin, viewsets.ModelViewSet):
 
     def validate_locale(self, data):
         try:
-            return Locale.objects.get(id=data['translations']['locale'])
+            return Locale.objects.get(id=data['locale'])
         except Locale.DoesNotExist:
             raise
 
-    def update_trans(self, trans, key, data):
-        trans.locale = self.locale
+    def update_trans(self, locale, key, data):
+        trans = self.locale.translation
 
         if not data['translations']['text']:
             trans.values.pop(key)
