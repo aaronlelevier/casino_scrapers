@@ -26,7 +26,9 @@ class LocaleViewSet(BaseModelViewSet):
 class TranslationBootstrapViewSet(viewsets.ModelViewSet):
     '''
     ## Filters
+
        **1. Filter by Locale.name:**
+
        URL: `/api/translations/?locale=en`
     '''
     model = Translation
