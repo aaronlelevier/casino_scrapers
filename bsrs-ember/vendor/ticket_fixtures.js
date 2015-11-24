@@ -50,6 +50,7 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.number = 'bye' + i;
             ticket.request = 'sub' + i;
             delete ticket.cc;
+            delete ticket.attachments;
             delete ticket.requester;
             response.push(ticket);
         }
@@ -67,6 +68,7 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.number = 'gone' + i;
             ticket.request = 'ape' + i;
             delete ticket.cc;
+            delete ticket.attachments;
             response.push(ticket);
         }
         return {'count':19,'next':null,'previous':null,'results': response};

@@ -7,9 +7,8 @@ import CcMixin from 'bsrs-ember/mixins/model/ticket/cc';
 import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 import RequesterMixin from 'bsrs-ember/mixins/model/ticket/requester';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
-import NewMixin from 'bsrs-ember/mixins/model/new';
 
-var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketLocationMixin, NewMixin, {
+var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketLocationMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
     number: attr(''),
@@ -90,6 +89,16 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
             this.change_priority(priority_fk);
         }
     },
+    rollbackAttachments() {
+        let ticket_attachments_fks = this.get('ticket_attachments_fks');
+        let previous_attachments_fks = this.get('previous_attachments_fks');
+        ticket_attachments_fks.forEach((id) => {
+            this.remove_attachment(id);
+        });
+        previous_attachments_fks.forEach((id) => {
+            this.add_attachment(id);
+        });
+    },
     saveStatus() {
         let status = this.get('status');
         if (status) { this.set('status_fk', status.get('id')); }
@@ -97,6 +106,9 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
     saveAssignee() {
         let assignee = this.get('assignee');
         if (assignee) { this.set('assignee_fk', assignee.get('id')); }
+    },
+    saveAttachments() {
+        this.set('previous_attachments_fks', this.get('ticket_attachments_fks'));
     },
     savePriority() {
         let priority = this.get('priority');
@@ -144,8 +156,8 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
             return true;
         }
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'requesterIsDirty', 'locationIsDirty', function() {
-        return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty') || this.get('requesterIsDirty') || this.get('locationIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'requesterIsDirty', 'locationIsDirty', 'attachmentsIsDirty', function() {
+        return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty') || this.get('requesterIsDirty') || this.get('locationIsDirty') || this.get('attachmentsIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     remove_assignee: function() {
@@ -184,12 +196,13 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         new_priority.set('tickets', new_priority_tickets.concat(ticket_id));
     },
     attachmentsIsNotDirty: Ember.computed.not('attachmentsIsDirty'),
-    attachmentsIsDirty: Ember.computed('attachments.[]', 'previous_attachments_fks.[]', function() {
-        let attachments = this.get('attachments');
+    attachmentsIsDirty: Ember.computed('attachment_ids.[]', 'previous_attachments_fks.[]', function() {
+        let attachment_ids = this.get('attachment_ids') || [];
         let previous_attachments_fks = this.get('previous_attachments_fks') || [];
-        if(attachments.get('length') !== previous_attachments_fks.length) {
+        if(attachment_ids.get('length') !== previous_attachments_fks.get('length')) {
             return true;
         }
+        return equal(attachment_ids, previous_attachments_fks) ? false : true;
     }),
     attachments: Ember.computed('ticket_attachments_fks.[]', function() {
         const related_fks = this.get('ticket_attachments_fks');
@@ -259,6 +272,7 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         this.rollbackCC();
         this.rollbackCategories();
         this.rollbackAssignee();
+        this.rollbackAttachments();
     },
     saveRelated() {
         this.saveStatus();
@@ -267,6 +281,12 @@ var TicketModel = Model.extend(CcMixin, CategoriesMixin, RequesterMixin, TicketL
         this.saveCC();
         this.saveCategories();
         this.saveAssignee();
+        this.saveAttachments();
+    },
+    save() {
+        this.set('new', undefined);
+        this.set('previous_attachments_fks', this.get('ticket_attachments_fks'));
+        this._super();
     }
 });
 

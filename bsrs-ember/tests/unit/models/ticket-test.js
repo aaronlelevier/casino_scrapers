@@ -1193,63 +1193,95 @@ test('add and remove attachment work as expected', function(assert) {
     assert.equal(ticket.get('attachments').get('length'), 0);
 });
 
-// test('ticket is dirty or related is dirty when attachment is added or removed (starting with none)', (assert) => {
-//     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: []});
-//     let attachment = store.push('ticket-attachment', {id: 8});
-//     assert.equal(ticket.get('attachments').get('length'), 0);
-//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     ticket.remove_attachment(8);
-//     assert.equal(ticket.get('attachments').get('length'), 0);
-//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     // ticket.add_attachment(8);
-//     // assert.equal(ticket.get('attachments').get('length'), 1);
-//     // assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//     // ticket.remove_attachment(8);
-//     // assert.equal(ticket.get('attachments').get('length'), 0);
-//     // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     // ticket.add_attachment(8);
-//     // assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-// });
+test('ticket is dirty or related is dirty when attachment is added or removed (starting with none)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: [], previous_attachments_fks: []});
+    let attachment = store.push('ticket-attachment', {id: 8});
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.add_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.remove_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.add_attachment(8);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
 
-// test('ticket is dirty or related is dirty when attachment is added or removed (starting with one attachment)', (assert) => {
-//     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: []});
-//     let attachment = store.push('ticket-attachment', {id: 8, ticket_fk: TICKET_DEFAULTS.idOne});
-//     assert.equal(ticket.get('attachments').get('length'), 1);
-//     // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     // ticket.remove_attachment(8);
-//     // assert.equal(ticket.get('attachments').get('length'), 0);
-//     // assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//     // ticket.remove_attachment(8);
-//     // assert.equal(ticket.get('attachments').get('length'), 0);
-//     // assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     // ticket.add_attachment(8);
-//     // assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-// });
+test('ticket is dirty or related is dirty when attachment is added or removed (starting with one attachment)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: [8], previous_attachments_fks: [8]});
+    let attachment = store.push('ticket-attachment', {id: 8, ticket_fk: TICKET_DEFAULTS.idOne});
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.remove_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.add_attachment(8);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
 
-// test('rollback attachments will revert and reboot the dirty attachments to clean', (assert) => {
-//     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: []});
-//     store.push('ticket-attachments', {id: TICKET_DEFAULTS.attachmentsOneId, name: TICKET_DEFAULTS.attachmentsOne, tickets: [TICKET_DEFAULTS.idOne]});
-//     store.push('ticket-attachments', {id: TICKET_DEFAULTS.attachmentsTwoId, name: TICKET_DEFAULTS.attachmentsTwo, tickets: []});
-//     assert.equal(ticket.get('attachments.id'), TICKET_DEFAULTS.attachmentsOneId);
-//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     ticket.change_attachments(TICKET_DEFAULTS.attachmentsTwoId);
-//     assert.equal(ticket.get('attachments.id'), TICKET_DEFAULTS.attachmentsTwoId);
-//     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//     ticket.rollbackRelated();
-//     assert.equal(ticket.get('attachments.id'), TICKET_DEFAULTS.attachmentsOneId);
-//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     ticket.change_attachments(TICKET_DEFAULTS.attachmentsTwoId);
-//     assert.equal(ticket.get('attachments.id'), TICKET_DEFAULTS.attachmentsTwoId);
-//     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//     ticket.saveRelated();
-//     assert.equal(ticket.get('attachments.id'), TICKET_DEFAULTS.attachmentsTwoId);
-//     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-// });
+test('rollback attachments will revert and reboot the dirty attachments to clean', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: [8], previous_attachments_fks: [8]});
+    store.push('ticket-attachment', {id: 8, ticket_fk: TICKET_DEFAULTS.idOne});
+    store.push('ticket-attachment', {id: 9});
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.add_attachment(9);
+    assert.equal(ticket.get('attachments').get('length'), 2);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.add_attachment(9);
+    assert.equal(ticket.get('attachments').get('length'), 2);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.saveRelated();
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('attachments').get('length'), 2);
+    ticket.remove_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.saveRelated();
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('attachments').get('length'), 1);
+});
 
-// test('attachments will save correctly as undefined', (assert) => {
-//     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: []});
-//     store.push('ticket-attachments', {id: TICKET_DEFAULTS.attachmentsOneId, name: TICKET_DEFAULTS.attachmentsOne, tickets: []});
-//     ticket.saveRelated();
-//     let attachments = ticket.get('attachments');
-//     assert.equal(ticket.get('attachments_fk'), undefined);
-// });
+test('attachments should be dirty even when the number of previous matches current', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: [8], previous_attachments_fks: [8]});
+    store.push('ticket-attachment', {id: 8, ticket_fk: TICKET_DEFAULTS.idOne});
+    store.push('ticket-attachment', {id: 9});
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.add_attachment(9);
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+});
+
+test('ticket is not dirty after save and save related (starting with none)', (assert) => {
+    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: [], previous_attachments_fks: []});
+    let attachment = store.push('ticket-attachment', {id: 8});
+    assert.equal(ticket.get('attachments').get('length'), 0);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.add_attachment(8);
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    ticket.save();
+    ticket.saveRelated();
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('attachments').get('length'), 1);
+});

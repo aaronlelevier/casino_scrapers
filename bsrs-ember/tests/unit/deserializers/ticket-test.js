@@ -20,7 +20,7 @@ let store, subject, uuid, person_deserializer, location_level_deserializer, loca
 
 module('unit: ticket deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:location','service:person-current','service:translations-fetcher','service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:location', 'model:ticket-attachment', 'service:person-current','service:translations-fetcher','service:i18n']);
         uuid = this.container.lookup('model:uuid');
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
@@ -591,3 +591,36 @@ test('ticket-category m2m added even when ticket did not exist before the deseri
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-category').get('length'), 2);
 });
+
+test('ticket-attachment added for each attachment on ticket', (assert) => {
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.idOne);
+    json.attachments = [TICKET_DEFAULTS.attachmentOneId];
+    subject.deserialize(json, json.id);
+    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    let attachments = ticket.get('attachments');
+    assert.equal(attachments.get('length'), 1);
+    assert.equal(attachments.objectAt(0).get('id'), TICKET_DEFAULTS.attachmentOneId);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('ticket-attachment').get('length'), 1);
+});
+
+test('ticket-attachment added for each attachment on ticket (when ticket has existing attachments)', (assert) => {
+    ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_attachments_fks: [TICKET_DEFAULTS.attachmentTwoId]});
+    ticket.save();
+    store.push('ticket-attachment', {id: TICKET_DEFAULTS.attachmentTwoId});
+    assert.equal(ticket.get('attachments').get('length'), 1);
+    let json = TICKET_FIXTURES.generate(TICKET_DEFAULTS.id);
+    json.attachments = [TICKET_DEFAULTS.attachmentTwoId, TICKET_DEFAULTS.attachmentOneId];
+    subject.deserialize(json, json.id);
+    let ticket = store.find('ticket', TICKET_DEFAULTS.idOne);
+    let attachments = ticket.get('attachments');
+    assert.equal(attachments.get('length'), 2);
+    assert.equal(attachments.objectAt(0).get('id'), TICKET_DEFAULTS.attachmentTwoId);
+    assert.equal(attachments.objectAt(1).get('id'), TICKET_DEFAULTS.attachmentOneId);
+    assert.ok(ticket.get('isNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(store.find('ticket-attachment').get('length'), 2);
+});
+
+//TODO: when attachments can be deleted (from ticket) we need a "server is the truth" test that removes in-memory relationships

@@ -60,16 +60,17 @@ test('upload will post form data, show progress and on save append the attachmen
         assert.equal(store.find('ticket-attachment').get('length'), 1);
         assert.equal(model.get('attachments').get('length'), 1);
         assert.equal(model.get('isDirty'), false);
-        // assert.equal(model.get('isDirtyOrRelatedDirty'), true);
+        assert.ok(model.get('isDirtyOrRelatedDirty'));
     });
     ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_attachment), {}, 200, TF.detail(TD.idOne));
     ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
     generalPage.save();
     andThen(() => {
+        model = store.find('ticket', TD.idOne);
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(store.find('ticket-attachment').get('length'), 1);
-        // assert.equal(model.get('attachment_ids').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
         assert.equal(model.get('isDirty'), false);
-        assert.equal(model.get('isDirtyOrRelatedDirty'), false);
+        assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
