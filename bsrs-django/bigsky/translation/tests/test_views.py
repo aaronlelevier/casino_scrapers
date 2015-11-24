@@ -9,6 +9,7 @@ from translation.serializers import LocaleSerializer, TranslationSerializer
 from translation.tests.factory import (create_locales, create_locale,
     create_translations)
 from utils import create
+from utils.tests.helpers import build_dict
 
 
 class LocaleTests(APITestCase):
@@ -133,19 +134,42 @@ class TranslationReadTests(APITestCase):
             Translation.objects.get(locale__locale='en').values
         )
 
-    ### "/api/admin/translations/{translation-key}/" list_route
+    # get_translations_by_key
 
-    def test_detail_with_key_get(self):
-        key = list(self.translation.values.keys())[0]
+    def test_get_translations_by_key(self):
+        key = list(self.translation.values.keys())[0] # key="admin.address.add" for example
+
         response = self.client.get('/api/admin/translations/{}/'.format(key))
+
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertIn(str(self.translation.id), [d['id'] for d in data])
-        self.assertIn(
-            str(self.translation.locale.id),
-            [d['translations']['locale'] for d in data]
+        self.assertEqual(data['id'], key)
+        self.assertEqual(data['key'], key)
+        self.assertIn('locales', data)
+        self.assertIsInstance(data['locales'], list)
+        self.assertTrue(len(data['locales']) > 0)
+        # Locales of the Translation
+        db_locale = Translation.objects.filter(values__has_key=key)[0].locale
+        d = build_dict(data['locales'], key="locale")
+        self.assertEqual(d[str(db_locale.id)]['locale'], str(db_locale.id))
+        self.assertEqual(
+            d[str(db_locale.id)]['translation'],
+            db_locale.translation.values.get(key, "")
         )
-        self.assertTrue([d['translations']['text'] for d in data])
+
+    def test_get_translations_by_key__empty_values_are_blank(self):
+        new_locale = Locale.objects.create(locale='jp', name='jp')
+        new_translation = Translation.objects.create(
+            locale=new_locale, values={}, context={})
+        key = list(self.translation.values.keys())[0]
+
+        response = self.client.get('/api/admin/translations/{}/'.format(key))
+
+        data = json.loads(response.content.decode('utf8'))
+
+        d = build_dict(data['locales'], key="locale")
+        self.assertEqual(d[str(new_locale.id)]['locale'], str(new_locale.id))
+        self.assertEqual(d[str(new_locale.id)]['translation'], "")
 
 
 class TranslationWriteTests(APITestCase):

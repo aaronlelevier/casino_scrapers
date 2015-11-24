@@ -97,15 +97,17 @@ class TranslationViewSet(DestroyModelMixin, viewsets.ModelViewSet):
     @list_route(methods=['GET', 'POST'], url_path=r"(?P<key>[\w\.]+)")
     def get_translations_by_key(self, request, key=None):
         if request.method == 'GET':
-            translations = Translation.objects.filter(values__has_key=key)
-            return Response([{
-                'id': str(t.id),
-                'translations': {
-                    'locale': str(t.locale.id),
-                    'text': t.values.get(key, ""),
-                    'helper': t.context.get(key, "") if t.context else ""
-                }
-            } for t in translations])
+            response = {
+                'id': key,
+                'key': key,
+                'locales': []
+            }
+            for t in Translation.objects.all():
+                response['locales'].append({
+                        'locale': str(t.locale.id),
+                        'translation': t.values.get(key, "")
+                    })
+            return Response(response)
 
         elif request.method == 'POST':
             self.final_data = []
