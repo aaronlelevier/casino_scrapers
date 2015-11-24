@@ -521,97 +521,97 @@ test('power select options are rendered immediately when enter detail route and 
     });
 });
 
-// test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
-//     page.visitDetail();
-//     andThen(() => {
-//         //override electrical to have children
-//         store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.idOne, children_fks: [CD.idChild]});
-//         let components = page.selectizeComponents();
-//         assert.equal(store.find('category').get('length'), 5);
-//         let ticket = store.find('ticket', TD.idOne);
-//         assert.equal(ticket.get('categories').get('length'), 3);
-//         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//         assert.ok(ticket.get('categoriesIsNotDirty'));
-//         assert.equal(components, 3);
-//     });
-//     //select same
-//     page.categoryOneClickDropdown();
-//     page.categoryOneClickOptionOne();
-//     andThen(() => {
-//         let components = page.selectizeComponents();
-//         assert.equal(store.find('ticket').get('length'), 1);
-//         let ticket = store.find('ticket', TD.idOne);
-//         assert.equal(ticket.get('categories').get('length'), 3);
-//         assert.equal(ticket.get('sorted_categories').get('length'), 3);
-//         assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
-//         assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
-//         assert.equal(ticket.get('sorted_categories').objectAt(2).get('children').get('length'), 0);
-//         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//         assert.ok(ticket.get('categoriesIsNotDirty'));
-//         assert.equal(components, 3);
-//     });
-//     //select electrical from second level
-//     let category_two = {id: CD.idTwo, name: CD.nameTwo, parent: {id: CD.idOne, name: CD.nameOne}, children_fks: [CD.idChild]};
-//     category_two.children = [{id: CD.idChild, name: CD.nameElectricalChild, children_fks: []}];
-//     xhr(`${PREFIX}/admin/categories/${CD.idTwo}/`, 'GET', null, {}, 200, category_two);
-//     page.categoryTwoClickDropdown();
-//     page.categoryTwoClickOptionElectrical();
-//     andThen(() => {
-//         let components = page.selectizeComponents();
-//         let ticket = store.find('ticket', TD.idOne);
-//         assert.equal(store.find('category').get('length'), 6);
-//         assert.equal(ticket.get('categories').get('length'), 2);
-//         assert.equal(ticket.get('sorted_categories').get('length'), 2);
-//         assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
-//         assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
-//         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//         assert.ok(ticket.get('categoriesIsDirty'));
-//         assert.equal(components, 3);
-//     });
-//     page.categoryThreeClickDropdown();
-//     page.categoryThreeClickOptionOne();
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//             assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
-//         });
-//     });
-//     generalPage.clickModalCancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.ok(generalPage.modalIsHidden());
-//             let components = page.selectizeComponents();
-//             let tickets = store.find('ticket');
-//             assert.equal(store.find('category').get('length'), 6);
-//             assert.equal(tickets.get('length'), 1);
-//             let ticket = store.find('ticket', TD.idOne);
-//             assert.equal(ticket.get('categories').get('length'), 3);
-//             assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
-//             assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
-//             assert.equal(ticket.get('sorted_categories').objectAt(2).get('children').get('length'), 0);
-//             assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//             assert.ok(ticket.get('categoriesIsDirty'));
-//             assert.equal(components, 3);
-//         });
-//     });
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//             assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
-//         });
-//     });
-//     generalPage.clickModalRollback();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), TICKET_URL);
-//         });
-//     });
-// });
+test('sco selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        //override electrical to have children
+        store.push('category', {id: CD.idTwo, name: CD.nameTwo, parent_id: CD.idOne, children_fks: [CD.idChild]});
+        let components = page.selectizeComponents();
+        assert.equal(store.find('category').get('length'), 5);
+        let ticket = store.find('ticket', TD.idOne);
+        assert.equal(ticket.get('categories').get('length'), 3);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(ticket.get('categoriesIsNotDirty'));
+        assert.equal(components, 3);
+    });
+    //select same
+    page.categoryOneClickDropdown();
+    page.categoryOneClickOptionOne();
+    andThen(() => {
+        let components = page.selectizeComponents();
+        assert.equal(store.find('ticket').get('length'), 1);
+        let ticket = store.find('ticket', TD.idOne);
+        assert.equal(ticket.get('categories').get('length'), 3);
+        assert.equal(ticket.get('sorted_categories').get('length'), 3);
+        assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
+        assert.equal(ticket.get('sorted_categories').objectAt(2).get('children').get('length'), 0);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+        assert.ok(ticket.get('categoriesIsNotDirty'));
+        assert.equal(components, 3);
+    });
+    //select electrical from second level
+    let category_two = {id: CD.idTwo, name: CD.nameTwo, parent: {id: CD.idOne, name: CD.nameOne}, children_fks: [CD.idChild]};
+    category_two.children = [{id: CD.idChild, name: CD.nameElectricalChild, children_fks: []}];
+    xhr(`${PREFIX}/admin/categories/${CD.idTwo}/`, 'GET', null, {}, 200, category_two);
+    page.categoryTwoClickDropdown();
+    page.categoryTwoClickOptionElectrical();
+    andThen(() => {
+        let components = page.selectizeComponents();
+        let ticket = store.find('ticket', TD.idOne);
+        assert.equal(store.find('category').get('length'), 6);
+        assert.equal(ticket.get('categories').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        assert.ok(ticket.get('categoriesIsDirty'));
+        assert.equal(components, 3);
+    });
+    page.categoryThreeClickDropdown();
+    page.categoryThreeClickOptionOne();
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible());
+            assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
+        });
+    });
+    generalPage.clickModalCancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsHidden());
+            let components = page.selectizeComponents();
+            let tickets = store.find('ticket');
+            assert.equal(store.find('category').get('length'), 6);
+            assert.equal(tickets.get('length'), 1);
+            let ticket = store.find('ticket', TD.idOne);
+            assert.equal(ticket.get('categories').get('length'), 3);
+            assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
+            assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
+            assert.equal(ticket.get('sorted_categories').objectAt(2).get('children').get('length'), 0);
+            assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+            assert.ok(ticket.get('categoriesIsDirty'));
+            assert.equal(components, 3);
+        });
+    });
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible());
+            assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
+        });
+    });
+    generalPage.clickModalRollback();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), TICKET_URL);
+        });
+    });
+});
 
 test('changing tree and reverting tree should not show as dirty', (assert) => {
     clearxhr(list_xhr);
@@ -828,79 +828,79 @@ test('location component shows location for ticket and will fire off xhr to fetc
     });
 });
 
-// //*TICKET TO ASSIGNEE*/
-// test('assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', (assert) => {
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(page.assigneeInput(), PD.fullname);
-//         let ticket = store.find('ticket', TD.idOne);
-//         assert.equal(ticket.get('assignee.id'), PD.idOne);
-//         assert.equal(ticket.get('assignee_fk'), PD.idOne);
-//         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-//     });
-//     xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
-//     page.assigneeClickDropdown();
-//     fillIn(`${SEARCH}`, 'b');
-//     andThen(() => {
-//         assert.equal(page.assigneeInput(), PD.fullname);
-//         assert.equal(page.assigneeOptionLength(), 11);
-//         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), PD.fullname);
-//         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-//         page.assigneeClickOptionTwo();
-//         andThen(() => {
-//             assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-//         });
-//     });
-//     page.assigneeClickDropdown();
-//     fillIn(`${SEARCH}`, '');
-//     andThen(() => {
-//         assert.equal(page.assigneeOptionLength(), 1);
-//         assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-//     });
-//     fillIn(`${SEARCH}`, 'b');
-//     andThen(() => {
-//         assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-//         assert.equal(page.assigneeOptionLength(), 11);
-//         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), PD.fullname);
-//         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-//     });
-//     page.assigneeClickOptionTwo();
-//     andThen(() => {
-//         assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-//         let ticket = store.find('ticket', TD.idOne);
-//         assert.equal(ticket.get('assignee.id'), PD.idBoy);
-//         assert.equal(ticket.get('assignee_fk'), PD.idOne);
-//         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//         //ensure categories has not changed
-//         assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
-//         assert.equal(ticket.get('categories').get('length'), 3);
-//     });
-//     //search specific assignee
-//     xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy2`, 'GET', null, {}, 200, PF.search());
-//     page.assigneeClickDropdown();
-//     fillIn(`${SEARCH}`, 'Boy2');
-//     andThen(() => {
-//         assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-//         assert.equal(page.assigneeOptionLength(), 1);
-//         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-//     });
-//     page.assigneeClickOptionOne();
-//     andThen(() => {
-//         assert.equal(page.assigneeInput(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
-//         let ticket = store.find('ticket', TD.idOne);
-//         assert.equal(ticket.get('assignee.id'), PD.idSearch);
-//         assert.equal(ticket.get('assignee_fk'), PD.idOne);
-//         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-//         //ensure categories has not changed
-//         assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
-//         assert.equal(ticket.get('categories').get('length'), 3);
-//     });
-//     let response_put = TF.detail(TD.idOne);
-//     response_put.assignee = {id: PD.idSearch, first_name: PD.nameBoy2};
-//     let payload = TF.put({id: TD.idOne, assignee: PD.idSearch});
-//     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_URL);
-//     });
-// });
+//*TICKET TO ASSIGNEE*/
+test('sco assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', (assert) => {
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), PD.fullname);
+        let ticket = store.find('ticket', TD.idOne);
+        assert.equal(ticket.get('assignee.id'), PD.idOne);
+        assert.equal(ticket.get('assignee_fk'), PD.idOne);
+        assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, 'b');
+    andThen(() => {
+        assert.equal(page.assigneeInput(), PD.fullname);
+        assert.equal(page.assigneeOptionLength(), 11);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), PD.fullname);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        page.assigneeClickOptionTwo();
+        andThen(() => {
+            assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        });
+    });
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, '');
+    andThen(() => {
+        assert.equal(page.assigneeOptionLength(), 1);
+        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    });
+    fillIn(`${SEARCH}`, 'b');
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(page.assigneeOptionLength(), 11);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), PD.fullname);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+    });
+    page.assigneeClickOptionTwo();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        let ticket = store.find('ticket', TD.idOne);
+        assert.equal(ticket.get('assignee.id'), PD.idBoy);
+        assert.equal(ticket.get('assignee_fk'), PD.idOne);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        //ensure categories has not changed
+        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
+        assert.equal(ticket.get('categories').get('length'), 3);
+    });
+    //search specific assignee
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=Boy2`, 'GET', null, {}, 200, PF.search());
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, 'Boy2');
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
+        assert.equal(page.assigneeOptionLength(), 1);
+        assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+    });
+    page.assigneeClickOptionOne();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PD.nameBoy2} ${PD.lastNameBoy2}`);
+        let ticket = store.find('ticket', TD.idOne);
+        assert.equal(ticket.get('assignee.id'), PD.idSearch);
+        assert.equal(ticket.get('assignee_fk'), PD.idOne);
+        assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+        //ensure categories has not changed
+        assert.equal(ticket.get('top_level_category').get('id'), CD.idOne);
+        assert.equal(ticket.get('categories').get('length'), 3);
+    });
+    let response_put = TF.detail(TD.idOne);
+    response_put.assignee = {id: PD.idSearch, first_name: PD.nameBoy2};
+    let payload = TF.put({id: TD.idOne, assignee: PD.idSearch});
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(payload), {}, 200, response_put);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
