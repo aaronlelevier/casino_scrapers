@@ -15,12 +15,9 @@ var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMi
     priorityValidation: validate('model.priority'),
     locationValidation: validate('model.location'),
     statusValidation: validate('model.status'),
-    files: function(e) {
-        return e.target.files;
-    },
     actions: {
         upload(e) {
-            let files = this.files(e);
+            let files = e.target.files;
             let ticket = this.get('model');
             let uploader = this.get('attachmentRepository');
             if (files && files[0]) {

@@ -102,8 +102,8 @@ function uploadFile(app, name, action, file, model) {
   Ember.run(function() {
       var component = app.__container__.lookup(`component:${name}`);
       component.set('model', model);
-      component.files = function() { return [file]; };
-      component.send(action);
+      var event = {target: {files: [file]}};
+      component.send(action, event);
   });
   return app.testHelpers.wait();
 }
