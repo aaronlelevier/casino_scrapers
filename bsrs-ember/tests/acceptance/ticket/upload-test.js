@@ -25,12 +25,11 @@ const PROGRESS_BAR = '.progress-bar';
 
 let application, store, original_uuid;
 
-module('Acceptance | ticket file upload test', {
+module('toran Acceptance | ticket file upload test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
         let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
-        xhr(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
         xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
         xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
         original_uuid = random.uuid;
@@ -45,20 +44,21 @@ module('Acceptance | ticket file upload test', {
 test('upload will post form data, show progress and on save append the attachment', (assert) => {
     let model = store.find('ticket', TD.idOne);
     let image = {name: 'foo.png', type: 'image/png', size: 234000};
+    ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(PROGRESS_BAR).length, 0);
-        assert.equal(store.find('ticket-attachment').get('length'), 0);
+        assert.equal(store.find('attachment').get('length'), 0);
     });
     ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {id: UUID.value});
-    uploadFile('tickets/ticket-single', 'upload', image, model);
+    uploadFile('attach-file', 'upload', image, model);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(PROGRESS_BAR).length, 1);
         assert.ok(find(PROGRESS_BAR).is(':visible'));
         assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
-        assert.equal(store.find('ticket-attachment').get('length'), 1);
+        assert.equal(store.find('attachment').get('length'), 1);
         assert.equal(model.get('attachments').get('length'), 1);
         assert.equal(model.get('isDirty'), false);
         assert.ok(model.get('isDirtyOrRelatedDirty'));
@@ -69,7 +69,7 @@ test('upload will post form data, show progress and on save append the attachmen
     andThen(() => {
         model = store.find('ticket', TD.idOne);
         assert.equal(currentURL(), TICKET_URL);
-        assert.equal(store.find('ticket-attachment').get('length'), 1);
+        assert.equal(store.find('attachment').get('length'), 1);
         assert.equal(model.get('attachments').get('length'), 1);
         assert.equal(model.get('isDirty'), false);
         assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
@@ -79,17 +79,18 @@ test('upload will post form data, show progress and on save append the attachmen
 test('uploading a file, then rolling back should throw out any previously associated attachments', (assert) => {
     let model = store.find('ticket', TD.idOne);
     let image = {name: 'foo.png', type: 'image/png', size: 234000};
+    ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(PROGRESS_BAR).length, 0);
-        assert.equal(store.find('ticket-attachment').get('length'), 0);
+        assert.equal(store.find('attachment').get('length'), 0);
         assert.equal(find('.dirty').length, 0);
     });
     ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {id: UUID.value});
-    uploadFile('tickets/ticket-single', 'upload', image, model);
+    uploadFile('attach-file', 'upload', image, model);
     andThen(() => {
-        assert.equal(store.find('ticket-attachment').get('length'), 1);
+        assert.equal(store.find('attachment').get('length'), 1);
         assert.equal(model.get('attachments').get('length'), 1);
         assert.equal(model.get('isDirty'), false);
         assert.ok(model.get('isDirtyOrRelatedDirty'));
@@ -109,5 +110,36 @@ test('uploading a file, then rolling back should throw out any previously associ
         assert.equal(model.get('attachments').get('length'), 0);
         assert.equal(model.get('isDirty'), false);
         assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('previously attached files do not show up after file upload', (assert) => {
+    let detail_with_attachment = TF.detail(TD.idOne);
+    detail_with_attachment.attachments = [TD.attachmentOneId];
+    let model = store.find('ticket', TD.idOne);
+    let image = {name: 'foo.png', type: 'image/png', size: 234000};
+    ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
+    page.visitDetail();
+    andThen(() => {
+        model = store.find('ticket', TD.idOne);
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(PROGRESS_BAR).length, 0);
+        assert.equal(store.find('attachment').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
+        assert.equal(model.get('isDirty'), false);
+        assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {id: UUID.value});
+    uploadFile('attach-file', 'upload', image, model);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        model = store.find('ticket', TD.idOne);
+        assert.equal(find(PROGRESS_BAR).length, 1);
+        assert.ok(find(PROGRESS_BAR).is(':visible'));
+        assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
+        assert.equal(store.find('attachment').get('length'), 2);
+        assert.equal(model.get('attachments').get('length'), 2);
+        assert.equal(model.get('isDirty'), false);
+        assert.ok(model.get('isDirtyOrRelatedDirty'));
     });
 });
