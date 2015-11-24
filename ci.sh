@@ -173,33 +173,33 @@ pipInstall
 
 cd ../bsrs-ember
 
-# if ! [ "$TEST_EMBER" == "false" ];  then
-#   echo $(date -u) "EMBER TESTS"
-#   emberTest &
-#   emberPID=$!
-# fi
+if ! [ "$TEST_EMBER" == "false" ];  then
+  echo $(date -u) "EMBER TESTS"
+  emberTest &
+  emberPID=$!
+fi
 
 cd ../bsrs-django/bigsky
 
-# echo $(date -u) "EMBER / DJANGO TESTS"
-# djangoTest &
-# djangoPID=$!
+echo $(date -u) "EMBER / DJANGO TESTS"
+djangoTest &
+djangoPID=$!
 
-# wait $djangoPID
-# echo $(date -u) "DJANGO TESTS COMPLETE"
-# djangoFinalResult=$?
-# if [ "$djangoFinalResult" == 1 ]; then
-#     echo "DJANGO TESTS FAILED"
-#     exit 1
-# fi
+wait $djangoPID
+echo $(date -u) "DJANGO TESTS COMPLETE"
+djangoFinalResult=$?
+if [ "$djangoFinalResult" == 1 ]; then
+    echo "DJANGO TESTS FAILED"
+    exit 1
+fi
 
-# wait $emberPID
-# echo $(date -u) "EMBER TESTS COMPLETE"
-# emberFinalResult=$?
-# if [ "$emberFinalResult" == 1 ]; then
-#     echo "EMBER TESTS FAILED"
-#     exit 1
-# fi
+wait $emberPID
+echo $(date -u) "EMBER TESTS COMPLETE"
+emberFinalResult=$?
+if [ "$emberFinalResult" == 1 ]; then
+    echo "EMBER TESTS FAILED"
+    exit 1
+fi
 
 cd ../../bsrs-ember
 
