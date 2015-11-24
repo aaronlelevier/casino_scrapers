@@ -159,7 +159,7 @@ class UpdateTicketModelMixin(object):
 
     def add_other_info_data(self, init_ticket, request_data):
         for field in self.other_info_fields:
-            data = request_data.pop(field, None)
+            data = request_data.get(field, None)
             if data:
                 init_ticket.update({field: data})
         return init_ticket

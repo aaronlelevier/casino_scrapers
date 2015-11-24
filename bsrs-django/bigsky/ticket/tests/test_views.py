@@ -8,6 +8,8 @@ from model_mommy import mommy
 
 from category.models import Category
 from category.tests.factory import create_categories
+from generic.models import Attachment
+from generic.tests.factory import create_attachments
 from person.tests.factory import PASSWORD, create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
     TicketActivityType, TICKET_ACTIVITY_TYPES)
@@ -15,7 +17,6 @@ from ticket.serializers import TicketCreateSerializer, TicketActivitySerializer
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,
     create_ticket_status, create_ticket_priority)
-from generic.tests.factory import create_attachments
 
 
 class TicketListTests(APITestCase):
@@ -797,7 +798,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_attachment_add(self):
         name = 'attachment_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_attachment = create_attachments(ticket=self.ticket)
+        new_attachment = create_attachments() # not `Ticket` yet associated w/ this `Attachment`
         self.data['attachments'].append(str(new_attachment.id))
 
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
@@ -807,3 +808,4 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(activity.type.name, name)
         self.assertEqual(activity.content['0'], str(new_attachment.id))
         self.assertEqual(str(activity.ticket.id), str(self.ticket.id))
+        self.assertIsInstance(self.ticket.attachments.get(id=new_attachment.id), Attachment)
