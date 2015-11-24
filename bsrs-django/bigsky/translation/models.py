@@ -66,6 +66,16 @@ class Locale(BaseModel):
 
 
 @receiver(post_save, sender=Locale)
+def create_translation(sender, instance=None, created=False, **kwargs):
+    """
+    Enforce OneToOne relationship with Translation by auto-creating a 
+    a Translation 'post-create' of a Locale.
+    """
+    if created:
+        Translation.objects.get_or_create(locale=instance)
+
+
+@receiver(post_save, sender=Locale)
 def update_locale(sender, instance=None, created=False, **kwargs):
     "Post-save hook for maintaing single default Locale."
     if instance.default:
@@ -160,6 +170,10 @@ class Translation(BaseModel):
     `Flatdict Helper library <https://pypi.python.org/pypi/flatdict>`_ 
     may be useful in flattening nested dictionaries for this Model.
 
+    :OneToOne Locale create signal:
+        doesn't exist because not enough information available from the 
+        Translation to create the Locale.  Locale should ideally be 
+        created first.
     '''
     locale = models.OneToOneField(Locale, blank=True, null=True)
     values = HStoreField(default={}, blank=True)
