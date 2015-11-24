@@ -14,3 +14,7 @@ def remove_attachment_test_files():
                     os.remove(join(dirpath, name))
                 except AttributeError:
                     pass
+
+
+def build_dict(seq, key):
+    return dict((d[key], dict(d, index=i)) for (i, d) in enumerate(seq))

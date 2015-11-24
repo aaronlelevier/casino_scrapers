@@ -4,7 +4,7 @@ import os
 from django.conf import settings
 from django.test import TestCase
 
-from utils.tests.helpers import remove_attachment_test_files
+from utils.tests.helpers import remove_attachment_test_files, build_dict
 
 
 class HelperTests(TestCase):
@@ -23,3 +23,16 @@ class HelperTests(TestCase):
         remove_attachment_test_files()
 
         self.assertFalse(os.path.isfile(test_file))
+
+    def test_build_dict(self):
+        lst = [
+            {'id':'1234','name':'Jason'},
+            {'id':'2345','name':'Tom'},
+            {'id':'3456','name':'Art'}
+        ]
+
+        d = build_dict(lst, key="name")
+        
+        ret = d["Tom"] 
+        self.assertEqual(ret['id'], '2345')
+        self.assertEqual(ret['name'], 'Tom')

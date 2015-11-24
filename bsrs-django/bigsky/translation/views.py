@@ -97,64 +97,50 @@ class TranslationViewSet(DestroyModelMixin, viewsets.ModelViewSet):
     @list_route(methods=['GET', 'POST'], url_path=r"(?P<key>[\w\.]+)")
     def get_translations_by_key(self, request, key=None):
         if request.method == 'GET':
-            translations = Translation.objects.filter(values__has_key=key)
-            return Response([{
-                'id': str(t.id),
-                'translations': {
-                    'locale': str(t.locale.id),
-                    'text': t.values.get(key, ""),
-                    'helper': t.context.get(key, "") if t.context else ""
-                }
-            } for t in translations])
+            response = {
+                'id': key,
+                'key': key,
+                'locales': []
+            }
+            for t in Translation.objects.all():
+                response['locales'].append({
+                        'locale': str(t.locale.id),
+                        'translation': t.values.get(key, "")
+                    })
+            return Response(response)
 
         elif request.method == 'POST':
-            self.final_data = []
             self.errors = []
 
-            for data in request.data:
-                data = copy.copy(data)
-
-                try:
-                    self.locale = self.validate_locale(data)
-                    trans, created = Translation.objects.get_or_create(id=data['id'])
-                    self.update_trans(trans, key, data)
-                    self.final_data.append(data)
-                except (KeyError, Locale.DoesNotExist) as e:
-                    self.errors.append(str(e))
-
+            data = copy.copy(request.data)
+            self._run_update_trans(data, key)
             if self.errors:
                 raise ValidationError(*self.errors)
 
-            # Will only be the Response Code of the last Object
-            response_status = self.get_created_status(created)
+            return Response(data, status=status.HTTP_200_OK)
 
-            return Response(self.final_data, status=response_status)
+    def _run_update_trans(self, data, key):
+        for locale_data in data['locales']:
+            try:
+                locale = self._validate_locale(locale_data)
+                self._update_trans(
+                    trans=locale.translation,
+                    key=key,
+                    value=locale_data['translation']
+                )
+            except (KeyError, Locale.DoesNotExist) as e:
+                self.errors.append(str(e))
 
-    def validate_locale(self, data):
-        try:
-            return Locale.objects.get(id=data['translations']['locale'])
-        except Locale.DoesNotExist:
-            raise
-
-    def update_trans(self, trans, key, data):
-        trans.locale = self.locale
-
-        if not data['translations']['text']:
-            trans.values.pop(key)
+    def _update_trans(self, trans, key, value):
+        if not value:
+            trans.values.pop(key, None)
         else:
-            trans.values.update({key: data['translations']['text']})
-
-        trans.context.update({key: data['translations'].get('helper', '')})
-
-        if not data['translations'].get('helper', ''):
-            trans.context.pop(key)
-        else:
-            trans.context.update({key: data['translations']['helper']})
+            trans.values.update({key: value})
 
         trans.save()
 
-    def get_created_status(self, created):
-        if created:
-            return status.HTTP_201_CREATED
-        else:
-            return status.HTTP_200_OK
+    def _validate_locale(self, locale_data):
+        try:
+            return Locale.objects.get(id=locale_data['locale'])
+        except Locale.DoesNotExist:
+            raise

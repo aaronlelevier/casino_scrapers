@@ -160,6 +160,10 @@ class Translation(BaseModel):
     `Flatdict Helper library <https://pypi.python.org/pypi/flatdict>`_ 
     may be useful in flattening nested dictionaries for this Model.
 
+    :OneToOne Locale create signal:
+        doesn't exist because not enough information available from the 
+        Translation to create the Locale.  Locale should ideally be 
+        created first.
     '''
     locale = models.OneToOneField(Locale, blank=True, null=True)
     values = HStoreField(default={}, blank=True)

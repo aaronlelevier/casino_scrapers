@@ -4,26 +4,6 @@ from translation.models import Locale, Translation
 from utils.create import random_lorem
 
 
-### HELPER FUNCTIONS
-
-def create_empty_dict(keys=50):
-    d = {}
-    while len(d) < keys:
-        try:
-            k = random_lorem(words=1)
-            d[k] = None
-        except KeyError:
-            pass
-    return d
-
-
-def update_dict_values(dict_):
-    dict_ = copy.copy(dict_)
-    for k,v in dict_.items():
-        dict_[k] = random_lorem(words=1)
-    return dict_
-
-
 ### FACTORIES
 
 def create_locales():
@@ -47,7 +27,26 @@ def create_translations():
         dict_ = create_empty_dict()
 
         Translation.objects.create(
-            locale = locale,
-            values = update_dict_values(dict_),
-            context = {}
+            locale=locale,
+            values=update_dict_values(dict_)
         )
+
+
+### HELPER FUNCTIONS
+
+def create_empty_dict(keys=50):
+    d = {}
+    while len(d) < keys:
+        try:
+            k = random_lorem(words=1)
+            d[k] = None
+        except KeyError:
+            pass
+    return d
+
+
+def update_dict_values(dict_):
+    dict_ = copy.copy(dict_)
+    for k,v in dict_.items():
+        dict_[k] = random_lorem(words=1)
+    return dict_
