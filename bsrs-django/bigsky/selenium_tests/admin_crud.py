@@ -246,28 +246,28 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
             self.gen_elem_page.click_save_btn()
         except NoSuchElementException:
             pass
-    #     person_page.find_list_data()
-    #     self.driver.refresh()
-    #     person_page.find_list_data()
-    #     new_person = person_page.click_name_in_list(username, new_person=None)
-    #     try:
-    #         new_person.click()
-    #     except AttributeError as e:
-    #         raise e("new person not found")
-    #     person_page.find_wait_and_assert_elem("t-person-username", username)
-    #     person_page.find_and_assert_elems(username=username, first_name=first_name,
-    #         middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
-    #     self.driver.refresh()
-    #     person_page.find_wait_and_assert_elem("t-person-username", username)
-    #     person_page.find_and_assert_elems(username=username, first_name=first_name,
-    #         middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
-    #     ### DELETE
-    #     person_page.find_wait_and_assert_elem("t-person-username", username)
-    #     self.gen_elem_page.click_dropdown_delete()
-    #     self.gen_elem_page.click_delete_btn()
-    #     self.driver.refresh()
-    #     person = self.driver_wait.find_elements_by_class_name(person_page.list_data) #person_page.find_list_data(just_refreshed=True)
-    #     person_page.find_list_name()
+        person_page.find_list_data()
+        self.driver.refresh()
+        person_page.find_list_data()
+        new_person = person_page.click_name_in_list(username, new_person=None)
+        try:
+            new_person.click()
+        except AttributeError as e:
+            raise e("new person not found")
+        person_page.find_wait_and_assert_elem("t-person-username", username)
+        person_page.find_and_assert_elems(username=username, first_name=first_name,
+            middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
+        self.driver.refresh()
+        person_page.find_wait_and_assert_elem("t-person-username", username)
+        person_page.find_and_assert_elems(username=username, first_name=first_name,
+            middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
+        ### DELETE
+        person_page.find_wait_and_assert_elem("t-person-username", username)
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        self.driver.refresh()
+        person = self.driver_wait.find_elements_by_class_name(person_page.list_data) #person_page.find_list_data(just_refreshed=True)
+        person_page.find_list_name()
 
         # # TODO: 
         # This is failing because a Grid View page # allows you to go to that page,
