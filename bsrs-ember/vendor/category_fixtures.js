@@ -31,7 +31,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
         var parent_one = this.get(this.category_defaults.idOne);
         parent_one.parent = null;
         parent_one.children = [{id: this.category_defaults.idTwo, name: this.category_defaults.nameTwo}, 
-            {id: this.category_defaults.idPlumbing, name: this.category_defaults.nameRepairChild, children_fks: [this.category_defaults.idPlumbingChild]}];
+            {id: this.category_defaults.idPlumbing, name: this.category_defaults.nameRepairChild}];
         var parent_two = this.get(this.category_defaults.idThree, this.category_defaults.nameThree);
         parent_two.parent = null;
         parent_two.children = [];
