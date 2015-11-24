@@ -172,7 +172,6 @@ IMAGE_FULL_SUB_PATH = "attachments/images/full"
 IMAGE_MEDIUM_SUB_PATH = "attachments/images/medium"
 IMAGE_THUMBNAIL_SUB_PATH = "attachments/images/thumbnail"
 
-
 ### LOCATION
 DEFAULT_LOCATION_STATUS = 'Open'
 DEFAULT_LOCATION_TYPE = 'big_store'

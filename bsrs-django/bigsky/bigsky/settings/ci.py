@@ -27,3 +27,7 @@ NOSE_ARGS = [
     '--cover-package=accounting,category,contact,generic,location,order,person,session,\
 third_party,ticket,translation,utils',
 ]
+
+### ATTACHMENTS
+DEFAULT_TEST_FILE = os.path.join(BASE_DIR, "source/test_in/aaron.jpeg")
+DEFAULT_TEST_IMAGE = os.path.join(BASE_DIR, "source/test_in/es.csv")
