@@ -204,6 +204,9 @@ class TranslationWriteTests(APITestCase):
             'id': self.key,
             'key': self.key,
             'locales': [{
+                'locale': str(self.locale.id),
+                'translation': self.value
+            },{
                 'locale': str(self.locale_two.id),
                 'translation': self.value_two
             }]
@@ -215,128 +218,63 @@ class TranslationWriteTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    ### Create
+    def test_create_new_key_value(self):
+        self.key = create._generate_chars()
+        self.data.update({
+            'id': self.key,
+            'key': self.key
+        })
 
-    def test_create__for_existing_translation(self):
-        new_locale = Locale.objects.create(locale='jp', name='jp')
-        new_translation = Translation.objects.create(
-            locale=new_locale, values={}, context={})
+        response = self.client.post('/api/admin/translations/{}/'.format(self.key),
+            self.data, format='json')
 
-        # init_count = Translation.objects.count()
-        # self.assertFalse(Translation.objects.filter(values__has_key=self.key).exists())
-        response = self.client.post('/api/admin/translations/{}/'.format(self.key), self.data, format='json')
-        self.assertEqual(response.status_code, 201)
-        self.assertTrue(Translation.objects.filter(values__has_key=self.key).exists())
-        # count check
-        post_count = Translation.objects.count()
-        self.assertEqual(init_count+1, post_count)
+        self.assertEqual(response.status_code, 200)
+        trans = Translation.objects.get(locale=self.locale,
+            values__has_key=self.key)
+        self.assertEqual(
+            trans.values.get(self.key, None),
+            self.value
+        )
 
-    # def test_create_double(self):
-    #     init_count = Translation.objects.count()
-    #     self.assertFalse(Translation.objects.filter(values__has_key=self.key).exists())
-    #     response = self.client.post('/api/admin/translations/{}/'.format(self.key),
-    #         [self.data, self.data_two], format='json')
-    #     self.assertEqual(response.status_code, 201)
-    #     self.assertTrue(Translation.objects.filter(values__has_key=self.key).exists())
-    #     # count check
-    #     post_count = Translation.objects.count()
-    #     self.assertEqual(init_count+2, post_count)
+    def test_update_key_value(self):
+        init_value = self.locale.translation.values.get(self.key, "")
 
-    # def test_create_validate_locale(self):
-    #     self.data['translations']['locale'] = str(uuid.uuid4())
-    #     response = self.client.post('/api/admin/translations/{}/'.format(self.key), [self.data], format='json')
-    #     self.assertEqual(response.status_code, 400)
+        response = self.client.post('/api/admin/translations/{}/'.format(self.key),
+            self.data, format='json')
 
-    # def test_create_no_text(self):
-    #     self.data['translations'].pop('text','')
-    #     response = self.client.post('/api/admin/translations/{}/'.format(self.key), [self.data], format='json')
-    #     self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.status_code, 200)
+        trans = Translation.objects.get(locale=self.locale,
+            values__has_key=self.key)
+        self.assertNotEqual(self.value, init_value)
+        self.assertEqual(
+            trans.values.get(self.key, None),
+            self.value
+        )
 
-    # def test_create_context_not_required(self):
-    #     self.data['translations'].pop('helper','')
-    #     response = self.client.post('/api/admin/translations/{}/'.format(self.key), [self.data], format='json')
-    #     self.assertEqual(response.status_code, 201)
+    def test_update_key_value__for_missing_translation(self):
+        """
+        A missing 'translation' will remove the key from 
+        ``translation.values``.
+        """
+        self.data['locales'][0]['translation'] = ""
 
-    # ### Update
+        response = self.client.post('/api/admin/translations/{}/'.format(self.key),
+            self.data, format='json')
 
-    # def test_update_single(self):
-    #     key = next(iter(self.translation.values))
-    #     # update
-    #     init_value = self.translation.values[key]
-    #     self.data['id'] = str(self.translation.id)
-    #     self.data['translations']['locale'] = str(self.locale.id)
-    #     # POST
-    #     response = self.client.post('/api/admin/translations/{}/'.format(key), [self.data], format='json')
-    #     self.assertEqual(response.status_code, 200)
-    #     # check
-    #     post_trans = Translation.objects.get(id=self.translation.id)
-    #     post_value = post_trans.values[key]
-    #     self.assertNotEqual(init_value, post_value)
+        self.assertEqual(response.status_code, 200)
+        with self.assertRaises(Translation.DoesNotExist):
+            Translation.objects.get(locale=self.locale,
+                values__has_key=self.key)
 
-    # def test_update_multiple(self):
-    #     key = next(iter(self.translation.values))
-    #     # 1st update
-    #     init_value = self.translation.values[key]        
-    #     self.data['id'] = str(self.translation.id)
-    #     self.data['translations']['locale'] = str(self.locale.id)
-    #     # 2nd update
-    #     self.translation_two.values.update({key: create._generate_chars()})
-    #     self.translation_two.save()
-    #     init_value_two = self.translation_two.values[key]
-    #     self.data_two['id'] = str(self.translation_two.id)
-    #     self.data_two['translations']['locale'] = str(self.locale_two.id)
-    #     # POST
-    #     response = self.client.post('/api/admin/translations/{}/'.format(key),
-    #         [self.data, self.data_two], format='json')
-    #     self.assertEqual(response.status_code, 200)
-    #     # 1st check
-    #     post_trans = Translation.objects.get(id=self.translation.id)
-    #     post_value = post_trans.values[key]
-    #     self.assertNotEqual(init_value, post_value)
-    #     # 2nd check
-    #     post_trans_two = Translation.objects.get(id=self.translation_two.id)
-    #     post_value_two = post_trans_two.values[key]
-    #     self.assertNotEqual(init_value_two, post_value_two)
+    def test_response_data(self):
+        response = self.client.post('/api/admin/translations/{}/'.format(self.key),
+            self.data, format='json')
 
-    # ### Delete
-
-    # def test_delete_single(self):
-    #     key = next(iter(self.translation.values))
-    #     # update
-    #     self.data['id'] = str(self.translation.id)
-    #     self.data['translations']['locale'] = str(self.locale.id)
-    #     self.data['translations']['text'] = ''
-    #     # POST
-    #     response = self.client.post('/api/admin/translations/{}/'.format(key), [self.data], format='json')
-    #     self.assertEqual(response.status_code, 200)
-    #     # check
-    #     trans = Translation.objects.get(id=self.translation.id)
-    #     with self.assertRaises(KeyError):
-    #         trans.values[key]
-
-
-    ### possible leaky state b/c not giving reliable test results. 
-    ### comment out for the time being.
-
-    # def test_delete_multiple(self):
-    #     key = next(iter(self.translation.values))
-    #     # 1st update
-    #     self.data['id'] = str(self.translation.id)
-    #     self.data['translations']['locale'] = str(self.locale.id)
-    #     self.data['translations']['text'] = ''
-    #     # 2nd update
-    #     self.data_two['id'] = str(self.translation_two.id)
-    #     self.data_two['translations']['locale'] = str(self.locale_two.id)
-    #     self.data_two['translations']['text'] = ''
-    #     # POST
-    #     response = self.client.post('/api/admin/translations/{}/'.format(key),
-    #         [self.data, self.data_two], format='json')
-    #     self.assertEqual(response.status_code, 200)
-    #     # 1st check
-    #     trans = Translation.objects.get(id=self.translation.id)
-    #     with self.assertRaises(KeyError):
-    #         trans.values[key]
-    #     # 2nd check
-    #     trans = Translation.objects.get(id=self.translation_two.id)
-    #     with self.assertRaises(KeyError):
-    #         trans.values[key]
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['id'], self.data['id'])
+        self.assertEqual(data['key'], self.data['key'])
+        self.assertEqual(data['locales'][0]['locale'],
+            self.data['locales'][0]['locale'])
+        self.assertEqual(data['locales'][0]['translation'],
+            self.data['locales'][0]['translation'])
