@@ -54,7 +54,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         self.gen_elem_page.click_save_btn()
         # List View
         tickets = ticket_page.find_list_data()
-        tickets[0].click()
+        # tickets[0].click()
         # Detail View
         # TODO: Do page refresh, and confirm Attachment is still there.
 
