@@ -229,6 +229,28 @@ class TicketUpdateTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertNotEqual(self.ticket.request, data['request'])
 
+    # attachments
+
+    def test_attachments_add_multiple(self):
+        new_attachment = create_attachments()
+        new_attachment_two = create_attachments()
+        self.data['attachments'].append(str(new_attachment.id))
+        self.data['attachments'].append(str(new_attachment_two.id))
+        self.assertEqual(self.ticket.attachments.count(), 0)
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(self.ticket.attachments.count(), 2)
+
+    def test_attachments_remove_from_ticket(self):
+        new_attachment = create_attachments(self.ticket)
+        self.data['attachments'] = []
+        self.assertEqual(self.ticket.attachments.count(), 1)
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(self.ticket.attachments.count(), 0)
+
 
 class TicketCreateTests(APITestCase):
 
