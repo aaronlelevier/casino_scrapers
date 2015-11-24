@@ -66,16 +66,6 @@ class Locale(BaseModel):
 
 
 @receiver(post_save, sender=Locale)
-def create_translation(sender, instance=None, created=False, **kwargs):
-    """
-    Enforce OneToOne relationship with Translation by auto-creating a 
-    a Translation 'post-create' of a Locale.
-    """
-    if created:
-        Translation.objects.get_or_create(locale=instance)
-
-
-@receiver(post_save, sender=Locale)
 def update_locale(sender, instance=None, created=False, **kwargs):
     "Post-save hook for maintaing single default Locale."
     if instance.default:

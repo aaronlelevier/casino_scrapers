@@ -26,9 +26,10 @@ def create_translations():
     for locale in locales:
         dict_ = create_empty_dict()
 
-        trans = locale.translation
-        trans.values = update_dict_values(dict_)
-        trans.save()
+        Translation.objects.create(
+            locale=locale,
+            values=update_dict_values(dict_)
+        )
 
 
 ### HELPER FUNCTIONS

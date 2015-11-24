@@ -42,10 +42,6 @@ class LocaleTests(TestCase):
         self.assertEqual(Locale.objects.filter(default=True).count(), 1)
         self.assertTrue(d.default)
 
-    def test_signal_create_translation(self):
-        locale = factory.create_locale('bob')
-        self.assertIsInstance(locale.translation, Translation)
-
 
 class TranslationManagerTests(TestCase):
 
