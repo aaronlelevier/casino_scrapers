@@ -220,7 +220,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_save_btn()
         ### UPDATE
         person_page.find_wait_and_assert_elem("t-person-username", username)
-        first_name = "scooter"
+        first_name = "aaascooter"
         middle_initial = "B"
         last_name = "McGavine"
         employee_id = "1234"

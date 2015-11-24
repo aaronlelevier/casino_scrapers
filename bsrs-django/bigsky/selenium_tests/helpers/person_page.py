@@ -17,37 +17,6 @@ class PersonPage(ModelPage):
         self.list_name = list_name
         self.list_data = list_data
 
-    def _loop_over_names(self, name, new_person, count):
-        """Loop over names in the list.
-
-        :Return: new_person; incremented count for the page.
-        """
-        try:
-            self.find_list_data()
-        except AssertionError:
-            pass
-        list_view_elements = self.find_list_name()
-        for row in list_view_elements:
-            if row.text and row.text == name:
-                new_person = row
-        count += 1
-        return (new_person, count)
-
-    def click_name_in_list_pages(self, name, new_model):
-        pagination = self.wait_for_xhr_request("t-pages")
-        element_list = pagination.find_elements_by_class_name("t-page")
-        element_list_len = len(element_list)
-        count = 0
-        while count < element_list_len:
-            new_model, count = self._loop_over_names(name, new_model, count)
-            if new_model:
-                break
-            pagination = self.driver.find_element_by_class_name("t-pages")
-            element_list = pagination.find_elements_by_class_name("t-page")
-            next_elem = element_list[count]
-            next_elem.find_element_by_xpath("a").click()
-        return new_model
-
     def find_ph_new_entry_send_keys(self, phone_num):
         first_phone_number_input = self.driver.find_element_by_class_name("t-new-entry")
         first_phone_number_input.send_keys(phone_num)
