@@ -136,64 +136,64 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
     });
 });
 
-// test('when you click cancel, you are redirected to the ticket list view', (assert) => {
-//     page.visitDetail();
-//     generalPage.cancel();
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_URL);
-//     });
-// });
+test('when you click cancel, you are redirected to the ticket list view', (assert) => {
+    page.visitDetail();
+    generalPage.cancel();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
 
-// test('validation works for non required fields and when hit save, we do same post', (assert) => {
-//     //assignee, requester, cc, request
-//     detail_data.assignee = null;
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.ok(find('.t-assignee-validation-error').is(':hidden'));
-//     });
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.ok(find('.t-assignee-validation-error').is(':visible'));
-//     });
-//     //assignee
-//     xhr(`${PREFIX}/admin/people/?fullname__icontains=Mel`, 'GET', null, {}, 200, PF.search());
-//     page.assigneeClickDropdown();
-//     fillIn(`${SEARCH}`, 'Mel');
-//     page.assigneeClickOptionOne();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL + '?search_assignee=Mel');
-//     });
-//     generalPage.save();
-//     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_URL);
-//     });
-// });
+test('validation works for non required fields and when hit save, we do same post', (assert) => {
+    //assignee, requester, cc, request
+    detail_data.assignee = null;
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.ok(find('.t-assignee-validation-error').is(':hidden'));
+    });
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.ok(find('.t-assignee-validation-error').is(':visible'));
+    });
+    //assignee
+    xhr(`${PREFIX}/admin/people/?fullname__icontains=Mel`, 'GET', null, {}, 200, PF.search());
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, 'Mel');
+    page.assigneeClickOptionOne();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL + '?search_assignee=Mel');
+    });
+    generalPage.save();
+    xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+});
 
-// test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
-//     clearxhr(list_xhr);
-//     page.visitDetail();
-//     page.priorityClickDropdown();
-//     page.priorityClickOptionTwo();
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//             assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
-//         });
-//     });
-//     generalPage.clickModalCancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.equal(page.priorityInput(), TD.priorityTwo);
-//             assert.ok(generalPage.modalIsHidden());
-//         });
-//     });
-// });
+test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
+    clearxhr(list_xhr);
+    page.visitDetail();
+    page.priorityClickDropdown();
+    page.priorityClickOptionTwo();
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible());
+            assert.equal(find('.t-modal-body').text().trim(), GLOBALMSG.modal_unsaved_msg);
+        });
+    });
+    generalPage.clickModalCancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(page.priorityInput(), TD.priorityTwo);
+            assert.ok(generalPage.modalIsHidden());
+        });
+    });
+});
 
 test('when click delete, ticket is deleted and removed from store', (assert) => {
     page.visitDetail();
@@ -237,24 +237,24 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     });
 });
 
-// test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
-//     page.visitDetail();
-//     page.priorityClickDropdown();
-//     page.priorityClickOptionTwo();
-//     generalPage.cancel();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.ok(generalPage.modalIsVisible());
-//         });
-//     });
-//     generalPage.clickModalRollback();
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), TICKET_URL);
-//         });
-//     });
-// });
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+    page.visitDetail();
+    page.priorityClickDropdown();
+    page.priorityClickOptionTwo();
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible());
+        });
+    });
+    generalPage.clickModalRollback();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), TICKET_URL);
+        });
+    });
+});
 
 //*TICKET CC M2M*/
 test('clicking and typing into selectize for people will fire off xhr request for all people', (assert) => {
@@ -521,7 +521,7 @@ test('power select options are rendered immediately when enter detail route and 
     });
 });
 
-test('sco selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
     page.visitDetail();
     andThen(() => {
         //override electrical to have children
@@ -829,7 +829,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
 });
 
 //*TICKET TO ASSIGNEE*/
-test('sco assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', (assert) => {
+test('assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', (assert) => {
     page.visitDetail();
     andThen(() => {
         assert.equal(page.assigneeInput(), PD.fullname);

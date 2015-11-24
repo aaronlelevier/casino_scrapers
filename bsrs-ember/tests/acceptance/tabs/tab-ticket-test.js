@@ -335,38 +335,38 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
     });
 });
 
-// test('closing a document should close it\'s related tab', (assert) => {
-//     let ticket_list_data = TF.list();
-//     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         let tabs = store.find('tab');
-//         assert.equal(tabs.get('length'), 1);
-//         click('.t-cancel-btn:eq(0)');
-//         andThen(() => {
-//           assert.equal(tabs.get('length'), 0);
-//         });
-//     });
-// });
+test('closing a document should close it\'s related tab', (assert) => {
+    let ticket_list_data = TF.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        click('.t-cancel-btn:eq(0)');
+        andThen(() => {
+          assert.equal(tabs.get('length'), 0);
+        });
+    });
+});
 
-// test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
-//     let ticket_list_data = TF.list();
-//     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         let tabs = store.find('tab');
-//         assert.equal(tabs.get('length'), 1);
-//     });
-//     visit(TICKET_URL);
-//     click('.t-tab-close:eq(0)');
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_URL);
-//         let tabs = store.find('tab');
-//         assert.equal(tabs.get('length'), 0);
-//     });
-// });
+test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
+    let ticket_list_data = TF.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+    });
+    visit(TICKET_URL);
+    click('.t-tab-close:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 0);
+    });
+});
 
 test('opening a tab, making the model dirty, navigating away and closing the tab should display the confirm dialog', (assert) => {
     let ticket_list_data = TF.list();

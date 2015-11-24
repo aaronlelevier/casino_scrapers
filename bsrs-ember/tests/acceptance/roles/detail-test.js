@@ -211,7 +211,7 @@ test('clicking and typing into power select for categories will fire off xhr req
     });
 });
 
-test('sco can remove and add back same category', (assert) => {
+test('can remove and add back same category', (assert) => {
     visit(DETAIL_URL);
     page.categoryOneRemove();
     andThen(() => {
@@ -244,7 +244,7 @@ test('sco can remove and add back same category', (assert) => {
     });
 });
 
-test('sco removing a category in selectize for categories will save correctly and cleanup role_category_fks', (assert) => {
+test('removing a category in selectize for categories will save correctly and cleanup role_category_fks', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         let role = store.find('role', RD.idOne);
@@ -269,7 +269,7 @@ test('sco removing a category in selectize for categories will save correctly an
     });
 });
 
-test('sco starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
+test('starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
     detail_data.categories = [...detail_data.categories, CF.get(CD.idTwo)];
     detail_data.categories[1].name = CD.nameOne + 'i';
     visit(DETAIL_URL);
@@ -311,7 +311,7 @@ test('sco starting with multiple categories, can remove all categories (while no
     });
 });
 
-test('sco search will filter down on categories in store correctly by removing and adding a category back', (assert) => {
+test('search will filter down on categories in store correctly by removing and adding a category back', (assert) => {
     detail_data.categories = [...detail_data.categories, CF.get(CD.idTwo)];
     detail_data.categories[1].id =  'abc123';
     detail_data.categories[1].name =  CD.nameOne + ' scooter';
@@ -349,7 +349,7 @@ test('sco search will filter down on categories in store correctly by removing a
     });
 });
 
-test('sco clicking and typing into power select for categories will not filter if spacebar pressed', (assert) => {
+test('clicking and typing into power select for categories will not filter if spacebar pressed', (assert) => {
     visit(DETAIL_URL);
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, ' ');
