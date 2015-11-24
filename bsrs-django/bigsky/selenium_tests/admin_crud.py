@@ -242,10 +242,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
 
         # b/c first save won't work if the 'password' is still attached to the person.
         self.gen_elem_page.click_save_btn()
-        try:
-            self.gen_elem_page.click_save_btn()
-        except NoSuchElementException:
-            pass
         person_page.find_list_data()
         self.driver.refresh()
         person_page.find_list_data()
