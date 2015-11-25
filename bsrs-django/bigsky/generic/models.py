@@ -200,4 +200,5 @@ class Attachment(BaseModel):
         return {
             "id": str(self.id),
             "filename": self.filename,
+            "file": str(self.file),
         }
