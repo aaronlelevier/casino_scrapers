@@ -38,12 +38,19 @@ class CategoryRoleSerializer(BaseCreateSerializer):
 
 class CategoryListSerializer(BaseCreateSerializer):
 
+    class Meta:
+        model = Category
+        fields = CATEGORY_FIELDS
+
+
+class CategoryParentSerializer(BaseCreateSerializer):
+
     parent = CategoryIDNameSerializer(read_only=True)
     children = CategoryIDNameSerializer(many=True, read_only=True)
 
     class Meta:
         model = Category
-        fields = CATEGORY_FIELDS + ('parent', 'children', )
+        fields = CATEGORY_FIELDS + ('parent', 'children',)
 
 
 class CategoryDetailSerializer(BaseCreateSerializer):

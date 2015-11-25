@@ -29,36 +29,6 @@ class SerializerDataTests(TestCase):
         self.assertEqual(data['name'], serializer.get_fields()['name'].__class__.__name__)
         self.assertEqual(data['name_plural'], serializer.get_fields()['name_plural'].__class__.__name__)
 
-    def test_foreign_key(self):
-        serializer_data = SerializerData(CategoryListSerializer)
-        data = serializer_data.data
-        # normal serializer
-        serializer = CategoryListSerializer()
-
-        self.assertEqual(
-            data['parent']['id'],
-            serializer.get_fields()['parent'].get_fields()['id'].__class__.__name__
-        )
-        self.assertEqual(
-            data['parent']['name'],
-            serializer.get_fields()['parent'].get_fields()['name'].__class__.__name__
-        )
-
-    def test_many_to_many_data(self):
-        serializer_data = SerializerData(CategoryListSerializer)
-        data = serializer_data.data
-        # normal serializer
-        serializer = CategoryListSerializer()
-
-        self.assertEqual(
-            data['children']['id'],
-            serializer.get_fields()['children']._kwargs['child'].get_fields()['id'].__class__.__name__
-        )
-        self.assertEqual(
-            data['children']['name'],
-            serializer.get_fields()['children']._kwargs['child'].get_fields()['name'].__class__.__name__
-        )
-
 
 class ModulesAndMembersTests(TestCase):
 

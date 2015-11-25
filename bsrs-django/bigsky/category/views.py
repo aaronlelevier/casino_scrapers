@@ -3,6 +3,8 @@ from rest_framework.permissions import IsAuthenticated
 from category.models import Category
 from category import serializers as cs
 from utils.views import BaseModelViewSet
+from rest_framework.decorators import list_route
+from rest_framework.response import Response
 
 
 class CategoryViewSet(BaseModelViewSet):
@@ -18,7 +20,7 @@ class CategoryViewSet(BaseModelViewSet):
     ### Filters
     1. Get top level Categories
 
-        `/api/admin/categories/?parent__isnull=True`
+        `/api/admin/categories/parents`
 
     2. Get Children for a specified Parent
 
@@ -42,3 +44,9 @@ class CategoryViewSet(BaseModelViewSet):
             return cs.CategoryDetailSerializer
         else:
             return cs.CategorySerializer
+
+    @list_route(methods=['GET'])
+    def parents(self, request):
+        queryset = Category.objects.filter(parent__isnull=True)
+        serializer = cs.CategoryParentSerializer(queryset, many=True)
+        return Response(serializer.data)
