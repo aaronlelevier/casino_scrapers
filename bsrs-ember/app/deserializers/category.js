@@ -33,9 +33,10 @@ var CategoryDeserializer = Ember.Object.extend({
         let store = this.get('store');
         let existing_category = store.find('category', id);
         if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
-            let temp = response.children_fks;
+            let temp = response.children_fks || [];
             [response.children_fks, response.parent_id] = extract_tree(response, store);
             if(response.children_fks.length < 1) {
+                //if no children, check if only children_fks was passed down
                 response.children_fks = temp;
             }
             let category = store.push('category', response);
