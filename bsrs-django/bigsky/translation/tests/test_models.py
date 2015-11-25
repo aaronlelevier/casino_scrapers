@@ -64,6 +64,21 @@ class TranslationManagerTests(TestCase):
         Translation.objects.export_csv(t.id)
         os.path.isfile(os.path.join(mypath, '{}-out.csv'.format(t.locale)))
 
+    def test_all_distinct_keys(self):
+        trans_values = {'abe':'a', 'bob':'b'}
+        trans = Translation.objects.create(values=trans_values)
+        trans_two_values = {'bob':'b', 'cat':'c'}
+        trans_two = Translation.objects.create(values=trans_two_values)
+
+        ret = Translation.objects.all_distinct_keys()
+
+        s = set()
+        for t in Translation.objects.all():
+            s.update(list(t.values.keys()))
+        manual_ret = sorted(s)
+
+        self.assertEqual(ret, manual_ret)
+
 
 class TranslationTests(TestCase):
 

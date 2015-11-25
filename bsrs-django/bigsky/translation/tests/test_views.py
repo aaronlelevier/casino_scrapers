@@ -1,6 +1,8 @@
 import json
 import uuid
 
+from django.conf import settings
+
 from rest_framework.test import APITestCase
 
 from person.tests.factory import create_person, PASSWORD
@@ -111,27 +113,42 @@ class TranslationReadTests(APITestCase):
 
     ### List
 
-    def test_list_multiple_translations(self):
+    def test_list_keys__for_gridview(self):
         response = self.client.get('/api/admin/translations/')
-        self.assertEqual(response.status_code, 200)
-        data = json.loads(response.content.decode('utf8'))
-        self.assertIsInstance(data, list)
-        self.assertTrue(data)
 
-    def test_list_no_en_translation(self):
-        Translation.objects.get(locale__locale='en').delete(override=True)
-        response = self.client.get('/api/admin/translations/')
-        self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertIsInstance(data, list)
-        self.assertFalse(data)
+        self.assertIn('count', data)
+        self.assertIn('next', data)
+        self.assertIn('previous', data)
+        self.assertIsInstance(data['results'], list)
 
-    def test_list_keys(self):
+    def test_list_size(self):
         response = self.client.get('/api/admin/translations/')
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertIn(
-            data[0],
-            Translation.objects.get(locale__locale='en').values
+        self.assertEqual(len(data['results']), 10)
+
+    def test_list_order(self):
+        response = self.client.get('/api/admin/translations/')
+
+        data = json.loads(response.content.decode('utf8'))
+        sorted_trans = Translation.objects.all_distinct_keys()
+        for i, x in enumerate(data['results']):
+            self.assertEqual(x, sorted_trans[i])
+
+    def test_list_pagination(self):
+        """
+        Page two should still be indexing the sorted list of 
+        Translation keys correctly.
+        """
+        response = self.client.get('/api/admin/translations/?page=2')
+
+        data = json.loads(response.content.decode('utf8'))
+        sorted_trans = Translation.objects.all_distinct_keys()
+
+        self.assertEqual(
+            data['results'][0],
+            sorted_trans[settings.REST_FRAMEWORK['PAGINATE_BY']]
         )
 
     # get_translations_by_key

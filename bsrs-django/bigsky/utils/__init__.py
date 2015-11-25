@@ -13,6 +13,24 @@ def db_record_counts():
             pass
 
 
+class ListObject(object):
+    
+    def __init__(self, x):
+        self.x = x
+    
+    def __getitem__(self, item):
+        return self.x[item]
+    
+    def __iter__(self):        
+        return iter(self.x)
+    
+    def __len__(self):
+        return len(self.x)
+    
+    def count(self):
+        return len(self.x)
+
+
 # ### For use w/ Django 1.9 (not fully function b/c Apps not registering correctly)
 
 # from django.core.exceptions import AppRegistryNotReady

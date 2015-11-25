@@ -13,7 +13,7 @@ class LocaleSerializer(BaseCreateSerializer):
             'presentation_name', 'rtl',)
 
 
-class TranslationSerializer(serializers.ModelSerializer):
+class TranslationBaseSerializer(serializers.ModelSerializer):
 
     locale = LocaleSerializer()
 
@@ -21,9 +21,22 @@ class TranslationSerializer(serializers.ModelSerializer):
         model = Translation
         fields = ('locale', 'values',)
 
+
+class TranslationBootstrapSerializer(TranslationBaseSerializer):
+
     def to_representation(self, instance):
-        ret = super(TranslationSerializer, self).to_representation(instance)
+        ret = super(TranslationBootstrapSerializer, self).to_representation(instance)
         try:
             return {ret['locale']['locale'] : ret['values']}
         except KeyError:
             raise NotFound
+
+
+class TranslationSerializer(TranslationBaseSerializer):
+    pass
+
+
+class TranslationListSerializer(TranslationBaseSerializer):
+
+    def to_representation(self, data):
+        return data

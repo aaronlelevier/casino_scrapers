@@ -146,6 +146,16 @@ class TranslationManager(BaseManager):
                     str(context.pop(k,''))
                 ])
 
+    def all_distinct_keys(self):
+        """
+        Return all distinct Translation keys accross all translations 
+        in a sorted list. For use with the Translation List API Endpoint.
+        """
+        s = set()
+        for t in self.all():
+            s.update(list(t.values.keys()))
+        return sorted(s)
+
 
 def translation_file(instance, filename):
     """Determines the file location of Translation CSVs saved 

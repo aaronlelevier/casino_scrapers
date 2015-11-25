@@ -1,13 +1,16 @@
 import copy
 
 from rest_framework import viewsets, status
+from rest_framework.compat import OrderedDict
 from rest_framework.decorators import list_route
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from translation.models import Locale, Translation
-from translation.serializers import LocaleSerializer, TranslationSerializer
+from translation.serializers import (LocaleSerializer, TranslationBootstrapSerializer,
+    TranslationSerializer, TranslationListSerializer)
+from utils import ListObject
 from utils.mixins import DestroyModelMixin
 from utils.views import BaseModelViewSet
 
@@ -33,7 +36,7 @@ class TranslationBootstrapViewSet(viewsets.ModelViewSet):
     '''
     model = Translation
     permission_classes = (IsAuthenticated,)
-    serializer_class = TranslationSerializer
+    serializer_class = TranslationBootstrapSerializer
     queryset = Translation.objects.all()
 
     def get_paginated_response(self, data):
@@ -81,18 +84,25 @@ class TranslationViewSet(DestroyModelMixin, viewsets.ModelViewSet):
     serializer_class = TranslationSerializer
     queryset = Translation.objects.all()
 
-    def get_paginated_response(self, data):
-        if data:
-            return Response({next(iter(d)):d[next(iter(d))] for d in data})
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return TranslationListSerializer
         else:
-            raise NotFound
+            return TranslationSerializer
 
-    def list(self, request):
-        try:
-            translation = Translation.objects.get(locale__locale='en')
-        except Translation.DoesNotExist:
-            return Response([])
-        return Response(sorted(translation.values.keys()))
+    def list(self, request, *args, **kwargs):
+        queryset = self.filter_queryset(self.get_queryset())
+        # custom: start
+        # keys = ListObject(sorted(queryset.first().values.keys()))
+        keys = ListObject(Translation.objects.all_distinct_keys())
+        # custom: end
+        page = self.paginate_queryset(keys)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     @list_route(methods=['GET', 'POST'], url_path=r"(?P<key>[\w\.]+)")
     def get_translations_by_key(self, request, key=None):
