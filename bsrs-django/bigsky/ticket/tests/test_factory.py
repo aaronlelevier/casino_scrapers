@@ -109,6 +109,22 @@ class CreateStatusTests(TestCase):
         factory.create_ticket_statuses()
         self.assertTrue(TicketStatus.objects.count() > 1)
 
+    def test_generate_uuid(self):
+        """
+        'test' is removed from ``sys.argv`` in order to trigger the static
+        generator for UUIDs.
+        """
+        global sys
+        sys.argv = ''
+        incr = TicketStatus.objects.count()
+
+        ret = factory.create_ticket_status()
+
+        self.assertEqual(
+            str(ret.id),
+            generate_uuid(factory.TICKET_STATUS_BASE_ID, incr+1)
+        )
+
 
 class CreatePriorityTests(TestCase):
 
@@ -120,6 +136,22 @@ class CreatePriorityTests(TestCase):
     def test_multiple(self):
         factory.create_ticket_priorites()
         self.assertTrue(TicketPriority.objects.all())
+
+    def test_generate_uuid(self):
+        """
+        'test' is removed from ``sys.argv`` in order to trigger the static
+        generator for UUIDs.
+        """
+        global sys
+        sys.argv = ''
+        incr = TicketPriority.objects.count()
+
+        ret = factory.create_ticket_priority()
+
+        self.assertEqual(
+            str(ret.id),
+            generate_uuid(factory.TICKET_PRIORITY_BASE_ID, incr+1)
+        )
 
 
 class CreateTicketActivityTests(TestCase):

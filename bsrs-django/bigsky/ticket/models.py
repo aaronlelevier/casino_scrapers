@@ -17,6 +17,7 @@ TICKET_STATUSES = [
     'ticket.status.complete',
     'ticket.status.deferred',
     'ticket.status.new',
+    'ticket.status.assigned',
     'ticket.status.in_progress',
     'ticket.status.unsatisfactory_completion'
 ]
