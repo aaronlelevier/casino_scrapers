@@ -831,3 +831,15 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(activity.content['0'], str(new_attachment.id))
         self.assertEqual(str(activity.ticket.id), str(self.ticket.id))
         self.assertIsInstance(self.ticket.attachments.get(id=new_attachment.id), Attachment)
+
+    def test_attachment_add__empty(self):
+        """
+        No TicketActivity will be generated when sending an empty 'attachments' field.
+        """
+        name = 'attachment_add'
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        self.data['attachments'] = []
+
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 0)
