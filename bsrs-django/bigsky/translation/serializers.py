@@ -22,16 +22,6 @@ class TranslationBaseSerializer(serializers.ModelSerializer):
         fields = ('locale', 'values',)
 
 
-class TranslationBootstrapSerializer(TranslationBaseSerializer):
-
-    def to_representation(self, instance):
-        ret = super(TranslationBootstrapSerializer, self).to_representation(instance)
-        try:
-            return {ret['locale']['locale'] : ret['values']}
-        except KeyError:
-            raise NotFound
-
-
 class TranslationSerializer(TranslationBaseSerializer):
     pass
 
@@ -40,3 +30,13 @@ class TranslationListSerializer(TranslationBaseSerializer):
 
     def to_representation(self, data):
         return data
+
+
+class TranslationBootstrapSerializer(TranslationBaseSerializer):
+
+    def to_representation(self, instance):
+        ret = super(TranslationBootstrapSerializer, self).to_representation(instance)
+        try:
+            return {ret['locale']['locale'] : ret['values']}
+        except KeyError:
+            raise NotFound
