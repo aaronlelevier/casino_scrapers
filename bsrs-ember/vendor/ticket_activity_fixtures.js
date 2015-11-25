@@ -1,8 +1,9 @@
 var TICKET_ACTIVITY_FACTORY = (function() {
-    var factory = function(pd, td, cd, general) {
+    var factory = function(pd, td, cd, general, ta) {
         this.pd = pd;
         this.td = td;
         this.cd = cd;
+        this.ta = ta;
         this.general = general;
     };
     factory.prototype.empty = function() {
@@ -124,12 +125,11 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         delete activity.content;
         return activity;
     },
-    //
     factory.prototype.get_attachment_add_remove = function(i, count, type, ticket_pk) {
         var d = new Date();
         var added_removed = [];
         for (var j=1; j <= count; j++) {
-            var attachment = {id: '249543cf-8fea-426a-8bc3-09778cd7801' + j, filename: this.general.nameTicketAttachment};
+            var attachment = {id: '249543cf-8fea-426a-8bc3-09778cd7801' + j, filename: this.general.nameTicketAttachment, file: this.ta.fileAttachmentAddOne};
             added_removed.push(attachment);
         }
         var ticket_id = ticket_pk || this.td.idOne;
@@ -247,13 +247,14 @@ var TICKET_ACTIVITY_FACTORY = (function() {
 if (typeof window === 'undefined') {
     var pd = require('../vendor/defaults/person');
     var td = require('../vendor/defaults/ticket');
+    var ta = require('../vendor/defaults/ticket_activity');
     var cd = require('../vendor/defaults/category');
     var general = require('../vendor/defaults/general');
-    module.exports = new TICKET_ACTIVITY_FACTORY(pd, td, cd, general);
+    module.exports = new TICKET_ACTIVITY_FACTORY(pd, td, cd, general, ta);
 } else {
-    define('bsrs-ember/vendor/ticket_activity_fixtures', ['exports', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/defaults/general'], function (exports, pd, td, cd, general) {
+    define('bsrs-ember/vendor/ticket_activity_fixtures', ['exports', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/defaults/general', 'bsrs-ember/vendor/defaults/ticket_activity'], function (exports, pd, td, cd, general, ta) {
         'use strict';
-        var Factory = new TICKET_ACTIVITY_FACTORY(pd, td, cd, general);
+        var Factory = new TICKET_ACTIVITY_FACTORY(pd, td, cd, general, ta);
         return {default: Factory};
     });
 }

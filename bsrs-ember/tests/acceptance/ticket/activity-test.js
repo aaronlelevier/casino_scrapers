@@ -12,6 +12,7 @@ import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CF from 'bsrs-ember/vendor/category_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import GD from 'bsrs-ember/vendor/defaults/general';
@@ -348,6 +349,7 @@ test('ticket detail shows the activity list including event data (multiple attac
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} uploaded 2 files 15 days ago \n${GD.nameTicketAttachment} ${GD.nameTicketAttachment}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
     });
 });
 
