@@ -42,7 +42,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             list_name = "t-ticket-request",
             list_data = "t-grid-data"
         )
-        self.wait_for_xhr_request("t-sort-request-dir")
+        self.wait_for_xhr_request("t-sort-request-dir").click()
         tickets = ticket_page.find_list_data()
         tickets[0].click()
         # Detail View
@@ -57,6 +57,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         # tickets[0].click()
         # Detail View
         # TODO: Do page refresh, and confirm Attachment is still there.
+        # self.driver.refresh()
 
     def test_image_upload(self):
         # Create Ticket Page Object
@@ -66,7 +67,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             list_name = "t-ticket-request",
             list_data = "t-grid-data"
         )
-        self.wait_for_xhr_request("t-sort-request-dir")
+        self.wait_for_xhr_request("t-sort-request-dir").click()
         tickets = ticket_page.find_list_data()
         tickets[0].click()
         # Detail View
@@ -81,6 +82,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         # tickets[0].click()
         # Detail View
         # TODO: Do page refresh, and confirm Attachment is still there.
+        # self.driver.refresh()
 
     # COMMENT OUT: While `Ticket` and `ember-power-select` are WIP
     # def test_ticket(self):
