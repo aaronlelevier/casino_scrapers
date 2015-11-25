@@ -63,5 +63,8 @@ B. If has Foreign Keys to other Fixtures, then these need to be statically gener
 
 ## Fixture Notes
 1.  Translation:
-  rm -rf translation.json
-  ./manage.py dumpdata translation --indent=2 > fixtures/translation.json
+  - update en doc on https://drive.google.com/drive/folders/0B7dl5Hhfqk0NfkZWUndwVEFzR2RhTUNPRnFRcVA1UVNWTEUxUEFyaU5ZSVpFeHBFMUZBeTg
+  - export to csv and replace file in sources folder
+  - ipython notebook or shell_plus and execute Translation.objects.import_csv('en')
+  - rm -rf translation.json
+  - ./manage.py dumpdata translation --indent=2 > fixtures/translation.json
