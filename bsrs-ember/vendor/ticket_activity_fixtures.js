@@ -155,11 +155,19 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         response.push(activity);
         return {'count':1,'next':null,'previous':null,'results': response};
     };
+    factory.prototype.get_comment_json = function(i) {
+        var activity = this.get_comment(i);
+        activity.person_fk = activity.person.id;
+        activity.comment = activity.content.comment;
+        delete activity.person;
+        delete activity.content;
+        return activity;
+    },
     factory.prototype.comment_only = function(ticket_pk, count) {
         var response = [];
         var count = count || 1;
         for (var i=1; i<=count; i++) {
-            var uuid = '649447cc-1a19-4d8d-829b-bfb81cb5ecw';
+            var uuid = '549447cc-1a19-4d8d-829b-bfb81cb5ecw';
             var activity = this.get_comment(uuid+i, ticket_pk);
             response.push(activity);
         }
