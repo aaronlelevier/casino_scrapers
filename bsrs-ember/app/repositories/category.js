@@ -21,6 +21,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
     insert(model) {
         return PromiseMixin.xhr(CATEGORY_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });
     },
     update(model) {

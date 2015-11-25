@@ -220,108 +220,109 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     });
 });
 
-// test('when you deep link to the category detail can add and remove child from category', (assert) => {
-//     let response = Ember.$.extend(true, {}, payload);
-//     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
-//     visit(CATEGORY_NEW_URL);
-//     andThen(() => {
-//         let category = store.find('category', CD.idNew);
-//         assert.equal(category.get('children').get('length'), 0);
-//         assert.equal(find('div.item').length, 0);
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     fillIn('.t-category-name', CD.nameOne);
-//     fillIn('.t-category-description', CD.descriptionMaintenance);
-//     fillIn('.t-category-label', CD.labelOne);
-//     fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
-//     fillIn('.t-amount', CD.costAmountOne);
-//     fillIn('.t-category-cost-code', CD.costCodeOne);
-//     page.categoryClickDropdown();
-//     fillIn(`${CATEGORY_SEARCH}`, 'a');
-//     andThen(() => {
-//         assert.equal(page.categoryOptionLength(), 10); 
-//         const category = store.findOne('category');
-//         assert.equal(category.get('children').get('length'), 0);
-//         assert.equal(category.get('children_fks').get('length'), 0);
-//     });
-//     page.categoryClickOptionTwo();
-//     andThen(() => {
-//         const category = store.findOne('category');
-//         assert.equal(category.get('children').get('length'), 1);
-//         assert.equal(category.get('children_fks').get('length'), 1);
-//     });
-//     page.categoryOneRemove();
-//     andThen(() => {
-//         const category = store.findOne('category');
-//         assert.equal(category.get('children').get('length'), 0);
-//         assert.equal(category.get('children_fks').get('length'), 0);
-//     });
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), CATEGORIES_URL);
-//     });
-// });
+/* CATEGORY TO CHILDREN */
+test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
+    let payload_new = Ember.$.extend(true, {}, payload);
+    payload_new.children = [CD.idTwo];
+    let response = Ember.$.extend(true, {}, payload_new);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload_new), {}, 201, response);
+    visit(CATEGORY_NEW_URL);
+    andThen(() => {
+        let category = store.find('category', CD.idNew);
+        assert.equal(category.get('has_many_children').get('length'), 0);
+        assert.equal(find('div.item').length, 0);
+        assert.equal(find('div.option').length, 0);
+    });
+    fillIn('.t-category-name', CD.nameOne);
+    fillIn('.t-category-description', CD.descriptionMaintenance);
+    fillIn('.t-category-label', CD.labelOne);
+    fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
+    fillIn('.t-amount', CD.costAmountOne);
+    fillIn('.t-category-cost-code', CD.costCodeOne);
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, 'a');
+    page.categoryClickOptionTwo();
+    andThen(() => {
+        let category = store.find('category', CD.idNew);
+        assert.equal(category.get('children_fks').get('length'), 1);
+        assert.equal(category.get('has_many_children').get('length'), 1);
+    });
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
 
-// test('clicking and typing into selectize for categories children will not filter if spacebar pressed', (assert) => {
-//     clearxhr(children_xhr);
-//     let response = Ember.$.extend(true, {}, payload);
-//     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
-//     visit(CATEGORY_NEW_URL);
-//     andThen(() => {
-//         let category = store.find('category', CD.idNew);
-//         assert.equal(category.get('children').get('length'), 0);
-//         assert.equal(find('div.item').length, 0);
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     page.categoryClickDropdown();
-//     fillIn(`${CATEGORY_SEARCH}`, ' ');
-//     andThen(() => {
-//         assert.equal(page.categoryOptionLength(), 1); 
-//     });
-//     andThen(() => {
-//         let category = store.find('category', CD.idNew);
-//         assert.equal(category.get('children_fks').get('length'), 0);
-//     });
-//     fillIn('.t-category-name', CD.nameOne);
-//     fillIn('.t-category-description', CD.descriptionMaintenance);
-//     fillIn('.t-category-label', CD.labelOne);
-//     fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
-//     fillIn('.t-amount', CD.costAmountOne);
-//     fillIn('.t-category-cost-code', CD.costCodeOne);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), CATEGORIES_URL);
-//     });
-// });
+test('clicking and typing into power select for categories children will not filter if spacebar pressed', (assert) => {
+    clearxhr(children_xhr);
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
+    visit(CATEGORY_NEW_URL);
+    andThen(() => {
+        let category = store.find('category', CD.idNew);
+        assert.equal(category.get('has_many_children').get('length'), 0);
+        assert.equal(find('div.item').length, 0);
+        assert.equal(find('div.option').length, 0);
+    });
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, ' ');
+    andThen(() => {
+        assert.equal(page.categoryOptionLength(), 1); 
+    });
+    andThen(() => {
+        let category = store.find('category', CD.idNew);
+        assert.equal(category.get('children_fks').get('length'), 0);
+    });
+    fillIn('.t-category-name', CD.nameOne);
+    fillIn('.t-category-description', CD.descriptionMaintenance);
+    fillIn('.t-category-label', CD.labelOne);
+    fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
+    fillIn('.t-amount', CD.costAmountOne);
+    fillIn('.t-category-cost-code', CD.costCodeOne);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
 
-// test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
-//     let payload_new = Ember.$.extend(true, {}, payload);
-//     payload_new.children = [CD.idTwo];
-//     let response = Ember.$.extend(true, {}, payload_new);
-//     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload_new), {}, 201, response);
-//     visit(CATEGORY_NEW_URL);
-//     andThen(() => {
-//         let category = store.find('category', CD.idNew);
-//         assert.equal(category.get('children').get('length'), 0);
-//         assert.equal(find('div.item').length, 0);
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     fillIn('.t-category-name', CD.nameOne);
-//     fillIn('.t-category-description', CD.descriptionMaintenance);
-//     fillIn('.t-category-label', CD.labelOne);
-//     fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
-//     fillIn('.t-amount', CD.costAmountOne);
-//     fillIn('.t-category-cost-code', CD.costCodeOne);
-//     page.categoryClickDropdown();
-//     fillIn(`${CATEGORY_SEARCH}`, 'a');
-//     page.categoryClickOptionTwo();
-//     andThen(() => {
-//         let category = store.find('category', CD.idNew);
-//         assert.equal(category.get('children_fks').get('length'), 1);
-//         assert.equal(category.get('children').get('length'), 1);
-//     });
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), CATEGORIES_URL);
-//     });
-// });
+test('you can add and remove child from category', (assert) => {
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
+    visit(CATEGORY_NEW_URL);
+    andThen(() => {
+        let category = store.find('category', CD.idNew);
+        assert.equal(category.get('has_many_children').get('length'), 0);
+        assert.equal(find('div.item').length, 0);
+        assert.equal(find('div.option').length, 0);
+    });
+    fillIn('.t-category-name', CD.nameOne);
+    fillIn('.t-category-description', CD.descriptionMaintenance);
+    fillIn('.t-category-label', CD.labelOne);
+    fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
+    fillIn('.t-amount', CD.costAmountOne);
+    fillIn('.t-category-cost-code', CD.costCodeOne);
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, 'a');
+    andThen(() => {
+        assert.equal(page.categoryOptionLength(), 10); 
+        const category = store.findOne('category');
+        assert.equal(category.get('has_many_children').get('length'), 0);
+        assert.equal(category.get('children_fks').get('length'), 0);
+    });
+    page.categoryClickOptionTwo();
+    andThen(() => {
+        const category = store.findOne('category');
+        assert.equal(category.get('has_many_children').get('length'), 1);
+        assert.equal(category.get('children_fks').get('length'), 1);
+    });
+    page.categoryOneRemove();
+    andThen(() => {
+        const category = store.findOne('category');
+        assert.equal(category.get('has_many_children').get('length'), 0);
+        assert.equal(category.get('children_fks').get('length'), 0);
+    });
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});

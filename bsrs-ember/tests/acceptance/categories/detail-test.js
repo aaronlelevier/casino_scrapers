@@ -23,15 +23,16 @@ const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-category-children-select-dropdown > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let application, store, endpoint, list_xhr;
+let application, store, endpoint, list_xhr, detail_data;
 
 module('Acceptance | detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/';
+        detail_data = CF.detail(CD.idOne);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CF.list());
-        xhr(endpoint + CD.idOne + '/', 'GET', null, {}, 200, CF.detail(CD.idOne));
+        xhr(endpoint + CD.idOne + '/', 'GET', null, {}, 200, detail_data);
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -246,93 +247,141 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-// /* CATEGORY TO CHILDREN */
-// test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         let category = store.find('category', CD.idOne);
-//         assert.equal(category.get('children_fks').length, 1);
-//         assert.equal(category.get('children').get('length'), 1);
-//         assert.equal(find('div.option').length, 0);
-//     });
-//     let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
-//     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
-//     page.categoryClickDropdown();
-//     fillIn(`${CATEGORY_SEARCH}`, 'a');
-//     page.categoryClickOptionThree();
-//     andThen(() => {
-//         let category = store.find('category', CD.idOne);
-//         assert.equal(category.get('children_fks').get('length'), 2);
-//         assert.equal(page.categoriesSelected(), 2);
-//     });
-//     let url = PREFIX + DETAIL_URL + '/';
-//     let response = CF.detail(CD.idOne);
-//     let payload = CF.put({id: CD.idOne, children: [CD.idChild, CD.idThree]});
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), CATEGORIES_URL);
-//     });
-// });
+/* CATEGORY TO CHILDREN */
+test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('children_fks').length, 1);
+        assert.equal(category.get('has_many_children').get('length'), 1);
+        assert.equal(find('div.option').length, 0);
+    });
+    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, 'a');
+    andThen(() => {
+        assert.equal(page.categoryOptionLength(), 10);
+    });
+    page.categoryClickOptionThree();
+    andThen(() => {
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('children_fks').get('length'), 2);
+        assert.equal(page.categoriesSelected(), 2);
+    });
+    page.categoryClickDropdown();
+    fillIn(CATEGORY_SEARCH, '');
+    andThen(() => {
+        assert.equal(page.categoryOptionLength(), 1);
+        assert.equal(find(`${CATEGORY_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
+        let category = store.find('category', CD.idOne);
+        assert.ok(category.get('isDirtyOrRelatedDirty'));
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = CF.detail(CD.idOne);
+    let payload = CF.put({id: CD.idOne, children: [CD.idChild, CD.idThree]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
 
-// test('when you deep link to the category detail can remove child from category and add same one back', (assert) => {
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         let category = store.find('category', CD.idOne);
-//         assert.equal(category.get('children_fks').length, 1);
-//         assert.equal(category.get('children').get('length'), 1);
-//         assert.equal(page.categoriesSelected(), 1);
-//     });
-//     page.categoryOneRemove();
-//     andThen(() => {
-//         let category = store.find('category', CD.idOne);
-//         assert.equal(category.get('children_fks').get('length'), 0);
-//         assert.equal(page.categoriesSelected(), 0);
-//     });
-//     let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
-//     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
-//     page.categoryClickDropdown();
-//     fillIn(`${CATEGORY_SEARCH}`, 'a');
-//     // page.categoryClickOptionThree();
-//     // let url = PREFIX + DETAIL_URL + '/';
-//     // let response = CF.detail(CD.idOne);
-//     // let payload = CF.put({id: CD.idOne, children: []});
-//     // xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-//     // generalPage.save();
-//     // andThen(() => {
-//     //     assert.equal(currentURL(), CATEGORIES_URL);
-//     // });
-// });
+test('when you deep link to the category detail can remove child from category and add same one back', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('children_fks').length, 1);
+        assert.equal(category.get('has_many_children').get('length'), 1);
+        assert.equal(page.categoriesSelected(), 1);
+    });
+    page.categoryOneRemove();
+    andThen(() => {
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('children_fks').get('length'), 0);
+        assert.equal(page.categoriesSelected(), 0);
+    });
+    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, 'a');
+    page.categoryClickOptionThree();
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = CF.detail(CD.idOne);
+    let payload = CF.put({id: CD.idOne, children: [CD.idThree]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
 
-// test('clicking and typing into power select for categories children will not filter if spacebar pressed', (assert) => {
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         let category = store.find('category', CD.idOne);
-//         assert.equal(category.get('children_fks').length, 1);
-//         assert.equal(category.get('children').get('length'), 1);
-//     });
-//     page.categoryClickDropdown();
-//     fillIn(`${CATEGORY_SEARCH}`, ' ');
-//     andThen(() => {
-//         assert.equal(page.categoryOptionLength(), 1);
-//         assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.no_results);
-//     });
-//     andThen(() => {
-//         let category = store.find('category', CD.idOne);
-//         assert.equal(category.get('children_fks').get('length'), 1);
-//         assert.equal(page.categoryOptionLength(), 1);
-//         assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.no_results);
-//     });
-//     let url = PREFIX + DETAIL_URL + '/';
-//     let response = CF.detail(CD.idOne);
-//     let payload = CF.put({id: CD.idOne, children: [CD.idChild]});
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), CATEGORIES_URL);
-//     });
-// });
-// /* END CATEGORY CHILDREN */
+test('starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
+    detail_data.children = [...detail_data.children, CF.get(CD.idThree)];
+    detail_data.children[1].name = CD.nameThree;
+    visit(DETAIL_URL);
+    andThen(() => {
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('has_many_children').get('length'), 2);
+        assert.equal(page.categorySelected().indexOf(CD.nameTwo), 2);
+        assert.equal(page.categoryTwoSelected().indexOf(CD.nameThree), 2);
+    });
+    page.categoryOneRemove();
+    page.categoryOneRemove();
+    andThen(() => {
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('has_many_children').get('length'), 0);
+        assert.ok(category.get('isDirtyOrRelatedDirty'));
+    });
+    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(CATEGORY_SEARCH, 'a');
+    page.categoryClickOptionOneEq();
+    andThen(() => {
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('has_many_children').get('length'), 1);
+        assert.equal(page.categorySelected().indexOf(`${CD.nameOne}4`), 2);
+        assert.ok(category.get('isDirtyOrRelatedDirty'));
+    });
+    let url = PREFIX + DETAIL_URL + "/";
+    let payload = CF.put({id: CD.idOne, children: [CD.idChild]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
+
+test('clicking and typing into power select for categories children will not filter if spacebar pressed', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('children_fks').length, 1);
+        assert.equal(category.get('has_many_children').get('length'), 1);
+    });
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, ' ');
+    andThen(() => {
+        assert.equal(page.categoryOptionLength(), 1);
+        assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.no_results);
+    });
+    andThen(() => {
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('children_fks').get('length'), 1);
+        assert.equal(page.categoryOptionLength(), 1);
+        assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.no_results);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = CF.detail(CD.idOne);
+    let payload = CF.put({id: CD.idOne, children: [CD.idChild]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+    });
+});
+/* END CATEGORY CHILDREN */
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
     visit(CATEGORIES_URL);
