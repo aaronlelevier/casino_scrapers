@@ -4,7 +4,7 @@ import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
 var extract_attachments = function(model, store) {
     model.attachments.forEach((attachment_id) => {
-        store.push('ticket-attachment', {id: attachment_id});
+        store.push('attachment', {id: attachment_id});
     });
     return model.attachments;
 };

@@ -81,18 +81,7 @@
                     </div>
                     {{comment-save model=model}}
                     <div class="col-md-12">
-                      <span class="btn btn-default btn-file">Attach File<input type="file" onchange={{action "upload"}}></span>
-                      {{#each model.attachments as |attachment|}}
-                        {{#if attachment.uploaded}}
-                          <div class="progress active" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
-                            <div class="progress-bar-success progress-bar" style="width: 100%;">Upload Progress: 100%</div>
-                          </div>
-                        {{else}}
-                          <div class="progress active" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
-                            <div class="progress-bar-success progress-bar" style="width: 25%;">Upload Progress: 25%</div>
-                          </div>
-                        {{/if}}
-                      {{/each}}
+                      {{attach-file model=model}}
                     </div>
                     {{activity-list model=activities}}
                 </section>

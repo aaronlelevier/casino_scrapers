@@ -60,3 +60,8 @@ Follow these two conventions:
 A. If no dependencies, can generate as normal.
 
 B. If has Foreign Keys to other Fixtures, then these need to be statically generated using the above function, so they are predictable, and won't cause any duplicate key errrors.
+
+## Fixture Notes
+1.  Translation:
+  rm -rf translation.json
+  ./manage.py dumpdata translation --indent=2 > fixtures/translation.json

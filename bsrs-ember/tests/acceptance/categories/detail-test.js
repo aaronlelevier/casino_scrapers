@@ -242,6 +242,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
+/* CATEGORY TO CHILDREN */
 test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
@@ -322,6 +323,7 @@ test('clicking and typing into power select for categories children will not fil
         assert.equal(currentURL(), CATEGORIES_URL);
     });
 });
+/* END CATEGORY CHILDREN */
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
     visit(CATEGORIES_URL);

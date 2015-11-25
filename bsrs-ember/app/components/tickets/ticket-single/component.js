@@ -9,23 +9,12 @@ import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
     child_components: ['parent-ticket-category-select'],
     repository: inject('ticket'),
-    attachmentRepository: inject('attachment'),
     numberValidation: validate('model.number'),
     assigneeValidation: validate('model.assignee'),
     priorityValidation: validate('model.priority'),
     locationValidation: validate('model.location'),
     statusValidation: validate('model.status'),
     actions: {
-        upload(e) {
-            let files = e.target.files;
-            let ticket = this.get('model');
-            let uploader = this.get('attachmentRepository');
-            if (files && files[0]) {
-                uploader.upload(files[0], ticket).then((file) => {
-                    ticket.get('attachments').findBy('id', file.id).set('uploaded', true);
-                });
-            }
-        },
         save() {
             this.set('submitted', true);
             if (this.all_components_valid()) {

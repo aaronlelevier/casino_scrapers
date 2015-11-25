@@ -33,14 +33,13 @@ var CategoryDeserializer = Ember.Object.extend({
         let store = this.get('store');
         let existing_category = store.find('category', id);
         if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
-            let temp = response.children_fks;
+            let temp = response.children_fks || [];
             [response.children_fks, response.parent_id] = extract_tree(response, store);
             if(response.children_fks.length < 1) {
+                //if no children, check if only children_fks was passed down
                 response.children_fks = temp;
             }
             let category = store.push('category', response);
-            // TODO: figure out if we should concat this?
-            category.set('children_fks', response.children_fks);
             category.save();
         }
     },
@@ -51,8 +50,6 @@ var CategoryDeserializer = Ember.Object.extend({
             if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
                 [model.children_fks, model.parent_id] = extract_tree(model, store);
                 let category = store.push('category', model);
-                // TODO: figure out if we should concat this?
-                category.set('children_fks', model.children_fks);
                 category.save();
             }
         });

@@ -211,159 +211,159 @@ test('clicking and typing into power select for categories will fire off xhr req
     });
 });
 
-// test('can remove and add back same category', (assert) => {
-//     visit(DETAIL_URL);
-//     page.categoryOneRemove();
-//     andThen(() => {
-//         let role = store.find('role', RD.idOne);
-//         assert.equal(role.get('role_category_fks').length, 1);
-//         assert.equal(role.get('categories').get('length'), 0);
-//         assert.equal(page.categoriesSelected(), 0);
-//     });
-//     let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair';
-//     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
-//     page.categoryClickDropdown();
-//     fillIn(`${CATEGORY_SEARCH}`, 'repair');
-//     page.categoryClickOptionTwo();
-//     andThen(() => {
-//         let role = store.find('role', RD.idOne);
-//         assert.equal(role.get('role_category_fks').length, 1);
-//         let join_model_id = role.get('role_category_fks')[0];
-//         let join_model = store.find('role-category', join_model_id);
-//         assert.equal(join_model.get('removed'), true);
-//         assert.equal(role.get('categories').get('length'), 1);
-//         assert.ok(role.get('isDirtyOrRelatedDirty'));
-//         assert.equal(page.categoriesSelected(), 1);
-//     });
-//     let url = PREFIX + DETAIL_URL + '/';
-//     let payload = RF.put({id: RD.idOne, categories: [CD.idTwo]});
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-// });
+test('can remove and add back same category', (assert) => {
+    visit(DETAIL_URL);
+    page.categoryOneRemove();
+    andThen(() => {
+        let role = store.find('role', RD.idOne);
+        assert.equal(role.get('role_category_fks').length, 1);
+        assert.equal(role.get('categories').get('length'), 0);
+        assert.equal(page.categoriesSelected(), 0);
+    });
+    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair';
+    xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, 'repair');
+    page.categoryClickOptionTwo();
+    andThen(() => {
+        let role = store.find('role', RD.idOne);
+        assert.equal(role.get('role_category_fks').length, 1);
+        let join_model_id = role.get('role_category_fks')[0];
+        let join_model = store.find('role-category', join_model_id);
+        assert.equal(join_model.get('removed'), true);
+        assert.equal(role.get('categories').get('length'), 1);
+        assert.ok(role.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.categoriesSelected(), 1);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let payload = RF.put({id: RD.idOne, categories: [CD.idTwo]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
 
-// test('removing a category in selectize for categories will save correctly and cleanup role_category_fks', (assert) => {
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         let role = store.find('role', RD.idOne);
-//         assert.equal(role.get('role_category_fks').length, 1);
-//         assert.equal(role.get('categories').get('length'), 1);
-//         assert.equal(page.categoriesSelected(), 1);
-//     });
-//     page.categoryOneRemove();
-//     andThen(() => {
-//         let role = store.find('role', RD.idOne);
-//         assert.equal(role.get('role_category_fks').length, 1);
-//         assert.equal(role.get('categories').get('length'), 0);
-//         assert.ok(role.get('isDirtyOrRelatedDirty'));
-//         assert.equal(page.categoriesSelected(), 0);
-//     });
-//     let url = PREFIX + DETAIL_URL + '/';
-//     let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: []});
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-// });
+test('removing a category in selectize for categories will save correctly and cleanup role_category_fks', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        let role = store.find('role', RD.idOne);
+        assert.equal(role.get('role_category_fks').length, 1);
+        assert.equal(role.get('categories').get('length'), 1);
+        assert.equal(page.categoriesSelected(), 1);
+    });
+    page.categoryOneRemove();
+    andThen(() => {
+        let role = store.find('role', RD.idOne);
+        assert.equal(role.get('role_category_fks').length, 1);
+        assert.equal(role.get('categories').get('length'), 0);
+        assert.ok(role.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.categoriesSelected(), 0);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: []});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
 
-// test('starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
-//     detail_data.categories = [...detail_data.categories, CF.get(CD.idTwo)];
-//     detail_data.categories[1].name = CD.nameOne + 'i';
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         let role = store.find('role', RD.idOne);
-//         assert.equal(role.get('categories').get('length'), 2);
-//         assert.equal(page.categoriesSelected(), 2);
-//     });
-//     page.categoryOneRemove();
-//     page.categoryOneRemove();
-//     andThen(() => {
-//         assert.equal(page.categoriesSelected(), 0);
-//     });
-//     let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1';
-//     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
-//     page.categoryClickDropdown();
-//     fillIn(`${CATEGORY_SEARCH}`, 'repair1');
-//     andThen(() => {
-//         let role = store.find('role', RD.idOne);
-//         assert.equal(role.get('role_category_fks').length, 2);
-//         assert.equal(role.get('categories').get('length'), 0);
-//         assert.ok(role.get('isDirtyOrRelatedDirty'));
-//         assert.equal(page.categoryOptionLength(), 2);
-//     });
-//     page.categoryClickOptionOneEq();
-//     andThen(() => {
-//         let role = store.find('role', RD.idOne);
-//         assert.equal(role.get('role_category_fks').length, 2);
-//         assert.equal(role.get('categories').get('length'), 1);
-//         assert.ok(role.get('isDirtyOrRelatedDirty'));
-//         assert.equal(page.categoriesSelected(), 1);
-//     });
-//     let url = PREFIX + DETAIL_URL + '/';
-//     let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-// });
+test('starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
+    detail_data.categories = [...detail_data.categories, CF.get(CD.idTwo)];
+    detail_data.categories[1].name = CD.nameOne + 'i';
+    visit(DETAIL_URL);
+    andThen(() => {
+        let role = store.find('role', RD.idOne);
+        assert.equal(role.get('categories').get('length'), 2);
+        assert.equal(page.categoriesSelected(), 2);
+    });
+    page.categoryOneRemove();
+    page.categoryOneRemove();
+    andThen(() => {
+        assert.equal(page.categoriesSelected(), 0);
+    });
+    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1';
+    xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, 'repair1');
+    andThen(() => {
+        let role = store.find('role', RD.idOne);
+        assert.equal(role.get('role_category_fks').length, 2);
+        assert.equal(role.get('categories').get('length'), 0);
+        assert.ok(role.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.categoryOptionLength(), 2);
+    });
+    page.categoryClickOptionOneEq();
+    andThen(() => {
+        let role = store.find('role', RD.idOne);
+        assert.equal(role.get('role_category_fks').length, 2);
+        assert.equal(role.get('categories').get('length'), 1);
+        assert.ok(role.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.categoriesSelected(), 1);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
 
-// test('search will filter down on categories in store correctly by removing and adding a category back', (assert) => {
-//     detail_data.categories = [...detail_data.categories, CF.get(CD.idTwo)];
-//     detail_data.categories[1].id =  'abc123';
-//     detail_data.categories[1].name =  CD.nameOne + ' scooter';
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         let role = store.find('role', RD.idOne);
-//         assert.equal(role.get('categories').get('length'), 2);
-//         assert.equal(page.categoriesSelected(), 2);
-//     });
-//     page.categoryOneRemove();
-//     andThen(() => {
-//         assert.equal(page.categoriesSelected(), 1);
-//     });
-//     let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1';
-//     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
-//     page.categoryClickDropdown();
-//     fillIn(`${CATEGORY_SEARCH}`, 'repair1');
-//     andThen(() => {
-//         assert.equal(page.categoryOptionLength(), 2);
-//     });
-//     page.categoryClickOptionOneEq();
-//     andThen(() => {
-//         let role = store.find('role', RD.idOne);
-//         assert.equal(role.get('role_category_fks').length, 2);
-//         assert.equal(role.get('categories').get('length'), 2);
-//         assert.ok(role.get('isDirtyOrRelatedDirty'));
-//         assert.equal(page.categoriesSelected(), 2);
-//     });
-//     let url = PREFIX + DETAIL_URL + '/';
-//     let payload = RF.put({id: RD.idOne, categories: [CD.idOne, 'abc123']});
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-// });
+test('search will filter down on categories in store correctly by removing and adding a category back', (assert) => {
+    detail_data.categories = [...detail_data.categories, CF.get(CD.idTwo)];
+    detail_data.categories[1].id =  'abc123';
+    detail_data.categories[1].name =  CD.nameOne + ' scooter';
+    visit(DETAIL_URL);
+    andThen(() => {
+        let role = store.find('role', RD.idOne);
+        assert.equal(role.get('categories').get('length'), 2);
+        assert.equal(page.categoriesSelected(), 2);
+    });
+    page.categoryOneRemove();
+    andThen(() => {
+        assert.equal(page.categoriesSelected(), 1);
+    });
+    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1';
+    xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, 'repair1');
+    andThen(() => {
+        assert.equal(page.categoryOptionLength(), 2);
+    });
+    page.categoryClickOptionOneEq();
+    andThen(() => {
+        let role = store.find('role', RD.idOne);
+        assert.equal(role.get('role_category_fks').length, 2);
+        assert.equal(role.get('categories').get('length'), 2);
+        assert.ok(role.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.categoriesSelected(), 2);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let payload = RF.put({id: RD.idOne, categories: [CD.idOne, 'abc123']});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
 
-// test('clicking and typing into power select for categories will not filter if spacebar pressed', (assert) => {
-//     visit(DETAIL_URL);
-//     page.categoryClickDropdown();
-//     fillIn(`${CATEGORY_SEARCH}`, ' ');
-//     andThen(() => {
-//         assert.equal(page.categoriesSelected(), 1);
-//         assert.equal(page.categoryOptionLength(), 1);
-//         assert.equal(find(`${CATEGORY_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.no_results);
-//     });
-//     let url = PREFIX + DETAIL_URL + '/';
-//     let response = RF.detail(RD.idOne);
-//     let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
-//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-// });
+test('clicking and typing into power select for categories will not filter if spacebar pressed', (assert) => {
+    visit(DETAIL_URL);
+    page.categoryClickDropdown();
+    fillIn(`${CATEGORY_SEARCH}`, ' ');
+    andThen(() => {
+        assert.equal(page.categoriesSelected(), 1);
+        assert.equal(page.categoryOptionLength(), 1);
+        assert.equal(find(`${CATEGORY_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.no_results);
+    });
+    let url = PREFIX + DETAIL_URL + '/';
+    let response = RF.detail(RD.idOne);
+    let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
