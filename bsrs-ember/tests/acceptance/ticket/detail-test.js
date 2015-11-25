@@ -50,7 +50,7 @@ const categories = '.categories-power-select-search input';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid, category_one_xhr, category_two_xhr, category_three_xhr, counter, activity_one;
 
-module('Acceptance | ticket detail test', {
+module('sco Acceptance | ticket detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -58,7 +58,7 @@ module('Acceptance | ticket detail test', {
         detail_data = TF.detail(TD.idOne);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
         detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, detail_data);
-        let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
+        let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
         top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
         activity_one = xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
     },
@@ -461,7 +461,7 @@ test('power select options are rendered immediately when enter detail route and 
     let top_level_data = CF.top_level();
     top_level_data.results[1] = {id: CD.idThree, name: CD.nameThree, parent: null, children_fks: [CD.idLossPreventionChild]};
     top_level_data.results[1].children = [{id: CD.idLossPreventionChild, name: CD.nameLossPreventionChild, children_fks: []}];
-    let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
+    let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
     xhr(top_level_categories_endpoint, 'GET', null, {}, 200, top_level_data);
     page.visitDetail();
     andThen(() => {
@@ -543,9 +543,9 @@ test('selecting a top level category will alter the url and can cancel/discard c
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('categories').get('length'), 3);
         assert.equal(ticket.get('sorted_categories').get('length'), 3);
-        assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
-        assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
-        assert.equal(ticket.get('sorted_categories').objectAt(2).get('children').get('length'), 0);
+        assert.equal(ticket.get('sorted_categories').objectAt(0).get('has_many_children').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').objectAt(1).get('has_many_children').get('length'), 1);
+        assert.equal(ticket.get('sorted_categories').objectAt(2).get('has_many_children').get('length'), 0);
         assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
         assert.ok(ticket.get('categoriesIsNotDirty'));
         assert.equal(components, 3);
@@ -562,8 +562,8 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.equal(store.find('category').get('length'), 6);
         assert.equal(ticket.get('categories').get('length'), 2);
         assert.equal(ticket.get('sorted_categories').get('length'), 2);
-        assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
-        assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
+        assert.equal(ticket.get('sorted_categories').objectAt(0).get('has_many_children').get('length'), 2);
+        assert.equal(ticket.get('sorted_categories').objectAt(1).get('has_many_children').get('length'), 1);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
         assert.ok(ticket.get('categoriesIsDirty'));
         assert.equal(components, 3);
@@ -589,9 +589,9 @@ test('selecting a top level category will alter the url and can cancel/discard c
             assert.equal(tickets.get('length'), 1);
             let ticket = store.find('ticket', TD.idOne);
             assert.equal(ticket.get('categories').get('length'), 3);
-            assert.equal(ticket.get('sorted_categories').objectAt(0).get('children').get('length'), 2);
-            assert.equal(ticket.get('sorted_categories').objectAt(1).get('children').get('length'), 1);
-            assert.equal(ticket.get('sorted_categories').objectAt(2).get('children').get('length'), 0);
+            assert.equal(ticket.get('sorted_categories').objectAt(0).get('has_many_children').get('length'), 2);
+            assert.equal(ticket.get('sorted_categories').objectAt(1).get('has_many_children').get('length'), 1);
+            assert.equal(ticket.get('sorted_categories').objectAt(2).get('has_many_children').get('length'), 0);
             assert.ok(ticket.get('isDirtyOrRelatedDirty'));
             assert.ok(ticket.get('categoriesIsDirty'));
             assert.equal(components, 3);
@@ -687,7 +687,7 @@ test('selecting and removing a top level category will remove children categorie
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 0);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 0);
         assert.equal(components, 1);
     });
 });

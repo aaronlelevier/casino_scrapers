@@ -48,7 +48,7 @@ module('Acceptance | ticket new test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         list_xhr = xhr(TICKET_LIST_URL, 'GET', null, {}, 200, TF.empty());
-        let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
+        let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
         xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
         location_xhr = xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
         //repair with child of electrical and wat
@@ -181,7 +181,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         let tickets = store.find('ticket');
         assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 2);
         assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
         assert.equal(components, 2);
     });
@@ -193,8 +193,8 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.equal(tickets.get('length'), 1);
         assert.equal(store.find('category').get('length'), 6);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 2);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('has_many_children').get('length'), 2);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 1);
         assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
         assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
         assert.equal(components, 3);
@@ -217,8 +217,8 @@ test('selecting a top level category will alter the url and can cancel/discard c
             assert.equal(tickets.get('length'), 1);
             assert.equal(store.find('category').get('length'), 6);
             assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
-            assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 2);
-            assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 1);
+            assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('has_many_children').get('length'), 2);
+            assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 1);
             assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
             assert.ok(tickets.objectAt(0).get('categoriesIsDirty'));
             assert.equal(components, 3);
@@ -265,7 +265,7 @@ test('selecting category tree and removing a top level category will remove chil
         assert.equal(store.find('category').get('length'), 5);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 2);
         assert.equal(components, 2);
     });
     //second select
@@ -276,8 +276,8 @@ test('selecting category tree and removing a top level category will remove chil
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 2);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('has_many_children').get('length'), 2);
         assert.equal(components, 3);
     });
     //third select
@@ -289,8 +289,8 @@ test('selecting category tree and removing a top level category will remove chil
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 3);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 2);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('has_many_children').get('length'), 2);
         assert.equal(components, 3);
     });
     //change second with same children as electrical (outlet);
@@ -305,8 +305,8 @@ test('selecting category tree and removing a top level category will remove chil
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 2);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('has_many_children').get('length'), 1);
         assert.equal(components, 3);
     });
     //change top level
@@ -318,7 +318,7 @@ test('selecting category tree and removing a top level category will remove chil
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 0);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 0);
         assert.equal(components, 1);
     });
 });
@@ -343,7 +343,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
         assert.equal(store.find('category').get('length'), 5);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 2);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 2);
         assert.equal(components, 2);
     });
     //second select
@@ -354,8 +354,8 @@ test('when selecting a new parent cateogry it should remove previously selected 
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 2);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 2);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('has_many_children').get('length'), 2);
         assert.equal(components, 3);
     });
     //third select
@@ -367,9 +367,9 @@ test('when selecting a new parent cateogry it should remove previously selected 
         let tickets = store.find('ticket');
         assert.equal(tickets.get('length'), 1);
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 3);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('children').get('length'), 1);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('children').get('length'), 2);
-        assert.equal(tickets.objectAt(0).get('categories').objectAt(2).get('children').get('length'), 0);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(0).get('has_many_children').get('length'), 1);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(1).get('has_many_children').get('length'), 2);
+        assert.equal(tickets.objectAt(0).get('categories').objectAt(2).get('has_many_children').get('length'), 0);
         assert.equal(components, 3);
     });
     page.categoryTwoClickDropdown();

@@ -7,8 +7,8 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import config from 'bsrs-ember/config/environment';
-import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
-import CATEGORY_FIXTURES from 'bsrs-ember/vendor/category_fixtures';
+import CD from 'bsrs-ember/vendor/defaults/category';
+import CF from 'bsrs-ember/vendor/category_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/category';
@@ -16,7 +16,7 @@ import page from 'bsrs-ember/tests/pages/category';
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_categories_url;
 const CATEGORIES_URL = BASE_URL + '/index';
-const DETAIL_URL = BASE_URL + '/' + CATEGORY_DEFAULTS.idOne;
+const DETAIL_URL = BASE_URL + '/' + CD.idOne;
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
@@ -30,8 +30,8 @@ module('Acceptance | detail test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/';
-        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-        xhr(endpoint + CATEGORY_DEFAULTS.idOne + '/', 'GET', null, {}, 200, CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne));
+        list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CF.list());
+        xhr(endpoint + CD.idOne + '/', 'GET', null, {}, 200, CF.detail(CD.idOne));
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -54,54 +54,58 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        let category = store.find('category', CD.idOne);
         assert.ok(category.get('isNotDirty'));
-        assert.equal(page.nameInput(), CATEGORY_DEFAULTS.nameOne);
-        assert.equal(page.descriptionInput(), CATEGORY_DEFAULTS.descriptionRepair);
-        assert.equal(page.labelInput(), CATEGORY_DEFAULTS.labelOne);
-        assert.equal(page.amountInput(), CATEGORY_DEFAULTS.costAmountOne);
-        assert.equal(page.costCodeInput(), CATEGORY_DEFAULTS.costCodeOne);
+        assert.equal(page.nameInput(), CD.nameOne);
+        assert.equal(page.descriptionInput(), CD.descriptionRepair);
+        assert.equal(page.labelInput(), CD.labelOne);
+        assert.equal(page.amountInput(), CD.costAmountOne);
+        assert.equal(page.costCodeInput(), CD.costCodeOne);
     });
     let url = PREFIX + DETAIL_URL + '/';
-    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo, description: CATEGORY_DEFAULTS.descriptionMaintenance, 
-    label: CATEGORY_DEFAULTS.labelTwo, cost_amount: CATEGORY_DEFAULTS.costAmountTwo, cost_code: CATEGORY_DEFAULTS.costCodeTwo});
+    let response = CF.detail(CD.idOne);
+    let payload = CF.put({id: CD.idOne, name: CD.nameTwo, description: CD.descriptionMaintenance, 
+    label: CD.labelTwo, cost_amount: CD.costAmountTwo, cost_code: CD.costCodeTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    page.nameFill(CATEGORY_DEFAULTS.nameTwo);
-    page.descriptionFill(CATEGORY_DEFAULTS.descriptionMaintenance);
-    page.labelFill(CATEGORY_DEFAULTS.labelTwo);
-    page.amountFill(CATEGORY_DEFAULTS.costAmountTwo);
-    page.costCodeFill(CATEGORY_DEFAULTS.costCodeTwo);
+    page.nameFill(CD.nameTwo);
+    page.descriptionFill(CD.descriptionMaintenance);
+    page.labelFill(CD.labelTwo);
+    page.amountFill(CD.costAmountTwo);
+    page.costCodeFill(CD.costCodeTwo);
     andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
+        let category = store.find('category', CD.idOne);
         assert.ok(category.get('isDirty'));
     });
-    let list = CATEGORY_FIXTURES.list();
-    list.results[0].name = CATEGORY_DEFAULTS.nameTwo;
-    list.results[0].description = CATEGORY_DEFAULTS.descriptionMaintenance;
-    list.results[0].label = CATEGORY_DEFAULTS.labelTwo;
-    list.results[0].cost_amount = CATEGORY_DEFAULTS.costAmountTwo;
-    list.results[0].cost_code = CATEGORY_DEFAULTS.costCodeTwo;
+    let list = CF.list();
+    list.results[0].name = CD.nameTwo;
+    list.results[0].description = CD.descriptionMaintenance;
+    list.results[0].label = CD.labelTwo;
+    list.results[0].cost_amount = CD.costAmountTwo;
+    list.results[0].cost_code = CD.costCodeTwo;
     //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me. 
     // let results = list.results[0];
-    // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CATEGORY_DEFAULTS);
+    // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CD);
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
         assert.equal(store.find('category').get('length'), 10);
-        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-        assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameTwo);
-        assert.equal(category.get('description'), CATEGORY_DEFAULTS.descriptionMaintenance);
-        assert.equal(category.get('label'), CATEGORY_DEFAULTS.labelTwo);
-        assert.equal(category.get('cost_amount'), CATEGORY_DEFAULTS.costAmountTwo);
-        assert.equal(category.get('cost_code'), CATEGORY_DEFAULTS.costCodeTwo);
+        let category = store.find('category', CD.idOne);
+        assert.equal(category.get('name'), CD.nameTwo);
+        assert.equal(category.get('description'), CD.descriptionMaintenance);
+        assert.equal(category.get('label'), CD.labelTwo);
+        assert.equal(category.get('cost_amount'), CD.costAmountTwo);
+        assert.equal(category.get('cost_code'), CD.costCodeTwo);
         assert.ok(category.get('isNotDirty'));
     });
 });
 
 test('when you click cancel, you are redirected to the category list view', (assert) => {
     visit(DETAIL_URL);
+    andThen(() => {
+        const category = store.find('category', CD.idOne);
+        assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+    });
     generalPage.cancel();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
@@ -122,11 +126,11 @@ test('when editing the category name to invalid, it checks for validation', (ass
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-description-validation-error').text().trim(), 'Invalid Description');
     });
-    page.nameFill(CATEGORY_DEFAULTS.nameTwo);
-    page.descriptionFill(CATEGORY_DEFAULTS.descriptionRepair);
+    page.nameFill(CD.nameTwo);
+    page.descriptionFill(CD.descriptionRepair);
     let url = PREFIX + DETAIL_URL + "/";
-    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameTwo});
+    let response = CF.detail(CD.idOne);
+    let payload = CF.put({id: CD.idOne, name: CD.nameTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
@@ -137,7 +141,7 @@ test('when editing the category name to invalid, it checks for validation', (ass
 test('when user changes an attribute and clicks cancel, we prompt them with a modal and they hit cancel', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
-    page.nameFill(CATEGORY_DEFAULTS.nameTwo);
+    page.nameFill(CD.nameTwo);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -150,7 +154,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-category-name').val(), CATEGORY_DEFAULTS.nameTwo);
+            assert.equal(find('.t-category-name').val(), CD.nameTwo);
             assert.ok(generalPage.modalIsHidden());
         });
     });
@@ -158,11 +162,11 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
 
 test('when click delete, category is deleted and removed from store', (assert) => {
     visit(DETAIL_URL);
-    xhr(PREFIX + BASE_URL + '/' + CATEGORY_DEFAULTS.idOne + '/', 'DELETE', null, {}, 204, {});
+    xhr(PREFIX + BASE_URL + '/' + CD.idOne + '/', 'DELETE', null, {}, 204, {});
     generalPage.delete();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
-        assert.equal(store.find('category', CATEGORY_DEFAULTS.idOne).get('length'), undefined);
+        assert.equal(store.find('category', CD.idOne).get('length'), undefined);
     });
 });
 
@@ -226,15 +230,15 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-label-validation-error').is(':visible'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
-    page.nameFill(CATEGORY_DEFAULTS.nameOne);
-    page.descriptionFill(CATEGORY_DEFAULTS.descriptionMaintenance);
-    page.labelFill(CATEGORY_DEFAULTS.labelOne);
-    page.costCodeFill(CATEGORY_DEFAULTS.costCodeOne);
-    page.subLabelFill(CATEGORY_DEFAULTS.subCatLabelTwo);
+    page.nameFill(CD.nameOne);
+    page.descriptionFill(CD.descriptionMaintenance);
+    page.labelFill(CD.labelOne);
+    page.costCodeFill(CD.costCodeOne);
+    page.subLabelFill(CD.subCatLabelTwo);
     let url = PREFIX + DETAIL_URL + '/';
-    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, description: CATEGORY_DEFAULTS.descriptionMaintenance, 
-    label: CATEGORY_DEFAULTS.labelOne, subcategory_label: CATEGORY_DEFAULTS.subCatLabelTwo, cost_amount: CATEGORY_DEFAULTS.costAmountOne, cost_code: CATEGORY_DEFAULTS.costCodeOne});
+    let response = CF.detail(CD.idOne);
+    let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance, 
+    label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: CD.costAmountOne, cost_code: CD.costCodeOne});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
@@ -242,88 +246,93 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-/* CATEGORY TO CHILDREN */
-test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
-    visit(DETAIL_URL);
-    andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-        assert.equal(category.get('children_fks').length, 1);
-        assert.equal(category.get('children').get('length'), 1);
-        assert.equal(find('div.option').length, 0);
-    });
-    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
-    xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-    page.categoryClickDropdown();
-    fillIn(`${CATEGORY_SEARCH}`, 'a');
-    page.categoryClickOptionThree();
-    andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-        assert.equal(category.get('children_fks').get('length'), 2);
-        assert.equal(page.categoriesSelected(), 2);
-    });
-    let url = PREFIX + DETAIL_URL + '/';
-    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, children: [CATEGORY_DEFAULTS.idChild, CATEGORY_DEFAULTS.idThree]});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), CATEGORIES_URL);
-    });
-});
+// /* CATEGORY TO CHILDREN */
+// test('clicking and typing into power select for categories children will fire off xhr request for all categories', (assert) => {
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         let category = store.find('category', CD.idOne);
+//         assert.equal(category.get('children_fks').length, 1);
+//         assert.equal(category.get('children').get('length'), 1);
+//         assert.equal(find('div.option').length, 0);
+//     });
+//     let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
+//     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+//     page.categoryClickDropdown();
+//     fillIn(`${CATEGORY_SEARCH}`, 'a');
+//     page.categoryClickOptionThree();
+//     andThen(() => {
+//         let category = store.find('category', CD.idOne);
+//         assert.equal(category.get('children_fks').get('length'), 2);
+//         assert.equal(page.categoriesSelected(), 2);
+//     });
+//     let url = PREFIX + DETAIL_URL + '/';
+//     let response = CF.detail(CD.idOne);
+//     let payload = CF.put({id: CD.idOne, children: [CD.idChild, CD.idThree]});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), CATEGORIES_URL);
+//     });
+// });
 
-test('when you deep link to the category detail can remove child from category', (assert) => {
-    visit(DETAIL_URL);
-    andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-        assert.equal(category.get('children_fks').length, 1);
-        assert.equal(category.get('children').get('length'), 1);
-        assert.equal(page.categoriesSelected(), 1);
-    });
-    page.categoryOneRemove();
-    andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-        assert.equal(category.get('children_fks').get('length'), 0);
-        assert.equal(page.categoriesSelected(), 0);
-    });
-    let url = PREFIX + DETAIL_URL + '/';
-    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, children: []});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), CATEGORIES_URL);
-    });
-});
+// test('when you deep link to the category detail can remove child from category and add same one back', (assert) => {
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         let category = store.find('category', CD.idOne);
+//         assert.equal(category.get('children_fks').length, 1);
+//         assert.equal(category.get('children').get('length'), 1);
+//         assert.equal(page.categoriesSelected(), 1);
+//     });
+//     page.categoryOneRemove();
+//     andThen(() => {
+//         let category = store.find('category', CD.idOne);
+//         assert.equal(category.get('children_fks').get('length'), 0);
+//         assert.equal(page.categoriesSelected(), 0);
+//     });
+//     let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
+//     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+//     page.categoryClickDropdown();
+//     fillIn(`${CATEGORY_SEARCH}`, 'a');
+//     // page.categoryClickOptionThree();
+//     // let url = PREFIX + DETAIL_URL + '/';
+//     // let response = CF.detail(CD.idOne);
+//     // let payload = CF.put({id: CD.idOne, children: []});
+//     // xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     // generalPage.save();
+//     // andThen(() => {
+//     //     assert.equal(currentURL(), CATEGORIES_URL);
+//     // });
+// });
 
-test('clicking and typing into power select for categories children will not filter if spacebar pressed', (assert) => {
-    visit(DETAIL_URL);
-    andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-        assert.equal(category.get('children_fks').length, 1);
-        assert.equal(category.get('children').get('length'), 1);
-    });
-    page.categoryClickDropdown();
-    fillIn(`${CATEGORY_SEARCH}`, ' ');
-    andThen(() => {
-        assert.equal(page.categoryOptionLength(), 1);
-        assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.no_results);
-    });
-    andThen(() => {
-        let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-        assert.equal(category.get('children_fks').get('length'), 1);
-        assert.equal(page.categoryOptionLength(), 1);
-        assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.no_results);
-    });
-    let url = PREFIX + DETAIL_URL + '/';
-    let response = CATEGORY_FIXTURES.detail(CATEGORY_DEFAULTS.idOne);
-    let payload = CATEGORY_FIXTURES.put({id: CATEGORY_DEFAULTS.idOne, children: [CATEGORY_DEFAULTS.idChild]});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), CATEGORIES_URL);
-    });
-});
-/* END CATEGORY CHILDREN */
+// test('clicking and typing into power select for categories children will not filter if spacebar pressed', (assert) => {
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         let category = store.find('category', CD.idOne);
+//         assert.equal(category.get('children_fks').length, 1);
+//         assert.equal(category.get('children').get('length'), 1);
+//     });
+//     page.categoryClickDropdown();
+//     fillIn(`${CATEGORY_SEARCH}`, ' ');
+//     andThen(() => {
+//         assert.equal(page.categoryOptionLength(), 1);
+//         assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.no_results);
+//     });
+//     andThen(() => {
+//         let category = store.find('category', CD.idOne);
+//         assert.equal(category.get('children_fks').get('length'), 1);
+//         assert.equal(page.categoryOptionLength(), 1);
+//         assert.equal(find(CATEGORY_DROPDOWN).text().trim(), GLOBALMSG.no_results);
+//     });
+//     let url = PREFIX + DETAIL_URL + '/';
+//     let response = CF.detail(CD.idOne);
+//     let payload = CF.put({id: CD.idOne, children: [CD.idChild]});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), CATEGORIES_URL);
+//     });
+// });
+// /* END CATEGORY CHILDREN */
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
     visit(CATEGORIES_URL);
@@ -343,7 +352,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
-    page.nameFill(CATEGORY_DEFAULTS.nameTwo);
+    page.nameFill(CD.nameTwo);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -356,7 +365,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-category-name').val(), CATEGORY_DEFAULTS.nameTwo);
+            assert.equal(find('.t-category-name').val(), CD.nameTwo);
             assert.ok(generalPage.modalIsHidden());
         });
     });
@@ -364,7 +373,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
-    page.nameFill(CATEGORY_DEFAULTS.nameTwo);
+    page.nameFill(CD.nameTwo);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -376,8 +385,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), CATEGORIES_URL);
-            let category = store.find('category', CATEGORY_DEFAULTS.idOne);
-            assert.equal(category.get('name'), CATEGORY_DEFAULTS.nameOne + '1');
+            let category = store.find('category', CD.idOne);
+            assert.equal(category.get('name'), CD.nameOne + '1');
         });
     });
 });

@@ -40,6 +40,8 @@ var CategoryDeserializer = Ember.Object.extend({
                 response.children_fks = temp;
             }
             let category = store.push('category', response);
+            category.set('children_fks', response.children_fks);
+            category.set('previous_children_fks', response.children_fks);
             category.save();
         }
     },
@@ -48,7 +50,6 @@ var CategoryDeserializer = Ember.Object.extend({
         response.results.forEach((model) => {
             let existing_category = store.find('category', model.id);
             if (!existing_category.get('id') || existing_category.get('isNotDirtyOrRelatedNotDirty')) {
-                [model.children_fks, model.parent_id] = extract_tree(model, store);
                 let category = store.push('category', model);
                 category.save();
             }
