@@ -8,7 +8,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 var store, subject, status;
 
-module('sco unit: third-party deserializer test', {
+module('unit: third-party deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:third-party', 'model:status']);
         subject = ThirdPartyDeserializer.create({store: store});

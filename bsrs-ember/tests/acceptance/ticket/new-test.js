@@ -70,7 +70,7 @@ module('Acceptance | ticket new test', {
     }
 });
 
-test('sco validation works and when hit save, we do same post', (assert) => {
+test('validation works and when hit save, we do same post', (assert) => {
     page.visit();
     andThen(() => {
         patchRandom(counter);
@@ -393,7 +393,7 @@ test('when selecting a new parent cateogry it should remove previously selected 
 });
 
 /*TICKET TO ASSIGNEE*/
-test('sco assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', (assert) => {
+test('assignee component shows assignee for ticket and will fire off xhr to fetch assignees on search to change assignee', (assert) => {
     clearxhr(list_xhr);
     clearxhr(location_xhr);
     clearxhr(category_one_xhr);
@@ -623,7 +623,7 @@ test('can remove and add back same cc and save empty cc', (assert) => {
     });
 });
 
-test('sco all required fields persist correctly when the user submits a new ticket form', (assert) => {
+test('all required fields persist correctly when the user submits a new ticket form', (assert) => {
     page.visit();
     andThen(() => {
         patchRandom(counter);
