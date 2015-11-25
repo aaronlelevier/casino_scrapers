@@ -1,5 +1,7 @@
 from django.test import TestCase
 
+from django_fsm import can_proceed
+
 from finite_state.models import (WorkRequestStatusEnum, WorkRequestStatus,
     WorkRequest)
 
@@ -27,8 +29,8 @@ class WorkRequestStatusEnumTests(TestCase):
 
         self.assertEqual(
             self.enum.get_key_from_value(value),
-            next((k for k,v in self.enum.to_dict().items()
-                    if v == value), None)
+            next(("_{}_".format(k) for k,v in self.enum.to_dict().items()
+                                   if v == value), None)
         )
 
 
@@ -39,7 +41,7 @@ class WorkRequestStatusTests(TestCase):
 
     def test_name(self):
         self.assertEqual(
-            self.status.name,
+            self.status.label,
             WorkRequestStatusEnum().get_key_from_value(self.status.id)
         )
 
@@ -53,22 +55,10 @@ class WorkRequestTests(TestCase):
             id=WorkRequestStatusEnum.ASSIGNED)
         self.request = WorkRequest.objects.create()
 
-    def test_default_status(self):
-        self.assertIsInstance(self.request.status, WorkRequestStatus)
-        self.assertEqual(
-            self.request.status.id,
-            WorkRequestStatusEnum.NEW
-        )
+    def test_initial_state_instatiated(self):
+        self.assertEqual(self.request.status, 'new',)
 
-    # def test_publish(self):
-    #     self.assertEqual(
-    #         self.request.status.id,
-    #         WorkRequestStatusEnum.NEW
-    #     )
-
-    #     self.request.publish()
-
-    #     self.assertEqual(
-    #         self.request.status.id,
-    #         WorkRequestStatusEnum.ASSIGNED
-    #     )
+    def test_known_transition_should_succeed(self):
+        self.assertTrue(can_proceed(self.request.draft))
+        self.request.draft()
+        self.assertEqual(self.request.status, 'draft')

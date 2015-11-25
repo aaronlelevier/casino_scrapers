@@ -39,8 +39,8 @@ class WorkRequestStatusEnum(object):
         To set 'default' field for ``WorkRequestStatus.name`` so it's 
         human readable.
         """
-        return next((k for k,v in self.to_dict().items()
-                       if v == value), None)
+        return next(("_{}_".format(k) for k,v in self.to_dict().items()
+                                      if v == value), None)
 
 
 class WorkRequestStatusManager(models.Manager):
@@ -57,21 +57,21 @@ class WorkRequestStatusManager(models.Manager):
 class WorkRequestStatus(models.Model):
     id = models.CharField(primary_key=True, max_length=50, editable=False,
         default=WorkRequestStatusEnum.NEW)
-    name = models.CharField(max_length=254, blank=True,
+    label = models.CharField(max_length=254, blank=True,
         help_text="String value of the ID 'key'.")
 
     objects = WorkRequestStatusManager()
 
     def __str__(self):
-        return self.name
+        return self.label
 
     def save(self, *args, **kwargs):
-        self.name = WorkRequestStatusEnum().get_key_from_value(self.id)
+        self.label = WorkRequestStatusEnum().get_key_from_value(self.id)
         return super(WorkRequestStatus, self).save(*args, **kwargs)
 
 
 class WorkRequest(models.Model):
-    status = FSMKeyField(WorkRequestStatus, blank=True, null=True)
+    status = FSMKeyField(WorkRequestStatus, default='new', protected=True)
 
     def __str__(self):
         return str(self.id)
@@ -84,6 +84,6 @@ class WorkRequest(models.Model):
         if not self.status:
             self.status = WorkRequestStatus.objects.default()
 
-    @transition(field=status, source='NEW', target='ASSIGNED')
-    def publish(self):
+    @transition(field=status, source='new', target='draft')
+    def draft(self):
         pass
