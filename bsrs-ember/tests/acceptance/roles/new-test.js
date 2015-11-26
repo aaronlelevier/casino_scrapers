@@ -12,6 +12,7 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import random from 'bsrs-ember/models/random';
+import page from 'bsrs-ember/tests/pages/role';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_roles_url;
@@ -55,15 +56,14 @@ test('visiting role/new', (assert) => {
         assert.equal(find('.t-location-level option:selected').text(), 'Select One');
         assert.equal(find('.t-location-level option:eq(1)').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
         assert.equal(find('.t-location-level option:eq(2)').text(), LOCATION_LEVEL_DEFAULTS.nameRegion);
-        assert.equal(find('.t-role-type option:selected').text(), ROLE_DEFAULTS.roleTypeGeneral);
-        assert.equal(find('.t-role-type option:eq(0)').text(), ROLE_DEFAULTS.roleTypeGeneral);
-        assert.equal(find('.t-role-type option:eq(1)').text(), ROLE_DEFAULTS.roleTypeContractor);
+        assert.equal(page.roleTypeInput(), ROLE_DEFAULTS.roleTypeGeneral);
         assert.ok(store.find('role').objectAt(1).get('isNotDirty'));
         const role = store.find('role', UUID.value);
         assert.ok(role.get('new'));
     });
     fillIn('.t-role-name', ROLE_DEFAULTS.nameOne);
-    fillIn('.t-role-type', ROLE_DEFAULTS.roleTypeGeneral);
+    page.roleTypeClickDropdown();
+    page.roleTypeClickOptionOne();
     fillIn('.t-location-level', ROLE_DEFAULTS.locationLevelOne);
     generalPage.save();
     andThen(() => {

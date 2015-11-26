@@ -13,11 +13,6 @@ var RoleSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
                 this._super();
             }
         },
-        changed(model, val) {
-            Ember.run(() => {
-                model.set('role_type', val);
-            });
-        },
         changedLocLevel(model, val) {
             Ember.run(() => {
                 model.set('location_level', val);

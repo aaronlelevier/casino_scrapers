@@ -64,8 +64,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         let role = store.find('role').objectAt(0);  
         assert.ok(role.get('isNotDirty'));
         assert.equal(role.get('location_level').get('id'), LLD.idOne);
-        assert.equal(find('.t-role-name').val(), RD.nameOne);
-        assert.equal(find('.t-role-role-type').val(), RD.roleTypeGeneral);
+        assert.equal(page.roleTypeInput(), RD.roleTypeGeneral);
         assert.equal(page.categorySelected().indexOf(CD.nameOne), 2);
         assert.equal(find('.t-location-level').val(), LLD.idOne);
     });
@@ -75,7 +74,8 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     let payload = RF.put({id: RD.idOne, name: RD.namePut, role_type: RD.roleTypeContractor, location_level: location_level.id, categories: [CD.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-role-name', RD.namePut);
-    fillIn('.t-role-role-type', RD.roleTypeContractor);
+    page.roleTypeClickDropdown();
+    page.roleTypeClickOptionTwo();
     fillIn('.t-location-level', RD.locationLevelTwo);
     andThen(() => {
         let role = store.find('role').objectAt(0);  

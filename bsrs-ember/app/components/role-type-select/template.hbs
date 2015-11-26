@@ -1,0 +1,10 @@
+{{#power-select
+  class="t-role-role-type"
+  options=all_role_types
+  selected=selected
+  onchange=(action "selected")
+  searchEnabled=false
+  as |role_type|
+}}
+  {{role_type.name}}
+{{/power-select}}

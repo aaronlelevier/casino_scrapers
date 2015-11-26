@@ -1,7 +1,10 @@
 import PageObject from '../page-object';
 import CD from 'bsrs-ember/vendor/defaults/category';
+import RD from 'bsrs-ember/vendor/defaults/role';
 
 let { text, visitable, fillable, clickable, count } = PageObject;
+const ROLETYPE = '.t-role-role-type > .ember-basic-dropdown-trigger';
+const ROLETYPE_DROPDOWN = '.t-role-role-type-dropdown > .ember-power-select-options';
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORIES = `${CATEGORY} > .ember-power-select-multiple-option`;
 const CATEGORY_ONE = `${CATEGORIES}:eq(0)`;
@@ -10,8 +13,14 @@ const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-selec
 
 export default PageObject.create({
   visit: visitable('/'),
-  categoryClickDropdown: clickable(`${CATEGORY}`),
+
+  roleTypeInput: text(`${ROLETYPE}`),
+  roleTypeClickDropdown: clickable(`${ROLETYPE}`),
+  roleTypeClickOptionOne: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeGeneral})`),
+  roleTypeClickOptionTwo: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeContractor})`),
+
   // categoryInput: text(`${CATEGORY}`),
+  categoryClickDropdown: clickable(`${CATEGORY}`),
   categorySelected: text(`${CATEGORY_ONE}`),
   categoryOneRemove: clickable(`${CATEGORY_ONE} > .ember-power-select-multiple-remove-btn`),
   // categoryTwoRemove: clickable(`${CATEGORY_TWO} > .ember-power-select-multiple-remove-btn`),
