@@ -1,9 +1,10 @@
 from django.test import TestCase
 
-from django_fsm import can_proceed
+from django_fsm import can_proceed, TransitionNotAllowed
 
 from finite_state.models import (WorkRequestStatusEnum, WorkRequestStatus,
     WorkRequest)
+from person.tests.factory import create_single_person
 
 
 class WorkRequestStatusEnumTests(TestCase):
@@ -58,7 +59,48 @@ class WorkRequestTests(TestCase):
     def test_initial_state_instatiated(self):
         self.assertEqual(self.request.status, 'new',)
 
-    def test_known_transition_should_succeed(self):
+    def test_transition(self):
         self.assertTrue(can_proceed(self.request.draft))
+
+        self.request.draft()
+
+        self.assertEqual(self.request.status, 'draft')
+
+    def test_transition_doesnt_save_to_db(self):
+        self.assertTrue(can_proceed(self.request.draft))
+
+        self.request.draft()
+
+        # Will alter 'status' of the object, but won't save it to the DB
+        self.request = WorkRequest.objects.get(id=self.request.id)
+        self.assertNotEqual(self.request.status, 'draft')
+
+    def test_transition_explicitly_save_to_db(self):
+        self.assertTrue(can_proceed(self.request.draft))
+
+        self.request.draft()
+        self.request.save()
+
+        # Will alter 'status' of the object, but won't save it to the DB
+        self.request = WorkRequest.objects.get(id=self.request.id)
+        self.assertEqual(self.request.status, 'draft')
+
+    def test_transition_condition(self):
+        self.assertTrue(can_proceed(self.request.draft))
+
         self.request.draft()
         self.assertEqual(self.request.status, 'draft')
+        self.assertFalse(can_proceed(self.request.submit_request))
+        self.assertRaises(TransitionNotAllowed, self.request.submit_request)
+        self.assertTrue(can_proceed(self.request.submit_request,
+                                    check_conditions=False))
+
+    # def test_transition_condition_multiple(self):
+    #     self.assertTrue(can_proceed(self.request.draft))
+
+    #     self.request.draft()
+    #     self.assertEqual(self.request.status, 'draft')
+    #     self.assertFalse(can_proceed(self.request.submit_request))
+    #     self.assertRaises(TransitionNotAllowed, self.request.submit_request)
+    #     self.assertTrue(can_proceed(self.request.submit_request,
+    #                                 check_conditions=False))

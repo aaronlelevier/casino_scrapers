@@ -4,6 +4,8 @@ from django.db import models
 
 from django_fsm import FSMKeyField, FSMFieldMixin, transition
 
+from person.models import Person
+
 
 class FSMUuidField(FSMFieldMixin, models.UUIDField):
     pass
@@ -19,6 +21,7 @@ class WorkRequestStatusEnum(object):
     ASSIGNED = "def11673-d4ab-41a6-a37f-0c6846b96007"
     IN_PROGRESS = "def11673-d4ab-41a6-a37f-0c6846b96008"
     UNSATISFACTORY_COMPLETION = "def11673-d4ab-41a6-a37f-0c6846b96009"
+    REQUESTED = "def11673-d4ab-41a6-a37f-0c6846b96010"
 
     @classmethod
     def to_dict(cls):
@@ -72,6 +75,8 @@ class WorkRequestStatus(models.Model):
 
 class WorkRequest(models.Model):
     status = FSMKeyField(WorkRequestStatus, default='new', protected=True)
+    request = models.CharField(max_length=254, blank=True, null=True)
+    approver = models.ForeignKey(Person, blank=True, null=True)
 
     def __str__(self):
         return str(self.id)
@@ -84,6 +89,19 @@ class WorkRequest(models.Model):
         if not self.status:
             self.status = WorkRequestStatus.objects.default()
 
+    # condition booleans
+
+    def requested(self):
+        return bool(self.request)
+
+    # def approved(self):
+        # return bool(self.approver)
+
     @transition(field=status, source='new', target='draft')
     def draft(self):
+        pass
+
+    @transition(field=status, source='draft', target='requested',
+        conditions=[requested])
+    def submit_request(self):
         pass
