@@ -1,10 +1,13 @@
 import PageObject from '../page-object';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import RD from 'bsrs-ember/vendor/defaults/role';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
 let { text, visitable, fillable, clickable, count } = PageObject;
 const ROLETYPE = '.t-role-role-type > .ember-basic-dropdown-trigger';
 const ROLETYPE_DROPDOWN = '.t-role-role-type-dropdown > .ember-power-select-options';
+const LOCATIONLEVEL = '.t-location-level-select > .ember-basic-dropdown-trigger';
+const LOCATIONLEVEL_DROPDOWN = '.t-location-level-select-dropdown > .ember-power-select-options';
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORIES = `${CATEGORY} > .ember-power-select-multiple-option`;
 const CATEGORY_ONE = `${CATEGORIES}:eq(0)`;
@@ -13,6 +16,11 @@ const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-selec
 
 export default PageObject.create({
   visit: visitable('/'),
+
+  locationLevelInput: text(`${LOCATIONLEVEL}`),
+  locationLevelClickDropdown: clickable(`${LOCATIONLEVEL}`),
+  locationLevelClickOptionOne: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameCompany})`),
+  locationLevelClickOptionTwo: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameRegion})`),
 
   roleTypeInput: text(`${ROLETYPE}`),
   roleTypeClickDropdown: clickable(`${ROLETYPE}`),

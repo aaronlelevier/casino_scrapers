@@ -86,33 +86,57 @@ var RoleModel = Model.extend(NewMixin, {
     location_levels: Ember.computed(function() {
         let filter = (location_level) => {
             let role_pks = location_level.get('roles') || [];
-            if (Ember.$.inArray(this.get('id'), role_pks) > -1) { 
-                return true; 
-            }
-            return false;
+            return Ember.$.inArray(this.get('id'), role_pks) > -1;
         };
-        let store = this.get('store');
-        return store.find('location-level', filter.bind(this), ['roles']);
+        return this.get('store').find('location-level', filter.bind(this), ['roles']);
     }),
+    change_location_level(new_location_level_id) {
+        let role_id = this.get('id');
+        let store = this.get('store');
+        let old_location_level = this.get('location_level');
+        if(old_location_level) {
+            let old_roles = old_location_level.get('roles') || [];
+            let updated_old_roles = old_roles.filter((id) => {
+                return id !== role_id;
+            });
+            old_location_level.set('roles', updated_old_roles);
+        }
+        if(!new_location_level_id){
+            return;
+        } else{
+            let new_location_level = store.find('location-level', new_location_level_id);
+            let new_roles = new_location_level.get('roles') || [];
+            new_location_level.set('roles', new_roles.concat(role_id));
+        }
+    },
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'categoryIsDirty', function() {
         return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('categoryIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     locationLevelIsDirty: Ember.computed('location_levels.@each.isDirty', 'location_levels.[]', 'location_level_fk', function() {
-        let location_levels = this.get('location_levels');
-        let location_level = location_levels.objectAt(0);
-        if (location_level) { 
-            return location_level.get('isDirty'); 
-        } 
-        if (this.get('cleanupLocation')) {
-            this.set('cleanupLocation', false);
-            return false;
+        const location_level = this.get('location_level');
+        const location_level_fk = this.get('location_level_fk');
+        if(location_level) {
+            return location_level.get('id') === location_level_fk ? false : true;
         }
-        return this.get('location_level_fk') ? true : false;
+        if(!location_level && location_level_fk) {
+            return true;
+        }
+        // let location_levels = this.get('location_levels');
+        // let location_level = location_levels.objectAt(0);
+        // if (location_level) { 
+        //     //TODO: remove this! don't want to dirty role if location level is dirty
+        //     return location_level.get('isDirty'); 
+        // } 
+        // if (this.get('cleanupLocation')) {
+        //     this.set('cleanupLocation', false);
+        //     return false;
+        // }
+        // return this.get('location_level_fk') ? true : false;
     }),
     locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
     serialize() {
-        let location_level = this.get('location_level');
+        const location_level = this.get('location_level');
         let location_level_id;
         if (location_level) {
             location_level_id = location_level.get('id');
@@ -137,18 +161,13 @@ var RoleModel = Model.extend(NewMixin, {
         this.saveCategories();
     },
     saveLocationLevel() {
-        let location_level = this.get('location_level');
-        if (location_level) { 
-            location_level.save(); 
-            this.set('location_level_fk', location_level.get('id'));
-        } else {
-            this.set('location_level_fk', undefined);
-        }
+        const location_level = this.get('location_level');
+        this.set('location_level_fk', location_level ? location_level.get('id') : undefined);
     },
     saveCategories() {
-        let role_categories = this.get('role_categories');
-        let role_categories_ids = this.get('role_categories_ids');
-        let previous_m2m_fks = this.get('role_category_fks');
+        const role_categories = this.get('role_categories');
+        const role_categories_ids = this.get('role_categories_ids');
+        const previous_m2m_fks = this.get('role_category_fks');
         //add
         role_categories.forEach((join_model) => {
             if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
@@ -163,23 +182,9 @@ var RoleModel = Model.extend(NewMixin, {
         }
     },
     rollbackLocationLevel() {
-        let store = this.get('store');
-        let current_location_level = this.get('location_level');
-        if (current_location_level) {
-            let current_location_level_roles = current_location_level.get('roles');  
-            current_location_level.set('roles', current_location_level_roles.filter((old_location_level_pks) => {
-                return old_location_level_pks !== this.get('id');
-            }));
-        }
-        let location_level_fk = this.get('location_level_fk');
-        let new_location_level = store.find('location-level', location_level_fk);
-        if (new_location_level.get('id')) {
-            let loc_level_roles = new_location_level.get('roles') || [];
-            new_location_level.set('roles', loc_level_roles.concat([this.get('id')]));
-            new_location_level.save();
-        } else {
-            this.set('cleanupLocation', true);  
-        }
+        const location_level = this.get('location_level');
+        const location_level_fk = this.get('location_level_fk');
+        this.change_location_level(location_level_fk);
     },
     toString: function() {
         let name = this.get('name');

@@ -43,30 +43,3 @@ test('selecting a location level will append the location id to the new location
     assert.ok(location_level_two.get('isNotDirty'));
 });
 
-test('selecting a placeholder instead of legit role will not append the persons id to anything but still remove it from the previous role', function(assert) {
-    var location_level_two = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idTwo, name: LOCATION_LEVEL_DEFAULTS.nameCompany, locations: [LOCATION_DEFAULTS.unusedId]});
-    var location_level_one = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, locations: [LOCATION_DEFAULTS.idOne]});
-    var location = store.push('location', {id: LOCATION_DEFAULTS.idOne, location_level_fk: LOCATION_LEVEL_DEFAULTS.idOne});
-    var all_location_levels = store.find('location-level');
-    this.set('model', location);
-    this.set('all_location_levels', all_location_levels);
-    this.render(hbs`{{location-single model=model all_location_levels=all_location_levels}}`);
-    var $component = this.$('.t-location-level');
-    assert.equal(this.$('.t-location-level option:eq(0)').text(), 'Select One');
-    assert.equal(this.$('.t-location-level option:eq(1)').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
-    assert.equal(this.$('.t-location-level option:eq(2)').text(), LOCATION_LEVEL_DEFAULTS.nameDistrict);
-    assert.deepEqual(location.get('location_level').get('locations'), [LOCATION_DEFAULTS.idOne]);
-    assert.equal(location.get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(location.get('isNotDirty'));
-    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
-    this.$('.t-location-level').val('Select One').trigger('change');
-    assert.equal(location_level_two.get('locations.length'), 1);
-    assert.deepEqual(location_level_two.get('locations'), [LOCATION_DEFAULTS.unusedId]);
-    assert.deepEqual(location_level_one.get('locations'), []);
-    assert.equal(location.get('location_level'), undefined);
-    assert.equal(location.get('location_level_fk'), LOCATION_LEVEL_DEFAULTS.idOne);
-    assert.ok(location_level_one.get('isNotDirty'));
-    assert.ok(location_level_two.get('isNotDirty'));
-    assert.ok(location.get('isDirtyOrRelatedDirty'));
-    assert.ok(location.get('isNotDirty'));
-});

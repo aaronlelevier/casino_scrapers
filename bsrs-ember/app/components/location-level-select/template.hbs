@@ -1,6 +1,12 @@
-<select class="t-location-level form-control location_level" onchange={{action (action "changed" manyRelationshipModel) value="target.value"}} id="location_location_level_select">
-    <option>Select One</option>
-  {{#each options as |location_level|}}
-    <option value={{location_level.id}} selected={{is-equal model.id location_level.id}}>{{location_level.name}}</option>
-  {{/each}}
-</select>
+{{#power-select
+  class="t-location-level-select"
+  options=options
+  selected=selected
+  onchange=(action "selected")
+  searchEnabled=false
+  allowClear=true
+  placeholder="Select One"
+  as |location_level|
+}}
+  {{location_level.name}}
+{{/power-select}}
