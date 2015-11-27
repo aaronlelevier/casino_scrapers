@@ -17,19 +17,19 @@ const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-selec
 export default PageObject.create({
   visit: visitable('/'),
 
-  locationLevelInput: text(`${LOCATIONLEVEL}`),
-  locationLevelClickDropdown: clickable(`${LOCATIONLEVEL}`),
+  locationLevelInput: text(LOCATIONLEVEL),
+  locationLevelClickDropdown: clickable(LOCATIONLEVEL),
   locationLevelClickOptionOne: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameCompany})`),
   locationLevelClickOptionTwo: clickable(`${LOCATIONLEVEL_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameRegion})`),
 
-  roleTypeInput: text(`${ROLETYPE}`),
-  roleTypeClickDropdown: clickable(`${ROLETYPE}`),
+  roleTypeInput: text(ROLETYPE),
+  roleTypeClickDropdown: clickable(ROLETYPE),
   roleTypeClickOptionOne: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeGeneral})`),
   roleTypeClickOptionTwo: clickable(`${ROLETYPE_DROPDOWN} > .ember-power-select-option:contains(${RD.roleTypeContractor})`),
 
   // categoryInput: text(`${CATEGORY}`),
-  categoryClickDropdown: clickable(`${CATEGORY}`),
-  categorySelected: text(`${CATEGORY_ONE}`),
+  categoryClickDropdown: clickable(CATEGORY),
+  categorySelected: text(CATEGORY_ONE),
   categoryOneRemove: clickable(`${CATEGORY_ONE} > .ember-power-select-multiple-remove-btn`),
   // categoryTwoRemove: clickable(`${CATEGORY_TWO} > .ember-power-select-multiple-remove-btn`),
   // categoryTwoSelected: text(`${CATEGORY_TWO}`),
@@ -40,6 +40,6 @@ export default PageObject.create({
   categoryClickOptionThree: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CD.nameOne}3)`),
   categoryClickOptionScooter: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains('scooter')`),
   categoryOptionLength: count(`${CATEGORY_DROPDOWN} > li`),
-  categoriesSelected: count(`${CATEGORIES}`),
+  categoriesSelected: count(CATEGORIES),
   categoryTwoClickOptionOne: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CD.nameTwo})`),
 });

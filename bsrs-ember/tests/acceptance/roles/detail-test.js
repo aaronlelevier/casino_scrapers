@@ -372,6 +372,7 @@ test('can remove and save undefined location level', (assert) => {
         let role = store.find('role', RD.idOne); 
         assert.ok(!role.get('location_level'));
         assert.equal(role.get('location_level_fk'), LLD.idOne);
+        assert.ok(role.get('isDirtyOrRelatedDirty'));
     });
     let payload = RF.put({id: RD.idOne});
     payload.location_level = null;

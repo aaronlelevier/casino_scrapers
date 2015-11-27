@@ -5,16 +5,16 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import config from 'bsrs-ember/config/environment';
-import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location_level_fixtures';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import LLF from 'bsrs-ember/vendor/location_level_fixtures';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
-const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
-const DISTRICT_DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idDistrict;
+const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
+const DISTRICT_DETAIL_URL = BASE_URL + '/' + LLD.idDistrict;
 
 let application, store, endpoint, endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
 
@@ -22,9 +22,9 @@ module('Acceptance | detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
-        let location_list_data = LOCATION_LEVEL_FIXTURES.list();
-        let location_detail_data = LOCATION_LEVEL_FIXTURES.detail();
-        location_level_district_detail_data = LOCATION_LEVEL_FIXTURES.detail_district();
+        let location_list_data = LLF.list();
+        let location_detail_data = LLF.detail();
+        location_level_district_detail_data = LLF.detail_district();
         endpoint = PREFIX + BASE_URL + '/';
         endpoint_detail = PREFIX + DETAIL_URL + '/';
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
@@ -55,28 +55,28 @@ test('visiting admin/location-level', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         let location = store.find('location-level').objectAt(0);
         assert.ok(location.get('isNotDirty'));
-        assert.equal(find('.t-location-level-name').val(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(find('.t-location-level-name').val(), LLD.nameCompany);
     });
-    let response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idOne);
-    let payload = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameAnother, children: LOCATION_LEVEL_DEFAULTS.companyChildren});
+    let response = LLF.detail(LLD.idOne);
+    let payload = LLF.put({id: LLD.idOne, name: LLD.nameAnother, children: LLD.companyChildren});
     xhr(endpoint_detail, 'PUT', JSON.stringify(payload), {}, 200, response);
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameAnother);
+    fillIn('.t-location-level-name', LLD.nameAnother);
     andThen(() => {
-        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+        let location_level = store.find('location-level', LLD.idOne);
         assert.equal(location_level.get('children_fks').length, 7);
         assert.equal(location_level.get('children').get('length'), 7);
         assert.equal(find('.t-location-level-location-level-select > div.option').length, 0);
         assert.equal(find('.items > div.item').length, 7);
         assert.ok(location_level.get('isDirty'));
     });
-    let list = LOCATION_LEVEL_FIXTURES.list();
-    list.results[0].name = LOCATION_LEVEL_DEFAULTS.nameRegion;
+    let list = LLF.list();
+    list.results[0].name = LLD.nameRegion;
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
-        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
-        assert.equal(location_level.get('name'), LOCATION_LEVEL_DEFAULTS.nameRegion);
+        let location_level = store.find('location-level', LLD.idOne);
+        assert.equal(location_level.get('name'), LLD.nameRegion);
         assert.ok(location_level.get('isNotDirty'));
     });
 });
@@ -88,32 +88,32 @@ test('a location level child can be selected and persisted', (assert) => {
     visit(DISTRICT_DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DISTRICT_DETAIL_URL);
-        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
+        let location_level = store.find('location-level', LLD.idDistrict);
         assert.equal(location_level.get('children_fks').length, 2);
         assert.equal(location_level.get('children').get('length'), 2);
     });
-    let response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idDistrict);
-    response.name = LOCATION_LEVEL_DEFAULTS.nameDistrict;
-    let children = LOCATION_LEVEL_DEFAULTS.districtChildren;
-    children.unshift(LOCATION_LEVEL_FIXTURES.idOne);
-    let payload = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idDistrict, name: LOCATION_LEVEL_DEFAULTS.nameDistrict, children: children});
+    let response = LLF.detail(LLD.idDistrict);
+    response.name = LLD.nameDistrict;
+    let children = LLD.districtChildren;
+    children.unshift(LLF.idOne);
+    let payload = LLF.put({id: LLD.idDistrict, name: LLD.nameDistrict, children: children});
     xhr(PREFIX + DISTRICT_DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     click('.selectize-input input');
     click('.t-location-level-location-level-select div.option:eq(0)');
     andThen(() => {
-        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
+        let location_level = store.find('location-level', LLD.idDistrict);
         assert.equal(location_level.get('children_fks').length, 3);
         assert.equal(location_level.get('children').get('length'), 3);
         assert.equal(find('.selectize-dropdown-content > div.option').length, 4);
         assert.equal(find('.items > div.item').length, 3);
         assert.ok(location_level.get('isDirty'));
     });
-    let list = LOCATION_LEVEL_FIXTURES.list();
+    let list = LLF.list();
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
-        let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idDistrict);
+        let location_level = store.find('location-level', LLD.idDistrict);
         assert.ok(location_level.get('isNotDirty'));
     });
 });
@@ -126,17 +126,17 @@ test('when editing name to invalid, it checks for validation', (assert) => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
     });
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
+    fillIn('.t-location-level-name', LLD.nameRegion);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').is(':hidden'), false);
     });
-    let response = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idOne);
-    response.name = LOCATION_LEVEL_DEFAULTS.nameAnother;
-    let payload = LOCATION_LEVEL_FIXTURES.put({id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameAnother, children: LOCATION_LEVEL_DEFAULTS.companyChildren});
+    let response = LLF.detail(LLD.idOne);
+    response.name = LLD.nameAnother;
+    let payload = LLF.put({id: LLD.idOne, name: LLD.nameAnother, children: LLD.companyChildren});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameAnother);
+    fillIn('.t-location-level-name', LLD.nameAnother);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -161,7 +161,7 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
     clearxhr(list_xhr);
     visit(DETAIL_URL);
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
+    fillIn('.t-location-level-name', LLD.nameRegion);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -174,7 +174,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-location-name').val(), LOCATION_LEVEL_DEFAULTS.storeNameTwo);
+            assert.equal(find('.t-location-name').val(), LLD.storeNameTwo);
             assert.ok(generalPage.modalIsHidden());
         });
     });
@@ -182,7 +182,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameRegion);
+    fillIn('.t-location-level-name', LLD.nameRegion);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -194,8 +194,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_LEVEL_URL);
-            let location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
-            assert.equal(location_level.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+            let location_level = store.find('location-level', LLD.idOne);
+            assert.equal(location_level.get('name'), LLD.nameCompany);
         });
     });
 });
@@ -206,6 +206,6 @@ test('when click delete, location level is deleted and removed from store', (ass
     generalPage.delete();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
-        assert.equal(store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne).get('length'), undefined);
+        assert.equal(store.find('location-level', LLD.idOne).get('length'), undefined);
     });
 });
