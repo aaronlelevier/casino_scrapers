@@ -85,7 +85,7 @@ class WorkRequestTests(TestCase):
         self.request = WorkRequest.objects.get(id=self.request.id)
         self.assertEqual(self.request.status, 'draft')
 
-    def test_transition_condition(self):
+    def test_transition_condition_single__fail(self):
         self.assertTrue(can_proceed(self.request.draft))
 
         self.request.draft()
@@ -94,13 +94,42 @@ class WorkRequestTests(TestCase):
         self.assertRaises(TransitionNotAllowed, self.request.submit_request)
         self.assertTrue(can_proceed(self.request.submit_request,
                                     check_conditions=False))
+        self.assertEqual(self.request.status, 'draft')
 
-    # def test_transition_condition_multiple(self):
-    #     self.assertTrue(can_proceed(self.request.draft))
+    def test_transition_condition_single__success(self):
+        self.assertTrue(can_proceed(self.request.draft))
+        self.request.draft()
+        self.assertEqual(self.request.status, 'draft')
 
-    #     self.request.draft()
-    #     self.assertEqual(self.request.status, 'draft')
-    #     self.assertFalse(can_proceed(self.request.submit_request))
-    #     self.assertRaises(TransitionNotAllowed, self.request.submit_request)
-    #     self.assertTrue(can_proceed(self.request.submit_request,
-    #                                 check_conditions=False))
+        self.request.request = 'foo'
+        self.request.save()
+
+        self.assertTrue(can_proceed(self.request.submit_request))
+
+        self.request.submit_request()
+        self.request.save()
+        self.assertTrue(self.request.status, 'requested')
+
+    def test_transition_condition_multiple(self):
+        # 'draft' status
+        self.assertTrue(can_proceed(self.request.draft))
+        self.request.draft()
+        self.assertEqual(self.request.status, 'draft')
+
+        # 'requested' status
+        self.request.request = 'foo'
+        self.request.save()
+        self.request.submit_request()
+        self.assertTrue(self.request.status, 'requested')
+
+        # 'approved' status
+        self.assertFalse(can_proceed(self.request.approve_request))
+        self.assertRaises(TransitionNotAllowed, self.request.approve_request)
+
+        approver = create_single_person()
+        self.request.approver = approver
+        self.request.save()
+
+        self.assertTrue(can_proceed(self.request.approve_request))
+        self.request.approve_request()
+        self.assertEqual(self.request.status, 'approved')

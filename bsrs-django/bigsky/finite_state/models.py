@@ -22,6 +22,7 @@ class WorkRequestStatusEnum(object):
     IN_PROGRESS = "def11673-d4ab-41a6-a37f-0c6846b96008"
     UNSATISFACTORY_COMPLETION = "def11673-d4ab-41a6-a37f-0c6846b96009"
     REQUESTED = "def11673-d4ab-41a6-a37f-0c6846b96010"
+    APPROVED = "def11673-d4ab-41a6-a37f-0c6846b96011"
 
     @classmethod
     def to_dict(cls):
@@ -94,8 +95,8 @@ class WorkRequest(models.Model):
     def requested(self):
         return bool(self.request)
 
-    # def approved(self):
-        # return bool(self.approver)
+    def approved(self):
+        return bool(self.approver)
 
     @transition(field=status, source='new', target='draft')
     def draft(self):
@@ -104,4 +105,9 @@ class WorkRequest(models.Model):
     @transition(field=status, source='draft', target='requested',
         conditions=[requested])
     def submit_request(self):
+        pass
+
+    @transition(field=status, source='requested', target='approved',
+        conditions=[requested, approved])
+    def approve_request(self):
         pass
