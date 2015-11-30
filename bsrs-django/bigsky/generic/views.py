@@ -31,6 +31,16 @@ class SavedSearchViewSet(BaseModelViewSet):
 
 
 class AttachmentViewSet(BaseModelViewSet):
+    """
+    ## Detail Routes
+
+    **1. batch-delete:**
+
+       Batch delete Attachments. Send a `delete` request with a payload of
+       `{ids: [id1, id2, etc...]}`
+
+       URL: `/api/admin/attachments/batch-delete/`
+    """
 
     model = Attachment
     permission_classes = (IsAuthenticated,)
@@ -43,9 +53,7 @@ class AttachmentViewSet(BaseModelViewSet):
         if ids:
             for id in ids:
                 try:
-                    # import pdb;pdb.set_trace()
-                    a = Attachment.objects.get(id=id)
-                    a.delete(override=True)
+                    Attachment.objects.get(id=id).delete(override=True)
                 except Attachment.DoesNotExist:
                     pass
             return Response(status=status.HTTP_204_NO_CONTENT)

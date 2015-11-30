@@ -162,7 +162,7 @@ class Attachment(BaseModel):
 
     def delete(self, override=None, *args, **kwargs):
         """Remove file from file system."""
-        super(Attachment, self).delete(*args, **kwargs)
+        super(Attachment, self).delete(override, *args, **kwargs)
         if override:
             # Pass false so FileField doesn't save the model.
             self.file.delete(False)

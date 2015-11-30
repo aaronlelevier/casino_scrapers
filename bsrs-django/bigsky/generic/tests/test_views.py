@@ -239,37 +239,37 @@ class AttachmentTests(APITestCase):
             self.assertFalse(os.path.isfile(
                 os.path.join(settings.MEDIA_ROOT, str(file_object.file))))
 
-    # COMMENT OUT: in order to push up some other changes (this test is not yet passing)
-    # def test_batch_delete(self):
-    #     # create files
-    #     id = str(uuid.uuid4())
-    #     with open(self.file) as data:
-    #         post_data = {
-    #             'id': id,
-    #             'filename': self.file_filename,
-    #             'file': data
-    #         }
-    #         response = self.client.post("/api/admin/attachments/", post_data)
-    #         self.assertEqual(response.status_code, 201)
+    def test_batch_delete(self):
+        # create files
+        id = str(uuid.uuid4())
+        with open(self.file) as data:
+            post_data = {
+                'id': id,
+                'filename': self.file_filename,
+                'file': data
+            }
+            response = self.client.post("/api/admin/attachments/", post_data)
+            self.assertEqual(response.status_code, 201)
 
-    #     id2 = str(uuid.uuid4())
-    #     with open(self.file2) as data:
-    #         post_data = {
-    #             'id': id2,
-    #             'filename': self.file2_filename,
-    #             'file': data
-    #         }
-    #         response = self.client.post("/api/admin/attachments/", post_data)
-    #         self.assertEqual(response.status_code, 201)
+        id2 = str(uuid.uuid4())
+        with open(self.file2) as data:
+            post_data = {
+                'id': id2,
+                'filename': self.file2_filename,
+                'file': data
+            }
+            response = self.client.post("/api/admin/attachments/", post_data)
+            self.assertEqual(response.status_code, 201)
 
-    #     # batch delete
-    #     response = self.client.delete("/api/admin/attachments/batch-delete/",
-    #         {'ids': [id, id2]})
+        attachments = Attachment.objects.all()
 
-    #     self.assertEqual(response.status_code, 204)
-    #     self.assertFalse(Attachment.objects_all.filter(
-    #         id__in=[id, id2]).exists())
-    #     self.assertFalse(os.path.isfile(
-    #         os.path.join(settings.MEDIA_ROOT, str(file_object.file))))
-    #     self.assertFalse(os.path.isfile(
-    #         os.path.join(settings.MEDIA_ROOT, str(file_object.file2))))
+        # batch delete
+        response = self.client.delete("/api/admin/attachments/batch-delete/",
+            {'ids': [id, id2]}, format='json')
+
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(Attachment.objects_all.filter(
+            id__in=[id, id2]).exists())
+        for a in attachments:
+            self.assertFalse(os.path.isfile(
+                os.path.join(settings.MEDIA_ROOT, str(a.file))))
