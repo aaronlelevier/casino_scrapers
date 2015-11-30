@@ -350,6 +350,9 @@ class CategoryFilterTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], Category.objects.filter(parent__isnull=True).count())
         self.assertIn('results', data)
+        self.assertIn('parent', data['results'][0])
+        self.assertIn('children', data['results'][0])
+        self.assertIn('id', data['results'][0]['children'][0])
 
     def test_filter_by_parent(self):
         response = self.client.get('/api/admin/categories/?parent={}'.format(self.trade.id))
