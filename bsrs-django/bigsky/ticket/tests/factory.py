@@ -67,11 +67,20 @@ def create_tickets(_many=1):
     return [create_ticket() for x in range(_many)]
 
 
+TICKET_STATUS_BASE_ID = "def11673-d4ab-41a6-a37f-0c6846b96"
+
+
 def create_ticket_status(name=None):
+    incr = TicketStatus.objects.count()
+    id = generate_uuid(TICKET_STATUS_BASE_ID, incr+1)
+
     if not name:
         name = random.choice(TICKET_STATUSES)
 
-    obj, _ = TicketStatus.objects.get_or_create(name=name)
+    try:
+        obj = TicketStatus.objects.get(name=name)
+    except TicketStatus.DoesNotExist:
+        obj = TicketStatus.objects.create(id=id, name=name)
 
     return obj
 
@@ -80,11 +89,20 @@ def create_ticket_statuses():
     return [create_ticket_status(s) for s in TICKET_STATUSES]
 
 
+TICKET_PRIORITY_BASE_ID = "def21673-d4ab-41a6-a37f-0c6846b96"
+
+
 def create_ticket_priority(name=None):
+    incr = TicketPriority.objects.count()
+    id = generate_uuid(TICKET_PRIORITY_BASE_ID, incr+1)
+
     if not name:
         name = random.choice(TICKET_PRIORITIES)
 
-    obj, _ = TicketPriority.objects.get_or_create(name=name)
+    try:
+        obj = TicketPriority.objects.get(name=name)
+    except TicketPriority.DoesNotExist:
+        obj = TicketPriority.objects.create(id=id, name=name)
 
     return obj
 

@@ -37,6 +37,7 @@ LOCAL_APPS = (
     'accounting',
     'category',
     'contact',
+    'finite_state',
     'generic',
     'location',
     'order',
