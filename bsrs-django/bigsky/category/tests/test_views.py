@@ -69,8 +69,6 @@ class CategoryListTests(APITestCase):
         self.assertEqual(data['cost_amount'], str(category.cost_amount))
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
-        self.assertNotIn('parent', data['results'][0])
-        self.assertNotIn('children', data['results'][0])
 
 
 class CategoryDetailTests(APITestCase):
