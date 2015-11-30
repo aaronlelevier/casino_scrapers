@@ -5,7 +5,7 @@ import sys
 # python 3
 sys.path.append('/usr/local/bin/python3.4')
 sys.path.append('/usr/local/lib/python3.4/site-packages')
-sys.path.append('/home/bsdev/.virtualenvs/bs_py34/lib/python3.4/site-packages')
+sys.path.append('/var/www/deploy/bsrs/bsrs-django/venv/lib/python3.4/site-packages')
 
 # project
 sys.path.append('/var/www/deploy/bsrs/python3')

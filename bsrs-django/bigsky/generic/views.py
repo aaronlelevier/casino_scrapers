@@ -5,8 +5,11 @@ from django.core.exceptions import PermissionDenied
 from django.db.models.loading import get_model
 from django.http import HttpResponse
 
+from rest_framework import status
+from rest_framework.decorators import list_route
 from rest_framework.exceptions import ValidationError
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from generic.models import SavedSearch, Attachment
@@ -33,6 +36,21 @@ class AttachmentViewSet(BaseModelViewSet):
     permission_classes = (IsAuthenticated,)
     serializer_class = AttachmentSerializer
     queryset = Attachment.objects.all()
+
+    @list_route(methods=['delete'], url_path=r"batch-delete")
+    def batch_delete(self, request):
+        ids = request.data.get('ids', None)
+        if ids:
+            for id in ids:
+                try:
+                    # import pdb;pdb.set_trace()
+                    a = Attachment.objects.get(id=id)
+                    a.delete(override=True)
+                except Attachment.DoesNotExist:
+                    pass
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        else:
+            return Response(status=status.HTTP_200_OK)
 
 
 class ExportData(APIView):
