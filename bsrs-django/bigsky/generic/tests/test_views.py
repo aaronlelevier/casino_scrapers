@@ -78,7 +78,7 @@ class SavedSearchTests(APITestCase):
         self.assertEqual(data['endpoint_name'], self.saved_search.endpoint_name)
         self.assertEqual(data['endpoint_uri'], self.saved_search.endpoint_uri)
 
-#     ### util.UniqueForActiveValidator - two key tests
+    ### util.UniqueForActiveValidator - two key tests
 
     def test_unique_for_active_two_keys(self):
         serializer = SavedSearchSerializer(self.saved_search)
@@ -209,3 +209,29 @@ class AttachmentTests(APITestCase):
             "/".join([settings.IMAGE_FULL_SUB_PATH, simple_png.name]),
             str(attachment.image_full)
         )
+
+    def test_delete_file(self):
+        # intial create
+        id = str(uuid.uuid4())
+        with open(self.file) as data:
+            post_data = {
+                'id': id,
+                'filename': self.file_filename,
+                'file': data
+            }
+
+            response = self.client.post("/api/admin/attachments/", post_data)
+
+            file_object = Attachment.objects.get(id=id)
+            self.assertEqual(response.status_code, 201)
+            self.assertTrue(os.path.isfile(
+                os.path.join(settings.MEDIA_ROOT, str(file_object.file))))
+
+            # delete - record and file from 'file system'
+            response = self.client.delete(
+                "/api/admin/attachments/{}/".format(id),
+                {'override': True}
+            )
+            self.assertEqual(response.status_code, 204)
+            self.assertFalse(os.path.isfile(
+                os.path.join(settings.MEDIA_ROOT, str(file_object.file))))

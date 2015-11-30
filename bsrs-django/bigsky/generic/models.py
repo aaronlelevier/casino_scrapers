@@ -160,6 +160,13 @@ class Attachment(BaseModel):
 
         super(Attachment, self).save(*args, **kwargs)
 
+    def delete(self, override=None, *args, **kwargs):
+        """Remove file from file system."""
+        super(Attachment, self).delete(*args, **kwargs)
+        if override:
+            # Pass false so FileField doesn't save the model.
+            self.file.delete(False)
+
     # NOT IN USE: currently b/c PIL either doesn't work on Jenkins,
     # or the configuration is incorrect.  Still TBD
     # def save_alt_image(self, location, size):
