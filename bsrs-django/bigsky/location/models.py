@@ -146,6 +146,10 @@ class LocationStatus(BaseNameModel):
     
     objects = LocationStatusManager()
 
+    def to_dict(self):
+        default = True if LocationStatus.objects.default().name == self.name else False
+        return {"id": str(self.pk), "name": self.name, "default": default}
+
 
 ### LOCATION TYPE
 

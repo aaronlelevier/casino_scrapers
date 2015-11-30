@@ -113,6 +113,7 @@ class ConfigurationTests(TestCase):
         self.phone_number_types = mommy.make(PhoneNumberType)
         self.location_levels = mommy.make(LocationLevel)
         self.location_statuses = mommy.make(LocationStatus)
+        mommy.make(LocationStatus, name=settings.DEFAULT_LOCATION_STATUS)
         self.person_status = mommy.make(PersonStatus)
         self.ticket_status = mommy.make(TicketStatus)
         self.ticket_priority = mommy.make(TicketPriority)
@@ -200,6 +201,8 @@ class ConfigurationTests(TestCase):
     def test_location_status(self):
         configuration = json.loads(self.response.context['location_status_config'])
         self.assertTrue(len(configuration) > 0)
+        self.assertFalse(configuration[0]['default'])
+        self.assertTrue(configuration[1]['default'])
 
     def test_locales(self):
         configuration = json.loads(self.response.context['locales'])
