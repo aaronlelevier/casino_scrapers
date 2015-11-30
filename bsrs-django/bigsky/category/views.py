@@ -47,6 +47,7 @@ class CategoryViewSet(BaseModelViewSet):
 
     @list_route(methods=['GET'])
     def parents(self, request):
-        queryset = Category.objects.filter(parent__isnull=True)
-        serializer = cs.CategoryParentSerializer(queryset, many=True)
-        return Response(serializer.data)
+        categories = Category.objects.filter(parent__isnull=True)
+        page = self.paginate_queryset(categories)
+        serializer = self.get_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
