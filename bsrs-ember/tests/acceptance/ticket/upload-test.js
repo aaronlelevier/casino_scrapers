@@ -249,6 +249,7 @@ test('user cannot delete uploaded attachment that is associated with a ticket', 
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(PROGRESS_BAR).length, 1);
         assert.equal(find('.t-remove-attachment').length, 0);
     });
 });
