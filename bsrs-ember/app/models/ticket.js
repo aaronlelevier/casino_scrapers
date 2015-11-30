@@ -110,6 +110,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
     },
     saveAttachments() {
         this.set('previous_attachments_fks', this.get('ticket_attachments_fks'));
+        this.get('attachments').forEach(function(attachment) {
+            attachment.save();
+        });
     },
     savePriority() {
         let priority = this.get('priority');

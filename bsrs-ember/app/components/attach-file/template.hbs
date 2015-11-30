@@ -2,7 +2,7 @@
 {{#each model.attachments as |attachment|}}
   {{#if attachment.local}}
     <div class="progress active" role="progressbar" aria-valuemin="100" aria-valuemax="100" aria-valuenow="0">
-      <div class="progress-bar-success progress-bar" style={{attachment.progress}}>Upload Progress: {{attachment.percent}}%</div>
+      <div class="progress-bar-success progress-bar" style={{attachment.progress}}>Upload Progress: {{attachment.percent}}% {{#if attachment.new}}<i class="fa fa-minus-circle t-remove-attachment" aria-hidden="true" {{action "removeAttachment" attachment.id}}></i>{{/if}}</div>
     </div>
   {{/if}}
 {{/each}}
