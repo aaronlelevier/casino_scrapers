@@ -236,7 +236,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     '''
     # keys
     location_level = models.ForeignKey(LocationLevel, related_name='locations')
-    status = models.ForeignKey(LocationStatus, related_name='locations', blank=False, null=False)
+    status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True)
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
     phone_numbers = GenericRelation(PhoneNumber)
     addresses = GenericRelation(Address)
