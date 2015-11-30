@@ -37,7 +37,6 @@ LOCAL_APPS = (
     'accounting',
     'category',
     'contact',
-    'finite_state',
     'generic',
     'location',
     'order',
@@ -46,6 +45,7 @@ LOCAL_APPS = (
     'third_party',
     'ticket',
     'translation',
+    'work_request',
     'utils',
     )
 

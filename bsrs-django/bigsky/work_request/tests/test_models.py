@@ -2,7 +2,7 @@ from django.test import TestCase
 
 from django_fsm import can_proceed, TransitionNotAllowed
 
-from finite_state.models import (WorkRequestStatusEnum, WorkRequestStatus,
+from work_request.models import (WorkRequestStatusEnum, WorkRequestStatus,
     WorkRequest)
 from person.tests.factory import create_single_person
 
