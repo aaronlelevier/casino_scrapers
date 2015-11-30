@@ -42,7 +42,7 @@ class CategoryListTests(APITestCase):
         self.assertFalse(self.top_level.parent)
         self.assertTrue(self.top_level.children)
 
-    def test_has_children(self):
+    def test_list_endpoint_returns_data_including_id(self):
         Category.objects.all().delete()
         create_categories(_many=1)
         first = Category.objects.filter(name="repair").first()
@@ -69,6 +69,8 @@ class CategoryListTests(APITestCase):
         self.assertEqual(data['cost_amount'], str(category.cost_amount))
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
+        self.assertNotIn('parent', data['results'][0])
+        self.assertNotIn('children', data['results'][0])
 
 
 class CategoryDetailTests(APITestCase):
