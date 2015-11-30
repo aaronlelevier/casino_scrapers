@@ -80,15 +80,31 @@ test('visiting role/new', (assert) => {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-    let response = Ember.$.extend(true, {}, payload);
-    payload.location_level = null;
-    xhr(url, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(ROLE_URL);
     click('.t-add-new');
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+    });
+    generalPage.save();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':visible'));
+        assert.ok(find('.t-location-level-validation-error').is(':visible'));
     });
     fillIn('.t-role-name', RD.nameOne);
+    generalPage.save();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':visible'));
+    });
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionOne();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+    });
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(url, 'POST', JSON.stringify(payload), {}, 201, response);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

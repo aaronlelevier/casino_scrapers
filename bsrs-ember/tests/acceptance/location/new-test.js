@@ -48,8 +48,6 @@ module('Acceptance | location-new', {
 });
 
 test('visiting /location/new', (assert) => {
-    let response = Ember.$.extend(true, {}, payload);
-    xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_URL);
     click('.t-add-new');
     andThen(() => {
@@ -66,6 +64,8 @@ test('visiting /location/new', (assert) => {
     andThen(() => {
         assert.equal(page.locationLevelInput().split(' +')[0].split(' ')[0], LLD.nameCompany);
     });
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
@@ -81,29 +81,42 @@ test('visiting /location/new', (assert) => {
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
-    let response = Ember.$.extend(true, {}, payload);
-    xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     visit(LOCATION_URL);
     click('.t-add-new');
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-number-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':hidden'));
     });
     generalPage.save();
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':visible'));
         assert.ok(find('.t-number-validation-error').is(':visible'));
+        assert.ok(find('.t-location-level-validation-error').is(':visible'));
     });
     fillIn('.t-location-name', LD.storeName);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_NEW_URL);
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-number-validation-error').is(':visible'));
+        assert.ok(find('.t-location-level-validation-error').is(':visible'));
     });
-    fillIn('.t-location-name', LD.storeName);
     fillIn('.t-location-number', LD.storeNumber);
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-number-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':visible'));
+    });
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-number-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+    });
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, response);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);

@@ -8,6 +8,7 @@ var LocationsNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, Valida
     repository: inject('location'),
     nameValidation: validate('model.name'),
     numberValidation: validate('model.number'),
+    locationLevelValidation: validate('model.location_level'),
     actions: {
         save() {
             this.set('submitted', true);

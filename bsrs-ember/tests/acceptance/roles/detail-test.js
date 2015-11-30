@@ -363,22 +363,3 @@ test('clicking and typing into power select for categories will not filter if sp
         assert.equal(currentURL(), ROLE_URL);
     });
 });
-
-/* ROLE TO LOCATION LEVEL */
-test('can remove and save undefined location level', (assert) => {
-    visit(DETAIL_URL);
-    click(LOCATIONLEVELCLEAR);
-    andThen(() => {
-        let role = store.find('role', RD.idOne); 
-        assert.ok(!role.get('location_level'));
-        assert.equal(role.get('location_level_fk'), LLD.idOne);
-        assert.ok(role.get('isDirtyOrRelatedDirty'));
-    });
-    let payload = RF.put({id: RD.idOne});
-    payload.location_level = null;
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-    });
-});

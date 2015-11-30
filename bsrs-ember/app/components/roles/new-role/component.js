@@ -7,6 +7,7 @@ import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/vali
 var RoleNew = Ember.Component.extend(TabMixin, NewTabMixin, ValidationMixin, {
     repository: inject('role'),
     nameValidation: validate('model.name'),
+    locationLevelValidation: validate('model.location_level'),
     actions: {
         changed(model, val) {
             Ember.run(() => {
