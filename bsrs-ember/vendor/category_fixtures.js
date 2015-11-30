@@ -20,6 +20,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
             cost_code: this.category_defaults.costCodeOne,
             label: this.category_defaults.labelOne,
             subcategory_label: this.category_defaults.subCatLabelOne,
+            //TODO: remove this
             parent: null
             // status: this.category_defaults.statusOne
         }
@@ -50,6 +51,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
             var category = this.generate(uuid);
             category.name += i;
             category.label += i;
+            delete category.parent;
             response.push(category);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component

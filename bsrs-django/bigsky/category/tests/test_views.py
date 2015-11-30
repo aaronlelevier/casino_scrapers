@@ -70,42 +70,6 @@ class CategoryListTests(APITestCase):
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
 
-    def test_data_parent(self):
-        response = self.client.get('/api/admin/categories/')
-
-        # data
-        data = json.loads(response.content.decode('utf8'))
-        data = data['results'][0]
-        # db object
-        category = Category.objects.get(id=data['id'])
-
-        self.assertIsInstance(data['parent'], dict)
-        self.assertEqual(data['parent']['id'], str(category.parent.id))
-        self.assertEqual(data['parent']['name'], str(category.parent.name))
-        self.assertIn('parent', data['parent'])
-        self.assertIn('children_fks', data['parent'])
-        self.assertNotIn('children', data['parent'])
-        self.assertIsInstance(data['parent']['children_fks'], list)
-
-    def test_data_children(self):
-        response = self.client.get('/api/admin/categories/?page_size=999')
-
-        # data
-        data = json.loads(response.content.decode('utf8'))
-        data = data['results'][-3]
-        # db object
-        category = Category.objects.get(id=data['id'])
-
-        self.assertIsInstance(data['children'], list)
-        child = data['children'][0]
-        self.assertIsInstance(child, dict)
-        self.assertEqual(child['id'], str(category.children.first().id))
-        self.assertEqual(child['name'], category.children.first().name)
-        self.assertIn('parent', child)
-        self.assertIn('children_fks', child)
-        self.assertNotIn('children', child)
-        self.assertIsInstance(child['children_fks'], list)
-
 
 class CategoryDetailTests(APITestCase):
 
@@ -382,9 +346,10 @@ class CategoryFilterTests(APITestCase):
         self.client.logout()
 
     def test_filter_top_level(self):
-        response = self.client.get('/api/admin/categories/?parent__isnull=True')
+        response = self.client.get('/api/admin/categories/parents/')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['count'], Category.objects.filter(parent__isnull=True).count())
+        self.assertIn('results', data)
 
     def test_filter_by_parent(self):
         response = self.client.get('/api/admin/categories/?parent={}'.format(self.trade.id))

@@ -28,8 +28,9 @@ const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
+const LOCATIONLEVELCLEAR = '.t-location-level-select > .ember-power-select-trigger > .ember-power-select-clear-btn';
 
-let application, store, list_xhr, endpoint, detail_data;
+let application, store, list_xhr, endpoint, detail_data, url;
 
 module('Acceptance | role-detail', {
     beforeEach() {
@@ -39,6 +40,7 @@ module('Acceptance | role-detail', {
         detail_data = RF.detail(RD.idOne);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.list());
         xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
+        url = `${PREFIX}${DETAIL_URL}/`;
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -64,19 +66,19 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         let role = store.find('role').objectAt(0);  
         assert.ok(role.get('isNotDirty'));
         assert.equal(role.get('location_level').get('id'), LLD.idOne);
-        assert.equal(find('.t-role-name').val(), RD.nameOne);
-        assert.equal(find('.t-role-role-type').val(), RD.roleTypeGeneral);
+        assert.equal(page.roleTypeInput(), RD.roleTypeGeneral);
         assert.equal(page.categorySelected().indexOf(CD.nameOne), 2);
-        assert.equal(find('.t-location-level').val(), LLD.idOne);
+        assert.equal(page.locationLevelInput().split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
     });
-    let url = PREFIX + DETAIL_URL + '/';
     let response = RF.detail(RD.idOne);
-    let location_level = LLF.put({id: LLD.idTwo, name: LLD.nameRegion});
+    let location_level = LLF.put({id: LLD.idThree, name: LLD.nameRegion});
     let payload = RF.put({id: RD.idOne, name: RD.namePut, role_type: RD.roleTypeContractor, location_level: location_level.id, categories: [CD.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-role-name', RD.namePut);
-    fillIn('.t-role-role-type', RD.roleTypeContractor);
-    fillIn('.t-location-level', RD.locationLevelTwo);
+    page.roleTypeClickDropdown();
+    page.roleTypeClickOptionTwo();
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionTwo();
     andThen(() => {
         let role = store.find('role').objectAt(0);  
         assert.ok(role.get('isDirty'));
@@ -84,7 +86,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     let list = RF.list();
     list.results[0].name = RD.namePut;
     list.results[0].role_type = RD.roleTypeContractor;
-    list.results[0].location_level = RD.locationLevelTwo;
+    list.results[0].location_level = LLD.idThree;
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     generalPage.save();
     andThen(() => {
@@ -96,7 +98,6 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
 
 test('when you change a related location level it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
-    let url = PREFIX + DETAIL_URL + '/';
     let location_level = LLF.put({id: LLD.idOne, name: LLD.nameRegion});
     let payload = RF.put({id: RD.idOne, location_level: location_level.id});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
@@ -146,7 +147,8 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-role-name', RD.nameTwo);
-    fillIn('.t-location-level', LLD.idDistrict);
+    page.locationLevelClickDropdown(); 
+    page.locationLevelClickOptionTwo(); 
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -185,7 +187,7 @@ test('clicking and typing into power select for categories will fire off xhr req
     let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(`${CATEGORY_SEARCH}`, 'a');
+    fillIn(CATEGORY_SEARCH, 'a');
     andThen(() => {
         assert.equal(page.categoryOptionLength(), 10); 
         assert.equal(page.categoriesSelected(), 1);
@@ -201,7 +203,6 @@ test('clicking and typing into power select for categories will fire off xhr req
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 2);
     });
-    let url = PREFIX + DETAIL_URL + '/';
     let category = CF.put({id: CD.idOne, name: CD.nameOne});
     let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [category.id, CD.idThree]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
@@ -223,7 +224,7 @@ test('can remove and add back same category', (assert) => {
     let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(`${CATEGORY_SEARCH}`, 'repair');
+    fillIn(CATEGORY_SEARCH, 'repair');
     page.categoryClickOptionTwo();
     andThen(() => {
         let role = store.find('role', RD.idOne);
@@ -235,7 +236,6 @@ test('can remove and add back same category', (assert) => {
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 1);
     });
-    let url = PREFIX + DETAIL_URL + '/';
     let payload = RF.put({id: RD.idOne, categories: [CD.idTwo]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
@@ -260,7 +260,6 @@ test('removing a category in selectize for categories will save correctly and cl
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 0);
     });
-    let url = PREFIX + DETAIL_URL + '/';
     let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: []});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
@@ -286,7 +285,7 @@ test('starting with multiple categories, can remove all categories (while not po
     let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(`${CATEGORY_SEARCH}`, 'repair1');
+    fillIn(CATEGORY_SEARCH, 'repair1');
     andThen(() => {
         let role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 2);
@@ -302,7 +301,6 @@ test('starting with multiple categories, can remove all categories (while not po
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 1);
     });
-    let url = PREFIX + DETAIL_URL + '/';
     let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
@@ -328,7 +326,7 @@ test('search will filter down on categories in store correctly by removing and a
     let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(`${CATEGORY_SEARCH}`, 'repair1');
+    fillIn(CATEGORY_SEARCH, 'repair1');
     andThen(() => {
         assert.equal(page.categoryOptionLength(), 2);
     });
@@ -340,7 +338,6 @@ test('search will filter down on categories in store correctly by removing and a
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 2);
     });
-    let url = PREFIX + DETAIL_URL + '/';
     let payload = RF.put({id: RD.idOne, categories: [CD.idOne, 'abc123']});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
@@ -352,16 +349,34 @@ test('search will filter down on categories in store correctly by removing and a
 test('clicking and typing into power select for categories will not filter if spacebar pressed', (assert) => {
     visit(DETAIL_URL);
     page.categoryClickDropdown();
-    fillIn(`${CATEGORY_SEARCH}`, ' ');
+    fillIn(CATEGORY_SEARCH, ' ');
     andThen(() => {
         assert.equal(page.categoriesSelected(), 1);
         assert.equal(page.categoryOptionLength(), 1);
         assert.equal(find(`${CATEGORY_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.no_results);
     });
-    let url = PREFIX + DETAIL_URL + '/';
     let response = RF.detail(RD.idOne);
     let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
+
+/* ROLE TO LOCATION LEVEL */
+test('can remove and save undefined location level', (assert) => {
+    visit(DETAIL_URL);
+    click(LOCATIONLEVELCLEAR);
+    andThen(() => {
+        let role = store.find('role', RD.idOne); 
+        assert.ok(!role.get('location_level'));
+        assert.equal(role.get('location_level_fk'), LLD.idOne);
+        assert.ok(role.get('isDirtyOrRelatedDirty'));
+    });
+    let payload = RF.put({id: RD.idOne});
+    payload.location_level = null;
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, {});
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);

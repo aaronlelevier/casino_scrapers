@@ -38,7 +38,7 @@ module('Acceptance | tab ticket test', {
         endpoint = PREFIX + BASE_TICKET_URL + '/';
         ticket_detail_data = TF.detail(TD.idOne);
         detail_xhr = xhr(endpoint + TD.idOne + '/', 'GET', null, {}, 200, ticket_detail_data);
-        let top_level_categories_endpoint = PREFIX + '/admin/categories/?parent__isnull=True';
+        let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
         xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
         activity_one = xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
         original_uuid = random.uuid;

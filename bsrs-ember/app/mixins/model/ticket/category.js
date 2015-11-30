@@ -3,7 +3,7 @@ import Ember from 'ember';
 var CategoriesMixin = Ember.Mixin.create({
     construct_category_tree(category, child_nodes=[]) {
         child_nodes.push(category);
-        const children = category ? category.get('children') : [];
+        const children = category ? category.get('has_many_children') : [];
         if(children.get('length') === 0) {
             return;
         }
@@ -143,21 +143,6 @@ var CategoriesMixin = Ember.Mixin.create({
             });
         });
         this.set('ticket_categories_fks', saved_m2m_pks);
-        // let ticket_categories = this.get('ticket_categories');
-        // let ticket_categories_ids = this.get('ticket_categories_ids') || [];
-        // let previous_m2m_fks = this.get('ticket_categories_fks') || [];
-        // //add
-        // ticket_categories.forEach((join_model) => {
-        //     if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
-        //         previous_m2m_fks.pushObject(join_model.get('id'));
-        //     } 
-        // });
-        // //remove
-        // for (let i=previous_m2m_fks.length-1; i>=0; --i) {
-        //     if (Ember.$.inArray(previous_m2m_fks[i], ticket_categories_ids) === -1) {
-        //         previous_m2m_fks.removeObject(previous_m2m_fks[i]);
-        //     } 
-        // }
     },
 });
 

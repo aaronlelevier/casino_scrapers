@@ -21,7 +21,9 @@ test('location level correctly deserialized if has children and new one comes in
     json.children = [LOCATION_LEVEL_DEFAULTS.idTwo];
     subject.deserialize(json, LOCATION_LEVEL_DEFAULTS.idOne);
     assert.equal(location_level.get('children').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
+    assert.equal(location_level.get('children_fks').length, 1);
     assert.equal(location_level_two.get('children.length'), 0);
+    assert.ok(!location_level_two.get('children_fks'));
 });
 
 test('location level correctly deserialized if has no children and new one comes in the store w/ children (detail)', (assert) => {
@@ -32,7 +34,9 @@ test('location level correctly deserialized if has no children and new one comes
     json.children = [LOCATION_LEVEL_DEFAULTS.idTwo];
     subject.deserialize(json, LOCATION_LEVEL_DEFAULTS.idOne);
     assert.equal(location_level.get('children').objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idTwo);
+    assert.equal(location_level.get('children_fks').length, 1);
     assert.equal(location_level_two.get('children.length'), 0);
+    assert.ok(!location_level_two.get('children_fks'));
 });
 
 test('location level correctly deserialized if has no children and new one comes in the store w/ no children (detail)', (assert) => {
@@ -52,7 +56,9 @@ test('location level correctly deserialized if has no children and store locatio
     let json = LOCATION_LEVEL_FIXTURES.generate(LOCATION_LEVEL_DEFAULTS.idOne);
     subject.deserialize(json, LOCATION_LEVEL_DEFAULTS.idOne);
     assert.equal(location_level.get('children.length'), 0);
+    assert.deepEqual(location_level.get('children_fks'), []);
     assert.equal(location_level_two.get('children.length'), 0);
+    assert.ok(!location_level_two.get('children_fks'));
 });
 
 test('location level updates children_fks array when new location level is pushed into store', (assert) => {

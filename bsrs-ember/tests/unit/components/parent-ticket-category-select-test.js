@@ -41,9 +41,9 @@ test('component is not valid when the only category (on the ticket model) has ch
         ticket.change_category_tree(category_one.get('id'));
     });
     assert.equal(ticket.get('categories').get('length'), 3);
-    assert.equal(category_three.get('children').get('length'), 1);
-    assert.equal(category_two.get('children').get('length'), 1);
-    assert.equal(category_one.get('children').get('length'), 0);
+    assert.equal(category_three.get('has_many_children').get('length'), 1);
+    assert.equal(category_two.get('has_many_children').get('length'), 1);
+    assert.equal(category_one.get('has_many_children').get('length'), 0);
     valid = subject.get('valid');
     assert.equal(valid, true);
 });

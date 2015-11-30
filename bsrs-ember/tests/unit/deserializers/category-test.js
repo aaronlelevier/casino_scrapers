@@ -38,18 +38,6 @@ test('category deserializer returns correct data with no existing category (list
     assert.ok(categories.objectAt(1).get('isNotDirty'), false);
 });
 
-test('category deserializer returns correct data (w/ children) with no existing category (list)', (assert) => {
-    let json = CF.generate(CD.idOne);
-    json.children = CF.children();
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    subject.deserialize(response);
-    assert.deepEqual(store.find('category', CD.idOne).get('children_fks'), [CD.idChild]);
-    let categories = store.find('category');
-    assert.equal(categories.get('length'), 2);
-    assert.ok(categories.objectAt(0).get('isNotDirty'), false);
-    assert.ok(categories.objectAt(1).get('isNotDirty'), false);
-});
-
 test('category deserializer returns correct data (w/ children) with no existing category (detail)', (assert) => {
     let json = CF.generate(CD.idOne);
     json.children = CF.children();
@@ -59,18 +47,6 @@ test('category deserializer returns correct data (w/ children) with no existing 
     assert.equal(categories.get('length'), 2);
     assert.ok(categories.objectAt(0).get('isNotDirty'), false);
     assert.ok(categories.objectAt(1).get('isNotDirty'), false);
-});
-
-test('category deserialized with null parent returns correct model with one without related parent record and one with (list)', (assert) => {
-    let json = [CF.generate(CD.idOne), CF.generate(CD.unusedId)];
-    json[0].parent = null;
-    json[1].parent = {id: CD.idOne};
-    let response = {'count':2,'next':null,'previous':null,'results': json};
-    subject.deserialize(response);
-    let categories = store.find('category');
-    assert.equal(categories.get('length'), 2);
-    assert.deepEqual(categories.objectAt(0).get('parent'), undefined);
-    assert.deepEqual(categories.objectAt(1).get('parent').get('id'), CD.idOne);
 });
 
 test('category deserialized with null parent returns correct model with no related parent record (detail)', (assert) => {
@@ -84,24 +60,10 @@ test('category deserialized with null parent returns correct model with no relat
 
 test('category deserializer returns correct data with existing category and different children (detail)', (assert) => {
     let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
-                              label: CD.labelOne, children:[{id: CD.idTwo, name: CD.nameTwo, children: []}]});
+                              label: CD.labelOne, has_many_children:[{id: CD.idTwo, name: CD.nameTwo, children: []}], children_fks: [CD.idTwo], previous_children_fks: [CD.idTwo]});
     let json = CF.generate(CD.idOne);
     json.children = CF.children();
     subject.deserialize(json, CD.idOne);
-    assert.deepEqual(store.find('category', CD.idOne).get('children_fks'), [CD.idChild]);
-    let categories = store.find('category');
-    assert.equal(categories.get('length'), 2);
-    assert.ok(categories.objectAt(0).get('isNotDirty'), false);
-    assert.ok(categories.objectAt(1).get('isNotDirty'), false);
-});
-
-test('category deserializer returns correct data with existing category and different children (list)', (assert) => {
-    let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
-                              label: CD.labelOne, children:[{id: CD.idTwo, name: CD.nameTwo, children: []}]});
-    let json = CF.generate(CD.idOne);
-    json.children = CF.children();
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    subject.deserialize(response);
     assert.deepEqual(store.find('category', CD.idOne).get('children_fks'), [CD.idChild]);
     let categories = store.find('category');
     assert.equal(categories.get('length'), 2);
@@ -111,24 +73,10 @@ test('category deserializer returns correct data with existing category and diff
 
 test('category deserializer returns correct data with existing category and same children (detail)', (assert) => {
     let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
-                              label: CD.labelOne, children:[{id: CD.idChild, name: CD.nameThree, children: []}]});
+                              label: CD.labelOne, has_many_children:[{id: CD.idChild, name: CD.nameThree, children: []}], children_fks: [CD.idChild], previous_children_fks: [CD.idChild]});
     let json = CF.generate(CD.idOne);
     json.children = CF.children();
     subject.deserialize(json, CD.idOne);
-    assert.deepEqual(store.find('category', CD.idOne).get('children_fks'), [CD.idChild]);
-    let categories = store.find('category');
-    assert.equal(categories.get('length'), 2);
-    assert.ok(categories.objectAt(0).get('isNotDirty'), false);
-    assert.ok(categories.objectAt(1).get('isNotDirty'), false);
-});
-
-test('category deserializer returns correct data with existing category and same children (list)', (assert) => {
-    let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
-                              label: CD.labelOne, children:[{id: CD.idChild, name: CD.nameThree, children: []}]});
-    let json = CF.generate(CD.idOne);
-    json.children = CF.children();
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    subject.deserialize(response);
     assert.deepEqual(store.find('category', CD.idOne).get('children_fks'), [CD.idChild]);
     let categories = store.find('category');
     assert.equal(categories.get('length'), 2);
@@ -138,7 +86,7 @@ test('category deserializer returns correct data with existing category and same
 
 test('category deserializer returns correct data with existing category that has no children (detail)', (assert) => {
     let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
-                              label: CD.labelOne, children:[{id: CD.idChild, name: CD.nameThree, children: []}]});
+                              label: CD.labelOne, has_many_children:[{id: CD.idChild, name: CD.nameThree, children: []}]});
     let json = CF.generate(CD.idOne);
     json.children = [];
     subject.deserialize(json, CD.idOne);
@@ -148,15 +96,31 @@ test('category deserializer returns correct data with existing category that has
     assert.ok(categories.objectAt(0).get('isNotDirty'), false);
 });
 
-test('category deserializer returns correct data with existing category and same children (list)', (assert) => {
+test('deserializer correctly sets previous_children_fks', (assert) => {
     let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
-                              label: CD.labelOne, children:[{id: CD.idChild, name: CD.nameThree, children: []}]});
+                              label: CD.labelOne, has_many_children:[{id: CD.idChild, name: CD.nameThree, children: []}], children_fks: [CD.idChild], previous_children_fks: [CD.idChild]});
     let json = CF.generate(CD.idOne);
-    json.children = [];
-    let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    subject.deserialize(response);
-    assert.deepEqual(store.find('category', CD.idOne).get('children_fks'), []);
-    let categories = store.find('category');
-    assert.equal(categories.get('length'), 1);
-    assert.ok(categories.objectAt(0).get('isNotDirty'), false);
+    json.children = CF.children();
+    subject.deserialize(json, CD.idOne);
+    assert.deepEqual(category.get('previous_children_fks'), [CD.idChild]);
+    assert.ok(category.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('deserializer correctly sets previous_children_fks with no children to start', (assert) => {
+    let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
+                              label: CD.labelOne, has_many_children:[]});
+    let json = CF.generate(CD.idOne);
+    json.children = CF.children();
+    subject.deserialize(json, CD.idOne);
+    assert.deepEqual(category.get('previous_children_fks'), [CD.idChild]);
+});
+
+test('deserializer correctly sets previous_children_fks with different array to start', (assert) => {
+    let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
+                              label: CD.labelOne, has_many_children:[{id: CD.idTwo, name: CD.nameThree, children: []}], previous_children_fks: [CD.idTwo], children_fks: [CD.idTwo]});
+    let json = CF.generate(CD.idOne);
+    json.children = CF.children();
+    subject.deserialize(json, CD.idOne);
+    category = store.find('category', CD.idOne);
+    assert.deepEqual(category.get('previous_children_fks'), [CD.idChild]);
 });

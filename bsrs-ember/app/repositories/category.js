@@ -21,11 +21,13 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
     insert(model) {
         return PromiseMixin.xhr(CATEGORY_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });
     },
     update(model) {
         return PromiseMixin.xhr(CATEGORY_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });   
     },
     findCategoryChildren(search) {
@@ -44,9 +46,11 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
         }
     },
     findTopLevelCategories() {
-        let url = CATEGORY_URL + '?parent__isnull=True';
+        let url = CATEGORY_URL + 'parents/';
         PromiseMixin.xhr(url, 'GET').then((response) => {
-            this.get('CategoryDeserializer').deserialize(response);
+            response.results.forEach((category) => {
+                this.get('CategoryDeserializer').deserialize(category, category.id);
+            });
         });
         let filterFunc = function(category) {
             return category.get('parent_id') === undefined;

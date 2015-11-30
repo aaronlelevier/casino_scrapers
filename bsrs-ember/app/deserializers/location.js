@@ -4,12 +4,9 @@ import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 let extract_location_level = (model, store, location_level_deserializer) => {
     let location_level_pk = model.location_level.id;  
     let existing_location_level = store.find('location-level', location_level_pk);
-    //if existing location level
     if (existing_location_level.get('content')) {
         let locations = existing_location_level.get('locations') || [];//bootstrapped location levels will not have locations
-        if (locations.indexOf(model.id) < 0) { locations.pushObject(model.id); }
-        existing_location_level.set('locations', locations);
-        existing_location_level.save();
+        existing_location_level.set('locations', locations.concat(model.id).uniq());
     } else {
         //if no location level
         model.location_level.locations = [model.id];

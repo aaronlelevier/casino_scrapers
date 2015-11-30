@@ -4,13 +4,14 @@ import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
-import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import LD from 'bsrs-ember/vendor/defaults/location';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import page from 'bsrs-ember/tests/pages/role';
 import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -18,8 +19,8 @@ const BASE_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = BASE_URL + '/index';
 const LOCATION_NEW_URL = BASE_URL + '/new';
 const DJANGO_LOCATION_URL = PREFIX + '/admin/locations/';
-const DETAIL_URL = BASE_URL + '/' + LOCATION_DEFAULTS.idOne;
-const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_URL + LOCATION_DEFAULTS.idOne + '/';
+const DETAIL_URL = BASE_URL + '/' + LD.idOne;
+const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_URL + LD.idOne + '/';
 
 let application, store, payload, list_xhr, original_uuid;
 
@@ -30,9 +31,9 @@ module('Acceptance | location-new', {
         list_xhr = xhr(DJANGO_LOCATION_URL + '?page=1', "GET", null, {}, 200, LOCATION_FIXTURES.empty());
         payload = {
             id: UUID.value,
-            name: LOCATION_DEFAULTS.storeName,
-            number: LOCATION_DEFAULTS.storeNumber,
-            location_level: LOCATION_LEVEL_DEFAULTS.idOne,
+            name: LD.storeName,
+            number: LD.storeNumber,
+            location_level: LLD.idOne,
             children: [],
             parents: []
         };
@@ -56,19 +57,25 @@ test('visiting /location/new', (assert) => {
         assert.equal(store.find('location').get('length'), 1);
         const location = store.find('location', UUID.value);
         assert.ok(location.get('new'));
+        assert.equal(page.locationLevelInput(), 'Select One');
     });
-    fillIn('.t-location-name', LOCATION_DEFAULTS.storeName);
-    fillIn('.t-location-number', LOCATION_DEFAULTS.storeNumber);
-    fillIn('.t-location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    fillIn('.t-location-name', LD.storeName);
+    fillIn('.t-location-number', LD.storeNumber);
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionOne();
+    andThen(() => {
+        assert.equal(page.locationLevelInput().split(' +')[0].split(' ')[0], LLD.nameCompany);
+    });
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(store.find('location').get('length'), 1);
         let location = store.find('location', UUID.value);
         assert.equal(location.get('new'), undefined);
-        assert.equal(location.get('name'), LOCATION_DEFAULTS.storeName);
-        assert.equal(location.get('number'), LOCATION_DEFAULTS.storeNumber);
-        //assert.equal(location.get('location_level'), LOCATION_DEFAULTS.location_level);
+        assert.equal(location.get('name'), LD.storeName);
+        assert.equal(location.get('number'), LD.storeNumber);
+        assert.equal(location.get('location_level').get('id'), LLD.idOne);
+        assert.equal(location.get('location_level_fk'), LLD.idOne);
         assert.ok(location.get('isNotDirty'));
     });
 });
@@ -87,15 +94,16 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-name-validation-error').is(':visible'));
         assert.ok(find('.t-number-validation-error').is(':visible'));
     });
-    fillIn('.t-location-name', LOCATION_DEFAULTS.storeName);
+    fillIn('.t-location-name', LD.storeName);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_NEW_URL);
         assert.ok(find('.t-number-validation-error').is(':visible'));
     });
-    fillIn('.t-location-name', LOCATION_DEFAULTS.storeName);
-    fillIn('.t-location-number', LOCATION_DEFAULTS.storeNumber);
-    fillIn('.t-location-level', LOCATION_LEVEL_DEFAULTS.idOne);
+    fillIn('.t-location-name', LD.storeName);
+    fillIn('.t-location-number', LD.storeNumber);
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionOne();
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
@@ -105,7 +113,7 @@ test('validation works and when hit save, we do same post', (assert) => {
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
     clearxhr(list_xhr);
     visit(LOCATION_NEW_URL);
-    fillIn('.t-location-name', LOCATION_DEFAULTS.storeName);
+    fillIn('.t-location-name', LD.storeName);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -118,7 +126,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_NEW_URL);
-            assert.equal(find('.t-location-name').val(), LOCATION_DEFAULTS.storeName);
+            assert.equal(find('.t-location-name').val(), LD.storeName);
             assert.equal(find('.t-modal').is(':hidden'), true);
         });
     });
@@ -126,7 +134,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     visit(LOCATION_NEW_URL);
-    fillIn('.t-location-name', LOCATION_DEFAULTS.storeName);
+    fillIn('.t-location-name', LD.storeName);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {

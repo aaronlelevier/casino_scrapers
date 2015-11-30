@@ -6,8 +6,8 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 var LocationLevel = Model.extend(NewMixin, {
     store: inject('main'),
     name: attr(''),
-    locations: attr([]),
-    roles: attr([]),
+    locations: [],
+    roles: [],
     children_fks: attr([]),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', function() {
         return this.get('isDirty');
