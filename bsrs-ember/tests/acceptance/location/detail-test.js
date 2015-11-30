@@ -199,20 +199,3 @@ test('changing location level will update related location level locations array
         assert.equal(currentURL(), LOCATION_URL);
     });
 });
-
-test('changing location level to none will dirty the location model', (assert) => {
-    visit(DETAIL_URL);
-    click(LOCATIONLEVELCLEAR);
-    andThen(() => {
-        let location = store.find('location', LD.idOne);
-        assert.equal(location.get('location_level_fk'), LLD.idOne);
-        assert.ok(location.get('isDirtyOrRelatedDirty'));
-    });
-    let response = LF.detail(LD.idOne);
-    let payload = LF.put({location_level: undefined});
-    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), LOCATION_URL);
-    });
-});

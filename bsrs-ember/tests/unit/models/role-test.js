@@ -98,32 +98,7 @@ test('when role suddently has location level assigned to it starting with non em
     assert.ok(role.get('isDirtyOrRelatedDirty'));
 });
 
-test('when role suddenly has location level removed, it is dirty', (assert) => {
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
-    let location_level = store.push('location-level', {id: LLD.idOne, roles: [RD.idOne, RD.unusedId]});
-    let location_level_two = store.push('location-level', {id: LLD.idTwo, roles: []});
-    assert.ok(role.get('isNotDirty'));
-    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.change_location_level(location_level_two.get('id'));
-    assert.equal(role.get('location_level').get('id'), location_level_two.get('id'));
-    assert.deepEqual(location_level.get('roles'), [RD.unusedId]);
-    assert.deepEqual(location_level_two.get('roles'), [RD.idOne]);
-    assert.ok(role.get('isNotDirty'));
-    assert.ok(role.get('isDirtyOrRelatedDirty'));
-});
-
-test('when role suddenly has location level removed, it is dirty (set to empty array)', (assert) => {
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
-    let location_level = store.push('location-level', {id: LLD.idOne, roles: [RD.idOne]});
-    assert.ok(role.get('isNotDirty'));
-    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.change_location_level();
-    assert.equal(role.get('location_level'), undefined);
-    assert.ok(role.get('isNotDirty'));
-    assert.ok(role.get('isDirtyOrRelatedDirty'));
-});
-
-test('rollback location level will reset the previously used location level when switching from valid location level to undefined', (assert) => {
+test('rollback location level will reset the previously used location level when switching from valid location level to another', (assert) => {
     let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
     let location_level_one = store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion, roles: [RD.idOne]});
     let location_level_two = store.push('location-level', {id: LLD.idTwo, name: LLD.nameDepartment, roles: [RD.unusedId]});
@@ -142,8 +117,8 @@ test('rollback location level will reset the previously used location level when
     role.saveRelated();
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.change_location_level();
-    assert.equal(role.get('location_level.name'), undefined);
+    role.change_location_level(location_level_one.get('id'));
+    assert.equal(role.get('location_level.name'), LLD.nameRegion);
     assert.equal(role.get('location_level_fk'), LLD.idTwo);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
@@ -182,35 +157,6 @@ test('rollback location level will reset the previously used location level when
     assert.ok(another_location_level.get('isNotDirty'));
     assert.ok(location_level_two.get('isNotDirty'));
     assert.ok(location_level_one.get('isNotDirty'));
-});
-
-test('saving an undefined location level on a previously dirty role will clean the role model', (assert) => {
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne});
-    let location_level_one = store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion, roles: [RD.idOne]});
-    let location_level_two = store.push('location-level', {id: LLD.idTwo, name: LLD.nameDepartment, roles: [RD.unusedId]});
-    let another_location_level = store.push('location-level', {id: LLD.idThree, name: LLD.nameDistrict, roles: [RD.unusedId]});
-    assert.ok(role.get('isNotDirty'));
-    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(role.get('location_level.name'), LLD.nameRegion); 
-    role.change_location_level();
-    assert.equal(role.get('location_level'), undefined); 
-    assert.ok(role.get('isNotDirty'));
-    assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.save();
-    role.saveRelated();
-    assert.equal(role.get('location_level'), undefined); 
-    assert.equal(role.get('location_level_fk'), undefined); 
-    assert.ok(role.get('isNotDirty'));
-    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.change_location_level(another_location_level.get('id'));
-    assert.equal(role.get('location_level.name'), LLD.nameDistrict);
-    assert.ok(role.get('isNotDirty'));
-    assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollback();
-    role.rollbackLocationLevel();
-    assert.ok(typeof role.get('location_level') === 'undefined');
-    assert.ok(role.get('isNotDirty'));
-    assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 /*ROLE TO CATEGORY M2M*/
