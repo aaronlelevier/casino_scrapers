@@ -160,6 +160,8 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.third_party.label.status':'Status',
             'validation.valid':'Valid',
             'validation.invalid':'Invalid',
+            'button.upload':'Attach File',
+            'upload.progress':'Upload Progress',
             'activity.ticket.categories':'changed the category from ${{from}} $to ${{to}} ${{timestamp}}',
             'activity.ticket.to_from':'changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}',
             'activity.ticket.create':'created this ticket ${{timestamp}}',
@@ -321,7 +323,9 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.locationlevel.label.general':'General',
             'admin.locationlevel.label.childOrg':'Organización Niño (s)',
             'validation.valid':'Vigente',
-            'validation.invalid':'No válido'
+            'validation.invalid':'No válido',
+            'button.upload':'Attach File',
+            'upload.progress':'Upload Progress',
           }
         }
       break;
@@ -475,7 +479,9 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.locationlevel.label.general':'Général',
             'admin.locationlevel.label.childOrg':'Organisation enfant (s)',
             'validation.valid':'Valide',
-            'validation.invalid':'Invalide'
+            'validation.invalid':'Invalide',
+            'button.upload':'Attach File',
+            'upload.progress':'Upload Progress',
           }
         }
       break;
@@ -630,6 +636,8 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.locationlevel.label.childOrg':'儿童组织（S）',
             'validation.valid':'有效',
             'validation.invalid':'失效',
+            'button.upload':'Attach File',
+            'upload.progress':'Upload Progress',
           }
         }
       break;
@@ -783,7 +791,9 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.locationlevel.label.general':'一般',
             'admin.locationlevel.label.childOrg':'子機構（複数可）',
             'validation.valid':'正当な',
-            'validation.invalid':'無効'
+            'validation.invalid':'無効',
+            'button.upload':'Attach File',
+            'upload.progress':'Upload Progress',
           }
         }
       break;
@@ -941,7 +951,9 @@ var BSRS_TRANSLATION_FACTORY = (function() {
             'admin.locationlevel.label.general':'General',
             'admin.locationlevel.label.childOrg':'Child Organization(s)',
             'validation.valid':'Valid',
-            'validation.invalid':'Invalid'
+            'validation.invalid':'Invalid',
+            'button.upload':'Attach File',
+            'upload.progress':'Upload Progress',
           }
         }
       break;
