@@ -3,7 +3,8 @@ var BSRS_UUID_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            value: 'abc123', //update to a true guid after pre/re factor
+            value: 'abc123',
+            random: 'def456'
         };
     };
     return factory;

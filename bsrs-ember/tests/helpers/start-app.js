@@ -50,6 +50,20 @@ function patchRandom(app, counter) {
   });
 }
 
+function patchRandomAsync(app, counter) {
+  Ember.run(function() {
+    random.uuid = function() { 
+        counter++;
+        if (counter === 1) {
+            return 'abc123';
+        }else{
+            return 'def456';
+        }
+    };
+  });
+  return app.testHelpers.wait();
+}
+
 function filterGrid(app, column, text) {
   var eventbus = app.__container__.lookup('service:eventbus');
   Ember.run(function() {
@@ -100,9 +114,15 @@ function saveFilterSet(app, name, controller) {
 
 function uploadFile(app, name, action, file, model) {
   Ember.run(function() {
+      var files;
       var component = app.__container__.lookup(`component:${name}`);
       component.set('model', model);
-      var event = {target: {files: [file]}};
+      if (file instanceof Array) {
+          files = file;
+      }else{
+          files = [file];
+      }
+      var event = {target: {files: files}};
       component.send(action, event);
   });
   return app.testHelpers.wait();
@@ -116,6 +136,7 @@ Ember.Test.registerAsyncHelper('alterPageSize', alterPageSize);
 Ember.Test.registerAsyncHelper('filterGrid', filterGrid);
 Ember.Test.registerHelper('visitSync', visitSync);
 Ember.Test.registerHelper('patchRandom', patchRandom);
+Ember.Test.registerAsyncHelper('patchRandomAsync', patchRandomAsync);
 
 export default function startApp(attrs) {
     let application;

@@ -1,7 +1,9 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 
 export default Ember.Component.extend({
+    uuid: injectUUID('uuid'),
     repository: inject('attachment'),
     actions: {
         removeAttachment(attachment_id) {
@@ -15,11 +17,15 @@ export default Ember.Component.extend({
         upload(e) {
             let files = e.target.files;
             let model = this.get('model');
+            let uuid = this.get('uuid');
             let repository = this.get('repository');
             if (files && files[0]) {
-                repository.upload(files[0], model).then((file) => {
-                    model.get('attachments').findBy('id', file.id).set('percent', 100);
-                });
+                for (let i = 0; i < files.length; i++) {
+                    let id = uuid.v4();
+                    repository.upload(id, files[i], model).then(() => {
+                        model.get('attachments').findBy('id', id).set('percent', 100);
+                    });
+                }
             }
         }
     }
