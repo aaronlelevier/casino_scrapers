@@ -23,7 +23,7 @@ const BACKSPACE = {keyCode: 8};
 
 var application, store, endpoint, list_xhr, original_uuid;
 
-module('Acceptance | amk admin-traslation-grid-list', {
+module('Acceptance | admin-traslation-grid-list', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -44,6 +44,7 @@ test('initial load should only show first 10 records ordered by id with correct 
         assert.equal(find('.t-grid-title').text(), 'Translations');
         assert.equal(find('.t-grid-data').length, 10);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').length, 1);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
