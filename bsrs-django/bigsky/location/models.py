@@ -254,6 +254,8 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         return self.name
 
     def save(self, *args, **kwargs):
+        if not self.status:
+            self.status = LocationStatus.objects.default()
         if not self.type:
             self.type = LocationType.objects.default()
 
