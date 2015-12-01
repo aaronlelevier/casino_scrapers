@@ -51,14 +51,11 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-# Turn on for debug mode
-# INTERNAL_IPS = (
-#        '127.0.0.1',
-#         )
+# Turn on for debug mode in 'debug_toolbar'
+# INTERNAL_IPS = ('127.0.0.1',)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -69,6 +66,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     # Translation Req
     'django.middleware.locale.LocaleMiddleware',
+    # debug_toolbar
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'bigsky.urls'
