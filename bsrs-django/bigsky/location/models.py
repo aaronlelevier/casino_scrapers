@@ -146,6 +146,10 @@ class LocationStatus(BaseNameModel):
     
     objects = LocationStatusManager()
 
+    def to_dict(self):
+        default = True if LocationStatus.objects.default().name == self.name else False
+        return {"id": str(self.pk), "name": self.name, "default": default}
+
 
 ### LOCATION TYPE
 
@@ -232,8 +236,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     '''
     # keys
     location_level = models.ForeignKey(LocationLevel, related_name='locations')
-    status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True,
-        help_text="If not provided, will be the default 'LocationStatus'.")
+    status = models.ForeignKey(LocationStatus, related_name='locations', blank=False, null=False)
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
     phone_numbers = GenericRelation(PhoneNumber)
     addresses = GenericRelation(Address)
@@ -251,8 +254,6 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        if not self.status:
-            self.status = LocationStatus.objects.default()
         if not self.type:
             self.type = LocationType.objects.default()
 

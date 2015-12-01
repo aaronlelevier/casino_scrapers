@@ -21,6 +21,7 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const DETAIL_URL = BASE_URL + '/' + TD.idOne;
 const TICKET_URL = BASE_URL + '/index';
 const TICKET_PUT_URL = PREFIX + DETAIL_URL + '/';
+const ATTACHMENT_DELETE_URL = PREFIX + '/admin/attachments/' + UUID.value + '/';
 const PROGRESS_BAR = '.progress-bar';
 
 let application, store, original_uuid;
@@ -141,5 +142,114 @@ test('previously attached files do not show up after file upload', (assert) => {
         assert.equal(model.get('attachments').get('length'), 2);
         assert.equal(model.get('isDirty'), false);
         assert.ok(model.get('isDirtyOrRelatedDirty'));
+    });
+});
+
+test('delete attachment is successful when the user confirms yes (before the file is associated with a ticket)', (assert) => {
+    let original = window.confirm;
+    window.confirm = function() {
+        return true;
+    };
+    let model = store.find('ticket', TD.idOne);
+    let image = {name: 'foo.png', type: 'image/png', size: 234000};
+    ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(PROGRESS_BAR).length, 0);
+        assert.equal(store.find('attachment').get('length'), 0);
+    });
+    ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {id: UUID.value});
+    uploadFile('attach-file', 'upload', image, model);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        model = store.find('ticket', TD.idOne);
+        assert.equal(find(PROGRESS_BAR).length, 1);
+        assert.equal(store.find('attachment').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
+    });
+    ajax(ATTACHMENT_DELETE_URL, 'DELETE', null, {}, 204, {});
+    click('.t-remove-attachment');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        model = store.find('ticket', TD.idOne);
+        assert.equal(find(PROGRESS_BAR).length, 0);
+        assert.equal(store.find('attachment').get('length'), 0);
+        assert.equal(model.get('attachments').get('length'), 0);
+    });
+});
+
+test('delete attachment is aborted when the user confirms no (before the file is associated with a ticket)', (assert) => {
+    let original = window.confirm;
+    window.confirm = function() {
+        return false;
+    };
+    let model = store.find('ticket', TD.idOne);
+    let image = {name: 'foo.png', type: 'image/png', size: 234000};
+    ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(PROGRESS_BAR).length, 0);
+        assert.equal(store.find('attachment').get('length'), 0);
+    });
+    ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {id: UUID.value});
+    uploadFile('attach-file', 'upload', image, model);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        model = store.find('ticket', TD.idOne);
+        assert.equal(find(PROGRESS_BAR).length, 1);
+        assert.equal(store.find('attachment').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
+    });
+    click('.t-remove-attachment');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        model = store.find('ticket', TD.idOne);
+        assert.equal(find(PROGRESS_BAR).length, 1);
+        assert.equal(store.find('attachment').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
+    });
+});
+
+test('user cannot delete uploaded attachment that is associated with a ticket', (assert) => {
+    let model = store.find('ticket', TD.idOne);
+    let image = {name: 'foo.png', type: 'image/png', size: 234000};
+    ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(PROGRESS_BAR).length, 0);
+        assert.equal(store.find('attachment').get('length'), 0);
+    });
+    ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {id: UUID.value});
+    uploadFile('attach-file', 'upload', image, model);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        model = store.find('ticket', TD.idOne);
+        assert.equal(find(PROGRESS_BAR).length, 1);
+        assert.equal(store.find('attachment').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
+        assert.equal(find('.t-remove-attachment').length, 1);
+    });
+    ajax(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_attachment), {}, 200, TF.detail(TD.idOne));
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+    generalPage.save();
+    andThen(() => {
+        model = store.find('ticket', TD.idOne);
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(store.find('attachment').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
+        assert.equal(model.get('isDirty'), false);
+        assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    let detail_with_attachment = TF.detail(TD.idOne);
+    detail_with_attachment.attachments = [UUID.value];
+    ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(PROGRESS_BAR).length, 1);
+        assert.equal(find('.t-remove-attachment').length, 0);
     });
 });

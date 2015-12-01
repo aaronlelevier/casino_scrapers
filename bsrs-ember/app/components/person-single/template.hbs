@@ -103,7 +103,9 @@
 					</div>
 					<div class="row">
 						<div class="col-md-12">
-              {{person-status-select person=model statuses=statuses}}
+                            {{#form-group title="admin.person.label.status" for="status"}}
+                            {{person-status-select person=model statuses=statuses}}
+                            {{/form-group}}
 						</div>
 					</div>
 					<div class="row">

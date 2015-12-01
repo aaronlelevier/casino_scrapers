@@ -77,7 +77,6 @@ class LocationSerializer(serializers.ModelSerializer):
         
 class LocationListSerializer(serializers.ModelSerializer):
     
-    status = LocationStatusSerializer()
     location_level = LocationLevelSerializer()
     
     class Meta:
