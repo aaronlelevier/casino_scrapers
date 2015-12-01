@@ -26,7 +26,7 @@ TICKET_STATUSES = [
 class TicketStatusManager(BaseManager):
 
     def default(self):
-        obj, _ = self.get_or_create(name=TICKET_STATUSES[0])
+        obj, _ = self.get_or_create(name=settings.DEFAULTS_TICKET_STATUS)
         return obj
 
 
@@ -37,6 +37,10 @@ class TicketStatus(BaseNameModel):
     class Meta:
         verbose_name_plural = "Ticket Statuses"
 
+    def to_dict(self):
+        default = True if TicketStatus.objects.default().name == self.name else False
+        return {"id": str(self.pk), "name": self.name, "default": default}
+    
 
 TICKET_PRIORITIES = [
     'ticket.priority.medium',
