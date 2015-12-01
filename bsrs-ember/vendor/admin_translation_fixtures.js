@@ -36,28 +36,19 @@ var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
     factory.prototype.list = function() {
         var response = [];
         for (var i=1; i <= 10; i++) {
-            var uuid = '6f771284-6d7d-4854-9125-39bf0cb6ab75';
-            if (i < 10) {
-                uuid = uuid + '0' + i;
-            } else{
-                uuid = uuid + i;
-            }
-            var translation = this.generate(uuid);
-            translation.key = translation.key + i;
+            translation = this.defaults.keyOne + i;
             response.push(translation);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component
         var sorted = response.sort(function(a,b) {
-            return b.id - a.id;
+            return b - a;
         });
         return {'count':19,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
         var response = [];
         for (var i=11; i <= 19; i++) {
-            var uuid = '6f771284-6d7d-4854-9125-39bf0cb6ab75';
-            var translation = this.generate(uuid + i);
-            translation.key = 'wat.foo' + i;
+            translation = this.defaults.keyOne + i;
             response.push(translation);
         }
         return {'count':19,'next':null,'previous':null,'results': response};
