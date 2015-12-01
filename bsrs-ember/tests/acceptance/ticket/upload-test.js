@@ -212,7 +212,7 @@ test('delete attachment is aborted when the user confirms no (before the file is
     });
 });
 
-test('user cannot delete uploaded attachment that is associated with a ticket', (assert) => {
+test('user cannot see progress bar for uploaded attachment that is associated with a ticket (after save)', (assert) => {
     let model = store.find('ticket', TD.idOne);
     let image = {name: 'foo.png', type: 'image/png', size: 234000};
     ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
@@ -249,8 +249,7 @@ test('user cannot delete uploaded attachment that is associated with a ticket', 
     page.visitDetail();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find(PROGRESS_BAR).length, 1);
-        assert.equal(find('.t-remove-attachment').length, 0);
+        assert.equal(find(PROGRESS_BAR).length, 0);
     });
 });
 
@@ -290,3 +289,7 @@ test('file upload supports multiple attachments', (assert) => {
         assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
+
+// show the BELOW in another test (with one saved/ one not saved -nav away, the back to detail)
+// assert.equal(find(PROGRESS_BAR).length, 1);
+// assert.equal(find('.t-remove-attachment').length, 0);

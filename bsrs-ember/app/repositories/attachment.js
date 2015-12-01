@@ -12,7 +12,7 @@ var AttachmentRepo = Ember.Object.extend({
     },
     upload(id, file, model) {
         let store = this.get('store');
-        store.push('attachment', {id: id, local: true, percent: 25, new: true});
+        store.push('attachment', {id: id, new: true, percent: 25});
         model.add_attachment(id);
         let data = new FormData();
         data.append('id', id);
