@@ -11,7 +11,6 @@ var RoleModel = Model.extend(NewMixin, {
     name: attr(''),
     people: [],
     role_type: attr(),
-    cleanupLocation: false,
     location_level_fk: undefined, 
     role_category_fks: [],
     categories_ids: Ember.computed('categories.[]', function() {
@@ -51,23 +50,6 @@ var RoleModel = Model.extend(NewMixin, {
         return equal(role_categories_ids, previous_m2m_fks) ? false : true;
     }),
     categoryIsNotDirty: Ember.computed.not('categoryIsDirty'),
-    rollbackCategories() {
-        const store = this.get('store');
-        const previous_m2m_fks = this.get('role_category_fks') || [];
-
-        const m2m_to_throw_out = store.find('role-category', function(join_model) {
-            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
-        }, ['id']);
-        m2m_to_throw_out.forEach(function(join_model) {
-            join_model.set('removed', true);
-        });
-        previous_m2m_fks.forEach(function(pk) {
-            const m2m_to_keep = store.find('role-category', pk);
-            if (m2m_to_keep.get('id')) {
-                m2m_to_keep.set('removed', undefined);
-            }
-        });
-    },
     add_category(category_pk) {
         let uuid = this.get('uuid');
         let store = this.get('store');
@@ -152,6 +134,11 @@ var RoleModel = Model.extend(NewMixin, {
         const location_level = this.get('location_level');
         this.set('location_level_fk', location_level ? location_level.get('id') : undefined);
     },
+    rollbackLocationLevel() {
+        const location_level = this.get('location_level');
+        const location_level_fk = this.get('location_level_fk');
+        this.change_location_level(location_level_fk);
+    },
     saveCategories() {
         const role_categories = this.get('role_categories');
         const role_categories_ids = this.get('role_categories_ids');
@@ -159,20 +146,32 @@ var RoleModel = Model.extend(NewMixin, {
         //add
         role_categories.forEach((join_model) => {
             if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
-                previous_m2m_fks.pushObject(join_model.get('id'));
+                this.set('role_category_fks', previous_m2m_fks.concat(join_model.get('id')));
             } 
         });
         //remove
-        for (let i=previous_m2m_fks.length-1; i>=0; i--) {
-            if (Ember.$.inArray(previous_m2m_fks[i], role_categories_ids) === -1) {
-                previous_m2m_fks.removeObject(previous_m2m_fks[i]);
+        const previous_m2m_fks_updated = this.get('role_category_fks');
+        for (let i=previous_m2m_fks_updated.length-1; i>=0; i--) {
+            if (Ember.$.inArray(previous_m2m_fks_updated[i], role_categories_ids) === -1) {
+                previous_m2m_fks_updated.removeObject(previous_m2m_fks_updated[i]);
             } 
         }
     },
-    rollbackLocationLevel() {
-        const location_level = this.get('location_level');
-        const location_level_fk = this.get('location_level_fk');
-        this.change_location_level(location_level_fk);
+    rollbackCategories() {
+        const store = this.get('store');
+        const previous_m2m_fks = this.get('role_category_fks') || [];
+        const m2m_to_throw_out = store.find('role-category', function(join_model) {
+            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
+        }, ['id']);
+        m2m_to_throw_out.forEach(function(join_model) {
+            join_model.set('removed', true);
+        });
+        previous_m2m_fks.forEach(function(pk) {
+            const m2m_to_keep = store.find('role-category', pk);
+            if (m2m_to_keep.get('id')) {
+                m2m_to_keep.set('removed', undefined);
+            }
+        });
     },
     toString: function() {
         const name = this.get('name');

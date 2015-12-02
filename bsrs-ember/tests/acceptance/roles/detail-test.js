@@ -14,7 +14,6 @@ import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import selectize from 'bsrs-ember/tests/pages/selectize';
 import page from 'bsrs-ember/tests/pages/role';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -28,7 +27,6 @@ const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
-const LOCATIONLEVELCLEAR = '.t-location-level-select > .ember-power-select-trigger > .ember-power-select-clear-btn';
 
 let application, store, list_xhr, endpoint, detail_data, url;
 
@@ -244,7 +242,7 @@ test('can remove and add back same category', (assert) => {
     });
 });
 
-test('removing a category in selectize for categories will save correctly and cleanup role_category_fks', (assert) => {
+test('removing a category in power select for categories will save correctly and cleanup role_category_fks', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
         let role = store.find('role', RD.idOne);
