@@ -44,8 +44,10 @@ module('Acceptance | role-new', {
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };
         url = `${PREFIX}${BASE_URL}/`;
+        counter=0;
     },
     afterEach() {
+        counter=0;
         random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
@@ -90,51 +92,51 @@ test('visiting role/new', (assert) => {
     });
 });
 
-// test('validation works and when hit save, we do same post', (assert) => {
-//     visit(ROLE_URL);
-//     click('.t-add-new');
-//     andThen(() => {
-//         assert.ok(find('.t-name-validation-error').is(':hidden'));
-//         assert.ok(find('.t-location-level-validation-error').is(':hidden'));
-//         assert.ok(find('.t-role-category-validation-error').is(':hidden'));
-//     });
-//     generalPage.save();
-//     andThen(() => {
-//         assert.ok(find('.t-name-validation-error').is(':visible'));
-//         assert.ok(find('.t-location-level-validation-error').is(':visible'));
-//         assert.ok(find('.t-role-category-validation-error').is(':visible'));
-//     });
-//     fillIn('.t-role-name', RD.nameOne);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.ok(find('.t-name-validation-error').is(':hidden'));
-//         assert.ok(find('.t-location-level-validation-error').is(':visible'));
-//         assert.ok(find('.t-role-category-validation-error').is(':visible'));
-//     });
-//     page.locationLevelClickDropdown();
-//     page.locationLevelClickOptionOne();
-//     andThen(() => {
-//         assert.ok(find('.t-name-validation-error').is(':hidden'));
-//         assert.ok(find('.t-location-level-validation-error').is(':hidden'));
-//         assert.ok(find('.t-role-category-validation-error').is(':visible'));
-//     });
-//     let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
-//     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
-//     page.categoryClickDropdown();
-//     fillIn(CATEGORY_SEARCH, 'a');
-//     page.categoryClickOptionTwo();
-//     andThen(() => {
-//         assert.ok(find('.t-name-validation-error').is(':hidden'));
-//         assert.ok(find('.t-location-level-validation-error').is(':hidden'));
-//         assert.ok(find('.t-role-category-validation-error').is(':hidden'));
-//     });
-//     let response = Ember.$.extend(true, {}, payload);
-//     xhr(url, 'POST', JSON.stringify(payload), {}, 201, response);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-// });
+test('validation works and when hit save, we do same post', (assert) => {
+    visit(ROLE_URL);
+    click('.t-add-new');
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+        assert.ok(find('.t-role-category-validation-error').is(':hidden'));
+    });
+    generalPage.save();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':visible'));
+        assert.ok(find('.t-location-level-validation-error').is(':visible'));
+        assert.ok(find('.t-role-category-validation-error').is(':visible'));
+    });
+    fillIn('.t-role-name', RD.nameOne);
+    generalPage.save();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':visible'));
+        assert.ok(find('.t-role-category-validation-error').is(':visible'));
+    });
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionOne();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+        assert.ok(find('.t-role-category-validation-error').is(':visible'));
+    });
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(CATEGORY_SEARCH, 'a');
+    page.categoryClickOptionTwo();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-location-level-validation-error').is(':hidden'));
+        assert.ok(find('.t-role-category-validation-error').is(':hidden'));
+    });
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(url, 'POST', JSON.stringify(payload), {}, 201, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
 
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
     clearxhr(list_xhr);
@@ -245,47 +247,47 @@ test('clicking and typing into power select for categories will fire off xhr req
     });
 });
 
-// test('adding and removing removing a category in power select for categories will save correctly and cleanup role_category_fks', (assert) => {
-//     visit(NEW_URL);
-//     andThen(() => {
-//         patchRandom(counter);
-//     });
-//     let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
-//     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
-//     page.categoryClickDropdown();
-//     fillIn(CATEGORY_SEARCH, 'a');
-//     andThen(() => {
-//         assert.equal(page.categoryOptionLength(), 10); 
-//         assert.equal(page.categoriesSelected(), 0);
-//         const role = store.find('role', UUID.value);
-//         assert.equal(role.get('role_category_fks').length, 0);
-//         assert.equal(role.get('categories').get('length'), 0);
-//     });
-//     page.categoryClickOptionTwo();
-//     andThen(() => {
-//         let role = store.find('role', UUID.value);
-//         assert.equal(role.get('role_categories').get('length'), 1);
-//         assert.equal(role.get('categories').get('length'), 1);
-//         assert.equal(page.categoriesSelected(), 1);
-//     });
-//     page.categoryOneRemove();
-//     andThen(() => {
-//         let role = store.find('role', UUID.value);
-//         assert.equal(role.get('role_categories').get('length'), 0);
-//         assert.equal(role.get('categories').get('length'), 0);
-//         assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-//         assert.equal(page.categoriesSelected(), 0);
-//     });
-//     page.categoryClickOptionTwo();
-//     fillIn('.t-role-name', RD.nameOne);
-//     page.locationLevelClickDropdown();
-//     page.locationLevelClickOptionOne();
-//     xhr(url, 'POST', JSON.stringify(payload), {}, 201);
-//     generalPage.save();
-//     andThen(() => {
-//         assert.equal(currentURL(), ROLE_URL);
-//     });
-// });
+test('adding and removing removing a category in power select for categories will save correctly and cleanup role_category_fks', (assert) => {
+    visit(NEW_URL);
+    andThen(() => {
+        patchRandom(counter);
+    });
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(CATEGORY_SEARCH, 'a');
+    andThen(() => {
+        assert.equal(page.categoryOptionLength(), 10); 
+        assert.equal(page.categoriesSelected(), 0);
+        const role = store.find('role', UUID.value);
+        assert.equal(role.get('role_category_fks').length, 0);
+        assert.equal(role.get('categories').get('length'), 0);
+    });
+    page.categoryClickOptionTwo();
+    andThen(() => {
+        let role = store.find('role', UUID.value);
+        assert.equal(role.get('role_categories').get('length'), 1);
+        assert.equal(role.get('categories').get('length'), 1);
+        assert.equal(page.categoriesSelected(), 1);
+    });
+    page.categoryOneRemove();
+    andThen(() => {
+        let role = store.find('role', UUID.value);
+        assert.equal(role.get('role_categories').get('length'), 0);
+        assert.equal(role.get('categories').get('length'), 0);
+        assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(page.categoriesSelected(), 0);
+    });
+    page.categoryClickOptionTwo();
+    fillIn('.t-role-name', RD.nameOne);
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionOne();
+    xhr(url, 'POST', JSON.stringify(payload), {}, 201);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
 
 test('can add multiple categories', (assert) => {
     visit(NEW_URL);

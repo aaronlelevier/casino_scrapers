@@ -45,55 +45,69 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         """Translation key 'menu.home' -> 'home' in 'en' """
         self.driver.find_element_by_link_text('Home')
 
-    # def test_role(self):
-    #     ### CREATE
-    #     # Go to Role Area
-    #     self.nav_page.find_role_link().click()
-    #     # Create Role Page Object
-    #     role_page = ModelPage(
-    #         driver = self.driver,
-    #         new_link = "t-add-new",
-    #         list_name = "t-role-name",
-    #         list_data = "t-grid-data"
-    #     )
-    #     role_page.find_new_link().click()
-    #     # New Role Data
-    #     name = rand_chars()
-    #     role = InputHelper(name=name)
-    #     self._fill_in(role)
-    #     self.gen_elem_page.click_save_btn()
-    #     # new Role in List view
-    #     role = role_page.find_list_data()
-    #     self.driver.refresh()
-    #     self.wait_for_xhr_request("t-sort-name-dir").click()
-    #     role_list_view = role_page.find_list_name()
-    #     role_page.click_name_in_list(name, role_list_view)
-    #     ### UPDATE
-    #     # Go to the first Role's Detail view
-    #     role_page.find_wait_and_assert_elem("t-role-name", name)
-    #     role_name = rand_chars()
-    #     role = InputHelper(role_name=role_name)
-    #     self._fill_in(role, clear=True)
-    #     self.gen_elem_page.click_save_btn()
-    #     # check name change
-    #     role = role_page.find_list_data()
-    #     self.driver.refresh()
-    #     role_list_view = role_page.find_list_name()
-    #     role_page.click_name_in_list(role_name, role_list_view)
-    #     ### DELETE
-    #     # Go to the first Role's Detail view
-    #     role_page.find_wait_and_assert_elem("t-role-name", role_name)
-    #     # click Delete
-    #     self.gen_elem_page.click_dropdown_delete()
-    #     self.gen_elem_page.click_delete_btn()
-    #     # check Role is deleted
-    #     self.driver.refresh()
-    #     role = role_page.find_list_data()
-    #     role_list_view = role_page.find_list_name()
-    #     self.assertNotIn(
-    #         role_name,
-    #         [r.text for r in role_list_view]
-    #     )
+    def test_role(self):
+        ### CREATE
+        # Go to Role Area
+        self.nav_page.find_role_link().click()
+        # Create Role Page Object
+        role_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-role-name",
+            list_data = "t-grid-data"
+        )
+        role_page.find_new_link().click()
+        # New Role Data
+        name = rand_chars()
+        role = InputHelper(name=name)
+        self._fill_in(role)
+
+        role_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-role-category-select ')]/div")
+        role_category.click()
+        role_category_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-basic-dropdown--opened ')]/div/input")
+        role_category_input.send_keys("a")
+        self.wait_for_xhr_request_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]", debounce=True)
+        category_option = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]")
+        category_option.click()
+
+        role_ll_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
+        role_ll_input.click()
+        ll_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
+        ll_option.click()
+
+        self.gen_elem_page.click_save_btn()
+        # new Role in List view
+        role = role_page.find_list_data()
+        self.driver.refresh()
+        self.wait_for_xhr_request("t-sort-name-dir").click()
+        role_list_view = role_page.find_list_name()
+        role_page.click_name_in_list(name, role_list_view)
+        ### UPDATE
+        # Go to the first Role's Detail view
+        role_page.find_wait_and_assert_elem("t-role-name", name)
+        role_name = rand_chars()
+        role = InputHelper(role_name=role_name)
+        self._fill_in(role, clear=True)
+        self.gen_elem_page.click_save_btn()
+        # check name change
+        role = role_page.find_list_data()
+        self.driver.refresh()
+        role_list_view = role_page.find_list_name()
+        role_page.click_name_in_list(role_name, role_list_view)
+        ### DELETE
+        # Go to the first Role's Detail view
+        role_page.find_wait_and_assert_elem("t-role-name", role_name)
+        # click Delete
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        # check Role is deleted
+        self.driver.refresh()
+        role = role_page.find_list_data()
+        role_list_view = role_page.find_list_name()
+        self.assertNotIn(
+            role_name,
+            [r.text for r in role_list_view]
+        )
 
     def test_location(self):
         ### CREATE
@@ -243,7 +257,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         last_phone_number_input = all_phone_number_inputs[1]
         last_phone_number_input.send_keys(new_phone_two)
         person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
-
         # b/c first save won't work if the 'password' is still attached to the person.
         self.gen_elem_page.click_save_btn()
         person_page.find_list_data()

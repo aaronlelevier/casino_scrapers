@@ -9,6 +9,9 @@ var RoleNewRoute = TabRoute.extend({
     modelName: Ember.computed(function() { return 'role'; }),
     templateModelField: Ember.computed(function() { return 'Role'; }),
     model_fetch: Ember.computed(function() {
+        const all_role_types = this.get('store').find('role-type');
+        const default_role_type = all_role_types.objectAt(0).get('name');
+        return this.get('repository').create(default_role_type);
     }),
     queryParams: {
         search: {
@@ -18,9 +21,8 @@ var RoleNewRoute = TabRoute.extend({
     model() {
         const repository = this.get('repository');
         const all_role_types = this.get('store').find('role-type');
-        const default_role_type = all_role_types.objectAt(0).get('name');
         const all_location_levels = this.get('store').find('location-level');
-        const model = this.get('repository').create(default_role_type);
+        const model = this.get('model_fetch');
         const search = arguments[1].queryParams.search;
         const categoryRepo = this.get('categoryRepo');
         const categories_children = categoryRepo.findCategoryChildren(search);
