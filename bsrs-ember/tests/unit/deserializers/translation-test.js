@@ -39,7 +39,6 @@ test('deserialize_single - locale-translation', (assert) => {
     subject.deserialize(response, TRANSLATION_DEFAULTS.keyOne);
 
     let ret = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
-    // test deserialized in the correct structure in the store
     assert.ok(ret);
     assert.equal(ret.get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
     assert.equal(ret.get('locale'), LOCALE_TRANSLATION_DEFAULTS.localeOne);
