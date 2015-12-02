@@ -1,5 +1,17 @@
 import Ember from 'ember';
 
+
+var extract_locale_translation = function(model, store) {
+    model.locales.forEach((obj) => {
+        var data = {
+            'id': obj.locale + ':' + model.key,
+            'locale': obj.locale,
+            'translation': obj.translation
+        };
+        let locale_trans = store.push('locale-translation', data);
+    }); 
+};
+
 var TranslationDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
@@ -12,6 +24,9 @@ var TranslationDeserializer = Ember.Object.extend({
         let store = this.get('store');
         let trans_check = store.find('translation', id);
         if (!trans_check.get('id') || trans_check.get('isNotDirty')) {
+            // locale-translations
+            extract_locale_translation(model, store);
+            // translation
             let trans = store.push('translation', model);
             trans.save();
         }
@@ -19,7 +34,6 @@ var TranslationDeserializer = Ember.Object.extend({
     deserialize_list(response) {
         let store = this.get('store');
         response.results.forEach((model) => {
-            // debugger;
             let trans_check = store.find('translation', model);
             //prevent updating if dirty
             if (!trans_check.get('id') || trans_check.get('isNotDirty')) {
