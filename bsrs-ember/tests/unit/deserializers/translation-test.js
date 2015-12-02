@@ -7,7 +7,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 let store, subject;
 
-module('unit: translation deserializer test', {
+module('aaron unit: translation deserializer test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:translation']);
         subject = TranslationDeserializer.create({store: store});
