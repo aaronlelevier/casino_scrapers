@@ -23,7 +23,7 @@ const BACKSPACE = {keyCode: 8};
 
 var application, store, endpoint, list_xhr, original_uuid;
 
-module('Acceptance | amk admin-traslation-grid-list', {
+module('Acceptance | admin-traslation-grid-list', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');

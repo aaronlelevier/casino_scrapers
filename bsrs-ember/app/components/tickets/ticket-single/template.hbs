@@ -1,90 +1,100 @@
 <form {{action "return false" this on="submit"}}>
-        <aside class="side-panel">
+    <aside class="side-panel">
+        <header>
+            <h1></h1>
+        </header>
+        <menu class="t-side-menu">
+            <section>
+                <div class="col-md-12">
+                    {{#form-group title="admin.ticket.label.location" for="location"}}
+                    {{ticket-location-select ticket=model ticket_location_options=ticket_location_options search_location=search_location}}
+                    {{#validation-error-field submitted=submitted field="location" className="validation validation-under t-location-validation-error" model=model validation=locationValidation}}invalid location{{/validation-error-field}}
+                    {{/form-group}}
+                </div>
+                <div class="col-md-12">
+                    {{#form-group title="admin.ticket.label.priority" for="priority"}}
+                    {{ticket-priority-select ticket=model priorities=priorities}}
+                    {{#validation-error-field submitted=submitted field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
+                    {{/form-group}}
+                </div>
+                <div class="col-md-12">
+                    {{#form-group title="admin.ticket.label.status" for="status"}}
+                    {{ticket-status-select ticket=model statuses=statuses}}
+                    {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
+                    {{/form-group}}
+                </div>
+                <div class="col-md-12">
+                    {{#form-group title="admin.ticket.label.cc" for="cc"}}
+                    {{ticket-cc-power-select ticket=model search_cc=search_cc ticket_cc_options=ticket_cc_options}}
+                    {{/form-group}}
+                </div>
+                <div class="col-md-12">
+                    {{#form-group title="admin.ticket.label.assignee" for="cc"}}
+                    {{ticket-assignee-select ticket=model ticket_assignee_options=ticket_assignee_options search_assignee=search_assignee}}
+                    {{#validation-error-field submitted=submitted field="assignee" className="validation validation-under t-assignee-validation-error" model=model validation=assigneeValidation}}invalid assignee{{/validation-error-field}}
+                    {{/form-group}}
+                </div>
+            </section>
+        </menu>
+    </aside>
+    <article class="main">
+        <div class="wrapper form">
             <header>
-                <h1></h1>
+                {{base-component
+                    model=model
+                    save="save"
+                    cancel="cancel"
+                    delete="delete"
+                }}
             </header>
-            <menu class="t-side-menu">
-                <section>
-                    <div class="col-md-12">
-                        {{#form-group title="admin.ticket.label.location" for="location"}}
-                          {{ticket-location-select ticket=model ticket_location_options=ticket_location_options search_location=search_location}}
-                          {{#validation-error-field submitted=submitted field="location" className="validation validation-under t-location-validation-error" model=model validation=locationValidation}}invalid location{{/validation-error-field}}
-                        {{/form-group}}
-                    </div>
-                    <div class="col-md-12">
-                        {{#form-group title="admin.ticket.label.priority" for="priority"}}
-                          {{ticket-priority-select ticket=model priorities=priorities}}
-                          {{#validation-error-field submitted=submitted field="priority" className="validation validation-under t-priority-validation-error" model=model validation=priorityValidation}}invalid priority{{/validation-error-field}}
-                        {{/form-group}}
-                    </div>
-                    <div class="col-md-12">
-                        {{#form-group title="admin.ticket.label.status" for="status"}}
-                        {{ticket-status-select ticket=model statuses=statuses}}
-                        {{#validation-error-field submitted=submitted field="status" className="validation validation-under t-status-validation-error" model=model validation=statusValidation}}invalid status{{/validation-error-field}}
-                        {{/form-group}}
-                    </div>
-                    <div class="col-md-12">
-                        {{#form-group title="admin.ticket.label.cc" for="cc"}}
-                            {{ticket-cc-power-select ticket=model search_cc=search_cc ticket_cc_options=ticket_cc_options}}
-                        {{/form-group}}
-                    </div>
-                    <div class="col-md-12">
-                        {{#form-group title="admin.ticket.label.assignee" for="cc"}}
-                          {{ticket-assignee-select ticket=model ticket_assignee_options=ticket_assignee_options search_assignee=search_assignee}}
-                          {{#validation-error-field submitted=submitted field="assignee" className="validation validation-under t-assignee-validation-error" model=model validation=assigneeValidation}}invalid assignee{{/validation-error-field}}
-                        {{/form-group}}
-                    </div>
-                </section>
-            </menu>
-        </aside>
-        <article class="main">
-            <div class="wrapper form">
-                <header>
-                    {{base-component
-                        model=model
-                        save="save"
-                        cancel="cancel"
-                        delete="delete"
-                    }}
-                </header>
 
-                <section class="docSection container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <section style="padding-bottom: 0">
-                                <div class="row card-title">
-                                    <h1 class="col-md-12">{{model.subject}} <small>{{model.number}}</small></h1>
-                                </div>
-                            </section>
-                        </div>
-                        <div class="col-md-12">
-                            <section>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                      {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
-                                        <span class="validation validation-under t-category-validation-error {{child-validation submitted child_valid}}">invalid category</span>
-                                      {{/parent-ticket-category-select}}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        {{input type="text" placeholder=(t "ticket.label.requester") value=model.requester.name class="form-control t-ticket-requester"}}
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        {{input type="text" placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request"}}
-                                    </div>
-                                </div>
-                            </section>
-                        </div>
-                    </div>
-                    {{comment-save model=model}}
+            <section class="docSection container-fluid">
+                <div class="row">
                     <div class="col-md-12">
-                      {{attach-file model=model}}
+                        <section style="padding-bottom: 0">
+                            <div class="row card-title">
+                                <h1 class="col-md-12">{{model.subject}} <small>{{model.number}}</small></h1>
+                                <div class="col-md-12">
+                                    {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
+                                    <span class="validation validation-under t-category-validation-error {{child-validation submitted child_valid}}">invalid category</span>
+                                    {{/parent-ticket-category-select}}
+                                </div>
+                                <div class="col-md-12">
+                                    {{input type="text" placeholder=(t "ticket.label.requester") value=model.requester.name class="form-control t-ticket-requester ticket-requester"}}
+                                </div>
+                                <div class="col-md-12">
+                                    {{input type="text" placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
+                                </div>
+                            </div>
+                        </section>
                     </div>
-                    {{activity-list model=activities}}
-                </section>
-            </div>
-        </article>
+                    <div class="col-md-12">
+                        <section>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{comment-save model=model}}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{attach-file model=model}}
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <section>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    {{activity-list model=activities}}
+                                </div>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </article>
 </form>

@@ -545,7 +545,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
     });
 });
 
-// test('amk save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
+// test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
 //     random.uuid = function() { return UUID.value; };
 //     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=priority';
 //     xhr(sort_one ,'GET',null,{},200,TF.sorted('priority'));
