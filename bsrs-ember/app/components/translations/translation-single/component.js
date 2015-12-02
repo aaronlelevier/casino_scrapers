@@ -5,7 +5,7 @@ import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 
 var TranslationSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
-    repository: inject('location'),
+    repository: inject('translation'),
     keyValidation: validate('model.key'),
     actions: {
         save() {

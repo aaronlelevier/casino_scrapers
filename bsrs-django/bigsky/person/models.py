@@ -132,9 +132,10 @@ class Role(BaseModel):
         return self.__name__.lower()
 
     def to_dict(self):
+        default = True if settings.DEFAULT_ROLE == self.name else False
         if not self.location_level:
             return {"id": str(self.pk), "name": self.name}
-        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id)}
+        return {"id": str(self.pk), "name": self.name, "location_level": str(self.location_level.id), "default": default}
 
     def _update_defaults(self):
         if not self.group:

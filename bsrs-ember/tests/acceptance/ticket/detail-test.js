@@ -44,7 +44,6 @@ const ASSIGNEE_DROPDOWN = '.t-ticket-assignee-select-dropdown > .ember-power-sel
 const CC = '.t-ticket-cc-select > .ember-basic-dropdown-trigger';
 const CC_DROPDOWN = '.t-ticket-cc-select-dropdown > .ember-power-select-options';
 const CC_SEARCH = '.ember-power-select-trigger-multiple-input';
-const STATUS = 'select.t-ticket-status-select:eq(0) + .selectize-control';
 const SEARCH = '.ember-power-select-search input';
 const categories = '.categories-power-select-search input';
 

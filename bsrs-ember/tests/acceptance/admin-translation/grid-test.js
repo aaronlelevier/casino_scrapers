@@ -44,6 +44,7 @@ test('initial load should only show first 10 records ordered by id with correct 
         assert.equal(find('.t-grid-title').text(), 'Translations');
         assert.equal(find('.t-grid-data').length, 10);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').length, 1);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -61,7 +62,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'wat.foo11');
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'home.welcome19');
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -154,7 +155,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL + '?page=2&sort=key');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'wat.foo11');
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'home.welcome19');
     });
 });
 
@@ -178,36 +179,36 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?search=4');
+        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4');
         assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), "home.welcome4");
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), "home.welcome14");
     });
     click('.t-sort-key-dir');
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?search=4&sort=key');
+        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4&sort=key');
         assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), "home.welcome4");
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), "home.welcome14");
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?search=&sort=key');
+        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=&sort=key');
         assert.equal(find('.t-grid-data').length, 10);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), ADMIN_TRANSLATION_DEFAULTS.keyOneGrid);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?page=2&search=&sort=key');
+        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?page=2&search=&sort=key');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'wat.foo11');
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'home.welcome19');
     });
     fillIn('.t-grid-search-input', '14');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?search=14&sort=key');
+        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=14&sort=key');
         assert.equal(find('.t-grid-data').length, 1);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'wat.foo14');
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'home.welcome14');
     });
     click('.t-reset-grid');
     andThen(() => {
@@ -276,8 +277,8 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?find=key%3A7');
         assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'home.welcome7');
-        assert.equal(find('.t-grid-data:eq(1) .t-translation-key:eq(0)').text(), 'wat.foo17');
+        assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), 'home.welcome17');
+        assert.equal(find('.t-grid-data:eq(1) .t-translation-key:eq(0)').text(), 'home.welcome7');
     });
     click('.t-reset-grid');
     andThen(() => {
@@ -370,7 +371,7 @@ test('after you reset the grid the filter model will also be reset', function(as
 
 test('count is shown and updated as the user filters down the list from django', function(assert) {
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(option_one ,'GET',null,{},200,ADMIN_TRANSLATION_FIXTURES.searched('4', 'key'));
+    xhr(option_one, 'GET', null, {}, 200, ADMIN_TRANSLATION_FIXTURES.searched('4', 'id'));
     visit(ADMIN_TRANSLATION_URL);
     andThen(() => {
         assert.equal(find('.t-grid-data').length, 10);
@@ -379,14 +380,14 @@ test('count is shown and updated as the user filters down the list from django',
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?search=4');
+        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4');
         assert.equal(find('.t-grid-data').length, 2);
         assert.equal(find('.t-page-count').text(), '2 Translations');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
-        assert.equal(currentURL(),ADMIN_TRANSLATION_URL + '?search=');
+        assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=');
         assert.equal(find('.t-grid-data').length, 10);
         assert.equal(find('.t-page-count').text(), '19 Translations');
     });

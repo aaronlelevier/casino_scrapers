@@ -116,6 +116,7 @@ class ConfigurationTests(TestCase):
         mommy.make(LocationStatus, name=settings.DEFAULT_LOCATION_STATUS)
         self.person_status = mommy.make(PersonStatus)
         self.ticket_status = mommy.make(TicketStatus)
+        mommy.make(TicketStatus, name=settings.DEFAULTS_TICKET_STATUS)
         self.ticket_priority = mommy.make(TicketPriority)
 
         categories = Category.objects.order_by("-parent")
@@ -166,7 +167,6 @@ class ConfigurationTests(TestCase):
         self.assertIn(str(self.person.role.id), [c["id"] for c in configuration])
         self.assertIn(str(self.person.role.name), [c["name"] for c in configuration])
         self.assertIn(str(self.person.role.location_level.id), [c["location_level"] for c in configuration])
-
         role = Role.objects.first()
         role.location_level = None
         role.save()
@@ -174,8 +174,7 @@ class ConfigurationTests(TestCase):
         configuration = json.loads(response.context['role_config'])
         self.assertTrue(len(configuration) > 0)
         self.assertIn(str(role.id), [c["id"] for c in configuration])
-        with self.assertRaises(KeyError):
-            configuration[0]["location_level"]
+        self.assertFalse([c["default"] for c in configuration if c["name"] == settings.DEFAULT_ROLE])
         
     def test_role_types(self):
         configuration = json.loads(self.response.context['role_types_config'])
@@ -235,6 +234,7 @@ class ConfigurationTests(TestCase):
         self.assertTrue(len(configuration) > 0)
         self.assertIn(str(self.ticket_status.id), [c['id'] for c in configuration])
         self.assertIn(str(self.ticket_status.name), [c['name'] for c in configuration])
+        self.assertTrue([c['default'] for c in configuration])
 
     def test_ticket_priorities(self):
         configuration = json.loads(self.response.context['ticket_priorities'])

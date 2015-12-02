@@ -45,13 +45,7 @@
           </div>
           <div class="row">
             <div class="col-md-12">
-              {{#form-group title="admin.location.label.status" for="location_status"}}
-              <select class="t-location-status form-control location_status" onchange={{action (action "changedStatus" model) value="target.value"}} id="location_status">
-                {{#each all_statuses as |location_status|}}
-                <option value={{location_status.id}} selected={{is-equal model.location_status location_status.id}}>{{t location_status.name}}</option>
-                {{/each}}
-              </select>
-              {{/form-group}}
+              {{location-status-select location=model all_statuses=all_statuses}}
             </div>
           </div>
         </section>

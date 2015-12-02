@@ -2,7 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
 
 let store, ticket, status_one, status_two, status_three, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
@@ -13,10 +13,10 @@ moduleForComponent('ticket-status-select', 'integration: ticket-status-select te
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status']);
-        ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, status_fk: TICKET_DEFAULTS.statusOneId});
-        status_one = store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
-        status_two = store.push('ticket-status', {id: TICKET_DEFAULTS.statusTwoId, name: TICKET_DEFAULTS.statusTwo});
-        status_three = store.push('ticket-status', {id: TICKET_DEFAULTS.statusThreeId, name: TICKET_DEFAULTS.statusThree});
+        ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusOneId});
+        status_one = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
+        status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwo});
+        status_three = store.push('ticket-status', {id: TD.statusThreeId, name: TD.statusThree});
     }
 });
 
@@ -39,19 +39,19 @@ test('should render a selectbox when status options are empty (initial state of 
 
 test('should render a selectbox with bound options', function(assert) {
     let statuses = store.find('ticket-status');
-    status_one.set('tickets', [TICKET_DEFAULTS.idOne]);
+    status_one.set('tickets', [TD.idOne]);
     this.set('ticket', ticket);
     this.set('statuses', statuses);
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(`${COMPONENT}`);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.statusOne);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), TD.statusOne);
     run(() => { 
         this.$(`${PowerSelect}`).click(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
-    assert.equal(ticket.get('status').get('id'), TICKET_DEFAULTS.statusOneId);
-    assert.deepEqual(status_one.get('tickets'), [TICKET_DEFAULTS.idOne]);
+    assert.equal(ticket.get('status').get('id'), TD.statusOneId);
+    assert.deepEqual(status_one.get('tickets'), [TD.idOne]);
 });
 
 test('should be able to select new status when one doesnt exist', function(assert) {
@@ -67,59 +67,59 @@ test('should be able to select new status when one doesnt exist', function(asser
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     run(() => { 
-        $(`.ember-power-select-option:contains(${TICKET_DEFAULTS.statusOne})`).click(); 
+        $(`.ember-power-select-option:contains(${TD.statusOne})`).click(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.statusOne);
-    assert.equal(ticket.get('status').get('id'), TICKET_DEFAULTS.statusOneId);
-    assert.deepEqual(status_one.get('tickets'), [TICKET_DEFAULTS.idOne]);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), TD.statusOne);
+    assert.equal(ticket.get('status').get('id'), TD.statusOneId);
+    assert.deepEqual(status_one.get('tickets'), [TD.idOne]);
 });
 
 test('should be able to select same status when ticket already has a status', function(assert) {
     let statuses = store.find('ticket-status');
-    status_one.set('tickets', [TICKET_DEFAULTS.idOne]);
+    status_one.set('tickets', [TD.idOne]);
     this.set('ticket', ticket);
     this.set('statuses', statuses);
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(`${COMPONENT}`);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.statusOne);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), TD.statusOne);
     run(() => { 
         this.$(`${PowerSelect}`).click(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     run(() => { 
-        $(`.ember-power-select-option:contains(${TICKET_DEFAULTS.statusOne})`).click(); 
+        $(`.ember-power-select-option:contains(${TD.statusOne})`).click(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.statusOne);
-    assert.equal(ticket.get('status').get('id'), TICKET_DEFAULTS.statusOneId);
-    assert.deepEqual(status_one.get('tickets'), [TICKET_DEFAULTS.idOne]);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), TD.statusOne);
+    assert.equal(ticket.get('status').get('id'), TD.statusOneId);
+    assert.deepEqual(status_one.get('tickets'), [TD.idOne]);
 });
 
 test('should be able to select new status when ticket already has a status', function(assert) {
     let statuses = store.find('ticket-status');
-    status_one.set('tickets', [TICKET_DEFAULTS.idOne]);
+    status_one.set('tickets', [TD.idOne]);
     this.set('ticket', ticket);
     this.set('statuses', statuses);
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(`${COMPONENT}`);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.statusOne);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), TD.statusOne);
     run(() => { 
         this.$(`${PowerSelect}`).click(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     run(() => { 
-        $(`.ember-power-select-option:contains(${TICKET_DEFAULTS.statusTwo})`).click(); 
+        $(`.ember-power-select-option:contains(${TD.statusTwo})`).click(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), TICKET_DEFAULTS.statusTwo);
-    assert.equal(ticket.get('status').get('id'), TICKET_DEFAULTS.statusTwoId);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), TD.statusTwo);
+    assert.equal(ticket.get('status').get('id'), TD.statusTwoId);
     assert.deepEqual(status_one.get('tickets'), []);
-    assert.deepEqual(status_two.get('tickets'), [TICKET_DEFAULTS.idOne]);
+    assert.deepEqual(status_two.get('tickets'), [TD.idOne]);
 });
 

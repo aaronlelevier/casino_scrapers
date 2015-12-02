@@ -83,7 +83,7 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
         });
         var regex = new RegExp(search);
         var searched = sorted.filter(function(object) {
-            var value = object.name || object.username || object.request || object[column];
+            var value = object.name || object.username || object.request || object[column] || object;
             return regex.test(value);
         });
         var paged;

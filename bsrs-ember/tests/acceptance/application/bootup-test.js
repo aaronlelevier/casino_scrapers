@@ -6,13 +6,13 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/status';
 import STORE_STATUS_DEFAULTS from 'bsrs-ember/vendor/defaults/location-status';
 import STATE_DEFAULTS from 'bsrs-ember/vendor/defaults/state';
-import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
+import CD from 'bsrs-ember/vendor/defaults/category';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
-import ADDRESS_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
-import PHONE_NUMBER_DEFAULT from 'bsrs-ember/vendor/defaults/phone-number-type';
-import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
-import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import ATD from 'bsrs-ember/vendor/defaults/address-type';
+import PND from 'bsrs-ember/vendor/defaults/phone-number-type';
+import RD from 'bsrs-ember/vendor/defaults/role';
+import LD from 'bsrs-ember/vendor/defaults/ticket';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
 import BSRS_PERSON_CURRENT_DEFAULTS_OBJECT from 'bsrs-ember/vendor/defaults/person-current';
 
@@ -35,10 +35,10 @@ test('on boot we should fetch and load the phone number configuration', function
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('phone-number-type').get('length'), 2);
-        assert.equal(store.find('phone-number-type').objectAt(0).get('id'), PHONE_NUMBER_DEFAULT.officeId);
-        assert.equal(store.find('phone-number-type').objectAt(0).get('name'), PHONE_NUMBER_DEFAULT.officeName);
-        assert.equal(store.find('phone-number-type').objectAt(1).get('id'), PHONE_NUMBER_DEFAULT.mobileId);
-        assert.equal(store.find('phone-number-type').objectAt(1).get('name'), PHONE_NUMBER_DEFAULT.mobileName);
+        assert.equal(store.find('phone-number-type').objectAt(0).get('id'), PND.officeId);
+        assert.equal(store.find('phone-number-type').objectAt(0).get('name'), PND.officeName);
+        assert.equal(store.find('phone-number-type').objectAt(1).get('id'), PND.mobileId);
+        assert.equal(store.find('phone-number-type').objectAt(1).get('name'), PND.mobileName);
     });
 });
 
@@ -46,10 +46,10 @@ test('on boot we should fetch and load the address configuration', function(asse
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('address-type').get('length'), 2);
-        assert.equal(store.find('address-type').objectAt(0).get('id'), ADDRESS_TYPE_DEFAULTS.officeId);
-        assert.equal(store.find('address-type').objectAt(0).get('name'), ADDRESS_TYPE_DEFAULTS.officeName);
-        assert.equal(store.find('address-type').objectAt(1).get('id'), ADDRESS_TYPE_DEFAULTS.shippingId);
-        assert.equal(store.find('address-type').objectAt(1).get('name'), ADDRESS_TYPE_DEFAULTS.shippingName);
+        assert.equal(store.find('address-type').objectAt(0).get('id'), ATD.officeId);
+        assert.equal(store.find('address-type').objectAt(0).get('name'), ATD.officeName);
+        assert.equal(store.find('address-type').objectAt(1).get('id'), ATD.shippingId);
+        assert.equal(store.find('address-type').objectAt(1).get('name'), ATD.shippingName);
     });
 });
 
@@ -104,22 +104,22 @@ test('on boot we should fetch and load the ticket status configuration', functio
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('ticket-status').get('length'), 8);
-        assert.equal(store.find('ticket-status').objectAt(0).get('id'), TICKET_DEFAULTS.statusOneId);
-        assert.equal(store.find('ticket-status').objectAt(0).get('name'), TICKET_DEFAULTS.statusOne);
-        assert.equal(store.find('ticket-status').objectAt(1).get('id'), TICKET_DEFAULTS.statusTwoId);
-        assert.equal(store.find('ticket-status').objectAt(1).get('name'), TICKET_DEFAULTS.statusTwo);
-        assert.equal(store.find('ticket-status').objectAt(2).get('id'), TICKET_DEFAULTS.statusThreeId);
-        assert.equal(store.find('ticket-status').objectAt(2).get('name'), TICKET_DEFAULTS.statusThree);
-        assert.equal(store.find('ticket-status').objectAt(3).get('id'), TICKET_DEFAULTS.statusFourId);
-        assert.equal(store.find('ticket-status').objectAt(3).get('name'), TICKET_DEFAULTS.statusFour);
-        assert.equal(store.find('ticket-status').objectAt(4).get('id'), TICKET_DEFAULTS.statusFiveId);
-        assert.equal(store.find('ticket-status').objectAt(4).get('name'), TICKET_DEFAULTS.statusFive);
-        assert.equal(store.find('ticket-status').objectAt(5).get('id'), TICKET_DEFAULTS.statusSixId);
-        assert.equal(store.find('ticket-status').objectAt(5).get('name'), TICKET_DEFAULTS.statusSix);
-        assert.equal(store.find('ticket-status').objectAt(6).get('id'), TICKET_DEFAULTS.statusSevenId);
-        assert.equal(store.find('ticket-status').objectAt(6).get('name'), TICKET_DEFAULTS.statusSeven);
-        assert.equal(store.find('ticket-status').objectAt(7).get('id'), TICKET_DEFAULTS.statusEightId);
-        assert.equal(store.find('ticket-status').objectAt(7).get('name'), TICKET_DEFAULTS.statusEight);
+        assert.equal(store.find('ticket-status').objectAt(0).get('id'), LD.statusOneId);
+        assert.equal(store.find('ticket-status').objectAt(0).get('name'), LD.statusOne);
+        assert.equal(store.find('ticket-status').objectAt(1).get('id'), LD.statusTwoId);
+        assert.equal(store.find('ticket-status').objectAt(1).get('name'), LD.statusTwo);
+        assert.equal(store.find('ticket-status').objectAt(2).get('id'), LD.statusThreeId);
+        assert.equal(store.find('ticket-status').objectAt(2).get('name'), LD.statusThree);
+        assert.equal(store.find('ticket-status').objectAt(3).get('id'), LD.statusFourId);
+        assert.equal(store.find('ticket-status').objectAt(3).get('name'), LD.statusFour);
+        assert.equal(store.find('ticket-status').objectAt(4).get('id'), LD.statusFiveId);
+        assert.equal(store.find('ticket-status').objectAt(4).get('name'), LD.statusFive);
+        assert.equal(store.find('ticket-status').objectAt(5).get('id'), LD.statusSixId);
+        assert.equal(store.find('ticket-status').objectAt(5).get('name'), LD.statusSix);
+        assert.equal(store.find('ticket-status').objectAt(6).get('id'), LD.statusSevenId);
+        assert.equal(store.find('ticket-status').objectAt(6).get('name'), LD.statusSeven);
+        assert.equal(store.find('ticket-status').objectAt(7).get('id'), LD.statusEightId);
+        assert.equal(store.find('ticket-status').objectAt(7).get('name'), LD.statusEight);
     });
 });
 
@@ -127,14 +127,14 @@ test('on boot we should fetch and load the ticket priority configuration', funct
     visit(HOME_URL);
     andThen(() => {
         assert.equal(store.find('ticket-priority').get('length'), 4);
-        assert.equal(store.find('ticket-priority').objectAt(0).get('id'), TICKET_DEFAULTS.priorityOneId);
-        assert.equal(store.find('ticket-priority').objectAt(0).get('name'), TICKET_DEFAULTS.priorityOne);
-        assert.equal(store.find('ticket-priority').objectAt(1).get('id'), TICKET_DEFAULTS.priorityTwoId);
-        assert.equal(store.find('ticket-priority').objectAt(1).get('name'), TICKET_DEFAULTS.priorityTwo);
-        assert.equal(store.find('ticket-priority').objectAt(2).get('id'), TICKET_DEFAULTS.priorityThreeId);
-        assert.equal(store.find('ticket-priority').objectAt(2).get('name'), TICKET_DEFAULTS.priorityThree);
-        assert.equal(store.find('ticket-priority').objectAt(3).get('id'), TICKET_DEFAULTS.priorityFourId);
-        assert.equal(store.find('ticket-priority').objectAt(3).get('name'), TICKET_DEFAULTS.priorityFour);
+        assert.equal(store.find('ticket-priority').objectAt(0).get('id'), LD.priorityOneId);
+        assert.equal(store.find('ticket-priority').objectAt(0).get('name'), LD.priorityOne);
+        assert.equal(store.find('ticket-priority').objectAt(1).get('id'), LD.priorityTwoId);
+        assert.equal(store.find('ticket-priority').objectAt(1).get('name'), LD.priorityTwo);
+        assert.equal(store.find('ticket-priority').objectAt(2).get('id'), LD.priorityThreeId);
+        assert.equal(store.find('ticket-priority').objectAt(2).get('name'), LD.priorityThree);
+        assert.equal(store.find('ticket-priority').objectAt(3).get('id'), LD.priorityFourId);
+        assert.equal(store.find('ticket-priority').objectAt(3).get('name'), LD.priorityFour);
     });
 });
 
@@ -159,13 +159,16 @@ test('on boot we should fetch and load the role configuration', function(assert)
     andThen(() => {
         var role_models = store.find('role');
         var category_models = store.find('category');
-        assert.equal(role_models.get('length'), 3);
-        assert.equal(role_models.objectAt(0).get('id'), ROLE_DEFAULTS.idOne);
-        assert.equal(role_models.objectAt(0).get('name'), t(ROLE_DEFAULTS.nameOne));
-        assert.equal(role_models.objectAt(0).get('location_level').get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
-        assert.equal(role_models.objectAt(0).get('location_level').get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
-        assert.equal(role_models.objectAt(0).get('role_type'), ROLE_DEFAULTS.roleTypeGeneral);
-        assert.equal(role_models.objectAt(2).get('location_level'), undefined);
+        assert.equal(role_models.get('length'), 6);
+        assert.equal(role_models.objectAt(0).get('id'), RD.idOne);
+        assert.equal(role_models.objectAt(0).get('name'), t(RD.nameOne));
+        assert.equal(role_models.objectAt(0).get('location_level').get('id'), LLD.idOne);
+        assert.equal(role_models.objectAt(0).get('location_level').get('name'), LLD.nameCompany);
+        assert.equal(role_models.objectAt(0).get('role_type'), RD.roleTypeGeneral);
+        assert.equal(role_models.objectAt(0).get('location_level').get('id'), LLD.idOne);
+        assert.equal(role_models.objectAt(1).get('location_level').get('id'), LLD.idDistrict);
+        assert.equal(role_models.objectAt(2).get('location_level').get('id'), LLD.idThree);
+        assert.equal(role_models.objectAt(3).get('location_level').get('id'), LLD.idStore);
     });
 });
 
@@ -175,7 +178,7 @@ test('on boot we should fetch and load the role types configuration', function(a
         var role_types_models = store.find('role-type');
         assert.equal(role_types_models.get('length'), 2);
         assert.ok(role_types_models.objectAt(0).get('id') > 0);
-        assert.equal(role_types_models.objectAt(0).get('name'), ROLE_DEFAULTS.roleTypeGeneral);
+        assert.equal(role_types_models.objectAt(0).get('name'), RD.roleTypeGeneral);
     });
 });
 
@@ -184,8 +187,8 @@ test('on boot we should fetch and load the location level configuration', functi
     andThen(() => {
         var location_level_models = store.find('location-level');
         assert.equal(location_level_models.get('length'), 8);
-        assert.equal(location_level_models.objectAt(0).get('id'), LOCATION_LEVEL_DEFAULTS.idOne);
-        assert.equal(location_level_models.objectAt(0).get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(location_level_models.objectAt(0).get('id'), LLD.idOne);
+        assert.equal(location_level_models.objectAt(0).get('name'), LLD.nameCompany);
         assert.equal(location_level_models.objectAt(0).get('children.length'), 7);
     });
 });

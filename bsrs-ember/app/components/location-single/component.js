@@ -14,11 +14,6 @@ var LocationSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin
                 this._super();
             }
         },
-        changedStatus(model, val) {
-            Ember.run(() => {
-                model.set('status', val);
-            });
-        }
     }
 });
 

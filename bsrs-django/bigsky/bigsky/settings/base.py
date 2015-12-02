@@ -51,14 +51,11 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-# Turn on for debug mode
-# INTERNAL_IPS = (
-#        '127.0.0.1',
-#         )
+# Turn on for debug mode in 'debug_toolbar'
+# INTERNAL_IPS = ('127.0.0.1',)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -69,6 +66,8 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     # Translation Req
     'django.middleware.locale.LocaleMiddleware',
+    # debug_toolbar
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'bigsky.urls'
@@ -182,6 +181,9 @@ IMAGE_THUMBNAIL_SUB_PATH = "attachments/images/thumbnail"
 # 500MB - 429916160
 MAX_UPLOAD_SIZE = 5242880
 
+### ROLE
+DEFAULT_ROLE = 'Administrator'
+
 ### LOCATION
 DEFAULT_LOCATION_STATUS = 'Open'
 DEFAULT_LOCATION_TYPE = 'big_store'
@@ -189,9 +191,11 @@ DEFAULT_LOCATION_TYPE = 'big_store'
 ### PERSON
 PASSWORD_EXPIRE_DAYS = 90
 MAX_PASSWORDS_STORED = 5
+DEFAULT_PERSON_STATUS = 'Active'
 
 ### THIRD PARTY
 THIRD_PARTY_STATUS_DEFAULT = "active"
 
 ### TICKETS
 ACTIVITY_DEFAULT_WEIGHT = 4
+DEFAULTS_TICKET_STATUS = "ticket.status.new" 

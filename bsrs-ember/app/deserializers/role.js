@@ -41,8 +41,9 @@ let extract_category = (model, store, role_existing, uuid, category_deserializer
 
 let extract_location_level = (model, store) => {
     let location_level_pk;
-    if (model.location_level) {
-        location_level_pk = model.location_level;
+    let fk = model.location_level || model.location_level_fk;//
+    if (fk) {
+        location_level_pk = fk;//
     } else {
         let role = store.find('role', model.id);
         if (role.get('location_level')) {
@@ -58,7 +59,7 @@ let extract_location_level = (model, store) => {
         return undefined;
     }
     if(location_level_pk) {
-        let location_level = store.find('location-level', model.location_level);
+        let location_level = store.find('location-level', fk);//
         let existing_roles = location_level.get('roles') || [];
         if (location_level.get('content') && existing_roles.indexOf(model.id) === -1) {
             location_level.set('roles', existing_roles.concat([model.id]));

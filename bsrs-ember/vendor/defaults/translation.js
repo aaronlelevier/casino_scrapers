@@ -22,6 +22,9 @@ var BSRS_TRANSLATION_DEFAULTS_OBJECT = (function() {
             localeThreeId: 'fe0a7aa5-54b0-4bb1-a79d-bc22621562ec',
             localeThreeTranslation: '欢迎',
             localeThreeHelper: '欢迎人们到现场',
+            // alternate translations
+            otherTranslationOne: 'goodbye',
+            otherTranslationTwo: 'adios'
         };
     };
     return factory;

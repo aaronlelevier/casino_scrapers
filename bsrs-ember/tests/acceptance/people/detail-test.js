@@ -18,13 +18,13 @@ import PD_PUT from 'bsrs-ember/vendor/defaults/person-put';
 import PERSON_CURRENT_DEFAULTS from 'bsrs-ember/vendor/defaults/person-current';
 import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
-import PHONE_NUMBER_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import AF from 'bsrs-ember/vendor/address_fixtures';
 import AD from 'bsrs-ember/vendor/defaults/address';
-import ADDRESS_TYPES_DEFAULTS from 'bsrs-ember/vendor/defaults/address-type';
+import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/person';
@@ -45,7 +45,7 @@ const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-option`;
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid;
+var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url;
 
 module('Acceptance | detail test', {
     beforeEach() {
@@ -57,6 +57,7 @@ module('Acceptance | detail test', {
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
         detail_xhr = xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data);
         original_uuid = random.uuid;
+        url = `${PREFIX}${DETAIL_URL}/`;
     },
     afterEach() {
         random.uuid = original_uuid;
@@ -87,23 +88,23 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-person-last-name').val(), PD.last_name);
         assert.equal(find('.t-person-title').val(), PD.title);
         assert.equal(find('.t-person-employee_id').val(), PD.employee_id);
-        assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
-        assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
-        assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), t(PHONE_NUMBER_TYPES_DEFAULTS.officeName));
-        assert.equal(find('.t-input-multi-phone').find('select:eq(1) option:selected').text(), t(PHONE_NUMBER_TYPES_DEFAULTS.mobileName));
+        assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), PNTD.officeId);
+        assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), PNTD.mobileId);
+        assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), t(PNTD.officeName));
+        assert.equal(find('.t-input-multi-phone').find('select:eq(1) option:selected').text(), t(PNTD.mobileName));
         assert.equal(find('.t-input-multi-phone').find('input').length, 2);
         assert.equal(find('.t-input-multi-phone').find('input:eq(0)').val(), PND.numberOne);
         assert.equal(find('.t-input-multi-phone').find('input:eq(1)').val(), PND.numberTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group').length, 2);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.officeId);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), t(ADDRESS_TYPES_DEFAULTS.officeName));
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type').val(), ATD.officeId);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-type option:selected').text(), t(ATD.officeName));
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-address').val(), AD.streetOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-city').val(), AD.cityOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-state').val(), AD.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-postal-code').val(), AD.zipOne);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(0) .t-address-country').val(), AD.countryOne);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ADDRESS_TYPES_DEFAULTS.shippingId);
-        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), t(ADDRESS_TYPES_DEFAULTS.shippingName));
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type').val(), ATD.shippingId);
+        assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-type option:selected').text(), t(ATD.shippingName));
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-address').val(), AD.streetTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-city').val(), AD.cityTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), AD.stateTwo);
@@ -121,7 +122,6 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-amount').val(), PD.auth_amount);
         assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
     });
-    var url = PREFIX + DETAIL_URL + '/';
     var response = PF.detail(PD.id);
     var payload = PF.put({id: PD.id, username: PD_PUT.username, first_name: PD_PUT.first_name,
                                       middle_initial: PD_PUT.middle_initial, last_name: PD_PUT.last_name, title: PD_PUT.title,
@@ -159,7 +159,6 @@ test('when editing username to invalid, it checks for validation', (assert) => {
         assert.equal(find('.t-username-validation-error').text().trim(), 'invalid username');
     });
     fillIn('.t-person-username', PD_PUT.username);
-    var url = PREFIX + DETAIL_URL + '/';
     var response = PF.detail(PD.id);
     var payload = PF.put({id: PD.id, username: PD_PUT.username});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
@@ -194,7 +193,6 @@ test('when changing password to invalid, it checks for validation', (assert) => 
 test('payload does not include password if blank or undefined', (assert) => {
     visit(DETAIL_URL);
     fillIn('.t-person-username', PD.sorted_username);
-    let url = PREFIX + DETAIL_URL + '/';
     let response = PF.detail(PD.id);
     let payload = PF.put({id: PD.id, username: PD.sorted_username});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
@@ -268,7 +266,6 @@ test('phone numbers without a valid number are ignored and removed on save', (as
         assert.equal(store.find('phonenumber').get('length'), 3);
     });
     fillIn('.t-new-entry:eq(2)', '');
-    var url = PREFIX + DETAIL_URL + "/";
     var response = PF.detail(PD.id);
     var payload = PF.put({id: PD.id});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
@@ -320,7 +317,6 @@ test('address without a valid address or zip code are ignored and removed on sav
         assert.equal(store.find('address').get('length'), 3);
     });
     fillIn('.t-address-postal-code:eq(2)', '');
-    var url = PREFIX + DETAIL_URL + "/";
     var response = PF.detail(PD.id);
     var payload = PF.put({id: PD.id});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
@@ -405,11 +401,10 @@ test('when editing phone numbers and addresses to invalid, it checks for validat
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-username-validation-error:not(:hidden)').length, 1);
     });
-    var url = PREFIX + DETAIL_URL + "/";
     var response = PF.detail(PD.id);
     var payload = PF.put({id: PD.id});
-    payload.phone_numbers.push({id: 'abc123', number: '515-222-3333', type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
-    payload.addresses.push({id: 'abc123', type: ADDRESS_TYPES_DEFAULTS.officeId, address: AD.streetThree, postal_code: AD.zipOne});
+    payload.phone_numbers.push({id: 'abc123', number: '515-222-3333', type: PNTD.officeId});
+    payload.addresses.push({id: 'abc123', type: ATD.officeId, address: AD.streetThree, postal_code: AD.zipOne});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-person-username', PD.username);
     generalPage.save();
@@ -435,10 +430,9 @@ test('clicking cancel button will take from detail view to list view', (assert) 
 
 test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
-    var url = PREFIX + DETAIL_URL + "/";
-    var phone_numbers = PNF.put({id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId});
+    var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.mobileId});
     var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
-    fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+    fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -448,11 +442,10 @@ test('when you change a related phone numbers type it will be persisted correctl
 
 test('when you change a related address type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
-    var url = PREFIX + DETAIL_URL + "/";
-    var addresses = AF.put({id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.shippingId});
+    var addresses = AF.put({id: AD.idOne, type: ATD.shippingId});
     var payload = PF.put({id: PD.id, addresses: addresses});
     xhr(url,'PUT',JSON.stringify(payload),{},200);
-    fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    fillIn('.t-address-type:eq(0)', ATD.shippingId);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
@@ -460,7 +453,7 @@ test('when you change a related address type it will be persisted correctly', (a
 });
 
 test('when you change a related role it will be persisted correctly', (assert) => {
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}`;
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     visit(DETAIL_URL);
     andThen(() => {
@@ -479,7 +472,6 @@ test('when you change a related role it will be persisted correctly', (assert) =
         andThen(() => {
             assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
         });
-        var url = PREFIX + DETAIL_URL + "/";
         var role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
         var payload = PF.put({id: PD.id, role: role.id});
         payload.locations = [];
@@ -538,7 +530,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user changes an attribute on phonenumber and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-multi-phone-type:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+    fillIn('.t-multi-phone-type:eq(0)', PNTD.mobileId);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -552,14 +544,14 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
             assert.equal(currentURL(), PEOPLE_URL);
             var person = store.find('person', PD.id);
             var phone_numbers = store.find('phonenumber', PD.id);
-            assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+            assert.equal(phone_numbers.source[0].get('type'), PNTD.officeId);
         });
     });
 });
 
 test('when user changes an attribute on address and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
     visit(DETAIL_URL);
-    fillIn('.t-address-type:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    fillIn('.t-address-type:eq(0)', ATD.shippingId);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -573,7 +565,7 @@ test('when user changes an attribute on address and clicks cancel we prompt them
             assert.equal(currentURL(), PEOPLE_URL);
             var person = store.find('person', PD.id);
             var addresses = store.find('address', PD.id);
-            assert.equal(addresses.source[0].get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
+            assert.equal(addresses.source[0].get('type'), ATD.officeId);
         });
     });
 });
@@ -594,7 +586,7 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
             assert.equal(currentURL(), PEOPLE_URL);
             var person = store.find('person', PD.id);
             var phone_numbers = store.find('phonenumber', PD.id);
-            assert.equal(phone_numbers.source[0].get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+            assert.equal(phone_numbers.source[0].get('type'), PNTD.officeId);
         });
     });
 });
@@ -615,7 +607,7 @@ test('when user removes an address clicks cancel we prompt them with a modal and
             assert.equal(currentURL(), PEOPLE_URL);
             var person = store.find('person', PD.id);
             var addresses = store.find('address', PD.id);
-            assert.equal(addresses.source[0].get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
+            assert.equal(addresses.source[0].get('type'), ATD.officeId);
         });
     });
 });
@@ -657,7 +649,7 @@ test('when you deep link to the person detail view you can add a new phone numbe
     });
     var phone_numbers = PNF.put();
     var response = PF.detail(PD.id);
-    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
     var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -686,7 +678,7 @@ test('when you deep link to the person detail view you can add a new address', (
     });
     var addresses = AF.put();
     var response = PF.detail(PD.id);
-    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: AD.streetThree});
+    addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
     var payload = PF.put({id: PD.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -793,13 +785,13 @@ test('when you deep link to the person detail view you can add and remove a new 
 test('when you deep link to the person detail view you can change the phone number type and add a new phone number', (assert) => {
     random.uuid = function() { return UUID.value; };
     visit(DETAIL_URL);
-    fillIn('.t-input-multi-phone select:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+    fillIn('.t-input-multi-phone select:eq(0)', PNTD.mobileId);
     click('.t-add-btn:eq(0)');
     fillIn('.t-new-entry:eq(2)', PND.numberThree);
     var phone_numbers = PNF.put();
-    phone_numbers[0].type = PHONE_NUMBER_TYPES_DEFAULTS.mobileId;
+    phone_numbers[0].type = PNTD.mobileId;
     var response = PF.detail(PD.id);
-    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
     var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -807,8 +799,8 @@ test('when you deep link to the person detail view you can change the phone numb
         assert.equal(currentURL(),PEOPLE_URL);
         var person = store.find('person', PD.id);
         assert.ok(person.get('isNotDirty'));
-        assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
-        assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+        assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PNTD.mobileId);
+        assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PNTD.officeId);
         assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
     });
 });
@@ -816,13 +808,13 @@ test('when you deep link to the person detail view you can change the phone numb
 test('when you deep link to the person detail view you can change the address type and can add new address with default type', (assert) => {
     random.uuid = function() { return UUID.value; };
     visit(DETAIL_URL);
-    fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    fillIn('.t-input-multi-address .t-address-group:eq(0) select:eq(0)', ATD.shippingId);
     click('.t-add-address-btn:eq(0)');
     fillIn('.t-address-address:eq(2)', AD.streetThree);
     var addresses = AF.put();
-    addresses[0].type = ADDRESS_TYPES_DEFAULTS.shippingId;
+    addresses[0].type = ATD.shippingId;
     var response = PF.detail(PD.id);
-    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: AD.streetThree});
+    addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
     var payload = PF.put({id: PD.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -830,8 +822,8 @@ test('when you deep link to the person detail view you can change the address ty
         assert.equal(currentURL(),PEOPLE_URL);
         var person = store.find('person', PD.id);
         assert.ok(person.get('isNotDirty'));
-        assert.equal(person.get('addresses').objectAt(0).get('type'), ADDRESS_TYPES_DEFAULTS.shippingId);
-        assert.equal(person.get('addresses').objectAt(2).get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
+        assert.equal(person.get('addresses').objectAt(0).get('type'), ATD.shippingId);
+        assert.equal(person.get('addresses').objectAt(2).get('type'), ATD.officeId);
         assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
     });
 });
@@ -844,20 +836,20 @@ test('when you deep link to the person detail view you can add and save a new ph
         assert.equal(currentURL(), DETAIL_URL);
     });
     var phone_numbers = PNF.put();
-    phone_numbers[0].type = PHONE_NUMBER_TYPES_DEFAULTS.mobileId;
+    phone_numbers[0].type = PNTD.mobileId;
     var response = PF.detail(PD.id);
-    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId});
+    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
     var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    fillIn('.t-input-multi-phone select:eq(0)', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
+    fillIn('.t-input-multi-phone select:eq(0)', PNTD.mobileId);
     fillIn('.t-new-entry:eq(2)', PND.numberThree);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         var person = store.find('person', PD.id);
         assert.ok(person.get('isNotDirty'));
-        assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
-        assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PHONE_NUMBER_TYPES_DEFAULTS.officeId);
+        assert.equal(person.get('phone_numbers').objectAt(0).get('type'), PNTD.mobileId);
+        assert.equal(person.get('phone_numbers').objectAt(2).get('type'), PNTD.officeId);
         assert.ok(person.get('phone_numbers').objectAt(0).get('isNotDirty'));
     });
 });
@@ -870,26 +862,26 @@ test('when you deep link to the person detail view you can add and save a new ad
         assert.equal(currentURL(), DETAIL_URL);
     });
     var addresses = AF.put();
-    addresses[0].type = ADDRESS_TYPES_DEFAULTS.shippingId;
+    addresses[0].type = ATD.shippingId;
     var response = PF.detail(PD.id);
-    addresses.push({id: UUID.value, type: ADDRESS_TYPES_DEFAULTS.officeId, address: AD.streetThree});
+    addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
     var payload = PF.put({id: PD.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    fillIn('.t-input-multi-address select:eq(0)', ADDRESS_TYPES_DEFAULTS.shippingId);
+    fillIn('.t-input-multi-address select:eq(0)', ATD.shippingId);
     fillIn('.t-address-address:eq(2)', AD.streetThree);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         var person = store.find('person', PD.id);
         assert.ok(person.get('isNotDirty'));
-        assert.equal(person.get('addresses').objectAt(0).get('type'), ADDRESS_TYPES_DEFAULTS.shippingId);
-        assert.equal(person.get('addresses').objectAt(2).get('type'), ADDRESS_TYPES_DEFAULTS.officeId);
+        assert.equal(person.get('addresses').objectAt(0).get('type'), ATD.shippingId);
+        assert.equal(person.get('addresses').objectAt(2).get('type'), ATD.officeId);
         assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
     });
 });
 
 test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}`;
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     visit(DETAIL_URL);
     andThen(() => {
@@ -897,7 +889,7 @@ test('when you deep link to the person detail view you can alter the role and ro
         //refreshModel will call findById in people repo
         let people_detail_data_two = PF.detail(PD.id);
         people_detail_data_two.role = RD.idTwo;
-        xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_two);
+        xhr(`${endpoint}${PD.idOne}/`, 'GET', null, {}, 200, people_detail_data_two);
         assert.equal(currentURL(), DETAIL_URL);
         var person = store.find('person', PD.id);
         andThen(() => {
@@ -939,7 +931,7 @@ test('when you deep link to the person detail view you can alter the role and ro
 });
 
 test('when you deep link to the person detail view you can alter the role and change it back without dirtying the person model', (assert) => {
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}`;
     let first_location_xhr = xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     visit(DETAIL_URL);
     andThen(() => {
@@ -966,7 +958,7 @@ test('when you deep link to the person detail view you can alter the role and ch
         andThen(() => {
             clearxhr(first_role_change);
             clearxhr(first_location_xhr);
-            let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne;
+            let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}`;
             xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
             let people_detail_data_three = PF.detail(PD.id);
             people_detail_data_three.role = RD.idOne;
@@ -1020,7 +1012,7 @@ test('when you change a related role it will change the related locations as wel
             let locations = store.find('location');
             assert.equal(locations.get('length'), 1);
         });
-        let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+        let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
         xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
         page.locationClickDropdown();
         fillIn(LOCATION_SEARCH, 'a');
@@ -1034,7 +1026,7 @@ test('when you change a related role it will change the related locations as wel
         clearxhr(detail_xhr);
         let people_detail_data_two = PF.detail(PD.id);
         xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_two);
-        let locations_endpoint_role_change = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo + '&name__icontains=a';
+        let locations_endpoint_role_change = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}&name__icontains=a`;
         xhr(locations_endpoint_role_change, 'GET', null, {}, 200, LF.list());
         fillIn('.t-person-role-select', RD.idTwo);
         andThen(() => {
@@ -1067,7 +1059,7 @@ test('when you change a related role it will change the related locations as wel
             let locations = store.find('location');
             assert.equal(locations.get('length'), 1);
         });
-        let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+        let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
         xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
         page.locationClickDropdown();
         fillIn(LOCATION_SEARCH, 'a');
@@ -1087,7 +1079,7 @@ test('when you change a related role it will change the related locations as wel
         let people_detail_data_two = PF.detail(PD.id);
         people_detail_data_two.role = RD.idTwo;
         xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_two);
-        let locations_endpoint_role_change = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idTwo;
+        let locations_endpoint_role_change = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}`;
         xhr(locations_endpoint_role_change, 'GET', null, {}, 200, LF.list());
         fillIn('.t-person-role-select', RD.idTwo);
         andThen(() => {
@@ -1120,7 +1112,7 @@ test('deep link to person and clicking in the person-locations-select component 
         assert.equal(page.locationOptionLength(), 1);
         assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
     });
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     fillIn(LOCATION_SEARCH, 'a');
     andThen(() => {
@@ -1158,7 +1150,7 @@ test('can remove and add back same location', (assert) => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 0);
     });
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     fillIn(LOCATION_SEARCH, 'a');
     page.locationClickOptionOneEq();
@@ -1194,7 +1186,7 @@ test('starting with multiple locations, can remove all locations (while not popu
         assert.equal(person.get('locations').get('length'), 0);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     page.locationClickDropdown();
     fillIn(LOCATION_SEARCH, 'a');
@@ -1242,7 +1234,7 @@ test('when you deep link to the person detail view you can alter the locations a
         assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), GLOBALMSG.power_search);
     });
     xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = PREFIX + '/admin/locations/?location_level=' + LOCATION_LEVEL_DEFAULTS.idOne + '&name__icontains=a';
+    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=a`;
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     fillIn(LOCATION_SEARCH, 'a');
     page.locationClickOptionTwo();
