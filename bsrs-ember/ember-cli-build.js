@@ -39,6 +39,8 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/currencies.js');
       app.import('vendor/defaults/category.js');
       app.import('vendor/defaults/general.js');
+      app.import('vendor/defaults/locale.js');
+      app.import('vendor/defaults/locale-translation.js');
       app.import('vendor/defaults/location.js');
       app.import('vendor/defaults/location-level.js');
       app.import('vendor/defaults/location-status.js');
