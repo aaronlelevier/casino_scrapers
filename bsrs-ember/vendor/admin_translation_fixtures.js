@@ -2,25 +2,21 @@ var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
     var factory = function(defaults) {
         this.defaults = defaults;
     };
-    factory.prototype.get = function(i, name) {
-        var name = name || this.defaults.storeName;
+    factory.prototype.get = function(i) {
+        // var name = name || this.defaults.storeName;
         return {
             id: i || this.defaults.idOne,
-            key: this.defaults.keyOne,
-            helper: this.defaults.helperOne,
+            key: this.defaults.keyOneGrid,
             locales: [
                 {
                     locale: this.defaults.localeOneId,
-                    translation: this.defaults.localeOneTranslation,
-                    helper: this.defaults.localeOneHelper
+                    translation: this.defaults.localeOneTranslation
                 },{
                     locale: this.defaults.localeTwoId,
-                    translation: this.defaults.localeTwoTranslation,
-                    helper: this.defaults.localeTwoHelper
+                    translation: this.defaults.localeTwoTranslation
                 },{
                     locale: this.defaults.localeThreeId,
-                    translation: this.defaults.localeThreeTranslation,
-                    helper: this.defaults.localeThreeHelper
+                    translation: this.defaults.localeThreeTranslation
                 }
             ]
         }
@@ -29,8 +25,7 @@ var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
         var id = i || this.defaults.idOne;
         return {
             id: id,
-            key : this.defaults.keyOne,
-            helper: this.defaults.helperOne
+            key : this.defaults.keyOne
         }
     };
     factory.prototype.list = function() {
@@ -57,9 +52,16 @@ var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
         return this.get(this.defaults.idOne);
     };
     factory.prototype.put = function(translation) {
-        var response = this.generate(translation.id);
+        var response = this.get(translation.id);
+        // update top level key:values
         for(var key in translation) {
             response[key] = translation[key];
+        }
+        // update nested locales
+        for(var x in translation.locales) {
+            for(var y in translation.locales[x]) {
+                response.locales[x][y] =  translation.locales[x][y];
+            }
         }
         return response;
     };

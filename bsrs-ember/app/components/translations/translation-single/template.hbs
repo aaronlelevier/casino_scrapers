@@ -32,14 +32,6 @@
                             {{/form-group}}
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            {{#form-group title="admin.translation.label.helper" for="helper"}}
-                            {{input type="text" placeholder=(t "admin.translation.label.translation") value=locale.helper class="form-control t-translation-helper"}}
-                            {{#validation-error-field submitted=submitted field="helper" className="validation validation-under t-helper-validation-error" model=model validation=helperValidation}}{{t "validation.invalid"}} {{t "admin.translation.label.helper"}}{{/validation-error-field}}
-                            {{/form-group}}
-                        </div>
-                    </div>
                     <br><br>
                     {{/each}}
                 </section>
