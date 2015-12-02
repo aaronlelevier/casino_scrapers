@@ -16,7 +16,7 @@ class TicketStatusManagerTests(TestCase):
     def test_default(self):
         default = TicketStatus.objects.default()
         self.assertIsInstance(default, TicketStatus)
-        self.assertEqual(default.name, TICKET_STATUSES[0])
+        self.assertEqual(default.name, TICKET_STATUSES[5])
 
 
 class TicketPriorityTests(TestCase):

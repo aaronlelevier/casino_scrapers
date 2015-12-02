@@ -236,7 +236,7 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     '''
     # keys
     location_level = models.ForeignKey(LocationLevel, related_name='locations')
-    status = models.ForeignKey(LocationStatus, related_name='locations', blank=False, null=False)
+    status = models.ForeignKey(LocationStatus, related_name='locations', blank=True, null=True)
     type = models.ForeignKey(LocationType, related_name='locations', blank=True, null=True)
     phone_numbers = GenericRelation(PhoneNumber)
     addresses = GenericRelation(Address)
@@ -254,6 +254,8 @@ class Location(SelfRefrencingBaseModel, BaseModel):
         return self.name
 
     def save(self, *args, **kwargs):
+        if not self.status:
+            self.status = LocationStatus.objects.default()
         if not self.type:
             self.type = LocationType.objects.default()
 

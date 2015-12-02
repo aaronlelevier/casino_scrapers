@@ -6,12 +6,13 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import page from 'bsrs-ember/tests/pages/role';
+import page from 'bsrs-ember/tests/pages/location';
 import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;

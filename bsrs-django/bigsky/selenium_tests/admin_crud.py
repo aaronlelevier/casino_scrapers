@@ -95,61 +95,61 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     #         [r.text for r in role_list_view]
     #     )
 
-    # def test_location(self):
-    #     ### CREATE
-    #     # Go to Location Area
-    #     self.nav_page.find_location_link().click()
-    #     # Create Location Page Object
-    #     location_page = ModelPage(
-    #         driver = self.driver,
-    #         new_link = "t-add-new",
-    #         list_name = "t-location-name",
-    #         list_data = "t-grid-data"
-    #     )
-    #     # Get to "Location create view"
-    #     location_new_link = location_page.find_new_link()
-    #     location_new_link.click()
-    #     # Enter info and hit "save"
-    #     location_name = rand_chars()
-    #     location_number = rand_chars()
-    #     location_level = rand_chars()
-    #     location = InputHelper(location_name=location_name, location_number=location_number)
-    #     self._fill_in(location)
-    #     location_level_select = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
-    #     location_level_select.click()
-    #     ll_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
-    #     ll_option.click()
-    #     # location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
-    #     # location_level_input.select_by_index(1)
-    #     self.gen_elem_page.click_save_btn()
-    #     # Go to newly created Location's Detail view
-    #     self.driver_wait.find_elements_by_class_name(location_page.list_data)
-    #     self.driver.refresh()
-    #     location_list_view = location_page.find_list_name()
-    #     location_page.click_name_in_list(location_name, location_list_view)
-    #     ### UPDATE
-    #     # Go to Location Detail view, Change name and hit "save"
-    #     location_page.find_wait_and_assert_elem("t-location-name", location_name)
-    #     location_name = rand_chars()
-    #     location = InputHelper(location_name=location_name)
-    #     self._fill_in(location, True)
-    #     self.gen_elem_page.click_save_btn()
-    #     # List view contains new name
-    #     locations = location_page.find_list_data()
-    #     location_list_view = location_page.find_list_name()
-    #     location_page.click_name_in_list(location_name, location_list_view)
-    #     ### DELETE
-    #     # Go to Location Detail view click Delete
-    #     self.gen_elem_page.click_dropdown_delete()
-    #     self.gen_elem_page.click_delete_btn()
-    #     # check Role is deleted
-    #     self.driver.refresh()
-    #     locations = location_page.find_list_data()
-    #     location_list_view = location_page.find_list_name()
-    #     self.assertNotIn(
-    #         location_name,
-    #         [r.text for r in location_list_view]
-    #     )
+    def test_location(self):
+        ### CREATE
+        # Go to Location Area
+        self.nav_page.find_location_link().click()
+        # Create Location Page Object
+        location_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-location-name",
+            list_data = "t-grid-data"
+        )
+        # Get to "Location create view"
+        location_new_link = location_page.find_new_link()
+        location_new_link.click()
+        # Enter info and hit "save"
+        location_name = rand_chars()
+        location_number = rand_chars()
+        location_level = rand_chars()
+        location = InputHelper(location_name=location_name, location_number=location_number)
+        self._fill_in(location)
+        location_level_select = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
+        location_level_select.click()
+        ll_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
+        ll_option.click()
+        # location_level_input = Select(self.driver.find_element_by_id("location_location_level_select"))
+        # location_level_input.select_by_index(1)
+        self.gen_elem_page.click_save_btn()
+        # Go to newly created Location's Detail view
+        self.driver_wait.find_elements_by_class_name(location_page.list_data)
+        self.driver.refresh()
+        location_list_view = location_page.find_list_name()
+        location_page.click_name_in_list(location_name, location_list_view)
+        ### UPDATE
+        # Go to Location Detail view, Change name and hit "save"
+        location_page.find_wait_and_assert_elem("t-location-name", location_name)
+        location_name = rand_chars()
+        location = InputHelper(location_name=location_name)
+        self._fill_in(location, True)
+        self.gen_elem_page.click_save_btn()
+        # List view contains new name
+        locations = location_page.find_list_data()
+        location_list_view = location_page.find_list_name()
+        location_page.click_name_in_list(location_name, location_list_view)
+        ### DELETE
+        # Go to Location Detail view click Delete
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        # check Role is deleted
+        self.driver.refresh()
+        locations = location_page.find_list_data()
+        location_list_view = location_page.find_list_name()
+        self.assertNotIn(
+            location_name,
+            [r.text for r in location_list_view]
+        )
 
     def test_location_level(self):
         ### CREATE

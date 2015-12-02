@@ -8,15 +8,15 @@ import config from 'bsrs-ember/config/environment';
 import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import page from 'bsrs-ember/tests/pages/role';
+import page from 'bsrs-ember/tests/pages/location';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = `${BASE_URL}/index`;
 const DETAIL_URL = BASE_URL + '/' + LD.idOne;
-const LOCATIONLEVELCLEAR = '.t-location-level-select > .ember-power-select-trigger > .ember-power-select-clear-btn';
 
 let application, store, endpoint, list_xhr;
 
@@ -56,19 +56,40 @@ test('visiting admin/location', (assert) => {
         assert.equal(location.get('location_level').get('id'), LLD.idOne);
         assert.equal(find('.t-location-name').val(), LD.baseStoreName);
         assert.equal(find('.t-location-number').val(), LD.storeNumber);
+        assert.equal(page.statusInput(), LDS.openName);
     });
-    let response = LF.detail(LD.idOne);
-    let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo});
-    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-location-name', LD.storeNameTwo);
     andThen(() => {
         let location = store.find('location', LD.idOne);
         assert.ok(location.get('isDirty'));
         assert.ok(location.get('isDirtyOrRelatedDirty'));
     });
+    page.statusClickDropdown();
+    andThen(() => {
+        assert.equal(page.statusOptionLength(), 3);
+        let location = store.find('location', LD.idOne);
+        assert.equal(location.get('status_fk'), LDS.openId);
+        assert.equal(location.get('status.id'), LDS.openId);
+        assert.ok(location.get('isDirty'));
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+        assert.ok(location.get('statusIsNotDirty'));
+    });
+    page.statusClickOptionTwo();
+    andThen(() => {
+        assert.equal(page.statusOptionLength(), 0);
+        let location = store.find('location', LD.idOne);
+        assert.equal(location.get('status_fk'), LDS.openId);
+        assert.equal(location.get('status.id'), LDS.closedId);
+        assert.ok(location.get('isDirty'));
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+        assert.ok(location.get('statusIsDirty'));
+    });
     let list = LF.list();
     list.results[0].name = LD.storeNameTwo;
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
+    let response = LF.detail(LD.idOne);
+    let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo, status: LDS.closedId});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);

@@ -1,0 +1,10 @@
+{{#power-select
+  class="t-location-status-select"
+  options=all_statuses
+  selected=location.status
+  onchange=(action "selected")
+  searchEnabled=false
+  as |status|
+}}
+  {{status.name}}
+{{/power-select}}

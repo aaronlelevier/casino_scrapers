@@ -4,6 +4,7 @@
     "uploadFile",
     "ajax",
     "patchRandom",
+    "patchRandomAsync",
     "clearAll",
     "saveFilterSet",
     "filterGrid",

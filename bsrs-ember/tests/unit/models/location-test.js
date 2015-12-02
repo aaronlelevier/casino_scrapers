@@ -2,13 +2,14 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
 var store;
 
 module('unit: location test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:location', 'model:location-level']);
+        store = module_registry(this.container, this.registry, ['model:location', 'model:location-level', 'model:location-status']);
     }
 });
 
@@ -125,4 +126,82 @@ test('rollback location-level will reset the previously used location-level when
     assert.deepEqual(admin_location_level.get('locations'), [LD.unusedId, LD.idOne]);
     assert.ok(another_location_level.get('isNotDirty'));
     assert.ok(admin_location_level.get('isNotDirty'));
+});
+
+/*LOCATION TO STATUS*/
+test('location is dirty or related is dirty when existing status is altered', (assert) => {
+    let location = store.push('location', {id: LD.idOne, status_fk: LDS.openId});
+    store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
+    store.push('location-status', {id: LDS.closedId, name: LDS.closedName, locations: []});
+    assert.equal(location.get('status.id'), LDS.openId);
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    location.change_status(LDS.closedId);
+    assert.equal(location.get('status.id'), LDS.closedId);
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+});
+
+test('location is dirty or related is dirty when existing status is altered (starting w/ nothing)', (assert) => {
+    let location = store.push('location', {id: LD.idOne, status_fk: undefined});
+    store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: []});
+    assert.equal(location.get('status'), undefined);
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    location.change_status(LDS.openId);
+    assert.equal(location.get('status.id'), LDS.openId);
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+});
+
+test('rollback status will revert and reboot the dirty status to clean', (assert) => {
+    let location = store.push('location', {id: LD.idOne, status_fk: LDS.openId});
+    store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
+    store.push('location-status', {id: LDS.closedId, name: LDS.closedName, locations: []});
+    assert.equal(location.get('status.id'), LDS.openId);
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    location.change_status(LDS.closedId);
+    assert.equal(location.get('status.id'), LDS.closedId);
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    location.rollbackRelated();
+    assert.equal(location.get('status.id'), LDS.openId);
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    location.change_status(LDS.closedId);
+    assert.equal(location.get('status.id'), LDS.closedId);
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    location.saveRelated();
+    assert.equal(location.get('status.id'), LDS.closedId);
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('status property returns associated object or undefined', (assert) => {
+    let location = store.push('location', {id: LD.idOne});
+    store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
+    let status = location.get('status');
+    assert.equal(status.get('id'), LDS.openId);
+    assert.equal(status.get('name'), LDS.openName);
+    status.set('locations', []);
+    status = location.get('status');
+    assert.equal(status, undefined);
+});
+
+test('change_status will append the location id to the new status locations array', function(assert) {
+    let location = store.push('location', {id: LD.idOne});
+    let status = store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [9]});
+    location.change_status(LDS.openId);
+    assert.deepEqual(status.get('locations'), [9, LD.idOne]);
+});
+
+test('change_status will remove the location id from the prev status locations array', function(assert) {
+    let location = store.push('location', {id: LD.idOne});
+    let status = store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [9, LD.idOne]});
+    store.push('location-status', {id: LDS.closedId, name: LDS.closedName, locations: []});
+    assert.deepEqual(status.get('locations'), [9, LD.idOne]);
+    assert.deepEqual(location.get('status.id'), LDS.openId);
+    location.change_status(LDS.closedId);
+    assert.deepEqual(status.get('locations'), [9]);
+});
+
+test('status will save correctly as undefined', (assert) => {
+    let location = store.push('location', {id: LD.idOne, status_fk: undefined});
+    store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: []});
+    location.saveRelated();
+    let status = location.get('status');
+    assert.equal(location.get('status_fk'), undefined);
 });

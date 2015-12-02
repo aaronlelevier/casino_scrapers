@@ -1,21 +1,18 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/uuid';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
 var PREFIX = config.APP.NAMESPACE;
 
 var AttachmentRepo = Ember.Object.extend({
-    uuid: inject('uuid'),
     remove(id) {
         let store = this.get('store');
         store.remove('attachment', id);
         PromiseMixin.xhr(`${PREFIX}/admin/attachments/${id}/`, 'DELETE');
     },
-    upload(file, model) {
+    upload(id, file, model) {
         let store = this.get('store');
-        let id = this.get('uuid').v4();
-        store.push('attachment', {id: id, local: true, percent: 25, new: true});
+        store.push('attachment', {id: id, new: true, percent: 25});
         model.add_attachment(id);
         let data = new FormData();
         data.append('id', id);

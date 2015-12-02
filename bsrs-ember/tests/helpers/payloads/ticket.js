@@ -53,8 +53,11 @@ var ticket_payload_with_attachment = {
     requester: PD.idOne,
     assignee: PD.idOne,
     location: LD.idOne,
-    attachments: ["abc123"]
+    attachments: ['abc123']
 };
+
+var ticket_payload_with_attachments = Ember.$.extend(true, {}, ticket_payload_with_attachment);
+ticket_payload_with_attachments.attachments = ['abc123', 'def456'];
 
 var ticket_payload_detail_one_category = {
     id: TD.idOne,
@@ -72,4 +75,4 @@ var ticket_payload_detail_one_category = {
 var required_ticket_payload = Ember.$.extend(true, {}, ticket_payload);
 delete required_ticket_payload.subject;
 
-export {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail, ticket_payload_detail_one_category, ticket_payload_with_attachment};
+export {ticket_payload, ticket_payload_with_comment, required_ticket_payload, ticket_payload_detail, ticket_payload_detail_one_category, ticket_payload_with_attachment, ticket_payload_with_attachments};
