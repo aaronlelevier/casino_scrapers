@@ -4,8 +4,14 @@ import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/vali
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 
+var categoryValidation = function(arr) {
+    return arr.get('length') > 0 ? true : false;
+};
+
 var RoleSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
     repository: inject('role'),
+    nameValidation: validate('model.name'),
+    categoryValidation: validate('model.categories', categoryValidation),
     actions: {
         save() {
             this.set('submitted', true);
