@@ -452,7 +452,7 @@ test('when you change a related address type it will be persisted correctly', (a
     });
 });
 
-test('sco when you change a related role it will be persisted correctly', (assert) => {
+test('when you change a related role it will be persisted correctly', (assert) => {
     let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}`;
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     visit(DETAIL_URL);

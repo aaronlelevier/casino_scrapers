@@ -14,65 +14,54 @@ var ApplicationRoute = Ember.Route.extend({
     tabList: inject.service(),
     beforeModel() {
         let store = this.get('store');
-        const phone_number_config = Ember.$('[data-preload-phonenumber_types]').html();
-        const phone_number_types = JSON.parse(phone_number_config);
+        const phone_number_types = Ember.$('[data-preload-phonenumber_types]').data('configuration');
         phone_number_types.forEach((model) => {
             store.push('phone-number-type', model);
         });
-        const address_config = Ember.$('[data-preload-address_types]').html();
-        const address_types = JSON.parse(address_config);
+        const address_types = Ember.$('[data-preload-address_types]').data('configuration');
         address_types.forEach((model) => {
             store.push('address-type', model);
         });
-        const country_config = Ember.$('[data-preload-countries]').html();
-        const countries = JSON.parse(country_config);
+        const countries = Ember.$('[data-preload-countries]').data('configuration');
         countries.forEach((model) => {
             store.push('country', model);
         });
-        const state_config = Ember.$('[data-preload-states_us]').html();
-        const state_list = JSON.parse(state_config);
+        const state_list = Ember.$('[data-preload-states_us]').data('configuration');
         state_list.forEach((model) => {
             store.push('state', model);
         });
-        const status_config = Ember.$('[data-preload-person-statuses]').html();
-        const status_list = JSON.parse(status_config);
+        const status_list = Ember.$('[data-preload-person-statuses]').data('configuration');
         status_list.forEach((model) => {
             store.push('status', model);
         });
-        const loc_status_config = Ember.$('[data-preload-location-statuses]').html();
-        const loc_status_list = JSON.parse(loc_status_config);
+        const loc_status_list = Ember.$('[data-preload-location-statuses]').data('configuration');
         loc_status_list.forEach((model) => {
             store.push('location-status', model);
         });
-        const ticket_status_config = Ember.$('[data-preload-ticket-statuses]').html();
-        let ticket_status_list = JSON.parse(ticket_status_config);
+        const ticket_status_list = Ember.$('[data-preload-ticket-statuses]').data('configuration');
         ticket_status_list.forEach((model) => {
             store.push('ticket-status', model);
         });
-        const ticket_priority_config = Ember.$('[data-preload-ticket-priorities]').html();
-        const ticket_priority_list = JSON.parse(ticket_priority_config);
+        const ticket_priority_list = Ember.$('[data-preload-ticket-priorities]').data('configuration');
         ticket_priority_list.forEach((model) => {
             store.push('ticket-priority', model);
         });
-        const currency_config = Ember.$('[data-preload-currencies]').html();
-        const currency_list = JSON.parse(currency_config);
+        const currency_list = Ember.$('[data-preload-currencies]').data('configuration');
         for (let key in currency_list) {
             store.push('currency', currency_list[key]);
         }
-        const location_level_config = Ember.$('[data-preload-location-levels]').html();
-        const location_level_list = JSON.parse(location_level_config);
+        const location_level_list = Ember.$('[data-preload-location-levels]').data('configuration');
         location_level_list.forEach((model) => {
-            model.children_fks = model.children || [];
+            model.children_fks = model.children || model.children_fks || [];
             delete model.children;
             store.push('location-level', model);
         });
-        const role_config = Ember.$('[data-preload-roles]').html();
-        const role_list = JSON.parse(role_config);
+        const role_list = Ember.$('[data-preload-roles]').data('configuration');
         const role_deserializer = this.get('RoleDeserializer');
         role_list.forEach((model) => {
             role_deserializer.deserialize(model, model.id);
-            if (model.location_level) {
-                let loc_level = store.find('location-level', model.location_level);
+            if (model.location_level_fk) {
+                let loc_level = store.find('location-level', model.location_level_fk);
                 let existing_roles = loc_level.get('roles') || [];
                 loc_level.set('roles', existing_roles.concat([model.id]));
                 loc_level.save();
@@ -80,35 +69,28 @@ var ApplicationRoute = Ember.Route.extend({
             }
             store.push('role', model);
         });
-        const role_types_config = Ember.$('[data-preload-role-types]').html();
-        const role_type_list = JSON.parse(role_types_config);
-        role_type_list.forEach((model, index) => {
+        const role_types_list = Ember.$('[data-preload-role-types]').data('configuration');
+        role_types_list.forEach((model, index) => {
             store.push('role-type', {id: index+1, name: model});
         });
 
-        const filterset_config = Ember.$('[data-preload-saved-filterset]').html();
-        const filterset_list = JSON.parse(filterset_config);
+        const filterset_list = Ember.$('[data-preload-saved-filterset]').data('configuration');
         filterset_list.forEach(filterset => {
             store.push('filterset', filterset);
         });
 
-        const model_default_order_config = Ember.$('[data-preload-default-model-ordering]').html();
-        const model_default_order_definitions = JSON.parse(model_default_order_config);
+        const model_default_order_definitions = Ember.$('[data-preload-default-model-ordering]').data('configuration');
         Object.keys(model_default_order_definitions).forEach(function(key) {
             let order = model_default_order_definitions[key];
             store.push('model-ordering', {id: key, order: order});
         });
 
-        const locale_config = Ember.$('[data-preload-locales]').html();
-        const locale_list = JSON.parse(locale_config);
-
+        const locale_list = Ember.$('[data-preload-locales]').data('configuration');
         locale_list.forEach((model, index) => {
             store.push('locale', model);
         });
 
-        const person_current_config = Ember.$('[data-preload-person-current]').html();
-        const person_current = JSON.parse(person_current_config);
-
+        const person_current = Ember.$('[data-preload-person-current]').data('configuration');
         const person_current_role = store.find('role', person_current.role);
         person_current_role.set('people', [person_current.id]);
         //save so not dirty
