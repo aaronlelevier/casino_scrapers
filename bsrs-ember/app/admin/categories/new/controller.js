@@ -1,7 +1,6 @@
 import Ember from 'ember';
-import TabActionMixin from 'bsrs-ember/mixins/controller/tab-actions';
 
-var CategoryNewController = Ember.Controller.extend(TabActionMixin, {
+var CategoryNewController = Ember.Controller.extend({
     queryParams: ['search'],
     search: undefined,
 });

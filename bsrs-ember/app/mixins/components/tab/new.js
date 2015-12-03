@@ -9,7 +9,7 @@ var NewTabMixin = Ember.Mixin.create({
                 return repository.insert(model).then(() => {
                     let tab = this.tab();
                     tab.set('saveModel', true);
-                    this.attrs.save(tab);
+                    this.sendAction('save', tab);
                     resolve(1);
                 });
             }.bind(this));

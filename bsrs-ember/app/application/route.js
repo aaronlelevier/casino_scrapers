@@ -123,7 +123,7 @@ var ApplicationRoute = Ember.Route.extend({
         cancel_modal() {
             Ember.$('.t-modal').modal('hide');
         },
-        closeTabMaster(tab){
+        closeTabMaster(tab, callback){
             let model = this.get('store').find(tab.get('doc_type'), tab.get('id'));
             if (model && model.get('isDirtyOrRelatedDirty')) {
                 Ember.$('.t-modal').modal('show');
@@ -146,11 +146,9 @@ var ApplicationRoute = Ember.Route.extend({
                 }
                 this.get('tabList').closeTab(model.get('id'));
             }
-        },
-        deleteAndCloseTabMaster(tab, repository) {
-            let model = this.get('store').find(tab.get('doc_type'), tab.get('id'));
-            this.send('closeTabMaster', tab);
-            repository.delete(model.get('id'));
+            if(callback) {
+                callback();
+            }
         }
     }
 });
