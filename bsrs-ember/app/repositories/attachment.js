@@ -20,7 +20,14 @@ var AttachmentRepo = Ember.Object.extend({
             store.remove('attachment', id);
         });
         if(ids.length > 0) {
-            PromiseMixin.xhr(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {data: {ids: ids}});
+            let endpoint = `${PREFIX}/admin/attachments/batch-delete/`;
+            let options = {method: 'DELETE', cache: false, data: {ids: ids}, url: endpoint};
+            return new Ember.RSVP.Promise(function(resolve, reject) {
+                options.success = function(json) {
+                    return Ember.run(null, resolve, json);
+                };
+                Ember.$.ajax(options);
+            });
         }
     },
     upload(id, file, model) {
