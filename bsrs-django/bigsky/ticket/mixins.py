@@ -1,4 +1,5 @@
 import copy
+import itertools
 
 from django.forms.models import model_to_dict
 
@@ -121,9 +122,29 @@ class TicketUpdateLogger(object):
             self.log_ticket_activity(type, content)
 
     def check_attachments_added(self):
-        attachments = set(self.init_ticket.pop('attachments', set()))
+        attachment_ids = [str(id) for id in self.instance.attachments.values_list('id', flat=True)]
+
+        current = set(attachment_ids)
+        previous = set(self.previous_attachments(attachment_ids))
+
+        attachments = current - previous
         if attachments:
             self.log_list_change('attachment_add', attachments)
+
+    def previous_attachments(self, attachment_ids):
+        """
+        Returns a list() of previously logged attachments ids.
+        """
+        activities = self.instance.activities.filter(type__name='attachment_add',
+                                                     content__values__contains=attachment_ids)
+        values = []
+        for activity in activities:
+            try:
+                values.append([v for k,v in activity.content.items()])
+            except TypeError:
+                pass
+
+        return itertools.chain(*values)
 
     def log_ticket_activity(self, type, content):
         TicketActivity.objects.create(
@@ -166,4 +187,4 @@ class UpdateTicketModelMixin(object):
 
     @property
     def other_info_fields(self):
-        return ['attachments', 'comment']
+        return ['comment']
