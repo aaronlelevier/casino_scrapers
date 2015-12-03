@@ -1,24 +1,24 @@
 [
 {
+  "pk": "2cf6a49f-c702-44d4-86f2-938260b8895c",
+  "model": "contact.addresstype",
   "fields": {
+    "created": "2015-08-31T16:51:35.702Z",
     "deleted": null,
     "order": 0,
-    "modified": "2015-08-31T16:51:35.699Z",
-    "name": "admin.address_type.office",
-    "created": "2015-08-31T16:51:35.699Z"
-  },
-  "model": "contact.addresstype",
-  "pk": "f32bd7b4-d199-4ca0-8194-5b18a31f1e60"
+    "name": "admin.address_type.shipping",
+    "modified": "2015-08-31T16:51:35.702Z"
+  }
 },
 {
+  "pk": "f32bd7b4-d199-4ca0-8194-5b18a31f1e60",
+  "model": "contact.addresstype",
   "fields": {
+    "created": "2015-08-31T16:51:35.699Z",
     "deleted": null,
     "order": 0,
-    "modified": "2015-08-31T16:51:35.702Z",
-    "name": "admin.address_type.shipping",
-    "created": "2015-08-31T16:51:35.702Z"
-  },
-  "model": "contact.addresstype",
-  "pk": "2cf6a49f-c702-44d4-86f2-938260b8895c"
+    "name": "admin.address_type.office",
+    "modified": "2015-08-31T16:51:35.699Z"
+  }
 }
 ]

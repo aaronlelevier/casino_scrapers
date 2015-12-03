@@ -46,11 +46,8 @@ def create_roles():
     create_categories(2)
     category = Category.objects.first()
     
-    # initial Locations
-    try:
+    if not Location.objects.first():
         create_locations()
-    except IntegrityError:
-        pass
 
     for location_level in LocationLevel.objects.all():
         role = mommy.make(Role, name='{}-role'.format(location_level.name),
@@ -124,11 +121,8 @@ create_all_people()
 """
 def create_all_people():
 
-    # initial Locations
-    try:
+    if not Location.objects.first():
         create_locations()
-    except IntegrityError:
-        pass
 
     # initial Roles
     roles = create_roles()
