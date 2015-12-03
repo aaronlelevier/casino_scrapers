@@ -142,7 +142,7 @@ class Role(BaseModel):
                 "id": str(self.pk),
                 "name": self.name,
                 "location_level": str(self.location_level.id),
-                "default": True if settings.DEFAULT_ROLE == self.name else False
+                "default": True if self.name == settings.DEFAULT_ROLE else False
             }
 
     def _update_defaults(self):
