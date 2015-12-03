@@ -6,7 +6,6 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category
-from category.tests.factory import create_categories
 from location.models import LocationLevel, Location
 from location.tests.factory import create_locations
 from person.models import Person, Role
@@ -30,7 +29,6 @@ def create_role(name=None, location_level=None):
     if not location_level:
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
 
-    create_categories(2)
     category = Category.objects.first()
 
     role = mommy.make(Role, name=name, location_level=location_level)
@@ -43,7 +41,6 @@ def create_role(name=None, location_level=None):
 def create_roles():
     "Create a Role for each LocationLevel"
 
-    create_categories(2)
     category = Category.objects.first()
     
     if not Location.objects.first():

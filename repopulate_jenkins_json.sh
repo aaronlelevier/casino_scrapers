@@ -29,9 +29,3 @@ wait
 ./manage.py create_tickets
 wait
 ./manage.py dumpdata ticket --indent=2 > fixtures/ticket.json
-
-
-wait
-echo "Re-dump all data after the './manage.py' commands create the final objects"
-./manage.py dumpdata location --indent=2 > fixtures/location.json
-./manage.py dumpdata category --indent=2 > fixtures/category.json
