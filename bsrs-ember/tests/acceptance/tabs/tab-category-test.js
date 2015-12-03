@@ -370,7 +370,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
     andThen(() => {
         assert.equal(currentURL(), CATEGORY_URL);
     });
-    click('.t-tab:eq(0)');
+    click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
