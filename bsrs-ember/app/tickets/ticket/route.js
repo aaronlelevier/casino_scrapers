@@ -10,6 +10,8 @@ var TicketSingleRoute = TabRoute.extend({
     categoryRepository: inject('category'),
     statusRepository: inject('ticket-status'),
     priorityRepository: inject('ticket-priority'),
+    attachmentRepository: inject('attachment'),
+    transitionCallback: function() { this.get('attachmentRepository').removeAllUnrelated(); },
     redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
     modelName: Ember.computed(function() { return 'ticket'; }),
     templateModelField: Ember.computed(function() { return 'subject'; }),

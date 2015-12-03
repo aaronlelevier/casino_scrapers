@@ -10,6 +10,19 @@ var AttachmentRepo = Ember.Object.extend({
         store.remove('attachment', id);
         PromiseMixin.xhr(`${PREFIX}/admin/attachments/${id}/`, 'DELETE');
     },
+    removeAllUnrelated() {
+        let store = this.get('store');
+        let filter = function(attachment) {
+            return attachment.get('new');
+        };
+        let ids = store.find('attachment', filter, []).mapBy('id');
+        ids.forEach((id) => {
+            store.remove('attachment', id);
+        });
+        if(ids.length > 0) {
+            PromiseMixin.xhr(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {data: {ids: ids}});
+        }
+    },
     upload(id, file, model) {
         let store = this.get('store');
         store.push('attachment', {id: id, new: true, percent: 25});

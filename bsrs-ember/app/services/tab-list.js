@@ -6,14 +6,15 @@ export default Ember.Service.extend({
     findTab(id) {
         return this.get('store').find('tab', id);
     },
-    createTab(doc_route, doc_type, id, templateModelField, redirect=undefined, newModel=false){
+    createTab(id, doc_route, doc_type, templateModelField, redirect=undefined, newModel=false, transitionCallback=undefined){
         this.get('store').push('tab', {
             id: id,
             doc_type: doc_type,
             doc_route: doc_route,
             templateModelField: templateModelField,
             redirect: redirect,
-            newModel: newModel
+            newModel: newModel,
+            transitionCallback: transitionCallback
         });
     },
     closeTab(id){

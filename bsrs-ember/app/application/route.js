@@ -134,6 +134,12 @@ var ApplicationRoute = Ember.Route.extend({
                 Ember.$('.t-modal').modal('hide');
                 let temp = this.router.generate(this.controller.currentPath);
                 temp = temp.split('/').pop();
+
+                if(tab.get('transitionCallback')) {
+                    //TODO: for ticket we should pass the model and filter ONLY for that ticket ...
+                    tab.get('transitionCallback')();
+                }
+
                 if(temp === tab.get('id') || tab.get('newModel')){
                     this.transitionTo(tab.get('redirect'));
                     if (tab.get('newModel') && !tab.get('saveModel')) {
