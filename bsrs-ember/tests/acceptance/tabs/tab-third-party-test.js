@@ -369,7 +369,7 @@ test('(NEW URL) deep linking the new third-party url should push a tab into the 
 //     andThen(() => {
 //         assert.equal(currentURL(), THIRD_PARTY_URL);
 //     });
-//     click('.t-tab:eq(0)');
+//     click('.t-add-new');
 //     andThen(() => {
 //         assert.equal(currentURL(), NEW_URL);
 //         let tabs = store.find('tab');

@@ -15,15 +15,15 @@ The following dependencies are required to run the build script
 
 ```
   git
-  nodejs v0.12+
-  npm v2.10+
-  bower v1.4+
-  postgresql
-  python v2.7.6+
-  pip
-  virtualenv
-  firefox 38+
-  Xcode 6.4+ (homebrew requirement)
+  nodejs v4.1+
+  npm v2.14+
+  bower v1.6+
+  postgresql v9.4
+  python v3.4
+  pip v7.1+
+  virtualenv v13.1+
+  firefox 42+
+  Xcode 7.1+ (homebrew requirement)
 ```
 
 If you need to provision a macbook pro checkout this installer

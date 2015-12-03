@@ -410,7 +410,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
     });
-    click('.t-tab:eq(0)');
+    click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
