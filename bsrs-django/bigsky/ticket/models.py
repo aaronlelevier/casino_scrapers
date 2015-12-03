@@ -38,8 +38,11 @@ class TicketStatus(BaseNameModel):
         verbose_name_plural = "Ticket Statuses"
 
     def to_dict(self):
-        default = True if TicketStatus.objects.default().name == self.name else False
-        return {"id": str(self.pk), "name": self.name, "default": default}
+        return {
+            "id": str(self.pk),
+            "name": self.name,
+            "default": True if self.name == settings.DEFAULTS_TICKET_STATUS else False
+        }
     
 
 TICKET_PRIORITIES = [

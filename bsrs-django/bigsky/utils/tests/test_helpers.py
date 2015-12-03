@@ -1,6 +1,48 @@
+import json
+
+from django.conf import settings
 from django.test import TestCase
 
-from utils.helpers import generate_uuid
+from person.models import Role
+from person.tests.factory import create_role
+from utils import choices
+from utils.helpers import (model_to_json, model_to_json_select_related, choices_to_json,
+    generate_uuid)
+
+
+class ModelToJsonTests(TestCase):
+
+    def setUp(self):
+        self.role = create_role(name=settings.DEFAULT_ROLE)
+
+    def test_model_to_json(self):
+        ret = model_to_json(Role)
+
+        ret = json.loads(ret)
+        self.assertEqual(len(ret), 1)
+        self.assertEqual(ret[0]['id'], str(self.role.id))
+        self.assertEqual(ret[0]['name'], self.role.name)
+        self.assertEqual(ret[0]['location_level'], str(self.role.location_level.id))
+        self.assertEqual(ret[0]['default'], True)
+
+    def test_model_to_json_select_related(self):
+        ret = model_to_json_select_related(Role, select=['location_level'])
+
+        ret = json.loads(ret)
+        self.assertEqual(len(ret), 1)
+        self.assertEqual(ret[0]['id'], str(self.role.id))
+        self.assertEqual(ret[0]['name'], self.role.name)
+        self.assertEqual(ret[0]['location_level'], str(self.role.location_level.id))
+        self.assertEqual(ret[0]['default'], True)
+
+    def test_choices_to_json(self):
+        ret = choices_to_json(choices.ROLE_TYPE_CHOICES)
+
+        ret = json.loads(ret)
+        self.assertEqual(
+            ret,
+            [c[0] for c in choices.ROLE_TYPE_CHOICES]
+        )
 
 
 class GenerateUuidTests(TestCase):
