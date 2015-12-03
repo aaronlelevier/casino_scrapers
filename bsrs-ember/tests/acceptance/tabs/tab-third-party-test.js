@@ -353,3 +353,26 @@ test('(NEW URL) deep linking the new third-party url should push a tab into the 
 //     });
 // });
 
+// test('sco (NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+//     clearxhr(detail_xhr);
+//     visit(NEW_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), NEW_URL);
+//         let tabs = store.find('tab');
+//         assert.equal(tabs.get('length'), 1);
+//         assert.equal(find('.t-tab-title:eq(0)').text(), 'New '+DOC_TYPE);
+//     });
+//     fillIn('.t-third-party-name', THIRD_PARTY_DEFAULTS.nameTwo);
+//     let list_data = THIRD_PARTY_FIXTURES.list();
+//     list_xhr = xhr(endpoint, 'GET', null, {}, 200, list_data);
+//     visit(THIRD_PARTY_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), THIRD_PARTY_URL);
+//     });
+//     click('.t-tab:eq(0)');
+//     andThen(() => {
+//         assert.equal(currentURL(), NEW_URL);
+//         let tabs = store.find('tab');
+//         assert.equal(tabs.get('length'), 1);
+//     });
+// });

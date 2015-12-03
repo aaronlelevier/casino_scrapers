@@ -2,6 +2,7 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
 
 var PREFIX = config.APP.NAMESPACE;
@@ -10,8 +11,13 @@ var LOCATION_LEVEL_URL = PREFIX + '/admin/location-levels/';
 var LocationLevelRepo = Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'location-level'; }),
     url: Ember.computed(function() { return LOCATION_LEVEL_URL; }),
+    uuid: injectUUID('uuid'),
     LocationLevelDeserializer: inject('location-level'),
     deserializer: Ember.computed.alias('LocationLevelDeserializer'),
+    create() {
+        let pk = this.get('uuid').v4();
+        return this.store.push('location-level', {id: pk, new: true});
+    },
     insert(model) {
         return PromiseMixin.xhr(LOCATION_LEVEL_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();

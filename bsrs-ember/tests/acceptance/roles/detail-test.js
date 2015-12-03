@@ -94,6 +94,43 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     });
 });
 
+test('validation works and when hit save, we do same post', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-role-category-validation-error').is(':hidden'));
+    });
+    fillIn('.t-role-name', '');
+    page.categoryOneRemove();
+    generalPage.save();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':visible'));
+        assert.ok(find('.t-role-category-validation-error').is(':visible'));
+    });
+    fillIn('.t-role-name', RD.nameOne);
+    generalPage.save();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-role-category-validation-error').is(':visible'));
+    });
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(CATEGORY_SEARCH, 'a');
+    page.categoryClickOptionTwo();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-role-category-validation-error').is(':hidden'));
+    });
+    let payload = RF.put({id: RD.idOne, categories: [CD.idTwo]});
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+});
+
 test('when you change a related location level it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     let location_level = LLF.put({id: LLD.idOne, name: LLD.nameRegion});
@@ -235,30 +272,6 @@ test('can remove and add back same category', (assert) => {
         assert.equal(page.categoriesSelected(), 1);
     });
     let payload = RF.put({id: RD.idOne, categories: [CD.idTwo]});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-    });
-});
-
-test('removing a category in power select for categories will save correctly and cleanup role_category_fks', (assert) => {
-    visit(DETAIL_URL);
-    andThen(() => {
-        let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(role.get('categories').get('length'), 1);
-        assert.equal(page.categoriesSelected(), 1);
-    });
-    page.categoryOneRemove();
-    andThen(() => {
-        let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(role.get('categories').get('length'), 0);
-        assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoriesSelected(), 0);
-    });
-    let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: []});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
