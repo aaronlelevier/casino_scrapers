@@ -43,7 +43,7 @@ https://github.com/toranb/osx-workstation/blob/master/installer
 
 Fixture data should be predictable.  If Fixtures are going to be dynamically generated, then they need to have **static** UUIDs using this function: [generate_uuid](https://github.com/bigskytech/bsrs/blob/master/bsrs-django/bigsky/utils/helpers.py).
 
-##### Naming conventions of `<fixtures.json>`
+#### Naming conventions of `<fixtures.json>`
 
 Follow the same naming convention for outputting the fixture.
   - A whole app should be `fixtures/<app_name>.json`
@@ -53,7 +53,7 @@ For a single Model in an App, it should also follow same naming convention for o
   - A single model should be `fixtures/<app_name.Model_name>.json`
   - example: `fixtures/person.Role.json`
 
-##### Fixture Generation
+#### Fixture Generation
 
 Follow these two conventions:
 
@@ -61,10 +61,29 @@ A. If no dependencies, can generate as normal.
 
 B. If has Foreign Keys to other Fixtures, then these need to be statically generated using the above function, so they are predictable, and won't cause any duplicate key errrors.
 
-## Fixture Notes
-1.  Translation:
-  - update en doc on https://drive.google.com/drive/folders/0B7dl5Hhfqk0NfkZWUndwVEFzR2RhTUNPRnFRcVA1UVNWTEUxUEFyaU5ZSVpFeHBFMUZBeTg
-  - export to csv and replace file in sources folder
-  - ipython notebook or shell_plus and execute Translation.objects.import_csv('en')
-  - rm -rf translation.json
-  - ./manage.py dumpdata translation --indent=2 > fixtures/translation.json
+
+#### Regenerating Fixtures
+
+Run `bash repopulate_jenkins_json.sh` to regenerate fixtures.
+
+Then, to **test**, run `bash build_project.sh`.  This will do the same fixture upload that is done in the `deploy.sh` script, so if this works, then then `deploy.sh` will work.
+
+
+#### Import Fixtures Notes
+
+1. Output "en" document on [Google Drive](https://drive.google.com/drive/folders/0B7dl5Hhfqk0NfkZWUndwVEFzR2RhTUNPRnFRcVA1UVNWTEUxUEFyaU5ZSVpFeHBFMUZBeTg)
+2. export to CSV and put in the file in `bsrs/bsrs-django/bigsky/source/translation` folder
+3. ipython notebook or shell_plus and execute:
+
+python commands
+
+```python
+from translation.models import Translation
+Translation.objects.import_csv('en')
+```
+
+bash commands
+```
+rm -rf translation.json
+./manage.py dumpdata translation --indent=2 > fixtures/translation.json
+```

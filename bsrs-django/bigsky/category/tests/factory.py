@@ -73,7 +73,6 @@ def create_category_statuses():
     return statuses
 
 
-
 def create_category_status(name=None):
     create_category_statuses()
 

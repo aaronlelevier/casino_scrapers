@@ -30,7 +30,7 @@ def create_role(name=None, location_level=None):
     if not location_level:
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
 
-    # create_categories(2)
+    create_categories(2)
     category = Category.objects.first()
 
     role = mommy.make(Role, name=name, location_level=location_level)
@@ -43,7 +43,7 @@ def create_role(name=None, location_level=None):
 def create_roles():
     "Create a Role for each LocationLevel"
 
-    # create_categories(2)
+    create_categories(2)
     category = Category.objects.first()
     
     # initial Locations
