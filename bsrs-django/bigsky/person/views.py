@@ -29,6 +29,8 @@ class RoleViewSet(BaseModelViewSet):
             return ps.RoleDetailSerializer
         elif self.action == ('update' or 'partial_update'):
             return ps.RoleUpdateSerializer
+        elif self.action == ('create'):
+            return ps.RoleCreateSerializer
         else:
             return ps.RoleSerializer
 
