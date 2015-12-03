@@ -26,7 +26,7 @@ const PROGRESS_BAR = '.progress-bar';
 
 let application, store, original_uuid;
 
-module('toran Acceptance | ticket file upload test', {
+module('Acceptance | ticket file upload test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
