@@ -10,7 +10,7 @@ var EditMixin = Ember.Mixin.create({
             repository[action](model).then(() => {
                 let tab = this.tab();
                 tab.set('saveModel', persisted);
-                this.sendAction('save', tab);
+                this.sendAction('close', tab);
             });
         },
         delete() {
@@ -19,7 +19,7 @@ var EditMixin = Ember.Mixin.create({
             let callback = function() {
                 repository.delete(id);
             };
-            this.sendAction('delete', this.tab(), callback);
+            this.sendAction('close', this.tab(), callback);
         }
     }
 });

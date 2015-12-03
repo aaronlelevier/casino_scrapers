@@ -9,7 +9,7 @@ var TabMixin = Ember.Mixin.create({
     },
     actions: {
         cancel() {
-            this.sendAction('cancel', this.tab());
+            this.sendAction('close', this.tab());
         },
     }
 });
