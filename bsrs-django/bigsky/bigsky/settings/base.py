@@ -30,7 +30,6 @@ THIRD_PARTY_APPS = (
     'psycopg2',
     'corsheaders',
     'rest_framework',
-    'debug_toolbar',
     )
 
 LOCAL_APPS = (
@@ -51,8 +50,6 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-# Turn on for debug mode in 'debug_toolbar'
-# INTERNAL_IPS = ('127.0.0.1',)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,10 +61,8 @@ MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    # Translation Req
+    # Translation Requirement
     'django.middleware.locale.LocaleMiddleware',
-    # debug_toolbar
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'bigsky.urls'
