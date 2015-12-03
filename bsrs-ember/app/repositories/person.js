@@ -3,6 +3,7 @@ import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import inject from 'bsrs-ember/utilities/deserializer';
 import GridRepositoryMixin from 'bsrs-ember/mixins/components/grid/repository';
+import injectUUID from 'bsrs-ember/utilities/uuid';
 
 var PREFIX = config.APP.NAMESPACE;
 var PEOPLE_URL = PREFIX + '/admin/people/';
@@ -10,8 +11,13 @@ var PEOPLE_URL = PREFIX + '/admin/people/';
 export default Ember.Object.extend(GridRepositoryMixin, {
     type: Ember.computed(function() { return 'person'; }),
     url: Ember.computed(function() { return PEOPLE_URL; }),
+    uuid: injectUUID('uuid'),
     PersonDeserializer: inject('person'),
     deserializer: Ember.computed.alias('PersonDeserializer'),
+    create() {
+        let pk = this.get('uuid').v4();
+        return this.store.push('person', {id: pk, new: true});
+    },
     insert(model) {
         return PromiseMixin.xhr(PEOPLE_URL, 'POST', {data: JSON.stringify(model.createSerialize())}).then(() => {
             model.saveRelated();

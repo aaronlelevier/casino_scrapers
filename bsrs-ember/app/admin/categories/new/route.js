@@ -7,6 +7,9 @@ var CategoryNewRoute = TabRoute.extend({
     redirectRoute: Ember.computed(function() { return 'admin.categories.index'; }),
     modelName: Ember.computed(function() { return 'category'; }),
     templateModelField: Ember.computed(function() { return 'Category'; }),
+    model_fetch: Ember.computed(function() {
+        return this.get('repository').create();
+    }),
     queryParams: {
         search: {
             refreshModel: true
@@ -17,7 +20,7 @@ var CategoryNewRoute = TabRoute.extend({
         let repository = this.get('repository');
         let search = transition.queryParams.search;
         let categories_children = repository.findCategoryChildren(search);
-        let model = repository.create();
+        let model = this.get('model_fetch');
         return Ember.RSVP.hash({
             model: model,
             categories_children: categories_children,

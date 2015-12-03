@@ -21,7 +21,7 @@ const NEW_URL = BASE_PEOPLE_URL + '/new';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + PD.id;
 const ROLE_URL = BASE_ROLE_URL + '/index';
 
-let application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid;
+let application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, counter;
 
 module('Acceptance | tab people test', {
     beforeEach() {
@@ -381,3 +381,28 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
     });
 });
 
+test('(NEW URL) clicking on the new link with a new tab of the same type open will redirect to open tab', (assert) => {
+    clearxhr(detail_xhr);
+    visit(NEW_URL);
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New person');
+    });
+    fillIn('.t-person-username', PD_PUT.username);
+    let people_list_data = PF.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+    });
+});

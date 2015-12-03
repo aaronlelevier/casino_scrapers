@@ -350,3 +350,26 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
         });
     });
 });
+
+test('(NEW URL) clicking on the new link with a new tab of the same type open will redirect to open tab', (assert) => {
+    clearxhr(detail_xhr);
+    visit(NEW_URL);
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New role');
+    });
+    let role_list_data = RF.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+    });
+});

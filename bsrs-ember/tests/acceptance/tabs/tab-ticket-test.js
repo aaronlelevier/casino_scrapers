@@ -391,3 +391,29 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
         });
     });
 });
+
+test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+    clearxhr(detail_xhr);
+    clearxhr(activity_one);
+    visit(NEW_URL);
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ticket');
+    });
+    page.priorityClickDropdown();
+    page.priorityClickOptionTwo();
+    let ticket_list_data = TF.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
+    visit(TICKET_URL);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+    click('.t-tab:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+    });
+});
