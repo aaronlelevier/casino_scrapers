@@ -844,7 +844,11 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
 
         self.assertEqual(TicketActivity.objects.count(), 0)
 
-    def test_attachment_add__then_add_empty(self):
+    def test_attachment_add__then_put_again(self):
+        """
+        First POST should create a TicketActivity, but the second shouldn't because
+        the same Attachment.ID is getting re-posted, and it's already been logged.
+        """
         name = 'attachment_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
         new_attachment = create_attachments()
