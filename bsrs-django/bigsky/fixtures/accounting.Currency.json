@@ -1,66 +1,66 @@
 [
 {
-  "model": "accounting.currency",
   "fields": {
-    "decimal_digits": 2,
-    "name": "Chinese Yuan",
-    "rounding": 0,
-    "deleted": null,
-    "symbol": "CN\u00a5",
-    "symbol_native": "CN\u00a5",
-    "modified": "2015-08-31T15:56:01.504Z",
     "created": "2015-08-31T15:56:01.504Z",
+    "code": "CNY",
+    "deleted": null,
+    "symbol_native": "CN\u00a5",
+    "name": "Chinese Yuan",
     "name_plural": "Chinese Yuan",
-    "code": "CNY"
+    "rounding": 0,
+    "symbol": "CN\u00a5",
+    "decimal_digits": 2,
+    "modified": "2015-08-31T15:56:01.504Z"
   },
+  "model": "accounting.currency",
   "pk": "67a1d56f-e9a3-4fa5-a6e4-afac651b05de"
 },
 {
-  "model": "accounting.currency",
   "fields": {
-    "decimal_digits": 2,
-    "name": "Canadian Dollar",
-    "rounding": 0,
-    "deleted": null,
-    "symbol": "CA$",
-    "symbol_native": "$",
-    "modified": "2015-08-31T15:53:09.613Z",
     "created": "2015-08-31T15:44:41.280Z",
+    "code": "CAD",
+    "deleted": null,
+    "symbol_native": "$",
+    "name": "Canadian Dollar",
     "name_plural": "Canadian Dollars",
-    "code": "CAD"
+    "rounding": 0,
+    "symbol": "CA$",
+    "decimal_digits": 2,
+    "modified": "2015-08-31T15:53:09.613Z"
   },
+  "model": "accounting.currency",
   "pk": "a773083a-54e8-4f41-84f8-e5b49bee3d0a"
 },
 {
-  "model": "accounting.currency",
   "fields": {
-    "decimal_digits": 2,
-    "name": "Euro",
-    "rounding": 0,
-    "deleted": null,
-    "symbol": "\u20ac",
-    "symbol_native": "\u20ac",
-    "modified": "2015-08-31T15:54:30.210Z",
     "created": "2015-08-31T15:54:30.210Z",
+    "code": "EUR",
+    "deleted": null,
+    "symbol_native": "\u20ac",
+    "name": "Euro",
     "name_plural": "Euros",
-    "code": "EUR"
+    "rounding": 0,
+    "symbol": "\u20ac",
+    "decimal_digits": 2,
+    "modified": "2015-08-31T15:54:30.210Z"
   },
+  "model": "accounting.currency",
   "pk": "ad7c3339-7c12-4193-82c7-8fcb333b1ad6"
 },
 {
-  "model": "accounting.currency",
   "fields": {
-    "decimal_digits": 2,
-    "name": "US Dollar",
-    "rounding": 0,
-    "deleted": null,
-    "symbol": "$",
-    "symbol_native": "$",
-    "modified": "2015-10-01T22:00:23.524Z",
     "created": "2015-10-01T22:00:23.524Z",
+    "code": "USD",
+    "deleted": null,
+    "symbol_native": "$",
+    "name": "US Dollar",
     "name_plural": "US Dollars",
-    "code": "USD"
+    "rounding": 0,
+    "symbol": "$",
+    "decimal_digits": 2,
+    "modified": "2015-10-01T22:00:23.524Z"
   },
+  "model": "accounting.currency",
   "pk": "baa98c7d-42d1-4909-9910-53a9991f959a"
 }
 ]

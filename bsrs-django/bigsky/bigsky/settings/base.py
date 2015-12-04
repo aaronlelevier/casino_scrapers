@@ -182,6 +182,7 @@ DEFAULT_ROLE = 'Administrator'
 ### LOCATION
 DEFAULT_LOCATION_STATUS = 'Open'
 DEFAULT_LOCATION_TYPE = 'big_store'
+DEFAULT_LOCATION_LEVEL = 'Company'
 
 ### PERSON
 PASSWORD_EXPIRE_DAYS = 90
@@ -241,3 +242,21 @@ LOGGING = {
         }
     }
 }
+
+
+import logging, copy
+from django.utils.log import DEFAULT_LOGGING
+
+LOGGING = copy.deepcopy(DEFAULT_LOGGING)
+LOGGING['filters']['suppress_deprecated'] = {
+    '()': 'bigsky.settings.SuppressDeprecated'  
+}
+LOGGING['handlers']['console']['filters'].append('suppress_deprecated')
+
+class SuppressDeprecated(logging.Filter):
+    def filter(self, record):
+        WARNINGS_TO_SUPPRESS = [
+            'RemovedInDjango19Warning'
+        ]
+        # Return false to suppress message.
+        return not any([warn in record.getMessage() for warn in WARNINGS_TO_SUPPRESS])

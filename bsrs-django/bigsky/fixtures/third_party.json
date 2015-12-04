@@ -1,44 +1,44 @@
 [
 {
-  "pk": "24bc2462-0b86-4bd4-bc82-ff16a9b6b009",
   "fields": {
-    "name": "DEF_CONTRACTOR",
     "deleted": null,
+    "categories": [],
+    "currency": null,
     "modified": "2015-10-08T19:16:37.731Z",
     "status": null,
-    "currency": null,
-    "categories": [],
-    "number": null,
-    "created": "2015-10-08T19:16:37.731Z"
+    "name": "DEF_CONTRACTOR",
+    "created": "2015-10-08T19:16:37.731Z",
+    "number": null
   },
+  "pk": "24bc2462-0b86-4bd4-bc82-ff16a9b6b009",
   "model": "third_party.thirdparty"
 },
 {
-  "pk": "3979216c-f531-488d-b486-b2ac854339db",
   "fields": {
-    "name": "ABC_CONTRACTOR",
     "deleted": null,
+    "categories": [],
+    "currency": null,
     "modified": "2015-10-08T19:16:37.723Z",
     "status": null,
-    "currency": null,
-    "categories": [],
-    "number": null,
-    "created": "2015-10-08T19:16:37.723Z"
+    "name": "ABC_CONTRACTOR",
+    "created": "2015-10-08T19:16:37.723Z",
+    "number": null
   },
+  "pk": "3979216c-f531-488d-b486-b2ac854339db",
   "model": "third_party.thirdparty"
 },
 {
-  "pk": "ce5d61af-b460-4658-8e50-d2b57f73fe0c",
   "fields": {
-    "name": "GHI_CONTRACTOR",
     "deleted": null,
+    "categories": [],
+    "currency": null,
     "modified": "2015-10-08T19:16:37.733Z",
     "status": null,
-    "currency": null,
-    "categories": [],
-    "number": null,
-    "created": "2015-10-08T19:16:37.733Z"
+    "name": "GHI_CONTRACTOR",
+    "created": "2015-10-08T19:16:37.733Z",
+    "number": null
   },
+  "pk": "ce5d61af-b460-4658-8e50-d2b57f73fe0c",
   "model": "third_party.thirdparty"
 }
 ]
