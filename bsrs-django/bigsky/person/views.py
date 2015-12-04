@@ -14,13 +14,14 @@ from utils.mixins import EagerLoadQuerySetMixin
 from utils.views import BaseModelViewSet
 
 
-class RoleViewSet(BaseModelViewSet):
+class RoleViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
     """
     API endpoint that allows roles to be viewed or edited.
     """
     model = Role
     queryset = Role.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
+    eager_load_actions = ['retrieve']
 
     def get_serializer_class(self):
         """

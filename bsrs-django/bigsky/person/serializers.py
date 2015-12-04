@@ -46,6 +46,10 @@ class RoleDetailSerializer(BaseCreateSerializer):
         model = Role
         fields = ('id', 'name', 'role_type', 'location_level', 'categories')
 
+    @staticmethod
+    def eager_load(queryset):
+        return queryset.prefetch_related('categories')
+
 
 class RoleIdNameSerializer(serializers.ModelSerializer):
     "Used for nested serializer data for other serializers."
