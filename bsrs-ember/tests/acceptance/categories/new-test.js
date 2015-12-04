@@ -43,7 +43,7 @@ module('Acceptance | category-new', {
         store = application.__container__.lookup('store:main');
         let endpoint = PREFIX + BASE_URL + '/';
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CATEGORY_FIXTURES.empty());
-        let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a';
+        let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=999';
         children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };
