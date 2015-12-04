@@ -132,10 +132,13 @@ MAX_UPLOAD_SIZE = 2621440 # 2621440 # default - aka: 2.5MB
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
+
+PAGE_SIZE = 10
+MAX_PAGE_SIZE = 100
+PAGE_SIZE_QUERY_PARAM = 'page_size'
+
 REST_FRAMEWORK = {
-    'PAGINATE_BY': 10,
-    'PAGINATE_BY_PARAM': 'page_size',
-    'MAX_PAGINATE_BY': 100,
+    'DEFAULT_PAGINATION_CLASS': 'utils.pagination.StandardPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
     ),

@@ -33,7 +33,7 @@ class CheckIdCreateMixin(object):
         serializer.is_valid(raise_exception=True)
         # custom: start
         try:
-            _id = serializer.data['id']
+            _id = serializer.validated_data['id']
             self.queryset.get(id=_id)
         except (KeyError, ObjectDoesNotExist):
             pass

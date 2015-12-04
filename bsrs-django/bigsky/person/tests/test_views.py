@@ -93,7 +93,7 @@ class RoleViewSetTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], role_data['id'])
         self.assertIsInstance(Role.objects.get(id=role_data['id']), Role)
-        self.assertEqual(data['categories'], role_data['categories'])
+        self.assertEqual(sorted(data['categories']), sorted(role_data['categories']))
 
     def test_update(self):
         category = mommy.make(Category)

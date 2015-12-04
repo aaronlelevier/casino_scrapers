@@ -1,7 +1,7 @@
+from collections import OrderedDict
 import copy
 
 from rest_framework import viewsets, status
-from rest_framework.compat import OrderedDict
 from rest_framework.decorators import list_route
 from rest_framework.exceptions import NotFound, ValidationError
 from rest_framework.permissions import IsAuthenticated
