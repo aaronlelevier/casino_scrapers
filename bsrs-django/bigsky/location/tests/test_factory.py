@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.test import TestCase
 
 from location.tests import factory
@@ -12,7 +13,7 @@ class LocationLevelTests(TestCase):
         # Region
         region = LocationLevel.objects.get(name='region')
         self.assertEqual(region.children.count(), 2)
-        default = LocationLevel.objects.get(name='company')
+        default = LocationLevel.objects.get(name=settings.DEFAULT_LOCATION_LEVEL)
         self.assertTrue(default)
 
 

@@ -1,24 +1,24 @@
 [
 {
-  "pk": "3ab97a52-9623-44a9-a8a7-087ad2e2e9e2",
+  "model": "contact.phonenumbertype",
   "fields": {
-    "modified": "2015-07-28T21:59:23.843Z",
-    "order": 1,
     "created": "2015-07-28T21:59:23.843Z",
+    "order": 1,
     "name": "admin.phonenumbertype.mobile",
+    "modified": "2015-07-28T21:59:23.843Z",
     "deleted": null
   },
-  "model": "contact.phonenumbertype"
+  "pk": "3ab97a52-9623-44a9-a8a7-087ad2e2e9e2"
 },
 {
-  "pk": "44008afd-4c85-42e1-8754-a1f6d9fc9d05",
+  "model": "contact.phonenumbertype",
   "fields": {
-    "modified": "2015-07-28T21:58:23.843Z",
-    "order": 0,
     "created": "2015-07-28T21:58:23.843Z",
+    "order": 0,
     "name": "admin.phonenumbertype.office",
+    "modified": "2015-07-28T21:58:23.843Z",
     "deleted": null
   },
-  "model": "contact.phonenumbertype"
+  "pk": "44008afd-4c85-42e1-8754-a1f6d9fc9d05"
 }
 ]

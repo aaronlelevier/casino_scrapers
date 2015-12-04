@@ -48,28 +48,16 @@ def create_roles():
         create_locations()
 
     for location_level in LocationLevel.objects.all():
-        role = mommy.make(Role, name='{}-role'.format(location_level.name),
-            location_level=location_level)
+        if location_level.name != settings.DEFAULT_LOCATION_LEVEL:
+            role = mommy.make(Role, name='{}-role'.format(location_level.name),
+                location_level=location_level)
+        else:
+            role = mommy.make(Role, name=settings.DEFAULT_ROLE, location_level=location_level)
 
         if category:
             role.categories.add(category)
 
     return Role.objects.all()
-
-
-def create_administrator_role():
-    location_level, _ = LocationLevel.objects.get_or_create(name=settings.DEFAULT_LOCATION_LEVEL)
-    
-    kwargs = {
-        'name': settings.DEFAULT_ROLE,
-        'location_level': location_level
-    }
-    try:
-        role = Role.objects.get(**kwargs)
-    except Role.DoesNotExist:
-        role = create_role(**kwargs)
-    finally:
-        return role
 
 
 PERSON_BASE_ID = "30f530c4-ce6c-4724-9cfd-37a16e787"
@@ -139,7 +127,6 @@ def create_all_people():
 
     # initial Roles
     create_roles()
-    create_administrator_role()
     roles = Role.objects.all()
 
     # other Persons for Grid View
