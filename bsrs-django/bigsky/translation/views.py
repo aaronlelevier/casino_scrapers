@@ -51,7 +51,7 @@ class TranslationBootstrapViewSet(viewsets.ModelViewSet):
             raise NotFound
 
     def get_queryset(self):
-        queryset = Translation.objects.all()
+        queryset = Translation.objects.all().select_related('locale')
         locale = self.request.query_params.get('locale', None)
         if locale is not None:
             queryset = queryset.filter(
@@ -112,7 +112,7 @@ class TranslationViewSet(DestroyModelMixin, viewsets.ModelViewSet):
                 'key': key,
                 'locales': []
             }
-            for t in Translation.objects.all():
+            for t in Translation.objects.all().select_related('locale'):
                 response['locales'].append({
                         'locale': str(t.locale.id),
                         'translation': t.values.get(key, "")
