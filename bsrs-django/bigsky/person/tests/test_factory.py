@@ -32,22 +32,7 @@ class FactoryTests(TestCase):
             Role.objects.count(),
             LocationLevel.objects.count()
         )
-
-    def test_create_administrator_role(self):
-        role = factory.create_administrator_role()
-
-        self.assertEqual(role.name, settings.DEFAULT_ROLE)
-        self.assertEqual(role.location_level.name, settings.DEFAULT_LOCATION_LEVEL)
-
-    def test_create_administrator_role__run_multiple(self):
-        """
-        Running multiple times doesn't matter, and will still return the same Role.
-        """
-        role = factory.create_administrator_role()
-        role = factory.create_administrator_role()
-
-        self.assertEqual(role.name, settings.DEFAULT_ROLE)
-        self.assertEqual(role.location_level.name, settings.DEFAULT_LOCATION_LEVEL)
+        self.assertEqual(settings.DEFAULT_ROLE, Role.objects.get(name=settings.DEFAULT_ROLE).name)
 
     def test_create_role_with_location_level(self):
         location_level = mommy.make(LocationLevel)
