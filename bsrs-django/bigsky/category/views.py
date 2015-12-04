@@ -27,7 +27,7 @@ class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
         `/api/admin/categories/?parent=id`
 
     3. Get all categories for selectize input
-        `/api/admin/categories/?name__icontains={x}&page_size=999`
+        `/api/admin/categories/?name__icontains={x}&page_size=25`
     '''
     model = Category
     permission_classes = (IsAuthenticated,)

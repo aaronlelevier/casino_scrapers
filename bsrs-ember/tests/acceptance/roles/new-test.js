@@ -74,7 +74,7 @@ test('visiting role/new', (assert) => {
     page.roleTypeClickOptionOne();
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=999';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
@@ -120,7 +120,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-location-level-validation-error').is(':hidden'));
         assert.ok(find('.t-role-category-validation-error').is(':visible'));
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=999';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
@@ -201,7 +201,7 @@ test('can save new location level', (assert) => {
         assert.equal(role.get('location_level').get('id'), LLD.idOne);
         assert.equal(role.get('location_level_fk'), undefined);
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=999';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
@@ -216,7 +216,7 @@ test('can save new location level', (assert) => {
 /*ROLE TO CATEGORY M2M*/
 test('clicking and typing into power select for categories will fire off xhr request for all categories', (assert) => {
     visit(NEW_URL);
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=999';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
@@ -252,7 +252,7 @@ test('adding and removing removing a category in power select for categories wil
     andThen(() => {
         patchRandom(counter);
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=999';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
@@ -291,7 +291,7 @@ test('adding and removing removing a category in power select for categories wil
 
 test('can add multiple categories', (assert) => {
     visit(NEW_URL);
-    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=999';
+    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=25';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'repair1');
@@ -308,7 +308,7 @@ test('can add multiple categories', (assert) => {
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 1);
     });
-    let category_endpoint_two = PREFIX + '/admin/categories/?name__icontains=a&page_size=999';
+    let category_endpoint_two = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_endpoint_two, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
@@ -336,7 +336,7 @@ test('clicking and typing into power select for categories will not filter if sp
     fillIn('.t-role-name', RD.nameOne);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
-    let category_endpoint_two = PREFIX + '/admin/categories/?name__icontains=a&page_size=999';
+    let category_endpoint_two = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_endpoint_two, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
