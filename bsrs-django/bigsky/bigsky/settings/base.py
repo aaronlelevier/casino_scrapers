@@ -149,7 +149,7 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8000$', ) #staging
+CORS_ORIGIN_REGEX_WHITELIST = (r'^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8000$', ) #staging
 
 # get w/ Aaron to understand what settings people run for local dev
 # CORS_ORIGIN_REGEX_WHITELIST = ('^https?://localhost:\d{4}$',
