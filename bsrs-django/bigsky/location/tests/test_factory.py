@@ -8,10 +8,12 @@ class LocationLevelTests(TestCase):
 
     def test_create_location_levels(self):
         factory.create_location_levels()
-        self.assertEqual(LocationLevel.objects.count(), 5)
+        self.assertEqual(LocationLevel.objects.count(), 6)
         # Region
         region = LocationLevel.objects.get(name='region')
         self.assertEqual(region.children.count(), 2)
+        default = LocationLevel.objects.get(name='company')
+        self.assertTrue(default)
 
 
 class LocationTests(TestCase):

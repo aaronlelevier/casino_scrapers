@@ -47,8 +47,11 @@ def create_roles():
         create_locations()
 
     for location_level in LocationLevel.objects.all():
-        role = mommy.make(Role, name='{}-role'.format(location_level.name),
-            location_level=location_level)
+        if location_level.name != 'company':
+            role = mommy.make(Role, name='{}-role'.format(location_level.name),
+                location_level=location_level)
+        else:
+            role = mommy.make(Role, name='Administrator', location_level=location_level)
 
         if category:
             role.categories.add(category)

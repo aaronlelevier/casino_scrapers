@@ -7,12 +7,18 @@ def create_location_levels():
     '''
     ``district_lp`` = district loss prevention
     '''
+    company, _ = LocationLevel.objects.get_or_create(name='company')
     region, _ = LocationLevel.objects.get_or_create(name='region')
     district, _ = LocationLevel.objects.get_or_create(name='district')
     district_lp, _ = LocationLevel.objects.get_or_create(name='district_lp')
     store, _ = LocationLevel.objects.get_or_create(name='store')
     department, _ = LocationLevel.objects.get_or_create(name='department')
     # JOIN's
+    company.children.add(region)
+    # company.children.add(district)
+    # company.children.add(district_lp)
+    # company.children.add(store)
+    # company.children.add(department)
     region.children.add(district)
     region.children.add(district_lp)
     district.children.add(store)
