@@ -3,15 +3,17 @@ from rest_framework.permissions import IsAuthenticated
 from third_party.models import ThirdParty
 from third_party.serializers import (ThirdPartySerializer, ThirdPartyDetailSerializer,
     ThirdPartyCreateSerializer, ThirdPartyUpdateSerializer)
+from utils.mixins import EagerLoadQuerySetMixin
 from utils.views import BaseModelViewSet
 
 
-class ThirdPartyViewSet(BaseModelViewSet):
+class ThirdPartyViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
 
     model = ThirdParty
     permission_classes = (IsAuthenticated,)
     queryset = ThirdParty.objects.all()
     filter_fields = [f.name for f in model._meta.get_fields()]
+    eager_load_actions = ['retrieve']
 
     def get_serializer_class(self):
         """

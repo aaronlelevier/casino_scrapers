@@ -53,3 +53,7 @@ class ThirdPartyDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = ThirdParty
         fields = THIRD_PARTY_FIELDS + ('emails', 'phone_numbers', 'addresses',)
+
+    @staticmethod
+    def eager_load(queryset):
+        return queryset.prefetch_related('categories', 'emails', 'phone_numbers', 'addresses')
