@@ -10,11 +10,15 @@ class EagerLoadQuerySetMixin(object):
     To prefetch related data on "read-only" serializers.
 
     When mixed into a ViewSet, must be the first "mixin".
+
+    :eager_load_actions: override in ViewSet to actions.
     """
+    eager_load_actions = ['retrieve', 'list']
+
     def get_queryset(self):
         queryset = super(EagerLoadQuerySetMixin, self).get_queryset()
 
-        if self.action not in ('create', 'update', 'partial_update'):
+        if self.action in self.eager_load_actions:
             queryset = self.get_serializer_class().eager_load(queryset)
 
         return queryset
