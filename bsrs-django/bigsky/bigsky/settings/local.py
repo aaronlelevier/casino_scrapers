@@ -6,7 +6,7 @@ from .base import *
 # Turn on for debug mode in 'debug_toolbar'
 # INTERNAL_IPS = ('127.0.0.1',)
 
-LOCAL_APPS += (
+LOCAL_APPS = (
     'django_extensions',
     )
 
@@ -14,7 +14,7 @@ THIRD_PARTY_APPS = (
     'debug_toolbar',
     )
 
-INSTALLED_APPS = set(INSTALLED_APPS + LOCAL_APPS + THIRD_PARTY_APPS)
+INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
 MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
