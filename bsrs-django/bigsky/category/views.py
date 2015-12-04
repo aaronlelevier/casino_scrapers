@@ -1,9 +1,9 @@
-from rest_framework.permissions import IsAuthenticated
-
-from category.models import Category
 from category import serializers as cs
+from category.models import Category
 from utils.views import BaseModelViewSet
+
 from rest_framework.decorators import list_route
+from rest_framework.permissions import IsAuthenticated
 
 
 class CategoryViewSet(BaseModelViewSet):
