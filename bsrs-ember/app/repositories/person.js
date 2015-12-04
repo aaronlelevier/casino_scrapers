@@ -15,8 +15,14 @@ export default Ember.Object.extend(GridRepositoryMixin, {
     PersonDeserializer: inject('person'),
     deserializer: Ember.computed.alias('PersonDeserializer'),
     create() {
-        let pk = this.get('uuid').v4();
-        return this.store.push('person', {id: pk, new: true});
+        const pk = this.get('uuid').v4();
+        const role = this.get('store').find('role').filter((role) => {
+            return role.get('default') ? true : false;
+        }).objectAt(0);
+        const people = role.get('people') || [];
+        const person = this.store.push('person', {id: pk, new: true, role_fk: role.get('id')});
+        role.set('people', people.concat(person.get('id')));
+        return person;
     },
     insert(model) {
         return PromiseMixin.xhr(PEOPLE_URL, 'POST', {data: JSON.stringify(model.createSerialize())}).then(() => {

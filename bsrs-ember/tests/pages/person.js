@@ -2,6 +2,7 @@ import PageObject from '../page-object';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import SD from 'bsrs-ember/vendor/defaults/status';
 
@@ -22,13 +23,15 @@ const LOCATION_DROPDOWN = '.t-person-locations-select-dropdown > .ember-power-se
 const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-option`;
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_TWO = `${LOCATIONS}:eq(1)`;
+const ROLE = '.t-person-role-select > .ember-basic-dropdown-trigger';
+const ROLE_DROPDOWN = '.t-person-role-select-dropdown > .ember-power-select-options';
 
 
 export default PageObject.create({
   visit: visitable('/'),
   visitDetail: visitable(DETAIL_URL),
-  statusInput: text(`${STATUS}`),
-  statusClickDropdown: clickable(`${STATUS}`),
+  statusInput: text(STATUS),
+  statusClickDropdown: clickable(STATUS),
   statusClickOptionOne: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${SD.activeName})`),
   statusClickOptionTwo: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${SD.inactiveName})`),
   statusOptionLength: count(`${STATUS_DROPDOWN} > li`),
@@ -36,12 +39,17 @@ export default PageObject.create({
   statusTwo: text(`${STATUS_DROPDOWN} > li:eq(1)`),
   statusThree: text(`${STATUS_DROPDOWN} > li:eq(2)`),
 
-  locationClickDropdown: clickable(`${LOCATION}`),
+  locationClickDropdown: clickable(LOCATION),
   locationClickOptionOne: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LD.storeName})`),
   locationClickOptionOneEq: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:eq(0)`),
   locationClickOptionTwo: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LD.baseStoreName}2)`),
   locationOptionLength: count(`${LOCATION_DROPDOWN} > li`),
   locationOneRemove: clickable(`${LOCATION_ONE} > .ember-power-select-multiple-remove-btn`),
-  locationOneSelected: text(`${LOCATION_ONE}`),
-  locationTwoSelected: text(`${LOCATION_TWO}`),
+  locationOneSelected: text(LOCATION_ONE),
+  locationTwoSelected: text(LOCATION_TWO),
+
+  roleInput: text(ROLE),
+  roleClickDropdown: clickable(ROLE),
+  roleClickOptionOne: clickable(`${ROLE_DROPDOWN} > .ember-power-select-option:contains(${RD.nameOneTranslated})`),
+  roleClickOptionTwo: clickable(`${ROLE_DROPDOWN} > .ember-power-select-option:contains(${RD.nameTwoTranslated})`),
 });

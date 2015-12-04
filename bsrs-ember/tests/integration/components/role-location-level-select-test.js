@@ -8,7 +8,6 @@ import LLF from 'bsrs-ember/vendor/location_level_fixtures';
 
 let store, role, location_level, all_location_levels, location_levels, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
-const ClearButton = '.ember-power-select-clear-btn';
 const COMPONENT = '.t-location-level-select';
 const DROPDOWN = '.ember-power-select-dropdown';
 

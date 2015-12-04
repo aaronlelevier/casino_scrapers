@@ -19,6 +19,7 @@ var StatusMixin = Ember.Mixin.create({
             return status.get('id') === status_fk ? false : true;
         }
     }),
+    statusIsNotDirty: Ember.computed.not('statusIsDirty'),
     change_status(status_id) {
         let store = this.get('store');
         const id = this.get('id');
