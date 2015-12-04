@@ -10,6 +10,7 @@ var extract_locale_translation = function(model, store) {
         };
         let locale_trans = store.push('locale-translation', data);
     }); 
+    delete model['locales'];
 };
 
 var TranslationDeserializer = Ember.Object.extend({
@@ -26,7 +27,6 @@ var TranslationDeserializer = Ember.Object.extend({
         if (!trans_check.get('id') || trans_check.get('isNotDirty')) {
             // locale-translations
             extract_locale_translation(model, store);
-            // delete model['locales'];
             // translation
             let trans = store.push('translation', model);
             trans.save();

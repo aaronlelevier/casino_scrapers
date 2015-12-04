@@ -24,14 +24,17 @@ test('deserialize_list', (assert) => {
     assert.ok(store.find('translation', TRANSLATION_DEFAULTS.keyOne));
 });
 
-// test('deserialize_single - translation', (assert) => {
-//     let response = TRANSLATION_FIXTURES.get();
+test('deserialize_single - translation', (assert) => {
+    let response = TRANSLATION_FIXTURES.get();
 
-//     subject.deserialize(response, TRANSLATION_DEFAULTS.idOne);
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
 
-//     let ret = store.find('translation', TRANSLATION_DEFAULTS.idOne);
-//     assert.ok();
-// });
+    let ret = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
+    assert.ok(ret);
+    assert.equal(ret.get('id'), TRANSLATION_DEFAULTS.keyOneGrid);
+    assert.equal(ret.get('key'), TRANSLATION_DEFAULTS.keyOneGrid);
+    assert.equal(ret.get('locales'), undefined);
+});
 
 test('deserialize_single - locale-translation', (assert) => {
     store.clear();
