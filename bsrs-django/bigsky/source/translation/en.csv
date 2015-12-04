@@ -1,4 +1,4 @@
-LOCALE,KEY,VALUE,CONTEXT,VALUE
+LOCALE,KEY,VALUE,CONTEXT,VALUE-UNDERSCORE
 en,activity.ticket.assignee,changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}},,changed the _type_var_ from $_from_var_ $to $_to_var_ $_timestamp_var_
 en,activity.ticket.attachment_add,uploaded ${{count}} files ${{timestamp}} ${{added}},,uploaded $_count_var_ files $_timestamp_var_ $_added_var_
 en,activity.ticket.attachment_remove,removed ${{count}} files ${{timestamp}} ${{removed}},,removed $_count_var_ files $_timestamp_var_ $_removed_var_
@@ -133,6 +133,7 @@ en,admin.translation.label.key,Key,,Key
 en,admin.translation.label.translation,Translation,,Translation
 en,admin.translation.label.helper,Helper,,Helper
 en,button.add,Add new {{model}},,Add new _model_var_
+en,button.upload,Attach file,,Attach file
 en,crud.cancel.button,Cancel,,Cancel
 en,crud.create.button,Create,,Create
 en,crud.create.error,Error creating {{model}}.,,Error creating _model_var_.
@@ -181,3 +182,4 @@ en,ticket.status.draft,Draft,,Draft
 en,ticket.status.deferred,Deferred,,Deferred
 en,ticket.status.denied,Denied,,Denied
 en,ticket.status.in_progress,In Progress,,In Progress
+en,upload.progress,Progress,,
