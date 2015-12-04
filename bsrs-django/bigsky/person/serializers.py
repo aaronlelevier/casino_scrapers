@@ -114,6 +114,12 @@ class PersonDetailSerializer(serializers.ModelSerializer):
         fields = PERSON_FIELDS + ('locale', 'locations', 'last_login', 'date_joined',
             'emails', 'phone_numbers', 'addresses',)
 
+    @staticmethod
+    def eager_load(queryset):
+        return (queryset.select_related('role')
+                        .prefetch_related('emails', 'phone_numbers', 'addresses',
+                                          'locations', 'locations__location_level'))
+
 
 class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSerializerMixin,
     serializers.ModelSerializer):

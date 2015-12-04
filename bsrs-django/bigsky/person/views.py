@@ -10,6 +10,7 @@ from rest_framework.response import Response
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
+from utils.mixins import EagerLoadQuerySetMixin
 from utils.views import BaseModelViewSet
 
 
@@ -37,7 +38,7 @@ class RoleViewSet(BaseModelViewSet):
 
 ### PERSON
 
-class PersonViewSet(BaseModelViewSet):
+class PersonViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
     '''
     ## Detail Routes
 
@@ -63,6 +64,7 @@ class PersonViewSet(BaseModelViewSet):
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     filter_fields = [f.name for f in model._meta.get_fields()]
+    eager_load_actions = ['retrieve']
 
     def get_serializer_class(self):
         """
