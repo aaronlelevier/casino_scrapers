@@ -256,7 +256,7 @@ test('clicking and typing into power select for categories children will fire of
         assert.equal(category.get('has_many_children').get('length'), 1);
         assert.equal(find('div.option').length, 0);
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=999';
+    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, 'a');
@@ -301,7 +301,7 @@ test('when you deep link to the category detail can remove child from category a
         assert.equal(category.get('children_fks').get('length'), 0);
         assert.equal(page.categoriesSelected(), 0);
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=999';
+    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, 'a');
@@ -333,7 +333,7 @@ test('starting with multiple categories, can remove all categories (while not po
         assert.equal(category.get('has_many_children').get('length'), 0);
         assert.ok(category.get('isDirtyOrRelatedDirty'));
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=999';
+    let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');

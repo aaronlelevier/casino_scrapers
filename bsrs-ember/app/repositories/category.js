@@ -34,7 +34,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
         let url = CATEGORY_URL;
         search = search ? search.trim() : search;
         if (search) {  
-            url += `?name__icontains=${search}&page_size=999`;
+            url += `?name__icontains=${search}&page_size=25`;
             PromiseMixin.xhr(url, 'GET').then((response) => {
                 this.get('CategoryDeserializer').deserialize(response);
             });

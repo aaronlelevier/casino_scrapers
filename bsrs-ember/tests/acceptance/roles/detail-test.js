@@ -113,7 +113,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
         assert.ok(find('.t-role-category-validation-error').is(':visible'));
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=999';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
@@ -219,7 +219,7 @@ test('clicking and typing into power select for categories will fire off xhr req
         assert.equal(role.get('role_category_fks').length, 1);
         assert.equal(page.categoriesSelected(), 1);
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=999';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
@@ -256,7 +256,7 @@ test('can remove and add back same category', (assert) => {
         assert.equal(role.get('categories').get('length'), 0);
         assert.equal(page.categoriesSelected(), 0);
     });
-    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair&page_size=999';
+    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair&page_size=25';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'repair');
@@ -293,7 +293,7 @@ test('starting with multiple categories, can remove all categories (while not po
     andThen(() => {
         assert.equal(page.categoriesSelected(), 0);
     });
-    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=999';
+    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=25';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'repair1');
@@ -334,7 +334,7 @@ test('search will filter down on categories in store correctly by removing and a
     andThen(() => {
         assert.equal(page.categoriesSelected(), 1);
     });
-    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=999';
+    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=25';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'repair1');
