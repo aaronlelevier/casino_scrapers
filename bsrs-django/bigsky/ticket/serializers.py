@@ -38,6 +38,12 @@ class TicketListSerializer(serializers.ModelSerializer):
         model = Ticket
         fields = TICKET_FIELDS + ('number',)
 
+    @staticmethod
+    def eager_load(queryset):
+        return (queryset.select_related('location', 'assignee', 'status',
+                                        'priority', 'requester')
+                            .prefetch_related('categories', 'categories__children'))
+
 
 class TicketSerializer(serializers.ModelSerializer):
 
@@ -50,6 +56,13 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket
         fields = TICKET_FIELDS + ('number', 'cc', 'attachments')
+
+    @staticmethod
+    def eager_load(queryset):
+        return (queryset.select_related('location', 'assignee', 'status',
+                                        'priority', 'requester')
+                            .prefetch_related('cc', 'categories', 'attachments',
+                                              'categories__children'))
 
 
 class TicketActivitySerializer(serializers.ModelSerializer):

@@ -5,6 +5,21 @@ from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
 
+class EagerLoadQuerySetMixin(object):
+    """
+    To prefetch related data on "read-only" serializers.
+
+    When mixed into a ViewSet, must be the first "mixin".
+    """
+    def get_queryset(self):
+        queryset = super(EagerLoadQuerySetMixin, self).get_queryset()
+
+        if self.action not in ('create', 'update', 'partial_update'):
+            queryset = self.get_serializer_class().eager_load(queryset)
+
+        return queryset
+
+
 class CheckIdCreateMixin(object):
     """
     Trying to Post a duplicate returns a 400 and not a 500 Server Error
