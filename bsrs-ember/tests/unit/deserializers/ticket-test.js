@@ -625,3 +625,20 @@ test('attachment added for each attachment on ticket (when ticket has existing a
 });
 
 //TODO: when attachments can be deleted (from ticket) we need a "server is the truth" test that removes in-memory relationships
+
+test('sco comment will be cleared out after save (detail)', (assert) => {
+    ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId, status_fk: TD.statusOneId, comment: 'wat'});
+    let json = TF.generate(TD.idOne);
+    subject.deserialize(json, json.id);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('comment'), '');
+});
+
+test('sco comment will be cleared out after save (list)', (assert) => {
+    ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId, status_fk: TD.statusOneId, comment: 'wat'});
+    let json = TF.generate(TD.idOne);
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    subject.deserialize(response);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('comment'), '');
+});
