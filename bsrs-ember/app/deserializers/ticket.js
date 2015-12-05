@@ -178,7 +178,6 @@ var TicketDeserializer = Ember.Object.extend({
             if (assignee_json) {
                 extract_assignee(assignee_json, store, person_deserializer, ticket);
             }
-            ticket.set('comment', '');
             ticket.save();
         }
     },
@@ -196,7 +195,6 @@ var TicketDeserializer = Ember.Object.extend({
                 delete model.assignee;
                 let ticket = store.push('ticket', model);
                 extract_assignee(assignee_json, store, person_deserializer, ticket);
-                ticket.set('comment', '');
                 ticket.save();
             }
         });

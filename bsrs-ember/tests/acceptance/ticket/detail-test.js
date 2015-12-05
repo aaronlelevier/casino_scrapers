@@ -96,6 +96,7 @@ test('you can add a comment and post it', (assert) => {
         assert.equal(currentURL(), TICKET_URL);
         let ticket = store.find('ticket', TD.idOne);
         assert.ok(ticket.get('isNotDirty'));
+        assert.equal(ticket.get('comment'), '');
     });
 });
 
