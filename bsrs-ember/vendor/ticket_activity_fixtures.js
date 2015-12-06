@@ -69,10 +69,10 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         var activity = this.get_assignee(i, ticket_pk);
         return {person: activity.person, to: activity.content.to, from: activity.content.from};
     },
-    factory.prototype.get_status = function(i, ticket_pk) {
+    factory.prototype.get_status = function(i, ticket_pk, inc) {
         var d = new Date();
         var ticket_id = ticket_pk || this.td.idOne;
-        var activity = {id: i, type: 'status', created: d.setDate(d.getDate()-30), ticket: ticket_id};
+        var activity = {id: i, type: 'status', created: d.setDate(d.getDate()-(30-inc*10)), ticket: ticket_id};
         activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
         activity.content = {to: this.td.statusOneId, from: this.td.statusTwoId};
         return activity;
@@ -203,7 +203,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         var response = [];
         for (var i=1; i <= 3; i++) {
             var uuid = '849447cc-1a19-4d8d-829b-bfb81cb5ece';
-            var activity = this.get_status(uuid+i, ticket_pk);
+            var activity = this.get_status(uuid+i, ticket_pk, i);
             response.push(activity);
         }
         return {'count':2,'next':null,'previous':null,'results': response};
