@@ -8,11 +8,10 @@ var commentActivity = Ember.Component.extend({
             const [beg_string, timestamp, comment] = str.split('$');
             this.set('begString', beg_string.trim());
             this.set('timestamp', timestamp.trim());
-            this.set('comment', comment.trim());
+            this.set('comment', Ember.String.htmlSafe(comment.trim()));
             return this.get('activity').get('person').get('fullname');
         }
     }),
 });
 
 export default commentActivity;
-

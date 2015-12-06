@@ -227,8 +227,8 @@ section.wrap{
             left: 0;
             background: $white;
             overflow: auto;
+            padding-bottom: 50px;
             &.docSectionWithFooter{
-                padding-bottom: 50px;
                 margin-bottom: $documentFooterHeight;
             }
             section{
