@@ -15,7 +15,6 @@ var LocationRoute = TabRoute.extend({
         let location = this.get('store').find('location', location_pk);
         if (!location.get('length') || location.get('isNotDirtyOrRelatedNotDirty')) { 
             location = repository.findById(location_pk);
-
         }
         return Ember.RSVP.hash({
             model: location,

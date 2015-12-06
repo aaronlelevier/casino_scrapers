@@ -140,7 +140,7 @@ var PersonDeserializer = Ember.Object.extend({
         response.results.forEach((model) => {
             let person_check = store.find('person', model.id);
             if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
-                extract_role(model, store);
+                [model.role_fk] = extract_role(model, store);
                 extract_status(model, store);
                 let person = store.push('person', model);
                 person.save();

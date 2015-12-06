@@ -353,3 +353,26 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
     });
 });
 
+test('(NEW URL) clicking on the new link with a new tab of the same type open will redirect to open tab', (assert) => {
+    clearxhr(detail_xhr);
+    visit(NEW_URL);
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New location');
+    });
+    fillIn('.t-location-name', LOCATION_DEFAULTS.storeName);
+    let location_list_data = LOCATION_FIXTURES.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
+    visit(LOCATION_URL);
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+    });
+});

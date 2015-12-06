@@ -115,10 +115,7 @@ test('when you deep link to the person detail view you get bound attrs', (assert
         assert.equal(find('.t-locale-select').find('.t-locale-option:eq(1)').val(), "en");
         assert.equal(find('.t-locale-select').find('.t-locale-option:eq(2)').val(), "es");
         assert.equal(find(".t-locale-select option:selected").val(), PD.locale);
-        assert.equal(find('.t-person-role-select option:eq(0)').val(), 'Select One');
-        assert.equal(find('.t-person-role-select option:eq(1)').val(), RD.idOne);
-        assert.equal(find('.t-person-role-select option:eq(2)').val(), RD.idTwo);
-        assert.equal(find(".t-person-role-select option:selected").val(), RD.idOne);
+        assert.equal(page.roleInput(), t(RD.nameOne));
         assert.equal(find('.t-amount').val(), PD.auth_amount);
         assert.equal(find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol);
     });
@@ -421,6 +418,10 @@ test('clicking cancel button will take from detail view to list view', (assert) 
     click('.t-grid-data:eq(1)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
+        const person = store.find('person', PD.idOne);
+        assert.equal(person.get('role.id'), RD.idOne);
+        assert.equal(person.get('role_fk'), RD.idOne);
+        assert.ok(person.get('roleIsNotDirty'));
     });
     generalPage.cancel();
     andThen(() => {
@@ -468,7 +469,8 @@ test('when you change a related role it will be persisted correctly', (assert) =
             assert.equal(person.get('locations').get('length'), 1);
             assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
         });
-        fillIn('.t-person-role-select', RD.idTwo);
+        page.roleClickDropdown();
+        page.roleClickOptionTwo();
         andThen(() => {
             assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
         });
@@ -478,9 +480,6 @@ test('when you change a related role it will be persisted correctly', (assert) =
         xhr(url,'PUT',JSON.stringify(payload),{},200);
         generalPage.save();
         andThen(() => {
-            let person = store.find('person', PD.id);
-            assert.equal(person.get('role_fk'), RD.idTwo);
-            assert.equal(person.get('locations').get('length'), 0);
             assert.equal(currentURL(), PEOPLE_URL);
         });
     });
@@ -894,14 +893,15 @@ test('when you deep link to the person detail view you can alter the role and ro
         var person = store.find('person', PD.id);
         andThen(() => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-            assert.equal(find('.t-person-role-select option:selected').val(), RD.idOne);
+            assert.equal(page.roleInput(), t(RD.nameOne));
             assert.equal(person.get('role.id'), RD.idOne);
         });
-        fillIn('.t-person-role-select', RD.idTwo);
+        page.roleClickDropdown();
+        page.roleClickOptionTwo();
         andThen(() => {
             assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-            assert.equal(find('.t-person-role-select option:selected').val(), RD.idTwo);
-            var person = store.find('person', PD.id);
+            assert.equal(page.roleInput(), RD.nameTwoTranslated);
+            var person = store.find('person', PD.idOne);
             assert.ok(person.get('isDirtyOrRelatedDirty'));
             assert.equal(person.get('role.id'), RD.idTwo);
         });
@@ -944,13 +944,14 @@ test('when you deep link to the person detail view you can alter the role and ch
         var person = store.find('person', PD.id);
         andThen(() => {
             assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-            assert.equal(find('.t-person-role-select option:selected').val(), RD.idOne);
+            assert.equal(page.roleInput(), t(RD.nameOne));
             assert.equal(person.get('role.id'), RD.idOne);
         });
-        fillIn('.t-person-role-select', RD.idTwo);
+        page.roleClickDropdown();
+        page.roleClickOptionTwo();
         andThen(() => {
             assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-            assert.equal(find('.t-person-role-select option:selected').val(), RD.idTwo);
+            assert.equal(page.roleInput(), RD.nameTwoTranslated);
             var person = store.find('person', PD.id);
             assert.ok(person.get('isDirtyOrRelatedDirty'));
             assert.equal(person.get('role.id'), RD.idTwo);
@@ -963,11 +964,12 @@ test('when you deep link to the person detail view you can alter the role and ch
             let people_detail_data_three = PF.detail(PD.id);
             people_detail_data_three.role = RD.idOne;
             xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_three);
-            fillIn('.t-person-role-select', RD.idOne);
+            page.roleClickDropdown();
+            page.roleClickOptionOne();
             andThen(() => {
                 assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idOne);
-                assert.equal(find('.t-person-role-select option:selected').val(), RD.idOne);
-                var person = store.find('person', PD.id);
+                assert.equal(page.roleInput(), t(RD.nameOne));
+                var person = store.find('person', PD.idOne);
                 assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
                 assert.equal(person.get('role.id'), RD.idOne);
             });
@@ -1028,7 +1030,8 @@ test('when you change a related role it will change the related locations as wel
         xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_two);
         let locations_endpoint_role_change = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}&name__icontains=a`;
         xhr(locations_endpoint_role_change, 'GET', null, {}, 200, LF.list());
-        fillIn('.t-person-role-select', RD.idTwo);
+        page.roleClickDropdown();
+        page.roleClickOptionTwo();
         andThen(() => {
             let person = store.find('person', PD.id);
             assert.equal(person.get('locationsIsDirty'), false);
@@ -1081,7 +1084,8 @@ test('when you change a related role it will change the related locations as wel
         xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_two);
         let locations_endpoint_role_change = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}`;
         xhr(locations_endpoint_role_change, 'GET', null, {}, 200, LF.list());
-        fillIn('.t-person-role-select', RD.idTwo);
+        page.roleClickDropdown();
+        page.roleClickOptionTwo();
         andThen(() => {
             let person = store.find('person', PD.id);
             assert.equal(person.get('role.id'), RD.idTwo);

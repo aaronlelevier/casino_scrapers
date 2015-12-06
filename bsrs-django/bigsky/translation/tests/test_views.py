@@ -148,7 +148,7 @@ class TranslationReadTests(APITestCase):
 
         self.assertEqual(
             data['results'][0],
-            sorted_trans[settings.REST_FRAMEWORK['PAGINATE_BY']]
+            sorted_trans[settings.PAGE_SIZE]
         )
 
     # get_translations_by_key

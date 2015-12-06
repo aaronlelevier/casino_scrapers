@@ -30,7 +30,6 @@ THIRD_PARTY_APPS = (
     'psycopg2',
     'corsheaders',
     'rest_framework',
-    'debug_toolbar',
     )
 
 LOCAL_APPS = (
@@ -51,8 +50,6 @@ LOCAL_APPS = (
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
-# Turn on for debug mode in 'debug_toolbar'
-# INTERNAL_IPS = ('127.0.0.1',)
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -64,10 +61,8 @@ MIDDLEWARE_CLASSES = (
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
-    # Translation Req
+    # Translation Requirement
     'django.middleware.locale.LocaleMiddleware',
-    # debug_toolbar
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'bigsky.urls'
@@ -137,10 +132,13 @@ MAX_UPLOAD_SIZE = 2621440 # 2621440 # default - aka: 2.5MB
 
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
+
+PAGE_SIZE = 10
+MAX_PAGE_SIZE = 100
+PAGE_SIZE_QUERY_PARAM = 'page_size'
+
 REST_FRAMEWORK = {
-    'PAGINATE_BY': 10,
-    'PAGINATE_BY_PARAM': 'page_size',
-    'MAX_PAGINATE_BY': 100,
+    'DEFAULT_PAGINATION_CLASS': 'utils.pagination.StandardPagination',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
     ),
@@ -151,7 +149,7 @@ REST_FRAMEWORK = {
 
 CORS_ALLOW_CREDENTIALS = True
 CORS_ORIGIN_ALLOW_ALL = False
-CORS_ORIGIN_REGEX_WHITELIST = ('^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8000$', ) #staging
+CORS_ORIGIN_REGEX_WHITELIST = (r'^https?://(\w+\.)?bs-webdev03.bigskytech\.com:8000$', ) #staging
 
 # get w/ Aaron to understand what settings people run for local dev
 # CORS_ORIGIN_REGEX_WHITELIST = ('^https?://localhost:\d{4}$',
@@ -187,6 +185,7 @@ DEFAULT_ROLE = 'Administrator'
 ### LOCATION
 DEFAULT_LOCATION_STATUS = 'Open'
 DEFAULT_LOCATION_TYPE = 'big_store'
+DEFAULT_LOCATION_LEVEL = 'Company'
 
 ### PERSON
 PASSWORD_EXPIRE_DAYS = 90
@@ -199,3 +198,68 @@ THIRD_PARTY_STATUS_DEFAULT = "active"
 ### TICKETS
 ACTIVITY_DEFAULT_WEIGHT = 4
 DEFAULTS_TICKET_STATUS = "ticket.status.new" 
+
+
+### EMAIL ###
+# django native settings for ``django.core.mail.mail_admins()``
+# EMAIL_HOST_USER
+# EMAIL_HOST_PASSWORD
+
+
+### LOGGING ###
+LOGGING_DIR = os.path.join(os.path.dirname(BASE_DIR), "log") # ../bsrs-django/log/
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format' : "[%(asctime)s] %(levelname)s [%(name)s:%(lineno)s] %(message)s",
+            'datefmt' : "%d/%b/%Y %H:%M:%S"
+        },
+        'simple': {
+            'format': '%(levelname)s %(message)s'
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(LOGGING_DIR, 'debug.log'),
+            'formatter': 'verbose'
+        },
+        'mail_admins': {
+            'level': 'ERROR',
+            'class': 'django.utils.log.AdminEmailHandler',
+        }
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
+        'bigsky': {
+            'handlers': ['file'],
+            'level': 'DEBUG'
+        }
+    }
+}
+
+
+import logging, copy
+from django.utils.log import DEFAULT_LOGGING
+
+LOGGING = copy.deepcopy(DEFAULT_LOGGING)
+LOGGING['filters']['suppress_deprecated'] = {
+    '()': 'bigsky.settings.SuppressDeprecated'  
+}
+LOGGING['handlers']['console']['filters'].append('suppress_deprecated')
+
+class SuppressDeprecated(logging.Filter):
+    def filter(self, record):
+        WARNINGS_TO_SUPPRESS = [
+            'RemovedInDjango19Warning'
+        ]
+        # Return false to suppress message.
+        return not any([warn in record.getMessage() for warn in WARNINGS_TO_SUPPRESS])

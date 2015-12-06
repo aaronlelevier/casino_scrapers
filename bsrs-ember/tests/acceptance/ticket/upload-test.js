@@ -106,9 +106,11 @@ test('uploading a file, then rolling back should throw out any previously associ
             assert.equal(find('.t-modal-body').length, 1);
         });
     });
+    ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
     click('.t-modal-rollback-btn');
     andThen(() => {
         assert.equal(model.get('attachments').get('length'), 0);
+        assert.equal(store.find('attachment').get('length'), 0);
         assert.equal(model.get('isDirty'), false);
         assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
     });
@@ -285,6 +287,54 @@ test('file upload supports multiple attachments', (assert) => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(store.find('attachment').get('length'), 2);
         assert.equal(model.get('attachments').get('length'), 2);
+        assert.equal(model.get('isDirty'), false);
+        assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('rolling back should only remove files not yet associated with a given ticket', (assert) => {
+    let detail_with_attachment = TF.detail(TD.idOne);
+    detail_with_attachment.attachments = [TD.attachmentOneId];
+    let model = store.find('ticket', TD.idOne);
+    let image = {name: 'foo.png', type: 'image/png', size: 234000};
+    ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, detail_with_attachment);
+    page.visitDetail();
+    andThen(() => {
+        model = store.find('ticket', TD.idOne);
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(PROGRESS_BAR).length, 0);
+        assert.equal(store.find('attachment').get('length'), 1);
+        assert.equal(model.get('attachments').get('length'), 1);
+        assert.equal(model.get('isDirty'), false);
+        assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+    uploadFile('attach-file', 'upload', image, model);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        model = store.find('ticket', TD.idOne);
+        assert.equal(find(PROGRESS_BAR).length, 1);
+        assert.ok(find(PROGRESS_BAR).is(':visible'));
+        assert.equal(find(PROGRESS_BAR).attr('style'), 'width: 100%;');
+        assert.equal(store.find('attachment').get('length'), 2);
+        assert.equal(model.get('attachments').get('length'), 2);
+        assert.equal(model.get('isDirty'), false);
+        assert.ok(model.get('isDirtyOrRelatedDirty'));
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+    visit(TICKET_URL);
+    click('.t-tab-close:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        waitFor(() => {
+            assert.equal(find('.t-modal-body').length, 1);
+        });
+    });
+    ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
+    click('.t-modal-rollback-btn');
+    andThen(() => {
+        assert.equal(model.get('attachments').get('length'), 1);
+        assert.equal(store.find('attachment').get('length'), 1);
         assert.equal(model.get('isDirty'), false);
         assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
     });

@@ -117,8 +117,8 @@ class AttachmentModelTests(TestCase):
             self.assertTrue(attachment.is_image)
             self.assertTrue(attachment.file)
             self.assertTrue(attachment.image_full)
-            self.assertFalse(attachment.image_medium)
-            self.assertFalse(attachment.image_thumbnail)
+            self.assertTrue(attachment.image_medium)
+            self.assertTrue(attachment.image_thumbnail)
 
     def test_upload_size(self):
         with self.settings(MAX_UPLOAD_SIZE=0):

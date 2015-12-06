@@ -43,6 +43,7 @@ class RoleViewSetTests(APITestCase):
         self.role = self.person.role
         self.role.location_level = self.location.location_level
         self.role.categories = self.categories
+        self.role.categories_ids = [str(c.id) for c in self.categories]
         self.role.save()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -84,13 +85,15 @@ class RoleViewSetTests(APITestCase):
             "id": str(uuid.uuid4()),
             "name": "Admin",
             "role_type": choices.ROLE_TYPE_CHOICES[0][0],
-            "location_level": str(self.location.location_level.id)
+            "location_level": str(self.location.location_level.id),
+            "categories": self.role.categories_ids
         }
         response = self.client.post('/api/admin/roles/', role_data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], role_data['id'])
         self.assertIsInstance(Role.objects.get(id=role_data['id']), Role)
+        self.assertEqual(sorted(data['categories']), sorted(role_data['categories']))
 
     def test_update(self):
         category = mommy.make(Category)

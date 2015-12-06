@@ -1,15 +1,14 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/store';
 
 var RoleSelect = Ember.Component.extend({
-    store: inject('main'),
+    selected: Ember.computed('model.role', function() {
+        return this.get('model').get('role');
+    }),
     actions: {
-        changed(person, role_pk) {
-            let new_role = this.get('store').find('role', role_pk);
-            Ember.run(() => {
-                person.change_role(new_role, this.get('model'));
-            });
-            this.set('role_change', role_pk); 
+        selected(role) {
+            const person = this.get('model');
+            person.change_role(role);
+            this.set('role_change', role.get('id'));
         }
     }
 });

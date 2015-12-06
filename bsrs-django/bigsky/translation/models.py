@@ -108,7 +108,7 @@ class TranslationManager(BaseManager):
             
             locale, _ = Locale.objects.get_or_create(locale=language, name=language)
             
-            ret, _ = Translation.objects.get_or_create(locale=locale, values={})
+            ret, _ = Translation.objects.get_or_create(locale=locale)
             ret.values = values
             ret.context = context
             ret.save()

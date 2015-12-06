@@ -21,7 +21,7 @@ from location.models import (Location, LocationLevel, LocationStatus,
     State, Country)
 from translation.models import Locale
 from utils import choices
-from utils.helpers import model_to_json, choices_to_json
+from utils.helpers import model_to_json, model_to_json_select_related, choices_to_json
 
 
 class IndexView(TemplateView):
@@ -51,7 +51,7 @@ class IndexView(TemplateView):
             'address_types': model_to_json(AddressType),
             'states_us': model_to_json(State),
             'countries': model_to_json(Country),
-            'role_config': model_to_json(Role),
+            'role_config': model_to_json_select_related(Role, select=['location_level']),
             'role_types_config': choices_to_json(choices.ROLE_TYPE_CHOICES),
             'person_status_config': model_to_json(PersonStatus),
             'location_level_config': model_to_json(LocationLevel),

@@ -10,13 +10,16 @@ var EditMixin = Ember.Mixin.create({
             repository[action](model).then(() => {
                 let tab = this.tab();
                 tab.set('saveModel', persisted);
-                this.attrs.save(tab);
+                this.sendAction('close', tab);
             });
         },
         delete() {
-            let model = this.get('model'); 
+            let id = this.get('model').get('id');
             let repository = this.get('repository');
-            this.attrs.delete(this.tab(), repository);
+            let callback = function() {
+                repository.delete(id);
+            };
+            this.sendAction('close', this.tab(), callback);
         }
     }
 });

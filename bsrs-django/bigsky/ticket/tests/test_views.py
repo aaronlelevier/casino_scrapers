@@ -843,3 +843,54 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
 
         self.assertEqual(TicketActivity.objects.count(), 0)
+
+    def test_attachment_add__then_put_again(self):
+        """
+        First POST should create a TicketActivity, but the second shouldn't because
+        the same Attachment.ID is getting re-posted, and it's already been logged.
+        """
+        name = 'attachment_add'
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        new_attachment = create_attachments()
+        self.data['attachments'].append(str(new_attachment.id))
+        self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+        self.assertEqual(TicketActivity.objects.count(), 1)
+
+        self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 1)
+
+    def test_attachment_add__then_add_ticket(self):
+        """
+        Each TicketActivity log should only log the Attachment(s) added.
+        """
+        name = 'attachment_add'
+        self.assertEqual(TicketActivity.objects.count(), 0)
+
+        # Attachment 1
+        first_attachment = create_attachments()
+        self.data['attachments'] = [str(first_attachment.id)]
+
+        self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        self.assertIn(
+            first_attachment.id,
+            list(TicketActivity.objects.order_by('created').last().content.values())
+        )
+
+        # Attachment 2
+        second_attachment = create_attachments()
+        self.data['attachments'] = [str(second_attachment.id)]
+
+        self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+
+        self.assertEqual(TicketActivity.objects.count(), 2)
+        self.assertIn(
+            second_attachment.id,
+            list(TicketActivity.objects.order_by('created').last().content.values())
+        )
+        self.assertNotIn(
+            first_attachment.id,
+            list(TicketActivity.objects.order_by('created').last().content.values())
+        )

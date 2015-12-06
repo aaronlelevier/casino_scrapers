@@ -263,6 +263,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
         };
         if (this.get('comment')) {
             payload.comment = this.get('comment');
+            this.set('comment', '');
         }
         return payload;
     },

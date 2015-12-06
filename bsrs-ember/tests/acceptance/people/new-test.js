@@ -3,23 +3,25 @@ import { test } from 'qunit';
 import module from "bsrs-ember/tests/helpers/module";
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
-import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
-import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
+import PF from 'bsrs-ember/vendor/people_fixtures';
+import RF from 'bsrs-ember/vendor/role_fixtures';
+import PD from 'bsrs-ember/vendor/defaults/person';
+import RD from 'bsrs-ember/vendor/defaults/role';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
-import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import PND from 'bsrs-ember/vendor/defaults/phone-number-type';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import config from 'bsrs-ember/config/environment';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import page from 'bsrs-ember/tests/pages/person';
 import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
-const PEOPLE_NEW_URL = BASE_PEOPLE_URL + '/new';
+const NEW_URL = BASE_PEOPLE_URL + '/new';
 
 var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint;
 
@@ -27,17 +29,17 @@ module('Acceptance | people-new', {
     beforeEach() {
         payload = {
             id: UUID.value,
-            username: PEOPLE_DEFAULTS.username,
-            password: PEOPLE_DEFAULTS.password,
-            role: PEOPLE_DEFAULTS.role,
+            username: PD.username,
+            password: PD.password,
+            role: PD.role,
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
-        var endpoint = PREFIX + BASE_PEOPLE_URL + '/';
-        list_xhr = xhr(endpoint + '?page=1','GET',null,{},200,PEOPLE_FIXTURES.empty());
-        detailEndpoint = PREFIX + BASE_PEOPLE_URL + '/';
-        people_detail_data = {id: UUID.value, username: PEOPLE_DEFAULTS.username,
-            role: ROLE_FIXTURES.get() , phone_numbers:[], addresses: [], locations: []};
+        var endpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
+        list_xhr = xhr(endpoint + '?page=1','GET',null,{},200,PF.empty());
+        detailEndpoint = `${PREFIX}${BASE_PEOPLE_URL}/`;
+        people_detail_data = {id: UUID.value, username: PD.username,
+            role: RF.get() , phone_numbers:[], addresses: [], locations: []};
         detail_xhr = xhr(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };
@@ -56,16 +58,15 @@ test('visiting /people/new and creating a new person', (assert) => {
     visit(PEOPLE_URL);
     click('.t-add-new');
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL);
+        assert.equal(currentURL(), NEW_URL);
         assert.equal(store.find('person').get('length'), 2);
-        assert.equal(find('.t-person-role-select option:eq(0)').text(), 'Select One');
-        var person = store.find('person').objectAt(1);
+        assert.equal(page.roleInput(), t(RD.nameOne));
+        var person = store.find('person', UUID.value);
         assert.ok(person.get('new'));
     });
-    fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
-    fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
-    fillIn('.t-person-role-select', PEOPLE_DEFAULTS.role);
-    ajax(PREFIX + BASE_PEOPLE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
+    fillIn('.t-person-username', PD.username);
+    fillIn('.t-person-password', PD.password);
+    ajax(`${PREFIX}${BASE_PEOPLE_URL}/`, 'POST', JSON.stringify(payload), {}, 201, response);
     ajax(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
     generalPage.save();
     andThen(() => {
@@ -74,16 +75,18 @@ test('visiting /people/new and creating a new person', (assert) => {
         var person = store.find('person').objectAt(1);
         assert.equal(person.get('id'), UUID.value);
         assert.equal(person.get('new'), undefined);
-        assert.equal(person.get('username'), PEOPLE_DEFAULTS.username);
+        assert.equal(person.get('username'), PD.username);
         assert.equal(person.get('password'), '');
-        assert.equal(person.get('role').get('id'), PEOPLE_DEFAULTS.role);
+        assert.equal(person.get('role').get('id'), PD.role);
+        assert.equal(person.get('role_fk'), PD.role);
         assert.ok(person.get('isNotDirty'));
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
 
 test('validation works and when hit save, we do same post', (assert) => {
     var response = Ember.$.extend(true, {}, payload);
-    var url = PREFIX + BASE_PEOPLE_URL + '/';
+    var url = `${PREFIX}${BASE_PEOPLE_URL}/`;
     xhr( url,'POST',JSON.stringify(payload),{},201,response );
     visit(PEOPLE_URL);
     click('.t-add-new');
@@ -96,14 +99,13 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-username-validation-error').is(':visible'));
         assert.ok(find('.t-password-validation-error').is(':visible'));
     });
-    fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
+    fillIn('.t-person-username', PD.username);
     generalPage.save();
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_NEW_URL);
+        assert.equal(currentURL(), NEW_URL);
         assert.ok(find('.t-username-validation-error').is(':hidden'));
     });
-    fillIn('.t-person-password', PEOPLE_DEFAULTS.password);
-    fillIn('.t-person-role-select', PEOPLE_DEFAULTS.role);
+    fillIn('.t-person-password', PD.password);
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
@@ -113,12 +115,12 @@ test('validation works and when hit save, we do same post', (assert) => {
 test('when user clicks cancel we prompt them with a modal and they cancel to keep model data', (assert) => {
     clearxhr(detail_xhr);
     clearxhr(list_xhr);
-    visit(PEOPLE_NEW_URL);
-    fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
+    visit(NEW_URL);
+    fillIn('.t-person-username', PD.username);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
-            assert.equal(currentURL(), PEOPLE_NEW_URL);
+            assert.equal(currentURL(), NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
             assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
         });
@@ -126,8 +128,8 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     click('.t-modal-footer .t-modal-cancel-btn');
     andThen(() => {
         waitFor(() => {
-            assert.equal(currentURL(), PEOPLE_NEW_URL);
-            assert.equal(find('.t-person-username').val(), PEOPLE_DEFAULTS.username);
+            assert.equal(currentURL(), NEW_URL);
+            assert.equal(find('.t-person-username').val(), PD.username);
             assert.equal(find('.t-modal').is(':hidden'), true);
         });
     });
@@ -135,12 +137,16 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     clearxhr(detail_xhr);
-    visit(PEOPLE_NEW_URL);
-    fillIn('.t-person-username', PEOPLE_DEFAULTS.username);
+    visit(NEW_URL);
+    andThen(() => {
+        const person = store.find('person', UUID.value);
+        assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    });
+    fillIn('.t-person-username', PD.username);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
-            assert.equal(currentURL(), PEOPLE_NEW_URL);
+            assert.equal(currentURL(), NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
             var person = store.find('person', {id: UUID.value});
             assert.equal(person.get('length'), 1);
@@ -159,9 +165,41 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user enters new form and doesnt enter data, the record is correctly removed from the store', (assert) => {
     clearxhr(detail_xhr);
-    visit(PEOPLE_NEW_URL);
+    visit(NEW_URL);
     generalPage.cancel();
     andThen(() => {
         assert.equal(store.find('person').get('length'), 1);
+    });
+});
+
+test('can change default role', (assert) => {
+    clearxhr(list_xhr);
+    visit(NEW_URL);
+    page.roleClickDropdown();
+    andThen(() => {
+        const person = store.find('person', UUID.value);
+        assert.equal(person.get('role').get('id'), RD.idOne);
+    });
+    page.roleClickOptionTwo();
+    andThen(() => {
+        const person = store.find('person', UUID.value);
+        assert.equal(person.get('role').get('id'), RD.idTwo);
+        assert.ok(person.get('roleIsDirty'));
+        assert.ok(person.get('isDirtyOrRelatedDirty'));
+        assert.equal(page.roleInput(), RD.nameTwoTranslated);
+    });
+    const payload_two = {
+        id: UUID.value,
+        username: PD.username,
+        password: PD.password,
+        role: RD.idTwo,
+    };
+    fillIn('.t-person-username', PD.username);
+    fillIn('.t-person-password', PD.password);
+    ajax(`${PREFIX}${BASE_PEOPLE_URL}/`, 'POST', JSON.stringify(payload_two), {}, 201, {});
+    ajax(detailEndpoint + UUID.value + '/', 'GET', null, {}, 200, people_detail_data);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
     });
 });

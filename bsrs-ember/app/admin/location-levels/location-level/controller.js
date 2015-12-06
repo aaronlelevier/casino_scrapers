@@ -1,7 +1,11 @@
 import Ember from 'ember';
-import TabActionMixin from 'bsrs-ember/mixins/controller/tab-actions';
 
-var LocationLevelController = Ember.Controller.extend(TabActionMixin, {
+var LocationLevelController = Ember.Controller.extend({
+    actions: {
+        closeTab(tab, callback) {
+            this.send('closeTabMaster', tab, callback);
+        }
+    }
 });
 export default LocationLevelController;
 

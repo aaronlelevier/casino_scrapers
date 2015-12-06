@@ -2,11 +2,13 @@
 {
   "model": "third_party.thirdparty",
   "fields": {
-    "number": null,
-    "name": "DEF_CONTRACTOR",
     "status": null,
-    "modified": "2015-10-08T19:16:37.731Z",
+    "number": null,
+    "categories": [],
+    "currency": null,
     "created": "2015-10-08T19:16:37.731Z",
+    "modified": "2015-10-08T19:16:37.731Z",
+    "name": "DEF_CONTRACTOR",
     "deleted": null
   },
   "pk": "24bc2462-0b86-4bd4-bc82-ff16a9b6b009"
@@ -14,11 +16,13 @@
 {
   "model": "third_party.thirdparty",
   "fields": {
-    "number": null,
-    "name": "ABC_CONTRACTOR",
     "status": null,
-    "modified": "2015-10-08T19:16:37.723Z",
+    "number": null,
+    "categories": [],
+    "currency": null,
     "created": "2015-10-08T19:16:37.723Z",
+    "modified": "2015-10-08T19:16:37.723Z",
+    "name": "ABC_CONTRACTOR",
     "deleted": null
   },
   "pk": "3979216c-f531-488d-b486-b2ac854339db"
@@ -26,11 +30,13 @@
 {
   "model": "third_party.thirdparty",
   "fields": {
-    "number": null,
-    "name": "GHI_CONTRACTOR",
     "status": null,
-    "modified": "2015-10-08T19:16:37.733Z",
+    "number": null,
+    "categories": [],
+    "currency": null,
     "created": "2015-10-08T19:16:37.733Z",
+    "modified": "2015-10-08T19:16:37.733Z",
+    "name": "GHI_CONTRACTOR",
     "deleted": null
   },
   "pk": "ce5d61af-b460-4658-8e50-d2b57f73fe0c"

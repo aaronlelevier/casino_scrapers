@@ -33,15 +33,6 @@ moduleForComponent('location-level', 'integration: location-level test', {
     }
 });
 
-test('should render component with child select that has correct options and selected option', function(assert) {
-    this.set('model', location_level);
-    this.set('location_level_options', location_levels);
-    this.render(hbs`{{location-level-general model=model location_level_options=location_level_options}}`);
-    var $select = this.$('.t-location-level-location-level-select');
-    assert.equal($select.find('div.option').length, 1);
-    assert.equal($select.find('div.item').length, 7);
-});
-
 test('validation should enforce basic location name property', function(assert) {
     this.set('model', location_level);
     this.set('location_level_options', location_levels);

@@ -10,16 +10,18 @@ from rest_framework.response import Response
 
 from person import helpers, serializers as ps
 from person.models import Person, PersonStatus, Role
+from utils.mixins import EagerLoadQuerySetMixin
 from utils.views import BaseModelViewSet
 
 
-class RoleViewSet(BaseModelViewSet):
+class RoleViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
     """
     API endpoint that allows roles to be viewed or edited.
     """
     model = Role
     queryset = Role.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
+    eager_load_actions = ['retrieve']
 
     def get_serializer_class(self):
         """
@@ -29,13 +31,15 @@ class RoleViewSet(BaseModelViewSet):
             return ps.RoleDetailSerializer
         elif self.action == ('update' or 'partial_update'):
             return ps.RoleUpdateSerializer
+        elif self.action == ('create'):
+            return ps.RoleCreateSerializer
         else:
             return ps.RoleSerializer
 
 
 ### PERSON
 
-class PersonViewSet(BaseModelViewSet):
+class PersonViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
     '''
     ## Detail Routes
 
@@ -61,6 +65,7 @@ class PersonViewSet(BaseModelViewSet):
     queryset = Person.objects.all()
     permission_classes = (permissions.IsAuthenticated,)
     filter_fields = [f.name for f in model._meta.get_fields()]
+    eager_load_actions = ['retrieve']
 
     def get_serializer_class(self):
         """

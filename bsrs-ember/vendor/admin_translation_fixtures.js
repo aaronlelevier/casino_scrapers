@@ -5,7 +5,7 @@ var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
     factory.prototype.get = function(i) {
         // var name = name || this.defaults.storeName;
         return {
-            id: i || this.defaults.idOne,
+            id: i || this.defaults.keyOneGrid,
             key: this.defaults.keyOneGrid,
             locales: [
                 {

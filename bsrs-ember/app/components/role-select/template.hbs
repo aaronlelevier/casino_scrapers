@@ -1,6 +1,11 @@
-<select class="t-person-role-select form-control role" id="person-role" onchange={{action (action "changed" person) value="target.value"}}>
-    <option>Select One</option>
-  {{#each options as |role|}}
-    <option value={{role.id}} selected={{is-equal model.id role.id}}>{{t role.name}}</option>
-  {{/each}}
-</select>
+{{#power-select
+  class="t-person-role-select"
+  options=options
+  selected=selected
+  onchange=(action "selected")
+  searchEnabled=false
+  placeholder="Select One"
+  as |role|
+}}
+  {{role.name}}
+{{/power-select}}

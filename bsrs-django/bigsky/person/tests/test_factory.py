@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.test import TestCase
 
 from model_mommy import mommy
@@ -25,16 +26,19 @@ class FactoryTests(TestCase):
         self.assertIsInstance(role, Role)
         self.assertEqual(role.name, name)
 
-    def create_role_exists(self):
+    def test_create_role_exists(self):
         factory.create_roles()
         self.assertEqual(
             Role.objects.count(),
             LocationLevel.objects.count()
         )
+        self.assertEqual(settings.DEFAULT_ROLE, Role.objects.get(name=settings.DEFAULT_ROLE).name)
 
-    def create_role_with_location_level(self):
+    def test_create_role_with_location_level(self):
         location_level = mommy.make(LocationLevel)
-        role = create_role(location_level=location_level)
+
+        role = factory.create_role(location_level=location_level)
+
         self.assertEqual(role.location_level.name, location_level.name)
 
     def test_create_single_person(self):
@@ -91,5 +95,7 @@ class FactoryTests(TestCase):
         factory.create_all_people()
         people = Person.objects.all()
         self.assertEqual(people.count(), 187)
+        # Roles
+        self.assertTrue(Role.objects.filter(name=settings.DEFAULT_ROLE).exists())
         # At least some people are assigned to Location(s)
         self.assertTrue(Person.objects.exclude(locations__isnull=True))

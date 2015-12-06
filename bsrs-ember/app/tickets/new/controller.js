@@ -1,7 +1,6 @@
 import Ember from 'ember';
-import TabActionMixin from 'bsrs-ember/mixins/controller/tab-actions';
 
-var TicketController = Ember.Controller.extend(TabActionMixin, {
+var TicketController = Ember.Controller.extend({
     queryParams: ['search_cc', 'search_location', 'search_assignee'],
     search_cc: undefined,
     search_location: undefined,

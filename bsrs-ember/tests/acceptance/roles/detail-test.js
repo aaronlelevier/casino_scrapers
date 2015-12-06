@@ -14,7 +14,6 @@ import CF from 'bsrs-ember/vendor/category_fixtures';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
-import selectize from 'bsrs-ember/tests/pages/selectize';
 import page from 'bsrs-ember/tests/pages/role';
 
 const PREFIX = config.APP.NAMESPACE;
@@ -28,7 +27,6 @@ const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
-const LOCATIONLEVELCLEAR = '.t-location-level-select > .ember-power-select-trigger > .ember-power-select-clear-btn';
 
 let application, store, list_xhr, endpoint, detail_data, url;
 
@@ -93,6 +91,43 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         assert.equal(currentURL(), ROLE_URL);
         let role = store.find('role').objectAt(0);  
         assert.ok(role.get('isNotDirty'));
+    });
+});
+
+test('validation works and when hit save, we do same post', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-role-category-validation-error').is(':hidden'));
+    });
+    fillIn('.t-role-name', '');
+    page.categoryOneRemove();
+    generalPage.save();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':visible'));
+        assert.ok(find('.t-role-category-validation-error').is(':visible'));
+    });
+    fillIn('.t-role-name', RD.nameOne);
+    generalPage.save();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-role-category-validation-error').is(':visible'));
+    });
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(CATEGORY_SEARCH, 'a');
+    page.categoryClickOptionTwo();
+    andThen(() => {
+        assert.ok(find('.t-name-validation-error').is(':hidden'));
+        assert.ok(find('.t-role-category-validation-error').is(':hidden'));
+    });
+    let payload = RF.put({id: RD.idOne, categories: [CD.idTwo]});
+    let response = Ember.$.extend(true, {}, payload);
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
     });
 });
 
@@ -184,7 +219,7 @@ test('clicking and typing into power select for categories will fire off xhr req
         assert.equal(role.get('role_category_fks').length, 1);
         assert.equal(page.categoriesSelected(), 1);
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'a');
@@ -221,7 +256,7 @@ test('can remove and add back same category', (assert) => {
         assert.equal(role.get('categories').get('length'), 0);
         assert.equal(page.categoriesSelected(), 0);
     });
-    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair';
+    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair&page_size=25';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'repair');
@@ -244,30 +279,6 @@ test('can remove and add back same category', (assert) => {
     });
 });
 
-test('removing a category in selectize for categories will save correctly and cleanup role_category_fks', (assert) => {
-    visit(DETAIL_URL);
-    andThen(() => {
-        let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(role.get('categories').get('length'), 1);
-        assert.equal(page.categoriesSelected(), 1);
-    });
-    page.categoryOneRemove();
-    andThen(() => {
-        let role = store.find('role', RD.idOne);
-        assert.equal(role.get('role_category_fks').length, 1);
-        assert.equal(role.get('categories').get('length'), 0);
-        assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoriesSelected(), 0);
-    });
-    let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: []});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-    });
-});
-
 test('starting with multiple categories, can remove all categories (while not populating options) and add back', (assert) => {
     detail_data.categories = [...detail_data.categories, CF.get(CD.idTwo)];
     detail_data.categories[1].name = CD.nameOne + 'i';
@@ -282,7 +293,7 @@ test('starting with multiple categories, can remove all categories (while not po
     andThen(() => {
         assert.equal(page.categoriesSelected(), 0);
     });
-    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1';
+    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=25';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'repair1');
@@ -323,7 +334,7 @@ test('search will filter down on categories in store correctly by removing and a
     andThen(() => {
         assert.equal(page.categoriesSelected(), 1);
     });
-    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1';
+    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=25';
     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'repair1');

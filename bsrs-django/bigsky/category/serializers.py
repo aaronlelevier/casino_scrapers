@@ -62,6 +62,11 @@ class CategoryDetailSerializer(BaseCreateSerializer):
         model = Category
         fields = CATEGORY_FIELDS + ('subcategory_label', 'parent', 'children',)
 
+    @staticmethod
+    def eager_load(queryset):
+        return (queryset.select_related('parent')
+                        .prefetch_related('children__children'))
+
 
 class CategorySerializer(BaseCreateSerializer):
 

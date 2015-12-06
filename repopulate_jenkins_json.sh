@@ -19,6 +19,8 @@ wait
 ./manage.py loaddata fixtures/third_party.json
 ./manage.py loaddata fixtures/auth.json
 ./manage.py loaddata fixtures/location.json
+
+
 wait
 ./manage.py create_all_people
 wait
@@ -26,4 +28,4 @@ wait
 wait
 ./manage.py create_tickets
 wait
-./manage.py dumpdata ticket --indent=2 > fixtures/tickets.json
+./manage.py dumpdata ticket --indent=2 > fixtures/ticket.json

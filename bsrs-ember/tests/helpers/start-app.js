@@ -12,7 +12,9 @@ function ajax(app, url, verb, data, headers, status, response) {
     var request = { url: url , method: verb };
     if (data) { 
         request.data = data;
-        request.contentType = 'application/json';
+        if(verb !== 'DELETE') {
+            request.contentType = 'application/json';
+        }
     }
     if(data && data instanceof FormData) {
         request.data = data;

@@ -1,12 +1,12 @@
 import random
 
+from django.conf import settings
 from django.db import IntegrityError
 
 from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category
-from category.tests.factory import create_categories
 from location.models import LocationLevel, Location
 from location.tests.factory import create_locations
 from person.models import Person, Role
@@ -30,7 +30,6 @@ def create_role(name=None, location_level=None):
     if not location_level:
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
 
-    # create_categories(2)
     category = Category.objects.first()
 
     role = mommy.make(Role, name=name, location_level=location_level)
@@ -43,18 +42,17 @@ def create_role(name=None, location_level=None):
 def create_roles():
     "Create a Role for each LocationLevel"
 
-    # create_categories(2)
     category = Category.objects.first()
     
-    # initial Locations
-    try:
+    if not Location.objects.first():
         create_locations()
-    except IntegrityError:
-        pass
 
     for location_level in LocationLevel.objects.all():
-        role = mommy.make(Role, name='{}-role'.format(location_level.name),
-            location_level=location_level)
+        if location_level.name != settings.DEFAULT_LOCATION_LEVEL:
+            role = mommy.make(Role, name='{}-role'.format(location_level.name),
+                location_level=location_level)
+        else:
+            role = mommy.make(Role, name=settings.DEFAULT_ROLE, location_level=location_level)
 
         if category:
             role.categories.add(category)
@@ -124,14 +122,12 @@ create_all_people()
 """
 def create_all_people():
 
-    # initial Locations
-    try:
+    if not Location.objects.first():
         create_locations()
-    except IntegrityError:
-        pass
 
     # initial Roles
-    roles = create_roles()
+    create_roles()
+    roles = Role.objects.all()
 
     # other Persons for Grid View
     names = sorted(create.LOREM_IPSUM_WORDS.split())

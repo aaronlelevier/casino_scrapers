@@ -16,7 +16,7 @@ import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-var store, personProxy, subject, personCurrent, uuid, location_deserializer, location_level_deserializer, status;
+var store, personProxy, subject, personCurrent, uuid, location_deserializer, location_level_deserializer, status, person;
 
 module('unit: person deserializer test', {
     beforeEach() {
@@ -26,12 +26,12 @@ module('unit: person deserializer test', {
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
         subject = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
         status = store.push('status', {id: SD.activeId, name: SD.activeName});
+        person = store.push('person', {id: PD.idOne, status_fk: SD.activeId});
     }
 });
 
 /* STATUS */
 test('person setup correct status fk with bootstrapped data (detail)', (assert) => {
-    let person = store.push('person', {id: PD.id});
     let status = store.push('status', {id: SD.activeId, name: SD.activeName});
     let response = PF.generate(PD.idOne);
     subject.deserialize(response, PD.idOne);
@@ -42,7 +42,6 @@ test('person setup correct status fk with bootstrapped data (detail)', (assert) 
 });
 
 test('person setup correct status fk with existing status pointer to person', (assert) => {
-    let person = store.push('person', {id: PD.idOne, status_fk: SD.activeId});
     let status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
     let response = PF.generate(PD.idOne);
     subject.deserialize(response, PD.idOne);
@@ -67,7 +66,7 @@ test('person setup correct status fk with bootstrapped data (list)', (assert) =>
 test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with relationship already in place', (assert) => {
     let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, phone_number_fks: [PND.idOne]});
+    let person = store.push('person', {id: PD.id, phone_number_fks: [PND.idOne], role_fk: RD.idOne});
     let phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, person_fk: PD.id});
     let response = PF.generate(PD.id);
     response.phone_numbers = PNF.get();
@@ -84,7 +83,7 @@ test('person will setup the correct relationship with phone numbers when deseria
 test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with no relationship in place', (assert) => {
     let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id});
+    let person = store.push('person', {id: PD.id, role_fk: RD.idOne});
     let phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
     let response = PF.generate(PD.id);
     response.phone_numbers = PNF.get();
@@ -99,7 +98,7 @@ test('person will setup the correct relationship with phone numbers when deseria
 test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with person setup with phone number relationship', (assert) => {
     let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, phone_number_fks: [PND.idOne]});
+    let person = store.push('person', {id: PD.id, phone_number_fks: [PND.idOne], role_fk: RD.idOne});
     let phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
     let response = PF.generate(PD.id);
     response.phone_numbers = PNF.get();
@@ -140,7 +139,7 @@ test('role will setup the correct relationship with location_level when deserial
 test('person-location m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
     let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, person_location_fks: []});
+    let person = store.push('person', {id: PD.id, person_location_fks: [], role_fk: RD.idOne});
     let response = PF.generate(PD.id);
     response.locations = [LF.get()];
     let locations = person.get('locations');
@@ -159,7 +158,7 @@ test('person-location m2m is added after deserialize single (starting with exist
     let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
     let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne]});
+    let person = store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne], role_fk: RD.idOne});
     let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
     assert.equal(person.get('locations.length'), 1);
     let response = PF.generate(PD.id);
@@ -181,7 +180,7 @@ test('person-location m2m is removed when server payload no longer reflects what
     let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
     let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne]});
+    let person = store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne], role_fk: RD.idOne});
     let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
     assert.equal(person.get('locations').get('length'), 1);
     let response = PF.generate(PD.id);
@@ -202,6 +201,7 @@ test('person-location m2m is removed when server payload no longer reflects what
 });
 
 test('person-location m2m added even when person did not exist before the deserializer executes', (assert) => {
+    store.clear('person');
     let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
     let response = PF.generate(PD.id);

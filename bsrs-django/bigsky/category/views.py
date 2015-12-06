@@ -1,12 +1,13 @@
-from rest_framework.permissions import IsAuthenticated
-
-from category.models import Category
 from category import serializers as cs
+from category.models import Category
 from utils.views import BaseModelViewSet
+
 from rest_framework.decorators import list_route
+from rest_framework.permissions import IsAuthenticated
+from utils.mixins import EagerLoadQuerySetMixin
 
 
-class CategoryViewSet(BaseModelViewSet):
+class CategoryViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
     '''
     ### Create
     Can add a single Parent and multiple Children Categories.
@@ -26,12 +27,13 @@ class CategoryViewSet(BaseModelViewSet):
         `/api/admin/categories/?parent=id`
 
     3. Get all categories for selectize input
-        `/api/admin/categories/?name__icontains={x}`
+        `/api/admin/categories/?name__icontains={x}&page_size=25`
     '''
+    model = Category
     permission_classes = (IsAuthenticated,)
     queryset = Category.objects.all()
-    model = Category
     filter_fields = [f.name for f in model._meta.get_fields()]
+    eager_load_actions = ['retrieve']
 
     def get_serializer_class(self):
         """

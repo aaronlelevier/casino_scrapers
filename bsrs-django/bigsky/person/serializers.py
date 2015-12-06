@@ -22,6 +22,14 @@ class RoleSerializer(BaseCreateSerializer):
         fields = ('id', 'name', 'role_type', 'location_level')
 
 
+class RoleCreateSerializer(BaseCreateSerializer):
+    "Serializer used for create ``Role`` API Endpoint operations."
+
+    class Meta:
+        model = Role
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories')
+
+
 class RoleUpdateSerializer(BaseCreateSerializer):
     "Serializer used for update ``Role`` API Endpoint operations."
 
@@ -37,6 +45,10 @@ class RoleDetailSerializer(BaseCreateSerializer):
     class Meta:
         model = Role
         fields = ('id', 'name', 'role_type', 'location_level', 'categories')
+
+    @staticmethod
+    def eager_load(queryset):
+        return queryset.prefetch_related('categories')
 
 
 class RoleIdNameSerializer(serializers.ModelSerializer):
@@ -105,6 +117,12 @@ class PersonDetailSerializer(serializers.ModelSerializer):
         model = Person
         fields = PERSON_FIELDS + ('locale', 'locations', 'last_login', 'date_joined',
             'emails', 'phone_numbers', 'addresses',)
+
+    @staticmethod
+    def eager_load(queryset):
+        return (queryset.select_related('role')
+                        .prefetch_related('emails', 'phone_numbers', 'addresses',
+                                          'locations', 'locations__location_level'))
 
 
 class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSerializerMixin,

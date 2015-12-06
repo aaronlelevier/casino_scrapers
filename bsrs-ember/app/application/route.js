@@ -123,7 +123,7 @@ var ApplicationRoute = Ember.Route.extend({
         cancel_modal() {
             Ember.$('.t-modal').modal('hide');
         },
-        closeTabMaster(tab){
+        closeTabMaster(tab, callback){
             let model = this.get('store').find(tab.get('doc_type'), tab.get('id'));
             if (model && model.get('isDirtyOrRelatedDirty')) {
                 Ember.$('.t-modal').modal('show');
@@ -134,6 +134,12 @@ var ApplicationRoute = Ember.Route.extend({
                 Ember.$('.t-modal').modal('hide');
                 let temp = this.router.generate(this.controller.currentPath);
                 temp = temp.split('/').pop();
+
+                if(tab.get('transitionCallback')) {
+                    //TODO: for ticket we should pass the model and filter ONLY for that ticket ...
+                    tab.get('transitionCallback')();
+                }
+
                 if(temp === tab.get('id') || tab.get('newModel')){
                     this.transitionTo(tab.get('redirect'));
                     if (tab.get('newModel') && !tab.get('saveModel')) {
@@ -146,11 +152,9 @@ var ApplicationRoute = Ember.Route.extend({
                 }
                 this.get('tabList').closeTab(model.get('id'));
             }
-        },
-        deleteAndCloseTabMaster(tab, repository) {
-            let model = this.get('store').find(tab.get('doc_type'), tab.get('id'));
-            this.send('closeTabMaster', tab);
-            repository.delete(model.get('id'));
+            if(callback) {
+                callback();
+            }
         }
     }
 });

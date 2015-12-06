@@ -3,11 +3,22 @@ import sys
 from .base import *
 
 
-LOCAL_APPS += (
+# Turn on for debug mode in 'debug_toolbar'
+# INTERNAL_IPS = ('127.0.0.1',)
+
+LOCAL_APPS = (
     'django_extensions',
     )
 
-INSTALLED_APPS = set(INSTALLED_APPS + LOCAL_APPS)
+THIRD_PARTY_APPS = (
+    'debug_toolbar',
+    )
+
+INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
+
+MIDDLEWARE_CLASSES += (
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
+    )
 
 DATABASES = {
     'default': {

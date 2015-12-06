@@ -1,6 +1,5 @@
 import Ember from 'ember';
-import TabActionMixin from 'bsrs-ember/mixins/controller/tab-actions';
 
-var TranslationController = Ember.Controller.extend(TabActionMixin, {
+var TranslationController = Ember.Controller.extend({
 });
 export default TranslationController;

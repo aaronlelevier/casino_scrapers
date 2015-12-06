@@ -7,10 +7,12 @@ from ticket.models import Ticket, TicketActivity, TicketActivityType
 from person.models import Person
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
     TicketListSerializer, TicketActivitySerializer)
+from utils.mixins import EagerLoadQuerySetMixin
 from utils.views import BaseModelViewSet
 
 
-class TicketViewSet(CreateTicketModelMixin, UpdateTicketModelMixin, BaseModelViewSet):
+class TicketViewSet(EagerLoadQuerySetMixin, CreateTicketModelMixin,
+    UpdateTicketModelMixin, BaseModelViewSet):
 
     model = Ticket
     queryset = Ticket.objects.all()

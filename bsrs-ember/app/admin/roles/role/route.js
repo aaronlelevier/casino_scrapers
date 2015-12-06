@@ -16,17 +16,17 @@ var RoleRoute = TabRoute.extend({
     modelName: Ember.computed(function() { return 'role'; }),
     templateModelField: Ember.computed(function() { return 'name'; }),
     model(params, transition) {
-        let role_pk = params.role_id;
-        let repository = this.get('repository');
-        let categoryRepo = this.get('categoryRepo');
-        let all_role_types = this.get('store').find('role-type');
-        let all_location_levels = this.get('store').find('location-level');
+        const role_pk = params.role_id;
+        const repository = this.get('repository');
+        const categoryRepo = this.get('categoryRepo');
+        const all_role_types = this.get('store').find('role-type');
+        const all_location_levels = this.get('store').find('location-level');
         let role = this.get('store').find('role', role_pk);
         if (!role.get('length') || role.get('isNotDirtyOrRelatedNotDirty')) {
             role = repository.findById(role_pk);
         }
-        let search = transition.queryParams.search;
-        let categories_children = categoryRepo.findCategoryChildren(search);
+        const search = transition.queryParams.search;
+        const categories_children = categoryRepo.findCategoryChildren(search);
         return Ember.RSVP.hash({
             model: role,
             all_role_types: all_role_types,
