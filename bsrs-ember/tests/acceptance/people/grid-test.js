@@ -5,7 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import PEOPLE_FIXTURES from 'bsrs-ember/vendor/people_fixtures';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
-import ROLE_DEFAULTS from 'bsrs-ember/vendor/defaults/role';
+import RD from 'bsrs-ember/vendor/defaults/role';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -46,7 +46,7 @@ test('initial load should only show first 10 records ordered by id with correct 
         assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
         assert.equal(find('.t-grid-data:eq(0) .t-person-fullname').text(), 'Donald Trump');
         assert.equal(find('.t-grid-data:eq(0) .t-person-title').text(), 'Wanker Extrodinare');
-        assert.equal(find('.t-grid-data:eq(0) .t-person-role').text(), t(ROLE_DEFAULTS.nameOne));
+        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), t(RD.nameOne));
         assert.equal(find('.t-grid-data:eq(0) .t-person-employee_id').text(), '');
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
@@ -646,5 +646,52 @@ test('save filterset button only available when a dynamic filter is present', fu
     click('.t-sort-username-dir');
     andThen(() => {
         assert.equal(find('.t-show-save-filterset-modal').length, 1);
+    });
+});
+
+test('typing a search will search on related', function(assert) {
+    var page_one = PREFIX + BASE_URL + '/?page=1&ordering=title';
+    xhr(page_one ,"GET",null,{},200,PEOPLE_FIXTURES.searched_related(RD.idTwo, 'role'));
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=title&search=manager';
+    xhr(sort_one ,"GET",null,{},200,PEOPLE_FIXTURES.searched_related(RD.idTwo, 'role'));
+    var search_one = PREFIX + BASE_URL + '/?page=1&search=manager';
+    xhr(search_one ,"GET",null,{},200,PEOPLE_FIXTURES.searched_related(RD.idTwo, 'role'));
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameOneTranslated);
+    });
+    fillIn('.t-grid-search-input', 'manager');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_M);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=manager');
+        assert.equal(find('.t-grid-data').length, 8);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameTwoTranslated);
+        assert.equal(find('.t-grid-data:eq(1) .t-person-role-name').text(), RD.nameTwoTranslated);
+        assert.equal(find('.t-grid-data:eq(2) .t-person-role-name').text(), RD.nameTwoTranslated);
+        assert.equal(find('.t-grid-data:eq(3) .t-person-role-name').text(), RD.nameTwoTranslated);
+    });
+    click('.t-sort-title-dir');
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=manager&sort=title');
+        assert.equal(find('.t-grid-data').length, 8);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameTwoTranslated);
+        assert.equal(find('.t-grid-data:eq(1) .t-person-role-name').text(), RD.nameTwoTranslated);
+        assert.equal(find('.t-grid-data:eq(2) .t-person-role-name').text(), RD.nameTwoTranslated);
+        assert.equal(find('.t-grid-data:eq(3) .t-person-role-name').text(), RD.nameTwoTranslated);
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),PEOPLE_URL + '?search=&sort=title');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.username);
+    });
+    click('.t-reset-grid');
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-username').text(), PEOPLE_DEFAULTS.sorted_username);
     });
 });
