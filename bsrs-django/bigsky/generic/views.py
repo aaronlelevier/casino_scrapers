@@ -2,8 +2,13 @@ import csv
 import json
 
 from django.core.exceptions import PermissionDenied
-from django.db.models.loading import get_model
 from django.http import HttpResponse
+
+try:
+    from django.apps import apps
+    get_model = apps.get_model
+except ImportError:
+    from django.db.models.loading import get_model
 
 from rest_framework import status
 from rest_framework.decorators import list_route

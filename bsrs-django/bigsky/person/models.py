@@ -5,7 +5,8 @@ from datetime import timedelta
 from django.db import models, IntegrityError
 from django.conf import settings
 from django.core.exceptions import ValidationError
-from django.contrib.auth.models import AbstractUser, UserManager, Group
+from django.contrib.auth.models import UserManager, Group
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -254,7 +255,7 @@ class PersonManager(UserManager):
         return PersonQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
 
 
-class Person(BaseModel, AbstractUser):
+class Person(BaseModel, AbstractBaseUser):
     '''
     :pw: password
     :ooto: out-of-the-office

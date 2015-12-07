@@ -1,12 +1,12 @@
 from .base import *
 
 
-CI_APPS = (
+CI_APPS = [
     'django_nose',
     'django_coverage',
-    )
+    ]
 
-INSTALLED_APPS = INSTALLED_APPS + CI_APPS
+INSTALLED_APPS += CI_APPS
 
 DATABASES = {
     'default': {

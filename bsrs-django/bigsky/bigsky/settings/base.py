@@ -13,7 +13,7 @@ ALLOWED_HOSTS = ['*']
 
 
 ### Application definition ###
-DEFAULT_APPS = (
+DEFAULT_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -24,15 +24,15 @@ DEFAULT_APPS = (
     'django.contrib.sitemaps',
     'django.contrib.flatpages',
     'django.contrib.postgres',
-    )
+    ]
 
-THIRD_PARTY_APPS = (
+THIRD_PARTY_APPS = [
     'psycopg2',
     'corsheaders',
     'rest_framework',
-    )
+    ]
 
-LOCAL_APPS = (
+LOCAL_APPS = [
     'accounting',
     'category',
     'contact',
@@ -46,12 +46,12 @@ LOCAL_APPS = (
     'translation',
     'work_request',
     'utils',
-    )
+    ]
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE_CLASSES = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -63,7 +63,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
     # Translation Requirement
     'django.middleware.locale.LocaleMiddleware',
-)
+]
 
 ROOT_URLCONF = 'bigsky.urls'
 
@@ -88,8 +88,29 @@ WSGI_APPLICATION = 'bigsky.wsgi.application'
 # Must Override!
 DATABASES = {}
 
+
+# Password validation
+# https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
+
+AUTH_PASSWORD_VALIDATORS = [
+    {
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+    },
+    {
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+    },
+]
+
 # AbstractUser Config
 AUTH_USER_MODEL = 'person.Person'
+USERNAME_FIELD = 'username'
+
 
 LANGUAGE_CODE = 'en'
 LANGUAGE_CODE_NAME = 'English'
@@ -103,9 +124,9 @@ USE_L10N = True
 USE_TZ = True
 
 
-STATICFILES_DIRS = (
+STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'ember'),
-    )
+    ]
 
 STATIC_URL = '/static/'
 
@@ -247,19 +268,19 @@ LOGGING = {
 }
 
 
-import logging, copy
-from django.utils.log import DEFAULT_LOGGING
+# import logging, copy
+# from django.utils.log import DEFAULT_LOGGING
 
-LOGGING = copy.deepcopy(DEFAULT_LOGGING)
-LOGGING['filters']['suppress_deprecated'] = {
-    '()': 'bigsky.settings.SuppressDeprecated'  
-}
-LOGGING['handlers']['console']['filters'].append('suppress_deprecated')
+# LOGGING = copy.deepcopy(DEFAULT_LOGGING)
+# LOGGING['filters']['suppress_deprecated'] = {
+#     '()': 'bigsky.settings.SuppressDeprecated'  
+# }
+# LOGGING['handlers']['console']['filters'].append('suppress_deprecated')
 
-class SuppressDeprecated(logging.Filter):
-    def filter(self, record):
-        WARNINGS_TO_SUPPRESS = [
-            'RemovedInDjango19Warning'
-        ]
-        # Return false to suppress message.
-        return not any([warn in record.getMessage() for warn in WARNINGS_TO_SUPPRESS])
+# class SuppressDeprecated(logging.Filter):
+#     def filter(self, record):
+#         WARNINGS_TO_SUPPRESS = [
+#             'RemovedInDjango19Warning'
+#         ]
+#         # Return false to suppress message.
+#         return not any([warn in record.getMessage() for warn in WARNINGS_TO_SUPPRESS])

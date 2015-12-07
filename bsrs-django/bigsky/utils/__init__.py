@@ -1,16 +1,16 @@
-import os
+# import os
 
-from django.contrib.auth.models import ContentType
-from django.db.models.loading import get_model
+# from django.contrib.contenttypes.models import ContentType
+# from django.db.models.loading import get_model
 
 
-def db_record_counts():
-    for ct in ContentType.objects.all():
-        try:
-            model = get_model(ct.app_label, ct.model)
-            print("{}.{}: {}".format(ct.app_label, ct.model, model.objects.count()))
-        except (KeyError, LookupError):
-            pass
+# def db_record_counts():
+#     for ct in ContentType.objects.all():
+#         try:
+#             model = get_model(ct.app_label, ct.model)
+#             print("{}.{}: {}".format(ct.app_label, ct.model, model.objects.count()))
+#         except (KeyError, LookupError):
+#             pass
 
 
 class ListObject(object):
