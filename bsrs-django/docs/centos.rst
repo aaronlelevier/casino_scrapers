@@ -107,3 +107,17 @@ Nginx Not able to connect with uWSGI
 Went to ``/var/run/nginx-deploy.sock`` and ``/var/run/nginx-deploy.pid`` and removed these files.
 Then restarted *uWSGI* and *nginx* and the issue was solved.
 
+
+Pillow
+------
+Install centos packages:
+
+.. code-block::
+
+    yum install libjpeg-devel zlib-devel
+
+Install in virtualenv
+
+.. code-block::
+
+    pip install -U pillow
