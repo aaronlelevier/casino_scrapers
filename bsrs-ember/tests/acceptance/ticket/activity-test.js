@@ -404,7 +404,7 @@ test('ticket detail shows the activity comment (multiple activities with comment
     });
 });
 
-test('sco activities are sorted descending based on created at', (assert) => {
+test('activities are sorted descending based on created at', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
     page.visitDetail();
     andThen(() => {
