@@ -93,7 +93,8 @@ class PersonViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
             queryset = queryset.filter(
                 Q(username__icontains=search) | \
                 Q(fullname__icontains=search) | \
-                Q(title__icontains=search)
+                Q(title__icontains=search) | \
+                Q(role__name__icontains=search)
             )
 
         return queryset

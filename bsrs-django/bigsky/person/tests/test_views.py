@@ -726,6 +726,16 @@ class PersonSearchTests(APITransactionTestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], users_count)
 
+    def test_search_related_role(self):
+        mommy.make(Person, username="Bob", role=self.role)
+        self.random_role = create_role(name="ZZXU")
+        mommy.make(Person, username="Bobby", role=self.random_role)
+        letters = "ZZXU"
+        users_count = Person.objects.filter(role__name__icontains=letters).count()
+        response = self.client.get('/api/admin/people/?search={}'.format(letters))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], users_count)
+
 
 class PasswordTests(APITestCase):
 
