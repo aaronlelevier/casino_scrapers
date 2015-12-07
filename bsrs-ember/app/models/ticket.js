@@ -230,6 +230,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
         this.set('ticket_attachments_fks', updated_fks);
     },
     add_attachment(attachment_id) {
+        let store = this.get('store');
+        let attachment = store.find('attachment', attachment_id);
+        attachment.set('rollback', undefined);
         let ticket_id = this.get('id');
         let current_fks = this.get('ticket_attachments_fks') || [];
         this.set('ticket_attachments_fks', current_fks.concat(attachment_id).uniq());
