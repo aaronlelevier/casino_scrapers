@@ -3,7 +3,7 @@
 <div class="activity-files">
 {{#each attachments as |attachment|}}
     <span class="activity-file">
-        <a href={{attachment.filepath}} class="t-ticket-attachment-add-remove">
+        <a href={{attachment.filepath}} target="_blank" class="t-ticket-attachment-add-remove">
             <img class="activity-thumb" src={{attachment.filepath}} />
             {{attachment.filename}}
         </a>
