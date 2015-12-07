@@ -286,7 +286,7 @@ class LocationDetailTests(APITestCase):
         self.assertTrue(self.data['phone_numbers'][0]['id'])
 
     def test_contact_type_nested(self):
-        self.assertTrue(self.data['phone_numbers'][0]['type']['id'])
+        self.assertTrue(self.data['phone_numbers'][0]['type'])
 
     ### DETAIL ROUTES
 

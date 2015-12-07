@@ -1,0 +1,44 @@
+.activity-list{
+    border: $borderStyle;
+    border-width: 1px 0 0;
+    .activity-list-item{
+        border: $borderStyle;
+        border-width: 0 0 0 1px;
+        margin: 0 0 0 50px;
+        padding: 20px 20px 20px 30px;
+        position: relative;
+
+        .activity-icon{
+            position: absolute;
+            top: 15px;
+            left: -15px;
+            height: 30px;
+            width: 30px;
+            border-radius: 50%;
+            border: $borderStyle;
+            background-color: $light;
+            text-align: center;
+            line-height: 27px;
+            color: $darkGray;
+            i{
+                margin-left: -1px;
+            }
+        }
+        &:first-child{
+            padding-top: 50px;
+            .activity-icon{
+                top: 45px;
+            }
+        }
+        &:last-child{
+            padding-bottom: 0;
+        }
+        a{
+            &:link,
+            &:visited{
+                color: $dark;
+                font-weight: bold;
+            }
+        }
+    }
+}

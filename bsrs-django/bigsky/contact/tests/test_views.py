@@ -51,8 +51,7 @@ class PhoneNumberViewSetTests(APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.phone_number.id))
-        self.assertEqual(data['type']['id'], str(self.phone_number.type.id))
-        self.assertEqual(data['type']['name'], str(self.phone_number.type.name))
+        self.assertEqual(data['type'], str(self.phone_number.type.id))
         self.assertEqual(data['number'], str(self.phone_number.number))
 
 
@@ -101,8 +100,7 @@ class AddressTests(APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.address.id))
-        self.assertEqual(data['type']['id'], str(self.address.type.id))
-        self.assertEqual(data['type']['name'], str(self.address.type.name))
+        self.assertEqual(data['type'], str(self.address.type.id))
         self.assertEqual(data['address'], self.address.address)
         self.assertEqual(data['city'], self.address.city)
         self.assertEqual(data['state'], self.address.state)

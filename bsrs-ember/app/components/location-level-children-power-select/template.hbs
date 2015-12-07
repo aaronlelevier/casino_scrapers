@@ -2,8 +2,10 @@
   multiple=true
   options=options
   selected=model.children
-  class="t-location-level-location-level-select-power"
-  onchange=(action (mut model.children))
-  as |name|}}
-  {{name}}
+  class="t-location-level-children-select"
+  onchange=(action "selected")
+  placeholder="Select One"
+  as |child|
+}}
+  {{child.name}}
 {{/power-select}}

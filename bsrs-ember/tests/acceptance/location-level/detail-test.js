@@ -9,6 +9,7 @@ import LLF from 'bsrs-ember/vendor/location_level_fixtures';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import generalPage from 'bsrs-ember/tests/pages/general';
+import page from 'bsrs-ember/tests/pages/location-level';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
@@ -61,12 +62,12 @@ test('visiting admin/location-level', (assert) => {
     let payload = LLF.put({id: LLD.idOne, name: LLD.nameAnother, children: LLD.companyChildren});
     xhr(endpoint_detail, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-location-level-name', LLD.nameAnother);
+    page.childrenClickDropdown();
     andThen(() => {
         let location_level = store.find('location-level', LLD.idOne);
         assert.equal(location_level.get('children_fks').length, 7);
         assert.equal(location_level.get('children').get('length'), 7);
-        assert.equal(find('.t-location-level-location-level-select > div.option').length, 0);
-        assert.equal(find('.items > div.item').length, 7);
+        assert.equal(page.childrenOptionLength(), 7);
         assert.ok(location_level.get('isDirty'));
     });
     let list = LLF.list();
@@ -92,22 +93,17 @@ test('a location level child can be selected and persisted', (assert) => {
         assert.equal(location_level.get('children_fks').length, 2);
         assert.equal(location_level.get('children').get('length'), 2);
     });
-    let response = LLF.detail(LLD.idDistrict);
-    response.name = LLD.nameDistrict;
-    let children = LLD.districtChildren;
-    children.unshift(LLF.idOne);
-    let payload = LLF.put({id: LLD.idDistrict, name: LLD.nameDistrict, children: children});
-    xhr(PREFIX + DISTRICT_DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    click('.selectize-input input');
-    click('.t-location-level-location-level-select div.option:eq(0)');
+    page.childrenClickDropdown();
+    page.childrenClickOptionRegion();
     andThen(() => {
         let location_level = store.find('location-level', LLD.idDistrict);
         assert.equal(location_level.get('children_fks').length, 3);
         assert.equal(location_level.get('children').get('length'), 3);
-        assert.equal(find('.selectize-dropdown-content > div.option').length, 4);
-        assert.equal(find('.items > div.item').length, 3);
         assert.ok(location_level.get('isDirty'));
     });
+    let children = [LLD.idThree, LLD.idStore, LLD.idTwo];
+    let payload = LLF.put({id: LLD.idDistrict, name: LLD.nameDistrict, children: children});
+    xhr(PREFIX + DISTRICT_DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, {});
     let list = LLF.list();
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     generalPage.save();
@@ -207,5 +203,45 @@ test('when click delete, location level is deleted and removed from store', (ass
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         assert.equal(store.find('location-level', LLD.idOne).get('length'), undefined);
+    });
+});
+
+/* Children */
+test('can remove and add back children', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        const model = store.find('location-level', LLD.idOne);
+        assert.equal(model.get('children_fks').length, 7);
+    });
+    //reclicking removes
+    page.childrenClickDropdown();
+    page.childrenClickOptionFacilityManagement();
+    page.childrenClickDropdown();
+    page.childrenClickOptionLossPreventionDistrict();
+    andThen(() => {
+        const model = store.find('location-level', LLD.idOne);
+        assert.equal(model.get('children_fks').length, 5);
+    });
+    page.childrenClickDropdown();
+    page.childrenClickOptionFacilityManagement();
+    page.childrenClickDropdown();
+    page.childrenClickOptionLossPreventionDistrict();
+    andThen(() => {
+        const model = store.find('location-level', LLD.idOne);
+        assert.equal(model.get('children_fks').length, 7);
+    });
+    //click x button
+    page.childrenOneRemove();
+    andThen(() => {
+        const model = store.find('location-level', LLD.idOne);
+        assert.equal(model.get('children_fks').length, 6);
+    });
+    page.childrenClickOptionRegion();
+    let children = LLD.companyChildren;
+    let payload = LLF.put({id: LLD.idOne, name: LLD.nameCompany, children: children});
+    xhr(endpoint_detail, 'PUT', JSON.stringify(payload), {}, 200, {});
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_LEVEL_URL);
     });
 });
