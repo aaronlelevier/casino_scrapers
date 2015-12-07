@@ -66,9 +66,20 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
     def test_search_input(self):
         people = self.wait_for_xhr_request("t-grid-data", plural=True)
         self.assertEqual(len(people), 10)
-        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('cu')
+        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('zap')
+        people = self.wait_for_xhr_request("t-grid-data", plural=True, debounce=True)
+        self.assertEqual(len(people), 1)
+        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('aaaaa')
+        with self.assertRaises(NoSuchElementException):
+            people = self.wait_for_xhr_request("t-grid-data", debounce=True)
+            people = self.driver.find_element_by_class_name("t-grid-data")
+
+    def test_search_related(self):
         people = self.wait_for_xhr_request("t-grid-data", plural=True)
         self.assertEqual(len(people), 10)
+        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('wat-role')
+        people = self.wait_for_xhr_request("t-grid-data", plural=True, debounce=True)
+        self.assertEqual(len(people), 1)
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('aaaaa')
         with self.assertRaises(NoSuchElementException):
             people = self.wait_for_xhr_request("t-grid-data", debounce=True)
