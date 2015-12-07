@@ -176,8 +176,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':hidden'));
-        assert.ok(find('.t-description-validation-error').is(':hidden'));
-        assert.ok(find('.t-cost-code-validation-error').is(':hidden'));
         assert.ok(find('.t-label-validation-error').is(':hidden'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
@@ -186,8 +184,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-description-validation-error').is(':hidden'));
-        assert.ok(find('.t-cost-code-validation-error').is(':hidden'));
         assert.ok(find('.t-label-validation-error').is(':hidden'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
@@ -196,8 +192,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-description-validation-error').is(':visible'));
-        assert.ok(find('.t-cost-code-validation-error').is(':hidden'));
         assert.ok(find('.t-label-validation-error').is(':hidden'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
@@ -206,8 +200,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-description-validation-error').is(':visible'));
-        assert.ok(find('.t-cost-code-validation-error').is(':visible'));
         assert.ok(find('.t-label-validation-error').is(':hidden'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
@@ -216,8 +208,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-description-validation-error').is(':visible'));
-        assert.ok(find('.t-cost-code-validation-error').is(':visible'));
         assert.ok(find('.t-label-validation-error').is(':visible'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':hidden'));
     });
@@ -226,8 +216,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.ok(find('.t-name-validation-error').is(':visible'));
-        assert.ok(find('.t-description-validation-error').is(':visible'));
-        assert.ok(find('.t-cost-code-validation-error').is(':visible'));
         assert.ok(find('.t-label-validation-error').is(':visible'));
         assert.ok(find('.t-subcategory-label-validation-error').is(':visible'));
     });
