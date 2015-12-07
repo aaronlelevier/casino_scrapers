@@ -1,3 +1,12 @@
 <span class="activity-icon">{{fa-icon "paperclip"}}</span>
-{{#link-to "admin.people.person" activity.person.id}}{{person}}{{/link-to}} {{begString}} {{count}} {{timestamp}}
-{{#each attachments as |attachment|}}<a href={{attachment.filepath}} class="t-ticket-attachment-add-remove">{{attachment.filename}}</a> {{/each}}
+<span class="activity-person">{{#link-to "admin.people.person" activity.person.id}}{{person}}{{/link-to}}</span> <span class="activity-type">{{begString}} {{count}}</span> <span class="activity-timestamp">{{timestamp}}</span>
+<div class="activity-files">
+{{#each attachments as |attachment|}}
+    <span class="activity-file">
+        <a href={{attachment.filepath}} class="t-ticket-attachment-add-remove">
+            <img class="activity-thumb" src={{attachment.filepath}} />
+            {{attachment.filename}}
+        </a>
+    </span>
+{{/each}}
+</div>

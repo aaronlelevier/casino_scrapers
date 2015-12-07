@@ -14,6 +14,7 @@ var toFrom = Ember.Component.extend({
             return this.get('activity').get('person').get('fullname');
         }
     }),
+    classNames: ['activity-wrap']
 });
 
 export default toFrom;

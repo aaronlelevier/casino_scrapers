@@ -5,12 +5,13 @@
         border: $borderStyle;
         border-width: 0 0 0 1px;
         margin: 0 0 0 50px;
-        padding: 20px 20px 20px 30px;
+        padding: 15px 15px 15px 40px;
         position: relative;
+        font-size: 1.15rem;
 
         .activity-icon{
             position: absolute;
-            top: 15px;
+            top: 10px;
             left: -15px;
             height: 30px;
             width: 30px;
@@ -24,10 +25,13 @@
                 margin-left: -1px;
             }
         }
+        .activity-timestamp {
+            color: $medGray;
+        }
         &:first-child{
-            padding-top: 50px;
+            padding-top: 40px;
             .activity-icon{
-                top: 45px;
+                top: 35px;
             }
         }
         &:last-child{
@@ -38,6 +42,57 @@
             &:visited{
                 color: $dark;
                 font-weight: bold;
+            }
+        }
+        // Styling for File uploads and Comments only
+        &.activity-attachment_add,
+        &.activity-comment{
+            .activity-wrap{
+                padding: 15px;
+                border: $borderStyle;
+                font-size: 1.3rem;
+                .activity-icon{
+                    height: 50px;
+                    line-height: 45px;
+                    width: 50px;
+                    left: -25px;
+                    top: 15px;
+                    font-size: 2rem;
+                }
+                .activity-timestamp {
+                    display: block;
+                    font-size: 1.2rem;
+                }
+                .activity-comment {
+                    padding: 15px 0 5px;
+                    display: block;
+                }
+                .activity-files {
+                    overflow: auto;
+                    .activity-file {
+                        float: left;
+                        max-width: 100px;
+                        text-align: center;
+                        font-size: 1rem;
+                        font-weight: normal;
+                        margin: 15px 15px 5px;
+                        a{
+                            font-weight: normal;
+                            &:hover{
+                                text-decoration: none;
+                            }
+                            img.activity-thumb {
+                                max-width: 100px;
+                                max-height: 120px;
+                            }
+                        }
+                    }
+                }
+            }
+            &:first-child{
+                .activity-icon{
+                    top: 40px;
+                }
             }
         }
     }

@@ -1,2 +1,2 @@
 <span class="activity-icon">{{fa-icon "comment"}}</span>
-{{#link-to "admin.people.person" activity.person.id}}{{person}}{{/link-to}} {{begString}} {{timestamp}} {{comment}}
+<span class="activity-person">{{#link-to "admin.people.person" activity.person.id}}{{person}}{{/link-to}}</span> <span class="activity-type">{{begString}}</span> <span class="activity-timestamp">{{timestamp}}</span> <span class="activity-comment">{{comment}}</span>
