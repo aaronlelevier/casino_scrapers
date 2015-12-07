@@ -24,8 +24,6 @@ class PhoneNumberFlatSerializer(BaseCreateSerializer):
 
 class PhoneNumberSerializer(BaseCreateSerializer):
 
-    type = PhoneNumberTypeSerializer()
-
     class Meta:
         model = PhoneNumber
         fields = ('id', 'type', 'number',)
@@ -50,8 +48,6 @@ class AddressFlatSerializer(BaseCreateSerializer):
 
 class AddressSerializer(BaseCreateSerializer):
     
-    type = AddressTypeSerializer()
-
     class Meta:
         model = Address
         fields = ('id', 'type', 'address', 'city', 'state',

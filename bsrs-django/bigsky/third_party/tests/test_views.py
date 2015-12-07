@@ -78,8 +78,7 @@ class ThirdPartyTests(APITestCase):
         
         phone_data = data['phone_numbers'][0]
         self.assertEqual(phone_data['id'], str(phone.id))
-        self.assertEqual(phone_data['type']['id'], str(phone.type.id))
-        self.assertEqual(phone_data['type']['name'], phone.type.name)
+        self.assertEqual(phone_data['type'], str(phone.type.id))
         self.assertEqual(phone_data['number'], phone.number)
 
     def test_data_addresses(self):
@@ -90,8 +89,7 @@ class ThirdPartyTests(APITestCase):
 
         address_data = data['addresses'][0]
         self.assertEqual(address_data['id'], str(address.id))
-        self.assertEqual(address_data['type']['id'], str(address.type.id))
-        self.assertEqual(address_data['type']['name'], address.type.name)
+        self.assertEqual(address_data['type'], str(address.type.id))
         self.assertEqual(address_data['address'], address.address)
         self.assertEqual(address_data['city'], address.city)
         self.assertEqual(address_data['state'], address.state)
