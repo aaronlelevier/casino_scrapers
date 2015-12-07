@@ -63,6 +63,17 @@ class TicketActivityTests(TestCase):
     def test_setup(self):
         self.assertIsInstance(self.activity, TicketActivity)
 
+    def test_meta_ordering(self):
+        self.activity = mommy.make(TicketActivity, person=self.person)
+        self.assertEqual(TicketActivity.objects.count(), 2)
+
+        ret = TicketActivity.objects.all()
+
+        self.assertEqual(
+            ret.first(),
+            TicketActivity.objects.order_by('-created').first()
+        )
+
     def test_weigh_default(self):
         self.assertEqual(
             self.activity.weight,
