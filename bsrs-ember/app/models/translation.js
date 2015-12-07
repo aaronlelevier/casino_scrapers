@@ -18,6 +18,25 @@ var TranslationModel = Model.extend(NewMixin, {
     locale_ids: Ember.computed('locales.[]', function() {
         return this.get('locales').mapBy('id');
     }),
+    add_locale(locale_id) {
+        let store = this.get('store');
+        let locale = store.find('locale-translation', locale_id);
+        locale.set('rollback', undefined);
+        let translation_id = this.get('id');
+        let current_fks = this.get('locale_fks') || [];
+        this.set('locale_fks', current_fks.concat(locale_id).uniq());
+    },
+    remove_locale(locale_id) {
+        let store = this.get('store');
+        let locale = store.find('locale-translation', locale_id);
+        locale.set('rollback', true);
+        let translation_id = this.get('id');
+        let current_fks = this.get('locale_fks') || [];
+        let updated_fks = current_fks.filter(function(id) {
+            return id !== locale_id;
+        });
+        this.set('locale_fks', updated_fks);
+    },
     serialize() {
         return {
             id: this.get('id'),
