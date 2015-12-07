@@ -29,6 +29,8 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             statusSeven: 'ticket.status.draft',
             statusEightId: '820dfa6c-003b-42f4-8f10-6b78f8b40c6a',
             statusEight: 'ticket.status.unsatisfactory_completion',
+            statusNineId: '820dfa6c-003b-42f4-8f10-6b78f8b40c7b',
+            statusNine: 'ticket.status.completed',
             priorityOneId: 'dfe28a24-307f-4da0-85e7-cdac016808c0',
             priorityOne: 'ticket.priority.emergency',
             priorityTwoId: '2a4c8c9c-7acb-44ca-af95-62a84e410e09',

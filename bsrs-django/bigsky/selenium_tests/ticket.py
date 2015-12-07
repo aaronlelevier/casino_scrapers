@@ -80,7 +80,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         ))
         self.gen_elem_page.click_save_btn()
         # List View
-        tickets = ticket_page.find_list_data()
+        # tickets = ticket_page.find_list_data()
 
     def test_file_delete(self):
         """

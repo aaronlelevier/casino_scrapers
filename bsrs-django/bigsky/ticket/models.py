@@ -12,13 +12,13 @@ from utils.models import BaseModel, BaseManager, BaseNameModel
 
 TICKET_STATUSES = [
     'ticket.status.draft',
+    'ticket.status.new',
+    'ticket.status.in_progress',
+    'ticket.status.deferred',
     'ticket.status.denied',
     'ticket.status.problem_solved',
-    'ticket.status.complete',
-    'ticket.status.deferred',
-    'ticket.status.new',
-    'ticket.status.assigned',
-    'ticket.status.in_progress',
+    'ticket.status.completed',
+    'ticket.status.closed',
     'ticket.status.unsatisfactory_completion'
 ]
 
@@ -46,10 +46,10 @@ class TicketStatus(BaseNameModel):
     
 
 TICKET_PRIORITIES = [
+    'ticket.priority.emergency',
+    'ticket.priority.high',
     'ticket.priority.medium',
     'ticket.priority.low',
-    'ticket.priority.high',
-    'ticket.priority.emergency'
 ]
 
 

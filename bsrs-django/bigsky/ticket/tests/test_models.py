@@ -16,7 +16,7 @@ class TicketStatusManagerTests(TestCase):
     def test_default(self):
         default = TicketStatus.objects.default()
         self.assertIsInstance(default, TicketStatus)
-        self.assertEqual(default.name, TICKET_STATUSES[5])
+        self.assertEqual(default.name, TICKET_STATUSES[1])
 
 
 class TicketPriorityTests(TestCase):
@@ -62,6 +62,17 @@ class TicketActivityTests(TestCase):
 
     def test_setup(self):
         self.assertIsInstance(self.activity, TicketActivity)
+
+    def test_meta_ordering(self):
+        self.activity = mommy.make(TicketActivity, person=self.person)
+        self.assertEqual(TicketActivity.objects.count(), 2)
+
+        ret = TicketActivity.objects.all()
+
+        self.assertEqual(
+            ret.first(),
+            TicketActivity.objects.order_by('-created').first()
+        )
 
     def test_weigh_default(self):
         self.assertEqual(

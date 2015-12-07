@@ -19,6 +19,7 @@ import { ticket_payload_with_attachment, ticket_payload_with_attachments } from 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const DETAIL_URL = BASE_URL + '/' + TD.idOne;
+const DETAIL_TWO_URL = BASE_URL + '/' + TD.idTwo;
 const TICKET_URL = BASE_URL + '/index';
 const TICKET_PUT_URL = PREFIX + DETAIL_URL + '/';
 const ATTACHMENT_DELETE_URL = PREFIX + '/admin/attachments/' + UUID.value + '/';
@@ -337,6 +338,64 @@ test('rolling back should only remove files not yet associated with a given tick
         assert.equal(store.find('attachment').get('length'), 1);
         assert.equal(model.get('isDirty'), false);
         assert.ok(model.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when multiple tabs are open only attachments associated with the rollback are removed', (assert) => {
+    let image = {name: 'foo.png', type: 'image/png', size: 234000};
+    ajax(`${PREFIX}${BASE_URL}/${TD.idOne}/`, 'GET', null, {}, 200, TF.detail(TD.idOne));
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(store.find('attachment').get('length'), 0);
+        assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
+    });
+    patchRandomAsync(0);
+    ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+    uploadFile('attach-file', 'upload', image, store.find('ticket', TD.idOne));
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(store.find('attachment').get('length'), 1);
+        assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 1);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+    visit(TICKET_URL);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+    ajax(`/api/tickets/${TD.idTwo}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+    ajax(`${PREFIX}${BASE_URL}/${TD.idTwo}/`, 'GET', null, {}, 200, TF.detail(TD.idTwo));
+    visit(DETAIL_TWO_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_TWO_URL);
+        assert.equal(store.find('attachment').get('length'), 1);
+        assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 0);
+    });
+    ajax(`${PREFIX}/admin/attachments/`, 'POST', new FormData(), {}, 201, {});
+    uploadFile('attach-file', 'upload', image, store.find('ticket', TD.idTwo));
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_TWO_URL);
+        assert.equal(store.find('attachment').get('length'), 2);
+        assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 1);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, TF.list());
+    visit(TICKET_URL);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+    });
+    click('.t-tab-close:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        waitFor(() => {
+            assert.equal(find('.t-modal-body').length, 1);
+        });
+    });
+    ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
+    click('.t-modal-rollback-btn');
+    andThen(() => {
+        assert.equal(store.find('attachment').get('length'), 1);
+        assert.equal(store.find('ticket', TD.idOne).get('attachments').get('length'), 0);
+        assert.equal(store.find('ticket', TD.idTwo).get('attachments').get('length'), 1);
     });
 });
 

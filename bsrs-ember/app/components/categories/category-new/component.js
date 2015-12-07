@@ -7,8 +7,6 @@ import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/vali
 var CategoryNewComponent = Ember.Component.extend(TabMixin, NewTabMixin, ValidationMixin, {
     repository: inject('category'),
     nameValidation: validate('model.name'),
-    descriptionValidation: validate('model.description'),
-    costCodeValidation: validate('model.cost_code'),
     labelValidation: validate('model.label'),
     subCategoryLabelValidation: validate('model.subcategory_label'),
     actions: {

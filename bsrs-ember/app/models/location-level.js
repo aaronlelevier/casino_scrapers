@@ -24,6 +24,9 @@ var LocationLevel = Model.extend(NewMixin, {
             children: children_fks
         };
     },
+    setChildren(new_children) {
+        this.set('children_fks', new_children.mapBy('id')); 
+    },
     removeRecord() {
         this.get('store').remove('location-level', this.get('id'));
     },

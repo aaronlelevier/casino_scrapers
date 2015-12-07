@@ -108,6 +108,15 @@ class CreateStatusTests(TestCase):
     def test_multiple(self):
         factory.create_ticket_statuses()
         self.assertTrue(TicketStatus.objects.count() > 1)
+        self.assertEqual(TicketStatus.objects.first().name, 'ticket.status.draft')
+        self.assertEqual(TicketStatus.objects.all()[1].name, 'ticket.status.new')
+        self.assertEqual(TicketStatus.objects.all()[2].name, 'ticket.status.in_progress')
+        self.assertEqual(TicketStatus.objects.all()[3].name, 'ticket.status.deferred')
+        self.assertEqual(TicketStatus.objects.all()[4].name, 'ticket.status.denied')
+        self.assertEqual(TicketStatus.objects.all()[5].name, 'ticket.status.problem_solved')
+        self.assertEqual(TicketStatus.objects.all()[6].name, 'ticket.status.completed')
+        self.assertEqual(TicketStatus.objects.all()[7].name, 'ticket.status.closed')
+        self.assertEqual(TicketStatus.objects.last().name, 'ticket.status.unsatisfactory_completion')
 
     def test_generate_uuid(self):
         """
@@ -136,6 +145,10 @@ class CreatePriorityTests(TestCase):
     def test_multiple(self):
         factory.create_ticket_priorites()
         self.assertTrue(TicketPriority.objects.all())
+        self.assertEqual(TicketPriority.objects.first().name, 'ticket.priority.emergency')
+        self.assertEqual(TicketPriority.objects.all()[1].name, 'ticket.priority.high')
+        self.assertEqual(TicketPriority.objects.all()[2].name, 'ticket.priority.medium')
+        self.assertEqual(TicketPriority.objects.last().name, 'ticket.priority.low')
 
     def test_generate_uuid(self):
         """
