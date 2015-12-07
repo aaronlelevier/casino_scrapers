@@ -33,7 +33,21 @@ test('deserialize_single - translation', (assert) => {
     assert.ok(ret);
     assert.equal(ret.get('id'), TRANSLATION_DEFAULTS.keyOneGrid);
     assert.equal(ret.get('key'), TRANSLATION_DEFAULTS.keyOneGrid);
-    assert.equal(ret.get('locales'), undefined);
+});
+
+test('deserialize_single - translation.locales attr is an array of "locale-translation" objects', (assert) => {
+    let response = TRANSLATION_FIXTURES.get();
+    // this is in the store, so now it just needs to be associated with the Translation
+    assert.ok(store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne));
+
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
+
+    let ret = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
+    assert.ok(ret);
+    assert.equal(store.find('locale-translation').get('length'), 3);
+    // force set "locale_fks" to get by "locales" attr below
+    ret.set('locale_fks', [LOCALE_TRANSLATION_DEFAULTS.idOne]);
+    assert.equal(ret.get('locales').get('length'), 1);
 });
 
 test('deserialize_single - locale-translation', (assert) => {
