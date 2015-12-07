@@ -594,6 +594,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(attachment.id))
         self.assertEqual(data['results'][0]['content']['added'][0]['filename'], attachment.filename)
         self.assertEqual(data['results'][0]['content']['added'][0]['file'], str(attachment.file))
+        self.assertEqual(data['results'][0]['content']['added'][0]['image_thumbnail'], str(attachment.image_thumbnail))
 
     # COMMENT OUT: test not needed until the removing of Attachments is further defined
     # def test_attachment_remove(self):

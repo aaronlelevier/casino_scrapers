@@ -208,4 +208,5 @@ class Attachment(BaseModel):
             "id": str(self.id),
             "filename": self.filename,
             "file": str(self.file),
+            "image_thumbnail": str(self.image_thumbnail)
         }
