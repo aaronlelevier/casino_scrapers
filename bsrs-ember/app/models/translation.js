@@ -15,6 +15,9 @@ var TranslationModel = Model.extend(NewMixin, {
         };
         return this.get('store').find('locale-translation', filter, []);
     }),
+    locale_ids: Ember.computed('locales.[]', function() {
+        return this.get('locales').mapBy('id');
+    }),
     serialize() {
         return {
             id: this.get('id'),
