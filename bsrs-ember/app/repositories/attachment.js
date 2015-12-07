@@ -13,7 +13,7 @@ var AttachmentRepo = Ember.Object.extend({
     removeAllUnrelated() {
         let store = this.get('store');
         let filter = function(attachment) {
-            return attachment.get('new');
+            return attachment.get('rollback');
         };
         let ids = store.find('attachment', filter, []).mapBy('id');
         ids.forEach((id) => {

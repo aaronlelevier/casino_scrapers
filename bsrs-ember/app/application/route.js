@@ -136,7 +136,6 @@ var ApplicationRoute = Ember.Route.extend({
                 temp = temp.split('/').pop();
 
                 if(tab.get('transitionCallback')) {
-                    //TODO: for ticket we should pass the model and filter ONLY for that ticket ...
                     tab.get('transitionCallback')();
                 }
 
