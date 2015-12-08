@@ -69,24 +69,3 @@ test('locale_ids - are computed based off of "locales" ', (assert) => {
     translation.set('locale_fks', [8]);
     assert.equal(translation.get('locale_ids').get('length'), 1);
 });
-
-test('add_locale', (assert) => {
-    var translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
-    store.push('locale-translation', {id: LOCALE_TRANSLATION_DEFAULTS.idOne});
-
-    translation.add_locale(LOCALE_TRANSLATION_DEFAULTS.idOne);
-
-    assert.equal(translation.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
-});
-
-test('remove_locale', (assert) => {
-    var translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
-    store.push('locale-translation', {id: LOCALE_TRANSLATION_DEFAULTS.idOne});
-    translation.add_locale(LOCALE_TRANSLATION_DEFAULTS.idOne);
-    assert.equal(translation.get('locales').get('length'), 1);
-
-    translation.remove_locale(LOCALE_TRANSLATION_DEFAULTS.idOne);
-
-    assert.equal(translation.get('locales').get('length'), 0);
-});
-
