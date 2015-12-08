@@ -1,6 +1,7 @@
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from django.db.models import Q
 
 from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
 from ticket.models import Ticket, TicketActivity, TicketActivityType
@@ -31,6 +32,25 @@ class TicketViewSet(EagerLoadQuerySetMixin, CreateTicketModelMixin,
         else:
             return TicketSerializer
 
+    def get_queryset(self):
+        """
+        :search: will use the ``Q`` lookup class:
+
+        https://docs.djangoproject.com/en/1.8/topics/db/queries/#complex-lookups-with-q-objects
+        """
+        queryset = super(TicketViewSet, self).get_queryset()
+
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = queryset.filter(
+                Q(request__icontains=search) | \
+                Q(location__name__icontains=search) | \
+                Q(assignee__fullname__icontains=search) | \
+                Q(priority__name__icontains=search) | \
+                Q(status__name__icontains=search)
+            )
+
+        return queryset
 
 class TicketActivityViewSet(BaseModelViewSet):
 
