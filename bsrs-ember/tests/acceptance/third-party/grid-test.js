@@ -181,165 +181,165 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     // });
 });
 
-test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', (assert) => {
-    var search_two = PREFIX + BASE_URL + '/?page=1&ordering=status.name&search=14';
-    xhr(search_two ,'GET',null,{},200,TPF.searched('14', 'status'));
-    var page_two = PREFIX + BASE_URL + '/?page=2&ordering=status.name';
-    xhr(page_two ,'GET',null,{},200,TPF.searched('', 'status', 2));
-    var page_one = PREFIX + BASE_URL + '/?page=1&ordering=status.name';
-    xhr(page_one ,'GET',null,{},200,TPF.searched('', 'status'));
-    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=status.name&search=4';
-    xhr(sort_one ,'GET',null,{},200,TPF.searched('4', 'status'));
-    var search_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(search_one,'GET',null,{},200,TPF.searched('4', 'id'));
-    visit(TP_URL);
-    andThen(() => {
-        assert.equal(currentURL(), TP_URL);
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-    });
-    fillIn(`${SEARCH_INPUT}`, '4');
-    triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_FOUR);
-    andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=4');
-        assert.equal(find(GRID_DATA_ALL).length, 2);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGrid);
-        assert.equal(find('.t-grid-data:eq(1) .t-third-party-name').text(), TPD.nameGrid4);
-    });
-    click(SORT_DIR);
-    andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=4&sort=status.name');
-        assert.equal(find(GRID_DATA_ALL).length, 2);
-        // assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGrid);
-        // assert.equal(find('.t-grid-data:eq(1) .t-third-party-name').text(), TPD.nameGridXav);
-    });
-    fillIn(`${SEARCH_INPUT}`, '');
-    triggerEvent(`${SEARCH_INPUT}`, 'keyup', BACKSPACE);
-    andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=&sort=status.name');
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        // assert.equal(find(`${GRID_DATA_0} .t-third-party-name').text(), TPD.nameGridTen); //admin instead?
-    });
-    click(`${PAGE}:eq(1) a`);
-    andThen(() => {
-        assert.equal(currentURL(),`${TP_URL}?page=2&search=&sort=status.name`);
-        assert.equal(find(GRID_DATA_ALL).length, 9);
-        // assert.equal(find(`${GRID_DATA_0} .t-third-party-name').text(), TPD.nameGridXav); //12?
-    });
-    fillIn(`${SEARCH_INPUT}`, '14');
-    triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_ONE);
-    triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_FOUR);
-    andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?search=14&sort=status.name');
-        assert.equal(find(GRID_DATA_ALL).length, 1);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGrid);
-    });
-    click(`${RESET_GRID}`);
-    andThen(() => {
-        assert.equal(currentURL(), TP_URL);
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-    });
-});
+// test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', (assert) => {
+//     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=status.name&search=14';
+//     xhr(search_two ,'GET',null,{},200,TPF.searched('14', 'status'));
+//     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=status.name';
+//     xhr(page_two ,'GET',null,{},200,TPF.searched('', 'status', 2));
+//     var page_one = PREFIX + BASE_URL + '/?page=1&ordering=status.name';
+//     xhr(page_one ,'GET',null,{},200,TPF.searched('', 'status'));
+//     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=status.name&search=4';
+//     xhr(sort_one ,'GET',null,{},200,TPF.searched('4', 'status'));
+//     var search_one = PREFIX + BASE_URL + '/?page=1&search=4';
+//     xhr(search_one,'GET',null,{},200,TPF.searched('4', 'id'));
+//     visit(TP_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), TP_URL);
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//     });
+//     fillIn(`${SEARCH_INPUT}`, '4');
+//     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_FOUR);
+//     andThen(() => {
+//         assert.equal(currentURL(),TP_URL + '?search=4');
+//         assert.equal(find(GRID_DATA_ALL).length, 2);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGrid);
+//         assert.equal(find('.t-grid-data:eq(1) .t-third-party-name').text(), TPD.nameGrid4);
+//     });
+//     click(SORT_DIR);
+//     andThen(() => {
+//         assert.equal(currentURL(),TP_URL + '?search=4&sort=status.name');
+//         assert.equal(find(GRID_DATA_ALL).length, 2);
+//         // assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGrid);
+//         // assert.equal(find('.t-grid-data:eq(1) .t-third-party-name').text(), TPD.nameGridXav);
+//     });
+//     fillIn(`${SEARCH_INPUT}`, '');
+//     triggerEvent(`${SEARCH_INPUT}`, 'keyup', BACKSPACE);
+//     andThen(() => {
+//         assert.equal(currentURL(),TP_URL + '?search=&sort=status.name');
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         // assert.equal(find(`${GRID_DATA_0} .t-third-party-name').text(), TPD.nameGridTen); //admin instead?
+//     });
+//     click(`${PAGE}:eq(1) a`);
+//     andThen(() => {
+//         assert.equal(currentURL(),`${TP_URL}?page=2&search=&sort=status.name`);
+//         assert.equal(find(GRID_DATA_ALL).length, 9);
+//         // assert.equal(find(`${GRID_DATA_0} .t-third-party-name').text(), TPD.nameGridXav); //12?
+//     });
+//     fillIn(`${SEARCH_INPUT}`, '14');
+//     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_ONE);
+//     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_FOUR);
+//     andThen(() => {
+//         assert.equal(currentURL(),TP_URL + '?search=14&sort=status.name');
+//         assert.equal(find(GRID_DATA_ALL).length, 1);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGrid);
+//     });
+//     click(`${RESET_GRID}`);
+//     andThen(() => {
+//         assert.equal(currentURL(), TP_URL);
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//     });
+// });
 
-test('multiple sort options appear in the query string as expected', (assert) => {
-    random.uuid = function() { return UUID.value; };
-    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=status.name,name';
-    xhr(sort_two ,'GET',null,{},200,TPF.sorted('third-party_type,name'));
-    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
-    visit(TP_URL);
-    andThen(() => {
-        assert.equal(currentURL(), TP_URL);
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-        assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-        assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'2');
-    });
-    click('.t-sort-name-dir');
-    andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?sort=name');
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-        assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-        assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
-    });
-    click(SORT_DIR);
-    andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-        assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-        assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
-    });
-});
+// test('multiple sort options appear in the query string as expected', (assert) => {
+//     random.uuid = function() { return UUID.value; };
+//     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=status.name,name';
+//     xhr(sort_two ,'GET',null,{},200,TPF.sorted('third-party_type,name'));
+//     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
+//     xhr(sort_one ,'GET',null,{},200,TPF.sorted('name'));
+//     visit(TP_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), TP_URL);
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'2');
+//     });
+//     click('.t-sort-name-dir');
+//     andThen(() => {
+//         assert.equal(currentURL(),TP_URL + '?sort=name');
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
+//     });
+//     click(SORT_DIR);
+//     andThen(() => {
+//         assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
+//     });
+// });
 
-test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', (assert) => {
-    random.uuid = function() { return UUID.value; };
-    var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=name,status.name';
-    xhr(sort_four,'GET',null,{},200,TPF.sorted('name,status.name'));
-    var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-name,status.name';
-    xhr(sort_three,'GET',null,{},200,TPF.sorted('-name,status.name'));
-    var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=status.name,name';
-    xhr(sort_two,'GET',null,{},200,TPF.sorted('status,name'));
-    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one,'GET',null,{},200,TPF.sorted('name'));
-    visit(TP_URL);
-    andThen(() => {
-        assert.equal(currentURL(), TP_URL);
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.ok(find('.t-sort-name-dir').hasClass('fa-sort'));
-        assert.ok(find(SORT_DIR).hasClass('fa-sort'));
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-        assert.equal(find(`${RESET_GRID}`).length, 0);
-    });
-    click('.t-sort-name-dir');
-    andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?sort=name');
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        assert.ok(find(SORT_DIR).hasClass('fa-sort'));
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-        assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-        assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
-    });
-    click(SORT_DIR);
-    andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
-        assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-        assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-        assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
-    });
-    click('.t-sort-name-dir');
-    andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?sort=-name%2Cstatus.name');
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
-        assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-desc'));
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGridBase+'8');
-        assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameGridBase+'7');
-        assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameGridBase+'6');
-    });
-    click('.t-sort-name-dir');
-    andThen(() => {
-        assert.equal(currentURL(),TP_URL + '?sort=name%2Cstatus.name');
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
-        assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-        assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
-        assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
-    });
-    click(RESET_GRID);
-    andThen(() => {
-        assert.equal(currentURL(), TP_URL);
-        assert.equal(find(GRID_DATA_ALL).length, 10);
-        assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
-    });
-});
+// test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', (assert) => {
+//     random.uuid = function() { return UUID.value; };
+//     var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=name,status.name';
+//     xhr(sort_four,'GET',null,{},200,TPF.sorted('name,status.name'));
+//     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-name,status.name';
+//     xhr(sort_three,'GET',null,{},200,TPF.sorted('-name,status.name'));
+//     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=status.name,name';
+//     xhr(sort_two,'GET',null,{},200,TPF.sorted('status,name'));
+//     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
+//     xhr(sort_one,'GET',null,{},200,TPF.sorted('name'));
+//     visit(TP_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), TP_URL);
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort'));
+//         assert.ok(find(SORT_DIR).hasClass('fa-sort'));
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${RESET_GRID}`).length, 0);
+//     });
+//     click('.t-sort-name-dir');
+//     andThen(() => {
+//         assert.equal(currentURL(),TP_URL + '?sort=name');
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
+//         assert.ok(find(SORT_DIR).hasClass('fa-sort'));
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
+//     });
+//     click(SORT_DIR);
+//     andThen(() => {
+//         assert.equal(currentURL(),TP_URL + '?sort=status.name%2Cname');
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
+//         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
+//     });
+//     click('.t-sort-name-dir');
+//     andThen(() => {
+//         assert.equal(currentURL(),TP_URL + '?sort=-name%2Cstatus.name');
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
+//         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-desc'));
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameGridBase+'8');
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameGridBase+'7');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameGridBase+'6');
+//     });
+//     click('.t-sort-name-dir');
+//     andThen(() => {
+//         assert.equal(currentURL(),TP_URL + '?sort=name%2Cstatus.name');
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.ok(find(SORT_DIR).hasClass('fa-sort-asc'));
+//         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//         assert.equal(find(`${GRID_DATA_1} .t-third-party-name`).text(), TPD.nameOne+'1');
+//         assert.equal(find(`${GRID_DATA_2} .t-third-party-name`).text(), TPD.nameOne+'10');
+//     });
+//     click(RESET_GRID);
+//     andThen(() => {
+//         assert.equal(currentURL(), TP_URL);
+//         assert.equal(find(GRID_DATA_ALL).length, 10);
+//         assert.equal(find(`${GRID_DATA_0} .t-third-party-name`).text(), TPD.nameOne);
+//     });
+// });
 
 // test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', (assert) => {
 //     let find_two = PREFIX + BASE_URL + '/?page=1&status__icontains=i&name__icontains=vzoname';
