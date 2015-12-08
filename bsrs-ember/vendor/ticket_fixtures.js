@@ -69,6 +69,7 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.request = 'ape' + i;
             ticket.priority = this.ticket.priorityTwoId;
             ticket.status = this.ticket.statusTwoId;
+            ticket.location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
             delete ticket.cc;
             delete ticket.attachments;
             response.push(ticket);

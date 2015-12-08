@@ -104,7 +104,7 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
             return a[column] - b[column];
         });
         var searched = sorted.filter(function(object) {
-            return object[column] === related_id;
+            return typeof object[column] === 'object' ? object[column]['id'] === related_id : object[column] === related_id;
         });
         var paged;
         if(page && page > 1) {

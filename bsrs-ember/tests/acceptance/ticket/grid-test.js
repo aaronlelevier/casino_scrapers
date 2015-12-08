@@ -5,6 +5,7 @@ import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
+import LD from 'bsrs-ember/vendor/defaults/location';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -18,10 +19,12 @@ const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = BASE_URL + '/index';
 const NUMBER_ONE = {keyCode: 49};
 const LETTER_R = {keyCode: 82};
+const LETTER_O = {keyCode: 79};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
 const SORT_PRIORITY_DIR = '.t-sort-priority-name-dir';
 const SORT_STATUS_DIR = '.t-sort-status-name-dir';
+const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
 const FILTER_PRIORITY = '.t-filter-priority-name';
 
 var application, store, endpoint, list_xhr, original_uuid;
@@ -620,7 +623,7 @@ test('save filterset button only available when a dynamic filter is present', fu
     });
 });
 
-test('toran status.name is a functional related filter', function(assert) {
+test('status.name is a functional related filter', function(assert) {
     let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name&status__name__icontains=rr';
     xhr(option_four,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
     let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name';
@@ -675,3 +678,57 @@ test('toran status.name is a functional related filter', function(assert) {
     });
 });
 
+test('location.name is a functional related filter', function(assert) {
+    let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-location__name&location__name__icontains=ow';
+    xhr(option_four,'GET',null,{},200,TF.searched_related(TD.locationTwoId, 'location'));
+    let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-location__name';
+    xhr(option_three,'GET',null,{},200,TF.searched_related(TD.locationTwoId, 'location'));
+    let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=location__name';
+    xhr(option_two,'GET',null,{},200,TF.searched_related(TD.locationTwoId, 'location'));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=ow';
+    xhr(option_one,'GET',null,{},200,TF.searched_related(TD.locationTwoId, 'location'));
+    visit(TICKET_URL);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+    });
+    fillIn('.t-grid-search-input', 'ow');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_O);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=ow');
+        assert.equal(find('.t-grid-data').length, 9);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), TD.locationTwo);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data').length, 10);
+    });
+    click(SORT_LOCATION_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=&sort=location.name');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOtherGrid);
+    });
+    click(SORT_LOCATION_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=&sort=-location.name');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), TD.locationTwo);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'ape12');
+    });
+    filterGrid('location.name', 'ow');
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?find=location.name%3Aow&search=&sort=-location.name');
+        assert.equal(find('.t-grid-data').length, 9);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), TD.locationTwo);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+    });
+});
