@@ -45,6 +45,7 @@ input[type="text"]:disabled {
 	}
 }
 .ember-power-select{
+
 	.ember-power-select-trigger{
 		min-height: 34px;
 		background-image: none;
@@ -129,6 +130,12 @@ input[type="text"]:disabled {
 		&.highlighted{
 			background-color: $hoverColor;
 		}
+	}
+	.ember-power-select-option--selected{
+		background: $light;
+	}
+	.ember-power-select-option--highlighted{
+		background: $hoverColor;
 	}
 }
 
