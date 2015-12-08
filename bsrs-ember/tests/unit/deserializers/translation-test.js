@@ -37,17 +37,21 @@ test('deserialize_single - translation', (assert) => {
 
 test('deserialize_single - translation.locales attr is an array of "locale-translation" objects', (assert) => {
     let response = TRANSLATION_FIXTURES.get();
-    // this is in the store, so now it just needs to be associated with the Translation
-    assert.ok(store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne));
+    // extra "locale-translation" in the "store" that should not be associated with the 
+    // translation b/c the translation-key is different
+    var model = {
+        id: LOCALE_TRANSLATION_DEFAULTS.idTwo,
+        locale: LOCALE_TRANSLATION_DEFAULTS.localeTwo,
+        translation: LOCALE_TRANSLATION_DEFAULTS.translationTwo
+    };
+    var locale_trans = store.push('locale-translation', model);
 
     subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
 
     let ret = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
     assert.ok(ret);
-    assert.equal(store.find('locale-translation').get('length'), 3);
-    // force set "locale_fks" to get by "locales" attr below
-    ret.set('locale_fks', [LOCALE_TRANSLATION_DEFAULTS.idOne]);
-    assert.equal(ret.get('locales').get('length'), 1);
+    assert.equal(store.find('locale-translation').get('length'), 4);
+    assert.equal(ret.get('locales').get('length'), 3);
 });
 
 test('deserialize_single - locale-translation', (assert) => {

@@ -23,7 +23,7 @@ module('Acceptance | detail-test', {
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/';
         translation_list_data = TF.list();
-        translation_detail_data = TF.detail();
+        translation_detail_data = TF.get();
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, translation_list_data);
         detail_xhr = xhr(endpoint + TD.keyOneGrid + '/', 'GET', null, {}, 200, translation_detail_data);
         // store

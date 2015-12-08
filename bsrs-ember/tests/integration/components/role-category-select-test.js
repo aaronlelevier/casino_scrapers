@@ -2,6 +2,9 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import RD from 'bsrs-ember/vendor/defaults/role';
@@ -16,7 +19,10 @@ const OPTION = 'li.ember-power-select-option';
 moduleForComponent('role-category-select', 'integration: role-category-select test', {
     integration: true,
     setup() {
+        translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:role', 'model:category', 'model:role-category']);
+        let service = this.container.lookup('service:i18n');
+        loadTranslations(service, translations.generate('en'));
         m2m = store.push('role-category', {id: ROLE_CD.idOne, role_fk: RD.idOne, category_fk: CD.idOne});
         m2m_two = store.push('role-category', {id: ROLE_CD.idTwo, role_fk: RD.idOne, category_fk: CD.idTwo});
         role = store.push('role', {id: RD.idOne, role_category_fks: [ROLE_CD.idOne, ROLE_CD.idTwo]});
@@ -86,8 +92,7 @@ test('should render power select with bound options after type ahead for search 
     assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'c');
     assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'e');
     assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
-    //TODO: need translations to fail this test
-    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${CD.nameOne})`));
+    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:eq(0)`).text().indexOf(CD.nameOne) > -1);
 });
 
 // test('input has a debouce that prevents each keystroke from publishing a message', function(assert) {

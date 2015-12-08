@@ -2,6 +2,9 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import PD from 'bsrs-ember/vendor/defaults/person';
@@ -16,7 +19,10 @@ const OPTION = 'li.ember-power-select-option';
 moduleForComponent('person-locations-select', 'integration: person-locations-select test', {
     integration: true,
     setup() {
+        translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:person', 'model:location', 'model:person-location']);
+        let service = this.container.lookup('service:i18n');
+        loadTranslations(service, translations.generate('en'));
         m2m = store.push('person-location', {id: PLD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
         m2m_two = store.push('person-location', {id: PLD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
         person = store.push('person', {id: PD.idOne});
@@ -86,8 +92,7 @@ test('should render power select with bound options after type ahead for search 
     assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'c');
     assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'e');
     assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
-    //TODO: need translations to fail this test
-    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${LD.storeName})`));
+    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:eq(0)`).text().indexOf(LD.storeName) > -1);
 });
 
 // test('input has a debouce that prevents each keystroke from publishing a message', function(assert) {

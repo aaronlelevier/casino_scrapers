@@ -6,36 +6,49 @@ import inject from 'bsrs-ember/utilities/store';
 var TranslationModel = Model.extend(NewMixin, {
     store: inject('main'),
     key: Ember.computed.alias('id'),
-    translated_value: attr(''),
     locale_fks: [],
     locales: Ember.computed('locale_fks.[]', function() {
-        const related_fks = this.get('locale_fks');
+        const trans_key = this.get('key');
         const filter = function(locale_trans) {
-            return Ember.$.inArray(locale_trans.get('id'), related_fks) > -1;
+            return Ember.$.inArray(locale_trans.get('translation_key'), [trans_key]) > -1;
         };
         return this.get('store').find('locale-translation', filter, []);
     }),
     locale_ids: Ember.computed('locales.[]', function() {
         return this.get('locales').mapBy('id');
     }),
-    add_locale(locale_id) {
-        let store = this.get('store');
-        let locale = store.find('locale-translation', locale_id);
-        locale.set('rollback', undefined);
-        let translation_id = this.get('id');
-        let current_fks = this.get('locale_fks') || [];
-        this.set('locale_fks', current_fks.concat(locale_id).uniq());
-    },
-    remove_locale(locale_id) {
-        let store = this.get('store');
-        let locale = store.find('locale-translation', locale_id);
-        locale.set('rollback', true);
-        let translation_id = this.get('id');
-        let current_fks = this.get('locale_fks') || [];
-        let updated_fks = current_fks.filter(function(id) {
-            return id !== locale_id;
+    localeIsDirty: Ember.computed(function() {
+        let locales = this.get('locales');
+        let bool = true;
+        locales.forEach((locale) => {
+            // FAILING b/c "locale_fks" needs to get populated in the "deserializer" ??
+            // bool = locale.get('isDirty') && bool;
         });
-        this.set('locale_fks', updated_fks);
+        return bool;
+    }),
+    isDirtyOrRelatedDirty: Ember.computed('localeIsDirty', function() {
+        return this.get('localeIsDirty');
+    }),
+    saveLocales() {
+        let locales = this.get('locales');
+        locales.forEach((locale) => {
+            locale.save();
+        });
+    },
+    rollbackLocales() {
+        let store = this.get('store');
+        let locales_to_remove = [];
+        let locales = this.get('locales');
+        locales.forEach((x) => {
+            //remove
+            if (x.get('isNotDirty')) {
+                locales_to_remove.push(x.get('id'));
+            }
+            x.rollback();
+        });
+        locales_to_remove.forEach((id) => {
+            store.remove('locale-translation', id);
+        });
     },
     serialize() {
         return {
