@@ -637,4 +637,3 @@ test('save filterset button only available when a dynamic filter is present', (a
         assert.equal(find('.t-show-save-filterset-modal').length, 1);
     });
 });
-

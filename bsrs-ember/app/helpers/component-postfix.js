@@ -8,12 +8,14 @@ export default Ember.Helper.helper((params) => {
     }else if (params[0] === 'categories') {
         return 'categories-activity';
     }else if(params[0] === 'create'){
-        return 'create-activity'; 
-    }else if(params[0] === 'priority' || params[0] === 'status'){
-        return 'to-from-without-link'; 
+        return 'create-activity';
+    }else if(params[0] === 'priority'){
+        return 'to-from-priority';
+    }else if(params[0] === 'status'){
+        return 'to-from-status'; 
     }else if(params[0] === 'cc_add' || params[0] === 'cc_remove') {
-        return 'cc-add-remove'; 
+        return 'cc-add-remove';
     }else if(params[0] === 'attachment_add' || params[0] === 'attachment_remove') {
-        return 'attachment-add-remove'; 
+        return 'attachment-add-remove';
     }
 });

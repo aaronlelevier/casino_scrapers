@@ -17,7 +17,7 @@ const DETAIL_URL = BASE_URL + '/' + TD.keyOneGrid;
 
 var application, store, endpoint, translation_list_data, translation_detail_data, list_xhr, detail_xhr;
 
-module('Acceptance | detail-test', {
+module('Acceptance | amk Admin Translation Detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -58,11 +58,21 @@ test('detail | header is translation key', (assert) => {
 });
 
 // COMMENT OUT: Need to correctly assert elements exist in the DetailView b/4 testing PUTs
+// test('detail | header is translation key', (assert) => {
+//     clearxhr(list_xhr);
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         waitFor(() => {
+//             assert.equal(currentURL(), DETAIL_URL);
+//             assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
+//         });
+//     });
+// });
+//
 // test('detail | update model by changing first Locale trans', (assert) => {
 //     clearxhr(list_xhr);
 //     visit(DETAIL_URL);
 //     andThen(() => {
-//         debugger;
 //         assert.equal(currentURL(), DETAIL_URL);
 //         let translation = store.find('translation', TD.keyOneGrid);
 //         assert.ok(translation.get('isNotDirty'));

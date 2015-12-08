@@ -105,21 +105,21 @@ test('on boot we should fetch and load the ticket status configuration', functio
     andThen(() => {
         assert.equal(store.find('ticket-status').get('length'), 8);
         assert.equal(store.find('ticket-status').objectAt(0).get('id'), LD.statusOneId);
-        assert.equal(store.find('ticket-status').objectAt(0).get('name'), LD.statusOne);
+        assert.equal(store.find('ticket-status').objectAt(0).get('name'), LD.statusOneKey);
         assert.equal(store.find('ticket-status').objectAt(1).get('id'), LD.statusTwoId);
-        assert.equal(store.find('ticket-status').objectAt(1).get('name'), LD.statusTwo);
+        assert.equal(store.find('ticket-status').objectAt(1).get('name'), LD.statusTwoKey);
         assert.equal(store.find('ticket-status').objectAt(2).get('id'), LD.statusThreeId);
-        assert.equal(store.find('ticket-status').objectAt(2).get('name'), LD.statusThree);
+        assert.equal(store.find('ticket-status').objectAt(2).get('name'), LD.statusThreeKey);
         assert.equal(store.find('ticket-status').objectAt(3).get('id'), LD.statusFourId);
-        assert.equal(store.find('ticket-status').objectAt(3).get('name'), LD.statusFour);
+        assert.equal(store.find('ticket-status').objectAt(3).get('name'), LD.statusFourKey);
         assert.equal(store.find('ticket-status').objectAt(4).get('id'), LD.statusFiveId);
-        assert.equal(store.find('ticket-status').objectAt(4).get('name'), LD.statusFive);
+        assert.equal(store.find('ticket-status').objectAt(4).get('name'), LD.statusFiveKey);
         assert.equal(store.find('ticket-status').objectAt(5).get('id'), LD.statusSixId);
-        assert.equal(store.find('ticket-status').objectAt(5).get('name'), LD.statusSix);
+        assert.equal(store.find('ticket-status').objectAt(5).get('name'), LD.statusSixKey);
         assert.equal(store.find('ticket-status').objectAt(6).get('id'), LD.statusSevenId);
-        assert.equal(store.find('ticket-status').objectAt(6).get('name'), LD.statusSeven);
+        assert.equal(store.find('ticket-status').objectAt(6).get('name'), LD.statusSevenKey);
         assert.equal(store.find('ticket-status').objectAt(7).get('id'), LD.statusEightId);
-        assert.equal(store.find('ticket-status').objectAt(7).get('name'), LD.statusEight);
+        assert.equal(store.find('ticket-status').objectAt(7).get('name'), LD.statusEightKey);
     });
 });
 
@@ -128,13 +128,13 @@ test('on boot we should fetch and load the ticket priority configuration', funct
     andThen(() => {
         assert.equal(store.find('ticket-priority').get('length'), 4);
         assert.equal(store.find('ticket-priority').objectAt(0).get('id'), LD.priorityOneId);
-        assert.equal(store.find('ticket-priority').objectAt(0).get('name'), LD.priorityOne);
+        assert.equal(store.find('ticket-priority').objectAt(0).get('name'), LD.priorityOneKey);
         assert.equal(store.find('ticket-priority').objectAt(1).get('id'), LD.priorityTwoId);
-        assert.equal(store.find('ticket-priority').objectAt(1).get('name'), LD.priorityTwo);
+        assert.equal(store.find('ticket-priority').objectAt(1).get('name'), LD.priorityTwoKey);
         assert.equal(store.find('ticket-priority').objectAt(2).get('id'), LD.priorityThreeId);
-        assert.equal(store.find('ticket-priority').objectAt(2).get('name'), LD.priorityThree);
+        assert.equal(store.find('ticket-priority').objectAt(2).get('name'), LD.priorityThreeKey);
         assert.equal(store.find('ticket-priority').objectAt(3).get('id'), LD.priorityFourId);
-        assert.equal(store.find('ticket-priority').objectAt(3).get('name'), LD.priorityFour);
+        assert.equal(store.find('ticket-priority').objectAt(3).get('name'), LD.priorityFourKey);
     });
 });
 
