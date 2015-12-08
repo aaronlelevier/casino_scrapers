@@ -211,6 +211,17 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
             str(Person.objects.order_by(*params).first().role.id)
         )
 
+    def test_list_multiple_with_non_related(self):
+        params = ["username", "role__location_level__name"]
+        response = self.client.get('/api/admin/people/?related_ordering={}'
+            .format(','.join(params)))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['results'][0]['role'],
+            str(Person.objects.order_by(*params).first().role.id)
+        )
+
     def test_list_reverse_multiple(self):
         params = ["-role__name", "role__location_level__name"]
         response = self.client.get('/api/admin/people/?related_ordering={}'

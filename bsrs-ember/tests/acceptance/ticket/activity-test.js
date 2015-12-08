@@ -32,7 +32,7 @@ const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid;
 
-module('sco Acceptance | ticket activity test', {
+module('Acceptance | ticket activity test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
