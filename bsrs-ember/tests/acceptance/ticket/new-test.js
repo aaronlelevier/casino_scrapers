@@ -473,7 +473,7 @@ test('selecting new location will not affect other selectize components and will
     fillIn(`${SEARCH}`, '6');
     page.locationClickOptionTwo();
     andThen(() => {
-        assert.equal(page.priorityInput(), t(TD.priorityOne));
+        assert.equal(page.priorityInput(), TD.priorityOne);
         assert.equal(page.locationInput(), LD.storeNameTwo);
         assert.equal(find('.t-tab').length, 1);
     });
@@ -489,7 +489,7 @@ test('location new component shows location for ticket and will fire off xhr to 
     fillIn(`${SEARCH}`, '6');
     andThen(() => {
         assert.equal(find(`${LOCATION_DROPDOWN} > li`).length, 2);
-    }); 
+    });
     page.locationClickOptionTwo();
     andThen(() => {
         assert.equal(page.locationInput(), LD.storeNameTwo);

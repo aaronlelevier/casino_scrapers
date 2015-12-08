@@ -108,7 +108,7 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
         assert.equal(currentURL(), DETAIL_URL);
         let ticket = store.find('ticket', TD.idOne);
         assert.ok(ticket.get('isNotDirty'));
-        assert.equal(page.priorityInput(), t(TD.priorityOne));
+        assert.equal(page.priorityInput(), TD.priorityOne);
         assert.equal(page.statusInput(), TD.statusOne);
     });
     page.priorityClickDropdown();
@@ -120,7 +120,7 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
     andThen(() => {
         let ticket = store.find('ticket', TD.idOne);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.priorityInput(), t(TD.priorityTwo));
+        assert.equal(page.priorityInput(), TD.priorityTwo);
         assert.equal(page.statusInput(), TD.statusTwo);
     });
     page.requestFillIn(TD.requestOneGrid);
@@ -189,7 +189,7 @@ test('when user changes an attribute and clicks cancel, we prompt them with a mo
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(page.priorityInput(), t(TD.priorityTwo));
+            assert.equal(page.priorityInput(), TD.priorityTwo);
             assert.ok(generalPage.modalIsHidden());
         });
     });

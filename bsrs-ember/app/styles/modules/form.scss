@@ -91,14 +91,24 @@ div.buttonGroup {
 		float: right;
 
 		.btn{
-			min-height: 36px;
-			line-height: 22px;
+			min-height: 30px;
+			line-height: 16px;
 			font-size: 1.2rem;
 			display: block;
 
 		}
 		.ember-power-select-trigger{
 			font-size: 1.2rem;
+			height: 30px;
+			min-height: auto;
+			max-height: none;
+			line-height: 30px;
+		}
+		&.status,
+		&.priority{
+			.ember-power-select-trigger{
+				min-width: 140px;
+			}
 		}
 	}
 }

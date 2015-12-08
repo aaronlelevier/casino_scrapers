@@ -179,7 +179,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     andThen(() => {
         assert.equal(currentURL(), NEW_URL);
         let ticket = store.find('ticket').objectAt(0);
-        assert.equal(page.priorityInput(), t(TD.priorityTwo));
+        assert.equal(page.priorityInput(), TD.priorityTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
     });
 });
@@ -199,7 +199,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let ticket = store.find('ticket', TD.idOne);
-        assert.equal(page.priorityInput(), t(TD.priorityTwo));
+        assert.equal(page.priorityInput(), TD.priorityTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
@@ -213,7 +213,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     click('.t-tab:eq(0)');
     andThen(() => {
         let ticket = store.find('ticket', TD.idOne);
-        assert.equal(page.priorityInput(), t(TD.priorityTwo));
+        assert.equal(page.priorityInput(), TD.priorityTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -269,7 +269,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let ticket = store.find('ticket', TD.idOne);
-        assert.equal(page.priorityInput(), t(TD.priorityTwo));
+        assert.equal(page.priorityInput(), TD.priorityTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
@@ -285,7 +285,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     click('.t-tab:eq(0)');
     andThen(() => {
         let ticket = store.find('ticket', TD.idOne);
-        assert.equal(page.priorityInput(), t(TD.priorityTwo));
+        assert.equal(page.priorityInput(), TD.priorityTwo);
         assert.equal(ticket.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
     });
