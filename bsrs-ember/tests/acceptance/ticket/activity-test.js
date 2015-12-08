@@ -365,7 +365,6 @@ test('ticket detail does not show the activity list without a matching ticket fo
     });
 });
 
-<<<<<<< HEAD
 // test('ticket detail shows the activity list including event data (attachment_remove)', (assert) => {
 //     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(1));
 //     page.visitDetail();
