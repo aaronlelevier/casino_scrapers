@@ -32,7 +32,7 @@ const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid;
 
-module('Acceptance | ticket activity test', {
+module('sco Acceptance | ticket activity test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -338,7 +338,8 @@ test('ticket detail shows the activity list including event data (attachment_add
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} uploaded 1 files 15 days ago\n${GD.nameTicketAttachment}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ')[0].trim(), `${PD.fullname} uploaded 1 files 15 days ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ').pop(), GD.nameTicketAttachment);
     });
 });
 
@@ -348,7 +349,9 @@ test('ticket detail shows the activity list including event data (multiple attac
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} uploaded 2 files 15 days ago\n${GD.nameTicketAttachment} ${GD.nameTicketAttachment}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ')[0].trim(), `${PD.fullname} uploaded 2 files 15 days ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ').indexOf(GD.nameTicketAttachment), 42);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ').pop(), GD.nameTicketAttachment);
         assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
     });
 });
@@ -368,7 +371,8 @@ test('ticket detail shows the activity list including event data (attachment_rem
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed 1 files 15 days ago\n${GD.nameTicketAttachment}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ')[0].trim(), `${PD.fullname} removed 1 files 15 days ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ').pop(), GD.nameTicketAttachment);
     });
 });
 
@@ -378,7 +382,9 @@ test('ticket detail shows the activity list including event data (multiple attac
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed 2 files 15 days ago\n${GD.nameTicketAttachment} ${GD.nameTicketAttachment}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ')[0].trim(), `${PD.fullname} removed 2 files 15 days ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ').indexOf(GD.nameTicketAttachment), 42);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ').pop(), GD.nameTicketAttachment);
     });
 });
 

@@ -2,7 +2,6 @@ import GridViewComponent from 'bsrs-ember/components/grid-view-2/component';
 
 export default GridViewComponent.extend({
     layoutName: 'components/grid-view-2',
-    searchable: ['request', 'priority'],
-    related_fields: [{'model': 'priority', 'field': 'name'}],
+    searchable: ['request', 'priority.name'],
     nonsearchable: ['status']
 });
