@@ -29,3 +29,21 @@ test('complex query will break apart and the filter model will be updated approp
     assert.equal(filterModel.get('role'), 'huh');
     assert.equal(filterModel.get('random'), 'zap');
 });
+
+test('complex query with related will break apart and the filter model will be updated appropriately', function(assert) {
+    var query = 'name:x,role.name:huh,random:zap';
+    var filterModel = Ember.Object.create({role: {name:'y'}, random: 'z'});
+    set_filter_model_attrs(filterModel, query);
+    assert.equal(filterModel.get('name'), 'x');
+    assert.equal(filterModel.get('role.name'), 'huh');
+    assert.equal(filterModel.get('random'), 'zap');
+});
+
+test('related works when not already existing in filterModel object as a key', function(assert) {
+    var query = 'name:x,role.name:huh,random:zap';
+    var filterModel = Ember.Object.create();
+    set_filter_model_attrs(filterModel, query);
+    assert.equal(filterModel.get('name'), 'x');
+    assert.equal(filterModel.get('role.name'), 'huh');
+    assert.equal(filterModel.get('random'), 'zap');
+});
