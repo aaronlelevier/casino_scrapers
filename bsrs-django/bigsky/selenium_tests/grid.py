@@ -43,7 +43,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         # DESC
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[0].text)
+        self.assertEqual(self.lorem[-1], usernames[1].text)
 
     def test_ordering_multiple(self):
         # order: username,title
@@ -53,12 +53,12 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual(self.lorem[0], usernames[0].text)
         self.wait_for_xhr_request("t-sort-username-dir").click()
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
-        self.assertEqual(self.lorem[-1], titles[0].text)
+        self.assertEqual(self.lorem[-1], titles[1].text)
         # order: -username,title
         self.wait_for_xhr_request("t-sort-username-dir").click()
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[0].text)
+        self.assertEqual(self.lorem[-1], usernames[1].text)
         self.wait_for_xhr_request("t-sort-username-dir").click()
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
         self.assertEqual(self.lorem[0], titles[0].text)
@@ -183,7 +183,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.wait_for_xhr_request("t-sort-username-dir").click()
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[0].text)
+        self.assertEqual(self.lorem[-1], usernames[1].text)
         # Save FilterSet
         search_name = str(uuid.uuid4())[:5]
         modal = self.wait_for_xhr_request("t-show-save-filterset-modal")
