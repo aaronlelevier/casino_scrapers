@@ -331,25 +331,27 @@ test('ticket detail does not show the activity list without a matching ticket fo
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
     });
 });
-
+//
 // test('ticket detail shows the activity list including event data (attachment_add)', (assert) => {
 //     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(1));
 //     page.visitDetail();
 //     andThen(() => {
 //         assert.equal(currentURL(), DETAIL_URL);
 //         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} uploaded 1 files 15 days ago\n${GD.nameTicketAttachment}`);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} uploaded 1 files 15 days ago\n${GD.nameTicketAttachment}`);
+//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ')[0].trim(), `${PD.fullname} uploaded 1 files 15 days ago`);
+//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ').pop(), GD.nameTicketAttachment);
 //     });
 // });
-
+//
 // test('ticket detail shows the activity list including event data (multiple attachment_add)', (assert) => {
 //     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2));
 //     page.visitDetail();
 //     andThen(() => {
 //         assert.equal(currentURL(), DETAIL_URL);
 //         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} uploaded 2 files 15 days ago\n${GD.nameTicketAttachment} ${GD.nameTicketAttachment}`);
+//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ')[0].trim(), `${PD.fullname} uploaded 2 files 15 days ago`);
+//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ').indexOf(GD.nameTicketAttachment), 42);
+//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim().split('  ').pop(), GD.nameTicketAttachment);
 //         assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
 //     });
 // });
@@ -363,6 +365,7 @@ test('ticket detail does not show the activity list without a matching ticket fo
     });
 });
 
+<<<<<<< HEAD
 // test('ticket detail shows the activity list including event data (attachment_remove)', (assert) => {
 //     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(1));
 //     page.visitDetail();

@@ -43,7 +43,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         # DESC
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[0].text)
+        self.assertEqual(self.lorem[-1], usernames[1].text)
 
     def test_ordering_multiple(self):
         # order: username,title
@@ -53,12 +53,12 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.assertEqual(self.lorem[0], usernames[0].text)
         self.wait_for_xhr_request("t-sort-username-dir").click()
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
-        self.assertEqual(self.lorem[-1], titles[0].text)
+        self.assertEqual(self.lorem[-1], titles[1].text)
         # order: -username,title
         self.wait_for_xhr_request("t-sort-username-dir").click()
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[0].text)
+        self.assertEqual(self.lorem[-1], usernames[1].text)
         self.wait_for_xhr_request("t-sort-username-dir").click()
         titles = self.wait_for_xhr_request("t-person-title", plural=True)
         self.assertEqual(self.lorem[0], titles[0].text)
@@ -66,9 +66,20 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
     def test_search_input(self):
         people = self.wait_for_xhr_request("t-grid-data", plural=True)
         self.assertEqual(len(people), 10)
-        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('cu')
+        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('zap')
+        people = self.wait_for_xhr_request("t-grid-data", plural=True, debounce=True)
+        self.assertEqual(len(people), 1)
+        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('aaaaa')
+        with self.assertRaises(NoSuchElementException):
+            people = self.wait_for_xhr_request("t-grid-data", debounce=True)
+            people = self.driver.find_element_by_class_name("t-grid-data")
+
+    def test_search_related(self):
         people = self.wait_for_xhr_request("t-grid-data", plural=True)
         self.assertEqual(len(people), 10)
+        search = self.wait_for_xhr_request("t-grid-search-input").send_keys('wat-role')
+        people = self.wait_for_xhr_request("t-grid-data", plural=True, debounce=True)
+        self.assertEqual(len(people), 1)
         search = self.wait_for_xhr_request("t-grid-search-input").send_keys('aaaaa')
         with self.assertRaises(NoSuchElementException):
             people = self.wait_for_xhr_request("t-grid-data", debounce=True)
@@ -172,7 +183,7 @@ class SeleniumGridTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.Test
         self.wait_for_xhr_request("t-sort-username-dir").click()
         self.wait_for_xhr_request("t-sort-username-dir").click()
         usernames = self.wait_for_xhr_request("t-person-username", plural=True)
-        self.assertEqual(self.lorem[-1], usernames[0].text)
+        self.assertEqual(self.lorem[-1], usernames[1].text)
         # Save FilterSet
         search_name = str(uuid.uuid4())[:5]
         modal = self.wait_for_xhr_request("t-show-save-filterset-modal")

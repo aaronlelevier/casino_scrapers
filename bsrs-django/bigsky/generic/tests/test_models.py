@@ -130,3 +130,18 @@ class AttachmentModelTests(TestCase):
                         ticket=self.ticket,
                         file=_file
                     )
+
+    def test_to_dict(self):
+        with open(self.image, 'rb') as infile:
+            _file = SimpleUploadedFile(self.image_filename, infile.read())
+            attachment = Attachment.objects.create(
+                ticket=self.ticket,
+                file=_file
+            )
+
+            ret = attachment.to_dict()
+
+            self.assertEqual(ret['id'], str(attachment.id))
+            self.assertEqual(ret['filename'], attachment.filename)
+            self.assertEqual(ret['file'], str(attachment.file))
+            self.assertEqual(ret['image_thumbnail'], str(attachment.image_thumbnail))
