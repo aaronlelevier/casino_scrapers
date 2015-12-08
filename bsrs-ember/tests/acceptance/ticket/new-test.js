@@ -473,7 +473,7 @@ test('selecting new location will not affect other selectize components and will
     fillIn(`${SEARCH}`, '6');
     page.locationClickOptionTwo();
     andThen(() => {
-        assert.equal(page.priorityInput(), TD.priorityOne);
+        assert.equal(page.priorityInput(), t(TD.priorityOne));
         assert.equal(page.locationInput(), LD.storeNameTwo);
         assert.equal(find('.t-tab').length, 1);
     });
