@@ -95,6 +95,26 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
         return {'count':searched.length,'next':null,'previous':null,'results': paged};
     };
 
+    factory.prototype.searched_related = function(related_id, column, page) {
+        var page1 = this.list_two().results;
+        var page2 = this.list().results;
+        var response = page1.concat(page2);
+        //we do a normal order sort here to slice correctly below
+        var sorted = response.sort(function(a,b) {
+            return a[column] - b[column];
+        });
+        var searched = sorted.filter(function(object) {
+            return object[column] === related_id;
+        });
+        var paged;
+        if(page && page > 1) {
+            paged = searched.slice(10, 20);
+        } else {
+            paged = searched.slice(0, 10);
+        }
+        return {'count':searched.length,'next':null,'previous':null,'results': paged};
+    };
+
     return factory;
 }());
 

@@ -17,9 +17,11 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = BASE_URL + '/index';
 const NUMBER_ONE = {keyCode: 49};
+const LETTER_R = {keyCode: 82};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
 const SORT_PRIORITY_DIR = '.t-sort-priority-name-dir';
+const SORT_STATUS_DIR = '.t-sort-status-name-dir';
 const FILTER_PRIORITY = '.t-filter-priority-name';
 
 var application, store, endpoint, list_xhr, original_uuid;
@@ -414,6 +416,7 @@ test('full text searched columns will have a special on css class when active', 
     });
 });
 
+//todo-update to searched related before we commit
 test('after you reset the grid the filter model will also be reset', function(assert) {
     let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=priority__name&search=4&priority__name__icontains=4';
     xhr(option_three ,'GET',null,{},200,TF.sorted('priority:4'));
@@ -616,3 +619,59 @@ test('save filterset button only available when a dynamic filter is present', fu
         assert.equal(find('.t-show-save-filterset-modal').length, 1);
     });
 });
+
+test('toran status.name is a functional related filter', function(assert) {
+    let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name&status__name__icontains=rr';
+    xhr(option_four,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
+    let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name';
+    xhr(option_three,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
+    let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=status__name';
+    xhr(option_two,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=rr';
+    xhr(option_one,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
+    visit(TICKET_URL);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusOneKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+    });
+    fillIn('.t-grid-search-input', 'rr');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_R);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=rr');
+        assert.equal(find('.t-grid-data').length, 9);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusTwoKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusOneKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data').length, 10);
+    });
+    click(SORT_STATUS_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=&sort=status.name');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusTwoKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'ape12');
+    });
+    click(SORT_STATUS_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=&sort=-status.name');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusOneKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOtherGrid);
+    });
+    filterGrid('status.name', 'rr');
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?find=status.name%3Arr&search=&sort=-status.name');
+        assert.equal(find('.t-grid-data').length, 9);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusTwoKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+    });
+});
+
