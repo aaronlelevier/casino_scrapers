@@ -49,7 +49,7 @@ var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
         return {'count':19,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i) {
-        return this.get(this.defaults.idOne);
+        return this.get(this.defaults.keyOneGrid);
     };
     factory.prototype.put = function(translation) {
         var response = this.get(translation.id);
