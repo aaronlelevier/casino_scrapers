@@ -1,5 +1,6 @@
 import Ember from 'ember';
 import { test } from 'qunit';
+import trim from 'bsrs-ember/utilities/trim';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
@@ -134,9 +135,9 @@ test('ticket detail shows the activity list including event data (status)', (ass
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a few seconds ago`);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} 10 days ago`);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} 20 days ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
     });
 });
 
@@ -332,26 +333,26 @@ test('ticket detail does not show the activity list without a matching ticket fo
     });
 });
 
-test('ticket detail shows the activity list including event data (attachment_add)', (assert) => {
-    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(1));
-    page.visitDetail();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} uploaded 1 files 15 days ago\n${GD.nameTicketAttachment}`);
-    });
-});
+ test('ticket detail shows the activity list including event data (attachment_add)', (assert) => {
+     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(1));
+     page.visitDetail();
+     andThen(() => {
+         assert.equal(currentURL(), DETAIL_URL);
+         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+         assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 1 files 15 days ago ${GD.nameTicketAttachment}`);
+     });
+ });
 
-test('ticket detail shows the activity list including event data (multiple attachment_add)', (assert) => {
-    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2));
-    page.visitDetail();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} uploaded 2 files 15 days ago\n${GD.nameTicketAttachment} ${GD.nameTicketAttachment}`);
-        assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
-    });
-});
+ test('ticket detail shows the activity list including event data (multiple attachment_add)', (assert) => {
+     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2));
+     page.visitDetail();
+     andThen(() => {
+         assert.equal(currentURL(), DETAIL_URL);
+         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+         assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 2 files 15 days ago ${GD.nameTicketAttachment} Invoice`);
+         assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
+     });
+ });
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_remove)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2, TD.idTwo));
@@ -368,7 +369,7 @@ test('ticket detail shows the activity list including event data (attachment_rem
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed 1 files 15 days ago\n${GD.nameTicketAttachment}`);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 1 files 15 days ago ${GD.nameTicketAttachment}`);
     });
 });
 
@@ -378,7 +379,7 @@ test('ticket detail shows the activity list including event data (multiple attac
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed 2 files 15 days ago\n${GD.nameTicketAttachment} ${GD.nameTicketAttachment}`);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 2 files 15 days ago ${GD.nameTicketAttachment} ${GD.nameTicketAttachment}`);
     });
 });
 
@@ -410,8 +411,8 @@ test('activities are sorted descending based on created at', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a few seconds ago`);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} 10 days ago`);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} 20 days ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
     });
 });

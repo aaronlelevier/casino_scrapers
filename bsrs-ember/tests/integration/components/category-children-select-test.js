@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import trim from 'bsrs-ember/utilities/trim';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
@@ -6,6 +7,9 @@ import repository from 'bsrs-ember/tests/helpers/repository';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CF from 'bsrs-ember/vendor/category_fixtures';
+import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 
 let store, category, category_two, category_three, category_repo, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
@@ -16,7 +20,10 @@ const OPTION = 'li.ember-power-select-option';
 moduleForComponent('category-children-select', 'integration: category-children-select-test', {
     integration: true,
     setup() {
+        translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:category']);
+        const service = this.container.lookup('service:i18n');
+        loadTranslations(service, translations.generate('en'));
         category = store.push('category', {id: CD.idOne, name: CD.nameOne, children_fks: [CD.idTwo]});
         category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, children_fks: []});
         category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, children_fks: []});
@@ -87,8 +94,7 @@ test('should render power select with bound options after type ahead for search 
     assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'c');
     assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'e');
     assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 1);
-    //TODO: need translations to fail this test
-    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${CD.nameOne})`));
+    assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:eq(0)`).text().indexOf(CD.nameTwo) > -1);
 });
 
 //// test('input has a debouce that prevents each keystroke from publishing a message', function(assert) {

@@ -127,14 +127,14 @@ class OrderingQuerySetMixinTests(APITransactionTestCase):
         response = self.client.get('/api/admin/people/?page=2')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data['results']), 5)
+        self.assertEqual(len(data['results']), 10)
 
     def test_ordering_second_page_ordering(self):
         # 11th Person, should be the 1st Person on Page=2
         response = self.client.get('/api/admin/people/?page=2&ordering=first_name')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['results'][0]['first_name'], self._get_name(15))
+        self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
 
     def test_ordering_first_page_ordering_reverse(self):
         # The last name on the last page in descending order should
@@ -148,7 +148,7 @@ class OrderingQuerySetMixinTests(APITransactionTestCase):
         response = self.client.get('/api/admin/people/?page=2&ordering=first_name&search=wat')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['results'][0]['first_name'], self._get_name(15))
+        self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
 
 
 class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
@@ -202,6 +202,17 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
 
     def test_list_multiple(self):
         params = ["role__name", "role__location_level__name"]
+        response = self.client.get('/api/admin/people/?related_ordering={}'
+            .format(','.join(params)))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['results'][0]['role'],
+            str(Person.objects.order_by(*params).first().role.id)
+        )
+
+    def test_list_multiple_with_non_related(self):
+        params = ["username", "role__location_level__name"]
         response = self.client.get('/api/admin/people/?related_ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)

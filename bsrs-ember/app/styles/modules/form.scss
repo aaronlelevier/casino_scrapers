@@ -85,3 +85,24 @@ div.buttonGroup {
 		border-radius: 0;
 	}
 }
+.ticket-actions{
+	.ticket-action{
+		margin: 0 0 5px 5px;
+		float: right;
+
+		.btn{
+			min-height: 36px;
+			line-height: 22px;
+			font-size: 1.2rem;
+			display: block;
+
+		}
+		.ember-power-select-trigger{
+			font-size: 1.2rem;
+		}
+	}
+}
+.ticket-request{
+	margin: 15px 0 10px;
+	font-size: 1.2rem;
+}

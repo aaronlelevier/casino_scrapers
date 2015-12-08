@@ -1,5 +1,17 @@
-{{#each sortedModels as |activity|}}
-<div class="t-activity-list-item activity-list-item activity-{{activity.type}}">
-    {{component (component-postfix activity.type) activity=activity i18nString=(activity-description activity timestamp=(moment-from-now activity.created) i18n=i18n) }}
+<div class="activity-list-wrap row">
+    <menu class="activity-list-tabs">
+        <ul>
+            <li class="active">All Updates</li>
+            <li>Comments</li>
+            <li>Status Updates</li>
+            <li>Files</li>
+        </ul>
+    </menu>
+    <div class="activity-list">
+        {{#each sortedModels as |activity|}}
+        <div class="t-activity-list-item activity-list-item activity-{{activity.type}}">
+            {{component (component-postfix activity.type) activity=activity i18nString=(activity-description activity timestamp=(moment-from-now activity.created) i18n=i18n) }}
+        </div>
+        {{/each}}
+    </div>
 </div>
-{{/each}}

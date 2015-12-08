@@ -10,8 +10,10 @@ var GridRepositoryMixin = Ember.Mixin.create({
 
         page = page || 1;
         let endpoint = url + '?page=' + page;
-        if (sort && sort !== 'id') {
+        if (sort && sort !== 'id' && sort.indexOf('.') < 0) {
             endpoint = endpoint + '&ordering=' + sort;
+        }else if (sort && sort !== 'id'){
+            endpoint = endpoint + '&related_ordering=' + sort.replace('.', '__');
         }
         if (search && search !== '') {
             endpoint = endpoint + '&search=' + encodeURIComponent(search);
