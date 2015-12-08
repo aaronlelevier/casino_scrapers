@@ -3,7 +3,11 @@ var BSRS_GENERAL_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            nameTicketAttachment: 'Invoice',
+            nameTicketAttachmentOne: 'Invoice.pdf',
+            nameTicketAttachmentTwo: 'Photo.jpg',
+            nameTicketAttachmentThree: 'Scope.doc',
+            nameTicketAttachmentFour: 'Calculations.xls',
+            nameTicketAttachmentFive: 'Nothing.txt',
             attachmentIdOne: '249543cf-8fea-426a-8bc3-09778cd78011',
             attachmentIdTwo: '249543cf-8fea-426a-8bc3-09778cd78012',
         };
@@ -19,4 +23,3 @@ if (typeof window === 'undefined') {
         return new BSRS_GENERAL_OBJECT().defaults();
     });
 }
-

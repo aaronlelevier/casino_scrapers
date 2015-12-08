@@ -115,6 +115,19 @@
                             img.activity-thumb {
                                 max-width: 100px;
                                 max-height: 120px;
+                                margin: 0 0 5px;
+                            }
+                            span.activity-thumb{
+                                display: block;
+                                width: 100px;
+                                height: 120px;
+                                line-height: 100px;
+                                text-align: center;
+                                font-size: 40px;
+                                border: $borderStyle;
+                                background: $light;
+                                color: $medGray;
+                                margin: 0 0 5px;
                             }
                         }
                     }

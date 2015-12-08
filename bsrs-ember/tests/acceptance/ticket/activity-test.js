@@ -333,26 +333,58 @@ test('ticket detail does not show the activity list without a matching ticket fo
     });
 });
 
- test('ticket detail shows the activity list including event data (attachment_add)', (assert) => {
-     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(1));
-     page.visitDetail();
-     andThen(() => {
-         assert.equal(currentURL(), DETAIL_URL);
-         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-         assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 1 files 15 days ago ${GD.nameTicketAttachment}`);
-     });
- });
+test('ticket detail shows the activity list including event data (attachment_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 1 files 15 days ago ${GD.nameTicketAttachmentOne}`);
+    });
+});
 
- test('ticket detail shows the activity list including event data (multiple attachment_add)', (assert) => {
-     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2));
-     page.visitDetail();
-     andThen(() => {
-         assert.equal(currentURL(), DETAIL_URL);
-         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-         assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 2 files 15 days ago ${GD.nameTicketAttachment} Invoice`);
-         assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
-     });
- });
+test('ticket detail shows the activity list including event data (multiple attachment_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 2 files 15 days ago ${GD.nameTicketAttachmentOne} ${GD.nameTicketAttachmentTwo}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-pdf').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(1) img').length, 1);
+    });
+});
+test('ticket detail shows the activity list including file attachment icons (multiple attachment_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(5));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 5 files 15 days ago ${GD.nameTicketAttachmentOne} ${GD.nameTicketAttachmentTwo} ${GD.nameTicketAttachmentThree} ${GD.nameTicketAttachmentFour} ${GD.nameTicketAttachmentFive}`);
+
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-pdf').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0) img').length, 0);
+
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(1)').attr('href'), `/media/${TAD.fileAttachmentAddTwo}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(1) .t-ext-jpg').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(1) img').length, 1);
+
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(2)').attr('href'), `/media/${TAD.fileAttachmentAddThree}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(2) .t-ext-docx').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(2) img').length, 0);
+
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(3)').attr('href'), `/media/${TAD.fileAttachmentAddFour}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(3) .t-ext-xlsx').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(3) img').length, 0);
+
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(4)').attr('href'), `/media/${TAD.fileAttachmentAddFive}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(4) .t-ext-file').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(4) img').length, 0);
+
+    });
+});
 
 test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_remove)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2, TD.idTwo));
@@ -369,7 +401,7 @@ test('ticket detail shows the activity list including event data (attachment_rem
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 1 files 15 days ago ${GD.nameTicketAttachment}`);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 1 files 15 days ago ${GD.nameTicketAttachmentOne}`);
     });
 });
 
@@ -379,7 +411,7 @@ test('ticket detail shows the activity list including event data (multiple attac
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 2 files 15 days ago ${GD.nameTicketAttachment} ${GD.nameTicketAttachment}`);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 2 files 15 days ago ${GD.nameTicketAttachmentOne} ${GD.nameTicketAttachmentTwo}`);
     });
 });
 

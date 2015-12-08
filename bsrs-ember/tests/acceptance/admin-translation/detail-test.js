@@ -17,7 +17,7 @@ const DETAIL_URL = BASE_URL + '/' + TD.keyOneGrid;
 
 var application, store, endpoint, translation_list_data, translation_detail_data, list_xhr, detail_xhr;
 
-module('Acceptance | amk Admin Translation Detail-test', {
+module('Acceptance | Admin Translation Detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
