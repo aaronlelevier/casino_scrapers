@@ -6,6 +6,7 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import PD from 'bsrs-ember/vendor/defaults/person';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -25,6 +26,7 @@ const BACKSPACE = {keyCode: 8};
 const SORT_PRIORITY_DIR = '.t-sort-priority-name-dir';
 const SORT_STATUS_DIR = '.t-sort-status-name-dir';
 const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
+const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
 const FILTER_PRIORITY = '.t-filter-priority-name';
 
 var application, store, endpoint, list_xhr, original_uuid;
@@ -729,6 +731,61 @@ test('location.name is a functional related filter', function(assert) {
         assert.equal(currentURL(),TICKET_URL + '?find=location.name%3Aow&search=&sort=-location.name');
         assert.equal(find('.t-grid-data').length, 9);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-location-name').text(), TD.locationTwo);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+    });
+});
+
+test('assignee.fullname is a functional related filter', function(assert) {
+    let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-assignee__fullname&assignee__fullname__icontains=ra';
+    xhr(option_four,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
+    let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-assignee__fullname';
+    xhr(option_three,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
+    let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=assignee__fullname';
+    xhr(option_two,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=ra';
+    xhr(option_one,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
+    visit(TICKET_URL);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+    });
+    fillIn('.t-grid-search-input', 'ra');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_R);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=ra');
+        assert.equal(find('.t-grid-data').length, 9);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data').length, 10);
+    });
+    click(SORT_ASSIGNEE_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=&sort=assignee.fullname');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOtherGrid);
+    });
+    click(SORT_ASSIGNEE_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=&sort=-assignee.fullname');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'ape12');
+    });
+    filterGrid('assignee.fullname', 'ra');
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?find=assignee.fullname%3Ara&search=&sort=-assignee.fullname');
+        assert.equal(find('.t-grid-data').length, 9);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
 });

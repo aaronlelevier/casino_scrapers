@@ -10,12 +10,12 @@ var BSRS_PEOPLE_FACTORY = (function() {
         this.location_level_defaults = location_level_defaults;
         this.location_defaults = location_defaults;
     };
-    factory.prototype.get = function(i) {
+    factory.prototype.get = function(i, first_name, last_name) {
         //right now function used for tickets
         return {
             id: i || this.person_defaults.id,
-            first_name: this.person_defaults.first_name,
-            last_name: this.person_defaults.last_name,
+            first_name: first_name || this.person_defaults.first_name,
+            last_name: last_name || this.person_defaults.last_name,
             email: this.person_defaults.emails,
             role: this.person_defaults.role,
         }
