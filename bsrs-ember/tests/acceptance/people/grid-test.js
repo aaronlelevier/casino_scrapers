@@ -660,26 +660,26 @@ test('typing a search will search on related', function(assert) {
     andThen(() => {
         assert.equal(currentURL(), PEOPLE_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameOneTranslated);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), t(RD.nameOne));
     });
     fillIn('.t-grid-search-input', 'manager');
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_M);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?search=manager');
         assert.equal(find('.t-grid-data').length, 8);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameTwoTranslated);
-        assert.equal(find('.t-grid-data:eq(1) .t-person-role-name').text(), RD.nameTwoTranslated);
-        assert.equal(find('.t-grid-data:eq(2) .t-person-role-name').text(), RD.nameTwoTranslated);
-        assert.equal(find('.t-grid-data:eq(3) .t-person-role-name').text(), RD.nameTwoTranslated);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), t(RD.nameTwo));
+        assert.equal(find('.t-grid-data:eq(1) .t-person-role-name').text(), t(RD.nameTwo));
+        assert.equal(find('.t-grid-data:eq(2) .t-person-role-name').text(), t(RD.nameTwo));
+        assert.equal(find('.t-grid-data:eq(3) .t-person-role-name').text(), t(RD.nameTwo));
     });
     click('.t-sort-title-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?search=manager&sort=title');
         assert.equal(find('.t-grid-data').length, 8);
-        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameTwoTranslated);
-        assert.equal(find('.t-grid-data:eq(1) .t-person-role-name').text(), RD.nameTwoTranslated);
-        assert.equal(find('.t-grid-data:eq(2) .t-person-role-name').text(), RD.nameTwoTranslated);
-        assert.equal(find('.t-grid-data:eq(3) .t-person-role-name').text(), RD.nameTwoTranslated);
+        assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), t(RD.nameTwo));
+        assert.equal(find('.t-grid-data:eq(1) .t-person-role-name').text(), t(RD.nameTwo));
+        assert.equal(find('.t-grid-data:eq(2) .t-person-role-name').text(), t(RD.nameTwo));
+        assert.equal(find('.t-grid-data:eq(3) .t-person-role-name').text(), t(RD.nameTwo));
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);

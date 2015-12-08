@@ -2,6 +2,7 @@ import Ember from 'ember';
 import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
+import RD from 'bsrs-ember/vendor/defaults/role';
 
 const HOME_URL = '/';
 const NAVBAR = '.t-navbar-items';
@@ -39,6 +40,6 @@ test('current user is set from bootstrap data', function(assert) {
     visit(HOME_URL);
     andThen(() => {
         assert.equal(find('.t-current-user-fullname').text(), 'Donald Trump');
-        assert.equal(find('.t-current-user-role').text(), 'Administrator');
+        assert.equal(find('.t-current-user-role').text(), RD.nameOne);
     });
 });

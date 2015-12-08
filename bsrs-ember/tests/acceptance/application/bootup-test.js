@@ -161,7 +161,7 @@ test('on boot we should fetch and load the role configuration', function(assert)
         var category_models = store.find('category');
         assert.equal(role_models.get('length'), 6);
         assert.equal(role_models.objectAt(0).get('id'), RD.idOne);
-        assert.equal(role_models.objectAt(0).get('name'), t(RD.nameOne));
+        assert.equal(role_models.objectAt(0).get('name'), RD.nameOne);
         assert.equal(role_models.objectAt(0).get('location_level').get('id'), LLD.idOne);
         assert.equal(role_models.objectAt(0).get('location_level').get('name'), LLD.nameCompany);
         assert.equal(role_models.objectAt(0).get('role_type'), RD.roleTypeGeneral);

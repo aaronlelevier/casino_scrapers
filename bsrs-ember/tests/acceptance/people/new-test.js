@@ -186,7 +186,7 @@ test('can change default role', (assert) => {
         assert.equal(person.get('role').get('id'), RD.idTwo);
         assert.ok(person.get('roleIsDirty'));
         assert.ok(person.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.roleInput(), RD.nameTwoTranslated);
+        assert.equal(page.roleInput(), t(RD.nameTwo));
     });
     const payload_two = {
         id: UUID.value,
