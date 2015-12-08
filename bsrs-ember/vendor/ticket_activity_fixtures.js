@@ -72,7 +72,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     factory.prototype.get_status = function(i, ticket_pk, inc) {
         var d = new Date();
         var ticket_id = ticket_pk || this.td.idOne;
-        var activity = {id: i, type: 'status', created: d.setDate(d.getDate()-(30-inc*10)), ticket: ticket_id};
+        var activity = {id: i, type: 'status', created: d.setDate(d.getDate()-30), ticket: ticket_id};
         activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
         activity.content = {to: this.td.statusOneId, from: this.td.statusTwoId};
         return activity;
