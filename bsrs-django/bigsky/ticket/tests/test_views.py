@@ -9,7 +9,7 @@ from model_mommy import mommy
 
 from person.models import Person
 from category.models import Category
-from category.tests.factory import create_categories
+from category.tests.factory import create_categories, create_single_category
 from location.tests.factory import create_locations
 from location.models import Location
 from generic.models import Attachment
@@ -340,7 +340,7 @@ class TicketCreateTests(APITestCase):
         self.assertEqual(data['request'], ticket.request)
 
 
-class TicketSearchTests(APITestCase):
+class TicketSearchTests(APITransactionTestCase):
 
     def setUp(self):
         self.password = PASSWORD
@@ -416,6 +416,21 @@ class TicketSearchTests(APITestCase):
         mommy.make(Ticket, request="watter", status=TicketStatus.objects.get(name=TICKET_STATUSES[1]))
         letters = "new"
         count = Ticket.objects.filter(status__name__icontains=letters).count()
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], count)
+
+    def test_search_related_categories(self):
+        letters = "zza"
+        category_one = create_single_category(letters)
+        category_two = create_single_category("zzap")
+        one = mommy.make(Ticket, request="one")
+        two = mommy.make(Ticket, request="two")
+        one.categories.add(category_one)
+        one.save()
+        two.categories.add(category_two)
+        two.save()
+        count = Ticket.objects.filter(categories__name__in=[letters]).count()
         response = self.client.get('/api/tickets/?search={}'.format(letters))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
