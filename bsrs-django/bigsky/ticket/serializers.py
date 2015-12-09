@@ -15,7 +15,7 @@ from utils.serializers import BaseCreateSerializer
 
 
 TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
-    'requester', 'categories', 'request',)
+    'requester', 'categories', 'request')
 
 
 class TicketCreateSerializer(BaseCreateSerializer):
@@ -36,7 +36,7 @@ class TicketListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number',)
+        fields = TICKET_FIELDS + ('number', 'created')
 
     @staticmethod
     def eager_load(queryset):
@@ -55,7 +55,7 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number', 'cc', 'attachments')
+        fields = TICKET_FIELDS + ('number', 'cc', 'attachments', 'created')
 
     @staticmethod
     def eager_load(queryset):
