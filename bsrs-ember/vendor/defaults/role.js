@@ -10,6 +10,8 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
             roleTypeGeneral: 'Internal',
             nameOne: 'admin.role.system_administrator',
             nameTwo: 'admin.role.district_manager',
+            nameContractor: 'admin.role.contractor',
+            nameCoordinator: 'admin.role.coordinator',
             nameOneTranslated: 'Administrator',
             nameTwoTranslated: 'District Manager',
             nameThree: 'Manager',

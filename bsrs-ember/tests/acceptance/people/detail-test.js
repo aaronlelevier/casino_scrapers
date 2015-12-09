@@ -900,7 +900,7 @@ test('when you deep link to the person detail view you can alter the role and ro
         page.roleClickOptionTwo();
         andThen(() => {
             assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-            assert.equal(page.roleInput(), RD.nameTwoTranslated);
+            assert.equal(page.roleInput(), t(RD.nameTwo));
             var person = store.find('person', PD.idOne);
             assert.ok(person.get('isDirtyOrRelatedDirty'));
             assert.equal(person.get('role.id'), RD.idTwo);
@@ -951,7 +951,7 @@ test('when you deep link to the person detail view you can alter the role and ch
         page.roleClickOptionTwo();
         andThen(() => {
             assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-            assert.equal(page.roleInput(), RD.nameTwoTranslated);
+            assert.equal(page.roleInput(), t(RD.nameTwo));
             var person = store.find('person', PD.id);
             assert.ok(person.get('isDirtyOrRelatedDirty'));
             assert.equal(person.get('role.id'), RD.idTwo);

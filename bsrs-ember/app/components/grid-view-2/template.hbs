@@ -68,7 +68,11 @@
                   {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
                   <td><input type="checkbox" /></td>
                   {{#each searchable as |column|}}
-                  <td class="{{grid-row-class noun column}}">{{get item column}}</td>
+                    {{#if (translate-check column translatable)}}
+                      <td class="{{grid-row-class noun column}}">{{t (get item column)}}</td>
+                    {{else}}
+                      <td class="{{grid-row-class noun column}}">{{get item column}}</td>
+                    {{/if}}
                   {{/each}}
                   {{#each nonsearchable as |column|}}
                   <td class="{{grid-row-class noun column}} {{add-text-right nonsearchable column}}">{{get item column}}</td>

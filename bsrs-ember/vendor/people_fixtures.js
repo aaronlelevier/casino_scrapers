@@ -10,12 +10,12 @@ var BSRS_PEOPLE_FACTORY = (function() {
         this.location_level_defaults = location_level_defaults;
         this.location_defaults = location_defaults;
     };
-    factory.prototype.get = function(i) {
+    factory.prototype.get = function(i, first_name, last_name) {
         //right now function used for tickets
         return {
             id: i || this.person_defaults.id,
-            first_name: this.person_defaults.first_name,
-            last_name: this.person_defaults.last_name,
+            first_name: first_name || this.person_defaults.first_name,
+            last_name: last_name || this.person_defaults.last_name,
             email: this.person_defaults.emails,
             role: this.person_defaults.role,
         }
@@ -142,26 +142,6 @@ var BSRS_PEOPLE_FACTORY = (function() {
             return b.id - a.id;
         });
         return {'count':10,'next':null,'previous':null,'results': sorted};
-    };
-
-    factory.prototype.searched_related = function(related_id, column, page) {
-        var page1 = this.list_two().results;
-        var page2 = this.list().results;
-        var response = page1.concat(page2);
-        //we do a normal order sort here to slice correctly below
-        var sorted = response.sort(function(a,b) {
-            return a[column] - b[column];
-        });
-        var searched = sorted.filter(function(object) {
-            return object[column] === related_id;
-        });
-        var paged;
-        if(page && page > 1) {
-            paged = searched.slice(10, 20);
-        } else {
-            paged = searched.slice(0, 10);
-        }
-        return {'count':searched.length,'next':null,'previous':null,'results': paged};
     };
 
     return factory;

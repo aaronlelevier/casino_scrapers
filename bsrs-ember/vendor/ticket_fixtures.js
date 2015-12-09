@@ -67,6 +67,10 @@ var BSRS_TICKET_FACTORY = (function() {
             var ticket = this.generate(uuid + i);
             ticket.number = 'gone' + i;
             ticket.request = 'ape' + i;
+            ticket.priority = this.ticket.priorityTwoId;
+            ticket.status = this.ticket.statusTwoId;
+            ticket.location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
+            ticket.assignee = this.people_fixtures.get(this.ticket.assigneeTwoId, this.ticket.assigneeTwo, this.ticket.assigneeTwo);
             delete ticket.cc;
             delete ticket.attachments;
             response.push(ticket);

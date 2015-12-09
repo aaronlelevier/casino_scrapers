@@ -46,6 +46,18 @@ test('clicking on a translation will redirect User to the detail view', (assert)
     });
 });
 
+test('detail | header is translation key', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
+        });
+    });
+});
+
+// COMMENT OUT: Need to correctly assert elements exist in the DetailView b/4 testing PUTs
 // test('detail | header is translation key', (assert) => {
 //     clearxhr(list_xhr);
 //     visit(DETAIL_URL);
@@ -65,7 +77,7 @@ test('clicking on a translation will redirect User to the detail view', (assert)
 //         let translation = store.find('translation', TD.keyOneGrid);
 //         assert.ok(translation.get('isNotDirty'));
 //     });
-//     let response = TF.detail(TD.keyOneGrid);
+//     let response = TF.get();
 //     let payload = TF.put({
 //         id: TD.keyOneGrid,
 //         locales: [{
@@ -83,12 +95,12 @@ test('clicking on a translation will redirect User to the detail view', (assert)
 //     fillIn('.t-translation-translation:eq(0)', TD.otherTranslationOne);
 //     andThen(() => {
 //         let translation = store.find('translation', TD.keyOneGrid);
-//         // assert.ok(translation.get('isDirty'));  // TODO: Need to iron out 'Locales in store'
+//         assert.ok(translation.get('isDirty'));  // TODO: Need to iron out 'Locales in store'
 //     });
 //     let list = TF.list();
 //     list.results[0].name = TD.otherTranslationOne;
-//     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
 //     generalPage.save();
+//     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
 //     andThen(() => {
 //         assert.equal(currentURL(), TRANSLATION_URL);
 //         let translation = store.find('translation', TD.keyOneGrid);
