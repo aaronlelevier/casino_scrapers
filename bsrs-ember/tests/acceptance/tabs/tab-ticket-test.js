@@ -350,6 +350,26 @@ test('closing a document should close it\'s related tab', (assert) => {
     });
 });
 
+test('opening a new tab, navigating away and closing the tab should remove the tab', (assert) => {
+    clearxhr(detail_xhr);
+    clearxhr(activity_one);
+    let ticket_list_data = TF.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
+    visit(NEW_URL);
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+    });
+    visit(TICKET_URL);
+    click('.t-tab-close:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 0);
+    });
+});
+
 test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
     let ticket_list_data = TF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);

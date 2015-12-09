@@ -310,6 +310,26 @@ test('closing a document should close it\'s related tab', (assert) => {
     });
 });
 
+test('opening a new tab, navigating away and closing the tab should remove the tab', (assert) => {
+    clearxhr(detail_xhr);
+    let category_list_data = CATEGORY_FIXTURES.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, category_list_data);
+    visit(NEW_URL);
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New category');
+        visit(CATEGORY_URL);
+    });
+    click('.t-tab-close:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORY_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 0);
+    });
+});
+
 test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
     let category_list_data = CATEGORY_FIXTURES.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, category_list_data);

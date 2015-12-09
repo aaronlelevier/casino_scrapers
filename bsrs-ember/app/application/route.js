@@ -142,6 +142,7 @@ var ApplicationRoute = Ember.Route.extend({
                 if(temp === tab.get('id') || tab.get('newModel')){
                     this.transitionTo(tab.get('redirect'));
                     if (tab.get('newModel') && !tab.get('saveModel')) {
+                        this.get('tabList').closeTab(model.get('id'));
                         model.removeRecord(); 
                     }
                 }else if(this.controller.currentPath !== tab.get('redirect')){

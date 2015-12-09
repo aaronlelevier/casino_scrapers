@@ -308,6 +308,26 @@ test('closing a document should close its related tab', (assert) => {
     });
 });
 
+test('opening a new tab, navigating away and closing the tab should remove the tab', (assert) => {
+    clearxhr(detail_xhr);
+    let third_party_list_data = TPF.list();
+    list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, third_party_list_data);
+    visit(NEW_URL);
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New third-party');
+        visit(THIRD_PARTY_URL);
+    });
+    click('.t-tab-close:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), THIRD_PARTY_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 0);
+    });
+});
+
 test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
     let third_party_list_data = TPF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, third_party_list_data);
