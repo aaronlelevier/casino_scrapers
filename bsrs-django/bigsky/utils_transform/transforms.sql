@@ -578,16 +578,16 @@ SELECT pg_catalog.setval('django_content_type_id_seq', 46, true);
 --
 
 COPY django_migrations (id, app, name, applied) FROM stdin;
-1	sites	0001_initial	2015-12-09 13:51:14.503007-08
-2	contenttypes	0001_initial	2015-12-09 13:51:15.355168-08
-3	contenttypes	0002_remove_content_type_name	2015-12-09 13:51:15.37521-08
-4	auth	0001_initial	2015-12-09 13:51:15.419936-08
-5	auth	0002_alter_permission_name_max_length	2015-12-09 13:51:15.43129-08
-6	auth	0003_alter_user_email_max_length	2015-12-09 13:51:15.441666-08
-7	auth	0004_alter_user_username_opts	2015-12-09 13:51:15.453222-08
-8	auth	0005_alter_user_last_login_null	2015-12-09 13:51:15.463094-08
-9	auth	0006_require_contenttypes_0002	2015-12-09 13:51:15.464839-08
-10	tlocation	0001_initial	2015-12-09 13:51:17.478915-08
+1	sites	0001_initial	2015-12-09 14:49:12.260767-08
+2	contenttypes	0001_initial	2015-12-09 14:49:13.152427-08
+3	contenttypes	0002_remove_content_type_name	2015-12-09 14:49:13.167613-08
+4	auth	0001_initial	2015-12-09 14:49:13.211383-08
+5	auth	0002_alter_permission_name_max_length	2015-12-09 14:49:13.222646-08
+6	auth	0003_alter_user_email_max_length	2015-12-09 14:49:13.233086-08
+7	auth	0004_alter_user_username_opts	2015-12-09 14:49:13.244196-08
+8	auth	0005_alter_user_last_login_null	2015-12-09 14:49:13.254849-08
+9	auth	0006_require_contenttypes_0002	2015-12-09 14:49:13.256599-08
+10	tlocation	0001_initial	2015-12-09 14:49:15.215705-08
 \.
 
 
@@ -678,11 +678,11 @@ ALTER TABLE ONLY auth_permission
 
 
 --
--- Name: django_content_type_app_label_63a1d87a66eaaa31_uniq; Type: CONSTRAINT; Schema: public; Owner: bsdev; Tablespace: 
+-- Name: django_content_type_app_label_5f202c2da6416552_uniq; Type: CONSTRAINT; Schema: public; Owner: bsdev; Tablespace: 
 --
 
 ALTER TABLE ONLY django_content_type
-    ADD CONSTRAINT django_content_type_app_label_63a1d87a66eaaa31_uniq UNIQUE (app_label, model);
+    ADD CONSTRAINT django_content_type_app_label_5f202c2da6416552_uniq UNIQUE (app_label, model);
 
 
 --
@@ -718,10 +718,10 @@ ALTER TABLE ONLY tlocation_location
 
 
 --
--- Name: auth_group_name_37ced14d4902cd1e_like; Type: INDEX; Schema: public; Owner: bsdev; Tablespace: 
+-- Name: auth_group_name_5a2cc3c12841bef1_like; Type: INDEX; Schema: public; Owner: bsdev; Tablespace: 
 --
 
-CREATE INDEX auth_group_name_37ced14d4902cd1e_like ON auth_group USING btree (name varchar_pattern_ops);
+CREATE INDEX auth_group_name_5a2cc3c12841bef1_like ON auth_group USING btree (name varchar_pattern_ops);
 
 
 --
@@ -746,27 +746,27 @@ CREATE INDEX auth_permission_417f1b1c ON auth_permission USING btree (content_ty
 
 
 --
--- Name: auth_content_type_id_18a7d324c8e7b27c_fk_django_content_type_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
+-- Name: auth_content_type_id_158878713117ffef_fk_django_content_type_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
 --
 
 ALTER TABLE ONLY auth_permission
-    ADD CONSTRAINT auth_content_type_id_18a7d324c8e7b27c_fk_django_content_type_id FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT auth_content_type_id_158878713117ffef_fk_django_content_type_id FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
--- Name: auth_group_permissio_group_id_72228d52f3fa09be_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
---
-
-ALTER TABLE ONLY auth_group_permissions
-    ADD CONSTRAINT auth_group_permissio_group_id_72228d52f3fa09be_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_group_permission_id_3e17e9cfb3e1a9f5_fk_auth_permission_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
+-- Name: auth_group_permissio_group_id_3fede206560262ce_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
 --
 
 ALTER TABLE ONLY auth_group_permissions
-    ADD CONSTRAINT auth_group_permission_id_3e17e9cfb3e1a9f5_fk_auth_permission_id FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT auth_group_permissio_group_id_3fede206560262ce_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permission_id_7d2d6bb990e4f7ed_fk_auth_permission_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
+--
+
+ALTER TABLE ONLY auth_group_permissions
+    ADD CONSTRAINT auth_group_permission_id_7d2d6bb990e4f7ed_fk_auth_permission_id FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

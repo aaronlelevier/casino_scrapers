@@ -17,3 +17,7 @@ printf "\n MIGRATE 'transforms' DATABASE SPECIFIC APPS \n\n"
 printf "\n OUTPUT MIGRATED TABLES \n\n"
 wait
 psql -d transforms -c "\dt"
+
+printf "\n DUMP DATABASE FILE - SO IT CAN BE LOADED ON JENKINS \n\n"
+wait
+pg_dump -U bsdev transforms > utils_transform/transforms.sql
