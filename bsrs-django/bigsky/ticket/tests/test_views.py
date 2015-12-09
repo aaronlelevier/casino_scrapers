@@ -683,21 +683,6 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['added'][0]['file'], str(attachment.file))
         self.assertEqual(data['results'][0]['content']['added'][0]['image_thumbnail'], str(attachment.image_thumbnail))
 
-    # COMMENT OUT: test not needed until the removing of Attachments is further defined
-    # def test_attachment_remove(self):
-    #     attachment = create_attachments(ticket=self.ticket)
-    #     ticket_activity = create_ticket_activity(ticket=self.ticket, type='attachment_remove',
-    #         content={'0': str(attachment.id)})
-
-    #     response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertEqual(data['count'], 1)
-    #     self.assertEqual(len(data['results'][0]['content']), 1)
-    #     self.assertEqual(data['results'][0]['content']['removed'][0]['id'], str(attachment.id))
-    #     self.assertEqual(data['results'][0]['content']['removed'][0]['filename'], attachment.filename)
-    #     self.assertNotIn('file', data['results'][0]['content']['removed'][0])
-
 
 class TicketAndTicketActivityTests(APITransactionTestCase):
 
