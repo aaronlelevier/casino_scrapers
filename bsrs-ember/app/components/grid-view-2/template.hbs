@@ -34,7 +34,7 @@
                         <h1 class="col-md-8">
                             <span class="t-grid-title">{{grid_title}}</span>
                             {{#if (filters-applied sort find search)}}
-                            <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>Reset all options</span>
+                            <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>{{t grid.reset_all_options}}</span>
                             {{/if}}
                             {{#unless model.isLoaded}}
                             {{grid-loading-graphic}}

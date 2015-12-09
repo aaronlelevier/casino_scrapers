@@ -184,11 +184,13 @@ en,ticket.priority.high,High,,"'ticket.priority.high':'High',",High
 en,ticket.priority.emergency,Emergency,,"'ticket.priority.emergency':'Emergency',",Emergency
 en,ticket.status.new,New,,"'ticket.status.new':'New',",New
 en,ticket.status.problem_solved,Problem Solved,,"'ticket.status.problem_solved':'Problem Solved',",Problem Solved
-en,ticket.status.complete,Complete,,"'ticket.status.complete':'Complete',",Complete
+en,ticket.status.completed,Complete,,"'ticket.status.completed':'Complete',",Complete
 en,ticket.status.draft,Draft,,"'ticket.status.draft':'Draft',",Draft
 en,ticket.status.deferred,Deferred,,"'ticket.status.deferred':'Deferred',",Deferred
+en,ticket.status.closed,Closed,,"'ticket.status.closed':'Closed',",Closed
 en,ticket.status.denied,Denied,,"'ticket.status.denied':'Denied',",Denied
 en,ticket.status.in_progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress
 en,upload.progress,Progress,,"'upload.progress':'Progress',",Progress
-,admin.third_party.label.name,Name,,,
-,admin.third_party.label.number,Number,,,
+en,admin.third_party.label.name,Name,,"'admin.third_party.label.name':'Name',",Name
+en,admin.third_party.label.number,Number,,"'admin.third_party.label.number':'Number',",Number
+en,grid.reset_all_options,Reset All Options,,"'grid.reset_all_options':'Reset All Options',",Reset All Options
