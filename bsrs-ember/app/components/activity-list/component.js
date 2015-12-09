@@ -10,5 +10,32 @@ export default Ember.Component.extend({
             return 1;
         }
         return 0;
-    })
+    }),
+    actions: {
+        filter(filterType, event){
+            Ember.$('.activity-list-tabs li').removeClass('active');
+            Ember.$(event.target).addClass('active');
+            Ember.$('.activity-list-item').each(function(i, elem){
+                switch(filterType){
+                    case 'comments':
+                        if(Ember.$(elem).hasClass('activity-comment')){
+                            Ember.$(elem).removeClass('hide');
+                        }else{
+                            Ember.$(elem).addClass('hide');
+                        }
+                    break;
+                    case 'status_updates':
+                        if(Ember.$(elem).hasClass('activity-status')){
+                            Ember.$(elem).removeClass('hide');
+                        }else{
+                            Ember.$(elem).addClass('hide');
+                        }
+                    break;
+                    default:
+                        Ember.$(elem).removeClass('hide');
+                    break;
+                }
+            });
+        }
+    }
 });
