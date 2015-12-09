@@ -70,7 +70,7 @@ Then, to **test**, run `bash build_project.sh`.  This will do the same fixture u
 
 
 #### Import Fixtures Notes
-
+##### TRANSLATION
 1. Output "en" document on [Google Drive](https://drive.google.com/drive/folders/0B7dl5Hhfqk0NfkZWUndwVEFzR2RhTUNPRnFRcVA1UVNWTEUxUEFyaU5ZSVpFeHBFMUZBeTg)
 2. export to CSV and put in the file in `bsrs/bsrs-django/bigsky/source/translation` folder
 3. ipython notebook or shell_plus and execute:
@@ -87,3 +87,10 @@ bash commands
 rm -rf translation.json
 ./manage.py dumpdata translation --indent=2 > fixtures/translation.json
 ```
+
+##### LOCATION
+1. Open repopulate_jenkins_json.sh and comment out loaddata of fixtures/location.json
+2. run bash repopulate_jenkins_json.sh
+3. ./manage.py dumpdata translation --indent=2 > fixtures/watt.json
+4. Remove location.states and copy into location.State.json
+5. uncomment out loaddata of fixtures/location.json and run bash repopulate_jenkins_json.sh
