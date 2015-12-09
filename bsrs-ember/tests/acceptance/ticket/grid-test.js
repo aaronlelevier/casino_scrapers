@@ -49,10 +49,10 @@ test('initial load should only show first 10 records ordered by id with correct 
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
-        //assert.equal(find('.t-grid-title').text(), 'Tickets');
+        assert.equal(find('.t-grid-title').text(), 'Tickets');
         assert.equal(find('.t-grid-data').length, 10);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority').text(), TD.priorityOne);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-name').text(), TD.priorityOne);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -159,8 +159,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL + '?sort=priority.name');
         assert.equal(find('.t-grid-data').length, 10);
-        //TODO: update this to get diff result on sort
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOtherGrid);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
@@ -639,7 +638,7 @@ test('status.name is a functional related filter', function(assert) {
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusOneKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusOneKey));
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     fillIn('.t-grid-search-input', 'rr');
@@ -647,14 +646,14 @@ test('status.name is a functional related filter', function(assert) {
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=rr');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusTwoKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusTwoKey));
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusOneKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusOneKey));
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data').length, 10);
     });
@@ -662,21 +661,21 @@ test('status.name is a functional related filter', function(assert) {
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=&sort=status.name');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusTwoKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusTwoKey));
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'ape12');
     });
     click(SORT_STATUS_DIR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=&sort=-status.name');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusOneKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusOneKey));
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOtherGrid);
     });
     filterGrid('status.name', 'rr');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=status.name%3Arr&search=&sort=-status.name');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), TD.statusTwoKey);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusTwoKey));
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
 });
