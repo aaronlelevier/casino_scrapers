@@ -1,3 +1,6 @@
+import Ember from 'ember';
+
+
 var set_filter_model_attrs = function(filterModel, query) {
     let columns = query ? query.split(',') : [];
     columns.forEach((pair) => {

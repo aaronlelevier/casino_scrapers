@@ -3,9 +3,10 @@ import { test } from 'qunit';
 import module from 'bsrs-ember/tests/helpers/module';
 import startApp from 'bsrs-ember/tests/helpers/start-app';
 import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
-import LOCATION_FIXTURES from 'bsrs-ember/vendor/location_fixtures';
-import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import LF from 'bsrs-ember/vendor/location_fixtures';
+import LD from 'bsrs-ember/vendor/defaults/location';
+import LDS from 'bsrs-ember/vendor/defaults/location-status';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import config from 'bsrs-ember/config/environment';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
@@ -20,7 +21,10 @@ const LOCATION_URL = BASE_URL + '/index';
 const DJANGO_LOCATION_URL = '/admin/locations/';
 const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
+const LETTER_R = {keyCode: 82};
+const LETTER_C = {keyCode: 67};
 const BACKSPACE = {keyCode: 8};
+const SORT_STATUS_DIR = '.t-sort-status-name-dir';
 
 var application, store, endpoint, list_xhr, original_uuid;
 
@@ -29,7 +33,7 @@ module('Acceptance | location-grid-list', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/?page=1';
-        list_xhr = xhr(endpoint ,"GET",null,{},200,LOCATION_FIXTURES.list());
+        list_xhr = xhr(endpoint ,"GET",null,{},200,LF.list());
         original_uuid = random.uuid;
     },
     afterEach() {
@@ -44,10 +48,10 @@ test('initial load should only show first 10 records ordered by id with correct 
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-title').text(), 'Locations');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-number').text(), LOCATION_DEFAULTS.storeNumber + '1');
-        // assert.equal(find('.t-grid-data:eq(0) .t-location-status').text(), LOCATION_DEFAULTS.status);//put back once get grid v2 out
-        assert.equal(find('.t-grid-data:eq(0) .t-location-location_level').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-number').text(), LD.storeNumber + '1');
+        // assert.equal(find('.t-grid-data:eq(0) .t-location-status').text(), LD.status);//put back once get grid v2 out
+        assert.equal(find('.t-grid-data:eq(0) .t-location-location_level').text(), LLD.nameCompany);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -59,7 +63,7 @@ test('initial load should only show first 10 records ordered by id with correct 
 
 test('clicking page 2 will load in another set of data as well as clicking page 1 after that reloads the original set of data (both require an additional xhr)', function(assert) {
     var page_two = PREFIX + BASE_URL + '/?page=2';
-    xhr(page_two ,"GET",null,{},200,LOCATION_FIXTURES.list_two());
+    xhr(page_two ,"GET",null,{},200,LF.list_two());
     visit(LOCATION_URL);
     click('.t-page:eq(1) a');
     andThen(() => {
@@ -77,7 +81,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -89,7 +93,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
 
 test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
     var page_two = PREFIX + BASE_URL + '/?page=2';
-    xhr(page_two ,"GET",null,{},200,LOCATION_FIXTURES.list_two());
+    xhr(page_two ,"GET",null,{},200,LF.list_two());
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
@@ -139,22 +143,22 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
 
 test('clicking header will sort by given property and reset page to 1 (also requires an additional xhr)', function(assert) {
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=number,name';
-    xhr(sort_two ,"GET",null,{},200,LOCATION_FIXTURES.sorted('number,name'));
+    xhr(sort_two ,"GET",null,{},200,LF.sorted('number,name'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=name';
-    xhr(page_two ,"GET",null,{},200,LOCATION_FIXTURES.sorted('name'));
+    xhr(page_two ,"GET",null,{},200,LF.sorted('name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,LOCATION_FIXTURES.sorted('name'));
+    xhr(sort_one ,"GET",null,{},200,LF.sorted('name'));
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
@@ -166,26 +170,26 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?sort=number%2Cname');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
 });
 
 test('typing a search will reset page to 1 and require an additional xhr and reset will clear any query params', function(assert) {
     var search_two = PREFIX + BASE_URL + '/?page=1&ordering=number&search=14';
-    xhr(search_two ,"GET",null,{},200,LOCATION_FIXTURES.searched('14', 'number'));
+    xhr(search_two ,"GET",null,{},200,LF.searched('14', 'number'));
     var page_two = PREFIX + BASE_URL + '/?page=2&ordering=number';
-    xhr(page_two ,"GET",null,{},200,LOCATION_FIXTURES.searched('', 'number', 2));
+    xhr(page_two ,"GET",null,{},200,LF.searched('', 'number', 2));
     var page_one = PREFIX + BASE_URL + '/?page=1&ordering=number';
-    xhr(page_one ,"GET",null,{},200,LOCATION_FIXTURES.searched('', 'number'));
+    xhr(page_one ,"GET",null,{},200,LF.searched('', 'number'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=number&search=4';
-    xhr(sort_one ,"GET",null,{},200,LOCATION_FIXTURES.searched('4', 'number'));
+    xhr(sort_one ,"GET",null,{},200,LF.searched('4', 'number'));
     var search_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(search_one ,"GET",null,{},200,LOCATION_FIXTURES.searched('4', 'id'));
+    xhr(search_one ,"GET",null,{},200,LF.searched('4', 'id'));
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
@@ -207,7 +211,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=&sort=number');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
@@ -227,51 +231,51 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
 });
 
 test('multiple sort options appear in the query string as expected', function(assert) {
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=number,name';
-    xhr(sort_two ,"GET",null,{},200,LOCATION_FIXTURES.sorted('number,name'));
+    xhr(sort_two ,"GET",null,{},200,LF.sorted('number,name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,LOCATION_FIXTURES.sorted('name'));
+    xhr(sort_one ,"GET",null,{},200,LF.sorted('name'));
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?sort=name');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
     click('.t-sort-number-dir');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?sort=number%2Cname');
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
 });
 
 test('clicking the same sort option over and over will flip the direction and reset will remove any sort query param', function(assert) {
     var sort_four = PREFIX + BASE_URL + '/?page=1&ordering=name,number';
-    xhr(sort_four ,"GET",null,{},200,LOCATION_FIXTURES.sorted('name,number'));
+    xhr(sort_four ,"GET",null,{},200,LF.sorted('name,number'));
     var sort_three = PREFIX + BASE_URL + '/?page=1&ordering=-name,number';
-    xhr(sort_three ,"GET",null,{},200,LOCATION_FIXTURES.sorted('-name,number'));
+    xhr(sort_three ,"GET",null,{},200,LF.sorted('-name,number'));
     var sort_two = PREFIX + BASE_URL + '/?page=1&ordering=number,name';
-    xhr(sort_two ,"GET",null,{},200,LOCATION_FIXTURES.sorted('number,name'));
+    xhr(sort_two ,"GET",null,{},200,LF.sorted('number,name'));
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,LOCATION_FIXTURES.sorted('name'));
+    xhr(sort_one ,"GET",null,{},200,LF.sorted('name'));
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort'));
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
         assert.equal(find('.t-reset-grid').length, 0);
     });
     click('.t-sort-name-dir');
@@ -280,7 +284,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
     click('.t-sort-number-dir');
     andThen(() => {
@@ -288,7 +292,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
     click('.t-sort-name-dir');
     andThen(() => {
@@ -304,26 +308,26 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, 10);
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
 });
 
 test('full text search will filter down the result set and query django accordingly and reset clears all full text searches', function(assert) {
     let find_two = PREFIX + BASE_URL + '/?page=1&number__icontains=num&name__icontains=7';
-    xhr(find_two ,"GET",null,{},200,LOCATION_FIXTURES.sorted('number:num,name:7'));
+    xhr(find_two ,"GET",null,{},200,LF.sorted('number:num,name:7'));
     let find_one = PREFIX + BASE_URL + '/?page=1&number__icontains=num';
-    xhr(find_one ,"GET",null,{},200,LOCATION_FIXTURES.fulltext('number:num', 1));
+    xhr(find_one ,"GET",null,{},200,LF.fulltext('number:num', 1));
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
     filterGrid('number', 'num');
     andThen(() => {
@@ -341,13 +345,13 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, 10);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LOCATION_DEFAULTS.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
     });
 });
 
 test('loading screen shown before any xhr and hidden after', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,"GET",null,{},200,LOCATION_FIXTURES.sorted('name'));
+    xhr(sort_one ,"GET",null,{},200,LF.sorted('name'));
     visitSync(LOCATION_URL);
     Ember.run.later(function() {
         assert.equal(find('.t-grid-data').length, 0);
@@ -381,11 +385,11 @@ test('when a full text filter is selected the input inside the modal is focused'
 
 test('full text searched columns will have a special on css class when active', function(assert) {
     let find_three = PREFIX + BASE_URL + '/?page=1&number__icontains=&name__icontains=7';
-    xhr(find_three ,"GET",null,{},200,LOCATION_FIXTURES.sorted('name:7'));
+    xhr(find_three ,"GET",null,{},200,LF.sorted('name:7'));
     let find_two = PREFIX + BASE_URL + '/?page=1&number__icontains=num&name__icontains=7';
-    xhr(find_two ,"GET",null,{},200,LOCATION_FIXTURES.sorted('number:num,name:7'));
+    xhr(find_two ,"GET",null,{},200,LF.sorted('number:num,name:7'));
     let find_one = PREFIX + BASE_URL + '/?page=1&number__icontains=num';
-    xhr(find_one ,"GET",null,{},200,LOCATION_FIXTURES.fulltext('number:num', 1));
+    xhr(find_one ,"GET",null,{},200,LF.fulltext('number:num', 1));
     visit(LOCATION_URL);
     andThen(() => {
         assert.ok(!find('.t-filter-name').hasClass('on'));
@@ -410,11 +414,11 @@ test('full text searched columns will have a special on css class when active', 
 
 test('after you reset the grid the filter model will also be reset', function(assert) {
     let option_three = PREFIX + BASE_URL + '/?page=1&ordering=name&search=4&name__icontains=4';
-    xhr(option_three ,'GET',null,{},200,LOCATION_FIXTURES.sorted('name:4'));
+    xhr(option_three ,'GET',null,{},200,LF.sorted('name:4'));
     let option_two = PREFIX + BASE_URL + '/?page=1&ordering=name&search=4';
-    xhr(option_two ,'GET',null,{},200,LOCATION_FIXTURES.sorted('name:4'));
+    xhr(option_two ,'GET',null,{},200,LF.sorted('name:4'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(option_one ,'GET',null,{},200,LOCATION_FIXTURES.searched('4', 'id'));
+    xhr(option_one ,'GET',null,{},200,LF.searched('4', 'id'));
     visit(LOCATION_URL);
     fillIn('.t-grid-search-input', '4');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
@@ -442,7 +446,7 @@ test('after you reset the grid the filter model will also be reset', function(as
 
 test('count is shown and updated as the user filters down the list from django', function(assert) {
     let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(option_one ,'GET',null,{},200,LOCATION_FIXTURES.searched('4', 'id'));
+    xhr(option_one ,'GET',null,{},200,LF.searched('4', 'id'));
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(find('.t-grid-data').length, 10);
@@ -466,11 +470,11 @@ test('count is shown and updated as the user filters down the list from django',
 
 test('picking a different number of pages will alter the query string and xhr', function(assert) {
     let option_two = PREFIX + BASE_URL + '/?page=1&page_size=10';
-    xhr(option_two, 'GET',null,{},200,LOCATION_FIXTURES.paginated(10));
+    xhr(option_two, 'GET',null,{},200,LF.paginated(10));
     let option_one = PREFIX + BASE_URL + '/?page=1&page_size=25';
-    xhr(option_one, 'GET',null,{},200,LOCATION_FIXTURES.paginated(25));
+    xhr(option_one, 'GET',null,{},200,LF.paginated(25));
     let page_two = PREFIX + BASE_URL + '/?page=2';
-    xhr(page_two, 'GET',null,{},200,LOCATION_FIXTURES.list_two());
+    xhr(page_two, 'GET',null,{},200,LF.list_two());
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
@@ -521,7 +525,7 @@ test('picking a different number of pages will alter the query string and xhr', 
 test('starting with a page size greater than 10 will set the selected', function(assert) {
     clearxhr(list_xhr);
     let option_one = PREFIX + BASE_URL + '/?page=1&page_size=25';
-    xhr(option_one, 'GET',null,{},200,LOCATION_FIXTURES.paginated(25));
+    xhr(option_one, 'GET',null,{},200,LF.paginated(25));
     visit(LOCATION_URL + '?page_size=25');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?page_size=25');
@@ -536,7 +540,7 @@ test('starting with a page size greater than 10 will set the selected', function
 
 test('when a save filterset modal is selected the input inside the modal is focused', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,LOCATION_FIXTURES.sorted('name'));
+    xhr(sort_one ,'GET',null,{},200,LF.sorted('name'));
     visit(LOCATION_URL);
     click('.t-sort-name-dir');
     click('.t-show-save-filterset-modal');
@@ -552,7 +556,7 @@ test('when a save filterset modal is selected the input inside the modal is focu
 test('save filterset will fire off xhr and add item to the sidebar navigation', function(assert) {
     random.uuid = function() { return UUID.value; };
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,LOCATION_FIXTURES.sorted('name'));
+    xhr(sort_one ,'GET',null,{},200,LF.sorted('name'));
     let name = 'foobar';
     let routePath = 'admin.locations.index';
     let url = window.location.toString();
@@ -600,7 +604,7 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
 
 test('save filterset button only available when a dynamic filter is present', function(assert) {
     var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=name';
-    xhr(sort_one ,'GET',null,{},200,LOCATION_FIXTURES.sorted('name'));
+    xhr(sort_one ,'GET',null,{},200,LF.sorted('name'));
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(find('.t-show-save-filterset-modal').length, 0);
@@ -608,5 +612,54 @@ test('save filterset button only available when a dynamic filter is present', fu
     click('.t-sort-name-dir');
     andThen(() => {
         assert.equal(find('.t-show-save-filterset-modal').length, 1);
+    });
+});
+
+test('status.name is a functional related filter for locations', function(assert) {
+    let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name&status__name__icontains=cl';
+    xhr(option_four,'GET',null,{},200,LF.searched_related(LD.statusTwoId, 'status'));
+    let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name';
+    xhr(option_three,'GET',null,{},200,LF.searched_related(LD.statusTwoId, 'status'));
+    let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=status__name';
+    xhr(option_two,'GET',null,{},200,LF.searched_related(LD.statusTwoId, 'status'));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=cl';
+    xhr(option_one,'GET',null,{},200,LF.searched_related(LDS.closedId, 'status'));
+    visit(LOCATION_URL);
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.openName));
+    });
+    fillIn('.t-grid-search-input', 'cl');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_C);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?search=cl');
+        assert.equal(find('.t-grid-data').length, 9);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.closedName));
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?search=');
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.openName));
+        assert.equal(find('.t-grid-data').length, 10);
+    });
+    click(SORT_STATUS_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?search=&sort=status.name');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.closedName));
+    });
+    click(SORT_STATUS_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?search=&sort=-status.name');
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.openName));
+    });
+    filterGrid('status.name', 'cl');
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL + '?find=status.name%3Acl&search=&sort=-status.name');
+        assert.equal(find('.t-grid-data').length, 9);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.closedName));
     });
 });

@@ -60,7 +60,7 @@ en,admin.location.label.general,General,,"'admin.location.label.general':'Genera
 en,admin.location.label.location_level,Organization,,"'admin.location.label.location_level':'Organization',",Organization
 en,admin.location.label.name,Name,,"'admin.location.label.name':'Name',",Name
 en,admin.location.label.number,Number,,"'admin.location.label.number':'Number',",Number
-en,admin.location.label.status,Status,,"'admin.location.label.status':'Status',",Status
+en,admin.location.label.status-name,Status,,"'admin.location.label.status-name':'Status',",Status
 en,admin.location.one,Location,,"'admin.location.one':'Location',",Location
 en,admin.location.other,Locations,,"'admin.location.other':'Locations',",Locations
 en,admin.location.status.closed,Closed,,"'admin.location.status.closed':'Closed',",Closed
@@ -97,7 +97,7 @@ en,admin.person.label.location,Location,,"'admin.person.label.location':'Locatio
 en,admin.person.label.password,Password,,"'admin.person.label.password':'Password',",Password
 en,admin.person.label.phone_number.one,Phone Number,,"'admin.person.label.phone_number.one':'Phone Number',",Phone Number
 en,admin.person.label.phone_number.other,Phone Numbers,,"'admin.person.label.phone_number.other':'Phone Numbers',",Phone Numbers
-en,admin.person.label.role,Role,,"'admin.person.label.role':'Role',",Role
+en,admin.person.label.role-name,Role,,"'admin.person.label.role-name':'Role',",Role
 en,admin.person.label.status,Status,,"'admin.person.label.status':'Status',",Status
 en,admin.person.label.title,Title,,"'admin.person.label.title':'Title',",Title
 en,admin.person.label.username,Username,,"'admin.person.label.username':'Username',",Username
@@ -169,12 +169,14 @@ en,validation.valid,Valid,,"'validation.valid':'Valid',",Valid
 en,welcome,Hello,,"'welcome':'Hello',",Hello
 en,ticket.one,Ticket,,"'ticket.one':'Ticket',",Ticket
 en,ticket.other,Tickets,,"'ticket.other':'Tickets',",Tickets
+en,ticket.label.number,Ticket Number,,"'ticket.label.number':'Ticket Number',",Ticket Number
 en,ticket.label.request,Request,,"'ticket.label.request':'Request',",Request
-en,ticket.label.priority,Priority,,"'ticket.label.priority':'Priority',",Priority
-en,ticket.label.status,Status,,"'ticket.label.status':'Status',",Status
-en,ticket.label.location,Location,,"'ticket.label.location':'Location',",Location
+en,ticket.label.priority-name,Priority,,"'ticket.label.priority-name':'Priority',",Priority
+en,ticket.label.status-name,Status,,"'ticket.label.status-name':'Status',",Status
+en,ticket.label.location-name,Location,,"'ticket.label.location-name':'Location',",Location
 en,ticket.label.cc,CC,,"'ticket.label.cc':'CC',",CC
-en,ticket.label.assignee,Assignee,,"'ticket.label.assignee':'Assignee',",Assignee
+en,ticket.label.category-name,Category,,"'ticket.label.category-name':'Category',",Category
+en,ticket.label.assignee-fullname,Assignee,,"'ticket.label.assignee-fullname':'Assignee',",Assignee
 en,ticket.label.requester,Requester,,"'ticket.label.requester':'Requester',",Requester
 en,ticket.priority.low,Low,,"'ticket.priority.low':'Low',",Low
 en,ticket.priority.medium,Medium,,"'ticket.priority.medium':'Medium',",Medium

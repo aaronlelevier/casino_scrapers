@@ -1,7 +1,8 @@
 var BSRS_LOCATION_FACTORY = (function() {
-    var factory = function(location_defaults, location_level_defaults, location_level_fixtures) {
+    var factory = function(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures) {
         this.location_defaults = location_defaults;
         this.location_level_defaults = location_level_defaults;
+        this.location_status_defaults = location_status_defaults;
         this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
     };
     factory.prototype.get = function(i, name) {
@@ -37,6 +38,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             var location = this.generate(uuid);
             location.name = location.name + i;
             location.number = location.number + i;
+            location.status = this.location_status_defaults.openId;
             response.push(location);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component
@@ -52,6 +54,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             var location = this.generate(uuid + i);
             location.name = 'vzoname' + i;
             location.number = 'sconumber' + i;
+            location.status = this.location_status_defaults.closedId;
             response.push(location);
         }
         return {'count':19,'next':null,'previous':null,'results': response};
@@ -89,15 +92,16 @@ if (typeof window === 'undefined') {
     var objectAssign = require('object-assign');
     var mixin = require('../vendor/mixin');
     var location_defaults = require('../vendor/defaults/location');
+    var location_status_defaults = require('../vendor/defaults/location-status');
     var location_level_fixtures = require('../vendor/location_level_fixtures');
     var location_level_defaults = require('../vendor/defaults/location-level');
     objectAssign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults, location_level_fixtures);
+    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures);
 } else {
-    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin'], function (exports, location_defaults, location_level_defaults, location_level_fixtures, mixin) {
+    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin'], function (exports, location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, mixin) {
         'use strict';
         Object.assign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_LOCATION_FACTORY(location_defaults, location_level_defaults, location_level_fixtures);
+        var Factory = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures);
         return {default: Factory};
     });
 }
