@@ -14,18 +14,35 @@ THIRD_PARTY_APPS = (
     'debug_toolbar',
     )
 
-INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
+# Data tranformation apps (from Domino -> to -> PostgreSQL)
+# Docs: https://docs.djangoproject.com/en/1.8/topics/db/multi-db/
+
+DATA_TRANSFORM_APPS = (
+    'utils_transform.tlocation',
+    )
+
+INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS + DATA_TRANSFORM_APPS
 
 MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     )
 
+DATABASE_ROUTERS = ['bigsky.db_router.TransformRouter', 'bigsky.db_router.DefaultRouter']
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('BSRS_DB_LOCAL_NAME', 'ci'),
-        'USER': os.environ.get('BSRS_DB_LOCAL_USER', 'bsdev'),
-        'PASSWORD': os.environ.get('BSRS_DB_LOCAL_NAME', 'tango'),
+        'NAME': 'ci',
+        'USER': 'bsdev',
+        'PASSWORD': 'tango',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    },
+    'transforms': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'transforms',
+        'USER': 'bsdev',
+        'PASSWORD': 'tango',
         'HOST': 'localhost',
         'PORT': '5432',
     }

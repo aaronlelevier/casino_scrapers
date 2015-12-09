@@ -1,5 +1,6 @@
 import json
 import uuid
+import datetime
 
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
@@ -57,6 +58,7 @@ class TicketListTests(APITestCase):
         self.assertEqual(ticket['requester'], str(self.ticket.requester.id))
         self.assertEqual(ticket['request'], self.ticket.request)
         self.assertEqual(ticket['number'], self.ticket.number)
+        self.assertEqual(self.ticket.created.strftime('%m/%d/%Y'), datetime.datetime.strptime(str(ticket['created']), '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y'))
 
     def test_data_location(self):
         response = self.client.get('/api/tickets/')
@@ -135,6 +137,7 @@ class TicketDetailTests(APITestCase):
             list(self.ticket.attachments.values_list('id', flat=True)))
         self.assertEqual(data['request'], self.ticket.request)
         self.assertEqual(data['number'], self.ticket.number)
+        self.assertEqual(self.ticket.created.strftime('%m/%d/%Y'), datetime.datetime.strptime(str(data['created']), '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y'))
 
     def test_location(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))

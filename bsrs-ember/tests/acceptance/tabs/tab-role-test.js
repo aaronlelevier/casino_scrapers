@@ -299,11 +299,12 @@ test('closing a document should close it\'s related tab', (assert) => {
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
-        click('.t-cancel-btn:eq(0)');
-        andThen(() => {
-            assert.equal(currentURL(), ROLE_URL);
-            assert.equal(tabs.get('length'), 0);
-        });
+    });
+    click('.t-cancel-btn:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 0);
     });
 });
 

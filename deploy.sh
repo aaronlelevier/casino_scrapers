@@ -2,6 +2,11 @@
 
 echo "DEPLOY DEPLOY STARTED!"
 
+wait
+echo "UWSGI - START/RELOAD"
+sudo kill -INT `cat /var/run/nginx-deploy.pid`
+sleep 15s
+
 
 echo "CONFIG - SET SCRIPT CONFIGURATION"
 export DJANGO_SETTINGS_MODULE='bigsky.settings.deploy'
@@ -125,9 +130,6 @@ echo "RELOAD SERVER SCRIPTS"
 
 cd ../../builds/deploy/
 
-wait
-echo "UWSGI - START/RELOAD"
-sudo kill -INT `cat /var/run/nginx-deploy.pid`
 wait
 sudo /usr/local/lib/deploy/uwsgi/uwsgi --ini uwsgi.ini
 TEST=$?; if [ "$TEST" == 1 ]; then echo "uwsgi failed"; exit $TEST; fi
