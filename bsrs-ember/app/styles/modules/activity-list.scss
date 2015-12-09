@@ -32,6 +32,7 @@
             }
         }
     }
+    .activity-spacer,
     .activity-list-item{
         border: $borderStyle;
         border-width: 0 0 0 1px;
@@ -58,12 +59,6 @@
         }
         .activity-timestamp {
             color: $medGray;
-        }
-        &:first-child{
-            padding-top: 40px;
-            .activity-icon{
-                top: 35px;
-            }
         }
         &:last-child{
             padding-bottom: 0;
@@ -133,11 +128,10 @@
                     }
                 }
             }
-            &:first-child{
-                .activity-icon{
-                    top: 40px;
-                }
-            }
         }
+    }
+    .activity-spacer{
+        padding-top: 20px;
+        padding-bottom: 0;
     }
 }
