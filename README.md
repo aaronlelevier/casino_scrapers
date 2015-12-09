@@ -94,3 +94,9 @@ rm -rf translation.json
 3. ./manage.py dumpdata translation --indent=2 > fixtures/watt.json
 4. Remove location.states and copy into location.State.json
 5. uncomment out loaddata of fixtures/location.json and run bash repopulate_jenkins_json.sh
+
+##### CATEGORY
+1. run bash repopulate_jenkins_json.sh
+2. go into shell_plus and do Category.objects.all().delete() and then run create_categories function
+3. ./manage.py dumpdata category --indent=2 > fixtures/watt.json
+4. Remove copy watt.json into category.json
