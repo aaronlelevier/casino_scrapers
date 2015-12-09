@@ -156,7 +156,9 @@ section.wrap{
         bottom: 0;
         top: 0;
         overflow: hidden;
-
+        &.full{
+            left: 0;
+        }
         header,
         footer{
             height: $documentHeaderHeight;
