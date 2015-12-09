@@ -81,7 +81,7 @@
 {
   "model": "location.locationstatus",
   "fields": {
-    "name": "Open",
+    "name": "admin.location.status.open",
     "modified": "2015-12-09T00:39:43.577Z",
     "created": "2015-12-09T00:39:43.577Z",
     "deleted": null
