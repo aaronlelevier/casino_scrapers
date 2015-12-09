@@ -1,4 +1,7 @@
 LOCALE,KEY,VALUE,CONTEXT,FIXUTURE,VALUE-UNDERSCORE
+en,activity.tabs.all_updates,All Updates,,"'activity.tabs.all_updates':'All Updates',",
+en,activity.tabs.comments,Comments,,"'activity.tabs.comments':'Comments',",
+en,activity.tabs.status_updates,Status Updates,,"'activity.tabs.status_updates':'Status Updates',",
 en,activity.ticket.assignee,changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}},,"'activity.ticket.assignee':'changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}',",changed the _type_var_ from $_from_var_ $to $_to_var_ $_timestamp_var_
 en,activity.ticket.attachment_add,uploaded ${{count}} files ${{timestamp}} ${{added}},,"'activity.ticket.attachment_add':'uploaded ${{count}} files ${{timestamp}} ${{added}}',",uploaded $_count_var_ files $_timestamp_var_ $_added_var_
 en,activity.ticket.attachment_remove,removed ${{count}} files ${{timestamp}} ${{removed}},,"'activity.ticket.attachment_remove':'removed ${{count}} files ${{timestamp}} ${{removed}}',",removed $_count_var_ files $_timestamp_var_ $_removed_var_
@@ -28,6 +31,7 @@ en,admin.approval.one,Approval,,"'admin.approval.one':'Approval',",Approval
 en,admin.approval.other,Approvals,,"'admin.approval.other':'Approvals',",Approvals
 en,admin.assignment.one,Assignment Profile,,"'admin.assignment.one':'Assignment Profile',",Assignment Profile
 en,admin.assignment.other,Assignment Profiles,,"'admin.assignment.other':'Assignment Profiles',",Assignment Profiles
+en,admin.category.label.children,Sub Categories,,"'admin.category.label.children':'Sub Categories',",Sub Categories
 en,admin.category.label.cost_amount,Cost Amount,,"'admin.category.label.cost_amount':'Cost Amount',",Cost Amount
 en,admin.category.label.cost_code,Cost Code,,"'admin.category.label.cost_code':'Cost Code',",Cost Code
 en,admin.category.label.cost_currency,Cost Currency,,"'admin.category.label.cost_currency':'Cost Currency',",Cost Currency
@@ -35,7 +39,6 @@ en,admin.category.label.description,Description,,"'admin.category.label.descript
 en,admin.category.label.general,General,,"'admin.category.label.general':'General',",General
 en,admin.category.label.label,Label,,"'admin.category.label.label':'Label',",Label
 en,admin.category.label.name,Name,,"'admin.category.label.name':'Name',",Name
-en,admin.category.label.children,Sub Categories,,"'admin.category.label.children':'Sub Categories',",Sub Categories
 en,admin.category.label.subcategory_label,Sub Category Label,,"'admin.category.label.subcategory_label':'Sub Category Label',",Sub Category Label
 en,admin.category.labelCat.issue,Issue,,"'admin.category.labelCat.issue':'Issue',",Issue
 en,admin.category.labelCat.trade,Trade,,"'admin.category.labelCat.trade':'Trade',",Trade
@@ -88,12 +91,12 @@ en,admin.person.label.credentials,Credentials,,"'admin.person.label.credentials'
 en,admin.person.label.email,Email,,"'admin.person.label.email':'Email',",Email
 en,admin.person.label.employee_id,Employee No.,,"'admin.person.label.employee_id':'Employee No.',",Employee No.
 en,admin.person.label.first_name,First Name,,"'admin.person.label.first_name':'First Name',",First Name
-en,admin.person.label.general,General,,"'admin.person.label.general':'General',",General
-en,admin.person.label.last_name,Last Name,,"'admin.person.label.last_name':'Last Name',",Last Name
-en,admin.person.label.middle_initial,Middle,,"'admin.person.label.middle_initial':'Middle',",Middle
 en,admin.person.label.fullname,Name,,"'admin.person.label.fullname':'Name',",Name
+en,admin.person.label.general,General,,"'admin.person.label.general':'General',",General
 en,admin.person.label.language,Language,,"'admin.person.label.language':'Language',",Language
+en,admin.person.label.last_name,Last Name,,"'admin.person.label.last_name':'Last Name',",Last Name
 en,admin.person.label.location,Location,,"'admin.person.label.location':'Location',",Location
+en,admin.person.label.middle_initial,Middle,,"'admin.person.label.middle_initial':'Middle',",Middle
 en,admin.person.label.password,Password,,"'admin.person.label.password':'Password',",Password
 en,admin.person.label.phone_number.one,Phone Number,,"'admin.person.label.phone_number.one':'Phone Number',",Phone Number
 en,admin.person.label.phone_number.other,Phone Numbers,,"'admin.person.label.phone_number.other':'Phone Numbers',",Phone Numbers
@@ -112,6 +115,9 @@ en,admin.phone.number,Phone Number,,"'admin.phone.number':'Phone Number',",Phone
 en,admin.phone.numbers,Phone Numbers,,"'admin.phone.numbers':'Phone Numbers',",Phone Numbers
 en,admin.phonenumbertype.mobile,Cell,,"'admin.phonenumbertype.mobile':'Cell',",Cell
 en,admin.phonenumbertype.office,Office,,"'admin.phonenumbertype.office':'Office',",Office
+en,admin.role.contractor,Contractor,,"'admin.role.contractor':'Contractor',",Contractor
+en,admin.role.coordinator,Coordinator,,"'admin.role.coordinator':'Coordinator',",Coordinator
+en,admin.role.district_manager,District Manager,,"'admin.role.district_manager':'District Manager',",District Manager
 en,admin.role.guest,Guest,,"'admin.role.guest':'Guest',",Guest
 en,admin.role.label.category,Category,,"'admin.role.label.category':'Category',",Category
 en,admin.role.label.general,General,,"'admin.role.label.general':'General',",General
@@ -121,22 +127,21 @@ en,admin.role.label.number_users,# of People,,"'admin.role.label.number_users':'
 en,admin.role.label.role_type,Role Type,,"'admin.role.label.role_type':'Role Type',",Role Type
 en,admin.role.one,Role,,"'admin.role.one':'Role',",Role
 en,admin.role.other,Roles,,"'admin.role.other':'Roles',",Roles
-en,admin.role.system_administrator,Administrator,,"'admin.role.system_administrator':'Administrator',",Administrator
-en,admin.role.district_manager,District Manager,,"'admin.role.district_manager':'District Manager',",District Manager
 en,admin.role.regional_manager,Reginal Manager,,"'admin.role.regional_manager':'Reginal Manager',",Reginal Manager
 en,admin.role.store_manager,Store Manager,,"'admin.role.store_manager':'Store Manager',",Store Manager
-en,admin.role.coordinator,Coordinator,,"'admin.role.coordinator':'Coordinator',",Coordinator
-en,admin.role.contractor,Contractor,,"'admin.role.contractor':'Contractor',",Contractor
+en,admin.role.system_administrator,Administrator,,"'admin.role.system_administrator':'Administrator',",Administrator
 en,admin.setting.one,Setting,,"'admin.setting.one':'Setting',",Setting
 en,admin.setting.other,Settings,,"'admin.setting.other':'Settings',",Settings
 en,admin.template.one,Template,,"'admin.template.one':'Template',",Template
 en,admin.template.other,Templates,,"'admin.template.other':'Templates',",Templates
+en,admin.third_party.label.name,Name,,"'admin.third_party.label.name':'Name',",Name
+en,admin.third_party.label.number,Number,,"'admin.third_party.label.number':'Number',",Number
 en,admin.title,Admin,,"'admin.title':'Admin',",Admin
-en,admin.translation.one,Translation,,"'admin.translation.one':'Translation',",Translation
-en,admin.translation.other,Translations,,"'admin.translation.other':'Translations',",Translations
+en,admin.translation.label.helper,Helper,,"'admin.translation.label.helper':'Helper',",Helper
 en,admin.translation.label.key,Key,,"'admin.translation.label.key':'Key',",Key
 en,admin.translation.label.translation,Translation,,"'admin.translation.label.translation':'Translation',",Translation
-en,admin.translation.label.helper,Helper,,"'admin.translation.label.helper':'Helper',",Helper
+en,admin.translation.one,Translation,,"'admin.translation.one':'Translation',",Translation
+en,admin.translation.other,Translations,,"'admin.translation.other':'Translations',",Translations
 en,button.add,Add new {{model}},,"'button.add':'Add new {{model}}',",Add new _model_var_
 en,button.upload,Attach file,,"'button.upload':'Attach file',",Attach file
 en,crud.cancel.button,Cancel,,"'crud.cancel.button':'Cancel',",Cancel
@@ -154,6 +159,7 @@ en,crud.save.error,Error saving {{model}}.,,"'crud.save.error':'Error saving {{m
 en,crud.save.success,{{model}} saved successfully.,,"'crud.save.success':'{{model}} saved successfully.',",_model_var_ saved successfully.
 en,crud.titles.edit,Edit {{model}},Edit Role,"'crud.titles.edit':'Edit {{model}}',",Edit _model_var_
 en,crud.titles.new,New {{model}},New Role,"'crud.titles.new':'New {{model}}',",New _model_var_
+en,grid.reset_all_options,Reset All Options,,"'grid.reset_all_options':'Reset All Options',",Reset All Options
 en,menu.home,Home,,"'menu.home':'Home',",Home
 en,modules.assets.titleShort,Assets,,"'modules.assets.titleShort':'Assets',",Assets
 en,modules.invoices.titleShort,Invoices,,"'modules.invoices.titleShort':'Invoices',",Invoices
@@ -164,33 +170,32 @@ en,modules.rfqs.titleShort,RFQs,,"'modules.rfqs.titleShort':'RFQs',",RFQs
 en,modules.tasks.titleShort,Tasks,,"'modules.tasks.titleShort':'Tasks',",Tasks
 en,modules.tickets.titleShort,Tickets,,"'modules.tickets.titleShort':'Tickets',",Tickets
 en,modules.workOrders.titleShort,Work Orders,,"'modules.workOrders.titleShort':'Work Orders',",Work Orders
+en,ticket.label.assignee-fullname,Assignee,,"'ticket.label.assignee-fullname':'Assignee',",Assignee
+en,ticket.label.category-name,Category,,"'ticket.label.category-name':'Category',",Category
+en,ticket.label.cc,CC,,"'ticket.label.cc':'CC',",CC
+en,ticket.label.created,Created,,"'ticket.label.created':'Created',",
+en,ticket.label.location-name,Location,,"'ticket.label.location-name':'Location',",Location
+en,ticket.label.number,Ticket Number,,"'ticket.label.number':'Ticket Number',",Ticket Number
+en,ticket.label.priority-name,Priority,,"'ticket.label.priority-name':'Priority',",Priority
+en,ticket.label.request,Request,,"'ticket.label.request':'Request',",Request
+en,ticket.label.requester,Requester,,"'ticket.label.requester':'Requester',",Requester
+en,ticket.label.status-name,Status,,"'ticket.label.status-name':'Status',",Status
+en,ticket.one,Ticket,,"'ticket.one':'Ticket',",Ticket
+en,ticket.other,Tickets,,"'ticket.other':'Tickets',",Tickets
+en,ticket.priority.emergency,Emergency,,"'ticket.priority.emergency':'Emergency',",Emergency
+en,ticket.priority.high,High,,"'ticket.priority.high':'High',",High
+en,ticket.priority.low,Low,,"'ticket.priority.low':'Low',",Low
+en,ticket.priority.medium,Medium,,"'ticket.priority.medium':'Medium',",Medium
+en,ticket.search,Search Tickets,,"'ticket.search':'Search Tickets',",
+en,ticket.status.closed,Closed,,"'ticket.status.closed':'Closed',",Closed
+en,ticket.status.completed,Complete,,"'ticket.status.completed':'Complete',",Complete
+en,ticket.status.deferred,Deferred,,"'ticket.status.deferred':'Deferred',",Deferred
+en,ticket.status.denied,Denied,,"'ticket.status.denied':'Denied',",Denied
+en,ticket.status.draft,Draft,,"'ticket.status.draft':'Draft',",Draft
+en,ticket.status.in_progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress
+en,ticket.status.new,New,,"'ticket.status.new':'New',",New
+en,ticket.status.problem_solved,Problem Solved,,"'ticket.status.problem_solved':'Problem Solved',",Problem Solved
+en,upload.progress,Progress,,"'upload.progress':'Progress',",Progress
 en,validation.invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid
 en,validation.valid,Valid,,"'validation.valid':'Valid',",Valid
 en,welcome,Hello,,"'welcome':'Hello',",Hello
-en,ticket.one,Ticket,,"'ticket.one':'Ticket',",Ticket
-en,ticket.other,Tickets,,"'ticket.other':'Tickets',",Tickets
-en,ticket.label.number,Ticket Number,,"'ticket.label.number':'Ticket Number',",Ticket Number
-en,ticket.label.request,Request,,"'ticket.label.request':'Request',",Request
-en,ticket.label.priority-name,Priority,,"'ticket.label.priority-name':'Priority',",Priority
-en,ticket.label.status-name,Status,,"'ticket.label.status-name':'Status',",Status
-en,ticket.label.location-name,Location,,"'ticket.label.location-name':'Location',",Location
-en,ticket.label.cc,CC,,"'ticket.label.cc':'CC',",CC
-en,ticket.label.category-name,Category,,"'ticket.label.category-name':'Category',",Category
-en,ticket.label.assignee-fullname,Assignee,,"'ticket.label.assignee-fullname':'Assignee',",Assignee
-en,ticket.label.requester,Requester,,"'ticket.label.requester':'Requester',",Requester
-en,ticket.priority.low,Low,,"'ticket.priority.low':'Low',",Low
-en,ticket.priority.medium,Medium,,"'ticket.priority.medium':'Medium',",Medium
-en,ticket.priority.high,High,,"'ticket.priority.high':'High',",High
-en,ticket.priority.emergency,Emergency,,"'ticket.priority.emergency':'Emergency',",Emergency
-en,ticket.status.new,New,,"'ticket.status.new':'New',",New
-en,ticket.status.problem_solved,Problem Solved,,"'ticket.status.problem_solved':'Problem Solved',",Problem Solved
-en,ticket.status.completed,Complete,,"'ticket.status.completed':'Complete',",Complete
-en,ticket.status.draft,Draft,,"'ticket.status.draft':'Draft',",Draft
-en,ticket.status.deferred,Deferred,,"'ticket.status.deferred':'Deferred',",Deferred
-en,ticket.status.closed,Closed,,"'ticket.status.closed':'Closed',",Closed
-en,ticket.status.denied,Denied,,"'ticket.status.denied':'Denied',",Denied
-en,ticket.status.in_progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress
-en,upload.progress,Progress,,"'upload.progress':'Progress',",Progress
-en,admin.third_party.label.name,Name,,"'admin.third_party.label.name':'Name',",Name
-en,admin.third_party.label.number,Number,,"'admin.third_party.label.number':'Number',",Number
-en,grid.reset_all_options,Reset All Options,,"'grid.reset_all_options':'Reset All Options',",Reset All Options
