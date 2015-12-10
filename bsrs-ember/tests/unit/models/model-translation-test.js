@@ -1,22 +1,11 @@
-import {test, module} from 'bsrs-ember/tests/helpers/qunit';
+import {test, module} from 'bsrs-ember/tests/helpers/i18n/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import translation from 'bsrs-ember/instance-initializers/ember-i18n';
-import translations from 'bsrs-ember/vendor/translation_fixtures';
-import loadTranslations from 'bsrs-ember/tests/helpers/translations';
-import localeConfig from 'ember-i18n/config/en';
-import compiler from 'ember-i18n/utils/i18n/compile-template';
 
 var store;
 
 module('unit: model translation test', {
     beforeEach() {
-        translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:category', 'model:ticket-priority', 'model:ticket-status', 'service:i18n']);
-        this.registry.register('util:i18n/compile-template', compiler);
-        this.registry.register('config:environment', {i18n: {defaultLocale: 'en'}});
-        this.registry.register('ember-i18n@config:en', localeConfig);
-        let service = this.container.lookup('service:i18n');
-        loadTranslations(service, translations.generate('en'));
     }
 });
 

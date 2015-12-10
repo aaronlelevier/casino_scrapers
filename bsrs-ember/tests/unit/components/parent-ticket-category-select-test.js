@@ -11,7 +11,7 @@ var store, eventbus;
 
 module('unit: parent-ticket-category-select component test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:ticket-category', 'model:uuid', 'service:eventbus']);
+        store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:ticket-category', 'model:uuid', 'service:eventbus', 'service:i18n']);
         eventbus = this.container.lookup('service:eventbus');
     }
 });

@@ -11,7 +11,7 @@ var store;
 
 module('unit: ticket-category-select component test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:ticket-category', 'model:uuid']);
+        store = module_registry(this.container, this.registry, ['model:person', 'model:ticket', 'model:category', 'model:ticket-category', 'model:uuid', 'service:i18n']);
     }
 });
 
