@@ -301,7 +301,7 @@ test('can add multiple categories', (assert) => {
         let role = store.find('role', UUID.value);
         assert.equal(role.get('categories').get('length'), 0);
         assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(page.categoryOptionLength(), 11);
+        assert.equal(page.categoryOptionLength(), 2);
     });
     page.categoryClickOptionOneEq();
     andThen(() => {

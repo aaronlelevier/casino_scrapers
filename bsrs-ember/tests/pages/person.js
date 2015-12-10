@@ -42,7 +42,7 @@ export default PageObject.create({
   locationClickDropdown: clickable(LOCATION),
   locationClickOptionOne: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LD.storeName})`),
   locationClickOptionOneEq: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:eq(0)`),
-  locationClickOptionTwo: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LD.baseStoreName}24)`),
+  locationClickOptionTwo: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LD.baseStoreName}4)`),
   locationOptionLength: count(`${LOCATION_DROPDOWN} > li`),
   locationOneRemove: clickable(`${LOCATION_ONE} > .ember-power-select-multiple-remove-btn`),
   locationOneSelected: text(LOCATION_ONE),

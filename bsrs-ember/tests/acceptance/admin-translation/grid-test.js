@@ -181,13 +181,13 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4');
-        assert.equal(find('.t-grid-data').length, 13);
+        assert.equal(find('.t-grid-data').length, 2);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), "home.welcome14");
     });
     click('.t-sort-key-dir');
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4&sort=key');
-        assert.equal(find('.t-grid-data').length, 13);
+        assert.equal(find('.t-grid-data').length, 2);
         assert.equal(find('.t-grid-data:eq(0) .t-translation-key:eq(0)').text(), "home.welcome14");
     });
     fillIn('.t-grid-search-input', '');
@@ -381,8 +381,8 @@ test('count is shown and updated as the user filters down the list from django',
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(), ADMIN_TRANSLATION_URL+'?search=4');
-        assert.equal(find('.t-grid-data').length, 13);
-        assert.equal(find('.t-page-count').text(), '14 Translations');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-page-count').text(), '2 Translations');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);

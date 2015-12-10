@@ -238,7 +238,7 @@ test('clicking on a new model from the grid view will not dirty the original tab
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
     });
-    const id = 'bf2b9c85-f6bd-4345-9834-c5d51de53d010';
+    const id = 'bf2b9c85-f6bd-4345-9834-c5d51de53d02';
     const data = TF.detail(id);
     data.cc = [PF.get(PD.idTwo)];
     ajax(endpoint + id + '/', 'GET', null, {}, 200, data);
