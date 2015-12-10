@@ -31,7 +31,7 @@ var CategoryPage = PageObject.create({
   categoryTwoSelected: text(`${CATEGORY_TWO}`),
   // categoryThreeSelected: text(`${CATEGORY_THREE}`),
   categoryClickOptionOneEq: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:eq(0)`),
-  categoryClickOptionTwo: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CD.nameOne}2)`),
+  categoryClickOptionTwo: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CD.nameOne}2z)`),
   categoryClickOptionThree: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CD.nameOne}3)`),
   categoryOptionLength: count(`${CATEGORY_DROPDOWN} > li`),
   categoriesSelected: count(`${CATEGORIES}`),

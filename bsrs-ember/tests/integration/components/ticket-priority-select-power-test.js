@@ -6,12 +6,10 @@ import tHelper from 'ember-i18n/helper';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
-let store, ticket, priority_one, priority_two, priority_three, run = Ember.run;
+var store, ticket, priority_one, priority_two, priority_three, run = Ember.run, trans;
 const PowerSelect = '.ember-power-select-trigger';
 const COMPONENT = '.t-ticket-priority-select';
 const DROPDOWN = '.ember-power-select-dropdown';
-
-var t; 
 
 moduleForComponent('ticket-priority-select', 'integration: ticket-priority-select test', {
     integration: true,
@@ -21,7 +19,7 @@ moduleForComponent('ticket-priority-select', 'integration: ticket-priority-selec
         priority_one = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey});
         priority_two = store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwoKey});
         priority_three = store.push('ticket-priority', {id: TD.priorityThreeId, name: TD.priorityThreeKey});
-        t = this.container.lookup('service:i18n');
+        trans = this.container.lookup('service:i18n');
         translation.initialize(this);
     }
 });
@@ -51,7 +49,7 @@ test('should render a selectbox with bound options', function(assert) {
     this.set('priorities', priorities);
     this.render(hbs`{{ticket-priority-select ticket=ticket priorities=priorities}}`);
     let $component = this.$(COMPONENT);
-    assert.equal($component.find(PowerSelect).text().trim(), t.t(TD.priorityOneKey));
+    assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.priorityOneKey));
     run(() => { 
         this.$(PowerSelect).click(); 
     });
@@ -81,7 +79,7 @@ test('should be able to select new priority when one doesnt exist', function(ass
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    assert.equal($component.find(PowerSelect).text().trim(), t.t(TD.priorityOneKey));
+    assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.priorityOneKey));
     assert.equal(ticket.get('priority').get('id'), TD.priorityOneId);
     assert.deepEqual(priority_one.get('tickets'), [TD.idOne]);
 });
@@ -93,7 +91,7 @@ test('should be able to select same priority when ticket already has a priority'
     this.set('priorities', priorities);
     this.render(hbs`{{ticket-priority-select ticket=ticket priorities=priorities}}`);
     let $component = this.$(COMPONENT);
-    assert.equal($component.find(PowerSelect).text().trim(), t.t(TD.priorityOneKey));
+    assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.priorityOneKey));
     run(() => { 
         this.$(PowerSelect).click(); 
     });
@@ -106,7 +104,7 @@ test('should be able to select same priority when ticket already has a priority'
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    assert.equal($component.find(PowerSelect).text().trim(), t.t(TD.priorityOneKey));
+    assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.priorityOneKey));
     assert.equal(ticket.get('priority').get('id'), TD.priorityOneId);
     assert.deepEqual(priority_one.get('tickets'), [TD.idOne]);
 });
@@ -118,7 +116,7 @@ test('should be able to select new priority when ticket already has a priority',
     this.set('priorities', priorities);
     this.render(hbs`{{ticket-priority-select ticket=ticket priorities=priorities}}`);
     let $component = this.$(COMPONENT);
-    assert.equal($component.find(PowerSelect).text().trim(), t.t(TD.priorityOneKey));
+    assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.priorityOneKey));
     run(() => { 
         this.$(PowerSelect).click(); 
     });
@@ -131,7 +129,7 @@ test('should be able to select new priority when ticket already has a priority',
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    assert.equal($component.find(PowerSelect).text().trim(), t.t(TD.priorityTwoKey));
+    assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.priorityTwoKey));
     assert.equal(ticket.get('priority').get('id'), TD.priorityTwoId);
     assert.deepEqual(priority_one.get('tickets'), []);
     assert.deepEqual(priority_two.get('tickets'), [TD.idOne]);

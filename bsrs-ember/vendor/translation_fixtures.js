@@ -179,6 +179,15 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'modules.workOrders.titleShort':'Work Orders',
                     'ticket.label.assignee-fullname':'Assignee',
                     'ticket.label.category-name':'Category',
+                    'validation.invalid':'Invalid',
+                    'validation.valid':'Valid',
+                    'welcome':'Hello',
+                    'ticket.one':'Ticket',
+                    'ticket.other':'Tickets',
+                    'ticket.label.request':'Request',
+                    'ticket.label.priority-name':'Priority',
+                    'ticket.label.status-name':'Status',
+                    'ticket.label.location':'Location',
                     'ticket.label.cc':'CC',
                     'ticket.label.created':'Created',
                     'ticket.label.location-name':'Location',
@@ -206,6 +215,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'validation.invalid':'Invalid',
                     'validation.valid':'Valid',
                     'welcome':'Hello',
+                    'grid.reset_all_options':'Reset Options',
                 }
             }
             break;

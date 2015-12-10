@@ -6,6 +6,7 @@ var BSRS_ROLE_DEFAULTS_OBJECT = (function() {
         return {
             idOne: 'af34ee9b-833c-4f3e-a584-b6851d1e04b1',
             idTwo: 'af34ee9b-833c-4f3e-a584-b6851d1e04b2', 
+            idGridTen: 'af34ee9b-833c-4f3e-a584-b6851d1e04017', 
             roleTypeContractor: 'Third Party', 
             roleTypeGeneral: 'Internal',
             nameOne: 'admin.role.system_administrator',

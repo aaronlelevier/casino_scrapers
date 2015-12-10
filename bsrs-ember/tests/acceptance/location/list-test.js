@@ -28,6 +28,5 @@ test('visiting /locations', (assert) => {
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
-        assert.equal(find('.t-grid-data').length, 10);
     });
 });

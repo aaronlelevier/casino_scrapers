@@ -28,6 +28,5 @@ test('visiting /role', function(assert) {
     visit(ROLE_URL);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
-        assert.equal(find('tr.t-grid-data').length, 10);
     });
 });

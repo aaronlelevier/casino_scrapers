@@ -14,6 +14,7 @@ import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/category';
 
 const PREFIX = config.APP.NAMESPACE;
+const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_categories_url;
 const CATEGORIES_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + CD.idOne;
@@ -90,7 +91,6 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
-        assert.equal(store.find('category').get('length'), 10);
         let category = store.find('category', CD.idOne);
         assert.equal(category.get('name'), CD.nameTwo);
         assert.equal(category.get('description'), CD.descriptionMaintenance);
@@ -249,7 +249,7 @@ test('clicking and typing into power select for categories children will fire of
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, 'a');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 10);
+        assert.equal(page.categoryOptionLength(), PAGE_SIZE);
     });
     page.categoryClickOptionThree();
     andThen(() => {

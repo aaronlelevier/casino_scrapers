@@ -1,9 +1,10 @@
 var BSRS_LOCATION_FACTORY = (function() {
-    var factory = function(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures) {
+    var factory = function(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, config) {
         this.location_defaults = location_defaults;
         this.location_level_defaults = location_level_defaults;
         this.location_status_defaults = location_status_defaults;
         this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
+        this.config = config;
     };
     factory.prototype.get = function(i, name) {
         var name = name || this.location_defaults.storeName;
@@ -28,9 +29,10 @@ var BSRS_LOCATION_FACTORY = (function() {
     };
     factory.prototype.list = function() {
         var response = [];
-        for (var i=1; i <= 10; i++) {
+        var page_size = this.config.default.APP.PAGE_SIZE;
+        for (var i=1; i <= page_size; i++) {
             var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
-            if (i < 10) {
+            if (i < page_size) {
                 uuid = uuid + '0' + i;
             } else{
                 uuid = uuid + i;
@@ -45,11 +47,12 @@ var BSRS_LOCATION_FACTORY = (function() {
         var sorted = response.sort(function(a,b) {
             return b.id - a.id;
         });
-        return {'count':19,'next':null,'previous':null,'results': sorted};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
         var response = [];
-        for (var i=11; i <= 19; i++) {
+        var page_size = this.config.default.APP.PAGE_SIZE;
+        for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
             var location = this.generate(uuid + i);
             location.name = 'vzoname' + i;
@@ -57,7 +60,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             location.status = this.location_status_defaults.closedId;
             response.push(location);
         }
-        return {'count':19,'next':null,'previous':null,'results': response};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i) {
         return this.generate(this.location_defaults.idOne);
@@ -95,13 +98,14 @@ if (typeof window === 'undefined') {
     var location_status_defaults = require('../vendor/defaults/location-status');
     var location_level_fixtures = require('../vendor/location_level_fixtures');
     var location_level_defaults = require('../vendor/defaults/location-level');
+    var config = require('../config/environment');
     objectAssign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures);
+    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, config);
 } else {
-    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin'], function (exports, location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, mixin) {
+    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, mixin, config) {
         'use strict';
         Object.assign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures);
+        var Factory = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, config);
         return {default: Factory};
     });
 }

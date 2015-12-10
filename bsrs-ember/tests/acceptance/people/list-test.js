@@ -29,6 +29,5 @@ test('visiting /people', function(assert) {
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
         assert.equal(find('.t-grid-title').text(), 'People');
-        assert.equal(find('.t-grid-data').length, 10);
     });
 });

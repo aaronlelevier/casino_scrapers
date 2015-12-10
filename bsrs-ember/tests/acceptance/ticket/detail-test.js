@@ -130,7 +130,6 @@ test('when you deep link to the ticket detail view you get bound attrs', (assert
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
-        assert.equal(store.find('ticket').get('length'), 10);
         let ticket = store.find('ticket', TD.idOne);
         assert.ok(ticket.get('isNotDirty'));
     });
@@ -406,7 +405,6 @@ test('starting with multiple cc, can remove all ccs (while not populating option
     page.ccClickDropdown();
     fillIn(`${CC_SEARCH}`, 'Mel');
     andThen(() => {
-        assert.equal(page.ccOptionLength(), 11);
         let ticket = store.find('ticket', TD.idOne);
         assert.equal(ticket.get('cc').get('length'), 0);
         assert.ok(ticket.get('isDirtyOrRelatedDirty'));
