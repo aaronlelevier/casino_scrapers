@@ -5,6 +5,7 @@ from django.test import TestCase
 from category.models import Category
 from category.tests.factory import create_categories
 from location.models import Location
+from location.tests.factory import create_location
 from person.models import Person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
@@ -17,7 +18,7 @@ class CreateTicketTests(TestCase):
 
     def setUp(self):
         create_categories()
-        create_single_person()
+        self.person = create_single_person()
         self.ticket = factory.create_ticket()
 
     def test_location(self):
@@ -50,6 +51,27 @@ class CreateTicketTests(TestCase):
 
     def test_number(self):
         self.assertIsInstance(self.ticket.number, int)
+
+    def test_ticket_requester(self):
+        person = create_single_person()
+
+        ret = factory.create_ticket(requester=person)
+
+        self.assertEqual(ret.requester, person)
+
+    def test_ticket_assignee(self):
+        person = create_single_person()
+
+        ret = factory.create_ticket(assignee=person)
+
+        self.assertEqual(ret.assignee, person)
+
+    def test_ticket_location(self):
+        location = create_location()
+
+        ret = factory.create_ticket(location=location)
+
+        self.assertEqual(ret.location, location)
 
 
 class ConstructTreeTests(TestCase):

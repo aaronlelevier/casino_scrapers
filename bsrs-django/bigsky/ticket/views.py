@@ -12,6 +12,25 @@ from utils.mixins import EagerLoadQuerySetMixin
 from utils.views import BaseModelViewSet
 
 
+# COMMENT OUT: Add this back after ``ticket.tests.test_views`` are refactored to work w/ these restrictions
+# class TicketQuerySetFilters(object):
+
+#     def get_queryset(self):
+#         queryset = super(TicketQuerySetFilters, self).get_queryset()
+
+#         queryset = self._filter_by_person_attrs(queryset)
+
+#         return queryset
+
+#     def _filter_by_person_attrs(self, queryset):
+#         kwargs = {}
+#         kwargs.update({
+#             'categories__id__in': self.request.user.role.categories.values_list('id', flat=True),
+#             'location__id__in': self.request.user.locations.values_list('id', flat=True)
+#         })
+#         return queryset.filter(**kwargs)
+
+
 class TicketViewSet(EagerLoadQuerySetMixin, CreateTicketModelMixin,
     UpdateTicketModelMixin, BaseModelViewSet):
 

@@ -411,8 +411,13 @@ class Person(BaseModel, AbstractUser):
         self.fullname = self.first_name + ' ' + self.last_name
 
     def _validate_locations(self):
-        """Remove invalid Locations from the Person based on
-        their Role.location_level"""
+        """
+        Remove invalid Locations from the Person based on
+        their Role.location_level
+
+        TODO: Change this to raise an ``Exception`` here, so can debug easier if 
+        ``locations`` are getting silenty removed from the ``Person``
+        """
         for l in self.locations.all():
             if l.location_level != self.role.location_level:
                 self.locations.remove(l)

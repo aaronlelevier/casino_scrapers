@@ -8,7 +8,7 @@ from model_mommy import mommy
 from accounting.models import Currency
 from category.models import Category
 from location.models import LocationLevel, Location
-from location.tests.factory import create_locations
+from location.tests.factory import create_location, create_locations
 from person.models import Person, Role
 from utils import create
 from utils.helpers import generate_uuid
@@ -30,9 +30,9 @@ def create_role(name=None, location_level=None):
     if not location_level:
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
 
-    category = Category.objects.first()
-
     role = mommy.make(Role, name=name, location_level=location_level)
+
+    category = Category.objects.first()
     if category:
         role.categories.add(category)
 
@@ -62,17 +62,18 @@ def create_roles():
 
 PERSON_BASE_ID = "30f530c4-ce6c-4724-9cfd-37a16e787"
 
-def create_single_person(name=None, role=None):
+def create_single_person(name=None, role=None, location=None):
     name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
     role = role or create_role()
+    location = location or create_location()
 
     incr = Person.objects.count()
     id = generate_uuid(PERSON_BASE_ID, incr+1)
 
     try:
-        return Person.objects.get(username=name)
+        person = Person.objects.get(username=name)
     except Person.DoesNotExist:
-        return Person.objects.create_user(
+        person = Person.objects.create_user(
             id=id,
             username=name,
             email='myemail@mail.com',
@@ -82,6 +83,10 @@ def create_single_person(name=None, role=None):
             title=name,
             role=role
         )
+
+    person.locations.add(location)
+
+    return person
 
 
 def update_login_person(person):

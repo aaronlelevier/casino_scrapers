@@ -28,13 +28,18 @@ def construct_tree(category, tree):
 TICKET_BASE_ID = "40f530c4-ce6c-4724-9cfd-37a16e787"
 
 
-def create_ticket():
+def create_ticket(requester=None, assignee=None, location=None):
+    people = Person.objects.all()
+
+    requester = requester or random.choice(people)
+    assignee = assignee or random.choice(people)
+    location = location or random.choice(Location.objects.all())
+
     if not Location.objects.first():
         create_locations()
 
     statuses = create_ticket_statuses()
     priorities = create_ticket_priorites()
-    people = Person.objects.all()
 
     if 'test' in sys.argv:
         id = uuid.uuid4()
@@ -44,11 +49,11 @@ def create_ticket():
 
     ticket = Ticket.objects.create(
         id = id,
-        location = random.choice(Location.objects.all()),
+        location = location,
         status = random.choice(statuses),
         priority = random.choice(priorities),
-        assignee = random.choice(people),
-        requester = random.choice(people),
+        assignee = assignee,
+        requester = requester,
         request = _generate_chars()
     )
 

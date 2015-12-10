@@ -37,8 +37,6 @@ def create_categories(_many=None):
             status=status
         )
 
-    # type.children.add(issue)
-
     # Issue
     for category in Category.objects.filter(subcategory_label='issue'):
         for i in range(random.randrange(2, 7)):
@@ -53,6 +51,7 @@ def create_categories(_many=None):
                 status=status
             )
 
+    return Category.objects.all()
 
 CATEGORY_STATUS_BASE_ID = "20f530c4-ce6c-4724-9cfd-37a16e787"
 

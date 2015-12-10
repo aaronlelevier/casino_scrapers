@@ -25,6 +25,13 @@ def create_location_levels():
     district.children.add(store)
     store.children.add(department)
 
+
+def create_location_level(name=None):
+    name = name or settings.DEFAULT_LOCATION_LEVEL
+    obj, _ = LocationLevel.objects.get_or_create(name=name)
+    return obj
+
+
 def create_locations():
     create_location_levels()
     # Region
@@ -43,3 +50,9 @@ def create_locations():
     east.children.add(nv)
     ca.children.add(san_diego)
     ca.children.add(los_angeles)
+
+
+def create_location(location_level=None):
+    location_level = location_level or create_location_level()
+    return mommy.make(Location, name=_generate_chars(), number=_generate_chars(),
+        location_level=location_level)
