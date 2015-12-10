@@ -116,3 +116,39 @@ div.buttonGroup {
 	margin: 15px 0 10px;
 	font-size: 1.2rem;
 }
+.tag{
+	display: inline-block;
+	height: 20px;
+	line-height: 17px;
+	font-size: 1.1rem;
+	background: $medGray;
+	border: 1px solid $darkGray;
+	color: $white;
+	padding: 0 7px;
+	border-radius: 3px;
+	text-transform: uppercase;
+	margin: 10px 0 0 10px;
+	top: -4px;
+	position: relative;
+	text-shadow: 1px 1px 0 $darkGray;
+	&.ticket-status-new{
+		background: $lightGreen;
+		border-color: $darkGreen;
+		text-shadow: 1px 1px 0 $darkGreen;
+	}
+	&.ticket-status-in_progress{
+		background: $lightBlue;
+		border-color: $blue;
+		text-shadow: 1px 1px 0 $blue;
+	}
+	&.ticket-priority-emergency{
+		background: $orange;
+		border-color: $darkOrange;
+		text-shadow: 1px 1px 0 $darkOrange;
+	}
+	&.ticket-priority-high{
+		background: $orange;
+		border-color: $darkOrange;
+		text-shadow: 1px 1px 0 $darkOrange;
+	}
+}
