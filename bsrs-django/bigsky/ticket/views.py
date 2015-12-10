@@ -66,7 +66,8 @@ class TicketViewSet(EagerLoadQuerySetMixin, CreateTicketModelMixin,
                 Q(location__name__icontains=search) | \
                 Q(assignee__fullname__icontains=search) | \
                 Q(priority__name__icontains=search) | \
-                Q(status__name__icontains=search)
+                Q(status__name__icontains=search) | \
+                Q(categories__name__in=[search])
             )
 
         return queryset

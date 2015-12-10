@@ -10,6 +10,17 @@ from utils.helpers import generate_uuid
 CATEGORY_BASE_ID = "24f530c4-ce6c-4724-9cfd-37a16e787"
 
 
+def create_single_category(name):
+    status = create_category_status()
+    incr = Category.objects.count()
+    return Category.objects.create(
+        id=generate_uuid(CATEGORY_BASE_ID, incr+1),
+        name=name,
+        subcategory_label='trade',
+        status=status
+    )
+
+    
 def create_categories(_many=None):
     statuses = create_category_statuses()
 

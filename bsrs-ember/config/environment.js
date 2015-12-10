@@ -30,6 +30,7 @@ module.exports = function(environment) {
   };
 
   ENV.APP.NAMESPACE = '/api';
+  ENV.APP.PAGE_SIZE = 25;
 
   if (environment === 'development') {
     // ENV.APP.LOG_RESOLVER = true;

@@ -10,6 +10,7 @@ import RF from 'bsrs-ember/vendor/role_fixtures';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
+import CF from 'bsrs-ember/vendor/category_fixtures';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 
@@ -18,7 +19,7 @@ const BASE_ROLE_URL = BASEURLS.base_roles_url;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const ROLE_URL = BASE_ROLE_URL + '/index';
 const NEW_URL = BASE_ROLE_URL + '/new';
-const DETAIL_URL = BASE_ROLE_URL + '/' + RD.idOne;
+const DETAIL_URL = BASE_ROLE_URL + '/' + RD.idGridTen;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const NEW_ROUTE = 'admin.roles.new';
 const INDEX_ROUTE = 'admin.roles.index';
@@ -32,9 +33,10 @@ module('Acceptance | tab role test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_ROLE_URL + '/';
-        role_detail_data = RF.detail(RD.idOne);
-        detail_xhr = xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, role_detail_data);
+        role_detail_data = RF.detail(RD.idGridTen);
+        detail_xhr = xhr(endpoint + RD.idGridTen + '/', 'GET', null, {}, 200, role_detail_data);
         original_uuid = random.uuid;
+        store.push('role', {id: RD.idGridTen, name: 'wat', categories: [CF.detail()]});
     },
     afterEach() {
         random.uuid = original_uuid;
@@ -64,7 +66,7 @@ test('deep linking the role detail url should push a tab into the tab store with
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let tab = store.find('tab', RD.idOne);
+        let tab = store.find('tab', RD.idGridTen);
         assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
         assert.equal(tab.get('doc_type'), DOC_TYPE);
         assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
@@ -87,7 +89,7 @@ test('visiting the role detail url from the list url should push a tab into the 
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let tab = store.find('tab', RD.idOne);
+        let tab = store.find('tab', RD.idGridTen);
         assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
         assert.equal(tab.get('doc_type'), DOC_TYPE);
         assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
@@ -108,7 +110,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     click('.t-grid-data:eq(7)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role', RD.idOne);
+        let role = store.find('role', RD.idGridTen);
         assert.equal(role.get('isDirtyOrRelatedDirty'), false);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
@@ -120,7 +122,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let role = store.find('role', RD.idOne);
+        let role = store.find('role', RD.idGridTen);
         assert.equal(role.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -189,7 +191,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     fillIn('.t-role-name', RD.nameTwo);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role', RD.idOne);
+        let role = store.find('role', RD.idGridTen);
         assert.equal(role.get('name'), RD.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
@@ -204,7 +206,7 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let role = store.find('role', RD.idOne);
+        let role = store.find('role', RD.idGridTen);
         assert.equal(role.get('name'), RD.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
@@ -224,7 +226,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     fillIn('.t-role-name', RD.nameTwo);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role', RD.idOne);
+        let role = store.find('role', RD.idGridTen);
         assert.equal(role.get('name'), RD.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
@@ -237,7 +239,7 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let role = store.find('role', RD.idOne);
+        let role = store.find('role', RD.idGridTen);
         assert.equal(role.get('name'), RD.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
@@ -255,7 +257,7 @@ test('clicking on a tab that is not dirty from the people url (or any non relate
     click('.t-grid-data:eq(7)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role', RD.idOne);
+        let role = store.find('role', RD.idGridTen);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), RD.nameOne);
@@ -269,7 +271,7 @@ test('clicking on a tab that is not dirty from the people url (or any non relate
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let role = store.find('role', RD.idOne);
+        let role = store.find('role', RD.idGridTen);
         assert.equal(role.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });

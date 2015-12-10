@@ -9,7 +9,7 @@ var store, subject;
 
 module('unit: category deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:category']);
+        store = module_registry(this.container, this.registry, ['model:category', 'service:i18n']);
         subject = CategoryDeserializer.create({store: store});
     }
 });

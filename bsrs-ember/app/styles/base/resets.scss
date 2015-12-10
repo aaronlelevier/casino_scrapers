@@ -137,6 +137,14 @@ input[type="text"]:disabled {
 	.ember-power-select-option--highlighted{
 		background: $hoverColor;
 	}
+
+
+    .ticket-priority-select,
+    .ticket-status-select{
+		li{
+			font-size: 1.2rem;
+		}
+	}
 }
 
 

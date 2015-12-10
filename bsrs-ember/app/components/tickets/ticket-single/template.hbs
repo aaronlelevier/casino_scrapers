@@ -46,7 +46,11 @@
                     <div class="col-md-12">
                         <section style="padding-bottom: 0">
                             <div class="row card-title">
-                                <h1 class="col-md-12">{{model.top_level_category.name}} <small>#{{model.number}}</small></h1>
+                                <h1 class="col-md-12">
+                                    {{model.top_level_category.name}}
+                                    <small>#{{model.number}}</small>
+                                    <span class="tag {{model.status_class}}">{{t model.status.name}}</span><span class="tag {{model.priority_class}}">{{t model.priority.name}}</span>
+                                </h1>
                                 <div class="col-md-12">
                                     {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
                                     <span class="validation validation-under t-category-validation-error {{child-validation submitted child_valid}}">invalid category</span>
@@ -69,7 +73,7 @@
                                 <div class="col-md-12">
                                     <div class="ticket-actions">
                                         <div class="ticket-action save">
-                                            <span class="btn btn-default">Save</span>
+                                            <span {{action 'save'}} class="btn btn-default action">Save</span>
                                         </div>
                                         <div class="ticket-action attach">
                                             {{attach-file model=model}}

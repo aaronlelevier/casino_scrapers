@@ -1,5 +1,5 @@
 var BSRS_LOCATION_LEVEL_FACTORY = (function() {
-    var factory = function(location_level_defaults) {
+    var factory = function(location_level_defaults, config) {
         this.idOne = location_level_defaults.idOne;
         this.idTwo = location_level_defaults.idTwo;
         this.idThree = location_level_defaults.idThree;
@@ -11,6 +11,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         this.nameDistrict = location_level_defaults.nameDistrict;
         this.allChildrenArray = location_level_defaults.companyChildren;
         this.districtChildrenArray = location_level_defaults.districtChildrenArray;
+        this.config = config;
     };
     factory.prototype.generate = function(i, name) {
         return {
@@ -39,9 +40,10 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
             {id: this.idDistrict, name : this.nameDistrict},
             {id: this.idThree, name : this.nameRegion}
         ];
-        for (var i=9; i <= 10; i++) {
+        var page_size = this.config.default.APP.PAGE_SIZE;
+        for (var i=9; i <= page_size; i++) {
             var uuid = '8854f6c5-58c7-4849-971f-e8df9e15e55';
-            if (i < 10) {
+            if (i < page_size) {
                 uuid = uuid + '0' + i;
             } else{
                 uuid = uuid + i;
@@ -52,17 +54,18 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
         var sorted = response.sort(function(a,b) {
             return b.id - a.id;
         });
-        return {'count':19,'next':null,'previous':null,'results': sorted};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
         var response = [];
-        for (var i=11; i <= 19; i++) {
+        var page_size = this.config.default.APP.PAGE_SIZE;
+        for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = '8854f6c5-58c7-4849-971f-e8df9e15e55';
             var level = this.generate_list(uuid + i);
             level.name = 'admin.locationlevel.company.tsiname' + i;
             response.push(level);
         }
-        return {'count':19,'next':null,'previous':null,'results': response};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
     factory.prototype.put = function(level) {
         var location_levels = this.detail();
@@ -88,13 +91,14 @@ if (typeof window === 'undefined') {
     var objectAssign = require('object-assign');
     var mixin = require('../vendor/mixin');
     var location_level_defaults = require('./defaults/location-level');
+    var config = require('../config/environment');
     objectAssign(BSRS_LOCATION_LEVEL_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults);
+    module.exports = new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults, config);
 } else {
-    define('bsrs-ember/vendor/location_level_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/mixin'], function (exports, location_level_defaults, mixin) {
+    define('bsrs-ember/vendor/location_level_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, location_level_defaults, mixin, config) {
         'use strict';
         Object.assign(BSRS_LOCATION_LEVEL_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults);
+        var Factory = new BSRS_LOCATION_LEVEL_FACTORY(location_level_defaults, config);
         return {default: Factory};
     });
 }

@@ -1,11 +1,14 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
 import MultiSort from 'bsrs-ember/utilities/sort';
 import SortBy from 'bsrs-ember/mixins/sort-by';
 import FilterBy from 'bsrs-ember/mixins/filter-by';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
 
+const PAGE_SIZE = config.APP.PAGE_SIZE;
+
 var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
-    page_sizes: ['10', '25', '50', '100'],
+    page_sizes: ['25', '50', '100', '150'],
     toggleFilter: false,
     savingFilter: false,
     classNames: ['wrapper'],
@@ -63,14 +66,14 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
     paginated_content: Ember.computed('sorted_content.[]', function() {
         const requested = this.get('requested');
         const page = parseInt(this.get('page')) || 1;
-        const page_size = parseInt(this.get('page_size')) || 10;
+        const page_size = parseInt(this.get('page_size')) || PAGE_SIZE;
         const pages = requested.toArray().sort((a,b) => { return a-b; }).uniq();
         const max = (pages.indexOf(page) + 1) * page_size;
         return this.get('sorted_content').slice(max-page_size, max);
     }),
     pages: Ember.computed('model.count', function() {
         const pages = [];
-        const page_size = this.get('page_size') || 10;
+        const page_size = this.get('page_size') || PAGE_SIZE;
         const total = this.get('model.count') / page_size || 1;
         for(let p=1; p <= Math.ceil(total); p++) {
             pages.push(p);

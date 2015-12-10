@@ -66,6 +66,7 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             assigneeTwo: 'Random2',
             requestOneGrid: 'sub1',
             requestLastGrid: 'ape11',
+            requestLastUpdatedGrid: 'ape26',//this one is for page size of 15
             requestLastPage2Grid: 'ape19',
             requestFourGrid: 'sub4',
             requestOtherGrid: 'sub10',

@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class Location(models.Model):
+class LocationRegion(models.Model):
     number = models.TextField()
     name = models.TextField()
     manager = models.TextField()
@@ -15,4 +15,42 @@ class Location(models.Model):
     fax = models.TextField()
     email = models.TextField()
     carphone = models.TextField()
+    comments = models.TextField()
+
+
+class LocationDistrict(models.Model):
+    number = models.TextField()
+    name = models.TextField()
+    regionnumber = models.TextField()
+    manager = models.TextField()
+    address1 = models.TextField()
+    address2 = models.TextField()
+    city = models.TextField()
+    state = models.TextField()
+    zip = models.TextField()
+    country = models.TextField()
+    telephone = models.TextField()
+    fax = models.TextField()
+    email = models.TextField()
+    carphone = models.TextField()
+    comments = models.TextField()
+
+
+class LocationStore(models.Model):
+    number = models.TextField()
+    name = models.TextField()
+    distnumber = models.TextField()
+    manager = models.TextField()
+    address1 = models.TextField()
+    address2 = models.TextField()
+    city = models.TextField()
+    state = models.TextField()
+    zip = models.TextField()
+    country = models.TextField()
+    telephone = models.TextField()
+    fax = models.TextField()
+    email = models.TextField()
+    carphone = models.TextField()
+    costcode = models.TextField()
+    openingdate = models.DateField()
     comments = models.TextField()

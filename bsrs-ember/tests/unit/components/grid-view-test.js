@@ -233,11 +233,11 @@ test('found filter will only match those exactly in all columns', (assert) => {
 });
 
 test('rolling pagination shows only ten records at a time', (assert) => {
-    for(var i=1; i < 179; i++) {
+    for(var i=1; i < 447; i++) {
         store.push('person', {id: i});
     }
     let model = store.find('person');
-    model.set('count', 179);
+    model.set('count', 447);
     let subject = GridViewComponent.create({page: 1, model: model, eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     let current = subject.get('page');
     assert.equal(current, 1);
@@ -296,9 +296,11 @@ test('rolling pagination shows only ten records at a time', (assert) => {
     subject.set('page', 18);
     shown = subject.get('shown_pages');
     assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
-    store.push('person', {id: 180});
-    store.push('person', {id: 181});
-    model.set('count', 181);
+    store.push('person', {id: 448});
+    store.push('person', {id: 449});
+    store.push('person', {id: 450});
+    store.push('person', {id: 451});
+    model.set('count', 451);
     shown = subject.get('shown_pages');
     assert.deepEqual(shown, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
 });

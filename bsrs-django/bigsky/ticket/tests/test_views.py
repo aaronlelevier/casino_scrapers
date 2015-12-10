@@ -2,6 +2,8 @@ import json
 import uuid
 import datetime
 
+from django.db.models import Q
+
 from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 
@@ -9,7 +11,7 @@ from model_mommy import mommy
 
 from person.models import Person
 from category.models import Category
-from category.tests.factory import create_categories
+from category.tests.factory import create_categories, create_single_category
 from location.tests.factory import create_location, create_locations
 from location.models import Location
 from generic.models import Attachment
@@ -362,9 +364,18 @@ class TicketSearchTests(TicketSetupMixin, APITestCase):
     def test_search_related_priority(self):
         mommy.make(Ticket, request="wat", priority=TicketPriority.objects.get(name=TICKET_PRIORITIES[0]))
         mommy.make(Ticket, request="watter", priority=TicketPriority.objects.get(name=TICKET_PRIORITIES[1]))
-        letters = "emergency"
-        count = Ticket.objects.filter(priority__name__icontains=letters).count()
-        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        search = "emergency"
+        count = Ticket.objects.filter(
+                Q(request__icontains=search) | \
+                Q(location__name__icontains=search) | \
+                Q(assignee__fullname__icontains=search) | \
+                Q(priority__name__icontains=search) | \
+                Q(status__name__icontains=search) | \
+                Q(categories__name__in=[search])
+            ).count()
+
+        response = self.client.get('/api/tickets/?search={}'.format(search))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
@@ -373,6 +384,21 @@ class TicketSearchTests(TicketSetupMixin, APITestCase):
         mommy.make(Ticket, request="watter", status=TicketStatus.objects.get(name=TICKET_STATUSES[1]))
         letters = "new"
         count = Ticket.objects.filter(status__name__icontains=letters).count()
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], count)
+
+    def test_search_related_categories(self):
+        letters = "zza"
+        category_one = create_single_category(letters)
+        category_two = create_single_category("zzap")
+        one = mommy.make(Ticket, request="one")
+        two = mommy.make(Ticket, request="two")
+        one.categories.add(category_one)
+        one.save()
+        two.categories.add(category_two)
+        two.save()
+        count = Ticket.objects.filter(categories__name__in=[letters]).count()
         response = self.client.get('/api/tickets/?search={}'.format(letters))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
