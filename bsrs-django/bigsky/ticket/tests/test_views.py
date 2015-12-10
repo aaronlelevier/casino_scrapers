@@ -2,27 +2,24 @@ import json
 import uuid
 import datetime
 
-from django.db.models import Q
-
-from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 
 from model_mommy import mommy
 
-from person.models import Person
 from category.models import Category
 from category.tests.factory import create_categories, create_single_category
-from location.tests.factory import create_location, create_locations
 from location.models import Location
+from location.tests.factory import create_location, create_locations
 from generic.models import Attachment
 from generic.tests.factory import create_attachments
+from person.models import Person
 from person.tests.factory import PASSWORD, create_single_person, create_role
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
-    TicketActivityType, TICKET_ACTIVITY_TYPES, TICKET_PRIORITIES, TICKET_STATUSES)
-from ticket.serializers import TicketCreateSerializer, TicketActivitySerializer
+    TicketActivityType, TICKET_PRIORITIES, TICKET_STATUSES)
+from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,
-    create_ticket_status, create_ticket_priority, create_tickets)
+    create_ticket_status, create_ticket_priority)
 
 
 class TicketSetupMixin(object):
@@ -323,9 +320,11 @@ class TicketSearchTests(TicketSetupMixin, APITestCase):
     def test_search(self):
         letters = 'watter'
         mommy.make(Ticket, request=letters)
-        count = Ticket.objects.filter(request__icontains=letters).count()
+        count = Ticket.objects.search_multi(keyword=letters).count()
         self.assertEqual(count, 1)
+
         response = self.client.get('/api/tickets/?search={}'.format(letters))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
@@ -333,19 +332,23 @@ class TicketSearchTests(TicketSetupMixin, APITestCase):
         letters = 'wat'
         mommy.make(Ticket, request=letters)
         mommy.make(Ticket, request='watter')
-        users_count = Ticket.objects.filter(request__icontains=letters).count()
-        self.assertEqual(users_count, 2)
+        count = Ticket.objects.search_multi(keyword=letters).count()
+        self.assertEqual(count, 2)
+
         response = self.client.get('/api/tickets/?search={}'.format(letters))
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["count"], users_count)
+        self.assertEqual(data["count"], count)
 
     def test_search_related_location(self):
         create_locations()
         mommy.make(Ticket, request="wat", location=Location.objects.filter(name='san_diego').first())
         mommy.make(Ticket, request="watter", location=Location.objects.filter(name='ca').first())
         letters = "ca"
-        count = Ticket.objects.filter(location__name__icontains=letters).count()
+        count = Ticket.objects.search_multi(keyword=letters).count()
+
         response = self.client.get('/api/tickets/?search={}'.format(letters))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
@@ -356,25 +359,20 @@ class TicketSearchTests(TicketSetupMixin, APITestCase):
         mommy.make(Ticket, request="wat", assignee=Person.objects.filter(fullname='wat soda').first())
         mommy.make(Ticket, request="watter", assignee=Person.objects.filter(fullname='wat pop').first())
         letters = "wat soda"
-        count = Ticket.objects.filter(assignee__fullname__icontains=letters).count()
+        count = Ticket.objects.search_multi(keyword=letters).count()
+
         response = self.client.get('/api/tickets/?search={}'.format(letters))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
     def test_search_related_priority(self):
         mommy.make(Ticket, request="wat", priority=TicketPriority.objects.get(name=TICKET_PRIORITIES[0]))
         mommy.make(Ticket, request="watter", priority=TicketPriority.objects.get(name=TICKET_PRIORITIES[1]))
-        search = "emergency"
-        count = Ticket.objects.filter(
-                Q(request__icontains=search) | \
-                Q(location__name__icontains=search) | \
-                Q(assignee__fullname__icontains=search) | \
-                Q(priority__name__icontains=search) | \
-                Q(status__name__icontains=search) | \
-                Q(categories__name__in=[search])
-            ).count()
+        letters = "emergency"
+        count = Ticket.objects.search_multi(keyword=letters).count()
 
-        response = self.client.get('/api/tickets/?search={}'.format(search))
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
@@ -383,8 +381,10 @@ class TicketSearchTests(TicketSetupMixin, APITestCase):
         mommy.make(Ticket, request="wat", status=TicketStatus.objects.get(name=TICKET_STATUSES[0]))
         mommy.make(Ticket, request="watter", status=TicketStatus.objects.get(name=TICKET_STATUSES[1]))
         letters = "new"
-        count = Ticket.objects.filter(status__name__icontains=letters).count()
+        count = Ticket.objects.search_multi(keyword=letters).count()
+
         response = self.client.get('/api/tickets/?search={}'.format(letters))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
@@ -398,8 +398,10 @@ class TicketSearchTests(TicketSetupMixin, APITestCase):
         one.save()
         two.categories.add(category_two)
         two.save()
-        count = Ticket.objects.filter(categories__name__in=[letters]).count()
+        count = Ticket.objects.search_multi(keyword=letters).count()
+
         response = self.client.get('/api/tickets/?search={}'.format(letters))
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
@@ -704,7 +706,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_assignee(self):
         name = 'assignee'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_assingee = create_single_person()
+        new_assingee = create_single_person(name='foo')
         self.assertNotEqual(self.data['assignee'], str(new_assingee.id))
         self.data['assignee'] = str(new_assingee.id)
 
@@ -724,7 +726,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_cc_add(self):
         name = 'cc_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_cc = create_single_person()
+        new_cc = create_single_person(name='foo')
         self.data['cc'].append(str(new_cc.id))
 
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
@@ -753,7 +755,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_cc_add_and_remove(self):
         self.assertEqual(TicketActivity.objects.count(), 0)
         init_cc = self.ticket.cc.first()
-        new_cc = create_single_person()
+        new_cc = create_single_person(name='foo')
         self.data['cc'] = [str(new_cc.id)]
 
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
@@ -771,8 +773,8 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_cc_add_multiple(self):
         name = 'cc_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_cc = create_single_person()
-        new_cc_two = create_single_person()
+        new_cc = create_single_person(name='foo')
+        new_cc_two = create_single_person(name='bar')
         self.data['cc'].append(str(new_cc.id))
         self.data['cc'].append(str(new_cc_two.id))
 

@@ -1,13 +1,14 @@
 import uuid
 
 from django.db import models
+from django.db.models import Q
 from django.conf import settings
 from django.contrib.postgres.fields import HStoreField
 
 from category.models import Category
 from location.models import Location
 from person.models import Person
-from utils.models import BaseModel, BaseManager, BaseNameModel
+from utils.models import BaseModel, BaseQuerySet, BaseManager, BaseNameModel
 
 
 TICKET_STATUSES = [
@@ -68,6 +69,28 @@ class TicketPriority(BaseNameModel):
         verbose_name_plural = "Ticket Priorities"
 
 
+class TicketQuerySet(BaseQuerySet):
+
+    def search_multi(self, keyword):
+        return self.filter(
+                Q(request__icontains=keyword) | \
+                Q(location__name__icontains=keyword) | \
+                Q(assignee__fullname__icontains=keyword) | \
+                Q(priority__name__icontains=keyword) | \
+                Q(status__name__icontains=keyword) | \
+                Q(categories__name__in=[keyword])
+            )
+
+
+class TicketManager(BaseManager):
+
+    def get_queryset(self):
+        return TicketQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
+
+    def search_multi(self, keyword):
+        return self.get_queryset().search_multi(keyword)
+
+
 class Ticket(BaseModel):
 
     def no_ticket_models():
@@ -92,6 +115,8 @@ class Ticket(BaseModel):
     request = models.CharField(max_length=1000, blank=True, null=True)
     # Auto-fields
     number = models.IntegerField(blank=True, default=no_ticket_models)
+
+    objects = TicketManager()
 
     def save(self, *args, **kwargs):
         self._update_defaults()

@@ -7,10 +7,10 @@ from category.tests.factory import create_categories
 from location.models import Location
 from location.tests.factory import create_location
 from person.models import Person
+from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from ticket.tests import factory
-from person.tests.factory import create_single_person
 from utils.helpers import generate_uuid
 
 

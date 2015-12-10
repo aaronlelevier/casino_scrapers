@@ -1,16 +1,11 @@
-import copy
-
 from rest_framework import serializers
 
-from category.models import Category
 from category.serializers import CategoryIDNameSerializer
 from generic.serializers import Attachment
 from location.serializers import LocationSerializer
-from person.models import Person
 from person.serializers import PersonSimpleSerializer, PersonTicketSerializer
 from ticket.helpers import TicketActivityToRepresentation
-from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
-    TicketActivityType)
+from ticket.models import Ticket, TicketActivity
 from utils.serializers import BaseCreateSerializer
 
 

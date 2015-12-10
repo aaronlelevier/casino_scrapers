@@ -1,5 +1,6 @@
-from django.test import TestCase
 from django.conf import settings
+from django.db.models import Q
+from django.test import TestCase
 
 from model_mommy import mommy
 
@@ -25,6 +26,37 @@ class TicketPriorityTests(TestCase):
         default = TicketPriority.objects.default()
         self.assertIsInstance(default, TicketPriority)
         self.assertEqual(default.name, TICKET_PRIORITIES[0])
+
+
+class TicketManagerTests(TestCase):
+
+    def setUp(self):
+        create_categories()
+        create_single_person()
+        create_tickets(_many=2)
+
+    def test_deleted(self):
+        ticket = Ticket.objects.first()
+
+        ticket.delete()
+
+        self.assertEqual(Ticket.objects.count(), 1)
+        self.assertEqual(Ticket.objects_all.count(), 2)
+
+    def test_search_multi(self):
+        search = TicketPriority.objects.first().name
+        raw_qs_count = Ticket.objects.filter(
+                Q(request__icontains=search) | \
+                Q(location__name__icontains=search) | \
+                Q(assignee__fullname__icontains=search) | \
+                Q(priority__name__icontains=search) | \
+                Q(status__name__icontains=search) | \
+                Q(categories__name__in=[search])
+            ).count()
+
+        ret = Ticket.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
 
 
 class TicketTests(TestCase):

@@ -6,10 +6,8 @@ from model_mommy import mommy
 
 from person.models import Person
 from category.models import Category
-from category.tests.factory import create_categories
 from location.models import Location
 from location.tests.factory import create_locations
-from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from utils.create import _generate_chars

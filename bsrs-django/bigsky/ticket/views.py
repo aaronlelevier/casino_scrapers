@@ -1,11 +1,9 @@
 from rest_framework.exceptions import MethodNotAllowed
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.db.models import Q
 
 from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
-from ticket.models import Ticket, TicketActivity, TicketActivityType
-from person.models import Person
+from ticket.models import Ticket, TicketActivity
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
     TicketListSerializer, TicketActivitySerializer)
 from utils.mixins import EagerLoadQuerySetMixin
@@ -61,14 +59,7 @@ class TicketViewSet(EagerLoadQuerySetMixin, CreateTicketModelMixin,
 
         search = self.request.query_params.get('search', None)
         if search:
-            queryset = queryset.filter(
-                Q(request__icontains=search) | \
-                Q(location__name__icontains=search) | \
-                Q(assignee__fullname__icontains=search) | \
-                Q(priority__name__icontains=search) | \
-                Q(status__name__icontains=search) | \
-                Q(categories__name__in=[search])
-            )
+            queryset = queryset.search_multi(keyword=search)
 
         return queryset
 
