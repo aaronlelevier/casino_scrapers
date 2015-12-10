@@ -126,7 +126,7 @@ class TranslationReadTests(APITestCase):
         response = self.client.get('/api/admin/translations/')
 
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(len(data['results']), 25)
+        self.assertEqual(len(data['results']), 10)
 
     def test_list_order(self):
         response = self.client.get('/api/admin/translations/')
