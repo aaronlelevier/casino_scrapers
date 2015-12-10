@@ -9,7 +9,7 @@ var store;
 
 module('unit: location level deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:location-level', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:location-level']);
     }
 });
 
