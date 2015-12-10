@@ -235,10 +235,57 @@ ALTER SEQUENCE django_site_id_seq OWNED BY django_site.id;
 
 
 --
--- Name: tlocation_location; Type: TABLE; Schema: public; Owner: bsdev; Tablespace: 
+-- Name: tlocation_locationdistrict; Type: TABLE; Schema: public; Owner: bsdev; Tablespace: 
 --
 
-CREATE TABLE tlocation_location (
+CREATE TABLE tlocation_locationdistrict (
+    id integer NOT NULL,
+    number text NOT NULL,
+    name text NOT NULL,
+    regionnumber text NOT NULL,
+    manager text NOT NULL,
+    address1 text NOT NULL,
+    address2 text NOT NULL,
+    city text NOT NULL,
+    state text NOT NULL,
+    zip text NOT NULL,
+    country text NOT NULL,
+    telephone text NOT NULL,
+    fax text NOT NULL,
+    email text NOT NULL,
+    carphone text NOT NULL,
+    comments text NOT NULL
+);
+
+
+ALTER TABLE tlocation_locationdistrict OWNER TO bsdev;
+
+--
+-- Name: tlocation_locationdistrict_id_seq; Type: SEQUENCE; Schema: public; Owner: bsdev
+--
+
+CREATE SEQUENCE tlocation_locationdistrict_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tlocation_locationdistrict_id_seq OWNER TO bsdev;
+
+--
+-- Name: tlocation_locationdistrict_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: bsdev
+--
+
+ALTER SEQUENCE tlocation_locationdistrict_id_seq OWNED BY tlocation_locationdistrict.id;
+
+
+--
+-- Name: tlocation_locationregion; Type: TABLE; Schema: public; Owner: bsdev; Tablespace: 
+--
+
+CREATE TABLE tlocation_locationregion (
     id integer NOT NULL,
     number text NOT NULL,
     name text NOT NULL,
@@ -257,13 +304,13 @@ CREATE TABLE tlocation_location (
 );
 
 
-ALTER TABLE tlocation_location OWNER TO bsdev;
+ALTER TABLE tlocation_locationregion OWNER TO bsdev;
 
 --
--- Name: tlocation_location_id_seq; Type: SEQUENCE; Schema: public; Owner: bsdev
+-- Name: tlocation_locationregion_id_seq; Type: SEQUENCE; Schema: public; Owner: bsdev
 --
 
-CREATE SEQUENCE tlocation_location_id_seq
+CREATE SEQUENCE tlocation_locationregion_id_seq
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -271,13 +318,62 @@ CREATE SEQUENCE tlocation_location_id_seq
     CACHE 1;
 
 
-ALTER TABLE tlocation_location_id_seq OWNER TO bsdev;
+ALTER TABLE tlocation_locationregion_id_seq OWNER TO bsdev;
 
 --
--- Name: tlocation_location_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: bsdev
+-- Name: tlocation_locationregion_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: bsdev
 --
 
-ALTER SEQUENCE tlocation_location_id_seq OWNED BY tlocation_location.id;
+ALTER SEQUENCE tlocation_locationregion_id_seq OWNED BY tlocation_locationregion.id;
+
+
+--
+-- Name: tlocation_locationstore; Type: TABLE; Schema: public; Owner: bsdev; Tablespace: 
+--
+
+CREATE TABLE tlocation_locationstore (
+    id integer NOT NULL,
+    number text NOT NULL,
+    name text NOT NULL,
+    distnumber text NOT NULL,
+    manager text NOT NULL,
+    address1 text NOT NULL,
+    address2 text NOT NULL,
+    city text NOT NULL,
+    state text NOT NULL,
+    zip text NOT NULL,
+    country text NOT NULL,
+    telephone text NOT NULL,
+    fax text NOT NULL,
+    email text NOT NULL,
+    carphone text NOT NULL,
+    costcode text NOT NULL,
+    openingdate date NOT NULL,
+    comments text NOT NULL
+);
+
+
+ALTER TABLE tlocation_locationstore OWNER TO bsdev;
+
+--
+-- Name: tlocation_locationstore_id_seq; Type: SEQUENCE; Schema: public; Owner: bsdev
+--
+
+CREATE SEQUENCE tlocation_locationstore_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE tlocation_locationstore_id_seq OWNER TO bsdev;
+
+--
+-- Name: tlocation_locationstore_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: bsdev
+--
+
+ALTER SEQUENCE tlocation_locationstore_id_seq OWNED BY tlocation_locationstore.id;
 
 
 --
@@ -326,7 +422,21 @@ ALTER TABLE ONLY django_site ALTER COLUMN id SET DEFAULT nextval('django_site_id
 -- Name: id; Type: DEFAULT; Schema: public; Owner: bsdev
 --
 
-ALTER TABLE ONLY tlocation_location ALTER COLUMN id SET DEFAULT nextval('tlocation_location_id_seq'::regclass);
+ALTER TABLE ONLY tlocation_locationdistrict ALTER COLUMN id SET DEFAULT nextval('tlocation_locationdistrict_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: bsdev
+--
+
+ALTER TABLE ONLY tlocation_locationregion ALTER COLUMN id SET DEFAULT nextval('tlocation_locationregion_id_seq'::regclass);
+
+
+--
+-- Name: id; Type: DEFAULT; Schema: public; Owner: bsdev
+--
+
+ALTER TABLE ONLY tlocation_locationstore ALTER COLUMN id SET DEFAULT nextval('tlocation_locationstore_id_seq'::regclass);
 
 
 --
@@ -499,9 +609,15 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 133	Can add tester	45	add_tester
 134	Can change tester	45	change_tester
 135	Can delete tester	45	delete_tester
-136	Can add location	46	add_location
-137	Can change location	46	change_location
-138	Can delete location	46	delete_location
+136	Can add location region	46	add_locationregion
+137	Can change location region	46	change_locationregion
+138	Can delete location region	46	delete_locationregion
+139	Can add location district	47	add_locationdistrict
+140	Can change location district	47	change_locationdistrict
+141	Can delete location district	47	delete_locationdistrict
+142	Can add location store	48	add_locationstore
+143	Can change location store	48	change_locationstore
+144	Can delete location store	48	delete_locationstore
 \.
 
 
@@ -509,7 +625,7 @@ COPY auth_permission (id, name, content_type_id, codename) FROM stdin;
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bsdev
 --
 
-SELECT pg_catalog.setval('auth_permission_id_seq', 138, true);
+SELECT pg_catalog.setval('auth_permission_id_seq', 144, true);
 
 
 --
@@ -562,7 +678,9 @@ COPY django_content_type (id, app_label, model) FROM stdin;
 43	work_request	workrequeststatus
 44	work_request	workrequest
 45	utils	tester
-46	tlocation	location
+46	tlocation	locationregion
+47	tlocation	locationdistrict
+48	tlocation	locationstore
 \.
 
 
@@ -570,7 +688,7 @@ COPY django_content_type (id, app_label, model) FROM stdin;
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bsdev
 --
 
-SELECT pg_catalog.setval('django_content_type_id_seq', 46, true);
+SELECT pg_catalog.setval('django_content_type_id_seq', 48, true);
 
 
 --
@@ -578,16 +696,16 @@ SELECT pg_catalog.setval('django_content_type_id_seq', 46, true);
 --
 
 COPY django_migrations (id, app, name, applied) FROM stdin;
-1	sites	0001_initial	2015-12-09 14:49:12.260767-08
-2	contenttypes	0001_initial	2015-12-09 14:49:13.152427-08
-3	contenttypes	0002_remove_content_type_name	2015-12-09 14:49:13.167613-08
-4	auth	0001_initial	2015-12-09 14:49:13.211383-08
-5	auth	0002_alter_permission_name_max_length	2015-12-09 14:49:13.222646-08
-6	auth	0003_alter_user_email_max_length	2015-12-09 14:49:13.233086-08
-7	auth	0004_alter_user_username_opts	2015-12-09 14:49:13.244196-08
-8	auth	0005_alter_user_last_login_null	2015-12-09 14:49:13.254849-08
-9	auth	0006_require_contenttypes_0002	2015-12-09 14:49:13.256599-08
-10	tlocation	0001_initial	2015-12-09 14:49:15.215705-08
+1	sites	0001_initial	2015-12-10 09:28:04.811057-08
+2	contenttypes	0001_initial	2015-12-10 09:28:05.641859-08
+3	contenttypes	0002_remove_content_type_name	2015-12-10 09:28:05.657014-08
+4	auth	0001_initial	2015-12-10 09:28:05.702066-08
+5	auth	0002_alter_permission_name_max_length	2015-12-10 09:28:05.711592-08
+6	auth	0003_alter_user_email_max_length	2015-12-10 09:28:05.724123-08
+7	auth	0004_alter_user_username_opts	2015-12-10 09:28:05.733969-08
+8	auth	0005_alter_user_last_login_null	2015-12-10 09:28:05.744338-08
+9	auth	0006_require_contenttypes_0002	2015-12-10 09:28:05.746102-08
+10	tlocation	0001_initial	2015-12-10 09:28:07.625957-08
 \.
 
 
@@ -615,18 +733,48 @@ SELECT pg_catalog.setval('django_site_id_seq', 1, true);
 
 
 --
--- Data for Name: tlocation_location; Type: TABLE DATA; Schema: public; Owner: bsdev
+-- Data for Name: tlocation_locationdistrict; Type: TABLE DATA; Schema: public; Owner: bsdev
 --
 
-COPY tlocation_location (id, number, name, manager, address1, address2, city, state, zip, country, telephone, fax, email, carphone, comments) FROM stdin;
+COPY tlocation_locationdistrict (id, number, name, regionnumber, manager, address1, address2, city, state, zip, country, telephone, fax, email, carphone, comments) FROM stdin;
 \.
 
 
 --
--- Name: tlocation_location_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bsdev
+-- Name: tlocation_locationdistrict_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bsdev
 --
 
-SELECT pg_catalog.setval('tlocation_location_id_seq', 1, false);
+SELECT pg_catalog.setval('tlocation_locationdistrict_id_seq', 1, false);
+
+
+--
+-- Data for Name: tlocation_locationregion; Type: TABLE DATA; Schema: public; Owner: bsdev
+--
+
+COPY tlocation_locationregion (id, number, name, manager, address1, address2, city, state, zip, country, telephone, fax, email, carphone, comments) FROM stdin;
+\.
+
+
+--
+-- Name: tlocation_locationregion_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bsdev
+--
+
+SELECT pg_catalog.setval('tlocation_locationregion_id_seq', 1, false);
+
+
+--
+-- Data for Name: tlocation_locationstore; Type: TABLE DATA; Schema: public; Owner: bsdev
+--
+
+COPY tlocation_locationstore (id, number, name, distnumber, manager, address1, address2, city, state, zip, country, telephone, fax, email, carphone, costcode, openingdate, comments) FROM stdin;
+\.
+
+
+--
+-- Name: tlocation_locationstore_id_seq; Type: SEQUENCE SET; Schema: public; Owner: bsdev
+--
+
+SELECT pg_catalog.setval('tlocation_locationstore_id_seq', 1, false);
 
 
 --
@@ -678,11 +826,11 @@ ALTER TABLE ONLY auth_permission
 
 
 --
--- Name: django_content_type_app_label_5f202c2da6416552_uniq; Type: CONSTRAINT; Schema: public; Owner: bsdev; Tablespace: 
+-- Name: django_content_type_app_label_20332d298be46ca6_uniq; Type: CONSTRAINT; Schema: public; Owner: bsdev; Tablespace: 
 --
 
 ALTER TABLE ONLY django_content_type
-    ADD CONSTRAINT django_content_type_app_label_5f202c2da6416552_uniq UNIQUE (app_label, model);
+    ADD CONSTRAINT django_content_type_app_label_20332d298be46ca6_uniq UNIQUE (app_label, model);
 
 
 --
@@ -710,18 +858,34 @@ ALTER TABLE ONLY django_site
 
 
 --
--- Name: tlocation_location_pkey; Type: CONSTRAINT; Schema: public; Owner: bsdev; Tablespace: 
+-- Name: tlocation_locationdistrict_pkey; Type: CONSTRAINT; Schema: public; Owner: bsdev; Tablespace: 
 --
 
-ALTER TABLE ONLY tlocation_location
-    ADD CONSTRAINT tlocation_location_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY tlocation_locationdistrict
+    ADD CONSTRAINT tlocation_locationdistrict_pkey PRIMARY KEY (id);
 
 
 --
--- Name: auth_group_name_5a2cc3c12841bef1_like; Type: INDEX; Schema: public; Owner: bsdev; Tablespace: 
+-- Name: tlocation_locationregion_pkey; Type: CONSTRAINT; Schema: public; Owner: bsdev; Tablespace: 
 --
 
-CREATE INDEX auth_group_name_5a2cc3c12841bef1_like ON auth_group USING btree (name varchar_pattern_ops);
+ALTER TABLE ONLY tlocation_locationregion
+    ADD CONSTRAINT tlocation_locationregion_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: tlocation_locationstore_pkey; Type: CONSTRAINT; Schema: public; Owner: bsdev; Tablespace: 
+--
+
+ALTER TABLE ONLY tlocation_locationstore
+    ADD CONSTRAINT tlocation_locationstore_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_group_name_29f84979934d1bd1_like; Type: INDEX; Schema: public; Owner: bsdev; Tablespace: 
+--
+
+CREATE INDEX auth_group_name_29f84979934d1bd1_like ON auth_group USING btree (name varchar_pattern_ops);
 
 
 --
@@ -746,27 +910,27 @@ CREATE INDEX auth_permission_417f1b1c ON auth_permission USING btree (content_ty
 
 
 --
--- Name: auth_content_type_id_158878713117ffef_fk_django_content_type_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
+-- Name: auth__content_type_id_bb810167b0d87eb_fk_django_content_type_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
 --
 
 ALTER TABLE ONLY auth_permission
-    ADD CONSTRAINT auth_content_type_id_158878713117ffef_fk_django_content_type_id FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT auth__content_type_id_bb810167b0d87eb_fk_django_content_type_id FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
--- Name: auth_group_permissio_group_id_3fede206560262ce_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
---
-
-ALTER TABLE ONLY auth_group_permissions
-    ADD CONSTRAINT auth_group_permissio_group_id_3fede206560262ce_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_group_permission_id_7d2d6bb990e4f7ed_fk_auth_permission_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
+-- Name: auth_group_permission_group_id_7861757d46a489f_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
 --
 
 ALTER TABLE ONLY auth_group_permissions
-    ADD CONSTRAINT auth_group_permission_id_7d2d6bb990e4f7ed_fk_auth_permission_id FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT auth_group_permission_group_id_7861757d46a489f_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permission_id_56726cac1d51f2dc_fk_auth_permission_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
+--
+
+ALTER TABLE ONLY auth_group_permissions
+    ADD CONSTRAINT auth_group_permission_id_56726cac1d51f2dc_fk_auth_permission_id FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
