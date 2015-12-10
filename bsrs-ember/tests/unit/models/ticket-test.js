@@ -1285,3 +1285,23 @@ test('ticket is not dirty after save and save related (starting with none)', (as
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('attachments').get('length'), 1);
 });
+
+test('status_class returns empty string when no status found and valid class when setup', (assert) => {
+    let status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey, tickets: []});
+    let ticket = store.push('ticket', {id: TD.idOne});
+    assert.equal(ticket.get('status'), undefined);
+    assert.equal(ticket.get('status_class'), '');
+    status.set('tickets', [TD.idOne]);
+    assert.equal(ticket.get('status'), status);
+    assert.equal(ticket.get('status_class'), 'ticket-status-new');
+});
+
+test('priority_class returns empty string when no priority found and valid class when setup', (assert) => {
+    let priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey, tickets: []});
+    let ticket = store.push('ticket', {id: TD.idOne});
+    assert.equal(ticket.get('priority'), undefined);
+    assert.equal(ticket.get('priority_class'), '');
+    priority.set('tickets', [TD.idOne]);
+    assert.equal(ticket.get('priority'), priority);
+    assert.equal(ticket.get('priority_class'), 'ticket-priority-emergency');
+});

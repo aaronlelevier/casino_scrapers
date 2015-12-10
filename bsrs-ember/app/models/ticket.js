@@ -69,11 +69,13 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
         };
         return this.get('store').find('ticket-status', filter, ['tickets']);
     }),
-    status_class: Ember.computed('status.name', function(){
-        return this.get('status.name').replace(/\./g, '-');
+    status_class: Ember.computed('status', function(){
+        const name = this.get('status.name');
+        return name ? name.replace(/\./g, '-') : '';
     }),
-    priority_class: Ember.computed('priority.name', function(){
-        return this.get('priority.name').replace(/\./g, '-');
+    priority_class: Ember.computed('priority', function(){
+        const name = this.get('priority.name');
+        return name ? name.replace(/\./g, '-') : '';
     }),
     rollbackStatus() {
         let status = this.get('status');
