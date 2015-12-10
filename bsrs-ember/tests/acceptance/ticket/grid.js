@@ -24,11 +24,12 @@ const LETTER_R = {keyCode: 82};
 const LETTER_O = {keyCode: 79};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
-const SORT_PRIORITY_DIR = '.t-sort-priority-name-dir';
-const SORT_STATUS_DIR = '.t-sort-status-name-dir';
+const SORT_PRIORITY_DIR = '.t-sort-priority-translated-name-dir';
+const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
 const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
 const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
-const FILTER_PRIORITY = '.t-filter-priority-name';
+const SORT_CATEGORY_DIR = '.t-sort-category-name-dir';
+const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 var application, store, endpoint, list_xhr, original_uuid;
 
@@ -53,7 +54,7 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
         assert.equal(find('.t-grid-title').text(), 'Tickets');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-name').text(), TD.priorityOne);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text(), TD.priorityOne);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -158,19 +159,19 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
-        assert.equal(currentURL(), TICKET_URL + '?sort=priority.name');
+        assert.equal(currentURL(), TICKET_URL + '?sort=priority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
     });
     click('.t-page:eq(1) a');
     andThen(() => {
-        assert.equal(currentURL(), TICKET_URL + '?page=2&sort=priority.name');
+        assert.equal(currentURL(), TICKET_URL + '?page=2&sort=priority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
     });
     click('.t-sort-request-dir');
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?sort=request%2Cpriority.name');
+        assert.equal(currentURL(),TICKET_URL + '?sort=request%2Cpriority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
     });
@@ -250,13 +251,13 @@ test('multiple sort options appear in the query string as expected', function(as
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?sort=priority.name');
+        assert.equal(currentURL(),TICKET_URL + '?sort=priority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'sub13');
     });
     click('.t-sort-request-dir');
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?sort=request%2Cpriority.name');
+        assert.equal(currentURL(),TICKET_URL + '?sort=request%2Cpriority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
     });
@@ -282,7 +283,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?sort=priority.name');
+        assert.equal(currentURL(),TICKET_URL + '?sort=priority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort'));
@@ -290,7 +291,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click('.t-sort-request-dir');
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?sort=request%2Cpriority.name');
+        assert.equal(currentURL(),TICKET_URL + '?sort=request%2Cpriority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-asc'));
@@ -298,7 +299,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?sort=-priority.name%2Crequest');
+        assert.equal(currentURL(),TICKET_URL + '?sort=-priority.translated_name%2Crequest');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-desc'));
@@ -306,7 +307,7 @@ test('clicking the same sort option over and over will flip the direction and re
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?sort=priority.name%2Crequest');
+        assert.equal(currentURL(),TICKET_URL + '?sort=priority.translated_name%2Crequest');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-asc'));
@@ -345,9 +346,9 @@ test('full text search will filter down the result set and query django accordin
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
-    filterGrid('priority.name', 'h');
+    filterGrid('priority.translated_name', 'h');
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?find=request%3A%2Cpriority.name%3Ah');
+        assert.equal(currentURL(),TICKET_URL + '?find=request%3A%2Cpriority.translated_name%3Ah');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastUpdatedGrid);
     });
@@ -410,7 +411,7 @@ test('full text searched columns will have a special on css class when active', 
         assert.ok(!find(FILTER_PRIORITY).hasClass('on'));
         assert.ok(find('.t-filter-request').hasClass('on'));
     });
-    filterGrid('priority.name', '7');
+    filterGrid('priority.translated_name', '7');
     andThen(() => {
         assert.ok(find(FILTER_PRIORITY).hasClass('on'));
         assert.ok(find('.t-filter-request').hasClass('on'));
@@ -438,11 +439,11 @@ test('after you reset the grid the filter model will also be reset', function(as
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?search=4&sort=priority.name');
+        assert.equal(currentURL(),TICKET_URL + '?search=4&sort=priority.translated_name');
     });
-    filterGrid('priority.name', '4');
+    filterGrid('priority.translated_name', '4');
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?find=priority.name%3A4&search=4&sort=priority.name');
+        assert.equal(currentURL(),TICKET_URL + '?find=priority.translated_name%3A4&search=4&sort=priority.translated_name');
     });
     click('.t-reset-grid');
     andThen(() => {
@@ -629,7 +630,7 @@ test('save filterset button only available when a dynamic filter is present', fu
     });
 });
 
-test('status.name is a functional related filter', function(assert) {
+test('status.translated_name is a functional related filter', function(assert) {
     let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name&status__name__icontains=rr';
     xhr(option_four,'GET',null,{},200,TF.searched_related(TD.statusTwoId, 'status'));
     let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name';
@@ -642,7 +643,7 @@ test('status.name is a functional related filter', function(assert) {
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusOneKey));
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusOneKey));
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     fillIn('.t-grid-search-input', 'rr');
@@ -650,36 +651,36 @@ test('status.name is a functional related filter', function(assert) {
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=rr');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusTwoKey));
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusTwoKey));
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusOneKey));
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusOneKey));
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     });
     click(SORT_STATUS_DIR);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?search=&sort=status.name');
+        assert.equal(currentURL(),TICKET_URL + '?search=&sort=status.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusTwoKey));
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusTwoKey));
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
     });
     click(SORT_STATUS_DIR);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?search=&sort=-status.name');
+        assert.equal(currentURL(),TICKET_URL + '?search=&sort=-status.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusOneKey));
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusOneKey));
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
     });
-    filterGrid('status.name', 'rr');
+    filterGrid('status.translated_name', 'rr');
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?find=status.name%3Arr&search=&sort=-status.name');
+        assert.equal(currentURL(),TICKET_URL + '?find=status.translated_name%3Arr&search=&sort=-status.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-name').text(), t(TD.statusTwoKey));
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-status-translated_name').text(), t(TD.statusTwoKey));
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
     });
 });

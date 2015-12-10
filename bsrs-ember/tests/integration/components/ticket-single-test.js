@@ -27,8 +27,8 @@ moduleForComponent('tickets/ticket-single', 'integration: ticket-single test', {
 });
 
 test('each status shows up as a valid select option', function(assert) {
-    store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOne});
-    store.push('ticket-status', {id: TICKET_DEFAULTS.statusTwoId, name: TICKET_DEFAULTS.statusTwo});
+    store.push('ticket-status', {id: TICKET_DEFAULTS.statusOneId, name: TICKET_DEFAULTS.statusOneKey});
+    store.push('ticket-status', {id: TICKET_DEFAULTS.statusTwoId, name: TICKET_DEFAULTS.statusTwoKey});
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
     let statuses = store.find('ticket-status');
     this.set('model', ticket);
@@ -39,8 +39,8 @@ test('each status shows up as a valid select option', function(assert) {
 });
 
 test('each priority shows up as a valid select option', function(assert) {
-    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOne});
-    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwo});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityOneId, name: TICKET_DEFAULTS.priorityOneKey});
+    store.push('ticket-priority', {id: TICKET_DEFAULTS.priorityTwoId, name: TICKET_DEFAULTS.priorityTwoKey});
     let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
     let priorities = store.find('ticket-priority');
     this.set('model', ticket);
