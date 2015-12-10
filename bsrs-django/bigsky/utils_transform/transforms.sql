@@ -242,19 +242,19 @@ CREATE TABLE tlocation_locationdistrict (
     id integer NOT NULL,
     number text NOT NULL,
     name text NOT NULL,
-    regionnumber text NOT NULL,
-    manager text NOT NULL,
-    address1 text NOT NULL,
-    address2 text NOT NULL,
-    city text NOT NULL,
-    state text NOT NULL,
-    zip text NOT NULL,
-    country text NOT NULL,
-    telephone text NOT NULL,
-    fax text NOT NULL,
-    email text NOT NULL,
-    carphone text NOT NULL,
-    comments text NOT NULL
+    regionnumber text,
+    manager text,
+    address1 text,
+    address2 text,
+    city text,
+    state text,
+    zip text,
+    country text,
+    telephone text,
+    fax text,
+    email text,
+    carphone text,
+    comments text
 );
 
 
@@ -289,18 +289,18 @@ CREATE TABLE tlocation_locationregion (
     id integer NOT NULL,
     number text NOT NULL,
     name text NOT NULL,
-    manager text NOT NULL,
-    address1 text NOT NULL,
-    address2 text NOT NULL,
-    city text NOT NULL,
-    state text NOT NULL,
-    zip text NOT NULL,
-    country text NOT NULL,
-    telephone text NOT NULL,
-    fax text NOT NULL,
-    email text NOT NULL,
-    carphone text NOT NULL,
-    comments text NOT NULL
+    manager text,
+    address1 text,
+    address2 text,
+    city text,
+    state text,
+    zip text,
+    country text,
+    telephone text,
+    fax text,
+    email text,
+    carphone text,
+    comments text
 );
 
 
@@ -335,21 +335,21 @@ CREATE TABLE tlocation_locationstore (
     id integer NOT NULL,
     number text NOT NULL,
     name text NOT NULL,
-    distnumber text NOT NULL,
-    manager text NOT NULL,
-    address1 text NOT NULL,
-    address2 text NOT NULL,
-    city text NOT NULL,
-    state text NOT NULL,
-    zip text NOT NULL,
-    country text NOT NULL,
-    telephone text NOT NULL,
-    fax text NOT NULL,
-    email text NOT NULL,
-    carphone text NOT NULL,
-    costcode text NOT NULL,
-    openingdate date NOT NULL,
-    comments text NOT NULL
+    distnumber text,
+    manager text,
+    address1 text,
+    address2 text,
+    city text,
+    state text,
+    zip text,
+    country text,
+    telephone text,
+    fax text,
+    email text,
+    carphone text,
+    costcode text,
+    openingdate date,
+    comments text
 );
 
 
@@ -696,16 +696,16 @@ SELECT pg_catalog.setval('django_content_type_id_seq', 48, true);
 --
 
 COPY django_migrations (id, app, name, applied) FROM stdin;
-1	sites	0001_initial	2015-12-10 09:28:04.811057-08
-2	contenttypes	0001_initial	2015-12-10 09:28:05.641859-08
-3	contenttypes	0002_remove_content_type_name	2015-12-10 09:28:05.657014-08
-4	auth	0001_initial	2015-12-10 09:28:05.702066-08
-5	auth	0002_alter_permission_name_max_length	2015-12-10 09:28:05.711592-08
-6	auth	0003_alter_user_email_max_length	2015-12-10 09:28:05.724123-08
-7	auth	0004_alter_user_username_opts	2015-12-10 09:28:05.733969-08
-8	auth	0005_alter_user_last_login_null	2015-12-10 09:28:05.744338-08
-9	auth	0006_require_contenttypes_0002	2015-12-10 09:28:05.746102-08
-10	tlocation	0001_initial	2015-12-10 09:28:07.625957-08
+1	sites	0001_initial	2015-12-10 11:03:18.269225-08
+2	contenttypes	0001_initial	2015-12-10 11:03:19.081621-08
+3	contenttypes	0002_remove_content_type_name	2015-12-10 11:03:19.097595-08
+4	auth	0001_initial	2015-12-10 11:03:19.138462-08
+5	auth	0002_alter_permission_name_max_length	2015-12-10 11:03:19.148167-08
+6	auth	0003_alter_user_email_max_length	2015-12-10 11:03:19.158779-08
+7	auth	0004_alter_user_username_opts	2015-12-10 11:03:19.168266-08
+8	auth	0005_alter_user_last_login_null	2015-12-10 11:03:19.179217-08
+9	auth	0006_require_contenttypes_0002	2015-12-10 11:03:19.181161-08
+10	tlocation	0001_initial	2015-12-10 11:03:21.053569-08
 \.
 
 
@@ -826,11 +826,11 @@ ALTER TABLE ONLY auth_permission
 
 
 --
--- Name: django_content_type_app_label_20332d298be46ca6_uniq; Type: CONSTRAINT; Schema: public; Owner: bsdev; Tablespace: 
+-- Name: django_content_type_app_label_6bad79df874a47ac_uniq; Type: CONSTRAINT; Schema: public; Owner: bsdev; Tablespace: 
 --
 
 ALTER TABLE ONLY django_content_type
-    ADD CONSTRAINT django_content_type_app_label_20332d298be46ca6_uniq UNIQUE (app_label, model);
+    ADD CONSTRAINT django_content_type_app_label_6bad79df874a47ac_uniq UNIQUE (app_label, model);
 
 
 --
@@ -882,10 +882,10 @@ ALTER TABLE ONLY tlocation_locationstore
 
 
 --
--- Name: auth_group_name_29f84979934d1bd1_like; Type: INDEX; Schema: public; Owner: bsdev; Tablespace: 
+-- Name: auth_group_name_148fcf5b0c8035dc_like; Type: INDEX; Schema: public; Owner: bsdev; Tablespace: 
 --
 
-CREATE INDEX auth_group_name_29f84979934d1bd1_like ON auth_group USING btree (name varchar_pattern_ops);
+CREATE INDEX auth_group_name_148fcf5b0c8035dc_like ON auth_group USING btree (name varchar_pattern_ops);
 
 
 --
@@ -910,27 +910,27 @@ CREATE INDEX auth_permission_417f1b1c ON auth_permission USING btree (content_ty
 
 
 --
--- Name: auth__content_type_id_bb810167b0d87eb_fk_django_content_type_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
+-- Name: auth_content_type_id_53e755a53f92e7e7_fk_django_content_type_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
 --
 
 ALTER TABLE ONLY auth_permission
-    ADD CONSTRAINT auth__content_type_id_bb810167b0d87eb_fk_django_content_type_id FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT auth_content_type_id_53e755a53f92e7e7_fk_django_content_type_id FOREIGN KEY (content_type_id) REFERENCES django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
--- Name: auth_group_permission_group_id_7861757d46a489f_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
---
-
-ALTER TABLE ONLY auth_group_permissions
-    ADD CONSTRAINT auth_group_permission_group_id_7861757d46a489f_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED;
-
-
---
--- Name: auth_group_permission_id_56726cac1d51f2dc_fk_auth_permission_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
+-- Name: auth_group_permissio_group_id_69f15ba7ffe9087a_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
 --
 
 ALTER TABLE ONLY auth_group_permissions
-    ADD CONSTRAINT auth_group_permission_id_56726cac1d51f2dc_fk_auth_permission_id FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+    ADD CONSTRAINT auth_group_permissio_group_id_69f15ba7ffe9087a_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permission_id_50f39f2495b44e0e_fk_auth_permission_id; Type: FK CONSTRAINT; Schema: public; Owner: bsdev
+--
+
+ALTER TABLE ONLY auth_group_permissions
+    ADD CONSTRAINT auth_group_permission_id_50f39f2495b44e0e_fk_auth_permission_id FOREIGN KEY (permission_id) REFERENCES auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
