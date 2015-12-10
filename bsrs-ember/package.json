@@ -23,7 +23,7 @@
     "body-parser": "^1.12.2",
     "broccoli-asset-rev": "^2.2.0",
     "broccoli-funnel": "^1.0.0",
-    "bsrs-bootstrap-config": "git+ssh://git@github.com:bigskytech/bsrs-bootstrap-config.git#0.2.30",
+    "bsrs-bootstrap-config": "git+ssh://git@github.com:bigskytech/bsrs-bootstrap-config.git#0.2.32",
     "ember-cli": "1.13.13",
     "ember-cli-app-version": "^1.0.0",
     "ember-cli-auto-register": "1.1.0",

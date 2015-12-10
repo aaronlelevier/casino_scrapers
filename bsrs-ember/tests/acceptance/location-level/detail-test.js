@@ -101,7 +101,7 @@ test('a location level child can be selected and persisted', (assert) => {
         assert.equal(location_level.get('children').get('length'), 3);
         assert.ok(location_level.get('isDirty'));
     });
-    let children = [LLD.idThree, LLD.idStore, LLD.idTwo];
+    let children = [LLD.idStore, LLD.idLossRegion, LLD.idTwo];
     let payload = LLF.put({id: LLD.idDistrict, name: LLD.nameDistrict, children: children});
     xhr(PREFIX + DISTRICT_DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, {});
     let list = LLF.list();
@@ -236,7 +236,7 @@ test('can remove and add back children', (assert) => {
         const model = store.find('location-level', LLD.idOne);
         assert.equal(model.get('children_fks').length, 6);
     });
-    page.childrenClickOptionRegion();
+    page.childrenClickOptionFirst();
     let children = LLD.companyChildren;
     let payload = LLF.put({id: LLD.idOne, name: LLD.nameCompany, children: children});
     xhr(endpoint_detail, 'PUT', JSON.stringify(payload), {}, 200, {});
