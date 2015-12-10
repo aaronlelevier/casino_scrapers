@@ -60,7 +60,7 @@ test('visiting /people/new and creating a new person', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), NEW_URL);
         assert.equal(store.find('person').get('length'), 2);
-        assert.equal(page.roleInput(), t(RD.nameOne));
+        assert.equal(page.roleInput(), RD.nameOne);
         var person = store.find('person', UUID.value);
         assert.ok(person.get('new'));
     });
@@ -186,7 +186,7 @@ test('can change default role', (assert) => {
         assert.equal(person.get('role').get('id'), RD.idTwo);
         assert.ok(person.get('roleIsDirty'));
         assert.ok(person.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.roleInput(), t(RD.nameTwo));
+        assert.equal(page.roleInput(), RD.nameTwo);
     });
     const payload_two = {
         id: UUID.value,

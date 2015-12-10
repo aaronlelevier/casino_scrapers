@@ -108,9 +108,9 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
         });
         var paged;
         if(page && page > 1) {
-            paged = searched.slice(10, 20);
+            paged = searched.slice(25, 50);
         } else {
-            paged = searched.slice(0, 10);
+            paged = searched.slice(0, 25);
         }
         return {'count':searched.length,'next':null,'previous':null,'results': paged};
     };

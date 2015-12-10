@@ -28,6 +28,5 @@ test('visiting /tickets', (assert) => {
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
-        assert.equal(find('.t-grid-data').length, 10);
     });
 });

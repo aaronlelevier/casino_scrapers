@@ -76,7 +76,7 @@ class OrderingQuerySetMixinTests(APITransactionTestCase):
         # Role
         self.role = create_role()
         # Person Records w/ specific Username
-        for i in range(20):
+        for i in range(35):
             name = self._get_name(i)
             Person.objects.create_user(name, 'myemail@mail.com', PASSWORD,
                 first_name=name, role=self.role)
@@ -113,7 +113,7 @@ class OrderingQuerySetMixinTests(APITransactionTestCase):
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
         record = 0
-        self.assertEqual(data['results'][record]['first_name'], self._get_name(record))
+        self.assertEqual(data['results'][record]['first_name'], self._get_name(26))
 
     def test_ordering_first_name_data_reverse(self):
         response = self.client.get('/api/admin/people/?ordering=-first_name')
@@ -134,7 +134,7 @@ class OrderingQuerySetMixinTests(APITransactionTestCase):
         response = self.client.get('/api/admin/people/?page=2&ordering=first_name')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
+        self.assertEqual(data['results'][0]['first_name'], self._get_name(16))
 
     def test_ordering_first_page_ordering_reverse(self):
         # The last name on the last page in descending order should
@@ -142,13 +142,13 @@ class OrderingQuerySetMixinTests(APITransactionTestCase):
         response = self.client.get('/api/admin/people/?ordering=-first_name&page=2')
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['results'][-1]['first_name'], self._get_name(0))
+        self.assertEqual(data['results'][-1]['first_name'], self._get_name(26))
 
     def test_ordering_first_name_page_search(self):
         response = self.client.get('/api/admin/people/?page=2&ordering=first_name&search=wat')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
+        self.assertEqual(data['results'][0]['first_name'], self._get_name(16))
 
 
 class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):

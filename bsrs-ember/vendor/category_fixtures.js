@@ -1,6 +1,7 @@
 var BSRS_CATEGORY_FACTORY = (function() {
-    var factory = function(category_defaults) {
+    var factory = function(category_defaults, config) {
         this.category_defaults = category_defaults.default || category_defaults;
+        this.config = config;
     };
     factory.prototype.get = function(i, name) {
         //right now function used for roles & tickets
@@ -41,9 +42,10 @@ var BSRS_CATEGORY_FACTORY = (function() {
     },
     factory.prototype.list = function() {
         var response = [];
-        for (var i=1; i <= 10; i++) {
+        var page_size = this.config.default.APP.PAGE_SIZE;
+        for (var i=1; i <= page_size; i++) {
             var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
-            if (i < 10) {
+            if (i < page_size) {
                 uuid = uuid + '0' + i;
             } else{
                 uuid = uuid + i;
@@ -58,18 +60,19 @@ var BSRS_CATEGORY_FACTORY = (function() {
         var sorted = response.sort(function(a,b) {
             return b.id - a.id;
         });
-        return {'count':19,'next':null,'previous':null,'results': sorted};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
     },
     factory.prototype.list_two = function() {
         var response = [];
-        for (var i=11; i <= 19; i++) {
+        var page_size = this.config.default.APP.PAGE_SIZE;
+        for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
             var category = this.generate(uuid + i);
             category.name = 'cococat' + i;
             category.label = 'scohat' + i;
             response.push(category);
         }
-        return {'count':19,'next':null,'previous':null,'results': response};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i) {
         var id = i || this.category_defaults.idOne;
@@ -97,13 +100,14 @@ if (typeof window === 'undefined') {
     var objectAssign = require('object-assign');
     var mixin = require('../vendor/mixin');
     var category_defaults = require('./defaults/category');
+    var config = require('../config/environment');
     objectAssign(BSRS_CATEGORY_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_CATEGORY_FACTORY(category_defaults);
+    module.exports = new BSRS_CATEGORY_FACTORY(category_defaults, config);
 } else {
-    define('bsrs-ember/vendor/category_fixtures', ['exports', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin'], function (exports, category_defaults, mixin) {
+    define('bsrs-ember/vendor/category_fixtures', ['exports', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, category_defaults, mixin, config) {
         'use strict';
         Object.assign(BSRS_CATEGORY_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_CATEGORY_FACTORY(category_defaults);
+        var Factory = new BSRS_CATEGORY_FACTORY(category_defaults, config);
         return {default: Factory};
     });
 }

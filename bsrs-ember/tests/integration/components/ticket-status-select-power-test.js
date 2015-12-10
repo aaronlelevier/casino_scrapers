@@ -5,7 +5,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import tHelper from 'ember-i18n/helper';
 
-let store, ticket, status_one, status_two, status_three, run = Ember.run;
+var store, ticket, status_one, status_two, status_three, run = Ember.run, trans;
 const PowerSelect = '.ember-power-select-trigger';
 const COMPONENT = '.t-ticket-status-select';
 const DROPDOWN = '.ember-power-select-dropdown';
@@ -18,7 +18,7 @@ moduleForComponent('ticket-status-select', 'integration: ticket-status-select te
         status_one = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
         status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
         status_three = store.push('ticket-status', {id: TD.statusThreeId, name: TD.statusThree});
-        t = this.container.lookup('service:i18n');
+        trans = this.container.lookup('service:i18n');
     }
 });
 
@@ -46,7 +46,7 @@ test('should render a selectbox with bound options', function(assert) {
     this.set('statuses', statuses);
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(COMPONENT);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), t.t(TD.statusOneKey));
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(TD.statusOneKey));
     run(() => {
         this.$(PowerSelect).click();
     });
@@ -73,7 +73,7 @@ test('should be able to select new status when one doesnt exist', function(asser
     });
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    assert.equal($component.find(PowerSelect).text().trim(), t.t(TD.statusOneKey));
+    assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.statusOneKey));
     assert.equal(ticket.get('status').get('id'), TD.statusOneId);
     assert.deepEqual(status_one.get('tickets'), [TD.idOne]);
 });
@@ -85,7 +85,7 @@ test('should be able to select same status when ticket already has a status', fu
     this.set('statuses', statuses);
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(COMPONENT);
-    assert.equal($component.find(PowerSelect).text().trim(), t.t(TD.statusOneKey));
+    assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.statusOneKey));
     run(() => {
         this.$(PowerSelect).click();
     });
@@ -96,7 +96,7 @@ test('should be able to select same status when ticket already has a status', fu
     });
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    assert.equal($component.find(PowerSelect).text().trim(), t.t(TD.statusOneKey));
+    assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.statusOneKey));
     assert.equal(ticket.get('status').get('id'), TD.statusOneId);
     assert.deepEqual(status_one.get('tickets'), [TD.idOne]);
 });
@@ -108,7 +108,7 @@ test('should be able to select new status when ticket already has a status', fun
     this.set('statuses', statuses);
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(COMPONENT);
-    assert.equal($component.find(PowerSelect).text().trim(), t.t(TD.statusOneKey));
+    assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.statusOneKey));
     run(() => {
         this.$(PowerSelect).click();
     });

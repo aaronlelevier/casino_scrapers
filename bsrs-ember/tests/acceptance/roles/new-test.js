@@ -18,6 +18,7 @@ import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/role';
 
 const PREFIX = config.APP.NAMESPACE;
+const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_roles_url;
 const ROLE_URL = BASE_URL + '/index';
 const NEW_URL = BASE_URL + '/new';
@@ -35,7 +36,7 @@ module('Acceptance | role-new', {
             name: RD.nameOne,
             role_type: RD.roleTypeGeneral,
             location_level: RD.locationLevelOne,
-            categories: [CD.idTwo]
+            categories: [CD.idTwo+'2z']
         };
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -45,6 +46,7 @@ module('Acceptance | role-new', {
         random.uuid = function() { return UUID.value; };
         url = `${PREFIX}${BASE_URL}/`;
         counter=0;
+        store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
     },
     afterEach() {
         counter=0;
@@ -74,10 +76,10 @@ test('visiting role/new', (assert) => {
     page.roleTypeClickOptionOne();
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'a');
+    fillIn(CATEGORY_SEARCH, '2z');
     page.categoryClickOptionTwo();
     generalPage.save();
     andThen(() => {
@@ -120,10 +122,10 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-location-level-validation-error').is(':hidden'));
         assert.ok(find('.t-role-category-validation-error').is(':visible'));
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'a');
+    fillIn(CATEGORY_SEARCH, '2z');
     page.categoryClickOptionTwo();
     andThen(() => {
         assert.ok(find('.t-name-validation-error').is(':hidden'));
@@ -201,10 +203,10 @@ test('can save new location level', (assert) => {
         assert.equal(role.get('location_level').get('id'), LLD.idOne);
         assert.equal(role.get('location_level_fk'), undefined);
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'a');
+    fillIn(CATEGORY_SEARCH, '2z');
     page.categoryClickOptionTwo();
     xhr(url, 'POST', JSON.stringify(payload), {}, 201, {});
     generalPage.save();
@@ -216,12 +218,12 @@ test('can save new location level', (assert) => {
 /*ROLE TO CATEGORY M2M*/
 test('clicking and typing into power select for categories will fire off xhr request for all categories', (assert) => {
     visit(NEW_URL);
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'a');
+    fillIn(CATEGORY_SEARCH, '2z');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 10); 
+        assert.equal(page.categoryOptionLength(), 1); 
         assert.equal(page.categoriesSelected(), 0);
         const role = store.find('role', UUID.value);
         assert.equal(role.get('role_category_fks').length, 0);
@@ -239,7 +241,7 @@ test('clicking and typing into power select for categories will fire off xhr req
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
     let category = CF.put({id: CD.idOne, name: CD.nameOne});
-    let payload = RF.put({id: UUID.value, location_level: LLD.idOne, categories: [CD.idTwo]});
+    let payload = RF.put({id: UUID.value, location_level: LLD.idOne, categories: [CD.idTwo+'2z']});
     xhr(url, 'POST', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -252,12 +254,12 @@ test('adding and removing removing a category in power select for categories wil
     andThen(() => {
         patchRandom(counter);
     });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'a');
+    fillIn(CATEGORY_SEARCH, '2z');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 10); 
+        assert.equal(page.categoryOptionLength(), 1); 
         assert.equal(page.categoriesSelected(), 0);
         const role = store.find('role', UUID.value);
         assert.equal(role.get('role_category_fks').length, 0);
@@ -299,7 +301,7 @@ test('can add multiple categories', (assert) => {
         let role = store.find('role', UUID.value);
         assert.equal(role.get('categories').get('length'), 0);
         assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(page.categoryOptionLength(), 2);
+        assert.equal(page.categoryOptionLength(), 11);
     });
     page.categoryClickOptionOneEq();
     andThen(() => {
@@ -308,10 +310,10 @@ test('can add multiple categories', (assert) => {
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 1);
     });
-    let category_endpoint_two = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
-    xhr(category_endpoint_two, 'GET', null, {}, 200, CF.list());
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'a');
+    fillIn(CATEGORY_SEARCH, '2z');
     page.categoryClickOptionTwo();
     fillIn('.t-role-name', RD.nameOne);
     page.locationLevelClickDropdown();
@@ -336,10 +338,10 @@ test('clicking and typing into power select for categories will not filter if sp
     fillIn('.t-role-name', RD.nameOne);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
-    let category_endpoint_two = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
-    xhr(category_endpoint_two, 'GET', null, {}, 200, CF.list());
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'a');
+    fillIn(CATEGORY_SEARCH, '2z');
     page.categoryClickOptionTwo();
     xhr(url, 'POST', JSON.stringify(payload), {}, 201);
     generalPage.save();

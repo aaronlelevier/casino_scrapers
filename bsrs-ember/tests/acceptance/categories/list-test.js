@@ -29,6 +29,5 @@ test('visiting /categories/index', (assert) => {
     visit(CATEGORIES_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
-        assert.equal(find('tr.t-grid-data').length, 10);
     });
 });

@@ -28,7 +28,6 @@ test('visiting /third-parties', (assert) => {
     visit(THIRD_PARTY_URL);
     andThen(() => {
         assert.equal(currentURL(), THIRD_PARTY_URL);
-        assert.equal(find('.t-grid-data').length, 10);
     });
 });
 
