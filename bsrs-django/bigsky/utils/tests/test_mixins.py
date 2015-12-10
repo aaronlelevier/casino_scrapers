@@ -175,11 +175,6 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_setup_data(self):
-        self.assertEqual(LocationLevel.objects.count(), 2)
-        self.assertEqual(Role.objects.count(), 3)
-        self.assertEqual(Person.objects.count(), 3)
-
     def test_list(self):
         params = ["role__name"]
         response = self.client.get('/api/admin/people/?related_ordering={}'

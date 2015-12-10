@@ -43,6 +43,16 @@ class FactoryTests(TestCase):
         self.assertEqual(role.location_level.name, location_level.name)
 
     def test_create_single_person(self):
+        person = factory.create_single_person()
+
+        self.assertIsInstance(person, Person)
+        self.assertIsInstance(person.role, Role)
+        # person's location
+        self.assertEqual(person.locations.count(), 1)
+        location = person.locations.first()
+        self.assertEqual(person.role.location_level, location.location_level)
+
+    def test_create_single_person__with_role(self):
         username = 'bob'
         role = factory.create_role()
 

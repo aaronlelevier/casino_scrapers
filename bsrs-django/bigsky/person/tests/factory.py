@@ -65,7 +65,7 @@ PERSON_BASE_ID = "30f530c4-ce6c-4724-9cfd-37a16e787"
 def create_single_person(name=None, role=None, location=None):
     name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
     role = role or create_role()
-    location = location or create_location()
+    location = location or create_location(location_level=role.location_level)
 
     incr = Person.objects.count()
     id = generate_uuid(PERSON_BASE_ID, incr+1)

@@ -315,7 +315,7 @@ class LocationDetailTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         region1 = Location.objects.filter(location_level=location_level).first()
         self.assertIn(str(region1.id), response.content.decode('utf8'))
-        self.assertEqual(len(data), 2)
+        self.assertEqual(len(data), 3)
 
 
 class LocationCreateTests(APITestCase):
@@ -546,6 +546,7 @@ class LocationOrderingTests(APITestCase):
     def setUp(self):
         # Login
         self.person = create_person()
+        self.person.locations.all().delete()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):

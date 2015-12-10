@@ -15,12 +15,12 @@ from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_contact, create_contacts
 from location.models import Location, LocationLevel
+from location.tests.factory import create_location
 from person.models import Person, Role
 from person.serializers import (PersonUpdateSerializer, RoleSerializer,
     RoleUpdateSerializer)
-from person.tests.factory import (
-    PASSWORD, create_person, create_role, create_roles, create_single_person,
-    create_all_people)
+from person.tests.factory import (PASSWORD, create_person, create_role, create_roles,
+    create_single_person, create_all_people)
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create, choices
@@ -409,7 +409,9 @@ class PersonPutTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
-        self.person = create_single_person(name="aaron")
+        self.role = create_role()
+        self.location = create_location(location_level=self.role.location_level)
+        self.person = create_single_person()
         self.client.login(username=self.person.username, password=self.password)
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
         self.email_type = mommy.make(EmailType)
@@ -421,7 +423,7 @@ class PersonPutTests(APITestCase):
 
         # Person2 w/ some contact info doesn't affect Person1's Contact
         # counts / updates / deletes
-        self.person2 = create_person()
+        self.person2 = create_single_person()
         create_contacts(self.person2)
 
         serializer = PersonUpdateSerializer(self.person)
@@ -556,7 +558,7 @@ class PersonPutTests(APITestCase):
         self.assertNotEqual(self.person.role.location_level, location_level)
         # Adding a LocationLevel that matches the new Role's LocationLevel is fine
         self.data['role'] = str(new_role.id)
-        self.data['locations'].append(str(location.id))
+        self.data['locations'] = [location.id]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
