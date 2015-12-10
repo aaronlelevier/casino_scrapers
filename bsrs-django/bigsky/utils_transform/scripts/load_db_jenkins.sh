@@ -3,12 +3,20 @@
 printf "LOAD 'transforms' DATABASE \n"
 printf "MUST RUN FROM './manage.py' DIR LEVEL!!! \n"
 
-DB_NAME="transforms"
-
+export DB_NAME=transforms
+export DB_USER=bsdev
 export PGPASSWORD=tango
+
+echo "CREATE FRESH DATABASE: '${DB_NAME}'"
 wait
-dropdb $DB_NAME -U bsdev
+dropdb $DB_NAME -U $DB_USER
 wait
-createdb $DB_NAME -U bsdev -O bsdev
+createdb $DB_NAME -U $DB_USER -O $DB_USER
+
+echo "LOAD TABLES TO '${DB_NAME}' DATABASE"
 wait
-psql -d transforms -f utils_transform/transforms.sql
+psql -d $DB_NAME -f utils_transform/transforms.sql
+
+echo "OUTPUT TABLES CREATED"
+wait
+psql -U $DB_USER -d $DB_NAME -c "\dt"
