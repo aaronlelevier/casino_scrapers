@@ -36,6 +36,26 @@ export default Ember.Component.extend({
                     break;
                 }
             });
+            if(Ember.$('.activity-list-item').filter(':visible').length === 0){
+                Ember.$('.activity-spacer').hide();
+                switch(filterType){
+                    case 'comments':
+                        Ember.$('.activity-empty-comments').removeClass('hide');
+                        Ember.$('.activity-empty-status_updates').addClass('hide');
+                    break;
+                    case 'status_updates':
+                        Ember.$('.activity-empty-comments').addClass('hide');
+                        Ember.$('.activity-empty-status_updates').removeClass('hide');
+                    break;
+                    default:
+                    break;
+                }
+            }else{
+                Ember.$('.activity-empty-comments').addClass('hide');
+                Ember.$('.activity-empty-status_updates').addClass('hide');
+                Ember.$('.activity-spacer').show();
+            }
+
         }
     }
 });

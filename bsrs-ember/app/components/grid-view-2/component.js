@@ -8,7 +8,7 @@ import UpdateFind from 'bsrs-ember/mixins/update-find';
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
 var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
-    page_sizes: ['25', '50', '100', '150'],
+    page_sizes: ['10', '20', '50', '100', '150'],
     toggleFilter: false,
     savingFilter: false,
     classNames: ['wrapper'],

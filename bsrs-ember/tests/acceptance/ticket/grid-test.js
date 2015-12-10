@@ -72,7 +72,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastUpdatedGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -198,16 +198,16 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=4');
-        assert.equal(find('.t-grid-data').length, 13);
+        assert.equal(find('.t-grid-data').length, 2);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'sub');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'ape');
     });
     click('.t-sort-request-dir');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=4&sort=request');
-        assert.equal(find('.t-grid-data').length, 13);
+        assert.equal(find('.t-grid-data').length, 2);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'ape');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'sub');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
@@ -228,7 +228,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=14&sort=request');
         assert.equal(find('.t-grid-data').length, 1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'sub14');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'ape14');
     });
     click('.t-reset-grid');
     andThen(() => {
@@ -253,7 +253,7 @@ test('multiple sort options appear in the query string as expected', function(as
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?sort=priority.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        // assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'sub13');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), 'sub1');
     });
     click('.t-sort-request-dir');
     andThen(() => {
@@ -295,7 +295,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastUpdatedGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
@@ -303,7 +303,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-request-dir').hasClass('fa-sort-asc'));
         assert.ok(find(SORT_PRIORITY_DIR).hasClass('fa-sort-desc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastUpdatedGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
     click(SORT_PRIORITY_DIR);
     andThen(() => {
@@ -338,7 +338,7 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=request%3Aape');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastUpdatedGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
     filterGrid('request', '');
     andThen(() => {
@@ -350,7 +350,7 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=request%3A%2Cpriority.translated_name%3Ah');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastUpdatedGrid);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
     click('.t-reset-grid');
     andThen(() => {
@@ -468,8 +468,8 @@ test('count is shown and updated as the user filters down the list from django',
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=4');
-        assert.equal(find('.t-grid-data').length, 13);
-        assert.equal(find('.t-page-count').text(), '14 Tickets');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-page-count').text(), '2 Tickets');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);

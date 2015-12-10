@@ -53,7 +53,7 @@ test('should be able to select same role when person already has a role', functi
     });
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
-    assert.equal($('.ember-power-select-options > li').length, 25);
+    assert.equal($('.ember-power-select-options > li').length, 10);
     run(() => { 
         $(`.ember-power-select-option:contains(${RD.nameOne})`).click(); 
     });

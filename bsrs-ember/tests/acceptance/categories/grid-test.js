@@ -191,16 +191,16 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?search=4');
-        assert.equal(find('.t-grid-data').length, 13);
-        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CD.nameOne + '14');
-        assert.equal(find('.t-grid-data:eq(1) .t-category-name').text(), CD.nameOne + '24');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CD.nameOne + '4');
+        assert.equal(find('.t-grid-data:eq(1) .t-category-name').text(), 'cococat14');
     });
     click('.t-sort-label-dir');
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?search=4&sort=label');
-        assert.equal(find('.t-grid-data').length, 13);
-        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CD.nameOne + '14');
-        assert.equal(find('.t-grid-data:eq(1) .t-category-name').text(), CD.nameOne + '24');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CD.nameOne + '4');
+        assert.equal(find('.t-grid-data:eq(1) .t-category-name').text(), 'cococat14');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
@@ -212,7 +212,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?page=2&search=&sort=label');
-        // assert.equal(find('.t-grid-data').length, 22);
+        assert.equal(find('.t-grid-data').length, 9);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-category-name').text()), 'cococat');
     });
     fillIn('.t-grid-search-input', '14');
@@ -221,7 +221,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?search=14&sort=label');
         assert.equal(find('.t-grid-data').length, 1);
-        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CD.nameOne + '14');
+        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), 'cococat14');
     });
     click('.t-reset-grid');
     andThen(() => {
@@ -334,7 +334,7 @@ test('full text search will filter down the result set and query django accordin
     filterGrid('name', '7');
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?find=label%3Ahat%2Cname%3A7');
-        assert.equal(find('.t-grid-data').length, 3);
+        assert.equal(find('.t-grid-data').length, 1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-category-name').text()), 'cococat');
     });
     click('.t-reset-grid');
@@ -453,9 +453,8 @@ test('count is shown and updated as the user filters down the list from django',
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?search=4');
-        //TODO: not the same 13 and 14
-        // assert.equal(find('.t-grid-data').length, 13);
-        // assert.equal(find('.t-page-count').text(), '2 Categories');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-page-count').text(), '2 Categories');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);

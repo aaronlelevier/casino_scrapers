@@ -480,7 +480,7 @@ test('count is shown and updated as the user filters down the list from django',
     triggerEvent(`${SEARCH_INPUT}`, 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(),TP_URL + '?search=4');
-        assert.equal(find(GRID_DATA_ALL).length, 13);
+        assert.equal(find(GRID_DATA_ALL).length, 2);
         // assert.equal(find(`${PAGE}-count`).text(), '14 Third Parties');
     });
     fillIn(`${SEARCH_INPUT}`, '');

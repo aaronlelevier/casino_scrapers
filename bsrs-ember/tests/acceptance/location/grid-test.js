@@ -196,16 +196,16 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=4');
-        assert.equal(find('.t-grid-data').length, 13);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), 'ABC12314');
-        assert.equal(find('.t-grid-data:eq(1) .t-location-name').text(), 'ABC12324');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-name').text()), 'ABC');
+        assert.equal(find('.t-grid-data:eq(1) .t-location-name').text(), 'vzoname14');
     });
     click('.t-sort-number-dir');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=4&sort=number');
-        assert.equal(find('.t-grid-data').length, 13);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), 'ABC12314');
-        assert.equal(find('.t-grid-data:eq(1) .t-location-name').text(), 'ABC12324');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-name').text()), 'ABC');
+        assert.equal(find('.t-grid-data:eq(1) .t-location-name').text(), 'vzoname14');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
@@ -217,8 +217,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?page=2&search=&sort=number');
-        //TODO: this is wrong. should be 24 but says 22
-        // assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), `vzoname${PAGE_SIZE+1}`);
     });
     fillIn('.t-grid-search-input', '14');
@@ -227,7 +226,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=14&sort=number');
         assert.equal(find('.t-grid-data').length, 1);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), 'ABC12314');
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), 'vzoname14');
     });
     click('.t-reset-grid');
     andThen(() => {
@@ -340,7 +339,7 @@ test('full text search will filter down the result set and query django accordin
     filterGrid('name', '7');
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?find=number%3Anum%2Cname%3A7');
-        assert.equal(find('.t-grid-data').length, 3);
+        assert.equal(find('.t-grid-data').length, 1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-location-name').text()), 'vzoname');
     });
     click('.t-reset-grid');
@@ -459,8 +458,8 @@ test('count is shown and updated as the user filters down the list from django',
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=4');
         //TODO: NOT MATCHING UP
-        // assert.equal(find('.t-grid-data').length, 13);
-        // assert.equal(find('.t-page-count').text(), '2 Locations');
+        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-page-count').text(), '2 Locations');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);

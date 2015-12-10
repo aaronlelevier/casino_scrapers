@@ -32,7 +32,7 @@ import selectize from 'bsrs-ember/tests/pages/selectize';
 import random from 'bsrs-ember/models/random';
 
 const PREFIX = config.APP.NAMESPACE;
-const POWER_SELECT_LENGTH = 25;
+const POWER_SELECT_LENGTH = 10;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_LOCATION_URL = BASEURLS.base_locations_url;
 const PEOPLE_URL = `${BASE_PEOPLE_URL}/index`;
@@ -1114,9 +1114,9 @@ test('deep link to person and clicking in the person-locations-select component 
         assert.equal(page.locationOptionLength(), 1);
         assert.equal(find(LOCATION_DROPDOWN).text().trim(), GLOBALMSG.power_search);
     });
-    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=ABC12324`;
+    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=ABC1234`;
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
-    fillIn(LOCATION_SEARCH, 'ABC12324');
+    fillIn(LOCATION_SEARCH, 'ABC1234');
     andThen(() => {
         assert.equal(page.locationOptionLength(), POWER_SELECT_LENGTH);
     });
@@ -1125,7 +1125,7 @@ test('deep link to person and clicking in the person-locations-select component 
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 2);
         assert.equal(page.locationOneSelected().indexOf(LD.storeName), 2);
-        assert.equal(page.locationTwoSelected().indexOf(LD.baseStoreName+'2'), 2);
+        assert.equal(page.locationTwoSelected().indexOf('ABC1234'), 2);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     page.locationClickDropdown();
@@ -1241,14 +1241,14 @@ test('when you deep link to the person detail view you can alter the locations a
         assert.equal(previous_location_m2m.get('length'), 0);
     });
     xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data);
-    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=ABC12324`;
+    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}&name__icontains=ABC1234`;
     xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
-    fillIn(LOCATION_SEARCH, 'ABC12324');
+    fillIn(LOCATION_SEARCH, 'ABC1234');
     page.locationClickOptionTwo();
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
-            assert.equal(currentURL(), DETAIL_URL + '?search=ABC12324');
+            assert.equal(currentURL(), DETAIL_URL + '?search=ABC1234');
             assert.ok(generalPage.modalIsVisible());
             let person = store.find('person', PD.id);
             assert.equal(person.get('locations').get('length'), 1);

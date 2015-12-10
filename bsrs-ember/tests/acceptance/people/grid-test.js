@@ -50,7 +50,7 @@ test('initial load should only show first 10 records ordered by id with correct 
         assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameOne);
         assert.equal(find('.t-grid-data:eq(0) .t-person-employee_id').text(), '');
         var pagination = find('.t-pages');
-        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page').length, PAGE_SIZE/5);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
         assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
         assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
@@ -192,16 +192,17 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_EIGHT);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?search=8');
-        assert.equal(find('.t-grid-data').length, 5);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE/5);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text()), 'mgibson');
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(2) .t-person-username').text()), 'scott');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-person-username').text()), 'scott');
     });
     click('.t-sort-title-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?search=8&sort=title');
-        assert.equal(find('.t-grid-data').length, 5);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text()), 'mgibson');
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-person-username').text()), 'scott');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE/5);
+        //switch if change page size
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-person-username').text()), 'mgibson');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text()), 'scott');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
@@ -214,7 +215,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?page=2&search=&sort=title');
         assert.ok(find('.t-grid-data').length < PAGE_SIZE);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text()), 'scott');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text()), 'mgibson');
     });
     fillIn('.t-grid-search-input', '8 m');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_EIGHT);
@@ -222,7 +223,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_M);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?search=8%20m&sort=title');
-        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-grid-data').length, 1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text()), 'mgibson');
     });
     click('.t-reset-grid');
@@ -348,14 +349,14 @@ test('full text search will filter down the result set and query django accordin
     filterGrid('username', '7');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?find=title%3Awat%2Cusername%3A7');
-        assert.equal(find('.t-grid-data').length, 3);
+        assert.equal(find('.t-grid-data').length, 1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text()), 'scott');
     });
     click('.t-filter-fullname');
     filterGrid('fullname', 'ewcomer');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?find=title%3Awat%2Cusername%3A7%2Cfullname%3Aewcomer');
-        assert.equal(find('.t-grid-data').length, 3);
+        assert.equal(find('.t-grid-data').length, 1);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-person-username').text()), 'scott');
     });
     click('.t-filter-fullname');
@@ -485,21 +486,21 @@ test('count is shown and updated as the user filters down the list from django',
     visit(PEOPLE_URL);
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-page-count').text(), '48 People');
+        assert.equal(find('.t-page-count').text(), `${PAGE_SIZE*2-2} People`);
     });
     fillIn('.t-grid-search-input', '8');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_EIGHT);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?search=8');
-        assert.equal(find('.t-grid-data').length, 5);
-        assert.equal(find('.t-page-count').text(), '5 People');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE/5);
+        assert.equal(find('.t-page-count').text(), `${PAGE_SIZE/5} People`);
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?search=');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-page-count').text(), '48 People');
+        assert.equal(find('.t-page-count').text(), `${PAGE_SIZE*2-2} People`);
     });
 });
 
@@ -550,10 +551,9 @@ test('picking a different number of pages will alter the query string and xhr', 
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-size option:selected').text(), `${PAGE_SIZE} per page`);
         var pagination = find('.t-pages');
-        //TODO: check with Toran on this.  Should be 2 pages after list_two comes in?
-        assert.equal(pagination.find('.t-page').length, 1);
+        assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
-        assert.equal(pagination.find('.t-page:eq(1) a').text(), '');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
         assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
         assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
     });
@@ -561,13 +561,13 @@ test('picking a different number of pages will alter the query string and xhr', 
 
 test(`starting with a page size greater than ${PAGE_SIZE} will set the selected`, function(assert) {
     clearxhr(list_xhr);
-    const updated_size = PAGE_SIZE * 2;
+    const updated_size = PAGE_SIZE*2;
     let option_one = PREFIX + BASE_URL + `/?page=1&page_size=${updated_size}`;
     xhr(option_one, 'GET',null,{},200,PF.paginated(updated_size));
     visit(`${PEOPLE_URL}?page_size=${updated_size}`);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + `?page_size=${updated_size}`);
-        assert.equal(find('.t-grid-data').length, 49);
+        assert.equal(find('.t-grid-data').length, updated_size-1);
         assert.equal(find('.t-page-size option:selected').text(), `${updated_size} per page`);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 1);
@@ -670,7 +670,7 @@ test('typing a search will search on related', function(assert) {
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_M);
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?search=manager');
-        assert.equal(find('.t-grid-data').length, 23);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
         assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameTwo);
         assert.equal(find('.t-grid-data:eq(1) .t-person-role-name').text(), RD.nameTwo);
         assert.equal(find('.t-grid-data:eq(2) .t-person-role-name').text(), RD.nameTwo);
@@ -679,7 +679,7 @@ test('typing a search will search on related', function(assert) {
     click('.t-sort-title-dir');
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL + '?search=manager&sort=title');
-        assert.equal(find('.t-grid-data').length, 23);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE-2);
         assert.equal(find('.t-grid-data:eq(0) .t-person-role-name').text(), RD.nameTwo);
         assert.equal(find('.t-grid-data:eq(1) .t-person-role-name').text(), RD.nameTwo);
         assert.equal(find('.t-grid-data:eq(2) .t-person-role-name').text(), RD.nameTwo);

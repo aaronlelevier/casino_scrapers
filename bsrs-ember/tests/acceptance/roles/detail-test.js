@@ -306,7 +306,7 @@ test('starting with multiple categories, can remove all categories (while not po
         assert.equal(role.get('role_category_fks').length, 2);
         assert.equal(role.get('categories').get('length'), 0);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoryOptionLength(), 11);
+        assert.equal(page.categoryOptionLength(), 2);
     });
     page.categoryClickOptionOneEq();
     andThen(() => {
@@ -343,7 +343,7 @@ test('search will filter down on categories in store correctly by removing and a
     page.categoryClickDropdown();
     fillIn(CATEGORY_SEARCH, 'repair1');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 11);
+        assert.equal(page.categoryOptionLength(), 2);
     });
     page.categoryClickOptionOneEq();
     andThen(() => {
