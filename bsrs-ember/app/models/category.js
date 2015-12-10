@@ -4,8 +4,9 @@ import equal from 'bsrs-ember/utilities/equal';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import NewMixin from 'bsrs-ember/mixins/model/new';
+import TranslationMixin from 'bsrs-ember/mixins/model/translation';
 
-var CategoryModel = Model.extend(NewMixin, {
+var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
     name: attr(''),
