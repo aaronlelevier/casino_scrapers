@@ -51,7 +51,7 @@ var extract_assignee = function(assignee_json, store, person_deserializer, ticke
     let assignee_id = assignee_json.id;
     person_deserializer.deserialize(assignee_json, assignee_id);
     ticket_model.change_assignee(assignee_id);
-    ticket_model.assignee_fk = assignee_id;
+    ticket_model.set('assignee_fk', assignee_id);
 };
 
 var extract_cc = function(model, store, uuid, person_deserializer) {
