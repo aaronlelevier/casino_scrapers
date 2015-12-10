@@ -4,20 +4,23 @@ printf "DROP, CREATE, MIGRATE 'transforms' DATABASE \n"
 printf "MUST RUN FROM './manage.py' DIR LEVEL!!! \n"
 printf "IGNORE STACK TRACE FOR 'sites' BECAUSE 'auth' ISN'T YET LOADED YET \n\n"
 
-dropdb transforms -U bsdev
-wait
-createdb transforms -U bsdev -O bsdev
-wait
-./manage.py migrate sites --database=transforms
-./manage.py migrate auth --database=transforms
+export DB_NAME=transforms
+export DB_USER=bsdev
 
-printf "\n MIGRATE 'transforms' DATABASE SPECIFIC APPS \n\n"
-./manage.py migrate tlocation --database=transforms
+dropdb $DB_NAME -U $DB_USER
+wait
+createdb $DB_NAME -U $DB_USER -O $DB_USER
+wait
+./manage.py migrate sites --database=$DB_NAME
+./manage.py migrate auth --database=$DB_NAME
+
+printf "\n MIGRATE '$DB_NAME' DATABASE SPECIFIC APPS \n\n"
+./manage.py migrate tlocation --database=$DB_NAME
 
 printf "\n OUTPUT MIGRATED TABLES \n\n"
 wait
-psql -d transforms -c "\dt"
+psql -d $DB_NAME -c "\dt"
 
 printf "\n DUMP DATABASE FILE - SO IT CAN BE LOADED ON JENKINS \n\n"
 wait
-pg_dump -U bsdev transforms > utils_transform/transforms.sql
+pg_dump -U $DB_USER $DB_NAME > utils_transform/$DB_NAME.sql
