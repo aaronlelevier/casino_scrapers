@@ -7,4 +7,4 @@ class Command(BaseCommand):
     help = 'create test tickets'
 
     def handle(self, *args, **options):
-        create_tickets(_many=11)
+        create_tickets(_many=51)
