@@ -1,15 +1,11 @@
 from .base import *
 
 
-LOCAL_APPS = (
-    'django_extensions',
-    )
-
 DATA_TRANSFORM_APPS = (
     'utils_transform.tlocation',
     )
 
-INSTALLED_APPS += LOCAL_APPS + DATA_TRANSFORM_APPS
+INSTALLED_APPS += DATA_TRANSFORM_APPS
 
 
 DATABASES = {
