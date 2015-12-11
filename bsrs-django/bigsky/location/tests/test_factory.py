@@ -37,6 +37,12 @@ class LocationTests(TestCase):
         ca = Location.objects.get(name='ca')
         self.assertEqual(ca.parents.count(), 1)
 
+    def test_create_locations__at_least_one_for_each_location_level(self):
+        factory.create_locations()
+
+        for x in LocationLevel.objects.all():
+            self.assertTrue(Location.objects.filter(location_level=x).exists())
+
     def test_create_location(self):
         ret = factory.create_location()
 

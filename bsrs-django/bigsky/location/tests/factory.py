@@ -51,6 +51,12 @@ def create_locations():
     ca.children.add(san_diego)
     ca.children.add(los_angeles)
 
+    # make sure that every LocationLevel has at least one Location for it.
+    for x in LocationLevel.objects.all():
+        if not Location.objects.filter(location_level=x).exists():
+            mommy.make(Location, name=_generate_chars(), number=_generate_chars(),
+                location_level=x)
+
 
 def create_location(location_level=None):
     location_level = location_level or create_location_level()
