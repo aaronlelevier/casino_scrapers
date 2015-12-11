@@ -9,6 +9,7 @@ import ParentValidationComponent from 'bsrs-ember/mixins/validation/parent';
 var TicketSingleComponent = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
     child_components: ['parent-ticket-category-select'],
     repository: inject('ticket'),
+    requestValidation: validate('model.request'),
     numberValidation: validate('model.number'),
     assigneeValidation: validate('model.assignee'),
     priorityValidation: validate('model.priority'),
