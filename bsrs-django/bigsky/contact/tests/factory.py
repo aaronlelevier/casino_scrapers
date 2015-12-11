@@ -42,13 +42,6 @@ def get_create_contact_method(model):
         return load_create_contact(model, EMAIL_BASE_ID)
 
 
-# def create_phone_number(instance):
-#     incr = PhoneNumber.objects.count()
-#     id = generate_uuid(PHONE_NUMBER_BASE_ID, incr)
-#     return mommy.make(PhoneNumber, id=id, content_object=instance,
-#         object_id=instance.id, _fill_optional=['type'])
-
-
 def load_create_contact(model, uuid):
     def create_contact_instance(instance):
         incr = model.objects.count()
@@ -56,20 +49,6 @@ def load_create_contact(model, uuid):
         return mommy.make(model, id=id, content_object=instance,
                           object_id=instance.id, _fill_optional=['type'])
     return create_contact_instance
-
-
-# def create_address(instance):
-#     incr = Address.objects.count()
-#     id = generate_uuid(ADDRESS_BASE_ID, incr)
-#     return mommy.make(Address, id=id, content_object=instance,
-#         object_id=instance.id, _fill_optional=['type'])
-
-
-# def create_email(instance):
-#     incr = Email.objects.count()
-#     id = generate_uuid(EMAIL_BASE_ID, incr)
-#     return mommy.make(Email, id=id, content_object=instance,
-#         object_id=instance.id, _fill_optional=['type'])
 
 
 def create_phone_number_type(name=None):
