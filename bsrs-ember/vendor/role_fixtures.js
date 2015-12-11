@@ -26,7 +26,7 @@ var BSRS_ROLE_FACTORY = (function() {
         response.push({id: uuid + 1, name: this.role_defaults.nameOne, location_level: this.location_level_fixtures.detail().id, role_type: this.role_defaults.roleTypeGeneral });
         response.push({id: uuid + 2, name: this.role_defaults.nameTwo, location_level: this.location_level_fixtures.detail().id, role_type: this.role_defaults.roleTypeGeneral });
         response.push({id: uuid + 3, name: this.role_defaults.nameThree, location_level: this.location_level_fixtures.detail().id, role_type: this.role_defaults.roleTypeGeneral });
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=4; i <= page_size; i++) {
             var rando_uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04';
             if (i < page_size) {
@@ -48,7 +48,7 @@ var BSRS_ROLE_FACTORY = (function() {
     };
     factory.prototype.list_two = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04';
             var role = this.generate(uuid + i);

@@ -50,7 +50,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
     },
     factory.prototype.list = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=1; i <= page_size; i++) {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
             if (i < 25) {
@@ -79,7 +79,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
     };
     factory.prototype.list_two = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-2; i++) {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
             var person = this.generate(uuid + i);

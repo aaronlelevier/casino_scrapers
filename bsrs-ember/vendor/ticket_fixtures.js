@@ -40,7 +40,7 @@ var BSRS_TICKET_FACTORY = (function() {
     };
     factory.prototype.list = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=1; i <= page_size; i++) {
             var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d';
             if (i < page_size) {
@@ -64,7 +64,7 @@ var BSRS_TICKET_FACTORY = (function() {
     };
     factory.prototype.list_two = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d';
             var ticket = this.generate(uuid + i);

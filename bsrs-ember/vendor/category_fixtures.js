@@ -42,7 +42,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
     },
     factory.prototype.list = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=1; i <= page_size; i++) {
             var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
             if (i < page_size) {
@@ -64,7 +64,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
     },
     factory.prototype.list_two = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
             var category = this.generate(uuid + i);

@@ -29,7 +29,7 @@ var BSRS_LOCATION_FACTORY = (function() {
     };
     factory.prototype.list = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=1; i <= page_size; i++) {
             var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
             if (i < page_size) {
@@ -51,7 +51,7 @@ var BSRS_LOCATION_FACTORY = (function() {
     };
     factory.prototype.list_two = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
             var location = this.generate(uuid + i);
