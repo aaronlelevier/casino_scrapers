@@ -271,6 +271,41 @@ test('when cc is changed dirty tracking works as expected (removing)', (assert) 
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
+test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
+    store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+    store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idTwo, person_pk: PD.id});
+    let person = store.push('person', {id: PD.id});
+    let ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
+    let ticket_two = store.push('ticket', {id: TD.idTwo, ticket_people_fks: [TPD.idTwo]});
+    assert.equal(ticket.get('cc').get('length'), 1);
+    assert.ok(ticket.get('ccIsNotDirty'));
+    assert.ok(ticket_two.get('ccIsNotDirty'));
+    ticket_two.remove_person(PD.id);
+    assert.equal(ticket.get('cc').get('length'), 1);
+    assert.equal(ticket_two.get('cc').get('length'), 0);
+    assert.ok(ticket.get('ccIsNotDirty'));
+    assert.ok(ticket_two.get('ccIsDirty'));
+    ticket_two.rollbackRelated();
+    assert.equal(ticket.get('cc').get('length'), 1);
+    assert.ok(ticket.get('ccIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(ticket_two.get('ccIsNotDirty'));
+    assert.equal(ticket_two.get('cc').get('length'), 1);
+    assert.ok(ticket_two.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_person(PD.id);
+    assert.equal(ticket.get('cc').get('length'), 0);
+    assert.ok(ticket.get('ccIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    assert.equal(ticket_two.get('cc').get('length'), 1);
+    assert.ok(ticket_two.get('ccIsNotDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('cc').get('length'), 1);
+    assert.ok(ticket.get('ccIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket_two.get('cc').get('length'), 1);
+    assert.ok(ticket_two.get('ccIsNotDirty'));
+});
+
 test('when cc is changed dirty tracking works as expected (replacing)', (assert) => {
     store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
     store.push('person', {id: PD.id});
