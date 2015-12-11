@@ -2,7 +2,7 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import GridViewComponent from 'bsrs-ember/components/grid-view-2/component';
+import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 
 var proxy = function() {
     return Ember.ArrayProxy.extend({
@@ -16,7 +16,7 @@ var proxy = function() {
 
 var store, eventbus, requested;
 
-module('unit: grid-view-2 test', {
+module('unit: grid-view test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'service:eventbus', 'model:role']);
         eventbus = this.container.lookup('service:eventbus');
