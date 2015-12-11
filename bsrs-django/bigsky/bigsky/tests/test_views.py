@@ -1,9 +1,10 @@
-import json
 from datetime import timedelta
+import json
+import time
 
-from django.test import TestCase
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.test import TestCase
 from django.utils import timezone
 
 from model_mommy import mommy
@@ -15,7 +16,7 @@ from contact.models import PhoneNumberType, AddressType
 from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus, State, Country
 from person.models import PersonStatus, Role
-from person.tests.factory import PASSWORD, create_person, create_role
+from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
 from ticket.models import TicketStatus, TicketPriority
 from translation.tests.factory import create_locales
 
@@ -253,3 +254,20 @@ class ErrorPageTests(TestCase):
     def test_500(self):
         response = self.client.get(reverse('500'))
         self.assertEqual(response.status_code, 500)
+
+
+class SessionTests(TestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        self.login_data = {'username': self.person.username, 'password': PASSWORD}
+
+    def test_session_expiry(self):
+        with self.settings(SESSION_COOKIE_AGE=1):
+            response = self.client.post(reverse('login'), self.login_data, follow=True)
+            self.assertRedirects(response, reverse('index'))
+            # simulate User inactivity, which leads to a "session timeout"
+            time.sleep(1)
+            response = self.client.get(reverse('index'), follow=True)
+            self.assertRedirects(response, '/login/?next=/')
+            self.assertIsNone(self.client.session.get('_auth_user_id', None))

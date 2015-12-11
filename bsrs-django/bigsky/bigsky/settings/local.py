@@ -28,6 +28,14 @@ DATABASES = {
         'PASSWORD': 'tango',
         'HOST': 'localhost',
         'PORT': '5432',
+    },
+    'transforms': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'transforms',
+        'USER': 'bsdev',
+        'PASSWORD': 'tango',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
