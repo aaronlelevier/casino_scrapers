@@ -2,7 +2,7 @@ import Ember from 'ember';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
 let extract_location_level = (model, store, location_level_deserializer) => {
-    let location_level_pk = model.location_level.id;  
+    let location_level_pk = model.location_level.id || model.location_level;//Tickets return location level as id and Location Detail returns LL as object
     let existing_location_level = store.find('location-level', location_level_pk);
     if (existing_location_level.get('content')) {
         let locations = existing_location_level.get('locations') || [];//bootstrapped location levels will not have locations

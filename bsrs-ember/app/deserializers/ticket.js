@@ -85,7 +85,7 @@ var extract_cc = function(model, store, uuid, person_deserializer) {
     return server_sum;
 };
 
-var extract_ticket_location = function(model, store) {
+var extract_ticket_location = function(model, store, location_deserializer) {
     let location_pk = model.location.id;
     let ticket = store.find('ticket', model.id);
     if (ticket.get('location')) {
@@ -105,7 +105,7 @@ var extract_ticket_location = function(model, store) {
         if (location.get('content') && existing_tickets.indexOf(model.id) === -1) {
             location.set('tickets', existing_tickets.concat([model.id]));
         } else {
-            let location = store.push('location', model.location);
+            location_deserializer.deserialize(model.location, model.location.id);
             location.set('tickets', [model.id]);
         }
         delete model.location;
@@ -149,23 +149,25 @@ var TicketDeserializer = Ember.Object.extend({
     uuid: inject('uuid'),
     PersonDeserializer: injectDeserializer('person'),
     CategoryDeserializer: injectDeserializer('category'),
+    LocationDeserializer: injectDeserializer('location'),
     deserialize(response, options) {
         let person_deserializer = this.get('PersonDeserializer');
         let category_deserializer = this.get('CategoryDeserializer');
+        let location_deserializer = this.get('LocationDeserializer');
         if (typeof options === 'undefined') {
-            this.deserialize_list(response, person_deserializer, category_deserializer);
+            this.deserialize_list(response, person_deserializer, category_deserializer, location_deserializer);
         } else {
-            this.deserialize_single(response, options, person_deserializer, category_deserializer);
+            this.deserialize_single(response, options, person_deserializer, category_deserializer, location_deserializer);
         }
     },
-    deserialize_single(response, id, person_deserializer, category_deserializer) {
+    deserialize_single(response, id, person_deserializer, category_deserializer, location_deserializer) {
         let uuid = this.get('uuid');
         let store = this.get('store');
         let existing_ticket = store.find('ticket', id);
         if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
             response.status_fk = extract_ticket_status(response, store);
             response.priority_fk = extract_ticket_priority(response, store);
-            response.location_fk = extract_ticket_location(response, store);
+            response.location_fk = extract_ticket_location(response, store, location_deserializer);
             response.ticket_people_fks = extract_cc(response, store, uuid, person_deserializer);
             response.requester_id = extract_requester(response, store, person_deserializer);
             response.ticket_categories_fks = extract_categories(response, store, uuid, category_deserializer);
@@ -181,7 +183,7 @@ var TicketDeserializer = Ember.Object.extend({
             ticket.save();
         }
     },
-    deserialize_list(response, person_deserializer, category_deserializer) {
+    deserialize_list(response, person_deserializer, category_deserializer, location_deserializer) {
         let uuid = this.get('uuid');
         let store = this.get('store');
         response.results.forEach((model) => {
@@ -189,7 +191,7 @@ var TicketDeserializer = Ember.Object.extend({
             if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
                 model.status_fk = extract_ticket_status(model, store);
                 model.priority_fk = extract_ticket_priority(model, store);
-                model.location_fk = extract_ticket_location(model, store);
+                model.location_fk = extract_ticket_location(model, store, location_deserializer);
                 model.ticket_categories_fks = extract_categories(model, store, uuid, category_deserializer);
                 let assignee_json = model.assignee;
                 delete model.assignee;
