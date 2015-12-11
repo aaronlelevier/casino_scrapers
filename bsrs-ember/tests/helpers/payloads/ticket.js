@@ -7,6 +7,7 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 
 var ticket_payload = {
     id: UUID.value,
+    request: TD.requestOne,
     status: TD.statusOneId,
     priority: TD.priorityOneId,
     cc: [],

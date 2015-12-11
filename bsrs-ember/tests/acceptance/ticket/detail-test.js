@@ -143,6 +143,20 @@ test('when you click cancel, you are redirected to the ticket list view', (asser
     });
 });
 
+test('validation works for request field', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    fillIn('.t-ticket-request', '');
+    generalPage.save();
+    andThen(() => {
+        assert.ok(find('.t-request-validation-error').is(':visible'));
+    });
+    fillIn('.t-ticket-request', 'wat');
+    andThen(() => {
+        assert.ok(find('.t-request-validation-error').is(':hidden'));
+    });
+});
+
 test('validation works for non required fields and when hit save, we do same post', (assert) => {
     //assignee, requester, cc, request
     detail_data.assignee = null;

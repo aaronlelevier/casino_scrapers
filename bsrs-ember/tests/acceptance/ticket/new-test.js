@@ -83,6 +83,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-assignee-validation-error').is(':hidden'));
         assert.ok(find('.t-location-validation-error').is(':hidden'));
         assert.ok(find('.t-category-validation-error').is(':hidden'));
+        assert.ok(find('.t-request-validation-error').is(':hidden'));
     });
     generalPage.save();
     andThen(() => {
@@ -92,6 +93,16 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
         assert.ok(find('.t-category-validation-error').is(':visible'));
+        assert.ok(find('.t-request-validation-error').is(':visible'));
+    });
+    fillIn('.t-ticket-request', TD.requestOne);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.ok(find('.t-priority-validation-error').is(':visible'));
+        assert.ok(find('.t-assignee-validation-error').is(':visible'));
+        assert.ok(find('.t-location-validation-error').is(':visible'));
+        assert.ok(find('.t-category-validation-error').is(':visible'));
+        assert.ok(find('.t-request-validation-error').is(':hidden'));
     });
     page.statusClickDropdown();
     page.statusClickOptionOne();
@@ -312,7 +323,6 @@ test('selecting category tree and removing a top level category will remove chil
     //change top level
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionTwo();
-
     andThen(() => {
         let components = page.selectizeComponents();
         let tickets = store.find('ticket');

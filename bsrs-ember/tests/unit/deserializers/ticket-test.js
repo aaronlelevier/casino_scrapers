@@ -6,6 +6,7 @@ import TICKET_CD from 'bsrs-ember/vendor/defaults/ticket-category';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import PF from 'bsrs-ember/vendor/people_fixtures';
 import CF from 'bsrs-ember/vendor/category_fixtures';
@@ -16,7 +17,7 @@ import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer, category_deserializer, ticket_priority, ticket_status, ticket;
+let store, subject, uuid, person_deserializer, location_level_deserializer, location_deserializer, category_deserializer, ticket_priority, ticket_status, ticket, location_level;
 
 module('unit: ticket deserializer test', {
     beforeEach() {
@@ -26,10 +27,11 @@ module('unit: ticket deserializer test', {
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
         person_deserializer = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
         category_deserializer = CategoryDeserializer.create({store: store});
-        subject = TicketDeserializer.create({store: store, uuid: uuid, PersonDeserializer: person_deserializer, CategoryDeserializer: category_deserializer});
+        subject = TicketDeserializer.create({store: store, uuid: uuid, PersonDeserializer: person_deserializer, CategoryDeserializer: category_deserializer, LocationDeserializer: location_deserializer});
         ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
         ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [TD.idOne]});
         ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId, status_fk: TD.statusOneId});
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, locations: [LD.idOne]});
     }
 });
 
@@ -166,26 +168,28 @@ test('ticket location will be updated when server returns different location (li
     let location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
     let json = TF.generate(TD.idOne);
     delete json.cc;
-    json.location = {id: LD.idTwo, name: LD.storeNameTwo};
+    json.location = {id: LD.idTwo, name: LD.storeNameTwo, location_level: LLD.idOne};
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     subject.deserialize(response);
     assert.deepEqual(location.get('tickets'), []);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('location.id'), LD.idTwo);
+    assert.equal(ticket.get('location.location_level.id'), LLD.idOne);
 });
 
 test('ticket location will be updated when server returns different location (detail)', (assert) => {
     ticket.set('location_fk', LD.idOne);
     ticket.save();
-    let location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
+    let location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne], location_level: LLD.idOne});
     let json = TF.generate(TD.idOne);
-    json.location = {id: LD.idTwo, name: LD.storeNameTwo};
+    json.location = {id: LD.idTwo, name: LD.storeNameTwo, location_level: LLD.idOne};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     subject.deserialize(json, ticket.get('id'));
     assert.deepEqual(location.get('tickets'), []);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('location.id'), LD.idTwo);
+    assert.equal(ticket.get('location.location_level.id'), LLD.idOne);
 });
 
 /*TICKET PRIORITY 1-2-Many*/

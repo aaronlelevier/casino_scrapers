@@ -14,6 +14,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
     uuid: injectUUID('uuid'),
     number: attr(''),
     requester_id: attr(),
+    request: attr(),
     ticket_people_fks: [],
     ticket_categories_fks: [],
     previous_attachments_fks: [],

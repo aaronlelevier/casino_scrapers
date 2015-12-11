@@ -16,6 +16,18 @@ module('unit: ticket test', {
     }
 });
 
+test('ticket request field is dirty trackable', (assert) => {
+    let ticket = store.push('ticket', {id: TD.idOne});
+    ticket.set('request', 'wat');
+    assert.ok(ticket.get('isDirty'));
+});
+
+test('ticket request field is dirty trackable with existing', (assert) => {
+    let ticket = store.push('ticket', {id: TD.idOne, request: 'who'});
+    ticket.set('request', 'wat');
+    assert.ok(ticket.get('isDirty'));
+});
+
 test('ticket is dirty or related is dirty when model has been updated', (assert) => {
     let ticket = store.push('ticket', {id: TD.idOne, number: TD.numberOne, status_fk: TD.statusOneId});
     store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [TD.idOne]});

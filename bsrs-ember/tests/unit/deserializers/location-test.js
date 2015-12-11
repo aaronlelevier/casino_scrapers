@@ -164,3 +164,18 @@ test('newly inserted location will have non dirty status when deserialize list e
     assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(location.get('status_fk'), LDS.openId);
 });
+
+test('can push in location with location level as an object', (assert) => {
+    let location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+    let json = LF.generate(LD.idOne);
+    subject.deserialize(json, LD.idOne);
+    assert.equal(location.get('location_level').get('id'), LLD.idOne);
+});
+
+test('can push in location with location level as an id', (assert) => {
+    let location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+    let json = LF.generate(LD.idOne);
+    json.location_level = LLD.idOne;
+    subject.deserialize(json, LD.idOne);
+    assert.equal(location.get('location_level').get('id'), LLD.idOne);
+});
