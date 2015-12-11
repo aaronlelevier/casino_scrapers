@@ -21,6 +21,12 @@ class BaseContactModel(BaseModel):
         return super(BaseContactModel, self).save(*args, **kwargs)
 
 
+PHONE_NUMBER_TYPES = [
+    'telephone',
+    'fax',
+    'carphone'
+]
+
 class PhoneNumberType(BaseNameOrderModel):
     pass
 
@@ -31,7 +37,7 @@ class PhoneNumber(BaseContactModel):
 
     https://github.com/daviddrysdale/python-phonenumbers
     """
-    type = models.ForeignKey(PhoneNumberType)
+    type = models.ForeignKey(PhoneNumberType, blank=True, null=True)
     number = models.CharField(max_length=32)
 
     class Meta:
@@ -50,15 +56,16 @@ class Address(BaseContactModel):
     ForeignKey Reqs: either the `location` or `person` FK must be 
     populated, but not both.
     """
-    type = models.ForeignKey(AddressType)
-    address = models.CharField(max_length=200, null=True, blank=True)
+    type = models.ForeignKey(AddressType, blank=True, null=True)
+    address1 = models.CharField(max_length=200, null=True, blank=True)
+    address2 = models.CharField(max_length=200, null=True, blank=True)
     city = models.CharField(max_length=100, null=True, blank=True)
     state = models.CharField(max_length=100, null=True, blank=True)
-    postal_code = models.CharField(max_length=32, null=True, blank=True)
+    zip = models.CharField(max_length=32, null=True, blank=True)
     country = models.CharField(max_length=100, null=True, blank=True)
 
     class Meta:
-        ordering = ('address',)
+        ordering = ('address1',)
 
 
 class EmailType(BaseNameOrderModel):
@@ -66,7 +73,7 @@ class EmailType(BaseNameOrderModel):
 
 
 class Email(BaseContactModel):
-    type = models.ForeignKey(EmailType)
+    type = models.ForeignKey(EmailType, blank=True, null=True)
     email = models.EmailField(max_length=255)
 
     class Meta:

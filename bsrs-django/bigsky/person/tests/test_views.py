@@ -371,11 +371,12 @@ class PersonDetailTests(TestCase):
         address_data = self.data['addresses'][0]
         self.assertEqual(address_data['id'], str(address.id))
         self.assertEqual(address_data['type'], str(address.type.id))
-        self.assertEqual(address_data['address'], address.address)
+        self.assertEqual(address_data['address1'], address.address1)
+        self.assertEqual(address_data['address2'], address.address2)
         self.assertEqual(address_data['city'], address.city)
         self.assertEqual(address_data['state'], address.state)
         self.assertEqual(address_data['country'], address.country)
-        self.assertEqual(address_data['postal_code'], address.postal_code)
+        self.assertEqual(address_data['zip'], address.zip)
 
     def test_person_fk(self):
         self.assertIn(

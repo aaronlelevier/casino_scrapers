@@ -8,17 +8,6 @@ CI_APPS = (
 
 INSTALLED_APPS = INSTALLED_APPS + CI_APPS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ci',
-        'USER': 'bsdev',
-        'PASSWORD': 'tango',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-
 TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
 
 NOSE_ARGS = [

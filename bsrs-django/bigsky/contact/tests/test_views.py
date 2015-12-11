@@ -101,11 +101,12 @@ class AddressTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.address.id))
         self.assertEqual(data['type'], str(self.address.type.id))
-        self.assertEqual(data['address'], self.address.address)
+        self.assertEqual(data['address1'], self.address.address1)
+        self.assertEqual(data['address2'], self.address.address2)
         self.assertEqual(data['city'], self.address.city)
         self.assertEqual(data['state'], self.address.state)
         self.assertEqual(data['country'], self.address.country)
-        self.assertEqual(data['postal_code'], self.address.postal_code)
+        self.assertEqual(data['zip'], self.address.zip)
 
 
 class EmailTypeTests(APITestCase):

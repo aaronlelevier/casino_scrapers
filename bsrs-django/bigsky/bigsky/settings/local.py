@@ -20,24 +20,15 @@ THIRD_PARTY_APPS = (
 
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'ci',
-        'USER': 'bsdev',
-        'PASSWORD': 'tango',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    },
-    'transforms': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'transforms',
-        'USER': 'bsdev',
-        'PASSWORD': 'tango',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+DATABASES['transforms'] = {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'transforms',
+    'USER': 'bsdev',
+    'PASSWORD': 'tango',
+    'HOST': 'localhost',
+    'PORT': '5432',
 }
+
 
 MIDDLEWARE_CLASSES += (
     'debug_toolbar.middleware.DebugToolbarMiddleware',

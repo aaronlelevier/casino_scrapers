@@ -165,8 +165,9 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
                 Q(name__icontains=search) | \
                 Q(number__icontains=search) | \
                 Q(addresses__city__icontains=search) | \
-                Q(addresses__address__icontains=search) | \
-                Q(addresses__postal_code__icontains=search)
+                Q(addresses__address1__icontains=search) | \
+                Q(addresses__address2__icontains=search) | \
+                Q(addresses__zip__icontains=search)
             )
 
         return queryset
