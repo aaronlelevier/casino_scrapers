@@ -1,4 +1,6 @@
 LOCALE,KEY,VALUE,CONTEXT,FIXUTURE,VALUE-UNDERSCORE
+en,activity.empty.comments,No Comments,,"'activity.empty.comments':'No Comments',",
+en,activity.empty.status_updates,No Status Updates,,"'activity.empty.status_updates':'No Status Updates',",
 en,activity.tabs.all_updates,All Updates,,"'activity.tabs.all_updates':'All Updates',",
 en,activity.tabs.comments,Comments,,"'activity.tabs.comments':'Comments',",
 en,activity.tabs.status_updates,Status Updates,,"'activity.tabs.status_updates':'Status Updates',",
@@ -31,6 +33,7 @@ en,admin.approval.one,Approval,,"'admin.approval.one':'Approval',",Approval
 en,admin.approval.other,Approvals,,"'admin.approval.other':'Approvals',",Approvals
 en,admin.assignment.one,Assignment Profile,,"'admin.assignment.one':'Assignment Profile',",Assignment Profile
 en,admin.assignment.other,Assignment Profiles,,"'admin.assignment.other':'Assignment Profiles',",Assignment Profiles
+en,admin.category.search,Search Categories,,"'admin.category.search':'Search Categories',",Search Categories
 en,admin.category.label.children,Sub Categories,,"'admin.category.label.children':'Sub Categories',",Sub Categories
 en,admin.category.label.cost_amount,Cost Amount,,"'admin.category.label.cost_amount':'Cost Amount',",Cost Amount
 en,admin.category.label.cost_code,Cost Code,,"'admin.category.label.cost_code':'Cost Code',",Cost Code
@@ -59,6 +62,7 @@ en,admin.contractorAssignment.one,Contractor Assignment,,"'admin.contractorAssig
 en,admin.contractorAssignment.other,Contractor Assignments,,"'admin.contractorAssignment.other':'Contractor Assignments',",Contractor Assignments
 en,admin.general.one,General Setting,,"'admin.general.one':'General Setting',",General Setting
 en,admin.general.other,General Settings,,"'admin.general.other':'General Settings',",General Settings
+en,admin.location.search,Search Locations,,"'admin.location.search':'Search Locations',",Search Locations
 en,admin.location.label.general,General,,"'admin.location.label.general':'General',",General
 en,admin.location.label.location_level,Organization,,"'admin.location.label.location_level':'Organization',",Organization
 en,admin.location.label.name,Name,,"'admin.location.label.name':'Name',",Name
@@ -80,6 +84,7 @@ en,admin.locationlevel.label.name,Name,,"'admin.locationlevel.label.name':'Name'
 en,admin.locationlevel.one,Location Level,,"'admin.locationlevel.one':'Location Level',",Location Level
 en,admin.locationlevel.other,Location Levels,,"'admin.locationlevel.other':'Location Levels',",Location Levels
 en,admin.locationlevel.region,Region,,"'admin.locationlevel.region':'Region',",Region
+en,admin.locationlevel.search,Search Location Levels,,"'admin.locationlevel.search':'Search Location Levels',",Search Location Levels
 en,admin.locationlevel.store,Store,,"'admin.locationlevel.store':'Store',",Store
 en,admin.notification.one,Notification Profile,,"'admin.notification.one':'Notification Profile',",Notification Profile
 en,admin.notification.other,Notification Profiles,,"'admin.notification.other':'Notification Profiles',",Notification Profiles
@@ -126,6 +131,7 @@ en,admin.role.label.name,Role Name,,"'admin.role.label.name':'Role Name',",Role 
 en,admin.role.label.number_users,# of People,,"'admin.role.label.number_users':'# of People',",# of People
 en,admin.role.label.role_type,Role Type,,"'admin.role.label.role_type':'Role Type',",Role Type
 en,admin.role.one,Role,,"'admin.role.one':'Role',",Role
+en,admin.role.search,Search Role,,"'admin.role.search':'Search Role',",Role
 en,admin.role.other,Roles,,"'admin.role.other':'Roles',",Roles
 en,admin.role.regional_manager,Reginal Manager,,"'admin.role.regional_manager':'Reginal Manager',",Reginal Manager
 en,admin.role.store_manager,Store Manager,,"'admin.role.store_manager':'Store Manager',",Store Manager
@@ -194,6 +200,7 @@ en,ticket.status.denied,Denied,,"'ticket.status.denied':'Denied',",Denied
 en,ticket.status.draft,Draft,,"'ticket.status.draft':'Draft',",Draft
 en,ticket.status.in_progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress
 en,ticket.status.new,New,,"'ticket.status.new':'New',",New
+en,ticket.status.unsatisfactory_completion,Unsatisfactory Completion,,"'ticket.status.unsatisfactory_completion':'Unsatisfactory Completion',",Unsatisfactory Completion
 en,ticket.status.problem_solved,Problem Solved,,"'ticket.status.problem_solved':'Problem Solved',",Problem Solved
 en,upload.progress,Progress,,"'upload.progress':'Progress',",Progress
 en,validation.invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid
