@@ -106,7 +106,7 @@ function clearAll(app, store, type) {
 
 function saveFilterSet(app, name, controller) {
   Ember.run(function() {
-      var component = app.__container__.lookup('component:grid-view-2');
+      var component = app.__container__.lookup('component:grid-view');
       var targetObject = app.__container__.lookup('controller:' + controller);
       component.set('targetObject', targetObject);
       component.set('attrs', {save_filterset: 'save_filterset'});

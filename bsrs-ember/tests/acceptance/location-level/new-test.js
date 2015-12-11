@@ -56,14 +56,13 @@ test('visiting /location-level/new', (assert) => {
     page.childrenClickDropdown();
     page.childrenClickOptionLossPreventionDistrict();
     page.childrenClickDropdown();
-    page.childrenClickOptionRegion();
+    page.childrenClickOptionLossPreventionRegion();
     page.childrenClickDropdown();
-    page.childrenClickOptionDistrict();
+    page.childrenClickOptionThree();//district
     page.childrenClickDropdown();
     page.childrenClickOptionFacilityManagement();
     page.childrenClickDropdown();
-    page.childrenClickOptionLossPreventionRegion();
-    page.childrenClickDropdown();
+    page.childrenClickOptionSecond();//region
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_NEW_URL);
         assert.equal(store.find('location-level').get('length'), 9);

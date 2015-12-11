@@ -56,7 +56,7 @@
                     <tr class="head">
                         <th></th>
                         {{#each searchable as |column|}}
-                        {{grid-column-2 label=(t (t-prefix prefix column)) column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
+                        {{grid-column label=(t (t-prefix prefix column)) column=column sort=sort find=find toggleFilterModal=(action "toggleFilterModal") sortBy=(action "sortBy")}}
                         {{/each}}
                         {{#each nonsearchable as |column|}}
                         <th class={{add-text-right nonsearchable column}}>{{t (t-prefix prefix column) }}</th>

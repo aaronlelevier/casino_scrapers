@@ -73,7 +73,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
         assert.equal(page.locationLevelInput().split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
     });
     let response = RF.detail(RD.idOne);
-    let location_level = LLF.put({id: LLD.idThree, name: LLD.nameRegion});
+    let location_level = LLF.put({id: LLD.idLossRegion, name: LLD.nameLossPreventionRegion});
     let payload = RF.put({id: RD.idOne, name: RD.namePut, role_type: RD.roleTypeContractor, location_level: location_level.id, categories: [CD.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     fillIn('.t-role-name', RD.namePut);
@@ -88,7 +88,7 @@ test('when you deep link to the role detail view you get bound attrs', (assert) 
     let list = RF.list();
     list.results[0].name = RD.namePut;
     list.results[0].role_type = RD.roleTypeContractor;
-    list.results[0].location_level = LLD.idThree;
+    list.results[0].location_level = LLD.idLossRegion;
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
     generalPage.save();
     andThen(() => {

@@ -16,26 +16,29 @@ export default Ember.Component.extend({
             Ember.$('.activity-list-tabs li').removeClass('active');
             Ember.$(event.target).addClass('active');
             Ember.$('.activity-list-item').each(function(i, elem){
-                switch(filterType){
-                    case 'comments':
-                        if(Ember.$(elem).hasClass('activity-comment')){
+                if(!Ember.$(elem).hasClass('activity-create')){
+                    switch(filterType){
+                        case 'comments':
+                            if(Ember.$(elem).hasClass('activity-comment')){
+                                Ember.$(elem).removeClass('hide');
+                            }else{
+                                Ember.$(elem).addClass('hide');
+                            }
+                        break;
+                        case 'status_updates':
+                            if(Ember.$(elem).hasClass('activity-status')){
+                                Ember.$(elem).removeClass('hide');
+                            }else{
+                                Ember.$(elem).addClass('hide');
+                            }
+                        break;
+                        default:
                             Ember.$(elem).removeClass('hide');
-                        }else{
-                            Ember.$(elem).addClass('hide');
-                        }
-                    break;
-                    case 'status_updates':
-                        if(Ember.$(elem).hasClass('activity-status')){
-                            Ember.$(elem).removeClass('hide');
-                        }else{
-                            Ember.$(elem).addClass('hide');
-                        }
-                    break;
-                    default:
-                        Ember.$(elem).removeClass('hide');
-                    break;
+                        break;
+                    }
                 }
             });
+
             if(Ember.$('.activity-list-item').filter(':visible').length === 0){
                 Ember.$('.activity-spacer').hide();
                 switch(filterType){

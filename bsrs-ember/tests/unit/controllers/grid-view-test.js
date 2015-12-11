@@ -2,7 +2,7 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import GridViewController from 'bsrs-ember/mixins/controller/grid';
 
-module('unit: grid-view-2-controller test');
+module('unit: grid-view-controller test');
 
 test('hasActiveFilterSet returns true when any page, sort, search, find or page_number present', (assert) => {
     var subject = GridViewController.create();

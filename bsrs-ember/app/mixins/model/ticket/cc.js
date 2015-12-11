@@ -5,9 +5,9 @@ var CCMixin = Ember.Mixin.create({
         return this.get('cc').mapBy('id');
     }),
     cc: Ember.computed('ticket_cc.[]', function() {
-        let ticket_cc = this.get('ticket_cc');
+        const ticket_cc = this.get('ticket_cc');
         let filter = function(person) {
-            let person_pks = this.mapBy('person_pk');
+            const person_pks = this.mapBy('person_pk');
             return Ember.$.inArray(person.get('id'), person_pks) > -1;
         };
         return this.get('store').find('person', filter.bind(ticket_cc), []);
@@ -19,13 +19,21 @@ var CCMixin = Ember.Mixin.create({
         let filter = function(join_model) {
             return join_model.get('ticket_pk') === this.get('id') && !join_model.get('removed');
         };
-        let store = this.get('store');
-        return store.find('ticket-person', filter.bind(this), ['removed']);
+        return this.get('store').find('ticket-person', filter.bind(this), ['removed']);
     }),
     add_person(person_pk) {
-        let uuid = this.get('uuid');
-        let store = this.get('store');
-        store.push('ticket-person', {id: uuid.v4(), ticket_pk: this.get('id'), person_pk: person_pk});
+        const uuid = this.get('uuid');
+        const store = this.get('store');
+        let id = uuid.v4();
+        //check for existing
+        const ticket_people = store.find('ticket-person');
+        ticket_people.forEach((tp) => {
+            if (tp.get('person_pk') === person_pk) {
+                id = tp.get('id');
+                tp.set('removed', undefined);
+            }
+        });
+        store.push('ticket-person', {id: id, ticket_pk: this.get('id'), person_pk: person_pk});
     },
     remove_person(person_pk) {
         const store = this.get('store');

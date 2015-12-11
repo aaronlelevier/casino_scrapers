@@ -1,7 +1,7 @@
-import GridViewComponent from 'bsrs-ember/components/grid-view-2/component';
+import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 
 export default GridViewComponent.extend({
-    layoutName: 'components/grid-view-2',
+    layoutName: 'components/grid-view',
     searchable: ['key'],
     nonsearchable: ['key']
 });
