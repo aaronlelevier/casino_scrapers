@@ -8,7 +8,7 @@ class Command(BaseCommand):
     help = 'LocationRegion migrate script'
 
     def handle(self, *args, **options):
-        region = LocationLevel.objects.get(name='region')
+        location_level = LocationLevel.objects.get(name='region')
 
         for x in LocationRegion.objects.all():
-            Location.objects.create(location_level=region, name=x.name, number=x.number)
+            Location.objects.create(location_level=location_level, name=x.name, number=x.number)

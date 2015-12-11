@@ -7,4 +7,4 @@ export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
 
 source ../venv/bin/activate
 
-./manage.py loaddata utils_transforms/fixtures/location_levels.json
+./manage.py loaddata utils_transform/fixtures/location_levels.json
