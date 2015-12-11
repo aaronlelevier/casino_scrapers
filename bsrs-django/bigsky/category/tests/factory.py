@@ -23,30 +23,27 @@ def create_single_category(name):
     
 def create_categories(_many=None):
     statuses = create_category_statuses()
-
-    # Type
-    incr = Category.objects.count()
-
-    type = Category.objects.create(
-        id=generate_uuid(CATEGORY_BASE_ID, incr+1),
-        name='repair',
-        subcategory_label='trade',
-        status=random.choice(statuses)
-    )
-
-    # Trade
-    trade_names = ['plumbing', 'electrical']
-    incr = Category.objects.count()
-
-    for i, name in enumerate(trade_names):
-        status = random.choice(statuses)
-        trade = Category.objects.create(
-            id=generate_uuid(CATEGORY_BASE_ID, incr+i+1),
+    top_levels = ['repair', 'Building', 'IT', 'Store Operations']
+    top_level_children = [['plumbing','electrical'], ['Alarm', 'Carpet'], ['Computer', 'Monitor'], ['HR', 'Loss Prevention']]
+    for i, name in enumerate(top_levels):
+        incr = Category.objects.count()
+        Category.objects.create(
+            id=generate_uuid(CATEGORY_BASE_ID, incr),
             name=name,
-            subcategory_label='issue',
-            parent=type,
-            status=status
+            subcategory_label='trade',
+            status=random.choice(statuses)
         )
+
+    for i, name_arr in enumerate(top_level_children):
+        for x, name in enumerate(name_arr):
+            incr = Category.objects.count()
+            Category.objects.create(
+                id=generate_uuid(CATEGORY_BASE_ID, incr),
+                name=name,
+                subcategory_label='issue',
+                parent=Category.objects.filter(name=top_levels[i]).first(),
+                status=random.choice(statuses)
+            )
 
     # Issue
     for category in Category.objects.filter(subcategory_label='issue'):
