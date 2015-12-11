@@ -45,13 +45,13 @@ var CCMixin = Ember.Mixin.create({
     rollbackCC() {
         const store = this.get('store');
         const previous_m2m_fks = this.get('ticket_people_fks') || [];
-        const m2m_to_throw_out = store.find('ticket-person', function(join_model) {
-            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
+        const m2m_to_throw_out = store.find('ticket-person', (join_model) => {
+            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed') && this.get('id') === join_model.get('ticket_id');
         }, ['removed']);
-        m2m_to_throw_out.forEach(function(join_model) {
+        m2m_to_throw_out.forEach((join_model) => {
             join_model.set('removed', true);
         });
-        previous_m2m_fks.forEach(function(pk) {
+        previous_m2m_fks.forEach((pk) => {
             var m2m_to_keep = store.find('ticket-person', pk);
             if (m2m_to_keep.get('id')) {
                 m2m_to_keep.set('removed', undefined);
