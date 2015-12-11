@@ -11,7 +11,7 @@ const PowerSelect = '.ember-power-select-trigger';
 const COMPONENT = '.t-location-level-select';
 const DROPDOWN = '.ember-power-select-dropdown';
 
-moduleForComponent('location-level-select', 'sco integration: location-level-select test', {
+moduleForComponent('location-level-select', 'integration: location-level-select test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:role', 'model:location-level']);

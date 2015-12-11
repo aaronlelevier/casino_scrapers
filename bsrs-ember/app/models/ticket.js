@@ -33,9 +33,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
     }),
     categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
     ccIsDirty: Ember.computed('cc.[]', 'cc_ids.[]', 'ticket_people_fks.[]', function() {
-        let cc = this.get('cc');
-        let ticket_cc_ids = this.get('ticket_cc_ids');
-        let previous_m2m_fks = this.get('ticket_people_fks') || [];
+        const cc = this.get('cc');
+        const ticket_cc_ids = this.get('ticket_cc_ids');
+        const previous_m2m_fks = this.get('ticket_people_fks') || [];
         if(cc.get('length') !== previous_m2m_fks.length) {
             return equal(ticket_cc_ids, previous_m2m_fks) ? false : true;
         }
