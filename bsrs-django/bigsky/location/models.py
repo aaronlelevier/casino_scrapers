@@ -242,8 +242,8 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     addresses = GenericRelation(Address)
     emails = GenericRelation(Email)
     # fields
-    name = models.CharField(max_length=50)
-    number = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=1000)
+    number = models.CharField(max_length=1000, blank=True, null=True)
 
     objects = LocationManager()
 

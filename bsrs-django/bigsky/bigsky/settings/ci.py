@@ -11,9 +11,9 @@ INSTALLED_APPS = INSTALLED_APPS + CI_APPS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('BSRS_DB_CI_NAME', 'ci'),
-        'USER': os.environ.get('BSRS_DB_CI_USER', 'bsdev'),
-        'PASSWORD': os.environ.get('BSRS_DB_CI_NAME', 'tango'),
+        'NAME': 'ci',
+        'USER': 'bsdev',
+        'PASSWORD': 'tango',
         'HOST': 'localhost',
         'PORT': '5432',
     }

@@ -1,5 +1,6 @@
 from .base import *
 
+
 TEMPLATE_DEBUG = DEBUG = False
 SSL_ENABLED = True
 

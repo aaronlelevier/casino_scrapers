@@ -85,8 +85,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bigsky.wsgi.application'
 
-# Must Override!
+
+# Must Override
 DATABASES = {}
+
 
 # AbstractUser Config
 AUTH_USER_MODEL = 'person.Person'
