@@ -3,6 +3,8 @@
 printf "LOAD 'transforms' DATABASE \n"
 printf "MUST RUN FROM './manage.py' DIR LEVEL!!! \n"
 
+export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
+
 export DB_NAME=transforms
 export DB_USER=bsdev
 export PGPASSWORD=tango

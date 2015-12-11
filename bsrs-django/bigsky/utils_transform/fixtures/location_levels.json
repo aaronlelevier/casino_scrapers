@@ -1,0 +1,59 @@
+[
+{
+  "model": "location.locationlevel",
+  "pk": "83fef95a-22a9-43fb-8ccb-9ae647d6175b",
+  "fields": {
+    "children": [
+      "8c552043-07fa-461c-9a2c-429251750ccf"
+    ],
+    "deleted": null,
+    "modified": "2015-12-11T18:22:03.389Z",
+    "name": "district",
+    "created": "2015-12-11T18:22:03.389Z"
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "8c552043-07fa-461c-9a2c-429251750ccf",
+  "fields": {
+    "children": [
+      "32e9fa06-e3b4-462e-9cb5-0b265208f10e"
+    ],
+    "deleted": null,
+    "modified": "2015-12-11T18:22:03.392Z",
+    "name": "store",
+    "created": "2015-12-11T18:22:03.392Z"
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf",
+  "fields": {
+    "children": [
+      "6a0e3cf0-0ac5-4e85-bf1c-ecee6fa3b53e",
+      "83fef95a-22a9-43fb-8ccb-9ae647d6175b"
+    ],
+    "deleted": null,
+    "modified": "2015-12-11T18:22:03.387Z",
+    "name": "region",
+    "created": "2015-12-11T18:22:03.387Z"
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "f0763643-395a-42b2-935f-141cfe706114",
+  "fields": {
+    "children": [
+      "32e9fa06-e3b4-462e-9cb5-0b265208f10e",
+      "6a0e3cf0-0ac5-4e85-bf1c-ecee6fa3b53e",
+      "83fef95a-22a9-43fb-8ccb-9ae647d6175b",
+      "8c552043-07fa-461c-9a2c-429251750ccf",
+      "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf"
+    ],
+    "deleted": null,
+    "modified": "2015-12-11T18:22:03.384Z",
+    "name": "Company",
+    "created": "2015-12-11T18:22:03.384Z"
+  }
+}
+]

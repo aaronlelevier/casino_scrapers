@@ -4,6 +4,8 @@ printf "DROP, CREATE, MIGRATE 'transforms' DATABASE \n"
 printf "MUST RUN FROM './manage.py' DIR LEVEL!!! \n"
 printf "IGNORE STACK TRACE FOR 'sites' BECAUSE 'auth' ISN'T YET LOADED YET \n\n"
 
+export DJANGO_SETTINGS_MODULE='bigsky.settings.persistent'
+
 export DB_NAME=transforms
 export DB_USER=bsdev
 
