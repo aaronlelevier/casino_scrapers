@@ -100,12 +100,12 @@ test('activity list can be filtered to show comments or status updates', functio
     this.$(`${STATUS_TAB}`).click();
 
     $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
-    assert.equal($component.length, 1);
+    assert.equal($component.length, 2);
 
     this.$(`${COMMENT_TAB}`).click();
 
     $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
-    assert.equal($component.length, 1);
+    assert.equal($component.length, 2);
 
     this.$(`${ALL_TAB}`).click();
 

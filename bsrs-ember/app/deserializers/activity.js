@@ -38,7 +38,7 @@ var extract_to_and_from_or_added_removed = function(store, model) {
             //TODO: this will be a problem if cc smashes over existing one. maybe need to make uuid like above
             cc.activities = [model.id];
             if(cc.file){
-                cc.ext = cc.file.split('.').pop();
+                cc.ext = cc.file.split('.').pop().toLowerCase();
             }
             store.push(`activity/${type}`, cc);
         });

@@ -49,7 +49,7 @@
                                 <h1 class="col-md-12">
                                     {{model.top_level_category.name}}
                                     <small>#{{model.number}}</small>
-                                    <span class="tag {{model.status_class}}">{{t model.status.name}}</span><span class="tag {{model.priority_class}}">{{t model.priority.name}}</span>
+                                    <span class="tag {{model.status_class}}">{{fa-icon 'clock-o'}} {{t model.status.name}}</span><span class="tag {{model.priority_class}}">{{fa-icon 'exclamation-triangle'}} {{t model.priority.name}}</span>
                                 </h1>
                                 <div class="col-md-12">
                                     {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
@@ -73,7 +73,7 @@
                                 <div class="col-md-12">
                                     <div class="ticket-actions">
                                         <div class="ticket-action save">
-                                            <span {{action 'save'}} class="btn btn-default add-btn">Save</span>
+                                            <span {{action 'save'}} class="btn btn-default add-btn">{{fa-icon 'check-circle'}} Save</span>
                                         </div>
                                         <div class="ticket-action attach">
                                             {{attach-file model=model}}

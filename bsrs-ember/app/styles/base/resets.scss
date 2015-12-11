@@ -137,7 +137,13 @@ input[type="text"]:disabled {
 	.ember-power-select-option--highlighted{
 		background: $hoverColor;
 	}
+	.ember-basic-dropdown--below{
+		border-radius: 0 0 2px 2px;
+	}
 
+	.ember-basic-dropdown--above{
+		border-radius: 2px 2px 0 0;
+	}
 
     .ticket-priority-select,
     .ticket-status-select{
