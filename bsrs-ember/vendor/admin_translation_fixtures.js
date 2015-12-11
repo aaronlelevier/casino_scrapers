@@ -31,7 +31,7 @@ var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
     };
     factory.prototype.list = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=1; i <= page_size; i++) {
             translation = this.defaults.keyOne + i;
             response.push(translation);
@@ -43,7 +43,7 @@ var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
         return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         var response = [];
         for (var i=page_size+1; i <= page_size*2-1; i++) {
             translation = this.defaults.keyOne + i;

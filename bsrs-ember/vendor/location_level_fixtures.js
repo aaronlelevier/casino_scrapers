@@ -41,7 +41,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
             {id: this.idDistrict, name : this.nameDistrict},
             {id: this.idThree, name : this.nameRegion}
         ];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=9; i <= page_size; i++) {
             var uuid = '8854f6c5-58c7-4849-971f-e8df9e15e55';
             if (i < page_size) {
@@ -59,7 +59,7 @@ var BSRS_LOCATION_LEVEL_FACTORY = (function() {
     };
     factory.prototype.list_two = function() {
         var response = [];
-        var page_size = this.config.default.APP.PAGE_SIZE;
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = '8854f6c5-58c7-4849-971f-e8df9e15e55';
             var level = this.generate_list(uuid + i);
