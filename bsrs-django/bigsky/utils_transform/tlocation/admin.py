@@ -5,14 +5,14 @@ from utils_transform.tlocation import models
 
 @admin.register(models.LocationDistrict)
 class LocationDistrictAdmin(admin.ModelAdmin):
-    pass
+    fields = LocationDistrict._meta.get_fields()
 
 
 @admin.register(models.LocationRegion)
 class LocationRegionAdmin(admin.ModelAdmin):
-    pass
+    fields = LocationRegion._meta.get_fields()
 
 
 @admin.register(models.LocationStore)
 class LocationStoreAdmin(admin.ModelAdmin):
-    pass
+    fields = LocationStore._meta.get_fields()

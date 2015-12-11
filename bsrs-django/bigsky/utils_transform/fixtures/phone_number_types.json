@@ -1,0 +1,35 @@
+[
+{
+  "pk": "62f2c980-da87-41a9-9ac5-2f8bd6cea005",
+  "model": "contact.phonenumbertype",
+  "fields": {
+    "order": 0,
+    "name": "carphone",
+    "modified": "2015-12-11T23:11:50.710Z",
+    "deleted": null,
+    "created": "2015-12-11T23:11:50.710Z"
+  }
+},
+{
+  "pk": "d3bf0db8-3745-4686-8066-5d63cb5abea7",
+  "model": "contact.phonenumbertype",
+  "fields": {
+    "order": 0,
+    "name": "fax",
+    "modified": "2015-12-11T23:11:50.708Z",
+    "deleted": null,
+    "created": "2015-12-11T23:11:50.708Z"
+  }
+},
+{
+  "pk": "daa46ed3-65ff-4165-97e5-c79fd95073b1",
+  "model": "contact.phonenumbertype",
+  "fields": {
+    "order": 0,
+    "name": "telephone",
+    "modified": "2015-12-11T23:11:50.706Z",
+    "deleted": null,
+    "created": "2015-12-11T23:11:50.706Z"
+  }
+}
+]
