@@ -143,10 +143,9 @@ def create_all_people():
 
         role = random.choice(roles)
         locations = Location.objects.filter(location_level=role.location_level)
+        location = random.choice(locations)
         # create
-        person = create_single_person(name=name, role=role)
-        person.locations.add(*locations)
-        person.save()        
+        create_single_person(name=name, role=role, location=location)
 
     # Person used to Login (so needs a 'password' set here)
     aaron = Person.objects.get(username="aaron")

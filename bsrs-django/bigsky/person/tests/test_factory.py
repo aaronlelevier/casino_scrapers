@@ -5,7 +5,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from location.models import Location, LocationLevel
-from location.tests.factory import create_location
+from location.tests.factory import create_location, create_locations
 from person.models import Person, Role
 from person.tests import factory
 from utils.helpers import generate_uuid
@@ -117,12 +117,19 @@ class FactoryTests(TestCase):
     ### .create_person(): End
 
     def test_create_all_people(self):
-        # Make sure that there are 23 People, and that all People Roles
-        # have a valid Location that uses that ``person.role.location_level``
+        # the ``create_all_people`` function should only create objects in the 
+        # ``person`` app, not any extra Locations
+        create_locations()
+        init_location_count = Location.objects.count()
+
         factory.create_all_people()
+
         people = Person.objects.all()
         self.assertEqual(people.count(), 187)
         # Roles
         self.assertTrue(Role.objects.filter(name=settings.DEFAULT_ROLE).exists())
         # At least some people are assigned to Location(s)
         self.assertTrue(Person.objects.exclude(locations__isnull=True))
+        # Locations
+        post_location_count = Location.objects.count()
+        self.assertEqual(init_location_count, post_location_count)
