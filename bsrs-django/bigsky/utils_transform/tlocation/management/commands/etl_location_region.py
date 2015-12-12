@@ -16,7 +16,7 @@ class Command(BaseCommand):
                 name=x.name, number=x.number)
 
             # PhoneNumbers
-            ph_types = PhoneNumbers.objects.all()
+            ph_types = PhoneNumberType.objects.all()
 
             if x.telephone:
                 ph_type = ph_types.get(name='telephone')
