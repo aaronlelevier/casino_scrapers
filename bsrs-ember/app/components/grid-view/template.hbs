@@ -71,7 +71,7 @@
                     {{#if (translate-check column translatable)}}
                       <td class="{{grid-row-class noun column}}">{{t (get item column)}}</td>
                     {{else}}
-                      <td class="{{grid-row-class noun column}}">{{get item column}}</td>
+                      <td class="{{grid-row-class noun column}}">{{grid-data item column}}</td>
                     {{/if}}
                   {{/each}}
                   {{#each nonsearchable as |column|}}
