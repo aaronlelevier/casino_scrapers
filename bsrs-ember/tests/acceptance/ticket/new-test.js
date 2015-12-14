@@ -129,7 +129,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     page.assigneeClickOptionTwo();
     generalPage.save();
     andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b');
+        assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-location-validation-error').is(':visible'));
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
@@ -137,20 +137,20 @@ test('validation works and when hit save, we do same post', (assert) => {
     fillIn(`${SEARCH}`, '6');
     page.locationClickOptionTwo();
     andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_location=6');
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
     page.categoryOneClickDropdown();
     page.categoryOneClickOptionOne();
     andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_location=6');
         assert.equal(find('.t-category-validation-error').length, 1);
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
     page.categoryTwoClickDropdown();
     page.categoryTwoClickOptionOne();
     andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_location=6');
         assert.equal(find('.t-category-validation-error').length, 1);
         assert.ok(find('.t-category-validation-error').is(':visible'));
     });
@@ -158,7 +158,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
     andThen(() => {
-        assert.equal(currentURL(), TICKET_NEW_URL + '?search_assignee=b&search_location=6');
+        assert.equal(currentURL(), TICKET_NEW_URL + '?search_location=6');
         assert.ok(find('.t-category-validation-error').is(':hidden'));
     });
     generalPage.save();

@@ -176,7 +176,7 @@ test('validation works for non required fields and when hit save, we do same pos
     fillIn(`${SEARCH}`, 'Mel');
     page.assigneeClickOptionOne();
     andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL + '?search_assignee=Mel');
+        assert.equal(currentURL(), DETAIL_URL);
     });
     generalPage.save();
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
@@ -879,10 +879,10 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
         assert.equal(page.assigneeOptionLength(), 11);
         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), PD.fullname);
         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-        page.assigneeClickOptionTwo();
-        andThen(() => {
-            assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-        });
+    });
+    page.assigneeClickOptionTwo();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
     page.assigneeClickDropdown();
     fillIn(`${SEARCH}`, '');
