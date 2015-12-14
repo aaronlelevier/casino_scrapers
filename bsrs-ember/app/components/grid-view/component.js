@@ -4,6 +4,7 @@ import MultiSort from 'bsrs-ember/utilities/sort';
 import SortBy from 'bsrs-ember/mixins/sort-by';
 import FilterBy from 'bsrs-ember/mixins/filter-by';
 import UpdateFind from 'bsrs-ember/mixins/update-find';
+import regex_property from 'bsrs-ember/utilities/regex-property';
 
 const PAGE_SIZE = config.APP.PAGE_SIZE;
 
@@ -27,8 +28,7 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
         const regex = new RegExp(search);
         let filter = this.get('searchable').map((property) => {
             return this.get('model').filter((object) => {
-                let value = object.get(property) ? object.get(property).toLowerCase() : null;
-                return regex.test(value);
+                return regex_property(object, property, regex);
             });
         }.bind(this));
         return filter.reduce((a, b) => { return a.concat(b); }).uniq();
@@ -48,10 +48,8 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
                 });
             }.bind(this));
             return filter.reduce((a,b) => {
-              const one_ids = a.map(model => model.get('id'));
-              const two_ids = b.map(model => model.get('id')); 
-              const one_match = a.filter(item => Ember.$.inArray(item.get('id'), two_ids) > -1);
-              const two_match = b.filter(item => Ember.$.inArray(item.get('id'), one_ids) > -1);
+              const one_match = a.filter(item => Ember.$.inArray(item.get('id'), b.mapBy('id')) > -1);
+              const two_match = b.filter(item => Ember.$.inArray(item.get('id'), a.mapBy('id')) > -1);
               return one_match.concat(two_match);
             }).uniq();
         }

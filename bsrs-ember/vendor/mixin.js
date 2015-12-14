@@ -115,6 +115,29 @@ var BSRS_LIST_FIXTURE_MIXIN = (function() {
         return {'count':searched.length,'next':null,'previous':null,'results': paged};
     };
 
+    factory.prototype.searched_related_array = function(related_id, column, page) {
+        var page1 = this.list_two().results;
+        var page2 = this.list().results;
+        var response = page1.concat(page2);
+
+        var searched = response.filter(function(object) {
+            var result;
+            object[column].forEach(function(model, index) {
+                var legit = model['id'] === related_id;
+                result = index > 0 ? result || legit : legit;
+            });
+            return result;
+        });
+        var paged;
+        if(page && page > 1) {
+            paged = searched.slice(10, 20);
+        } else {
+            paged = searched.slice(0, 10);
+        }
+        return {'count':searched.length,'next':null,'previous':null,'results': paged};
+    };
+
+
     return factory;
 }());
 

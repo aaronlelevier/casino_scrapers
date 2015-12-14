@@ -22,6 +22,7 @@ const TICKET_URL = BASE_URL + '/index';
 const NUMBER_ONE = {keyCode: 49};
 const LETTER_R = {keyCode: 82};
 const LETTER_O = {keyCode: 79};
+const LETTER_X = {keyCode: 88};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
 const SORT_PRIORITY_DIR = '.t-sort-priority-translated-name-dir';
@@ -792,5 +793,23 @@ test('assignee.fullname is a functional related filter', function(assert) {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+    });
+});
+
+test('category.name is a functional related filter (search only)', function(assert) {
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=x';
+    xhr(option_one,'GET',null,{},200,TF.searched_related_array(TD.categoryRandomId, 'categories'));
+    visit(TICKET_URL);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+    });
+    fillIn('.t-grid-search-input', 'x');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_X);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=x');
+        assert.equal(find('.t-grid-data').length, 9);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
 });
