@@ -32,8 +32,7 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
 test('should render a selectbox when location options are empty (initial state of selectize)', function(assert) {
     let ticket_location_options = Ember.A([]);
     this.set('ticket', ticket);
-    this.set('ticket_location_options', ticket_location_options);
-    this.render(hbs`{{ticket-location-select ticket=ticket ticket_location_options=ticket_location_options}}`);
+    this.render(hbs`{{ticket-location-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { 
         this.$(`${PowerSelect}`).click(); 
@@ -49,8 +48,7 @@ test('should render a selectbox with bound options after type ahead for search',
     let ticket_location_options = store.find('location');
     location_one.set('tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
-    this.set('ticket_location_options', ticket_location_options);
-    this.render(hbs`{{ticket-location-select ticket=ticket ticket_location_options=ticket_location_options}}`);
+    this.render(hbs`{{ticket-location-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().
@@ -67,8 +65,7 @@ test('should render a selectbox with bound options after type ahead for search',
 test('should be able to select new location when one doesnt exist', function(assert) {
     let ticket_location_options = store.find('location');
     this.set('ticket', ticket);
-    this.set('ticket_location_options', ticket_location_options);
-    this.render(hbs`{{ticket-location-select ticket=ticket ticket_location_options=ticket_location_options}}`);
+    this.render(hbs`{{ticket-location-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().
@@ -87,8 +84,7 @@ test('should be able to select new location when ticket already has a location',
     let ticket_location_options = store.find('location');
     location_one.set('tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
-    this.set('ticket_location_options', ticket_location_options);
-    this.render(hbs`{{ticket-location-select ticket=ticket ticket_location_options=ticket_location_options}}`);
+    this.render(hbs`{{ticket-location-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().

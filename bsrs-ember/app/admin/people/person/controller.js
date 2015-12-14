@@ -1,8 +1,7 @@
 import Ember from 'ember';
 
 var PersonController = Ember.Controller.extend({
-    queryParams: ['search', 'role_change'],
-    search: undefined,
+    queryParams: ['role_change'],
     role_change: undefined,
 });
 

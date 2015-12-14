@@ -42,8 +42,7 @@ moduleForComponent('role-category-select', 'integration: role-category-select te
 test('should render a selectbox when with no options (initial state)', function(assert) {
     let categories_children = Ember.A([]);
     this.set('role', role);
-    this.set('categories_children', categories_children);
-    this.render(hbs`{{role-category-select role=role categories_children=categories_children}}`);
+    this.render(hbs`{{role-category-select role=role}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { 
         this.$(`${PowerSelect}`).click(); 
@@ -57,8 +56,7 @@ test('should render a selectbox when with no options (initial state)', function(
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let categories_children = store.find('category');
     this.set('role', role);
-    this.set('categories_children', categories_children);
-    this.render(hbs`{{role-category-select role=role categories_children=categories_children}}`);
+    this.render(hbs`{{role-category-select role=role}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().

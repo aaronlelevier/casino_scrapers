@@ -454,8 +454,6 @@ test('when you change a related address type it will be persisted correctly', (a
 });
 
 test('when you change a related role it will be persisted correctly', (assert) => {
-    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}`;
-    xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     visit(DETAIL_URL);
     andThen(() => {
         clearxhr(detail_xhr);
@@ -880,8 +878,6 @@ test('when you deep link to the person detail view you can add and save a new ad
 });
 
 test('when you deep link to the person detail view you can alter the role and rolling back will reset it', (assert) => {
-    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}`;
-    xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     visit(DETAIL_URL);
     andThen(() => {
         clearxhr(detail_xhr);
@@ -931,8 +927,6 @@ test('when you deep link to the person detail view you can alter the role and ro
 });
 
 test('when you deep link to the person detail view you can alter the role and change it back without dirtying the person model', (assert) => {
-    let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}`;
-    let first_location_xhr = xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
     visit(DETAIL_URL);
     andThen(() => {
         clearxhr(detail_xhr);
@@ -958,9 +952,6 @@ test('when you deep link to the person detail view you can alter the role and ch
         });
         andThen(() => {
             clearxhr(first_role_change);
-            clearxhr(first_location_xhr);
-            let locations_endpoint = `${PREFIX}/admin/locations/?location_level=${LLD.idOne}`;
-            xhr(locations_endpoint, 'GET', null, {}, 200, LF.list());
             let people_detail_data_three = PF.detail(PD.id);
             people_detail_data_three.role = RD.idOne;
             xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_three);
@@ -1028,8 +1019,6 @@ test('when you change a related role it will change the related locations as wel
         clearxhr(detail_xhr);
         let people_detail_data_two = PF.detail(PD.id);
         xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_two);
-        let locations_endpoint_role_change = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}&name__icontains=a`;
-        xhr(locations_endpoint_role_change, 'GET', null, {}, 200, LF.list());
         page.roleClickDropdown();
         page.roleClickOptionTwo();
         andThen(() => {
@@ -1082,8 +1071,6 @@ test('when you change a related role it will change the related locations as wel
         let people_detail_data_two = PF.detail(PD.id);
         people_detail_data_two.role = RD.idTwo;
         xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_two);
-        let locations_endpoint_role_change = `${PREFIX}/admin/locations/?location_level=${LLD.idDistrict}`;
-        xhr(locations_endpoint_role_change, 'GET', null, {}, 200, LF.list());
         page.roleClickDropdown();
         page.roleClickOptionTwo();
         andThen(() => {
@@ -1248,7 +1235,7 @@ test('when you deep link to the person detail view you can alter the locations a
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
-            assert.equal(currentURL(), DETAIL_URL + '?search=ABC1234');
+            assert.equal(currentURL(), DETAIL_URL);
             assert.ok(generalPage.modalIsVisible());
             let person = store.find('person', PD.id);
             assert.equal(person.get('locations').get('length'), 1);

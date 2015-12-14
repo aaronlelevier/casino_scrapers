@@ -37,8 +37,7 @@ test('should render a selectbox when with options selected (initial state)', fun
     store.clear('ticket-person');
     let ticket_cc_options = Ember.A([]);
     this.set('ticket', ticket);
-    this.set('ticket_cc_options', ticket_cc_options);
-    this.render(hbs`{{ticket-cc-power-select ticket=ticket ticket_cc_options=ticket_cc_options}}`);
+    this.render(hbs`{{ticket-cc-power-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { 
         this.$(`${PowerSelect}`).click(); 
@@ -52,8 +51,7 @@ test('should render a selectbox when with options selected (initial state)', fun
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let ticket_cc_options = store.find('person');
     this.set('ticket', ticket);
-    this.set('ticket_cc_options', ticket_cc_options);
-    this.render(hbs`{{ticket-cc-power-select ticket=ticket ticket_cc_options=ticket_cc_options}}`);
+    this.render(hbs`{{ticket-cc-power-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().

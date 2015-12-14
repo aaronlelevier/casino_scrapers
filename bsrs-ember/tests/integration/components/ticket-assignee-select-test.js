@@ -32,8 +32,7 @@ moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-selec
 test('should render a selectbox when person options are empty (initial state of selectize)', function(assert) {
     let ticket_assignee_options = Ember.A([]);
     this.set('ticket', ticket);
-    this.set('ticket_assignee_options', ticket_assignee_options);
-    this.render(hbs`{{ticket-assignee-select ticket=ticket ticket_assignee_options=ticket_assignee_options}}`);
+    this.render(hbs`{{ticket-assignee-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { 
         this.$(`${PowerSelect}`).click(); 
@@ -48,8 +47,7 @@ test('should render a selectbox with bound options after type ahead for search',
     let ticket_assignee_options = store.find('person');
     person_one.set('assigned_tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
-    this.set('ticket_assignee_options', ticket_assignee_options);
-    this.render(hbs`{{ticket-assignee-select ticket=ticket ticket_assignee_options=ticket_assignee_options}}`);
+    this.render(hbs`{{ticket-assignee-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().
@@ -66,8 +64,7 @@ test('should render a selectbox with bound options after type ahead for search',
 test('should be able to select new person when one doesnt exist', function(assert) {
     let ticket_assignee_options = store.find('person');
     this.set('ticket', ticket);
-    this.set('ticket_assignee_options', ticket_assignee_options);
-    this.render(hbs`{{ticket-assignee-select ticket=ticket ticket_assignee_options=ticket_assignee_options}}`);
+    this.render(hbs`{{ticket-assignee-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().
@@ -112,8 +109,7 @@ test('should be able to select new person when ticket already has a person', fun
     let ticket_assignee_options = store.find('person');
     person_one.set('assigned_tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
-    this.set('ticket_assignee_options', ticket_assignee_options);
-    this.render(hbs`{{ticket-assignee-select ticket=ticket ticket_assignee_options=ticket_assignee_options}}`);
+    this.render(hbs`{{ticket-assignee-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
     run(() => { typeInSearch('a'); });
     return waitFor().
