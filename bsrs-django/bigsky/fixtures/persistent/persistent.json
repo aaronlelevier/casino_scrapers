@@ -1,2121 +1,2121 @@
 [
 {
   "model": "contenttypes.contenttype",
+  "pk": 1,
   "fields": {
-    "app_label": "admin",
-    "model": "logentry"
-  },
-  "pk": 1
+    "model": "logentry",
+    "app_label": "admin"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 2,
   "fields": {
-    "app_label": "auth",
-    "model": "permission"
-  },
-  "pk": 2
+    "model": "permission",
+    "app_label": "auth"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 3,
   "fields": {
-    "app_label": "auth",
-    "model": "group"
-  },
-  "pk": 3
+    "model": "group",
+    "app_label": "auth"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 4,
   "fields": {
-    "app_label": "contenttypes",
-    "model": "contenttype"
-  },
-  "pk": 4
+    "model": "contenttype",
+    "app_label": "contenttypes"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 5,
   "fields": {
-    "app_label": "sessions",
-    "model": "session"
-  },
-  "pk": 5
+    "model": "session",
+    "app_label": "sessions"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 6,
   "fields": {
-    "app_label": "sites",
-    "model": "site"
-  },
-  "pk": 6
+    "model": "site",
+    "app_label": "sites"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 7,
   "fields": {
-    "app_label": "flatpages",
-    "model": "flatpage"
-  },
-  "pk": 7
+    "model": "flatpage",
+    "app_label": "flatpages"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 8,
   "fields": {
-    "app_label": "corsheaders",
-    "model": "corsmodel"
-  },
-  "pk": 8
+    "model": "corsmodel",
+    "app_label": "corsheaders"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 9,
   "fields": {
-    "app_label": "accounting",
-    "model": "currency"
-  },
-  "pk": 9
+    "model": "currency",
+    "app_label": "accounting"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 10,
   "fields": {
-    "app_label": "category",
-    "model": "categorystatus"
-  },
-  "pk": 10
+    "model": "categorystatus",
+    "app_label": "category"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 11,
   "fields": {
-    "app_label": "category",
-    "model": "category"
-  },
-  "pk": 11
+    "model": "category",
+    "app_label": "category"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 12,
   "fields": {
-    "app_label": "contact",
-    "model": "phonenumbertype"
-  },
-  "pk": 12
+    "model": "phonenumbertype",
+    "app_label": "contact"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 13,
   "fields": {
-    "app_label": "contact",
-    "model": "phonenumber"
-  },
-  "pk": 13
+    "model": "phonenumber",
+    "app_label": "contact"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 14,
   "fields": {
-    "app_label": "contact",
-    "model": "addresstype"
-  },
-  "pk": 14
+    "model": "addresstype",
+    "app_label": "contact"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 15,
   "fields": {
-    "app_label": "contact",
-    "model": "address"
-  },
-  "pk": 15
+    "model": "address",
+    "app_label": "contact"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 16,
   "fields": {
-    "app_label": "contact",
-    "model": "emailtype"
-  },
-  "pk": 16
+    "model": "emailtype",
+    "app_label": "contact"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 17,
   "fields": {
-    "app_label": "contact",
-    "model": "email"
-  },
-  "pk": 17
+    "model": "email",
+    "app_label": "contact"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 18,
   "fields": {
-    "app_label": "generic",
-    "model": "savedsearch"
-  },
-  "pk": 18
+    "model": "savedsearch",
+    "app_label": "generic"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 19,
   "fields": {
-    "app_label": "generic",
-    "model": "mainsetting"
-  },
-  "pk": 19
+    "model": "mainsetting",
+    "app_label": "generic"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 20,
   "fields": {
-    "app_label": "generic",
-    "model": "customsetting"
-  },
-  "pk": 20
+    "model": "customsetting",
+    "app_label": "generic"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 21,
   "fields": {
-    "app_label": "generic",
-    "model": "attachment"
-  },
-  "pk": 21
+    "model": "attachment",
+    "app_label": "generic"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 22,
   "fields": {
-    "app_label": "location",
-    "model": "state"
-  },
-  "pk": 22
+    "model": "state",
+    "app_label": "location"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 23,
   "fields": {
-    "app_label": "location",
-    "model": "country"
-  },
-  "pk": 23
+    "model": "country",
+    "app_label": "location"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 24,
   "fields": {
-    "app_label": "location",
-    "model": "locationlevel"
-  },
-  "pk": 24
+    "model": "locationlevel",
+    "app_label": "location"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 25,
   "fields": {
-    "app_label": "location",
-    "model": "locationstatus"
-  },
-  "pk": 25
+    "model": "locationstatus",
+    "app_label": "location"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 26,
   "fields": {
-    "app_label": "location",
-    "model": "locationtype"
-  },
-  "pk": 26
+    "model": "locationtype",
+    "app_label": "location"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 27,
   "fields": {
-    "app_label": "location",
-    "model": "location"
-  },
-  "pk": 27
+    "model": "location",
+    "app_label": "location"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 28,
   "fields": {
-    "app_label": "order",
-    "model": "workorderstatus"
-  },
-  "pk": 28
+    "model": "workorderstatus",
+    "app_label": "order"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 29,
   "fields": {
-    "app_label": "order",
-    "model": "workorder"
-  },
-  "pk": 29
+    "model": "workorder",
+    "app_label": "order"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 30,
   "fields": {
-    "app_label": "person",
-    "model": "role"
-  },
-  "pk": 30
+    "model": "role",
+    "app_label": "person"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 31,
   "fields": {
-    "app_label": "person",
-    "model": "proxyrole"
-  },
-  "pk": 31
+    "model": "proxyrole",
+    "app_label": "person"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 32,
   "fields": {
-    "app_label": "person",
-    "model": "personstatus"
-  },
-  "pk": 32
+    "model": "personstatus",
+    "app_label": "person"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 33,
   "fields": {
-    "app_label": "person",
-    "model": "person"
-  },
-  "pk": 33
+    "model": "person",
+    "app_label": "person"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 34,
   "fields": {
-    "app_label": "third_party",
-    "model": "thirdpartystatus"
-  },
-  "pk": 34
+    "model": "thirdpartystatus",
+    "app_label": "third_party"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 35,
   "fields": {
-    "app_label": "third_party",
-    "model": "thirdparty"
-  },
-  "pk": 35
+    "model": "thirdparty",
+    "app_label": "third_party"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 36,
   "fields": {
-    "app_label": "ticket",
-    "model": "ticketstatus"
-  },
-  "pk": 36
+    "model": "ticketstatus",
+    "app_label": "ticket"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 37,
   "fields": {
-    "app_label": "ticket",
-    "model": "ticketpriority"
-  },
-  "pk": 37
+    "model": "ticketpriority",
+    "app_label": "ticket"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 38,
   "fields": {
-    "app_label": "ticket",
-    "model": "ticket"
-  },
-  "pk": 38
+    "model": "ticket",
+    "app_label": "ticket"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 39,
   "fields": {
-    "app_label": "ticket",
-    "model": "ticketactivitytype"
-  },
-  "pk": 39
+    "model": "ticketactivitytype",
+    "app_label": "ticket"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 40,
   "fields": {
-    "app_label": "ticket",
-    "model": "ticketactivity"
-  },
-  "pk": 40
+    "model": "ticketactivity",
+    "app_label": "ticket"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 41,
   "fields": {
-    "app_label": "translation",
-    "model": "locale"
-  },
-  "pk": 41
+    "model": "locale",
+    "app_label": "translation"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 42,
   "fields": {
-    "app_label": "translation",
-    "model": "translation"
-  },
-  "pk": 42
+    "model": "translation",
+    "app_label": "translation"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 43,
   "fields": {
-    "app_label": "work_request",
-    "model": "workrequeststatus"
-  },
-  "pk": 43
+    "model": "workrequeststatus",
+    "app_label": "work_request"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 44,
   "fields": {
-    "app_label": "work_request",
-    "model": "workrequest"
-  },
-  "pk": 44
+    "model": "workrequest",
+    "app_label": "work_request"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 45,
   "fields": {
-    "app_label": "utils",
-    "model": "tester"
-  },
-  "pk": 45
+    "model": "tester",
+    "app_label": "utils"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 46,
   "fields": {
-    "app_label": "tlocation",
-    "model": "locationregion"
-  },
-  "pk": 46
+    "model": "locationregion",
+    "app_label": "tlocation"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 47,
   "fields": {
-    "app_label": "tlocation",
-    "model": "locationdistrict"
-  },
-  "pk": 47
+    "model": "locationdistrict",
+    "app_label": "tlocation"
+  }
 },
 {
   "model": "contenttypes.contenttype",
+  "pk": 48,
   "fields": {
-    "app_label": "tlocation",
-    "model": "locationstore"
-  },
-  "pk": 48
+    "model": "locationstore",
+    "app_label": "tlocation"
+  }
 },
 {
   "model": "sites.site",
+  "pk": 1,
   "fields": {
-    "domain": "example.com",
-    "name": "example.com"
-  },
-  "pk": 1
+    "name": "example.com",
+    "domain": "example.com"
+  }
 },
 {
   "model": "accounting.currency",
+  "pk": "12cbdda0-c925-4982-aec1-542d561c016e",
   "fields": {
-    "code": "USD",
+    "rounding": 0,
     "decimal_digits": 2,
-    "symbol_native": "$",
     "deleted": null,
     "name_plural": "US Dollars",
-    "rounding": 0,
+    "code": "USD",
+    "created": "2015-12-14T23:06:00.223Z",
+    "name": "US Dollar",
+    "modified": "2015-12-14T23:06:00.223Z",
     "symbol": "$",
-    "modified": "2015-12-14T21:01:31.477Z",
-    "created": "2015-12-14T21:01:31.477Z",
-    "name": "US Dollar"
-  },
-  "pk": "59423353-7274-4195-ba45-cb42fdc4c967"
+    "symbol_native": "$"
+  }
 },
 {
   "model": "contact.phonenumbertype",
+  "pk": "14957a42-84a3-4297-91fa-a816d2077344",
   "fields": {
     "name": "cell",
+    "order": 0,
     "modified": "2015-12-14T19:46:05.236Z",
-    "created": "2015-12-14T19:46:05.236Z",
     "deleted": null,
-    "order": 0
-  },
-  "pk": "14957a42-84a3-4297-91fa-a816d2077344"
+    "created": "2015-12-14T19:46:05.236Z"
+  }
 },
 {
   "model": "contact.phonenumbertype",
+  "pk": "9b9e217e-b58e-47e0-b12f-cc44abd47ea7",
   "fields": {
     "name": "fax",
+    "order": 0,
     "modified": "2015-12-14T19:46:05.234Z",
-    "created": "2015-12-14T19:46:05.234Z",
     "deleted": null,
-    "order": 0
-  },
-  "pk": "9b9e217e-b58e-47e0-b12f-cc44abd47ea7"
+    "created": "2015-12-14T19:46:05.234Z"
+  }
 },
 {
   "model": "contact.phonenumbertype",
+  "pk": "fd38d12e-f1e1-41ce-8156-bab1538f1542",
   "fields": {
     "name": "telephone",
+    "order": 0,
     "modified": "2015-12-14T19:46:05.232Z",
-    "created": "2015-12-14T19:46:05.232Z",
     "deleted": null,
-    "order": 0
-  },
-  "pk": "fd38d12e-f1e1-41ce-8156-bab1538f1542"
+    "created": "2015-12-14T19:46:05.232Z"
+  }
 },
 {
   "model": "contact.addresstype",
+  "pk": "1ac01128-d88a-4e9f-aab0-80e0ee83f7b7",
   "fields": {
     "name": "location",
+    "order": 0,
     "modified": "2015-12-14T19:46:05.240Z",
-    "created": "2015-12-14T19:46:05.240Z",
     "deleted": null,
-    "order": 0
-  },
-  "pk": "1ac01128-d88a-4e9f-aab0-80e0ee83f7b7"
+    "created": "2015-12-14T19:46:05.240Z"
+  }
 },
 {
   "model": "contact.emailtype",
+  "pk": "2c49e152-2419-4eb9-9767-7d8e2cd6916c",
   "fields": {
     "name": "location",
+    "order": 0,
     "modified": "2015-12-14T19:46:05.238Z",
-    "created": "2015-12-14T19:46:05.238Z",
     "deleted": null,
-    "order": 0
-  },
-  "pk": "2c49e152-2419-4eb9-9767-7d8e2cd6916c"
+    "created": "2015-12-14T19:46:05.238Z"
+  }
 },
 {
   "model": "location.locationlevel",
+  "pk": "83fef95a-22a9-43fb-8ccb-9ae647d6175b",
   "fields": {
-    "children": [],
     "name": "district",
+    "children": [],
     "modified": "2015-12-11T18:22:03.389Z",
-    "created": "2015-12-11T18:22:03.389Z",
-    "deleted": null
-  },
-  "pk": "83fef95a-22a9-43fb-8ccb-9ae647d6175b"
+    "deleted": null,
+    "created": "2015-12-11T18:22:03.389Z"
+  }
 },
 {
   "model": "location.locationlevel",
+  "pk": "8c552043-07fa-461c-9a2c-429251750ccf",
   "fields": {
-    "children": [],
     "name": "store",
+    "children": [],
     "modified": "2015-12-11T18:22:03.392Z",
-    "created": "2015-12-11T18:22:03.392Z",
-    "deleted": null
-  },
-  "pk": "8c552043-07fa-461c-9a2c-429251750ccf"
+    "deleted": null,
+    "created": "2015-12-11T18:22:03.392Z"
+  }
 },
 {
   "model": "location.locationlevel",
+  "pk": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf",
   "fields": {
-    "children": [],
     "name": "region",
+    "children": [],
     "modified": "2015-12-11T18:22:03.387Z",
-    "created": "2015-12-11T18:22:03.387Z",
-    "deleted": null
-  },
-  "pk": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf"
+    "deleted": null,
+    "created": "2015-12-11T18:22:03.387Z"
+  }
 },
 {
   "model": "location.locationstatus",
+  "pk": "87585d9a-6bb5-49ae-b88a-76ca3508c1db",
   "fields": {
     "name": "admin.location.status.open",
-    "modified": "2015-12-14T21:01:31.494Z",
-    "created": "2015-12-14T21:01:31.494Z",
-    "deleted": null
-  },
-  "pk": "fef5e05f-8971-46db-be08-ac47a1b2352e"
+    "modified": "2015-12-14T23:06:00.240Z",
+    "deleted": null,
+    "created": "2015-12-14T23:06:00.240Z"
+  }
 },
 {
   "model": "location.locationtype",
+  "pk": "48821d8e-e340-4087-96a2-6f379b7a2d6e",
   "fields": {
     "name": "big_store",
-    "modified": "2015-12-14T21:01:31.496Z",
-    "created": "2015-12-14T21:01:31.496Z",
-    "deleted": null
-  },
-  "pk": "43a7c5ba-7e58-4ef4-8311-49a30ddf95d9"
+    "modified": "2015-12-14T23:06:00.242Z",
+    "deleted": null,
+    "created": "2015-12-14T23:06:00.242Z"
+  }
 },
 {
   "model": "location.location",
+  "pk": "6864a364-80d4-4b80-9ad2-9fa747923cc7",
   "fields": {
-    "children": [],
-    "status": "fef5e05f-8971-46db-be08-ac47a1b2352e",
-    "deleted": null,
+    "type": "48821d8e-e340-4087-96a2-6f379b7a2d6e",
+    "status": "87585d9a-6bb5-49ae-b88a-76ca3508c1db",
     "location_level": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf",
-    "number": "SOJhCafJrf",
-    "modified": "2015-12-14T21:01:31.498Z",
-    "created": "2015-12-14T21:01:31.498Z",
-    "name": "laJIxSNZSa",
-    "type": "43a7c5ba-7e58-4ef4-8311-49a30ddf95d9"
-  },
-  "pk": "6e358358-def0-4a45-a81e-f0189ed30084"
+    "deleted": null,
+    "created": "2015-12-14T23:06:00.244Z",
+    "name": "KDmijOfnlw",
+    "children": [],
+    "modified": "2015-12-14T23:06:00.244Z",
+    "number": "deYKdHiEwe"
+  }
 },
 {
   "model": "person.personstatus",
+  "pk": "9fe0f820-5001-4e30-bc1c-d12c113a4c0a",
   "fields": {
-    "default": true,
     "name": "active",
-    "modified": "2015-12-14T21:01:31.606Z",
-    "created": "2015-12-14T21:01:31.606Z",
-    "deleted": null
-  },
-  "pk": "dd388b17-154b-41f4-a16d-48683274011d"
+    "modified": "2015-12-14T23:06:00.352Z",
+    "deleted": null,
+    "default": true,
+    "created": "2015-12-14T23:06:00.352Z"
+  }
 },
 {
   "model": "translation.locale",
+  "pk": "118f5ceb-269b-4e7c-9572-48fe4c9e6487",
   "fields": {
-    "deleted": null,
-    "locale": "ch",
-    "native_name": "ch",
-    "default": false,
-    "rtl": false,
+    "presentation_name": "ch",
     "modified": "2015-12-02T17:49:47.177Z",
+    "deleted": null,
     "created": "2015-12-02T17:49:47.177Z",
     "name": "ch",
-    "presentation_name": "ch"
-  },
-  "pk": "118f5ceb-269b-4e7c-9572-48fe4c9e6487"
+    "rtl": false,
+    "default": false,
+    "native_name": "ch",
+    "locale": "ch"
+  }
 },
 {
   "model": "translation.locale",
+  "pk": "15b8159a-9b22-4e26-b80a-2f22b6878864",
   "fields": {
-    "deleted": null,
-    "locale": "es",
-    "native_name": "es",
-    "default": false,
-    "rtl": false,
+    "presentation_name": "es",
     "modified": "2015-12-02T17:50:52.140Z",
+    "deleted": null,
     "created": "2015-12-02T17:50:52.140Z",
     "name": "es",
-    "presentation_name": "es"
-  },
-  "pk": "15b8159a-9b22-4e26-b80a-2f22b6878864"
+    "rtl": false,
+    "default": false,
+    "native_name": "es",
+    "locale": "es"
+  }
 },
 {
   "model": "translation.locale",
+  "pk": "553b1cd1-3a79-4473-980a-4fb4469b9b2d",
   "fields": {
-    "deleted": null,
-    "locale": "en-us",
-    "native_name": "en-us",
-    "default": false,
-    "rtl": false,
+    "presentation_name": "en-us",
     "modified": "2015-12-02T17:50:03.869Z",
+    "deleted": null,
     "created": "2015-12-02T17:50:03.869Z",
     "name": "en-us",
-    "presentation_name": "en-us"
-  },
-  "pk": "553b1cd1-3a79-4473-980a-4fb4469b9b2d"
+    "rtl": false,
+    "default": false,
+    "native_name": "en-us",
+    "locale": "en-us"
+  }
 },
 {
   "model": "translation.locale",
+  "pk": "674ae67d-6d49-47d7-9e4e-b231bdb3ecaf",
   "fields": {
-    "deleted": null,
-    "locale": "en",
-    "native_name": "en",
-    "default": false,
-    "rtl": false,
+    "presentation_name": "en",
     "modified": "2015-12-02T17:54:21.505Z",
+    "deleted": null,
     "created": "2015-12-02T17:54:21.505Z",
     "name": "en",
-    "presentation_name": "en"
-  },
-  "pk": "674ae67d-6d49-47d7-9e4e-b231bdb3ecaf"
+    "rtl": false,
+    "default": false,
+    "native_name": "en",
+    "locale": "en"
+  }
 },
 {
   "model": "translation.locale",
+  "pk": "70d1b98f-17ce-4afd-8284-489b41ac3487",
   "fields": {
-    "deleted": null,
-    "locale": "fr",
-    "native_name": "fr",
-    "default": false,
-    "rtl": false,
+    "presentation_name": "fr",
     "modified": "2015-12-02T17:50:57.530Z",
+    "deleted": null,
     "created": "2015-12-02T17:50:57.530Z",
     "name": "fr",
-    "presentation_name": "fr"
-  },
-  "pk": "70d1b98f-17ce-4afd-8284-489b41ac3487"
+    "rtl": false,
+    "default": false,
+    "native_name": "fr",
+    "locale": "fr"
+  }
 },
 {
   "model": "translation.locale",
+  "pk": "875f6f3a-66cc-40d9-be3e-245d45ffca1c",
   "fields": {
-    "deleted": null,
-    "locale": "jp",
-    "native_name": "jp",
-    "default": false,
-    "rtl": false,
+    "presentation_name": "jp",
     "modified": "2015-12-02T17:51:00.849Z",
+    "deleted": null,
     "created": "2015-12-02T17:51:00.849Z",
     "name": "jp",
-    "presentation_name": "jp"
-  },
-  "pk": "875f6f3a-66cc-40d9-be3e-245d45ffca1c"
+    "rtl": false,
+    "default": false,
+    "native_name": "jp",
+    "locale": "jp"
+  }
 },
 {
   "model": "translation.translation",
+  "pk": "1926b2e8-aea9-45bf-84c3-fa2aeec13eef",
   "fields": {
-    "values": "{\"admin.locationlevel.one\": \"Location Level\", \"admin.address.address\": \"Street Address\", \"admin.address.city\": \"City\", \"activity.ticket.cc_remove\": \"removed ${{removed}} $from CC ${{timestamp}}\", \"admin.address.country.one\": \"Country\", \"ticket.status.deferred\": \"Deferred\", \"admin.role.search\": \"Search Role\", \"admin.addresstype.shipping\": \"Shipping\", \"crud.delete.error\": \"Error deleting {{model}}.\", \"admin.locationlevel.fmu\": \"Facility Management Region\", \"ticket.other\": \"Tickets\", \"admin.category.label.cost_amount\": \"Cost Amount\", \"admin.locationlevel.label.name\": \"Name\", \"admin.person.label.phone_number.other\": \"Phone Numbers\", \"admin.role.system_administrator\": \"Administrator\", \"admin.person.label.auth_amount\": \"Auth. Amount\", \"admin.address.country.select\": \"Select a Country\", \"admin.location.other\": \"Locations\", \"admin.category.label.cost_currency\": \"Cost Currency\", \"button.upload\": \"Attach file\", \"ticket.label.priority-name\": \"Priority\", \"admin.role.label.role_type\": \"Role Type\", \"admin.person.status.expired\": \"Expired\", \"ticket.search\": \"Search Tickets\", \"modules.purchaseOrders.titleShort\": \"Purchase Orders\", \"activity.ticket.comment\": \"commented ${{timestamp}} ${{comment}}\", \"admin.address.add\": \"Add Address\", \"admin.locationlevel.district\": \"District\", \"admin.location.label.status-name\": \"Status\", \"ticket.label.created\": \"Created\", \"admin.person.label.last_name\": \"Last Name\", \"modules.tickets.titleShort\": \"Tickets\", \"admin.person.label.change_password\": \"Change\", \"admin.locationlevel.region\": \"Region\", \"ticket.label.requester\": \"Requester\", \"admin.contractor.other\": \"Contractors\", \"crud.delete.button\": \"Delete\", \"admin.third_party.label.name\": \"Name\", \"admin.person.label.middle_initial\": \"Middle\", \"admin.category.label.cost_code\": \"Cost Code\", \"admin.role.coordinator\": \"Coordinator\", \"admin.category.one\": \"Category\", \"admin.address.postal_code\": \"Zip\", \"activity.ticket.categories\": \"changed the category from ${{from}} $to ${{to}} ${{timestamp}}\", \"admin.person.one\": \"Person\", \"upload.progress\": \"Progress\", \"activity.tabs.all_updates\": \"All Updates\", \"admin.categoryType.one\": \"Category Type\", \"modules.invoices.titleShort\": \"Invoices\", \"admin.person.status.inactive\": \"Inactive\", \"admin.translation.label.key\": \"Key\", \"crud.create.success\": \"{{model}} created successfully.\", \"admin.address.state.one\": \"State\", \"admin.template.one\": \"Template\", \"ticket.status.denied\": \"Denied\", \"admin.location.search\": \"Search Locations\", \"admin.person.label.title\": \"Title\", \"admin.contractorAssignment.other\": \"Contractor Assignments\", \"activity.ticket.create\": \"created this ticket ${{timestamp}}\", \"admin.person.label.credentials\": \"Credentials\", \"admin.notification.other\": \"Notification Profiles\", \"admin.person.search\": \"Search People\", \"admin.address_type.office\": \"Office\", \"admin.address.state.other\": \"States\", \"modules.assets.titleShort\": \"Assets\", \"admin.setting.one\": \"Setting\", \"admin.person.label.location\": \"Location\", \"admin.phonenumbertype.office\": \"Office\", \"admin.locationlevel.company\": \"Company\", \"admin.person.label.password\": \"Password\", \"admin.role.contractor\": \"Contractor\", \"admin.location.status.closed\": \"Closed\", \"ticket.priority.high\": \"High\", \"admin.phone.add\": \"Add Phone Number\", \"admin.role.district_manager\": \"District Manager\", \"ticket.status.in_progress\": \"In Progress\", \"admin.translation.other\": \"Translations\", \"admin.translation.label.translation\": \"Translation\", \"ticket.status.new\": \"New\", \"crud.create.error\": \"Error creating {{model}}.\", \"ticket.label.status-name\": \"Status\", \"ticket.label.number\": \"Ticket Number\", \"validation.invalid\": \"Invalid\", \"admin.category.name.loss_prevention\": \"Loss Prevention\", \"admin.locationlevel.other\": \"Location Levels\", \"admin.approval.other\": \"Approvals\", \"admin.role.label.location_level\": \"Location Organization\", \"admin.address.label\": \"Type\", \"ticket.status.draft\": \"Draft\", \"admin.category.label.name\": \"Name\", \"crud.cancel.button\": \"Cancel\", \"admin.notification.one\": \"Notification Profile\", \"ticket.label.location-name\": \"Location\", \"ticket.priority.emergency\": \"Emergency\", \"activity.ticket.to_from\": \"changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}\", \"admin.locationlevel.store\": \"Store\", \"validation.valid\": \"Valid\", \"admin.locationlevel.department\": \"Department\", \"activity.tabs.status_updates\": \"Status Updates\", \"admin.location.label.general\": \"General\", \"admin.category.labelCat.issue\": \"Issue\", \"activity.tabs.comments\": \"Comments\", \"admin.role.label.number_users\": \"# of People\", \"admin.location.label.location_level\": \"Organization\", \"admin.setting.other\": \"Settings\", \"admin.assignment.one\": \"Assignment Profile\", \"ticket.priority.low\": \"Low\", \"admin.category.name.repair\": \"Repair\", \"admin.category.labelCat.trade\": \"Trade\", \"ticket.one\": \"Ticket\", \"admin.general.one\": \"General Setting\", \"modules.workOrders.titleShort\": \"Work Orders\", \"admin.assignment.other\": \"Assignment Profiles\", \"admin.location.status.future\": \"Future\", \"ticket.label.request\": \"Request\", \"admin.amount\": \"Amount\", \"ticket.label.cc\": \"CC\", \"admin.location.one\": \"Location\", \"crud.save.success\": \"{{model}} saved successfully.\", \"admin.role.guest\": \"Guest\", \"admin.category.label.description\": \"Description\", \"activity.ticket.cc_add\": \"added ${{added}} $to CC ${{timestamp}}\", \"admin.translation.label.helper\": \"Helper\", \"admin.category.search\": \"Search Categories\", \"crud.save.error\": \"Error saving {{model}}.\", \"admin.role.store_manager\": \"Store Manager\", \"grid.reset_all_options\": \"Reset All Options\", \"admin.person.label.contact\": \"Contact\", \"admin.role.label.general\": \"General\", \"admin.general.other\": \"General Settings\", \"admin.locationlevel.fmd\": \"Facility Management District\", \"crud.save.button\": \"Save\", \"admin.location.label.name\": \"Name\", \"admin.title\": \"Admin\", \"activity.ticket.attachment_add\": \"uploaded ${{count}} files ${{timestamp}} ${{added}}\", \"modules.tasks.titleShort\": \"Tasks\", \"admin.location.status.open\": \"Open\", \"admin.person.label.fullname\": \"Name\", \"ticket.status.completed\": \"Complete\", \"admin.role.label.category\": \"Category\", \"admin.category.label.subcategory_label\": \"Sub Category Label\", \"admin.address_type.shipping\": \"Shipping\", \"admin.category.label.general\": \"General\", \"crud.restore.success\": \"{{model}} restored successfully.\", \"admin.person.label.language\": \"Language\", \"admin.contractorAssignment.one\": \"Contractor Assignment\", \"modules.pms.titleShort\": \"PM\", \"modules.projects.titleShort\": \"Projects\", \"admin.translation.one\": \"Translation\", \"admin.category.status.active\": \"Active\", \"welcome\": \"Hello\", \"activity.ticket.assignee\": \"changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}\", \"admin.category.other\": \"Categories\", \"crud.restore.button\": \"Restore\", \"admin.locationlevel.search\": \"Search Location Levels\", \"activity.empty.comments\": \"No Comments\", \"crud.restore.error\": \"Error restoring {{model}}\", \"admin.addresstype.office\": \"Office\", \"admin.person.label.general\": \"General\", \"activity.empty.status_updates\": \"No Status Updates\", \"admin.company.other\": \"Companies\", \"admin.person.label.first_name\": \"First Name\", \"admin.category.label.label\": \"Label\", \"button.add\": \"Add new {{model}}\", \"admin.person.label.employee_id\": \"Employee No.\", \"ticket.status.unsatisfactory_completion\": \"Unsatisfactory Completion\", \"admin.role.other\": \"Roles\", \"crud.create.button\": \"Create\", \"admin.location.label.number\": \"Number\", \"ticket.status.problem_solved\": \"Problem Solved\", \"menu.home\": \"Home\", \"activity.ticket.attachment_remove\": \"removed ${{count}} files ${{timestamp}} ${{removed}}\", \"admin.category.label.children\": \"Sub Categories\", \"admin.address.country.other\": \"Countries\", \"admin.third_party.label.number\": \"Number\", \"admin.company.one\": \"Company\", \"crud.delete.confirm\": \"Are you sure you want to delete {{model}} \\\\'{{record}}\\\\'?\", \"admin.categoryType.other\": \"Category Types\", \"ticket.priority.medium\": \"Medium\", \"admin.phone.number\": \"Phone Number\", \"admin.locationlevel.label.childOrg\": \"Child Organization(s)\", \"admin.template.other\": \"Templates\", \"crud.titles.new\": \"New {{model}}\", \"admin.category.labelCat.type\": \"Type\", \"admin.person.label.role-name\": \"Role\", \"admin.phonenumbertype.mobile\": \"Cell\", \"admin.contractor.one\": \"Contractor\", \"admin.person.label.phone_number.one\": \"Phone Number\", \"ticket.status.closed\": \"Closed\", \"admin.role.one\": \"Role\", \"ticket.label.assignee-fullname\": \"Assignee\", \"admin.person.other\": \"People\", \"admin.person.status.active\": \"Active\", \"admin.role.regional_manager\": \"Reginal Manager\", \"admin.person.label.username\": \"Username\", \"ticket.label.category-name\": \"Category\", \"admin.person.label.status\": \"Status\", \"admin.person.label.address\": \"Address\", \"admin.locationlevel.label.general\": \"General\", \"admin.address.state.select\": \"Select a State\", \"admin.phone.numbers\": \"Phone Numbers\", \"admin.category.name.maintenance\": \"Maintenance\", \"crud.titles.edit\": \"Edit {{model}}\", \"admin.person.label.email\": \"Email\", \"modules.rfqs.titleShort\": \"RFQs\", \"admin.role.label.name\": \"Role Name\", \"admin.approval.one\": \"Approval\"}",
-    "context": "{\"crud.titles.new\": \"New Role\", \"crud.create.success\": \"Person created successfully.\", \"crud.titles.edit\": \"Edit Role\", \"crud.restore.success\": \"Work Order restored successfully.\", \"crud.delete.confirm\": \"Are you sure you want to delete Work Order 150306-448?\"}",
+    "values": "{\"admin.person.label.address\": \"Address\", \"admin.role.label.number_users\": \"# of People\", \"admin.person.label.middle_initial\": \"Middle\", \"admin.third_party.label.number\": \"Number\", \"admin.person.label.employee_id\": \"Employee No.\", \"activity.tabs.all_updates\": \"All Updates\", \"admin.address.state.select\": \"Select a State\", \"activity.tabs.comments\": \"Comments\", \"ticket.status.new\": \"New\", \"admin.setting.other\": \"Settings\", \"crud.restore.button\": \"Restore\", \"admin.person.label.fullname\": \"Name\", \"admin.person.label.general\": \"General\", \"admin.template.other\": \"Templates\", \"modules.projects.titleShort\": \"Projects\", \"admin.role.guest\": \"Guest\", \"admin.category.label.children\": \"Sub Categories\", \"activity.empty.comments\": \"No Comments\", \"admin.template.one\": \"Template\", \"admin.addresstype.shipping\": \"Shipping\", \"admin.contractorAssignment.one\": \"Contractor Assignment\", \"ticket.status.problem_solved\": \"Problem Solved\", \"ticket.label.number\": \"Ticket Number\", \"admin.phonenumbertype.office\": \"Office\", \"admin.category.labelCat.type\": \"Type\", \"admin.address.city\": \"City\", \"admin.category.label.subcategory_label\": \"Sub Category Label\", \"modules.rfqs.titleShort\": \"RFQs\", \"admin.translation.label.translation\": \"Translation\", \"admin.contractor.other\": \"Contractors\", \"ticket.label.requester\": \"Requester\", \"crud.delete.confirm\": \"Are you sure you want to delete {{model}} \\\\'{{record}}\\\\'?\", \"ticket.other\": \"Tickets\", \"crud.create.error\": \"Error creating {{model}}.\", \"admin.approval.other\": \"Approvals\", \"admin.locationlevel.department\": \"Department\", \"admin.role.contractor\": \"Contractor\", \"admin.address.state.other\": \"States\", \"admin.assignment.other\": \"Assignment Profiles\", \"admin.locationlevel.region\": \"Region\", \"admin.category.search\": \"Search Categories\", \"admin.category.label.cost_currency\": \"Cost Currency\", \"admin.translation.label.helper\": \"Helper\", \"admin.phonenumbertype.mobile\": \"Cell\", \"admin.assignment.one\": \"Assignment Profile\", \"welcome\": \"Hello\", \"ticket.status.closed\": \"Closed\", \"modules.pms.titleShort\": \"PM\", \"modules.assets.titleShort\": \"Assets\", \"ticket.status.denied\": \"Denied\", \"admin.locationlevel.label.general\": \"General\", \"admin.address.add\": \"Add Address\", \"admin.category.label.name\": \"Name\", \"admin.person.label.contact\": \"Contact\", \"crud.delete.error\": \"Error deleting {{model}}.\", \"admin.locationlevel.label.childOrg\": \"Child Organization(s)\", \"activity.ticket.assignee\": \"changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}\", \"ticket.label.cc\": \"CC\", \"admin.person.label.change_password\": \"Change\", \"admin.person.label.last_name\": \"Last Name\", \"admin.person.label.first_name\": \"First Name\", \"admin.person.label.password\": \"Password\", \"admin.locationlevel.fmd\": \"Facility Management District\", \"admin.role.label.role_type\": \"Role Type\", \"activity.ticket.comment\": \"commented ${{timestamp}} ${{comment}}\", \"ticket.priority.medium\": \"Medium\", \"admin.category.label.label\": \"Label\", \"modules.tickets.titleShort\": \"Tickets\", \"admin.address.label\": \"Type\", \"admin.locationlevel.search\": \"Search Location Levels\", \"admin.category.one\": \"Category\", \"admin.role.label.name\": \"Role Name\", \"admin.person.other\": \"People\", \"admin.company.other\": \"Companies\", \"admin.location.label.general\": \"General\", \"admin.locationlevel.other\": \"Location Levels\", \"crud.create.success\": \"{{model}} created successfully.\", \"admin.notification.one\": \"Notification Profile\", \"ticket.priority.emergency\": \"Emergency\", \"activity.empty.status_updates\": \"No Status Updates\", \"admin.title\": \"Admin\", \"crud.restore.error\": \"Error restoring {{model}}\", \"activity.ticket.attachment_remove\": \"removed ${{count}} files ${{timestamp}} ${{removed}}\", \"activity.ticket.to_from\": \"changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}\", \"admin.location.status.open\": \"Open\", \"admin.location.label.name\": \"Name\", \"admin.role.label.location_level\": \"Location Organization\", \"admin.role.search\": \"Search Role\", \"ticket.status.unsatisfactory_completion\": \"Unsatisfactory Completion\", \"ticket.priority.low\": \"Low\", \"admin.person.label.phone_number.other\": \"Phone Numbers\", \"admin.address_type.shipping\": \"Shipping\", \"admin.location.other\": \"Locations\", \"admin.role.regional_manager\": \"Reginal Manager\", \"admin.person.status.inactive\": \"Inactive\", \"admin.address.country.other\": \"Countries\", \"admin.address.country.one\": \"Country\", \"admin.categoryType.one\": \"Category Type\", \"upload.progress\": \"Progress\", \"activity.ticket.cc_remove\": \"removed ${{removed}} $from CC ${{timestamp}}\", \"admin.category.labelCat.issue\": \"Issue\", \"button.add\": \"Add new {{model}}\", \"ticket.status.completed\": \"Complete\", \"crud.save.error\": \"Error saving {{model}}.\", \"admin.person.label.location\": \"Location\", \"modules.tasks.titleShort\": \"Tasks\", \"grid.reset_all_options\": \"Reset All Options\", \"admin.setting.one\": \"Setting\", \"admin.translation.label.key\": \"Key\", \"admin.address.postal_code\": \"Zip\", \"admin.address.state.one\": \"State\", \"admin.address.address\": \"Street Address\", \"admin.category.label.cost_code\": \"Cost Code\", \"admin.person.label.role-name\": \"Role\", \"admin.person.label.phone_number.one\": \"Phone Number\", \"admin.locationlevel.district\": \"District\", \"admin.phone.add\": \"Add Phone Number\", \"menu.home\": \"Home\", \"admin.translation.other\": \"Translations\", \"admin.phone.numbers\": \"Phone Numbers\", \"admin.address.country.select\": \"Select a Country\", \"ticket.status.in_progress\": \"In Progress\", \"admin.location.status.future\": \"Future\", \"admin.contractor.one\": \"Contractor\", \"admin.person.one\": \"Person\", \"admin.role.one\": \"Role\", \"admin.third_party.label.name\": \"Name\", \"ticket.label.status-name\": \"Status\", \"admin.category.name.maintenance\": \"Maintenance\", \"crud.cancel.button\": \"Cancel\", \"admin.role.coordinator\": \"Coordinator\", \"modules.workOrders.titleShort\": \"Work Orders\", \"admin.address_type.office\": \"Office\", \"admin.category.label.general\": \"General\", \"admin.role.district_manager\": \"District Manager\", \"admin.role.system_administrator\": \"Administrator\", \"admin.locationlevel.fmu\": \"Facility Management Region\", \"ticket.status.draft\": \"Draft\", \"admin.person.status.expired\": \"Expired\", \"admin.category.label.description\": \"Description\", \"admin.amount\": \"Amount\", \"admin.locationlevel.label.name\": \"Name\", \"ticket.status.deferred\": \"Deferred\", \"admin.approval.one\": \"Approval\", \"ticket.label.request\": \"Request\", \"admin.location.label.location_level\": \"Organization\", \"activity.ticket.categories\": \"changed the category from ${{from}} $to ${{to}} ${{timestamp}}\", \"admin.category.name.repair\": \"Repair\", \"validation.valid\": \"Valid\", \"activity.ticket.cc_add\": \"added ${{added}} $to CC ${{timestamp}}\", \"crud.titles.new\": \"New {{model}}\", \"admin.general.other\": \"General Settings\", \"admin.locationlevel.store\": \"Store\", \"admin.translation.one\": \"Translation\", \"crud.titles.edit\": \"Edit {{model}}\", \"admin.person.label.username\": \"Username\", \"admin.locationlevel.company\": \"Company\", \"admin.contractorAssignment.other\": \"Contractor Assignments\", \"activity.ticket.create\": \"created this ticket ${{timestamp}}\", \"crud.restore.success\": \"{{model}} restored successfully.\", \"modules.invoices.titleShort\": \"Invoices\", \"admin.location.search\": \"Search Locations\", \"admin.person.label.credentials\": \"Credentials\", \"admin.phone.number\": \"Phone Number\", \"button.upload\": \"Attach file\", \"crud.delete.button\": \"Delete\", \"admin.role.label.general\": \"General\", \"ticket.label.priority-name\": \"Priority\", \"admin.location.status.closed\": \"Closed\", \"ticket.label.created\": \"Created\", \"crud.create.button\": \"Create\", \"admin.person.label.email\": \"Email\", \"admin.location.one\": \"Location\", \"admin.locationlevel.one\": \"Location Level\", \"ticket.search\": \"Search Tickets\", \"admin.person.label.title\": \"Title\", \"modules.purchaseOrders.titleShort\": \"Purchase Orders\", \"admin.person.label.auth_amount\": \"Auth. Amount\", \"admin.category.status.active\": \"Active\", \"admin.location.label.status-name\": \"Status\", \"admin.person.status.active\": \"Active\", \"admin.role.store_manager\": \"Store Manager\", \"activity.tabs.status_updates\": \"Status Updates\", \"admin.role.label.category\": \"Category\", \"admin.general.one\": \"General Setting\", \"admin.person.label.language\": \"Language\", \"ticket.label.location-name\": \"Location\", \"crud.save.success\": \"{{model}} saved successfully.\", \"admin.category.label.cost_amount\": \"Cost Amount\", \"admin.category.name.loss_prevention\": \"Loss Prevention\", \"admin.categoryType.other\": \"Category Types\", \"ticket.priority.high\": \"High\", \"admin.location.label.number\": \"Number\", \"admin.person.search\": \"Search People\", \"admin.category.other\": \"Categories\", \"ticket.one\": \"Ticket\", \"admin.category.labelCat.trade\": \"Trade\", \"admin.notification.other\": \"Notification Profiles\", \"crud.save.button\": \"Save\", \"admin.addresstype.office\": \"Office\", \"validation.invalid\": \"Invalid\", \"activity.ticket.attachment_add\": \"uploaded ${{count}} files ${{timestamp}} ${{added}}\", \"ticket.label.category-name\": \"Category\", \"admin.person.label.status\": \"Status\", \"admin.role.other\": \"Roles\", \"admin.company.one\": \"Company\", \"ticket.label.assignee-fullname\": \"Assignee\"}",
     "deleted": null,
-    "locale": "674ae67d-6d49-47d7-9e4e-b231bdb3ecaf",
     "csv": "",
+    "created": "2015-12-02T17:54:21.507Z",
     "modified": "2015-12-11T19:22:13.685Z",
-    "created": "2015-12-02T17:54:21.507Z"
-  },
-  "pk": "1926b2e8-aea9-45bf-84c3-fa2aeec13eef"
+    "locale": "674ae67d-6d49-47d7-9e4e-b231bdb3ecaf",
+    "context": "{\"crud.titles.edit\": \"Edit Role\", \"crud.create.success\": \"Person created successfully.\", \"crud.restore.success\": \"Work Order restored successfully.\", \"crud.delete.confirm\": \"Are you sure you want to delete Work Order 150306-448?\", \"crud.titles.new\": \"New Role\"}"
+  }
 },
 {
   "model": "translation.translation",
+  "pk": "669c5b47-39f4-481b-bfd3-6b0bbb8751a7",
   "fields": {
-    "values": "{\"admin.locationlevel.one\": \"\\u5834\\u6240\\u30ec\\u30d9\\u30eb\", \"admin.address.address\": \"\\u4f4f\\u6240\", \"admin.address.city\": \"\\u30b7\\u30c6\\u30a3\", \"activity.ticket.cc_remove\": \"CC\\u306e$\\u306e{{timestamp}}\\u304b\\u3089\\u524a\\u9664${{removed}} $\", \"admin.address.country.one\": \"\\u56fd\", \"ticket.status.deferred\": \"\\u7e70\\u5ef6\", \"admin.addresstype.shipping\": \"\\u904b\\u9001\", \"crud.delete.error\": \"\\u30a8\\u30e9\\u30fc\\u304c{{model}}\\u524a\\u9664\\u3057\\u307e\\u3059\\u3002\", \"admin.locationlevel.fmu\": \"\\u30d5\\u30a1\\u30b7\\u30ea\\u30c6\\u30a3\\u30de\\u30cd\\u30b8\\u30e1\\u30f3\\u30c8\\u30ea\\u30fc\\u30b8\\u30e7\\u30f3\", \"ticket.other\": \"\\u30c1\\u30b1\\u30c3\\u30c8\", \"admin.category.label.cost_amount\": \"\\u30b3\\u30b9\\u30c8\\u984d\", \"admin.locationlevel.label.name\": \"\\u540d\", \"admin.role.system_administrator\": \"\\u7ba1\\u7406\\u8005\", \"admin.address.country.select\": \"\\u56fd\\u3092\\u9078\\u629e\", \"admin.location.other\": \"\\u5834\\u6240\", \"admin.category.label.cost_currency\": \"\\u30b3\\u30b9\\u30c8\\u901a\\u8ca8\", \"button.upload\": \"\\u30d5\\u30a1\\u30a4\\u30eb\\u3092\\u6dfb\\u4ed8\\u3059\\u308b\", \"ticket.priority.low\": \"\\u30ed\\u30fc\", \"admin.role.label.role_type\": \"\\u5f79\\u5272\\u578b\", \"crud.save.error\": \"{{model}}\\u3092\\u4fdd\\u5b58\\u3059\\u308b\\u30a8\\u30e9\\u30fc\\u304c\\u767a\\u751f\\u3057\\u307e\\u3057\\u305f\\u3002\", \"ticket.search\": \"\\u691c\\u7d22\\u30c1\\u30b1\\u30c3\\u30c8\", \"modules.purchaseOrders.titleShort\": \"\\u767a\\u6ce8\\u66f8\", \"activity.ticket.comment\": \"\\u30b3\\u30e1\\u30f3\\u30c8${{timestamp}} ${{comment}}\", \"admin.address.add\": \"\\u30a2\\u30c9\\u30ec\\u30b9\\u306e\\u8ffd\\u52a0\", \"admin.locationlevel.district\": \"\\u5730\\u533a\", \"ticket.label.created\": \"\\u4f5c\\u6210\", \"admin.person.label.last_name\": \"\\u82d7\\u5b57\", \"modules.tickets.titleShort\": \"\\u30c1\\u30b1\\u30c3\\u30c8\", \"admin.person.label.change_password\": \"\\u5909\\u66f4\", \"admin.locationlevel.region\": \"\\u9818\\u57df\", \"ticket.label.requester\": \"\\u30ea\\u30af\\u30a8\\u30b9\\u30bf\", \"crud.delete.button\": \"\\u524a\\u9664\", \"admin.person.label.middle_initial\": \"\\u4e2d\\u9593\", \"admin.category.label.cost_code\": \"\\u30b3\\u30b9\\u30c8\\u30b3\\u30fc\\u30c9\", \"admin.person.label.auth_amount\": \"\\u8a8d\\u8a3c\\u3002\\u91cf\", \"admin.category.one\": \"\\u30ab\\u30c6\\u30b4\\u30ea\", \"admin.address.postal_code\": \"\\u30b8\\u30c3\\u30d7\", \"activity.ticket.categories\": \"${{to}} ${{timestamp}}\\u306b${{from}} $\\u304b\\u3089\\u30ab\\u30c6\\u30b4\\u30ea\\u3092\\u5909\\u66f4\", \"admin.person.one\": \"\\u4eba\", \"ticket.status.complete\": \"\\u30b3\\u30f3\\u30d7\\u30ea\\u30fc\\u30c8\", \"activity.tabs.all_updates\": \"\\u3059\\u3079\\u3066\\u306e\\u30a2\\u30c3\\u30d7\\u30c7\\u30fc\\u30c8\", \"admin.categoryType.one\": \"\\u30ab\\u30c6\\u30b4\\u30ea\\u30bf\\u30a4\\u30d7\", \"modules.invoices.titleShort\": \"\\u8acb\\u6c42\\u66f8\", \"admin.person.status.inactive\": \"\\u975e\\u30a2\\u30af\\u30c6\\u30a3\\u30d6\", \"admin.translation.label.key\": \"\\u30ad\\u30fc\", \"crud.create.success\": \"{{model}}\\u6b63\\u5e38\\u306b\\u4f5c\\u6210\\u3055\\u308c\\u307e\\u3057\\u305f\\u3002\", \"admin.address.state.one\": \"\\u72b6\\u614b\", \"admin.template.one\": \"\\u30c6\\u30f3\\u30d7\\u30ec\\u30fc\\u30c8\", \"ticket.status.denied\": \"\\u62d2\\u5426\\u3055\\u308c\\u307e\\u3057\\u305f\", \"admin.contractorAssignment.other\": \"\\u8acb\\u8ca0\\u696d\\u8005\\u306e\\u5272\\u308a\\u5f53\\u3066\", \"activity.ticket.create\": \"\\u3053\\u306e\\u30c1\\u30b1\\u30c3\\u30c8\\u306e${{timestamp}}\\u3092\\u4f5c\\u6210\", \"admin.notification.other\": \"\\u901a\\u77e5\\u30d7\\u30ed\\u30d5\\u30a1\\u30a4\\u30eb\", \"admin.person.search\": \"\\u691c\\u7d22\\u4eba\", \"admin.address_type.office\": \"\\u30aa\\u30d5\\u30a3\\u30b9\", \"admin.address.state.other\": \"\\u7c73\\u56fd\", \"modules.assets.titleShort\": \"\\u8cc7\\u7523\", \"admin.setting.one\": \"\\u8a2d\\u5b9a\", \"admin.person.label.location\": \"\\u30ed\\u30b1\\u30fc\\u30b7\\u30e7\\u30f3\", \"admin.phonenumbertype.office\": \"\\u30aa\\u30d5\\u30a3\\u30b9\", \"admin.locationlevel.company\": \"\\u4f1a\\u793e\", \"admin.person.label.password\": \"\\u30d1\\u30b9\\u30ef\\u30fc\\u30c9\", \"admin.location.status.closed\": \"\\u30af\\u30ed\\u30fc\\u30ba\", \"crud.delete.confirm\": \"\\u3042\\u306a\\u305f\\u306f '{{ record}}\\u306e\\\\'\\u3092{{model}}\\u306e\\\\\\u3092\\u524a\\u9664\\u3057\\u3066\\u3082\\u3088\\u308d\\u3057\\u3044\\u3067\\u3059\\u304b\\uff1f\", \"ticket.priority.high\": \"\\u9ad8\\u3044\", \"admin.phone.add\": \"\\u96fb\\u8a71\\u756a\\u53f7\\u3092\\u8ffd\\u52a0\\u3057\\u307e\\u3059\\u3002\", \"admin.person.label.title\": \"\\u30bf\\u30a4\\u30c8\\u30eb\", \"ticket.status.in_progress\": \"\\u9032\\u884c\\u4e2d\", \"admin.translation.other\": \"\\u7ffb\\u8a33\", \"admin.translation.label.translation\": \"\\u7ffb\\u8a33\", \"ticket.status.new\": \"\\u65b0\\u3057\\u3044\", \"upload.progress\": \"\\u9032\\u6357\", \"crud.create.error\": \"{{model}}\\u306e\\u4f5c\\u6210\\u30a8\\u30e9\\u30fc\\u304c\\u767a\\u751f\\u3057\\u307e\\u3057\\u305f\\u3002\", \"admin.phonenumbertype.mobile\": \"\\u7d30\\u80de\", \"validation.invalid\": \"\\u7121\\u52b9\", \"admin.category.name.loss_prevention\": \"\\u640d\\u5931\\u9632\\u6b62\", \"admin.locationlevel.other\": \"\\u5834\\u6240\\u30ec\\u30d9\\u30eb\", \"admin.general.one\": \"\\u4e00\\u822c\\u7684\\u306a\\u8a2d\\u5b9a\", \"admin.person.label.role\": \"\\u5f79\\u5272\", \"admin.role.label.location_level\": \"\\u5834\\u6240\\u7d44\\u7e54\", \"admin.address.label\": \"\\u30bf\\u30a4\\u30d7\", \"ticket.status.draft\": \"\\u30c9\\u30e9\\u30d5\\u30c8\", \"admin.category.label.name\": \"\\u540d\", \"ticket.label.status\": \"\\u72b6\\u614b\", \"crud.cancel.button\": \"\\u30ad\\u30e3\\u30f3\\u30bb\\u30eb\", \"admin.notification.one\": \"\\u901a\\u77e5\\u30d7\\u30ed\\u30d5\\u30a1\\u30a4\\u30eb\", \"ticket.label.priority\": \"\\u512a\\u5148\", \"admin.approval.other\": \"\\u627f\\u8a8d\", \"ticket.priority.emergency\": \"\\u7dca\\u6025\", \"activity.ticket.to_from\": \"${{to}} ${{timestamp}}\\u306b${{from}} $\\u304b\\u3089{{type}}\\u3092\\u5909\\u66f4\", \"admin.locationlevel.store\": \"\\u683c\\u7d0d\", \"validation.valid\": \"\\u6b63\\u5f53\\u306a\", \"admin.locationlevel.label.general\": \"\\u4e00\\u822c\", \"activity.tabs.status_updates\": \"\\u30b9\\u30c6\\u30fc\\u30bf\\u30b9\\u306e\\u66f4\\u65b0\", \"admin.location.label.general\": \"\\u4e00\\u822c\", \"admin.category.labelCat.issue\": \"\\u554f\\u984c\", \"activity.tabs.comments\": \"\\u30b3\\u30e1\\u30f3\\u30c8\", \"admin.location.label.status\": \"\\u72b6\\u614b\", \"admin.role.label.number_users\": \"\\uff03 \\u4eba\\u306e\", \"admin.location.label.location_level\": \"\\u7d44\\u7e54\", \"admin.setting.other\": \"[\\u8a2d\\u5b9a]\", \"admin.assignment.one\": \"\\u5272\\u308a\\u5f53\\u3066\\u30d7\\u30ed\\u30d5\\u30a3\\u30fc\\u30eb\", \"admin.category.name.repair\": \"\\u4fee\\u5fa9\", \"admin.category.labelCat.trade\": \"\\u30c8\\u30ec\\u30fc\\u30c9\", \"ticket.one\": \"\\u30c1\\u30b1\\u30c3\\u30c8\", \"admin.locationlevel.department\": \"\\u90e8\\u9580\", \"admin.assignment.other\": \"\\u5272\\u308a\\u5f53\\u3066\\u30d7\\u30ed\\u30d5\\u30a1\\u30a4\\u30eb\", \"admin.location.status.future\": \"\\u5c06\\u6765\", \"ticket.label.request\": \"\\u8981\\u6c42\", \"admin.amount\": \"\\u91cf\", \"admin.person.status.expired\": \"\\u671f\\u9650\\u5207\\u308c\", \"ticket.label.cc\": \"CC\", \"admin.location.one\": \"\\u30ed\\u30b1\\u30fc\\u30b7\\u30e7\\u30f3\", \"crud.save.success\": \"{{model}}\\u304c\\u6b63\\u5e38\\u306b\\u4fdd\\u5b58\\u3055\\u308c\\u307e\\u3057\\u305f\\u3002\", \"admin.role.guest\": \"\\u30b2\\u30b9\\u30c8\", \"admin.category.label.description\": \"\\u8aac\\u660e\", \"activity.ticket.cc_add\": \"$CC\\u306e$\\u306e{{timestamp}}\\u306b${{added}}\\u3092\\u8ffd\\u52a0\\u3057\\u307e\\u3057\\u305f\", \"admin.translation.label.helper\": \"\\u30d8\\u30eb\\u30d1\\u30fc\", \"admin.role.label.name\": \"\\u5f79\\u5272\\u540d\\u79f0\", \"admin.person.label.first_name\": \"\\u30d5\\u30a1\\u30fc\\u30b9\\u30c8\\u30cd\\u30fc\\u30e0\", \"admin.person.label.contact\": \"\\u63a5\\u89e6\", \"admin.role.label.general\": \"\\u4e00\\u822c\", \"admin.general.other\": \"\\u4e00\\u822c\\u8a2d\\u5b9a\", \"admin.locationlevel.fmd\": \"\\u65bd\\u8a2d\\u7ba1\\u7406\\u533a\", \"crud.save.button\": \"\\u30bb\\u30fc\\u30d6\", \"admin.location.label.name\": \"\\u540d\", \"admin.title\": \"\\u7ba1\\u7406\\u8005\", \"activity.ticket.attachment_add\": \"${{timestamp}} ${{added}} ${{count}}\\u30d5\\u30a1\\u30a4\\u30eb\\u3092\\u30a2\\u30c3\\u30d7\\u30ed\\u30fc\\u30c9\", \"modules.tasks.titleShort\": \"\\u30bf\\u30b9\\u30af\", \"admin.location.status.open\": \"\\u30aa\\u30fc\\u30d7\\u30f3\", \"admin.person.label.fullname\": \"\\u540d\", \"admin.role.label.category\": \"\\u30ab\\u30c6\\u30b4\\u30ea\", \"admin.category.label.subcategory_label\": \"\\u30b5\\u30d6\\u30ab\\u30c6\\u30b4\\u30ea\\u30fc\\u30e9\\u30d9\\u30eb\", \"admin.address_type.shipping\": \"\\u904b\\u9001\", \"admin.category.label.general\": \"\\u4e00\\u822c\", \"crud.restore.success\": \"{{model}}\\u6b63\\u5e38\\u306b\\u5fa9\\u5143\\u3002\", \"admin.person.label.language\": \"\\u8a00\\u8a9e\", \"admin.contractorAssignment.one\": \"\\u8acb\\u8ca0\\u696d\\u8005\\u306e\\u5272\\u308a\\u5f53\\u3066\", \"modules.pms.titleShort\": \"PM\", \"modules.projects.titleShort\": \"\\u30d7\\u30ed\\u30b8\\u30a7\\u30af\\u30c8\", \"admin.translation.one\": \"\\u7ffb\\u8a33\", \"admin.category.status.active\": \"\\u30a2\\u30af\\u30c6\\u30a3\\u30d6\", \"welcome\": \"\\u3053\\u3093\\u306b\\u3061\\u306f\", \"activity.ticket.assignee\": \"${{to}} ${{timestamp}}\\u306b${{from}} $\\u304b\\u3089{{type}}\\u3092\\u5909\\u66f4\", \"admin.category.other\": \"\\u30ab\\u30c6\\u30b4\\u30ea\\u30fc\", \"crud.restore.button\": \"\\u30ea\\u30b9\\u30c8\\u30a2\", \"admin.person.label.phone_number.other\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.contractor.other\": \"\\u8acb\\u8ca0\\u696d\\u8005\", \"crud.restore.error\": \"\\u30a8\\u30e9\\u30fc\\u5fa9\\u5143{{model}}\", \"admin.addresstype.office\": \"\\u30aa\\u30d5\\u30a3\\u30b9\", \"admin.person.label.general\": \"\\u4e00\\u822c\", \"admin.company.other\": \"\\u4f01\\u696d\", \"modules.workOrders.titleShort\": \"\\u4f5c\\u696d\\u30aa\\u30fc\\u30c0\\u30fc\", \"admin.category.label.label\": \"\\u30e9\\u30d9\\u30eb\", \"button.add\": \"\\u65b0\\u3057\\u3044{{model}}\\u3092\\u8ffd\\u52a0\", \"admin.person.label.employee_id\": \"\\u5f93\\u696d\\u54e1\\u756a\\u53f7\", \"admin.role.other\": \"\\u5f79\\u5272\", \"crud.create.button\": \"\\u4f5c\\u308a\\u51fa\\u3057\\u307e\\u3059\", \"admin.location.label.number\": \"\\u6570\", \"ticket.label.location\": \"\\u30ed\\u30b1\\u30fc\\u30b7\\u30e7\\u30f3\", \"ticket.status.problem_solved\": \"\\u554f\\u984c\\u304c\\u89e3\\u6c7a\\u3057\\u307e\\u3057\\u305f\", \"menu.home\": \"\\u30db\\u30fc\\u30e0\", \"activity.ticket.attachment_remove\": \"${{timestamp}} ${{removed}} ${{count}}\\u30d5\\u30a1\\u30a4\\u30eb\\u3092\\u524a\\u9664\", \"admin.category.label.children\": \"\\u30b5\\u30d6\\u30ab\\u30c6\\u30b4\\u30ea\\u30fc\", \"admin.address.country.other\": \"\\u56fd\", \"admin.company.one\": \"\\u4f1a\\u793e\", \"admin.person.label.credentials\": \"\\u30af\\u30ec\\u30c7\\u30f3\\u30b7\\u30e3\\u30eb\", \"admin.categoryType.other\": \"\\u30ab\\u30c6\\u30b4\\u30ea\\u578b\", \"ticket.priority.medium\": \"\\u4e2d\", \"admin.phone.number\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.locationlevel.label.childOrg\": \"\\u5b50\\u6a5f\\u69cb\\uff08\\u8907\\u6570\\u53ef\\uff09\", \"admin.template.other\": \"\\u30c6\\u30f3\\u30d7\\u30ec\\u30fc\\u30c8\", \"crud.titles.new\": \"\\u65b0\\u3057\\u3044{{model}}\", \"admin.category.labelCat.type\": \"\\u30bf\\u30a4\\u30d7\", \"admin.contractor.one\": \"\\u8acb\\u8ca0\\u696d\\u8005\", \"admin.person.label.phone_number.one\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.role.one\": \"\\u5f79\\u5272\", \"admin.person.other\": \"\\u4eba\", \"admin.person.status.active\": \"\\u30a2\\u30af\\u30c6\\u30a3\\u30d6\", \"ticket.label.assignee\": \"\\u8b72\\u53d7\\u4eba\", \"admin.person.label.username\": \"\\u30e6\\u30fc\\u30b6\\u30fc\\u540d\", \"admin.person.label.status\": \"\\u72b6\\u614b\", \"admin.person.label.address\": \"\\u4f4f\\u6240\", \"admin.address.state.select\": \"\\u5dde\\u3092\\u9078\\u629e\", \"admin.phone.numbers\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.category.name.maintenance\": \"\\u30e1\\u30f3\\u30c6\\u30ca\\u30f3\\u30b9\", \"crud.titles.edit\": \"\\u7de8\\u96c6{{model}}\", \"admin.person.label.email\": \"\\u30e1\\u30fc\\u30eb\", \"modules.rfqs.titleShort\": \"\\u898b\\u7a4d\\u4f9d\\u983c\", \"admin.approval.one\": \"\\u627f\\u8a8d\"}",
-    "context": "{\"admin.address.state.select\": \"Are you sure you want to delete Work Order 150306-448?\", \"admin.address.country.other\": \"Person created successfully.\", \"admin.amount\": \"Work Order restored successfully.\", \"admin.address.address\": \"New Role\", \"admin.address.city\": \"Edit Role\"}",
+    "values": "{\"admin.person.label.address\": \"\\u4f4f\\u6240\", \"admin.role.label.number_users\": \"\\uff03 \\u4eba\\u306e\", \"admin.person.label.middle_initial\": \"\\u4e2d\\u9593\", \"admin.person.label.employee_id\": \"\\u5f93\\u696d\\u54e1\\u756a\\u53f7\", \"activity.tabs.all_updates\": \"\\u3059\\u3079\\u3066\\u306e\\u30a2\\u30c3\\u30d7\\u30c7\\u30fc\\u30c8\", \"admin.address.state.select\": \"\\u5dde\\u3092\\u9078\\u629e\", \"ticket.status.complete\": \"\\u30b3\\u30f3\\u30d7\\u30ea\\u30fc\\u30c8\", \"ticket.status.new\": \"\\u65b0\\u3057\\u3044\", \"admin.setting.other\": \"[\\u8a2d\\u5b9a]\", \"crud.restore.button\": \"\\u30ea\\u30b9\\u30c8\\u30a2\", \"admin.address.state.other\": \"\\u7c73\\u56fd\", \"admin.person.label.general\": \"\\u4e00\\u822c\", \"admin.template.other\": \"\\u30c6\\u30f3\\u30d7\\u30ec\\u30fc\\u30c8\", \"modules.projects.titleShort\": \"\\u30d7\\u30ed\\u30b8\\u30a7\\u30af\\u30c8\", \"admin.role.guest\": \"\\u30b2\\u30b9\\u30c8\", \"admin.category.label.children\": \"\\u30b5\\u30d6\\u30ab\\u30c6\\u30b4\\u30ea\\u30fc\", \"admin.template.one\": \"\\u30c6\\u30f3\\u30d7\\u30ec\\u30fc\\u30c8\", \"admin.addresstype.shipping\": \"\\u904b\\u9001\", \"ticket.label.created\": \"\\u4f5c\\u6210\", \"ticket.status.problem_solved\": \"\\u554f\\u984c\\u304c\\u89e3\\u6c7a\\u3057\\u307e\\u3057\\u305f\", \"admin.person.label.role\": \"\\u5f79\\u5272\", \"admin.phonenumbertype.office\": \"\\u30aa\\u30d5\\u30a3\\u30b9\", \"admin.category.labelCat.type\": \"\\u30bf\\u30a4\\u30d7\", \"admin.address.city\": \"\\u30b7\\u30c6\\u30a3\", \"admin.category.label.subcategory_label\": \"\\u30b5\\u30d6\\u30ab\\u30c6\\u30b4\\u30ea\\u30fc\\u30e9\\u30d9\\u30eb\", \"ticket.label.priority\": \"\\u512a\\u5148\", \"admin.translation.label.translation\": \"\\u7ffb\\u8a33\", \"admin.contractor.other\": \"\\u8acb\\u8ca0\\u696d\\u8005\", \"ticket.label.requester\": \"\\u30ea\\u30af\\u30a8\\u30b9\\u30bf\", \"crud.delete.confirm\": \"\\u3042\\u306a\\u305f\\u306f '{{ record}}\\u306e\\\\'\\u3092{{model}}\\u306e\\\\\\u3092\\u524a\\u9664\\u3057\\u3066\\u3082\\u3088\\u308d\\u3057\\u3044\\u3067\\u3059\\u304b\\uff1f\", \"ticket.other\": \"\\u30c1\\u30b1\\u30c3\\u30c8\", \"crud.create.error\": \"{{model}}\\u306e\\u4f5c\\u6210\\u30a8\\u30e9\\u30fc\\u304c\\u767a\\u751f\\u3057\\u307e\\u3057\\u305f\\u3002\", \"admin.category.one\": \"\\u30ab\\u30c6\\u30b4\\u30ea\", \"admin.locationlevel.department\": \"\\u90e8\\u9580\", \"admin.locationlevel.region\": \"\\u9818\\u57df\", \"activity.tabs.comments\": \"\\u30b3\\u30e1\\u30f3\\u30c8\", \"admin.category.label.cost_currency\": \"\\u30b3\\u30b9\\u30c8\\u901a\\u8ca8\", \"admin.translation.label.helper\": \"\\u30d8\\u30eb\\u30d1\\u30fc\", \"admin.phonenumbertype.mobile\": \"\\u7d30\\u80de\", \"admin.assignment.one\": \"\\u5272\\u308a\\u5f53\\u3066\\u30d7\\u30ed\\u30d5\\u30a3\\u30fc\\u30eb\", \"welcome\": \"\\u3053\\u3093\\u306b\\u3061\\u306f\", \"admin.approval.other\": \"\\u627f\\u8a8d\", \"modules.pms.titleShort\": \"PM\", \"modules.assets.titleShort\": \"\\u8cc7\\u7523\", \"ticket.status.denied\": \"\\u62d2\\u5426\\u3055\\u308c\\u307e\\u3057\\u305f\", \"admin.locationlevel.label.general\": \"\\u4e00\\u822c\", \"admin.address.add\": \"\\u30a2\\u30c9\\u30ec\\u30b9\\u306e\\u8ffd\\u52a0\", \"admin.category.label.name\": \"\\u540d\", \"admin.person.label.contact\": \"\\u63a5\\u89e6\", \"crud.delete.error\": \"\\u30a8\\u30e9\\u30fc\\u304c{{model}}\\u524a\\u9664\\u3057\\u307e\\u3059\\u3002\", \"admin.locationlevel.label.childOrg\": \"\\u5b50\\u6a5f\\u69cb\\uff08\\u8907\\u6570\\u53ef\\uff09\", \"activity.ticket.assignee\": \"${{to}} ${{timestamp}}\\u306b${{from}} $\\u304b\\u3089{{type}}\\u3092\\u5909\\u66f4\", \"ticket.label.cc\": \"CC\", \"admin.person.label.change_password\": \"\\u5909\\u66f4\", \"admin.person.label.last_name\": \"\\u82d7\\u5b57\", \"admin.person.label.password\": \"\\u30d1\\u30b9\\u30ef\\u30fc\\u30c9\", \"admin.locationlevel.fmd\": \"\\u65bd\\u8a2d\\u7ba1\\u7406\\u533a\", \"admin.role.label.role_type\": \"\\u5f79\\u5272\\u578b\", \"activity.ticket.comment\": \"\\u30b3\\u30e1\\u30f3\\u30c8${{timestamp}} ${{comment}}\", \"ticket.priority.medium\": \"\\u4e2d\", \"admin.category.label.label\": \"\\u30e9\\u30d9\\u30eb\", \"admin.person.label.location\": \"\\u30ed\\u30b1\\u30fc\\u30b7\\u30e7\\u30f3\", \"admin.address.label\": \"\\u30bf\\u30a4\\u30d7\", \"admin.company.other\": \"\\u4f01\\u696d\", \"admin.person.label.fullname\": \"\\u540d\", \"crud.save.error\": \"{{model}}\\u3092\\u4fdd\\u5b58\\u3059\\u308b\\u30a8\\u30e9\\u30fc\\u304c\\u767a\\u751f\\u3057\\u307e\\u3057\\u305f\\u3002\", \"admin.role.label.name\": \"\\u5f79\\u5272\\u540d\\u79f0\", \"admin.person.other\": \"\\u4eba\", \"admin.location.label.general\": \"\\u4e00\\u822c\", \"admin.locationlevel.other\": \"\\u5834\\u6240\\u30ec\\u30d9\\u30eb\", \"ticket.label.location\": \"\\u30ed\\u30b1\\u30fc\\u30b7\\u30e7\\u30f3\", \"crud.create.success\": \"{{model}}\\u6b63\\u5e38\\u306b\\u4f5c\\u6210\\u3055\\u308c\\u307e\\u3057\\u305f\\u3002\", \"admin.notification.one\": \"\\u901a\\u77e5\\u30d7\\u30ed\\u30d5\\u30a1\\u30a4\\u30eb\", \"ticket.priority.emergency\": \"\\u7dca\\u6025\", \"admin.title\": \"\\u7ba1\\u7406\\u8005\", \"crud.restore.error\": \"\\u30a8\\u30e9\\u30fc\\u5fa9\\u5143{{model}}\", \"ticket.label.assignee\": \"\\u8b72\\u53d7\\u4eba\", \"activity.ticket.to_from\": \"${{to}} ${{timestamp}}\\u306b${{from}} $\\u304b\\u3089{{type}}\\u3092\\u5909\\u66f4\", \"activity.ticket.create\": \"\\u3053\\u306e\\u30c1\\u30b1\\u30c3\\u30c8\\u306e${{timestamp}}\\u3092\\u4f5c\\u6210\", \"admin.location.label.name\": \"\\u540d\", \"crud.save.button\": \"\\u30bb\\u30fc\\u30d6\", \"activity.tabs.status_updates\": \"\\u30b9\\u30c6\\u30fc\\u30bf\\u30b9\\u306e\\u66f4\\u65b0\", \"ticket.priority.low\": \"\\u30ed\\u30fc\", \"admin.person.label.phone_number.other\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.address_type.shipping\": \"\\u904b\\u9001\", \"admin.location.other\": \"\\u5834\\u6240\", \"admin.general.one\": \"\\u4e00\\u822c\\u7684\\u306a\\u8a2d\\u5b9a\", \"admin.person.status.inactive\": \"\\u975e\\u30a2\\u30af\\u30c6\\u30a3\\u30d6\", \"admin.address.country.other\": \"\\u56fd\", \"admin.address.country.one\": \"\\u56fd\", \"admin.categoryType.one\": \"\\u30ab\\u30c6\\u30b4\\u30ea\\u30bf\\u30a4\\u30d7\", \"upload.progress\": \"\\u9032\\u6357\", \"activity.ticket.cc_remove\": \"CC\\u306e$\\u306e{{timestamp}}\\u304b\\u3089\\u524a\\u9664${{removed}} $\", \"admin.category.labelCat.issue\": \"\\u554f\\u984c\", \"button.add\": \"\\u65b0\\u3057\\u3044{{model}}\\u3092\\u8ffd\\u52a0\", \"ticket.label.status\": \"\\u72b6\\u614b\", \"admin.role.label.location_level\": \"\\u5834\\u6240\\u7d44\\u7e54\", \"modules.tickets.titleShort\": \"\\u30c1\\u30b1\\u30c3\\u30c8\", \"modules.tasks.titleShort\": \"\\u30bf\\u30b9\\u30af\", \"admin.setting.one\": \"\\u8a2d\\u5b9a\", \"admin.translation.label.key\": \"\\u30ad\\u30fc\", \"admin.address.postal_code\": \"\\u30b8\\u30c3\\u30d7\", \"admin.address.state.one\": \"\\u72b6\\u614b\", \"crud.titles.new\": \"\\u65b0\\u3057\\u3044{{model}}\", \"admin.address.address\": \"\\u4f4f\\u6240\", \"admin.category.label.cost_code\": \"\\u30b3\\u30b9\\u30c8\\u30b3\\u30fc\\u30c9\", \"admin.person.label.phone_number.one\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.locationlevel.district\": \"\\u5730\\u533a\", \"admin.phone.add\": \"\\u96fb\\u8a71\\u756a\\u53f7\\u3092\\u8ffd\\u52a0\\u3057\\u307e\\u3059\\u3002\", \"menu.home\": \"\\u30db\\u30fc\\u30e0\", \"admin.translation.other\": \"\\u7ffb\\u8a33\", \"admin.phone.numbers\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.locationlevel.one\": \"\\u5834\\u6240\\u30ec\\u30d9\\u30eb\", \"ticket.status.in_progress\": \"\\u9032\\u884c\\u4e2d\", \"admin.location.status.future\": \"\\u5c06\\u6765\", \"admin.contractor.one\": \"\\u8acb\\u8ca0\\u696d\\u8005\", \"admin.person.one\": \"\\u4eba\", \"admin.role.one\": \"\\u5f79\\u5272\", \"admin.category.name.maintenance\": \"\\u30e1\\u30f3\\u30c6\\u30ca\\u30f3\\u30b9\", \"crud.cancel.button\": \"\\u30ad\\u30e3\\u30f3\\u30bb\\u30eb\", \"modules.workOrders.titleShort\": \"\\u4f5c\\u696d\\u30aa\\u30fc\\u30c0\\u30fc\", \"admin.address_type.office\": \"\\u30aa\\u30d5\\u30a3\\u30b9\", \"admin.category.label.general\": \"\\u4e00\\u822c\", \"admin.role.system_administrator\": \"\\u7ba1\\u7406\\u8005\", \"admin.locationlevel.fmu\": \"\\u30d5\\u30a1\\u30b7\\u30ea\\u30c6\\u30a3\\u30de\\u30cd\\u30b8\\u30e1\\u30f3\\u30c8\\u30ea\\u30fc\\u30b8\\u30e7\\u30f3\", \"ticket.status.draft\": \"\\u30c9\\u30e9\\u30d5\\u30c8\", \"admin.person.status.expired\": \"\\u671f\\u9650\\u5207\\u308c\", \"admin.category.label.description\": \"\\u8aac\\u660e\", \"admin.amount\": \"\\u91cf\", \"admin.locationlevel.label.name\": \"\\u540d\", \"ticket.status.deferred\": \"\\u7e70\\u5ef6\", \"admin.approval.one\": \"\\u627f\\u8a8d\", \"ticket.label.request\": \"\\u8981\\u6c42\", \"admin.location.label.location_level\": \"\\u7d44\\u7e54\", \"activity.ticket.categories\": \"${{to}} ${{timestamp}}\\u306b${{from}} $\\u304b\\u3089\\u30ab\\u30c6\\u30b4\\u30ea\\u3092\\u5909\\u66f4\", \"admin.category.name.repair\": \"\\u4fee\\u5fa9\", \"validation.valid\": \"\\u6b63\\u5f53\\u306a\", \"activity.ticket.cc_add\": \"$CC\\u306e$\\u306e{{timestamp}}\\u306b${{added}}\\u3092\\u8ffd\\u52a0\\u3057\\u307e\\u3057\\u305f\", \"admin.assignment.other\": \"\\u5272\\u308a\\u5f53\\u3066\\u30d7\\u30ed\\u30d5\\u30a1\\u30a4\\u30eb\", \"admin.general.other\": \"\\u4e00\\u822c\\u8a2d\\u5b9a\", \"admin.locationlevel.store\": \"\\u683c\\u7d0d\", \"admin.location.label.status\": \"\\u72b6\\u614b\", \"admin.translation.one\": \"\\u7ffb\\u8a33\", \"crud.titles.edit\": \"\\u7de8\\u96c6{{model}}\", \"modules.rfqs.titleShort\": \"\\u898b\\u7a4d\\u4f9d\\u983c\", \"admin.person.label.username\": \"\\u30e6\\u30fc\\u30b6\\u30fc\\u540d\", \"admin.locationlevel.company\": \"\\u4f1a\\u793e\", \"admin.contractorAssignment.other\": \"\\u8acb\\u8ca0\\u696d\\u8005\\u306e\\u5272\\u308a\\u5f53\\u3066\", \"admin.person.label.credentials\": \"\\u30af\\u30ec\\u30c7\\u30f3\\u30b7\\u30e3\\u30eb\", \"crud.restore.success\": \"{{model}}\\u6b63\\u5e38\\u306b\\u5fa9\\u5143\\u3002\", \"modules.invoices.titleShort\": \"\\u8acb\\u6c42\\u66f8\", \"admin.category.name.loss_prevention\": \"\\u640d\\u5931\\u9632\\u6b62\", \"admin.phone.number\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"button.upload\": \"\\u30d5\\u30a1\\u30a4\\u30eb\\u3092\\u6dfb\\u4ed8\\u3059\\u308b\", \"crud.delete.button\": \"\\u524a\\u9664\", \"admin.role.label.general\": \"\\u4e00\\u822c\", \"admin.location.status.closed\": \"\\u30af\\u30ed\\u30fc\\u30ba\", \"admin.contractorAssignment.one\": \"\\u8acb\\u8ca0\\u696d\\u8005\\u306e\\u5272\\u308a\\u5f53\\u3066\", \"crud.create.button\": \"\\u4f5c\\u308a\\u51fa\\u3057\\u307e\\u3059\", \"admin.person.label.email\": \"\\u30e1\\u30fc\\u30eb\", \"activity.ticket.attachment_remove\": \"${{timestamp}} ${{removed}} ${{count}}\\u30d5\\u30a1\\u30a4\\u30eb\\u3092\\u524a\\u9664\", \"admin.location.one\": \"\\u30ed\\u30b1\\u30fc\\u30b7\\u30e7\\u30f3\", \"admin.address.country.select\": \"\\u56fd\\u3092\\u9078\\u629e\", \"ticket.search\": \"\\u691c\\u7d22\\u30c1\\u30b1\\u30c3\\u30c8\", \"admin.person.label.title\": \"\\u30bf\\u30a4\\u30c8\\u30eb\", \"modules.purchaseOrders.titleShort\": \"\\u767a\\u6ce8\\u66f8\", \"admin.location.status.open\": \"\\u30aa\\u30fc\\u30d7\\u30f3\", \"admin.person.label.auth_amount\": \"\\u8a8d\\u8a3c\\u3002\\u91cf\", \"admin.category.status.active\": \"\\u30a2\\u30af\\u30c6\\u30a3\\u30d6\", \"admin.person.status.active\": \"\\u30a2\\u30af\\u30c6\\u30a3\\u30d6\", \"admin.role.label.category\": \"\\u30ab\\u30c6\\u30b4\\u30ea\", \"admin.person.label.language\": \"\\u8a00\\u8a9e\", \"crud.save.success\": \"{{model}}\\u304c\\u6b63\\u5e38\\u306b\\u4fdd\\u5b58\\u3055\\u308c\\u307e\\u3057\\u305f\\u3002\", \"admin.category.label.cost_amount\": \"\\u30b3\\u30b9\\u30c8\\u984d\", \"admin.categoryType.other\": \"\\u30ab\\u30c6\\u30b4\\u30ea\\u578b\", \"ticket.priority.high\": \"\\u9ad8\\u3044\", \"admin.location.label.number\": \"\\u6570\", \"admin.person.search\": \"\\u691c\\u7d22\\u4eba\", \"admin.category.other\": \"\\u30ab\\u30c6\\u30b4\\u30ea\\u30fc\", \"ticket.one\": \"\\u30c1\\u30b1\\u30c3\\u30c8\", \"admin.category.labelCat.trade\": \"\\u30c8\\u30ec\\u30fc\\u30c9\", \"admin.notification.other\": \"\\u901a\\u77e5\\u30d7\\u30ed\\u30d5\\u30a1\\u30a4\\u30eb\", \"admin.person.label.first_name\": \"\\u30d5\\u30a1\\u30fc\\u30b9\\u30c8\\u30cd\\u30fc\\u30e0\", \"admin.addresstype.office\": \"\\u30aa\\u30d5\\u30a3\\u30b9\", \"validation.invalid\": \"\\u7121\\u52b9\", \"activity.ticket.attachment_add\": \"${{timestamp}} ${{added}} ${{count}}\\u30d5\\u30a1\\u30a4\\u30eb\\u3092\\u30a2\\u30c3\\u30d7\\u30ed\\u30fc\\u30c9\", \"admin.person.label.status\": \"\\u72b6\\u614b\", \"admin.role.other\": \"\\u5f79\\u5272\", \"admin.company.one\": \"\\u4f1a\\u793e\"}",
     "deleted": null,
-    "locale": "875f6f3a-66cc-40d9-be3e-245d45ffca1c",
     "csv": "",
+    "created": "2015-12-02T17:51:00.852Z",
     "modified": "2015-12-09T22:13:42.294Z",
-    "created": "2015-12-02T17:51:00.852Z"
-  },
-  "pk": "669c5b47-39f4-481b-bfd3-6b0bbb8751a7"
+    "locale": "875f6f3a-66cc-40d9-be3e-245d45ffca1c",
+    "context": "{\"admin.address.country.other\": \"Person created successfully.\", \"admin.address.address\": \"New Role\", \"admin.amount\": \"Work Order restored successfully.\", \"admin.address.state.select\": \"Are you sure you want to delete Work Order 150306-448?\", \"admin.address.city\": \"Edit Role\"}"
+  }
 },
 {
   "model": "translation.translation",
+  "pk": "bd81f289-c884-417c-9ec7-a87f6b9a0220",
   "fields": {
-    "values": "{\"admin.locationlevel.one\": \"\\u5730\\u9ede\\u4e00\\u5c64\", \"admin.address.address\": \"\\u8857\\u9053\\u5730\\u5740\", \"admin.address.city\": \"\\u5e02\", \"activity.ticket.cc_remove\": \"\\u5f9eCC ${{timestamp}}\\u522a\\u9664${{removed}} $\", \"admin.address.country.one\": \"\\u570b\\u5bb6\", \"ticket.status.deferred\": \"\\u905e\\u5ef6\", \"admin.addresstype.shipping\": \"\\u9001\\u8ca8\", \"crud.delete.error\": \"\\u932f\\u8aa4\\u522a\\u9664{{model}}\\u3002\", \"admin.locationlevel.fmu\": \"\\u8a2d\\u65bd\\u7ba1\\u7406\\u5340\", \"ticket.other\": \"\\u9580\\u7968\", \"admin.category.label.cost_amount\": \"\\u6210\\u672c\\u91d1\\u984d\", \"admin.locationlevel.label.name\": \"\\u540d\\u7a31\", \"admin.role.system_administrator\": \"\\u7ba1\\u7406\\u54e1\", \"admin.address.country.select\": \"\\u9078\\u64c7\\u4e00\\u500b\\u570b\\u5bb6\", \"admin.location.other\": \"\\u5730\\u9ede\", \"admin.category.label.cost_currency\": \"\\u6210\\u672c\\u8ca8\\u5e63\", \"button.upload\": \"\\u6dfb\\u52a0\\u9644\\u4ef6\", \"ticket.priority.low\": \"\\u4f4e\", \"admin.role.label.role_type\": \"\\u89d2\\u8272\\u985e\\u578b\", \"crud.save.error\": \"\\u932f\\u8aa4\\u4fdd\\u5b58{{model}}\\u3002\", \"ticket.search\": \"\\u641c\\u7d22\\u9580\\u7968\", \"modules.purchaseOrders.titleShort\": \"\\u8a02\\u55ae\", \"activity.ticket.comment\": \"\\u8a55\\u8ad6${{timestamp}} ${{comment}}\", \"admin.address.add\": \"\\u6dfb\\u52a0\\u5730\\u5740\", \"admin.locationlevel.district\": \"\\u5340\", \"ticket.label.created\": \"\\u5275\\u5efa\", \"admin.person.label.last_name\": \"\\u59d3\", \"modules.tickets.titleShort\": \"\\u9580\\u7968\", \"admin.person.label.change_password\": \"\\u66f4\\u6539\", \"admin.locationlevel.region\": \"\\u5730\\u5340\", \"ticket.label.requester\": \"\\u8acb\\u6c42\\u8005\", \"crud.delete.button\": \"\\u522a\\u9664\", \"admin.person.label.middle_initial\": \"\\u4e2d\\u9593\", \"admin.category.label.cost_code\": \"\\u6210\\u672c\\u78bc\", \"admin.person.label.auth_amount\": \"\\u9a57\\u8b49\\u3002\\u91cf\", \"admin.category.one\": \"\\u985e\\u5225\", \"admin.address.postal_code\": \"\\u62c9\\u934a\", \"activity.ticket.categories\": \"\\u6539\\u8b8a\\u985e\\u5225\\u5f9e${{from}} $\\u81f3${{to}} ${{timestamp}}\", \"admin.person.one\": \"\\u4eba\", \"ticket.status.complete\": \"\\u5b8c\\u6210\", \"activity.tabs.all_updates\": \"\\u6240\\u6709\\u66f4\\u65b0\", \"admin.categoryType.one\": \"\\u5206\\u985e\\u578b\", \"modules.invoices.titleShort\": \"\\u767c\\u7968\", \"admin.person.status.inactive\": \"\\u975e\\u6d3b\\u52d5\", \"admin.translation.label.key\": \"\\u9375\", \"crud.create.success\": \"{{model}}\\u6210\\u529f\\u5275\\u5efa\\u3002\", \"admin.address.state.one\": \"\\u5dde\", \"admin.template.one\": \"\\u6a21\\u677f\", \"ticket.status.denied\": \"\\u88ab\\u62d2\\u7d55\", \"admin.contractorAssignment.other\": \"\\u627f\\u5305\\u5546\\u5206\\u914d\", \"activity.ticket.create\": \"\\u5275\\u5efa\\u6b64\\u9580\\u7968${{timestamp}}\", \"admin.notification.other\": \"\\u901a\\u77e5\\u7c21\\u4ecb\", \"admin.person.search\": \"\\u641c\\u7d22\\u4eba\", \"admin.address_type.office\": \"\\u8fa6\\u516c\\u5ba4\", \"admin.address.state.other\": \"\\u72c0\\u614b\", \"modules.assets.titleShort\": \"\\u8cc7\\u7522\", \"admin.setting.one\": \"\\u74b0\\u5883\", \"admin.person.label.location\": \"\\u4f4d\\u7f6e\", \"admin.phonenumbertype.office\": \"\\u8fa6\\u516c\\u5ba4\", \"admin.locationlevel.company\": \"\\u516c\\u53f8\", \"admin.person.label.password\": \"\\u5bc6\\u78bc\", \"admin.location.status.closed\": \"\\u95dc\\u9589\", \"crud.delete.confirm\": \"\\u8981\\u522a\\u9664{{model}} \\\\'{{ record}} \\\\'\\u4f60\\u78ba\\u5b9a\\u55ce\\uff1f\", \"ticket.priority.high\": \"\\u9ad8\", \"admin.phone.add\": \"\\u6dfb\\u52a0\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.person.label.title\": \"\\u6a19\\u984c\", \"ticket.status.in_progress\": \"\\u9032\\u884c\\u4e2d\", \"admin.translation.other\": \"\\u7ffb\\u8b6f\", \"admin.translation.label.translation\": \"\\u7ffb\\u8b6f\", \"ticket.status.new\": \"\\u65b0\", \"upload.progress\": \"\\u9032\\u5c55\", \"crud.create.error\": \"\\u932f\\u8aa4\\u5275\\u5efa{{model}}\\u3002\", \"admin.phonenumbertype.mobile\": \"\\u7d30\\u80de\", \"validation.invalid\": \"\\u7121\\u6548\", \"admin.category.name.loss_prevention\": \"\\u9632\\u640d\", \"admin.locationlevel.other\": \"\\u4f4d\\u7f6e\\u6c34\\u5e73\", \"admin.general.one\": \"\\u4e00\\u822c\\u8a2d\\u7f6e\", \"admin.person.label.role\": \"\\u89d2\\u8272\", \"admin.role.label.location_level\": \"\\u5730\\u9ede\\u7d44\\u7e54\", \"admin.address.label\": \"\\u985e\\u578b\", \"ticket.status.draft\": \"\\u8349\\u6848\", \"admin.category.label.name\": \"\\u540d\\u7a31\", \"ticket.label.status\": \"\\u72c0\\u614b\", \"crud.cancel.button\": \"\\u53d6\\u6d88\", \"admin.notification.one\": \"\\u901a\\u77e5\\u914d\\u7f6e\", \"ticket.label.priority\": \"\\u512a\\u5148\", \"admin.approval.other\": \"\\u8a8d\\u8b49\", \"ticket.priority.emergency\": \"\\u6025\", \"activity.ticket.to_from\": \"\\u6539\\u8b8a\\u4e86{{type}}\\u5f9e${{from}} $\\u81f3${{to}} ${{timestamp}}\", \"admin.locationlevel.store\": \"\\u5546\\u5e97\", \"validation.valid\": \"\\u6709\\u6548\", \"admin.locationlevel.label.general\": \"\\u4e00\\u822c\", \"activity.tabs.status_updates\": \"\\u72c0\\u614b\\u66f4\\u65b0\", \"admin.location.label.general\": \"\\u4e00\\u822c\", \"admin.category.labelCat.issue\": \"\\u554f\\u984c\", \"activity.tabs.comments\": \"\\u8a55\\u8ad6\", \"admin.location.label.status\": \"\\u72c0\\u614b\", \"admin.role.label.number_users\": \"\\uff03\\u4eba\\u6c11\", \"admin.location.label.location_level\": \"\\u7d44\\u7e54\", \"admin.setting.other\": \"\\u8a2d\\u7f6e\", \"admin.assignment.one\": \"\\u8f49\\u8b93\\u500b\\u4eba\\u8cc7\\u6599\", \"admin.category.name.repair\": \"\\u4fee\\u5fa9\", \"admin.category.labelCat.trade\": \"\\u884c\\u696d\", \"ticket.one\": \"\\u7968\", \"admin.locationlevel.department\": \"\\u90e8\\u9580\", \"admin.assignment.other\": \"\\u5206\\u914d\\u7c21\\u4ecb\", \"admin.location.status.future\": \"\\u672a\\u4f86\", \"ticket.label.request\": \"\\u8acb\\u6c42\", \"admin.amount\": \"\\u91cf\", \"admin.person.status.expired\": \"\\u904e\\u671f\", \"ticket.label.cc\": \"CC\", \"admin.location.one\": \"\\u4f4d\\u7f6e\", \"crud.save.success\": \"{{model}}\\u4fdd\\u5b58\\u6210\\u529f\\u3002\", \"admin.role.guest\": \"\\u4f86\\u8cd3\", \"admin.category.label.description\": \"\\u63cf\\u8ff0\", \"activity.ticket.cc_add\": \"\\u52a0${{added}} $\\u5230CC ${{timestamp}}\", \"admin.translation.label.helper\": \"\\u5e6b\\u624b\", \"admin.role.label.name\": \"\\u89d2\\u8272\\u540d\\u7a31\", \"admin.person.label.first_name\": \"\\u540d\\u5b57\", \"admin.person.label.contact\": \"\\u806f\\u7e6b\", \"admin.role.label.general\": \"\\u4e00\\u822c\", \"admin.general.other\": \"\\u5e38\\u898f\\u8a2d\\u7f6e\", \"admin.locationlevel.fmd\": \"\\u8a2d\\u65bd\\u7ba1\\u7406\\u5340\", \"crud.save.button\": \"\\u4fdd\\u5b58\", \"admin.location.label.name\": \"\\u540d\\u7a31\", \"admin.title\": \"\\u7ba1\\u7406\\u54e1\", \"activity.ticket.attachment_add\": \"\\u4e0a\\u50b3${{count}}\\u6587\\u4ef6${{timestamp}} ${{added}}\", \"modules.tasks.titleShort\": \"\\u4efb\\u52d9\", \"admin.location.status.open\": \"\\u6253\\u958b\", \"admin.person.label.fullname\": \"\\u540d\\u7a31\", \"admin.role.label.category\": \"\\u985e\\u5225\", \"admin.category.label.subcategory_label\": \"\\u5b50\\u985e\\u5225\\u6a19\\u7c64\", \"admin.address_type.shipping\": \"\\u9001\\u8ca8\", \"admin.category.label.general\": \"\\u4e00\\u822c\", \"crud.restore.success\": \"{{model}}\\u6210\\u529f\\u6062\\u5fa9\\u3002\", \"admin.person.label.language\": \"\\u8a9e\\u8a00\", \"admin.contractorAssignment.one\": \"\\u627f\\u5305\\u5546\\u5206\\u914d\", \"modules.pms.titleShort\": \"\\u4e0b\\u5348\", \"modules.projects.titleShort\": \"\\u5de5\\u7a0b\", \"admin.translation.one\": \"\\u7ffb\\u8b6f\", \"admin.category.status.active\": \"\\u6d3b\\u6027\", \"welcome\": \"\\u60a8\\u597d\", \"activity.ticket.assignee\": \"\\u6539\\u8b8a\\u4e86{{type}}\\u5f9e${{from}} $\\u81f3${{to}} ${{timestamp}}\", \"admin.category.other\": \"\\u5206\\u985e\", \"crud.restore.button\": \"\\u6062\\u5fa9\", \"admin.person.label.phone_number.other\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.contractor.other\": \"\\u627f\\u5305\\u5546\", \"crud.restore.error\": \"\\u932f\\u8aa4\\u6062\\u5fa9{{model}}\", \"admin.addresstype.office\": \"\\u8fa6\\u516c\\u5ba4\", \"admin.person.label.general\": \"\\u4e00\\u822c\", \"admin.company.other\": \"\\u516c\\u53f8\", \"modules.workOrders.titleShort\": \"\\u5de5\\u4f5c\\u8a02\\u55ae\", \"admin.category.label.label\": \"\\u6a19\\u7c64\", \"button.add\": \"\\u65b0\\u589e{{model}}\", \"admin.person.label.employee_id\": \"\\u54e1\\u5de5\\u865f\", \"admin.role.other\": \"\\u89d2\\u8272\", \"crud.create.button\": \"\\u5275\\u5efa\", \"admin.location.label.number\": \"\\u6578\", \"ticket.label.location\": \"\\u4f4d\\u7f6e\", \"ticket.status.problem_solved\": \"\\u554f\\u984c\\u89e3\\u6c7a\\u4e86\", \"menu.home\": \"\\u5bb6\", \"activity.ticket.attachment_remove\": \"\\u522a\\u9664${{count}}\\u6587\\u4ef6${{timestamp}} ${{removed}}\", \"admin.category.label.children\": \"\\u5b50\\u5206\\u985e\", \"admin.address.country.other\": \"\\u570b\\u5bb6\", \"admin.company.one\": \"\\u516c\\u53f8\", \"admin.person.label.credentials\": \"\\u8b49\\u66f8\", \"admin.categoryType.other\": \"\\u5206\\u985e\\u985e\\u578b\", \"ticket.priority.medium\": \"\\u4e2d\", \"admin.phone.number\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.locationlevel.label.childOrg\": \"\\u5152\\u7ae5\\u7d44\\u7e54\\uff08S\\uff09\", \"admin.template.other\": \"\\u6a21\\u677f\", \"crud.titles.new\": \"\\u65b0{{model}}\", \"admin.category.labelCat.type\": \"\\u985e\\u578b\", \"admin.contractor.one\": \"\\u627f\\u5305\\u5546\", \"admin.person.label.phone_number.one\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.role.one\": \"\\u89d2\\u8272\", \"admin.person.other\": \"\\u4eba\", \"admin.person.status.active\": \"\\u6d3b\\u6027\", \"ticket.label.assignee\": \"\\u53d7\\u8b93\\u4eba\", \"admin.person.label.username\": \"\\u7528\\u6236\\u540d\", \"admin.person.label.status\": \"\\u72c0\\u614b\", \"admin.person.label.address\": \"\\u5730\\u5740\", \"admin.address.state.select\": \"\\u9078\\u64c7\\u4e00\\u500b\\u570b\\u5bb6\", \"admin.phone.numbers\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.category.name.maintenance\": \"\\u4fdd\\u990a\", \"crud.titles.edit\": \"\\u7de8\\u8f2f{{model}}\", \"admin.person.label.email\": \"\\u96fb\\u5b50\\u90f5\\u4ef6\", \"modules.rfqs.titleShort\": \"\\u8a62\\u50f9\", \"admin.approval.one\": \"\\u5be9\\u6279\"}",
-    "context": "{\"crud.titles.new\": \"New Role\", \"crud.create.success\": \"Person created successfully.\", \"crud.titles.edit\": \"Edit Role\", \"crud.restore.success\": \"Work Order restored successfully.\", \"crud.delete.confirm\": \"Are you sure you want to delete Work Order 150306-448?\"}",
+    "values": "{\"admin.person.label.address\": \"\\u5730\\u5740\", \"admin.role.label.number_users\": \"\\uff03\\u4eba\\u6c11\", \"admin.person.label.middle_initial\": \"\\u4e2d\\u9593\", \"admin.person.label.employee_id\": \"\\u54e1\\u5de5\\u865f\", \"activity.tabs.all_updates\": \"\\u6240\\u6709\\u66f4\\u65b0\", \"admin.address.state.select\": \"\\u9078\\u64c7\\u4e00\\u500b\\u570b\\u5bb6\", \"ticket.status.complete\": \"\\u5b8c\\u6210\", \"ticket.status.new\": \"\\u65b0\", \"admin.setting.other\": \"\\u8a2d\\u7f6e\", \"crud.restore.button\": \"\\u6062\\u5fa9\", \"admin.address.state.other\": \"\\u72c0\\u614b\", \"admin.person.label.general\": \"\\u4e00\\u822c\", \"admin.template.other\": \"\\u6a21\\u677f\", \"modules.projects.titleShort\": \"\\u5de5\\u7a0b\", \"admin.role.guest\": \"\\u4f86\\u8cd3\", \"admin.category.label.children\": \"\\u5b50\\u5206\\u985e\", \"admin.template.one\": \"\\u6a21\\u677f\", \"admin.addresstype.shipping\": \"\\u9001\\u8ca8\", \"ticket.label.created\": \"\\u5275\\u5efa\", \"ticket.status.problem_solved\": \"\\u554f\\u984c\\u89e3\\u6c7a\\u4e86\", \"admin.person.label.role\": \"\\u89d2\\u8272\", \"admin.phonenumbertype.office\": \"\\u8fa6\\u516c\\u5ba4\", \"admin.category.labelCat.type\": \"\\u985e\\u578b\", \"admin.address.city\": \"\\u5e02\", \"admin.category.label.subcategory_label\": \"\\u5b50\\u985e\\u5225\\u6a19\\u7c64\", \"ticket.label.priority\": \"\\u512a\\u5148\", \"admin.translation.label.translation\": \"\\u7ffb\\u8b6f\", \"admin.contractor.other\": \"\\u627f\\u5305\\u5546\", \"ticket.label.requester\": \"\\u8acb\\u6c42\\u8005\", \"crud.delete.confirm\": \"\\u8981\\u522a\\u9664{{model}} \\\\'{{ record}} \\\\'\\u4f60\\u78ba\\u5b9a\\u55ce\\uff1f\", \"ticket.other\": \"\\u9580\\u7968\", \"crud.create.error\": \"\\u932f\\u8aa4\\u5275\\u5efa{{model}}\\u3002\", \"admin.category.one\": \"\\u985e\\u5225\", \"admin.locationlevel.department\": \"\\u90e8\\u9580\", \"admin.locationlevel.region\": \"\\u5730\\u5340\", \"activity.tabs.comments\": \"\\u8a55\\u8ad6\", \"admin.category.label.cost_currency\": \"\\u6210\\u672c\\u8ca8\\u5e63\", \"admin.translation.label.helper\": \"\\u5e6b\\u624b\", \"admin.phonenumbertype.mobile\": \"\\u7d30\\u80de\", \"admin.assignment.one\": \"\\u8f49\\u8b93\\u500b\\u4eba\\u8cc7\\u6599\", \"welcome\": \"\\u60a8\\u597d\", \"admin.approval.other\": \"\\u8a8d\\u8b49\", \"modules.pms.titleShort\": \"\\u4e0b\\u5348\", \"modules.assets.titleShort\": \"\\u8cc7\\u7522\", \"ticket.status.denied\": \"\\u88ab\\u62d2\\u7d55\", \"admin.locationlevel.label.general\": \"\\u4e00\\u822c\", \"admin.address.add\": \"\\u6dfb\\u52a0\\u5730\\u5740\", \"admin.category.label.name\": \"\\u540d\\u7a31\", \"admin.person.label.contact\": \"\\u806f\\u7e6b\", \"crud.delete.error\": \"\\u932f\\u8aa4\\u522a\\u9664{{model}}\\u3002\", \"admin.locationlevel.label.childOrg\": \"\\u5152\\u7ae5\\u7d44\\u7e54\\uff08S\\uff09\", \"activity.ticket.assignee\": \"\\u6539\\u8b8a\\u4e86{{type}}\\u5f9e${{from}} $\\u81f3${{to}} ${{timestamp}}\", \"ticket.label.cc\": \"CC\", \"admin.person.label.change_password\": \"\\u66f4\\u6539\", \"admin.person.label.last_name\": \"\\u59d3\", \"admin.person.label.password\": \"\\u5bc6\\u78bc\", \"admin.locationlevel.fmd\": \"\\u8a2d\\u65bd\\u7ba1\\u7406\\u5340\", \"admin.role.label.role_type\": \"\\u89d2\\u8272\\u985e\\u578b\", \"activity.ticket.comment\": \"\\u8a55\\u8ad6${{timestamp}} ${{comment}}\", \"ticket.priority.medium\": \"\\u4e2d\", \"admin.category.label.label\": \"\\u6a19\\u7c64\", \"admin.person.label.location\": \"\\u4f4d\\u7f6e\", \"admin.address.label\": \"\\u985e\\u578b\", \"admin.company.other\": \"\\u516c\\u53f8\", \"admin.person.label.fullname\": \"\\u540d\\u7a31\", \"crud.save.error\": \"\\u932f\\u8aa4\\u4fdd\\u5b58{{model}}\\u3002\", \"admin.role.label.name\": \"\\u89d2\\u8272\\u540d\\u7a31\", \"admin.person.other\": \"\\u4eba\", \"admin.location.label.general\": \"\\u4e00\\u822c\", \"admin.locationlevel.other\": \"\\u4f4d\\u7f6e\\u6c34\\u5e73\", \"ticket.label.location\": \"\\u4f4d\\u7f6e\", \"crud.create.success\": \"{{model}}\\u6210\\u529f\\u5275\\u5efa\\u3002\", \"admin.notification.one\": \"\\u901a\\u77e5\\u914d\\u7f6e\", \"ticket.priority.emergency\": \"\\u6025\", \"admin.title\": \"\\u7ba1\\u7406\\u54e1\", \"crud.restore.error\": \"\\u932f\\u8aa4\\u6062\\u5fa9{{model}}\", \"ticket.label.assignee\": \"\\u53d7\\u8b93\\u4eba\", \"activity.ticket.to_from\": \"\\u6539\\u8b8a\\u4e86{{type}}\\u5f9e${{from}} $\\u81f3${{to}} ${{timestamp}}\", \"activity.ticket.create\": \"\\u5275\\u5efa\\u6b64\\u9580\\u7968${{timestamp}}\", \"admin.location.label.name\": \"\\u540d\\u7a31\", \"crud.save.button\": \"\\u4fdd\\u5b58\", \"activity.tabs.status_updates\": \"\\u72c0\\u614b\\u66f4\\u65b0\", \"ticket.priority.low\": \"\\u4f4e\", \"admin.person.label.phone_number.other\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.address_type.shipping\": \"\\u9001\\u8ca8\", \"admin.location.other\": \"\\u5730\\u9ede\", \"admin.general.one\": \"\\u4e00\\u822c\\u8a2d\\u7f6e\", \"admin.person.status.inactive\": \"\\u975e\\u6d3b\\u52d5\", \"admin.address.country.other\": \"\\u570b\\u5bb6\", \"admin.address.country.one\": \"\\u570b\\u5bb6\", \"admin.categoryType.one\": \"\\u5206\\u985e\\u578b\", \"upload.progress\": \"\\u9032\\u5c55\", \"activity.ticket.cc_remove\": \"\\u5f9eCC ${{timestamp}}\\u522a\\u9664${{removed}} $\", \"admin.category.labelCat.issue\": \"\\u554f\\u984c\", \"button.add\": \"\\u65b0\\u589e{{model}}\", \"ticket.label.status\": \"\\u72c0\\u614b\", \"admin.role.label.location_level\": \"\\u5730\\u9ede\\u7d44\\u7e54\", \"modules.tickets.titleShort\": \"\\u9580\\u7968\", \"modules.tasks.titleShort\": \"\\u4efb\\u52d9\", \"admin.setting.one\": \"\\u74b0\\u5883\", \"admin.translation.label.key\": \"\\u9375\", \"admin.address.postal_code\": \"\\u62c9\\u934a\", \"admin.address.state.one\": \"\\u5dde\", \"crud.titles.new\": \"\\u65b0{{model}}\", \"admin.address.address\": \"\\u8857\\u9053\\u5730\\u5740\", \"admin.category.label.cost_code\": \"\\u6210\\u672c\\u78bc\", \"admin.person.label.phone_number.one\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.locationlevel.district\": \"\\u5340\", \"admin.phone.add\": \"\\u6dfb\\u52a0\\u96fb\\u8a71\\u865f\\u78bc\", \"menu.home\": \"\\u5bb6\", \"admin.translation.other\": \"\\u7ffb\\u8b6f\", \"admin.phone.numbers\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.locationlevel.one\": \"\\u5730\\u9ede\\u4e00\\u5c64\", \"ticket.status.in_progress\": \"\\u9032\\u884c\\u4e2d\", \"admin.location.status.future\": \"\\u672a\\u4f86\", \"admin.contractor.one\": \"\\u627f\\u5305\\u5546\", \"admin.person.one\": \"\\u4eba\", \"admin.role.one\": \"\\u89d2\\u8272\", \"admin.category.name.maintenance\": \"\\u4fdd\\u990a\", \"crud.cancel.button\": \"\\u53d6\\u6d88\", \"modules.workOrders.titleShort\": \"\\u5de5\\u4f5c\\u8a02\\u55ae\", \"admin.address_type.office\": \"\\u8fa6\\u516c\\u5ba4\", \"admin.category.label.general\": \"\\u4e00\\u822c\", \"admin.role.system_administrator\": \"\\u7ba1\\u7406\\u54e1\", \"admin.locationlevel.fmu\": \"\\u8a2d\\u65bd\\u7ba1\\u7406\\u5340\", \"ticket.status.draft\": \"\\u8349\\u6848\", \"admin.person.status.expired\": \"\\u904e\\u671f\", \"admin.category.label.description\": \"\\u63cf\\u8ff0\", \"admin.amount\": \"\\u91cf\", \"admin.locationlevel.label.name\": \"\\u540d\\u7a31\", \"ticket.status.deferred\": \"\\u905e\\u5ef6\", \"admin.approval.one\": \"\\u5be9\\u6279\", \"ticket.label.request\": \"\\u8acb\\u6c42\", \"admin.location.label.location_level\": \"\\u7d44\\u7e54\", \"activity.ticket.categories\": \"\\u6539\\u8b8a\\u985e\\u5225\\u5f9e${{from}} $\\u81f3${{to}} ${{timestamp}}\", \"admin.category.name.repair\": \"\\u4fee\\u5fa9\", \"validation.valid\": \"\\u6709\\u6548\", \"activity.ticket.cc_add\": \"\\u52a0${{added}} $\\u5230CC ${{timestamp}}\", \"admin.assignment.other\": \"\\u5206\\u914d\\u7c21\\u4ecb\", \"admin.general.other\": \"\\u5e38\\u898f\\u8a2d\\u7f6e\", \"admin.locationlevel.store\": \"\\u5546\\u5e97\", \"admin.location.label.status\": \"\\u72c0\\u614b\", \"admin.translation.one\": \"\\u7ffb\\u8b6f\", \"crud.titles.edit\": \"\\u7de8\\u8f2f{{model}}\", \"modules.rfqs.titleShort\": \"\\u8a62\\u50f9\", \"admin.person.label.username\": \"\\u7528\\u6236\\u540d\", \"admin.locationlevel.company\": \"\\u516c\\u53f8\", \"admin.contractorAssignment.other\": \"\\u627f\\u5305\\u5546\\u5206\\u914d\", \"admin.person.label.credentials\": \"\\u8b49\\u66f8\", \"crud.restore.success\": \"{{model}}\\u6210\\u529f\\u6062\\u5fa9\\u3002\", \"modules.invoices.titleShort\": \"\\u767c\\u7968\", \"admin.category.name.loss_prevention\": \"\\u9632\\u640d\", \"admin.phone.number\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"button.upload\": \"\\u6dfb\\u52a0\\u9644\\u4ef6\", \"crud.delete.button\": \"\\u522a\\u9664\", \"admin.role.label.general\": \"\\u4e00\\u822c\", \"admin.location.status.closed\": \"\\u95dc\\u9589\", \"admin.contractorAssignment.one\": \"\\u627f\\u5305\\u5546\\u5206\\u914d\", \"crud.create.button\": \"\\u5275\\u5efa\", \"admin.person.label.email\": \"\\u96fb\\u5b50\\u90f5\\u4ef6\", \"activity.ticket.attachment_remove\": \"\\u522a\\u9664${{count}}\\u6587\\u4ef6${{timestamp}} ${{removed}}\", \"admin.location.one\": \"\\u4f4d\\u7f6e\", \"admin.address.country.select\": \"\\u9078\\u64c7\\u4e00\\u500b\\u570b\\u5bb6\", \"ticket.search\": \"\\u641c\\u7d22\\u9580\\u7968\", \"admin.person.label.title\": \"\\u6a19\\u984c\", \"modules.purchaseOrders.titleShort\": \"\\u8a02\\u55ae\", \"admin.location.status.open\": \"\\u6253\\u958b\", \"admin.person.label.auth_amount\": \"\\u9a57\\u8b49\\u3002\\u91cf\", \"admin.category.status.active\": \"\\u6d3b\\u6027\", \"admin.person.status.active\": \"\\u6d3b\\u6027\", \"admin.role.label.category\": \"\\u985e\\u5225\", \"admin.person.label.language\": \"\\u8a9e\\u8a00\", \"crud.save.success\": \"{{model}}\\u4fdd\\u5b58\\u6210\\u529f\\u3002\", \"admin.category.label.cost_amount\": \"\\u6210\\u672c\\u91d1\\u984d\", \"admin.categoryType.other\": \"\\u5206\\u985e\\u985e\\u578b\", \"ticket.priority.high\": \"\\u9ad8\", \"admin.location.label.number\": \"\\u6578\", \"admin.person.search\": \"\\u641c\\u7d22\\u4eba\", \"admin.category.other\": \"\\u5206\\u985e\", \"ticket.one\": \"\\u7968\", \"admin.category.labelCat.trade\": \"\\u884c\\u696d\", \"admin.notification.other\": \"\\u901a\\u77e5\\u7c21\\u4ecb\", \"admin.person.label.first_name\": \"\\u540d\\u5b57\", \"admin.addresstype.office\": \"\\u8fa6\\u516c\\u5ba4\", \"validation.invalid\": \"\\u7121\\u6548\", \"activity.ticket.attachment_add\": \"\\u4e0a\\u50b3${{count}}\\u6587\\u4ef6${{timestamp}} ${{added}}\", \"admin.person.label.status\": \"\\u72c0\\u614b\", \"admin.role.other\": \"\\u89d2\\u8272\", \"admin.company.one\": \"\\u516c\\u53f8\"}",
     "deleted": null,
-    "locale": "118f5ceb-269b-4e7c-9572-48fe4c9e6487",
     "csv": "",
+    "created": "2015-12-02T17:49:47.196Z",
     "modified": "2015-12-09T22:13:37.718Z",
-    "created": "2015-12-02T17:49:47.196Z"
-  },
-  "pk": "bd81f289-c884-417c-9ec7-a87f6b9a0220"
+    "locale": "118f5ceb-269b-4e7c-9572-48fe4c9e6487",
+    "context": "{\"crud.titles.edit\": \"Edit Role\", \"crud.create.success\": \"Person created successfully.\", \"crud.restore.success\": \"Work Order restored successfully.\", \"crud.delete.confirm\": \"Are you sure you want to delete Work Order 150306-448?\", \"crud.titles.new\": \"New Role\"}"
+  }
 },
 {
   "model": "translation.translation",
+  "pk": "d34a9f9a-b562-4471-b789-b32d2041f558",
   "fields": {
-    "values": "{\"admin.locationlevel.one\": \"Ubicaci\\u00f3n Nivel\", \"admin.address.address\": \"Direcci\\u00f3n\", \"admin.address.city\": \"Ciudad\", \"activity.ticket.cc_remove\": \"removidos ${{removed}} $de CC ${{timestamp}}\", \"admin.address.country.one\": \"Pa\\u00eds\", \"ticket.status.deferred\": \"Diferido\", \"admin.addresstype.shipping\": \"Env\\u00edo\", \"crud.delete.error\": \"Error al eliminar {{model}}.\", \"admin.locationlevel.fmu\": \"Fondo regi\\u00f3n de gesti\\u00f3n\", \"ticket.other\": \"Entradas\", \"admin.category.label.cost_amount\": \"Costo Monto\", \"admin.locationlevel.label.name\": \"Nombre\", \"admin.role.system_administrator\": \"Administrador\", \"admin.address.country.select\": \"Seleccione un pa\\u00eds\", \"admin.location.other\": \"Ubicaciones\", \"admin.category.label.cost_currency\": \"Costo moneda\", \"button.upload\": \"Adjuntar archivo\", \"ticket.priority.low\": \"Bajo\", \"admin.role.label.role_type\": \"Tipo de Papel\", \"crud.save.error\": \"Salvar {{model}} error.\", \"ticket.search\": \"Buscar Entradas\", \"modules.purchaseOrders.titleShort\": \"Ordenes de compra\", \"activity.ticket.comment\": \"comentado ${{timestamp}} ${{comment}}\", \"admin.address.add\": \"A\\u00f1adir la direcci\\u00f3n\", \"admin.locationlevel.district\": \"Distrito\", \"ticket.label.created\": \"Creado\", \"admin.person.label.last_name\": \"Apellido\", \"modules.tickets.titleShort\": \"Entradas\", \"admin.person.label.change_password\": \"Cambiar\", \"admin.locationlevel.region\": \"Regi\\u00f3n\", \"ticket.label.requester\": \"Solicitante\", \"crud.delete.button\": \"Borrar\", \"admin.person.label.middle_initial\": \"Medio\", \"admin.category.label.cost_code\": \"C\\u00f3digo de costo\", \"admin.person.label.auth_amount\": \"Aut. Cantidad\", \"admin.category.one\": \"Categor\\u00eda\", \"admin.address.postal_code\": \"Cremallera\", \"activity.ticket.categories\": \"cambiado la categor\\u00eda de ${{from}} $a ${{to}} ${{timestamp}}\", \"admin.person.one\": \"La persona\", \"ticket.status.complete\": \"Completar\", \"activity.tabs.all_updates\": \"Todas las Actualizaciones\", \"admin.categoryType.one\": \"Categor\\u00eda Tipo\", \"modules.invoices.titleShort\": \"Facturas\", \"admin.person.status.inactive\": \"Inactivo\", \"admin.translation.label.key\": \"Llave\", \"crud.create.success\": \"{{model}} creado con \\u00e9xito.\", \"admin.address.state.one\": \"Estado\", \"admin.template.one\": \"Modelo\", \"ticket.status.denied\": \"Denegado\", \"admin.contractorAssignment.other\": \"Asignaciones de contratista\", \"activity.ticket.create\": \"creado este boleto ${{timestamp}}\", \"admin.notification.other\": \"Perfiles de notificaci\\u00f3n\", \"admin.person.search\": \"Buscador de personas\", \"admin.address_type.office\": \"Oficina\", \"admin.address.state.other\": \"Unidos\", \"modules.assets.titleShort\": \"Bienes\", \"admin.setting.one\": \"Ajuste\", \"admin.person.label.location\": \"Localizaci\\u00f3n\", \"admin.phonenumbertype.office\": \"Oficina\", \"admin.locationlevel.company\": \"Compa\\u00f1\\u00eda\", \"admin.person.label.password\": \"Clave\", \"admin.location.status.closed\": \"Cerrado\", \"crud.delete.confirm\": \"\\u00bfSeguro que quieres eliminar {{model}} \\\\ '{{ record}} \\\\'?\", \"ticket.priority.high\": \"Alto\", \"admin.phone.add\": \"Agregar el n\\u00famero de tel\\u00e9fono\", \"admin.person.label.title\": \"T\\u00edtulo\", \"ticket.status.in_progress\": \"En curso\", \"admin.translation.other\": \"Traducciones\", \"admin.translation.label.translation\": \"Traducci\\u00f3n\", \"ticket.status.new\": \"Nuevo\", \"upload.progress\": \"Progreso\", \"crud.create.error\": \"Error al crear {{model}}.\", \"admin.phonenumbertype.mobile\": \"Celda\", \"validation.invalid\": \"Inv\\u00e1lido\", \"admin.category.name.loss_prevention\": \"Prevenci\\u00f3n de P\\u00e9rdidas\", \"admin.locationlevel.other\": \"Ubicaci\\u00f3n Niveles\", \"admin.general.one\": \"Ajustes generales\", \"admin.person.label.role\": \"Papel\", \"admin.role.label.location_level\": \"Ubicaci\\u00f3n Organizaci\\u00f3n\", \"admin.address.label\": \"Escribe\", \"ticket.status.draft\": \"Borrador\", \"admin.category.label.name\": \"Nombre\", \"ticket.label.status\": \"Estado\", \"crud.cancel.button\": \"Cancelar\", \"admin.notification.one\": \"Notificaci\\u00f3n Perfil\", \"ticket.label.priority\": \"Prioridad\", \"admin.approval.other\": \"Homologaciones\", \"ticket.priority.emergency\": \"Emergencia\", \"activity.ticket.to_from\": \"cambiado el {{type}} desde ${{from}} $a ${{to}} ${{timestamp}}\", \"admin.locationlevel.store\": \"Almacenar\", \"validation.valid\": \"V\\u00e1lido\", \"admin.locationlevel.label.general\": \"General\", \"activity.tabs.status_updates\": \"Actualizaciones de estado\", \"admin.location.label.general\": \"General\", \"admin.category.labelCat.issue\": \"Asunto\", \"activity.tabs.comments\": \"Comentarios\", \"admin.location.label.status\": \"Estado\", \"admin.role.label.number_users\": \"# de la gente\", \"admin.location.label.location_level\": \"Organizaci\\u00f3n\", \"admin.setting.other\": \"Ajustes\", \"admin.assignment.one\": \"Asignaci\\u00f3n Perfil\", \"admin.category.name.repair\": \"Reparar\", \"admin.category.labelCat.trade\": \"Comercio\", \"ticket.one\": \"Billete\", \"admin.locationlevel.department\": \"Departamento\", \"admin.assignment.other\": \"Perfiles de asignaci\\u00f3n\", \"admin.location.status.future\": \"Futuro\", \"ticket.label.request\": \"Petici\\u00f3n\", \"admin.amount\": \"Cantidad\", \"admin.person.status.expired\": \"Muerto\", \"ticket.label.cc\": \"CC\", \"admin.location.one\": \"Localizaci\\u00f3n\", \"crud.save.success\": \"{{model}} guardado correctamente.\", \"admin.role.guest\": \"Hu\\u00e9sped\", \"admin.category.label.description\": \"Descripci\\u00f3n\", \"activity.ticket.cc_add\": \"agregado ${{added}} $a CC ${{timestamp}}\", \"admin.translation.label.helper\": \"Ayudante\", \"admin.role.label.name\": \"Nombre de rol\", \"admin.person.label.first_name\": \"Nombre de pila\", \"admin.person.label.contact\": \"Contacto\", \"admin.role.label.general\": \"General\", \"admin.general.other\": \"Configuraci\\u00f3n general\", \"admin.locationlevel.fmd\": \"Facilidad Distrito de Administraci\\u00f3n\", \"crud.save.button\": \"Guardar\", \"admin.location.label.name\": \"Nombre\", \"admin.title\": \"Administraci\\u00f3n\", \"activity.ticket.attachment_add\": \"subido ${{count}} archivos ${{timestamp}} ${{added}}\", \"modules.tasks.titleShort\": \"Tareas\", \"admin.location.status.open\": \"Abierto\", \"admin.person.label.fullname\": \"Nombre\", \"admin.role.label.category\": \"Categor\\u00eda\", \"admin.category.label.subcategory_label\": \"Sub Categor\\u00eda Label\", \"admin.address_type.shipping\": \"Env\\u00edo\", \"admin.category.label.general\": \"General\", \"crud.restore.success\": \"{{model}} restaurado con \\u00e9xito.\", \"admin.person.label.language\": \"Idioma\", \"admin.contractorAssignment.one\": \"Asignaci\\u00f3n Contratista\", \"modules.pms.titleShort\": \"P.M\", \"modules.projects.titleShort\": \"Proyectos\", \"admin.translation.one\": \"Traducci\\u00f3n\", \"admin.category.status.active\": \"Activo\", \"welcome\": \"Hola\", \"activity.ticket.assignee\": \"cambiado el {{type}} desde ${{from}} $a ${{to}} ${{timestamp}}\", \"admin.category.other\": \"Categor\\u00edas\", \"crud.restore.button\": \"Restaurar\", \"admin.person.label.phone_number.other\": \"N\\u00fameros de tel\\u00e9fono\", \"admin.contractor.other\": \"Contratistas\", \"crud.restore.error\": \"Error restaurando {{model}}\", \"admin.addresstype.office\": \"Oficina\", \"admin.person.label.general\": \"General\", \"admin.company.other\": \"Empresas\", \"modules.workOrders.titleShort\": \"\\u00d3rdenes de trabajo\", \"admin.category.label.label\": \"Etiqueta\", \"button.add\": \"A\\u00f1adir nuevo {{model}}\", \"admin.person.label.employee_id\": \"Empleado No.\", \"admin.role.other\": \"Roles\", \"crud.create.button\": \"Crear\", \"admin.location.label.number\": \"N\\u00famero\", \"ticket.label.location\": \"Localizaci\\u00f3n\", \"ticket.status.problem_solved\": \"Problema resuelto\", \"menu.home\": \"Casa\", \"activity.ticket.attachment_remove\": \"removidos ${{count}} archivos ${{timestamp}} ${{removed}}\", \"admin.category.label.children\": \"Sub Categor\\u00edas\", \"admin.address.country.other\": \"Pa\\u00edses\", \"admin.company.one\": \"Compa\\u00f1\\u00eda\", \"admin.person.label.credentials\": \"Cartas credenciales\", \"admin.categoryType.other\": \"Categor\\u00eda Tipos\", \"ticket.priority.medium\": \"Medio\", \"admin.phone.number\": \"N\\u00famero de tel\\u00e9fono\", \"admin.locationlevel.label.childOrg\": \"Organizaci\\u00f3n Ni\\u00f1o (s)\", \"admin.template.other\": \"Plantillas\", \"crud.titles.new\": \"Nueva {{model}}\", \"admin.category.labelCat.type\": \"Escribe\", \"admin.contractor.one\": \"Contratista\", \"admin.person.label.phone_number.one\": \"N\\u00famero de tel\\u00e9fono\", \"admin.role.one\": \"Papel\", \"admin.person.other\": \"Gente\", \"admin.person.status.active\": \"Activo\", \"ticket.label.assignee\": \"Cesionario\", \"admin.person.label.username\": \"Nombre de usuario\", \"admin.person.label.status\": \"Estado\", \"admin.person.label.address\": \"Direcci\\u00f3n\", \"admin.address.state.select\": \"Selecciona un estado\", \"admin.phone.numbers\": \"N\\u00fameros de tel\\u00e9fono\", \"admin.category.name.maintenance\": \"Mantenimiento\", \"crud.titles.edit\": \"Editar {{model}}\", \"admin.person.label.email\": \"Email\", \"modules.rfqs.titleShort\": \"RFQ\", \"admin.approval.one\": \"Aprobaci\\u00f3n\"}",
-    "context": "{\"admin.address.state.select\": \"Are you sure you want to delete Work Order 150306-448?\", \"admin.address.country.other\": \"Person created successfully.\", \"admin.amount\": \"Work Order restored successfully.\", \"admin.address.address\": \"New Role\", \"admin.address.city\": \"Edit Role\"}",
+    "values": "{\"admin.person.label.address\": \"Direcci\\u00f3n\", \"admin.role.label.number_users\": \"# de la gente\", \"admin.person.label.middle_initial\": \"Medio\", \"admin.person.label.employee_id\": \"Empleado No.\", \"activity.tabs.all_updates\": \"Todas las Actualizaciones\", \"admin.address.state.select\": \"Selecciona un estado\", \"ticket.status.complete\": \"Completar\", \"ticket.status.new\": \"Nuevo\", \"admin.setting.other\": \"Ajustes\", \"crud.restore.button\": \"Restaurar\", \"admin.address.state.other\": \"Unidos\", \"admin.person.label.general\": \"General\", \"admin.template.other\": \"Plantillas\", \"modules.projects.titleShort\": \"Proyectos\", \"admin.role.guest\": \"Hu\\u00e9sped\", \"admin.category.label.children\": \"Sub Categor\\u00edas\", \"admin.template.one\": \"Modelo\", \"admin.addresstype.shipping\": \"Env\\u00edo\", \"ticket.label.created\": \"Creado\", \"ticket.status.problem_solved\": \"Problema resuelto\", \"admin.person.label.role\": \"Papel\", \"admin.phonenumbertype.office\": \"Oficina\", \"admin.category.labelCat.type\": \"Escribe\", \"admin.address.city\": \"Ciudad\", \"admin.category.label.subcategory_label\": \"Sub Categor\\u00eda Label\", \"ticket.label.priority\": \"Prioridad\", \"admin.translation.label.translation\": \"Traducci\\u00f3n\", \"admin.contractor.other\": \"Contratistas\", \"ticket.label.requester\": \"Solicitante\", \"crud.delete.confirm\": \"\\u00bfSeguro que quieres eliminar {{model}} \\\\ '{{ record}} \\\\'?\", \"ticket.other\": \"Entradas\", \"crud.create.error\": \"Error al crear {{model}}.\", \"admin.category.one\": \"Categor\\u00eda\", \"admin.locationlevel.department\": \"Departamento\", \"admin.locationlevel.region\": \"Regi\\u00f3n\", \"activity.tabs.comments\": \"Comentarios\", \"admin.category.label.cost_currency\": \"Costo moneda\", \"admin.translation.label.helper\": \"Ayudante\", \"admin.phonenumbertype.mobile\": \"Celda\", \"admin.assignment.one\": \"Asignaci\\u00f3n Perfil\", \"welcome\": \"Hola\", \"admin.approval.other\": \"Homologaciones\", \"modules.pms.titleShort\": \"P.M\", \"modules.assets.titleShort\": \"Bienes\", \"ticket.status.denied\": \"Denegado\", \"admin.locationlevel.label.general\": \"General\", \"admin.address.add\": \"A\\u00f1adir la direcci\\u00f3n\", \"admin.category.label.name\": \"Nombre\", \"admin.person.label.contact\": \"Contacto\", \"crud.delete.error\": \"Error al eliminar {{model}}.\", \"admin.locationlevel.label.childOrg\": \"Organizaci\\u00f3n Ni\\u00f1o (s)\", \"activity.ticket.assignee\": \"cambiado el {{type}} desde ${{from}} $a ${{to}} ${{timestamp}}\", \"ticket.label.cc\": \"CC\", \"admin.person.label.change_password\": \"Cambiar\", \"admin.person.label.last_name\": \"Apellido\", \"admin.person.label.password\": \"Clave\", \"admin.locationlevel.fmd\": \"Facilidad Distrito de Administraci\\u00f3n\", \"admin.role.label.role_type\": \"Tipo de Papel\", \"activity.ticket.comment\": \"comentado ${{timestamp}} ${{comment}}\", \"ticket.priority.medium\": \"Medio\", \"admin.category.label.label\": \"Etiqueta\", \"admin.person.label.location\": \"Localizaci\\u00f3n\", \"admin.address.label\": \"Escribe\", \"admin.company.other\": \"Empresas\", \"admin.person.label.fullname\": \"Nombre\", \"crud.save.error\": \"Salvar {{model}} error.\", \"admin.role.label.name\": \"Nombre de rol\", \"admin.person.other\": \"Gente\", \"admin.location.label.general\": \"General\", \"admin.locationlevel.other\": \"Ubicaci\\u00f3n Niveles\", \"ticket.label.location\": \"Localizaci\\u00f3n\", \"crud.create.success\": \"{{model}} creado con \\u00e9xito.\", \"admin.notification.one\": \"Notificaci\\u00f3n Perfil\", \"ticket.priority.emergency\": \"Emergencia\", \"admin.title\": \"Administraci\\u00f3n\", \"crud.restore.error\": \"Error restaurando {{model}}\", \"ticket.label.assignee\": \"Cesionario\", \"activity.ticket.to_from\": \"cambiado el {{type}} desde ${{from}} $a ${{to}} ${{timestamp}}\", \"activity.ticket.create\": \"creado este boleto ${{timestamp}}\", \"admin.location.label.name\": \"Nombre\", \"crud.save.button\": \"Guardar\", \"activity.tabs.status_updates\": \"Actualizaciones de estado\", \"ticket.priority.low\": \"Bajo\", \"admin.person.label.phone_number.other\": \"N\\u00fameros de tel\\u00e9fono\", \"admin.address_type.shipping\": \"Env\\u00edo\", \"admin.location.other\": \"Ubicaciones\", \"admin.general.one\": \"Ajustes generales\", \"admin.person.status.inactive\": \"Inactivo\", \"admin.address.country.other\": \"Pa\\u00edses\", \"admin.address.country.one\": \"Pa\\u00eds\", \"admin.categoryType.one\": \"Categor\\u00eda Tipo\", \"upload.progress\": \"Progreso\", \"activity.ticket.cc_remove\": \"removidos ${{removed}} $de CC ${{timestamp}}\", \"admin.category.labelCat.issue\": \"Asunto\", \"button.add\": \"A\\u00f1adir nuevo {{model}}\", \"ticket.label.status\": \"Estado\", \"admin.role.label.location_level\": \"Ubicaci\\u00f3n Organizaci\\u00f3n\", \"modules.tickets.titleShort\": \"Entradas\", \"modules.tasks.titleShort\": \"Tareas\", \"admin.setting.one\": \"Ajuste\", \"admin.translation.label.key\": \"Llave\", \"admin.address.postal_code\": \"Cremallera\", \"admin.address.state.one\": \"Estado\", \"crud.titles.new\": \"Nueva {{model}}\", \"admin.address.address\": \"Direcci\\u00f3n\", \"admin.category.label.cost_code\": \"C\\u00f3digo de costo\", \"admin.person.label.phone_number.one\": \"N\\u00famero de tel\\u00e9fono\", \"admin.locationlevel.district\": \"Distrito\", \"admin.phone.add\": \"Agregar el n\\u00famero de tel\\u00e9fono\", \"menu.home\": \"Casa\", \"admin.translation.other\": \"Traducciones\", \"admin.phone.numbers\": \"N\\u00fameros de tel\\u00e9fono\", \"admin.locationlevel.one\": \"Ubicaci\\u00f3n Nivel\", \"ticket.status.in_progress\": \"En curso\", \"admin.location.status.future\": \"Futuro\", \"admin.contractor.one\": \"Contratista\", \"admin.person.one\": \"La persona\", \"admin.role.one\": \"Papel\", \"admin.category.name.maintenance\": \"Mantenimiento\", \"crud.cancel.button\": \"Cancelar\", \"modules.workOrders.titleShort\": \"\\u00d3rdenes de trabajo\", \"admin.address_type.office\": \"Oficina\", \"admin.category.label.general\": \"General\", \"admin.role.system_administrator\": \"Administrador\", \"admin.locationlevel.fmu\": \"Fondo regi\\u00f3n de gesti\\u00f3n\", \"ticket.status.draft\": \"Borrador\", \"admin.person.status.expired\": \"Muerto\", \"admin.category.label.description\": \"Descripci\\u00f3n\", \"admin.amount\": \"Cantidad\", \"admin.locationlevel.label.name\": \"Nombre\", \"ticket.status.deferred\": \"Diferido\", \"admin.approval.one\": \"Aprobaci\\u00f3n\", \"ticket.label.request\": \"Petici\\u00f3n\", \"admin.location.label.location_level\": \"Organizaci\\u00f3n\", \"activity.ticket.categories\": \"cambiado la categor\\u00eda de ${{from}} $a ${{to}} ${{timestamp}}\", \"admin.category.name.repair\": \"Reparar\", \"validation.valid\": \"V\\u00e1lido\", \"activity.ticket.cc_add\": \"agregado ${{added}} $a CC ${{timestamp}}\", \"admin.assignment.other\": \"Perfiles de asignaci\\u00f3n\", \"admin.general.other\": \"Configuraci\\u00f3n general\", \"admin.locationlevel.store\": \"Almacenar\", \"admin.location.label.status\": \"Estado\", \"admin.translation.one\": \"Traducci\\u00f3n\", \"crud.titles.edit\": \"Editar {{model}}\", \"modules.rfqs.titleShort\": \"RFQ\", \"admin.person.label.username\": \"Nombre de usuario\", \"admin.locationlevel.company\": \"Compa\\u00f1\\u00eda\", \"admin.contractorAssignment.other\": \"Asignaciones de contratista\", \"admin.person.label.credentials\": \"Cartas credenciales\", \"crud.restore.success\": \"{{model}} restaurado con \\u00e9xito.\", \"modules.invoices.titleShort\": \"Facturas\", \"admin.category.name.loss_prevention\": \"Prevenci\\u00f3n de P\\u00e9rdidas\", \"admin.phone.number\": \"N\\u00famero de tel\\u00e9fono\", \"button.upload\": \"Adjuntar archivo\", \"crud.delete.button\": \"Borrar\", \"admin.role.label.general\": \"General\", \"admin.location.status.closed\": \"Cerrado\", \"admin.contractorAssignment.one\": \"Asignaci\\u00f3n Contratista\", \"crud.create.button\": \"Crear\", \"admin.person.label.email\": \"Email\", \"activity.ticket.attachment_remove\": \"removidos ${{count}} archivos ${{timestamp}} ${{removed}}\", \"admin.location.one\": \"Localizaci\\u00f3n\", \"admin.address.country.select\": \"Seleccione un pa\\u00eds\", \"ticket.search\": \"Buscar Entradas\", \"admin.person.label.title\": \"T\\u00edtulo\", \"modules.purchaseOrders.titleShort\": \"Ordenes de compra\", \"admin.location.status.open\": \"Abierto\", \"admin.person.label.auth_amount\": \"Aut. Cantidad\", \"admin.category.status.active\": \"Activo\", \"admin.person.status.active\": \"Activo\", \"admin.role.label.category\": \"Categor\\u00eda\", \"admin.person.label.language\": \"Idioma\", \"crud.save.success\": \"{{model}} guardado correctamente.\", \"admin.category.label.cost_amount\": \"Costo Monto\", \"admin.categoryType.other\": \"Categor\\u00eda Tipos\", \"ticket.priority.high\": \"Alto\", \"admin.location.label.number\": \"N\\u00famero\", \"admin.person.search\": \"Buscador de personas\", \"admin.category.other\": \"Categor\\u00edas\", \"ticket.one\": \"Billete\", \"admin.category.labelCat.trade\": \"Comercio\", \"admin.notification.other\": \"Perfiles de notificaci\\u00f3n\", \"admin.person.label.first_name\": \"Nombre de pila\", \"admin.addresstype.office\": \"Oficina\", \"validation.invalid\": \"Inv\\u00e1lido\", \"activity.ticket.attachment_add\": \"subido ${{count}} archivos ${{timestamp}} ${{added}}\", \"admin.person.label.status\": \"Estado\", \"admin.role.other\": \"Roles\", \"admin.company.one\": \"Compa\\u00f1\\u00eda\"}",
     "deleted": null,
-    "locale": "15b8159a-9b22-4e26-b80a-2f22b6878864",
     "csv": "",
+    "created": "2015-12-02T17:50:52.143Z",
     "modified": "2015-12-09T22:13:28.526Z",
-    "created": "2015-12-02T17:50:52.143Z"
-  },
-  "pk": "d34a9f9a-b562-4471-b789-b32d2041f558"
+    "locale": "15b8159a-9b22-4e26-b80a-2f22b6878864",
+    "context": "{\"admin.address.country.other\": \"Person created successfully.\", \"admin.address.address\": \"New Role\", \"admin.amount\": \"Work Order restored successfully.\", \"admin.address.state.select\": \"Are you sure you want to delete Work Order 150306-448?\", \"admin.address.city\": \"Edit Role\"}"
+  }
 },
 {
   "model": "translation.translation",
+  "pk": "d67c2601-2aee-4f4d-bffc-49b6fa6dcc24",
   "fields": {
-    "values": "{\"admin.locationlevel.one\": \"Lieu Niveau\", \"admin.address.address\": \"Adresse de la rue\", \"admin.address.city\": \"Ville\", \"activity.ticket.cc_remove\": \"enlev\\u00e9es {{removed}} $de CC {{timestamp}}\", \"admin.address.country.one\": \"Pays\", \"ticket.status.deferred\": \"Diff\\u00e9r\\u00e9\", \"admin.addresstype.shipping\": \"Exp\\u00e9dition\", \"crud.delete.error\": \"Erreur de suppression {{model}}.\", \"admin.locationlevel.fmu\": \"Facilit\\u00e9 R\\u00e9gion de gestion\", \"ticket.other\": \"Billets\", \"admin.category.label.cost_amount\": \"Montant des co\\u00fbts\", \"admin.locationlevel.label.name\": \"Nom\", \"admin.role.system_administrator\": \"Administrateur\", \"admin.address.country.select\": \"Choisissez un pays\", \"admin.location.other\": \"Emplacements\", \"admin.category.label.cost_currency\": \"Co\\u00fbt devise\", \"button.upload\": \"Pi\\u00e8ce jointe\", \"ticket.priority.low\": \"Faible\", \"admin.role.label.role_type\": \"Type de R\\u00f4le\", \"crud.save.error\": \"Sauver {{model}} erreur.\", \"ticket.search\": \"Chercher un ticket\", \"modules.purchaseOrders.titleShort\": \"Acheter en ligne\", \"activity.ticket.comment\": \"comment\\u00e9 ${{timestamp}} ${{comment}}\", \"admin.address.add\": \"Ajouter une adresse\", \"admin.locationlevel.district\": \"District\", \"ticket.label.created\": \"Cr\\u00e9\\u00e9\", \"admin.person.label.last_name\": \"Nom de famille\", \"modules.tickets.titleShort\": \"Billets\", \"admin.person.label.change_password\": \"Changement\", \"admin.locationlevel.region\": \"R\\u00e9gion\", \"ticket.label.requester\": \"Demandeur\", \"crud.delete.button\": \"Effacer\", \"admin.person.label.middle_initial\": \"Milieu\", \"admin.category.label.cost_code\": \"Code des co\\u00fbts\", \"admin.person.label.auth_amount\": \"Auth. Montant\", \"admin.category.one\": \"Cat\\u00e9gorie\", \"admin.address.postal_code\": \"Zip *: fran\\u00e7ais\", \"activity.ticket.categories\": \"chang\\u00e9 la cat\\u00e9gorie \\u00e0 partir de ${{from}} $\\u00e0 {{to}} ${{timestamp}}\", \"admin.person.one\": \"La personne\", \"ticket.status.complete\": \"Achev\\u00e9e\", \"activity.tabs.all_updates\": \"Toutes les mises \\u00e0 jour\", \"admin.categoryType.one\": \"Cat\\u00e9gorie type\", \"modules.invoices.titleShort\": \"Factures\", \"admin.person.status.inactive\": \"Inactif\", \"admin.translation.label.key\": \"Cl\\u00e9\", \"crud.create.success\": \"{{model}} cr\\u00e9\\u00e9 avec succ\\u00e8s.\", \"admin.address.state.one\": \"Etat\", \"admin.template.one\": \"Mod\\u00e8le\", \"ticket.status.denied\": \"Refus\\u00e9\", \"admin.contractorAssignment.other\": \"Missions de l'entrepreneur\", \"activity.ticket.create\": \"cr\\u00e9\\u00e9 ce billet ${{timestamp}}\", \"admin.notification.other\": \"Profils de notification\", \"admin.person.search\": \"Recherche de membres\", \"admin.address_type.office\": \"Bureau\", \"admin.address.state.other\": \"\\u00c9tats\", \"modules.assets.titleShort\": \"Des atouts\", \"admin.setting.one\": \"R\\u00e9glage\", \"admin.person.label.location\": \"Emplacement\", \"admin.phonenumbertype.office\": \"Bureau\", \"admin.locationlevel.company\": \"Compagnie\", \"admin.person.label.password\": \"Mot de passe\", \"admin.location.status.closed\": \"Ferm\\u00e9\", \"crud.delete.confirm\": \"Etes-vous s\\u00fbr que vous voulez supprimer {{model}} \\\\ '{{ record}} \\\\'?\", \"ticket.priority.high\": \"Haut\", \"admin.phone.add\": \"Ajouter un num\\u00e9ro de t\\u00e9l\\u00e9phone\", \"admin.person.label.title\": \"Titre\", \"ticket.status.in_progress\": \"En cours\", \"admin.translation.other\": \"Traductions\", \"admin.translation.label.translation\": \"Traduction\", \"ticket.status.new\": \"Neuf\", \"upload.progress\": \"La progression\", \"crud.create.error\": \"Erreur de cr\\u00e9ation {{model}}.\", \"admin.phonenumbertype.mobile\": \"Cellule\", \"validation.invalid\": \"Invalide\", \"admin.category.name.loss_prevention\": \"La pr\\u00e9vention des pertes\", \"admin.locationlevel.other\": \"Situation Niveaux\", \"admin.general.one\": \"Cadre g\\u00e9n\\u00e9ral\", \"admin.person.label.role\": \"R\\u00f4le\", \"admin.role.label.location_level\": \"Lieu Organisation\", \"admin.address.label\": \"Type\", \"ticket.status.draft\": \"R\\u00e9diger\", \"admin.category.label.name\": \"Nom\", \"ticket.label.status\": \"Statut\", \"crud.cancel.button\": \"Annuler\", \"admin.notification.one\": \"Profil de notification\", \"ticket.label.priority\": \"Priorit\\u00e9\", \"admin.approval.other\": \"Approbations\", \"ticket.priority.emergency\": \"Urgence\", \"activity.ticket.to_from\": \"chang\\u00e9 le {{type}} \\u00e0 partir de ${{from}} $\\u00e0 {{to}} ${{timestamp}}\", \"admin.locationlevel.store\": \"Magasin\", \"validation.valid\": \"Valide\", \"admin.locationlevel.label.general\": \"G\\u00e9n\\u00e9ral\", \"activity.tabs.status_updates\": \"Mises \\u00e0 jour de statut\", \"admin.location.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.category.labelCat.issue\": \"Probl\\u00e8me\", \"activity.tabs.comments\": \"commentaires\", \"admin.location.label.status\": \"Statut\", \"admin.role.label.number_users\": \"# des gens\", \"admin.location.label.location_level\": \"Organisation\", \"admin.setting.other\": \"Param\\u00e8tres\", \"admin.assignment.one\": \"Affectation d'un profil\", \"admin.category.name.repair\": \"r\\u00e9paration\", \"admin.category.labelCat.trade\": \"Commerce\", \"ticket.one\": \"Billet\", \"admin.locationlevel.department\": \"D\\u00e9partement\", \"admin.assignment.other\": \"Profils d'affectation\", \"admin.location.status.future\": \"Avenir\", \"ticket.label.request\": \"Demande\", \"admin.amount\": \"Montant\", \"admin.person.status.expired\": \"Expir\\u00e9\", \"ticket.label.cc\": \"CC\", \"admin.location.one\": \"Emplacement\", \"crud.save.success\": \"{{model}} sauvegard\\u00e9 avec succ\\u00e8s.\", \"admin.role.guest\": \"Client\", \"admin.category.label.description\": \"Description\", \"activity.ticket.cc_add\": \"ajout\\u00e9 {{added}} $\\u00e0 CC {{timestamp}}\", \"admin.translation.label.helper\": \"Auxiliaire\", \"admin.role.label.name\": \"R\\u00f4le Nom\", \"admin.person.label.first_name\": \"Pr\\u00e9nom\", \"admin.person.label.contact\": \"Contact\", \"admin.role.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.general.other\": \"r\\u00e9glages g\\u00e9n\\u00e9raux\", \"admin.locationlevel.fmd\": \"Facility Management District\", \"crud.save.button\": \"sauvegarder\", \"admin.location.label.name\": \"Nom\", \"admin.title\": \"Administrateur\", \"activity.ticket.attachment_add\": \"t\\u00e9l\\u00e9charg\\u00e9 {{count}} $fichiers ${{timestamp}} ${{added}}\", \"modules.tasks.titleShort\": \"T\\u00e2ches\", \"admin.location.status.open\": \"Ouvrir\", \"admin.person.label.fullname\": \"Nom\", \"admin.role.label.category\": \"Cat\\u00e9gorie\", \"admin.category.label.subcategory_label\": \"Sous cat\\u00e9gorie \\u00c9tiquette\", \"admin.address_type.shipping\": \"Exp\\u00e9dition\", \"admin.category.label.general\": \"G\\u00e9n\\u00e9ral\", \"crud.restore.success\": \"{{model}} restaur\\u00e9 avec succ\\u00e8s.\", \"admin.person.label.language\": \"Langue\", \"admin.contractorAssignment.one\": \"Entrepreneur Affectation\", \"modules.pms.titleShort\": \"PM\", \"modules.projects.titleShort\": \"Des projets\", \"admin.translation.one\": \"Traduction\", \"admin.category.status.active\": \"Actif\", \"welcome\": \"Bonjour\", \"activity.ticket.assignee\": \"chang\\u00e9 le {{type}} \\u00e0 partir de ${{from}} $\\u00e0 {{to}} ${{timestamp}}\", \"admin.category.other\": \"Cat\\u00e9gories\", \"crud.restore.button\": \"Restaurer\", \"admin.person.label.phone_number.other\": \"Les num\\u00e9ros de t\\u00e9l\\u00e9phone\", \"admin.contractor.other\": \"Entrepreneurs\", \"crud.restore.error\": \"Erreur restauration {{model}}\", \"admin.addresstype.office\": \"Bureau\", \"admin.person.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.company.other\": \"Entreprises\", \"modules.workOrders.titleShort\": \"Ordres de travail\", \"admin.category.label.label\": \"\\u00c9tiquette\", \"button.add\": \"Ajouter un nouveau {{model}}\", \"admin.person.label.employee_id\": \"Num\\u00e9ro d'employ\\u00e9.\", \"admin.role.other\": \"Les r\\u00f4les\", \"crud.create.button\": \"Cr\\u00e9er\", \"admin.location.label.number\": \"Nombre\", \"ticket.label.location\": \"Emplacement\", \"ticket.status.problem_solved\": \"Probl\\u00e8me r\\u00e9solu\", \"menu.home\": \"Accueil\", \"activity.ticket.attachment_remove\": \"enlev\\u00e9es {{count}} $fichiers ${{timestamp}} ${{removed}}\", \"admin.category.label.children\": \"Sous-cat\\u00e9gories\", \"admin.address.country.other\": \"Des pays\", \"admin.company.one\": \"Compagnie\", \"admin.person.label.credentials\": \"Lettres de cr\\u00e9ance\", \"admin.categoryType.other\": \"Cat\\u00e9gorie Types\", \"ticket.priority.medium\": \"Moyen\", \"admin.phone.number\": \"Num\\u00e9ro de t\\u00e9l\\u00e9phone\", \"admin.locationlevel.label.childOrg\": \"Organisation enfant (s)\", \"admin.template.other\": \"Mod\\u00e8les\", \"crud.titles.new\": \"Nouveau {{model}}\", \"admin.category.labelCat.type\": \"Type\", \"admin.contractor.one\": \"Entrepreneur\", \"admin.person.label.phone_number.one\": \"Num\\u00e9ro de t\\u00e9l\\u00e9phone\", \"admin.role.one\": \"R\\u00f4le\", \"admin.person.other\": \"Gens\", \"admin.person.status.active\": \"Actif\", \"ticket.label.assignee\": \"Cessionnaire\", \"admin.person.label.username\": \"le nom d'utilisateur\", \"admin.person.label.status\": \"Statut\", \"admin.person.label.address\": \"Adresse\", \"admin.address.state.select\": \"S\\u00e9lectionnez un Etat\", \"admin.phone.numbers\": \"Les num\\u00e9ros de t\\u00e9l\\u00e9phone\", \"admin.category.name.maintenance\": \"entretien\", \"crud.titles.edit\": \"Modifier {{model}}\", \"admin.person.label.email\": \"Email\", \"modules.rfqs.titleShort\": \"RFQ\", \"admin.approval.one\": \"Approbation\"}",
-    "context": "{\"admin.address.state.select\": \"Are you sure you want to delete Work Order 150306-448?\", \"admin.address.country.other\": \"Person created successfully.\", \"admin.amount\": \"Work Order restored successfully.\", \"admin.address.address\": \"New Role\", \"admin.address.city\": \"Edit Role\"}",
+    "values": "{\"admin.person.label.address\": \"Adresse\", \"admin.role.label.number_users\": \"# des gens\", \"admin.person.label.middle_initial\": \"Milieu\", \"admin.person.label.employee_id\": \"Num\\u00e9ro d'employ\\u00e9.\", \"activity.tabs.all_updates\": \"Toutes les mises \\u00e0 jour\", \"admin.address.state.select\": \"S\\u00e9lectionnez un Etat\", \"ticket.status.complete\": \"Achev\\u00e9e\", \"ticket.status.new\": \"Neuf\", \"admin.setting.other\": \"Param\\u00e8tres\", \"crud.restore.button\": \"Restaurer\", \"admin.address.state.other\": \"\\u00c9tats\", \"admin.person.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.template.other\": \"Mod\\u00e8les\", \"modules.projects.titleShort\": \"Des projets\", \"admin.role.guest\": \"Client\", \"admin.category.label.children\": \"Sous-cat\\u00e9gories\", \"admin.template.one\": \"Mod\\u00e8le\", \"admin.addresstype.shipping\": \"Exp\\u00e9dition\", \"ticket.label.created\": \"Cr\\u00e9\\u00e9\", \"ticket.status.problem_solved\": \"Probl\\u00e8me r\\u00e9solu\", \"admin.person.label.role\": \"R\\u00f4le\", \"admin.phonenumbertype.office\": \"Bureau\", \"admin.category.labelCat.type\": \"Type\", \"admin.address.city\": \"Ville\", \"admin.category.label.subcategory_label\": \"Sous cat\\u00e9gorie \\u00c9tiquette\", \"ticket.label.priority\": \"Priorit\\u00e9\", \"admin.translation.label.translation\": \"Traduction\", \"admin.contractor.other\": \"Entrepreneurs\", \"ticket.label.requester\": \"Demandeur\", \"crud.delete.confirm\": \"Etes-vous s\\u00fbr que vous voulez supprimer {{model}} \\\\ '{{ record}} \\\\'?\", \"ticket.other\": \"Billets\", \"crud.create.error\": \"Erreur de cr\\u00e9ation {{model}}.\", \"admin.category.one\": \"Cat\\u00e9gorie\", \"admin.locationlevel.department\": \"D\\u00e9partement\", \"admin.locationlevel.region\": \"R\\u00e9gion\", \"activity.tabs.comments\": \"commentaires\", \"admin.category.label.cost_currency\": \"Co\\u00fbt devise\", \"admin.translation.label.helper\": \"Auxiliaire\", \"admin.phonenumbertype.mobile\": \"Cellule\", \"admin.assignment.one\": \"Affectation d'un profil\", \"welcome\": \"Bonjour\", \"admin.approval.other\": \"Approbations\", \"modules.pms.titleShort\": \"PM\", \"modules.assets.titleShort\": \"Des atouts\", \"ticket.status.denied\": \"Refus\\u00e9\", \"admin.locationlevel.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.address.add\": \"Ajouter une adresse\", \"admin.category.label.name\": \"Nom\", \"admin.person.label.contact\": \"Contact\", \"crud.delete.error\": \"Erreur de suppression {{model}}.\", \"admin.locationlevel.label.childOrg\": \"Organisation enfant (s)\", \"activity.ticket.assignee\": \"chang\\u00e9 le {{type}} \\u00e0 partir de ${{from}} $\\u00e0 {{to}} ${{timestamp}}\", \"ticket.label.cc\": \"CC\", \"admin.person.label.change_password\": \"Changement\", \"admin.person.label.last_name\": \"Nom de famille\", \"admin.person.label.password\": \"Mot de passe\", \"admin.locationlevel.fmd\": \"Facility Management District\", \"admin.role.label.role_type\": \"Type de R\\u00f4le\", \"activity.ticket.comment\": \"comment\\u00e9 ${{timestamp}} ${{comment}}\", \"ticket.priority.medium\": \"Moyen\", \"admin.category.label.label\": \"\\u00c9tiquette\", \"admin.person.label.location\": \"Emplacement\", \"admin.address.label\": \"Type\", \"admin.company.other\": \"Entreprises\", \"admin.person.label.fullname\": \"Nom\", \"crud.save.error\": \"Sauver {{model}} erreur.\", \"admin.role.label.name\": \"R\\u00f4le Nom\", \"admin.person.other\": \"Gens\", \"admin.location.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.locationlevel.other\": \"Situation Niveaux\", \"ticket.label.location\": \"Emplacement\", \"crud.create.success\": \"{{model}} cr\\u00e9\\u00e9 avec succ\\u00e8s.\", \"admin.notification.one\": \"Profil de notification\", \"ticket.priority.emergency\": \"Urgence\", \"admin.title\": \"Administrateur\", \"crud.restore.error\": \"Erreur restauration {{model}}\", \"ticket.label.assignee\": \"Cessionnaire\", \"activity.ticket.to_from\": \"chang\\u00e9 le {{type}} \\u00e0 partir de ${{from}} $\\u00e0 {{to}} ${{timestamp}}\", \"activity.ticket.create\": \"cr\\u00e9\\u00e9 ce billet ${{timestamp}}\", \"admin.location.label.name\": \"Nom\", \"crud.save.button\": \"sauvegarder\", \"activity.tabs.status_updates\": \"Mises \\u00e0 jour de statut\", \"ticket.priority.low\": \"Faible\", \"admin.person.label.phone_number.other\": \"Les num\\u00e9ros de t\\u00e9l\\u00e9phone\", \"admin.address_type.shipping\": \"Exp\\u00e9dition\", \"admin.location.other\": \"Emplacements\", \"admin.general.one\": \"Cadre g\\u00e9n\\u00e9ral\", \"admin.person.status.inactive\": \"Inactif\", \"admin.address.country.other\": \"Des pays\", \"admin.address.country.one\": \"Pays\", \"admin.categoryType.one\": \"Cat\\u00e9gorie type\", \"upload.progress\": \"La progression\", \"activity.ticket.cc_remove\": \"enlev\\u00e9es {{removed}} $de CC {{timestamp}}\", \"admin.category.labelCat.issue\": \"Probl\\u00e8me\", \"button.add\": \"Ajouter un nouveau {{model}}\", \"ticket.label.status\": \"Statut\", \"admin.role.label.location_level\": \"Lieu Organisation\", \"modules.tickets.titleShort\": \"Billets\", \"modules.tasks.titleShort\": \"T\\u00e2ches\", \"admin.setting.one\": \"R\\u00e9glage\", \"admin.translation.label.key\": \"Cl\\u00e9\", \"admin.address.postal_code\": \"Zip *: fran\\u00e7ais\", \"admin.address.state.one\": \"Etat\", \"crud.titles.new\": \"Nouveau {{model}}\", \"admin.address.address\": \"Adresse de la rue\", \"admin.category.label.cost_code\": \"Code des co\\u00fbts\", \"admin.person.label.phone_number.one\": \"Num\\u00e9ro de t\\u00e9l\\u00e9phone\", \"admin.locationlevel.district\": \"District\", \"admin.phone.add\": \"Ajouter un num\\u00e9ro de t\\u00e9l\\u00e9phone\", \"menu.home\": \"Accueil\", \"admin.translation.other\": \"Traductions\", \"admin.phone.numbers\": \"Les num\\u00e9ros de t\\u00e9l\\u00e9phone\", \"admin.locationlevel.one\": \"Lieu Niveau\", \"ticket.status.in_progress\": \"En cours\", \"admin.location.status.future\": \"Avenir\", \"admin.contractor.one\": \"Entrepreneur\", \"admin.person.one\": \"La personne\", \"admin.role.one\": \"R\\u00f4le\", \"admin.category.name.maintenance\": \"entretien\", \"crud.cancel.button\": \"Annuler\", \"modules.workOrders.titleShort\": \"Ordres de travail\", \"admin.address_type.office\": \"Bureau\", \"admin.category.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.role.system_administrator\": \"Administrateur\", \"admin.locationlevel.fmu\": \"Facilit\\u00e9 R\\u00e9gion de gestion\", \"ticket.status.draft\": \"R\\u00e9diger\", \"admin.person.status.expired\": \"Expir\\u00e9\", \"admin.category.label.description\": \"Description\", \"admin.amount\": \"Montant\", \"admin.locationlevel.label.name\": \"Nom\", \"ticket.status.deferred\": \"Diff\\u00e9r\\u00e9\", \"admin.approval.one\": \"Approbation\", \"ticket.label.request\": \"Demande\", \"admin.location.label.location_level\": \"Organisation\", \"activity.ticket.categories\": \"chang\\u00e9 la cat\\u00e9gorie \\u00e0 partir de ${{from}} $\\u00e0 {{to}} ${{timestamp}}\", \"admin.category.name.repair\": \"r\\u00e9paration\", \"validation.valid\": \"Valide\", \"activity.ticket.cc_add\": \"ajout\\u00e9 {{added}} $\\u00e0 CC {{timestamp}}\", \"admin.assignment.other\": \"Profils d'affectation\", \"admin.general.other\": \"r\\u00e9glages g\\u00e9n\\u00e9raux\", \"admin.locationlevel.store\": \"Magasin\", \"admin.location.label.status\": \"Statut\", \"admin.translation.one\": \"Traduction\", \"crud.titles.edit\": \"Modifier {{model}}\", \"modules.rfqs.titleShort\": \"RFQ\", \"admin.person.label.username\": \"le nom d'utilisateur\", \"admin.locationlevel.company\": \"Compagnie\", \"admin.contractorAssignment.other\": \"Missions de l'entrepreneur\", \"admin.person.label.credentials\": \"Lettres de cr\\u00e9ance\", \"crud.restore.success\": \"{{model}} restaur\\u00e9 avec succ\\u00e8s.\", \"modules.invoices.titleShort\": \"Factures\", \"admin.category.name.loss_prevention\": \"La pr\\u00e9vention des pertes\", \"admin.phone.number\": \"Num\\u00e9ro de t\\u00e9l\\u00e9phone\", \"button.upload\": \"Pi\\u00e8ce jointe\", \"crud.delete.button\": \"Effacer\", \"admin.role.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.location.status.closed\": \"Ferm\\u00e9\", \"admin.contractorAssignment.one\": \"Entrepreneur Affectation\", \"crud.create.button\": \"Cr\\u00e9er\", \"admin.person.label.email\": \"Email\", \"activity.ticket.attachment_remove\": \"enlev\\u00e9es {{count}} $fichiers ${{timestamp}} ${{removed}}\", \"admin.location.one\": \"Emplacement\", \"admin.address.country.select\": \"Choisissez un pays\", \"ticket.search\": \"Chercher un ticket\", \"admin.person.label.title\": \"Titre\", \"modules.purchaseOrders.titleShort\": \"Acheter en ligne\", \"admin.location.status.open\": \"Ouvrir\", \"admin.person.label.auth_amount\": \"Auth. Montant\", \"admin.category.status.active\": \"Actif\", \"admin.person.status.active\": \"Actif\", \"admin.role.label.category\": \"Cat\\u00e9gorie\", \"admin.person.label.language\": \"Langue\", \"crud.save.success\": \"{{model}} sauvegard\\u00e9 avec succ\\u00e8s.\", \"admin.category.label.cost_amount\": \"Montant des co\\u00fbts\", \"admin.categoryType.other\": \"Cat\\u00e9gorie Types\", \"ticket.priority.high\": \"Haut\", \"admin.location.label.number\": \"Nombre\", \"admin.person.search\": \"Recherche de membres\", \"admin.category.other\": \"Cat\\u00e9gories\", \"ticket.one\": \"Billet\", \"admin.category.labelCat.trade\": \"Commerce\", \"admin.notification.other\": \"Profils de notification\", \"admin.person.label.first_name\": \"Pr\\u00e9nom\", \"admin.addresstype.office\": \"Bureau\", \"validation.invalid\": \"Invalide\", \"activity.ticket.attachment_add\": \"t\\u00e9l\\u00e9charg\\u00e9 {{count}} $fichiers ${{timestamp}} ${{added}}\", \"admin.person.label.status\": \"Statut\", \"admin.role.other\": \"Les r\\u00f4les\", \"admin.company.one\": \"Compagnie\"}",
     "deleted": null,
-    "locale": "70d1b98f-17ce-4afd-8284-489b41ac3487",
     "csv": "",
+    "created": "2015-12-02T17:50:57.533Z",
     "modified": "2015-12-09T22:13:45.240Z",
-    "created": "2015-12-02T17:50:57.533Z"
-  },
-  "pk": "d67c2601-2aee-4f4d-bffc-49b6fa6dcc24"
+    "locale": "70d1b98f-17ce-4afd-8284-489b41ac3487",
+    "context": "{\"admin.address.country.other\": \"Person created successfully.\", \"admin.address.address\": \"New Role\", \"admin.amount\": \"Work Order restored successfully.\", \"admin.address.state.select\": \"Are you sure you want to delete Work Order 150306-448?\", \"admin.address.city\": \"Edit Role\"}"
+  }
 },
 {
   "model": "translation.translation",
+  "pk": "f9d7ccac-c254-4155-b8d5-ee55206d6481",
   "fields": {
-    "values": "{\"welcome\": \"Howdy\", \"modules.tickets.titleShort\": \"Requests\"}",
-    "context": "{}",
+    "values": "{\"modules.tickets.titleShort\": \"Requests\", \"welcome\": \"Howdy\"}",
     "deleted": null,
-    "locale": "553b1cd1-3a79-4473-980a-4fb4469b9b2d",
     "csv": "",
+    "created": "2015-12-02T17:50:03.873Z",
     "modified": "2015-12-04T22:56:46.959Z",
-    "created": "2015-12-02T17:50:03.873Z"
-  },
-  "pk": "f9d7ccac-c254-4155-b8d5-ee55206d6481"
+    "locale": "553b1cd1-3a79-4473-980a-4fb4469b9b2d",
+    "context": "{}"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 1,
   "fields": {
+    "name": "Can add log entry",
     "content_type": 1,
-    "codename": "add_logentry",
-    "name": "Can add log entry"
-  },
-  "pk": 1
+    "codename": "add_logentry"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 2,
   "fields": {
+    "name": "Can change log entry",
     "content_type": 1,
-    "codename": "change_logentry",
-    "name": "Can change log entry"
-  },
-  "pk": 2
+    "codename": "change_logentry"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 3,
   "fields": {
+    "name": "Can delete log entry",
     "content_type": 1,
-    "codename": "delete_logentry",
-    "name": "Can delete log entry"
-  },
-  "pk": 3
+    "codename": "delete_logentry"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 4,
   "fields": {
+    "name": "Can add permission",
     "content_type": 2,
-    "codename": "add_permission",
-    "name": "Can add permission"
-  },
-  "pk": 4
+    "codename": "add_permission"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 5,
   "fields": {
+    "name": "Can change permission",
     "content_type": 2,
-    "codename": "change_permission",
-    "name": "Can change permission"
-  },
-  "pk": 5
+    "codename": "change_permission"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 6,
   "fields": {
+    "name": "Can delete permission",
     "content_type": 2,
-    "codename": "delete_permission",
-    "name": "Can delete permission"
-  },
-  "pk": 6
+    "codename": "delete_permission"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 7,
   "fields": {
+    "name": "Can add group",
     "content_type": 3,
-    "codename": "add_group",
-    "name": "Can add group"
-  },
-  "pk": 7
+    "codename": "add_group"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 8,
   "fields": {
+    "name": "Can change group",
     "content_type": 3,
-    "codename": "change_group",
-    "name": "Can change group"
-  },
-  "pk": 8
+    "codename": "change_group"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 9,
   "fields": {
+    "name": "Can delete group",
     "content_type": 3,
-    "codename": "delete_group",
-    "name": "Can delete group"
-  },
-  "pk": 9
+    "codename": "delete_group"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 10,
   "fields": {
+    "name": "Can add content type",
     "content_type": 4,
-    "codename": "add_contenttype",
-    "name": "Can add content type"
-  },
-  "pk": 10
+    "codename": "add_contenttype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 11,
   "fields": {
+    "name": "Can change content type",
     "content_type": 4,
-    "codename": "change_contenttype",
-    "name": "Can change content type"
-  },
-  "pk": 11
+    "codename": "change_contenttype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 12,
   "fields": {
+    "name": "Can delete content type",
     "content_type": 4,
-    "codename": "delete_contenttype",
-    "name": "Can delete content type"
-  },
-  "pk": 12
+    "codename": "delete_contenttype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 13,
   "fields": {
+    "name": "Can add session",
     "content_type": 5,
-    "codename": "add_session",
-    "name": "Can add session"
-  },
-  "pk": 13
+    "codename": "add_session"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 14,
   "fields": {
+    "name": "Can change session",
     "content_type": 5,
-    "codename": "change_session",
-    "name": "Can change session"
-  },
-  "pk": 14
+    "codename": "change_session"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 15,
   "fields": {
+    "name": "Can delete session",
     "content_type": 5,
-    "codename": "delete_session",
-    "name": "Can delete session"
-  },
-  "pk": 15
+    "codename": "delete_session"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 16,
   "fields": {
+    "name": "Can add site",
     "content_type": 6,
-    "codename": "add_site",
-    "name": "Can add site"
-  },
-  "pk": 16
+    "codename": "add_site"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 17,
   "fields": {
+    "name": "Can change site",
     "content_type": 6,
-    "codename": "change_site",
-    "name": "Can change site"
-  },
-  "pk": 17
+    "codename": "change_site"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 18,
   "fields": {
+    "name": "Can delete site",
     "content_type": 6,
-    "codename": "delete_site",
-    "name": "Can delete site"
-  },
-  "pk": 18
+    "codename": "delete_site"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 19,
   "fields": {
+    "name": "Can add flat page",
     "content_type": 7,
-    "codename": "add_flatpage",
-    "name": "Can add flat page"
-  },
-  "pk": 19
+    "codename": "add_flatpage"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 20,
   "fields": {
+    "name": "Can change flat page",
     "content_type": 7,
-    "codename": "change_flatpage",
-    "name": "Can change flat page"
-  },
-  "pk": 20
+    "codename": "change_flatpage"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 21,
   "fields": {
+    "name": "Can delete flat page",
     "content_type": 7,
-    "codename": "delete_flatpage",
-    "name": "Can delete flat page"
-  },
-  "pk": 21
+    "codename": "delete_flatpage"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 22,
   "fields": {
+    "name": "Can add cors model",
     "content_type": 8,
-    "codename": "add_corsmodel",
-    "name": "Can add cors model"
-  },
-  "pk": 22
+    "codename": "add_corsmodel"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 23,
   "fields": {
+    "name": "Can change cors model",
     "content_type": 8,
-    "codename": "change_corsmodel",
-    "name": "Can change cors model"
-  },
-  "pk": 23
+    "codename": "change_corsmodel"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 24,
   "fields": {
+    "name": "Can delete cors model",
     "content_type": 8,
-    "codename": "delete_corsmodel",
-    "name": "Can delete cors model"
-  },
-  "pk": 24
+    "codename": "delete_corsmodel"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 25,
   "fields": {
+    "name": "Can add currency",
     "content_type": 9,
-    "codename": "add_currency",
-    "name": "Can add currency"
-  },
-  "pk": 25
+    "codename": "add_currency"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 26,
   "fields": {
+    "name": "Can change currency",
     "content_type": 9,
-    "codename": "change_currency",
-    "name": "Can change currency"
-  },
-  "pk": 26
+    "codename": "change_currency"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 27,
   "fields": {
+    "name": "Can delete currency",
     "content_type": 9,
-    "codename": "delete_currency",
-    "name": "Can delete currency"
-  },
-  "pk": 27
+    "codename": "delete_currency"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 28,
   "fields": {
+    "name": "Can add category status",
     "content_type": 10,
-    "codename": "add_categorystatus",
-    "name": "Can add category status"
-  },
-  "pk": 28
+    "codename": "add_categorystatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 29,
   "fields": {
+    "name": "Can change category status",
     "content_type": 10,
-    "codename": "change_categorystatus",
-    "name": "Can change category status"
-  },
-  "pk": 29
+    "codename": "change_categorystatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 30,
   "fields": {
+    "name": "Can delete category status",
     "content_type": 10,
-    "codename": "delete_categorystatus",
-    "name": "Can delete category status"
-  },
-  "pk": 30
+    "codename": "delete_categorystatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 31,
   "fields": {
+    "name": "Can add category",
     "content_type": 11,
-    "codename": "add_category",
-    "name": "Can add category"
-  },
-  "pk": 31
+    "codename": "add_category"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 32,
   "fields": {
+    "name": "Can change category",
     "content_type": 11,
-    "codename": "change_category",
-    "name": "Can change category"
-  },
-  "pk": 32
+    "codename": "change_category"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 33,
   "fields": {
+    "name": "Can delete category",
     "content_type": 11,
-    "codename": "delete_category",
-    "name": "Can delete category"
-  },
-  "pk": 33
+    "codename": "delete_category"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 34,
   "fields": {
+    "name": "Can add phone number type",
     "content_type": 12,
-    "codename": "add_phonenumbertype",
-    "name": "Can add phone number type"
-  },
-  "pk": 34
+    "codename": "add_phonenumbertype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 35,
   "fields": {
+    "name": "Can change phone number type",
     "content_type": 12,
-    "codename": "change_phonenumbertype",
-    "name": "Can change phone number type"
-  },
-  "pk": 35
+    "codename": "change_phonenumbertype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 36,
   "fields": {
+    "name": "Can delete phone number type",
     "content_type": 12,
-    "codename": "delete_phonenumbertype",
-    "name": "Can delete phone number type"
-  },
-  "pk": 36
+    "codename": "delete_phonenumbertype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 37,
   "fields": {
+    "name": "Can add phone number",
     "content_type": 13,
-    "codename": "add_phonenumber",
-    "name": "Can add phone number"
-  },
-  "pk": 37
+    "codename": "add_phonenumber"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 38,
   "fields": {
+    "name": "Can change phone number",
     "content_type": 13,
-    "codename": "change_phonenumber",
-    "name": "Can change phone number"
-  },
-  "pk": 38
+    "codename": "change_phonenumber"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 39,
   "fields": {
+    "name": "Can delete phone number",
     "content_type": 13,
-    "codename": "delete_phonenumber",
-    "name": "Can delete phone number"
-  },
-  "pk": 39
+    "codename": "delete_phonenumber"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 40,
   "fields": {
+    "name": "Can add address type",
     "content_type": 14,
-    "codename": "add_addresstype",
-    "name": "Can add address type"
-  },
-  "pk": 40
+    "codename": "add_addresstype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 41,
   "fields": {
+    "name": "Can change address type",
     "content_type": 14,
-    "codename": "change_addresstype",
-    "name": "Can change address type"
-  },
-  "pk": 41
+    "codename": "change_addresstype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 42,
   "fields": {
+    "name": "Can delete address type",
     "content_type": 14,
-    "codename": "delete_addresstype",
-    "name": "Can delete address type"
-  },
-  "pk": 42
+    "codename": "delete_addresstype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 43,
   "fields": {
+    "name": "Can add address",
     "content_type": 15,
-    "codename": "add_address",
-    "name": "Can add address"
-  },
-  "pk": 43
+    "codename": "add_address"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 44,
   "fields": {
+    "name": "Can change address",
     "content_type": 15,
-    "codename": "change_address",
-    "name": "Can change address"
-  },
-  "pk": 44
+    "codename": "change_address"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 45,
   "fields": {
+    "name": "Can delete address",
     "content_type": 15,
-    "codename": "delete_address",
-    "name": "Can delete address"
-  },
-  "pk": 45
+    "codename": "delete_address"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 46,
   "fields": {
+    "name": "Can add email type",
     "content_type": 16,
-    "codename": "add_emailtype",
-    "name": "Can add email type"
-  },
-  "pk": 46
+    "codename": "add_emailtype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 47,
   "fields": {
+    "name": "Can change email type",
     "content_type": 16,
-    "codename": "change_emailtype",
-    "name": "Can change email type"
-  },
-  "pk": 47
+    "codename": "change_emailtype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 48,
   "fields": {
+    "name": "Can delete email type",
     "content_type": 16,
-    "codename": "delete_emailtype",
-    "name": "Can delete email type"
-  },
-  "pk": 48
+    "codename": "delete_emailtype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 49,
   "fields": {
+    "name": "Can add email",
     "content_type": 17,
-    "codename": "add_email",
-    "name": "Can add email"
-  },
-  "pk": 49
+    "codename": "add_email"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 50,
   "fields": {
+    "name": "Can change email",
     "content_type": 17,
-    "codename": "change_email",
-    "name": "Can change email"
-  },
-  "pk": 50
+    "codename": "change_email"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 51,
   "fields": {
+    "name": "Can delete email",
     "content_type": 17,
-    "codename": "delete_email",
-    "name": "Can delete email"
-  },
-  "pk": 51
+    "codename": "delete_email"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 52,
   "fields": {
+    "name": "Can add saved search",
     "content_type": 18,
-    "codename": "add_savedsearch",
-    "name": "Can add saved search"
-  },
-  "pk": 52
+    "codename": "add_savedsearch"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 53,
   "fields": {
+    "name": "Can change saved search",
     "content_type": 18,
-    "codename": "change_savedsearch",
-    "name": "Can change saved search"
-  },
-  "pk": 53
+    "codename": "change_savedsearch"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 54,
   "fields": {
+    "name": "Can delete saved search",
     "content_type": 18,
-    "codename": "delete_savedsearch",
-    "name": "Can delete saved search"
-  },
-  "pk": 54
+    "codename": "delete_savedsearch"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 55,
   "fields": {
+    "name": "Can add main setting",
     "content_type": 19,
-    "codename": "add_mainsetting",
-    "name": "Can add main setting"
-  },
-  "pk": 55
+    "codename": "add_mainsetting"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 56,
   "fields": {
+    "name": "Can change main setting",
     "content_type": 19,
-    "codename": "change_mainsetting",
-    "name": "Can change main setting"
-  },
-  "pk": 56
+    "codename": "change_mainsetting"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 57,
   "fields": {
+    "name": "Can delete main setting",
     "content_type": 19,
-    "codename": "delete_mainsetting",
-    "name": "Can delete main setting"
-  },
-  "pk": 57
+    "codename": "delete_mainsetting"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 58,
   "fields": {
+    "name": "Can add custom setting",
     "content_type": 20,
-    "codename": "add_customsetting",
-    "name": "Can add custom setting"
-  },
-  "pk": 58
+    "codename": "add_customsetting"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 59,
   "fields": {
+    "name": "Can change custom setting",
     "content_type": 20,
-    "codename": "change_customsetting",
-    "name": "Can change custom setting"
-  },
-  "pk": 59
+    "codename": "change_customsetting"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 60,
   "fields": {
+    "name": "Can delete custom setting",
     "content_type": 20,
-    "codename": "delete_customsetting",
-    "name": "Can delete custom setting"
-  },
-  "pk": 60
+    "codename": "delete_customsetting"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 61,
   "fields": {
+    "name": "Can add attachment",
     "content_type": 21,
-    "codename": "add_attachment",
-    "name": "Can add attachment"
-  },
-  "pk": 61
+    "codename": "add_attachment"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 62,
   "fields": {
+    "name": "Can change attachment",
     "content_type": 21,
-    "codename": "change_attachment",
-    "name": "Can change attachment"
-  },
-  "pk": 62
+    "codename": "change_attachment"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 63,
   "fields": {
+    "name": "Can delete attachment",
     "content_type": 21,
-    "codename": "delete_attachment",
-    "name": "Can delete attachment"
-  },
-  "pk": 63
+    "codename": "delete_attachment"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 64,
   "fields": {
+    "name": "Can add state",
     "content_type": 22,
-    "codename": "add_state",
-    "name": "Can add state"
-  },
-  "pk": 64
+    "codename": "add_state"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 65,
   "fields": {
+    "name": "Can change state",
     "content_type": 22,
-    "codename": "change_state",
-    "name": "Can change state"
-  },
-  "pk": 65
+    "codename": "change_state"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 66,
   "fields": {
+    "name": "Can delete state",
     "content_type": 22,
-    "codename": "delete_state",
-    "name": "Can delete state"
-  },
-  "pk": 66
+    "codename": "delete_state"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 67,
   "fields": {
+    "name": "Can add country",
     "content_type": 23,
-    "codename": "add_country",
-    "name": "Can add country"
-  },
-  "pk": 67
+    "codename": "add_country"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 68,
   "fields": {
+    "name": "Can change country",
     "content_type": 23,
-    "codename": "change_country",
-    "name": "Can change country"
-  },
-  "pk": 68
+    "codename": "change_country"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 69,
   "fields": {
+    "name": "Can delete country",
     "content_type": 23,
-    "codename": "delete_country",
-    "name": "Can delete country"
-  },
-  "pk": 69
+    "codename": "delete_country"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 70,
   "fields": {
+    "name": "Can add location level",
     "content_type": 24,
-    "codename": "add_locationlevel",
-    "name": "Can add location level"
-  },
-  "pk": 70
+    "codename": "add_locationlevel"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 71,
   "fields": {
+    "name": "Can change location level",
     "content_type": 24,
-    "codename": "change_locationlevel",
-    "name": "Can change location level"
-  },
-  "pk": 71
+    "codename": "change_locationlevel"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 72,
   "fields": {
+    "name": "Can delete location level",
     "content_type": 24,
-    "codename": "delete_locationlevel",
-    "name": "Can delete location level"
-  },
-  "pk": 72
+    "codename": "delete_locationlevel"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 73,
   "fields": {
+    "name": "Can add location status",
     "content_type": 25,
-    "codename": "add_locationstatus",
-    "name": "Can add location status"
-  },
-  "pk": 73
+    "codename": "add_locationstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 74,
   "fields": {
+    "name": "Can change location status",
     "content_type": 25,
-    "codename": "change_locationstatus",
-    "name": "Can change location status"
-  },
-  "pk": 74
+    "codename": "change_locationstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 75,
   "fields": {
+    "name": "Can delete location status",
     "content_type": 25,
-    "codename": "delete_locationstatus",
-    "name": "Can delete location status"
-  },
-  "pk": 75
+    "codename": "delete_locationstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 76,
   "fields": {
+    "name": "Can add location type",
     "content_type": 26,
-    "codename": "add_locationtype",
-    "name": "Can add location type"
-  },
-  "pk": 76
+    "codename": "add_locationtype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 77,
   "fields": {
+    "name": "Can change location type",
     "content_type": 26,
-    "codename": "change_locationtype",
-    "name": "Can change location type"
-  },
-  "pk": 77
+    "codename": "change_locationtype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 78,
   "fields": {
+    "name": "Can delete location type",
     "content_type": 26,
-    "codename": "delete_locationtype",
-    "name": "Can delete location type"
-  },
-  "pk": 78
+    "codename": "delete_locationtype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 79,
   "fields": {
+    "name": "Can add location",
     "content_type": 27,
-    "codename": "add_location",
-    "name": "Can add location"
-  },
-  "pk": 79
+    "codename": "add_location"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 80,
   "fields": {
+    "name": "Can change location",
     "content_type": 27,
-    "codename": "change_location",
-    "name": "Can change location"
-  },
-  "pk": 80
+    "codename": "change_location"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 81,
   "fields": {
+    "name": "Can delete location",
     "content_type": 27,
-    "codename": "delete_location",
-    "name": "Can delete location"
-  },
-  "pk": 81
+    "codename": "delete_location"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 82,
   "fields": {
+    "name": "Can add work order status",
     "content_type": 28,
-    "codename": "add_workorderstatus",
-    "name": "Can add work order status"
-  },
-  "pk": 82
+    "codename": "add_workorderstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 83,
   "fields": {
+    "name": "Can change work order status",
     "content_type": 28,
-    "codename": "change_workorderstatus",
-    "name": "Can change work order status"
-  },
-  "pk": 83
+    "codename": "change_workorderstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 84,
   "fields": {
+    "name": "Can delete work order status",
     "content_type": 28,
-    "codename": "delete_workorderstatus",
-    "name": "Can delete work order status"
-  },
-  "pk": 84
+    "codename": "delete_workorderstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 85,
   "fields": {
+    "name": "Can add work order",
     "content_type": 29,
-    "codename": "add_workorder",
-    "name": "Can add work order"
-  },
-  "pk": 85
+    "codename": "add_workorder"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 86,
   "fields": {
+    "name": "Can change work order",
     "content_type": 29,
-    "codename": "change_workorder",
-    "name": "Can change work order"
-  },
-  "pk": 86
+    "codename": "change_workorder"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 87,
   "fields": {
+    "name": "Can delete work order",
     "content_type": 29,
-    "codename": "delete_workorder",
-    "name": "Can delete work order"
-  },
-  "pk": 87
+    "codename": "delete_workorder"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 88,
   "fields": {
+    "name": "Can add role",
     "content_type": 30,
-    "codename": "add_role",
-    "name": "Can add role"
-  },
-  "pk": 88
+    "codename": "add_role"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 89,
   "fields": {
+    "name": "Can change role",
     "content_type": 30,
-    "codename": "change_role",
-    "name": "Can change role"
-  },
-  "pk": 89
+    "codename": "change_role"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 90,
   "fields": {
+    "name": "Can delete role",
     "content_type": 30,
-    "codename": "delete_role",
-    "name": "Can delete role"
-  },
-  "pk": 90
+    "codename": "delete_role"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 91,
   "fields": {
+    "name": "Can add proxy role",
     "content_type": 31,
-    "codename": "add_proxyrole",
-    "name": "Can add proxy role"
-  },
-  "pk": 91
+    "codename": "add_proxyrole"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 92,
   "fields": {
+    "name": "Can change proxy role",
     "content_type": 31,
-    "codename": "change_proxyrole",
-    "name": "Can change proxy role"
-  },
-  "pk": 92
+    "codename": "change_proxyrole"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 93,
   "fields": {
+    "name": "Can delete proxy role",
     "content_type": 31,
-    "codename": "delete_proxyrole",
-    "name": "Can delete proxy role"
-  },
-  "pk": 93
+    "codename": "delete_proxyrole"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 94,
   "fields": {
+    "name": "Can add person status",
     "content_type": 32,
-    "codename": "add_personstatus",
-    "name": "Can add person status"
-  },
-  "pk": 94
+    "codename": "add_personstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 95,
   "fields": {
+    "name": "Can change person status",
     "content_type": 32,
-    "codename": "change_personstatus",
-    "name": "Can change person status"
-  },
-  "pk": 95
+    "codename": "change_personstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 96,
   "fields": {
+    "name": "Can delete person status",
     "content_type": 32,
-    "codename": "delete_personstatus",
-    "name": "Can delete person status"
-  },
-  "pk": 96
+    "codename": "delete_personstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 97,
   "fields": {
+    "name": "Can add person",
     "content_type": 33,
-    "codename": "add_person",
-    "name": "Can add person"
-  },
-  "pk": 97
+    "codename": "add_person"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 98,
   "fields": {
+    "name": "Can change person",
     "content_type": 33,
-    "codename": "change_person",
-    "name": "Can change person"
-  },
-  "pk": 98
+    "codename": "change_person"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 99,
   "fields": {
+    "name": "Can delete person",
     "content_type": 33,
-    "codename": "delete_person",
-    "name": "Can delete person"
-  },
-  "pk": 99
+    "codename": "delete_person"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 100,
   "fields": {
+    "name": "Can add third party status",
     "content_type": 34,
-    "codename": "add_thirdpartystatus",
-    "name": "Can add third party status"
-  },
-  "pk": 100
+    "codename": "add_thirdpartystatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 101,
   "fields": {
+    "name": "Can change third party status",
     "content_type": 34,
-    "codename": "change_thirdpartystatus",
-    "name": "Can change third party status"
-  },
-  "pk": 101
+    "codename": "change_thirdpartystatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 102,
   "fields": {
+    "name": "Can delete third party status",
     "content_type": 34,
-    "codename": "delete_thirdpartystatus",
-    "name": "Can delete third party status"
-  },
-  "pk": 102
+    "codename": "delete_thirdpartystatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 103,
   "fields": {
+    "name": "Can add third party",
     "content_type": 35,
-    "codename": "add_thirdparty",
-    "name": "Can add third party"
-  },
-  "pk": 103
+    "codename": "add_thirdparty"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 104,
   "fields": {
+    "name": "Can change third party",
     "content_type": 35,
-    "codename": "change_thirdparty",
-    "name": "Can change third party"
-  },
-  "pk": 104
+    "codename": "change_thirdparty"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 105,
   "fields": {
+    "name": "Can delete third party",
     "content_type": 35,
-    "codename": "delete_thirdparty",
-    "name": "Can delete third party"
-  },
-  "pk": 105
+    "codename": "delete_thirdparty"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 106,
   "fields": {
+    "name": "Can add ticket status",
     "content_type": 36,
-    "codename": "add_ticketstatus",
-    "name": "Can add ticket status"
-  },
-  "pk": 106
+    "codename": "add_ticketstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 107,
   "fields": {
+    "name": "Can change ticket status",
     "content_type": 36,
-    "codename": "change_ticketstatus",
-    "name": "Can change ticket status"
-  },
-  "pk": 107
+    "codename": "change_ticketstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 108,
   "fields": {
+    "name": "Can delete ticket status",
     "content_type": 36,
-    "codename": "delete_ticketstatus",
-    "name": "Can delete ticket status"
-  },
-  "pk": 108
+    "codename": "delete_ticketstatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 109,
   "fields": {
+    "name": "Can add ticket priority",
     "content_type": 37,
-    "codename": "add_ticketpriority",
-    "name": "Can add ticket priority"
-  },
-  "pk": 109
+    "codename": "add_ticketpriority"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 110,
   "fields": {
+    "name": "Can change ticket priority",
     "content_type": 37,
-    "codename": "change_ticketpriority",
-    "name": "Can change ticket priority"
-  },
-  "pk": 110
+    "codename": "change_ticketpriority"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 111,
   "fields": {
+    "name": "Can delete ticket priority",
     "content_type": 37,
-    "codename": "delete_ticketpriority",
-    "name": "Can delete ticket priority"
-  },
-  "pk": 111
+    "codename": "delete_ticketpriority"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 112,
   "fields": {
+    "name": "Can add ticket",
     "content_type": 38,
-    "codename": "add_ticket",
-    "name": "Can add ticket"
-  },
-  "pk": 112
+    "codename": "add_ticket"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 113,
   "fields": {
+    "name": "Can change ticket",
     "content_type": 38,
-    "codename": "change_ticket",
-    "name": "Can change ticket"
-  },
-  "pk": 113
+    "codename": "change_ticket"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 114,
   "fields": {
+    "name": "Can delete ticket",
     "content_type": 38,
-    "codename": "delete_ticket",
-    "name": "Can delete ticket"
-  },
-  "pk": 114
+    "codename": "delete_ticket"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 115,
   "fields": {
+    "name": "Can add ticket activity type",
     "content_type": 39,
-    "codename": "add_ticketactivitytype",
-    "name": "Can add ticket activity type"
-  },
-  "pk": 115
+    "codename": "add_ticketactivitytype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 116,
   "fields": {
+    "name": "Can change ticket activity type",
     "content_type": 39,
-    "codename": "change_ticketactivitytype",
-    "name": "Can change ticket activity type"
-  },
-  "pk": 116
+    "codename": "change_ticketactivitytype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 117,
   "fields": {
+    "name": "Can delete ticket activity type",
     "content_type": 39,
-    "codename": "delete_ticketactivitytype",
-    "name": "Can delete ticket activity type"
-  },
-  "pk": 117
+    "codename": "delete_ticketactivitytype"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 118,
   "fields": {
+    "name": "Can add ticket activity",
     "content_type": 40,
-    "codename": "add_ticketactivity",
-    "name": "Can add ticket activity"
-  },
-  "pk": 118
+    "codename": "add_ticketactivity"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 119,
   "fields": {
+    "name": "Can change ticket activity",
     "content_type": 40,
-    "codename": "change_ticketactivity",
-    "name": "Can change ticket activity"
-  },
-  "pk": 119
+    "codename": "change_ticketactivity"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 120,
   "fields": {
+    "name": "Can delete ticket activity",
     "content_type": 40,
-    "codename": "delete_ticketactivity",
-    "name": "Can delete ticket activity"
-  },
-  "pk": 120
+    "codename": "delete_ticketactivity"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 121,
   "fields": {
+    "name": "Can add locale",
     "content_type": 41,
-    "codename": "add_locale",
-    "name": "Can add locale"
-  },
-  "pk": 121
+    "codename": "add_locale"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 122,
   "fields": {
+    "name": "Can change locale",
     "content_type": 41,
-    "codename": "change_locale",
-    "name": "Can change locale"
-  },
-  "pk": 122
+    "codename": "change_locale"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 123,
   "fields": {
+    "name": "Can delete locale",
     "content_type": 41,
-    "codename": "delete_locale",
-    "name": "Can delete locale"
-  },
-  "pk": 123
+    "codename": "delete_locale"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 124,
   "fields": {
+    "name": "Can add translation",
     "content_type": 42,
-    "codename": "add_translation",
-    "name": "Can add translation"
-  },
-  "pk": 124
+    "codename": "add_translation"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 125,
   "fields": {
+    "name": "Can change translation",
     "content_type": 42,
-    "codename": "change_translation",
-    "name": "Can change translation"
-  },
-  "pk": 125
+    "codename": "change_translation"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 126,
   "fields": {
+    "name": "Can delete translation",
     "content_type": 42,
-    "codename": "delete_translation",
-    "name": "Can delete translation"
-  },
-  "pk": 126
+    "codename": "delete_translation"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 127,
   "fields": {
+    "name": "Can add work request status",
     "content_type": 43,
-    "codename": "add_workrequeststatus",
-    "name": "Can add work request status"
-  },
-  "pk": 127
+    "codename": "add_workrequeststatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 128,
   "fields": {
+    "name": "Can change work request status",
     "content_type": 43,
-    "codename": "change_workrequeststatus",
-    "name": "Can change work request status"
-  },
-  "pk": 128
+    "codename": "change_workrequeststatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 129,
   "fields": {
+    "name": "Can delete work request status",
     "content_type": 43,
-    "codename": "delete_workrequeststatus",
-    "name": "Can delete work request status"
-  },
-  "pk": 129
+    "codename": "delete_workrequeststatus"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 130,
   "fields": {
+    "name": "Can add work request",
     "content_type": 44,
-    "codename": "add_workrequest",
-    "name": "Can add work request"
-  },
-  "pk": 130
+    "codename": "add_workrequest"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 131,
   "fields": {
+    "name": "Can change work request",
     "content_type": 44,
-    "codename": "change_workrequest",
-    "name": "Can change work request"
-  },
-  "pk": 131
+    "codename": "change_workrequest"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 132,
   "fields": {
+    "name": "Can delete work request",
     "content_type": 44,
-    "codename": "delete_workrequest",
-    "name": "Can delete work request"
-  },
-  "pk": 132
+    "codename": "delete_workrequest"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 133,
   "fields": {
+    "name": "Can add tester",
     "content_type": 45,
-    "codename": "add_tester",
-    "name": "Can add tester"
-  },
-  "pk": 133
+    "codename": "add_tester"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 134,
   "fields": {
+    "name": "Can change tester",
     "content_type": 45,
-    "codename": "change_tester",
-    "name": "Can change tester"
-  },
-  "pk": 134
+    "codename": "change_tester"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 135,
   "fields": {
+    "name": "Can delete tester",
     "content_type": 45,
-    "codename": "delete_tester",
-    "name": "Can delete tester"
-  },
-  "pk": 135
+    "codename": "delete_tester"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 136,
   "fields": {
+    "name": "Can add location region",
     "content_type": 46,
-    "codename": "add_locationregion",
-    "name": "Can add location region"
-  },
-  "pk": 136
+    "codename": "add_locationregion"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 137,
   "fields": {
+    "name": "Can change location region",
     "content_type": 46,
-    "codename": "change_locationregion",
-    "name": "Can change location region"
-  },
-  "pk": 137
+    "codename": "change_locationregion"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 138,
   "fields": {
+    "name": "Can delete location region",
     "content_type": 46,
-    "codename": "delete_locationregion",
-    "name": "Can delete location region"
-  },
-  "pk": 138
+    "codename": "delete_locationregion"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 139,
   "fields": {
+    "name": "Can add location district",
     "content_type": 47,
-    "codename": "add_locationdistrict",
-    "name": "Can add location district"
-  },
-  "pk": 139
+    "codename": "add_locationdistrict"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 140,
   "fields": {
+    "name": "Can change location district",
     "content_type": 47,
-    "codename": "change_locationdistrict",
-    "name": "Can change location district"
-  },
-  "pk": 140
+    "codename": "change_locationdistrict"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 141,
   "fields": {
+    "name": "Can delete location district",
     "content_type": 47,
-    "codename": "delete_locationdistrict",
-    "name": "Can delete location district"
-  },
-  "pk": 141
+    "codename": "delete_locationdistrict"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 142,
   "fields": {
+    "name": "Can add location store",
     "content_type": 48,
-    "codename": "add_locationstore",
-    "name": "Can add location store"
-  },
-  "pk": 142
+    "codename": "add_locationstore"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 143,
   "fields": {
+    "name": "Can change location store",
     "content_type": 48,
-    "codename": "change_locationstore",
-    "name": "Can change location store"
-  },
-  "pk": 143
+    "codename": "change_locationstore"
+  }
 },
 {
   "model": "auth.permission",
+  "pk": 144,
   "fields": {
+    "name": "Can delete location store",
     "content_type": 48,
-    "codename": "delete_locationstore",
-    "name": "Can delete location store"
-  },
-  "pk": 144
+    "codename": "delete_locationstore"
+  }
 },
 {
   "model": "auth.group",
+  "pk": 1,
   "fields": {
-    "permissions": [],
-    "name": "GFAMnaApSc"
-  },
-  "pk": 1
+    "name": "BScviFZLAQ",
+    "permissions": []
+  }
 },
 {
   "model": "person.role",
+  "pk": "c51578fd-9557-4ea9-a899-d29552b7104c",
   "fields": {
-    "proxy_approval_bypass": false,
-    "accept_assign": false,
+    "password_history_length": "[]",
+    "create_all": false,
+    "wo_show_inactive": false,
+    "modified": "2015-12-14T23:06:00.234Z",
     "password_special_char_required": false,
-    "inv_max_approval_currency": "usd",
-    "dashboad_text": "",
-    "default_auth_amount": "0.0000",
-    "password_digit_required": false,
+    "msg_stored_link": false,
+    "inv_max_approval_amount": 0,
+    "inv_select_assign": "all",
+    "wo_allow_backdate": false,
+    "location_level": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf",
+    "password_can_change": true,
+    "modules": "",
+    "categories": [],
+    "inv_close_wo": "Do not display",
+    "password_expire": 90,
+    "wo_days_backdate": null,
+    "proxy_set": false,
+    "accept_assign": false,
+    "msg_viewall": false,
     "inv_wait": null,
     "inv_options": "new",
-    "inv_wo_status": null,
-    "wo_allow_backdate": false,
-    "wo_edit_closeout": false,
-    "categories": [],
-    "password_history_length": "[]",
-    "modules": "",
-    "default_accept_notify": true,
-    "accept_notify": false,
-    "created": "2015-12-14T21:01:31.489Z",
-    "allow_approval": false,
+    "created": "2015-12-14T23:06:00.234Z",
+    "name": "BScviFZLAQ",
     "inv_req_attach": true,
-    "tabs": "",
-    "wo_days_backdate": null,
-    "default_accept_assign": true,
-    "inv_autoapprove": false,
-    "wo_notes": false,
-    "inv_close_wo": "Do not display",
-    "wo_show_inactive": false,
-    "msg_viewall": false,
-    "role_type": "Internal",
-    "password_min_length": 6,
-    "dashboad_links": "",
-    "password_expire_alert": true,
-    "group": 1,
-    "inv_select_assign": "all",
-    "password_upper_char_required": false,
     "msg_copy_email": false,
-    "password_lower_char_required": false,
-    "password_expire": 90,
-    "password_can_change": true,
-    "msg_stored_link": false,
-    "modified": "2015-12-14T21:01:31.489Z",
-    "name": "GFAMnaApSc",
-    "wo_show_tkt_attach": false,
-    "inv_max_approval_amount": 0,
     "password_expired_login_count": null,
-    "default_auth_currency": "59423353-7274-4195-ba45-cb42fdc4c967",
-    "msg_copy_default": false,
+    "dashboad_text": "",
+    "default_accept_notify": true,
+    "password_min_length": 6,
+    "msg_address": false,
+    "allow_approval": false,
+    "password_digit_required": false,
     "deleted": null,
-    "create_all": false,
-    "location_level": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf",
-    "proxy_set": false,
-    "msg_address": false
-  },
-  "pk": "609923b1-c724-4620-8cb8-cc00fb3d73a1"
+    "wo_edit_closeout": false,
+    "dashboad_links": "",
+    "inv_wo_status": null,
+    "default_auth_amount": "0.0000",
+    "password_lower_char_required": false,
+    "password_upper_char_required": false,
+    "inv_max_approval_currency": "usd",
+    "wo_show_tkt_attach": false,
+    "proxy_approval_bypass": false,
+    "group": 1,
+    "role_type": "Internal",
+    "msg_copy_default": false,
+    "default_auth_currency": "12cbdda0-c925-4982-aec1-542d561c016e",
+    "inv_autoapprove": false,
+    "tabs": "",
+    "wo_notes": false,
+    "accept_notify": false,
+    "password_expire_alert": true,
+    "default_accept_assign": true
+  }
 },
 {
   "model": "person.person",
+  "pk": "30f530c4-ce6c-4724-9cfd-37a16e787001",
   "fields": {
-    "accept_assign": true,
-    "password_length": null,
-    "proxy_user": null,
-    "status": "dd388b17-154b-41f4-a16d-48683274011d",
-    "proxy_start_date": null,
-    "password_expire_date": "2016-03-13",
-    "proxy_status": null,
+    "username": "aaron",
+    "auth_amount": "0.0000",
     "is_staff": true,
-    "first_name": "aaron",
     "title": "aaron",
+    "modified": "2015-12-14T23:06:00.370Z",
+    "password_history": "[\"pbkdf2_sha256$20000$doG8nHx0cNOE$14BvTEDp0U+zErLXdKti7M/ls8hOs7HNJwnAcK16ezo=\"]",
     "locale": null,
     "last_login": null,
-    "password_history": "[\"pbkdf2_sha256$20000$8NsseL8y2LIV$LWiY7LOxLSJzkBQ+a1rP8YEsxyLiDENrdGtRc2CWpn8=\"]",
-    "username": "aaron",
+    "password_change": "2015-12-14T23:06:00.349Z",
     "groups": [
       1
     ],
-    "created": "2015-12-14T21:01:31.614Z",
-    "employee_id": null,
     "locations": [
-      "6e358358-def0-4a45-a81e-f0189ed30084"
+      "6864a364-80d4-4b80-9ad2-9fa747923cc7"
     ],
-    "middle_initial": null,
-    "proxy_end_date": null,
-    "is_active": true,
-    "auth_currency": "59423353-7274-4195-ba45-cb42fdc4c967",
-    "password": "pbkdf2_sha256$20000$z9oxJm0vDbjS$ToKHHBX4FLxwQVmgJa8IdF2L7fNlnSgQas24J6P7pT8=",
-    "modified": "2015-12-14T21:01:31.625Z",
-    "accept_notify": true,
     "fullname": "aaron aaron",
-    "date_joined": "2015-12-14T21:01:31.502Z",
-    "role": "609923b1-c724-4620-8cb8-cc00fb3d73a1",
-    "is_superuser": true,
-    "last_name": "aaron",
     "deleted": null,
+    "last_name": "aaron",
+    "employee_id": null,
+    "auth_currency": "12cbdda0-c925-4982-aec1-542d561c016e",
+    "first_name": "aaron",
+    "is_superuser": true,
     "password_one_time": null,
-    "next_approver": null,
-    "auth_amount": "0.0000",
-    "password_change": "2015-12-14T21:01:31.603Z",
+    "status": "9fe0f820-5001-4e30-bc1c-d12c113a4c0a",
+    "password_expire_date": "2016-03-13",
+    "role": "c51578fd-9557-4ea9-a899-d29552b7104c",
+    "date_joined": "2015-12-14T23:06:00.248Z",
+    "proxy_user": null,
+    "middle_initial": null,
+    "password_length": null,
+    "email": "myemail@mail.com",
+    "proxy_end_date": null,
+    "password": "pbkdf2_sha256$20000$3MCNUgRSk5bz$UsnSaVHGb9QzsXz48XuwS5Tkit5v4Dnyp5GuqeeXIJs=",
+    "accept_assign": true,
+    "is_active": true,
+    "proxy_status": null,
     "user_permissions": [],
-    "email": "myemail@mail.com"
-  },
-  "pk": "30f530c4-ce6c-4724-9cfd-37a16e787001"
+    "next_approver": null,
+    "created": "2015-12-14T23:06:00.359Z",
+    "proxy_start_date": null,
+    "accept_notify": true
+  }
 }
 ]

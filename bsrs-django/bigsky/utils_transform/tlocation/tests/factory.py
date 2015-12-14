@@ -15,6 +15,6 @@ def create_location_region():
 
     data = {}
     for field in fields:
-        data[field] = str(random.choice(string.ascii_letters))
+        data[field] = random.choice(string.ascii_letters)
 
     return mommy.make(LocationRegion, **data)

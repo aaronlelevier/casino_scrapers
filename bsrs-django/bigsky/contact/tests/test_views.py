@@ -2,6 +2,8 @@ import json
 
 from rest_framework.test import APITestCase
 
+from model_mommy import mommy
+
 from contact.models import PhoneNumber, Address, Email
 from contact.tests.factory import create_contact
 from person.tests.factory import PASSWORD, create_person
@@ -35,7 +37,8 @@ class PhoneNumberViewSetTests(APITestCase):
 
     def setUp(self):
         self.person = create_person()
-        self.phone_number = create_contact(PhoneNumber, self.person)
+        self.phone_number = mommy.make(PhoneNumber, content_object=self.person,
+            object_id=self.person.id, _fill_optional=['type', 'number'])
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
@@ -139,7 +142,8 @@ class EmailTests(APITestCase):
 
     def setUp(self):
         self.person = create_person()
-        self.email = create_contact(Email, self.person)
+        self.email = mommy.make(Email, content_object=self.person,
+            object_id=self.person.id, _fill_optional=['type', 'email'])
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):

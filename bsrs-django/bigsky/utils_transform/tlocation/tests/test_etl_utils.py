@@ -11,6 +11,7 @@ from contact.tests.factory import create_phone_number_types
 from location.models import Location, LocationLevel
 from person.models import Person
 from utils.create import _generate_chars
+from utils_transform.tlocation.tests.factory import create_location_region
 from utils_transform.tlocation.models import LocationRegion
 from utils_transform.tlocation.management.commands._etl_utils import (
     create_phone_numbers, create_email, create_address)
@@ -22,20 +23,7 @@ class EtlUtilsTests(TestCase):
 
     def setUp(self):
         self.ph_types = create_phone_number_types()
-        self.location_region = mommy.make(
-            LocationRegion,
-            name=_generate_chars(),
-            number=_generate_chars(),
-            telephone=_generate_chars(),
-            carphone=_generate_chars(),
-            fax=_generate_chars(),
-            email=_generate_chars(),
-            address2='Ste 140',
-            city='Omaha',
-            state='NE',
-            zip=92126,
-            country='United States',
-        )
+        self.location_region = create_location_region()
 
         # Next-Gen: Location / LocationLevel
         self.location_level = LocationLevel.objects.get(name='region')
@@ -76,15 +64,6 @@ class EtlUtilsTests(TestCase):
 
         self.assertEqual(ph.content_object, self.location)
         self.assertEqual(ph.object_id, self.location.id)
-
-    def test_new_phone_length(self):
-        self.assertEqual(PhoneNumber.objects.filter(type__name='telephone').count(), 1)
-        self.location_region.telephone = "".join(str(random.choice(string.ascii_letters))
-                                                 for x in range(PhoneNumber._meta.get_field('number').max_length+1))
-
-        create_phone_numbers(self.location_region, self.location)
-
-        self.assertEqual(PhoneNumber.objects.filter(type__name='telephone').count(), 1)
 
     # create_email
 

@@ -38,7 +38,7 @@ class PhoneNumber(BaseContactModel):
     https://github.com/daviddrysdale/python-phonenumbers
     """
     type = models.ForeignKey(PhoneNumberType, blank=True, null=True)
-    number = models.CharField(max_length=32)
+    number = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ('number',)
@@ -61,12 +61,12 @@ class Address(BaseContactModel):
     populated, but not both.
     """
     type = models.ForeignKey(AddressType, blank=True, null=True)
-    address1 = models.CharField(max_length=200, null=True, blank=True)
-    address2 = models.CharField(max_length=200, null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
-    state = models.CharField(max_length=100, null=True, blank=True)
-    zip = models.CharField(max_length=32, null=True, blank=True)
-    country = models.CharField(max_length=100, null=True, blank=True)
+    address1 = models.TextField(blank=True, null=True)
+    address2 = models.TextField(blank=True, null=True)
+    city = models.TextField(blank=True, null=True)
+    state = models.TextField(blank=True, null=True)
+    zip = models.TextField(blank=True, null=True)
+    country = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ('address1',)
@@ -82,7 +82,7 @@ class EmailType(BaseNameOrderModel):
 
 class Email(BaseContactModel):
     type = models.ForeignKey(EmailType, blank=True, null=True)
-    email = models.EmailField(max_length=255)
+    email = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ('email',)
