@@ -1,15 +1,8 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
 
 var TicketLocation = Ember.Component.extend({
-    options: Ember.computed('ticket_location_options.[]', function() {
-        let options = this.get('ticket_location_options');
-        if (options && options.get('length') > 0) {
-            return options;
-        }
-    }),
-    find_all_locations(search) {
-        this.set('search_location', search);
-    },
+    repository: inject('location'),
     actions: {
         selected(location) {
             let ticket = this.get('ticket');
@@ -20,7 +13,13 @@ var TicketLocation = Ember.Component.extend({
             }
         },
         update_filter(search) {
-            Ember.run.debounce(this, this.get('find_all_locations'), search, 300);
+            const repo = this.get('repository');
+            return new Ember.RSVP.Promise((resolve, reject) => {
+                Ember.run.later(() => {
+                    if (Ember.isBlank(search)) { return resolve([]); }
+                    resolve(repo.findTicket(search));
+                }, 300);
+            });
         }
     }
 });

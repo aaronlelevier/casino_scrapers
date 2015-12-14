@@ -19,9 +19,6 @@ var TicketSingleRoute = TabRoute.extend({
         search_cc: {
             refreshModel: true
         },
-        search_location: {
-            refreshModel: true
-        },
     },
     top_level_category_options: Ember.computed(function() {
         const categoryRepo = this.get('categoryRepository');
@@ -38,7 +35,6 @@ var TicketSingleRoute = TabRoute.extend({
         const repository = this.get('repository');
         const peopleRepo = this.get('peopleRepo');
         let search_cc = transition.queryParams.search_cc;
-        let search_location = transition.queryParams.search_location;
         let ticket = repository.fetch(pk);
         let statuses = this.get('statuses');
         let priorities = this.get('priorities');
@@ -46,14 +42,6 @@ var TicketSingleRoute = TabRoute.extend({
         let top_level_category_options = this.get('top_level_category_options');
 
         let ticket_cc_options = peopleRepo.findTicketPeople(search_cc);
-
-        let ticket_location_options = [];
-        let locationRepo = this.get('locationRepo');
-        ticket_location_options = locationRepo.findTicket(search_location) || [];
-        let location = ticket.get('location');
-        if (location) {
-            ticket_location_options.push(location);
-        }
 
         if (!ticket.get('content') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             //NOTE: if not dirty on search change, then will bring in new data
@@ -67,9 +55,7 @@ var TicketSingleRoute = TabRoute.extend({
             statuses: statuses,
             priorities: priorities,
             search_cc: search_cc,
-            search_location: search_location,
             ticket_cc_options: ticket_cc_options,
-            ticket_location_options: ticket_location_options,
             top_level_category_options: top_level_category_options,
             activities: activities
         });
@@ -79,9 +65,7 @@ var TicketSingleRoute = TabRoute.extend({
         controller.set('statuses', hash.statuses);
         controller.set('priorities', hash.priorities);
         controller.set('search_cc', hash.search_cc);
-        controller.set('search_location', hash.search_location);
         controller.set('ticket_cc_options', hash.ticket_cc_options);
-        controller.set('ticket_location_options', hash.ticket_location_options);
         controller.set('top_level_category_options', hash.top_level_category_options);
         controller.set('activities', hash.activities);
     },

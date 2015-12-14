@@ -7,7 +7,7 @@
             <section>
                 <div class="col-md-12">
                     {{#form-group title="ticket.label.location-name" for="location"}}
-                    {{ticket-location-select ticket=model ticket_location_options=ticket_location_options search_location=search_location}}
+                    {{ticket-location-select ticket=model ticket_location_options=ticket_location_options}}
                     {{#validation-error-field submitted=submitted field="location" className="validation validation-under t-location-validation-error" model=model validation=locationValidation}}invalid location{{/validation-error-field}}
                     {{/form-group}}
                 </div>

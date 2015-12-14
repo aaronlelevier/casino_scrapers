@@ -44,14 +44,13 @@ test('should render a selectbox when person options are empty (initial state of 
     assert.ok(!ticket.get('assignee'));
 });
 
-test('should render a selectbox with bound options after type ahead for search_assignee', function(assert) {
+test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let ticket_assignee_options = store.find('person');
     person_one.set('assigned_tickets', [TICKET_DEFAULTS.idOne]);
     this.set('ticket', ticket);
     this.set('ticket_assignee_options', ticket_assignee_options);
     this.render(hbs`{{ticket-assignee-select ticket=ticket ticket_assignee_options=ticket_assignee_options}}`);
     let $component = this.$(`${COMPONENT}`);
-    run(() => { this.$(`${PowerSelect}`).click(); });
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
@@ -70,7 +69,6 @@ test('should be able to select new person when one doesnt exist', function(asser
     this.set('ticket_assignee_options', ticket_assignee_options);
     this.render(hbs`{{ticket-assignee-select ticket=ticket ticket_assignee_options=ticket_assignee_options}}`);
     let $component = this.$(`${COMPONENT}`);
-    run(() => { this.$(`${PowerSelect}`).click(); });
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
@@ -91,7 +89,6 @@ test('should be able to select same person when ticket already has a person', fu
     this.set('ticket_assignee_options', ticket_assignee_options);
     this.render(hbs`{{ticket-assignee-select ticket=ticket ticket_assignee_options=ticket_assignee_options}}`);
     let $component = this.$(`${COMPONENT}`);
-    run(() => { this.$(`${PowerSelect}`).click(); });
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
@@ -118,7 +115,6 @@ test('should be able to select new person when ticket already has a person', fun
     this.set('ticket_assignee_options', ticket_assignee_options);
     this.render(hbs`{{ticket-assignee-select ticket=ticket ticket_assignee_options=ticket_assignee_options}}`);
     let $component = this.$(`${COMPONENT}`);
-    run(() => { this.$(`${PowerSelect}`).click(); });
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
