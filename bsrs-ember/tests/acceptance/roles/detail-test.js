@@ -226,6 +226,8 @@ test('clicking and typing into power select for categories will fire off xhr req
     let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
+    //test filter out new
+    store.push('category', {id: 'testingNewFilter', name: 'wataA', new: true});
     fillIn(CATEGORY_SEARCH, 'a');
     andThen(() => {
         assert.equal(page.categoryOptionLength(), PAGE_SIZE+1); 

@@ -280,6 +280,8 @@ test('adding and removing removing a category in power select for categories wil
         assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(page.categoriesSelected(), 0);
     });
+    page.categoryClickDropdown()
+    fillIn(CATEGORY_SEARCH, '2z');
     page.categoryClickOptionTwo();
     fillIn('.t-role-name', RD.nameOne);
     page.locationLevelClickDropdown();

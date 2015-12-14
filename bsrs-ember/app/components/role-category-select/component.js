@@ -1,19 +1,12 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
 
 var RoleCategorySelect = Ember.Component.extend({
+    repository: inject('category'),
     categories_selected: Ember.computed('role.role_categories.[]', function() {
         let role = this.get('role');
         return role.get('categories');
     }),
-    options: Ember.computed('categories_children.[]', 'role.categories.[]', 'search', function() {
-        let options = this.get('categories_children');
-        if (options && options.get('length') > 0) {
-            return options;
-        }
-    }),
-    find_all_categories(search) {
-        this.set('search', search);
-    },
     actions: {
         change_category(new_categories) {
             const role = this.get('role');
@@ -32,7 +25,13 @@ var RoleCategorySelect = Ember.Component.extend({
             });
         },
         update_filter(search) {
-            Ember.run.debounce(this, this.get('find_all_categories'), search, 300);
+            const repo = this.get('repository');
+            return new Ember.RSVP.Promise((resolve, reject) => {
+                Ember.run.later(() => {
+                    if (Ember.isBlank(search)) { return resolve([]); }
+                    resolve(repo.findCategoryChildren(search));
+                }, 300);
+            });
         }
     }
 });
