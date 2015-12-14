@@ -17,6 +17,7 @@ source ../venv/bin/activate
 
 ./manage.py loaddata fixtures/translation.json
 ./manage.py loaddata utils_transform/fixtures/location_levels.json
+./manage.py loaddata utils_transform/fixtures/contact_types.json
 
 ./manage.py create_single_person
 

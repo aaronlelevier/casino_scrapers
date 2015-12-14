@@ -22,7 +22,24 @@ def create_phone_numbers(domino_location, related_instance):
 
 
 def create_email(domino_location, related_instance):
-    email_type = EmailType.objects.get('location')
+    email_type = EmailType.objects.get(name='location')
+
     Email.objects.create(content_object=related_instance,
         object_id=related_instance.id, email=domino_location.email,
         type=email_type)
+
+
+def create_address(domino_location, related_instance):
+    address_type = AddressType.objects.get(name='location')
+
+    address = {
+        'address1': domino_location.address1,
+        'address2': domino_location.address2,
+        'city': domino_location.city,
+        'state': domino_location.state,
+        'zip': domino_location.zip,
+        'country': domino_location.country
+    }
+    if any(address.values()):
+        Address.objects.create(content_object=related_instance,
+            object_id=related_instance.id, type=address_type, **address)
