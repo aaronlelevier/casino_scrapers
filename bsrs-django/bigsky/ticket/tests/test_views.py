@@ -53,6 +53,10 @@ class TicketSetupMixin(object):
 
 class TicketListTests(TicketSetupMixin, APITestCase):
 
+    def setUp(self):
+        super(TicketListTests, self).setUp()
+        self.ticket_two.delete(override=True)
+
     def test_response(self):
         response = self.client.get('/api/tickets/')
         self.assertEqual(response.status_code, 200)

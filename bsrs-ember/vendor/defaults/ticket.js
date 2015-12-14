@@ -72,7 +72,8 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             requestOtherGrid: 'sub10',
             requestFourteenGrid: 'ape14',
             attachmentOneId: '40f530c4-ce6c-4724-9cfd-37a16e787001',
-            attachmentTwoId: '40f530c4-ce6c-4724-9cfd-37a16e787002'
+            attachmentTwoId: '40f530c4-ce6c-4724-9cfd-37a16e787002',
+            categoryRandomId: 'ec62006b-6275-4aa9-abfa-38b146383z213'
         };
     };
     return factory;

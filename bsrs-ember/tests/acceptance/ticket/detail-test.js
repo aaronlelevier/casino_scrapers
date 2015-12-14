@@ -176,7 +176,7 @@ test('validation works for non required fields and when hit save, we do same pos
     fillIn(`${SEARCH}`, 'Mel');
     page.assigneeClickOptionOne();
     andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL + '?search_assignee=Mel');
+        assert.equal(currentURL(), DETAIL_URL);
     });
     generalPage.save();
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
@@ -796,8 +796,11 @@ test('location component shows location for ticket and will fire off xhr to fetc
     // </check category tree>
     xhr(`${PREFIX}/admin/locations/?name__icontains=6`, 'GET', null, {}, 200, LF.search());
     page.locationClickDropdown();
+    //test filter out new models in repo
+    store.push('location', {id: 'testFilterOutNew6', name: 'Wat6', new: true});
     fillIn(`${SEARCH}`, '6');
     andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
         assert.equal(page.locationInput(), LD.storeName);
         assert.equal(page.locationOptionLength(), 2);
         assert.equal(find(`${LOCATION_DROPDOWN} > li:eq(0)`).text().trim(), LD.storeNameFour);
@@ -811,7 +814,7 @@ test('location component shows location for ticket and will fire off xhr to fetc
     fillIn(`${SEARCH}`, '');
     andThen(() => {
         assert.equal(page.locationOptionLength(), 1);
-        assert.equal(find(`${LOCATION_DROPDOWN}`).text().trim(), LD.storeNameTwo);
+        assert.equal(find(`${LOCATION_DROPDOWN}`).text().trim(), GLOBALMSG.power_search);
     });
     fillIn(`${SEARCH}`, '6');
     andThen(() => {
@@ -879,10 +882,10 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
         assert.equal(page.assigneeOptionLength(), 11);
         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(0)`).text().trim(), PD.fullname);
         assert.equal(find(`${ASSIGNEE_DROPDOWN} > li:eq(1)`).text().trim(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-        page.assigneeClickOptionTwo();
-        andThen(() => {
-            assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
-        });
+    });
+    page.assigneeClickOptionTwo();
+    andThen(() => {
+        assert.equal(page.assigneeInput(), `${PD.nameBoy} ${PD.lastNameBoy}`);
     });
     page.assigneeClickDropdown();
     fillIn(`${SEARCH}`, '');

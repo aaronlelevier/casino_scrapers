@@ -46,7 +46,7 @@ var CCMixin = Ember.Mixin.create({
         const store = this.get('store');
         const previous_m2m_fks = this.get('ticket_people_fks') || [];
         const m2m_to_throw_out = store.find('ticket-person', (join_model) => {
-            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed') && this.get('id') === join_model.get('ticket_id');
+            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed') && this.get('id') === join_model.get('ticket_pk');
         }, ['removed']);
         m2m_to_throw_out.forEach((join_model) => {
             join_model.set('removed', true);

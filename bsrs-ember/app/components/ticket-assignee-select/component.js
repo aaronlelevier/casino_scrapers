@@ -1,15 +1,8 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
 
 var TicketAssignee = Ember.Component.extend({
-    options: Ember.computed('ticket_assignee_options.[]', function() {
-        let options = this.get('ticket_assignee_options');
-        if (options && options.get('length') > 0) {
-            return options;
-        }
-    }),
-    find_all_people(search) {
-        this.set('search_assignee', search);
-    },
+    repository: inject('person'),
     actions: {
         selected(person) {
             let ticket = this.get('ticket');
@@ -20,7 +13,13 @@ var TicketAssignee = Ember.Component.extend({
             }
         },
         update_filter(search) {
-            Ember.run.debounce(this, this.get('find_all_people'), search, 300);
+            const repo = this.get('repository');
+            return new Ember.RSVP.Promise((resolve, reject) => {
+                Ember.run.later(() => {
+                    if (Ember.isBlank(search)) { return resolve([]); }
+                    resolve(repo.findTicketAssignee(search));
+                }, 300);
+            });
         }
     }
 });

@@ -63,6 +63,10 @@ var BSRS_TICKET_FACTORY = (function() {
         return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
+        var unused_category = this.category_fixtures.get(this.category_defaults.idRandom, this.category_defaults.nameRandom);
+        unused_category.children_fks = [];
+        unused_category.parent = null;
+
         var response = [];
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
@@ -74,6 +78,7 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.status = this.ticket.statusTwoId;
             ticket.location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
             ticket.assignee = this.people_fixtures.get(this.ticket.assigneeTwoId, this.ticket.assigneeTwo, this.ticket.assigneeTwo);
+            ticket.categories = [unused_category];
             delete ticket.cc;
             delete ticket.attachments;
             response.push(ticket);

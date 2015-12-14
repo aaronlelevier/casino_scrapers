@@ -41,7 +41,9 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             subCatLabelTwo: 'Issue',
             parent: [],
             statusOne: 'admin.category.status.active',
-            statusTwo: 'admin.category.status.inactive'
+            statusTwo: 'admin.category.status.inactive',
+            nameRandom: 'x',
+            idRandom: 'ec62006b-6275-4aa9-abfa-38b146383z213'
         };
     };
     return factory;

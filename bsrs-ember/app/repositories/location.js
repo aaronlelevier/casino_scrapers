@@ -35,14 +35,14 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
         search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
         if (search_criteria) {
             url += `?name__icontains=${search_criteria}`;
-            PromiseMixin.xhr(url, 'GET').then((response) => {
+            return PromiseMixin.xhr(url, 'GET').then((response) => {
                 this.get('LocationDeserializer').deserialize(response);
+                let filterFunc = function(location) {
+                    let name = location.get('name');
+                    return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1 && !location.get('new');
+                };
+                return this.get('store').find('location', filterFunc, ['id']);
             });
-            let filterFunc = function(location) {
-                let name = location.get('name');
-                return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1 && !location.get('new');
-            };
-            return this.get('store').find('location', filterFunc, ['id']);
         }
         return Ember.A([]);
     },
