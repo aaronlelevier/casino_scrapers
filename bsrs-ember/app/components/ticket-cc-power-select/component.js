@@ -1,9 +1,8 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
 
 var TicketPeopleMulti = Ember.Component.extend({
-    find_all_people(search) {
-        this.set('search_cc', search);
-    },
+    repository: inject('person'),
     actions: {
         change_cc(new_cc_selection) {
             const ticket = this.get('ticket');
@@ -22,7 +21,13 @@ var TicketPeopleMulti = Ember.Component.extend({
             }); 
         },
         update_filter(search) {
-            Ember.run.debounce(this, this.get('find_all_people'), search, 300);
+            const repo = this.get('repository');
+            return new Ember.RSVP.Promise((resolve, reject) => {
+                Ember.run.later(() => {
+                    if (Ember.isBlank(search)) { return resolve([]); }
+                    resolve(repo.findTicketPeople(search));
+                }, 300);
+            });
         }
     }
 });

@@ -57,14 +57,14 @@ export default Ember.Object.extend(GridRepositoryMixin, {
         search = search ? search.trim() : search;
         if (search) {
             url += `?fullname__icontains=${search}`;
-            PromiseMixin.xhr(url, 'GET').then((response) => {
+            return PromiseMixin.xhr(url, 'GET').then((response) => {
                 this.get('PersonDeserializer').deserialize(response);
+                let filterFunc = function(person) {
+                    let fullname = person.get('fullname');
+                    return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1 && !person.get('new');
+                };
+                return this.get('store').find('person', filterFunc, ['id']);
             });
-            let filterFunc = function(person) {
-                let fullname = person.get('fullname');
-                return fullname.toLowerCase().indexOf(search.toLowerCase()) > -1 && !person.get('new');
-            };
-            return this.get('store').find('person', filterFunc, ['id']);
         }
     },
     find() {

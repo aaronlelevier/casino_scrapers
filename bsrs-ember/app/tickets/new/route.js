@@ -7,17 +7,11 @@ var TicketNewRoute = TabNewRoute.extend({
     statusRepository: inject('ticket-status'),
     categoryRepository: inject('category'),
     locationRepo: inject('location'),
-    peopleRepo: inject('person'),
     priorityRepository: inject('ticket-priority'),
     redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
     modelName: Ember.computed(function() { return 'ticket'; }),
     //TODO: tab tests say 'New ticket', not 'New Ticket'
     templateModelField: Ember.computed(function() { return 'Ticket'; }),
-    queryParams: {
-        search_cc: {
-            refreshModel: true
-        },
-    },
     priorities: Ember.computed(function() {
         return this.get('priorityRepository').fetch();
     }),
@@ -35,15 +29,11 @@ var TicketNewRoute = TabNewRoute.extend({
         let top_level_category_options = categoryRepo.findTopLevelCategories() || [];
         let transition = arguments[1];
 
-        let search_cc = transition.queryParams.search_cc;
-        let ticket_cc_options = this.get('peopleRepo').findTicketPeople(search_cc);
-
         return Ember.RSVP.hash({
             model: model,
             statuses: statuses,
             priorities: priorities,
             top_level_category_options: top_level_category_options,
-            ticket_cc_options: ticket_cc_options,
         });
     },
     setupController: function(controller, hash) {
@@ -51,8 +41,6 @@ var TicketNewRoute = TabNewRoute.extend({
         controller.set('statuses', hash.statuses);
         controller.set('priorities', hash.priorities);
         controller.set('top_level_category_options', hash.top_level_category_options);
-        controller.set('ticket_cc_options', hash.ticket_cc_options);
-        controller.set('search_cc', hash.search_cc);
     }
 });
 
