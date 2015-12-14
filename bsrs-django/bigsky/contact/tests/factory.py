@@ -2,8 +2,8 @@ import random
 
 from model_mommy import mommy
 
-from contact.models import (PhoneNumber, PhoneNumberType, PHONE_NUMBER_TYPES,
-    Address, Email)
+from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
+    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES)
 from utils.helpers import generate_uuid
 
 
@@ -61,3 +61,33 @@ def create_phone_number_types():
     for name in PHONE_NUMBER_TYPES:
         create_phone_number_type(name=name)
     return PhoneNumberType.objects.all()
+
+
+def create_email_type(name=None):
+    name = name or random.choice(EMAIL_TYPES)
+    obj, _ = EmailType.objects.get_or_create(name=name)
+    return obj
+
+
+def create_email_types():
+    for name in EMAIL_TYPES:
+        create_email_type(name=name)
+    return EmailType.objects.all()
+
+
+def create_address_type(name=None):
+    name = name or random.choice(ADDRESS_TYPES)
+    obj, _ = AddressType.objects.get_or_create(name=name)
+    return obj
+
+
+def create_address_types():
+    for name in ADDRESS_TYPES:
+        create_address_type(name=name)
+    return AddressType.objects.all()
+
+
+def create_contact_types():
+    create_phone_number_types()
+    create_email_types()
+    create_address_types()

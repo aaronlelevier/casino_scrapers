@@ -2,6 +2,8 @@ from django.core.management.base import BaseCommand
 
 from contact.models import Email, PhoneNumber, PhoneNumberType, Address
 from location.models import Location, LocationLevel
+from utils_transform.tlocation.management.commands import (
+    create_phone_numbers,)
 from utils_transform.tlocation.models import LocationRegion
 
 
@@ -16,20 +18,7 @@ class Command(BaseCommand):
                 name=x.name, number=x.number)
 
             # PhoneNumbers
-            ph_types = PhoneNumberType.objects.all()
-
-            if x.telephone:
-                ph_type = ph_types.get(name='telephone')
-                PhoneNumber.objects.create(content_object=instance, object_id=instance.id,
-                    number=x.telephone, type=ph_type)
-            if x.carphone:
-                ph_type = ph_types.get(name='carphone')
-                PhoneNumber.objects.create(content_object=instance, object_id=instance.id,
-                    number=x.carphone, type=ph_type)
-            if x.fax:
-                ph_type = ph_types.get(name='fax')
-                PhoneNumber.objects.create(content_object=instance, object_id=instance.id,
-                    number=x.fax, type=ph_type)
+            create_phone_numbers(x, instance)
 
             # Email
             if x.email:

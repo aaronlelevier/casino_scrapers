@@ -4,7 +4,7 @@
   "model": "contact.phonenumbertype",
   "fields": {
     "order": 0,
-    "name": "carphone",
+    "name": "cell",
     "modified": "2015-12-11T23:11:50.710Z",
     "deleted": null,
     "created": "2015-12-11T23:11:50.710Z"

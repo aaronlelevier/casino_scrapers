@@ -1,4 +1,5 @@
 from django.conf import settings
+
 from model_mommy import mommy
 
 from location.models import Location, LocationLevel

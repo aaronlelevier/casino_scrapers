@@ -24,7 +24,7 @@ class BaseContactModel(BaseModel):
 PHONE_NUMBER_TYPES = [
     'telephone',
     'fax',
-    'carphone'
+    'cell'
 ]
 
 class PhoneNumberType(BaseNameOrderModel):
@@ -43,6 +43,10 @@ class PhoneNumber(BaseContactModel):
     class Meta:
         ordering = ('number',)
 
+
+ADDRESS_TYPES = [
+    'location'
+]
 
 class AddressType(BaseNameOrderModel):
     pass
@@ -67,6 +71,10 @@ class Address(BaseContactModel):
     class Meta:
         ordering = ('address1',)
 
+
+EMAIL_TYPES = [
+    'location'
+]
 
 class EmailType(BaseNameOrderModel):
     pass

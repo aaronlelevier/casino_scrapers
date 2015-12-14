@@ -2,8 +2,8 @@ from mock import patch
 
 from django.test import TestCase
 
-from contact.models import (PhoneNumber, PhoneNumberType, PHONE_NUMBER_TYPES,
-    Address, Email)
+from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
+    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES)
 from contact.tests import factory
 from person.models import Person
 from person.tests.factory import create_person
@@ -96,9 +96,43 @@ class FactoryTests(TestCase):
         self.assertIsInstance(ret, PhoneNumberType)
 
     def test_create_phone_number_types(self):
-        ph_types = factory.create_phone_number_types()
+        types = factory.create_phone_number_types()
 
-        for ph_type in ph_types:
-            self.assertIn(ph_type.name, PHONE_NUMBER_TYPES)
+        for t in types:
+            self.assertIn(t.name, PHONE_NUMBER_TYPES)
 
-        self.assertEqual(ph_types.count(), len(PHONE_NUMBER_TYPES))
+        self.assertEqual(types.count(), len(PHONE_NUMBER_TYPES))
+
+    def test_create_email_type(self):
+        ret = factory.create_email_type()
+
+        self.assertIsInstance(ret, EmailType)
+
+    def test_create_email_types(self):
+        types = factory.create_email_types()
+
+        for t in types:
+            self.assertIn(t.name, EMAIL_TYPES)
+
+        self.assertEqual(types.count(), len(EMAIL_TYPES))
+
+    def test_create_address_type(self):
+        ret = factory.create_address_type()
+
+        self.assertIsInstance(ret, AddressType)
+
+    def test_create_address_types(self):
+        types = factory.create_address_types()
+
+        for t in types:
+            self.assertIn(t.name, ADDRESS_TYPES)
+
+        self.assertEqual(types.count(), len(ADDRESS_TYPES))
+
+    @patch("contact.tests.factory.create_phone_number_types")
+    @patch("contact.tests.factory.create_email_types")
+    @patch("contact.tests.factory.create_address_types")
+    def test_create_contact_types(self, phone_mock, email_mock, address_mock):
+        self.assertTrue(phone_mock.was_called)
+        self.assertTrue(email_mock.was_called)
+        self.assertTrue(address_mock.was_called)
