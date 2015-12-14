@@ -306,7 +306,7 @@ test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
     assert.ok(ticket_two.get('ccIsNotDirty'));
 });
 
-test('when cc is changed dirty tracking works as expected (replacing)', (assert) => {
+test('toran when cc is changed dirty tracking works as expected (replacing)', (assert) => {
     store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
     store.push('person', {id: PD.id});
     store.push('person', {id: PD.idTwo});
