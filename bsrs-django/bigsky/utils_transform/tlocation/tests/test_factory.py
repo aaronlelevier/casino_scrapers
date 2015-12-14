@@ -3,17 +3,14 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from utils_transform.tlocation.models import LocationRegion, LocationDistrict, LocationStore
+from utils_transform.tlocation.tests import factory
 
 
-# class LocationRegionTests(TestCase):
+class FactoryTests(TestCase):
 
-#     # def setUp(self):
-#         # self.fields = [x.name for x in LocationDistrict._meta.get_fields()]
-#         # self.location = mommy.make(LocationRegion, _fill_optional=self.fields)
+    def test_create_location_region(self):
+        ret = factory.create_location_region()
 
-#     def test_all_fields_populated(self):
-#         location = LocationRegion.objects.create(name='a', number='b')
-
-#         self.assertIsInstance(location, LocationRegion)
-#         # for f in self.fields:
-#         #     self.assertTrue(getattr(self.location, f))
+        self.assertIsInstance(ret, LocationRegion)
+        for field in factory.FACTORY_LOCATION_REGION_FIELDS:
+            self.assertTrue(getattr(ret, field))

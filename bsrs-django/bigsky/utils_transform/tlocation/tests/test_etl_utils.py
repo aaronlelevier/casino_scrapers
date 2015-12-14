@@ -1,3 +1,6 @@
+import random
+import string
+
 from django.test import TestCase
 
 from model_mommy import mommy
@@ -73,6 +76,15 @@ class EtlUtilsTests(TestCase):
 
         self.assertEqual(ph.content_object, self.location)
         self.assertEqual(ph.object_id, self.location.id)
+
+    def test_new_phone_length(self):
+        self.assertEqual(PhoneNumber.objects.filter(type__name='telephone').count(), 1)
+        self.location_region.telephone = "".join(str(random.choice(string.ascii_letters))
+                                                 for x in range(PhoneNumber._meta.get_field('number').max_length+1))
+
+        create_phone_numbers(self.location_region, self.location)
+
+        self.assertEqual(PhoneNumber.objects.filter(type__name='telephone').count(), 1)
 
     # create_email
 

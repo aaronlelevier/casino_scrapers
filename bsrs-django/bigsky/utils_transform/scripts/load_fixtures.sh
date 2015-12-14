@@ -11,13 +11,15 @@ export DB_USER=bsdev
 dropdb $DB_NAME -U $DB_USER
 wait
 createdb $DB_NAME -U $DB_USER -O $DB_USER
+wait
+./manage.py migrate
 
 wait
 source ../venv/bin/activate
 
 ./manage.py loaddata fixtures/translation.json
-./manage.py loaddata utils_transform/fixtures/location_levels.json
-./manage.py loaddata utils_transform/fixtures/contact_types.json
+./manage.py loaddata utils_transform/tlocation/fixtures/location_levels.json
+./manage.py loaddata utils_transform/tlocation/fixtures/contact_types.json
 
 ./manage.py create_single_person
 
