@@ -29,7 +29,6 @@ const SORT_PRIORITY_DIR = '.t-sort-priority-translated-name-dir';
 const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
 const SORT_LOCATION_DIR = '.t-sort-location-name-dir';
 const SORT_ASSIGNEE_DIR = '.t-sort-assignee-fullname-dir';
-const SORT_CATEGORY_DIR = '.t-sort-category-name-dir';
 const FILTER_PRIORITY = '.t-filter-priority-translated-name';
 
 var application, store, endpoint, list_xhr, original_uuid;
@@ -797,19 +796,33 @@ test('assignee.fullname is a functional related filter', function(assert) {
 });
 
 test('category.name is a functional related filter (search only)', function(assert) {
+    let option_four = PREFIX + BASE_URL + '/?page=1&categories__name__icontains=x';
+    xhr(option_four,'GET',null,{},200,TF.searched_related_array(TD.categoryRandomId, 'categories'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=x';
     xhr(option_one,'GET',null,{},200,TF.searched_related_array(TD.categoryRandomId, 'categories'));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
-        assert.equal(find('.t-grid-data').length, 10);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     fillIn('.t-grid-search-input', 'x');
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_X);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=x');
-        assert.equal(find('.t-grid-data').length, 9);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE - 1);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    });
+    filterGrid('categories[name]', 'x');
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?find=categories%5Bname%5D%3Ax&search=');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE - 1);
     });
 });

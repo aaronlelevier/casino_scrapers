@@ -40,3 +40,10 @@ test('findWithQuery will format find url string correctly', (assert) => {
     let subject = FakeRepo.create({store: store, type: 'ticket', url:''});
     subject.findWithQuery(1, '', '', 'status.translated_name:a,request:r,priority.translated_name:b');
 });
+
+test('findWithQuery will format find url string correctly with array based property', (assert) => {
+    assert.expect(1);
+    expected_endpoint = '?page=1&status__name__icontains=a&categories__name__icontains=x&request__icontains=r';
+    let subject = FakeRepo.create({store: store, type: 'ticket', url:''});
+    subject.findWithQuery(1, '', '', 'status.translated_name:a,categories[name]:x,request:r');
+});

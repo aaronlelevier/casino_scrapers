@@ -41,10 +41,9 @@ var GridViewComponent = Ember.Component.extend(SortBy, FilterBy, UpdateFind, {
             let filter = params.map((option) => {
                 const property = option.split(':')[0];
                 const propertyValue = option.split(':')[1];
-                const findRegex = new RegExp(propertyValue);
+                const regex = new RegExp(propertyValue);
                 return this.get('model').filter((object) => {
-                    let value = object.get(property) ? object.get(property).toLowerCase() : null;
-                    return findRegex.test(value);
+                    return regex_property(object, property, regex);
                 });
             }.bind(this));
             return filter.reduce((a,b) => {
