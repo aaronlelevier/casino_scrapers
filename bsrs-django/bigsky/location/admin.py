@@ -20,4 +20,5 @@ class LocationTypeAdmin(admin.ModelAdmin):
 
 @admin.register(models.Location)
 class LocationAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'number', 'location_level',)
+    fields = models.Location._meta.get_fields()
