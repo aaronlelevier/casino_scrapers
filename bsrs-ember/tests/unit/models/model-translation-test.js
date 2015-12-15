@@ -5,7 +5,7 @@ var store;
 
 module('unit: model translation test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:category', 'model:ticket-priority', 'model:ticket-status', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:category', 'model:ticket-priority', 'model:ticket-status', 'model:location-status', 'service:i18n']);
     }
 });
 
@@ -28,4 +28,11 @@ test('ticket-status translated name returns correct value', (assert) => {
     assert.equal(status.get('translated_name'), '');
     status.set('name', 'ticket.status.draft');
     assert.equal(status.get('translated_name'), 'Draft');
+});
+
+test('location-status translated name returns correct value', (assert) => {
+    let status = store.push('location-status', {id: 1, name: ''});
+    assert.equal(status.get('translated_name'), '');
+    status.set('name', 'admin.location.status.open');
+    assert.equal(status.get('translated_name'), 'Open');
 });
