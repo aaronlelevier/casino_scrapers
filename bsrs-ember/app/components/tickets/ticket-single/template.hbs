@@ -46,8 +46,8 @@
                     <div class="col-md-12">
                         <section style="padding-bottom: 0">
                             <div class="row card-title">
-                                <h1 class="col-md-12">
-                                    {{model.top_level_category.name}}
+                                <h1 class="col-md-12 t-ticket-header">
+                                    {{model.sorted_categories.lastObject.name}}
                                     <small>#{{model.number}}</small>
                                     <span class="tag {{model.status_class}}">{{fa-icon 'clock-o'}} {{t model.status.name}}</span><span class="tag {{model.priority_class}}">{{fa-icon 'exclamation-triangle'}} {{t model.priority.name}}</span>
                                 </h1>

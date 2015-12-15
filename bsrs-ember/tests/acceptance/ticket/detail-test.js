@@ -66,7 +66,7 @@ module('Acceptance | ticket detail test', {
     }
 });
 
-test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working', (assert) => {
+test('sco clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working', (assert) => {
     page.visit();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
@@ -75,6 +75,7 @@ test('clicking a tickets will redirect to the given detail view and can save to 
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(page.ccSelected().indexOf(PD.first_name), 2);
+        assert.equal(find('.t-ticket-header').text().trim().split('  ')[0].trim(), 'Toilet Leak');
     });
     let response = TF.detail(TD.idOne);
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_detail), {}, 200, response);
