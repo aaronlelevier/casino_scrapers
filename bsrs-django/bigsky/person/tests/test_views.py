@@ -711,33 +711,37 @@ class PersonSearchTests(APITransactionTestCase):
         self.client.logout()
         ContentType.objects.clear_cache()
 
-    def test_search(self):
-        letters = "aa"
-        users_count = Person.objects.filter(username__icontains=letters).count()
-        self.assertEqual(users_count, 1)
-        response = self.client.get('/api/admin/people/?search={}'.format(letters))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["count"], users_count)
+    def test_search_username(self):
+        keyword = self.person.username
 
-    def test_search_multiple(self):
-        mommy.make(Person, username="Bob", role=self.role)
-        mommy.make(Person, username="Bobby", role=self.role)
-        letters = "bob"
-        users_count = Person.objects.filter(username__icontains=letters).count()
-        self.assertEqual(users_count, 2)
-        response = self.client.get('/api/admin/people/?search={}'.format(letters))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["count"], users_count)
+        response = self.client.get('/api/admin/people/?search={}'.format(keyword))
 
-    def test_search_related_role(self):
-        mommy.make(Person, username="Bob", role=self.role)
-        self.random_role = create_role(name="ZZXU")
-        mommy.make(Person, username="Bobby", role=self.random_role)
-        letters = "ZZXU"
-        users_count = Person.objects.filter(role__name__icontains=letters).count()
-        response = self.client.get('/api/admin/people/?search={}'.format(letters))
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["count"], users_count)
+        self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
+
+    def test_search_fullname(self):
+        keyword = self.person.fullname
+
+        response = self.client.get('/api/admin/people/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
+
+    def test_search_title(self):
+        keyword = self.person.title
+
+        response = self.client.get('/api/admin/people/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
+
+    def test_search_role_name(self):
+        keyword = self.person.role.name
+
+        response = self.client.get('/api/admin/people/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
 
 
 class PasswordTests(APITestCase):

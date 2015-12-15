@@ -14,7 +14,7 @@ NOSE_ARGS = [
     '--nologcapture',
     '--with-coverage',
     '--cover-package=accounting,category,contact,generic,location,order,person,session,\
-third_party,ticket,translation,utils',
+third_party,ticket,translation,utils,utils_transform',
 ]
 
 ### ATTACHMENTS

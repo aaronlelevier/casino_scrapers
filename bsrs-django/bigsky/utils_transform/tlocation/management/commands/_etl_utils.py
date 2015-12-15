@@ -1,5 +1,5 @@
 from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
-    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES)
+    Address, AddressType)
 
 
 def create_phone_numbers(domino_location, related_instance):

@@ -1,18 +1,9 @@
-import random
-import string
-
 from django.test import TestCase
 
-from model_mommy import mommy
-
-from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
-    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES)
+from contact.models import PhoneNumber, Email, Address
 from contact.tests.factory import create_phone_number_types
 from location.models import Location, LocationLevel
-from person.models import Person
-from utils.create import _generate_chars
 from utils_transform.tlocation.tests.factory import create_location_region
-from utils_transform.tlocation.models import LocationRegion
 from utils_transform.tlocation.management.commands._etl_utils import (
     create_phone_numbers, create_email, create_address)
 

@@ -314,8 +314,6 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
 
 class TicketSearchTests(TicketSetupMixin, APITestCase):
 
-    # NEXT 12-9-15: start w/ this class and refactor to work w/ Ticket Viewable restrictions
-
     def test_response(self):
         letters = 'wat'
         response = self.client.get('/api/tickets/?search={}'.format(letters))

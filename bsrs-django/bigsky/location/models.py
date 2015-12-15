@@ -1,9 +1,8 @@
-import json
-
-from django.db import models
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.fields import GenericRelation
+from django.db import models
+from django.db.models import Q
 
 from contact.models import PhoneNumber, Address, Email
 from utils.models import BaseNameModel, BaseModel, BaseManager
@@ -206,6 +205,16 @@ class LocationQuerySet(SelfRefrencingQuerySet):
             raise
         return self.filter(location_level=location_level)
 
+    def search_multi(self, keyword):
+        return self.filter(
+            Q(name__icontains=keyword) | \
+            Q(number__icontains=keyword) | \
+            Q(addresses__city__icontains=keyword) | \
+            Q(addresses__address1__icontains=keyword) | \
+            Q(addresses__address2__icontains=keyword) | \
+            Q(addresses__zip__icontains=keyword)
+        )
+
 
 class LocationManager(SelfRefrencingManager):
     ''' '''
@@ -224,6 +233,9 @@ class LocationManager(SelfRefrencingManager):
         Get all Parent Locations at a specific LocationLevel.
         '''
         return self.get_queryset().get_level_parents(location, level_id)
+
+    def search_multi(self, keyword):
+        return self.get_queryset().search_multi(keyword)
 
 
 class Location(SelfRefrencingBaseModel, BaseModel):

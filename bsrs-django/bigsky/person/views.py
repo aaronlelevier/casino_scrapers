@@ -1,15 +1,15 @@
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db.models import Q
 from django.shortcuts import get_object_or_404
-from django.utils.translation import ugettext, ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _
 
 from rest_framework import permissions, status
 from rest_framework.decorators import list_route
 from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
 
-from person import helpers, serializers as ps
-from person.models import Person, PersonStatus, Role
+from person import serializers as ps
+from person.models import Person, Role
 from utils.mixins import EagerLoadQuerySetMixin
 from utils.views import BaseModelViewSet
 

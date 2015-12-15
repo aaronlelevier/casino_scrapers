@@ -1,8 +1,6 @@
 from django.test import TestCase
 
-from model_mommy import mommy
-
-from utils_transform.tlocation.models import LocationRegion, LocationDistrict, LocationStore
+from utils_transform.tlocation.models import LocationRegion
 from utils_transform.tlocation.tests import factory
 
 

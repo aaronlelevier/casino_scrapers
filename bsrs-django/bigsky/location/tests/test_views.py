@@ -1,8 +1,6 @@
 import uuid
 import json
 
-from django.db.models import Q
-
 from rest_framework.test import APITestCase
 from model_mommy import mommy
 
@@ -613,23 +611,57 @@ class LocationSearchTests(APITestCase):
         self.client.logout()
 
     def test_search_name(self):
-        letter = "a"
-        response = self.client.get('/api/admin/locations/?search={}'.format(letter))
+        keyword = self.location.name
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data["count"],
-            Location.objects.filter(
-                Q(name__icontains=letter) | Q(number__icontains=letter)
-                ).count()
-        )
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
+
+    def test_search_number(self):
+        keyword = self.location.number
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
 
     def test_search_address_city(self):
-        city = "San Diego"
-        address = mommy.make(Address, city=city, content_object=self.location,
+        keyword = create._generate_chars()
+        address = mommy.make(Address, city=keyword, content_object=self.location,
             object_id=self.location.id)
-        response = self.client.get('/api/admin/locations/?search={}'.format(city))
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data['results'][0]['id'],
-            str(address.object_id)
-        )
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
+
+    def test_search_address_address1(self):
+        keyword = create._generate_chars()
+        address = mommy.make(Address, address1=keyword, content_object=self.location,
+            object_id=self.location.id)
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
+
+    def test_search_address_address2(self):
+        keyword = create._generate_chars()
+        address = mommy.make(Address, address2=keyword, content_object=self.location,
+            object_id=self.location.id)
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
+
+    def test_search_address_zip(self):
+        keyword = create._generate_chars()
+        address = mommy.make(Address, zip=keyword, content_object=self.location,
+            object_id=self.location.id)
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())

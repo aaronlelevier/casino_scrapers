@@ -46,6 +46,7 @@ LOCAL_APPS = (
     'translation',
     'work_request',
     'utils',
+    'utils_transform.tlocation',
     )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -95,8 +96,18 @@ DATABASES = {
         'PASSWORD': 'tango',
         'HOST': 'localhost',
         'PORT': '5432',
+    },
+    'transforms': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'transforms',
+        'USER': 'bsdev',
+        'PASSWORD': 'tango',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
+
+DATABASE_ROUTERS = ['bigsky.db_router.TransformRouter', 'bigsky.db_router.DefaultRouter']
 
 
 # AbstractUser Config

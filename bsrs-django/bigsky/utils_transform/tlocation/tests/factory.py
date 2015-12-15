@@ -3,8 +3,8 @@ import string
 
 from model_mommy import mommy
 
-from utils.create import _generate_chars
 from utils_transform.tlocation.models import LocationRegion
+
 
 FACTORY_LOCATION_REGION_FIELDS = ('name', 'number', 'telephone', 'carphone',
     'fax', 'email', 'address1', 'address2', 'city','state', 'country',)

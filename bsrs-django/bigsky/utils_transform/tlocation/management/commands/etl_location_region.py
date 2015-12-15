@@ -1,6 +1,5 @@
 from django.core.management.base import BaseCommand
 
-from contact.models import Email, PhoneNumber, PhoneNumberType, Address
 from location.models import Location, LocationLevel
 from utils_transform.tlocation.management.commands._etl_utils import (
     create_phone_numbers, create_email, create_address)
