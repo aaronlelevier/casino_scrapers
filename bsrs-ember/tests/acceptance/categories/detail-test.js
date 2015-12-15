@@ -18,13 +18,14 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_categories_url;
 const CATEGORIES_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + CD.idOne;
+const GRID_DETAIL_URL = BASE_URL + '/' + CD.idGridOne;
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-category-children-select-dropdown > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let application, store, endpoint, list_xhr, detail_data;
+let application, store, endpoint, detail_xhr, list_xhr, detail_data;
 
 module('Acceptance | detail test', {
     beforeEach() {
@@ -33,7 +34,7 @@ module('Acceptance | detail test', {
         endpoint = PREFIX + BASE_URL + '/';
         detail_data = CF.detail(CD.idOne);
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CF.list());
-        xhr(endpoint + CD.idOne + '/', 'GET', null, {}, 200, detail_data);
+        detail_xhr = xhr(endpoint + CD.idOne + '/', 'GET', null, {}, 200, detail_data);
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -41,13 +42,16 @@ module('Acceptance | detail test', {
 });
 
 test('clicking a categories name will redirect to the given detail view', (assert) => {
+    clearxhr(detail_xhr);
     visit(CATEGORIES_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
+    const detail_data = CF.detail(CD.idGridOne);
+    xhr(endpoint + CD.idGridOne + '/', 'GET', null, {}, 200, detail_data);
     click('.t-grid-data:eq(0)');
     andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(currentURL(), GRID_DETAIL_URL);
     });
 });
 
@@ -120,12 +124,6 @@ test('when editing the category name to invalid, it checks for validation', (ass
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find('.t-name-validation-error').text().trim(), 'invalid name');
-    });
-    page.descriptionFill('');
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-description-validation-error').text().trim(), 'Invalid Description');
     });
     page.nameFill(CD.nameTwo);
     page.descriptionFill(CD.descriptionRepair);
@@ -241,15 +239,15 @@ test('clicking and typing into power select for categories children will fire of
     andThen(() => {
         let category = store.find('category', CD.idOne);
         assert.equal(category.get('children_fks').length, 1);
+        assert.deepEqual(category.get('children_fks')[0], CD.idChild);
         assert.equal(category.get('has_many_children').get('length'), 1);
-        assert.equal(find('div.option').length, 0);
     });
     let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, 'a');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), PAGE_SIZE);
+        assert.equal(page.categoryOptionLength(), PAGE_SIZE+2);
     });
     page.categoryClickOptionThree();
     andThen(() => {
@@ -267,7 +265,7 @@ test('clicking and typing into power select for categories children will fire of
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = CF.detail(CD.idOne);
-    let payload = CF.put({id: CD.idOne, children: [CD.idChild, CD.idThree]});
+    let payload = CF.put({id: CD.idOne, children: [CD.idChild, CD.idSelected]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
@@ -296,7 +294,7 @@ test('when you deep link to the category detail can remove child from category a
     page.categoryClickOptionThree();
     let url = PREFIX + DETAIL_URL + '/';
     let response = CF.detail(CD.idOne);
-    let payload = CF.put({id: CD.idOne, children: [CD.idThree]});
+    let payload = CF.put({id: CD.idOne, children: [CD.idSelected]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
@@ -329,7 +327,7 @@ test('starting with multiple categories, can remove all categories (while not po
     andThen(() => {
         let category = store.find('category', CD.idOne);
         assert.equal(category.get('has_many_children').get('length'), 1);
-        assert.equal(page.categorySelected().indexOf(`${CD.nameOne}4`), 2);
+        assert.equal(page.categorySelected().indexOf(`${CD.nameTwo}`), 2);
         assert.ok(category.get('isDirtyOrRelatedDirty'));
     });
     let url = PREFIX + DETAIL_URL + "/";
@@ -372,13 +370,16 @@ test('clicking and typing into power select for categories children will not fil
 /* END CATEGORY CHILDREN */
 
 test('clicking cancel button will take from detail view to list view', (assert) => {
+    clearxhr(detail_xhr);
     visit(CATEGORIES_URL);
     andThen(() => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
+    const detail_data = CF.detail(CD.idGridOne);
+    xhr(endpoint + CD.idGridOne + '/', 'GET', null, {}, 200, detail_data);
     click('.t-grid-data:eq(0)');
     andThen(() => {
-        assert.equal(currentURL(),DETAIL_URL);
+        assert.equal(currentURL(), GRID_DETAIL_URL);
     });
     generalPage.cancel();
     andThen(() => {
@@ -423,7 +424,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
         waitFor(() => {
             assert.equal(currentURL(), CATEGORIES_URL);
             let category = store.find('category', CD.idOne);
-            assert.equal(category.get('name'), CD.nameOne + '1');
+            assert.equal(category.get('name'), CD.nameOne);
         });
     });
 });

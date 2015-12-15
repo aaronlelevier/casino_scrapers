@@ -8,6 +8,8 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             idTwo: 'ec62006b-6275-4aa9-abfa-38b146383d302',
             idThree: 'ec62006b-6275-4aa9-abfa-38b146383d303',
             idChild: 'ec62006b-6275-4aa9-abfa-38b146383d304',//used for outlet right now
+            idGridOne: 'ec62006b-6275-4aa9-abfa-38b146383d401',
+            idSelected: 'ec62006b-6275-4aa9-abfa-38b146383d403',
             idWatChild: 'ec62006b-6275-4aa9-abfa-38b146383d306',
             idParent: 'ec62006b-6275-4aa9-abfa-38b146383d305',
             idPlumbing: 'ec62006b-6275-4aa9-abfa-38b146383d306',

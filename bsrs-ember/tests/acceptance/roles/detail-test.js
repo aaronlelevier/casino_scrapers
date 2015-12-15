@@ -353,9 +353,10 @@ test('search will filter down on categories in store correctly by removing and a
         assert.equal(role.get('role_category_fks').length, 2);
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
+        assert.deepEqual(role.get('categories_ids'), ['abc123', CD.idGridOne]);
         assert.equal(page.categoriesSelected(), 2);
     });
-    let payload = RF.put({id: RD.idOne, categories: [CD.idOne, 'abc123']});
+    let payload = RF.put({id: RD.idOne, categories: ['abc123', CD.idGridOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
