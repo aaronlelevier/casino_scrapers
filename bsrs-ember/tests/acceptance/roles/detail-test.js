@@ -230,7 +230,7 @@ test('clicking and typing into power select for categories will fire off xhr req
     store.push('category', {id: 'testingNewFilter', name: 'wataA', new: true});
     fillIn(CATEGORY_SEARCH, 'a');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), PAGE_SIZE+1); 
+        assert.equal(page.categoryOptionLength(), PAGE_SIZE+3); 
         assert.equal(page.categoriesSelected(), 1);
         const role = store.find('role', RD.idOne);
         assert.equal(role.get('role_category_fks').length, 1);

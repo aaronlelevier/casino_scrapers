@@ -66,7 +66,7 @@ module('Acceptance | ticket detail test', {
     }
 });
 
-test('sco clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working', (assert) => {
+test('clicking a tickets will redirect to the given detail view and can save to ensure validation mixins are working', (assert) => {
     page.visit();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
