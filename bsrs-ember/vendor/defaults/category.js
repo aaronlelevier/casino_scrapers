@@ -17,6 +17,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             idLossPreventionChild: 'ec62006b-6275-4aa9-abfa-38b146383d308',
             idSolo: 'ec62006b-6275-4aa9-abfa-38b146383d309',
             nameSolo: 'Repair',
+            nameRepairKey: 'admin.category.name.repair',
             unusedId: 'ec62006b-6275-4aa9-abfa-38b146383d50',
             nameOne: 'Repair',
             nameTwo: 'Electrical',

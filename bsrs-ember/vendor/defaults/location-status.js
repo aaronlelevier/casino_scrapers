@@ -5,6 +5,7 @@ var BSRS_LOC_STATUS_DEFAULTS_OBJECT = (function() {
         return {
             openId: 'aca00958-987d-4576-aa4c-2093dc7d40f4',
             openName: 'admin.location.status.open',
+            openNameTranslated: 'Open',
             closedId: 'aca00958-987d-4576-aa4c-2093dc7d40f5',
             closedName: 'admin.location.status.closed',
             futureId: 'aca00958-987d-4576-aa4c-2093dc7d40f6',
