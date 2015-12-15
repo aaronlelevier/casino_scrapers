@@ -16,8 +16,11 @@ const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + LLD.idOne;
 const DISTRICT_DETAIL_URL = BASE_URL + '/' + LLD.idDistrict;
+const LOCATION_LEVEL = '.t-location-level-children-select > .ember-basic-dropdown-trigger';
+const LOCATION_LEVEL_DROPDOWN = '.t-location-level-children-select-dropdown > .ember-power-select-options';
+const LOCATION_LEVEL_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let application, store, endpoint, endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
+var application, store, endpoint, endpoint_detail, list_xhr, detail_xhr, location_level_district_detail_data;
 
 module('Acceptance | detail-test', {
     beforeEach() {
@@ -178,7 +181,18 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 
 test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(page.childrenSelectedCount(), 7);
+        const ll = store.find('location-level', LLD.idOne);
+        assert.ok(ll.get('isNotDirtyOrRelatedNotDirty'));
+    });
     fillIn('.t-location-level-name', LLD.nameRegion);
+    page.childrenOneRemove();
+    andThen(() => {
+        assert.equal(page.childrenSelectedCount(), 6);
+        const ll = store.find('location-level', LLD.idOne);
+        assert.ok(ll.get('isDirtyOrRelatedDirty'));
+    });
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -192,6 +206,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), LOCATION_LEVEL_URL);
             let location_level = store.find('location-level', LLD.idOne);
             assert.equal(location_level.get('name'), LLD.nameCompany);
+            assert.equal(location_level.get('children_fks').length, 7);
         });
     });
 });
