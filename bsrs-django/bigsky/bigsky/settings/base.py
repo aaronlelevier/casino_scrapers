@@ -46,7 +46,6 @@ LOCAL_APPS = (
     'translation',
     'work_request',
     'utils',
-    'utils_transform.tlocation',
     )
 
 INSTALLED_APPS = DEFAULT_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -96,18 +95,24 @@ DATABASES = {
         'PASSWORD': 'tango',
         'HOST': 'localhost',
         'PORT': '5432',
-    },
-    'transforms': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'transforms',
-        'USER': 'bsdev',
-        'PASSWORD': 'tango',
-        'HOST': 'localhost',
-        'PORT': '5432',
     }
 }
 
-DATABASE_ROUTERS = ['bigsky.db_router.TransformRouter', 'bigsky.db_router.DefaultRouter']
+
+# COMMENT OUT: ETL Domino -> to -> Django dome for the time being, so the ``transforms``
+#   flat database is not needed for now.
+# DATABASES['transforms'] = {
+#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     'NAME': 'transforms',
+#     'USER': 'bsdev',
+#     'PASSWORD': 'tango',
+#     'HOST': 'localhost',
+#     'PORT': '5432',
+# }
+
+# INSTALLED_APPS += ('utils_transform.tlocation',)
+
+# DATABASE_ROUTERS = ['bigsky.db_router.TransformRouter', 'bigsky.db_router.DefaultRouter']
 
 
 # AbstractUser Config
