@@ -9,7 +9,7 @@ var array_func = function(object, property) {
         const value = model.get(this) || '';
         result = index > 0 ? `${result} &#8226; ${value}` : value;
     });
-    const legit = all.length > 0 && result.replace(/&#8226;/g, '').trim().length > 0;
+    const legit = all.get('length') > 0 && result.replace(/&#8226;/g, '').trim().length > 0;
     return legit ? Ember.String.htmlSafe(result) : '';
 };
 
