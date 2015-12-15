@@ -27,12 +27,11 @@ wait
 ./manage.py migrate
 
 wait
-source ../venv/bin/activate
-
 ./manage.py loaddata fixtures/translation.json
 ./manage.py loaddata utils_transform/tlocation/fixtures/location_levels.json
 ./manage.py loaddata utils_transform/tlocation/fixtures/contact_types.json
 
+wait
 ./manage.py create_single_person
 
 ./manage.py dumpdata --indent=2 > fixtures/persistent/persistent.json
