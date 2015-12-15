@@ -804,6 +804,7 @@ test('category.name is a functional related filter (search only)', function(asse
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-categories\\[name\\]').text(), 'Plumbing • Repair • Toilet Leak');
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     fillIn('.t-grid-search-input', 'x');
@@ -811,18 +812,22 @@ test('category.name is a functional related filter (search only)', function(asse
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=x');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE - 1);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-categories\\[name\\]').text(), 'x');
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=');
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-categories\\[name\\]').text(), 'Plumbing • Repair • Toilet Leak');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
     filterGrid('categories[name]', 'x');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?find=categories%5Bname%5D%3Ax&search=');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE - 1);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-categories\\[name\\]').text(), 'x');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestLastGrid);
     });
 });
