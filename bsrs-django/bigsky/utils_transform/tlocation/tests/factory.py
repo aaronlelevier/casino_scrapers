@@ -3,29 +3,25 @@ import string
 
 from model_mommy import mommy
 
-from utils_transform.tlocation.models import LocationRegion, LocationDistrict
+from utils_transform.tlocation.models import (LocationRegion, LocationDistrict,
+    LocationStore)
 
 
-FACTORY_LOCATION_REGION_FIELDS = ('name', 'number', 'telephone', 'carphone',
+DOMINO_LOCATION_FIELDS = ('name', 'number', 'telephone', 'carphone',
     'fax', 'email', 'address1', 'address2', 'city','state', 'country',)
 
 
+def get_random_data():
+    return {f: random.choice(string.ascii_letters)
+            for f in DOMINO_LOCATION_FIELDS}
+
 def create_location_region():
-    fields = FACTORY_LOCATION_REGION_FIELDS
-
-    data = {}
-    for field in fields:
-        data[field] = random.choice(string.ascii_letters)
-
+    data = get_random_data()
     return mommy.make(LocationRegion, **data)
 
 
 def create_location_district(region=None):
-    fields = FACTORY_LOCATION_REGION_FIELDS
-
-    data = {}
-    for field in fields:
-        data[field] = random.choice(string.ascii_letters)
+    data = get_random_data()
 
     district = mommy.make(LocationDistrict, **data)
 
@@ -34,3 +30,15 @@ def create_location_district(region=None):
         district.save()
 
     return district
+
+
+def create_location_store(district=None):
+    data = get_random_data()
+
+    store = mommy.make(LocationStore, **data)
+
+    if district:
+        store.distnumber = district.number
+        store.save()
+
+    return store

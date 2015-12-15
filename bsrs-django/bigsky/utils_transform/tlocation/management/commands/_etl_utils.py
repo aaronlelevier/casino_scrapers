@@ -55,8 +55,19 @@ def join_region_to_district(domino_location, related_instance):
     try:
         region = regions.get(number=domino_location.regionnumber)
     except Location.DoesNotExist as e:
-        logger.debug("Location.pk:{}, Location.regionnumber:{} Not Found."
-            .format(domino_location.id, domino_location.regionnumber))
+        logger.debug("Location.pk:{}, LocationRegion.regionnumber:{} Not Found."
+            .format(related_instance.id, domino_location.regionnumber))
     else:
         region.children.add(related_instance)
 
+
+def join_district_to_store(domino_location, related_instance):
+    districts = Location.objects.filter(location_level__name='district')
+
+    try:
+        district = districts.get(number=domino_location.distnumber)
+    except Location.DoesNotExist as e:
+        logger.debug("Location.pk:{}, LocationDistrict.distnumber:{} Not Found."
+            .format(related_instance.id, domino_location.distnumber))
+    else:
+        district.children.add(related_instance)
