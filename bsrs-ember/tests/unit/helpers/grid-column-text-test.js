@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import GridColumnText from '../../../helpers/grid-column-text';
 import { module, test } from 'qunit';
 
