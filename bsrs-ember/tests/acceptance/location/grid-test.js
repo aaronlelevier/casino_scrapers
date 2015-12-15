@@ -25,7 +25,7 @@ const NUMBER_FOUR = {keyCode: 52};
 const LETTER_R = {keyCode: 82};
 const LETTER_C = {keyCode: 67};
 const BACKSPACE = {keyCode: 8};
-const SORT_STATUS_DIR = '.t-sort-status-name-dir';
+const SORT_STATUS_DIR = '.t-sort-status-translated-name-dir';
 
 var application, store, endpoint, list_xhr, original_uuid;
 
@@ -620,51 +620,51 @@ test('save filterset button only available when a dynamic filter is present', fu
     });
 });
 
-test('status.name is a functional related filter for locations', function(assert) {
+test('status.translated_name is a functional related filter', function(assert) {
     let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name&status__name__icontains=cl';
-    xhr(option_four,'GET',null,{},200,LF.searched_related(LD.statusTwoId, 'status'));
+    xhr(option_four,'GET',null,{},200,LF.searched_related(LDS.closedId, 'status'));
     let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name';
-    xhr(option_three,'GET',null,{},200,LF.searched_related(LD.statusTwoId, 'status'));
+    xhr(option_three,'GET',null,{},200,LF.searched_related(LDS.closedId, 'status'));
     let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=status__name';
-    xhr(option_two,'GET',null,{},200,LF.searched_related(LD.statusTwoId, 'status'));
+    xhr(option_two,'GET',null,{},200,LF.searched_related(LD.openId, 'status'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=cl';
     xhr(option_one,'GET',null,{},200,LF.searched_related(LDS.closedId, 'status'));
     visit(LOCATION_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.openName));
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-translated_name').text(), t(LDS.openName));
     });
     fillIn('.t-grid-search-input', 'cl');
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_C);
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=cl');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.closedName));
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-translated_name').text(), t(LDS.closedName));
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=');
-        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.openName));
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-translated_name').text(), t(LDS.openName));
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     });
     click(SORT_STATUS_DIR);
     andThen(() => {
-        assert.equal(currentURL(),LOCATION_URL + '?search=&sort=status.name');
+        assert.equal(currentURL(),LOCATION_URL + '?search=&sort=status.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.closedName));
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-translated_name').text(), t(LDS.closedName));
     });
     click(SORT_STATUS_DIR);
     andThen(() => {
-        assert.equal(currentURL(),LOCATION_URL + '?search=&sort=-status.name');
+        assert.equal(currentURL(),LOCATION_URL + '?search=&sort=-status.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.openName));
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-translated_name').text(), t(LDS.openName));
     });
-    filterGrid('status.name', 'cl');
+    filterGrid('status.translated_name', 'cl');
     andThen(() => {
-        assert.equal(currentURL(),LOCATION_URL + '?find=status.name%3Acl&search=&sort=-status.name');
+        assert.equal(currentURL(),LOCATION_URL + '?find=status.translated_name%3Acl&search=&sort=-status.translated_name');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-status-name').text(), t(LDS.closedName));
+        assert.equal(find('.t-grid-data:eq(0) .t-location-status-translated_name').text(), t(LDS.closedName));
     });
 });
