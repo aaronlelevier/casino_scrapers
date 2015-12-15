@@ -1,19 +1,12 @@
 import Ember from 'ember';
+import inject from 'bsrs-ember/utilities/inject';
 
 var PersonLocationsSelect = Ember.Component.extend({
+    repository: inject('location'),
     person_locations_selected: Ember.computed('person.person_locations.@each.removed', function() {
         let person = this.get('person');
         return person.get('locations');
     }),
-    options: Ember.computed('person_locations_children.[]', 'person_locations_selected.[]', 'search', function() {
-        let options = this.get('person_locations_children');
-        if (options && options.get('length') > 0) {
-            return options;
-        }
-    }),
-    find_all_locations(search) {
-        this.set('search', search);
-    },
     actions: {
         change_location(new_location_selection) {
             const person = this.get('person');
@@ -32,7 +25,14 @@ var PersonLocationsSelect = Ember.Component.extend({
             }); 
         },
         update_filter(search) {
-            Ember.run.debounce(this, this.get('find_all_locations'), search, 300);
+            const repo = this.get('repository');
+            const model = this.get('person');
+            return new Ember.RSVP.Promise((resolve, reject) => {
+                Ember.run.later(() => {
+                    if (Ember.isBlank(search)) { return resolve([]); }
+                    resolve(repo.findLocationSelect({location_level: model.get('location_level_pk')}, search));
+                }, 300);
+            });
         }
     }
 });

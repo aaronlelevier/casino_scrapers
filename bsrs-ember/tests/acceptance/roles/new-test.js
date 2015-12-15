@@ -280,6 +280,8 @@ test('adding and removing removing a category in power select for categories wil
         assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
         assert.equal(page.categoriesSelected(), 0);
     });
+    page.categoryClickDropdown();
+    fillIn(CATEGORY_SEARCH, '2z');
     page.categoryClickOptionTwo();
     fillIn('.t-role-name', RD.nameOne);
     page.locationLevelClickDropdown();
@@ -318,7 +320,7 @@ test('can add multiple categories', (assert) => {
     fillIn('.t-role-name', RD.nameOne);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
-    let payload = RF.put({id: UUID.value, categories: [CD.idOne]});
+    let payload = RF.put({id: UUID.value, categories: [CD.idGridOne]});
     xhr(url, 'POST', JSON.stringify(payload), {}, 201);
     generalPage.save();
     andThen(() => {

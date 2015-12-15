@@ -17,12 +17,9 @@ var PersonRoute = TabRoute.extend({
     phone_number_type_repo: inject('phone-number-type'),
     address_type_repo: inject('address-type'),
     queryParams: {
-        search: {
-            refreshModel: true
-        },
         role_change: {
             refreshModel: true
-        },
+        }
     },
     redirectRoute: Ember.computed(function() { return 'admin.people.index'; }),
     modelName: Ember.computed(function() { return 'person'; }),
@@ -44,15 +41,7 @@ var PersonRoute = TabRoute.extend({
         let address_type_repo = this.get('address_type_repo');
         let default_address_type = address_type_repo.get_default();
         let roles = role_repo.get_default();
-        let search = transition.queryParams.search;
         let role_change = transition.queryParams.role_change;
-        let location_level_pk = person.get('location_level_pk');
-        var person_locations_children;
-        if ((search || role_change) && location_level_pk) {
-            person_locations_children = location_repo.findLocationSelect({location_level: location_level_pk}, search, role_change);
-        } else {
-            person_locations_children = [];
-        }
         return Ember.RSVP.hash({
             model: person,
             model_id: person_pk,
@@ -65,9 +54,7 @@ var PersonRoute = TabRoute.extend({
             default_address_type: default_address_type,
             locales: this.get('store').find('locale'),
             roles: roles,
-            search: search,
             role_change: role_change,
-            person_locations_children: person_locations_children
         });
     },
     setupController(controller, hash) {
@@ -81,9 +68,7 @@ var PersonRoute = TabRoute.extend({
         controller.set('statuses', hash.statuses);
         controller.set('roles', hash.roles);
         controller.set('locales', hash.locales);
-        controller.set('search', hash.search);
         controller.set('role_change', hash.role_change);
-        controller.set('person_locations_children', hash.person_locations_children);
     },
     actions: {
         localeChanged(locale){

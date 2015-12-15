@@ -44,7 +44,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
         var response = [];
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=1; i <= page_size; i++) {
-            var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
+            var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d4';
             if (i < page_size) {
                 uuid = uuid + '0' + i;
             } else{
@@ -66,7 +66,7 @@ var BSRS_CATEGORY_FACTORY = (function() {
         var response = [];
         var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         for (var i=page_size+1; i <= page_size*2-1; i++) {
-            var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d3';
+            var uuid = 'ec62006b-6275-4aa9-abfa-38b146383d4';
             var category = this.generate(uuid + i);
             category.name = 'cococat' + i;
             category.label = 'scohat' + i;

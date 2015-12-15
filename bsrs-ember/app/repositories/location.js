@@ -51,15 +51,15 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
         if (search_criteria) {
             url += `&name__icontains=${search_criteria}`;
         }
-        PromiseMixin.xhr(url, 'GET').then((response) => {
+        return PromiseMixin.xhr(url, 'GET').then((response) => {
             this.get('LocationDeserializer').deserialize(response);
+            let filterFunc = function(location) {
+                let location_level_fk = location.get('location_level').get('id');
+                return location_level_fk === filter.location_level;
+            };
+            //TODO: this will return those locations with a certain location level but doesn't include the search parameters
+            return this.get('store').find('location', filterFunc, ['id', 'location_level']);
         });
-        let filterFunc = function(location) {
-            let location_level_fk = location.get('location_level').get('id');
-            return location_level_fk === filter.location_level;
-        };
-        //TODO: this will return those locations with a certain location level but doesn't include the search parameters
-        return this.get('store').find('location', filterFunc, ['id', 'location_level']);
     },
     find(filter) {
         PromiseMixin.xhr(this.format_url(filter), 'GET').then((response) => {

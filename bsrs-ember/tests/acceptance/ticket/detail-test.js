@@ -281,8 +281,11 @@ test('clicking and typing into selectize for people will fire off xhr request fo
     let people_endpoint = PREFIX + '/admin/people/?fullname__icontains=a';
     xhr(people_endpoint, 'GET', null, {}, 200, PF.list());
     page.ccClickDropdown();
+    //testing filter out new flag in repo
+    store.push('person', {id: 'testingNewFilter', fullname: 'watA', new: true});
     fillIn(`${CC_SEARCH}`, 'a');
     andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
         assert.equal(page.ccSelected().indexOf(PD.first_name), 2);
         assert.equal(page.ccOptionLength(), 1);
         assert.equal(find(`${CC_DROPDOWN} > li:eq(0)`).text().trim(), PD.donald);

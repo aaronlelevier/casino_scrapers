@@ -226,6 +226,8 @@ test('clicking and typing into power select for categories will fire off xhr req
     let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=a&page_size=25';
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
+    //test filter out new
+    store.push('category', {id: 'testingNewFilter', name: 'wataA', new: true});
     fillIn(CATEGORY_SEARCH, 'a');
     andThen(() => {
         assert.equal(page.categoryOptionLength(), PAGE_SIZE+1); 
@@ -243,7 +245,7 @@ test('clicking and typing into power select for categories will fire off xhr req
         assert.equal(page.categoriesSelected(), 2);
     });
     let category = CF.put({id: CD.idOne, name: CD.nameOne});
-    let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [category.id, CD.idThree]});
+    let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [category.id, CD.idSelected]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -316,7 +318,7 @@ test('starting with multiple categories, can remove all categories (while not po
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 1);
     });
-    let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
+    let payload = RF.put({id: RD.idOne, categories: [CD.idGridOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -351,9 +353,10 @@ test('search will filter down on categories in store correctly by removing and a
         assert.equal(role.get('role_category_fks').length, 2);
         assert.equal(role.get('categories').get('length'), 2);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
+        assert.deepEqual(role.get('categories_ids'), ['abc123', CD.idGridOne]);
         assert.equal(page.categoriesSelected(), 2);
     });
-    let payload = RF.put({id: RD.idOne, categories: [CD.idOne, 'abc123']});
+    let payload = RF.put({id: RD.idOne, categories: ['abc123', CD.idGridOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
