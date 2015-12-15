@@ -21,4 +21,4 @@ class LocationTypeAdmin(admin.ModelAdmin):
 @admin.register(models.Location)
 class LocationAdmin(admin.ModelAdmin):
     list_display = ('name', 'number', 'location_level',)
-    fields = models.Location._meta.get_fields()
+    search_fields = ('name', 'number',)

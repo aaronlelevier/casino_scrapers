@@ -3,19 +3,19 @@ from django.contrib import admin
 from utils_transform.tlocation import models
 
 
+BASE_LIST_DISPLAY = ('name', 'number',)
+
+
 @admin.register(models.LocationRegion)
 class LocationRegionAdmin(admin.ModelAdmin):
-    list_display = ('name', 'number')
-    fields = models.LocationRegion._meta.get_fields()
+    list_display = search_fields = BASE_LIST_DISPLAY
 
 
 @admin.register(models.LocationDistrict)
 class LocationDistrictAdmin(admin.ModelAdmin):
-    list_display = ('name', 'number', 'regionnumber')
-    fields = models.LocationDistrict._meta.get_fields()
+    list_display = search_fields = BASE_LIST_DISPLAY + ('regionnumber',)
 
 
 @admin.register(models.LocationStore)
 class LocationStoreAdmin(admin.ModelAdmin):
-    list_display = ('name', 'number', 'distnumber')
-    fields = models.LocationStore._meta.get_fields()
+    list_display = search_fields = BASE_LIST_DISPLAY + ('distnumber',)
