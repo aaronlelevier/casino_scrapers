@@ -245,7 +245,7 @@ test('clicking and typing into power select for categories will fire off xhr req
         assert.equal(page.categoriesSelected(), 2);
     });
     let category = CF.put({id: CD.idOne, name: CD.nameOne});
-    let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [category.id, CD.idThree]});
+    let payload = RF.put({id: RD.idOne, location_level: LLD.idOne, categories: [category.id, CD.idSelected]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {
@@ -318,7 +318,7 @@ test('starting with multiple categories, can remove all categories (while not po
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 1);
     });
-    let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
+    let payload = RF.put({id: RD.idOne, categories: [CD.idGridOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {

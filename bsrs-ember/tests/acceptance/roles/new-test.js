@@ -320,7 +320,7 @@ test('can add multiple categories', (assert) => {
     fillIn('.t-role-name', RD.nameOne);
     page.locationLevelClickDropdown();
     page.locationLevelClickOptionOne();
-    let payload = RF.put({id: UUID.value, categories: [CD.idOne]});
+    let payload = RF.put({id: UUID.value, categories: [CD.idGridOne]});
     xhr(url, 'POST', JSON.stringify(payload), {}, 201);
     generalPage.save();
     andThen(() => {
