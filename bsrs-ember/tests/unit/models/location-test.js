@@ -9,7 +9,7 @@ var store;
 
 module('unit: location test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:location', 'model:location-level', 'model:location-status']);
+        store = module_registry(this.container, this.registry, ['model:location', 'model:location-level', 'model:location-status', 'service:i18n']);
     }
 });
 
