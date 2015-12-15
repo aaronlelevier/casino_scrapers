@@ -51,6 +51,23 @@ class TicketSetupMixin(object):
         self.client.logout()
 
 
+class TicketListFulltextTests(TicketSetupMixin, APITestCase):
+
+    def setUp(self):
+        super(TicketListFulltextTests, self).setUp()
+
+    def test_ticket_filter_related_m2m_with_icontains(self):
+        letters = str(uuid.uuid4())
+        rando = create_single_category(letters)
+        self.ticket_two.categories.add(rando)
+        self.ticket_two.save()
+        response = self.client.get('/api/tickets/?categories__name__icontains={}'.format(letters))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(self.ticket_two.pk))
+
+
 class TicketListTests(TicketSetupMixin, APITestCase):
 
     def setUp(self):
