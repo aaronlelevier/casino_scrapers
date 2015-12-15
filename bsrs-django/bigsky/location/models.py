@@ -119,7 +119,11 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
-    pass
+
+    def to_dict(self):
+        children = [str(child.id) for child in self.children.all()]
+        parents = [str(parent.id) for parent in self.parents.all()]
+        return {"id": str(self.id), "name": self.name, "children": children, "parents": parents}
     
 
 ### LOCATION STATUS

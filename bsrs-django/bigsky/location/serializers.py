@@ -23,8 +23,6 @@ class LocationLevelSerializer(serializers.ModelSerializer):
 
 class LocationLevelDetailSerializer(serializers.ModelSerializer):
 
-    parents = LocationLevelSerializer(many=True)
-
     class Meta:
         model = LocationLevel
         fields = ('id', 'name', 'children', 'parents',)
@@ -86,7 +84,6 @@ class LocationListSerializer(serializers.ModelSerializer):
 
 class LocationDetailSerializer(serializers.ModelSerializer):
     
-    location_level = LocationLevelDetailSerializer()
     parents = LocationSerializer(many=True)
     children = LocationSerializer(many=True)
     emails = EmailSerializer(required=False, many=True)

@@ -66,11 +66,10 @@ class LocationLevelTests(APITestCase):
         response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertIn(
-            LocationLevel.objects.get(id=data['parents'][0]['id']),
+            LocationLevel.objects.get(id=data['parents'][0]),
             self.district.parents.all()
         )
-        parent = self.district.parents.get(id=data['parents'][0]['id'])
-        self.assertEqual(data['parents'][0]['name'], parent.name)
+        parent = self.district.parents.get(id=data['parents'][0])
 
     def test_get_children(self):
         response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
@@ -169,7 +168,7 @@ class LocationLevelTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district.id),
-            [ea['id'] for ea in data['parents']]
+            [ea for ea in data['parents']]
         )
 
     def test_delete_override(self):
@@ -251,13 +250,13 @@ class LocationDetailTests(APITestCase):
 
     def test_location_level(self):
         self.assertIsInstance(
-            LocationLevel.objects.get(id=self.data['location_level']['id']),
+            LocationLevel.objects.get(id=self.data['location_level']),
             LocationLevel
         )
 
     def test_location_level_nested(self):
-        self.assertTrue(self.data['location_level']['parents'][0]['id'])
-        self.assertTrue(self.data['location_level']['children'][0])
+        self.assertTrue(self.data['location_level'])
+        self.assertTrue(self.data['location_level'])
 
     def test_get_status(self):
         self.assertIsInstance(
