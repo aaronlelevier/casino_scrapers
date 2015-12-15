@@ -3,17 +3,21 @@ from django.test import TestCase
 from contact.models import PhoneNumber, Email, Address
 from contact.tests.factory import create_phone_number_types
 from location.models import Location, LocationLevel
-from utils_transform.tlocation.tests.factory import create_location_region
+from utils_transform.tlocation.tests.factory import (
+    create_location_region, create_location_district)
 from utils_transform.tlocation.management.commands._etl_utils import (
-    create_phone_numbers, create_email, create_address)
+    create_phone_numbers, create_email, create_address, join_region_to_district)
 
 
-class EtlUtilsTests(TestCase):
+class LocationRegionTests(TestCase):
+    """
+    Also tests ``Base methods`` for Contact Models shared by 
+    Domino -> to -> Django flat table transforms.
+    """
 
     fixtures = ['location_levels.json', 'contact_types.json']
 
     def setUp(self):
-        self.ph_types = create_phone_number_types()
         self.location_region = create_location_region()
 
         # Next-Gen: Location / LocationLevel
@@ -81,3 +85,45 @@ class EtlUtilsTests(TestCase):
 
         self.assertEqual(ret.content_object, self.location)
         self.assertEqual(ret.object_id, self.location.id)
+
+
+class LocationDistrictTests(TestCase):
+
+    fixtures = ['location_levels.json', 'contact_types.json']
+
+    def setUp(self):
+        self.domino_region = create_location_region()
+        self.domino_district = create_location_district(self.domino_region)
+
+        # Next-Gen: Location / LocationLevel
+        self.region_location_level = LocationLevel.objects.get(name='region')
+        self.region_location = Location.objects.create(
+            location_level=self.region_location_level,
+            name=self.domino_region.name, number=self.domino_region.number)
+
+        self.district_location_level = LocationLevel.objects.get(name='district')
+        self.district_location = Location.objects.create(
+            location_level=self.district_location_level,
+            name=self.domino_district.name, number=self.domino_district.number)
+
+    def test_join_region_to_district__success(self):
+        self.assertEqual(
+            self.domino_district.regionnumber,
+            self.domino_region.number
+        )
+
+        join_region_to_district(self.domino_district, self.district_location)
+
+        self.assertIn(self.district_location, self.region_location.children.all())
+
+    def test_join_region_to_district__fail(self):
+        self.domino_district.regionnumber = 'foo'
+        self.domino_district.save()
+        self.assertNotEqual(
+            self.domino_district.regionnumber,
+            self.domino_region.number
+        )
+
+        join_region_to_district(self.domino_district, self.district_location)
+
+        self.assertNotIn(self.district_location, self.region_location.children.all())

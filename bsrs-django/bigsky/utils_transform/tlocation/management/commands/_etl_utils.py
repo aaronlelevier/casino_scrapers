@@ -1,5 +1,9 @@
 from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
     Address, AddressType)
+from location.models import Location
+
+import logging
+logger = logging.getLogger(__name__)
 
 
 def create_phone_numbers(domino_location, related_instance):
@@ -43,3 +47,16 @@ def create_address(domino_location, related_instance):
     if any(address.values()):
         Address.objects.create(content_object=related_instance,
             object_id=related_instance.id, type=address_type, **address)
+
+
+def join_region_to_district(domino_location, related_instance):
+    regions = Location.objects.filter(location_level__name='region')
+
+    try:
+        region = regions.get(number=domino_location.regionnumber)
+    except Location.DoesNotExist as e:
+        logger.debug("Location.pk:{}, Location.regionnumber:{} Not Found."
+            .format(domino_location.id, domino_location.regionnumber))
+    else:
+        region.children.add(related_instance)
+
