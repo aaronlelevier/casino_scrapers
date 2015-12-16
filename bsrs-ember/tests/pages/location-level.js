@@ -24,6 +24,7 @@ export default PageObject.create({
   childrenClickOptionSecond: clickable(`${CHILDREN_DROPDOWN} > .ember-power-select-option:eq(1)`),
   childrenClickOptionThree: clickable(`${CHILDREN_DROPDOWN} > .ember-power-select-option:eq(2)`),
   childrenOptionLength: count(`${CHILDREN_DROPDOWN} > li`),
+  childrenSelectedCount: count(CHILDREN_MULTIPLE),
   categoriesSelected: count(CHILDREN_MULTIPLE),
   childrenTwoClickOptionOne: clickable(`${CHILDREN_DROPDOWN} > .ember-power-select-option:contains(${LLD.nameTwo})`),
 });

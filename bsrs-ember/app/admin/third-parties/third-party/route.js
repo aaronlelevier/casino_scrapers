@@ -16,10 +16,10 @@ var ThirdPartyRoute = TabRoute.extend({
         if (!third_party.get('length') || third_party.get('isNotDirtyOrRelatedNotDirty')) { 
             third_party = repository.findById(third_party_pk);
         }
-        return Ember.RSVP.hash({
+        return {
             model: third_party,
             statuses: status_repo.find(),
-        });
+        };
 
     },
     setupController: function(controller, hash) {

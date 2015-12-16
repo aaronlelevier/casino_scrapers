@@ -40,13 +40,13 @@ var TicketSingleRoute = TabRoute.extend({
 
         let activities = this.get('activityRepository').find('ticket', 'tickets', pk);
 
-        return Ember.RSVP.hash({
+        return {
             model: ticket,
             statuses: statuses,
             priorities: priorities,
             top_level_category_options: top_level_category_options,
             activities: activities
-        });
+        };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

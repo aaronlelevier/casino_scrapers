@@ -19,15 +19,16 @@ const STATUS_TAB = '.t-activity-tab-status_updates';
 const ACTIVITY_ITEMS = '.t-activity-list-item';
 const ATTACHMENT_FILE = '.t-ticket-attachment-add-remove';
 
-let store;
+let store, trans;
 
 moduleForComponent('activity-list', 'integration: activity-list', {
     integration: true,
     setup() {
         translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
-        let service = this.container.lookup('service:i18n');
-        loadTranslations(service, translations.generate('en'));
+        trans = this.container.lookup('service:i18n');
+        loadTranslations(trans, translations.generate('en'));
+        translation.initialize(this);
     }
 });
 
@@ -61,9 +62,9 @@ test('activity list will dynamically generate a mix of activity types', function
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added person1 person2 to CC 15 days ago`);
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} removed person1 person2 from CC 15 days ago`);
     assert.equal(trim(this.$(`${ACTIVITY_ITEMS}:eq(2)`).text()), `${PD.fullname} uploaded 1 files 15 days ago ${GD.nameTicketAttachmentOne}`);
-    //assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(3)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(3)`).text().trim(), `${PD.fullname} changed the status from ${trans.t(TD.statusTwo)} to ${trans.t(TD.statusOne)} a month ago`);
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(4)`).text().trim(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} a month ago`);
-    //assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(5)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(5)`).text().trim(), `${PD.fullname} changed the priority from ${trans.t(TD.priorityTwo)} to ${trans.t(TD.priorityOne)} 2 months ago`);
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(6)`).text().trim(), `${PD.fullname} created this ticket 3 months ago`);
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(7)`).text().trim(), `${PD.fullname} commented 3 months ago ${TD.commentOne}`);
     assert.equal(this.$(`${ATTACHMENT_FILE}:eq(0)`).attr('href'), `/media/${TAD.fileAttachmentAddOne}`);

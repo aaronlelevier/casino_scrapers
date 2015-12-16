@@ -42,7 +42,7 @@ var PersonRoute = TabRoute.extend({
         let default_address_type = address_type_repo.get_default();
         let roles = role_repo.get_default();
         let role_change = transition.queryParams.role_change;
-        return Ember.RSVP.hash({
+        return {
             model: person,
             model_id: person_pk,
             phone_number_types: phone_number_type_repo.find(),
@@ -55,7 +55,7 @@ var PersonRoute = TabRoute.extend({
             locales: this.get('store').find('locale'),
             roles: roles,
             role_change: role_change,
-        });
+        };
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);

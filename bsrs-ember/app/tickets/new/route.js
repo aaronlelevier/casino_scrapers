@@ -27,14 +27,13 @@ var TicketNewRoute = TabNewRoute.extend({
         let priorities = this.get('priorities');
         let categoryRepo = this.get('categoryRepository');
         let top_level_category_options = categoryRepo.findTopLevelCategories() || [];
-        let transition = arguments[1];
 
-        return Ember.RSVP.hash({
+        return {
             model: model,
             statuses: statuses,
             priorities: priorities,
             top_level_category_options: top_level_category_options,
-        });
+        };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

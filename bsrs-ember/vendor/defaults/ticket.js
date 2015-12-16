@@ -73,7 +73,15 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             requestFourteenGrid: 'ape14',
             attachmentOneId: '40f530c4-ce6c-4724-9cfd-37a16e787001',
             attachmentTwoId: '40f530c4-ce6c-4724-9cfd-37a16e787002',
-            categoryRandomId: 'ec62006b-6275-4aa9-abfa-38b146383z213'
+            categoryRandomId: 'ec62006b-6275-4aa9-abfa-38b146383z213',
+            createdISOToday: '2014-12-25T13:41:59.905000Z',
+            createdISOYesterday: '2014-12-23T23:41:59.905000Z',
+            createdISOTwoDaysAgo: '2014-12-22T23:41:59.905000Z',
+            createdISOTwoWeeksAgo: '2014-12-14T23:41:59.905000Z',
+            createdFormattedToday: 'Today at 5:41 am',
+            createdFormattedYesterday: 'Yesterday at 3:41 pm',
+            createdFormattedTwoDaysAgo: 'Monday at 3:41 pm',
+            createdFormattedTwoWeeksAgo: '12/14 at 3:41 pm',
         };
     };
     return factory;

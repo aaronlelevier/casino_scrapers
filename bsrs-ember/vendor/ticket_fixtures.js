@@ -54,6 +54,7 @@ var BSRS_TICKET_FACTORY = (function() {
             delete ticket.cc;
             delete ticket.attachments;
             delete ticket.requester;
+            ticket.created = new Date();
             response.push(ticket);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component

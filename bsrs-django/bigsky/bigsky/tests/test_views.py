@@ -112,7 +112,12 @@ class ConfigurationTests(TestCase):
         create_categories()
         self.person = create_person()
         self.phone_number_types = mommy.make(PhoneNumberType)
-        self.location_levels = mommy.make(LocationLevel)
+        self.location_levels = mommy.make(LocationLevel, name='Base')
+        self.location_level_child = mommy.make(LocationLevel, name='Child')
+        self.location_level_parent = mommy.make(LocationLevel, name='Parent', children=[self.location_levels])
+        self.location_levels.children.add(self.location_level_child)
+        self.location_levels.parents.add(self.location_level_parent)
+        self.location_levels.save()
         self.location_statuses = mommy.make(LocationStatus)
         LocationStatus.objects.default()
         self.person_status = mommy.make(PersonStatus)
@@ -197,6 +202,10 @@ class ConfigurationTests(TestCase):
         # the model id shows in the context
         self.assertIn(str(self.location_levels.id), [c['id'] for c in configuration])
         self.assertIn(str(self.location_levels.name), [c['name'] for c in configuration])
+        children = [c['children'] for c in configuration]
+        parents = [c['parents'] for c in configuration]
+        self.assertIn(str(self.location_levels.children.first().id), [item for sublist in children for item in sublist])
+        self.assertIn(str(self.location_levels.parents.first().id), [item for sublist in parents for item in sublist])
 
     def test_location_status(self):
         configuration = json.loads(self.response.context['location_status_config'])

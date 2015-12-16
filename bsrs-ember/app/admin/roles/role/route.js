@@ -18,11 +18,11 @@ var RoleRoute = TabRoute.extend({
         if (!role.get('length') || role.get('isNotDirtyOrRelatedNotDirty')) {
             role = repository.findById(role_pk);
         }
-        return Ember.RSVP.hash({
+        return {
             model: role,
             all_role_types: all_role_types,
             all_location_levels: all_location_levels,
-        });
+        };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

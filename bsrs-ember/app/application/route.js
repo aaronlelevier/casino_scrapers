@@ -52,8 +52,10 @@ var ApplicationRoute = Ember.Route.extend({
         }
         const location_level_list = Ember.$('[data-preload-location-levels]').data('configuration');
         location_level_list.forEach((model) => {
-            model.children_fks = model.children || model.children_fks || [];
+            model.children_fks = model.children || [];
+            model.parent_fks = model.parents || [];
             delete model.children;
+            delete model.parents;
             store.push('location-level', model);
         });
         const role_list = Ember.$('[data-preload-roles]').data('configuration');

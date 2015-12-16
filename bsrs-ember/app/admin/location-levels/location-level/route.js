@@ -14,9 +14,9 @@ var LocationLevelRoute = TabRoute.extend({
         if (!location_level.get('length') || location_level.get('isNotDirtyOrRelatedNotDirty')) { 
             location_level = repository.findById(location_level_pk);
         }
-        return Ember.RSVP.hash({
+        return {
             model: location_level,
-        });
+        };
     }, 
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

@@ -68,7 +68,7 @@
                   {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
                   <td><input type="checkbox" /></td>
                   {{#each searchable as |column|}}
-                    <td class="{{grid-row-class noun column}}">{{get item column}}</td>
+                    <td class="{{grid-row-class noun column}}">{{grid-column-text item column}}</td>
                   {{/each}}
                   {{#each nonsearchable as |column|}}
                   <td class="{{grid-row-class noun column}} {{add-text-right nonsearchable column}}">{{get item column}}</td>

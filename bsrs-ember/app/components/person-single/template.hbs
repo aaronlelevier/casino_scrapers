@@ -32,6 +32,7 @@
 						<div class="col-md-4">
 							{{#form-group title="admin.person.label.middle_initial" for="middle_initial"}}
 							{{input type="text" placeholder=(t "admin.person.label.middle_initial") value=model.middle_initial class="form-control t-person-middle-initial" id="middle_initial"}}
+							{{#validation-error-field submitted=submitted field="middle_initial" className="t-middle-initial-validation-error" model=model validation=middleInitialValidation}}invalid middle initial{{/validation-error-field}}
 							{{/form-group}}
 						</div>
 					</div>
