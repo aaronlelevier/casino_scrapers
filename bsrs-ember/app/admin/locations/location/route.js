@@ -16,11 +16,11 @@ var LocationRoute = TabRoute.extend({
         if (!location.get('length') || location.get('isNotDirtyOrRelatedNotDirty')) { 
             location = repository.findById(location_pk);
         }
-        return Ember.RSVP.hash({
+        return {
             model: location,
             all_location_levels: all_location_levels,
             all_statuses: all_statuses,
-        });
+        };
 
     },
     setupController: function(controller, hash) {

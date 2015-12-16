@@ -14,10 +14,10 @@ var PersonNew = TabNewRoute.extend({
     model() {
         const roles = this.get('store').find('role');
         const model = this.get('model_fetch');
-        return Ember.RSVP.hash({
+        return {
             model: model,
             roles: roles
-        });
+        };
     },
     setupController(controller, hash) {
         controller.set('model', hash.model);

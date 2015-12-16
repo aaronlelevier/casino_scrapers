@@ -14,9 +14,9 @@ var CategorySingle = TabRoute.extend({
         if (!category.get('length') || category.get('isNotDirtyOrRelatedNotDirty')) { 
             category = repository.findById(pk);
         }
-        return Ember.RSVP.hash({
+        return {
             model: category,
-        });
+        };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

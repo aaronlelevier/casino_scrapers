@@ -17,11 +17,11 @@ var RoleNewRoute = TabRoute.extend({
         const all_role_types = this.get('store').find('role-type');
         const all_location_levels = this.get('store').find('location-level');
         const model = this.get('model_fetch');
-        return Ember.RSVP.hash({
+        return {
             model: model,
             all_role_types: all_role_types,
             all_location_levels: all_location_levels,
-        });
+        };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);
