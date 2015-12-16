@@ -42,7 +42,6 @@
     "ember-cli-qunit": "^1.0.4",
     "ember-cli-release": "0.2.8",
     "ember-cli-sass": "^5.1.0",
-    "ember-cli-selectize-toranb": "0.4.6",
     "ember-cli-simple-store": "3.5.0",
     "ember-cli-simple-validation": "1.1.0",
     "ember-cli-sri": "^1.2.0",
