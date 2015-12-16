@@ -74,6 +74,25 @@ class CreateTicketTests(TestCase):
         self.assertEqual(ret.location, location)
 
 
+class CreateExtraTicketWithCategoriesTests(TestCase):
+
+    def setUp(self):
+        factory.create_extra_ticket_with_categories()
+        self.ticket = Ticket.objects.get(request="seven")
+
+    def test_ticket(self):
+        self.assertIsInstance(self.ticket, Ticket)
+
+    def test_categories(self):
+        loss_prevention, _ = Category.objects.get_or_create(name="Loss Prevention", subcategory_label="trade")
+        locks, _ = Category.objects.get_or_create(name="Locks", parent=loss_prevention, subcategory_label="issue")
+        a_locks, _ = Category.objects.get_or_create(name="A Lock", parent=locks)
+
+        self.assertIn(loss_prevention, self.ticket.categories.all())
+        self.assertIn(locks, self.ticket.categories.all())
+        self.assertIn(a_locks, self.ticket.categories.all())
+
+
 class ConstructTreeTests(TestCase):
 
     def setUp(self):

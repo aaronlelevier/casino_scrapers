@@ -19,7 +19,7 @@ from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
 from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,
-    create_ticket_status, create_ticket_priority)
+    create_ticket_status, create_ticket_priority, create_extra_ticket_with_categories)
 from ticket.tests.mixins import TicketSetupMixin, TicketCategoryOrderingSetupMixin
 
 
@@ -968,16 +968,8 @@ class TicketCategoryOrderingListTests(TicketCategoryOrderingSetupMixin, APITrans
                 self.assertEqual(data['categories'][i2]['id'], str(category.id))
 
     def test_ordering__new_ticket_ticket_related_ordering_by_created_data(self):
-        # Category
-        loss_prevention = Category.objects.get(name="Loss Prevention", subcategory_label="trade")
-        locks = Category.objects.get(name="Locks", parent=loss_prevention, subcategory_label="issue")
-        a_locks = Category.objects.create(name="A Lock", parent=locks)
-        # Ticket
-        seven = mommy.make(Ticket, request="seven")
-        # Join them
-        seven.categories.add(loss_prevention)
-        seven.categories.add(locks)
-        seven.categories.add(a_locks)
+        create_extra_ticket_with_categories()
+        seven = Ticket.objects.get(request="seven")
 
         response = self.client.get('/api/tickets/?related_ordering=created')
         data = json.loads(response.content.decode('utf8'))
@@ -989,16 +981,7 @@ class TicketCategoryOrderingListTests(TicketCategoryOrderingSetupMixin, APITrans
         The new ticket should be alphabetically placed at the start, but based upon a 
         'created' sort, would be placed at the end.
         """
-        # Category
-        loss_prevention = Category.objects.get(name="Loss Prevention", subcategory_label="trade")
-        locks = Category.objects.get(name="Locks", parent=loss_prevention, subcategory_label="issue")
-        a_locks = Category.objects.create(name="A Lock", parent=locks)
-        # Ticket
-        seven = mommy.make(Ticket, request="seven")
-        # Join them
-        seven.categories.add(loss_prevention)
-        seven.categories.add(locks)
-        seven.categories.add(a_locks)
+        create_extra_ticket_with_categories()
 
         # response
         response = self.client.get('/api/tickets/')

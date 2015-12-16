@@ -59,6 +59,7 @@ def create_categories(_many=None):
 
     return Category.objects.all()
 
+
 CATEGORY_STATUS_BASE_ID = "20f530c4-ce6c-4724-9cfd-37a16e787"
 
 
