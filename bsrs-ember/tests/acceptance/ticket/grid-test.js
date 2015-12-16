@@ -14,6 +14,8 @@ import {isNotFocused} from 'bsrs-ember/tests/helpers/focus';
 import {isFocused} from 'bsrs-ember/tests/helpers/input';
 import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/disabled';
 import random from 'bsrs-ember/models/random';
+import timemachine from 'vendor/timemachine';
+import moment from 'moment';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -40,14 +42,18 @@ module('Acceptance | ticket grid test', {
         endpoint = PREFIX + BASE_URL + '/?page=1';
         list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
         original_uuid = random.uuid;
+        timemachine.config({
+            dateString: 'December 25, 2014 13:12:59'
+        });
     },
     afterEach() {
         random.uuid = original_uuid;
         Ember.run(application, 'destroy');
+        timemachine.reset();
     }
 });
 
-test('initial load should only show first PAGE_SIZE records ordered by id with correct pagination and no additional xhr', function(assert) {
+test(`initial load should only show first ${PAGE_SIZE} records ordered by id with correct pagination and no additional xhr`, function(assert) {
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
@@ -55,6 +61,7 @@ test('initial load should only show first PAGE_SIZE records ordered by id with c
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text(), TD.priorityOne);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-formatted_date').text(), '12/31 at 4:00 pm');
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -198,14 +205,14 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=4');
-        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-grid-data').length, 10);//
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'ape');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'sub');//
     });
     click('.t-sort-request-dir');
     andThen(() => {
         assert.equal(currentURL(),TICKET_URL + '?search=4&sort=request');
-        assert.equal(find('.t-grid-data').length, 2);
+        assert.equal(find('.t-grid-data').length, 10);//
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'sub');
     });
@@ -457,17 +464,17 @@ test('after you reset the grid the filter model will also be reset', function(as
 });
 
 test('count is shown and updated as the user filters down the list from django', function(assert) {
-    let option_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(option_one ,'GET',null,{},200,TF.searched('4', 'id'));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=6';
+    xhr(option_one ,'GET',null,{},200,TF.searched('6', 'id'));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-page-count').text(), `${PAGE_SIZE*2-1} Tickets`);
     });
-    fillIn('.t-grid-search-input', '4');
+    fillIn('.t-grid-search-input', '6');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?search=4');
+        assert.equal(currentURL(),TICKET_URL + '?search=6');
         assert.equal(find('.t-grid-data').length, 2);
         assert.equal(find('.t-page-count').text(), '2 Tickets');
     });

@@ -179,7 +179,8 @@ en,modules.workOrders.titleShort,Work Orders,,"'modules.workOrders.titleShort':'
 en,ticket.label.assignee-fullname,Assignee,,"'ticket.label.assignee-fullname':'Assignee',",Assignee
 en,ticket.label.category-name,Category,,"'ticket.label.category-name':'Category',",Category
 en,ticket.label.cc,CC,,"'ticket.label.cc':'CC',",CC
-en,ticket.label.created,Created,,"'ticket.label.created':'Created',",
+en,ticket.label.formatted_date,Created,,"'ticket.label.formatted_date':'Created',",Created
+en,ticket.label.created,Created,,"'ticket.label.created':'Created',",Created
 en,ticket.label.location-name,Location,,"'ticket.label.location-name':'Location',",Location
 en,ticket.label.number,Ticket Number,,"'ticket.label.number':'Ticket Number',",Ticket Number
 en,ticket.label.priority-name,Priority,,"'ticket.label.priority-name':'Priority',",Priority
