@@ -1,5 +1,3 @@
-from rest_framework import serializers
-
 from category.models import Category
 from utils.serializers import BaseCreateSerializer
 

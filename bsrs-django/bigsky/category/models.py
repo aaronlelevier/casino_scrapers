@@ -1,5 +1,3 @@
-import json
-
 from django.db import models
 from django.conf import settings
 
@@ -50,7 +48,8 @@ class Category(BaseModel):
     level = models.IntegerField(blank=True, default=0)
 
     class Meta:
-        ordering = ('label', 'name',)
+        # ordering = ('label', 'name',)
+        ordering = ('level',)
 
     def save(self, *args, **kwargs):
         self._update_defalts()

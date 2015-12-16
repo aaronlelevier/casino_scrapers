@@ -20,35 +20,7 @@ from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,
     create_ticket_status, create_ticket_priority)
-
-
-class TicketSetupMixin(object):
-
-    def setUp(self):
-        # Categories
-        self.categories = create_categories()
-        self.category = Category.objects.first()
-        self.category_two = Category.objects.last()
-        self.category_ids = [str(x) for x in Category.objects.values_list('id', flat=True)]
-        self.category_names = [str(x) for x in Category.objects.values_list('name', flat=True)]
-        # Role
-        self.role = create_role()
-        # Location
-        self.location = create_location(location_level=self.role.location_level)
-        self.location_two = create_location()
-        # Person
-        self.password = PASSWORD
-        self.person = create_single_person(role=self.role, location=self.location)
-        # Ticket 1
-        self.ticket = create_ticket(location=self.location)
-        self.ticket.categories.add(self.person.role.categories.first())
-        # Ticket 2
-        self.ticket_two = create_ticket()
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
+from ticket.tests.mixins import TicketSetupMixin, TicketCategoryOrderingSetupMixin
 
 
 class TicketListTests(TicketSetupMixin, APITestCase):
@@ -621,8 +593,9 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['to'], str(to_priority.id))
 
     def test_categories(self):
-        from_category = self.ticket.categories.first()
-        to_category = Category.objects.exclude(id=from_category.id).first()
+        from_category = self.ticket.categories.exclude(parent__isnull=True).first()
+        to_category = (Category.objects.exclude(id=from_category.id)
+                                       .exclude(parent__isnull=True).first())
         ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
             content={'from_0': str(from_category.id), 'to_0': str(to_category.id)})
 
@@ -839,7 +812,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(TicketActivity.objects.count(), 0)
         # ticket_activity_type = create_ticket_activity_type(name=name)
         # Only one Category on the Ticket
-        [c.delete(override=True) for c in self.ticket.categories.all()[:self.ticket.categories.count()-1]]
+        [self.ticket.categories.remove(c) for c in self.ticket.categories.all()[:self.ticket.categories.count()-1]]
         new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()
         self.assertEqual(len(self.data['categories']), 3)
         self.assertNotEqual(self.data['categories'][0], str(new_category.id))
@@ -956,9 +929,91 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         )
 
 
-        # import pdb;pdb.set_trace()
-        # Ticket.objects.order_by('categories__name')
-        # self.assertEqual(Ticket.objects.filter(pk=one.pk).first().categories.count(), 3)
+class TicketCategoryOrderingListTests(TicketCategoryOrderingSetupMixin, APITransactionTestCase):
+
+    def setUp(self):
+        super(TicketCategoryOrderingListTests, self).setUp()
+        # Role
+        self.role = create_role()
+        # Location
+        self.location = create_location(location_level=self.role.location_level)
+        # Person
+        self.password = PASSWORD
+        self.person = create_single_person(role=self.role, location=self.location)
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+        # response
+        self.response = self.client.get('/api/tickets/')
+        self.data = json.loads(self.response.content.decode('utf8'))
+
+        # desired "queryset" ordered by
+        #   - top level category name
+        #   - categories: parent -> to -> children
+        self.queryset = Ticket.objects.all_with_ordered_categories()
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_count(self):
+        self.assertEqual(self.data['count'], 6)
+
+    def test_ordering(self):
+        for i, data in enumerate(self.data['results']):
+            self.assertEqual(data['id'], str(self.queryset[i].id))
+            # Categories ordering test
+            ticket = Ticket.objects.get(id=data['id'])
+            categories = ticket.categories.order_by('level')
+            for i2, category in enumerate(categories):
+                self.assertEqual(data['categories'][i2]['id'], str(category.id))
+
+    def test_ordering__new_ticket_ticket_related_ordering_by_created_data(self):
+        # Category
+        loss_prevention = Category.objects.get(name="Loss Prevention", subcategory_label="trade")
+        locks = Category.objects.get(name="Locks", parent=loss_prevention, subcategory_label="issue")
+        a_locks = Category.objects.create(name="A Lock", parent=locks)
+        # Ticket
+        seven = mommy.make(Ticket, request="seven")
+        # Join them
+        seven.categories.add(loss_prevention)
+        seven.categories.add(locks)
+        seven.categories.add(a_locks)
+
+        response = self.client.get('/api/tickets/?related_ordering=created')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(data['results'][-1]['id'], str(seven.id))
+
+    def test_ordering__new_ticket(self):
+        """
+        The new ticket should be alphabetically placed at the start, but based upon a 
+        'created' sort, would be placed at the end.
+        """
+        # Category
+        loss_prevention = Category.objects.get(name="Loss Prevention", subcategory_label="trade")
+        locks = Category.objects.get(name="Locks", parent=loss_prevention, subcategory_label="issue")
+        a_locks = Category.objects.create(name="A Lock", parent=locks)
+        # Ticket
+        seven = mommy.make(Ticket, request="seven")
+        # Join them
+        seven.categories.add(loss_prevention)
+        seven.categories.add(locks)
+        seven.categories.add(a_locks)
+
+        # response
+        response = self.client.get('/api/tickets/')
+        data = json.loads(response.content.decode('utf8'))
+        # desired "queryset"
+        queryset = Ticket.objects.all_with_ordered_categories()
+
+        for i, data in enumerate(data['results']):
+            self.assertEqual(data['id'], str(queryset[i].id))
+            # Categories ordering test
+            ticket = Ticket.objects.get(id=data['id'])
+            categories = ticket.categories.order_by('level')
+            for i2, category in enumerate(categories):
+                self.assertEqual(data['categories'][i2]['id'], str(category.id))
+
 
 ### COMMENT OUT: Until these filters are added to the Ticket List API get_queryset mixin
 # class TicketsFilteredBySettingsTests(TicketSetupMixin, APITransactionTestCase):

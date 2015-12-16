@@ -81,6 +81,11 @@ class TicketQuerySet(BaseQuerySet):
                 Q(categories__name__in=[keyword])
             )
 
+    def all_with_ordered_categories(self):
+        return (self.all()
+                    .prefetch_related('categories')
+                    .exclude(categories__isnull=True))
+
 
 class TicketManager(BaseManager):
 
@@ -89,6 +94,9 @@ class TicketManager(BaseManager):
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
+
+    def all_with_ordered_categories(self):
+        return self.get_queryset().all_with_ordered_categories()
 
 
 class Ticket(BaseModel):

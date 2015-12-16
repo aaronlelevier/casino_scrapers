@@ -9,6 +9,7 @@ from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES)
 from ticket.tests.factory import create_ticket, create_tickets
+from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
 from generic.tests.factory import create_attachments
 
 
@@ -182,3 +183,24 @@ class TicketActivityTests(TestCase):
         self.assertIsInstance(ticket_activity, TicketActivity)
         self.assertEqual(ticket_activity.ticket.id, self.ticket.id)
         self.assertEqual(ticket_activity.content['0'], self.person.id)
+
+
+class TicketCategoryOrderingTests(TicketCategoryOrderingSetupMixin, TestCase):
+
+    def test_ticket_one(self):
+        ordered_categories = self.one.categories.order_by('level').values_list('name', flat=True)
+        
+        self.assertEqual(
+            " - ".join(ordered_categories),
+            "Loss Prevention - Locks - Drawer Lock"
+        )
+
+    def test_ticket_and_category_ordering(self):
+        manual = (Ticket.objects.all()
+                                .prefetch_related('categories')
+                                .exclude(categories__isnull=True))
+
+        queryset = Ticket.objects.all_with_ordered_categories()
+
+        for i, obj in enumerate(queryset):
+            self.assertEqual(manual[i].id, obj.id)
