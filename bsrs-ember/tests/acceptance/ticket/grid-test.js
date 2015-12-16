@@ -37,14 +37,14 @@ var application, store, endpoint, list_xhr, original_uuid;
 
 module('Acceptance | ticket grid test', {
     beforeEach() {
+        timemachine.config({
+            dateString: 'December 25, 2014 13:12:59'
+        });
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/?page=1';
         list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
         original_uuid = random.uuid;
-        timemachine.config({
-            dateString: 'December 25, 2014 13:12:59'
-        });
     },
     afterEach() {
         random.uuid = original_uuid;
@@ -61,7 +61,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-priority-translated_name').text(), TD.priorityOne);
-        assert.equal(find('.t-grid-data:eq(0) .t-ticket-formatted_date').text(), '12/31 at 4:00 pm');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-formatted_date').text(), 'Today at 1:12 pm');
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -191,28 +191,28 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     xhr(page_two ,"GET",null,{},200,TF.searched('', 'request', 2));
     var page_one = PREFIX + BASE_URL + '/?page=1&ordering=request';
     xhr(page_one ,"GET",null,{},200,TF.searched('', 'request'));
-    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=request&search=4';
+    var sort_one = PREFIX + BASE_URL + '/?page=1&ordering=request&search=5';
     xhr(sort_one ,"GET",null,{},200,TF.searched('4', 'request'));
-    var search_one = PREFIX + BASE_URL + '/?page=1&search=4';
-    xhr(search_one ,"GET",null,{},200,TF.searched('4', 'id'));
+    var search_one = PREFIX + BASE_URL + '/?page=1&search=5';
+    xhr(search_one ,"GET",null,{},200,TF.searched('5', 'id'));
     visit(TICKET_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
     });
-    fillIn('.t-grid-search-input', '4');
+    fillIn('.t-grid-search-input', '5');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_FOUR);
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?search=4');
-        // assert.equal(find('.t-grid-data').length, 10);//
+        assert.equal(currentURL(),TICKET_URL + '?search=5');
+        assert.equal(find('.t-grid-data').length, 2);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
-        // assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'sub');//
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'ape');
     });
     click('.t-sort-request-dir');
     andThen(() => {
-        assert.equal(currentURL(),TICKET_URL + '?search=4&sort=request');
-        // assert.equal(find('.t-grid-data').length, 10);//
+        assert.equal(currentURL(),TICKET_URL + '?search=5&sort=request');
+        assert.equal(find('.t-grid-data').length, 2);
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
         assert.equal(substring_up_to_num(find('.t-grid-data:eq(1) .t-ticket-request').text()), 'sub');
     });
