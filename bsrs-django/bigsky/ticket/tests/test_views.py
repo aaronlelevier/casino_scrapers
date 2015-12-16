@@ -956,6 +956,11 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         )
 
 
+        # import pdb;pdb.set_trace()
+        # Ticket.objects.order_by('categories__name')
+        # self.assertEqual(Ticket.objects.filter(pk=one.pk).first().categories.count(), 3)
+
+### COMMENT OUT: Until these filters are added to the Ticket List API get_queryset mixin
 # class TicketsFilteredBySettingsTests(TicketSetupMixin, APITransactionTestCase):
 
 #     def test_create(self):
