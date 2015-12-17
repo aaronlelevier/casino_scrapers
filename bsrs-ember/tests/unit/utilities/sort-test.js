@@ -100,3 +100,248 @@ test('will sort null values without exception', function(assert) {
     assert.equal(result[1].get('name'), 'mgibson1');
     assert.equal(result[2].get('name'), 'mgibson2');
 });
+
+test('array field is sorted correctly when the items are in reverse order', function(assert) {
+    var one = Ember.Object.create({name: 'z'});
+    var two = Ember.Object.create({name: 'c'});
+    var four = Ember.Object.create({name: 'a'});
+    var five = Ember.Object.create({name: 'x'});
+    var items = [
+        Ember.Object.create({name:'a', categories: [one, two]}),
+        Ember.Object.create({name:'a', categories: [four, five]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [four, five]}),
+        Ember.Object.create({name:'a', categories: [one, two]})
+    ];
+    var options = ['categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
+
+test('array field is not sorted when the data is already in the correct order', function(assert) {
+    var one = Ember.Object.create({name: 'z'});
+    var two = Ember.Object.create({name: 'c'});
+    var four = Ember.Object.create({name: 'a'});
+    var five = Ember.Object.create({name: 'x'});
+    var items = [
+        Ember.Object.create({name:'a', categories: [four, five]}),
+        Ember.Object.create({name:'a', categories: [one, two]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [four, five]}),
+        Ember.Object.create({name:'a', categories: [one, two]})
+    ];
+    var options = ['categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
+
+test('array field is sorted correctly when the items have the same top level but middle is in reverse order', function(assert) {
+    var one = Ember.Object.create({name: 'a'});
+    var two = Ember.Object.create({name: 'd'});
+    var three = Ember.Object.create({name: 'e'});
+    var four = Ember.Object.create({name: 'a'});
+    var five = Ember.Object.create({name: 'b'});
+    var six = Ember.Object.create({name: 'c'});
+    var items = [
+        Ember.Object.create({name:'a', categories: [one, two, three]}),
+        Ember.Object.create({name:'a', categories: [four, five, six]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [four, five, six]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]})
+    ];
+    var options = ['categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
+
+test('array field is not sorted when the items are in the correct order including the middle node', function(assert) {
+    var one = Ember.Object.create({name: 'a'});
+    var two = Ember.Object.create({name: 'd'});
+    var three = Ember.Object.create({name: 'e'});
+    var four = Ember.Object.create({name: 'a'});
+    var five = Ember.Object.create({name: 'b'});
+    var six = Ember.Object.create({name: 'c'});
+    var items = [
+        Ember.Object.create({name:'a', categories: [four, five, six]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [four, five, six]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]})
+    ];
+    var options = ['categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
+
+test('array field is sorted correctly with multiple items that start in reverse order', function(assert) {
+    var one = Ember.Object.create({name: 'a'});
+    var two = Ember.Object.create({name: 'd'});
+    var three = Ember.Object.create({name: 'f'});
+    var four = Ember.Object.create({name: 'b'});
+    var five = Ember.Object.create({name: 'e'});
+    var six = Ember.Object.create({name: 'g'});
+    var seven = Ember.Object.create({name: 'c'});
+    var eight = Ember.Object.create({name: 'x'});
+    var nine = Ember.Object.create({name: 'y'});
+    var items = [
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]}),
+        Ember.Object.create({name:'a', categories: [four, five, six]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [one, two, three]}),
+        Ember.Object.create({name:'a', categories: [four, five, six]}),
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]})
+    ];
+    var options = ['categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
+
+test('array field is sorted correctly when top level matches but middle is out of order', function(assert) {
+    var one = Ember.Object.create({name: 'a'});
+    var two = Ember.Object.create({name: 'l'});
+    var three = Ember.Object.create({name: 'o'});
+    var four = Ember.Object.create({name: 'a'});
+    var five = Ember.Object.create({name: 'r'});
+    var six = Ember.Object.create({name: 'n'});
+    var seven = Ember.Object.create({name: 'a'});
+    var eight = Ember.Object.create({name: 'l'});
+    var nine = Ember.Object.create({name: 'm'});
+    var items = [
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]}),
+        Ember.Object.create({name:'a', categories: [four, five, six]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]}),
+        Ember.Object.create({name:'a', categories: [four, five, six]})
+    ];
+    var options = ['categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
+
+test('array field is not sorted when the items are in the correct order including the middle node (3 items in record set)', function(assert) {
+    var one = Ember.Object.create({name: 'a'});
+    var two = Ember.Object.create({name: 'l'});
+    var three = Ember.Object.create({name: 'o'});
+    var four = Ember.Object.create({name: 'a'});
+    var five = Ember.Object.create({name: 'l'});
+    var six = Ember.Object.create({name: 'n'});
+    var seven = Ember.Object.create({name: 'a'});
+    var eight = Ember.Object.create({name: 'l'});
+    var nine = Ember.Object.create({name: 'm'});
+    var items = [
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]}),
+        Ember.Object.create({name:'a', categories: [four, five, six]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]}),
+        Ember.Object.create({name:'a', categories: [four, five, six]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]})
+    ];
+    var options = ['categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
+
+test('array field is sorted correctly when top level and middle matches but middle is missing leaf node', function(assert) {
+    var one = Ember.Object.create({name: 'a'});
+    var two = Ember.Object.create({name: 'l'});
+    var three = Ember.Object.create({name: 'o'});
+    var four = Ember.Object.create({name: 'a'});
+    var five = Ember.Object.create({name: 'l'});
+    var seven = Ember.Object.create({name: 'a'});
+    var eight = Ember.Object.create({name: 'l'});
+    var nine = Ember.Object.create({name: 'm'});
+    var items = [
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]}),
+        Ember.Object.create({name:'a', categories: [four, five]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [four, five]}),
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]})
+    ];
+    var options = ['categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
+
+test('array field is sorted correctly when top level and middle matches but middle is missing leaf node (and top item should be bottom)', function(assert) {
+    var one = Ember.Object.create({name: 'a'});
+    var two = Ember.Object.create({name: 'l'});
+    var three = Ember.Object.create({name: 'o'});
+    var four = Ember.Object.create({name: 'a'});
+    var five = Ember.Object.create({name: 'l'});
+    var seven = Ember.Object.create({name: 'a'});
+    var eight = Ember.Object.create({name: 'l'});
+    var nine = Ember.Object.create({name: 'm'});
+    var items = [
+        Ember.Object.create({name:'a', categories: [one, two, three]}),
+        Ember.Object.create({name:'a', categories: [four, five]}),
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [four, five]}),
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]}),
+        Ember.Object.create({name:'a', categories: [one, two, three]})
+    ];
+    var options = ['categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
+
+test('array field is sorted correctly when top level and middle matches but only 1 has a leaf node', function(assert) {
+    var one = Ember.Object.create({name: 'b'});
+    var two = Ember.Object.create({name: 'z'});
+    var four = Ember.Object.create({name: 'c'});
+    var five = Ember.Object.create({name: 'x'});
+    var seven = Ember.Object.create({name: 'a'});
+    var eight = Ember.Object.create({name: 'c'});
+    var nine = Ember.Object.create({name: 'e'});
+    var items = [
+        Ember.Object.create({name:'a', categories: [one, two]}),
+        Ember.Object.create({name:'a', categories: [four, five]}),
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]}),
+        Ember.Object.create({name:'a', categories: [one, two]}),
+        Ember.Object.create({name:'a', categories: [four, five]})
+    ];
+    var options = ['categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
+
+test('array field is sorted correctly when first sorted by another non array property', function(assert) {
+    var one = Ember.Object.create({name: 'b'});
+    var two = Ember.Object.create({name: 'z'});
+    var four = Ember.Object.create({name: 'c'});
+    var five = Ember.Object.create({name: 'x'});
+    var seven = Ember.Object.create({name: 'a'});
+    var eight = Ember.Object.create({name: 'c'});
+    var nine = Ember.Object.create({name: 'e'});
+    var items = [
+        Ember.Object.create({name:'z', categories: [one, two]}),
+        Ember.Object.create({name:'a', categories: [four, five]}),
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]})
+    ];
+    var expected = [
+        Ember.Object.create({name:'a', categories: [seven, eight, nine]}),
+        Ember.Object.create({name:'a', categories: [four, five]}),
+        Ember.Object.create({name:'z', categories: [one, two]})
+    ];
+    var options = ['name', 'categories[name]'];
+    var result = MultiSort.run(items, options);
+    assert.deepEqual(result, expected);
+});
