@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import Q
 from django.conf import settings
 from django.contrib.postgres.fields import HStoreField
+from django.db.models.signals import m2m_changed
 
 from category.models import Category
 from location.models import Location
@@ -119,6 +120,8 @@ class Ticket(BaseModel):
     requester = models.ForeignKey(Person, blank=True, null=True,
         related_name="requester_tickets")
     categories = models.ManyToManyField(Category, blank=True)
+    category_names = models.CharField(max_length=254, blank=True,
+        help_text="Denormalized field that stores Category names ordered by 'level'.")
     # Fields
     request = models.CharField(max_length=1000, blank=True, null=True)
     # Auto-fields
@@ -135,6 +138,16 @@ class Ticket(BaseModel):
             self.status = TicketStatus.objects.default()
         if not self.priority:
             self.priority = TicketPriority.objects.default()
+
+
+def categories_changed(sender, instance=None, action=None, **kwargs):
+    if action in ('post_add', 'post_remove'):
+        category_names = " - ".join(instance.categories.values_list('name', flat=True))
+        if instance.category_names != category_names:
+            instance.category_names = category_names
+            instance.save()
+
+m2m_changed.connect(categories_changed, sender=Ticket.categories.through)
 
 
 TICKET_ACTIVITY_TYPES = [
