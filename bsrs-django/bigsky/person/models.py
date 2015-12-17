@@ -33,7 +33,7 @@ class Role(BaseModel):
     role_type = models.CharField(max_length=29, blank=True,
         choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
     # Required
-    name = models.CharField(max_length=100, unique=True, help_text="Will be set to the Group Name")
+    name = models.CharField(max_length=75, unique=True, help_text="Will be set to the Group Name")
     categories = models.ManyToManyField(Category, blank=True) 
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,

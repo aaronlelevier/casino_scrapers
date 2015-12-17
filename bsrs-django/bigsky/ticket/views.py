@@ -63,6 +63,7 @@ class TicketViewSet(EagerLoadQuerySetMixin, CreateTicketModelMixin,
 
         return queryset
 
+
 class TicketActivityViewSet(BaseModelViewSet):
 
     model = TicketActivity

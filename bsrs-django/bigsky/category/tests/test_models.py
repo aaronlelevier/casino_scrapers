@@ -6,13 +6,16 @@ from category.models import Category
 from category.tests import factory
 
 
-class CategoryTests(TestCase):
+class CategorySetupMixin(object):
 
     def setUp(self):
         factory.create_categories()
         self.type = Category.objects.filter(subcategory_label='trade').first()
         self.trade = Category.objects.filter(label='trade').first()
         self.child = Category.objects.filter(subcategory_label='sub_issue').first()
+
+
+class CategoryTests(CategorySetupMixin, TestCase):
 
     def test_label_top_level(self):
         self.assertIsNone(self.type.parent)
@@ -53,3 +56,29 @@ class CategoryTests(TestCase):
         self.assertEqual(d['id'], str(self.child.id))
         self.assertEqual(d['name'], self.child.name)
         self.assertEqual(d['parent'], str(self.child.parent.id))
+
+
+class CategoryLevelTests(CategorySetupMixin, TestCase):
+
+    def test_set_level__no_parents(self):
+        self.assertEqual(self.type._set_level(), 0)
+
+    def test_set_level__one_parent(self):
+        self.assertTrue(self.trade.parent)
+        self.assertFalse(self.trade.parent.parent)
+        self.assertEqual(self.trade._set_level(), 1)
+
+    def test_set_level__one_parent(self):
+        self.assertTrue(self.child.parent)
+        self.assertTrue(self.child.parent.parent)
+        self.assertFalse(self.child.parent.parent.parent)
+        self.assertEqual(self.child._set_level(), 2)
+
+    def test_level_type(self):
+        self.assertEqual(self.type.level, 0)
+
+    def test_level_trade(self):
+        self.assertEqual(self.trade.level, 1)
+
+    def test_level_trade(self):
+        self.assertEqual(self.child.level, 2)

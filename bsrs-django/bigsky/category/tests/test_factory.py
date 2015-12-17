@@ -1,5 +1,3 @@
-import random
-
 from django.test import TransactionTestCase
 from django.contrib.auth.models import ContentType
 
@@ -83,6 +81,7 @@ class CategoryTests(TransactionTestCase):
 
 
 class CategoryTestsForMethod(TransactionTestCase):
+
     def setUp(self):
         factory.create_categories()
 
@@ -91,4 +90,4 @@ class CategoryTestsForMethod(TransactionTestCase):
 
     def test_with_four_top_levels(self):
         self.assertEqual(Category.objects.filter(parent=None).count(), 4)
-        self.assertEqual(Category.objects.filter(parent=None).first().name, 'Building')
+        self.assertEqual(Category.objects.filter(parent=None).first().name, 'Store Operations')

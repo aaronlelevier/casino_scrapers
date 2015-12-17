@@ -70,6 +70,24 @@ def create_tickets(_many=1):
     return [create_ticket() for x in range(_many)]
 
 
+def create_extra_ticket_with_categories():
+    """
+    Used in Ticket / Category ordering tests to test that ordering still holds 
+    when new Tickets are added, but the Category would insert them in the middle
+    of the ordering.
+    """
+    # Category
+    loss_prevention, _ = Category.objects.get_or_create(name="Loss Prevention", subcategory_label="trade")
+    locks, _ = Category.objects.get_or_create(name="Locks", parent=loss_prevention, subcategory_label="issue")
+    a_locks, _ = Category.objects.get_or_create(name="A Lock", parent=locks)
+    # Ticket
+    seven = mommy.make(Ticket, request="seven")
+    # Join them
+    seven.categories.add(loss_prevention)
+    seven.categories.add(locks)
+    seven.categories.add(a_locks)
+
+
 TICKET_STATUS_BASE_ID = "def11673-d4ab-41a6-a37f-0c6846b96"
 
 

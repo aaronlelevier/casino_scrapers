@@ -1,7 +1,5 @@
 import random
 
-from model_mommy import mommy
-
 from category.models import Category, CATEGORY_STATUSES, CategoryStatus
 from utils.create import random_lorem
 from utils.helpers import generate_uuid
@@ -60,6 +58,7 @@ def create_categories(_many=None):
             )
 
     return Category.objects.all()
+
 
 CATEGORY_STATUS_BASE_ID = "20f530c4-ce6c-4724-9cfd-37a16e787"
 
