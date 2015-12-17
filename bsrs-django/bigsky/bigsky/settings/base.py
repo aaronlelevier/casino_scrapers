@@ -11,6 +11,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
+# AbstractUser Config
+AUTH_USER_MODEL = 'person.Person'
 
 ### Application definition ###
 DEFAULT_APPS = [
@@ -89,26 +91,24 @@ WSGI_APPLICATION = 'bigsky.wsgi.application'
 DATABASES = {}
 
 
-# Password validation
+# Password validation (not in use in currently)
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
+AUTH_PASSWORD_VALIDATORS = []
+# [
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+#     },
+#     {
+#         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+#     },
+# ]
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
-
-# AbstractUser Config
-AUTH_USER_MODEL = 'person.Person'
 
 
 LANGUAGE_CODE = 'en'
@@ -267,19 +267,19 @@ LOGGING = {
 }
 
 
-# import logging, copy
-# from django.utils.log import DEFAULT_LOGGING
+import logging, copy
+from django.utils.log import DEFAULT_LOGGING
 
-# LOGGING = copy.deepcopy(DEFAULT_LOGGING)
-# LOGGING['filters']['suppress_deprecated'] = {
-#     '()': 'bigsky.settings.SuppressDeprecated'  
-# }
-# LOGGING['handlers']['console']['filters'].append('suppress_deprecated')
+LOGGING = copy.deepcopy(DEFAULT_LOGGING)
+LOGGING['filters']['suppress_deprecated'] = {
+    '()': 'bigsky.settings.SuppressDeprecated'  
+}
+LOGGING['handlers']['console']['filters'].append('suppress_deprecated')
 
-# class SuppressDeprecated(logging.Filter):
-#     def filter(self, record):
-#         WARNINGS_TO_SUPPRESS = [
-#             'RemovedInDjango19Warning'
-#         ]
-#         # Return false to suppress message.
-#         return not any([warn in record.getMessage() for warn in WARNINGS_TO_SUPPRESS])
+class SuppressDeprecated(logging.Filter):
+    def filter(self, record):
+        WARNINGS_TO_SUPPRESS = [
+            'RemovedInDjango110Warning'
+        ]
+        # Return false to suppress message.
+        return not any([warn in record.getMessage() for warn in WARNINGS_TO_SUPPRESS])

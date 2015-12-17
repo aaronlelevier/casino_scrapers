@@ -1,6 +1,9 @@
 from .base import *
 
 
+AUTH_USER_MODEL = 'person.Person'
+
+
 CI_APPS = [
     'django_nose',
     'django_coverage',

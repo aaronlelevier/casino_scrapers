@@ -259,7 +259,7 @@ class Person(BaseModel, AbstractUser):
     :pw: password
     :ooto: out-of-the-office
     '''
-    USERNAME_FIELD = 'username'
+    # USERNAME_FIELD = 'username'
 
     # Keys
     role = models.ForeignKey(Role)
