@@ -1,6 +1,5 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
-import Address from 'bsrs-ember/models/address';
 import ChildValidationComponent from 'bsrs-ember/mixins/validation/child';
 import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
 import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';

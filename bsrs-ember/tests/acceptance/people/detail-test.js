@@ -201,6 +201,68 @@ test('payload does not include password if blank or undefined', (assert) => {
     });
 });
 
+/* OTHER */
+test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    fillIn('.t-person-username', PD_PUT.username);
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible());
+            assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
+        });
+    });
+    generalPage.clickModalCancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-person-username').val(), PD_PUT.username);
+            assert.ok(generalPage.modalIsHidden());
+        });
+    });
+});
+
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-person-username', PD_PUT.username);
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible());
+        });
+    });
+    generalPage.clickModalRollback();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+            var person = store.find('person', PD.id);
+            assert.equal(person.get('username'), PD.username);
+        });
+    });
+});
+
+test('currency helper displays correct currency format', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    var symbol = '$';
+    andThen(() => {
+        assert.equal(find('.t-amount').val(), PD.auth_amount);
+    });
+});
+
+test('when click delete, person is deleted and removed from store', (assert) => {
+    visit(DETAIL_URL);
+    xhr(PREFIX + BASE_PEOPLE_URL + '/' + PD.id + '/', 'DELETE', null, {}, 204, {});
+    generalPage.delete();
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+});
+
+/* PHONE NUMBER AND ADDRESS */
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
     visit(DETAIL_URL);
     click('.t-add-btn:eq(0)');
@@ -410,25 +472,6 @@ test('when editing phone numbers and addresses to invalid, it checks for validat
     });
 });
 
-test('clicking cancel button will take from detail view to list view', (assert) => {
-    visit(PEOPLE_URL);
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
-    });
-    click('.t-grid-data:eq(1)');
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        const person = store.find('person', PD.idOne);
-        assert.equal(person.get('role.id'), RD.idOne);
-        assert.equal(person.get('role_fk'), RD.idOne);
-        assert.ok(person.get('roleIsNotDirty'));
-    });
-    generalPage.cancel();
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
-    });
-});
-
 test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var phone_numbers = PNF.put({id: PND.idOne, type: PNTD.mobileId});
@@ -450,78 +493,6 @@ test('when you change a related address type it will be persisted correctly', (a
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(),PEOPLE_URL);
-    });
-});
-
-test('when you change a related role it will be persisted correctly', (assert) => {
-    visit(DETAIL_URL);
-    andThen(() => {
-        clearxhr(detail_xhr);
-        //refreshModel will call findById in people repo
-        let people_detail_data_two = PF.detail(PD.id);
-        people_detail_data_two.role = RD.idTwo;
-        xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_two);
-        andThen(() => {
-            let person = store.find('person', PD.id);
-            assert.equal(person.get('role_fk'), RD.idOne);
-            assert.equal(person.get('locations').get('length'), 1);
-            assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
-        });
-        page.roleClickDropdown();
-        page.roleClickOptionTwo();
-        andThen(() => {
-            assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
-        });
-        var role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
-        var payload = PF.put({id: PD.id, role: role.id});
-        payload.locations = [];
-        xhr(url,'PUT',JSON.stringify(payload),{},200);
-        generalPage.save();
-        andThen(() => {
-            assert.equal(currentURL(), PEOPLE_URL);
-        });
-    });
-});
-
-test('when user changes an attribute and clicks cancel we prompt them with a modal and they cancel', (assert) => {
-    clearxhr(list_xhr);
-    visit(DETAIL_URL);
-    fillIn('.t-person-username', PD_PUT.username);
-    generalPage.cancel();
-    andThen(() => {
-        waitFor(() => {
-            assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
-            assert.equal(find('.t-modal-body').text().trim(), 'You have unsaved changes. Are you sure?');
-        });
-    });
-    generalPage.clickModalCancel();
-    andThen(() => {
-        waitFor(() => {
-            assert.equal(currentURL(), DETAIL_URL);
-            assert.equal(find('.t-person-username').val(), PD_PUT.username);
-            assert.ok(generalPage.modalIsHidden());
-        });
-    });
-});
-
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
-    visit(DETAIL_URL);
-    fillIn('.t-person-username', PD_PUT.username);
-    generalPage.cancel();
-    andThen(() => {
-        waitFor(() => {
-            assert.equal(currentURL(), DETAIL_URL);
-            assert.ok(generalPage.modalIsVisible());
-        });
-    });
-    generalPage.clickModalRollback();
-    andThen(() => {
-        waitFor(() => {
-            assert.equal(currentURL(), PEOPLE_URL);
-            var person = store.find('person', PD.id);
-            assert.equal(person.get('username'), PD.username);
-        });
     });
 });
 
@@ -606,24 +577,6 @@ test('when user removes an address clicks cancel we prompt them with a modal and
             var addresses = store.find('address', PD.id);
             assert.equal(addresses.source[0].get('type'), ATD.officeId);
         });
-    });
-});
-
-test('currency helper displays correct currency format', (assert) => {
-    clearxhr(list_xhr);
-    visit(DETAIL_URL);
-    var symbol = '$';
-    andThen(() => {
-        assert.equal(find('.t-amount').val(), PD.auth_amount);
-    });
-});
-
-test('when click delete, person is deleted and removed from store', (assert) => {
-    visit(DETAIL_URL);
-    xhr(PREFIX + BASE_PEOPLE_URL + '/' + PD.id + '/', 'DELETE', null, {}, 204, {});
-    generalPage.delete();
-    andThen(() => {
-        assert.equal(currentURL(), PEOPLE_URL);
     });
 });
 
@@ -874,6 +827,56 @@ test('when you deep link to the person detail view you can add and save a new ad
         assert.equal(person.get('addresses').objectAt(0).get('type'), ATD.shippingId);
         assert.equal(person.get('addresses').objectAt(2).get('type'), ATD.officeId);
         assert.ok(person.get('addresses').objectAt(0).get('isNotDirty'));
+    });
+});
+
+test('clicking cancel button will take from detail view to list view', (assert) => {
+    visit(PEOPLE_URL);
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+    click('.t-grid-data:eq(1)');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        const person = store.find('person', PD.idOne);
+        assert.equal(person.get('role.id'), RD.idOne);
+        assert.equal(person.get('role_fk'), RD.idOne);
+        assert.ok(person.get('roleIsNotDirty'));
+    });
+    generalPage.cancel();
+    andThen(() => {
+        assert.equal(currentURL(), PEOPLE_URL);
+    });
+});
+
+/* ROLE */
+test('when you change a related role it will be persisted correctly', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        clearxhr(detail_xhr);
+        //refreshModel will call findById in people repo
+        let people_detail_data_two = PF.detail(PD.id);
+        people_detail_data_two.role = RD.idTwo;
+        xhr(endpoint + PD.id + '/', 'GET', null, {}, 200, people_detail_data_two);
+        andThen(() => {
+            let person = store.find('person', PD.id);
+            assert.equal(person.get('role_fk'), RD.idOne);
+            assert.equal(person.get('locations').get('length'), 1);
+            assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
+        });
+        page.roleClickDropdown();
+        page.roleClickOptionTwo();
+        andThen(() => {
+            assert.equal(currentURL(), DETAIL_URL + '?role_change=' + RD.idTwo);
+        });
+        var role = RF.put({id: RD.idTwo, name: RD.nameTwo, people: [PD.id]});
+        var payload = PF.put({id: PD.id, role: role.id});
+        payload.locations = [];
+        xhr(url,'PUT',JSON.stringify(payload),{},200);
+        generalPage.save();
+        andThen(() => {
+            assert.equal(currentURL(), PEOPLE_URL);
+        });
     });
 });
 
