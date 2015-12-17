@@ -1,9 +1,11 @@
 var BSRS_LOCATION_FACTORY = (function() {
-    var factory = function(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, config) {
+    var factory = function(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, phone_number_fixtures, address_fixtures, config) {
         this.location_defaults = location_defaults;
         this.location_level_defaults = location_level_defaults;
         this.location_status_defaults = location_status_defaults;
         this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
+        this.phone_numbers = phone_number_fixtures;
+        this.addresses = address_fixtures;
         this.config = config;
     };
     factory.prototype.get = function(i, name) {
@@ -24,7 +26,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             status: this.location_defaults.status,
             location_level: this.location_level_fixtures.detail(),
             children: [],
-            parents: []
+            parents: [],
         }
     };
     factory.prototype.list = function() {
@@ -63,7 +65,10 @@ var BSRS_LOCATION_FACTORY = (function() {
         return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i) {
-        return this.generate(this.location_defaults.idOne);
+        var model = this.generate(this.location_defaults.idOne);
+        model.phone_numbers = this.phone_numbers.get();
+        model.addresses = this.addresses.get();
+        return model;
     };
     factory.prototype.put = function(location) {
         var response = this.generate(location.id);
@@ -98,14 +103,16 @@ if (typeof window === 'undefined') {
     var location_status_defaults = require('../vendor/defaults/location-status');
     var location_level_fixtures = require('../vendor/location_level_fixtures');
     var location_level_defaults = require('../vendor/defaults/location-level');
+    var address_fixtures = require('../vendor/address_fixtures');
+    var phone_number_fixtures = require('../vendor/phone_number_fixtures');
     var config = require('../config/environment');
     objectAssign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, config);
+    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, phone_number_fixtures, address_fixtures, config);
 } else {
-    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, mixin, config) {
+    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/phone_number_fixtures', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, phone_number_fixtures, address_fixtures, mixin, config) {
         'use strict';
         Object.assign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, config);
+        var Factory = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, phone_number_fixtures, address_fixtures, config);
         return {default: Factory};
     });
 }

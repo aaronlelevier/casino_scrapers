@@ -2,13 +2,18 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import inject from 'bsrs-ember/utilities/store';
+import PhoneNumberMixin from 'bsrs-ember/mixins/model/general/phone_number';
+import AddressMixin from 'bsrs-ember/mixins/model/general/address';
+import CopyMixin from 'bsrs-ember/mixins/model/copy';
 
-var LocationModel = Model.extend(NewMixin, {
+var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberMixin, {
     store: inject('main'),
     name: attr(''),
     number: attr(''),
     status_fk: undefined,
     tickets: [],
+    phone_number_fks: [],
+    address_fks: [],
     location_level_fk: undefined,
     locationLevelIsDirty: Ember.computed('location_levels.[]', 'location_level_fk', function() {
         const location_level_id = this.get('location_level.id');
@@ -77,9 +82,8 @@ var LocationModel = Model.extend(NewMixin, {
             this.change_status(status_fk);
         }
     },
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', function() {
-        var x = this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty');
-        return x;
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', function() {
+        return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     change_location_level(new_location_level_id) {
@@ -118,10 +122,14 @@ var LocationModel = Model.extend(NewMixin, {
     saveRelated() {
         this.saveLocationLevel();
         this.saveStatus();
+        this.savePhoneNumbers();
+        this.saveAddresses();
     },
     rollbackRelated() {
         this.rollbackLocationLevel();
         this.rollbackStatus();
+        this.rollbackPhoneNumbers();
+        this.rollbackAddresses();
     },
     serialize() {
         return {
