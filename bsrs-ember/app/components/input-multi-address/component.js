@@ -22,10 +22,9 @@ var MultiAddressComponent = ChildValidationComponent.extend(ValidationMixin, Cus
         append() {
             const id = this.get('uuid').v4();
             const type = this.get('default_type').get('id');
-            const related_field = this.get('related_field');
             const related_pk = this.get('related_pk');
             var model = {id: id, type: type};
-            model[related_field] = related_pk;
+            model['model_fk'] = related_pk;
             this.get('model').push(model);
         },
         delete(entry) {

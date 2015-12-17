@@ -78,10 +78,10 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             createdISOYesterday: '2014-12-23T23:41:59.905000Z',
             createdISOTwoDaysAgo: '2014-12-22T23:41:59.905000Z',
             createdISOTwoWeeksAgo: '2014-12-14T23:41:59.905000Z',
-            createdFormattedToday: 'Today at 5:41 am',
-            createdFormattedYesterday: 'Yesterday at 3:41 pm',
-            createdFormattedTwoDaysAgo: 'Monday at 3:41 pm',
-            createdFormattedTwoWeeksAgo: '12/14 at 3:41 pm',
+            createdFormattedToday: 'Today at',
+            createdFormattedYesterday: 'Yesterday at',
+            createdFormattedTwoDaysAgo: 'Monday at',
+            createdFormattedTwoWeeksAgo: '12/14 at',
         };
     };
     return factory;

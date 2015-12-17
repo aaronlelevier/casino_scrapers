@@ -8,9 +8,9 @@ import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 import RequesterMixin from 'bsrs-ember/mixins/model/ticket/requester';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
-import DateMixin from 'bsrs-ember/mixins/model/date-format';
+import DateFormatMixin from 'bsrs-ember/mixins/model/date-format';
 
-var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixin, TicketLocationMixin, DateMixin, {
+var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixin, TicketLocationMixin, DateFormatMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
     number: attr(''),

@@ -88,11 +88,11 @@ test('person will setup the correct relationship with phone numbers when deseria
     let response = PF.generate(PD.id);
     response.phone_numbers = PNF.get();
     subject.deserialize(response, PD.id);
-    let person_pk = phonenumber.get('person_fk');
+    let person_pk = phonenumber.get('model_fk');
     assert.ok(person_pk);
     assert.deepEqual(person.get('phone_number_fks'), [PND.idOne, PND.idTwo]);
     assert.ok(person.get('isNotDirty'));
-    assert.equal(phonenumber.get('person_fk'), PD.id);
+    assert.equal(phonenumber.get('model_fk'), PD.id);
 });
 
 test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with person setup with phone number relationship', (assert) => {
@@ -103,13 +103,14 @@ test('person will setup the correct relationship with phone numbers when deseria
     let response = PF.generate(PD.id);
     response.phone_numbers = PNF.get();
     subject.deserialize(response, PD.id);
-    let person_pk = phonenumber.get('person_fk');
+    let person_pk = phonenumber.get('model_fk');
     assert.ok(person_pk);
     assert.deepEqual(person.get('phone_number_fks'), [PND.idOne, PND.idTwo]);
     assert.ok(person.get('isNotDirty'));
-    assert.equal(phonenumber.get('person_fk'), PD.id);
+    assert.equal(phonenumber.get('model_fk'), PD.id);
 });
 
+/* ROLE */
 test('role will keep appending when deserialize_list is invoked with many people who play the same role', (assert) => {
     let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
@@ -136,6 +137,7 @@ test('role will setup the correct relationship with location_level when deserial
     assert.deepEqual(role_location_level.get('roles'), [RD.idOne]);
 });
 
+/* PERSON LOCATION */
 test('person-location m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
     let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
     let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
