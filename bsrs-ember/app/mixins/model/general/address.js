@@ -4,14 +4,14 @@ var AddressMixin = Ember.Mixin.create({
     addresses_all: Ember.computed(function() {
         let store = this.get('store');
         let filter = function(address) {
-            return this.get('id') === address.get('person_fk');
+            return this.get('id') === address.get('model_fk');
         };
         return store.find('address', filter.bind(this), ['removed']);
     }),
     addresses: Ember.computed(function() {
         let store = this.get('store');
         let filter = function(address) {
-            return this.get('id') === address.get('person_fk') && !address.get('removed');
+            return this.get('id') === address.get('model_fk') && !address.get('removed');
         };
         return store.find('address', filter.bind(this), ['removed']);
     }),

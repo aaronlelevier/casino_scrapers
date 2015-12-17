@@ -4,14 +4,14 @@ var PhoneNumberMixin = Ember.Mixin.create({
     phone_numbers_all: Ember.computed(function() {
         let store = this.get('store');
         let filter = function(phone_number) {
-            return this.get('id') === phone_number.get('person_fk');
+            return this.get('id') === phone_number.get('model_fk');
         };
         return store.find('phonenumber', filter.bind(this), ['removed']);
     }),
     phone_numbers: Ember.computed(function() {
         let store = this.get('store');
         let filter = function(phone_number) {
-            return this.get('id') === phone_number.get('person_fk') && !phone_number.get('removed');
+            return this.get('id') === phone_number.get('model_fk') && !phone_number.get('removed');
         };
         return store.find('phonenumber', filter.bind(this), ['removed']);
     }),

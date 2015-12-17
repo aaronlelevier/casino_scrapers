@@ -34,12 +34,12 @@ test('fullname property is a computed of first and last', (assert) => {
 });
 
 test('related phone numbers are not dirty when no phone numbers present', (assert) => {
-    let phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.unusedId});
+    let phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.unusedId});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
 });
 
 test('related addresses are not dirty when no addresses present', (assert) => {
-    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.unusedId});
+    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.unusedId});
     assert.ok(person.get('addressesIsNotDirty'));
 });
 
@@ -192,19 +192,19 @@ test('related role is not dirty if after rollback and save', (assert) => {
 /* PHONE NUMBERS AND ADDRESSES */
 test('related phone numbers are not dirty with original phone number model', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
-    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
 });
 
 test('related addresses are not dirty with original addresses model', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('addressesIsNotDirty'));
 });
 
 test('related phone number model is dirty when phone number is dirty (and phone number is not newly added)', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
-    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(phone_number.get('isNotDirty'));
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
@@ -214,7 +214,7 @@ test('related phone number model is dirty when phone number is dirty (and phone 
 
 test('related address model is dirty when address is dirty (and address is not newly added)', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('addressesIsNotDirty'));
     assert.ok(address.get('isNotDirty'));
     address.set('type', ADDRESS_TYPES_DEFAULTS.shippingId);
@@ -226,8 +226,8 @@ test('related address model is dirty when address is dirty (and address is not n
 test('person is dirty or related is dirty when model has been updated', (assert) => {
     store.clear('person');
     let person = store.push('person', {id: PD.idOne, username: PD.username, phone_number_fks: [PND.idOne], address_fks: [AD.idOne], role_fk: RD.idOne});
-    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirty'));
     assert.ok(phone_number.get('isNotDirty'));
     assert.ok(person.get('phoneNumbersIsNotDirty'));
@@ -271,8 +271,8 @@ test('person is dirty or related is dirty when model has been updated', (assert)
 
 test('save related will iterate over each phone number and save that model', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, model_fk: PD.idOne});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     assert.ok(person.get('phoneNumbersIsDirty'));
@@ -286,8 +286,8 @@ test('save related will iterate over each phone number and save that model', (as
 
 test('save related will iterate over each address and save that model', (assert) => {
     let person = store.push('person', {id: PD.idOne});
-    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne,  type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_address = store.push('address', {id: AD.idTwo, address: AD.streetTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
+    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne,  type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_address = store.push('address', {id: AD.idTwo, address: AD.streetTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
     assert.ok(person.get('addressesIsNotDirty'));
     first_address.set('type', ADDRESS_TYPES_DEFAULTS.shippingId);
     assert.ok(person.get('addressesIsDirty'));
@@ -301,9 +301,9 @@ test('save related will iterate over each address and save that model', (assert)
 
 test('savePhoneNumbers will remove any phone number model with no (valid) value', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo, PND.idThree]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let third_phone_number = store.push('phonenumber', {id: PND.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let third_phone_number = store.push('phonenumber', {id: PND.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
     second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
     third_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
@@ -325,9 +325,9 @@ test('savePhoneNumbers will remove any phone number model with no (valid) value'
 
 test('saveAddresses will remove any address model with no (valid) value', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo, PND.idThree]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let third_phone_number = store.push('phonenumber', {id: PND.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let third_phone_number = store.push('phonenumber', {id: PND.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
     second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
     third_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
@@ -349,9 +349,9 @@ test('saveAddresses will remove any address model with no (valid) value', (asser
 
 test('phoneNumbersDirty behaves correctly for phone numbers (newly) added', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo, PND.idThree]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let third_phone_number = store.push('phonenumber', {id: PND.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let third_phone_number = store.push('phonenumber', {id: PND.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.equal(person.get('phone_numbers').get('length'), 3);
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     first_phone_number.set('number', PND.numberOne);
@@ -362,9 +362,9 @@ test('phoneNumbersDirty behaves correctly for phone numbers (newly) added', (ass
 
 test('addressesIsDirty behaves correctly for addresses (newly) added', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo, AD.idThree]});
-    let first_address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
-    let third_address = store.push('address', {id: AD.idThree, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
+    let first_address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
+    let third_address = store.push('address', {id: AD.idThree, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
     assert.equal(person.get('addresses').get('length'), 3);
     assert.ok(person.get('addressesIsNotDirty'));
     first_address.set('address', AD.streetOne);
@@ -375,7 +375,7 @@ test('addressesIsDirty behaves correctly for addresses (newly) added', (assert) 
 
 test('phoneNumbersDirty behaves correctly for existing phone numbers', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.equal(person.get('phone_numbers').get('length'), 1);
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     first_phone_number.set('number', PND.numberTwo);
@@ -386,7 +386,7 @@ test('phoneNumbersDirty behaves correctly for existing phone numbers', (assert) 
 
 test('addressesDirty behaves correctly for existing addresses', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.equal(person.get('addresses').get('length'), 1);
     assert.ok(person.get('addressesIsNotDirty'));
     first_address.set('address', AD.streetTwo);
@@ -397,9 +397,9 @@ test('addressesDirty behaves correctly for existing addresses', (assert) => {
 
 test('phoneNumbersIsDirty is false when a phone number is added but does not have a (valid) number', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo, PND.idThree]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let third_phone_number = store.push('phonenumber', {id: PND.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let third_phone_number = store.push('phonenumber', {id: PND.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.equal(store.find('phonenumber').get('length'), 3);
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     assert.equal(store.find('phonenumber').get('length'), 3);
@@ -407,9 +407,9 @@ test('phoneNumbersIsDirty is false when a phone number is added but does not hav
 
 test('addressesIsDirty is false when an address is added but does not have a (valid) address', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo, AD.idThree]});
-    let first_address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
-    let third_address = store.push('address', {id: AD.idThree, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
+    let first_address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
+    let third_address = store.push('address', {id: AD.idThree, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
     assert.equal(store.find('address').get('length'), 3);
     assert.ok(person.get('addressesIsNotDirty'));
     assert.equal(store.find('address').get('length'), 3);
@@ -417,9 +417,9 @@ test('addressesIsDirty is false when an address is added but does not have a (va
 
 test('phoneNumbersIsDirty is false when a phone number is added but does not have a (valid) number without phone_number_fks', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: []});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let third_phone_number = store.push('phonenumber', {id: PND.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let third_phone_number = store.push('phonenumber', {id: PND.idThree, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.equal(store.find('phonenumber').get('length'), 3);
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     assert.equal(store.find('phonenumber').get('length'), 3);
@@ -427,9 +427,9 @@ test('phoneNumbersIsDirty is false when a phone number is added but does not hav
 
 test('addressesIsDirty is false when an address is added but does not have a (valid) address without address_fks', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: []});
-    let first_address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
-    let third_address = store.push('address', {id: AD.idThree, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
+    let first_address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
+    let third_address = store.push('address', {id: AD.idThree, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
     assert.equal(store.find('address').get('length'), 3);
     assert.ok(person.get('addressesIsNotDirty'));
     assert.equal(store.find('address').get('length'), 3);
@@ -437,8 +437,8 @@ test('addressesIsDirty is false when an address is added but does not have a (va
 
 test('rollback related will iterate over each phone number and rollback that model', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, model_fk: PD.idOne});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     assert.ok(person.get('phoneNumbersIsDirty'));
@@ -452,8 +452,8 @@ test('rollback related will iterate over each phone number and rollback that mod
 
 test('rollback related will iterate over each address and rollback that model', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo]});
-    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_address = store.push('address', {id: AD.idTwo, address: AD.streetTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
+    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_address = store.push('address', {id: AD.idTwo, address: AD.streetTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
     assert.ok(person.get('addressesIsNotDirty'));
     first_address.set('type', ADDRESS_TYPES_DEFAULTS.shippingId);
     assert.ok(person.get('addressesIsDirty'));
@@ -468,10 +468,10 @@ test('rollback related will iterate over each address and rollback that model', 
 
 test('when new phone number is added, the person model is not dirty unless number is altered', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
-    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
-    let phone_number_two = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let phone_number_two = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     phone_number_two.set('number', '888-888-8888');
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -483,10 +483,10 @@ test('when new phone number is added, the person model is not dirty unless numbe
 
 test('when new address is added, the person model is not dirty unless address is altered', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('addressesIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
-    let address_two = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let address_two = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     address_two.set('address', '123 Mexico');
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -498,10 +498,10 @@ test('when new address is added, the person model is not dirty unless address is
 
 test('when new phone number is added, the person model is dirty when the type or number attrs are modified', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
-    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
-    let phone_number_two = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let phone_number_two = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     phone_number_two.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -515,10 +515,10 @@ test('when new phone number is added, the person model is dirty when the type or
 
 test('when new address is added, the person model is not dirty when the type or address attrs are modified', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let address = store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('addressesIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
-    let address_two = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let address_two = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     address_two.set('type', ADDRESS_TYPES_DEFAULTS.shippingId);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -535,7 +535,7 @@ test('when new phone number is added after render, the person model is not dirty
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('isNotDirty'));
     let phonenumbers = person.get('phone_numbers');
-    let added_phone_num = phonenumbers.push({id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let added_phone_num = phonenumbers.push({id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -545,15 +545,15 @@ test('when new address is added after render, the person model is not dirty when
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('isNotDirty'));
     let addresses = person.get('addresses');
-    let added_address = addresses.push({id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let added_address = addresses.push({id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('when phone number is removed after render, the person model is dirty (two phone numbers)', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo]});
-    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('isNotDirty'));
     let phonenumbers = person.get('phone_numbers');
@@ -565,9 +565,9 @@ test('when phone number is removed after render, the person model is dirty (two 
 test('when address is removed after render, the person model is dirty (two addresses)', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo]});
     let address = store.push('address', {id: AD.idOne, address: AD.streetOne, city: AD.cityOne, state: AD.stateOne, postal_code: AD.zipOne,
-                             type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+                             type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     store.push('address', {id: AD.idTwo, address: AD.streetTwo, city: AD.cityTwo, state: AD.stateTwo, postal_code: AD.zipOne,
-                             type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+                             type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('isNotDirty'));
     let addresses = person.get('addresses');
@@ -578,10 +578,10 @@ test('when address is removed after render, the person model is dirty (two addre
 
 test('when no phone number and new phone number is added and updated, expect related isDirty to be true', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
-    store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    let phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -593,10 +593,10 @@ test('when no phone number and new phone number is added and updated, expect rel
 
 test('when no address and new address is added and updated, expect related isDirty to be true', (assert) => {
     let person = store.push('person', {id: PD.idOne});
-    store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    store.push('address', {id: AD.idOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    let address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     address.set('type', ADDRESS_TYPES_DEFAULTS.shippingId);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -608,7 +608,7 @@ test('when no address and new address is added and updated, expect related isDir
 
 test('when phone number is removed after render, the person model is dirty', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
-    let phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let phone_number = store.push('phonenumber', {id: PND.idOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('isNotDirty'));
     phone_number.set('removed', true);
@@ -619,7 +619,7 @@ test('when phone number is removed after render, the person model is dirty', (as
 test('when address is removed after render, the person model is dirty', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
     let address = store.push('address', {id: AD.idOne, address: AD.streetOne, city: AD.cityOne, state: AD.stateOne, postal_code: AD.zipOne,
-                             type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+                             type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('isNotDirty'));
     address.set('removed', true);
@@ -964,8 +964,8 @@ test('location_ids computed returns a flat list of ids for each location', (asse
 
 test('cleanup phone numbers works as expected on removal and save', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, model_fk: PD.idOne});
     let phone_numbers = store.find('phone-number');
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     second_phone_number.set('removed', true);
@@ -979,11 +979,11 @@ test('cleanup phone numbers works as expected on removal and save', (assert) => 
 
 test('cleanup phone numbers works as expected on add and save', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     assert.equal(person.get('phone_numbers').get('length'), 1);
     assert.equal(person.get('phone_numbers_all').get('length'), 1);
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, model_fk: PD.idOne});
     second_phone_number.set('number', PND.numberTwo);
     assert.ok(person.get('phoneNumbersIsDirty'));
     assert.equal(person.get('phone_numbers').get('length'), 2);
@@ -995,8 +995,8 @@ test('cleanup phone numbers works as expected on add and save', (assert) => {
 
 test('cleanup phone numbers works as expected on removal and rollback', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne, PND.idTwo]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, number: PND.numberTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, model_fk: PD.idOne});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     second_phone_number.set('removed', true);
     assert.ok(person.get('phoneNumbersIsDirty'));
@@ -1006,11 +1006,11 @@ test('cleanup phone numbers works as expected on removal and rollback', (assert)
 
 test('cleanup phone numbers works as expected on add and rollback', (assert) => {
     let person = store.push('person', {id: PD.idOne, phone_number_fks: [PND.idOne]});
-    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_phone_number = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, type: PHONE_NUMBER_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     assert.equal(person.get('phone_numbers').get('length'), 1);
     assert.equal(person.get('phone_numbers_all').get('length'), 1);
-    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, person_fk: PD.idOne});
+    let second_phone_number = store.push('phonenumber', {id: PND.idTwo, type: PHONE_NUMBER_TYPES_DEFAULTS.mobileId, model_fk: PD.idOne});
     assert.ok(second_phone_number.get('invalid_number'));
     assert.equal(person.get('phone_numbers').get('length'), 2);
     assert.equal(person.get('phone_numbers_all').get('length'), 2);
@@ -1021,8 +1021,8 @@ test('cleanup phone numbers works as expected on add and rollback', (assert) => 
 
 test('cleanup addresses works as expected on removal and save', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo]});
-    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne,  type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_address = store.push('address', {id: AD.idTwo, address: AD.streetTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
+    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne,  type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_address = store.push('address', {id: AD.idTwo, address: AD.streetTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
     assert.ok(person.get('addressesIsNotDirty'));
     second_address.set('removed', true);
     assert.ok(person.get('addressesIsDirty'));
@@ -1035,11 +1035,11 @@ test('cleanup addresses works as expected on removal and save', (assert) => {
 
 test('cleanup addresses works as expected on add and save', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne, type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne, type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('addressesIsNotDirty'));
     assert.equal(person.get('addresses').get('length'), 1);
     assert.equal(person.get('addresses_all').get('length'), 1);
-    let second_address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
+    let second_address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
     second_address.set('address', AD.streetTwo);
     assert.ok(person.get('addressesIsDirty'));
     assert.equal(person.get('addresses').get('length'), 2);
@@ -1051,8 +1051,8 @@ test('cleanup addresses works as expected on add and save', (assert) => {
 
 test('cleanup addresses works as expected on removal and rollback', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne, AD.idTwo]});
-    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne,  type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
-    let second_address = store.push('address', {id: AD.idTwo, address: AD.streetTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
+    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne,  type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
+    let second_address = store.push('address', {id: AD.idTwo, address: AD.streetTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
     assert.ok(person.get('addressesIsNotDirty'));
     second_address.set('removed', true);
     assert.ok(person.get('addressesIsDirty'));
@@ -1062,11 +1062,11 @@ test('cleanup addresses works as expected on removal and rollback', (assert) => 
 
 test('cleanup addresses works as expected on add and rollback', (assert) => {
     let person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
-    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne,  type: ADDRESS_TYPES_DEFAULTS.officeId, person_fk: PD.idOne});
+    let first_address = store.push('address', {id: AD.idOne, address: AD.streetOne,  type: ADDRESS_TYPES_DEFAULTS.officeId, model_fk: PD.idOne});
     assert.ok(person.get('addressesIsNotDirty'));
     assert.equal(person.get('addresses').get('length'), 1);
     assert.equal(person.get('addresses_all').get('length'), 1);
-    let second_address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, person_fk: PD.idOne});
+    let second_address = store.push('address', {id: AD.idTwo, type: ADDRESS_TYPES_DEFAULTS.shippingId, model_fk: PD.idOne});
     assert.ok(second_address.get('invalid_address'));
     assert.equal(person.get('addresses').get('length'), 2);
     assert.equal(person.get('addresses_all').get('length'), 2);

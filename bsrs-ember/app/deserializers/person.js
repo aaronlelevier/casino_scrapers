@@ -16,7 +16,7 @@ var extract_phone_numbers = function(model, store) {
     let phone_numbers = model.phone_numbers || [];
     phone_numbers.forEach((phone_number) => {
         phone_number_fks.push(phone_number.id);
-        phone_number.person_fk = model.id;
+        phone_number.model_fk = model.id;
         store.push('phonenumber', phone_number);
     });
     delete model.phone_numbers;
@@ -28,7 +28,7 @@ var extract_addresses = function(model, store) {
     let addresses = model.addresses || [];
     addresses.forEach((address) => {
         address_fks.push(address.id);
-        address.person_fk = model.id;
+        address.model_fk = model.id;
         // store.push('address-type', address.type);
         // address.type = address.type.id;
         store.push('address', address);
