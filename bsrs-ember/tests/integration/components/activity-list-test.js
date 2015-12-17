@@ -65,7 +65,7 @@ test('activity list will dynamically generate a mix of activity types', function
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(3)`).text().trim(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} a month ago`);
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(4)`).text().trim(), `${PD.fullname} changed the priority from ${trans.t(TD.priorityTwo)} to ${trans.t(TD.priorityOne)} 2 months ago`);
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(5)`).text().trim(), `${PD.fullname} created this ticket 3 months ago`);
-    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(6)`).text().trim(), `${PD.fullname} commented 3 months ago ${TD.commentOne}`);
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(6)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
     assert.equal(trim(this.$(`${ACTIVITY_ITEMS}:eq(7)`).text()), `${PD.fullname} uploaded 1 files 6 months ago ${GD.nameTicketAttachmentOne}`);
     // assert.equal(this.$(`${ATTACHMENT_FILE}:eq(2)`).attr('href'), `/media/${TAD.fileAttachmentAddOne}`);//not sure where this cam from....there is only 8 activity push above
 });
@@ -97,19 +97,13 @@ test('activity list can be filtered to show comments or status updates', functio
     this.render(hbs`{{activity-list model=model}}`);
     let $component = this.$(`${ACTIVITY_ITEMS}`);
     assert.equal($component.length, 8);
-
     this.$(`${STATUS_TAB}`).click();
-
     $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
     assert.equal($component.length, 2);
-
     this.$(`${COMMENT_TAB}`).click();
-
     $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
     assert.equal($component.length, 2);
-
     this.$(`${ALL_TAB}`).click();
-
     $component = this.$(`${ACTIVITY_ITEMS}`).filter(':visible');
     assert.equal($component.length, 8);
 

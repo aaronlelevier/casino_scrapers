@@ -12,7 +12,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     factory.prototype.get_comment = function(i, ticket_pk) {
         var d = new Date();
         var ticket_id = ticket_pk || this.td.idOne;
-        var activity = {id: i, type: 'comment', created: d.setDate(d.getDate()-90), ticket: ticket_id};
+        var activity = {id: i, type: 'comment', created: d.setDate(d.getDate()-120), ticket: ticket_id};
         activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
         activity.content = {'comment': this.td.commentOne};
         return activity;

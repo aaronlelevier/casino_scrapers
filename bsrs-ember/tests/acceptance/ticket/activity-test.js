@@ -422,7 +422,7 @@ test('ticket detail shows the activity comment', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} commented 3 months ago ${TD.commentOne}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
     });
 });
 
@@ -432,8 +432,8 @@ test('ticket detail shows the activity comment (multiple activities with comment
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} commented 3 months ago ${TD.commentOne}`);
-        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} commented 3 months ago ${TD.commentOne}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
     });
 });
 
