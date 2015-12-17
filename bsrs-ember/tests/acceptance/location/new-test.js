@@ -36,7 +36,9 @@ module('Acceptance | location-new', {
             number: LD.storeNumber,
             location_level: LLD.idOne,
             children: [],
-            parents: []
+            parents: [],
+            phone_numbers: [],
+            addresses: []
         };
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };

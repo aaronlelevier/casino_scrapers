@@ -73,6 +73,8 @@ var BSRS_LOCATION_FACTORY = (function() {
     factory.prototype.put = function(location) {
         var response = this.generate(location.id);
         response.location_level = this.location_level_fixtures.detail().id;
+        response.phone_numbers = this.phone_numbers.get();
+        response.addresses = this.addresses.get();
         for(var key in location) {
             response[key] = location[key];
         }

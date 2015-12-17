@@ -2,8 +2,8 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import inject from 'bsrs-ember/utilities/store';
-import PhoneNumberMixin from 'bsrs-ember/mixins/model/general/phone_number';
-import AddressMixin from 'bsrs-ember/mixins/model/general/address';
+import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
+import AddressMixin from 'bsrs-ember/mixins/model/address';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 
 var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberMixin, {
@@ -132,6 +132,22 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         this.rollbackAddresses();
     },
     serialize() {
+        var phone_numbers = this.get('phone_numbers').filter(function(num) {
+            if(num.get('invalid_number')) {
+                return;
+            }
+            return num;
+        }).map((num) => {
+            return num.serialize();
+        });
+        var addresses = this.get('addresses').filter(function(address) {
+            if (address.get('invalid_address')) {
+                return;
+            }
+            return address;
+        }).map((address) => {
+            return address.serialize();
+        });
         return {
             id: this.get('id'),
             name: this.get('name'),
@@ -139,7 +155,9 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             status: this.get('status.id'),
             location_level: this.get('location_level.id'),
             children: [],
-            parents: []
+            parents: [],
+            phone_numbers: phone_numbers,
+            addresses: addresses,
         };
     },
     removeRecord() {
