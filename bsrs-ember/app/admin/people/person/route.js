@@ -3,19 +3,14 @@ import inject from 'bsrs-ember/utilities/inject';
 import config from 'bsrs-ember/config/environment';
 import injectStore from 'bsrs-ember/utilities/store';
 import TabRoute from 'bsrs-ember/route/tab/route';
-import AddressType from 'bsrs-ember/models/address-type';
-import PhoneNumberType from 'bsrs-ember/models/phone-number-type';
+import ContactRouteMixin from 'bsrs-ember/mixins/route/contact';
 
-var PersonRoute = TabRoute.extend({
+var PersonRoute = TabRoute.extend(ContactRouteMixin, {
     store: injectStore('main'),
     repository: inject('person'),
     location_repo: inject('location'),
-    state_repo: inject('state'),
     status_repo: inject('status'),
-    country_repo: inject('country'),
     role_repo: inject('role'),
-    phone_number_type_repo: inject('phone-number-type'),
-    address_type_repo: inject('address-type'),
     queryParams: {
         role_change: {
             refreshModel: true
@@ -27,8 +22,6 @@ var PersonRoute = TabRoute.extend({
     model(params, transition) {
         const person_pk = params.person_id;
         const location_repo = this.get('location_repo');
-        const country_repo = this.get('country_repo');
-        const state_repo = this.get('state_repo');
         const status_repo = this.get('status_repo');
         const role_repo = this.get('role_repo');
         const repository = this.get('repository');
@@ -36,22 +29,18 @@ var PersonRoute = TabRoute.extend({
         if (!person.get('length') || person.get('isNotDirtyOrRelatedNotDirty')) {
             person = repository.findById(person_pk);
         }
-        let phone_number_type_repo = this.get('phone_number_type_repo');
-        let default_phone_number_type = phone_number_type_repo.get_default();
-        let address_type_repo = this.get('address_type_repo');
-        let default_address_type = address_type_repo.get_default();
-        let roles = role_repo.get_default();
-        let role_change = transition.queryParams.role_change;
+        const roles = role_repo.get_default();
+        const role_change = transition.queryParams.role_change;
         return {
             model: person,
             model_id: person_pk,
-            phone_number_types: phone_number_type_repo.find(),
-            countries: country_repo.find(),
-            state_list: state_repo.find(),
-            address_types: address_type_repo.find(),
+            phone_number_types: this.phone_number_type_repo.find(),
+            default_phone_number_type: this.phone_number_type_repo.get_default(),
+            address_types: this.address_type_repo.find(),
+            default_address_type: this.address_type_repo.get_default(),
+            countries: this.country_repo.find(),
+            state_list: this.state_repo.find(),
             statuses: status_repo.find(),
-            default_phone_number_type: default_phone_number_type,
-            default_address_type: default_address_type,
             locales: this.get('store').find('locale'),
             roles: roles,
             role_change: role_change,
