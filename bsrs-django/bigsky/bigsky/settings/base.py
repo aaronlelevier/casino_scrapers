@@ -109,7 +109,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # AbstractUser Config
 AUTH_USER_MODEL = 'person.Person'
-USERNAME_FIELD = 'username'
 
 
 LANGUAGE_CODE = 'en'
