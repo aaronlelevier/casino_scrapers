@@ -135,6 +135,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self.gen_elem_page.click_save_btn()
         # Go to newly created Location's Detail view
         self.driver_wait.find_elements_by_class_name(location_page.list_data)
+        self.wait_for_xhr_request("t-sort-name-dir").click()
         self.driver.refresh()
         location_list_view = location_page.find_list_name()
         location_page.click_name_in_list(location_name, location_list_view)
@@ -182,6 +183,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         self._fill_in(location_level)
         self.gen_elem_page.click_save_btn()
         # new record shows in List view
+        self.wait_for_xhr_request("t-sort-name-dir").click()
         location_levels = location_level_page.find_list_data()
         self.driver.refresh()
         location_level_list_view = location_level_page.find_list_name()
@@ -200,6 +202,10 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_level_page.click_name_in_list(location_level_name, location_level_list_view)
         ### DELETE
         # Go to the first Role's Detail view
+        self.wait_for_xhr_request("t-sort-name-dir").click()
+        # print(location_level_name)
+        # import time;time.sleep(100)
+        location_level_list_view = location_level_page.find_list_name()
         location_level_page.find_wait_and_assert_elem("t-location-level-name", location_level_name)
         # click Delete
         self.gen_elem_page.click_dropdown_delete()
