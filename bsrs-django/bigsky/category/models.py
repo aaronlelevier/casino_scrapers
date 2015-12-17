@@ -48,7 +48,6 @@ class Category(BaseModel):
     level = models.IntegerField(blank=True, default=0)
 
     class Meta:
-        # ordering = ('label', 'name',)
         ordering = ('level',)
 
     def save(self, *args, **kwargs):

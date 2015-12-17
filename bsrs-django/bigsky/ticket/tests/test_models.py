@@ -84,21 +84,6 @@ class TicketTests(TestCase):
         self.assertIsInstance(ticket.status, TicketStatus)
         self.assertIsInstance(ticket.priority, TicketPriority)
 
-    def test_category_names(self):
-        ticket = Ticket.objects.first()
-        [ticket.categories.remove(c) for c in ticket.categories.all()]
-        # Join Categories to the Ticket
-        category_zero = Category.objects.filter(level=0)[0]
-        category_one = Category.objects.filter(level=1)[0]
-        ticket.categories.add(category_zero)
-        ticket.categories.add(category_one)
-
-        self.assertTrue(hasattr(ticket, 'category_names'))
-        self.assertEqual(
-            ticket.category_names,
-            "{} - {}".format(category_zero.name, category_one.name)
-        )
-
 
 class TicketActivityTests(TestCase):
     
@@ -220,11 +205,3 @@ class TicketCategoryOrderingTests(TicketCategoryOrderingSetupMixin, TestCase):
 
         for i, obj in enumerate(queryset):
             self.assertEqual(manual[i].id, obj.id)
-
-    def test_order_by__category_names(self):
-        queryset = Ticket.objects.order_by('category_names')
-
-        self.assertEqual(
-            queryset[0].category_names,
-            "Loss Prevention - Locks - Drawer Lock"
-        )

@@ -62,7 +62,6 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         self.assertEqual(ticket['requester'], str(self.ticket.requester.id))
         self.assertEqual(ticket['request'], self.ticket.request)
         self.assertEqual(ticket['number'], self.ticket.number)
-        self.assertEqual(ticket['category_names'], self.ticket.category_names)
         self.assertEqual(
             self.ticket.created.strftime('%m/%d/%Y'),
             datetime.datetime.strptime(str(ticket['created']), '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y')
@@ -1018,24 +1017,6 @@ class TicketCategoryOrderingListTests(TicketCategoryOrderingSetupMixin, APITrans
             categories = ticket.categories.order_by('level')
             for i2, category in enumerate(categories):
                 self.assertEqual(data['categories'][i2]['id'], str(category.id))
-
-    def test_ordering__new_ticket_explicit(self):
-        """
-        The new ticket should be alphabetically placed at the start, but based upon a 
-        'created' sort, would be placed at the end.
-        """
-        queryset = Ticket.objects.order_by('category_names')
-
-        response = self.client.get('/api/tickets/?ordering=category_names')
-        data = json.loads(response.content.decode('utf8'))
-
-        self.assertEqual(len(data['results']), 6)
-        self.assertEqual(data['results'][0]['id'], str(queryset[0].id))
-        self.assertEqual(data['results'][1]['id'], str(queryset[1].id))
-        self.assertEqual(data['results'][2]['id'], str(queryset[2].id))
-        self.assertEqual(data['results'][3]['id'], str(queryset[3].id))
-        self.assertEqual(data['results'][4]['id'], str(queryset[4].id))
-        self.assertEqual(data['results'][5]['id'], str(queryset[5].id))
 
 
 ### COMMENT OUT: Until these filters are added to the Ticket List API get_queryset mixin
