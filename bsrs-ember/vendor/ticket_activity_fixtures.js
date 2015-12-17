@@ -111,7 +111,8 @@ var TICKET_ACTIVITY_FACTORY = (function() {
             added_removed.push(person);
         }
         var ticket_id = ticket_pk || this.td.idOne;
-        var activity = {id: i, type: type, created: d.setDate(d.getDate()-15), ticket: ticket_id};
+        var date_reset = type === 'cc_remove' ? 20 : 15;
+        var activity = {id: i, type: type, created: d.setDate(d.getDate()-date_reset), ticket: ticket_id};
         activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
         var key = type === 'cc_add' ? 'added' : 'removed';
         activity.content = {};
