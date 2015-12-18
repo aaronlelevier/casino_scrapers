@@ -32,7 +32,7 @@ moduleForComponent('activity-list', 'integration: activity-list', {
     }
 });
 
-test('scott activity list will dynamically generate a mix of activity types', function(assert) {
+test('activity list will dynamically generate a mix of activity types', function(assert) {
     let person_to_and_from_json = TAF.get_assignee_person_and_to_from_json(TAD.idAssigneeOne);
     store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
     store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwo});

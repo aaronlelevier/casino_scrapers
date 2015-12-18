@@ -131,24 +131,6 @@ test('visiting admin/location', (assert) => {
     });
 });
 
-test('when editing name to invalid, it checks for validation', (assert) => {
-    visit(DETAIL_URL);
-    fillIn('.t-location-name', '');
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
-    });
-    fillIn('.t-location-name', LD.storeNameTwo);
-    let response = LF.detail(LD.idOne);
-    let payload = LF.put({id: LD.idOne, name: LD.storeNameTwo});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), LOCATION_URL);
-    });
-});
-
 test('clicking cancel button will take from detail view to list view', (assert) => {
     visit(LOCATION_URL);
     andThen(() => {
@@ -347,37 +329,6 @@ test('newly added addresses without a valid name are ignored and removed when us
     });
 });
 
-test('phone numbers without a valid number are ignored and removed on save', (assert) => {
-    visit(DETAIL_URL);
-    click('.t-add-btn:eq(0)');
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-        assert.equal(visible_errors.length, 0);
-    });
-    fillIn('.t-new-entry:eq(2)', '34');
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-        assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
-    });
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-        assert.equal(visible_errors.length, 1);
-        assert.equal(store.find('phonenumber').get('length'), 3);
-    });
-    fillIn('.t-new-entry:eq(2)', '');
-    var response = LF.detail(LD.idOne);
-    var payload = LF.put({id: LD.idOne});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), LOCATION_URL);
-        assert.equal(store.find('phonenumber').get('length'), 2);
-    });
-});
-
 test('address without a valid address or zip code are ignored and removed on save', (assert) => {
     visit(DETAIL_URL);
     click('.t-add-address-btn:eq(0)');
@@ -426,81 +377,6 @@ test('address without a valid address or zip code are ignored and removed on sav
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(store.find('address').get('length'), 2);
-    });
-});
-
-test('when editing phone numbers and addresses to invalid, it checks for validation', (assert) => {
-    random.uuid = function() { return UUID.value; };
-    visit(DETAIL_URL);
-    click('.t-add-btn:eq(0)');
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-        assert.equal(visible_errors.length, 0);
-    });
-    fillIn('.t-new-entry:eq(2)', '34');
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-        assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
-    });
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-        assert.equal(visible_errors.length, 1);
-        assert.equal(find('.t-input-multi-phone-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid phone number');
-    });
-    fillIn('.t-new-entry:eq(2)', '515-222-3333');
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-        assert.equal(visible_errors.length, 0);
-    });
-    click('.t-add-address-btn:eq(0)');
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-        assert.equal(visible_errors.length, 0);
-    });
-    fillIn('.t-address-address:eq(2)', AD.streetThree);
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-        assert.equal(visible_errors.length, 0);
-    });
-    fillIn('.t-address-address:eq(2)', '');
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-address-validation-error:not(:hidden)');
-        assert.equal(visible_errors.length, 1);
-    });
-    fillIn('.t-address-address:eq(2)', AD.streetThree);
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-phone-validation-format-error:not(:hidden)');
-        let visible_address_errors = find('.t-input-multi-address-validation-format-error:not(:hidden)');
-        assert.equal(visible_errors.length, 0);
-        assert.equal(visible_address_errors.length, 0);
-    });
-    fillIn('.t-address-postal-code:eq(2)', AD.zipOne);
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-        assert.equal(visible_errors.length, 0);
-    });
-    fillIn('.t-address-postal-code:eq(2)', '');
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-        assert.equal(visible_errors.length, 1);
-    });
-    fillIn('.t-address-postal-code:eq(2)', AD.zipOne);
-    andThen(() => {
-        let visible_errors = find('.t-input-multi-address-zip-validation-error:not(:hidden)');
-        assert.equal(visible_errors.length, 0);
-    });
-    var response = LF.detail(LD.idOne);
-    var payload = LF.put({id: LD.idOne});
-    payload.phone_numbers.push({id: 'abc123', number: '515-222-3333', type: PNTD.officeId});
-    payload.addresses.push({id: 'abc123', type: ATD.officeId, address: AD.streetThree, postal_code: AD.zipOne});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), LOCATION_URL);
     });
 });
 
@@ -802,58 +678,6 @@ test('when you deep link to the location detail view you can change the address 
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL);
-        var location = store.find('location', LD.idOne);
-        assert.ok(location.get('isNotDirty'));
-        assert.equal(location.get('addresses').objectAt(0).get('type'), ATD.shippingId);
-        assert.equal(location.get('addresses').objectAt(2).get('type'), ATD.officeId);
-        assert.ok(location.get('addresses').objectAt(0).get('isNotDirty'));
-    });
-});
-
-test('when you deep link to the location detail view you can add and save a new phone number with validation', (assert) => {
-    random.uuid = function() { return UUID.value; };
-    visit(DETAIL_URL);
-    click('.t-add-btn:eq(0)');
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-    });
-    var phone_numbers = PNF.put();
-    phone_numbers[0].type = PNTD.mobileId;
-    var response = LF.detail(LD.idOne);
-    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
-    var payload = LF.put({id: LD.idOne, phone_numbers: phone_numbers});
-    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    fillIn('.t-input-multi-phone select:eq(0)', PNTD.mobileId);
-    fillIn('.t-new-entry:eq(2)', PND.numberThree);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), LOCATION_URL);
-        var location = store.find('location', LD.idOne);
-        assert.ok(location.get('isNotDirty'));
-        assert.equal(location.get('phone_numbers').objectAt(0).get('type'), PNTD.mobileId);
-        assert.equal(location.get('phone_numbers').objectAt(2).get('type'), PNTD.officeId);
-        assert.ok(location.get('phone_numbers').objectAt(0).get('isNotDirty'));
-    });
-});
-
-test('when you deep link to the location detail view you can add and save a new address with validation', (assert) => {
-    random.uuid = function() { return UUID.value; };
-    visit(DETAIL_URL);
-    click('.t-add-address-btn:eq(0)');
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-    });
-    var addresses = AF.put();
-    addresses[0].type = ATD.shippingId;
-    var response = LF.detail(LD.idOne);
-    addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
-    var payload = LF.put({id: LD.idOne, addresses: addresses});
-    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-    fillIn('.t-input-multi-address select:eq(0)', ATD.shippingId);
-    fillIn('.t-address-address:eq(2)', AD.streetThree);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), LOCATION_URL);
         var location = store.find('location', LD.idOne);
         assert.ok(location.get('isNotDirty'));
         assert.equal(location.get('addresses').objectAt(0).get('type'), ATD.shippingId);
