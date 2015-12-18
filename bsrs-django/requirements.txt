@@ -1,11 +1,11 @@
 # django
-Django==1.8.7
+Django==1.9
 django-cors-headers==1.1.0
 django-filter==0.10.0
 django-fsm==2.3.0
 djangorestframework==3.3.1
 djangorestframework-filters==0.4.0
-model-mommy==1.2.4
+model-mommy==1.2.6
 
 # misc
 beautifulsoup4==4.4.0
