@@ -5,6 +5,7 @@ AUTH_USER_MODEL = 'person.Person'
 
 
 CI_APPS = [
+    'nose',
     'django_nose',
     'django_coverage',
     ]

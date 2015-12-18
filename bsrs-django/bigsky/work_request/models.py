@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.db import models
 
 from django_fsm import FSMKeyField, FSMFieldMixin, transition
@@ -77,7 +78,7 @@ class WorkRequestStatus(models.Model):
 class WorkRequest(models.Model):
     status = FSMKeyField(WorkRequestStatus, default='new', protected=True)
     request = models.CharField(max_length=254, blank=True, null=True)
-    approver = models.ForeignKey(Person, blank=True, null=True)
+    approver = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True)
 
     def __str__(self):
         return str(self.id)

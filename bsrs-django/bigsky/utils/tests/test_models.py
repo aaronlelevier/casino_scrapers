@@ -33,32 +33,6 @@ class TesterManagerTests(TestCase):
         self.assertEqual(Tester.objects_all.count(), 2)
 
 
-class TesterTests(TestCase):
-    # Empty Model to test Base Model Methods
-
-    def setUp(self):
-        # default ``objects`` model manager should only
-        # return non-deleted objects
-        self.t_del = mommy.make(Tester, deleted=timezone.now())
-        self.t_ok = mommy.make(Tester)
-
-    def test_create(self):
-        # Confirm can pass in the ``uuid`` instead of only auto-generating it
-        id = uuid.uuid4()
-        tester = mommy.make(Tester, id=id)
-        self.assertEqual(str(id), str(tester.id))
-
-    def test_delete(self):
-        # can't hide already ``deleted=True`` object, so should have
-        # the same object count
-        self.t_del.delete()
-        self.assertEqual(len(Tester.objects_all.all()), 2)
-
-    def test_delete_real(self):
-        self.t_del.delete(override=True)
-        self.assertEqual(len(Tester.objects_all.all()), 1)
-
-
 class TesterPermissionTests(TestCase):
 
     def setUp(self):

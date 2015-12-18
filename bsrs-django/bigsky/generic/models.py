@@ -28,7 +28,7 @@ class SavedSearch(BaseModel):
     """
     name = models.CharField(max_length=254,
         help_text="name of the saved search that the Person designates.")
-    person = models.ForeignKey(Person,
+    person = models.ForeignKey(settings.AUTH_USER_MODEL,
         help_text="The Person who saves the search.")
     endpoint_name = models.CharField(max_length=254,
         help_text="the Ember List API route name. i.e. 'admin.people.index'.")

@@ -259,8 +259,6 @@ class Person(BaseModel, AbstractUser):
     :pw: password
     :ooto: out-of-the-office
     '''
-    # USERNAME_FIELD = 'username'
-
     # Keys
     role = models.ForeignKey(Role)
     status = models.ForeignKey(PersonStatus, blank=True, null=True)

@@ -8,7 +8,7 @@ import shutil
 from django.conf import settings
 from django.test.client import MULTIPART_CONTENT, BOUNDARY, encode_multipart
 from django.core.urlresolvers import reverse
-from django.db.models.loading import get_model
+from django.apps import apps
 
 from model_mommy import mommy
 from rest_framework.test import APITestCase
@@ -129,7 +129,7 @@ class ExportDataTests(APITestCase):
             'fields': ['id', 'username'],
             'query_params': {'username__icontains': 'aaron'}
         }
-        model = get_model(data['app_name'], data['model_name'])
+        model = apps.get_model(data['app_name'], data['model_name'])
         response = self.client.post(reverse("export_data"), data, format='json')
         self.assertEqual(response.status_code, 200)
         self.assertEquals(

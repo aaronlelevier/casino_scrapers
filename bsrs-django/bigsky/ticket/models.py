@@ -82,10 +82,10 @@ class Ticket(BaseModel):
     location = models.ForeignKey(Location)
     status = models.ForeignKey(TicketStatus, blank=True, null=True)
     priority = models.ForeignKey(TicketPriority, blank=True, null=True)
-    assignee = models.ForeignKey(Person, blank=True, null=True,
+    assignee = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name="assignee_tickets")
-    cc = models.ManyToManyField(Person, blank=True)
-    requester = models.ForeignKey(Person, blank=True, null=True,
+    cc = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
+    requester = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name="requester_tickets")
     categories = models.ManyToManyField(Category, blank=True)
     # Fields
