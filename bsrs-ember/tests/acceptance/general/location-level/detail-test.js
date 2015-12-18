@@ -251,6 +251,7 @@ test('can remove and add back children', (assert) => {
         const model = store.find('location-level', LLD.idOne);
         assert.equal(model.get('children_fks').length, 6);
     });
+    page.childrenClickDropdown();
     page.childrenClickOptionFirst();
     let children = LLD.companyChildren;
     let payload = LLF.put({id: LLD.idOne, name: LLD.nameCompany, children: children});
