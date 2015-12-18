@@ -432,6 +432,8 @@ class Person(BaseModel, AbstractUser):
         for l in self.locations.all():
             if l.location_level != self.role.location_level:
                 self.locations.remove(l)
+                raise ValidationError("{} != {}"
+                    .format(l.location_level, self.role.location_level))
 
     def _update_max_passwords_history(self):
         if len(self.password_history) > settings.MAX_PASSWORDS_STORED:

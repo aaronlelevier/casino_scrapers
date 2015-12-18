@@ -4,11 +4,40 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from accounting.models import Currency
+from category.tests.factory import create_single_category
 from location.models import Location, LocationLevel
 from location.tests.factory import create_location, create_locations
 from person.models import Person, Role
 from person.tests import factory
 from utils.helpers import generate_uuid
+
+
+class PreConfiguredPersonTests(TestCase):
+
+    def setUp(self):
+        self.dm = factory.DistrictManager()
+
+    def test_person(self):
+        self.assertEqual(self.dm.person.username, 'district-manager-1')
+        self.assertEqual(self.dm.person.role.name, 'district-manager')
+        self.assertEqual(self.dm.person.role, self.dm.role)
+
+    def test_location_level(self):
+        self.assertEqual(self.dm.role.location_level, self.dm.location_level)
+        self.assertEqual(
+            self.dm.location.location_level,
+            self.dm.location_level
+        )
+
+    def test_location(self):
+        self.assertIn(
+            self.dm.location,
+            self.dm.person.locations.all()
+        )
+
+    def test_categories(self):
+        self.assertEqual(self.dm.role.categories.count(), 1)
+        self.assertEqual(self.dm.role.categories.first().name, "Repair")
 
 
 class FactoryTests(TestCase):
@@ -41,6 +70,18 @@ class FactoryTests(TestCase):
         role = factory.create_role(location_level=location_level)
 
         self.assertEqual(role.location_level.name, location_level.name)
+
+    def test_create_role_explicit_category(self):
+        category = create_single_category('foo')
+        role = factory.create_role(category=category)
+
+        self.assertEqual(role.categories.count(), 1)
+        self.assertEqual(role.categories.first().name, category.name)
+
+    def test_create_role_default_category(self):
+        role = factory.create_role()
+
+        self.assertEqual(role.categories.count(), 1)
 
     def test_create_single_person(self):
         person = factory.create_single_person()

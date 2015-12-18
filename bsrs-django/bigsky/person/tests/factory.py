@@ -6,6 +6,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category
+from category.tests.factory import create_single_category
 from location.models import LocationLevel, Location
 from location.tests.factory import create_location, create_locations
 from person.models import Person, Role
@@ -18,11 +19,24 @@ LOCATION_LEVEL = 'region'
 CATEGORY = 'repair'
 
 
-def create_role(name=None, location_level=None):
+class DistrictManager(object):
+    
+    def __init__(self, *args, **kwargs):
+        repair = Category.objects.create(name="Repair", subcategory_label="trade")
+
+        self.location_level, _ = LocationLevel.objects.get_or_create(name='district')
+        self.role = create_role('district-manager', self.location_level, category=repair)
+        self.location = Location.objects.create(location_level=self.location_level,
+                                                name='district-1', number='district-1')
+        self.person = create_single_person('district-manager-1', self.role, self.location)        
+
+
+def create_role(name=None, location_level=None, category=None):
     """
     Single Role needed to create Person with Login privileges.
     """
     name = name or create._generate_chars()
+    category = category or create_single_category(create._generate_chars())
 
     Currency.objects.default()
 
@@ -30,10 +44,7 @@ def create_role(name=None, location_level=None):
         location_level, _ = LocationLevel.objects.get_or_create(name=LOCATION_LEVEL)
 
     role = mommy.make(Role, name=name, location_level=location_level)
-
-    category = Category.objects.first()
-    if category:
-        role.categories.add(category)
+    role.categories.add(category)
 
     return role
 
