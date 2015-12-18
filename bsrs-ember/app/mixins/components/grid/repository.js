@@ -2,6 +2,10 @@ import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
 var GridRepositoryMixin = Ember.Mixin.create({
+    findCount() {
+        var count = this.get('store').find(this.get('type'), {new: true}).get('length');
+        return count+1;
+    },
     findWithQuery(page, sort, search, find, page_size) {
         let type = this.get('type');
         let url = this.get('url');

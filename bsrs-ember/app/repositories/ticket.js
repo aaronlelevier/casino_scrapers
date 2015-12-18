@@ -14,9 +14,9 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     url: Ember.computed(function() { return TICKET_URL; }),
     TicketDeserializer: inject('ticket'),
     deserializer: Ember.computed.alias('TicketDeserializer'),
-    create() {
+    create(new_id) {
         let pk = this.get('uuid').v4();
-        return this.store.push('ticket', {id: pk, new: true});
+        return this.store.push('ticket', {id: pk, new: true, new_id: new_id});
     },
     insert(model) {
         return PromiseMixin.xhr(TICKET_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
