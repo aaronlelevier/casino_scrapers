@@ -23,6 +23,10 @@ class CreateTicketTests(TestCase):
 
     def test_location(self):
         self.assertIsInstance(self.ticket.location, Location)
+        self.assertIn(
+            self.ticket.location,
+            self.person.locations.all()
+        )
 
     def test_status(self):
         self.assertIsInstance(self.ticket.status, TicketStatus)
@@ -38,6 +42,11 @@ class CreateTicketTests(TestCase):
 
     def test_category(self):
         self.assertIsInstance(self.ticket.categories.all()[0], Category)
+        for category in self.ticket.categories.all():
+            self.assertIn(
+                category,
+                self.person.role.categories.all()
+            )
 
     def test_requester(self):
         self.assertIsInstance(self.ticket.requester, Person)
@@ -52,27 +61,57 @@ class CreateTicketTests(TestCase):
     def test_number(self):
         self.assertIsInstance(self.ticket.number, int)
 
+
+class CreateTicketKwargTests(TestCase):
+
+    def test_ticket_request(self):
+        person = create_single_person()
+        request = 'foo'
+        ticket = factory.create_ticket(request=request)
+        self.assertEqual(ticket.request, request)
+
     def test_ticket_requester(self):
         person = create_single_person()
-
-        ret = factory.create_ticket(requester=person)
-
-        self.assertEqual(ret.requester, person)
+        ticket = factory.create_ticket(requester=person)
+        self.assertEqual(ticket.requester, person)
 
     def test_ticket_assignee(self):
         person = create_single_person()
+        ticket = factory.create_ticket(assignee=person)
+        self.assertEqual(ticket.assignee, person)
 
-        ret = factory.create_ticket(assignee=person)
 
-        self.assertEqual(ret.assignee, person)
+class CreateTicketWithSingleCategoryKwargTests(TestCase):
 
-    def test_district_manager_ticket(self):
-        dm = DistrictManager()
-        ticket = factory.create_ticket_with_single_category(requester=dm.person)
+    def setUp(self):
+        self.dm = DistrictManager()
 
-        self.assertIn(ticket.location, dm.person.locations.all())
+    def test_defualts(self):
+        ticket = factory.create_ticket_with_single_category()
+
+        self.assertIsInstance(ticket.requester, Person)
+        self.assertIsInstance(ticket.assignee, Person)
         self.assertIn(
-            dm.role.categories.first(),
+            ticket.location,
+            ticket.requester.locations.all()
+        )
+        self.assertIn(
+            ticket.categories.first(),
+            ticket.requester.role.categories.all()
+        )
+
+    def test_explicit(self):
+        request = 'foo'
+        assignee = create_single_person()
+        ticket = factory.create_ticket_with_single_category(
+            request=request, requester=self.dm.person, assignee=assignee)
+
+        self.assertEqual(ticket.request, request)
+        self.assertEqual(ticket.requester, self.dm.person)
+        self.assertEqual(ticket.assignee, assignee)
+        self.assertIn(ticket.location, self.dm.person.locations.all())
+        self.assertIn(
+            self.dm.role.categories.first(),
             ticket.categories.all()
         )
 

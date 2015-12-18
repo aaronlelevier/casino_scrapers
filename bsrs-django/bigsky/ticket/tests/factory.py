@@ -25,9 +25,10 @@ def construct_tree(category, tree):
 
 TICKET_BASE_ID = "40f530c4-ce6c-4724-9cfd-37a16e787"
 
-def _create_ticket(requester=None, assignee=None):
+def _create_ticket(request=None, requester=None, assignee=None):
     people = Person.objects.all()
 
+    request = request or _generate_chars()
     requester = requester or random.choice(people)
     assignee = assignee or random.choice(people)
 
@@ -37,7 +38,7 @@ def _create_ticket(requester=None, assignee=None):
         'priority': TicketPriority.objects.default(),
         'requester': requester,
         'assignee': assignee,
-        'request': _generate_chars()
+        'request': request
     }
 
     if 'test' in sys.argv:
@@ -53,8 +54,8 @@ def _create_ticket(requester=None, assignee=None):
     return ticket
 
 
-def create_ticket(requester=None, assignee=None):
-    ticket = _create_ticket(requester, assignee)
+def create_ticket(request=None, requester=None, assignee=None):
+    ticket = _create_ticket(request, requester, assignee)
     top_level_category = Category.objects.filter(parent__isnull=True).first()
     tree = construct_tree(top_level_category, [])
     for category in tree:
@@ -62,8 +63,8 @@ def create_ticket(requester=None, assignee=None):
     return ticket
 
 
-def create_ticket_with_single_category(requester=None, assignee=None):
-    ticket = _create_ticket(requester, assignee)
+def create_ticket_with_single_category(request=None, requester=None, assignee=None):
+    ticket = _create_ticket(request, requester, assignee)
     category = ticket.requester.role.categories.first()
     ticket.categories.add(category)
     return ticket
