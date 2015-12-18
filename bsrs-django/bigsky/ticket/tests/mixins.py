@@ -26,7 +26,7 @@ class TicketSetupMixin(object):
         self.password = PASSWORD
         self.person = create_single_person(role=self.role, location=self.location)
         # Ticket 1
-        self.ticket = create_ticket(location=self.location)
+        self.ticket = create_ticket(requester=self.person)
         self.ticket.categories.add(self.person.role.categories.first())
         # Ticket 2
         self.ticket_two = create_ticket()

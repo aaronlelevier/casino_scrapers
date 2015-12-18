@@ -17,7 +17,7 @@ from utils.helpers import generate_uuid
 def construct_tree(category, tree):
     tree.append(category)
     if not category.children.all():
-        return category 
+        return [category]
     child_category = category.children.first()
     construct_tree(child_category, tree)
     return tree
@@ -25,19 +25,20 @@ def construct_tree(category, tree):
 
 TICKET_BASE_ID = "40f530c4-ce6c-4724-9cfd-37a16e787"
 
-
-def create_ticket(requester=None, assignee=None, location=None):
+def _create_ticket(requester=None, assignee=None):
     people = Person.objects.all()
 
     requester = requester or random.choice(people)
     assignee = assignee or random.choice(people)
-    location = location or random.choice(Location.objects.all())
 
-    if not Location.objects.first():
-        create_locations()
-
-    statuses = create_ticket_statuses()
-    priorities = create_ticket_priorites()
+    kwargs = {
+        'location': requester.locations.first(),
+        'status': TicketStatus.objects.default(),
+        'priority': TicketPriority.objects.default(),
+        'requester': requester,
+        'assignee': assignee,
+        'request': _generate_chars()
+    }
 
     if 'test' in sys.argv:
         id = uuid.uuid4()
@@ -45,24 +46,26 @@ def create_ticket(requester=None, assignee=None, location=None):
         incr = Ticket.objects.count()
         id = generate_uuid(TICKET_BASE_ID, incr+1)
 
-    ticket = Ticket.objects.create(
-        id = id,
-        location = location,
-        status = random.choice(statuses),
-        priority = random.choice(priorities),
-        assignee = assignee,
-        requester = requester,
-        request = _generate_chars()
-    )
-
+    ticket = Ticket.objects.create(id=id, **kwargs)
     cc = random.choice(people)
     ticket.cc.add(cc)
 
+    return ticket
+
+
+def create_ticket(requester=None, assignee=None):
+    ticket = _create_ticket(requester, assignee)
     top_level_category = Category.objects.filter(parent__isnull=True).first()
     tree = construct_tree(top_level_category, [])
     for category in tree:
         ticket.categories.add(category)
+    return ticket
 
+
+def create_ticket_with_single_category(requester=None, assignee=None):
+    ticket = _create_ticket(requester, assignee)
+    category = ticket.requester.role.categories.first()
+    ticket.categories.add(category)
     return ticket
 
 

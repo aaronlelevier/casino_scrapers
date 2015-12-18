@@ -7,7 +7,7 @@ from category.tests.factory import create_categories
 from location.models import Location
 from location.tests.factory import create_location
 from person.models import Person
-from person.tests.factory import create_single_person
+from person.tests.factory import create_single_person, DistrictManager
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from ticket.tests import factory
@@ -66,12 +66,16 @@ class CreateTicketTests(TestCase):
 
         self.assertEqual(ret.assignee, person)
 
-    def test_ticket_location(self):
-        location = create_location()
+    def test_district_manager_ticket(self):
+        dm = DistrictManager()
+        ticket = factory.create_ticket_with_single_category(requester=dm.person)
 
-        ret = factory.create_ticket(location=location)
+        self.assertIn(ticket.location, dm.person.locations.all())
+        self.assertIn(
+            dm.role.categories.first(),
+            ticket.categories.all()
+        )
 
-        self.assertEqual(ret.location, location)
 
 
 class CreateExtraTicketWithCategoriesTests(TestCase):
@@ -102,7 +106,12 @@ class ConstructTreeTests(TestCase):
 
     def test_categories(self):
         top_level = Category.objects.filter(parent__isnull=True).first()
+        # add child Category(s)
+        categories = Category.objects.exclude(parent__isnull=True)
+        top_level.children.add(categories[0])
+
         self.categories = factory.construct_tree(top_level, [])
+
         self.assertTrue(len(self.categories) >= 2)
 
 
