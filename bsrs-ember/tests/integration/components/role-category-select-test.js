@@ -6,6 +6,7 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import waitFor from 'ember-test-helpers/wait';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import CD from 'bsrs-ember/vendor/defaults/category';
@@ -44,9 +45,7 @@ test('should render a selectbox when with no options (initial state)', function(
     this.set('role', role);
     this.render(hbs`{{role-category-select role=role}}`);
     let $component = this.$(`${COMPONENT}`);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
     assert.equal($(`${OPTION}`).text(), GLOBALMSG.power_search);

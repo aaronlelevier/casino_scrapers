@@ -2,6 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import RD from 'bsrs-ember/vendor/defaults/role';
 
 let store, role, all_role_types,run = Ember.run;
@@ -27,9 +28,7 @@ test('should render a selectbox when role type options are empty (initial state 
     this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), '');
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
@@ -44,9 +43,7 @@ test('should render a selectbox with bound options', function(assert) {
     this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), '');
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 2);
@@ -58,14 +55,12 @@ test('should be able to select new role_type when one doesnt exist', function(as
     this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), '');
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 2);
     run(() => { 
-        $(`.ember-power-select-option:contains(${RD.roleTypeGeneral})`).click(); 
+        $(`.ember-power-select-option:contains(${RD.roleTypeGeneral})`).mouseup(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
@@ -81,14 +76,12 @@ test('should be able to select same role_type when role already has a role_type'
     this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), RD.roleTypeGeneral);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 2);
     run(() => { 
-        $(`.ember-power-select-option:contains(${RD.roleTypeGeneral})`).click(); 
+        $(`.ember-power-select-option:contains(${RD.roleTypeGeneral})`).mouseup(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
@@ -105,14 +98,12 @@ test('should be able to select new role_type when role already has a role_type',
     this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), RD.roleTypeGeneral);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 2);
     run(() => { 
-        $(`.ember-power-select-option:contains('Third Party')`).click(); 
+        $(`.ember-power-select-option:contains('Third Party')`).mouseup(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);

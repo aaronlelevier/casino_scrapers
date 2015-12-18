@@ -2,6 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import RF from 'bsrs-ember/vendor/role_fixtures';
@@ -30,9 +31,7 @@ test('should render a selectbox when role options are empty (initial state of se
     this.render(hbs`{{role-select model=model options=roles role_change=role_change}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(PowerSelect).text().trim(), 'Select One');
-    run(() => { 
-        this.$(PowerSelect).click(); 
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
@@ -47,20 +46,18 @@ test('should be able to select same role when person already has a role', functi
     this.set('roles', roles);
     this.render(hbs`{{role-select model=model options=roles role_change=role_change}}`);
     let $component = this.$(COMPONENT);
-    // assert.equal($component.find(PowerSelect).text().trim().split(' +')[0].split(' ')[0].trim(), RD.nameOne);
-    run(() => { 
-        this.$(PowerSelect).click(); 
-    });
+    assert.equal($component.find(PowerSelect).text().trim(), RD.nameOne);
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 10);
     run(() => { 
-        $(`.ember-power-select-option:contains(${RD.nameOne})`).click(); 
+        $(`.ember-power-select-option:contains(${RD.nameOne})`).mouseup(); 
     });
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    // assert.equal($component.find(PowerSelect).text().trim().split(' +')[0].split(' ')[0].trim(), RD.nameOne);
+    assert.equal($component.find(PowerSelect).text().trim(), RD.nameOne);
     assert.equal(person.get('role').get('name'), RD.nameOne);
 });
 
@@ -71,18 +68,16 @@ test('should be able to select new person level when person already has a person
     this.set('roles', roles);
     this.render(hbs`{{role-select model=model options=roles role_change=role_change}}`);
     let $component = this.$(COMPONENT);
-    // assert.equal($component.find(PowerSelect).text().trim().split(' +')[0].split(' ')[0].trim(), RD.nameOne);
-    run(() => { 
-        this.$(PowerSelect).click(); 
-    });
+    assert.equal($component.find(PowerSelect).text().trim(), RD.nameOne);
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     run(() => { 
-        $(`.ember-power-select-option:contains(${RD.nameTwo})`).click(); 
+        $(`.ember-power-select-option:contains(${RD.nameTwo})`).mouseup(); 
     });
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    // assert.equal($component.find(PowerSelect).text().trim().split(' +')[0].split(' ')[0].trim(), RD.nameTwo);
+    assert.equal($component.find(PowerSelect).text().trim(), RD.nameTwo);
     assert.equal(person.get('role').get('name'), RD.nameTwo);
 });

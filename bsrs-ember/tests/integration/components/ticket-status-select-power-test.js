@@ -2,6 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import tHelper from 'ember-i18n/helper';
 
@@ -29,9 +30,7 @@ test('should render a selectbox when status options are empty (initial state of 
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(PowerSelect).text().trim(), '');
-    run(() => {
-        this.$(`${PowerSelect}`).click();
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
     assert.equal($('li.ember-power-select-option').text(), 'No results found');
@@ -47,9 +46,7 @@ test('should render a selectbox with bound options', function(assert) {
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(TD.statusOneKey));
-    run(() => {
-        this.$(PowerSelect).click();
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     assert.equal(ticket.get('status').get('id'), TD.statusOneId);
@@ -63,13 +60,11 @@ test('should be able to select new status when one doesnt exist', function(asser
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(PowerSelect).text().trim(), '');
-    run(() => {
-        this.$(PowerSelect).click();
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     run(() => {
-        $(`.ember-power-select-option:contains(${TD.statusOneKey})`).click();
+        $(`.ember-power-select-option:contains(${TD.statusOneKey})`).mouseup();
     });
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
@@ -86,13 +81,11 @@ test('should be able to select same status when ticket already has a status', fu
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.statusOneKey));
-    run(() => {
-        this.$(PowerSelect).click();
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     run(() => {
-        $(`.ember-power-select-option:contains(${TD.statusOneKey})`).click();
+        $(`.ember-power-select-option:contains(${TD.statusOneKey})`).mouseup();
     });
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
@@ -109,13 +102,11 @@ test('should be able to select new status when ticket already has a status', fun
     this.render(hbs`{{ticket-status-select ticket=ticket statuses=statuses}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(PowerSelect).text().trim(), trans.t(TD.statusOneKey));
-    run(() => {
-        this.$(PowerSelect).click();
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     run(() => {
-        $(`.ember-power-select-option:contains(${TD.statusTwoKey})`).click();
+        $(`.ember-power-select-option:contains(${TD.statusTwoKey})`).mouseup();
     });
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);

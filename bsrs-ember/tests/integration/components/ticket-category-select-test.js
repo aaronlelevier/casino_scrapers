@@ -2,6 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
@@ -36,9 +37,7 @@ test('should render a selectbox when the options are empty (initial state of pow
     this.set('ticket_category_options', ticket_category_options);
     this.render(hbs`{{ticket-category-select ticket=ticket ticket_category_options=ticket_category_options}}`);
     let $component = this.$(`${COMPONENT}`);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal(this.$('.ember-power-select-placeholder').text(), GLOBALMSG.category_power_select);
     assert.equal($('.ember-power-select-options > li').length, 1);
@@ -51,9 +50,7 @@ test('should render a selectbox with bound options after type ahead for search',
     this.render(hbs`{{ticket-category-select ticket=ticket ticket_category_options=ticket_category_options}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), CATEGORY_DEFAULTS.nameThree);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 4);
 });
@@ -69,35 +66,15 @@ test('should render a selectbox with bound options and can change top level cate
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), CATEGORY_DEFAULTS.nameThree);
     assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.unusedId);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 2);
     run(() => { 
-        $(`.ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameRepairChild})`).click();
+        $(`.ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameRepairChild})`).mouseup();
     });
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 2);
     assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idThree);
 });
 
-// test('input has a debouce that prevents each keystroke from publishing a message', function(assert) {
-//     var done = assert.async();
-//     this.set('category', category);
-//     this.set('search', undefined);
-//     this.set('model', category.get('locations'));
-//     this.render(hbs`{{category-locations-select model=model category=category search=search}}`);
-//     let $component = this.$('.t-category-locations-select');
-//     this.$('div.selectize-input input').val('x').trigger('keyup');
-//     setTimeout(() => {
-//         assert.equal(this.get('search'), undefined);
-//         setTimeout(() => {
-//             assert.equal(this.get('search'), 'x');
-//             done();
-//         }, 15);
-//     }, 290);
-// });

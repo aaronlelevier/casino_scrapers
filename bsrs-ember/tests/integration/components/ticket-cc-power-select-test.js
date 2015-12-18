@@ -4,6 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import waitFor from 'ember-test-helpers/wait';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
@@ -39,9 +40,7 @@ test('should render a selectbox when with options selected (initial state)', fun
     this.set('ticket', ticket);
     this.render(hbs`{{ticket-cc-power-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
     assert.equal($(`${OPTION}`).text(), GLOBALMSG.power_search);
@@ -53,6 +52,7 @@ test('should render a selectbox with bound options after type ahead for search',
     this.set('ticket', ticket);
     this.render(hbs`{{ticket-cc-power-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
+    clickTrigger();
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {

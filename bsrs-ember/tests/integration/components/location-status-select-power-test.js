@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
@@ -29,9 +30,7 @@ test('should render a selectbox with bound options (defaulted to open on new tem
     this.render(hbs`{{location-status-select location=location all_statuses=all_statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), LDS.openName);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     assert.equal(location_one.get('status').get('id'), LDS.openId);
@@ -46,13 +45,11 @@ test('should be able to select same status when location already has a status', 
     this.render(hbs`{{location-status-select location=location all_statuses=all_statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), LDS.openName);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     run(() => { 
-        $(`.ember-power-select-option:contains(${LDS.openName})`).click(); 
+        $(`.ember-power-select-option:contains(${LDS.openName})`).mouseup(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
@@ -69,13 +66,11 @@ test('should be able to select new status when location already has a status', f
     this.render(hbs`{{location-status-select location=location all_statuses=all_statuses}}`);
     let $component = this.$(`${COMPONENT}`);
     assert.equal($component.find(`${PowerSelect}`).text().trim(), LDS.openName);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
     run(() => { 
-        $(`.ember-power-select-option:contains(${LDS.closedName})`).click(); 
+        $(`.ember-power-select-option:contains(${LDS.closedName})`).mouseup(); 
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);

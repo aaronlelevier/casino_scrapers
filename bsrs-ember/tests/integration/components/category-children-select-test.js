@@ -4,6 +4,7 @@ import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
 import waitFor from 'ember-test-helpers/wait';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
@@ -43,9 +44,7 @@ test('should render a selectbox when with options selected (initial state)', fun
     this.set('search', '');
     this.render(hbs`{{category-children-select category=category search=search categories_children=categories_children}}`);
     let $component = this.$(`${COMPONENT}`);
-    run(() => {
-        this.$(`${PowerSelect}`).click();
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
     assert.equal($(`${OPTION}`).text(), GLOBALMSG.power_search);

@@ -2,6 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLF from 'bsrs-ember/vendor/location_level_fixtures';
@@ -30,9 +31,7 @@ test('should render a selectbox when location type options are empty (initial st
     this.render(hbs`{{location-level-select model=model options=all_location_levels}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(PowerSelect).text().trim(), 'Select One');
-    run(() => { 
-        this.$(PowerSelect).click(); 
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
@@ -47,9 +46,7 @@ test('should render a selectbox with bound options', function(assert) {
     this.render(hbs`{{location-level-select model=model options=all_location_levels}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(PowerSelect).text().trim(), 'Select One');
-    run(() => { 
-        this.$(PowerSelect).click(); 
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 8);
@@ -61,14 +58,12 @@ test('should be able to select new location level when one doesnt exist', functi
     this.render(hbs`{{location-level-select model=model options=all_location_levels}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(PowerSelect).text().trim(), 'Select One');
-    run(() => { 
-        this.$(PowerSelect).click(); 
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 8);
     run(() => { 
-        $(`.ember-power-select-option:contains(${LLD.nameCompany})`).click(); 
+        $(`.ember-power-select-option:contains(${LLD.nameCompany})`).mouseup(); 
     });
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
@@ -85,14 +80,12 @@ test('should be able to select same location level when location already has a l
     this.render(hbs`{{location-level-select model=model options=all_location_levels}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(PowerSelect).text().trim().split(' +')[0].split(' ')[0].trim(), LLD.nameCompany);
-    run(() => { 
-        this.$(PowerSelect).click(); 
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 8);
     run(() => { 
-        $(`.ember-power-select-option:contains(${LLD.nameCompany})`).click(); 
+        $(`.ember-power-select-option:contains(${LLD.nameCompany})`).mouseup(); 
     });
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);
@@ -109,14 +102,12 @@ test('should be able to select new location level when location already has a lo
     this.render(hbs`{{location-level-select model=model options=all_location_levels}}`);
     let $component = this.$(COMPONENT);
     assert.equal($component.find(PowerSelect).text().trim().split(' +')[0].split(' ')[0].trim(), LLD.nameCompany);
-    run(() => { 
-        this.$(PowerSelect).click(); 
-    });
+    clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-basic-dropdown-content').length, 1);
     assert.equal($('.ember-power-select-options > li').length, 8);
     run(() => { 
-        $(`.ember-power-select-option:contains(${LLD.nameDistrict})`).click(); 
+        $(`.ember-power-select-option:contains(${LLD.nameDistrict})`).mouseup(); 
     });
     assert.equal($(DROPDOWN).length, 0);
     assert.equal($('.ember-basic-dropdown-content').length, 0);

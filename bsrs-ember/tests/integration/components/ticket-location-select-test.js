@@ -4,6 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
+import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import waitFor from 'ember-test-helpers/wait';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
 import LOCATION_DEFAULTS from 'bsrs-ember/vendor/defaults/location';
@@ -34,9 +35,7 @@ test('should render a selectbox when location options are empty (initial state o
     this.set('ticket', ticket);
     this.render(hbs`{{ticket-location-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
-    run(() => { 
-        this.$(`${PowerSelect}`).click(); 
-    });
+    clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
     assert.equal($('li.ember-power-select-option').text(), GLOBALMSG.power_search);
@@ -50,6 +49,7 @@ test('should render a selectbox with bound options after type ahead for search',
     this.set('ticket', ticket);
     this.render(hbs`{{ticket-location-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
+    clickTrigger();
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
@@ -67,13 +67,14 @@ test('should be able to select new location when one doesnt exist', function(ass
     this.set('ticket', ticket);
     this.render(hbs`{{ticket-location-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
+    clickTrigger();
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
             assert.equal($(`${DROPDOWN}`).length, 1);
             assert.equal($('.ember-power-select-options > li').length, 3);
             run(() => { 
-                $(`.ember-power-select-option:contains(${LOCATION_DEFAULTS.storeName})`).click(); 
+                $(`.ember-power-select-option:contains(${LOCATION_DEFAULTS.storeName})`).mouseup(); 
             });
             assert.equal($component.find(`${PowerSelect}`).text().trim(), LOCATION_DEFAULTS.storeName);
             assert.equal(ticket.get('location').get('id'), LOCATION_DEFAULTS.idOne);
@@ -86,6 +87,7 @@ test('should be able to select new location when ticket already has a location',
     this.set('ticket', ticket);
     this.render(hbs`{{ticket-location-select ticket=ticket}}`);
     let $component = this.$(`${COMPONENT}`);
+    clickTrigger();
     run(() => { typeInSearch('a'); });
     return waitFor().
         then(() => {
@@ -93,7 +95,7 @@ test('should be able to select new location when ticket already has a location',
             assert.equal($('.ember-basic-dropdown-content').length, 1);
             assert.equal($('.ember-power-select-options > li').length, 3);
             run(() => { 
-                $(`.ember-power-select-option:contains(${LOCATION_DEFAULTS.storeNameTwo})`).click(); 
+                $(`.ember-power-select-option:contains(${LOCATION_DEFAULTS.storeNameTwo})`).mouseup(); 
             });
             assert.equal($(`${DROPDOWN}`).length, 0);
             assert.equal($('.ember-basic-dropdown-content').length, 0);
