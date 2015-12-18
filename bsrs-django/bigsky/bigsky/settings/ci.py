@@ -1,8 +1,9 @@
 from .base import *
 
 
-AUTH_USER_MODEL = 'person.Person'
-
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+)
 
 CI_APPS = [
     'nose',
@@ -19,7 +20,7 @@ NOSE_ARGS = [
     '--with-coverage',
     '--exclude-dir={}'.format(os.path.join(BASE_DIR, "utils_transform/tlocation/tests")),
     '--cover-package=accounting,category,contact,generic,location,order,person,session,\
-third_party,ticket,translation,utils',
+third_party,ticket,translation,utils,work_request',
 ]
 
 ### ATTACHMENTS

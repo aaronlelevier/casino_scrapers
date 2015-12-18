@@ -17,9 +17,7 @@ THIRD_PARTY_APPS = [
 # Data tranformation apps (from Domino -> to -> PostgreSQL)
 # Docs: https://docs.djangoproject.com/en/1.8/topics/db/multi-db/
 
-
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
-
 
 MIDDLEWARE_CLASSES += [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
@@ -33,8 +31,4 @@ CACHES = {
 }
 
 if 'test' in sys.argv:
-    # Will only be activated when running ``./manage.py test``
-    PASSWORD_HASHERS = (
-        'django.contrib.auth.hashers.MD5PasswordHasher',
-    )
     from .ci import *
