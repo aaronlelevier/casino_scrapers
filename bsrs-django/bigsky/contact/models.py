@@ -21,6 +21,12 @@ class BaseContactModel(BaseModel):
         return super(BaseContactModel, self).save(*args, **kwargs)
 
 
+PHONE_NUMBER_TYPES = [
+    'telephone',
+    'fax',
+    'cell'
+]
+
 class PhoneNumberType(BaseNameOrderModel):
     pass
 
@@ -31,12 +37,16 @@ class PhoneNumber(BaseContactModel):
 
     https://github.com/daviddrysdale/python-phonenumbers
     """
-    type = models.ForeignKey(PhoneNumberType)
-    number = models.CharField(max_length=32)
+    type = models.ForeignKey(PhoneNumberType, blank=True, null=True)
+    number = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ('number',)
 
+
+ADDRESS_TYPES = [
+    'location'
+]
 
 class AddressType(BaseNameOrderModel):
     pass
@@ -50,24 +60,29 @@ class Address(BaseContactModel):
     ForeignKey Reqs: either the `location` or `person` FK must be 
     populated, but not both.
     """
-    type = models.ForeignKey(AddressType)
-    address = models.CharField(max_length=200, null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
-    state = models.CharField(max_length=100, null=True, blank=True)
-    postal_code = models.CharField(max_length=32, null=True, blank=True)
-    country = models.CharField(max_length=100, null=True, blank=True)
+    type = models.ForeignKey(AddressType, blank=True, null=True)
+    address1 = models.TextField(blank=True, null=True)
+    address2 = models.TextField(blank=True, null=True)
+    city = models.TextField(blank=True, null=True)
+    state = models.TextField(blank=True, null=True)
+    zip = models.TextField(blank=True, null=True)
+    country = models.TextField(blank=True, null=True)
 
     class Meta:
-        ordering = ('address',)
+        ordering = ('address1',)
 
+
+EMAIL_TYPES = [
+    'location'
+]
 
 class EmailType(BaseNameOrderModel):
     pass
 
 
 class Email(BaseContactModel):
-    type = models.ForeignKey(EmailType)
-    email = models.EmailField(max_length=255)
+    type = models.ForeignKey(EmailType, blank=True, null=True)
+    email = models.TextField(blank=True, null=True)
 
     class Meta:
         ordering = ('email',)

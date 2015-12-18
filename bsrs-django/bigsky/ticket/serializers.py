@@ -1,21 +1,16 @@
-import copy
-
 from rest_framework import serializers
 
-from category.models import Category
 from category.serializers import CategoryIDNameSerializer
 from generic.serializers import Attachment
 from location.serializers import LocationSerializer
-from person.models import Person
 from person.serializers import PersonSimpleSerializer, PersonTicketSerializer
 from ticket.helpers import TicketActivityToRepresentation
-from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
-    TicketActivityType)
+from ticket.models import Ticket, TicketActivity
 from utils.serializers import BaseCreateSerializer
 
 
 TICKET_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
-    'requester', 'categories', 'request',)
+    'requester', 'categories', 'request')
 
 
 class TicketCreateSerializer(BaseCreateSerializer):
@@ -36,13 +31,13 @@ class TicketListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number',)
+        fields = TICKET_FIELDS + ('number', 'created',)
 
     @staticmethod
     def eager_load(queryset):
         return (queryset.select_related('location', 'assignee', 'status',
                                         'priority', 'requester')
-                            .prefetch_related('categories', 'categories__children'))
+                        .prefetch_related('categories', 'categories__children'))
 
 
 class TicketSerializer(serializers.ModelSerializer):
@@ -55,14 +50,14 @@ class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = TICKET_FIELDS + ('number', 'cc', 'attachments')
+        fields = TICKET_FIELDS + ('number', 'cc', 'attachments', 'created')
 
     @staticmethod
     def eager_load(queryset):
         return (queryset.select_related('location', 'assignee', 'status',
                                         'priority', 'requester')
-                            .prefetch_related('cc', 'categories', 'attachments',
-                                              'categories__children'))
+                        .prefetch_related('cc', 'categories', 'attachments',
+                                          'categories__children'))
 
 
 class TicketActivitySerializer(serializers.ModelSerializer):

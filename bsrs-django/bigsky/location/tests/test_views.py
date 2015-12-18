@@ -1,8 +1,6 @@
 import uuid
 import json
 
-from django.db.models import Q
-
 from rest_framework.test import APITestCase
 from model_mommy import mommy
 
@@ -68,11 +66,10 @@ class LocationLevelTests(APITestCase):
         response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertIn(
-            LocationLevel.objects.get(id=data['parents'][0]['id']),
+            LocationLevel.objects.get(id=data['parents'][0]),
             self.district.parents.all()
         )
-        parent = self.district.parents.get(id=data['parents'][0]['id'])
-        self.assertEqual(data['parents'][0]['name'], parent.name)
+        parent = self.district.parents.get(id=data['parents'][0])
 
     def test_get_children(self):
         response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
@@ -171,7 +168,7 @@ class LocationLevelTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertNotIn(
             str(self.district.id),
-            [ea['id'] for ea in data['parents']]
+            [ea for ea in data['parents']]
         )
 
     def test_delete_override(self):
@@ -250,16 +247,19 @@ class LocationDetailTests(APITestCase):
         self.assertEqual(self.data['name'], self.location.name)
         self.assertEqual(self.data['number'], self.location.number)
         self.assertEqual(self.data['status'], str(self.location.status.id))
+        self.assertIsNotNone(self.data['emails'][0]['id'])
+        self.assertIsNotNone(self.data['phone_numbers'][0]['id'])
+        self.assertIsNotNone(self.data['addresses'][0]['id'])
 
     def test_location_level(self):
         self.assertIsInstance(
-            LocationLevel.objects.get(id=self.data['location_level']['id']),
+            LocationLevel.objects.get(id=self.data['location_level']),
             LocationLevel
         )
 
     def test_location_level_nested(self):
-        self.assertTrue(self.data['location_level']['parents'][0]['id'])
-        self.assertTrue(self.data['location_level']['children'][0])
+        self.assertTrue(self.data['location_level'])
+        self.assertTrue(self.data['location_level'])
 
     def test_get_status(self):
         self.assertIsInstance(
@@ -286,7 +286,7 @@ class LocationDetailTests(APITestCase):
         self.assertTrue(self.data['phone_numbers'][0]['id'])
 
     def test_contact_type_nested(self):
-        self.assertTrue(self.data['phone_numbers'][0]['type']['id'])
+        self.assertTrue(self.data['phone_numbers'][0]['type'])
 
     ### DETAIL ROUTES
 
@@ -315,7 +315,7 @@ class LocationDetailTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         region1 = Location.objects.filter(location_level=location_level).first()
         self.assertIn(str(region1.id), response.content.decode('utf8'))
-        self.assertEqual(len(data), 2)
+        self.assertEqual(len(data), 3)
 
 
 class LocationCreateTests(APITestCase):
@@ -546,6 +546,7 @@ class LocationOrderingTests(APITestCase):
     def setUp(self):
         # Login
         self.person = create_person()
+        self.person.locations.all().delete()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
@@ -612,23 +613,57 @@ class LocationSearchTests(APITestCase):
         self.client.logout()
 
     def test_search_name(self):
-        letter = "a"
-        response = self.client.get('/api/admin/locations/?search={}'.format(letter))
+        keyword = self.location.name
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data["count"],
-            Location.objects.filter(
-                Q(name__icontains=letter) | Q(number__icontains=letter)
-                ).count()
-        )
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
+
+    def test_search_number(self):
+        keyword = self.location.number
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
 
     def test_search_address_city(self):
-        city = "San Diego"
-        address = mommy.make(Address, city=city, content_object=self.location,
+        keyword = create._generate_chars()
+        address = mommy.make(Address, city=keyword, content_object=self.location,
             object_id=self.location.id)
-        response = self.client.get('/api/admin/locations/?search={}'.format(city))
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data['results'][0]['id'],
-            str(address.object_id)
-        )
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
+
+    def test_search_address_address1(self):
+        keyword = create._generate_chars()
+        address = mommy.make(Address, address1=keyword, content_object=self.location,
+            object_id=self.location.id)
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
+
+    def test_search_address_address2(self):
+        keyword = create._generate_chars()
+        address = mommy.make(Address, address2=keyword, content_object=self.location,
+            object_id=self.location.id)
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
+
+    def test_search_address_zip(self):
+        keyword = create._generate_chars()
+        address = mommy.make(Address, zip=keyword, content_object=self.location,
+            object_id=self.location.id)
+
+        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())

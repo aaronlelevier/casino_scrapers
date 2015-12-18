@@ -13,10 +13,10 @@ var LocationNewRoute = TabRoute.extend({
     model() {
         let all_location_levels = this.get('store').find('location-level');
         let model = this.get('model_fetch');
-        return Ember.RSVP.hash({
+        return {
             model: model,
             all_location_levels: all_location_levels
-        });
+        };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

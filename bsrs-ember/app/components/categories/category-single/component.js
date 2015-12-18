@@ -7,8 +7,6 @@ import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 var CategorySingleComponent = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
     repository: inject('category'),
     nameValidation: validate('model.name'),
-    descriptionValidation: validate('model.description'),
-    costCodeValidation: validate('model.cost_code'),
     labelValidation: validate('model.label'),
     subCategoryLabelValidation: validate('model.subcategory_label'),
     actions: {

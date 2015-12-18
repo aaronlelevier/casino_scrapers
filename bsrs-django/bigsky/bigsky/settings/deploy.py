@@ -1,17 +1,13 @@
-import os
-
 from .base import *
 
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('BSRS_DB_STAGING_NAME', 'deploy'),
-        'USER': os.environ.get('BSRS_DB_STAGING_USER', 'bsdev'),
-        'PASSWORD': os.environ.get('BSRS_DB_STAGING_NAME', 'tango'),
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
+DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': 'deploy',
+    'USER': 'bsdev',
+    'PASSWORD': 'tango',
+    'HOST': 'localhost',
+    'PORT': '5432',
 }
 
 MEDIA_ROOT = "/var/www/media/deploy/"

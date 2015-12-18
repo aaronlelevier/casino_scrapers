@@ -11,7 +11,7 @@
       <h2 class="col-sm-12">{{t "admin.role.label.general"}}</h2>
       <div class="col-sm-12">
         {{#form-group title="admin.role.label.name" for="name"}}
-            {{input type="text" value=model.name placeholder=(t "admin.role.label.name") class="form-control t-role-name" id="name" required="required"}}
+            {{input type="text" value=model.name placeholder=(t "admin.role.label.name") class="form-control t-role-name" id="name"}}
             {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.role.label.name"}}{{/validation-error-field}}
         {{/form-group}}
       </div>
@@ -27,7 +27,7 @@
       <div class="row">
         <div class="col-md-12">
           {{#form-group title="admin.role.label.category" for="category"}}
-            {{role-category-select role=model search=search categories_children=categories_children}}
+            {{role-category-select role=model categories_children=categories_children}}
             {{#validation-error-field submitted=submitted field="categories" className="validation validation-under t-role-category-validation-error" model=model validation=categoryValidation}}{{t "validation.invalid"}} {{t "admin.role.label.categories"}}{{/validation-error-field}}
           {{/form-group}}
         </div>

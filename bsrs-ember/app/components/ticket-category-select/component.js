@@ -26,8 +26,6 @@ var TicketCategories = Ember.Component.extend({
             let category_id = category.get('id');
             ticket.change_category_tree(category_id);
             this.sendAction('selected_category', category);
-            // let category_remove = this.get('categories_selected');
-            // ticket.remove_categories_down_tree(category_remove.get('id'));
         }
     }
 });

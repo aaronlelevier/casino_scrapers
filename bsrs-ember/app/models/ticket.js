@@ -8,12 +8,14 @@ import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
 import RequesterMixin from 'bsrs-ember/mixins/model/ticket/requester';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
+import DateFormatMixin from 'bsrs-ember/mixins/model/date-format';
 
-var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixin, TicketLocationMixin, {
+var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixin, TicketLocationMixin, DateFormatMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
     number: attr(''),
     requester_id: attr(),
+    request: attr(),
     ticket_people_fks: [],
     ticket_categories_fks: [],
     previous_attachments_fks: [],
@@ -33,9 +35,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
     }),
     categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
     ccIsDirty: Ember.computed('cc.[]', 'cc_ids.[]', 'ticket_people_fks.[]', function() {
-        let cc = this.get('cc');
-        let ticket_cc_ids = this.get('ticket_cc_ids');
-        let previous_m2m_fks = this.get('ticket_people_fks') || [];
+        const cc = this.get('cc');
+        const ticket_cc_ids = this.get('ticket_cc_ids');
+        const previous_m2m_fks = this.get('ticket_people_fks') || [];
         if(cc.get('length') !== previous_m2m_fks.length) {
             return equal(ticket_cc_ids, previous_m2m_fks) ? false : true;
         }
@@ -68,6 +70,14 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
             return Ember.$.inArray(ticket_id, tickets) > -1;
         };
         return this.get('store').find('ticket-status', filter, ['tickets']);
+    }),
+    status_class: Ember.computed('status', function(){
+        const name = this.get('status.name');
+        return name ? name.replace(/\./g, '-') : '';
+    }),
+    priority_class: Ember.computed('priority', function(){
+        const name = this.get('priority.name');
+        return name ? name.replace(/\./g, '-') : '';
     }),
     rollbackStatus() {
         let status = this.get('status');
@@ -219,6 +229,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
         return this.get('attachments').mapBy('id');
     }),
     remove_attachment(attachment_id) {
+        let store = this.get('store');
+        let attachment = store.find('attachment', attachment_id);
+        attachment.set('rollback', true);
         let ticket_id = this.get('id');
         let current_fks = this.get('ticket_attachments_fks') || [];
         let updated_fks = current_fks.filter(function(id) {
@@ -227,6 +240,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
         this.set('ticket_attachments_fks', updated_fks);
     },
     add_attachment(attachment_id) {
+        let store = this.get('store');
+        let attachment = store.find('attachment', attachment_id);
+        attachment.set('rollback', undefined);
         let ticket_id = this.get('id');
         let current_fks = this.get('ticket_attachments_fks') || [];
         this.set('ticket_attachments_fks', current_fks.concat(attachment_id).uniq());
@@ -263,6 +279,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
         };
         if (this.get('comment')) {
             payload.comment = this.get('comment');
+            this.set('comment', '');
         }
         return payload;
     },

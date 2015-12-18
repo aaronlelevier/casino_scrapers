@@ -10,8 +10,10 @@ var GridRepositoryMixin = Ember.Mixin.create({
 
         page = page || 1;
         let endpoint = url + '?page=' + page;
-        if (sort && sort !== 'id') {
+        if (sort && sort !== 'id' && sort.indexOf('.') < 0) {
             endpoint = endpoint + '&ordering=' + sort;
+        }else if (sort && sort !== 'id'){
+            endpoint = endpoint + '&related_ordering=' + sort.replace(/\./g, '__').replace(/translated_name/g, 'name');
         }
         if (search && search !== '') {
             endpoint = endpoint + '&search=' + encodeURIComponent(search);
@@ -25,7 +27,8 @@ var GridRepositoryMixin = Ember.Mixin.create({
                 let params = data.split(':');
                 let key = params[0] || '';
                 let value = params[1];
-                endpoint = endpoint + '&' + key.replace('-', '_') + '__icontains=' + encodeURIComponent(value);
+                let field = key.replace('-', '_').replace('.', '__').replace('translated_name', 'name').replace('[', '__').replace(']', '');
+                endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
             });
         }
         let all = store.find(type);

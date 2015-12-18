@@ -10,8 +10,8 @@ var extract_comment = function(model) {
 var extract_category = function(store, model, uuid) {
     const content = model.content;
     if (content && model.type === 'categories' && content.to && content.from) {
-        const to = content.to; 
-        const from = content.from; 
+        const to = content.to;
+        const from = content.from;
         to.forEach((to) => {
             to.id = uuid.v4();
             to.activities = [model.id];
@@ -37,6 +37,9 @@ var extract_to_and_from_or_added_removed = function(store, model) {
         content.added.forEach((cc) => {
             //TODO: this will be a problem if cc smashes over existing one. maybe need to make uuid like above
             cc.activities = [model.id];
+            if(cc.file){
+                cc.ext = cc.file.split('.').pop().toLowerCase();
+            }
             store.push(`activity/${type}`, cc);
         });
     }else if (content && content.removed) {
@@ -74,6 +77,3 @@ var ActivityDeserializer = Ember.Object.extend({
 });
 
 export default ActivityDeserializer;
-
-
-

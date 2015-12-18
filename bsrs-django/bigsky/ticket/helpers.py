@@ -24,9 +24,6 @@ class TicketActivityToRepresentation(object):
                 self.set_category_data()
             elif self.type.name == 'attachment_add':
                 self.set_attachment_list_data_with_key(key='added')
-            # COMMENT OUT: because removal of Attachments is yet to be defined (11-23-2015)
-            # elif self.type.name == 'attachment_remove':
-            #     self.set_attachment_list_data_with_key(key='removed')
 
         self.data.update({'type': self.type.name})
 

@@ -1,7 +1,10 @@
+from mock import patch
+
 from django.test import TestCase
 
+from contact.models import (PhoneNumber, PhoneNumberType, Email, EmailType,
+    Address, AddressType, PHONE_NUMBER_TYPES, EMAIL_TYPES, ADDRESS_TYPES)
 from contact.tests import factory
-from contact.models import Email, Address, PhoneNumber
 from person.models import Person
 from person.tests.factory import create_person
 from utils.helpers import generate_uuid
@@ -39,10 +42,11 @@ class FactoryTests(TestCase):
         email = Email.objects.first()
         self.assertEqual(str(email.content_object.id), str(person.id))
 
-    def test_get_create_contact_method(self):
+    @patch("contact.tests.factory.load_create_contact")
+    def test_get_create_contact_method(self, mock_call):
         ret = factory.get_create_contact_method(Email)
 
-        self.assertEqual(ret, factory.create_email)
+        self.assertTrue(mock_call.was_called)
 
     def test_create_phone_number(self):
         incr = 0
@@ -50,7 +54,7 @@ class FactoryTests(TestCase):
         person = create_person()
         base_id = factory.PHONE_NUMBER_BASE_ID
 
-        ret = factory.create_phone_number(person)
+        ret = factory.create_contact(PhoneNumber, person)
 
         self.assertEqual(PhoneNumber.objects.count(), incr+1)
         self.assertEqual(
@@ -64,7 +68,7 @@ class FactoryTests(TestCase):
         person = create_person()
         base_id = factory.ADDRESS_BASE_ID
 
-        ret = factory.create_address(person)
+        ret = factory.create_contact(Address, person)
 
         self.assertEqual(Address.objects.count(), incr+1)
         self.assertEqual(
@@ -78,10 +82,57 @@ class FactoryTests(TestCase):
         person = create_person()
         base_id = factory.EMAIL_BASE_ID
 
-        ret = factory.create_email(person)
+        ret = factory.create_contact(Email, person)
 
         self.assertEqual(Email.objects.count(), incr+1)
         self.assertEqual(
             str(ret.id),
             generate_uuid(base_id, incr)
         )
+
+    def test_create_phone_number_type(self):
+        ret = factory.create_phone_number_type()
+
+        self.assertIsInstance(ret, PhoneNumberType)
+
+    def test_create_phone_number_types(self):
+        types = factory.create_phone_number_types()
+
+        for t in types:
+            self.assertIn(t.name, PHONE_NUMBER_TYPES)
+
+        self.assertEqual(types.count(), len(PHONE_NUMBER_TYPES))
+
+    def test_create_email_type(self):
+        ret = factory.create_email_type()
+
+        self.assertIsInstance(ret, EmailType)
+
+    def test_create_email_types(self):
+        types = factory.create_email_types()
+
+        for t in types:
+            self.assertIn(t.name, EMAIL_TYPES)
+
+        self.assertEqual(types.count(), len(EMAIL_TYPES))
+
+    def test_create_address_type(self):
+        ret = factory.create_address_type()
+
+        self.assertIsInstance(ret, AddressType)
+
+    def test_create_address_types(self):
+        types = factory.create_address_types()
+
+        for t in types:
+            self.assertIn(t.name, ADDRESS_TYPES)
+
+        self.assertEqual(types.count(), len(ADDRESS_TYPES))
+
+    @patch("contact.tests.factory.create_phone_number_types")
+    @patch("contact.tests.factory.create_email_types")
+    @patch("contact.tests.factory.create_address_types")
+    def test_create_contact_types(self, phone_mock, email_mock, address_mock):
+        self.assertTrue(phone_mock.was_called)
+        self.assertTrue(email_mock.was_called)
+        self.assertTrue(address_mock.was_called)

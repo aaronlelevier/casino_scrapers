@@ -1,5 +1,3 @@
-import json
-
 from django.db import models
 from django.conf import settings
 
@@ -47,9 +45,10 @@ class Category(BaseModel):
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
     status = models.ForeignKey(CategoryStatus, blank=True, null=True)
+    level = models.IntegerField(blank=True, default=0)
 
     class Meta:
-        ordering = ('label', 'name',)
+        ordering = ('level',)
 
     def save(self, *args, **kwargs):
         self._update_defalts()
@@ -65,6 +64,22 @@ class Category(BaseModel):
 
         if not self.cost_currency:
             self.cost_currency = Currency.objects.default()
+
+        self.level = self._set_level()
+
+    def _set_level(self):
+        count = 0
+
+        if not self.parent:
+            return count
+        else:
+            return self._get_parent_count(self.parent, count+1)
+
+    def _get_parent_count(self, category, count):
+        if not category.parent:
+            return count
+        else:
+            return self._get_parent_count(category.parent, count+1)
 
     def to_dict(self):
         if self.parent:

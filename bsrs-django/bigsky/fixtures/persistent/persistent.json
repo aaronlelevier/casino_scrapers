@@ -339,8 +339,48 @@
   "model": "contenttypes.contenttype",
   "pk": 43,
   "fields": {
+    "model": "workrequeststatus",
+    "app_label": "work_request"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 44,
+  "fields": {
+    "model": "workrequest",
+    "app_label": "work_request"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 45,
+  "fields": {
     "model": "tester",
     "app_label": "utils"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 46,
+  "fields": {
+    "model": "locationregion",
+    "app_label": "tlocation"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 47,
+  "fields": {
+    "model": "locationdistrict",
+    "app_label": "tlocation"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "pk": 48,
+  "fields": {
+    "model": "locationstore",
+    "app_label": "tlocation"
   }
 },
 {
@@ -353,1312 +393,1729 @@
 },
 {
   "model": "accounting.currency",
-  "pk": "93ca195e-f29b-48f1-a8c8-578ee70bc51c",
+  "pk": "2469e974-00a9-4fe4-91ed-992c2e0be846",
   "fields": {
-    "created": "2015-11-19T23:15:23.912Z",
-    "decimal_digits": 2,
     "code": "USD",
-    "name_plural": "US Dollars",
-    "modified": "2015-11-19T23:15:23.912Z",
+    "deleted": null,
+    "modified": "2015-12-15T19:32:20.311Z",
+    "symbol": "$",
+    "created": "2015-12-15T19:32:20.311Z",
+    "decimal_digits": 2,
+    "name": "US Dollar",
     "symbol_native": "$",
     "rounding": 0,
+    "name_plural": "US Dollars"
+  }
+},
+{
+  "model": "contact.phonenumbertype",
+  "pk": "14957a42-84a3-4297-91fa-a816d2077344",
+  "fields": {
+    "order": 0,
     "deleted": null,
-    "name": "US Dollar",
-    "symbol": "$"
+    "modified": "2015-12-14T19:46:05.236Z",
+    "name": "cell",
+    "created": "2015-12-14T19:46:05.236Z"
+  }
+},
+{
+  "model": "contact.phonenumbertype",
+  "pk": "9b9e217e-b58e-47e0-b12f-cc44abd47ea7",
+  "fields": {
+    "order": 0,
+    "deleted": null,
+    "modified": "2015-12-14T19:46:05.234Z",
+    "name": "fax",
+    "created": "2015-12-14T19:46:05.234Z"
+  }
+},
+{
+  "model": "contact.phonenumbertype",
+  "pk": "fd38d12e-f1e1-41ce-8156-bab1538f1542",
+  "fields": {
+    "order": 0,
+    "deleted": null,
+    "modified": "2015-12-14T19:46:05.232Z",
+    "name": "telephone",
+    "created": "2015-12-14T19:46:05.232Z"
+  }
+},
+{
+  "model": "contact.addresstype",
+  "pk": "1ac01128-d88a-4e9f-aab0-80e0ee83f7b7",
+  "fields": {
+    "order": 0,
+    "deleted": null,
+    "modified": "2015-12-14T19:46:05.240Z",
+    "name": "location",
+    "created": "2015-12-14T19:46:05.240Z"
+  }
+},
+{
+  "model": "contact.emailtype",
+  "pk": "2c49e152-2419-4eb9-9767-7d8e2cd6916c",
+  "fields": {
+    "order": 0,
+    "deleted": null,
+    "modified": "2015-12-14T19:46:05.238Z",
+    "name": "location",
+    "created": "2015-12-14T19:46:05.238Z"
   }
 },
 {
   "model": "location.locationlevel",
-  "pk": "d8f79864-b3fd-4f59-976e-7bdc9939cae6",
+  "pk": "83fef95a-22a9-43fb-8ccb-9ae647d6175b",
   "fields": {
-    "modified": "2015-11-19T23:15:23.917Z",
-    "created": "2015-11-19T23:15:23.917Z",
+    "children": [],
     "deleted": null,
+    "modified": "2015-12-11T18:22:03.389Z",
+    "name": "district",
+    "created": "2015-12-11T18:22:03.389Z"
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "8c552043-07fa-461c-9a2c-429251750ccf",
+  "fields": {
+    "children": [],
+    "deleted": null,
+    "modified": "2015-12-11T18:22:03.392Z",
+    "name": "store",
+    "created": "2015-12-11T18:22:03.392Z"
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf",
+  "fields": {
+    "children": [],
+    "deleted": null,
+    "modified": "2015-12-11T18:22:03.387Z",
     "name": "region",
-    "children": []
+    "created": "2015-12-11T18:22:03.387Z"
+  }
+},
+{
+  "model": "location.locationstatus",
+  "pk": "68ef9608-2a35-4243-801e-64f76ec9a56d",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-15T19:32:20.327Z",
+    "name": "admin.location.status.open",
+    "created": "2015-12-15T19:32:20.327Z"
+  }
+},
+{
+  "model": "location.locationtype",
+  "pk": "c837e936-87ff-4f93-be91-582f96347bf6",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-15T19:32:20.329Z",
+    "name": "big_store",
+    "created": "2015-12-15T19:32:20.329Z"
+  }
+},
+{
+  "model": "location.location",
+  "pk": "ac00a916-e931-4fd6-a2a6-8e68aa80e202",
+  "fields": {
+    "type": "c837e936-87ff-4f93-be91-582f96347bf6",
+    "deleted": null,
+    "modified": "2015-12-15T19:32:20.331Z",
+    "location_level": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf",
+    "status": "68ef9608-2a35-4243-801e-64f76ec9a56d",
+    "created": "2015-12-15T19:32:20.331Z",
+    "children": [],
+    "name": "TjqsZRiOfq",
+    "number": "eizgxaGmeU"
   }
 },
 {
   "model": "person.personstatus",
-  "pk": "6df92460-c318-473b-8227-c648b7908627",
+  "pk": "05f99e0d-2a81-4dd0-9146-4feac15b7ba6",
   "fields": {
-    "modified": "2015-11-19T23:15:24.050Z",
-    "created": "2015-11-19T23:15:24.050Z",
+    "default": true,
     "deleted": null,
+    "modified": "2015-12-15T19:32:20.438Z",
     "name": "active",
-    "default": true
+    "created": "2015-12-15T19:32:20.438Z"
+  }
+},
+{
+  "model": "translation.locale",
+  "pk": "118f5ceb-269b-4e7c-9572-48fe4c9e6487",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-02T17:49:47.177Z",
+    "native_name": "ch",
+    "created": "2015-12-02T17:49:47.177Z",
+    "name": "ch",
+    "presentation_name": "ch",
+    "default": false,
+    "locale": "ch",
+    "rtl": false
+  }
+},
+{
+  "model": "translation.locale",
+  "pk": "15b8159a-9b22-4e26-b80a-2f22b6878864",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-02T17:50:52.140Z",
+    "native_name": "es",
+    "created": "2015-12-02T17:50:52.140Z",
+    "name": "es",
+    "presentation_name": "es",
+    "default": false,
+    "locale": "es",
+    "rtl": false
+  }
+},
+{
+  "model": "translation.locale",
+  "pk": "553b1cd1-3a79-4473-980a-4fb4469b9b2d",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-02T17:50:03.869Z",
+    "native_name": "en-us",
+    "created": "2015-12-02T17:50:03.869Z",
+    "name": "en-us",
+    "presentation_name": "en-us",
+    "default": false,
+    "locale": "en-us",
+    "rtl": false
+  }
+},
+{
+  "model": "translation.locale",
+  "pk": "674ae67d-6d49-47d7-9e4e-b231bdb3ecaf",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-02T17:54:21.505Z",
+    "native_name": "en",
+    "created": "2015-12-02T17:54:21.505Z",
+    "name": "en",
+    "presentation_name": "en",
+    "default": false,
+    "locale": "en",
+    "rtl": false
+  }
+},
+{
+  "model": "translation.locale",
+  "pk": "70d1b98f-17ce-4afd-8284-489b41ac3487",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-02T17:50:57.530Z",
+    "native_name": "fr",
+    "created": "2015-12-02T17:50:57.530Z",
+    "name": "fr",
+    "presentation_name": "fr",
+    "default": false,
+    "locale": "fr",
+    "rtl": false
+  }
+},
+{
+  "model": "translation.locale",
+  "pk": "875f6f3a-66cc-40d9-be3e-245d45ffca1c",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-02T17:51:00.849Z",
+    "native_name": "jp",
+    "created": "2015-12-02T17:51:00.849Z",
+    "name": "jp",
+    "presentation_name": "jp",
+    "default": false,
+    "locale": "jp",
+    "rtl": false
+  }
+},
+{
+  "model": "translation.translation",
+  "pk": "1926b2e8-aea9-45bf-84c3-fa2aeec13eef",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-11T19:22:13.685Z",
+    "values": "{\"admin.locationlevel.region\": \"Region\", \"admin.role.other\": \"Roles\", \"admin.phone.add\": \"Add Phone Number\", \"admin.location.label.number\": \"Number\", \"modules.projects.titleShort\": \"Projects\", \"admin.assignment.other\": \"Assignment Profiles\", \"ticket.status.completed\": \"Complete\", \"admin.template.other\": \"Templates\", \"ticket.label.number\": \"Ticket Number\", \"modules.pms.titleShort\": \"PM\", \"admin.role.coordinator\": \"Coordinator\", \"admin.phonenumbertype.mobile\": \"Cell\", \"admin.person.label.location\": \"Location\", \"admin.category.search\": \"Search Categories\", \"admin.setting.one\": \"Setting\", \"crud.restore.button\": \"Restore\", \"admin.locationlevel.label.general\": \"General\", \"admin.phonenumbertype.office\": \"Office\", \"admin.role.search\": \"Search Role\", \"admin.role.label.name\": \"Role Name\", \"ticket.status.draft\": \"Draft\", \"crud.restore.error\": \"Error restoring {{model}}\", \"activity.ticket.to_from\": \"changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}\", \"admin.locationlevel.fmu\": \"Facility Management Region\", \"admin.company.other\": \"Companies\", \"admin.category.labelCat.issue\": \"Issue\", \"ticket.priority.medium\": \"Medium\", \"ticket.search\": \"Search Tickets\", \"activity.ticket.cc_remove\": \"removed ${{removed}} $from CC ${{timestamp}}\", \"crud.delete.confirm\": \"Are you sure you want to delete {{model}} \\\\'{{record}}\\\\'?\", \"admin.category.label.label\": \"Label\", \"admin.locationlevel.store\": \"Store\", \"admin.category.label.description\": \"Description\", \"crud.save.error\": \"Error saving {{model}}.\", \"ticket.priority.high\": \"High\", \"admin.role.label.role_type\": \"Role Type\", \"crud.create.success\": \"{{model}} created successfully.\", \"admin.approval.other\": \"Approvals\", \"admin.person.label.title\": \"Title\", \"admin.phone.numbers\": \"Phone Numbers\", \"admin.address.city\": \"City\", \"ticket.label.priority-name\": \"Priority\", \"admin.translation.label.helper\": \"Helper\", \"admin.person.status.inactive\": \"Inactive\", \"admin.person.label.role-name\": \"Role\", \"modules.tickets.titleShort\": \"Tickets\", \"admin.person.label.email\": \"Email\", \"admin.person.label.employee_id\": \"Employee No.\", \"admin.category.label.subcategory_label\": \"Sub Category Label\", \"admin.translation.other\": \"Translations\", \"admin.third_party.label.number\": \"Number\", \"admin.category.label.children\": \"Sub Categories\", \"admin.person.label.username\": \"Username\", \"ticket.priority.low\": \"Low\", \"admin.person.label.status\": \"Status\", \"ticket.other\": \"Tickets\", \"admin.general.one\": \"General Setting\", \"admin.locationlevel.one\": \"Location Level\", \"admin.translation.label.translation\": \"Translation\", \"activity.ticket.create\": \"created this ticket ${{timestamp}}\", \"admin.locationlevel.fmd\": \"Facility Management District\", \"ticket.status.deferred\": \"Deferred\", \"admin.address.state.other\": \"States\", \"admin.approval.one\": \"Approval\", \"crud.titles.edit\": \"Edit {{model}}\", \"ticket.label.request\": \"Request\", \"admin.person.label.phone_number.other\": \"Phone Numbers\", \"admin.contractor.other\": \"Contractors\", \"admin.category.name.repair\": \"Repair\", \"admin.role.system_administrator\": \"Administrator\", \"admin.person.label.credentials\": \"Credentials\", \"validation.invalid\": \"Invalid\", \"admin.phone.number\": \"Phone Number\", \"admin.locationlevel.search\": \"Search Location Levels\", \"admin.location.other\": \"Locations\", \"admin.categoryType.one\": \"Category Type\", \"admin.location.label.name\": \"Name\", \"admin.category.label.general\": \"General\", \"activity.tabs.status_updates\": \"Status Updates\", \"admin.role.guest\": \"Guest\", \"ticket.status.problem_solved\": \"Problem Solved\", \"admin.categoryType.other\": \"Category Types\", \"admin.person.label.contact\": \"Contact\", \"admin.locationlevel.other\": \"Location Levels\", \"admin.translation.label.key\": \"Key\", \"admin.category.label.name\": \"Name\", \"admin.amount\": \"Amount\", \"admin.category.name.loss_prevention\": \"Loss Prevention\", \"ticket.label.created\": \"Created\", \"admin.setting.other\": \"Settings\", \"admin.person.one\": \"Person\", \"admin.address_type.shipping\": \"Shipping\", \"upload.progress\": \"Progress\", \"modules.assets.titleShort\": \"Assets\", \"admin.person.label.address\": \"Address\", \"admin.third_party.label.name\": \"Name\", \"activity.ticket.comment\": \"commented ${{timestamp}} ${{comment}}\", \"admin.address.postal_code\": \"Zip\", \"admin.category.label.cost_amount\": \"Cost Amount\", \"crud.restore.success\": \"{{model}} restored successfully.\", \"admin.location.label.status-name\": \"Status\", \"admin.person.other\": \"People\", \"admin.locationlevel.district\": \"District\", \"admin.locationlevel.label.childOrg\": \"Child Organization(s)\", \"ticket.status.denied\": \"Denied\", \"activity.ticket.attachment_remove\": \"removed ${{count}} files ${{timestamp}} ${{removed}}\", \"activity.ticket.cc_add\": \"added ${{added}} $to CC ${{timestamp}}\", \"ticket.status.unsatisfactory_completion\": \"Unsatisfactory Completion\", \"admin.person.search\": \"Search People\", \"crud.create.button\": \"Create\", \"crud.titles.new\": \"New {{model}}\", \"admin.address.address\": \"Street Address\", \"button.upload\": \"Attach file\", \"ticket.label.category-name\": \"Category\", \"admin.category.labelCat.type\": \"Type\", \"admin.person.label.first_name\": \"First Name\", \"ticket.label.assignee-fullname\": \"Assignee\", \"admin.location.one\": \"Location\", \"ticket.label.status-name\": \"Status\", \"activity.empty.status_updates\": \"No Status Updates\", \"button.add\": \"Add new {{model}}\", \"ticket.status.closed\": \"Closed\", \"crud.cancel.button\": \"Cancel\", \"admin.locationlevel.department\": \"Department\", \"grid.reset_all_options\": \"Reset All Options\", \"admin.notification.one\": \"Notification Profile\", \"admin.role.label.general\": \"General\", \"admin.location.status.open\": \"Open\", \"crud.delete.error\": \"Error deleting {{model}}.\", \"admin.person.label.change_password\": \"Change\", \"admin.company.one\": \"Company\", \"activity.tabs.all_updates\": \"All Updates\", \"admin.category.labelCat.trade\": \"Trade\", \"admin.role.label.category\": \"Category\", \"admin.contractorAssignment.one\": \"Contractor Assignment\", \"admin.person.label.language\": \"Language\", \"admin.category.one\": \"Category\", \"ticket.priority.emergency\": \"Emergency\", \"welcome\": \"Hello\", \"admin.role.district_manager\": \"District Manager\", \"admin.translation.one\": \"Translation\", \"modules.rfqs.titleShort\": \"RFQs\", \"admin.role.label.location_level\": \"Location Organization\", \"validation.valid\": \"Valid\", \"admin.address.state.one\": \"State\", \"crud.delete.button\": \"Delete\", \"admin.contractorAssignment.other\": \"Contractor Assignments\", \"admin.person.label.phone_number.one\": \"Phone Number\", \"admin.address.country.select\": \"Select a Country\", \"admin.category.label.cost_currency\": \"Cost Currency\", \"admin.general.other\": \"General Settings\", \"activity.tabs.comments\": \"Comments\", \"modules.tasks.titleShort\": \"Tasks\", \"admin.address.add\": \"Add Address\", \"admin.category.status.active\": \"Active\", \"crud.save.button\": \"Save\", \"admin.address.label\": \"Type\", \"admin.person.label.last_name\": \"Last Name\", \"admin.address.state.select\": \"Select a State\", \"admin.category.other\": \"Categories\", \"admin.title\": \"Admin\", \"admin.location.status.future\": \"Future\", \"admin.location.label.location_level\": \"Organization\", \"ticket.label.requester\": \"Requester\", \"admin.person.label.password\": \"Password\", \"admin.role.contractor\": \"Contractor\", \"ticket.one\": \"Ticket\", \"admin.person.label.auth_amount\": \"Auth. Amount\", \"modules.purchaseOrders.titleShort\": \"Purchase Orders\", \"ticket.status.new\": \"New\", \"activity.ticket.attachment_add\": \"uploaded ${{count}} files ${{timestamp}} ${{added}}\", \"crud.save.success\": \"{{model}} saved successfully.\", \"admin.address.country.other\": \"Countries\", \"admin.locationlevel.label.name\": \"Name\", \"activity.ticket.assignee\": \"changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}\", \"admin.addresstype.office\": \"Office\", \"modules.invoices.titleShort\": \"Invoices\", \"admin.category.label.cost_code\": \"Cost Code\", \"admin.template.one\": \"Template\", \"admin.assignment.one\": \"Assignment Profile\", \"admin.role.label.number_users\": \"# of People\", \"admin.person.label.fullname\": \"Name\", \"admin.contractor.one\": \"Contractor\", \"admin.category.name.maintenance\": \"Maintenance\", \"admin.address_type.office\": \"Office\", \"ticket.status.in_progress\": \"In Progress\", \"admin.locationlevel.company\": \"Company\", \"activity.empty.comments\": \"No Comments\", \"admin.location.search\": \"Search Locations\", \"admin.role.regional_manager\": \"Reginal Manager\", \"admin.location.status.closed\": \"Closed\", \"admin.person.label.general\": \"General\", \"menu.home\": \"Home\", \"admin.location.label.general\": \"General\", \"admin.person.status.active\": \"Active\", \"admin.person.status.expired\": \"Expired\", \"admin.addresstype.shipping\": \"Shipping\", \"admin.person.label.middle_initial\": \"Middle\", \"ticket.label.location-name\": \"Location\", \"modules.workOrders.titleShort\": \"Work Orders\", \"crud.create.error\": \"Error creating {{model}}.\", \"admin.role.one\": \"Role\", \"admin.role.store_manager\": \"Store Manager\", \"activity.ticket.categories\": \"changed the category from ${{from}} $to ${{to}} ${{timestamp}}\", \"admin.address.country.one\": \"Country\", \"admin.notification.other\": \"Notification Profiles\", \"ticket.label.cc\": \"CC\"}",
+    "created": "2015-12-02T17:54:21.507Z",
+    "csv": "",
+    "context": "{\"crud.titles.new\": \"New Role\", \"crud.delete.confirm\": \"Are you sure you want to delete Work Order 150306-448?\", \"crud.restore.success\": \"Work Order restored successfully.\", \"crud.create.success\": \"Person created successfully.\", \"crud.titles.edit\": \"Edit Role\"}",
+    "locale": "674ae67d-6d49-47d7-9e4e-b231bdb3ecaf"
+  }
+},
+{
+  "model": "translation.translation",
+  "pk": "669c5b47-39f4-481b-bfd3-6b0bbb8751a7",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-09T22:13:42.294Z",
+    "values": "{\"admin.locationlevel.region\": \"\\u9818\\u57df\", \"admin.role.other\": \"\\u5f79\\u5272\", \"admin.phone.add\": \"\\u96fb\\u8a71\\u756a\\u53f7\\u3092\\u8ffd\\u52a0\\u3057\\u307e\\u3059\\u3002\", \"admin.location.label.number\": \"\\u6570\", \"modules.projects.titleShort\": \"\\u30d7\\u30ed\\u30b8\\u30a7\\u30af\\u30c8\", \"admin.person.label.employee_id\": \"\\u5f93\\u696d\\u54e1\\u756a\\u53f7\", \"admin.person.label.middle_initial\": \"\\u4e2d\\u9593\", \"admin.template.other\": \"\\u30c6\\u30f3\\u30d7\\u30ec\\u30fc\\u30c8\", \"modules.pms.titleShort\": \"PM\", \"ticket.label.status\": \"\\u72b6\\u614b\", \"admin.phonenumbertype.mobile\": \"\\u7d30\\u80de\", \"admin.person.label.location\": \"\\u30ed\\u30b1\\u30fc\\u30b7\\u30e7\\u30f3\", \"admin.person.label.role\": \"\\u5f79\\u5272\", \"ticket.status.deferred\": \"\\u7e70\\u5ef6\", \"admin.setting.one\": \"\\u8a2d\\u5b9a\", \"crud.restore.button\": \"\\u30ea\\u30b9\\u30c8\\u30a2\", \"admin.locationlevel.label.general\": \"\\u4e00\\u822c\", \"admin.phonenumbertype.office\": \"\\u30aa\\u30d5\\u30a3\\u30b9\", \"admin.role.label.name\": \"\\u5f79\\u5272\\u540d\\u79f0\", \"ticket.status.draft\": \"\\u30c9\\u30e9\\u30d5\\u30c8\", \"crud.restore.error\": \"\\u30a8\\u30e9\\u30fc\\u5fa9\\u5143{{model}}\", \"admin.locationlevel.label.name\": \"\\u540d\", \"admin.locationlevel.fmu\": \"\\u30d5\\u30a1\\u30b7\\u30ea\\u30c6\\u30a3\\u30de\\u30cd\\u30b8\\u30e1\\u30f3\\u30c8\\u30ea\\u30fc\\u30b8\\u30e7\\u30f3\", \"admin.company.other\": \"\\u4f01\\u696d\", \"admin.general.other\": \"\\u4e00\\u822c\\u8a2d\\u5b9a\", \"ticket.priority.medium\": \"\\u4e2d\", \"ticket.search\": \"\\u691c\\u7d22\\u30c1\\u30b1\\u30c3\\u30c8\", \"activity.ticket.cc_remove\": \"CC\\u306e$\\u306e{{timestamp}}\\u304b\\u3089\\u524a\\u9664${{removed}} $\", \"crud.delete.confirm\": \"\\u3042\\u306a\\u305f\\u306f '{{ record}}\\u306e\\\\'\\u3092{{model}}\\u306e\\\\\\u3092\\u524a\\u9664\\u3057\\u3066\\u3082\\u3088\\u308d\\u3057\\u3044\\u3067\\u3059\\u304b\\uff1f\", \"admin.category.label.label\": \"\\u30e9\\u30d9\\u30eb\", \"admin.locationlevel.store\": \"\\u683c\\u7d0d\", \"admin.category.label.description\": \"\\u8aac\\u660e\", \"crud.save.error\": \"{{model}}\\u3092\\u4fdd\\u5b58\\u3059\\u308b\\u30a8\\u30e9\\u30fc\\u304c\\u767a\\u751f\\u3057\\u307e\\u3057\\u305f\\u3002\", \"ticket.priority.high\": \"\\u9ad8\\u3044\", \"admin.role.label.role_type\": \"\\u5f79\\u5272\\u578b\", \"crud.create.success\": \"{{model}}\\u6b63\\u5e38\\u306b\\u4f5c\\u6210\\u3055\\u308c\\u307e\\u3057\\u305f\\u3002\", \"admin.approval.other\": \"\\u627f\\u8a8d\", \"ticket.label.assignee\": \"\\u8b72\\u53d7\\u4eba\", \"admin.person.label.title\": \"\\u30bf\\u30a4\\u30c8\\u30eb\", \"admin.address.city\": \"\\u30b7\\u30c6\\u30a3\", \"admin.person.status.inactive\": \"\\u975e\\u30a2\\u30af\\u30c6\\u30a3\\u30d6\", \"modules.tickets.titleShort\": \"\\u30c1\\u30b1\\u30c3\\u30c8\", \"admin.person.label.email\": \"\\u30e1\\u30fc\\u30eb\", \"admin.category.label.subcategory_label\": \"\\u30b5\\u30d6\\u30ab\\u30c6\\u30b4\\u30ea\\u30fc\\u30e9\\u30d9\\u30eb\", \"admin.translation.other\": \"\\u7ffb\\u8a33\", \"admin.category.label.children\": \"\\u30b5\\u30d6\\u30ab\\u30c6\\u30b4\\u30ea\\u30fc\", \"admin.person.label.username\": \"\\u30e6\\u30fc\\u30b6\\u30fc\\u540d\", \"ticket.priority.low\": \"\\u30ed\\u30fc\", \"admin.person.label.status\": \"\\u72b6\\u614b\", \"ticket.other\": \"\\u30c1\\u30b1\\u30c3\\u30c8\", \"admin.general.one\": \"\\u4e00\\u822c\\u7684\\u306a\\u8a2d\\u5b9a\", \"admin.locationlevel.one\": \"\\u5834\\u6240\\u30ec\\u30d9\\u30eb\", \"admin.translation.label.translation\": \"\\u7ffb\\u8a33\", \"activity.ticket.create\": \"\\u3053\\u306e\\u30c1\\u30b1\\u30c3\\u30c8\\u306e${{timestamp}}\\u3092\\u4f5c\\u6210\", \"admin.locationlevel.fmd\": \"\\u65bd\\u8a2d\\u7ba1\\u7406\\u533a\", \"admin.translation.label.helper\": \"\\u30d8\\u30eb\\u30d1\\u30fc\", \"ticket.status.complete\": \"\\u30b3\\u30f3\\u30d7\\u30ea\\u30fc\\u30c8\", \"admin.address.state.other\": \"\\u7c73\\u56fd\", \"admin.approval.one\": \"\\u627f\\u8a8d\", \"ticket.label.location\": \"\\u30ed\\u30b1\\u30fc\\u30b7\\u30e7\\u30f3\", \"crud.titles.edit\": \"\\u7de8\\u96c6{{model}}\", \"ticket.label.priority\": \"\\u512a\\u5148\", \"admin.person.label.phone_number.other\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.contractor.other\": \"\\u8acb\\u8ca0\\u696d\\u8005\", \"admin.category.name.repair\": \"\\u4fee\\u5fa9\", \"ticket.label.request\": \"\\u8981\\u6c42\", \"admin.role.system_administrator\": \"\\u7ba1\\u7406\\u8005\", \"admin.person.label.credentials\": \"\\u30af\\u30ec\\u30c7\\u30f3\\u30b7\\u30e3\\u30eb\", \"validation.invalid\": \"\\u7121\\u52b9\", \"admin.phone.number\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.location.other\": \"\\u5834\\u6240\", \"admin.categoryType.one\": \"\\u30ab\\u30c6\\u30b4\\u30ea\\u30bf\\u30a4\\u30d7\", \"admin.location.label.name\": \"\\u540d\", \"admin.category.label.general\": \"\\u4e00\\u822c\", \"activity.tabs.status_updates\": \"\\u30b9\\u30c6\\u30fc\\u30bf\\u30b9\\u306e\\u66f4\\u65b0\", \"admin.role.guest\": \"\\u30b2\\u30b9\\u30c8\", \"ticket.status.problem_solved\": \"\\u554f\\u984c\\u304c\\u89e3\\u6c7a\\u3057\\u307e\\u3057\\u305f\", \"admin.categoryType.other\": \"\\u30ab\\u30c6\\u30b4\\u30ea\\u578b\", \"admin.person.label.contact\": \"\\u63a5\\u89e6\", \"admin.locationlevel.other\": \"\\u5834\\u6240\\u30ec\\u30d9\\u30eb\", \"admin.translation.label.key\": \"\\u30ad\\u30fc\", \"admin.category.label.name\": \"\\u540d\", \"admin.amount\": \"\\u91cf\", \"ticket.label.created\": \"\\u4f5c\\u6210\", \"admin.setting.other\": \"[\\u8a2d\\u5b9a]\", \"admin.person.one\": \"\\u4eba\", \"admin.address_type.shipping\": \"\\u904b\\u9001\", \"upload.progress\": \"\\u9032\\u6357\", \"modules.assets.titleShort\": \"\\u8cc7\\u7523\", \"admin.person.label.address\": \"\\u4f4f\\u6240\", \"admin.address.label\": \"\\u30bf\\u30a4\\u30d7\", \"admin.address.postal_code\": \"\\u30b8\\u30c3\\u30d7\", \"admin.location.label.location_level\": \"\\u7d44\\u7e54\", \"crud.restore.success\": \"{{model}}\\u6b63\\u5e38\\u306b\\u5fa9\\u5143\\u3002\", \"admin.person.other\": \"\\u4eba\", \"admin.locationlevel.district\": \"\\u5730\\u533a\", \"admin.locationlevel.label.childOrg\": \"\\u5b50\\u6a5f\\u69cb\\uff08\\u8907\\u6570\\u53ef\\uff09\", \"ticket.status.denied\": \"\\u62d2\\u5426\\u3055\\u308c\\u307e\\u3057\\u305f\", \"activity.ticket.attachment_remove\": \"${{timestamp}} ${{removed}} ${{count}}\\u30d5\\u30a1\\u30a4\\u30eb\\u3092\\u524a\\u9664\", \"admin.person.search\": \"\\u691c\\u7d22\\u4eba\", \"crud.create.button\": \"\\u4f5c\\u308a\\u51fa\\u3057\\u307e\\u3059\", \"crud.titles.new\": \"\\u65b0\\u3057\\u3044{{model}}\", \"admin.address.address\": \"\\u4f4f\\u6240\", \"button.upload\": \"\\u30d5\\u30a1\\u30a4\\u30eb\\u3092\\u6dfb\\u4ed8\\u3059\\u308b\", \"admin.category.labelCat.type\": \"\\u30bf\\u30a4\\u30d7\", \"admin.person.label.first_name\": \"\\u30d5\\u30a1\\u30fc\\u30b9\\u30c8\\u30cd\\u30fc\\u30e0\", \"admin.category.name.loss_prevention\": \"\\u640d\\u5931\\u9632\\u6b62\", \"admin.location.one\": \"\\u30ed\\u30b1\\u30fc\\u30b7\\u30e7\\u30f3\", \"admin.assignment.other\": \"\\u5272\\u308a\\u5f53\\u3066\\u30d7\\u30ed\\u30d5\\u30a1\\u30a4\\u30eb\", \"button.add\": \"\\u65b0\\u3057\\u3044{{model}}\\u3092\\u8ffd\\u52a0\", \"crud.cancel.button\": \"\\u30ad\\u30e3\\u30f3\\u30bb\\u30eb\", \"admin.locationlevel.department\": \"\\u90e8\\u9580\", \"modules.rfqs.titleShort\": \"\\u898b\\u7a4d\\u4f9d\\u983c\", \"admin.category.labelCat.issue\": \"\\u554f\\u984c\", \"admin.role.label.general\": \"\\u4e00\\u822c\", \"admin.location.status.open\": \"\\u30aa\\u30fc\\u30d7\\u30f3\", \"crud.delete.error\": \"\\u30a8\\u30e9\\u30fc\\u304c{{model}}\\u524a\\u9664\\u3057\\u307e\\u3059\\u3002\", \"admin.person.label.change_password\": \"\\u5909\\u66f4\", \"admin.company.one\": \"\\u4f1a\\u793e\", \"activity.tabs.all_updates\": \"\\u3059\\u3079\\u3066\\u306e\\u30a2\\u30c3\\u30d7\\u30c7\\u30fc\\u30c8\", \"admin.category.labelCat.trade\": \"\\u30c8\\u30ec\\u30fc\\u30c9\", \"admin.role.label.category\": \"\\u30ab\\u30c6\\u30b4\\u30ea\", \"admin.contractorAssignment.one\": \"\\u8acb\\u8ca0\\u696d\\u8005\\u306e\\u5272\\u308a\\u5f53\\u3066\", \"admin.person.label.language\": \"\\u8a00\\u8a9e\", \"admin.category.one\": \"\\u30ab\\u30c6\\u30b4\\u30ea\", \"ticket.priority.emergency\": \"\\u7dca\\u6025\", \"welcome\": \"\\u3053\\u3093\\u306b\\u3061\\u306f\", \"admin.translation.one\": \"\\u7ffb\\u8a33\", \"admin.role.label.location_level\": \"\\u5834\\u6240\\u7d44\\u7e54\", \"validation.valid\": \"\\u6b63\\u5f53\\u306a\", \"admin.address.state.one\": \"\\u72b6\\u614b\", \"crud.delete.button\": \"\\u524a\\u9664\", \"admin.contractorAssignment.other\": \"\\u8acb\\u8ca0\\u696d\\u8005\\u306e\\u5272\\u308a\\u5f53\\u3066\", \"admin.person.label.phone_number.one\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.address.country.select\": \"\\u56fd\\u3092\\u9078\\u629e\", \"admin.category.label.cost_currency\": \"\\u30b3\\u30b9\\u30c8\\u901a\\u8ca8\", \"activity.ticket.cc_add\": \"$CC\\u306e$\\u306e{{timestamp}}\\u306b${{added}}\\u3092\\u8ffd\\u52a0\\u3057\\u307e\\u3057\\u305f\", \"activity.tabs.comments\": \"\\u30b3\\u30e1\\u30f3\\u30c8\", \"modules.tasks.titleShort\": \"\\u30bf\\u30b9\\u30af\", \"admin.address.add\": \"\\u30a2\\u30c9\\u30ec\\u30b9\\u306e\\u8ffd\\u52a0\", \"admin.category.status.active\": \"\\u30a2\\u30af\\u30c6\\u30a3\\u30d6\", \"crud.save.button\": \"\\u30bb\\u30fc\\u30d6\", \"activity.ticket.comment\": \"\\u30b3\\u30e1\\u30f3\\u30c8${{timestamp}} ${{comment}}\", \"admin.person.label.last_name\": \"\\u82d7\\u5b57\", \"admin.address.state.select\": \"\\u5dde\\u3092\\u9078\\u629e\", \"admin.category.other\": \"\\u30ab\\u30c6\\u30b4\\u30ea\\u30fc\", \"admin.title\": \"\\u7ba1\\u7406\\u8005\", \"admin.location.status.future\": \"\\u5c06\\u6765\", \"ticket.label.requester\": \"\\u30ea\\u30af\\u30a8\\u30b9\\u30bf\", \"admin.person.label.password\": \"\\u30d1\\u30b9\\u30ef\\u30fc\\u30c9\", \"admin.category.label.cost_amount\": \"\\u30b3\\u30b9\\u30c8\\u984d\", \"ticket.one\": \"\\u30c1\\u30b1\\u30c3\\u30c8\", \"admin.person.label.auth_amount\": \"\\u8a8d\\u8a3c\\u3002\\u91cf\", \"modules.purchaseOrders.titleShort\": \"\\u767a\\u6ce8\\u66f8\", \"ticket.status.new\": \"\\u65b0\\u3057\\u3044\", \"admin.location.label.status\": \"\\u72b6\\u614b\", \"activity.ticket.attachment_add\": \"${{timestamp}} ${{added}} ${{count}}\\u30d5\\u30a1\\u30a4\\u30eb\\u3092\\u30a2\\u30c3\\u30d7\\u30ed\\u30fc\\u30c9\", \"crud.save.success\": \"{{model}}\\u304c\\u6b63\\u5e38\\u306b\\u4fdd\\u5b58\\u3055\\u308c\\u307e\\u3057\\u305f\\u3002\", \"admin.address.country.other\": \"\\u56fd\", \"activity.ticket.assignee\": \"${{to}} ${{timestamp}}\\u306b${{from}} $\\u304b\\u3089{{type}}\\u3092\\u5909\\u66f4\", \"admin.addresstype.office\": \"\\u30aa\\u30d5\\u30a3\\u30b9\", \"admin.category.label.cost_code\": \"\\u30b3\\u30b9\\u30c8\\u30b3\\u30fc\\u30c9\", \"admin.template.one\": \"\\u30c6\\u30f3\\u30d7\\u30ec\\u30fc\\u30c8\", \"admin.assignment.one\": \"\\u5272\\u308a\\u5f53\\u3066\\u30d7\\u30ed\\u30d5\\u30a3\\u30fc\\u30eb\", \"admin.role.label.number_users\": \"\\uff03 \\u4eba\\u306e\", \"admin.person.label.fullname\": \"\\u540d\", \"admin.contractor.one\": \"\\u8acb\\u8ca0\\u696d\\u8005\", \"admin.category.name.maintenance\": \"\\u30e1\\u30f3\\u30c6\\u30ca\\u30f3\\u30b9\", \"admin.address_type.office\": \"\\u30aa\\u30d5\\u30a3\\u30b9\", \"ticket.status.in_progress\": \"\\u9032\\u884c\\u4e2d\", \"admin.locationlevel.company\": \"\\u4f1a\\u793e\", \"admin.phone.numbers\": \"\\u96fb\\u8a71\\u756a\\u53f7\", \"admin.location.status.closed\": \"\\u30af\\u30ed\\u30fc\\u30ba\", \"admin.person.label.general\": \"\\u4e00\\u822c\", \"menu.home\": \"\\u30db\\u30fc\\u30e0\", \"admin.location.label.general\": \"\\u4e00\\u822c\", \"admin.person.status.active\": \"\\u30a2\\u30af\\u30c6\\u30a3\\u30d6\", \"admin.person.status.expired\": \"\\u671f\\u9650\\u5207\\u308c\", \"admin.addresstype.shipping\": \"\\u904b\\u9001\", \"admin.notification.one\": \"\\u901a\\u77e5\\u30d7\\u30ed\\u30d5\\u30a1\\u30a4\\u30eb\", \"admin.notification.other\": \"\\u901a\\u77e5\\u30d7\\u30ed\\u30d5\\u30a1\\u30a4\\u30eb\", \"crud.create.error\": \"{{model}}\\u306e\\u4f5c\\u6210\\u30a8\\u30e9\\u30fc\\u304c\\u767a\\u751f\\u3057\\u307e\\u3057\\u305f\\u3002\", \"admin.role.one\": \"\\u5f79\\u5272\", \"modules.invoices.titleShort\": \"\\u8acb\\u6c42\\u66f8\", \"activity.ticket.to_from\": \"${{to}} ${{timestamp}}\\u306b${{from}} $\\u304b\\u3089{{type}}\\u3092\\u5909\\u66f4\", \"activity.ticket.categories\": \"${{to}} ${{timestamp}}\\u306b${{from}} $\\u304b\\u3089\\u30ab\\u30c6\\u30b4\\u30ea\\u3092\\u5909\\u66f4\", \"admin.address.country.one\": \"\\u56fd\", \"modules.workOrders.titleShort\": \"\\u4f5c\\u696d\\u30aa\\u30fc\\u30c0\\u30fc\", \"ticket.label.cc\": \"CC\"}",
+    "created": "2015-12-02T17:51:00.852Z",
+    "csv": "",
+    "context": "{\"admin.address.address\": \"New Role\", \"admin.address.state.select\": \"Are you sure you want to delete Work Order 150306-448?\", \"admin.amount\": \"Work Order restored successfully.\", \"admin.address.country.other\": \"Person created successfully.\", \"admin.address.city\": \"Edit Role\"}",
+    "locale": "875f6f3a-66cc-40d9-be3e-245d45ffca1c"
+  }
+},
+{
+  "model": "translation.translation",
+  "pk": "bd81f289-c884-417c-9ec7-a87f6b9a0220",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-09T22:13:37.718Z",
+    "values": "{\"admin.locationlevel.region\": \"\\u5730\\u5340\", \"admin.role.other\": \"\\u89d2\\u8272\", \"admin.phone.add\": \"\\u6dfb\\u52a0\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.location.label.number\": \"\\u6578\", \"modules.projects.titleShort\": \"\\u5de5\\u7a0b\", \"admin.person.label.employee_id\": \"\\u54e1\\u5de5\\u865f\", \"admin.person.label.middle_initial\": \"\\u4e2d\\u9593\", \"admin.template.other\": \"\\u6a21\\u677f\", \"modules.pms.titleShort\": \"\\u4e0b\\u5348\", \"ticket.label.status\": \"\\u72c0\\u614b\", \"admin.phonenumbertype.mobile\": \"\\u7d30\\u80de\", \"admin.person.label.location\": \"\\u4f4d\\u7f6e\", \"admin.person.label.role\": \"\\u89d2\\u8272\", \"ticket.status.deferred\": \"\\u905e\\u5ef6\", \"admin.setting.one\": \"\\u74b0\\u5883\", \"crud.restore.button\": \"\\u6062\\u5fa9\", \"admin.locationlevel.label.general\": \"\\u4e00\\u822c\", \"admin.phonenumbertype.office\": \"\\u8fa6\\u516c\\u5ba4\", \"admin.role.label.name\": \"\\u89d2\\u8272\\u540d\\u7a31\", \"ticket.status.draft\": \"\\u8349\\u6848\", \"crud.restore.error\": \"\\u932f\\u8aa4\\u6062\\u5fa9{{model}}\", \"admin.locationlevel.label.name\": \"\\u540d\\u7a31\", \"admin.locationlevel.fmu\": \"\\u8a2d\\u65bd\\u7ba1\\u7406\\u5340\", \"admin.company.other\": \"\\u516c\\u53f8\", \"admin.general.other\": \"\\u5e38\\u898f\\u8a2d\\u7f6e\", \"ticket.priority.medium\": \"\\u4e2d\", \"ticket.search\": \"\\u641c\\u7d22\\u9580\\u7968\", \"activity.ticket.cc_remove\": \"\\u5f9eCC ${{timestamp}}\\u522a\\u9664${{removed}} $\", \"crud.delete.confirm\": \"\\u8981\\u522a\\u9664{{model}} \\\\'{{ record}} \\\\'\\u4f60\\u78ba\\u5b9a\\u55ce\\uff1f\", \"admin.category.label.label\": \"\\u6a19\\u7c64\", \"admin.locationlevel.store\": \"\\u5546\\u5e97\", \"admin.category.label.description\": \"\\u63cf\\u8ff0\", \"crud.save.error\": \"\\u932f\\u8aa4\\u4fdd\\u5b58{{model}}\\u3002\", \"ticket.priority.high\": \"\\u9ad8\", \"admin.role.label.role_type\": \"\\u89d2\\u8272\\u985e\\u578b\", \"crud.create.success\": \"{{model}}\\u6210\\u529f\\u5275\\u5efa\\u3002\", \"admin.approval.other\": \"\\u8a8d\\u8b49\", \"ticket.label.assignee\": \"\\u53d7\\u8b93\\u4eba\", \"admin.person.label.title\": \"\\u6a19\\u984c\", \"admin.address.city\": \"\\u5e02\", \"admin.person.status.inactive\": \"\\u975e\\u6d3b\\u52d5\", \"modules.tickets.titleShort\": \"\\u9580\\u7968\", \"admin.person.label.email\": \"\\u96fb\\u5b50\\u90f5\\u4ef6\", \"admin.category.label.subcategory_label\": \"\\u5b50\\u985e\\u5225\\u6a19\\u7c64\", \"admin.translation.other\": \"\\u7ffb\\u8b6f\", \"admin.category.label.children\": \"\\u5b50\\u5206\\u985e\", \"admin.person.label.username\": \"\\u7528\\u6236\\u540d\", \"ticket.priority.low\": \"\\u4f4e\", \"admin.person.label.status\": \"\\u72c0\\u614b\", \"ticket.other\": \"\\u9580\\u7968\", \"admin.general.one\": \"\\u4e00\\u822c\\u8a2d\\u7f6e\", \"admin.locationlevel.one\": \"\\u5730\\u9ede\\u4e00\\u5c64\", \"admin.translation.label.translation\": \"\\u7ffb\\u8b6f\", \"activity.ticket.create\": \"\\u5275\\u5efa\\u6b64\\u9580\\u7968${{timestamp}}\", \"admin.locationlevel.fmd\": \"\\u8a2d\\u65bd\\u7ba1\\u7406\\u5340\", \"admin.translation.label.helper\": \"\\u5e6b\\u624b\", \"ticket.status.complete\": \"\\u5b8c\\u6210\", \"admin.address.state.other\": \"\\u72c0\\u614b\", \"admin.approval.one\": \"\\u5be9\\u6279\", \"ticket.label.location\": \"\\u4f4d\\u7f6e\", \"crud.titles.edit\": \"\\u7de8\\u8f2f{{model}}\", \"ticket.label.priority\": \"\\u512a\\u5148\", \"admin.person.label.phone_number.other\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.contractor.other\": \"\\u627f\\u5305\\u5546\", \"admin.category.name.repair\": \"\\u4fee\\u5fa9\", \"ticket.label.request\": \"\\u8acb\\u6c42\", \"admin.role.system_administrator\": \"\\u7ba1\\u7406\\u54e1\", \"admin.person.label.credentials\": \"\\u8b49\\u66f8\", \"validation.invalid\": \"\\u7121\\u6548\", \"admin.phone.number\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.location.other\": \"\\u5730\\u9ede\", \"admin.categoryType.one\": \"\\u5206\\u985e\\u578b\", \"admin.location.label.name\": \"\\u540d\\u7a31\", \"admin.category.label.general\": \"\\u4e00\\u822c\", \"activity.tabs.status_updates\": \"\\u72c0\\u614b\\u66f4\\u65b0\", \"admin.role.guest\": \"\\u4f86\\u8cd3\", \"ticket.status.problem_solved\": \"\\u554f\\u984c\\u89e3\\u6c7a\\u4e86\", \"admin.categoryType.other\": \"\\u5206\\u985e\\u985e\\u578b\", \"admin.person.label.contact\": \"\\u806f\\u7e6b\", \"admin.locationlevel.other\": \"\\u4f4d\\u7f6e\\u6c34\\u5e73\", \"admin.translation.label.key\": \"\\u9375\", \"admin.category.label.name\": \"\\u540d\\u7a31\", \"admin.amount\": \"\\u91cf\", \"ticket.label.created\": \"\\u5275\\u5efa\", \"admin.setting.other\": \"\\u8a2d\\u7f6e\", \"admin.person.one\": \"\\u4eba\", \"admin.address_type.shipping\": \"\\u9001\\u8ca8\", \"upload.progress\": \"\\u9032\\u5c55\", \"modules.assets.titleShort\": \"\\u8cc7\\u7522\", \"admin.person.label.address\": \"\\u5730\\u5740\", \"admin.address.label\": \"\\u985e\\u578b\", \"admin.address.postal_code\": \"\\u62c9\\u934a\", \"admin.location.label.location_level\": \"\\u7d44\\u7e54\", \"crud.restore.success\": \"{{model}}\\u6210\\u529f\\u6062\\u5fa9\\u3002\", \"admin.person.other\": \"\\u4eba\", \"admin.locationlevel.district\": \"\\u5340\", \"admin.locationlevel.label.childOrg\": \"\\u5152\\u7ae5\\u7d44\\u7e54\\uff08S\\uff09\", \"ticket.status.denied\": \"\\u88ab\\u62d2\\u7d55\", \"activity.ticket.attachment_remove\": \"\\u522a\\u9664${{count}}\\u6587\\u4ef6${{timestamp}} ${{removed}}\", \"admin.person.search\": \"\\u641c\\u7d22\\u4eba\", \"crud.create.button\": \"\\u5275\\u5efa\", \"crud.titles.new\": \"\\u65b0{{model}}\", \"admin.address.address\": \"\\u8857\\u9053\\u5730\\u5740\", \"button.upload\": \"\\u6dfb\\u52a0\\u9644\\u4ef6\", \"admin.category.labelCat.type\": \"\\u985e\\u578b\", \"admin.person.label.first_name\": \"\\u540d\\u5b57\", \"admin.category.name.loss_prevention\": \"\\u9632\\u640d\", \"admin.location.one\": \"\\u4f4d\\u7f6e\", \"admin.assignment.other\": \"\\u5206\\u914d\\u7c21\\u4ecb\", \"button.add\": \"\\u65b0\\u589e{{model}}\", \"crud.cancel.button\": \"\\u53d6\\u6d88\", \"admin.locationlevel.department\": \"\\u90e8\\u9580\", \"modules.rfqs.titleShort\": \"\\u8a62\\u50f9\", \"admin.category.labelCat.issue\": \"\\u554f\\u984c\", \"admin.role.label.general\": \"\\u4e00\\u822c\", \"admin.location.status.open\": \"\\u6253\\u958b\", \"crud.delete.error\": \"\\u932f\\u8aa4\\u522a\\u9664{{model}}\\u3002\", \"admin.person.label.change_password\": \"\\u66f4\\u6539\", \"admin.company.one\": \"\\u516c\\u53f8\", \"activity.tabs.all_updates\": \"\\u6240\\u6709\\u66f4\\u65b0\", \"admin.category.labelCat.trade\": \"\\u884c\\u696d\", \"admin.role.label.category\": \"\\u985e\\u5225\", \"admin.contractorAssignment.one\": \"\\u627f\\u5305\\u5546\\u5206\\u914d\", \"admin.person.label.language\": \"\\u8a9e\\u8a00\", \"admin.category.one\": \"\\u985e\\u5225\", \"ticket.priority.emergency\": \"\\u6025\", \"welcome\": \"\\u60a8\\u597d\", \"admin.translation.one\": \"\\u7ffb\\u8b6f\", \"admin.role.label.location_level\": \"\\u5730\\u9ede\\u7d44\\u7e54\", \"validation.valid\": \"\\u6709\\u6548\", \"admin.address.state.one\": \"\\u5dde\", \"crud.delete.button\": \"\\u522a\\u9664\", \"admin.contractorAssignment.other\": \"\\u627f\\u5305\\u5546\\u5206\\u914d\", \"admin.person.label.phone_number.one\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.address.country.select\": \"\\u9078\\u64c7\\u4e00\\u500b\\u570b\\u5bb6\", \"admin.category.label.cost_currency\": \"\\u6210\\u672c\\u8ca8\\u5e63\", \"activity.ticket.cc_add\": \"\\u52a0${{added}} $\\u5230CC ${{timestamp}}\", \"activity.tabs.comments\": \"\\u8a55\\u8ad6\", \"modules.tasks.titleShort\": \"\\u4efb\\u52d9\", \"admin.address.add\": \"\\u6dfb\\u52a0\\u5730\\u5740\", \"admin.category.status.active\": \"\\u6d3b\\u6027\", \"crud.save.button\": \"\\u4fdd\\u5b58\", \"activity.ticket.comment\": \"\\u8a55\\u8ad6${{timestamp}} ${{comment}}\", \"admin.person.label.last_name\": \"\\u59d3\", \"admin.address.state.select\": \"\\u9078\\u64c7\\u4e00\\u500b\\u570b\\u5bb6\", \"admin.category.other\": \"\\u5206\\u985e\", \"admin.title\": \"\\u7ba1\\u7406\\u54e1\", \"admin.location.status.future\": \"\\u672a\\u4f86\", \"ticket.label.requester\": \"\\u8acb\\u6c42\\u8005\", \"admin.person.label.password\": \"\\u5bc6\\u78bc\", \"admin.category.label.cost_amount\": \"\\u6210\\u672c\\u91d1\\u984d\", \"ticket.one\": \"\\u7968\", \"admin.person.label.auth_amount\": \"\\u9a57\\u8b49\\u3002\\u91cf\", \"modules.purchaseOrders.titleShort\": \"\\u8a02\\u55ae\", \"ticket.status.new\": \"\\u65b0\", \"admin.location.label.status\": \"\\u72c0\\u614b\", \"activity.ticket.attachment_add\": \"\\u4e0a\\u50b3${{count}}\\u6587\\u4ef6${{timestamp}} ${{added}}\", \"crud.save.success\": \"{{model}}\\u4fdd\\u5b58\\u6210\\u529f\\u3002\", \"admin.address.country.other\": \"\\u570b\\u5bb6\", \"activity.ticket.assignee\": \"\\u6539\\u8b8a\\u4e86{{type}}\\u5f9e${{from}} $\\u81f3${{to}} ${{timestamp}}\", \"admin.addresstype.office\": \"\\u8fa6\\u516c\\u5ba4\", \"admin.category.label.cost_code\": \"\\u6210\\u672c\\u78bc\", \"admin.template.one\": \"\\u6a21\\u677f\", \"admin.assignment.one\": \"\\u8f49\\u8b93\\u500b\\u4eba\\u8cc7\\u6599\", \"admin.role.label.number_users\": \"\\uff03\\u4eba\\u6c11\", \"admin.person.label.fullname\": \"\\u540d\\u7a31\", \"admin.contractor.one\": \"\\u627f\\u5305\\u5546\", \"admin.category.name.maintenance\": \"\\u4fdd\\u990a\", \"admin.address_type.office\": \"\\u8fa6\\u516c\\u5ba4\", \"ticket.status.in_progress\": \"\\u9032\\u884c\\u4e2d\", \"admin.locationlevel.company\": \"\\u516c\\u53f8\", \"admin.phone.numbers\": \"\\u96fb\\u8a71\\u865f\\u78bc\", \"admin.location.status.closed\": \"\\u95dc\\u9589\", \"admin.person.label.general\": \"\\u4e00\\u822c\", \"menu.home\": \"\\u5bb6\", \"admin.location.label.general\": \"\\u4e00\\u822c\", \"admin.person.status.active\": \"\\u6d3b\\u6027\", \"admin.person.status.expired\": \"\\u904e\\u671f\", \"admin.addresstype.shipping\": \"\\u9001\\u8ca8\", \"admin.notification.one\": \"\\u901a\\u77e5\\u914d\\u7f6e\", \"admin.notification.other\": \"\\u901a\\u77e5\\u7c21\\u4ecb\", \"crud.create.error\": \"\\u932f\\u8aa4\\u5275\\u5efa{{model}}\\u3002\", \"admin.role.one\": \"\\u89d2\\u8272\", \"modules.invoices.titleShort\": \"\\u767c\\u7968\", \"activity.ticket.to_from\": \"\\u6539\\u8b8a\\u4e86{{type}}\\u5f9e${{from}} $\\u81f3${{to}} ${{timestamp}}\", \"activity.ticket.categories\": \"\\u6539\\u8b8a\\u985e\\u5225\\u5f9e${{from}} $\\u81f3${{to}} ${{timestamp}}\", \"admin.address.country.one\": \"\\u570b\\u5bb6\", \"modules.workOrders.titleShort\": \"\\u5de5\\u4f5c\\u8a02\\u55ae\", \"ticket.label.cc\": \"CC\"}",
+    "created": "2015-12-02T17:49:47.196Z",
+    "csv": "",
+    "context": "{\"crud.titles.new\": \"New Role\", \"crud.delete.confirm\": \"Are you sure you want to delete Work Order 150306-448?\", \"crud.restore.success\": \"Work Order restored successfully.\", \"crud.create.success\": \"Person created successfully.\", \"crud.titles.edit\": \"Edit Role\"}",
+    "locale": "118f5ceb-269b-4e7c-9572-48fe4c9e6487"
+  }
+},
+{
+  "model": "translation.translation",
+  "pk": "d34a9f9a-b562-4471-b789-b32d2041f558",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-09T22:13:28.526Z",
+    "values": "{\"admin.locationlevel.region\": \"Regi\\u00f3n\", \"admin.role.other\": \"Roles\", \"admin.phone.add\": \"Agregar el n\\u00famero de tel\\u00e9fono\", \"admin.location.label.number\": \"N\\u00famero\", \"modules.projects.titleShort\": \"Proyectos\", \"admin.person.label.employee_id\": \"Empleado No.\", \"admin.person.label.middle_initial\": \"Medio\", \"admin.template.other\": \"Plantillas\", \"modules.pms.titleShort\": \"P.M\", \"ticket.label.status\": \"Estado\", \"admin.phonenumbertype.mobile\": \"Celda\", \"admin.person.label.location\": \"Localizaci\\u00f3n\", \"admin.person.label.role\": \"Papel\", \"ticket.status.deferred\": \"Diferido\", \"admin.setting.one\": \"Ajuste\", \"crud.restore.button\": \"Restaurar\", \"admin.locationlevel.label.general\": \"General\", \"admin.phonenumbertype.office\": \"Oficina\", \"admin.role.label.name\": \"Nombre de rol\", \"ticket.status.draft\": \"Borrador\", \"crud.restore.error\": \"Error restaurando {{model}}\", \"admin.locationlevel.label.name\": \"Nombre\", \"admin.locationlevel.fmu\": \"Fondo regi\\u00f3n de gesti\\u00f3n\", \"admin.company.other\": \"Empresas\", \"admin.general.other\": \"Configuraci\\u00f3n general\", \"ticket.priority.medium\": \"Medio\", \"ticket.search\": \"Buscar Entradas\", \"activity.ticket.cc_remove\": \"removidos ${{removed}} $de CC ${{timestamp}}\", \"crud.delete.confirm\": \"\\u00bfSeguro que quieres eliminar {{model}} \\\\ '{{ record}} \\\\'?\", \"admin.category.label.label\": \"Etiqueta\", \"admin.locationlevel.store\": \"Almacenar\", \"admin.category.label.description\": \"Descripci\\u00f3n\", \"crud.save.error\": \"Salvar {{model}} error.\", \"ticket.priority.high\": \"Alto\", \"admin.role.label.role_type\": \"Tipo de Papel\", \"crud.create.success\": \"{{model}} creado con \\u00e9xito.\", \"admin.approval.other\": \"Homologaciones\", \"ticket.label.assignee\": \"Cesionario\", \"admin.person.label.title\": \"T\\u00edtulo\", \"admin.address.city\": \"Ciudad\", \"admin.person.status.inactive\": \"Inactivo\", \"modules.tickets.titleShort\": \"Entradas\", \"admin.person.label.email\": \"Email\", \"admin.category.label.subcategory_label\": \"Sub Categor\\u00eda Label\", \"admin.translation.other\": \"Traducciones\", \"admin.category.label.children\": \"Sub Categor\\u00edas\", \"admin.person.label.username\": \"Nombre de usuario\", \"ticket.priority.low\": \"Bajo\", \"admin.person.label.status\": \"Estado\", \"ticket.other\": \"Entradas\", \"admin.general.one\": \"Ajustes generales\", \"admin.locationlevel.one\": \"Ubicaci\\u00f3n Nivel\", \"admin.translation.label.translation\": \"Traducci\\u00f3n\", \"activity.ticket.create\": \"creado este boleto ${{timestamp}}\", \"admin.locationlevel.fmd\": \"Facilidad Distrito de Administraci\\u00f3n\", \"admin.translation.label.helper\": \"Ayudante\", \"ticket.status.complete\": \"Completar\", \"admin.address.state.other\": \"Unidos\", \"admin.approval.one\": \"Aprobaci\\u00f3n\", \"ticket.label.location\": \"Localizaci\\u00f3n\", \"crud.titles.edit\": \"Editar {{model}}\", \"ticket.label.priority\": \"Prioridad\", \"admin.person.label.phone_number.other\": \"N\\u00fameros de tel\\u00e9fono\", \"admin.contractor.other\": \"Contratistas\", \"admin.category.name.repair\": \"Reparar\", \"ticket.label.request\": \"Petici\\u00f3n\", \"admin.role.system_administrator\": \"Administrador\", \"admin.person.label.credentials\": \"Cartas credenciales\", \"validation.invalid\": \"Inv\\u00e1lido\", \"admin.phone.number\": \"N\\u00famero de tel\\u00e9fono\", \"admin.location.other\": \"Ubicaciones\", \"admin.categoryType.one\": \"Categor\\u00eda Tipo\", \"admin.location.label.name\": \"Nombre\", \"admin.category.label.general\": \"General\", \"activity.tabs.status_updates\": \"Actualizaciones de estado\", \"admin.role.guest\": \"Hu\\u00e9sped\", \"ticket.status.problem_solved\": \"Problema resuelto\", \"admin.categoryType.other\": \"Categor\\u00eda Tipos\", \"admin.person.label.contact\": \"Contacto\", \"admin.locationlevel.other\": \"Ubicaci\\u00f3n Niveles\", \"admin.translation.label.key\": \"Llave\", \"admin.category.label.name\": \"Nombre\", \"admin.amount\": \"Cantidad\", \"ticket.label.created\": \"Creado\", \"admin.setting.other\": \"Ajustes\", \"admin.person.one\": \"La persona\", \"admin.address_type.shipping\": \"Env\\u00edo\", \"upload.progress\": \"Progreso\", \"modules.assets.titleShort\": \"Bienes\", \"admin.person.label.address\": \"Direcci\\u00f3n\", \"admin.address.label\": \"Escribe\", \"admin.address.postal_code\": \"Cremallera\", \"admin.location.label.location_level\": \"Organizaci\\u00f3n\", \"crud.restore.success\": \"{{model}} restaurado con \\u00e9xito.\", \"admin.person.other\": \"Gente\", \"admin.locationlevel.district\": \"Distrito\", \"admin.locationlevel.label.childOrg\": \"Organizaci\\u00f3n Ni\\u00f1o (s)\", \"ticket.status.denied\": \"Denegado\", \"activity.ticket.attachment_remove\": \"removidos ${{count}} archivos ${{timestamp}} ${{removed}}\", \"admin.person.search\": \"Buscador de personas\", \"crud.create.button\": \"Crear\", \"crud.titles.new\": \"Nueva {{model}}\", \"admin.address.address\": \"Direcci\\u00f3n\", \"button.upload\": \"Adjuntar archivo\", \"admin.category.labelCat.type\": \"Escribe\", \"admin.person.label.first_name\": \"Nombre de pila\", \"admin.category.name.loss_prevention\": \"Prevenci\\u00f3n de P\\u00e9rdidas\", \"admin.location.one\": \"Localizaci\\u00f3n\", \"admin.assignment.other\": \"Perfiles de asignaci\\u00f3n\", \"button.add\": \"A\\u00f1adir nuevo {{model}}\", \"crud.cancel.button\": \"Cancelar\", \"admin.locationlevel.department\": \"Departamento\", \"modules.rfqs.titleShort\": \"RFQ\", \"admin.category.labelCat.issue\": \"Asunto\", \"admin.role.label.general\": \"General\", \"admin.location.status.open\": \"Abierto\", \"crud.delete.error\": \"Error al eliminar {{model}}.\", \"admin.person.label.change_password\": \"Cambiar\", \"admin.company.one\": \"Compa\\u00f1\\u00eda\", \"activity.tabs.all_updates\": \"Todas las Actualizaciones\", \"admin.category.labelCat.trade\": \"Comercio\", \"admin.role.label.category\": \"Categor\\u00eda\", \"admin.contractorAssignment.one\": \"Asignaci\\u00f3n Contratista\", \"admin.person.label.language\": \"Idioma\", \"admin.category.one\": \"Categor\\u00eda\", \"ticket.priority.emergency\": \"Emergencia\", \"welcome\": \"Hola\", \"admin.translation.one\": \"Traducci\\u00f3n\", \"admin.role.label.location_level\": \"Ubicaci\\u00f3n Organizaci\\u00f3n\", \"validation.valid\": \"V\\u00e1lido\", \"admin.address.state.one\": \"Estado\", \"crud.delete.button\": \"Borrar\", \"admin.contractorAssignment.other\": \"Asignaciones de contratista\", \"admin.person.label.phone_number.one\": \"N\\u00famero de tel\\u00e9fono\", \"admin.address.country.select\": \"Seleccione un pa\\u00eds\", \"admin.category.label.cost_currency\": \"Costo moneda\", \"activity.ticket.cc_add\": \"agregado ${{added}} $a CC ${{timestamp}}\", \"activity.tabs.comments\": \"Comentarios\", \"modules.tasks.titleShort\": \"Tareas\", \"admin.address.add\": \"A\\u00f1adir la direcci\\u00f3n\", \"admin.category.status.active\": \"Activo\", \"crud.save.button\": \"Guardar\", \"activity.ticket.comment\": \"comentado ${{timestamp}} ${{comment}}\", \"admin.person.label.last_name\": \"Apellido\", \"admin.address.state.select\": \"Selecciona un estado\", \"admin.category.other\": \"Categor\\u00edas\", \"admin.title\": \"Administraci\\u00f3n\", \"admin.location.status.future\": \"Futuro\", \"ticket.label.requester\": \"Solicitante\", \"admin.person.label.password\": \"Clave\", \"admin.category.label.cost_amount\": \"Costo Monto\", \"ticket.one\": \"Billete\", \"admin.person.label.auth_amount\": \"Aut. Cantidad\", \"modules.purchaseOrders.titleShort\": \"Ordenes de compra\", \"ticket.status.new\": \"Nuevo\", \"admin.location.label.status\": \"Estado\", \"activity.ticket.attachment_add\": \"subido ${{count}} archivos ${{timestamp}} ${{added}}\", \"crud.save.success\": \"{{model}} guardado correctamente.\", \"admin.address.country.other\": \"Pa\\u00edses\", \"activity.ticket.assignee\": \"cambiado el {{type}} desde ${{from}} $a ${{to}} ${{timestamp}}\", \"admin.addresstype.office\": \"Oficina\", \"admin.category.label.cost_code\": \"C\\u00f3digo de costo\", \"admin.template.one\": \"Modelo\", \"admin.assignment.one\": \"Asignaci\\u00f3n Perfil\", \"admin.role.label.number_users\": \"# de la gente\", \"admin.person.label.fullname\": \"Nombre\", \"admin.contractor.one\": \"Contratista\", \"admin.category.name.maintenance\": \"Mantenimiento\", \"admin.address_type.office\": \"Oficina\", \"ticket.status.in_progress\": \"En curso\", \"admin.locationlevel.company\": \"Compa\\u00f1\\u00eda\", \"admin.phone.numbers\": \"N\\u00fameros de tel\\u00e9fono\", \"admin.location.status.closed\": \"Cerrado\", \"admin.person.label.general\": \"General\", \"menu.home\": \"Casa\", \"admin.location.label.general\": \"General\", \"admin.person.status.active\": \"Activo\", \"admin.person.status.expired\": \"Muerto\", \"admin.addresstype.shipping\": \"Env\\u00edo\", \"admin.notification.one\": \"Notificaci\\u00f3n Perfil\", \"admin.notification.other\": \"Perfiles de notificaci\\u00f3n\", \"crud.create.error\": \"Error al crear {{model}}.\", \"admin.role.one\": \"Papel\", \"modules.invoices.titleShort\": \"Facturas\", \"activity.ticket.to_from\": \"cambiado el {{type}} desde ${{from}} $a ${{to}} ${{timestamp}}\", \"activity.ticket.categories\": \"cambiado la categor\\u00eda de ${{from}} $a ${{to}} ${{timestamp}}\", \"admin.address.country.one\": \"Pa\\u00eds\", \"modules.workOrders.titleShort\": \"\\u00d3rdenes de trabajo\", \"ticket.label.cc\": \"CC\"}",
+    "created": "2015-12-02T17:50:52.143Z",
+    "csv": "",
+    "context": "{\"admin.address.address\": \"New Role\", \"admin.address.state.select\": \"Are you sure you want to delete Work Order 150306-448?\", \"admin.amount\": \"Work Order restored successfully.\", \"admin.address.country.other\": \"Person created successfully.\", \"admin.address.city\": \"Edit Role\"}",
+    "locale": "15b8159a-9b22-4e26-b80a-2f22b6878864"
+  }
+},
+{
+  "model": "translation.translation",
+  "pk": "d67c2601-2aee-4f4d-bffc-49b6fa6dcc24",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-09T22:13:45.240Z",
+    "values": "{\"admin.locationlevel.region\": \"R\\u00e9gion\", \"admin.role.other\": \"Les r\\u00f4les\", \"admin.phone.add\": \"Ajouter un num\\u00e9ro de t\\u00e9l\\u00e9phone\", \"admin.location.label.number\": \"Nombre\", \"modules.projects.titleShort\": \"Des projets\", \"admin.person.label.employee_id\": \"Num\\u00e9ro d'employ\\u00e9.\", \"admin.person.label.middle_initial\": \"Milieu\", \"admin.template.other\": \"Mod\\u00e8les\", \"modules.pms.titleShort\": \"PM\", \"ticket.label.status\": \"Statut\", \"admin.phonenumbertype.mobile\": \"Cellule\", \"admin.person.label.location\": \"Emplacement\", \"admin.person.label.role\": \"R\\u00f4le\", \"ticket.status.deferred\": \"Diff\\u00e9r\\u00e9\", \"admin.setting.one\": \"R\\u00e9glage\", \"crud.restore.button\": \"Restaurer\", \"admin.locationlevel.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.phonenumbertype.office\": \"Bureau\", \"admin.role.label.name\": \"R\\u00f4le Nom\", \"ticket.status.draft\": \"R\\u00e9diger\", \"crud.restore.error\": \"Erreur restauration {{model}}\", \"admin.locationlevel.label.name\": \"Nom\", \"admin.locationlevel.fmu\": \"Facilit\\u00e9 R\\u00e9gion de gestion\", \"admin.company.other\": \"Entreprises\", \"admin.general.other\": \"r\\u00e9glages g\\u00e9n\\u00e9raux\", \"ticket.priority.medium\": \"Moyen\", \"ticket.search\": \"Chercher un ticket\", \"activity.ticket.cc_remove\": \"enlev\\u00e9es {{removed}} $de CC {{timestamp}}\", \"crud.delete.confirm\": \"Etes-vous s\\u00fbr que vous voulez supprimer {{model}} \\\\ '{{ record}} \\\\'?\", \"admin.category.label.label\": \"\\u00c9tiquette\", \"admin.locationlevel.store\": \"Magasin\", \"admin.category.label.description\": \"Description\", \"crud.save.error\": \"Sauver {{model}} erreur.\", \"ticket.priority.high\": \"Haut\", \"admin.role.label.role_type\": \"Type de R\\u00f4le\", \"crud.create.success\": \"{{model}} cr\\u00e9\\u00e9 avec succ\\u00e8s.\", \"admin.approval.other\": \"Approbations\", \"ticket.label.assignee\": \"Cessionnaire\", \"admin.person.label.title\": \"Titre\", \"admin.address.city\": \"Ville\", \"admin.person.status.inactive\": \"Inactif\", \"modules.tickets.titleShort\": \"Billets\", \"admin.person.label.email\": \"Email\", \"admin.category.label.subcategory_label\": \"Sous cat\\u00e9gorie \\u00c9tiquette\", \"admin.translation.other\": \"Traductions\", \"admin.category.label.children\": \"Sous-cat\\u00e9gories\", \"admin.person.label.username\": \"le nom d'utilisateur\", \"ticket.priority.low\": \"Faible\", \"admin.person.label.status\": \"Statut\", \"ticket.other\": \"Billets\", \"admin.general.one\": \"Cadre g\\u00e9n\\u00e9ral\", \"admin.locationlevel.one\": \"Lieu Niveau\", \"admin.translation.label.translation\": \"Traduction\", \"activity.ticket.create\": \"cr\\u00e9\\u00e9 ce billet ${{timestamp}}\", \"admin.locationlevel.fmd\": \"Facility Management District\", \"admin.translation.label.helper\": \"Auxiliaire\", \"ticket.status.complete\": \"Achev\\u00e9e\", \"admin.address.state.other\": \"\\u00c9tats\", \"admin.approval.one\": \"Approbation\", \"ticket.label.location\": \"Emplacement\", \"crud.titles.edit\": \"Modifier {{model}}\", \"ticket.label.priority\": \"Priorit\\u00e9\", \"admin.person.label.phone_number.other\": \"Les num\\u00e9ros de t\\u00e9l\\u00e9phone\", \"admin.contractor.other\": \"Entrepreneurs\", \"admin.category.name.repair\": \"r\\u00e9paration\", \"ticket.label.request\": \"Demande\", \"admin.role.system_administrator\": \"Administrateur\", \"admin.person.label.credentials\": \"Lettres de cr\\u00e9ance\", \"validation.invalid\": \"Invalide\", \"admin.phone.number\": \"Num\\u00e9ro de t\\u00e9l\\u00e9phone\", \"admin.location.other\": \"Emplacements\", \"admin.categoryType.one\": \"Cat\\u00e9gorie type\", \"admin.location.label.name\": \"Nom\", \"admin.category.label.general\": \"G\\u00e9n\\u00e9ral\", \"activity.tabs.status_updates\": \"Mises \\u00e0 jour de statut\", \"admin.role.guest\": \"Client\", \"ticket.status.problem_solved\": \"Probl\\u00e8me r\\u00e9solu\", \"admin.categoryType.other\": \"Cat\\u00e9gorie Types\", \"admin.person.label.contact\": \"Contact\", \"admin.locationlevel.other\": \"Situation Niveaux\", \"admin.translation.label.key\": \"Cl\\u00e9\", \"admin.category.label.name\": \"Nom\", \"admin.amount\": \"Montant\", \"ticket.label.created\": \"Cr\\u00e9\\u00e9\", \"admin.setting.other\": \"Param\\u00e8tres\", \"admin.person.one\": \"La personne\", \"admin.address_type.shipping\": \"Exp\\u00e9dition\", \"upload.progress\": \"La progression\", \"modules.assets.titleShort\": \"Des atouts\", \"admin.person.label.address\": \"Adresse\", \"admin.address.label\": \"Type\", \"admin.address.postal_code\": \"Zip *: fran\\u00e7ais\", \"admin.location.label.location_level\": \"Organisation\", \"crud.restore.success\": \"{{model}} restaur\\u00e9 avec succ\\u00e8s.\", \"admin.person.other\": \"Gens\", \"admin.locationlevel.district\": \"District\", \"admin.locationlevel.label.childOrg\": \"Organisation enfant (s)\", \"ticket.status.denied\": \"Refus\\u00e9\", \"activity.ticket.attachment_remove\": \"enlev\\u00e9es {{count}} $fichiers ${{timestamp}} ${{removed}}\", \"admin.person.search\": \"Recherche de membres\", \"crud.create.button\": \"Cr\\u00e9er\", \"crud.titles.new\": \"Nouveau {{model}}\", \"admin.address.address\": \"Adresse de la rue\", \"button.upload\": \"Pi\\u00e8ce jointe\", \"admin.category.labelCat.type\": \"Type\", \"admin.person.label.first_name\": \"Pr\\u00e9nom\", \"admin.category.name.loss_prevention\": \"La pr\\u00e9vention des pertes\", \"admin.location.one\": \"Emplacement\", \"admin.assignment.other\": \"Profils d'affectation\", \"button.add\": \"Ajouter un nouveau {{model}}\", \"crud.cancel.button\": \"Annuler\", \"admin.locationlevel.department\": \"D\\u00e9partement\", \"modules.rfqs.titleShort\": \"RFQ\", \"admin.category.labelCat.issue\": \"Probl\\u00e8me\", \"admin.role.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.location.status.open\": \"Ouvrir\", \"crud.delete.error\": \"Erreur de suppression {{model}}.\", \"admin.person.label.change_password\": \"Changement\", \"admin.company.one\": \"Compagnie\", \"activity.tabs.all_updates\": \"Toutes les mises \\u00e0 jour\", \"admin.category.labelCat.trade\": \"Commerce\", \"admin.role.label.category\": \"Cat\\u00e9gorie\", \"admin.contractorAssignment.one\": \"Entrepreneur Affectation\", \"admin.person.label.language\": \"Langue\", \"admin.category.one\": \"Cat\\u00e9gorie\", \"ticket.priority.emergency\": \"Urgence\", \"welcome\": \"Bonjour\", \"admin.translation.one\": \"Traduction\", \"admin.role.label.location_level\": \"Lieu Organisation\", \"validation.valid\": \"Valide\", \"admin.address.state.one\": \"Etat\", \"crud.delete.button\": \"Effacer\", \"admin.contractorAssignment.other\": \"Missions de l'entrepreneur\", \"admin.person.label.phone_number.one\": \"Num\\u00e9ro de t\\u00e9l\\u00e9phone\", \"admin.address.country.select\": \"Choisissez un pays\", \"admin.category.label.cost_currency\": \"Co\\u00fbt devise\", \"activity.ticket.cc_add\": \"ajout\\u00e9 {{added}} $\\u00e0 CC {{timestamp}}\", \"activity.tabs.comments\": \"commentaires\", \"modules.tasks.titleShort\": \"T\\u00e2ches\", \"admin.address.add\": \"Ajouter une adresse\", \"admin.category.status.active\": \"Actif\", \"crud.save.button\": \"sauvegarder\", \"activity.ticket.comment\": \"comment\\u00e9 ${{timestamp}} ${{comment}}\", \"admin.person.label.last_name\": \"Nom de famille\", \"admin.address.state.select\": \"S\\u00e9lectionnez un Etat\", \"admin.category.other\": \"Cat\\u00e9gories\", \"admin.title\": \"Administrateur\", \"admin.location.status.future\": \"Avenir\", \"ticket.label.requester\": \"Demandeur\", \"admin.person.label.password\": \"Mot de passe\", \"admin.category.label.cost_amount\": \"Montant des co\\u00fbts\", \"ticket.one\": \"Billet\", \"admin.person.label.auth_amount\": \"Auth. Montant\", \"modules.purchaseOrders.titleShort\": \"Acheter en ligne\", \"ticket.status.new\": \"Neuf\", \"admin.location.label.status\": \"Statut\", \"activity.ticket.attachment_add\": \"t\\u00e9l\\u00e9charg\\u00e9 {{count}} $fichiers ${{timestamp}} ${{added}}\", \"crud.save.success\": \"{{model}} sauvegard\\u00e9 avec succ\\u00e8s.\", \"admin.address.country.other\": \"Des pays\", \"activity.ticket.assignee\": \"chang\\u00e9 le {{type}} \\u00e0 partir de ${{from}} $\\u00e0 {{to}} ${{timestamp}}\", \"admin.addresstype.office\": \"Bureau\", \"admin.category.label.cost_code\": \"Code des co\\u00fbts\", \"admin.template.one\": \"Mod\\u00e8le\", \"admin.assignment.one\": \"Affectation d'un profil\", \"admin.role.label.number_users\": \"# des gens\", \"admin.person.label.fullname\": \"Nom\", \"admin.contractor.one\": \"Entrepreneur\", \"admin.category.name.maintenance\": \"entretien\", \"admin.address_type.office\": \"Bureau\", \"ticket.status.in_progress\": \"En cours\", \"admin.locationlevel.company\": \"Compagnie\", \"admin.phone.numbers\": \"Les num\\u00e9ros de t\\u00e9l\\u00e9phone\", \"admin.location.status.closed\": \"Ferm\\u00e9\", \"admin.person.label.general\": \"G\\u00e9n\\u00e9ral\", \"menu.home\": \"Accueil\", \"admin.location.label.general\": \"G\\u00e9n\\u00e9ral\", \"admin.person.status.active\": \"Actif\", \"admin.person.status.expired\": \"Expir\\u00e9\", \"admin.addresstype.shipping\": \"Exp\\u00e9dition\", \"admin.notification.one\": \"Profil de notification\", \"admin.notification.other\": \"Profils de notification\", \"crud.create.error\": \"Erreur de cr\\u00e9ation {{model}}.\", \"admin.role.one\": \"R\\u00f4le\", \"modules.invoices.titleShort\": \"Factures\", \"activity.ticket.to_from\": \"chang\\u00e9 le {{type}} \\u00e0 partir de ${{from}} $\\u00e0 {{to}} ${{timestamp}}\", \"activity.ticket.categories\": \"chang\\u00e9 la cat\\u00e9gorie \\u00e0 partir de ${{from}} $\\u00e0 {{to}} ${{timestamp}}\", \"admin.address.country.one\": \"Pays\", \"modules.workOrders.titleShort\": \"Ordres de travail\", \"ticket.label.cc\": \"CC\"}",
+    "created": "2015-12-02T17:50:57.533Z",
+    "csv": "",
+    "context": "{\"admin.address.address\": \"New Role\", \"admin.address.state.select\": \"Are you sure you want to delete Work Order 150306-448?\", \"admin.amount\": \"Work Order restored successfully.\", \"admin.address.country.other\": \"Person created successfully.\", \"admin.address.city\": \"Edit Role\"}",
+    "locale": "70d1b98f-17ce-4afd-8284-489b41ac3487"
+  }
+},
+{
+  "model": "translation.translation",
+  "pk": "f9d7ccac-c254-4155-b8d5-ee55206d6481",
+  "fields": {
+    "deleted": null,
+    "modified": "2015-12-04T22:56:46.959Z",
+    "values": "{\"modules.tickets.titleShort\": \"Requests\", \"welcome\": \"Howdy\"}",
+    "created": "2015-12-02T17:50:03.873Z",
+    "csv": "",
+    "context": "{}",
+    "locale": "553b1cd1-3a79-4473-980a-4fb4469b9b2d"
   }
 },
 {
   "model": "auth.permission",
   "pk": 1,
   "fields": {
-    "content_type": 1,
+    "name": "Can add log entry",
     "codename": "add_logentry",
-    "name": "Can add log entry"
+    "content_type": 1
   }
 },
 {
   "model": "auth.permission",
   "pk": 2,
   "fields": {
-    "content_type": 1,
+    "name": "Can change log entry",
     "codename": "change_logentry",
-    "name": "Can change log entry"
+    "content_type": 1
   }
 },
 {
   "model": "auth.permission",
   "pk": 3,
   "fields": {
-    "content_type": 1,
+    "name": "Can delete log entry",
     "codename": "delete_logentry",
-    "name": "Can delete log entry"
+    "content_type": 1
   }
 },
 {
   "model": "auth.permission",
   "pk": 4,
   "fields": {
-    "content_type": 2,
+    "name": "Can add permission",
     "codename": "add_permission",
-    "name": "Can add permission"
+    "content_type": 2
   }
 },
 {
   "model": "auth.permission",
   "pk": 5,
   "fields": {
-    "content_type": 2,
+    "name": "Can change permission",
     "codename": "change_permission",
-    "name": "Can change permission"
+    "content_type": 2
   }
 },
 {
   "model": "auth.permission",
   "pk": 6,
   "fields": {
-    "content_type": 2,
+    "name": "Can delete permission",
     "codename": "delete_permission",
-    "name": "Can delete permission"
+    "content_type": 2
   }
 },
 {
   "model": "auth.permission",
   "pk": 7,
   "fields": {
-    "content_type": 3,
+    "name": "Can add group",
     "codename": "add_group",
-    "name": "Can add group"
+    "content_type": 3
   }
 },
 {
   "model": "auth.permission",
   "pk": 8,
   "fields": {
-    "content_type": 3,
+    "name": "Can change group",
     "codename": "change_group",
-    "name": "Can change group"
+    "content_type": 3
   }
 },
 {
   "model": "auth.permission",
   "pk": 9,
   "fields": {
-    "content_type": 3,
+    "name": "Can delete group",
     "codename": "delete_group",
-    "name": "Can delete group"
+    "content_type": 3
   }
 },
 {
   "model": "auth.permission",
   "pk": 10,
   "fields": {
-    "content_type": 4,
+    "name": "Can add content type",
     "codename": "add_contenttype",
-    "name": "Can add content type"
+    "content_type": 4
   }
 },
 {
   "model": "auth.permission",
   "pk": 11,
   "fields": {
-    "content_type": 4,
+    "name": "Can change content type",
     "codename": "change_contenttype",
-    "name": "Can change content type"
+    "content_type": 4
   }
 },
 {
   "model": "auth.permission",
   "pk": 12,
   "fields": {
-    "content_type": 4,
+    "name": "Can delete content type",
     "codename": "delete_contenttype",
-    "name": "Can delete content type"
+    "content_type": 4
   }
 },
 {
   "model": "auth.permission",
   "pk": 13,
   "fields": {
-    "content_type": 5,
+    "name": "Can add session",
     "codename": "add_session",
-    "name": "Can add session"
+    "content_type": 5
   }
 },
 {
   "model": "auth.permission",
   "pk": 14,
   "fields": {
-    "content_type": 5,
+    "name": "Can change session",
     "codename": "change_session",
-    "name": "Can change session"
+    "content_type": 5
   }
 },
 {
   "model": "auth.permission",
   "pk": 15,
   "fields": {
-    "content_type": 5,
+    "name": "Can delete session",
     "codename": "delete_session",
-    "name": "Can delete session"
+    "content_type": 5
   }
 },
 {
   "model": "auth.permission",
   "pk": 16,
   "fields": {
-    "content_type": 6,
+    "name": "Can add site",
     "codename": "add_site",
-    "name": "Can add site"
+    "content_type": 6
   }
 },
 {
   "model": "auth.permission",
   "pk": 17,
   "fields": {
-    "content_type": 6,
+    "name": "Can change site",
     "codename": "change_site",
-    "name": "Can change site"
+    "content_type": 6
   }
 },
 {
   "model": "auth.permission",
   "pk": 18,
   "fields": {
-    "content_type": 6,
+    "name": "Can delete site",
     "codename": "delete_site",
-    "name": "Can delete site"
+    "content_type": 6
   }
 },
 {
   "model": "auth.permission",
   "pk": 19,
   "fields": {
-    "content_type": 7,
+    "name": "Can add flat page",
     "codename": "add_flatpage",
-    "name": "Can add flat page"
+    "content_type": 7
   }
 },
 {
   "model": "auth.permission",
   "pk": 20,
   "fields": {
-    "content_type": 7,
+    "name": "Can change flat page",
     "codename": "change_flatpage",
-    "name": "Can change flat page"
+    "content_type": 7
   }
 },
 {
   "model": "auth.permission",
   "pk": 21,
   "fields": {
-    "content_type": 7,
+    "name": "Can delete flat page",
     "codename": "delete_flatpage",
-    "name": "Can delete flat page"
+    "content_type": 7
   }
 },
 {
   "model": "auth.permission",
   "pk": 22,
   "fields": {
-    "content_type": 8,
+    "name": "Can add cors model",
     "codename": "add_corsmodel",
-    "name": "Can add cors model"
+    "content_type": 8
   }
 },
 {
   "model": "auth.permission",
   "pk": 23,
   "fields": {
-    "content_type": 8,
+    "name": "Can change cors model",
     "codename": "change_corsmodel",
-    "name": "Can change cors model"
+    "content_type": 8
   }
 },
 {
   "model": "auth.permission",
   "pk": 24,
   "fields": {
-    "content_type": 8,
+    "name": "Can delete cors model",
     "codename": "delete_corsmodel",
-    "name": "Can delete cors model"
+    "content_type": 8
   }
 },
 {
   "model": "auth.permission",
   "pk": 25,
   "fields": {
-    "content_type": 9,
+    "name": "Can add currency",
     "codename": "add_currency",
-    "name": "Can add currency"
+    "content_type": 9
   }
 },
 {
   "model": "auth.permission",
   "pk": 26,
   "fields": {
-    "content_type": 9,
+    "name": "Can change currency",
     "codename": "change_currency",
-    "name": "Can change currency"
+    "content_type": 9
   }
 },
 {
   "model": "auth.permission",
   "pk": 27,
   "fields": {
-    "content_type": 9,
+    "name": "Can delete currency",
     "codename": "delete_currency",
-    "name": "Can delete currency"
+    "content_type": 9
   }
 },
 {
   "model": "auth.permission",
   "pk": 28,
   "fields": {
-    "content_type": 10,
+    "name": "Can add category status",
     "codename": "add_categorystatus",
-    "name": "Can add category status"
+    "content_type": 10
   }
 },
 {
   "model": "auth.permission",
   "pk": 29,
   "fields": {
-    "content_type": 10,
+    "name": "Can change category status",
     "codename": "change_categorystatus",
-    "name": "Can change category status"
+    "content_type": 10
   }
 },
 {
   "model": "auth.permission",
   "pk": 30,
   "fields": {
-    "content_type": 10,
+    "name": "Can delete category status",
     "codename": "delete_categorystatus",
-    "name": "Can delete category status"
+    "content_type": 10
   }
 },
 {
   "model": "auth.permission",
   "pk": 31,
   "fields": {
-    "content_type": 11,
+    "name": "Can add category",
     "codename": "add_category",
-    "name": "Can add category"
+    "content_type": 11
   }
 },
 {
   "model": "auth.permission",
   "pk": 32,
   "fields": {
-    "content_type": 11,
+    "name": "Can change category",
     "codename": "change_category",
-    "name": "Can change category"
+    "content_type": 11
   }
 },
 {
   "model": "auth.permission",
   "pk": 33,
   "fields": {
-    "content_type": 11,
+    "name": "Can delete category",
     "codename": "delete_category",
-    "name": "Can delete category"
+    "content_type": 11
   }
 },
 {
   "model": "auth.permission",
   "pk": 34,
   "fields": {
-    "content_type": 12,
+    "name": "Can add phone number type",
     "codename": "add_phonenumbertype",
-    "name": "Can add phone number type"
+    "content_type": 12
   }
 },
 {
   "model": "auth.permission",
   "pk": 35,
   "fields": {
-    "content_type": 12,
+    "name": "Can change phone number type",
     "codename": "change_phonenumbertype",
-    "name": "Can change phone number type"
+    "content_type": 12
   }
 },
 {
   "model": "auth.permission",
   "pk": 36,
   "fields": {
-    "content_type": 12,
+    "name": "Can delete phone number type",
     "codename": "delete_phonenumbertype",
-    "name": "Can delete phone number type"
+    "content_type": 12
   }
 },
 {
   "model": "auth.permission",
   "pk": 37,
   "fields": {
-    "content_type": 13,
+    "name": "Can add phone number",
     "codename": "add_phonenumber",
-    "name": "Can add phone number"
+    "content_type": 13
   }
 },
 {
   "model": "auth.permission",
   "pk": 38,
   "fields": {
-    "content_type": 13,
+    "name": "Can change phone number",
     "codename": "change_phonenumber",
-    "name": "Can change phone number"
+    "content_type": 13
   }
 },
 {
   "model": "auth.permission",
   "pk": 39,
   "fields": {
-    "content_type": 13,
+    "name": "Can delete phone number",
     "codename": "delete_phonenumber",
-    "name": "Can delete phone number"
+    "content_type": 13
   }
 },
 {
   "model": "auth.permission",
   "pk": 40,
   "fields": {
-    "content_type": 14,
+    "name": "Can add address type",
     "codename": "add_addresstype",
-    "name": "Can add address type"
+    "content_type": 14
   }
 },
 {
   "model": "auth.permission",
   "pk": 41,
   "fields": {
-    "content_type": 14,
+    "name": "Can change address type",
     "codename": "change_addresstype",
-    "name": "Can change address type"
+    "content_type": 14
   }
 },
 {
   "model": "auth.permission",
   "pk": 42,
   "fields": {
-    "content_type": 14,
+    "name": "Can delete address type",
     "codename": "delete_addresstype",
-    "name": "Can delete address type"
+    "content_type": 14
   }
 },
 {
   "model": "auth.permission",
   "pk": 43,
   "fields": {
-    "content_type": 15,
+    "name": "Can add address",
     "codename": "add_address",
-    "name": "Can add address"
+    "content_type": 15
   }
 },
 {
   "model": "auth.permission",
   "pk": 44,
   "fields": {
-    "content_type": 15,
+    "name": "Can change address",
     "codename": "change_address",
-    "name": "Can change address"
+    "content_type": 15
   }
 },
 {
   "model": "auth.permission",
   "pk": 45,
   "fields": {
-    "content_type": 15,
+    "name": "Can delete address",
     "codename": "delete_address",
-    "name": "Can delete address"
+    "content_type": 15
   }
 },
 {
   "model": "auth.permission",
   "pk": 46,
   "fields": {
-    "content_type": 16,
+    "name": "Can add email type",
     "codename": "add_emailtype",
-    "name": "Can add email type"
+    "content_type": 16
   }
 },
 {
   "model": "auth.permission",
   "pk": 47,
   "fields": {
-    "content_type": 16,
+    "name": "Can change email type",
     "codename": "change_emailtype",
-    "name": "Can change email type"
+    "content_type": 16
   }
 },
 {
   "model": "auth.permission",
   "pk": 48,
   "fields": {
-    "content_type": 16,
+    "name": "Can delete email type",
     "codename": "delete_emailtype",
-    "name": "Can delete email type"
+    "content_type": 16
   }
 },
 {
   "model": "auth.permission",
   "pk": 49,
   "fields": {
-    "content_type": 17,
+    "name": "Can add email",
     "codename": "add_email",
-    "name": "Can add email"
+    "content_type": 17
   }
 },
 {
   "model": "auth.permission",
   "pk": 50,
   "fields": {
-    "content_type": 17,
+    "name": "Can change email",
     "codename": "change_email",
-    "name": "Can change email"
+    "content_type": 17
   }
 },
 {
   "model": "auth.permission",
   "pk": 51,
   "fields": {
-    "content_type": 17,
+    "name": "Can delete email",
     "codename": "delete_email",
-    "name": "Can delete email"
+    "content_type": 17
   }
 },
 {
   "model": "auth.permission",
   "pk": 52,
   "fields": {
-    "content_type": 18,
+    "name": "Can add saved search",
     "codename": "add_savedsearch",
-    "name": "Can add saved search"
+    "content_type": 18
   }
 },
 {
   "model": "auth.permission",
   "pk": 53,
   "fields": {
-    "content_type": 18,
+    "name": "Can change saved search",
     "codename": "change_savedsearch",
-    "name": "Can change saved search"
+    "content_type": 18
   }
 },
 {
   "model": "auth.permission",
   "pk": 54,
   "fields": {
-    "content_type": 18,
+    "name": "Can delete saved search",
     "codename": "delete_savedsearch",
-    "name": "Can delete saved search"
+    "content_type": 18
   }
 },
 {
   "model": "auth.permission",
   "pk": 55,
   "fields": {
-    "content_type": 19,
+    "name": "Can add main setting",
     "codename": "add_mainsetting",
-    "name": "Can add main setting"
+    "content_type": 19
   }
 },
 {
   "model": "auth.permission",
   "pk": 56,
   "fields": {
-    "content_type": 19,
+    "name": "Can change main setting",
     "codename": "change_mainsetting",
-    "name": "Can change main setting"
+    "content_type": 19
   }
 },
 {
   "model": "auth.permission",
   "pk": 57,
   "fields": {
-    "content_type": 19,
+    "name": "Can delete main setting",
     "codename": "delete_mainsetting",
-    "name": "Can delete main setting"
+    "content_type": 19
   }
 },
 {
   "model": "auth.permission",
   "pk": 58,
   "fields": {
-    "content_type": 20,
+    "name": "Can add custom setting",
     "codename": "add_customsetting",
-    "name": "Can add custom setting"
+    "content_type": 20
   }
 },
 {
   "model": "auth.permission",
   "pk": 59,
   "fields": {
-    "content_type": 20,
+    "name": "Can change custom setting",
     "codename": "change_customsetting",
-    "name": "Can change custom setting"
+    "content_type": 20
   }
 },
 {
   "model": "auth.permission",
   "pk": 60,
   "fields": {
-    "content_type": 20,
+    "name": "Can delete custom setting",
     "codename": "delete_customsetting",
-    "name": "Can delete custom setting"
+    "content_type": 20
   }
 },
 {
   "model": "auth.permission",
   "pk": 61,
   "fields": {
-    "content_type": 21,
+    "name": "Can add attachment",
     "codename": "add_attachment",
-    "name": "Can add attachment"
+    "content_type": 21
   }
 },
 {
   "model": "auth.permission",
   "pk": 62,
   "fields": {
-    "content_type": 21,
+    "name": "Can change attachment",
     "codename": "change_attachment",
-    "name": "Can change attachment"
+    "content_type": 21
   }
 },
 {
   "model": "auth.permission",
   "pk": 63,
   "fields": {
-    "content_type": 21,
+    "name": "Can delete attachment",
     "codename": "delete_attachment",
-    "name": "Can delete attachment"
+    "content_type": 21
   }
 },
 {
   "model": "auth.permission",
   "pk": 64,
   "fields": {
-    "content_type": 22,
+    "name": "Can add state",
     "codename": "add_state",
-    "name": "Can add state"
+    "content_type": 22
   }
 },
 {
   "model": "auth.permission",
   "pk": 65,
   "fields": {
-    "content_type": 22,
+    "name": "Can change state",
     "codename": "change_state",
-    "name": "Can change state"
+    "content_type": 22
   }
 },
 {
   "model": "auth.permission",
   "pk": 66,
   "fields": {
-    "content_type": 22,
+    "name": "Can delete state",
     "codename": "delete_state",
-    "name": "Can delete state"
+    "content_type": 22
   }
 },
 {
   "model": "auth.permission",
   "pk": 67,
   "fields": {
-    "content_type": 23,
+    "name": "Can add country",
     "codename": "add_country",
-    "name": "Can add country"
+    "content_type": 23
   }
 },
 {
   "model": "auth.permission",
   "pk": 68,
   "fields": {
-    "content_type": 23,
+    "name": "Can change country",
     "codename": "change_country",
-    "name": "Can change country"
+    "content_type": 23
   }
 },
 {
   "model": "auth.permission",
   "pk": 69,
   "fields": {
-    "content_type": 23,
+    "name": "Can delete country",
     "codename": "delete_country",
-    "name": "Can delete country"
+    "content_type": 23
   }
 },
 {
   "model": "auth.permission",
   "pk": 70,
   "fields": {
-    "content_type": 24,
+    "name": "Can add location level",
     "codename": "add_locationlevel",
-    "name": "Can add location level"
+    "content_type": 24
   }
 },
 {
   "model": "auth.permission",
   "pk": 71,
   "fields": {
-    "content_type": 24,
+    "name": "Can change location level",
     "codename": "change_locationlevel",
-    "name": "Can change location level"
+    "content_type": 24
   }
 },
 {
   "model": "auth.permission",
   "pk": 72,
   "fields": {
-    "content_type": 24,
+    "name": "Can delete location level",
     "codename": "delete_locationlevel",
-    "name": "Can delete location level"
+    "content_type": 24
   }
 },
 {
   "model": "auth.permission",
   "pk": 73,
   "fields": {
-    "content_type": 25,
+    "name": "Can add location status",
     "codename": "add_locationstatus",
-    "name": "Can add location status"
+    "content_type": 25
   }
 },
 {
   "model": "auth.permission",
   "pk": 74,
   "fields": {
-    "content_type": 25,
+    "name": "Can change location status",
     "codename": "change_locationstatus",
-    "name": "Can change location status"
+    "content_type": 25
   }
 },
 {
   "model": "auth.permission",
   "pk": 75,
   "fields": {
-    "content_type": 25,
+    "name": "Can delete location status",
     "codename": "delete_locationstatus",
-    "name": "Can delete location status"
+    "content_type": 25
   }
 },
 {
   "model": "auth.permission",
   "pk": 76,
   "fields": {
-    "content_type": 26,
+    "name": "Can add location type",
     "codename": "add_locationtype",
-    "name": "Can add location type"
+    "content_type": 26
   }
 },
 {
   "model": "auth.permission",
   "pk": 77,
   "fields": {
-    "content_type": 26,
+    "name": "Can change location type",
     "codename": "change_locationtype",
-    "name": "Can change location type"
+    "content_type": 26
   }
 },
 {
   "model": "auth.permission",
   "pk": 78,
   "fields": {
-    "content_type": 26,
+    "name": "Can delete location type",
     "codename": "delete_locationtype",
-    "name": "Can delete location type"
+    "content_type": 26
   }
 },
 {
   "model": "auth.permission",
   "pk": 79,
   "fields": {
-    "content_type": 27,
+    "name": "Can add location",
     "codename": "add_location",
-    "name": "Can add location"
+    "content_type": 27
   }
 },
 {
   "model": "auth.permission",
   "pk": 80,
   "fields": {
-    "content_type": 27,
+    "name": "Can change location",
     "codename": "change_location",
-    "name": "Can change location"
+    "content_type": 27
   }
 },
 {
   "model": "auth.permission",
   "pk": 81,
   "fields": {
-    "content_type": 27,
+    "name": "Can delete location",
     "codename": "delete_location",
-    "name": "Can delete location"
+    "content_type": 27
   }
 },
 {
   "model": "auth.permission",
   "pk": 82,
   "fields": {
-    "content_type": 28,
+    "name": "Can add work order status",
     "codename": "add_workorderstatus",
-    "name": "Can add work order status"
+    "content_type": 28
   }
 },
 {
   "model": "auth.permission",
   "pk": 83,
   "fields": {
-    "content_type": 28,
+    "name": "Can change work order status",
     "codename": "change_workorderstatus",
-    "name": "Can change work order status"
+    "content_type": 28
   }
 },
 {
   "model": "auth.permission",
   "pk": 84,
   "fields": {
-    "content_type": 28,
+    "name": "Can delete work order status",
     "codename": "delete_workorderstatus",
-    "name": "Can delete work order status"
+    "content_type": 28
   }
 },
 {
   "model": "auth.permission",
   "pk": 85,
   "fields": {
-    "content_type": 29,
+    "name": "Can add work order",
     "codename": "add_workorder",
-    "name": "Can add work order"
+    "content_type": 29
   }
 },
 {
   "model": "auth.permission",
   "pk": 86,
   "fields": {
-    "content_type": 29,
+    "name": "Can change work order",
     "codename": "change_workorder",
-    "name": "Can change work order"
+    "content_type": 29
   }
 },
 {
   "model": "auth.permission",
   "pk": 87,
   "fields": {
-    "content_type": 29,
+    "name": "Can delete work order",
     "codename": "delete_workorder",
-    "name": "Can delete work order"
+    "content_type": 29
   }
 },
 {
   "model": "auth.permission",
   "pk": 88,
   "fields": {
-    "content_type": 30,
+    "name": "Can add role",
     "codename": "add_role",
-    "name": "Can add role"
+    "content_type": 30
   }
 },
 {
   "model": "auth.permission",
   "pk": 89,
   "fields": {
-    "content_type": 30,
+    "name": "Can change role",
     "codename": "change_role",
-    "name": "Can change role"
+    "content_type": 30
   }
 },
 {
   "model": "auth.permission",
   "pk": 90,
   "fields": {
-    "content_type": 30,
+    "name": "Can delete role",
     "codename": "delete_role",
-    "name": "Can delete role"
+    "content_type": 30
   }
 },
 {
   "model": "auth.permission",
   "pk": 91,
   "fields": {
-    "content_type": 31,
+    "name": "Can add proxy role",
     "codename": "add_proxyrole",
-    "name": "Can add proxy role"
+    "content_type": 31
   }
 },
 {
   "model": "auth.permission",
   "pk": 92,
   "fields": {
-    "content_type": 31,
+    "name": "Can change proxy role",
     "codename": "change_proxyrole",
-    "name": "Can change proxy role"
+    "content_type": 31
   }
 },
 {
   "model": "auth.permission",
   "pk": 93,
   "fields": {
-    "content_type": 31,
+    "name": "Can delete proxy role",
     "codename": "delete_proxyrole",
-    "name": "Can delete proxy role"
+    "content_type": 31
   }
 },
 {
   "model": "auth.permission",
   "pk": 94,
   "fields": {
-    "content_type": 32,
+    "name": "Can add person status",
     "codename": "add_personstatus",
-    "name": "Can add person status"
+    "content_type": 32
   }
 },
 {
   "model": "auth.permission",
   "pk": 95,
   "fields": {
-    "content_type": 32,
+    "name": "Can change person status",
     "codename": "change_personstatus",
-    "name": "Can change person status"
+    "content_type": 32
   }
 },
 {
   "model": "auth.permission",
   "pk": 96,
   "fields": {
-    "content_type": 32,
+    "name": "Can delete person status",
     "codename": "delete_personstatus",
-    "name": "Can delete person status"
+    "content_type": 32
   }
 },
 {
   "model": "auth.permission",
   "pk": 97,
   "fields": {
-    "content_type": 33,
+    "name": "Can add person",
     "codename": "add_person",
-    "name": "Can add person"
+    "content_type": 33
   }
 },
 {
   "model": "auth.permission",
   "pk": 98,
   "fields": {
-    "content_type": 33,
+    "name": "Can change person",
     "codename": "change_person",
-    "name": "Can change person"
+    "content_type": 33
   }
 },
 {
   "model": "auth.permission",
   "pk": 99,
   "fields": {
-    "content_type": 33,
+    "name": "Can delete person",
     "codename": "delete_person",
-    "name": "Can delete person"
+    "content_type": 33
   }
 },
 {
   "model": "auth.permission",
   "pk": 100,
   "fields": {
-    "content_type": 34,
+    "name": "Can add third party status",
     "codename": "add_thirdpartystatus",
-    "name": "Can add third party status"
+    "content_type": 34
   }
 },
 {
   "model": "auth.permission",
   "pk": 101,
   "fields": {
-    "content_type": 34,
+    "name": "Can change third party status",
     "codename": "change_thirdpartystatus",
-    "name": "Can change third party status"
+    "content_type": 34
   }
 },
 {
   "model": "auth.permission",
   "pk": 102,
   "fields": {
-    "content_type": 34,
+    "name": "Can delete third party status",
     "codename": "delete_thirdpartystatus",
-    "name": "Can delete third party status"
+    "content_type": 34
   }
 },
 {
   "model": "auth.permission",
   "pk": 103,
   "fields": {
-    "content_type": 35,
+    "name": "Can add third party",
     "codename": "add_thirdparty",
-    "name": "Can add third party"
+    "content_type": 35
   }
 },
 {
   "model": "auth.permission",
   "pk": 104,
   "fields": {
-    "content_type": 35,
+    "name": "Can change third party",
     "codename": "change_thirdparty",
-    "name": "Can change third party"
+    "content_type": 35
   }
 },
 {
   "model": "auth.permission",
   "pk": 105,
   "fields": {
-    "content_type": 35,
+    "name": "Can delete third party",
     "codename": "delete_thirdparty",
-    "name": "Can delete third party"
+    "content_type": 35
   }
 },
 {
   "model": "auth.permission",
   "pk": 106,
   "fields": {
-    "content_type": 36,
+    "name": "Can add ticket status",
     "codename": "add_ticketstatus",
-    "name": "Can add ticket status"
+    "content_type": 36
   }
 },
 {
   "model": "auth.permission",
   "pk": 107,
   "fields": {
-    "content_type": 36,
+    "name": "Can change ticket status",
     "codename": "change_ticketstatus",
-    "name": "Can change ticket status"
+    "content_type": 36
   }
 },
 {
   "model": "auth.permission",
   "pk": 108,
   "fields": {
-    "content_type": 36,
+    "name": "Can delete ticket status",
     "codename": "delete_ticketstatus",
-    "name": "Can delete ticket status"
+    "content_type": 36
   }
 },
 {
   "model": "auth.permission",
   "pk": 109,
   "fields": {
-    "content_type": 37,
+    "name": "Can add ticket priority",
     "codename": "add_ticketpriority",
-    "name": "Can add ticket priority"
+    "content_type": 37
   }
 },
 {
   "model": "auth.permission",
   "pk": 110,
   "fields": {
-    "content_type": 37,
+    "name": "Can change ticket priority",
     "codename": "change_ticketpriority",
-    "name": "Can change ticket priority"
+    "content_type": 37
   }
 },
 {
   "model": "auth.permission",
   "pk": 111,
   "fields": {
-    "content_type": 37,
+    "name": "Can delete ticket priority",
     "codename": "delete_ticketpriority",
-    "name": "Can delete ticket priority"
+    "content_type": 37
   }
 },
 {
   "model": "auth.permission",
   "pk": 112,
   "fields": {
-    "content_type": 38,
+    "name": "Can add ticket",
     "codename": "add_ticket",
-    "name": "Can add ticket"
+    "content_type": 38
   }
 },
 {
   "model": "auth.permission",
   "pk": 113,
   "fields": {
-    "content_type": 38,
+    "name": "Can change ticket",
     "codename": "change_ticket",
-    "name": "Can change ticket"
+    "content_type": 38
   }
 },
 {
   "model": "auth.permission",
   "pk": 114,
   "fields": {
-    "content_type": 38,
+    "name": "Can delete ticket",
     "codename": "delete_ticket",
-    "name": "Can delete ticket"
+    "content_type": 38
   }
 },
 {
   "model": "auth.permission",
   "pk": 115,
   "fields": {
-    "content_type": 39,
+    "name": "Can add ticket activity type",
     "codename": "add_ticketactivitytype",
-    "name": "Can add ticket activity type"
+    "content_type": 39
   }
 },
 {
   "model": "auth.permission",
   "pk": 116,
   "fields": {
-    "content_type": 39,
+    "name": "Can change ticket activity type",
     "codename": "change_ticketactivitytype",
-    "name": "Can change ticket activity type"
+    "content_type": 39
   }
 },
 {
   "model": "auth.permission",
   "pk": 117,
   "fields": {
-    "content_type": 39,
+    "name": "Can delete ticket activity type",
     "codename": "delete_ticketactivitytype",
-    "name": "Can delete ticket activity type"
+    "content_type": 39
   }
 },
 {
   "model": "auth.permission",
   "pk": 118,
   "fields": {
-    "content_type": 40,
+    "name": "Can add ticket activity",
     "codename": "add_ticketactivity",
-    "name": "Can add ticket activity"
+    "content_type": 40
   }
 },
 {
   "model": "auth.permission",
   "pk": 119,
   "fields": {
-    "content_type": 40,
+    "name": "Can change ticket activity",
     "codename": "change_ticketactivity",
-    "name": "Can change ticket activity"
+    "content_type": 40
   }
 },
 {
   "model": "auth.permission",
   "pk": 120,
   "fields": {
-    "content_type": 40,
+    "name": "Can delete ticket activity",
     "codename": "delete_ticketactivity",
-    "name": "Can delete ticket activity"
+    "content_type": 40
   }
 },
 {
   "model": "auth.permission",
   "pk": 121,
   "fields": {
-    "content_type": 41,
+    "name": "Can add locale",
     "codename": "add_locale",
-    "name": "Can add locale"
+    "content_type": 41
   }
 },
 {
   "model": "auth.permission",
   "pk": 122,
   "fields": {
-    "content_type": 41,
+    "name": "Can change locale",
     "codename": "change_locale",
-    "name": "Can change locale"
+    "content_type": 41
   }
 },
 {
   "model": "auth.permission",
   "pk": 123,
   "fields": {
-    "content_type": 41,
+    "name": "Can delete locale",
     "codename": "delete_locale",
-    "name": "Can delete locale"
+    "content_type": 41
   }
 },
 {
   "model": "auth.permission",
   "pk": 124,
   "fields": {
-    "content_type": 42,
+    "name": "Can add translation",
     "codename": "add_translation",
-    "name": "Can add translation"
+    "content_type": 42
   }
 },
 {
   "model": "auth.permission",
   "pk": 125,
   "fields": {
-    "content_type": 42,
+    "name": "Can change translation",
     "codename": "change_translation",
-    "name": "Can change translation"
+    "content_type": 42
   }
 },
 {
   "model": "auth.permission",
   "pk": 126,
   "fields": {
-    "content_type": 42,
+    "name": "Can delete translation",
     "codename": "delete_translation",
-    "name": "Can delete translation"
+    "content_type": 42
   }
 },
 {
   "model": "auth.permission",
   "pk": 127,
   "fields": {
-    "content_type": 43,
-    "codename": "add_tester",
-    "name": "Can add tester"
+    "name": "Can add work request status",
+    "codename": "add_workrequeststatus",
+    "content_type": 43
   }
 },
 {
   "model": "auth.permission",
   "pk": 128,
   "fields": {
-    "content_type": 43,
-    "codename": "change_tester",
-    "name": "Can change tester"
+    "name": "Can change work request status",
+    "codename": "change_workrequeststatus",
+    "content_type": 43
   }
 },
 {
   "model": "auth.permission",
   "pk": 129,
   "fields": {
-    "content_type": 43,
+    "name": "Can delete work request status",
+    "codename": "delete_workrequeststatus",
+    "content_type": 43
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 130,
+  "fields": {
+    "name": "Can add work request",
+    "codename": "add_workrequest",
+    "content_type": 44
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 131,
+  "fields": {
+    "name": "Can change work request",
+    "codename": "change_workrequest",
+    "content_type": 44
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 132,
+  "fields": {
+    "name": "Can delete work request",
+    "codename": "delete_workrequest",
+    "content_type": 44
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 133,
+  "fields": {
+    "name": "Can add tester",
+    "codename": "add_tester",
+    "content_type": 45
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 134,
+  "fields": {
+    "name": "Can change tester",
+    "codename": "change_tester",
+    "content_type": 45
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 135,
+  "fields": {
+    "name": "Can delete tester",
     "codename": "delete_tester",
-    "name": "Can delete tester"
+    "content_type": 45
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 136,
+  "fields": {
+    "name": "Can add location region",
+    "codename": "add_locationregion",
+    "content_type": 46
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 137,
+  "fields": {
+    "name": "Can change location region",
+    "codename": "change_locationregion",
+    "content_type": 46
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 138,
+  "fields": {
+    "name": "Can delete location region",
+    "codename": "delete_locationregion",
+    "content_type": 46
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 139,
+  "fields": {
+    "name": "Can add location district",
+    "codename": "add_locationdistrict",
+    "content_type": 47
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 140,
+  "fields": {
+    "name": "Can change location district",
+    "codename": "change_locationdistrict",
+    "content_type": 47
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 141,
+  "fields": {
+    "name": "Can delete location district",
+    "codename": "delete_locationdistrict",
+    "content_type": 47
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 142,
+  "fields": {
+    "name": "Can add location store",
+    "codename": "add_locationstore",
+    "content_type": 48
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 143,
+  "fields": {
+    "name": "Can change location store",
+    "codename": "change_locationstore",
+    "content_type": 48
+  }
+},
+{
+  "model": "auth.permission",
+  "pk": 144,
+  "fields": {
+    "name": "Can delete location store",
+    "codename": "delete_locationstore",
+    "content_type": 48
   }
 },
 {
   "model": "auth.group",
   "pk": 1,
   "fields": {
-    "name": "FzsRUNVxYq",
-    "permissions": []
+    "permissions": [],
+    "name": "PkmtjeInqR"
   }
 },
 {
   "model": "person.role",
-  "pk": "21339bca-e05d-4a0b-a150-f21140e5edc6",
+  "pk": "cbbac225-d096-4950-9e70-0c289a4a0630",
   "fields": {
-    "inv_wo_status": null,
-    "password_digit_required": false,
-    "group": 1,
-    "inv_wait": null,
-    "dashboad_links": "",
-    "location_level": "d8f79864-b3fd-4f59-976e-7bdc9939cae6",
-    "dashboad_text": "",
-    "wo_notes": false,
-    "inv_autoapprove": false,
-    "modules": "",
-    "msg_address": false,
-    "proxy_set": false,
-    "create_all": false,
     "inv_select_assign": "all",
-    "created": "2015-11-19T23:15:23.926Z",
     "wo_allow_backdate": false,
-    "password_expired_login_count": null,
-    "password_lower_char_required": false,
-    "password_can_change": true,
-    "default_accept_assign": true,
-    "default_accept_notify": true,
-    "accept_notify": false,
-    "password_upper_char_required": false,
-    "wo_show_inactive": false,
-    "msg_copy_email": false,
-    "inv_close_wo": "Do not display",
-    "proxy_approval_bypass": false,
-    "wo_days_backdate": null,
-    "msg_copy_default": false,
-    "categories": [],
-    "name": "FzsRUNVxYq",
-    "role_type": "Internal",
-    "inv_max_approval_currency": "usd",
-    "password_expire": 90,
-    "deleted": null,
-    "password_special_char_required": false,
-    "wo_edit_closeout": false,
-    "inv_max_approval_amount": 0,
-    "password_min_length": 6,
-    "msg_viewall": false,
-    "modified": "2015-11-19T23:15:23.926Z",
-    "password_history_length": "[]",
-    "allow_approval": false,
-    "password_expire_alert": true,
+    "inv_wait": null,
     "msg_stored_link": false,
-    "accept_assign": false,
-    "tabs": "",
-    "default_auth_amount": "0.0000",
-    "inv_options": "new",
-    "default_auth_currency": "93ca195e-f29b-48f1-a8c8-578ee70bc51c",
     "inv_req_attach": true,
-    "wo_show_tkt_attach": false
+    "created": "2015-12-15T19:32:20.322Z",
+    "create_all": false,
+    "msg_viewall": false,
+    "wo_days_backdate": null,
+    "proxy_set": false,
+    "location_level": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf",
+    "password_special_char_required": false,
+    "role_type": "Internal",
+    "password_min_length": 6,
+    "deleted": null,
+    "default_auth_currency": "2469e974-00a9-4fe4-91ed-992c2e0be846",
+    "inv_autoapprove": false,
+    "default_accept_notify": true,
+    "msg_copy_email": false,
+    "categories": [],
+    "password_expire_alert": true,
+    "default_auth_amount": "0.0000",
+    "password_expire": 90,
+    "inv_max_approval_currency": "usd",
+    "inv_close_wo": "Do not display",
+    "inv_options": "new",
+    "password_digit_required": false,
+    "accept_notify": false,
+    "password_can_change": true,
+    "dashboad_text": "",
+    "accept_assign": false,
+    "group": 1,
+    "wo_show_tkt_attach": false,
+    "password_upper_char_required": false,
+    "allow_approval": false,
+    "modules": "",
+    "modified": "2015-12-15T19:32:20.322Z",
+    "proxy_approval_bypass": false,
+    "msg_copy_default": false,
+    "inv_max_approval_amount": 0,
+    "wo_show_inactive": false,
+    "tabs": "",
+    "password_expired_login_count": null,
+    "inv_wo_status": null,
+    "default_accept_assign": true,
+    "dashboad_links": "",
+    "msg_address": false,
+    "password_history_length": "[]",
+    "name": "PkmtjeInqR",
+    "wo_edit_closeout": false,
+    "wo_notes": false,
+    "password_lower_char_required": false
   }
 },
 {
   "model": "person.person",
   "pk": "30f530c4-ce6c-4724-9cfd-37a16e787001",
   "fields": {
-    "password": "pbkdf2_sha256$20000$NAbA7zezPvj0$SLLebAUbKvD18hVVnp/E4pAXNh//ZS6V1fKM1i0uMKk=",
-    "middle_initial": null,
-    "role": "21339bca-e05d-4a0b-a150-f21140e5edc6",
-    "password_history": "[\"pbkdf2_sha256$20000$FxlO85O2yU8X$hHwa9mF65xTJ0jmanfFoC9tHEtPgoxVLWyVTP3QGCs4=\"]",
     "password_one_time": null,
-    "is_superuser": false,
-    "locations": [],
-    "password_expire_date": "2016-02-17",
-    "next_approver": null,
+    "fullname": "aaron aaron",
+    "employee_id": null,
+    "username": "aaron",
+    "password": "pbkdf2_sha256$20000$8nL5IRf80uVc$jU74GwLXtxv9pIYOnl0ZL2tBXBy9whjgTSN6bPPqeYc=",
+    "middle_initial": null,
+    "proxy_start_date": null,
+    "accept_notify": true,
+    "password_change": "2015-12-15T19:32:20.435Z",
+    "is_staff": true,
+    "auth_amount": "0.0000",
+    "status": "05f99e0d-2a81-4dd0-9146-4feac15b7ba6",
+    "created": "2015-12-15T19:32:20.445Z",
+    "password_expire_date": "2016-03-14",
+    "proxy_user": null,
+    "last_name": "aaron",
+    "deleted": null,
+    "is_active": true,
+    "locations": [
+      "ac00a916-e931-4fd6-a2a6-8e68aa80e202"
+    ],
+    "password_history": "[\"pbkdf2_sha256$20000$CJGtiRsBOfQV$hUDmLhewF8sAu0Pqir4dLUqM3YYnj/RsWsbdC/+J/Rw=\"]",
     "groups": [
       1
     ],
-    "proxy_start_date": null,
-    "title": "aaron",
-    "auth_amount": "0.0000",
-    "email": "myemail@mail.com",
-    "last_name": "aaron",
+    "is_superuser": true,
     "proxy_status": null,
-    "password_length": null,
-    "auth_currency": "93ca195e-f29b-48f1-a8c8-578ee70bc51c",
-    "deleted": null,
-    "proxy_user": null,
-    "locale": null,
-    "proxy_end_date": null,
-    "fullname": "aaron aaron",
-    "is_staff": false,
-    "date_joined": "2015-11-19T23:15:23.931Z",
-    "first_name": "aaron",
-    "modified": "2015-11-19T23:15:24.059Z",
-    "employee_id": null,
-    "password_change": "2015-11-19T23:15:24.046Z",
-    "status": "6df92460-c318-473b-8227-c648b7908627",
-    "accept_assign": true,
+    "auth_currency": "2469e974-00a9-4fe4-91ed-992c2e0be846",
     "user_permissions": [],
-    "created": "2015-11-19T23:15:24.059Z",
+    "password_length": null,
     "last_login": null,
-    "is_active": true,
-    "accept_notify": true,
-    "username": "aaron"
+    "next_approver": null,
+    "date_joined": "2015-12-15T19:32:20.335Z",
+    "proxy_end_date": null,
+    "modified": "2015-12-15T19:32:20.455Z",
+    "role": "cbbac225-d096-4950-9e70-0c289a4a0630",
+    "title": "aaron",
+    "first_name": "aaron",
+    "locale": null,
+    "accept_assign": true,
+    "email": "myemail@mail.com"
   }
 }
 ]

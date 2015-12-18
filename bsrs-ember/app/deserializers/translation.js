@@ -9,7 +9,7 @@ var extract_locale_translation = function(model, store) {
             'translation': obj.translation
         };
         let locale_trans = store.push('locale-translation', data);
-    }); 
+    });
     delete model['locales'];
 };
 

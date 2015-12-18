@@ -1,9 +1,8 @@
-import json
-
-from django.db import models
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.fields import GenericRelation
+from django.db import models
+from django.db.models import Q
 
 from contact.models import PhoneNumber, Address, Email
 from utils.models import BaseNameModel, BaseModel, BaseManager
@@ -120,7 +119,11 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
-    pass
+
+    def to_dict(self):
+        children = [str(child.id) for child in self.children.all()]
+        parents = [str(parent.id) for parent in self.parents.all()]
+        return {"id": str(self.id), "name": self.name, "children": children, "parents": parents}
     
 
 ### LOCATION STATUS
@@ -206,6 +209,16 @@ class LocationQuerySet(SelfRefrencingQuerySet):
             raise
         return self.filter(location_level=location_level)
 
+    def search_multi(self, keyword):
+        return self.filter(
+            Q(name__icontains=keyword) | \
+            Q(number__icontains=keyword) | \
+            Q(addresses__city__icontains=keyword) | \
+            Q(addresses__address1__icontains=keyword) | \
+            Q(addresses__address2__icontains=keyword) | \
+            Q(addresses__zip__icontains=keyword)
+        )
+
 
 class LocationManager(SelfRefrencingManager):
     ''' '''
@@ -225,6 +238,9 @@ class LocationManager(SelfRefrencingManager):
         '''
         return self.get_queryset().get_level_parents(location, level_id)
 
+    def search_multi(self, keyword):
+        return self.get_queryset().search_multi(keyword)
+
 
 class Location(SelfRefrencingBaseModel, BaseModel):
     '''
@@ -242,8 +258,8 @@ class Location(SelfRefrencingBaseModel, BaseModel):
     addresses = GenericRelation(Address)
     emails = GenericRelation(Email)
     # fields
-    name = models.CharField(max_length=50)
-    number = models.CharField(max_length=50, blank=True, null=True)
+    name = models.CharField(max_length=1000)
+    number = models.CharField(max_length=1000, blank=True, null=True)
 
     objects = LocationManager()
 

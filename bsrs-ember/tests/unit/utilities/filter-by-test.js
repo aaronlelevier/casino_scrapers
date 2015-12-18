@@ -65,3 +65,19 @@ test('will reset to page 1 with any toggle', function(assert) {
     result = subject.run('username');
     assert.equal(subject.get('page'), 1);
 });
+
+test('related column name will set each field correctly', function(assert) {
+    let subject = new FakeComponent();
+    let result = subject.run('priority.translated_name');
+    assert.equal(subject.get('filterField'), 'priority.translated_name');
+    assert.equal(subject.get('targetFilter'), '.t-filter-priority-translated-name');
+    assert.equal(subject.get('filterPlaceholder'), 'Search priority.translated_name');
+});
+
+test('array column name will set each field correctly', function(assert) {
+    let subject = new FakeComponent();
+    let result = subject.run('categories[name]');
+    assert.equal(subject.get('filterField'), 'categories[name]');
+    assert.equal(subject.get('targetFilter'), '.t-filter-categories[name]');
+    assert.equal(subject.get('filterPlaceholder'), 'Search categories[name]');
+});

@@ -5,7 +5,8 @@ var TicketPriority = Ember.Component.extend({
         selected(priority) {
             this.get('ticket').change_priority(priority.get('id'));
         }
-    }
+    },
+    classNames: ['ticket-priority-select']
 });
 
 export default TicketPriority;

@@ -30,7 +30,6 @@
             <div class="col-md-12">
               {{#form-group title="admin.category.label.description" for="description"}}
               {{input type="text" placeholder=(t "admin.category.label.description") value=model.description class="form-control t-category-description" id="category_description"}}
-              {{#validation-error-field submitted=submitted field="description" className="validation validation-under t-description-validation-error" model=model validation=descriptionValidation}}{{t "validation.invalid"}} {{t "admin.category.label.description"}}{{/validation-error-field}}
               {{/form-group}}
             </div>
           </div>
@@ -61,7 +60,6 @@
             <div class="col-md-12">
               {{#form-group title="admin.category.label.cost_code" for="category_cost_code"}}
               {{input type="text" placeholder=(t "admin.category.label.cost_code") value=model.cost_code class="form-control t-category-cost-code" id="category_cost_code"}}
-              {{#validation-error-field submitted=submitted field="cost_code" className="validation validation-under t-cost-code-validation-error" model=model validation=costCodeValidation}}{{t "validation.invalid"}} {{t "admin.category.label.cost_code"}}{{/validation-error-field}}
               {{/form-group}}
             </div>
           </div>

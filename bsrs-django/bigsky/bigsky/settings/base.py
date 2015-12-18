@@ -87,8 +87,35 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'bigsky.wsgi.application'
 
-# Must Override!
-DATABASES = {}
+
+# Must Override
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'ci',
+        'USER': 'bsdev',
+        'PASSWORD': 'tango',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
+
+
+# COMMENT OUT: ETL Domino -> to -> Django dome for the time being, so the ``transforms``
+#   flat database is not needed for now.
+# DATABASES['transforms'] = {
+#     'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#     'NAME': 'transforms',
+#     'USER': 'bsdev',
+#     'PASSWORD': 'tango',
+#     'HOST': 'localhost',
+#     'PORT': '5432',
+# }
+
+# INSTALLED_APPS += ('utils_transform.tlocation',)
+
+# DATABASE_ROUTERS = ['bigsky.db_router.TransformRouter', 'bigsky.db_router.DefaultRouter']
+
 
 
 # Password validation (not in use in currently)
@@ -153,7 +180,7 @@ MAX_UPLOAD_SIZE = 2621440 # 2621440 # default - aka: 2.5MB
 DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 
-PAGE_SIZE = 10
+PAGE_SIZE = 10 
 MAX_PAGE_SIZE = 100
 PAGE_SIZE_QUERY_PARAM = 'page_size'
 
@@ -203,7 +230,7 @@ MAX_UPLOAD_SIZE = 5242880
 DEFAULT_ROLE = 'Administrator'
 
 ### LOCATION
-DEFAULT_LOCATION_STATUS = 'Open'
+DEFAULT_LOCATION_STATUS = 'admin.location.status.open'
 DEFAULT_LOCATION_TYPE = 'big_store'
 DEFAULT_LOCATION_LEVEL = 'Company'
 

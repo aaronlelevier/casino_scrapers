@@ -12,7 +12,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
     factory.prototype.get_comment = function(i, ticket_pk) {
         var d = new Date();
         var ticket_id = ticket_pk || this.td.idOne;
-        var activity = {id: i, type: 'comment', created: d.setDate(d.getDate()-90), ticket: ticket_id};
+        var activity = {id: i, type: 'comment', created: d.setDate(d.getDate()-120), ticket: ticket_id};
         activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
         activity.content = {'comment': this.td.commentOne};
         return activity;
@@ -69,7 +69,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         var activity = this.get_assignee(i, ticket_pk);
         return {person: activity.person, to: activity.content.to, from: activity.content.from};
     },
-    factory.prototype.get_status = function(i, ticket_pk) {
+    factory.prototype.get_status = function(i, ticket_pk, inc) {
         var d = new Date();
         var ticket_id = ticket_pk || this.td.idOne;
         var activity = {id: i, type: 'status', created: d.setDate(d.getDate()-30), ticket: ticket_id};
@@ -111,7 +111,8 @@ var TICKET_ACTIVITY_FACTORY = (function() {
             added_removed.push(person);
         }
         var ticket_id = ticket_pk || this.td.idOne;
-        var activity = {id: i, type: type, created: d.setDate(d.getDate()-15), ticket: ticket_id};
+        var date_reset = type === 'cc_remove' ? 20 : 15;
+        var activity = {id: i, type: type, created: d.setDate(d.getDate()-date_reset), ticket: ticket_id};
         activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
         var key = type === 'cc_add' ? 'added' : 'removed';
         activity.content = {};
@@ -125,15 +126,29 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         delete activity.content;
         return activity;
     },
+    factory.prototype.get_attachment_activity = function(i) {
+        var arr = [
+            [this.general.nameTicketAttachmentOne, this.ta.fileAttachmentAddOne, this.ta.imageThumnailOne],
+            [this.general.nameTicketAttachmentTwo, this.ta.fileAttachmentAddTwo, this.ta.imageThumnailTwo],
+            [this.general.nameTicketAttachmentThree, this.ta.fileAttachmentAddThree, this.ta.imageThumnailThree],
+            [this.general.nameTicketAttachmentFour, this.ta.fileAttachmentAddFour, this.ta.imageThumnailFour],
+            [this.general.nameTicketAttachmentFive, this.ta.fileAttachmentAddFive, this.ta.imageThumnailFive]
+        ];
+        return attachment = {
+            id: '249543cf-8fea-426a-8bc3-09778cd7801' + (i + 1),
+            filename: arr[i][0],
+            file: arr[i][1],
+            image_thumbnail: arr[i][2]
+        };
+    },
     factory.prototype.get_attachment_add_remove = function(i, count, type, ticket_pk) {
         var d = new Date();
         var added_removed = [];
-        for (var j=1; j <= count; j++) {
-            var attachment = {id: '249543cf-8fea-426a-8bc3-09778cd7801' + j, filename: this.general.nameTicketAttachment, file: this.ta.fileAttachmentAddOne};
-            added_removed.push(attachment);
+        for (var j=0; j <= count-1; j++) {
+            added_removed.push(this.get_attachment_activity(j));
         }
         var ticket_id = ticket_pk || this.td.idOne;
-        var activity = {id: i, type: type, created: d.setDate(d.getDate()-15), ticket: ticket_id};
+        var activity = {id: i, type: type, created: d.setDate(d.getDate()-180), ticket: ticket_id};
         activity.person = {id: this.pd.idOne, fullname: this.pd.fullname};
         var key = type === 'attachment_add' ? 'added' : 'removed';
         activity.content = {};
@@ -203,7 +218,7 @@ var TICKET_ACTIVITY_FACTORY = (function() {
         var response = [];
         for (var i=1; i <= 3; i++) {
             var uuid = '849447cc-1a19-4d8d-829b-bfb81cb5ece';
-            var activity = this.get_status(uuid+i, ticket_pk);
+            var activity = this.get_status(uuid+i, ticket_pk, i);
             response.push(activity);
         }
         return {'count':2,'next':null,'previous':null,'results': response};

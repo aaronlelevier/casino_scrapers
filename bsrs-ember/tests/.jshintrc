@@ -10,6 +10,7 @@
     "filterGrid",
     "alterPageSize",
     "visitSync",
+    "substring_up_to_num",
     "document",
     "window",
     "location",

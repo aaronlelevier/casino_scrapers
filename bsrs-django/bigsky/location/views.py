@@ -1,5 +1,4 @@
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
 
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -9,6 +8,7 @@ from rest_framework.exceptions import MethodNotAllowed
 from location.models import Location, LocationLevel, LocationStatus, LocationType
 from location import serializers as ls
 from utils.views import BaseModelViewSet
+
 
 class SelfReferencingRouteMixin(object):
 
@@ -161,13 +161,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
         search = self.request.query_params.get('search', None)
         if search:
-            queryset = queryset.filter(
-                Q(name__icontains=search) | \
-                Q(number__icontains=search) | \
-                Q(addresses__city__icontains=search) | \
-                Q(addresses__address__icontains=search) | \
-                Q(addresses__postal_code__icontains=search)
-            )
+            queryset = queryset.search_multi(keyword=search)
 
         return queryset
 

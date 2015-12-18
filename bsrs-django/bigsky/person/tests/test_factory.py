@@ -4,7 +4,8 @@ from django.test import TestCase
 from model_mommy import mommy
 
 from accounting.models import Currency
-from location.models import LocationLevel
+from location.models import Location, LocationLevel
+from location.tests.factory import create_location, create_locations
 from person.models import Person, Role
 from person.tests import factory
 from utils.helpers import generate_uuid
@@ -42,9 +43,25 @@ class FactoryTests(TestCase):
         self.assertEqual(role.location_level.name, location_level.name)
 
     def test_create_single_person(self):
-        role = factory.create_role()
-        person = factory.create_single_person('bob', role)
+        person = factory.create_single_person()
+
         self.assertIsInstance(person, Person)
+        self.assertIsInstance(person.role, Role)
+        # person's location
+        self.assertEqual(person.locations.count(), 1)
+        location = person.locations.first()
+        self.assertEqual(person.role.location_level, location.location_level)
+
+    def test_create_single_person__with_role(self):
+        username = 'bob'
+        role = factory.create_role()
+
+        person = factory.create_single_person('bob', role)
+
+        self.assertIsInstance(person, Person)
+        self.assertEqual(person.username, username)
+        self.assertEqual(person.role, role)
+        self.assertIsInstance(person.locations.first(), Location)
 
     def test_create_single_person__generate_uuid(self):
         incr = Person.objects.count()
@@ -55,6 +72,16 @@ class FactoryTests(TestCase):
         self.assertEqual(
             str(person.id),
             generate_uuid(factory.PERSON_BASE_ID, incr+1)
+        )
+
+    def test_create_single_person__with_location(self):
+        location = create_location()
+
+        person = factory.create_single_person(location=location)
+
+        self.assertIn(
+            location,
+            person.locations.all()
         )
 
     def test_update_login_person(self):
@@ -90,12 +117,19 @@ class FactoryTests(TestCase):
     ### .create_person(): End
 
     def test_create_all_people(self):
-        # Make sure that there are 23 People, and that all People Roles
-        # have a valid Location that uses that ``person.role.location_level``
+        # the ``create_all_people`` function should only create objects in the 
+        # ``person`` app, not any extra Locations
+        create_locations()
+        init_location_count = Location.objects.count()
+
         factory.create_all_people()
+
         people = Person.objects.all()
         self.assertEqual(people.count(), 187)
         # Roles
         self.assertTrue(Role.objects.filter(name=settings.DEFAULT_ROLE).exists())
         # At least some people are assigned to Location(s)
         self.assertTrue(Person.objects.exclude(locations__isnull=True))
+        # Locations
+        post_location_count = Location.objects.count()
+        self.assertEqual(init_location_count, post_location_count)

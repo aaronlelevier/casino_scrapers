@@ -2,7 +2,7 @@ import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
-import GridViewComponent from 'bsrs-ember/components/grid-view-2/component';
+import GridViewComponent from 'bsrs-ember/components/grid-view/component';
 
 var proxy = function() {
     return Ember.ArrayProxy.extend({
@@ -16,9 +16,9 @@ var proxy = function() {
 
 var store, eventbus, requested;
 
-module('unit: grid-view-2 test', {
+module('unit: grid-view test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:person', 'service:eventbus']);
+        store = module_registry(this.container, this.registry, ['model:person', 'service:eventbus', 'model:role']);
         eventbus = this.container.lookup('service:eventbus');
         requested = proxy();
     }
@@ -534,4 +534,57 @@ test('requesting pages in order still returns the correct results even when the 
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 81);
     assert.equal(content.objectAt(9).get('id'), 90);
+});
+
+test('searched content allows you to look through related models', (assert) => {
+    store.push('role', {id: 1, name: 'role1', people: [1,2]});
+    store.push('role', {id: 2, name: 'role2', people: [3]});
+    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
+    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
+    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title', 'role.name']});
+    var people = subject.get('searched_content');
+    assert.deepEqual(subject.get('searchable'), ['fullname', 'username', 'title', 'role.name']);
+    assert.equal(people.get('length'), 3);
+    subject.set('search', '1'); 
+    people = subject.get('searched_content');
+    assert.equal(people.get('length'), 2);
+    assert.equal(people.objectAt(0).get('title'), 'scott newcomer');
+    assert.equal(people.objectAt(1).get('title'), 'toran lillups');
+    subject.set('search', ''); 
+    people = subject.get('searched_content');
+    assert.equal(people.get('length'), 3);
+});
+
+test('found content allows you to look through related models', (assert) => {
+    store.push('role', {id: 1, name: 'role1', people: [1,2]});
+    store.push('role', {id: 2, name: 'role2', people: [3]});
+    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
+    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
+    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title', 'role.name']});
+    var people = subject.get('found_content');
+    assert.equal(people.get('length'), 3);
+    subject.set('find', 'role.name:2');
+    people = subject.get('found_content');
+    assert.equal(people.get('length'), 1);
+    assert.equal(people.objectAt(0).get('title'), 'aaron lelevier');
+});
+
+test('sorted content is sorted related models', (assert) => {
+    store.push('role', {id: 1, name: 'zzz', people: [1,2]});
+    store.push('role', {id: 2, name: 'aaa', people: [3]});
+    store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: '', role_fks: 1});
+    store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title, role_fk: 1});
+    store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title, role_fk: 2});
+    var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title', 'role.name']});
+    var people = subject.get('sorted_content');
+    assert.equal(people.objectAt(0).get('id'), 1);
+    assert.equal(people.objectAt(1).get('id'), 2);
+    assert.equal(people.objectAt(2).get('id'), 3);
+    subject.set('sort', 'role.name');
+    people = subject.get('sorted_content');
+    assert.equal(people.objectAt(0).get('id'), 3);
+    assert.equal(people.objectAt(1).get('id'), 1);
+    assert.equal(people.objectAt(2).get('id'), 2);
 });

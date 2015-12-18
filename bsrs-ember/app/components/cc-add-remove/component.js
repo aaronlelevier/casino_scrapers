@@ -22,6 +22,7 @@ var ccAddRemove = Ember.Component.extend({
         }
         return ccs;
     }),
+    classNames: ['activity-wrap']
 });
 
 export default ccAddRemove;

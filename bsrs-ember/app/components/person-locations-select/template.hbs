@@ -1,11 +1,11 @@
 {{#power-select
   multiple=true
-  options=options
   selected=person_locations_selected
   onchange=(action "change_location")
   class="t-person-locations-select"
   searchPlaceholder="Type a location"
   search=(action "update_filter")
+  searchField="name"
   as |location|
 }}
   {{location.name}}

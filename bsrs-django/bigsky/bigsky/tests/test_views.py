@@ -1,9 +1,10 @@
-import json
 from datetime import timedelta
+import json
+import time
 
-from django.test import TestCase
 from django.conf import settings
 from django.core.urlresolvers import reverse
+from django.test import TestCase
 from django.utils import timezone
 
 from model_mommy import mommy
@@ -15,7 +16,7 @@ from contact.models import PhoneNumberType, AddressType
 from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus, State, Country
 from person.models import PersonStatus, Role
-from person.tests.factory import PASSWORD, create_person, create_role
+from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
 from ticket.models import TicketStatus, TicketPriority
 from translation.tests.factory import create_locales
 
@@ -111,12 +112,17 @@ class ConfigurationTests(TestCase):
         create_categories()
         self.person = create_person()
         self.phone_number_types = mommy.make(PhoneNumberType)
-        self.location_levels = mommy.make(LocationLevel)
+        self.location_levels = mommy.make(LocationLevel, name='Base')
+        self.location_level_child = mommy.make(LocationLevel, name='Child')
+        self.location_level_parent = mommy.make(LocationLevel, name='Parent', children=[self.location_levels])
+        self.location_levels.children.add(self.location_level_child)
+        self.location_levels.parents.add(self.location_level_parent)
+        self.location_levels.save()
         self.location_statuses = mommy.make(LocationStatus)
-        mommy.make(LocationStatus, name=settings.DEFAULT_LOCATION_STATUS)
+        LocationStatus.objects.default()
         self.person_status = mommy.make(PersonStatus)
         self.ticket_status = mommy.make(TicketStatus)
-        mommy.make(TicketStatus, name=settings.DEFAULTS_TICKET_STATUS)
+        TicketStatus.objects.default()
         self.ticket_priority = mommy.make(TicketPriority)
 
         categories = Category.objects.order_by("-parent")
@@ -196,12 +202,17 @@ class ConfigurationTests(TestCase):
         # the model id shows in the context
         self.assertIn(str(self.location_levels.id), [c['id'] for c in configuration])
         self.assertIn(str(self.location_levels.name), [c['name'] for c in configuration])
+        children = [c['children'] for c in configuration]
+        parents = [c['parents'] for c in configuration]
+        self.assertIn(str(self.location_levels.children.first().id), [item for sublist in children for item in sublist])
+        self.assertIn(str(self.location_levels.parents.first().id), [item for sublist in parents for item in sublist])
 
     def test_location_status(self):
         configuration = json.loads(self.response.context['location_status_config'])
-        self.assertTrue(len(configuration) > 0)
-        self.assertFalse(configuration[0]['default'])
-        self.assertTrue(configuration[1]['default'])
+        self.assertIn(
+            True,
+            [x['default'] for x in configuration]
+        )
 
     def test_locales(self):
         configuration = json.loads(self.response.context['locales'])
@@ -252,3 +263,20 @@ class ErrorPageTests(TestCase):
     def test_500(self):
         response = self.client.get(reverse('500'))
         self.assertEqual(response.status_code, 500)
+
+
+class SessionTests(TestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        self.login_data = {'username': self.person.username, 'password': PASSWORD}
+
+    def test_session_expiry(self):
+        with self.settings(SESSION_COOKIE_AGE=1):
+            response = self.client.post(reverse('login'), self.login_data, follow=True)
+            self.assertRedirects(response, reverse('index'))
+            # simulate User inactivity, which leads to a "session timeout"
+            time.sleep(1)
+            response = self.client.get(reverse('index'), follow=True)
+            self.assertRedirects(response, '/login/?next=/')
+            self.assertIsNone(self.client.session.get('_auth_user_id', None))

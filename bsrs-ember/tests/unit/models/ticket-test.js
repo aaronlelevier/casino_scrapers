@@ -16,6 +16,18 @@ module('unit: ticket test', {
     }
 });
 
+test('ticket request field is dirty trackable', (assert) => {
+    let ticket = store.push('ticket', {id: TD.idOne});
+    ticket.set('request', 'wat');
+    assert.ok(ticket.get('isDirty'));
+});
+
+test('ticket request field is dirty trackable with existing', (assert) => {
+    let ticket = store.push('ticket', {id: TD.idOne, request: 'who'});
+    ticket.set('request', 'wat');
+    assert.ok(ticket.get('isDirty'));
+});
+
 test('ticket is dirty or related is dirty when model has been updated', (assert) => {
     let ticket = store.push('ticket', {id: TD.idOne, number: TD.numberOne, status_fk: TD.statusOneId});
     store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [TD.idOne]});
@@ -257,6 +269,41 @@ test('when cc is changed dirty tracking works as expected (removing)', (assert) 
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+});
+
+test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
+    store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+    store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idTwo, person_pk: PD.id});
+    let person = store.push('person', {id: PD.id});
+    let ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
+    let ticket_two = store.push('ticket', {id: TD.idTwo, ticket_people_fks: [TPD.idTwo]});
+    assert.equal(ticket.get('cc').get('length'), 1);
+    assert.ok(ticket.get('ccIsNotDirty'));
+    assert.ok(ticket_two.get('ccIsNotDirty'));
+    ticket_two.remove_person(PD.id);
+    assert.equal(ticket.get('cc').get('length'), 1);
+    assert.equal(ticket_two.get('cc').get('length'), 0);
+    assert.ok(ticket.get('ccIsNotDirty'));
+    assert.ok(ticket_two.get('ccIsDirty'));
+    ticket_two.rollbackRelated();
+    assert.equal(ticket.get('cc').get('length'), 1);
+    assert.ok(ticket.get('ccIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(ticket_two.get('ccIsNotDirty'));
+    assert.equal(ticket_two.get('cc').get('length'), 1);
+    assert.ok(ticket_two.get('isNotDirtyOrRelatedNotDirty'));
+    ticket.remove_person(PD.id);
+    assert.equal(ticket.get('cc').get('length'), 0);
+    assert.ok(ticket.get('ccIsDirty'));
+    assert.ok(ticket.get('isDirtyOrRelatedDirty'));
+    assert.equal(ticket_two.get('cc').get('length'), 1);
+    assert.ok(ticket_two.get('ccIsNotDirty'));
+    ticket.rollbackRelated();
+    assert.equal(ticket.get('cc').get('length'), 1);
+    assert.ok(ticket.get('ccIsNotDirty'));
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket_two.get('cc').get('length'), 1);
+    assert.ok(ticket_two.get('ccIsNotDirty'));
 });
 
 test('when cc is changed dirty tracking works as expected (replacing)', (assert) => {
@@ -1284,4 +1331,24 @@ test('ticket is not dirty after save and save related (starting with none)', (as
     ticket.saveRelated();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('attachments').get('length'), 1);
+});
+
+test('status_class returns empty string when no status found and valid class when setup', (assert) => {
+    let status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey, tickets: []});
+    let ticket = store.push('ticket', {id: TD.idOne});
+    assert.equal(ticket.get('status'), undefined);
+    assert.equal(ticket.get('status_class'), '');
+    status.set('tickets', [TD.idOne]);
+    assert.equal(ticket.get('status'), status);
+    assert.equal(ticket.get('status_class'), 'ticket-status-new');
+});
+
+test('priority_class returns empty string when no priority found and valid class when setup', (assert) => {
+    let priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey, tickets: []});
+    let ticket = store.push('ticket', {id: TD.idOne});
+    assert.equal(ticket.get('priority'), undefined);
+    assert.equal(ticket.get('priority_class'), '');
+    priority.set('tickets', [TD.idOne]);
+    assert.equal(ticket.get('priority'), priority);
+    assert.equal(ticket.get('priority_class'), 'ticket-priority-emergency');
 });

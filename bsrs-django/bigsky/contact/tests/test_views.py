@@ -2,6 +2,8 @@ import json
 
 from rest_framework.test import APITestCase
 
+from model_mommy import mommy
+
 from contact.models import PhoneNumber, Address, Email
 from contact.tests.factory import create_contact
 from person.tests.factory import PASSWORD, create_person
@@ -35,7 +37,8 @@ class PhoneNumberViewSetTests(APITestCase):
 
     def setUp(self):
         self.person = create_person()
-        self.phone_number = create_contact(PhoneNumber, self.person)
+        self.phone_number = mommy.make(PhoneNumber, content_object=self.person,
+            object_id=self.person.id, _fill_optional=['type', 'number'])
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):
@@ -51,8 +54,7 @@ class PhoneNumberViewSetTests(APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.phone_number.id))
-        self.assertEqual(data['type']['id'], str(self.phone_number.type.id))
-        self.assertEqual(data['type']['name'], str(self.phone_number.type.name))
+        self.assertEqual(data['type'], str(self.phone_number.type.id))
         self.assertEqual(data['number'], str(self.phone_number.number))
 
 
@@ -101,13 +103,13 @@ class AddressTests(APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.address.id))
-        self.assertEqual(data['type']['id'], str(self.address.type.id))
-        self.assertEqual(data['type']['name'], str(self.address.type.name))
-        self.assertEqual(data['address'], self.address.address)
+        self.assertEqual(data['type'], str(self.address.type.id))
+        self.assertEqual(data['address1'], self.address.address1)
+        self.assertEqual(data['address2'], self.address.address2)
         self.assertEqual(data['city'], self.address.city)
         self.assertEqual(data['state'], self.address.state)
         self.assertEqual(data['country'], self.address.country)
-        self.assertEqual(data['postal_code'], self.address.postal_code)
+        self.assertEqual(data['zip'], self.address.zip)
 
 
 class EmailTypeTests(APITestCase):
@@ -140,7 +142,8 @@ class EmailTests(APITestCase):
 
     def setUp(self):
         self.person = create_person()
-        self.email = create_contact(Email, self.person)
+        self.email = mommy.make(Email, content_object=self.person,
+            object_id=self.person.id, _fill_optional=['type', 'email'])
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):

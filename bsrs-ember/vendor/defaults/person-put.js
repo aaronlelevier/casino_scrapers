@@ -8,7 +8,7 @@ var BSRS_PERSON_PUT_DEFAULTS_OBJECT = (function() {
             username: 'llcoolj',
             password: '',
             first_name: 'Ice',
-            middle_initial: 'F\'in',
+            middle_initial: 'F',
             last_name: 'Cube',
             fullname: 'Ice F\'in Cube',
             employee_id: '1122',

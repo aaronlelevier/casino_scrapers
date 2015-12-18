@@ -5,11 +5,12 @@ from django.test import TestCase
 from category.models import Category
 from category.tests.factory import create_categories
 from location.models import Location
+from location.tests.factory import create_location
 from person.models import Person
+from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from ticket.tests import factory
-from person.tests.factory import create_single_person
 from utils.helpers import generate_uuid
 
 
@@ -17,7 +18,7 @@ class CreateTicketTests(TestCase):
 
     def setUp(self):
         create_categories()
-        create_single_person()
+        self.person = create_single_person()
         self.ticket = factory.create_ticket()
 
     def test_location(self):
@@ -50,6 +51,46 @@ class CreateTicketTests(TestCase):
 
     def test_number(self):
         self.assertIsInstance(self.ticket.number, int)
+
+    def test_ticket_requester(self):
+        person = create_single_person()
+
+        ret = factory.create_ticket(requester=person)
+
+        self.assertEqual(ret.requester, person)
+
+    def test_ticket_assignee(self):
+        person = create_single_person()
+
+        ret = factory.create_ticket(assignee=person)
+
+        self.assertEqual(ret.assignee, person)
+
+    def test_ticket_location(self):
+        location = create_location()
+
+        ret = factory.create_ticket(location=location)
+
+        self.assertEqual(ret.location, location)
+
+
+class CreateExtraTicketWithCategoriesTests(TestCase):
+
+    def setUp(self):
+        factory.create_extra_ticket_with_categories()
+        self.ticket = Ticket.objects.get(request="seven")
+
+    def test_ticket(self):
+        self.assertIsInstance(self.ticket, Ticket)
+
+    def test_categories(self):
+        loss_prevention, _ = Category.objects.get_or_create(name="Loss Prevention", subcategory_label="trade")
+        locks, _ = Category.objects.get_or_create(name="Locks", parent=loss_prevention, subcategory_label="issue")
+        a_locks, _ = Category.objects.get_or_create(name="A Lock", parent=locks)
+
+        self.assertIn(loss_prevention, self.ticket.categories.all())
+        self.assertIn(locks, self.ticket.categories.all())
+        self.assertIn(a_locks, self.ticket.categories.all())
 
 
 class ConstructTreeTests(TestCase):
@@ -108,6 +149,15 @@ class CreateStatusTests(TestCase):
     def test_multiple(self):
         factory.create_ticket_statuses()
         self.assertTrue(TicketStatus.objects.count() > 1)
+        self.assertEqual(TicketStatus.objects.first().name, 'ticket.status.draft')
+        self.assertEqual(TicketStatus.objects.all()[1].name, 'ticket.status.new')
+        self.assertEqual(TicketStatus.objects.all()[2].name, 'ticket.status.in_progress')
+        self.assertEqual(TicketStatus.objects.all()[3].name, 'ticket.status.deferred')
+        self.assertEqual(TicketStatus.objects.all()[4].name, 'ticket.status.denied')
+        self.assertEqual(TicketStatus.objects.all()[5].name, 'ticket.status.problem_solved')
+        self.assertEqual(TicketStatus.objects.all()[6].name, 'ticket.status.completed')
+        self.assertEqual(TicketStatus.objects.all()[7].name, 'ticket.status.closed')
+        self.assertEqual(TicketStatus.objects.last().name, 'ticket.status.unsatisfactory_completion')
 
     def test_generate_uuid(self):
         """
@@ -136,6 +186,10 @@ class CreatePriorityTests(TestCase):
     def test_multiple(self):
         factory.create_ticket_priorites()
         self.assertTrue(TicketPriority.objects.all())
+        self.assertEqual(TicketPriority.objects.first().name, 'ticket.priority.emergency')
+        self.assertEqual(TicketPriority.objects.all()[1].name, 'ticket.priority.high')
+        self.assertEqual(TicketPriority.objects.all()[2].name, 'ticket.priority.medium')
+        self.assertEqual(TicketPriority.objects.last().name, 'ticket.priority.low')
 
     def test_generate_uuid(self):
         """

@@ -13,6 +13,12 @@ function validatePassword(){
         return true;
     }
 }
+function validateSingleChar(middle_init){
+    if(middle_init) {
+        return middle_init.length < 2 ? true : false;
+    }
+    return true;
+}
 
 var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
     repository: inject('person'),
@@ -20,6 +26,7 @@ var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, Edit
     classNames: ['wrapper', 'form'],
     attemptedTransition: '',
     usernameValidation: validate('model.username'),
+    middleInitialValidation: validate('model.middle_initial', validateSingleChar),
     passwordValidation: validate('model.password', validatePassword),
     changingPassword: false,
     actions: {

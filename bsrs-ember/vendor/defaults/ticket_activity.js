@@ -16,7 +16,16 @@ var BSRS_TICKET_ACTIVITY_DEFAULTS_OBJECT = (function() {
             idCcRemoveOne: '149447cc-1a19-4d8d-829b-bfb81cb5ecc1',
             idCategoryOne: '259447cc-1a19-4d8d-829b-bfb81cb5ecd2',
             idAttachmentAddOne: '449447cd-1a19-4d8d-829b-bfb81cb5jcw8',
-            fileAttachmentAddOne: 'attachments/images/full/foo.png',
+            fileAttachmentAddOne: 'attachments/images/full/Invoice.pdf',
+            imageThumnailOne: '',
+            fileAttachmentAddTwo: 'attachments/images/full/Photo.jpg',
+            imageThumnailTwo: 'attachments/images/thumb/Photo.jpg',
+            fileAttachmentAddThree: 'attachments/images/full/Scope.docx',
+            imageThumnailThree: '',
+            fileAttachmentAddFour: 'attachments/images/full/Calculations.xlsx',
+            imageThumnailFour: '',
+            fileAttachmentAddFive: 'attachments/images/full/Nothing.txt',
+            imageThumnailFive: '',
             idAttachmentRemoveOne: '449447cd-1a19-4d8d-829b-bfb81cb5jcw9',
             idCommentOne: '549447cc-1a19-4d8d-829b-bfb81cb5ecw1',
         };
@@ -32,5 +41,3 @@ if (typeof window === 'undefined') {
         return new BSRS_TICKET_ACTIVITY_DEFAULTS_OBJECT().defaults();
     });
 }
-
-

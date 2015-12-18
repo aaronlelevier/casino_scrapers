@@ -8,21 +8,24 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             idTwo: 'ec62006b-6275-4aa9-abfa-38b146383d302',
             idThree: 'ec62006b-6275-4aa9-abfa-38b146383d303',
             idChild: 'ec62006b-6275-4aa9-abfa-38b146383d304',//used for outlet right now
+            idGridOne: 'ec62006b-6275-4aa9-abfa-38b146383d401',
+            idSelected: 'ec62006b-6275-4aa9-abfa-38b146383d403',
             idWatChild: 'ec62006b-6275-4aa9-abfa-38b146383d306',
             idParent: 'ec62006b-6275-4aa9-abfa-38b146383d305',
             idPlumbing: 'ec62006b-6275-4aa9-abfa-38b146383d306',
             idPlumbingChild: 'ec62006b-6275-4aa9-abfa-38b146383d307',
             idLossPreventionChild: 'ec62006b-6275-4aa9-abfa-38b146383d308',
             idSolo: 'ec62006b-6275-4aa9-abfa-38b146383d309',
-            nameSolo: 'admin.category.name.repair',
+            nameSolo: 'Repair',
+            nameRepairKey: 'admin.category.name.repair',
             unusedId: 'ec62006b-6275-4aa9-abfa-38b146383d50',
-            nameOne: 'admin.category.name.repair',
-            nameTwo: 'admin.category.name.electrical',
-            nameThree: 'admin.category.name.loss_prevention', 
-            nameRepairChild: 'admin.category.name.plumbing', 
-            namePlumbingChild: 'admin.category.name.toilet_leak', 
-            nameLossPreventionChild: 'admin.category.name.security', 
-            nameElectricalChild: 'admin.category.name.outlet', 
+            nameOne: 'Repair',
+            nameTwo: 'Electrical',
+            nameThree: 'Loss Prevention', 
+            nameRepairChild: 'Plumbing', 
+            namePlumbingChild: 'Toilet Leak', 
+            nameLossPreventionChild: 'Security', 
+            nameElectricalChild: 'Outlet', 
             nameUnused: 'wat', 
             nameWatChild: 'scott', 
             idNew: 'abc123',
@@ -41,7 +44,9 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             subCatLabelTwo: 'Issue',
             parent: [],
             statusOne: 'admin.category.status.active',
-            statusTwo: 'admin.category.status.inactive'
+            statusTwo: 'admin.category.status.inactive',
+            nameRandom: 'x',
+            idRandom: 'ec62006b-6275-4aa9-abfa-38b146383z213'
         };
     };
     return factory;

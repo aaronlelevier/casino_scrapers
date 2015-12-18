@@ -1,18 +1,20 @@
 import re
-import json
 from datetime import timedelta
 
-from django.db import models, IntegrityError
 from django.conf import settings
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import UserManager, Group, AbstractUser
+from django.contrib.auth.hashers import make_password, identify_hasher
+from django.contrib.contenttypes.fields import GenericRelation
+from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django.contrib.auth.hashers import make_password
-from django.contrib.auth.hashers import identify_hasher
-from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.postgres.fields import ArrayField
+from django.db import models, IntegrityError
+from django.db.models.signals import post_save
+from django.db.models import Q
+from django.dispatch import receiver
+from django.utils import timezone
 
 from accounting.models import Currency
 from contact.models import PhoneNumber, Address, Email
@@ -21,9 +23,8 @@ from category.models import Category
 from person import helpers
 from order.models import WorkOrderStatus
 from translation.models import Locale
-from utils import choices, create
-from utils.models import (BaseNameModel, BaseModel, BaseManager, BaseStatusModel,
-    BaseStatusManager)
+from utils import choices
+from utils.models import BaseModel, BaseStatusModel, BaseStatusManager
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
 
@@ -35,7 +36,7 @@ class Role(BaseModel):
     role_type = models.CharField(max_length=29, blank=True,
         choices=choices.ROLE_TYPE_CHOICES, default=choices.ROLE_TYPE_CHOICES[0][0])
     # Required
-    name = models.CharField(max_length=100, unique=True, help_text="Will be set to the Group Name")
+    name = models.CharField(max_length=75, unique=True, help_text="Will be set to the Group Name")
     categories = models.ManyToManyField(Category, blank=True) 
     dashboad_text = models.CharField(max_length=255, blank=True)
     create_all = models.BooleanField(blank=True, default=False,
@@ -241,7 +242,14 @@ class PersonStatus(BaseStatusModel):
 
 
 class PersonQuerySet(models.query.QuerySet):
-    pass
+    
+    def search_multi(self, keyword):
+        return self.filter(
+            Q(username__icontains=keyword) | \
+            Q(fullname__icontains=keyword) | \
+            Q(title__icontains=keyword) | \
+            Q(role__name__icontains=keyword)
+        )
 
 
 class PersonManager(UserManager):
@@ -252,6 +260,9 @@ class PersonManager(UserManager):
 
     def get_queryset(self):
         return PersonQuerySet(self.model, using=self._db).filter(deleted__isnull=True)
+
+    def search_multi(self, keyword):
+        return self.get_queryset().search_multi(keyword)
 
 
 class Person(BaseModel, AbstractUser):
@@ -411,8 +422,13 @@ class Person(BaseModel, AbstractUser):
         self.fullname = self.first_name + ' ' + self.last_name
 
     def _validate_locations(self):
-        """Remove invalid Locations from the Person based on
-        their Role.location_level"""
+        """
+        Remove invalid Locations from the Person based on
+        their Role.location_level
+
+        TODO: Change this to raise an ``Exception`` here, so can debug easier if 
+        ``locations`` are getting silenty removed from the ``Person``
+        """
         for l in self.locations.all():
             if l.location_level != self.role.location_level:
                 self.locations.remove(l)

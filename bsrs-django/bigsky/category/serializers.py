@@ -1,5 +1,3 @@
-from rest_framework import serializers
-
 from category.models import Category
 from utils.serializers import BaseCreateSerializer
 
@@ -14,7 +12,7 @@ class CategoryIDNameSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
-        fields = ('id', 'name', 'parent', 'children',)
+        fields = ('id', 'name', 'parent', 'children', 'level',)
 
     def to_representation(self, obj):
         data = super(CategoryIDNameSerializer, self).to_representation(obj)

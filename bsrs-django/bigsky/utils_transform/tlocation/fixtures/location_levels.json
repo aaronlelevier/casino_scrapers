@@ -1,0 +1,35 @@
+[
+{
+  "model": "location.locationlevel",
+  "pk": "83fef95a-22a9-43fb-8ccb-9ae647d6175b",
+  "fields": {
+    "children": [],
+    "deleted": null,
+    "modified": "2015-12-11T18:22:03.389Z",
+    "name": "district",
+    "created": "2015-12-11T18:22:03.389Z"
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "8c552043-07fa-461c-9a2c-429251750ccf",
+  "fields": {
+    "children": [],
+    "deleted": null,
+    "modified": "2015-12-11T18:22:03.392Z",
+    "name": "store",
+    "created": "2015-12-11T18:22:03.392Z"
+  }
+},
+{
+  "model": "location.locationlevel",
+  "pk": "ebc70963-e655-4ac5-9f53-4ff3c22c0cdf",
+  "fields": {
+    "children": [],
+    "deleted": null,
+    "modified": "2015-12-11T18:22:03.387Z",
+    "name": "region",
+    "created": "2015-12-11T18:22:03.387Z"
+  }
+}
+]

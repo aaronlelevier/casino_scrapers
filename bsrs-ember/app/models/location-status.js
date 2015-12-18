@@ -1,6 +1,8 @@
-import Ember from 'ember';
+import { attr, Model } from 'ember-cli-simple-store/model';
+import TranslationMixin from 'bsrs-ember/mixins/model/translation';
 
-var LocationStatusModel = Ember.Object.extend({});
+export default Model.extend(TranslationMixin, {
+    name: attr(),
+});
 
-export default LocationStatusModel;
 

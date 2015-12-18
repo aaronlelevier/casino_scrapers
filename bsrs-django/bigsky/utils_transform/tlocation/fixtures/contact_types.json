@@ -1,0 +1,57 @@
+[
+{
+  "pk": "14957a42-84a3-4297-91fa-a816d2077344",
+  "model": "contact.phonenumbertype",
+  "fields": {
+    "name": "cell",
+    "created": "2015-12-14T19:46:05.236Z",
+    "order": 0,
+    "deleted": null,
+    "modified": "2015-12-14T19:46:05.236Z"
+  }
+},
+{
+  "pk": "9b9e217e-b58e-47e0-b12f-cc44abd47ea7",
+  "model": "contact.phonenumbertype",
+  "fields": {
+    "name": "fax",
+    "created": "2015-12-14T19:46:05.234Z",
+    "order": 0,
+    "deleted": null,
+    "modified": "2015-12-14T19:46:05.234Z"
+  }
+},
+{
+  "pk": "fd38d12e-f1e1-41ce-8156-bab1538f1542",
+  "model": "contact.phonenumbertype",
+  "fields": {
+    "name": "telephone",
+    "created": "2015-12-14T19:46:05.232Z",
+    "order": 0,
+    "deleted": null,
+    "modified": "2015-12-14T19:46:05.232Z"
+  }
+},
+{
+  "pk": "1ac01128-d88a-4e9f-aab0-80e0ee83f7b7",
+  "model": "contact.addresstype",
+  "fields": {
+    "name": "location",
+    "created": "2015-12-14T19:46:05.240Z",
+    "order": 0,
+    "deleted": null,
+    "modified": "2015-12-14T19:46:05.240Z"
+  }
+},
+{
+  "pk": "2c49e152-2419-4eb9-9767-7d8e2cd6916c",
+  "model": "contact.emailtype",
+  "fields": {
+    "name": "location",
+    "created": "2015-12-14T19:46:05.238Z",
+    "order": 0,
+    "deleted": null,
+    "modified": "2015-12-14T19:46:05.238Z"
+  }
+}
+]

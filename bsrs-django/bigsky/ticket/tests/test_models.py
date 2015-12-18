@@ -1,13 +1,16 @@
-from django.test import TestCase
 from django.conf import settings
+from django.db.models import Q
+from django.test import TestCase
 
 from model_mommy import mommy
 
+from category.models import Category
 from category.tests.factory import create_categories
 from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES)
 from ticket.tests.factory import create_ticket, create_tickets
+from ticket.tests.mixins import TicketCategoryOrderingSetupMixin
 from generic.tests.factory import create_attachments
 
 
@@ -16,7 +19,7 @@ class TicketStatusManagerTests(TestCase):
     def test_default(self):
         default = TicketStatus.objects.default()
         self.assertIsInstance(default, TicketStatus)
-        self.assertEqual(default.name, TICKET_STATUSES[5])
+        self.assertEqual(default.name, TICKET_STATUSES[1])
 
 
 class TicketPriorityTests(TestCase):
@@ -25,6 +28,37 @@ class TicketPriorityTests(TestCase):
         default = TicketPriority.objects.default()
         self.assertIsInstance(default, TicketPriority)
         self.assertEqual(default.name, TICKET_PRIORITIES[0])
+
+
+class TicketManagerTests(TestCase):
+
+    def setUp(self):
+        create_categories()
+        create_single_person()
+        create_tickets(_many=2)
+
+    def test_deleted(self):
+        ticket = Ticket.objects.first()
+
+        ticket.delete()
+
+        self.assertEqual(Ticket.objects.count(), 1)
+        self.assertEqual(Ticket.objects_all.count(), 2)
+
+    def test_search_multi(self):
+        search = TicketPriority.objects.first().name
+        raw_qs_count = Ticket.objects.filter(
+                Q(request__icontains=search) | \
+                Q(location__name__icontains=search) | \
+                Q(assignee__fullname__icontains=search) | \
+                Q(priority__name__icontains=search) | \
+                Q(status__name__icontains=search) | \
+                Q(categories__name__in=[search])
+            ).count()
+
+        ret = Ticket.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
 
 
 class TicketTests(TestCase):
@@ -62,6 +96,17 @@ class TicketActivityTests(TestCase):
 
     def test_setup(self):
         self.assertIsInstance(self.activity, TicketActivity)
+
+    def test_meta_ordering(self):
+        self.activity = mommy.make(TicketActivity, person=self.person)
+        self.assertEqual(TicketActivity.objects.count(), 2)
+
+        ret = TicketActivity.objects.all()
+
+        self.assertEqual(
+            ret.first(),
+            TicketActivity.objects.order_by('-created').first()
+        )
 
     def test_weigh_default(self):
         self.assertEqual(
@@ -139,3 +184,24 @@ class TicketActivityTests(TestCase):
         self.assertIsInstance(ticket_activity, TicketActivity)
         self.assertEqual(ticket_activity.ticket.id, self.ticket.id)
         self.assertEqual(ticket_activity.content['0'], self.person.id)
+
+
+class TicketCategoryOrderingTests(TicketCategoryOrderingSetupMixin, TestCase):
+
+    def test_ticket_one(self):
+        ordered_categories = self.one.categories.order_by('level').values_list('name', flat=True)
+        
+        self.assertEqual(
+            " - ".join(ordered_categories),
+            "Loss Prevention - Locks - Drawer Lock"
+        )
+
+    def test_ticket_and_category_ordering(self):
+        manual = (Ticket.objects.all()
+                                .prefetch_related('categories')
+                                .exclude(categories__isnull=True))
+
+        queryset = Ticket.objects.all_with_ordered_categories()
+
+        for i, obj in enumerate(queryset):
+            self.assertEqual(manual[i].id, obj.id)

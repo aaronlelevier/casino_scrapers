@@ -21,11 +21,11 @@ var CategoryNewRoute = TabRoute.extend({
         let search = transition.queryParams.search;
         let categories_children = repository.findCategoryChildren(search);
         let model = this.get('model_fetch');
-        return Ember.RSVP.hash({
+        return {
             model: model,
             categories_children: categories_children,
             search: search
-        });
+        };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

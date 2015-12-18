@@ -6,7 +6,7 @@ from contact.serializers import   (
     AddressFlatSerializer, AddressSerializer)
 from location.serializers import LocationIdNameSerializer
 from category.serializers import CategoryRoleSerializer
-from person.models import PersonStatus, Person, Role
+from person.models import Person, Role
 from person.validators import RoleLocationValidator
 from utils.serializers import (BaseCreateSerializer, NestedContactSerializerMixin,
     RemovePasswordSerializerMixin)

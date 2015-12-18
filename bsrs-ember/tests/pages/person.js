@@ -42,7 +42,7 @@ export default PageObject.create({
   locationClickDropdown: clickable(LOCATION),
   locationClickOptionOne: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LD.storeName})`),
   locationClickOptionOneEq: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:eq(0)`),
-  locationClickOptionTwo: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LD.baseStoreName}2)`),
+  locationClickOptionTwo: clickable(`${LOCATION_DROPDOWN} > .ember-power-select-option:contains(${LD.baseStoreName}4)`),
   locationOptionLength: count(`${LOCATION_DROPDOWN} > li`),
   locationOneRemove: clickable(`${LOCATION_ONE} > .ember-power-select-multiple-remove-btn`),
   locationOneSelected: text(LOCATION_ONE),
@@ -50,6 +50,6 @@ export default PageObject.create({
 
   roleInput: text(ROLE),
   roleClickDropdown: clickable(ROLE),
-  roleClickOptionOne: clickable(`${ROLE_DROPDOWN} > .ember-power-select-option:contains(${RD.nameOneTranslated})`),
-  roleClickOptionTwo: clickable(`${ROLE_DROPDOWN} > .ember-power-select-option:contains(${RD.nameTwoTranslated})`),
+  roleClickOptionOne: clickable(`${ROLE_DROPDOWN} > .ember-power-select-option:contains(${RD.nameOne})`),
+  roleClickOptionTwo: clickable(`${ROLE_DROPDOWN} > .ember-power-select-option:contains(${RD.nameTwo})`),
 });

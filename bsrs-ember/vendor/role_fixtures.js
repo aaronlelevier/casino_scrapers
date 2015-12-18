@@ -1,8 +1,9 @@
 var BSRS_ROLE_FACTORY = (function() {
-    var factory = function(role_defaults, category_fixtures, location_level_fixtures) {
+    var factory = function(role_defaults, category_fixtures, location_level_fixtures, config) {
         this.role_defaults = role_defaults;
         this.category_fixtures = category_fixtures.default || category_fixtures;
         this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
+        this.config = config;
     };
     factory.prototype.generate = function(i) {
         return {
@@ -25,9 +26,10 @@ var BSRS_ROLE_FACTORY = (function() {
         response.push({id: uuid + 1, name: this.role_defaults.nameOne, location_level: this.location_level_fixtures.detail().id, role_type: this.role_defaults.roleTypeGeneral });
         response.push({id: uuid + 2, name: this.role_defaults.nameTwo, location_level: this.location_level_fixtures.detail().id, role_type: this.role_defaults.roleTypeGeneral });
         response.push({id: uuid + 3, name: this.role_defaults.nameThree, location_level: this.location_level_fixtures.detail().id, role_type: this.role_defaults.roleTypeGeneral });
-        for (var i=4; i <= 10; i++) {
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+        for (var i=4; i <= page_size; i++) {
             var rando_uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04';
-            if (i < 10) {
+            if (i < page_size) {
                 rando_uuid = rando_uuid + '0' + i;
             } else{
                 rando_uuid = rando_uuid + i;
@@ -41,19 +43,20 @@ var BSRS_ROLE_FACTORY = (function() {
         var sorted = response.sort(function(a,b) {
             return b.id - a.id;
         });
-        return {'count':19,'next':null,'previous':null,'results': sorted};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
         //return {'count':2,'next':null,'previous':null,'results': response};
     };
     factory.prototype.list_two = function() {
         var response = [];
-        for (var i=11; i <= 19; i++) {
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+        for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = 'af34ee9b-833c-4f3e-a584-b6851d1e04';
             var role = this.generate(uuid + i);
             delete role.categories;
             role.name = 'xav' + i;
             response.push(role);
         }
-        return {'count':19,'next':null,'previous':null,'results': response};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i) {
         var role = this.generate(i);
@@ -80,13 +83,14 @@ if (typeof window === 'undefined') {
     var role_defaults = require('../vendor/defaults/role');
     var category_fixtures = require('../vendor/category_fixtures');
     var location_level_fixtures = require('../vendor/location_level_fixtures');
+    var config = require('../config/environment');
     objectAssign(BSRS_ROLE_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_ROLE_FACTORY(role_defaults, category_fixtures, location_level_fixtures);
+    module.exports = new BSRS_ROLE_FACTORY(role_defaults, category_fixtures, location_level_fixtures, config);
 } else {
-    define('bsrs-ember/vendor/role_fixtures', ['exports','bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin'], function (exports, role_defaults, category_fixtures, location_level_fixtures, mixin) {
+    define('bsrs-ember/vendor/role_fixtures', ['exports','bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, role_defaults, category_fixtures, location_level_fixtures, mixin, config) {
         'use strict';
         Object.assign(BSRS_ROLE_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_ROLE_FACTORY(role_defaults, category_fixtures, location_level_fixtures);
+        var Factory = new BSRS_ROLE_FACTORY(role_defaults, category_fixtures, location_level_fixtures, config);
         return {default: Factory};
     });
 }

@@ -1,7 +1,5 @@
 import random
 
-from model_mommy import mommy
-
 from category.models import Category, CATEGORY_STATUSES, CategoryStatus
 from utils.create import random_lorem
 from utils.helpers import generate_uuid
@@ -10,34 +8,40 @@ from utils.helpers import generate_uuid
 CATEGORY_BASE_ID = "24f530c4-ce6c-4724-9cfd-37a16e787"
 
 
-def create_categories(_many=None):
-    statuses = create_category_statuses()
-
-    # Type
+def create_single_category(name):
+    status = create_category_status()
     incr = Category.objects.count()
-
-    type = Category.objects.create(
+    return Category.objects.create(
         id=generate_uuid(CATEGORY_BASE_ID, incr+1),
-        name='repair',
+        name=name,
         subcategory_label='trade',
-        status=random.choice(statuses)
+        status=status
     )
 
-    # Trade
-    trade_names = ['plumbing', 'electrical']
-    incr = Category.objects.count()
-
-    for i, name in enumerate(trade_names):
-        status = random.choice(statuses)
-        trade = Category.objects.create(
-            id=generate_uuid(CATEGORY_BASE_ID, incr+i+1),
+    
+def create_categories(_many=None):
+    statuses = create_category_statuses()
+    top_levels = ['repair', 'Building', 'IT', 'Store Operations']
+    top_level_children = [['plumbing','electrical'], ['Alarm', 'Carpet'], ['Computer', 'Monitor'], ['HR', 'Loss Prevention']]
+    for i, name in enumerate(top_levels):
+        incr = Category.objects.count()
+        Category.objects.create(
+            id=generate_uuid(CATEGORY_BASE_ID, incr),
             name=name,
-            subcategory_label='issue',
-            parent=type,
-            status=status
+            subcategory_label='trade',
+            status=random.choice(statuses)
         )
 
-    # type.children.add(issue)
+    for i, name_arr in enumerate(top_level_children):
+        for x, name in enumerate(name_arr):
+            incr = Category.objects.count()
+            Category.objects.create(
+                id=generate_uuid(CATEGORY_BASE_ID, incr),
+                name=name,
+                subcategory_label='issue',
+                parent=Category.objects.filter(name=top_levels[i]).first(),
+                status=random.choice(statuses)
+            )
 
     # Issue
     for category in Category.objects.filter(subcategory_label='issue'):
@@ -52,6 +56,8 @@ def create_categories(_many=None):
                 parent=category,
                 status=status
             )
+
+    return Category.objects.all()
 
 
 CATEGORY_STATUS_BASE_ID = "20f530c4-ce6c-4724-9cfd-37a16e787"

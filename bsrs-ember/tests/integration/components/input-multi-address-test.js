@@ -34,7 +34,7 @@ moduleForComponent('input-multi-address', 'integration: input-multi-address test
 
 test('renders a single button with a class of t-add-btn', function(assert){
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    var model = store.find('address', {person_id: PEOPLE_DEFAULTS.id});
+    var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.render(hbs`{{input-multi-address model=model}}`);
     var $component = this.$('.t-input-multi-address');
@@ -43,10 +43,10 @@ test('renders a single button with a class of t-add-btn', function(assert){
 
 test('click add btn will append blank entry to list of entries and binds value to model', function(assert) {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    var model = store.find('address', {person_id: PEOPLE_DEFAULTS.id});
+    var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.set('related_pk', PEOPLE_DEFAULTS.id);
-    this.set('related_field', 'person_id');
+    this.set('related_field', 'model_fk');
     this.set('state_list', STATE_LIST);
     this.set('countries', COUNTRIES);
     this.set('default_type', default_type);
@@ -62,7 +62,7 @@ test('click add btn will append blank entry to list of entries and binds value t
     assert.equal($component.find('.t-address-country option').length, 3);
     // assert.equal(model.objectAt(0).get('id').length, 36);//toggles from 36 to 6
     assert.equal(model.objectAt(0).get('type'), ADDRESS_TYPE_DEFAULTS.officeId);
-    assert.equal(model.objectAt(0).get('person_id'), PEOPLE_DEFAULTS.id);
+    assert.equal(model.objectAt(0).get('model_fk'), PEOPLE_DEFAULTS.id);
     assert.equal(model.objectAt(0).get('address'), undefined);
     assert.equal(model.objectAt(0).get('city'), undefined);
     assert.equal(model.objectAt(0).get('state'), undefined);
@@ -73,11 +73,11 @@ test('click add btn will append blank entry to list of entries and binds value t
 
 test('once added a button for address type appears with a button to delete it', function(assert) {
     //currently in General Settings Route
-    var model = store.find('address', {person_id: PEOPLE_DEFAULTS.id});
+    var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     var address_types = [AddressType.create({id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName})];
     this.set('model', model);
     this.set('related_pk', PEOPLE_DEFAULTS.id);
-    this.set('related_field', 'person_id');
+    this.set('related_field', 'model_fk');
     this.set('address_types', address_types);
     this.set('default_type', default_type);
     this.render(hbs`{{input-multi-address model=model types=address_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
@@ -101,9 +101,9 @@ test('once added a button for address type appears with a button to delete it', 
 
 test('click delete btn will remove input', function(assert) {
     var person = store.push('person', {id: PEOPLE_DEFAULTS.id, address_fks: [ADDRESS_DEFAULTS.idOne, ADDRESS_DEFAULTS.idTwo]});
-    store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPE_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, person_fk: PEOPLE_DEFAULTS.id});
-    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, address: ADDRESS_DEFAULTS.streetTwo, city: ADDRESS_DEFAULTS.cityTwo, state: ADDRESS_DEFAULTS.stateTwo, postal_code: ADDRESS_DEFAULTS.zipTwo, country: ADDRESS_DEFAULTS.countryTwo, person_fk: PEOPLE_DEFAULTS.id});
-    var model = store.find('address', {person_fk: PEOPLE_DEFAULTS.id});
+    store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPE_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, model_fk: PEOPLE_DEFAULTS.id});
+    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, address: ADDRESS_DEFAULTS.streetTwo, city: ADDRESS_DEFAULTS.cityTwo, state: ADDRESS_DEFAULTS.stateTwo, postal_code: ADDRESS_DEFAULTS.zipTwo, country: ADDRESS_DEFAULTS.countryTwo, model_fk: PEOPLE_DEFAULTS.id});
+    var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.render(hbs`{{input-multi-address model=model}}`);
     var $component = this.$('.t-input-multi-address');
@@ -118,15 +118,15 @@ test('click delete btn will remove input', function(assert) {
 
 test('model with existing array of entries is shown at render and bound to model', function(assert) {
     var address_types = [AddressType.create({id: ADDRESS_TYPE_DEFAULTS.officeId}), AddressType.create({id: ADDRESS_TYPE_DEFAULTS.shippingId})];
-    store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPE_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, person_id: PEOPLE_DEFAULTS.id});
-    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, address: ADDRESS_DEFAULTS.streetTwo, city: ADDRESS_DEFAULTS.cityTwo, state: ADDRESS_DEFAULTS.stateTwo, postal_code: ADDRESS_DEFAULTS.zipTwo, country: ADDRESS_DEFAULTS.countryTwo, person_id: PEOPLE_DEFAULTS.id});
-    var model = store.find('address', {person_id: PEOPLE_DEFAULTS.id});
+    store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPE_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, model_fk: PEOPLE_DEFAULTS.id});
+    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, address: ADDRESS_DEFAULTS.streetTwo, city: ADDRESS_DEFAULTS.cityTwo, state: ADDRESS_DEFAULTS.stateTwo, postal_code: ADDRESS_DEFAULTS.zipTwo, country: ADDRESS_DEFAULTS.countryTwo, model_fk: PEOPLE_DEFAULTS.id});
+    var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.set('state_list', STATE_LIST);
     this.set('address_types', address_types);
     this.set('countries', COUNTRIES);
     this.set('related_pk', PEOPLE_DEFAULTS.id);
-    this.set('related_field', 'person_id');
+    this.set('related_field', 'model_fk');
     this.set('default_type', default_type);
     this.render(hbs`{{input-multi-address model=model state_list=state_list types=address_types countries=countries related_pk=related_pk related_field=related_fieldi default_type=default_type}}`);
     var $component = this.$('.t-input-multi-address');
@@ -147,12 +147,12 @@ test('model with existing array of entries is shown at render and bound to model
 });
 
 test('changing existing address type will alter the model regardless of the primary key value', function(assert) {
-    store.push('address', {id: ADDRESS_DEFAULTS.idOne, number: ADDRESS_DEFAULTS.numberOne, type: ADDRESS_TYPE_DEFAULTS.officeId, person_id: PEOPLE_DEFAULTS.id});
-    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, number: ADDRESS_DEFAULTS.numberTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, person_id: PEOPLE_DEFAULTS.id});
-    var model = store.find('address', {person_id: PEOPLE_DEFAULTS.id});
+    store.push('address', {id: ADDRESS_DEFAULTS.idOne, number: ADDRESS_DEFAULTS.numberOne, type: ADDRESS_TYPE_DEFAULTS.officeId, model_fk: PEOPLE_DEFAULTS.id});
+    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, number: ADDRESS_DEFAULTS.numberTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, model_fk: PEOPLE_DEFAULTS.id});
+    var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.set('related_pk', PEOPLE_DEFAULTS.id);
-    this.set('related_field', 'person_id');
+    this.set('related_field', 'model_fk');
     this.set('default_type', default_type);
     var address_number_types = [AddressType.create({id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName})];
     this.set('address_number_types', address_number_types);
@@ -168,10 +168,10 @@ test('changing existing address type will alter the model regardless of the prim
 });
 
 test('filling in invalid address reveals validation message', function(assert) {
-    var model = store.find('address', {person_id: PEOPLE_DEFAULTS.id});
+    var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.set('related_pk', PEOPLE_DEFAULTS.id);
-    this.set('related_field', 'person_id');
+    this.set('related_field', 'model_fk');
     this.set('default_type', default_type);
     var address_number_types = [AddressType.create({id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName})];
     this.set('address_number_types', address_number_types);

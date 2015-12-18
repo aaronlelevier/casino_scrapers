@@ -3,12 +3,30 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from ticket.mixins import CreateTicketModelMixin, UpdateTicketModelMixin
-from ticket.models import Ticket, TicketActivity, TicketActivityType
-from person.models import Person
+from ticket.models import Ticket, TicketActivity
 from ticket.serializers import (TicketSerializer, TicketCreateSerializer,
     TicketListSerializer, TicketActivitySerializer)
 from utils.mixins import EagerLoadQuerySetMixin
 from utils.views import BaseModelViewSet
+
+
+# COMMENT OUT: Add this back after ``ticket.tests.test_views`` are refactored to work w/ these restrictions
+# class TicketQuerySetFilters(object):
+
+#     def get_queryset(self):
+#         queryset = super(TicketQuerySetFilters, self).get_queryset()
+
+#         queryset = self._filter_by_person_attrs(queryset)
+
+#         return queryset
+
+#     def _filter_by_person_attrs(self, queryset):
+#         kwargs = {}
+#         kwargs.update({
+#             'categories__id__in': self.request.user.role.categories.values_list('id', flat=True),
+#             'location__id__in': self.request.user.locations.values_list('id', flat=True)
+#         })
+#         return queryset.filter(**kwargs)
 
 
 class TicketViewSet(EagerLoadQuerySetMixin, CreateTicketModelMixin,
@@ -30,6 +48,20 @@ class TicketViewSet(EagerLoadQuerySetMixin, CreateTicketModelMixin,
             return TicketCreateSerializer
         else:
             return TicketSerializer
+
+    def get_queryset(self):
+        """
+        :search: will use the ``Q`` lookup class:
+
+        https://docs.djangoproject.com/en/1.8/topics/db/queries/#complex-lookups-with-q-objects
+        """
+        queryset = super(TicketViewSet, self).get_queryset()
+
+        search = self.request.query_params.get('search', None)
+        if search:
+            queryset = queryset.search_multi(keyword=search)
+
+        return queryset
 
 
 class TicketActivityViewSet(BaseModelViewSet):

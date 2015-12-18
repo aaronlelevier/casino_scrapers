@@ -14,22 +14,16 @@ THIRD_PARTY_APPS = [
     'debug_toolbar',
     ]
 
+# Data tranformation apps (from Domino -> to -> PostgreSQL)
+# Docs: https://docs.djangoproject.com/en/1.8/topics/db/multi-db/
+
+
 INSTALLED_APPS += LOCAL_APPS + THIRD_PARTY_APPS
+
 
 MIDDLEWARE_CLASSES += [
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     ]
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': os.environ.get('BSRS_DB_LOCAL_NAME', 'ci'),
-        'USER': os.environ.get('BSRS_DB_LOCAL_USER', 'bsdev'),
-        'PASSWORD': os.environ.get('BSRS_DB_LOCAL_NAME', 'tango'),
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
 
 # Disable Caching for Local Dev
 CACHES = {

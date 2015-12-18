@@ -6,10 +6,8 @@ from model_mommy import mommy
 
 from person.models import Person
 from category.models import Category
-from category.tests.factory import create_categories
 from location.models import Location
 from location.tests.factory import create_locations
-from person.tests.factory import create_single_person
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivityType,
     TicketActivity, TICKET_STATUSES, TICKET_PRIORITIES, TICKET_ACTIVITY_TYPES)
 from utils.create import _generate_chars
@@ -28,13 +26,18 @@ def construct_tree(category, tree):
 TICKET_BASE_ID = "40f530c4-ce6c-4724-9cfd-37a16e787"
 
 
-def create_ticket():
+def create_ticket(requester=None, assignee=None, location=None):
+    people = Person.objects.all()
+
+    requester = requester or random.choice(people)
+    assignee = assignee or random.choice(people)
+    location = location or random.choice(Location.objects.all())
+
     if not Location.objects.first():
         create_locations()
 
     statuses = create_ticket_statuses()
     priorities = create_ticket_priorites()
-    people = Person.objects.all()
 
     if 'test' in sys.argv:
         id = uuid.uuid4()
@@ -44,11 +47,11 @@ def create_ticket():
 
     ticket = Ticket.objects.create(
         id = id,
-        location = random.choice(Location.objects.all()),
+        location = location,
         status = random.choice(statuses),
         priority = random.choice(priorities),
-        assignee = random.choice(people),
-        requester = random.choice(people),
+        assignee = assignee,
+        requester = requester,
         request = _generate_chars()
     )
 
@@ -65,6 +68,24 @@ def create_ticket():
 
 def create_tickets(_many=1):
     return [create_ticket() for x in range(_many)]
+
+
+def create_extra_ticket_with_categories():
+    """
+    Used in Ticket / Category ordering tests to test that ordering still holds 
+    when new Tickets are added, but the Category would insert them in the middle
+    of the ordering.
+    """
+    # Category
+    loss_prevention, _ = Category.objects.get_or_create(name="Loss Prevention", subcategory_label="trade")
+    locks, _ = Category.objects.get_or_create(name="Locks", parent=loss_prevention, subcategory_label="issue")
+    a_locks, _ = Category.objects.get_or_create(name="A Lock", parent=locks)
+    # Ticket
+    seven = mommy.make(Ticket, request="seven")
+    # Join them
+    seven.categories.add(loss_prevention)
+    seven.categories.add(locks)
+    seven.categories.add(a_locks)
 
 
 TICKET_STATUS_BASE_ID = "def11673-d4ab-41a6-a37f-0c6846b96"

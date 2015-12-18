@@ -24,6 +24,7 @@ var attachmentAddRemove = Ember.Component.extend({
         }
         return attachments;
     }),
+    classNames: ['activity-wrap']
 });
 
 export default attachmentAddRemove;

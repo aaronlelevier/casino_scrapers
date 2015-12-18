@@ -132,6 +132,16 @@ section.wrap{
                         margin: 0 0 25px
                     }
                 }//ul
+
+                .form-group{
+                    margin: 5px 0;
+                    label{
+                        font-size: 1.1rem;
+                        font-weight: normal;
+                        margin-bottom: 2px;
+                    }
+                }
+
             }//section
         }//menu
         @media screen and (max-width: $mobileDeviceWidth){
@@ -146,7 +156,9 @@ section.wrap{
         bottom: 0;
         top: 0;
         overflow: hidden;
-
+        &.full{
+            left: 0;
+        }
         header,
         footer{
             height: $documentHeaderHeight;

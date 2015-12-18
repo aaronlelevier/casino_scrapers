@@ -52,8 +52,10 @@ var ApplicationRoute = Ember.Route.extend({
         }
         const location_level_list = Ember.$('[data-preload-location-levels]').data('configuration');
         location_level_list.forEach((model) => {
-            model.children_fks = model.children || model.children_fks || [];
+            model.children_fks = model.children || [];
+            model.parent_fks = model.parents || [];
             delete model.children;
+            delete model.parents;
             store.push('location-level', model);
         });
         const role_list = Ember.$('[data-preload-roles]').data('configuration');
@@ -136,13 +138,13 @@ var ApplicationRoute = Ember.Route.extend({
                 temp = temp.split('/').pop();
 
                 if(tab.get('transitionCallback')) {
-                    //TODO: for ticket we should pass the model and filter ONLY for that ticket ...
                     tab.get('transitionCallback')();
                 }
 
                 if(temp === tab.get('id') || tab.get('newModel')){
                     this.transitionTo(tab.get('redirect'));
                     if (tab.get('newModel') && !tab.get('saveModel')) {
+                        this.get('tabList').closeTab(model.get('id'));
                         model.removeRecord(); 
                     }
                 }else if(this.controller.currentPath !== tab.get('redirect')){

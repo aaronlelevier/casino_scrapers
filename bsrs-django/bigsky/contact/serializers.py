@@ -24,8 +24,6 @@ class PhoneNumberFlatSerializer(BaseCreateSerializer):
 
 class PhoneNumberSerializer(BaseCreateSerializer):
 
-    type = PhoneNumberTypeSerializer()
-
     class Meta:
         model = PhoneNumber
         fields = ('id', 'type', 'number',)
@@ -44,18 +42,16 @@ class AddressFlatSerializer(BaseCreateSerializer):
     
     class Meta:
         model = Address
-        fields = ('id', 'type', 'address', 'city', 'state',
-            'country', 'postal_code',)
+        fields = ('id', 'type', 'address1', 'address2', 'city', 'state',
+            'country', 'zip',)
 
 
 class AddressSerializer(BaseCreateSerializer):
     
-    type = AddressTypeSerializer()
-
     class Meta:
         model = Address
-        fields = ('id', 'type', 'address', 'city', 'state',
-            'country', 'postal_code',)
+        fields = ('id', 'type', 'address1', 'address2', 'city', 'state',
+            'country', 'zip',)
 
 
 ### EMAIL ###

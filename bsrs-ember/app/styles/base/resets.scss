@@ -45,6 +45,7 @@ input[type="text"]:disabled {
 	}
 }
 .ember-power-select{
+
 	.ember-power-select-trigger{
 		min-height: 34px;
 		background-image: none;
@@ -128,6 +129,26 @@ input[type="text"]:disabled {
 		}
 		&.highlighted{
 			background-color: $hoverColor;
+		}
+	}
+	.ember-power-select-option--selected{
+		background: $light;
+	}
+	.ember-power-select-option--highlighted{
+		background: $hoverColor;
+	}
+	.ember-basic-dropdown--below{
+		border-radius: 0 0 2px 2px;
+	}
+
+	.ember-basic-dropdown--above{
+		border-radius: 2px 2px 0 0;
+	}
+
+    .ticket-priority-select,
+    .ticket-status-select{
+		li{
+			font-size: 1.2rem;
 		}
 	}
 }

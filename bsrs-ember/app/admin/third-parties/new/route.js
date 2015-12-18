@@ -14,10 +14,10 @@ var ThirdPartyNewRoute = TabRoute.extend({
     model() {
         const model = this.get('model_fetch');
         const status_repo = this.get('status_repo');
-        return Ember.RSVP.hash({
+        return {
             model: model,
             statuses: status_repo.find()
-        });
+        };
     },
     setupController: function(controller, hash) {
         controller.set('model', hash.model);

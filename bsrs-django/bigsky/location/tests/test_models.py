@@ -92,6 +92,19 @@ class LocationLevelTests(TestCase):
         # confirm that the "mixin-inheritance" worked for the ``name`` field
         self.assertTrue(hasattr(self.location, 'name'))
 
+    def test_to_dict(self):
+        # middle
+        location_level = mommy.make(LocationLevel)
+        # child
+        location_level_two = mommy.make(LocationLevel)
+        # parent
+        location_level_three = mommy.make(LocationLevel, children=[location_level])
+        location_level.children.add(location_level_two)
+        location_level.parents.add(location_level_three)
+        self.assertIsInstance(location_level.children.first(), LocationLevel)
+        self.assertIsInstance(location_level.parents.first(), LocationLevel)
+        self.assertEqual(location_level.parents.first().children.first().pk, location_level.pk)
+
 
 class LocationStatusManagerTests(TestCase):
 

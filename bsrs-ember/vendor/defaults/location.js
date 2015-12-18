@@ -22,6 +22,7 @@ var BSRS_LOCATION_DEFAULTS_OBJECT = (function() {
             unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b056789',
             anotherId: 'zcreb4ba-a533-44e0-ab1f-57cc1b056789',
             gridTwoId: '232z46cf-9fbb-456z-4hc3-59728vu309902',
+            gridLocSelect: '232z46cf-9fbb-456z-4hc3-59728vu309904',
         };
     };
     return factory;

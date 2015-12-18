@@ -1,11 +1,11 @@
 {{#power-select
   multiple=true
   selected=categories_selected
-  options=options
   search=(action "update_filter")
   onchange=(action "change_category")
   class="t-role-category-select"
   searchPlaceholder="Type a category"
+  searchField="name"
   as |category|
 }}
   {{category.name}}

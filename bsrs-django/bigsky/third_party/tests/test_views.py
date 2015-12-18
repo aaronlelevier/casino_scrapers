@@ -78,8 +78,7 @@ class ThirdPartyTests(APITestCase):
         
         phone_data = data['phone_numbers'][0]
         self.assertEqual(phone_data['id'], str(phone.id))
-        self.assertEqual(phone_data['type']['id'], str(phone.type.id))
-        self.assertEqual(phone_data['type']['name'], phone.type.name)
+        self.assertEqual(phone_data['type'], str(phone.type.id))
         self.assertEqual(phone_data['number'], phone.number)
 
     def test_data_addresses(self):
@@ -90,13 +89,13 @@ class ThirdPartyTests(APITestCase):
 
         address_data = data['addresses'][0]
         self.assertEqual(address_data['id'], str(address.id))
-        self.assertEqual(address_data['type']['id'], str(address.type.id))
-        self.assertEqual(address_data['type']['name'], address.type.name)
-        self.assertEqual(address_data['address'], address.address)
+        self.assertEqual(address_data['type'], str(address.type.id))
+        self.assertEqual(address_data['address1'], address.address1)
+        self.assertEqual(address_data['address2'], address.address2)
         self.assertEqual(address_data['city'], address.city)
         self.assertEqual(address_data['state'], address.state)
         self.assertEqual(address_data['country'], address.country)
-        self.assertEqual(address_data['postal_code'], address.postal_code)
+        self.assertEqual(address_data['zip'], address.zip)
 
     def test_detail_contact(self):
         response = self.client.get('/api/admin/third-parties/{}/'.format(self.third_party.id))
@@ -182,10 +181,11 @@ class ThirdPartyTests(APITestCase):
         self.data['addresses'] = [{
             'id': id,
             'type': str(address_type.id),
-            'address': '123 My St.',
+            'address1': '123 My St.',
+            'address2': 'Ste 140',
             'city': 'Omaha',
             'state': 'NE',
-            'postal_code': '92126',
+            'zip': '92126',
             'country': 'United States',
         }]
 
@@ -196,10 +196,11 @@ class ThirdPartyTests(APITestCase):
         self.assertTrue(data['addresses'])
         self.assertEqual(data['addresses'][0]['id'], self.data['addresses'][0]['id'])
         self.assertEqual(data['addresses'][0]['type'], self.data['addresses'][0]['type'])
-        self.assertEqual(data['addresses'][0]['address'], self.data['addresses'][0]['address'])
+        self.assertEqual(data['addresses'][0]['address1'], self.data['addresses'][0]['address1'])
+        self.assertEqual(data['addresses'][0]['address2'], self.data['addresses'][0]['address2'])
         self.assertEqual(data['addresses'][0]['city'], self.data['addresses'][0]['city'])
         self.assertEqual(data['addresses'][0]['state'], self.data['addresses'][0]['state'])
-        self.assertEqual(data['addresses'][0]['postal_code'], self.data['addresses'][0]['postal_code'])
+        self.assertEqual(data['addresses'][0]['zip'], self.data['addresses'][0]['zip'])
         self.assertEqual(data['addresses'][0]['country'], self.data['addresses'][0]['country'])
 
     def test_update_create_phone_number(self):

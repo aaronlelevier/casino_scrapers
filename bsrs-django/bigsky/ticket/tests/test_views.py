@@ -1,42 +1,50 @@
 import json
 import uuid
+import datetime
 
-from rest_framework import status
 from rest_framework.test import APITestCase, APITransactionTestCase
 
 from model_mommy import mommy
 
 from category.models import Category
-from category.tests.factory import create_categories
+from category.tests.factory import create_categories, create_single_category
+from location.models import Location
+from location.tests.factory import create_location, create_locations
 from generic.models import Attachment
 from generic.tests.factory import create_attachments
-from person.tests.factory import PASSWORD, create_single_person
+from person.models import Person
+from person.tests.factory import PASSWORD, create_single_person, create_role
 from ticket.models import (Ticket, TicketStatus, TicketPriority, TicketActivity,
-    TicketActivityType, TICKET_ACTIVITY_TYPES)
-from ticket.serializers import TicketCreateSerializer, TicketActivitySerializer
+    TicketActivityType, TICKET_PRIORITIES, TICKET_STATUSES)
+from ticket.serializers import TicketCreateSerializer
 from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,
-    create_ticket_status, create_ticket_priority)
+    create_ticket_status, create_ticket_priority, create_extra_ticket_with_categories)
+from ticket.tests.mixins import TicketSetupMixin, TicketCategoryOrderingSetupMixin
 
 
-class TicketListTests(APITestCase):
+class TicketListFulltextTests(TicketSetupMixin, APITestCase):
 
     def setUp(self):
-        self.password = PASSWORD
-        create_categories()
-        create_single_person()
-        # Ticket
-        self.ticket = create_ticket()
-        # Person
-        self.person = self.ticket.assignee
-        # Category
-        self.category_ids = [str(x) for x in Category.objects.values_list('id', flat=True)]
-        self.category_names = [str(x) for x in Category.objects.values_list('name', flat=True)]
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
+        super(TicketListFulltextTests, self).setUp()
 
-    def tearDown(self):
-        self.client.logout()
+    def test_ticket_filter_related_m2m_with_icontains(self):
+        letters = str(uuid.uuid4())
+        rando = create_single_category(letters)
+        self.ticket_two.categories.add(rando)
+        self.ticket_two.save()
+        response = self.client.get('/api/tickets/?categories__name__icontains={}'.format(letters))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], 1)
+        self.assertEqual(data['results'][0]['id'], str(self.ticket_two.pk))
+
+
+class TicketListTests(TicketSetupMixin, APITestCase):
+
+    def setUp(self):
+        super(TicketListTests, self).setUp()
+        self.ticket_two.delete(override=True)
 
     def test_response(self):
         response = self.client.get('/api/tickets/')
@@ -54,6 +62,10 @@ class TicketListTests(APITestCase):
         self.assertEqual(ticket['requester'], str(self.ticket.requester.id))
         self.assertEqual(ticket['request'], self.ticket.request)
         self.assertEqual(ticket['number'], self.ticket.number)
+        self.assertEqual(
+            self.ticket.created.strftime('%m/%d/%Y'),
+            datetime.datetime.strptime(str(ticket['created']), '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y')
+        )
 
     def test_data_location(self):
         response = self.client.get('/api/tickets/')
@@ -77,6 +89,7 @@ class TicketListTests(APITestCase):
         self.assertIn('name', category)
         self.assertIn('parent', category)
         self.assertIn('children_fks', category)
+        self.assertIn('level', category)
 
     def test_data_assignee(self):
         response = self.client.get('/api/tickets/')
@@ -91,29 +104,7 @@ class TicketListTests(APITestCase):
         self.assertEqual(assignee['title'], self.ticket.assignee.title)
         self.assertEqual(assignee['role'], str(self.ticket.assignee.role.id))
 
-
-class TicketDetailTests(APITestCase):
-
-    def setUp(self):
-        self.password = PASSWORD
-        # Ticket
-        create_categories()
-        create_single_person()
-        self.ticket = create_ticket()
-        self.person = self.ticket.assignee
-        # Category
-        category = Category.objects.first()
-        child = Category.objects.last()
-        category.children.add(child)
-        self.ticket.categories.add(category)
-        self.ticket.save()
-        self.category_ids = [str(c.id) for c in Category.objects.all()]
-        self.category_names = [str(x) for x in Category.objects.values_list('name', flat=True)]
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
+class TicketDetailTests(TicketSetupMixin, APITestCase):
 
     def test_response(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
@@ -132,6 +123,7 @@ class TicketDetailTests(APITestCase):
             list(self.ticket.attachments.values_list('id', flat=True)))
         self.assertEqual(data['request'], self.ticket.request)
         self.assertEqual(data['number'], self.ticket.number)
+        self.assertEqual(self.ticket.created.strftime('%m/%d/%Y'), datetime.datetime.strptime(str(data['created']), '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y'))
 
     def test_location(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
@@ -197,24 +189,13 @@ class TicketDetailTests(APITestCase):
         self.assertEqual(data_cc['role'], str(cc.role.id))
 
 
-class TicketUpdateTests(APITestCase):
+class TicketUpdateTests(TicketSetupMixin, APITestCase):
 
     def setUp(self):
-        self.password = PASSWORD
-        # Ticket
-        create_categories()
-        create_single_person()
-        self.ticket = create_ticket()
-        self.person = self.ticket.assignee
-        # Category
-        # Data
+        super(TicketUpdateTests, self).setUp()
+        # serializer data
         serializer = TicketCreateSerializer(self.ticket)
         self.data = serializer.data
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
 
     def test_no_change(self):
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id),
@@ -252,23 +233,13 @@ class TicketUpdateTests(APITestCase):
         self.assertEqual(self.ticket.attachments.count(), 0)
 
 
-class TicketCreateTests(APITestCase):
+class TicketCreateTests(TicketSetupMixin, APITestCase):
 
     def setUp(self):
-        self.password = PASSWORD
-        create_categories()
-        self.person = create_single_person()
-        # Ticket
-        self.ticket = create_ticket()
-        # Data
+        super(TicketCreateTests, self).setUp()
+        # serializer data
         serializer = TicketCreateSerializer(self.ticket)
         self.data = serializer.data
-        self.categories = Category.objects.all()
-        # Login
-        self.client.login(username=self.person.username, password=PASSWORD)
-
-    def tearDown(self):
-        self.client.logout()
 
     def test_ticket(self):
         self.data.update({
@@ -332,6 +303,102 @@ class TicketCreateTests(APITestCase):
         self.assertEqual(data['attachments'],
             list(ticket.attachments.values_list('id', flat=True)))
         self.assertEqual(data['request'], ticket.request)
+
+
+class TicketSearchTests(TicketSetupMixin, APITestCase):
+
+    def test_response(self):
+        letters = 'wat'
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        self.assertEqual(response.status_code, 200)
+
+    def test_search(self):
+        letters = 'watter'
+        mommy.make(Ticket, request=letters)
+        count = Ticket.objects.search_multi(keyword=letters).count()
+        self.assertEqual(count, 1)
+
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], count)
+
+    def test_search_multiple(self):
+        letters = 'wat'
+        mommy.make(Ticket, request=letters)
+        mommy.make(Ticket, request='watter')
+        count = Ticket.objects.search_multi(keyword=letters).count()
+        self.assertEqual(count, 2)
+
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], count)
+
+    def test_search_related_location(self):
+        create_locations()
+        mommy.make(Ticket, request="wat", location=Location.objects.filter(name='san_diego').first())
+        mommy.make(Ticket, request="watter", location=Location.objects.filter(name='ca').first())
+        letters = "ca"
+        count = Ticket.objects.search_multi(keyword=letters).count()
+
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], count)
+
+    def test_search_related_assignee(self):
+        role = create_role()
+        mommy.make(Person, first_name="wat", last_name="soda", role=role)
+        mommy.make(Person, first_name="wat", last_name="pop", role=role)
+        mommy.make(Ticket, request="wat", assignee=Person.objects.filter(fullname='wat soda').first())
+        mommy.make(Ticket, request="watter", assignee=Person.objects.filter(fullname='wat pop').first())
+        letters = "wat soda"
+        count = Ticket.objects.search_multi(keyword=letters).count()
+
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], count)
+
+    def test_search_related_priority(self):
+        mommy.make(Ticket, request="wat", priority=TicketPriority.objects.get(name=TICKET_PRIORITIES[0]))
+        mommy.make(Ticket, request="watter", priority=TicketPriority.objects.get(name=TICKET_PRIORITIES[1]))
+        letters = "emergency"
+        count = Ticket.objects.search_multi(keyword=letters).count()
+
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], count)
+
+    def test_search_related_status(self):
+        mommy.make(Ticket, request="wat", status=TicketStatus.objects.get(name=TICKET_STATUSES[0]))
+        mommy.make(Ticket, request="watter", status=TicketStatus.objects.get(name=TICKET_STATUSES[1]))
+        letters = "new"
+        count = Ticket.objects.search_multi(keyword=letters).count()
+
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], count)
+
+    def test_search_related_categories(self):
+        letters = "zza"
+        category_one = create_single_category(letters)
+        category_two = create_single_category("zzap")
+        one = mommy.make(Ticket, request="one")
+        two = mommy.make(Ticket, request="two")
+        one.categories.add(category_one)
+        one.save()
+        two.categories.add(category_two)
+        two.save()
+        count = Ticket.objects.search_multi(keyword=letters).count()
+
+        response = self.client.get('/api/tickets/?search={}'.format(letters))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], count)
 
 
 class TicketActivityViewSetTests(APITransactionTestCase):
@@ -547,8 +614,9 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['to'], str(to_priority.id))
 
     def test_categories(self):
-        from_category = self.ticket.categories.first()
-        to_category = Category.objects.exclude(id=from_category.id).first()
+        from_category = self.ticket.categories.exclude(parent__isnull=True).first()
+        to_category = (Category.objects.exclude(id=from_category.id)
+                                       .exclude(parent__isnull=True).first())
         ticket_activity = create_ticket_activity(ticket=self.ticket, type='categories',
             content={'from_0': str(from_category.id), 'to_0': str(to_category.id)})
 
@@ -594,21 +662,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['added'][0]['id'], str(attachment.id))
         self.assertEqual(data['results'][0]['content']['added'][0]['filename'], attachment.filename)
         self.assertEqual(data['results'][0]['content']['added'][0]['file'], str(attachment.file))
-
-    # COMMENT OUT: test not needed until the removing of Attachments is further defined
-    # def test_attachment_remove(self):
-    #     attachment = create_attachments(ticket=self.ticket)
-    #     ticket_activity = create_ticket_activity(ticket=self.ticket, type='attachment_remove',
-    #         content={'0': str(attachment.id)})
-
-    #     response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertEqual(data['count'], 1)
-    #     self.assertEqual(len(data['results'][0]['content']), 1)
-    #     self.assertEqual(data['results'][0]['content']['removed'][0]['id'], str(attachment.id))
-    #     self.assertEqual(data['results'][0]['content']['removed'][0]['filename'], attachment.filename)
-    #     self.assertNotIn('file', data['results'][0]['content']['removed'][0])
+        self.assertEqual(data['results'][0]['content']['added'][0]['image_thumbnail'], str(attachment.image_thumbnail))
 
 
 class TicketAndTicketActivityTests(APITransactionTestCase):
@@ -648,7 +702,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_assignee(self):
         name = 'assignee'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_assingee = create_single_person()
+        new_assingee = create_single_person(name='foo')
         self.assertNotEqual(self.data['assignee'], str(new_assingee.id))
         self.data['assignee'] = str(new_assingee.id)
 
@@ -668,7 +722,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_cc_add(self):
         name = 'cc_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_cc = create_single_person()
+        new_cc = create_single_person(name='foo')
         self.data['cc'].append(str(new_cc.id))
 
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
@@ -697,7 +751,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_cc_add_and_remove(self):
         self.assertEqual(TicketActivity.objects.count(), 0)
         init_cc = self.ticket.cc.first()
-        new_cc = create_single_person()
+        new_cc = create_single_person(name='foo')
         self.data['cc'] = [str(new_cc.id)]
 
         response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
@@ -715,8 +769,8 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def test_cc_add_multiple(self):
         name = 'cc_add'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        new_cc = create_single_person()
-        new_cc_two = create_single_person()
+        new_cc = create_single_person(name='foo')
+        new_cc_two = create_single_person(name='bar')
         self.data['cc'].append(str(new_cc.id))
         self.data['cc'].append(str(new_cc_two.id))
 
@@ -779,7 +833,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(TicketActivity.objects.count(), 0)
         # ticket_activity_type = create_ticket_activity_type(name=name)
         # Only one Category on the Ticket
-        [c.delete(override=True) for c in self.ticket.categories.all()[:self.ticket.categories.count()-1]]
+        [self.ticket.categories.remove(c) for c in self.ticket.categories.all()[:self.ticket.categories.count()-1]]
         new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()
         self.assertEqual(len(self.data['categories']), 3)
         self.assertNotEqual(self.data['categories'][0], str(new_category.id))
@@ -894,3 +948,112 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
             first_attachment.id,
             list(TicketActivity.objects.order_by('created').last().content.values())
         )
+
+
+class TicketCategoryOrderingListTests(TicketCategoryOrderingSetupMixin, APITransactionTestCase):
+
+    def setUp(self):
+        super(TicketCategoryOrderingListTests, self).setUp()
+        # Role
+        self.role = create_role()
+        # Location
+        self.location = create_location(location_level=self.role.location_level)
+        # Person
+        self.password = PASSWORD
+        self.person = create_single_person(role=self.role, location=self.location)
+        # Login
+        self.client.login(username=self.person.username, password=PASSWORD)
+
+        # response
+        self.response = self.client.get('/api/tickets/')
+        self.data = json.loads(self.response.content.decode('utf8'))
+
+        # desired "queryset" ordered by
+        #   - top level category name
+        #   - categories: parent -> to -> children
+        self.queryset = Ticket.objects.all_with_ordered_categories()
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_count(self):
+        self.assertEqual(self.data['count'], 6)
+
+    def test_ordering(self):
+        for i, data in enumerate(self.data['results']):
+            self.assertEqual(data['id'], str(self.queryset[i].id))
+            # Categories ordering test
+            ticket = Ticket.objects.get(id=data['id'])
+            categories = ticket.categories.order_by('level')
+            for i2, category in enumerate(categories):
+                self.assertEqual(data['categories'][i2]['id'], str(category.id))
+
+    def test_ordering__new_ticket_ticket_related_ordering_by_created_data(self):
+        create_extra_ticket_with_categories()
+        seven = Ticket.objects.get(request="seven")
+
+        response = self.client.get('/api/tickets/?related_ordering=created')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(data['results'][-1]['id'], str(seven.id))
+
+    def test_ordering__new_ticket(self):
+        """
+        The new ticket should be alphabetically placed at the start, but based upon a 
+        'created' sort, would be placed at the end.
+        """
+        create_extra_ticket_with_categories()
+
+        # response
+        response = self.client.get('/api/tickets/')
+        data = json.loads(response.content.decode('utf8'))
+        # desired "queryset"
+        queryset = Ticket.objects.all_with_ordered_categories()
+
+        for i, data in enumerate(data['results']):
+            self.assertEqual(data['id'], str(queryset[i].id))
+            # Categories ordering test
+            ticket = Ticket.objects.get(id=data['id'])
+            categories = ticket.categories.order_by('level')
+            for i2, category in enumerate(categories):
+                self.assertEqual(data['categories'][i2]['id'], str(category.id))
+
+
+### COMMENT OUT: Until these filters are added to the Ticket List API get_queryset mixin
+# class TicketsFilteredBySettingsTests(TicketSetupMixin, APITransactionTestCase):
+
+#     def test_create(self):
+#         self.assertTrue(self.person.role.categories.all())
+#         self.assertTrue(self.ticket.categories.all())
+#         # category ticket test
+#         self.assertIn(
+#             self.person.role.categories.first(),
+#             self.ticket.categories.all()
+#         )
+#         # location ticket test
+#         self.assertIn(
+#             self.ticket.location,
+#             self.person.locations.all()
+#         )
+
+#     def test_role_categories_and_location_match(self):
+#         response = self.client.get('/api/tickets/')
+
+#         data = json.loads(response.content.decode('utf8'))
+#         self.assertTrue(data['count'] > 0)
+
+#     def test_role_categories__dont_match_ticket(self):
+#         self.person.role.categories.all().delete()
+
+#         response = self.client.get('/api/tickets/')
+
+#         data = json.loads(response.content.decode('utf8'))
+#         self.assertEqual(data['count'], 0)
+
+#     def test_person_locations__dont_match_ticket(self):
+#         self.person.locations.all().delete()
+
+#         response = self.client.get('/api/tickets/')
+
+#         data = json.loads(response.content.decode('utf8'))
+#         self.assertEqual(data['count'], 0)

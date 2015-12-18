@@ -15,12 +15,12 @@ from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_contact, create_contacts
 from location.models import Location, LocationLevel
+from location.tests.factory import create_location
 from person.models import Person, Role
 from person.serializers import (PersonUpdateSerializer, RoleSerializer,
     RoleUpdateSerializer)
-from person.tests.factory import (
-    PASSWORD, create_person, create_role, create_roles, create_single_person,
-    create_all_people)
+from person.tests.factory import (PASSWORD, create_person, create_role, create_roles,
+    create_single_person, create_all_people)
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create, choices
@@ -361,8 +361,7 @@ class PersonDetailTests(TestCase):
         
         phone_data = self.data['phone_numbers'][0]
         self.assertEqual(phone_data['id'], str(phone.id))
-        self.assertEqual(phone_data['type']['id'], str(phone.type.id))
-        self.assertEqual(phone_data['type']['name'], phone.type.name)
+        self.assertEqual(phone_data['type'], str(phone.type.id))
         self.assertEqual(phone_data['number'], phone.number)
 
     def test_data_addresses(self):
@@ -371,13 +370,13 @@ class PersonDetailTests(TestCase):
 
         address_data = self.data['addresses'][0]
         self.assertEqual(address_data['id'], str(address.id))
-        self.assertEqual(address_data['type']['id'], str(address.type.id))
-        self.assertEqual(address_data['type']['name'], address.type.name)
-        self.assertEqual(address_data['address'], address.address)
+        self.assertEqual(address_data['type'], str(address.type.id))
+        self.assertEqual(address_data['address1'], address.address1)
+        self.assertEqual(address_data['address2'], address.address2)
         self.assertEqual(address_data['city'], address.city)
         self.assertEqual(address_data['state'], address.state)
         self.assertEqual(address_data['country'], address.country)
-        self.assertEqual(address_data['postal_code'], address.postal_code)
+        self.assertEqual(address_data['zip'], address.zip)
 
     def test_person_fk(self):
         self.assertIn(
@@ -411,7 +410,9 @@ class PersonPutTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
-        self.person = create_single_person(name="aaron")
+        self.role = create_role()
+        self.location = create_location(location_level=self.role.location_level)
+        self.person = create_single_person()
         self.client.login(username=self.person.username, password=self.password)
         # Create ``contact.Model`` Objects not yet JOINed to a ``Person`` or ``Location``
         self.email_type = mommy.make(EmailType)
@@ -423,7 +424,7 @@ class PersonPutTests(APITestCase):
 
         # Person2 w/ some contact info doesn't affect Person1's Contact
         # counts / updates / deletes
-        self.person2 = create_person()
+        self.person2 = create_single_person()
         create_contacts(self.person2)
 
         serializer = PersonUpdateSerializer(self.person)
@@ -558,7 +559,7 @@ class PersonPutTests(APITestCase):
         self.assertNotEqual(self.person.role.location_level, location_level)
         # Adding a LocationLevel that matches the new Role's LocationLevel is fine
         self.data['role'] = str(new_role.id)
-        self.data['locations'].append(str(location.id))
+        self.data['locations'] = [location.id]
         response = self.client.put('/api/admin/people/{}/'.format(self.person.id),
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
@@ -710,23 +711,37 @@ class PersonSearchTests(APITransactionTestCase):
         self.client.logout()
         ContentType.objects.clear_cache()
 
-    def test_search(self):
-        letters = "aa"
-        users_count = Person.objects.filter(username__icontains=letters).count()
-        self.assertEqual(users_count, 1)
-        response = self.client.get('/api/admin/people/?search={}'.format(letters))
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["count"], users_count)
+    def test_search_username(self):
+        keyword = self.person.username
 
-    def test_search_multiple(self):
-        mommy.make(Person, username="Bob", role=self.role)
-        mommy.make(Person, username="Bobby", role=self.role)
-        letters = "bob"
-        users_count = Person.objects.filter(username__icontains=letters).count()
-        self.assertEqual(users_count, 2)
-        response = self.client.get('/api/admin/people/?search={}'.format(letters))
+        response = self.client.get('/api/admin/people/?search={}'.format(keyword))
+
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["count"], users_count)
+        self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
+
+    def test_search_fullname(self):
+        keyword = self.person.fullname
+
+        response = self.client.get('/api/admin/people/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
+
+    def test_search_title(self):
+        keyword = self.person.title
+
+        response = self.client.get('/api/admin/people/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
+
+    def test_search_role_name(self):
+        keyword = self.person.role.name
+
+        response = self.client.get('/api/admin/people/?search={}'.format(keyword))
+
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data["count"], Person.objects.search_multi(keyword).count())
 
 
 class PasswordTests(APITestCase):

@@ -1,6 +1,7 @@
 var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
-    var factory = function(defaults) {
+    var factory = function(defaults, config) {
         this.defaults = defaults;
+        this.config = config;
     };
     factory.prototype.get = function(i) {
         // var name = name || this.defaults.storeName;
@@ -30,7 +31,8 @@ var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
     };
     factory.prototype.list = function() {
         var response = [];
-        for (var i=1; i <= 10; i++) {
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+        for (var i=1; i <= page_size; i++) {
             translation = this.defaults.keyOne + i;
             response.push(translation);
         }
@@ -38,18 +40,19 @@ var BSRS_ADMIN_TRANSLATION_FACTORY = (function() {
         var sorted = response.sort(function(a,b) {
             return b - a;
         });
-        return {'count':19,'next':null,'previous':null,'results': sorted};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
         var response = [];
-        for (var i=11; i <= 19; i++) {
+        for (var i=page_size+1; i <= page_size*2-1; i++) {
             translation = this.defaults.keyOne + i;
             response.push(translation);
         }
-        return {'count':19,'next':null,'previous':null,'results': response};
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i) {
-        return this.get(this.defaults.idOne);
+        return this.get(this.defaults.keyOneGrid);
     };
     factory.prototype.put = function(translation) {
         var response = this.get(translation.id);
@@ -72,13 +75,14 @@ if (typeof window === 'undefined') {
     var objectAssign = require('object-assign');
     var mixin = require('../vendor/mixin');
     var translation_defaults = require('../vendor/defaults/translation');
+    var config = require('../config/environment');
     objectAssign(BSRS_ADMIN_TRANSLATION_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_ADMIN_TRANSLATION_FACTORY(translation_defaults);
+    module.exports = new BSRS_ADMIN_TRANSLATION_FACTORY(translation_defaults, config);
 } else {
-    define('bsrs-ember/vendor/admin_translation_fixtures', ['exports', 'bsrs-ember/vendor/defaults/translation', 'bsrs-ember/vendor/mixin'], function (exports, translation_defaults, mixin) {
+    define('bsrs-ember/vendor/admin_translation_fixtures', ['exports', 'bsrs-ember/vendor/defaults/translation', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, translation_defaults, mixin, config) {
         'use strict';
         Object.assign(BSRS_ADMIN_TRANSLATION_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_ADMIN_TRANSLATION_FACTORY(translation_defaults);
+        var Factory = new BSRS_ADMIN_TRANSLATION_FACTORY(translation_defaults, config);
         return {default: Factory};
     });
 }

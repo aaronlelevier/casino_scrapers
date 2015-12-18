@@ -1,5 +1,5 @@
 var BSRS_PEOPLE_FACTORY = (function() {
-    var factory = function(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults) {
+    var factory = function(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults, config) {
         this.address_fixtures = address_fixtures;
         this.person_defaults = person_defaults;
         this.phone_number_fixtures = phone_number_fixtures;
@@ -9,13 +9,14 @@ var BSRS_PEOPLE_FACTORY = (function() {
         this.status_defaults = status_defaults;
         this.location_level_defaults = location_level_defaults;
         this.location_defaults = location_defaults;
+        this.config = config;
     };
-    factory.prototype.get = function(i) {
+    factory.prototype.get = function(i, first_name, last_name) {
         //right now function used for tickets
         return {
             id: i || this.person_defaults.id,
-            first_name: this.person_defaults.first_name,
-            last_name: this.person_defaults.last_name,
+            first_name: first_name || this.person_defaults.first_name,
+            last_name: last_name || this.person_defaults.last_name,
             email: this.person_defaults.emails,
             role: this.person_defaults.role,
         }
@@ -49,9 +50,10 @@ var BSRS_PEOPLE_FACTORY = (function() {
     },
     factory.prototype.list = function() {
         var response = [];
-        for (var i=1; i <= 10; i++) {
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+        for (var i=1; i <= page_size; i++) {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
-            if (i < 10) {
+            if (i < 25) {
                 uuid = uuid + '0' + i;
             } else{
                 uuid = uuid + i;
@@ -73,13 +75,15 @@ var BSRS_PEOPLE_FACTORY = (function() {
         var sorted = response.sort(function(a,b) {
             return b.id - a.id;
         });
-        return {'count':18,'next':null,'previous':null,'results': sorted};
+        return {'count':page_size*2-2,'next':null,'previous':null,'results': sorted};
     };
     factory.prototype.list_two = function() {
         var response = [];
-        for (var i=11; i <= 18; i++) {
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+        for (var i=page_size+1; i <= page_size*2-2; i++) {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
             var person = this.generate(uuid + i);
+            person.role = this.role_defaults.idTwo;
             delete person.locations;
             delete person.phone_numbers;
             delete person.addresses;
@@ -89,7 +93,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             person.title = i + ' WAT';
             response.push(person);
         }
-        return {'count':18,'next':null,'previous':null,'results': response};
+        return {'count':page_size*2-2,'next':null,'previous':null,'results': response};
     };
     factory.prototype.detail = function(i, username) {
         var j = i || this.person_defaults.idOne;
@@ -142,6 +146,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         });
         return {'count':10,'next':null,'previous':null,'results': sorted};
     };
+
     return factory;
 })();
 
@@ -157,16 +162,17 @@ if (typeof window === 'undefined') {
     var location_level_defaults = require('../vendor/defaults/location-level');
     var location_defaults = require('../vendor/defaults/location');
     var location_fixtures = require('../vendor/location_fixtures');
+    var config = require('../config/environment');
     objectAssign(BSRS_PEOPLE_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults);
+    module.exports = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults, config);
 } else {
     define('bsrs-ember/vendor/people_fixtures', ['exports', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/phone_number_fixtures',
            'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/defaults/role', 'bsrs-ember/vendor/defaults/status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/role_fixtures',
-            'bsrs-ember/vendor/location_fixtures', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/mixin'],
-           function (exports, address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults, mixin) {
+            'bsrs-ember/vendor/location_fixtures', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
+           function (exports, address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults, mixin, config) {
         'use strict';
         Object.assign(BSRS_PEOPLE_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults);
+        var Factory = new BSRS_PEOPLE_FACTORY(address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults, config);
         return {default: Factory};
     });
 }
