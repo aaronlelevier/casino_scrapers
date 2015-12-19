@@ -164,10 +164,10 @@ class CategoryDetailTests(APITestCase):
 class CategorySerializerDataTests(APITestCase):
 
     def setUp(self):
+        create_categories()
         self.password = PASSWORD
         self.person = create_person()
         # Category
-        create_categories()
         self.category = (Category.objects.exclude(parent__isnull=True)
                                          .filter(label='trade').first())
         # Data
@@ -215,10 +215,10 @@ class CategorySerializerDataTests(APITestCase):
 class CategoryUpdateTests(APITestCase):
 
     def setUp(self):
+        create_categories()
         self.password = PASSWORD
         self.person = create_person()
         # Category
-        create_categories()
         self.type = Category.objects.filter(subcategory_label='trade').first()
         self.trade = Category.objects.filter(label='trade').first()
         # Data

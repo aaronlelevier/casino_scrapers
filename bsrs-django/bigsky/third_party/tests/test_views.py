@@ -7,7 +7,7 @@ from model_mommy import mommy
 from contact.models import (Email, EmailType, PhoneNumber, PhoneNumberType,
     Address, AddressType)
 from contact.tests.factory import create_contact
-from person.tests.factory import PASSWORD, create_person
+from person.tests.factory import PASSWORD, create_person, create_single_person
 from third_party.models import ThirdParty
 from third_party.serializers import ThirdPartyUpdateSerializer
 from third_party.tests.factory import create_third_party
@@ -17,10 +17,8 @@ from utils import create
 class ThirdPartyTests(APITestCase):
 
     def setUp(self):
-        self.password = PASSWORD
-        self.person = create_person()
-        # ThirdParty
         self.third_party = create_third_party()
+        self.person = create_single_person()
         # Data
         serializer = ThirdPartyUpdateSerializer(self.third_party)
         self.data = serializer.data

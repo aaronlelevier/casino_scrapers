@@ -19,7 +19,7 @@ from location.tests.factory import create_location
 from person.models import Person, Role
 from person.serializers import (PersonUpdateSerializer, RoleSerializer,
     RoleUpdateSerializer)
-from person.tests.factory import (PASSWORD, create_person, create_role, create_roles,
+from person.tests.factory import (PASSWORD, create_single_person, create_role, create_roles,
     create_single_person, create_all_people)
 from translation.models import Locale
 from translation.tests.factory import create_locales
@@ -31,19 +31,13 @@ from utils import create, choices
 class RoleViewSetTests(APITestCase):
 
     def setUp(self):
-        self.password = PASSWORD
-        self.person = create_person()
-        # LocationLevel
-        self.location = mommy.make(Location)
-        # Category
+        self.person = create_single_person()
+        self.location = self.person.locations.first()
         self.categories = mommy.make(Category, _quantity=2)
-        # Currency
         self.currency = Currency.objects.default()
         # Role
         self.role = self.person.role
-        self.role.location_level = self.location.location_level
-        self.role.categories = self.categories
-        self.role.categories_ids = [str(c.id) for c in self.categories]
+        self.role.categories_ids = [str(c.id) for c in self.role.categories.all()]
         self.role.save()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
@@ -134,7 +128,7 @@ class RoleViewSetTests(APITestCase):
 class PersonAccessTests(TestCase):
 
     def setUp(self):
-        self.person = create_person()
+        self.person = create_single_person()
 
     def test_access_user(self):
         # verify we can access user records correctly as a super user
@@ -158,7 +152,7 @@ class PersonCreateTests(APITestCase):
     # Test: create, update, partial_update
 
     def setUp(self):
-        self.person = create_person()
+        self.person = create_single_person()
         self.client.login(username=self.person.username, password=PASSWORD)
 
         self.ph_num_type = mommy.make(PhoneNumberType)
@@ -219,10 +213,9 @@ class PersonCreateTests(APITestCase):
 class PersonListTests(TestCase):
 
     def setUp(self):
-        self.people = 10
-        self.person = create_person(_many=self.people)
+        for i in range(3):
+            self.person = create_single_person()
         # Login
-        self.person1 = Person.objects.first()
         self.client.login(username=self.person.username, password=PASSWORD)
         # List GET data
         self.response = self.client.get('/api/admin/people/')
@@ -278,7 +271,7 @@ class PersonListTests(TestCase):
 class PersonDetailTests(TestCase):
 
     def setUp(self):
-        self.person = create_person()
+        self.person = create_single_person()
         # Contact info
         create_contacts(self.person)
         # Location

@@ -42,11 +42,6 @@ class CreateTicketTests(TestCase):
 
     def test_category(self):
         self.assertIsInstance(self.ticket.categories.all()[0], Category)
-        for category in self.ticket.categories.all():
-            self.assertIn(
-                category,
-                self.person.role.categories.all()
-            )
 
     def test_requester(self):
         self.assertIsInstance(self.ticket.requester, Person)
