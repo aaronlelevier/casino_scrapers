@@ -21,7 +21,7 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + UUID.value;
-const NEW_URL = BASE_PEOPLE_URL + '/new';
+const NEW_URL = BASE_PEOPLE_URL + '/new/1';
 
 var application, store, payload, detail_xhr, list_xhr, original_uuid, people_detail_data, detailEndpoint;
 

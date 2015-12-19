@@ -8,12 +8,12 @@ var PersonNew = TabNewRoute.extend({
     redirectRoute: Ember.computed(function() { return 'admin.people.index'; }),
     modelName: Ember.computed(function() { return 'person'; }),
     templateModelField: Ember.computed(function() { return 'Person'; }),
-    model_fetch: Ember.computed(function() {
-        return this.get('repository').create();
-    }),
-    model() {
+    model(params) {
         const roles = this.get('store').find('role');
-        const model = this.get('model_fetch');
+        let model = this.get('store').find('person', {id: params.new_id}).objectAt(0);
+        if(!model){
+            model = this.get('repository').create(parseInt(params.new_id));
+        }
         return {
             model: model,
             roles: roles

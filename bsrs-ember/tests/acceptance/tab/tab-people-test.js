@@ -17,7 +17,8 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
-const NEW_URL = BASE_PEOPLE_URL + '/new';
+const NEW_URL = BASE_PEOPLE_URL + '/new/1';
+const NEW_URL_2 = BASE_PEOPLE_URL + '/new/2';
 const DETAIL_URL = BASE_PEOPLE_URL + '/' + PD.id;
 const ROLE_URL = BASE_ROLE_URL + '/index';
 
@@ -46,7 +47,7 @@ test('(NEW URL) deep linking the new people url should push a tab into the tab s
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         let tab = tabs.objectAt(0);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New person');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Person');
         assert.equal(tab.get('doc_type'), 'person');
         assert.equal(tab.get('doc_route'), 'admin.people.new');
         assert.equal(tab.get('redirect'), 'admin.people.index');
@@ -161,7 +162,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New person');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Person');
     });
     let people_list_data = PF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, people_list_data);
@@ -183,7 +184,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New person');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Person');
     });
     fillIn('.t-person-username', PD_PUT.username);
     let people_list_data = PF.list();
@@ -346,7 +347,7 @@ test('opening a new tab, navigating away and closing the tab should remove the t
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New person');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Person');
         visit(PEOPLE_URL);
     });
     click('.t-tab-close:eq(0)');
@@ -408,7 +409,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New person');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Person');
     });
     fillIn('.t-person-username', PD_PUT.username);
     let people_list_data = PF.list();
@@ -421,8 +422,8 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
     });
     click('.t-add-new');
     andThen(() => {
-        assert.equal(currentURL(), NEW_URL);
+        assert.equal(currentURL(), NEW_URL_2);
         let tabs = store.find('tab');
-        assert.equal(tabs.get('length'), 1);
+        assert.equal(tabs.get('length'), 2);
     });
 });
