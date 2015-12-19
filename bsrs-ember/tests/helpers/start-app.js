@@ -3,6 +3,7 @@ import Application from '../../app';
 import config from 'bsrs-ember/config/environment';
 import windowProxy from 'bsrs-ember/utilities/window-proxy';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
+import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import random from 'bsrs-ember/models/random';
 import t from './t';
 import substring_up_to_num from './substring_up_to_num';
@@ -45,7 +46,7 @@ function patchRandom(app, counter) {
     random.uuid = function() { 
         counter++;
         if (counter === 1) {
-            return 'abc123';
+            return UUID.value;
         }else{
             return Ember.uuid();
         }

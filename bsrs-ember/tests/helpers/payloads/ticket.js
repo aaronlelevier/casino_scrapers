@@ -54,7 +54,7 @@ var ticket_payload_with_attachment = {
     requester: PD.idOne,
     assignee: PD.idOne,
     location: LD.idOne,
-    attachments: ['abc123']
+    attachments: [UUID.value]
 };
 
 var ticket_payload_with_attachments = Ember.$.extend(true, {}, ticket_payload_with_attachment);

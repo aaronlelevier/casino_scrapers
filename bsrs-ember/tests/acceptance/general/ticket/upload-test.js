@@ -390,7 +390,7 @@ test('when multiple tabs are open only attachments associated with the rollback 
             assert.equal(find('.t-modal-body').length, 1);
         });
     });
-    ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: [UUID.value]}, {}, 204, {});
+    ajax(`${PREFIX}/admin/attachments/batch-delete/`, 'DELETE', {ids: ['abc123']}, {}, 204, {});
     click('.t-modal-rollback-btn');
     andThen(() => {
         assert.equal(store.find('attachment').get('length'), 1);

@@ -50,37 +50,6 @@ module('Acceptance | tab ticket test', {
     }
 });
 
-test('(NEW URL) clicking on multiple new tabs will change the url and increment tab count in url', (assert) => {
-    clearxhr(detail_xhr);
-    clearxhr(activity_one);
-    visit(NEW_URL);
-    andThen(() => {
-        assert.equal(currentURL(), NEW_URL);
-        let tabs = store.find('tab');
-        assert.equal(tabs.get('length'), 1);
-        let tab = tabs.objectAt(0);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ticket');
-        assert.equal(tab.get('doc_type'), 'ticket');
-        assert.equal(tab.get('doc_route'), NEW_ROUTE);
-        assert.equal(tab.get('redirect'), INDEX_ROUTE);
-        assert.equal(tab.get('newModel'), 1);
-    });
-    xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
-    visit(TICKET_URL);
-    click('.t-add-new');
-    andThen(() => {
-        assert.equal(currentURL(), NEW_URL_2);
-        let tabs = store.find('tab');
-        assert.equal(tabs.get('length'), 2);
-        let tab = tabs.objectAt(1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ticket');
-        assert.equal(tab.get('doc_type'), 'ticket');
-        assert.equal(tab.get('doc_route'), NEW_ROUTE);
-        assert.equal(tab.get('redirect'), INDEX_ROUTE);
-        assert.equal(tab.get('newModel'), 2);
-    });
-});
-
 test('(NEW URL) deep linking the new ticket url should push a tab into the tab store with correct properties', (assert) => {
     clearxhr(detail_xhr);
     clearxhr(activity_one);
@@ -90,7 +59,7 @@ test('(NEW URL) deep linking the new ticket url should push a tab into the tab s
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         let tab = tabs.objectAt(0);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ticket');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Ticket');
         assert.equal(tab.get('doc_type'), 'ticket');
         assert.equal(tab.get('doc_route'), NEW_ROUTE);
         assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -171,7 +140,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ticket');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Ticket');
     });
     let ticket_list_data = TF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);
@@ -194,7 +163,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ticket');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Ticket');
     });
     page.priorityClickDropdown();
     page.priorityClickOptionTwo();
@@ -452,7 +421,7 @@ test('(NEW URL) a dirty new tab and clicking on new model button should push new
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ticket');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Ticket');
     });
     page.priorityClickDropdown();
     page.priorityClickOptionTwo();

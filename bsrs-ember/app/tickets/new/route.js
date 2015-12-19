@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import TabNewRoute from 'bsrs-ember/route/tab/new-ticket-route';
+import TabNewRoute from 'bsrs-ember/route/tab/new-route';
 
 var TicketNewRoute = TabNewRoute.extend({
     repository: inject('ticket'),
@@ -22,12 +22,10 @@ var TicketNewRoute = TabNewRoute.extend({
         let statuses = this.get('statuses');
         let priorities = this.get('priorities');
         let top_level_category_options = this.get('categoryRepository').findTopLevelCategories() || [];
-
-        let model = this.get('store').find('ticket', {new_id: params.new_id}).objectAt(0);
+        let model = this.get('store').find('ticket', {id: params.new_id}).objectAt(0);
         if(!model){
-            model = this.get('repository').create(params.new_id);
+            model = this.get('repository').create(parseInt(params.new_id));
         }
-
         return {
             model: model,
             statuses: statuses,
