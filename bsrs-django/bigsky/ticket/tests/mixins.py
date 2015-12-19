@@ -3,9 +3,10 @@ from model_mommy import mommy
 from category.models import Category
 from category.tests.factory import create_categories
 from location.tests.factory import create_location
-from person.tests.factory import create_single_person, create_role, PASSWORD
+from person.tests.factory import (create_single_person, create_role, PASSWORD,
+    DistrictManager)
 from ticket.models import Ticket
-from ticket.tests.factory import create_ticket
+from ticket.tests.factory import create_ticket, create_ticket_statuses, create_ticket_priorites
 
 
 class TicketSetupMixin(object):
@@ -17,19 +18,15 @@ class TicketSetupMixin(object):
         self.category_two = Category.objects.last()
         self.category_ids = [str(x) for x in Category.objects.values_list('id', flat=True)]
         self.category_names = [str(x) for x in Category.objects.values_list('name', flat=True)]
-        # Role
-        self.role = create_role()
-        # Location
-        self.location = create_location(location_level=self.role.location_level)
-        self.location_two = create_location()
-        # Person
-        self.password = PASSWORD
-        self.person = create_single_person(role=self.role, location=self.location)
-        # Ticket 1
+
+        self.dm = DistrictManager()
+        self.person = self.dm.person
+
+        create_ticket_statuses()
+        create_ticket_priorites()
         self.ticket = create_ticket(requester=self.person)
-        self.ticket.categories.add(self.person.role.categories.first())
-        # Ticket 2
         self.ticket_two = create_ticket()
+
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 

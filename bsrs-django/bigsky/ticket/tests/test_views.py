@@ -309,94 +309,60 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
 class TicketSearchTests(TicketSetupMixin, APITestCase):
 
     def test_response(self):
-        letters = 'wat'
-        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        keyword = 'wat'
+        response = self.client.get('/api/tickets/?search={}'.format(keyword))
         self.assertEqual(response.status_code, 200)
 
-    def test_search(self):
-        letters = 'watter'
-        mommy.make(Ticket, request=letters)
-        count = Ticket.objects.search_multi(keyword=letters).count()
-        self.assertEqual(count, 1)
+    def test_search_request(self):
+        keyword = self.ticket.request
+        count = Ticket.objects.search_multi(keyword=keyword).count()
 
-        response = self.client.get('/api/tickets/?search={}'.format(letters))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["count"], count)
-
-    def test_search_multiple(self):
-        letters = 'wat'
-        mommy.make(Ticket, request=letters)
-        mommy.make(Ticket, request='watter')
-        count = Ticket.objects.search_multi(keyword=letters).count()
-        self.assertEqual(count, 2)
-
-        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        response = self.client.get('/api/tickets/?search={}'.format(keyword))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
     def test_search_related_location(self):
-        create_locations()
-        mommy.make(Ticket, request="wat", location=Location.objects.filter(name='san_diego').first())
-        mommy.make(Ticket, request="watter", location=Location.objects.filter(name='ca').first())
-        letters = "ca"
-        count = Ticket.objects.search_multi(keyword=letters).count()
+        keyword = self.ticket.location.name
+        count = Ticket.objects.search_multi(keyword=keyword).count()
 
-        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        response = self.client.get('/api/tickets/?search={}'.format(keyword))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
     def test_search_related_assignee(self):
-        role = create_role()
-        mommy.make(Person, first_name="wat", last_name="soda", role=role)
-        mommy.make(Person, first_name="wat", last_name="pop", role=role)
-        mommy.make(Ticket, request="wat", assignee=Person.objects.filter(fullname='wat soda').first())
-        mommy.make(Ticket, request="watter", assignee=Person.objects.filter(fullname='wat pop').first())
-        letters = "wat soda"
-        count = Ticket.objects.search_multi(keyword=letters).count()
+        keyword = self.ticket.assignee.fullname
+        count = Ticket.objects.search_multi(keyword=keyword).count()
 
-        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        response = self.client.get('/api/tickets/?search={}'.format(keyword))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
     def test_search_related_priority(self):
-        mommy.make(Ticket, request="wat", priority=TicketPriority.objects.get(name=TICKET_PRIORITIES[0]))
-        mommy.make(Ticket, request="watter", priority=TicketPriority.objects.get(name=TICKET_PRIORITIES[1]))
-        letters = "emergency"
-        count = Ticket.objects.search_multi(keyword=letters).count()
+        keyword = self.ticket.priority.name
+        count = Ticket.objects.search_multi(keyword=keyword).count()
 
-        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        response = self.client.get('/api/tickets/?search={}'.format(keyword))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
     def test_search_related_status(self):
-        mommy.make(Ticket, request="wat", status=TicketStatus.objects.get(name=TICKET_STATUSES[0]))
-        mommy.make(Ticket, request="watter", status=TicketStatus.objects.get(name=TICKET_STATUSES[1]))
-        letters = "new"
-        count = Ticket.objects.search_multi(keyword=letters).count()
+        keyword = self.ticket.status.name
+        count = Ticket.objects.search_multi(keyword=keyword).count()
 
-        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        response = self.client.get('/api/tickets/?search={}'.format(keyword))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
 
     def test_search_related_categories(self):
-        letters = "zza"
-        category_one = create_single_category(letters)
-        category_two = create_single_category("zzap")
-        one = mommy.make(Ticket, request="one")
-        two = mommy.make(Ticket, request="two")
-        one.categories.add(category_one)
-        one.save()
-        two.categories.add(category_two)
-        two.save()
-        count = Ticket.objects.search_multi(keyword=letters).count()
+        keyword = self.person.role.categories.first().name[:5]
+        count = Ticket.objects.search_multi(keyword=keyword).count()
 
-        response = self.client.get('/api/tickets/?search={}'.format(letters))
+        response = self.client.get('/api/tickets/?search={}'.format(keyword))
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], count)
