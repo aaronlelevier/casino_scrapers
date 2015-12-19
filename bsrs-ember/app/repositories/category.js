@@ -14,16 +14,6 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
     uuid: injectUUID('uuid'),
     CategoryDeserializer: inject('category'),
     deserializer: Ember.computed.alias('CategoryDeserializer'),
-    create(role_type) {
-        let pk = this.get('uuid').v4();
-        return this.store.push('category', {id: pk, new: true});
-    },
-    insert(model) {
-        return PromiseMixin.xhr(CATEGORY_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
-            model.save();
-            model.saveRelated();
-        });
-    },
     update(model) {
         return PromiseMixin.xhr(CATEGORY_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();

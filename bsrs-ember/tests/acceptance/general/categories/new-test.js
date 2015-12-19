@@ -18,7 +18,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const BASE_URL = BASEURLS.base_categories_url;
 const CATEGORIES_URL = BASE_URL + '/index';
 const DETAIL_URL = BASE_URL + '/' + UUID.value;
-const CATEGORY_NEW_URL = BASE_URL + '/new';
+const CATEGORY_NEW_URL = BASE_URL + '/new/1';
 const LETTER_A = {keyCode: 65};
 const SPACEBAR = {keyCode: 32};
 const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
@@ -218,7 +218,7 @@ test('clicking and typing into power select for categories children will fire of
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload_new), {}, 201, response);
     visit(CATEGORY_NEW_URL);
     andThen(() => {
-        let category = store.find('category', CD.idNew);
+        let category = store.find('category', UUID.value);
         assert.equal(category.get('has_many_children').get('length'), 0);
         assert.equal(find('div.item').length, 0);
         assert.equal(find('div.option').length, 0);
@@ -233,7 +233,7 @@ test('clicking and typing into power select for categories children will fire of
     fillIn(`${CATEGORY_SEARCH}`, '2z');
     page.categoryClickOptionTwo();
     andThen(() => {
-        let category = store.find('category', CD.idNew);
+        let category = store.find('category', UUID.value);
         assert.equal(category.get('children_fks').get('length'), 1);
         assert.equal(category.get('has_many_children').get('length'), 1);
     });
@@ -249,7 +249,7 @@ test('clicking and typing into power select for categories children will not fil
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(CATEGORY_NEW_URL);
     andThen(() => {
-        let category = store.find('category', CD.idNew);
+        let category = store.find('category', UUID.value);
         assert.equal(category.get('has_many_children').get('length'), 0);
         assert.equal(find('div.item').length, 0);
         assert.equal(find('div.option').length, 0);
@@ -260,7 +260,7 @@ test('clicking and typing into power select for categories children will not fil
         assert.equal(page.categoryOptionLength(), 1); 
     });
     andThen(() => {
-        let category = store.find('category', CD.idNew);
+        let category = store.find('category', UUID.value);
         assert.equal(category.get('children_fks').get('length'), 0);
     });
     fillIn('.t-category-name', CD.nameOne);
@@ -280,7 +280,7 @@ test('you can add and remove child from category', (assert) => {
     xhr(PREFIX + BASE_URL + '/', 'POST', JSON.stringify(payload), {}, 201, response);
     visit(CATEGORY_NEW_URL);
     andThen(() => {
-        let category = store.find('category', CD.idNew);
+        let category = store.find('category', UUID.value);
         assert.equal(category.get('has_many_children').get('length'), 0);
         assert.equal(find('div.item').length, 0);
         assert.equal(find('div.option').length, 0);
