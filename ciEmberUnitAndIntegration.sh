@@ -46,8 +46,10 @@ npmInstall
 echo $(date -u) "EMBER UNIT TESTS"
 emberUnitTest
 
-# echo $(date -u) "EMBER INTEGRATION TESTS"
-# emberIntegrationTest
+rm -rf tmp dist
+
+echo $(date -u) "EMBER INTEGRATION TESTS"
+emberIntegrationTest
 
 echo $(date -u) "BUILD SUCCESSFUL!"
 
