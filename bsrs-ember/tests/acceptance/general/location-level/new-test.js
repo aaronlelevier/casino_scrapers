@@ -16,7 +16,7 @@ import random from 'bsrs-ember/models/random';
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
-const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new';
+const LOCATION_LEVEL_NEW_URL = BASE_URL + '/new/1';
 const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idOne;
 
 let application, store, payload, list_xhr, endpoint, original_uuid;

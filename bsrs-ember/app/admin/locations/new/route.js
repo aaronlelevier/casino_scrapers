@@ -7,12 +7,12 @@ var LocationNewRoute = TabRoute.extend({
     redirectRoute: Ember.computed(function() { return 'admin.locations.index'; }),
     modelName: Ember.computed(function() { return 'location'; }),
     templateModelField: Ember.computed(function() { return 'Location'; }),
-    model_fetch: Ember.computed(function() {
-        return this.get('repository').create();
-    }),
-    model() {
+    model(params) {
         let all_location_levels = this.get('store').find('location-level');
-        let model = this.get('model_fetch');
+        let model = this.get('store').find('location', {id: params.new_id}).objectAt(0);
+        if(!model){
+            model = this.get('repository').create(parseInt(params.new_id));
+        }
         return {
             model: model,
             all_location_levels: all_location_levels

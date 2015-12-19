@@ -6,9 +6,9 @@ import {xhr, clearxhr} from 'bsrs-ember/tests/helpers/xhr';
 import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import config from 'bsrs-ember/config/environment';
-import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location_level_fixtures';
-import ROLE_FIXTURES from 'bsrs-ember/vendor/role_fixtures';
-import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
+import LLF from 'bsrs-ember/vendor/location_level_fixtures';
+import RF from 'bsrs-ember/vendor/role_fixtures';
+import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import BASEURLS from 'bsrs-ember/tests/helpers/urls';
 import random from 'bsrs-ember/models/random';
 
@@ -16,9 +16,10 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_location_levels_url;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;
 const LOCATION_LEVEL_URL = BASE_URL + '/index';
-const NEW_URL = BASE_URL + '/new';
-const DJANGO_DETAIL_URL = PREFIX + BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idLossDistrict + '/';
-const DETAIL_URL = BASE_URL + '/' + LOCATION_LEVEL_DEFAULTS.idLossDistrict;
+const NEW_URL = BASE_URL + '/new/1';
+const NEW_URL_2 = BASE_URL + '/new/2';
+const DJANGO_DETAIL_URL = PREFIX + BASE_URL + '/' + LLD.idLossDistrict + '/';
+const DETAIL_URL = BASE_URL + '/' + LLD.idLossDistrict;
 const SUBMIT_BTN = '.submit_btn';
 const ROLE_URL = BASE_ROLE_URL + '/index';
 const NEW_ROUTE = 'admin.location-levels.new';
@@ -33,8 +34,8 @@ module('Acceptance | tab location-level test', {
         application = startApp();
         store = application.__container__.lookup('store:main');
         endpoint = PREFIX + BASE_URL + '/';
-        location_detail_data = LOCATION_LEVEL_FIXTURES.detail(LOCATION_LEVEL_DEFAULTS.idLossDistrict);
-        location_detail_data.name = LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict;
+        location_detail_data = LLF.detail(LLD.idLossDistrict);
+        location_detail_data.name = LLD.lossPreventionDistrict;
         detail_xhr = xhr(DJANGO_DETAIL_URL, 'GET', null, {}, 200, location_detail_data);
         original_uuid = random.uuid;
     },
@@ -66,8 +67,8 @@ test('deep linking the location-level detail url should push a tab into the tab 
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let tab = store.find('tab', LOCATION_LEVEL_DEFAULTS.idLossDistrict);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict);
+        let tab = store.find('tab', LLD.idLossDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
         assert.equal(tab.get('doc_type'), DOC_TYPE);
         assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
         assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -76,7 +77,7 @@ test('deep linking the location-level detail url should push a tab into the tab 
 });
 
 test('visiting the location detail url from the list url should push a tab into the tab store', (assert) => {
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -89,8 +90,8 @@ test('visiting the location detail url from the list url should push a tab into 
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        let tab = store.find('tab', LOCATION_LEVEL_DEFAULTS.idLossDistrict);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict);
+        let tab = store.find('tab', LLD.idLossDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
         assert.equal(tab.get('doc_type'), DOC_TYPE);
         assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
         assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -99,7 +100,7 @@ test('visiting the location detail url from the list url should push a tab into 
 });
 
 test('clicking on a tab that is not dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -110,11 +111,11 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let location = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idLossDistrict);
+        let location = store.find('location-level', LLD.idLossDistrict);
         assert.equal(location.get('isDirtyOrRelatedDirty'), false);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
     });
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -122,7 +123,7 @@ test('clicking on a tab that is not dirty from the list url should take you to t
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let location = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idLossDistrict);
+        let location = store.find('location-level', LLD.idLossDistrict);
         assert.equal(location.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -137,7 +138,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), 'New location-level');
     });
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -159,27 +160,27 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), 'New location-level');
     });
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    fillIn('.t-location-level-name', LLD.nameCompany);
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
         let location = store.find('location-level', UUID.value);
-        assert.equal(location.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(location.get('name'), LLD.nameCompany);
         assert.equal(location.get('isDirtyOrRelatedDirty'), true);
     });
     click('.t-tab:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), NEW_URL);
         let location = store.find('location-level', UUID.value);
-        assert.equal(location.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(location.get('name'), LLD.nameCompany);
         assert.equal(location.get('isDirtyOrRelatedDirty'), true);
     });
 });
 
 test('clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -188,15 +189,15 @@ test('clicking on a tab that is dirty from the list url should take you to the d
         assert.equal(tabs.get('length'), 0);
     });
     click('.t-grid-data:eq(0)');
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+    fillIn('.t-location-level-name', LLD.nameCompany);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let location = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idLossDistrict);
-        assert.equal(location.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        let location = store.find('location-level', LLD.idLossDistrict);
+        assert.equal(location.get('name'), LLD.nameCompany);
         assert.equal(location.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
     });
     andThen(() => {
         visit(LOCATION_LEVEL_URL);
@@ -206,15 +207,15 @@ test('clicking on a tab that is dirty from the list url should take you to the d
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let location = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idLossDistrict);
-        assert.equal(location.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        let location = store.find('location-level', LLD.idLossDistrict);
+        assert.equal(location.get('name'), LLD.nameCompany);
         assert.equal(location.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
     });
 });
 
 test('clicking on a tab that is dirty from the role url (or any non related page) should take you to the detail url and not fire off an xhr request', (assert) => {
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -223,19 +224,19 @@ test('clicking on a tab that is dirty from the role url (or any non related page
         assert.equal(tabs.get('length'), 0);
     });
     click('.t-grid-data:eq(0)');
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+    fillIn('.t-location-level-name', LLD.nameCompany);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let location = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idLossDistrict);
-        assert.equal(location.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        let location = store.find('location-level', LLD.idLossDistrict);
+        assert.equal(location.get('name'), LLD.nameCompany);
         assert.equal(location.get('isDirtyOrRelatedDirty'), true);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.nameCompany);
     });
     andThen(() => {
         let endpoint = PREFIX + BASE_ROLE_URL + '/';
-        xhr(endpoint + '?page=1','GET',null,{},200,ROLE_FIXTURES.list());
+        xhr(endpoint + '?page=1','GET',null,{},200,RF.list());
         visit(ROLE_URL);
         andThen(() => {
             assert.equal(currentURL(), ROLE_URL);
@@ -243,15 +244,15 @@ test('clicking on a tab that is dirty from the role url (or any non related page
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let location = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idLossDistrict);
-        assert.equal(location.get('name'), LOCATION_LEVEL_DEFAULTS.nameCompany);
+        let location = store.find('location-level', LLD.idLossDistrict);
+        assert.equal(location.get('name'), LLD.nameCompany);
         assert.equal(location.get('isDirtyOrRelatedDirty'), true);
         assert.equal(currentURL(), DETAIL_URL);
     });
 });
 
 test('clicking on a tab that is not dirty from the role url (or any non related page) should take you to the detail url and fire off an xhr request', (assert) => {
-    xhr(endpoint + '?page=1','GET',null,{},200,LOCATION_LEVEL_FIXTURES.list());
+    xhr(endpoint + '?page=1','GET',null,{},200,LLF.list());
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
         assert.equal(currentURL(), LOCATION_LEVEL_URL);
@@ -261,20 +262,20 @@ test('clicking on a tab that is not dirty from the role url (or any non related 
     click('.t-grid-data:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        let location = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idLossDistrict);
+        let location = store.find('location-level', LLD.idLossDistrict);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
     });
     let role_endpoint = PREFIX + BASE_ROLE_URL + '/';
-    xhr(role_endpoint + '?page=1','GET',null,{},200, ROLE_FIXTURES.list());
+    xhr(role_endpoint + '?page=1','GET',null,{},200, RF.list());
     click('.t-nav-admin-role');
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
     });
     click('.t-tab:eq(0)');
     andThen(() => {
-        let location = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idLossDistrict);
+        let location = store.find('location-level', LLD.idLossDistrict);
         assert.equal(location.get('isDirtyOrRelatedDirty'), false);
         assert.equal(currentURL(), DETAIL_URL);
     });
@@ -287,23 +288,23 @@ test('a dirty model should add the dirty class to the tab close icon', (assert) 
         assert.equal(find('.dirty').length, 0);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
     });
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+    fillIn('.t-location-level-name', LLD.nameCompany);
     andThen(() => {
         assert.equal(find('.dirty').length, 1);
     });
 });
 
 test('closing a document should close it\'s related tab', (assert) => {
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
         click('.t-cancel-btn:eq(0)');
         andThen(() => {
             assert.equal(tabs.get('length'), 0);
@@ -313,7 +314,7 @@ test('closing a document should close it\'s related tab', (assert) => {
 
 test('opening a new tab, navigating away and closing the tab should remove the tab', (assert) => {
     clearxhr(detail_xhr);
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(NEW_URL);
     andThen(() => {
@@ -332,14 +333,14 @@ test('opening a new tab, navigating away and closing the tab should remove the t
 });
 
 test('opening a tab, navigating away and closing the tab should remove the tab', (assert) => {
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
         visit(LOCATION_LEVEL_URL);
     });
     click('.t-tab-close:eq(0)');
@@ -351,19 +352,19 @@ test('opening a tab, navigating away and closing the tab should remove the tab',
 });
 
 test('opening a tab, making the model dirty, navigating away and closing the tab should display the confirm dialog', (assert) => {
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(DETAIL_URL);
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), LOCATION_LEVEL_DEFAULTS.lossPreventionDistrict);
+        assert.equal(find('.t-tab-title:eq(0)').text(), LLD.lossPreventionDistrict);
     });
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
+    fillIn('.t-location-level-name', LLD.nameCompany);
     andThen(() => {
         assert.equal(find('.dirty').length, 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), `${LOCATION_LEVEL_DEFAULTS.nameCompany}`);
+        assert.equal(find('.t-tab-title:eq(0)').text(), `${LLD.nameCompany}`);
     });
     visit(LOCATION_LEVEL_URL);
     click('.t-tab-close:eq(0)');
@@ -384,8 +385,8 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
         assert.equal(tabs.get('length'), 1);
         assert.equal(find('.t-tab-title:eq(0)').text(), 'New location-level');
     });
-    fillIn('.t-location-level-name', LOCATION_LEVEL_DEFAULTS.nameCompany);
-    let location_list_data = LOCATION_LEVEL_FIXTURES.list();
+    fillIn('.t-location-level-name', LLD.nameCompany);
+    let location_list_data = LLF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, location_list_data);
     visit(LOCATION_LEVEL_URL);
     andThen(() => {
@@ -393,8 +394,8 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
     });
     click('.t-add-new');
     andThen(() => {
-        assert.equal(currentURL(), NEW_URL);
+        assert.equal(currentURL(), NEW_URL_2);
         let tabs = store.find('tab');
-        assert.equal(tabs.get('length'), 1);
+        assert.equal(tabs.get('length'), 2);
     });
 });

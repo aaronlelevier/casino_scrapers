@@ -18,7 +18,7 @@ import random from 'bsrs-ember/models/random';
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = BASE_URL + '/index';
-const LOCATION_NEW_URL = BASE_URL + '/new';
+const LOCATION_NEW_URL = BASE_URL + '/new/1';
 const DJANGO_LOCATION_URL = PREFIX + '/admin/locations/';
 const DETAIL_URL = BASE_URL + '/' + LD.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_LOCATION_URL + LD.idOne + '/';

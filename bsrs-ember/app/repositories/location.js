@@ -14,16 +14,6 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
     uuid: injectUUID('uuid'),
     LocationDeserializer: inject('location'),
     deserializer: Ember.computed.alias('LocationDeserializer'),
-    create() {
-        let pk = this.get('uuid').v4();
-        return this.store.push('location', {id: pk, new: true});
-    },
-    insert(model) {
-        return PromiseMixin.xhr(LOCATION_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
-            model.save();
-            model.saveRelated();
-        });
-    },
     update(model) {
         return PromiseMixin.xhr(LOCATION_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();

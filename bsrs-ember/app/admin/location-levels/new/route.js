@@ -7,12 +7,12 @@ var LocationLevelNew = TabRoute.extend({
     redirectRoute: Ember.computed(function() { return 'admin.location-levels.index'; }),
     modelName: Ember.computed(function() { return 'location-level'; }),
     templateModelField: Ember.computed(function() { return 'location-level'; }),
-    model_fetch: Ember.computed(function() {
-        return this.get('repository').create();
-    }),
-    model() {
+    model(params) {
         let location_level_options = this.get('store').find('location-level');
-        let model = this.get('model_fetch');
+        let model = this.get('store').find('location-level', {id: params.new_id}).objectAt(0);
+        if(!model){
+            model = this.get('repository').create(parseInt(params.new_id));
+        }
         return {
             model: model,
             location_level_options: location_level_options
