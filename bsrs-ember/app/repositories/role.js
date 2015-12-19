@@ -14,15 +14,8 @@ var RoleRepo = Ember.Object.extend(GridRepositoryMixin, {
     uuid: injectUUID('uuid'),
     RoleDeserializer: inject('role'),
     deserializer: Ember.computed.alias('RoleDeserializer'),
-    create(role_type) {
-        let pk = this.get('uuid').v4();
-        return this.store.push('role', {id: pk, role_type: role_type, new: true});
-    },
-    insert(model) {
-        return PromiseMixin.xhr(ROLE_URL, 'POST', { data: JSON.stringify(model.serialize()) }).then(() => {
-           model.save(); 
-           model.saveRelated();
-        });
+    create(role_type, tab_id) {
+        return this.store.push('role', {id: tab_id, role_type: role_type, new: true});
     },
     update(model) {
         return PromiseMixin.xhr(ROLE_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())} ).then(() => {

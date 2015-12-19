@@ -18,7 +18,8 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;
 const BASE_PEOPLE_URL = BASEURLS.base_people_url;
 const ROLE_URL = BASE_ROLE_URL + '/index';
-const NEW_URL = BASE_ROLE_URL + '/new';
+const NEW_URL = BASE_ROLE_URL + '/new/1';
+const NEW_URL_2 = BASE_ROLE_URL + '/new/2';
 const DETAIL_URL = BASE_ROLE_URL + '/' + RD.idGridTen;
 const PEOPLE_URL = BASE_PEOPLE_URL + '/index';
 const NEW_ROUTE = 'admin.roles.new';
@@ -52,7 +53,7 @@ test('(NEW URL) deep linking the new role url should push a tab into the tab sto
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         let tab = tabs.objectAt(0);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New role');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Role');
         assert.equal(tab.get('doc_type'), 'role');
         assert.equal(tab.get('doc_route'), NEW_ROUTE);
         assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -135,7 +136,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New role');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Role');
     });
     let role_list_data = RF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
@@ -157,7 +158,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New role');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Role');
     });
     fillIn('.t-role-name', RD.nameTwo);
     let role_list_data = RF.list();
@@ -165,14 +166,14 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     visit(ROLE_URL);
     andThen(() => {
         assert.equal(currentURL(), ROLE_URL);
-        let role = store.find('role', 'abc123');//sensitive to changes in number of roles that are bootstrapped.  Bc remove uuid = 'abc123' for new model, need to find specific one
+        let role = store.find('role', UUID.value);//sensitive to changes in number of roles that are bootstrapped.  Bc remove uuid = 'abc123' for new model, need to find specific one
         assert.equal(role.get('name'), RD.nameTwo);
         assert.ok(role.get('isDirtyOrRelatedDirty'));
     });
     click('.t-tab:eq(0)');
     andThen(() => {
         assert.equal(currentURL(), NEW_URL);
-        let role = store.find('role', 'abc123');
+        let role = store.find('role', UUID.value);
         assert.equal(role.get('name'), RD.nameTwo);
         assert.equal(role.get('isDirtyOrRelatedDirty'), true);
     });
@@ -319,7 +320,7 @@ test('opening a new tab, navigating away and closing the tab should remove the t
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New role');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Role');
         visit(ROLE_URL);
     });
     click('.t-tab-close:eq(0)');
@@ -381,7 +382,7 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New role');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New Role');
     });
     let role_list_data = RF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, role_list_data);
@@ -391,8 +392,8 @@ test('(NEW URL) clicking on the new link with a new tab of the same type open wi
     });
     click('.t-add-new');
     andThen(() => {
-        assert.equal(currentURL(), NEW_URL);
+        assert.equal(currentURL(), NEW_URL_2);
         let tabs = store.find('tab');
-        assert.equal(tabs.get('length'), 1);
+        assert.equal(tabs.get('length'), 2);
     });
 });
