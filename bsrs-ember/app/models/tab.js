@@ -7,7 +7,7 @@ var TabModel = Ember.Object.extend({
         Ember.defineProperty(this, 'modelBindingToTemplate', Ember.computed(function() {
             var model = this.get('model');
             if (model.get('content')) {
-                return model.get(dynamicField);
+                return model.get('new') ? `New ${dynamicField}` : model.get(dynamicField);
             }
         }).property('model.' + dynamicField));
     },

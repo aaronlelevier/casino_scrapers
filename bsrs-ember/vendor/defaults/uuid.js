@@ -3,7 +3,7 @@ var BSRS_UUID_DEFAULTS_OBJECT = (function() {
     };
     factory.prototype.defaults = function() {
         return {
-            value: 'abc123',
+            value: 1,
             random: 'def456'
         };
     };

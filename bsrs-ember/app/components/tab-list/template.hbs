@@ -1,48 +1,18 @@
 <nav class="tabs">
     <ul id="tabs" class="list-inline">
         {{#each tabs as |tab|}}
-            {{#if tab.newModel}}
-              {{#if (check-if-num tab.newModel)}}
-                {{#link-to tab.doc_route tab.newModel classNames="t-tab" tagName="li"}}
-                <span class="t-tab-title">New {{tab.parent}}</span>
-                <span class="close-wrap">
-                    <span class="t-tab-close" {{action "closeTab" tab bubbles=false}}>
-                    {{#if tab.model.isDirtyOrRelatedDirty}}
-                      {{fa-icon "circle" classNames="close-icon dirty"}}
-                    {{else}}
-                      {{fa-icon "times-circle" classNames="close-icon"}}
-                    {{/if}}
-                    </span>
+            {{#link-to tab.doc_route tab.id classNames="t-tab" tagName="li"}}
+            <span class="t-tab-title">{{tab.parent}}</span>
+            <span class="close-wrap">
+                <span class="t-tab-close" {{action "closeTab" tab bubbles=false}}>
+                {{#if tab.model.isDirtyOrRelatedDirty}}
+                  {{fa-icon "circle" classNames="close-icon dirty"}}
+                {{else}}
+                  {{fa-icon "times-circle" classNames="close-icon"}}
+                {{/if}}
                 </span>
-                {{/link-to}}
-              {{else}}
-                {{#link-to tab.doc_route classNames="t-tab" tagName="li"}}
-                <span class="t-tab-title">New {{tab.parent}}</span>
-                <span class="close-wrap">
-                    <span class="t-tab-close" {{action "closeTab" tab bubbles=false}}>
-                    {{#if tab.model.isDirtyOrRelatedDirty}}
-                      {{fa-icon "circle" classNames="close-icon dirty"}}
-                    {{else}}
-                      {{fa-icon "times-circle" classNames="close-icon"}}
-                    {{/if}}
-                    </span>
-                </span>
-                {{/link-to}}
-              {{/if}}
-            {{else}}
-                {{#link-to tab.doc_route tab.id classNames="t-tab" tagName="li"}}
-                <span class="t-tab-title">{{tab.parent}}</span>
-                <span class="close-wrap">
-                    <span class="t-tab-close" {{action "closeTab" tab bubbles=false}}>
-                    {{#if tab.model.isDirtyOrRelatedDirty}}
-                      {{fa-icon "circle" classNames="close-icon dirty"}}
-                    {{else}}
-                      {{fa-icon "times-circle" classNames="close-icon"}}
-                    {{/if}}
-                    </span>
-                </span>
-                {{/link-to}}
-            {{/if}}
+            </span>
+            {{/link-to}}
         {{/each}}
         <li class="new">
             <span>{{fa-icon "plus"}}</span>

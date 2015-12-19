@@ -15,12 +15,12 @@ Router.map(function() {
         this.route('contractor-assignments');
         this.route('locations', function() {
             this.route('index');
-            this.route('new');
+            this.route('new', {path: 'new/:new_id'});
             this.route('location', {path: '/:location_id'});
         });
         this.route('categories', function() {
             this.route('index');
-            this.route('new');
+            this.route('new', {path: 'new/:new_id'});
             this.route('category', {path: '/:category_id'});
         });
         this.route('notifications');
@@ -28,27 +28,27 @@ Router.map(function() {
         this.route('approvals');
         this.route('translations', function() {
             this.route('index');
-            this.route('new');
+            this.route('new', {path: 'new/:new_id'});
             this.route('translation', {path: '/:translation_key'});
         });
         this.route('people', function() {
             this.route('index');
-            this.route('new');
+            this.route('new', {path: 'new/:new_id'});
             this.route('person', {path: '/:person_id'});
         });
         this.route('roles', function() {
             this.route('index');
-            this.route('new');
+            this.route('new', {path: 'new/:new_id'});
             this.route('role', {path: '/:role_id'});
         });
         this.route('location-levels', function() {
             this.route('index');
-            this.route('new');
+            this.route('new', {path: 'new/:new_id'});
             this.route('location-level', {path: '/:location_level_id'});
         });
         this.route('third-parties', function() {
             this.route('index');
-            this.route('new');
+            this.route('new', {path: 'new/:new_id'});
             this.route('third-party', {path: '/:third_party_id'});
         });
     });
