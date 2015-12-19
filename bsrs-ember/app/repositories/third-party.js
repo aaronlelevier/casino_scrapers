@@ -14,16 +14,6 @@ var ThirdPartyRepo = Ember.Object.extend(GridRepositoryMixin, {
     url: Ember.computed(function() { return THIRD_PARTY_URL; }),
     ThirdPartyDeserializer: inject('third-party'),
     deserializer: Ember.computed.alias('ThirdPartyDeserializer'),
-    create() {
-        let pk = this.get('uuid').v4();
-        return this.store.push('third-party', {id: pk, new: true});
-    },
-    insert(model) {
-        return PromiseMixin.xhr(THIRD_PARTY_URL, 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
-            model.save();
-            model.saveRelated();
-        });
-    },
     update(model) {
         return PromiseMixin.xhr(THIRD_PARTY_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();

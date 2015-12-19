@@ -16,7 +16,7 @@ import page from 'bsrs-ember/tests/pages/third-party';
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_third_parties_url;
 const THIRD_PARTY_URL = BASE_URL + '/index';
-const THIRD_PARTY_NEW_URL = BASE_URL + '/new';
+const THIRD_PARTY_NEW_URL = BASE_URL + '/new/1';
 const DJANGO_THIRD_PARTY_URL = PREFIX + '/admin/third-parties/';
 const DETAIL_URL = BASE_URL + '/' + TPD.idOne;
 const DJANGO_DETAIL_URL = PREFIX + DJANGO_THIRD_PARTY_URL + TPD.idOne + '/';

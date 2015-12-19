@@ -15,7 +15,8 @@ import random from 'bsrs-ember/models/random';
 const PREFIX = config.APP.NAMESPACE;
 const BASE_THIRD_PARTY_URL = BASEURLS.base_third_parties_url;
 const THIRD_PARTY_URL = BASE_THIRD_PARTY_URL + '/index';
-const NEW_URL = BASE_THIRD_PARTY_URL + '/new';
+const NEW_URL = BASE_THIRD_PARTY_URL + '/new/1';
+const NEW_URL_2 = BASE_THIRD_PARTY_URL + '/new/2';
 const DETAIL_URL = BASE_THIRD_PARTY_URL + '/' + TPD.idOne;
 const SUBMIT_BTN = '.submit_btn';
 const NEW_ROUTE = 'admin.third-parties.new';
@@ -50,7 +51,7 @@ test('(NEW URL) deep linking the new third-party url should push a tab into the 
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
         let tab = tabs.objectAt(0);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New '+DOC_TYPE);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ThirdParty');
         assert.equal(tab.get('doc_type'), DOC_TYPE);
         assert.equal(tab.get('doc_route'), NEW_ROUTE);
         assert.equal(tab.get('redirect'), INDEX_ROUTE);
@@ -134,7 +135,7 @@ test('(NEW URL) clicking on a tab that is not dirty from the list url should tak
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New '+DOC_TYPE);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ThirdParty');
     });
     let list_data = TPF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, list_data);
@@ -156,7 +157,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New '+DOC_TYPE);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ThirdParty');
     });
     fillIn('.t-third-party-name', TPD.nameTwo);
     let list_data = TPF.list();
@@ -317,7 +318,7 @@ test('opening a new tab, navigating away and closing the tab should remove the t
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New third-party');
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ThirdParty');
         visit(THIRD_PARTY_URL);
     });
     click('.t-tab-close:eq(0)');
@@ -379,7 +380,7 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
         assert.equal(currentURL(), NEW_URL);
         let tabs = store.find('tab');
         assert.equal(tabs.get('length'), 1);
-        assert.equal(find('.t-tab-title:eq(0)').text(), 'New '+DOC_TYPE);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ThirdParty');
     });
     fillIn('.t-third-party-name', TPD.nameTwo);
     let list_data = TPF.list();
@@ -390,8 +391,8 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     });
     click('.t-add-new');
     andThen(() => {
-        assert.equal(currentURL(), NEW_URL);
+        assert.equal(currentURL(), NEW_URL_2);
         let tabs = store.find('tab');
-        assert.equal(tabs.get('length'), 1);
+        assert.equal(tabs.get('length'), 2);
     });
 });

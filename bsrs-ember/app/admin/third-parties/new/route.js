@@ -8,12 +8,12 @@ var ThirdPartyNewRoute = TabRoute.extend({
     redirectRoute: Ember.computed(function() { return 'admin.third-parties.index'; }),
     modelName: Ember.computed(function() { return 'third-party'; }),
     templateModelField: Ember.computed(function() { return 'ThirdParty'; }),
-    model_fetch: Ember.computed(function() {
-        return this.get('repository').create();
-    }),
-    model() {
-        const model = this.get('model_fetch');
+    model(params) {
         const status_repo = this.get('status_repo');
+        let model = this.get('store').find('third-party', {id: params.new_id}).objectAt(0);
+        if(!model){
+            model = this.get('repository').create(parseInt(params.new_id));
+        }
         return {
             model: model,
             statuses: status_repo.find()
