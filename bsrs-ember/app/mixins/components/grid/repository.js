@@ -2,11 +2,6 @@ import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
 var GridRepositoryMixin = Ember.Mixin.create({
-    tabList: Ember.inject.service(),
-    tab(id) {
-        let service = this.get('tabList');
-        return service.findTab(id);
-    },
     create(tab_id) {
         return this.store.push(this.get('type'), {id: tab_id, new: true});
     },
