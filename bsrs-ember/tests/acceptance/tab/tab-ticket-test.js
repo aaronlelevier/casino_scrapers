@@ -21,7 +21,8 @@ const PREFIX = config.APP.NAMESPACE;
 const BASE_TICKET_URL = BASEURLS.base_tickets_url;
 const BASE_ROLE_URL = BASEURLS.base_roles_url;
 const TICKET_URL = BASE_TICKET_URL + '/index';
-const NEW_URL = BASE_TICKET_URL + '/new';
+const NEW_URL = BASE_TICKET_URL + '/new/1';
+const NEW_URL_2 = BASE_TICKET_URL + '/new/2';
 const DETAIL_URL = BASE_TICKET_URL + '/' + TD.idOne;
 const ROLE_URL = BASE_ROLE_URL + '/index';
 const NEW_ROUTE = 'tickets.new';
@@ -47,6 +48,37 @@ module('Acceptance | tab ticket test', {
         random.uuid = original_uuid;
         Ember.run(application, 'destroy');
     }
+});
+
+test('(NEW URL) clicking on multiple new tabs will change the url and increment tab count in url', (assert) => {
+    clearxhr(detail_xhr);
+    clearxhr(activity_one);
+    visit(NEW_URL);
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        let tab = tabs.objectAt(0);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ticket');
+        assert.equal(tab.get('doc_type'), 'ticket');
+        assert.equal(tab.get('doc_route'), NEW_ROUTE);
+        assert.equal(tab.get('redirect'), INDEX_ROUTE);
+        assert.equal(tab.get('newModel'), 1);
+    });
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
+    visit(TICKET_URL);
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL_2);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 2);
+        let tab = tabs.objectAt(1);
+        assert.equal(find('.t-tab-title:eq(0)').text(), 'New ticket');
+        assert.equal(tab.get('doc_type'), 'ticket');
+        assert.equal(tab.get('doc_route'), NEW_ROUTE);
+        assert.equal(tab.get('redirect'), INDEX_ROUTE);
+        assert.equal(tab.get('newModel'), 2);
+    });
 });
 
 test('(NEW URL) deep linking the new ticket url should push a tab into the tab store with correct properties', (assert) => {
@@ -412,7 +444,7 @@ test('opening a tab, making the model dirty, navigating away and closing the tab
     });
 });
 
-test('(NEW URL) clicking on a tab that is dirty from the list url should take you to the detail url and not fire off an xhr request', (assert) => {
+test('(NEW URL) a dirty new tab and clicking on new model button should push new tab into store', (assert) => {
     clearxhr(detail_xhr);
     clearxhr(activity_one);
     visit(NEW_URL);
@@ -432,8 +464,8 @@ test('(NEW URL) clicking on a tab that is dirty from the list url should take yo
     });
     click('.t-add-new');
     andThen(() => {
-        assert.equal(currentURL(), NEW_URL);
+        assert.equal(currentURL(), NEW_URL_2);
         let tabs = store.find('tab');
-        assert.equal(tabs.get('length'), 1);
+        assert.equal(tabs.get('length'), 2);
     });
 });

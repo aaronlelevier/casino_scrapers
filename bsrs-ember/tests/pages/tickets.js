@@ -9,7 +9,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKETS_URL = BASE_URL + '/index';
-const NEW_URL = BASE_URL + '/new';
+const NEW_URL = BASE_URL + '/new/1';
 const DETAIL_URL = BASE_URL + '/' + TD.idOne;
 const CC = '.t-ticket-cc-select > .ember-basic-dropdown-trigger';
 const CCS = `${CC} > .ember-power-select-multiple-option`;

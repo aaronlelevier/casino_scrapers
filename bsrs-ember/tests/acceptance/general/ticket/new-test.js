@@ -25,7 +25,7 @@ import page from 'bsrs-ember/tests/pages/tickets';
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
 const TICKET_URL = BASE_URL + '/index';
-const TICKET_NEW_URL = BASE_URL + '/new';
+const TICKET_NEW_URL = BASE_URL + '/new/1';
 const TICKET_LIST_URL = PREFIX + BASE_URL + '/?page=1';
 const TICKET_POST_URL = PREFIX + BASE_URL + '/';
 const NUMBER_6 = {keyCode: 54};

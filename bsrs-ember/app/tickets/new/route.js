@@ -1,6 +1,6 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import TabNewRoute from 'bsrs-ember/route/tab/new-route';
+import TabNewRoute from 'bsrs-ember/route/tab/new-ticket-route';
 
 var TicketNewRoute = TabNewRoute.extend({
     repository: inject('ticket'),
@@ -18,15 +18,15 @@ var TicketNewRoute = TabNewRoute.extend({
     statuses: Ember.computed(function() {
         return this.get('statusRepository').fetch();
     }),
-    model_fetch: Ember.computed(function() {
-        return this.get('repository').create();
-    }),
-    model() {
-        let model = this.get('model_fetch');
+    model(params) {
         let statuses = this.get('statuses');
         let priorities = this.get('priorities');
-        let categoryRepo = this.get('categoryRepository');
-        let top_level_category_options = categoryRepo.findTopLevelCategories() || [];
+        let top_level_category_options = this.get('categoryRepository').findTopLevelCategories() || [];
+
+        let model = this.get('store').find('ticket', {new_id: params.new_id}).objectAt(0);
+        if(!model){
+            model = this.get('repository').create(params.new_id);
+        }
 
         return {
             model: model,
