@@ -478,11 +478,18 @@ class TicketActivityViewSetTests(APITransactionTestCase):
 class TicketActivityViewSetReponseTests(APITestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         create_categories()
-        self.person = create_single_person()
-        # Ticket
-        self.ticket = create_ticket()
+
+        self.dm = DistrictManager()
+        self.person = self.dm.person
+        self.ticket = create_ticket(requester=self.person)
+
+        # Add additional 'child' Category to Ticket and Role.
+        # These are needed to correct test the 'from'/'to' category change for the 'parent' key
+        child_category = Category.objects.exclude(parent__isnull=True)[0]
+        self.person.role.categories.add(child_category)
+        self.ticket.categories.add(child_category)
+
         # TicketActivityTypes
         create_ticket_activity_types()
         # Login
@@ -635,12 +642,12 @@ class TicketActivityViewSetReponseTests(APITestCase):
 class TicketAndTicketActivityTests(APITransactionTestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         create_categories()
-        self.person = create_single_person()
-        # Ticket
-        self.ticket = create_ticket()
-        # TicketActivityType
+
+        self.dm = DistrictManager()
+        self.person = self.dm.person
+        self.ticket = create_ticket(requester=self.person)
+
         create_ticket_activity_types()
         # Data
         serializer = TicketCreateSerializer(self.ticket)
@@ -802,7 +809,7 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         # Only one Category on the Ticket
         [self.ticket.categories.remove(c) for c in self.ticket.categories.all()[:self.ticket.categories.count()-1]]
         new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()
-        self.assertEqual(len(self.data['categories']), 3)
+        self.assertEqual(len(self.data['categories']), 1)
         self.assertNotEqual(self.data['categories'][0], str(new_category.id))
         # data
         init_categories = self.data['categories'] = [str(self.ticket.categories.first().id)]
@@ -969,8 +976,6 @@ class TicketFilteredListTests(APITransactionTestCase):
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(data['count'], 1)
-
-
 
 
 # class TicketCategoryOrderingListTests(TicketCategoryOrderingSetupMixin, APITransactionTestCase):
