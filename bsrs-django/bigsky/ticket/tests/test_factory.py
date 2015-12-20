@@ -181,6 +181,23 @@ class CreateTicketsTests(TestCase):
             generate_uuid(factory.TICKET_BASE_ID, incr+1)
         )
 
+class CreateTicketsWithSingleCategory(TestCase):
+
+    def setUp(self):
+        self.dm = DistrictManager()
+        self.person = self.dm.person
+
+    def test_create(self):
+        tickets = factory.create_tickets_with_single_category(requester=self.person, _many=3)
+
+        self.assertEqual(len(tickets), 3)
+        for t in tickets:
+            self.assertIsInstance(t, Ticket)
+            self.assertEqual(t.requester, self.person)
+            self.assertEqual(t.categories.count(), 1)
+            self.assertEqual(t.categories.first(), self.person.role.categories.first())
+            self.assertIn(t.location, self.person.locations.all())
+
 
 class CreateStatusTests(TestCase):
 

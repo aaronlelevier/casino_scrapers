@@ -120,6 +120,11 @@ DATABASES = {
 
 # Password validation (not in use in currently)
 # https://docs.djangoproject.com/en/1.9/ref/settings/#auth-password-validators
+
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+)
+
 AUTH_PASSWORD_VALIDATORS = []
 # [
 #     {

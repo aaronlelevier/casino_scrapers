@@ -99,9 +99,11 @@ def create_single_person(name=None, role=None, location=None):
     return person
 
 
-def update_login_person(person):
+def update_login_person(person, new_password=None):
     person.is_superuser = True
     person.is_staff = True
+    if new_password:
+        person.set_password(new_password)
     person.save()
 
 
@@ -159,4 +161,4 @@ def create_all_people():
 
     # Person used to Login (so needs a 'password' set here)
     aaron = Person.objects.get(username="aaron")
-    update_login_person(aaron)
+    update_login_person(aaron, new_password='tango')

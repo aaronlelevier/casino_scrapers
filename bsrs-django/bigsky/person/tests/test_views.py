@@ -692,12 +692,7 @@ class PersonSearchTests(APITransactionTestCase):
         self.role = create_role()
         create_all_people()
         # Login
-        self.person = None
-        while not self.person:
-            try:
-                self.person = Person.objects.get(username='aaron')
-            except Person.DoesNotExist:
-                pass
+        self.person = Person.objects.first()
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):

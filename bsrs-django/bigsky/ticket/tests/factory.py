@@ -63,6 +63,10 @@ def create_ticket(request=None, requester=None, assignee=None):
     return ticket
 
 
+def create_tickets(_many=1):
+    return [create_ticket() for x in range(_many)]
+
+
 def create_ticket_with_single_category(request=None, requester=None, assignee=None):
     ticket = _create_ticket(request, requester, assignee)
     category = ticket.requester.role.categories.first()
@@ -70,8 +74,8 @@ def create_ticket_with_single_category(request=None, requester=None, assignee=No
     return ticket
 
 
-def create_tickets(_many=1):
-    return [create_ticket() for x in range(_many)]
+def create_tickets_with_single_category(requester=None, _many=0):
+    return [create_ticket_with_single_category(requester=requester) for x in range(_many)]
 
 
 def create_extra_ticket_with_categories():

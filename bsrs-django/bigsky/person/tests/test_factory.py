@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.urlresolvers import reverse
 from django.test import TestCase
 
 from model_mommy import mommy
@@ -127,8 +128,16 @@ class FactoryTests(TestCase):
 
     def test_update_login_person(self):
         person = factory.create_person()
-        factory.update_login_person(person)
+        new_password = 'tango'
+
+        factory.update_login_person(person, new_password=new_password)
+
+        self.assertTrue(person.is_superuser)
         self.assertTrue(person.is_staff)
+        response = self.client.post(reverse('login'), {'username': person.username,
+            'password': new_password})
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(self.client.session['_auth_user_id'], person.pk)
 
     ### .create_person(): Start
 

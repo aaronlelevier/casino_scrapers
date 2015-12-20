@@ -241,7 +241,7 @@ class FilterRelatedMixinMixin(APITransactionTestCase):
                 role=role
             )
         # Login User
-        self.person = create_single_person(name="aaron", role=self.role)
+        self.person = create_single_person(name="foo", role=self.role)
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):

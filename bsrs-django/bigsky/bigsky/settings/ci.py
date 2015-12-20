@@ -1,10 +1,6 @@
 from .base import *
 
 
-PASSWORD_HASHERS = (
-    'django.contrib.auth.hashers.MD5PasswordHasher',
-)
-
 CI_APPS = [
     'nose',
     'django_nose',
