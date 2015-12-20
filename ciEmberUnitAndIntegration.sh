@@ -46,6 +46,7 @@ npmInstall
 echo $(date -u) "EMBER UNIT TESTS"
 emberUnitTest
 
+sleep 15s
 rm -rf tmp dist
 
 echo $(date -u) "EMBER INTEGRATION TESTS"
