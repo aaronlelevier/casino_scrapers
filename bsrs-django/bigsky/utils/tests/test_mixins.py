@@ -230,112 +230,112 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
         )
 
 
-# class FilterRelatedMixinMixin(APITransactionTestCase):
+class FilterRelatedMixinMixin(APITransactionTestCase):
 
-#     def setUp(self):
-#         self.roles = create_roles()
-#         self.role = self.roles[0]
-#         for role in self.roles:
-#             create_single_person(
-#                 name=random.choice(create.LOREM_IPSUM_WORDS.split()),
-#                 role=role
-#             )
-#         # Login User
-#         self.person = create_single_person(name="aaron", role=self.role)
-#         self.client.login(username=self.person.username, password=PASSWORD)
+    def setUp(self):
+        self.roles = create_roles()
+        self.role = self.roles[0]
+        for role in self.roles:
+            create_single_person(
+                name=random.choice(create.LOREM_IPSUM_WORDS.split()),
+                role=role
+            )
+        # Login User
+        self.person = create_single_person(name="aaron", role=self.role)
+        self.client.login(username=self.person.username, password=PASSWORD)
 
-#     def tearDown(self):
-#         self.client.logout()
+    def tearDown(self):
+        self.client.logout()
 
-#     # FIELDS
+    # FIELDS
 
-#     def test_field(self):
-#         username = self.person.username
-#         response = self.client.get('/api/admin/people/?username={}'.format(username))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], Person.objects.filter(username=username).count())
+    def test_field(self):
+        username = self.person.username
+        response = self.client.get('/api/admin/people/?username={}'.format(username))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], Person.objects.filter(username=username).count())
 
-#     def test_field_with_arg(self):
-#         letter = 'T'
-#         response = self.client.get('/api/admin/people/?fullname__contains={}'
-#             .format(letter))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(
-#             data['count'],
-#             Person.objects.filter(fullname__contains=letter).count()
-#         )
+    def test_field_with_arg(self):
+        letter = 'T'
+        response = self.client.get('/api/admin/people/?fullname__contains={}'
+            .format(letter))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['count'],
+            Person.objects.filter(fullname__contains=letter).count()
+        )
 
-#     # RELATED
+    # RELATED
 
-#     def test_related_field(self):
-#         response = self.client.get('/api/admin/people/?role__name={}'.format(self.role.name))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], Person.objects.filter(role__name=self.role.name).count())
+    def test_related_field(self):
+        response = self.client.get('/api/admin/people/?role__name={}'.format(self.role.name))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], Person.objects.filter(role__name=self.role.name).count())
 
-#     def test_related_field_with_arg(self):
-#         response = self.client.get('/api/admin/people/?role__name__icontains={}'
-#             .format(self.role.name[0]))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(
-#             data['count'],
-#             Person.objects.filter(role__name__icontains=self.role.name[0]).count()
-#         )
+    def test_related_field_with_arg(self):
+        response = self.client.get('/api/admin/people/?role__name__icontains={}'
+            .format(self.role.name[0]))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['count'],
+            Person.objects.filter(role__name__icontains=self.role.name[0]).count()
+        )
 
-#     def test_related_id_in(self):
-#         response = self.client.get('/api/admin/people/?role__id__in={}'.format(self.role.id))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(
-#             data['count'],
-#             Person.objects.filter(role__id__in=[self.role.id]).count()
-#         )
+    def test_related_id_in(self):
+        response = self.client.get('/api/admin/people/?role__id__in={}'.format(self.role.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['count'],
+            Person.objects.filter(role__id__in=[self.role.id]).count()
+        )
 
-#     def test_related_id_in_multiple(self):
-#         response = self.client.get('/api/admin/people/?role__id__in={},{}'
-#             .format(self.roles[0].id, self.roles[1].id))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(
-#             data['count'],
-#             Person.objects.filter(role__id__in=[self.roles[0].id, self.roles[1].id]).count()
-#         )
+    def test_related_id_in_multiple(self):
+        response = self.client.get('/api/admin/people/?role__id__in={},{}'
+            .format(self.roles[0].id, self.roles[1].id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['count'],
+            Person.objects.filter(role__id__in=[self.roles[0].id, self.roles[1].id]).count()
+        )
 
-#     # IN
+    # IN
 
-#     def test_in_single(self):
-#         letter = self.person.username[0]
-#         response = self.client.get('/api/admin/people/?username__in={}'.format(letter))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], Person.objects.filter(username__in=[letter]).count())
+    def test_in_single(self):
+        letter = self.person.username[0]
+        response = self.client.get('/api/admin/people/?username__in={}'.format(letter))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], Person.objects.filter(username__in=[letter]).count())
 
-#     def test_in_multiple(self):
-#         # Setup
-#         people = Person.objects.all()
-#         a = people[0].username
-#         b = people[1].username
-#         usernames = "{},{}".format(a,b)
-#         # Test
-#         response = self.client.get('/api/admin/people/?username__in={}'.format(usernames))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], Person.objects.filter(username__in=[a,b]).count())
+    def test_in_multiple(self):
+        # Setup
+        people = Person.objects.all()
+        a = people[0].username
+        b = people[1].username
+        usernames = "{},{}".format(a,b)
+        # Test
+        response = self.client.get('/api/admin/people/?username__in={}'.format(usernames))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], Person.objects.filter(username__in=[a,b]).count())
 
-#     def test_in_single_uuid(self):
-#         response = self.client.get('/api/admin/people/?id__in={}'.format(self.person.id))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], Person.objects.filter(id__in=[self.person.id]).count())
+    def test_in_single_uuid(self):
+        response = self.client.get('/api/admin/people/?id__in={}'.format(self.person.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], Person.objects.filter(id__in=[self.person.id]).count())
 
-#     def test_in_multiple_uuid(self):
-#         people = Person.objects.all()
-#         a = people[0]
-#         b = people[1]
-#         response = self.client.get('/api/admin/people/?id__in={},{}'.format(a.id, b.id))
-#         self.assertEqual(response.status_code, 200)
-#         data = json.loads(response.content.decode('utf8'))
-#         self.assertEqual(data['count'], Person.objects.filter(id__in=[a.id, b.id]).count())
+    def test_in_multiple_uuid(self):
+        people = Person.objects.all()
+        a = people[0]
+        b = people[1]
+        response = self.client.get('/api/admin/people/?id__in={},{}'.format(a.id, b.id))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['count'], Person.objects.filter(id__in=[a.id, b.id]).count())
