@@ -696,18 +696,18 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertTrue(TicketActivity.objects.filter(content__from=str(self.ticket.assignee.id)).exists())
         self.assertTrue(TicketActivity.objects.filter(content__to=str(new_assingee.id)).exists())
 
-    # def test_cc_add(self):
-    #     name = 'cc_add'
-    #     self.assertEqual(TicketActivity.objects.count(), 0)
-    #     new_cc = create_single_person(name='foo')
-    #     self.data['cc'].append(str(new_cc.id))
+    def test_cc_add(self):
+        name = 'cc_add'
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        new_cc = create_single_person(name='foo')
+        self.data['cc'].append(str(new_cc.id))
 
-    #     response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
 
-    #     self.assertEqual(TicketActivity.objects.count(), 1)
-    #     activity = TicketActivity.objects.first()
-    #     self.assertEqual(activity.type.name, name)
-    #     self.assertEqual(activity.content['0'], str(new_cc.id))
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertEqual(activity.content['0'], str(new_cc.id))
 
     # def test_cc_remove(self):
     #     name = 'cc_remove'
