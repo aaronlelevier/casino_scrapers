@@ -642,6 +642,60 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['added'][0]['image_thumbnail'], str(attachment.image_thumbnail))
 
 
+class TicketFilteredListTests(APITransactionTestCase):
+
+    def setUp(self):
+        self.dm = DistrictManager()
+        self.ticket = create_ticket_with_single_category(requester=self.dm.person)
+        self.ticket_two = create_ticket_with_single_category(requester=self.dm.person)
+        # Login
+        self.client.login(username=self.dm.person.username, password=PASSWORD)
+
+        # response
+        self.response = self.client.get('/api/tickets/')
+        self.data = json.loads(self.response.content.decode('utf8'))
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_response_count(self):
+        self.assertEqual(self.data['count'], 2)
+
+    def test_count__matches_filtered_queryset(self):
+        kwargs = {}
+        kwargs.update({
+            'categories__id__in': self.dm.person.role.categories.values_list('id', flat=True),
+            'location__id__in': self.dm.person.locations.values_list('id', flat=True)
+        })
+        queryset = Ticket.objects.filter(**kwargs)
+
+        self.assertEqual(self.data['count'], queryset.count())
+
+    def test_location_filter(self):
+        new_location = create_location()
+        self.ticket_two.location = new_location
+        self.ticket_two.save()
+        # If False, can't view Ticket
+        self.assertNotIn(new_location, self.dm.person.locations.all())
+
+        response = self.client.get('/api/tickets/')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(data['count'], 1)
+
+    def test_category_filter(self):
+        new_category = create_single_category('foo')
+        self.ticket_two.categories.clear()
+        self.ticket_two.categories.add(new_category)
+        # If False, can't view Ticket
+        self.assertNotIn(new_category, self.dm.role.categories.all())
+
+        response = self.client.get('/api/tickets/')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(data['count'], 1)
+
+
 class TicketAndTicketActivityTests(APITransactionTestCase):
 
     def setUp(self):
@@ -925,57 +979,3 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
             first_attachment.id,
             list(TicketActivity.objects.order_by('created').last().content.values())
         )
-
-
-class TicketFilteredListTests(APITransactionTestCase):
-
-    def setUp(self):
-        self.dm = DistrictManager()
-        self.ticket = create_ticket_with_single_category(requester=self.dm.person)
-        self.ticket_two = create_ticket_with_single_category(requester=self.dm.person)
-        # Login
-        self.client.login(username=self.dm.person.username, password=PASSWORD)
-
-        # response
-        self.response = self.client.get('/api/tickets/')
-        self.data = json.loads(self.response.content.decode('utf8'))
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_response_count(self):
-        self.assertEqual(self.data['count'], 2)
-
-    def test_count__matches_filtered_queryset(self):
-        kwargs = {}
-        kwargs.update({
-            'categories__id__in': self.dm.person.role.categories.values_list('id', flat=True),
-            'location__id__in': self.dm.person.locations.values_list('id', flat=True)
-        })
-        queryset = Ticket.objects.filter(**kwargs)
-
-        self.assertEqual(self.data['count'], queryset.count())
-
-    def test_location_filter(self):
-        new_location = create_location()
-        self.ticket_two.location = new_location
-        self.ticket_two.save()
-        # If False, can't view Ticket
-        self.assertNotIn(new_location, self.dm.person.locations.all())
-
-        response = self.client.get('/api/tickets/')
-        data = json.loads(response.content.decode('utf8'))
-
-        self.assertEqual(data['count'], 1)
-
-    def test_category_filter(self):
-        new_category = create_single_category('foo')
-        self.ticket_two.categories.clear()
-        self.ticket_two.categories.add(new_category)
-        # If False, can't view Ticket
-        self.assertNotIn(new_category, self.dm.role.categories.all())
-
-        response = self.client.get('/api/tickets/')
-        data = json.loads(response.content.decode('utf8'))
-
-        self.assertEqual(data['count'], 1)
