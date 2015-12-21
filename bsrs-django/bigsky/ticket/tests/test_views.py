@@ -662,39 +662,39 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
     def tearDown(self):
         self.client.logout()
 
-    # def test_create(self):
-    #     name = 'create'
-    #     self.assertEqual(TicketActivity.objects.count(), 0)
-    #     self.data.update({
-    #         'id': str(uuid.uuid4()),
-    #         'request': 'plumbing',
-    #     })
+    def test_create(self):
+        name = 'create'
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'request': 'plumbing',
+        })
 
-    #     response = self.client.post('/api/tickets/', self.data, format='json')
+        response = self.client.post('/api/tickets/', self.data, format='json')
 
-    #     self.assertEqual(TicketActivity.objects.count(), 1)
-    #     activity = TicketActivity.objects.first()
-    #     self.assertEqual(activity.type.name, name)
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
 
-    # def test_assignee(self):
-    #     name = 'assignee'
-    #     self.assertEqual(TicketActivity.objects.count(), 0)
-    #     new_assingee = create_single_person(name='foo')
-    #     self.assertNotEqual(self.data['assignee'], str(new_assingee.id))
-    #     self.data['assignee'] = str(new_assingee.id)
+    def test_assignee(self):
+        name = 'assignee'
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        new_assingee = create_single_person(name='foo')
+        self.assertNotEqual(self.data['assignee'], str(new_assingee.id))
+        self.data['assignee'] = str(new_assingee.id)
 
-    #     response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
 
-    #     # response
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertEqual(data['assignee'], str(new_assingee.id))
-    #     # TicketActivity
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(TicketActivity.objects.count(), 1)
-    #     activity = TicketActivity.objects.first()
-    #     self.assertEqual(activity.type.name, name)
-    #     self.assertTrue(TicketActivity.objects.filter(content__from=str(self.ticket.assignee.id)).exists())
-    #     self.assertTrue(TicketActivity.objects.filter(content__to=str(new_assingee.id)).exists())
+        # response
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['assignee'], str(new_assingee.id))
+        # TicketActivity
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertTrue(TicketActivity.objects.filter(content__from=str(self.ticket.assignee.id)).exists())
+        self.assertTrue(TicketActivity.objects.filter(content__to=str(new_assingee.id)).exists())
 
     def test_cc_add(self):
         name = 'cc_add'
