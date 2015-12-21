@@ -2,7 +2,7 @@ import json
 import uuid
 import datetime
 
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 
 from model_mommy import mommy
 
@@ -371,7 +371,7 @@ class TicketSearchTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data["count"], count)
 
 
-class TicketActivityViewSetTests(APITransactionTestCase):
+class TicketActivityViewSetTests(APITestCase):
 
     def setUp(self):
         self.password = PASSWORD
@@ -642,7 +642,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['added'][0]['image_thumbnail'], str(attachment.image_thumbnail))
 
 
-class TicketFilteredListTests(APITransactionTestCase):
+class TicketFilteredListTests(APITestCase):
 
     def setUp(self):
         self.dm = DistrictManager()
@@ -696,7 +696,7 @@ class TicketFilteredListTests(APITransactionTestCase):
         self.assertEqual(data['count'], 1)
 
 
-class TicketAndTicketActivityTests(APITransactionTestCase):
+class TicketAndTicketActivityTests(APITestCase):
 
     def setUp(self):
         create_categories()
