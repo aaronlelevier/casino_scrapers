@@ -709,21 +709,21 @@ class TicketAndTicketActivityTests(APITransactionTestCase):
         self.assertEqual(activity.type.name, name)
         self.assertEqual(activity.content['0'], str(new_cc.id))
 
-    # def test_cc_remove(self):
-    #     name = 'cc_remove'
-    #     # ticket
-    #     init_cc = self.ticket.cc.first()
-    #     self.assertEqual(self.ticket.cc.count(), 1)
-    #     # ticket activity
-    #     self.assertEqual(TicketActivity.objects.count(), 0)
-    #     self.data['cc'] = []
+    def test_cc_remove(self):
+        name = 'cc_remove'
+        # ticket
+        init_cc = self.ticket.cc.first()
+        self.assertEqual(self.ticket.cc.count(), 1)
+        # ticket activity
+        self.assertEqual(TicketActivity.objects.count(), 0)
+        self.data['cc'] = []
 
-    #     response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
+        response = self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
 
-    #     self.assertEqual(TicketActivity.objects.count(), 1)
-    #     activity = TicketActivity.objects.first()
-    #     self.assertEqual(activity.type.name, name)
-    #     self.assertEqual(activity.content['0'], str(init_cc.id))
+        self.assertEqual(TicketActivity.objects.count(), 1)
+        activity = TicketActivity.objects.first()
+        self.assertEqual(activity.type.name, name)
+        self.assertEqual(activity.content['0'], str(init_cc.id))
 
     # def test_cc_add_and_remove(self):
     #     self.assertEqual(TicketActivity.objects.count(), 0)
