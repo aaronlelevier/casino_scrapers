@@ -22,3 +22,14 @@ third_party,ticket,translation,utils,work_request',
 ### ATTACHMENTS
 DEFAULT_TEST_FILE = os.path.join(BASE_DIR, "source/test_in/aaron.jpeg")
 DEFAULT_TEST_IMAGE = os.path.join(BASE_DIR, "source/test_in/es.csv")
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'test',
+        'USER': 'bsdev',
+        'PASSWORD': 'tango',
+        'HOST': 'localhost',
+        'PORT': '5432',
+    }
+}
