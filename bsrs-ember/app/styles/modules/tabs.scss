@@ -1,78 +1,83 @@
 nav.tabs{
-  font-size: 1.1rem;
-  position: absolute;
-  top: $tabTop;
-  right: 0;
-  left: $tabLeft;
-  height: $tabHeight;
-  overflow: hidden;
-  z-index: 1;
-  ul{
-    margin-left: 0px;
-    li{
-      height: $tabHeight;
-      line-height: $tabHeight;
-      background: $light;
-      border: $borderStyle;
-      padding: 0 10px;
-      float: left;
-      font-size: 1.2em;
-      width: $tabWidth;
-      margin: 0 3px 0 0;
-      border-radius: $borderRadiusTop;
-      position: relative;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-      .close-wrap{
-        .close-icon{
-          height: 12px;
-          width: 12px;
-          position: absolute;
-          top: 3px;
-          right: 3px;
-          color: $darkGray;
-          &:hover{
-            cursor: pointer;
-            color: $dark;
-          }
-          .dirty{
-            color: $lightGreen;
-          }
-          .dirty:hover{
-            color: $darkGreen;
-          }
-        }
-      }
-      &:hover{
-        cursor: pointer;
-      }
-      &.active{
-        background: $lightGray;
-        border-bottom-color: $lightGray;
-      }
-      &:hover.active{
-        cursor: default;
-      }
-      @media screen and (max-width: $mobileDeviceWidth){
-        float: none;
-      }
+    font-size: 1.1rem;
+    position: absolute;
+    top: $tabTop;
+    right: 0;
+    left: $tabLeft;
+    height: $tabHeight;
+    overflow: hidden;
+    z-index: 1;
+    ul{
+        margin-left: 0px;
+        li{
+            height: $tabHeight;
+            line-height: $tabHeight;
+            background: $light;
+            border: $borderStyle;
+            padding: 0 10px;
+            float: left;
+            font-size: 1.2em;
+            width: $tabWidth;
+            margin: 0 3px 0 0;
+            border-radius: $borderRadiusTop;
+            position: relative;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            .close-wrap{
+                .close-icon{
+                    height: 12px;
+                    width: 12px;
+                    position: absolute;
+                    top: 3px;
+                    right: 3px;
+                    color: $darkGray;
+                    &:hover{
+                        cursor: pointer;
+                        color: $dark;
+                        text-decoration: none;
+                    }
+                    i{
+                        display: block;
+                        &.dirty{
+                            color: $lightGreen;
+                            &:hover{
+                                color: $darkGreen;
+                            }
+                        }
+                    }
 
-    }//li
+                }
+            }
+            &:hover{
+                cursor: pointer;
+            }
+            &.active{
+                background: $lightGray;
+                border-bottom-color: $lightGray;
+            }
+            &:hover.active{
+                cursor: default;
+            }
+            @media screen and (max-width: $mobileDeviceWidth){
+                float: none;
+            }
 
-    li.new{
-      width: 40px;
-      text-align: center;
-      color: $darkGray;
-      &:hover{
-          color: $hoverColor;
-      }
-      &:active{
-          color: $activeColor;
-      }
-    }//li.new
-  }//ul
-  @media screen and (max-width: $mobileDeviceWidth){
-    display: none
-  }
+        }//li
+
+        li.new{
+            width: 40px;
+            text-align: center;
+            color: $darkGray;
+            &:hover{
+                color: $hoverColor;
+            }
+            &:active{
+                color: $activeColor;
+            }
+        }//li.new
+    }//ul
+    @media screen and (max-width: $mobileDeviceWidth){
+        display: none
+    }
 }//nav.tabs

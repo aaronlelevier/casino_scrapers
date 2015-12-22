@@ -11,6 +11,7 @@ var ApplicationRoute = Ember.Route.extend({
     store: injectStore('main'),
     translationsFetcher: inject.service(),
     i18n: inject.service(),
+    moment: inject.service(),
     tabList: inject.service(),
     beforeModel() {
         let store = this.get('store');
@@ -111,6 +112,12 @@ var ApplicationRoute = Ember.Route.extend({
             role_fk: person_current.role,
             locale: current_locale.get('locale')
         });
+
+        // Set the current user's time zone
+        // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220
+        // TODO: allow timezone to be overridden at the system/role/user level
+        let zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        this.get('moment').changeTimeZone(zone);
 
         return this.get('translationsFetcher').fetch();
 
