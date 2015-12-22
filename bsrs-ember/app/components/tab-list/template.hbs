@@ -4,12 +4,12 @@
             {{#link-to tab.doc_route tab.id classNames="t-tab" tagName="li"}}
             <span class="t-tab-title">{{tab.parent}}</span>
             <span class="close-wrap">
-              <a href="#" class="t-tab-close" {{action "closeTab" tab bubbles=false}}>
-                  {{#if tab.model.isDirtyOrRelatedDirty}}
-                    {{fa-icon "circle" classNames="dirty"}}
-                  {{else}}
-                    {{fa-icon "times-circle"}}
-                  {{/if}}
+              <a href="#" class="close-icon t-tab-close" {{action "closeTab" tab bubbles=false}}>
+                {{#if tab.model.isDirtyOrRelatedDirty}}
+                  {{fa-icon "circle" classNames="dirty"}}
+                {{else}}
+                  {{fa-icon "times-circle"}}
+                {{/if}}
               </a>
             </span>
             {{/link-to}}
