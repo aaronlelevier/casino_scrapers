@@ -49,8 +49,10 @@
                                 <h1 class="col-md-12 t-ticket-header">
                                     {{model.sorted_categories.lastObject.name}}
                                     <small>#{{model.number}}</small>
-                                    <span class="tag {{model.status_class}}">{{fa-icon 'clock-o'}} {{t model.status.name}}</span><span class="tag {{model.priority_class}}">{{fa-icon 'exclamation-triangle'}} {{t model.priority.name}}</span>
                                 </h1>
+                                <div class="col-md-12 ticket-created">
+                                    <span class="tag {{model.status_class}}">{{fa-icon 'clock-o'}} {{t model.status.name}}</span><span class="tag {{model.priority_class}}">{{fa-icon 'exclamation-triangle'}} {{t model.priority.name}}</span>
+                                    {{t 'ticket.label.created'}} {{moment-format model.created 'LLL z' timeZone='America/Los_Angeles'}}</div>
                                 <div class="col-md-12">
                                     {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
                                     <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">invalid category</span>

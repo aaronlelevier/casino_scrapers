@@ -123,6 +123,11 @@ div.buttonGroup {
 	margin: 15px 0 10px;
 	font-size: 1.2rem;
 }
+.ticket-created{
+	font-size: 1.2rem;
+	color: $darkGray;
+	padding-bottom: 12px;
+}
 .tag{
 	display: inline-block;
 	height: 20px;
@@ -134,8 +139,7 @@ div.buttonGroup {
 	padding: 0 7px;
 	border-radius: 3px;
 	text-transform: uppercase;
-	margin: 10px 0 0 10px;
-	top: -4px;
+	margin: 0 10px 0 0;
 	position: relative;
 	&.ticket-status-new{
 		background: $lightGreen;
