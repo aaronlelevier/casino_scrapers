@@ -32,18 +32,17 @@ nav.tabs{
           top: 3px;
           right: 3px;
           color: $darkGray;
+          &:hover{
+            cursor: pointer;
+            color: $dark;
+          }
+          .dirty{
+            color: $lightGreen;
+          }
+          .dirty:hover{
+            color: $darkGreen;
+          }
         }
-        .close-icon:hover{
-          cursor: pointer;
-          color: $dark;
-        }
-        .dirty{
-          color: $lightGreen;
-        }
-        .dirty:hover{
-          color: $darkGreen;
-        }
-
       }
       &:hover{
         cursor: pointer;
