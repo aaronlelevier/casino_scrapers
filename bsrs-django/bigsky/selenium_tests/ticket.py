@@ -115,19 +115,18 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         # Go to Ticket Area
         self.nav_page.find_ticket_link().click()
 
-        tabs = self.wait_for_xhr_request("t-tab-close", plural=True)
-        tabs[0].click()
+        tab = self.driver_wait.find_element_by_class_name("t-tab-close")
+        tab.click()
 
-        self.driver_wait.find_element_by_class_name("application-modal")
+        self.wait_for_xhr_request("application-modal", debounce=True).click()
+        # self.driver_wait.find_element_by_class_name("application-modal")
 
         WebDriverWait(self.driver, 10).until(
             EC.presence_of_element_located((By.CLASS_NAME, "modal-title"))
         )
 
         # click "rollback button"
-        import time;time.sleep(3) # TODO: submit SO question on how to get the
-                                  # modal button to be viewable
-        rollback_btn = self.driver.find_element_by_class_name("t-modal-rollback-btn")
+        rollback_btn = self.wait_for_xhr_request("t-modal-rollback-btn", debounce=True)
         rollback_btn.click()
 
         # revisit page
@@ -139,7 +138,6 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
 
         with self.assertRaises(InvalidSelectorException):
             self.driver.find_elements_by_class_name("progress active")
-
 
     # # COMMENT OUT: While `Ticket` and `ember-power-select` are WIP
     # def test_ticket(self):
