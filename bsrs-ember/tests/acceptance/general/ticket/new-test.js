@@ -72,6 +72,9 @@ module('Acceptance | ticket new test', {
 
 test('validation works and when hit save, we do same post', (assert) => {
     page.visit();
+    andThen(() => {
+        patchRandom(counter);
+    });
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
@@ -157,9 +160,6 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-category-validation-error').is(':hidden'));
-    });
-    andThen(() => {
-        patchRandom(counter);
     });
     generalPage.save();
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
@@ -635,6 +635,9 @@ test('can remove and add back same cc and save empty cc', (assert) => {
 
 test('all required fields persist correctly when the user submits a new ticket form', (assert) => {
     page.visit();
+    andThen(() => {
+        patchRandom(counter);
+    });
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
@@ -685,9 +688,6 @@ test('all required fields persist correctly when the user submits a new ticket f
     page.requestFillIn(TD.requestOneGrid);
     required_ticket_payload.request = TD.requestOneGrid;
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
-    andThen(() => {
-        patchRandom(counter);
-    });
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);

@@ -264,10 +264,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
             new_status.set('tickets', new_status_tickets.concat(ticket_id));
         }
     },
-    serialize(id=null) {
-        if(id) { this.set('id', id); }
+    serialize() {
         let payload = {
-            id: id || this.get('id'),
+            id: this.get('id'),
             request: this.get('request'),
             status: this.get('status.id'),
             priority: this.get('priority.id'),

@@ -2,14 +2,12 @@ import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
 var GridRepositoryMixin = Ember.Mixin.create({
-    create(tab_id) {
-        return this.store.push(this.get('type'), {id: tab_id, new: true});
+    create(new_pk) {
+        let pk = this.get('uuid').v4();
+        return this.store.push(this.get('type'), {id: pk, new: true, new_pk: new_pk});
     },
     insert(model) {
-        let pk = this.get('uuid').v4();
-        const tab = this.get('store').find('tab', {id: model.get('id')}).objectAt(0);
-        tab.set('id', pk);
-        return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(model.serialize(pk))}).then(() => {
+        return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
             model.saveRelated();
         });

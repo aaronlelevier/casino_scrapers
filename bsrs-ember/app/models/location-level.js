@@ -20,12 +20,11 @@ var LocationLevel = Model.extend(NewMixin, {
     rollbackChildren() {
         this.set('children_fks', this.get('_oldState').children_fks);
     },
-    serialize(id) {
+    serialize() {
         const children = this.get('children');
         const children_fks = children.mapBy('id');
-        if(id) { this.set('id', id); }
         return {
-            id: id || this.get('id'),
+            id: this.get('id'),
             name: this.get('name'),
             children: children_fks
         };

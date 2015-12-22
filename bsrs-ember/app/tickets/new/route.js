@@ -19,12 +19,13 @@ var TicketNewRoute = TabNewRoute.extend({
         return this.get('statusRepository').fetch();
     }),
     model(params) {
+        let new_pk = parseInt(params.new_id, 10);
         let statuses = this.get('statuses');
         let priorities = this.get('priorities');
         let top_level_category_options = this.get('categoryRepository').findTopLevelCategories() || [];
-        let model = this.get('store').find('ticket', {id: params.new_id}).objectAt(0);
+        let model = this.get('store').find('ticket', {new_pk: new_pk}).objectAt(0);
         if(!model){
-            model = this.get('repository').create(parseInt(params.new_id));
+            model = this.get('repository').create(new_pk);
         }
         return {
             model: model,

@@ -105,15 +105,14 @@ var RoleModel = Model.extend(NewMixin, {
         }
     }),
     locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
-    serialize(id) {
+    serialize() {
         const location_level = this.get('location_level');
         let location_level_id;
         if (location_level) {
             location_level_id = location_level.get('id');
         }
-        if(id) { this.set('id', id); }
         return {
-            id: id || this.get('id'),
+            id: this.get('id'),
             name: this.get('name'),
             role_type: this.get('role_type'),
             location_level: location_level_id || null,

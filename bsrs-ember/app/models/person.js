@@ -71,10 +71,9 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
         this.rollbackLocations();
         this.rollbackStatus();
     },
-    createSerialize(id) {
-        if(id) { this.set('id', id); }
+    createSerialize() {
         return {
-            id: id || this.get('id'),
+            id: this.get('id'),
             username: this.get('username'),
             password: this.get('password'),
             role: this.get('role').get('id')

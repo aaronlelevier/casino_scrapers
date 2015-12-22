@@ -8,14 +8,15 @@ var RoleNewRoute = TabNewRoute.extend({
     modelName: Ember.computed(function() { return 'role'; }),
     templateModelField: Ember.computed(function() { return 'Role'; }),
     model(params) {
+        let new_pk = parseInt(params.new_id, 10);
         const repository = this.get('repository');
         const all_role_types = this.get('store').find('role-type');
         const all_location_levels = this.get('store').find('location-level');
-        let model = this.get('store').find('role', {id: params.new_id}).objectAt(0);
+        let model = this.get('store').find('role', {new_pk: new_pk}).objectAt(0);
         if(!model){
             const all_role_types = this.get('store').find('role-type');
             const default_role_type = all_role_types.objectAt(0).get('name');
-            model = this.get('repository').create(default_role_type, parseInt(params.new_id));
+            model = this.get('repository').create(default_role_type, new_pk);
         }
         return {
             model: model,

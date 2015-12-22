@@ -1,18 +1,11 @@
 <nav class="tabs">
     <ul id="tabs" class="list-inline">
         {{#each tabs as |tab|}}
-            {{#link-to tab.doc_route tab.id classNames="t-tab" tagName="li"}}
-            <span class="t-tab-title">{{tab.parent}}</span>
-            <span class="close-wrap">
-              <a href="#" class="close-icon t-tab-close" {{action "closeTab" tab bubbles=false}}>
-                {{#if tab.model.isDirtyOrRelatedDirty}}
-                  {{fa-icon "circle" classNames="dirty"}}
-                {{else}}
-                  {{fa-icon "times-circle"}}
-                {{/if}}
-              </a>
-            </span>
-            {{/link-to}}
+            {{#if tab.model.new}}
+              {{tab-navigation tab=tab link_id=tab.model.new_pk close=(action "closeTab")}}
+            {{else}}
+              {{tab-navigation tab=tab link_id=tab.model.id close=(action "closeTab")}}
+            {{/if}}
         {{/each}}
         <li class="new">
             <span>{{fa-icon "plus"}}</span>

@@ -21,10 +21,9 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         return this.get('isDirty') || this.get('childrenIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
-    serialize(id=null) {
-        if(id) { this.set('id', id); }
+    serialize() {
         return {
-            id: id || this.get('id'),
+            id: this.get('id'),
             name: this.get('name'),
             description: this.get('description'),
             cost_amount: this.get('cost_amount'),

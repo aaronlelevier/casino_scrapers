@@ -21,10 +21,9 @@ var ThirdPartyModel = Model.extend(StatusMixin, {
     removeRecord() {
         this.get('store').remove('third-party', this.get('id'));
     },
-    serialize(id) {
-        if(id) { this.set('id', id); }
+    serialize() {
         return {
-            id: id || this.get('id'),
+            id: this.get('id'),
             name: this.get('name'),
             number: this.get('number'),
             status: this.get('status').get('id')

@@ -131,7 +131,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
     },
-    serialize(id) {
+    serialize() {
         var phone_numbers = this.get('phone_numbers').filter(function(num) {
             if(num.get('invalid_number')) {
                 return;
@@ -148,9 +148,8 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         }).map((address) => {
             return address.serialize();
         });
-        if(id) { this.set('id', id); }
         return {
-            id: id || this.get('id'),
+            id: this.get('id'),
             name: this.get('name'),
             number: this.get('number'),
             status: this.get('status.id'),

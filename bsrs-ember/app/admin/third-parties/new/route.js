@@ -9,10 +9,11 @@ var ThirdPartyNewRoute = TabRoute.extend({
     modelName: Ember.computed(function() { return 'third-party'; }),
     templateModelField: Ember.computed(function() { return 'ThirdParty'; }),
     model(params) {
+        let new_pk = parseInt(params.new_id, 10);
         const status_repo = this.get('status_repo');
-        let model = this.get('store').find('third-party', {id: params.new_id}).objectAt(0);
+        let model = this.get('store').find('third-party', {new_pk: new_pk}).objectAt(0);
         if(!model){
-            model = this.get('repository').create(parseInt(params.new_id));
+            model = this.get('repository').create(new_pk);
         }
         return {
             model: model,

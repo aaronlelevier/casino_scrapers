@@ -8,13 +8,14 @@ var CategoryNewRoute = TabNewRoute.extend({
     modelName: Ember.computed(function() { return 'category'; }),
     templateModelField: Ember.computed(function() { return 'Category'; }),
     model(params) {
+        let new_pk = parseInt(params.new_id, 10);
         let transition = arguments[1];
         let repository = this.get('repository');
         let search = transition.queryParams.search;
         let categories_children = repository.findCategoryChildren(search);
-        let model = this.get('store').find('category', {id: params.new_id}).objectAt(0);
+        let model = this.get('store').find('category', {new_pk: new_pk}).objectAt(0);
         if(!model){
-            model = this.get('repository').create(parseInt(params.new_id));
+            model = this.get('repository').create(new_pk);
         }
         return {
             model: model,
