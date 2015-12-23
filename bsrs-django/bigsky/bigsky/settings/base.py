@@ -46,6 +46,7 @@ LOCAL_APPS = [
     'third_party',
     'ticket',
     'translation',
+    'work_order',
     'work_request',
     'utils',
     ]
@@ -251,6 +252,8 @@ THIRD_PARTY_STATUS_DEFAULT = "active"
 ACTIVITY_DEFAULT_WEIGHT = 4
 DEFAULTS_TICKET_STATUS = "ticket.status.new" 
 
+### WORK ORDER
+DEFAULTS_WORKORDER_STATUS = "work_order.status.new" 
 
 ### EMAIL ###
 # django native settings for ``django.core.mail.mail_admins()``
