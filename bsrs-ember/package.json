@@ -62,5 +62,8 @@
     "glob": "^4.5.3",
     "morgan": "^1.6.1",
     "object-assign": "^4.0.1"
+  },
+  "dependencies": {
+    "ember-responsive": "^1.2.5"
   }
 }

@@ -10,15 +10,21 @@
 @import 'app/styles/base/components.scss';
 @import 'app/styles/modules/buttons.scss';
 @import 'app/styles/modules/activity-list.scss';
-@import 'app/styles/modules/login.scss';
-@import 'app/styles/modules/header.scss';
-@import 'app/styles/modules/tabs.scss';
-@import 'app/styles/modules/tray.scss';
-@import 'app/styles/modules/wrap.scss';
+
+
+@media screen and (max-width: $mobileMax){
+    @import 'app/styles/mobile/layout.scss';
+}
+@media screen and (min-width: $tabletMin){
+    @import 'app/styles/modules/header.scss';
+    @import 'app/styles/modules/tabs.scss';
+    @import 'app/styles/modules/tray.scss';
+    @import 'app/styles/modules/wrap.scss';
+    @import 'app/styles/modules/user-menu.scss';
+}
+
 @import 'app/styles/modules/form.scss';
 @import 'app/styles/modules/table.scss';
-@import 'app/styles/modules/user-menu.scss';
-@import 'app/styles/modules/application-modal.scss';
 @import 'app/styles/modules/multi-input.scss';
 @import 'app/styles/modules/loading.scss';
 @import 'ember-modal-dialog/ember-modal-structure';

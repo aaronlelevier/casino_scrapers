@@ -42,7 +42,15 @@ $documentHeaderHeightPlus1: 42px;
 $documentFooterHeight: 41px;
 
 // Responsive Gates
-$mobileDeviceWidth: 20px;
+$mobileMax: 768px;
+$tabletMin: 769px;
+$tabletMax: 992px;
+$desktopMin: 993px;
+$desktopMax: 1200px;
+$jumboMin: 1201px;
+
+// Mobile layout
+$mobileMenuHeight: 41px;
 
 // Borders
 $borderStyle: 1px solid $borderColor;

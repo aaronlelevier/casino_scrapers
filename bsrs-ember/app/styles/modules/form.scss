@@ -14,13 +14,6 @@ div.buttonGroup {
 		margin: 0 1rem;
 	}
 }//buttonGroup
-@media screen and (max-width: $mobileDeviceWidth){
-  div.login_form {
-	  margin: 30px auto;
-	  padding: 0;
-	  width: auto;
-	}
-}
 .validation{
 	display: block;
 	background-color: $orange;
@@ -123,10 +116,14 @@ div.buttonGroup {
 	margin: 15px 0 10px;
 	font-size: 1.2rem;
 }
-.ticket-created{
+.meta-data{
+	line-height: 30px;
+	padding-bottom: 12px;
+}
+.create-date{
 	font-size: 1.2rem;
 	color: $darkGray;
-	padding-bottom: 12px;
+	white-space: nowrap;
 }
 .tag{
 	display: inline-block;

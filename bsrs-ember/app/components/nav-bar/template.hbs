@@ -1,11 +1,8 @@
-<nav class="modules menuStack">
-    <ul class="list-inline">
-        <li>
-            <a>{{fa-icon "bars" classNames="menuIcon"}}</a>
-        </li>
-    </ul>
-</nav>
 <nav class="modules moduleMenu">
+    {{#if media.isMobile}}
+    <a href="#" class="menu-toggle" {{action 'show_menu' bubbles=false}}>{{fa-icon 'bars'}}</a>
+    {{/if}}
+    {{#if showing}}
     <ul class="moduleWrap list-inline t-navbar-items">
         <li>{{#link-to "index"}}{{t 'menu.home'}}{{/link-to}}</li>
         <li>{{#link-to "tickets.index" class="t-nav-tickets"}}{{t 'modules.tickets.titleShort'}}{{/link-to}}</li>
@@ -18,21 +15,5 @@
         <li>{{#link-to "assets"}}{{t 'modules.assets.titleShort'}}{{/link-to}}</li>
         <li>{{#link-to "invoices"}}{{t 'modules.invoices.titleShort'}}{{/link-to}}</li>
     </ul>
-</nav>
-<nav class="userMenu">
-    <ul class="userWrap list-inline pull-right">
-        <li>
-            <a>{{fa-icon "question" classNames="menuIcon"}}</a>
-        </li>
-        <li>
-            <a data-toggle="modal" data-target=".bs-example-modal-lg">{{fa-icon "search" classNames="menuIcon"}}</a>
-        </li>
-        <li>
-            <a>{{fa-icon "bell-o" classNames="menuIcon"}}<span class="badge">2</span></a>
-        </li>
-        <li>
-            <a>{{fa-icon "envelope-o" classNames="menuIcon"}} <span class="badge">56</span></a>
-        </li>
-        {{person-current}}
-    </ul>
+    {{/if}}
 </nav>

@@ -31,9 +31,6 @@ section.wrap{
                 font-size: 1.3em;
                 font-weight: normal;
                 display: inline;
-                @media screen and (max-width: $mobileDeviceWidth) {
-                    font-size: 1.35rem;
-                }
             }//h1
         }
         menu{
@@ -124,13 +121,7 @@ section.wrap{
                                 }
                             }
                         }//ul
-                        @media screen and (max-width: $mobileDeviceWidth){
-                            line-height: 2.3rem;
-                        }
                     }//li
-                    @media screen and (max-width: $mobileDeviceWidth){
-                        margin: 0 0 25px
-                    }
                 }//ul
 
                 .form-group{
@@ -144,9 +135,6 @@ section.wrap{
 
             }//section
         }//menu
-        @media screen and (max-width: $mobileDeviceWidth){
-            display: none;
-        }
     }// aside.side-panel
 
     article.main { //if no side panel
@@ -179,9 +167,6 @@ section.wrap{
                 margin: 0;
                 height: $documentHeaderHeight;
                 line-height: $documentHeaderHeight;
-                @media screen and (max-width: $mobileDeviceWidth) {
-                    font-size: 1.35rem;
-                }
             }//h1
             .reset-grid{
                 display: inline-block;
@@ -234,13 +219,6 @@ section.wrap{
                 margin-bottom: $documentFooterHeight;
             }
             section{
-                /*
-                margin: 0 0 15px;
-                padding: 0 15px 15px;
-                border: 1px solid $gray;
-                background: $white;
-                box-shadow: 0 0 2px 0 $gray;
-                */
                 h1{
                     color: $dark;
                     font-size: 2.8rem;
@@ -277,20 +255,7 @@ section.wrap{
                     }
                 }
             }
-            /*
-            [class*="col-"] {
-                padding: 0 7.5px;
-                [class*="col-"] {
-                    padding: 4px;
-                }
-            }
-            */
-        }//section.docSection
-        // .form{
-        //     section.docSection {
-        //         margin-bottom: $documentFooterHeight;
-        //     }
-        // }
+        }
         footer{
             height: $documentFooterHeight;
             position: absolute;
@@ -309,19 +274,3 @@ section.wrap{
         left: 0
     }
 }//section.wrap
-@media screen and (max-width: $mobileDeviceWidth){
-    section.wrap,
-    section.wrap article.main,
-    section.wrap article.main section.docSection,
-    section.wrap aside.side-panel {
-        position: static;
-        top: auto;
-        right: auto;
-        bottom: auto;
-        left: auto;
-        height: auto;
-        width: auto;
-        overflow: auto;
-        border: none;
-    }
-}

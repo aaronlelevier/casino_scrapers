@@ -59,9 +59,6 @@ nav.tabs{
             &:hover.active{
                 cursor: default;
             }
-            @media screen and (max-width: $mobileDeviceWidth){
-                float: none;
-            }
 
         }//li
 
@@ -77,7 +74,4 @@ nav.tabs{
             }
         }//li.new
     }//ul
-    @media screen and (max-width: $mobileDeviceWidth){
-        display: none
-    }
 }//nav.tabs

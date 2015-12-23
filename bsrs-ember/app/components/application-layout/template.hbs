@@ -1,11 +1,23 @@
-<header class="main">
-    {{nav-bar}}
-</header>
 
-  {{tab-list tabs=tabs closeTabMaster="closeTabMaster"}}
-
-  {{tray-main}}
-
-  <section class="wrap">
-    {{outlet}}
-  </section>
+{{#if media.isMobile}}
+    <header class="main">
+        {{nav-bar showing=false}}
+    </header>
+    <section class="main">
+        {{outlet}}
+    </section>
+    <footer class="main">
+        {{tray-main}}
+        {{user-menu showing=false}}
+    </footer>
+{{else}}
+    <header class="main">
+        {{nav-bar showing=true}}
+        {{user-menu showing=true}}
+    </header>
+    {{tab-list tabs=tabs closeTabMaster="closeTabMaster"}}
+    {{tray-main}}
+    <section class="wrap">
+        {{outlet}}
+    </section>
+{{/if}}

@@ -1,49 +1,37 @@
 aside.tray{
-  font-size: 1.4rem;
-  position: absolute;
-  top: $mainTop;
-  left: 0;
-  right: $mainLeft;
-  bottom: 0;
-  width: $mainLeft;
-  overflow: hidden;
+    font-size: 1.4rem;
+    position: absolute;
+    top: $mainTop;
+    left: 0;
+    right: $mainLeft;
+    bottom: 0;
+    width: $mainLeft;
+    overflow: hidden;
 
-  nav.trayMain{
-    ul{
-      li{
-        font-size: 2.33rem;
-        text-align: center;
-        margin: 15px 0 0;
-        color: $darkGray;
+    nav.trayMain{
+        ul{
+            li{
+                font-size: 2.33rem;
+                text-align: center;
+                margin: 15px 0 0;
+                color: $darkGray;
 
-        a {
-          color: $darkGray;
-          //order matters w/ visited and active
-          &:visited {
-            color: $darkGray;
-          }
-          &:hover{
-            cursor: pointer;
-            color: $hoverColor;
-          }
-          &.active{
-            color: $activeColor;
-            cursor: default;
-          }
-        }//a
-      }//li
-    }//ul
-  }//nav
-  @media screen and (max-width: $mobileDeviceWidth){
-    position: static;
-    top: auto;
-    right: auto;
-    bottom: auto;
-    left: auto;
-    height: auto;
-    width: auto;
-    overflow: auto;
-    margin-bottom: 15px;
-    display: none;
-  }
+                a {
+                    color: $darkGray;
+                    //order matters w/ visited and active
+                    &:visited {
+                        color: $darkGray;
+                    }
+                    &:hover{
+                        cursor: pointer;
+                        color: $hoverColor;
+                    }
+                    &.active{
+                        color: $activeColor;
+                        cursor: default;
+                    }
+                }//a
+            }//li
+        }//ul
+    }//nav
 }//aside.tray

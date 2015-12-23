@@ -1,128 +1,75 @@
 header.main{
-  font-size: 1.3rem;
-  position: fixed;
-  top: 0;
-  right: 0;
-  left: 0;
-  background: $blue;
-  color: $light;
-  line-height: $menuHeight;
-  height: $menuHeight;
-  -webkit-box-shadow: 0 0 7px $darkGray;
-  -moz-box-shadow: 0 0 7px $darkGray;
-  box-shadow: 0 0 7px $darkGray;
-  z-index: 3;
-
-  //float right and float lev nav's
-  nav.modules,
-  nav.userMenu{
-    ul.moduleWrap > li{
-      padding: 0;
-    }
-    ul{
-      padding: 0;
-      margin: 0;
-      height: $menuHeight;
-
-      li{
-
-        a{
-          padding: 0 1.1rem;
-          display: block;
-          width: inherit;
-          height: $menuHeight;
-          color: $light;
-          text-decoration: none;
-
-          &.active,
-          &.active:hover{
-            cursor: default;
-            background-color: $activeColor;
-          }
-        }//a
-        a:hover{
-          cursor: pointer;
-          background-color: $hoverColor;
-        }
-        @media screen and (max-width: $mobileDeviceWidth){
-          display: block;
-          float: none;
-        }
-      }//li
-    }//ul
-  }//nav
-
-  nav.menuStack{
-    display: none;
-    @media screen and (max-width: $mobileDeviceWidth){
-      display: block;
-    }
-  }
-  nav.modules{
-    width: 66%;
-    float: left;
-    padding: 0 0 0 15px;
-    ul{
-      li {
-        -webkit-transition: background-color .2s;
-        -moz-transition: background-color .2s;
-        -ms-transition: background-color .2s;
-        transition: background-color .2s;
-        transform: translateZ(0);
-      }
-      @media screen and (max-width: $mobileDeviceWidth){
-        display: block;
-        float: none;
-        padding: 0;
-      }
-    }
-
-  }//nav.modules
-
-  nav.userMenu {
-    width: 34%;
-    /* float: right; */
-    ul{
-      li {
-        vertical-align: top;
-      }
-    }
-  }//nav.userMenu
-
-/*   #time_out_login {
-  height: $menuHeight;
-  #short_login_container {
-    position: absolute;
+    font-size: 1.3rem;
+    position: fixed;
+    top: 0;
     right: 0;
-    margin: 0;
-    padding: 0;
-    div.input_short_login {
-      height: $menuHeight;
-      margin: 0 .5rem;
-      .login_short {
-        position: absolute;
-        top: 15%;
-      }
-    }
-  }//div
-}//time_out_login */
+    left: 0;
+    background: $blue;
+    color: $light;
+    line-height: $menuHeight;
+    height: $menuHeight;
+    -webkit-box-shadow: 0 0 7px $darkGray;
+    -moz-box-shadow: 0 0 7px $darkGray;
+    box-shadow: 0 0 7px $darkGray;
+    z-index: 3;
 
+    //float right and float lev nav's
+    nav.modules,
+    nav.userMenu{
+        ul.moduleWrap > li{
+            padding: 0;
+        }
+        ul{
+            padding: 0;
+            margin: 0;
+            height: $menuHeight;
+
+            li{
+
+                a{
+                    padding: 0 1.1rem;
+                    display: block;
+                    width: inherit;
+                    height: $menuHeight;
+                    color: $light;
+                    text-decoration: none;
+
+                    &.active,
+                    &.active:hover{
+                        cursor: default;
+                        background-color: $activeColor;
+                    }
+                }//a
+                a:hover{
+                    cursor: pointer;
+                    background-color: $hoverColor;
+                }
+            }//li
+        }//ul
+    }//nav
+    nav.modules{
+        width: 66%;
+        float: left;
+        padding: 0 0 0 15px;
+        ul{
+            li {
+                -webkit-transition: background-color .2s;
+                -moz-transition: background-color .2s;
+                -ms-transition: background-color .2s;
+                transition: background-color .2s;
+                transform: translateZ(0);
+            }
+        }
+
+    }//nav.modules
+
+    nav.userMenu {
+        width: 34%;
+        /* float: right; */
+        ul{
+            li {
+                vertical-align: top;
+            }
+        }
+    }//nav.userMenu
 }//header.main
-
-@media screen and (max-width: $mobileDeviceWidth){
-  header.main nav.moduleMenu,
-  header.main nav.userMenu{
-    display: none;
-
-  }
-}
-@media screen and (max-width: $mobileDeviceWidth){
-  header.main{
-    position: static;
-    top: auto;
-    right: auto;
-    bottom: auto;
-    left: auto;
-    height: auto;
-  }
-}

@@ -1,35 +1,4 @@
 <form {{action "return false" this on="submit"}}>
-    <aside class="side-panel">
-        <header>
-            <h1></h1>
-        </header>
-        <menu class="t-side-menu">
-            <section>
-                <div class="col-md-12">
-                    {{#form-group title="ticket.label.location-name" for="location"}}
-                    {{ticket-location-select ticket=model}}
-                    {{#validation-error-field submitted=submitted field="location" className="validation validation-under t-location-validation-error" model=model validation=locationValidation}}invalid location{{/validation-error-field}}
-                    {{/form-group}}
-                </div>
-                <div class="col-md-12">
-                    {{#form-group title="ticket.label.requester" for="requester"}}
-                    {{input type="text" placeholder=(t "ticket.label.requester") value=model.requester.name class="form-control t-ticket-requester ticket-requester"}}
-                    {{/form-group}}
-                </div>
-                <div class="col-md-12">
-                    {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
-                    {{ticket-assignee-select ticket=model}}
-                    {{#validation-error-field submitted=submitted field="assignee" className="validation validation-under t-assignee-validation-error" model=model validation=assigneeValidation}}invalid assignee{{/validation-error-field}}
-                    {{/form-group}}
-                </div>
-                <div class="col-md-12">
-                    {{#form-group title="ticket.label.cc" for="cc"}}
-                    {{ticket-cc-power-select ticket=model}}
-                    {{/form-group}}
-                </div>
-            </section>
-        </menu>
-    </aside>
     <article class="main">
         <div class="wrapper form">
             <header>
@@ -50,9 +19,10 @@
                                     {{model.sorted_categories.lastObject.name}}
                                     <small>#{{model.number}}</small>
                                 </h1>
-                                <div class="col-md-12 ticket-created">
+                                <div class="col-md-12 meta-data">
                                     <span class="tag {{model.status_class}}">{{fa-icon 'clock-o'}} {{t model.status.name}}</span><span class="tag {{model.priority_class}}">{{fa-icon 'exclamation-triangle'}} {{t model.priority.name}}</span>
-                                    {{t 'ticket.label.created'}} {{moment-format model.created 'LLL z'}}</div>
+                                    <span class="create-date">{{t 'ticket.label.created'}} {{moment-format model.created 'LLL z'}}</span>
+                                </div>
                                 <div class="col-md-12">
                                     {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
                                     <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">invalid category</span>
@@ -99,4 +69,35 @@
             </section>
         </div>
     </article>
+    <aside class="side-panel">
+        <header>
+            <h1></h1>
+        </header>
+        <menu class="t-side-menu">
+            <section>
+                <div class="col-md-12">
+                    {{#form-group title="ticket.label.location-name" for="location"}}
+                    {{ticket-location-select ticket=model}}
+                    {{#validation-error-field submitted=submitted field="location" className="validation validation-under t-location-validation-error" model=model validation=locationValidation}}invalid location{{/validation-error-field}}
+                    {{/form-group}}
+                </div>
+                <div class="col-md-12">
+                    {{#form-group title="ticket.label.requester" for="requester"}}
+                    {{input type="text" placeholder=(t "ticket.label.requester") value=model.requester.name class="form-control t-ticket-requester ticket-requester"}}
+                    {{/form-group}}
+                </div>
+                <div class="col-md-12">
+                    {{#form-group title="ticket.label.assignee-fullname" for="assignee"}}
+                    {{ticket-assignee-select ticket=model}}
+                    {{#validation-error-field submitted=submitted field="assignee" className="validation validation-under t-assignee-validation-error" model=model validation=assigneeValidation}}invalid assignee{{/validation-error-field}}
+                    {{/form-group}}
+                </div>
+                <div class="col-md-12">
+                    {{#form-group title="ticket.label.cc" for="cc"}}
+                    {{ticket-cc-power-select ticket=model}}
+                    {{/form-group}}
+                </div>
+            </section>
+        </menu>
+    </aside>
 </form>
