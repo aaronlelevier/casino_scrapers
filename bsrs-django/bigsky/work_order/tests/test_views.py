@@ -9,7 +9,7 @@ from person.tests.factory import PASSWORD, create_single_person
 from person.models import Person
 from location.tests.factory import create_location
 from location.models import Location
-from work_order.tests.factory import create_work_orders, create_work_order
+from work_order.tests.factory import (create_work_orders, create_work_order, create_work_order_status)
 
 
 class WorkOrderListTests(APITestCase):
@@ -103,11 +103,11 @@ class WorkOrderUpdateTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['location'], str(self.data['location']))
 
-    # def test_change_status(self):
-    #     new_status = create_status()
-    #     self.data['status'] = new_status.id
-    #     response = self.client.put('/api/work-orders/{}/'.format(self.wo.id), 
-    #         self.data, format='json')
-    #     data = json.loads(response.content.decode('utf8'))
-    #     self.assertEqual(data['status'], str(self.data['status']))
+    def test_change_status(self):
+        new_status = create_work_order_status()
+        self.data['status'] = new_status.id
+        response = self.client.put('/api/work-orders/{}/'.format(self.wo.id), 
+            self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['status'], str(self.data['status']))
 

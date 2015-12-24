@@ -39,4 +39,5 @@ class TicketTests(TestCase):
         self.assertIsInstance(work_order.status, WorkOrderStatus)
         self.assertIsInstance(work_order.priority, WorkOrderPriority)
         self.assertIsInstance(work_order.requester, Person)
-        self.assertIsInstance(work_order.assignee, Person) self.assertIsInstance(work_order.location, Location) 
+        self.assertIsInstance(work_order.assignee, Person) 
+        self.assertIsInstance(work_order.location, Location) 

@@ -4,6 +4,7 @@ import uuid
 from work_order.models import (WorkOrderStatus, WorkOrderPriority, WorkOrder)
 from person.models import Person
 from location.models import Location
+from work_order.models import WORKORDER_STATUSES
 from utils.helpers import generate_uuid
 
 
@@ -30,3 +31,21 @@ def create_work_order():
 
     wo = WorkOrder.objects.create(id=id, **kwargs)
     return wo
+
+
+WORKORDER_STATUS_BASE_ID = "aed0c752-beff-4f0f-9e86-55bfc9914"
+
+def create_work_order_status(name=None):
+    incr = WorkOrderStatus.objects.count()
+    id = generate_uuid(WORKORDER_STATUS_BASE_ID, incr+1)
+    if not name:
+        name = random.choice(WORKORDER_STATUSES)
+    try:
+        obj = WorkOrderStatus.objects.get(name=name)
+    except WorkOrderStatus.DoesNotExist:
+        obj = WorkOrderStatus.objects.create(id=id, name=name)
+    return obj
+
+
+def create_work_order_statuses():
+    return [create_work_order_status(s) for s in WORKORDER_STATUSES]
