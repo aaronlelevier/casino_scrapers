@@ -1,4 +1,5 @@
 from django.test import TestCase
+from datetime import datetime
 
 from person.tests.factory import create_single_person
 from work_order.tests import factory
@@ -16,6 +17,7 @@ class WorkOrderFactory(TestCase):
         self.assertIsNotNone(wo[0].location)
         self.assertIsNotNone(wo[0].status.id)
         self.assertIsNotNone(wo[0].priority.id)
+        self.assertEqual(wo[0].date_due, datetime(2015, 2, 1, 14, 30, 00))
 
 
 class CreateStatusTests(TestCase):

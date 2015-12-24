@@ -1,5 +1,6 @@
 import random
 import uuid
+from datetime import datetime
 
 from work_order.models import (WorkOrderStatus, WorkOrderPriority, WorkOrder)
 from person.models import Person
@@ -23,7 +24,8 @@ def create_work_order():
         'status': WorkOrderStatus.objects.default(),
         'priority': WorkOrderPriority.objects.default(),
         'requester': requester,
-        'assignee': assignee
+        'assignee': assignee,
+        'date_due': datetime(2015, 2, 1, 14, 30, 00),
     }
 
     incr = WorkOrder.objects.count()
