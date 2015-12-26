@@ -35,6 +35,7 @@ class WorkOrderListTests(APITestCase):
         self.assertEqual(wo['status'], str(self.wo.status.id))
         self.assertEqual(wo['priority'], str(self.wo.priority.id))
         self.assertIsNotNone(wo['requester'])
+        self.assertIsNotNone(wo['date_due'])
 
     def test_data_location(self):
         response = self.client.get('/api/work-orders/')
@@ -76,6 +77,11 @@ class WorkOrderDetailTests(APITestCase):
         response = self.client.get('/api/work-orders/{}/'.format(self.wo.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.wo.id))
+        self.assertIsNotNone(data['location'])
+        self.assertEqual(data['status'], str(self.wo.status.id))
+        self.assertEqual(data['priority'], str(self.wo.priority.id))
+        self.assertIsNotNone(data['requester'])
+        self.assertIsNotNone(data['date_due'])
 
 
 class WorkOrderUpdateTests(APITestCase):
@@ -111,3 +117,10 @@ class WorkOrderUpdateTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['status'], str(self.data['status']))
 
+    def test_change_assignee(self):
+        new_assignee = create_single_person()
+        self.data['assignee'] = new_assignee.id
+        response = self.client.put('/api/work-orders/{}/'.format(self.wo.id), 
+            self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(data['assignee'], str(self.data['assignee']))

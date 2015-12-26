@@ -8,6 +8,7 @@ from location.models import Location
 from work_order.models import WORKORDER_STATUSES
 from utils.helpers import generate_uuid
 
+TIME =  datetime(2015, 2, 1, 14, 30, 00)
 
 def create_work_orders(_many=1):
     return [create_work_order() for x in range(_many)]
@@ -25,7 +26,7 @@ def create_work_order():
         'priority': WorkOrderPriority.objects.default(),
         'requester': requester,
         'assignee': assignee,
-        'date_due': datetime(2015, 2, 1, 14, 30, 00),
+        'date_due': TIME
     }
 
     incr = WorkOrder.objects.count()

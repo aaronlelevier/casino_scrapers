@@ -6,7 +6,7 @@ from utils.serializers import BaseCreateSerializer
 
 
 WO_FIELDS = ('id', 'location', 'status', 'priority', 'assignee',
-    'requester')
+    'requester', 'date_due')
 
 
 class WorkOrderListSerializer(serializers.ModelSerializer):

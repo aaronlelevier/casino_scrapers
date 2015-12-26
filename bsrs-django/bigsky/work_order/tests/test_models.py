@@ -1,11 +1,11 @@
 from django.conf import settings
 from django.test import TestCase
+from datetime import datetime
 
 from person.tests.factory import create_single_person
 from person.models import Person
 from location.models import Location
-from work_order.tests.factory import create_work_orders
-
+from work_order.tests.factory import (create_work_orders, TIME) 
 from work_order.models import (WorkOrder, WorkOrderPriority, WorkOrderStatus,
         WORKORDER_STATUSES, WORKORDER_PRIORITIES
         )
@@ -41,3 +41,4 @@ class TicketTests(TestCase):
         self.assertIsInstance(work_order.requester, Person)
         self.assertIsInstance(work_order.assignee, Person) 
         self.assertIsInstance(work_order.location, Location) 
+        self.assertEqual(work_order.date_due.strftime('%m/%d/%Y'), TIME.strftime('%m/%d/%Y')) 
