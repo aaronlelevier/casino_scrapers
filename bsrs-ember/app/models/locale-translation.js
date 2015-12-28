@@ -10,9 +10,16 @@ var LocaleTranslationModel = Model.extend({
     locale: attr(''),
     translation: attr(''),
     // related "translation key" for this model
-    translation_key: Ember.computed('translation_key', function() {
+    translation_key: Ember.computed(function() {
         return this.get('id').split(':')[1] || '';
-    })
+    }),
+    serialize: function() {
+        return {
+            id: this.get('id'),
+            locale: this.get('locale'),
+            translation: this.get('translation')
+        };
+    }
 });
 export default LocaleTranslationModel;
 

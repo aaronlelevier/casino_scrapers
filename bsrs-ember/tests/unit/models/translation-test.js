@@ -35,13 +35,17 @@ test('locales - push in actual object structure w/ 3 key:value', (assert) => {
         translation: LOCALE_TRANSLATION_DEFAULTS.translationOne
     };
 
-    store.push('locale-translation', locale_trans);
+    var locale = store.push('locale-translation', locale_trans);
 
     assert.equal(translation.get('locales').get('length'), 1);
     assert.equal(translation.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
     assert.equal(translation.get('locales').objectAt(0).get('locale'), LOCALE_TRANSLATION_DEFAULTS.localeOne);
     assert.equal(translation.get('locales').objectAt(0).get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
     assert.deepEqual(translation.get('locale_ids'), [LOCALE_TRANSLATION_DEFAULTS.idOne]);
+
+    store.remove('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
+
+    assert.equal(translation.get('locales').get('length'), 0);
 });
 
 test('dirty track related', (assert) => {
@@ -58,6 +62,10 @@ test('dirty track related', (assert) => {
 
     assert.ok(locale_trans.get('isDirty'));
     assert.ok(translation.get('isDirtyOrRelatedDirty'));
+
+    locale_trans.set('translation', LOCALE_TRANSLATION_DEFAULTS.translationOne);
+    assert.ok(locale_trans.get('isNotDirty'));
+    assert.ok(translation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('saveLocales', (assert) => {
@@ -70,11 +78,12 @@ test('saveLocales', (assert) => {
     var locale_trans = store.push('locale-translation', model);
     locale_trans.set('translation', LOCALE_TRANSLATION_DEFAULTS.translationTwo);
     assert.ok(locale_trans.get('isDirty'));
+    assert.ok(translation.get('isDirtyOrRelatedDirty'));
 
     translation.saveLocales();
 
-    assert.notOk(locale_trans.get('isDirty'));
-    assert.notOk(translation.get('isDirty'));
+    assert.ok(locale_trans.get('isNotDirty'));
+    assert.ok(translation.get('isNotDirtyOrRelatedNotDirty'));
     var ret = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
     assert.equal(ret.get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationTwo);
 });
@@ -89,11 +98,12 @@ test('rollbackLocales', (assert) => {
     var locale_trans = store.push('locale-translation', model);
     locale_trans.set('translation', LOCALE_TRANSLATION_DEFAULTS.translationTwo);
     assert.ok(locale_trans.get('isDirty'));
+    assert.ok(translation.get('isDirtyOrRelatedDirty'));
 
     translation.rollbackLocales();
 
-    assert.notOk(locale_trans.get('isDirty'));
-    assert.notOk(translation.get('isDirty'));
+    assert.ok(locale_trans.get('isNotDirty'));
+    assert.ok(translation.get('isNotDirtyOrRelatedNotDirty'));
     var ret = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
     assert.equal(ret.get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
 });

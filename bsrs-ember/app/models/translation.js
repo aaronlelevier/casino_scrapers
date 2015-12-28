@@ -7,28 +7,30 @@ var TranslationModel = Model.extend(NewMixin, {
     store: inject('main'),
     key: Ember.computed.alias('id'),
     locale_fks: [],
-    locales: Ember.computed('locale_fks.[]', function() {
+    locales: Ember.computed(function() {
         const trans_key = this.get('key');
         const filter = function(locale_trans) {
             return Ember.$.inArray(locale_trans.get('translation_key'), [trans_key]) > -1;
         };
-        return this.get('store').find('locale-translation', filter, []);
+        return this.get('store').find('locale-translation', filter, ['isDirty', 'translation_key']);
     }),
     locale_ids: Ember.computed('locales.[]', function() {
         return this.get('locales').mapBy('id');
     }),
-    localeIsDirty: Ember.computed(function() {
+    localeIsDirty: Ember.computed('locales.[]', function() {
         let locales = this.get('locales');
         let bool = true;
         locales.forEach((locale) => {
             // FAILING b/c "locale_fks" needs to get populated in the "deserializer" ??
-            // bool = locale.get('isDirty') && bool;
+            bool = locale.get('isDirty') && bool;
         });
         return bool;
     }),
     isDirtyOrRelatedDirty: Ember.computed('localeIsDirty', function() {
+        // others use this.get('isDirty') || this.get('localeIsDirty')
         return this.get('localeIsDirty');
     }),
+    isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     saveLocales() {
         let locales = this.get('locales');
         locales.forEach((locale) => {
@@ -51,10 +53,14 @@ var TranslationModel = Model.extend(NewMixin, {
         });
     },
     serialize() {
+        var locales = [];
+        this.get('locales').forEach(function(locale) {
+            locales.push(locale.serialize());
+        });
         return {
             id: this.get('id'),
             key: this.get('key'),
-            locales: this.get('locales')
+            locales: locales
         };
     },
 });

@@ -57,18 +57,18 @@ test('detail | header is translation key', (assert) => {
     });
 });
 
+test('detail | header is translation key', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
+        });
+    });
+});
+
 // COMMENT OUT: Need to correctly assert elements exist in the DetailView b/4 testing PUTs
-// test('detail | header is translation key', (assert) => {
-//     clearxhr(list_xhr);
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         waitFor(() => {
-//             assert.equal(currentURL(), DETAIL_URL);
-//             assert.equal(find('.t-translation-key').text(), TD.keyOneGrid);
-//         });
-//     });
-// });
-//
 // test('detail | update model by changing first Locale trans', (assert) => {
 //     clearxhr(list_xhr);
 //     visit(DETAIL_URL);
