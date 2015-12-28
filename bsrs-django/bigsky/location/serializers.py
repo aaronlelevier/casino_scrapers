@@ -12,6 +12,10 @@ from utils.validators import UniqueForActiveValidator
 
 ### LOCATION LEVEL
 
+LOCATION_LEVEL_BASE_DETAIL_FIELDS = ('id', 'name', 'contact', 'can_create_tickets',
+    'landlord', 'warranty', 'catalog_categories', 'assets',)
+
+
 class LocationLevelSerializer(serializers.ModelSerializer):
 
     id = serializers.UUIDField(read_only=False)
@@ -25,14 +29,15 @@ class LocationLevelDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LocationLevel
-        fields = ('id', 'name', 'children', 'parents',)
+        fields = LOCATION_LEVEL_BASE_DETAIL_FIELDS + \
+            ('children', 'parents',)
 
 
 class LocationLevelCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = LocationLevel
-        fields = ('id', 'name', 'children',)
+        fields = LOCATION_LEVEL_BASE_DETAIL_FIELDS + ('children',)
 
 
 ### LOCATION STATUS

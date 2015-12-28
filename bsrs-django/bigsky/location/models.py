@@ -119,6 +119,16 @@ class LocationLevel(SelfRefrencingBaseModel, BaseNameModel):
     '''
     LocationLevel records must be unique by: name, role_type
     '''
+    contact = models.BooleanField(blank=True, default=True,
+        help_text="Defines whether locations in this type will have related Contact models.")
+    can_create_tickets = models.BooleanField(blank=True, default=True,
+        help_text="Can Tickets be assigned to this Location")
+
+    # TODO: (ayl) not sure what these four fields do?
+    landlord = models.BooleanField(blank=True, default=True)
+    warranty = models.BooleanField(blank=True, default=True)
+    catalog_categories = models.BooleanField(blank=True, default=True)
+    assets = models.BooleanField(blank=True, default=True)
 
     def to_dict(self):
         children = [str(child.id) for child in self.children.all()]
