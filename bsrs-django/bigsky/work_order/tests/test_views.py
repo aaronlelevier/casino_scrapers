@@ -1,6 +1,7 @@
 import json
 import uuid
 from rest_framework import status
+from datetime import datetime
 
 from rest_framework.test import APITestCase, APITransactionTestCase
 from work_order.models import (WorkOrderStatus, WorkOrder,)
@@ -9,7 +10,8 @@ from person.tests.factory import PASSWORD, create_single_person
 from person.models import Person
 from location.tests.factory import create_location
 from location.models import Location
-from work_order.tests.factory import (create_work_orders, create_work_order, create_work_order_status)
+from work_order.tests.factory import (create_work_orders, create_work_order, 
+        create_work_order_status, TIME)
 
 
 class WorkOrderListTests(APITestCase):
@@ -124,3 +126,38 @@ class WorkOrderUpdateTests(APITestCase):
             self.data, format='json')
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['assignee'], str(self.data['assignee']))
+
+class WorkOrderCreateTests(APITestCase):
+
+    def setUp(self):
+        self.person = create_single_person()
+        self.wo = create_work_order()
+        self.client.login(username=self.person.username, password=PASSWORD)
+        serializer = WorkOrderCreateSerializer(self.wo)
+        self.data = serializer.data
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_create(self):
+        self.data.update({
+            'id': str(uuid.uuid4())
+        })
+        response = self.client.post('/api/work-orders/', self.data, format='json')
+        self.assertEqual(response.status_code, 201)
+
+    def test_data(self):
+        self.data.update({
+            'id': str(uuid.uuid4()),
+            'date_due': TIME
+        })
+        response = self.client.post('/api/work-orders/', self.data, format='json')
+        data = json.loads(response.content.decode('utf8'))
+        wo = WorkOrder.objects.get(id=data['id'])
+        self.assertEqual(data['id'], str(wo.id))
+        self.assertEqual(data['status'], str(wo.status.id))
+        self.assertEqual(data['priority'], str(wo.priority.id))
+        self.assertEqual(data['location'], str(wo.location.id))
+        self.assertEqual(data['assignee'], str(wo.assignee.id))
+        self.assertEqual(data['requester'], str(wo.requester.id))
+        self.assertEqual(datetime.strptime(data['date_due'], '%Y-%m-%dT%H:%M:%S.%fZ').strftime('%m/%d/%Y'), wo.date_due.strftime('%m/%d/%Y'))

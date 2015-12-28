@@ -1,6 +1,7 @@
 import random
 import uuid
 from datetime import datetime
+from django.utils import timezone
 
 from work_order.models import (WorkOrderStatus, WorkOrderPriority, WorkOrder)
 from person.models import Person
@@ -8,7 +9,7 @@ from location.models import Location
 from work_order.models import WORKORDER_STATUSES
 from utils.helpers import generate_uuid
 
-TIME =  datetime(2015, 2, 1, 14, 30, 00)
+TIME = timezone.now()
 
 def create_work_orders(_many=1):
     return [create_work_order() for x in range(_many)]

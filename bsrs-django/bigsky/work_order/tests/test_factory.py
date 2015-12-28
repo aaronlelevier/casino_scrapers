@@ -17,7 +17,7 @@ class WorkOrderFactory(TestCase):
         self.assertIsNotNone(wo[0].location)
         self.assertIsNotNone(wo[0].status.id)
         self.assertIsNotNone(wo[0].priority.id)
-        self.assertEqual(wo[0].date_due, datetime(2015, 2, 1, 14, 30, 00))
+        self.assertEqual(wo[0].date_due, factory.TIME)
 
 
 class CreateStatusTests(TestCase):
