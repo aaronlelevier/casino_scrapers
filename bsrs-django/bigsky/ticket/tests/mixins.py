@@ -9,7 +9,7 @@ from ticket.models import Ticket
 from ticket.tests.factory import create_ticket, create_ticket_statuses, create_ticket_priorites
 
 
-class TicketSetupMixin(object):
+class TicketSetupNoLoginMixin(object):
 
     def setUp(self):
         # Categories
@@ -27,6 +27,11 @@ class TicketSetupMixin(object):
         self.ticket = create_ticket(requester=self.person, assignee=self.person)
         self.ticket_two = create_ticket()
 
+
+class TicketSetupMixin(TicketSetupNoLoginMixin):
+
+    def setUp(self):
+        super(TicketSetupMixin, self).setUp()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)
 
