@@ -6,7 +6,7 @@ dropdb ci
 wait
 createdb ci
 wait
-./manage.py makemigrations accounting category contact generic location order person session third_party ticket translation utils work_request
+./manage.py makemigrations accounting category contact generic location person session third_party ticket translation utils work_order work_request
 wait
 ./manage.py migrate
 wait

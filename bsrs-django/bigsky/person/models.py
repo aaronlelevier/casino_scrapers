@@ -21,7 +21,7 @@ from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location
 from category.models import Category
 from person import helpers
-from order.models import WorkOrderStatus
+from work_order.models import WorkOrderStatus
 from translation.models import Locale
 from utils import choices
 from utils.models import BaseModel, BaseStatusModel, BaseStatusManager

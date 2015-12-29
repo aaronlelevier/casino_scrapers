@@ -40,7 +40,6 @@ LOCAL_APPS = [
     'contact',
     'generic',
     'location',
-    'order',
     'person',
     'session',
     'third_party',

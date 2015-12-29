@@ -1,9 +1,9 @@
 from django.conf import settings
 from django.db import models
 
-from utils.models import BaseModel, BaseQuerySet, BaseManager, BaseNameModel
 from location.models import Location
 from third_party.models import ThirdParty
+from utils.models import BaseModel, BaseQuerySet, BaseManager, BaseNameModel
 
 
 WORKORDER_STATUSES = [
