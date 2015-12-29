@@ -84,7 +84,7 @@ test('dirty track related - when the first locale isDirtyOrRelatedDirty is true'
 });
 
 // NEXT: ``translation.saveRelated();`` - why is this not setting the 'model' and related 'models' back to clean??
-test('aaron saveRelated - will call "saveLocales"', (assert) => {
+test('saveRelated - will call "saveLocales"', (assert) => {
     var translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
     var model = {
         id: LOCALE_TRANSLATION_DEFAULTS.idOne,
@@ -98,8 +98,8 @@ test('aaron saveRelated - will call "saveLocales"', (assert) => {
 
     translation.saveRelated();
 
-    // debugger;
     assert.ok(locale_trans.get('isNotDirty'));
+    assert.ok(translation.get('isNotDirty'));
     assert.ok(translation.get('isNotDirtyOrRelatedNotDirty'));
     var ret = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
     assert.equal(ret.get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationTwo);

@@ -19,7 +19,7 @@ var TranslationModel = Model.extend(NewMixin, {
     }),
     localeIsDirty: Ember.computed('locales.[]', function() {
         let locales = this.get('locales');
-        let bool = true;
+        let bool = false;
         locales.forEach((locale) => {
             bool = locale.get('isDirty') || bool;
         });
@@ -33,7 +33,6 @@ var TranslationModel = Model.extend(NewMixin, {
     saveRelated() {
         this.saveLocales();
     },
-    // TODO: Not sure why this is not setting the related 'locale.isDirty' back to 'false'??
     saveLocales() {
         let locales = this.get('locales');
         locales.forEach((locale) => {
