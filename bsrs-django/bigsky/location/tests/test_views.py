@@ -1,5 +1,6 @@
-import uuid
 import json
+import random
+import uuid
 
 from rest_framework.test import APITestCase
 from model_mommy import mommy
@@ -10,7 +11,7 @@ from location.tests.factory import create_location_levels, create_locations
 from location.models import Location, LocationLevel, LocationStatus
 from location.serializers import (LocationCreateSerializer,
     LocationUpdateSerializer)
-from person.tests.factory import create_person, PASSWORD
+from person.tests.factory import create_person, create_single_person, create_role, PASSWORD
 from utils import create
 
 
@@ -61,6 +62,12 @@ class LocationLevelTests(APITestCase):
 
         self.assertEqual(data['id'], str(location_level.id))
         self.assertEqual(data['name'], location_level.name)
+        self.assertEqual(data['contact'], location_level.contact)
+        self.assertEqual(data['can_create_tickets'], location_level.can_create_tickets)
+        self.assertEqual(data['landlord'], location_level.landlord)
+        self.assertEqual(data['warranty'], location_level.warranty)
+        self.assertEqual(data['catalog_categories'], location_level.catalog_categories)
+        self.assertEqual(data['assets'], location_level.assets)
 
     def test_get_parents(self):
         response = self.client.get('/api/admin/location-levels/{}/'.format(self.district.id))
@@ -89,6 +96,9 @@ class LocationLevelTests(APITestCase):
             'name': new_name,
             'children': [str(child_location_level.id)]
         }
+        # randomly add boolean fields for the basic 'create'
+        for field in ('contact', 'can_create_tickets', 'landlord', 'warranty', 'catalog_categories', 'assets'):
+            data[field] = random.choice([True, False])
 
         response = self.client.post('/api/admin/location-levels/', data, format='json')
 
@@ -97,10 +107,29 @@ class LocationLevelTests(APITestCase):
         new_location_level = LocationLevel.objects.get(id=data['id'])
         self.assertEqual(data['id'], str(new_location_level.id))
         self.assertEqual(data['name'], new_location_level.name)
+        self.assertEqual(data['contact'], new_location_level.contact)
+        self.assertEqual(data['can_create_tickets'], new_location_level.can_create_tickets)
+        self.assertEqual(data['landlord'], new_location_level.landlord)
+        self.assertEqual(data['warranty'], new_location_level.warranty)
+        self.assertEqual(data['catalog_categories'], new_location_level.catalog_categories)
+        self.assertEqual(data['assets'], new_location_level.assets)
         self.assertIn(
             data['children'][0],
             [str(id) for id in new_location_level.children.values_list('id', flat=True)]
         )
+
+    def test_create__bool_fields_not_required(self):
+        new_name = 'region_lp'
+        child_location_level = mommy.make(LocationLevel)
+        data = {
+            'id': str(uuid.uuid4()),
+            'name': new_name,
+            'children': [str(child_location_level.id)]
+        }
+
+        response = self.client.post('/api/admin/location-levels/', data, format='json')
+
+        self.assertEqual(response.status_code, 201)
 
     ### UPDATE
 
@@ -112,9 +141,21 @@ class LocationLevelTests(APITestCase):
             'name': 'new_name',
             'children': [str(r.id) for r in region.children.all()]
         }
+        # randomly add boolean fields for the basic 'create'
+        for field in ('contact', 'can_create_tickets', 'landlord', 'warranty', 'catalog_categories', 'assets'):
+            data[field] = random.choice([True, False])
+
         response = self.client.put('/api/admin/location-levels/{}/'.format(region.id), data, format='json')
+
         data = json.loads(response.content.decode('utf8'))
+        updated_obj = LocationLevel.objects.get(id=data['id'])
         self.assertNotEqual(data['name'], old_name)
+        self.assertEqual(data['contact'], updated_obj.contact)
+        self.assertEqual(data['can_create_tickets'], updated_obj.can_create_tickets)
+        self.assertEqual(data['landlord'], updated_obj.landlord)
+        self.assertEqual(data['warranty'], updated_obj.warranty)
+        self.assertEqual(data['catalog_categories'], updated_obj.catalog_categories)
+        self.assertEqual(data['assets'], updated_obj.assets)
 
     ### DETAIL ROUTES
 
@@ -222,15 +263,31 @@ class LocationListTests(APITestCase):
         self.assertEqual(self.data['results'][0]['location_level']['name'],
             location_level.name)
 
+    def test_filter_by_can_create_tickets(self):
+        location = Location.objects.get(name='nv')
+        location.location_level.can_create_tickets = False
+        location.save()
+
+        response = self.client.get('/api/admin/locations/?location_level__can_create_tickets=True')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(
+            data['count'],
+            Location.objects.filter(location_level__can_create_tickets=True).count()
+        )
+
 
 class LocationDetailTests(APITestCase):
 
     def setUp(self):
         create_locations()
         self.location = Location.objects.get(name='ca')
+        self.location_level = self.location.location_level
+        self.role = create_role(location_level=self.location_level)
+        self.person = create_single_person(role=self.role, location=self.location)
+        # Contacts
         create_contacts(self.location)
         # Login
-        self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         # Response / Data
         self.response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
@@ -250,6 +307,12 @@ class LocationDetailTests(APITestCase):
         self.assertIsNotNone(self.data['emails'][0]['id'])
         self.assertIsNotNone(self.data['phone_numbers'][0]['id'])
         self.assertIsNotNone(self.data['addresses'][0]['id'])
+
+    def test_data__people(self):
+        self.assertIsInstance(self.data['people'], list)
+        self.assertEqual(len(self.data['people']), 1)
+        self.assertEqual(self.data['people'][0]['id'], str(self.person.id))
+        self.assertEqual(self.data['people'][0]['fullname'], self.person.fullname)
 
     def test_location_level(self):
         self.assertIsInstance(
@@ -279,8 +342,8 @@ class LocationDetailTests(APITestCase):
             self.location.children.all()
         )
 
-    def test_keys(self):
-        self.assertEqual(len(self.data), 10) # b/c ph,email,addresses added
+    def test_count_of_detail_fields(self):
+        self.assertEqual(len(self.data), 11)
 
     def test_contact_nested(self):
         self.assertTrue(self.data['phone_numbers'][0]['id'])
@@ -315,7 +378,7 @@ class LocationDetailTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         region1 = Location.objects.filter(location_level=location_level).first()
         self.assertIn(str(region1.id), response.content.decode('utf8'))
-        self.assertEqual(len(data), 3)
+        self.assertEqual(len(data), 2)
 
 
 class LocationCreateTests(APITestCase):

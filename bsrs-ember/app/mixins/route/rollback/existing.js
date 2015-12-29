@@ -4,6 +4,7 @@ var RollbackModalMixin = Ember.Mixin.create({
     actions: {
         willTransition(transition) {
             var model = this.currentModel.model ? this.currentModel.model : this.currentModel;
+            debugger;
             if (model.get('isDirtyOrRelatedDirty')) {
                 Ember.$('.t-modal').modal('show');
                 this.trx.attemptedTransition = transition;

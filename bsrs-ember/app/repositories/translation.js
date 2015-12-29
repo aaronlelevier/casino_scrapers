@@ -15,11 +15,13 @@ export default Ember.Object.extend(GridRepositoryMixin, {
     insert(model) {
         return PromiseMixin.xhr(TRANSLATION_URL, 'POST', {data: JSON.stringify(model.createSerialize())}).then(() => {
             model.save();
+            //TODO: insert should also call saveRelated (tdd please)
         });
     },
     update(model) {
         return PromiseMixin.xhr(TRANSLATION_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
+            model.saveRelated();
         });
     },
     find() {

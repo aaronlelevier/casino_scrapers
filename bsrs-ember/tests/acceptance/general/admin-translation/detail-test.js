@@ -26,9 +26,6 @@ module('Acceptance | Admin Translation Detail-test', {
         translation_detail_data = TF.get();
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, translation_list_data);
         detail_xhr = xhr(endpoint + TD.keyOneGrid + '/', 'GET', null, {}, 200, translation_detail_data);
-        // store
-        let model = TF.get();
-        store.push('translation', model);
     },
     afterEach() {
        Ember.run(application, 'destroy');
@@ -68,42 +65,41 @@ test('detail | header is translation key', (assert) => {
     });
 });
 
-// COMMENT OUT: Need to correctly assert elements exist in the DetailView b/4 testing PUTs
-// test('detail | update model by changing first Locale trans', (assert) => {
-//     clearxhr(list_xhr);
-//     visit(DETAIL_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         let translation = store.find('translation', TD.keyOneGrid);
-//         assert.ok(translation.get('isNotDirty'));
-//     });
-//     let response = TF.get();
-//     let payload = TF.put({
-//         id: TD.keyOneGrid,
-//         locales: [{
-//             locale: TD.localeOneId,
-//             translation: TD.otherTranslationOne
-//         },{
-//             locale: TD.localeTwoId,
-//             translation: TD.localeTwoTranslation
-//         },{
-//             locale: TD.localeThreeId,
-//             translation: TD.localeThreeTranslation
-//         }]
-//     });
-//     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
-//     fillIn('.t-translation-translation:eq(0)', TD.otherTranslationOne);
-//     andThen(() => {
-//         let translation = store.find('translation', TD.keyOneGrid);
-//         assert.ok(translation.get('isDirty'));  // TODO: Need to iron out 'Locales in store'
-//     });
-//     let list = TF.list();
-//     list.results[0].name = TD.otherTranslationOne;
-//     generalPage.save();
-//     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
-//     andThen(() => {
-//         assert.equal(currentURL(), TRANSLATION_URL);
-//         let translation = store.find('translation', TD.keyOneGrid);
-//         assert.ok(translation.get('isNotDirty'));
-//     });
-// });
+test('detail | update model by changing first Locale trans', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let translation = store.find('translation', TD.keyOneGrid);
+        assert.ok(translation.get('isNotDirty'));
+    });
+    let response = TF.get();
+    let payload = TF.put({
+        id: TD.keyOneGrid,
+        locales: [{
+            locale: TD.localeOneId,
+            translation: TD.otherTranslationOne
+        },{
+            locale: TD.localeTwoId,
+            translation: TD.localeTwoTranslation
+        },{
+            locale: TD.localeThreeId,
+            translation: TD.localeThreeTranslation
+        }]
+    });
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    fillIn('.t-translation-translation:eq(0)', TD.otherTranslationOne);
+    andThen(() => {
+        let translation = store.find('translation', TD.keyOneGrid);
+        assert.ok(translation.get('isDirtyOrRelatedDirty'));  // TODO: Need to iron out 'Locales in store'
+    });
+    let list = TF.list();
+    list.results[0].name = TD.otherTranslationOne;
+    generalPage.save();
+    xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
+    andThen(() => {
+        assert.equal(currentURL(), TRANSLATION_URL);
+        let translation = store.find('translation', TD.keyOneGrid);
+        assert.ok(translation.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});

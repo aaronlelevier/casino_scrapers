@@ -3,7 +3,8 @@ from rest_framework import serializers
 from category.serializers import CategoryIDNameSerializer
 from generic.serializers import Attachment
 from location.serializers import LocationSerializer
-from person.serializers import PersonSimpleSerializer, PersonTicketSerializer
+from person.serializers import PersonTicketSerializer
+from person.serializers_leaf import PersonSimpleSerializer
 from ticket.helpers import TicketActivityToRepresentation
 from ticket.models import Ticket, TicketActivity
 from utils.serializers import BaseCreateSerializer

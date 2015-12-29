@@ -48,27 +48,43 @@ test('locales - push in actual object structure w/ 3 key:value', (assert) => {
     assert.equal(translation.get('locales').get('length'), 0);
 });
 
-test('dirty track related', (assert) => {
+test('dirty track related - when the first locale isDirtyOrRelatedDirty is true', (assert) => {
     var translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
-    var model = {
+    var one = {
         id: LOCALE_TRANSLATION_DEFAULTS.idOne,
         locale: LOCALE_TRANSLATION_DEFAULTS.localeOne,
         translation: LOCALE_TRANSLATION_DEFAULTS.translationOne
     };
-    var locale_trans = store.push('locale-translation', model);
+    store.push('locale-translation', one);
+    var two = {
+        id: LOCALE_TRANSLATION_DEFAULTS.idTwo,
+        locale: LOCALE_TRANSLATION_DEFAULTS.localeTwo,
+        translation: LOCALE_TRANSLATION_DEFAULTS.translationOne
+    };
+    store.push('locale-translation', two);
+    var three = {
+        id: LOCALE_TRANSLATION_DEFAULTS.idThree,
+        locale: LOCALE_TRANSLATION_DEFAULTS.localeThree,
+        translation: LOCALE_TRANSLATION_DEFAULTS.translationOne
+    };
+    store.push('locale-translation', three);
+    // confirm setUp
+    assert.equal(translation.get('locales').get('length'), 3);
+    assert.equal(translation.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
+    assert.equal(translation.get('locales').objectAt(1).get('id'), LOCALE_TRANSLATION_DEFAULTS.idTwo);
+    assert.equal(translation.get('locales').objectAt(2).get('id'), LOCALE_TRANSLATION_DEFAULTS.idThree);
     assert.equal(translation.get('locales').objectAt(0).get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
+    // change a Locale's 'translation', and trigger 'isDirtryOrRelatedDirty'
+    var locale = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
 
-    locale_trans.set('translation', LOCALE_TRANSLATION_DEFAULTS.translationTwo);
+    locale.set('translation', LOCALE_TRANSLATION_DEFAULTS.translationTwo);
 
-    assert.ok(locale_trans.get('isDirty'));
+    assert.ok(locale.get('isDirty'));
     assert.ok(translation.get('isDirtyOrRelatedDirty'));
-
-    locale_trans.set('translation', LOCALE_TRANSLATION_DEFAULTS.translationOne);
-    assert.ok(locale_trans.get('isNotDirty'));
-    assert.ok(translation.get('isNotDirtyOrRelatedNotDirty'));
 });
 
-test('saveLocales', (assert) => {
+// NEXT: ``translation.saveRelated();`` - why is this not setting the 'model' and related 'models' back to clean??
+test('aaron saveRelated - will call "saveLocales"', (assert) => {
     var translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
     var model = {
         id: LOCALE_TRANSLATION_DEFAULTS.idOne,
@@ -80,8 +96,9 @@ test('saveLocales', (assert) => {
     assert.ok(locale_trans.get('isDirty'));
     assert.ok(translation.get('isDirtyOrRelatedDirty'));
 
-    translation.saveLocales();
+    translation.saveRelated();
 
+    // debugger;
     assert.ok(locale_trans.get('isNotDirty'));
     assert.ok(translation.get('isNotDirtyOrRelatedNotDirty'));
     var ret = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);

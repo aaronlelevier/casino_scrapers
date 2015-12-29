@@ -10,13 +10,17 @@ var BSRS_LOCALE_TRANSLATION_DEFAULTS_OBJECT = (function() {
             localeOne: this.locale.idOne,
             translationOne: this.translation.localeOneTranslation,
             // two
-            idTwo: this.locale.idTwo + ":" + this.translation.keyTwoGrid,
+            idTwo: this.locale.idTwo + ":" + this.translation.keyOneGrid,
             localeTwo: this.locale.idTwo,
             translationTwo: this.translation.localeTwoTranslation,
-            // other
-            idThree: this.locale.idOther + ":" + this.translation.keyThreeGrid,
-            localeThree: this.locale.idOther,
+            // three
+            idThree: this.locale.idThree + ":" + this.translation.keyOneGrid,
+            localeThree: this.locale.idThree,
             translationThree: this.translation.localeThreeTranslation,
+            // other - to be used to test filtering out of other 'translation keys'
+            idOther: this.locale.idOther + ":" + this.translation.keyTwoGrid,
+            localeOther: this.locale.idOther,
+            translationOther: this.translation.localeOtherTranslation,
         }
     };
     return factory;

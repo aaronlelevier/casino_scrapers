@@ -6,11 +6,11 @@ import inject from 'bsrs-ember/utilities/store';
 var TranslationModel = Model.extend(NewMixin, {
     store: inject('main'),
     key: Ember.computed.alias('id'),
-    locale_fks: [],
     locales: Ember.computed(function() {
         const trans_key = this.get('key');
         const filter = function(locale_trans) {
-            return Ember.$.inArray(locale_trans.get('translation_key'), [trans_key]) > -1;
+            const key = locale_trans.get('translation_key');
+            return key === trans_key;
         };
         return this.get('store').find('locale-translation', filter, ['isDirty', 'translation_key']);
     }),
@@ -21,8 +21,7 @@ var TranslationModel = Model.extend(NewMixin, {
         let locales = this.get('locales');
         let bool = true;
         locales.forEach((locale) => {
-            // FAILING b/c "locale_fks" needs to get populated in the "deserializer" ??
-            bool = locale.get('isDirty') && bool;
+            bool = locale.get('isDirty') || bool;
         });
         return bool;
     }),
@@ -31,6 +30,10 @@ var TranslationModel = Model.extend(NewMixin, {
         return this.get('localeIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
+    saveRelated() {
+        this.saveLocales();
+    },
+    // TODO: Not sure why this is not setting the related 'locale.isDirty' back to 'false'??
     saveLocales() {
         let locales = this.get('locales');
         locales.forEach((locale) => {

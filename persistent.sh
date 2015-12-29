@@ -56,10 +56,12 @@ TEST=$?; if [ "$TEST" == 1 ]; then echo "pip install failed"; exit $TEST; fi
 
 cd bigsky/
 
-
-wait
-../venv/bin/python manage.py migrate
-TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $TEST; fi
+# NOTE: Need to manually migrate b/c this has an existing DB
+# TODO: Squash migrations and correctly version control them to make this
+#       process how it should be.
+# wait
+# ../venv/bin/python manage.py migrate
+# TEST=$?; if [ "$TEST" == 1 ]; then echo "migrate failed"; exit $TEST; fi
 
 
 echo "AFTER MIGRATIONS, LOAD LATEST FIXTURE DATA."

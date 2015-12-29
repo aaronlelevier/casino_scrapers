@@ -15,7 +15,6 @@ var LocaleTranslationModel = Model.extend({
     }),
     serialize: function() {
         return {
-            id: this.get('id'),
             locale: this.get('locale'),
             translation: this.get('translation')
         };

@@ -15,15 +15,6 @@ module('unit: translation deserializer test', {
     }
 });
 
-test('deserialize_list', (assert) => {
-    let json = [TRANSLATION_DEFAULTS.keyOne, TRANSLATION_DEFAULTS.keyTwo];
-    let response = {'count':2,'next':null,'previous':null,'results': json};
-
-    subject.deserialize(response);
-
-    assert.ok(store.find('translation', TRANSLATION_DEFAULTS.keyOne));
-});
-
 test('deserialize_single - translation', (assert) => {
     let response = TRANSLATION_FIXTURES.get();
 
@@ -40,18 +31,29 @@ test('deserialize_single - translation.locales attr is an array of "locale-trans
     // extra "locale-translation" in the "store" that should not be associated with the 
     // translation b/c the translation-key is different
     var model = {
-        id: LOCALE_TRANSLATION_DEFAULTS.idTwo,
-        locale: LOCALE_TRANSLATION_DEFAULTS.localeTwo,
-        translation: LOCALE_TRANSLATION_DEFAULTS.translationTwo
+        id: LOCALE_TRANSLATION_DEFAULTS.idOther,
+        locale: LOCALE_TRANSLATION_DEFAULTS.localeOther,
+        translation: LOCALE_TRANSLATION_DEFAULTS.translationOther
     };
     var locale_trans = store.push('locale-translation', model);
-
     subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
 
     let ret = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
     assert.ok(ret);
     assert.equal(store.find('locale-translation').get('length'), 4);
     assert.equal(ret.get('locales').get('length'), 3);
+    assert.equal(ret.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
+});
+
+test('deserialize - list - translations only created from list of strings', (assert) => {
+    let json = ['home.welcome1', 'home.welcome2'];
+    let response = {'count':2,'next':null,'previous':null,'results': json};
+
+    subject.deserialize(response);
+
+    let translations = store.find('translation');
+    assert.ok(translations.get('length'), 2);
+    assert.equal(store.find('locales').get('length'), 0);
 });
 
 test('deserialize_single - locale-translation', (assert) => {

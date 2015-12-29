@@ -7,6 +7,7 @@ var BSRS_TRANSLATION_DEFAULTS_OBJECT = (function() {
             idThree: '335eb805-869f-43f9-bc6c-b955374e42f6',
             keyOne: 'home.welcome',
             keyOneGrid: 'home.welcome1',
+            keyTwoGrid: 'home.welcome2',
             keyTwo: 'home.hello',
             keyThree: 'home.goodbye',
             helperOne: 'home.welcome.helper',
@@ -22,6 +23,9 @@ var BSRS_TRANSLATION_DEFAULTS_OBJECT = (function() {
             localeThreeId: 'fe0a7aa5-54b0-4bb1-a79d-bc22621562ec',
             localeThreeTranslation: '欢迎',
             localeThreeHelper: '欢迎人们到现场',
+            localeOtherId: 'fe0a7aa5-54b0-4bb1-a79d-bc22621562aa',
+            localeOtherTranslation: 'Moshi Moshi',
+            localeOtherHelper: "Moshi y'all",
             // alternate translations
             otherTranslationOne: 'goodbye',
             otherTranslationTwo: 'adios'

@@ -13,6 +13,8 @@ var extract_locale_translation = function(model, store) {
     delete model['locales'];
 };
 
+// TODO: Write a test to show how this behaves when there's nothing in the store to begin with
+
 var TranslationDeserializer = Ember.Object.extend({
     deserialize(response, options) {
         if (typeof options === 'undefined') {
@@ -24,23 +26,21 @@ var TranslationDeserializer = Ember.Object.extend({
     deserialize_single(model, id) {
         let store = this.get('store');
         let trans_check = store.find('translation', id);
-        if (!trans_check.get('id') || trans_check.get('isNotDirty')) {
-            // locale-translations
-            extract_locale_translation(model, store);
-            // translation
-            let trans = store.push('translation', model);
-            trans.save();
-        }
+        // if (!trans_check.get('id') || trans_check.get('isNotDirty')) {
+        // locale-translations
+        extract_locale_translation(model, store);
+        // translation
+        let trans = store.push('translation', model);
+        trans.save();
+        // }
     },
     deserialize_list(response) {
         let store = this.get('store');
-        response.results.forEach((model) => {
-            let trans_check = store.find('translation', model);
-            //prevent updating if dirty
-            if (!trans_check.get('id') || trans_check.get('isNotDirty')) {
-                let trans = store.push('translation', {id: model});
-                trans.save();
-            }
+        response.results.forEach((json) => {
+        // TODO: this will also be required eventually (need a test to justify as well)
+        // if (!trans_check.get('id') || trans_check.get('isNotDirty')) {
+            let trans = store.push('translation', {id: json});
+            trans.save();
         });
     }
 });
