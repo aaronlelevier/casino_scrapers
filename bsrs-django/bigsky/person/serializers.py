@@ -68,13 +68,6 @@ PERSON_FIELDS = (
 )
 
 
-class PersonSimpleSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Person
-        fields = ('id', 'fullname',)
-
-
 class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
     '''
     Base Create serializer because ``Role`` needed before second step 

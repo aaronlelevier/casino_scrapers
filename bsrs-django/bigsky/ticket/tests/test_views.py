@@ -21,7 +21,8 @@ from ticket.tests.factory import (create_ticket, create_ticket_activity,
     create_ticket_activity_type, create_ticket_activity_types,
     create_ticket_status, create_ticket_priority, create_extra_ticket_with_categories,
     create_ticket_with_single_category)
-from ticket.tests.mixins import TicketSetupMixin, TicketCategoryOrderingSetupMixin
+from ticket.tests.mixins import (TicketSetupNoLoginMixin, TicketSetupMixin,
+    TicketCategoryOrderingSetupMixin)
 
 
 class TicketListFulltextTests(TicketSetupMixin, APITestCase):
@@ -642,60 +643,6 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['added'][0]['image_thumbnail'], str(attachment.image_thumbnail))
 
 
-class TicketFilteredListTests(APITestCase):
-
-    def setUp(self):
-        self.dm = DistrictManager()
-        self.ticket = create_ticket_with_single_category(requester=self.dm.person)
-        self.ticket_two = create_ticket_with_single_category(requester=self.dm.person)
-        # Login
-        self.client.login(username=self.dm.person.username, password=PASSWORD)
-
-        # response
-        self.response = self.client.get('/api/tickets/')
-        self.data = json.loads(self.response.content.decode('utf8'))
-
-    def tearDown(self):
-        self.client.logout()
-
-    def test_response_count(self):
-        self.assertEqual(self.data['count'], 2)
-
-    def test_count__matches_filtered_queryset(self):
-        kwargs = {}
-        kwargs.update({
-            'categories__id__in': self.dm.person.role.categories.values_list('id', flat=True),
-            'location__id__in': self.dm.person.locations.values_list('id', flat=True)
-        })
-        queryset = Ticket.objects.filter(**kwargs)
-
-        self.assertEqual(self.data['count'], queryset.count())
-
-    def test_location_filter(self):
-        new_location = create_location()
-        self.ticket_two.location = new_location
-        self.ticket_two.save()
-        # If False, can't view Ticket
-        self.assertNotIn(new_location, self.dm.person.locations.all())
-
-        response = self.client.get('/api/tickets/')
-        data = json.loads(response.content.decode('utf8'))
-
-        self.assertEqual(data['count'], 1)
-
-    def test_category_filter(self):
-        new_category = create_single_category('foo')
-        self.ticket_two.categories.clear()
-        self.ticket_two.categories.add(new_category)
-        # If False, can't view Ticket
-        self.assertNotIn(new_category, self.dm.role.categories.all())
-
-        response = self.client.get('/api/tickets/')
-        data = json.loads(response.content.decode('utf8'))
-
-        self.assertEqual(data['count'], 1)
-
-
 class TicketAndTicketActivityTests(APITestCase):
 
     def setUp(self):
@@ -979,3 +926,63 @@ class TicketAndTicketActivityTests(APITestCase):
             first_attachment.id,
             list(TicketActivity.objects.order_by('created').last().content.values())
         )
+
+
+class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
+
+    def setUp(self):
+        super(TicketQuerySetFiltersTests, self).setUp()
+
+        self.person_two = create_single_person()
+
+    def tearDown(self):
+        self.client.logout()
+
+    def test_cannot_view_tickets(self):
+        with self.settings(TICKET_FILTERING_ON=True):
+            self.client.login(username=self.person_two.username, password=PASSWORD)
+
+            response = self.client.get('/api/tickets/')
+
+            data = json.loads(response.content.decode('utf8'))
+            self.assertEqual(data['count'], 0)
+
+    def test_can_view_tickets(self):
+        with self.settings(TICKET_FILTERING_ON=True):
+            self.client.login(username=self.person.username, password=PASSWORD)
+
+            response = self.client.get('/api/tickets/')
+
+            data = json.loads(response.content.decode('utf8'))
+            self.assertEqual(data['count'], 2)
+
+    def test_can_view_tickets__location(self):
+        """
+        Checks that the Ticket 'Location' is in the Person's Locations.
+        """
+        with self.settings(TICKET_FILTERING_ON=True):
+            self.client.login(username=self.person.username, password=PASSWORD)
+            other_location = create_location()
+            self.ticket_two.location = other_location
+            self.ticket_two.save()
+
+            response = self.client.get('/api/tickets/')
+
+            data = json.loads(response.content.decode('utf8'))
+            self.assertEqual(data['count'], 1)
+
+    def test_can_view_tickets__category(self):
+        """
+        Checks that at least one of Ticket's 'Categories' are in the 
+        Person's Role Categories.
+        """
+        with self.settings(TICKET_FILTERING_ON=True):
+            self.client.login(username=self.person.username, password=PASSWORD)
+            other_category = create_single_category('some other category')
+            [self.ticket_two.categories.remove(c) for c in self.ticket_two.categories.all()]
+            self.ticket_two.categories.add(other_category)
+
+            response = self.client.get('/api/tickets/')
+
+            data = json.loads(response.content.decode('utf8'))
+            self.assertEqual(data['count'], 1)

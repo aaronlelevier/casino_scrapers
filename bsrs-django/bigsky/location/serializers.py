@@ -6,11 +6,16 @@ from contact.serializers import   (
     AddressFlatSerializer, AddressSerializer)
 from location.models import LocationLevel, LocationStatus, LocationType, Location
 from location.validators import LocationParentChildValidator
+from person.serializers_leaf import PersonSimpleSerializer
 from utils.serializers import BaseCreateSerializer, NestedContactSerializerMixin
 from utils.validators import UniqueForActiveValidator
 
 
 ### LOCATION LEVEL
+
+LOCATION_LEVEL_BASE_DETAIL_FIELDS = ('id', 'name', 'contact', 'can_create_tickets',
+    'landlord', 'warranty', 'catalog_categories', 'assets',)
+
 
 class LocationLevelSerializer(serializers.ModelSerializer):
 
@@ -25,14 +30,15 @@ class LocationLevelDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LocationLevel
-        fields = ('id', 'name', 'children', 'parents',)
+        fields = LOCATION_LEVEL_BASE_DETAIL_FIELDS + \
+            ('children', 'parents',)
 
 
 class LocationLevelCreateSerializer(BaseCreateSerializer):
 
     class Meta:
         model = LocationLevel
-        fields = ('id', 'name', 'children',)
+        fields = LOCATION_LEVEL_BASE_DETAIL_FIELDS + ('children',)
 
 
 ### LOCATION STATUS
@@ -84,6 +90,7 @@ class LocationListSerializer(serializers.ModelSerializer):
 
 class LocationDetailSerializer(serializers.ModelSerializer):
     
+    people = PersonSimpleSerializer(many=True)
     parents = LocationSerializer(many=True)
     children = LocationSerializer(many=True)
     emails = EmailSerializer(required=False, many=True)
@@ -92,7 +99,7 @@ class LocationDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Location
-        fields = ('id', 'name', 'number', 'location_level', 'status',
+        fields = ('id', 'name', 'number', 'location_level', 'status', 'people',
             'parents', 'children', 'emails', 'phone_numbers', 'addresses',)
 
 
