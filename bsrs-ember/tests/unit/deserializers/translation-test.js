@@ -15,15 +15,6 @@ module('unit: translation deserializer test', {
     }
 });
 
-test('deserialize_list', (assert) => {
-    let json = [TRANSLATION_DEFAULTS.keyOne, TRANSLATION_DEFAULTS.keyTwo];
-    let response = {'count':2,'next':null,'previous':null,'results': json};
-
-    subject.deserialize(response);
-
-    assert.ok(store.find('translation', TRANSLATION_DEFAULTS.keyOne));
-});
-
 test('deserialize_single - translation', (assert) => {
     let response = TRANSLATION_FIXTURES.get();
 
@@ -45,13 +36,34 @@ test('deserialize_single - translation.locales attr is an array of "locale-trans
         translation: LOCALE_TRANSLATION_DEFAULTS.translationTwo
     };
     var locale_trans = store.push('locale-translation', model);
-
     subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
 
     let ret = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
     assert.ok(ret);
     assert.equal(store.find('locale-translation').get('length'), 4);
     assert.equal(ret.get('locales').get('length'), 3);
+    assert.equal(ret.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
+});
+
+test('deserialize - list - translation.locales attr is an array of "locale-translation" objects', (assert) => {
+    let json = TRANSLATION_FIXTURES.get();
+    let response = {'count':2,'next':null,'previous':null,'results': [json]};
+
+    // extra "locale-translation" in the "store" that should not be associated with the 
+    // translation b/c the translation-key is different
+    var model = {
+        id: LOCALE_TRANSLATION_DEFAULTS.idTwo,
+        locale: LOCALE_TRANSLATION_DEFAULTS.localeTwo,
+        translation: LOCALE_TRANSLATION_DEFAULTS.translationTwo
+    };
+    var locale_trans = store.push('locale-translation', model);
+    subject.deserialize(response);
+
+    let ret = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
+    assert.ok(ret);
+    assert.equal(store.find('locale-translation').get('length'), 4);
+    assert.equal(ret.get('locales').get('length'), 3);
+    assert.equal(ret.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
 });
 
 test('deserialize_single - locale-translation', (assert) => {

@@ -1,20 +1,10 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
-import {ValidationMixin, validate} from 'ember-cli-simple-validation/mixins/validate';
 import TabMixin from 'bsrs-ember/mixins/components/tab/base';
 import EditMixin from 'bsrs-ember/mixins/components/tab/edit';
 
-var TranslationSingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMixin, {
-    repository: inject('translation'),
-    keyValidation: validate('model.key'),
-    actions: {
-        save() {
-            this.set('submitted', true);
-            if (this.get('valid')) {
-                this._super();
-            }
-        }
-    }
+var TranslationSingle = Ember.Component.extend(TabMixin, EditMixin, {
+    repository: inject('translation')
 });
 
 export default TranslationSingle;

@@ -60,7 +60,7 @@ test('dirty track related', (assert) => {
     assert.ok(translation.get('isDirtyOrRelatedDirty'));
 });
 
-test('saveLocales', (assert) => {
+test('saveRelated - will call "saveLocales"', (assert) => {
     var translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
     var model = {
         id: LOCALE_TRANSLATION_DEFAULTS.idOne,
@@ -71,7 +71,7 @@ test('saveLocales', (assert) => {
     locale_trans.set('translation', LOCALE_TRANSLATION_DEFAULTS.translationTwo);
     assert.ok(locale_trans.get('isDirty'));
 
-    translation.saveLocales();
+    translation.saveRelated();
 
     assert.notOk(locale_trans.get('isDirty'));
     assert.notOk(translation.get('isDirty'));

@@ -28,7 +28,6 @@
                         <div class="col-md-12">
                             {{#form-group title="admin.translation.label.translation" for="translation"}}
                             {{input type="text" placeholder=(t "admin.translation.label.translation") value=locale.translation class="form-control t-translation-translation"}}
-                            {{#validation-error-field submitted=submitted field="translation" className="validation validation-under t-translation-validation-error" model=model validation=translationValidation}}{{t "validation.invalid"}} {{t "admin.translation.label.translation"}}{{/validation-error-field}}
                             {{/form-group}}
                         </div>
                     </div>

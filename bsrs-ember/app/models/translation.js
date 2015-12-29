@@ -29,6 +29,9 @@ var TranslationModel = Model.extend(NewMixin, {
     isDirtyOrRelatedDirty: Ember.computed('localeIsDirty', function() {
         return this.get('localeIsDirty');
     }),
+    saveRelated() {
+        this.saveLocales();
+    },
     saveLocales() {
         let locales = this.get('locales');
         locales.forEach((locale) => {
