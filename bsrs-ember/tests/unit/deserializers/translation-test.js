@@ -15,15 +15,50 @@ module('unit: translation deserializer test', {
     }
 });
 
+test('deserialize_list - translations only created from list of strings', (assert) => {
+    let json = ['home.welcome1', 'home.welcome2'];
+    let response = {'count':2,'next':null,'previous':null,'results': json};
+
+    subject.deserialize(response);
+
+    let translations = store.find('translation');
+    assert.ok(translations.get('length'), 2);
+    assert.equal(store.find('locales').get('length'), 0);
+});
+
+test('deserialize_list - if the object already exists in the store, do not replace it.', (assert) => {
+    // NOTE: Confirm with Toran that this test is needed?
+    // Translation doesn't have an properties to dirty, and the related 'locales' are 
+    // computed, so re-pushing into the store doesn't affect the related 'locales' 
+    // based on this test.
+    let response = TRANSLATION_FIXTURES.get();
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
+    let translation = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
+    let locale = translation.get('locales').objectAt(0);
+    let newTranslation = 'foo';
+
+    locale.set('translation', newTranslation);
+    assert.ok(locale.get('isDirty'));
+    // 2nd `deserialize` will push 'translation' into store a 2nd time
+    let json = [translation.get('id')];
+    response = {'count':1,'next':null,'previous':null,'results': json};
+    subject.deserialize(response);
+
+    translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
+    locale = translation.get('locales').objectAt(0);
+    assert.ok(locale.get('translation'), newTranslation);
+    assert.ok(locale.get('isDirty'));
+});
+
 test('deserialize_single - translation', (assert) => {
     let response = TRANSLATION_FIXTURES.get();
 
     subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
 
-    let ret = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
-    assert.ok(ret);
-    assert.equal(ret.get('id'), TRANSLATION_DEFAULTS.keyOneGrid);
-    assert.equal(ret.get('key'), TRANSLATION_DEFAULTS.keyOneGrid);
+    let translation = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
+    assert.ok(translation);
+    assert.equal(translation.get('id'), TRANSLATION_DEFAULTS.keyOneGrid);
+    assert.equal(translation.get('key'), TRANSLATION_DEFAULTS.keyOneGrid);
 });
 
 test('deserialize_single - translation.locales attr is an array of "locale-translation" objects', (assert) => {
@@ -38,33 +73,42 @@ test('deserialize_single - translation.locales attr is an array of "locale-trans
     var locale_trans = store.push('locale-translation', model);
     subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
 
-    let ret = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
-    assert.ok(ret);
+    let translation = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
+    assert.ok(translation);
     assert.equal(store.find('locale-translation').get('length'), 4);
-    assert.equal(ret.get('locales').get('length'), 3);
-    assert.equal(ret.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
-});
-
-test('deserialize - list - translations only created from list of strings', (assert) => {
-    let json = ['home.welcome1', 'home.welcome2'];
-    let response = {'count':2,'next':null,'previous':null,'results': json};
-
-    subject.deserialize(response);
-
-    let translations = store.find('translation');
-    assert.ok(translations.get('length'), 2);
-    assert.equal(store.find('locales').get('length'), 0);
+    assert.equal(translation.get('locales').get('length'), 3);
+    assert.equal(translation.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
 });
 
 test('deserialize_single - locale-translation', (assert) => {
     store.clear();
     let response = TRANSLATION_FIXTURES.get();
 
-    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOne);
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
 
-    let ret = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
-    assert.ok(ret);
-    assert.equal(ret.get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
-    assert.equal(ret.get('locale'), LOCALE_TRANSLATION_DEFAULTS.localeOne);
-    assert.equal(ret.get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
+    let locale = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
+    assert.ok(locale);
+    assert.equal(locale.get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
+    assert.equal(locale.get('locale'), LOCALE_TRANSLATION_DEFAULTS.localeOne);
+    assert.equal(locale.get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
+});
+
+test('deserialize_single - multiple deserializes from hitting detail endpoint would not affect state.', (assert) => {
+    store.clear();
+    let response = TRANSLATION_FIXTURES.get();
+
+    // 1st `deserialize`
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
+    let locale = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
+    assert.equal(locale.get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
+    let newTranslation = 'foo';
+    locale.set('translation', newTranslation);
+    assert.ok(locale.get('isDirty'));
+
+    // 2nd `deserialize` where store push would happen again
+    response = TRANSLATION_FIXTURES.get();
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
+    locale = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
+    assert.equal(locale.get('translation'), newTranslation);
+    assert.ok(locale.get('isDirty'));
 });

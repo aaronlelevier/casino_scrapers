@@ -16,6 +16,9 @@ export default Ember.Object.extend(GridRepositoryMixin, {
         return PromiseMixin.xhr(TRANSLATION_URL, 'POST', {data: JSON.stringify(model.createSerialize())}).then(() => {
             model.save();
             //TODO: insert should also call saveRelated (tdd please)
+            //NOTE: (ayl) Since the List Endpoint only contains the Translation keys, we're
+            //  never going to save related on the initial "insert"
+            //  - wait for Toran to confirm this??
         });
     },
     update(model) {
