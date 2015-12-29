@@ -11,7 +11,7 @@ from location.tests.factory import create_location_levels, create_locations
 from location.models import Location, LocationLevel, LocationStatus
 from location.serializers import (LocationCreateSerializer,
     LocationUpdateSerializer)
-from person.tests.factory import create_person, PASSWORD
+from person.tests.factory import create_person, create_single_person, create_role, PASSWORD
 from utils import create
 
 
@@ -282,9 +282,12 @@ class LocationDetailTests(APITestCase):
     def setUp(self):
         create_locations()
         self.location = Location.objects.get(name='ca')
+        self.location_level = self.location.location_level
+        self.role = create_role(location_level=self.location_level)
+        self.person = create_single_person(role=self.role, location=self.location)
+        # Contacts
         create_contacts(self.location)
         # Login
-        self.person = create_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         # Response / Data
         self.response = self.client.get('/api/admin/locations/{}/'.format(self.location.id))
@@ -304,6 +307,12 @@ class LocationDetailTests(APITestCase):
         self.assertIsNotNone(self.data['emails'][0]['id'])
         self.assertIsNotNone(self.data['phone_numbers'][0]['id'])
         self.assertIsNotNone(self.data['addresses'][0]['id'])
+
+    def test_data__people(self):
+        self.assertIsInstance(self.data['people'], list)
+        self.assertEqual(len(self.data['people']), 1)
+        self.assertEqual(self.data['people'][0]['id'], str(self.person.id))
+        self.assertEqual(self.data['people'][0]['fullname'], self.person.fullname)
 
     def test_location_level(self):
         self.assertIsInstance(
@@ -333,8 +342,8 @@ class LocationDetailTests(APITestCase):
             self.location.children.all()
         )
 
-    def test_keys(self):
-        self.assertEqual(len(self.data), 10) # b/c ph,email,addresses added
+    def test_count_of_detail_fields(self):
+        self.assertEqual(len(self.data), 11)
 
     def test_contact_nested(self):
         self.assertTrue(self.data['phone_numbers'][0]['id'])
@@ -369,7 +378,7 @@ class LocationDetailTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         region1 = Location.objects.filter(location_level=location_level).first()
         self.assertIn(str(region1.id), response.content.decode('utf8'))
-        self.assertEqual(len(data), 3)
+        self.assertEqual(len(data), 2)
 
 
 class LocationCreateTests(APITestCase):
