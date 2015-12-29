@@ -20,8 +20,9 @@
                                     <small>#{{model.number}}</small>
                                 </h1>
                                 <div class="col-md-12 meta-data">
-                                    <span class="tag {{model.status_class}}">{{fa-icon 'clock-o'}} {{t model.status.name}}</span><span class="tag {{model.priority_class}}">{{fa-icon 'exclamation-triangle'}} {{t model.priority.name}}</span>
-                                    <span class="create-date">{{t 'ticket.label.created'}} {{moment-format model.created 'LLL z'}}</span>
+                                    <span class="tag {{model.priority_class}}">{{fa-icon 'exclamation-triangle'}} {{t model.priority.name}}</span>
+                                    <span class="tag {{model.status_class}}">{{fa-icon 'clock-o'}} {{t model.status.name}}</span>
+                                    <span class="create-date" title="{{moment-format model.created 'dddd, MMMM Do YYYY, h:mm:ss a z'}}">{{t 'ticket.created' requester=model.requester timestamp=(moment-from-now model.created)}}</span>
                                 </div>
                                 <div class="col-md-12">
                                     {{#parent-ticket-category-select ticket=model top_level_category_options=top_level_category_options as |child_valid|}}
@@ -29,7 +30,7 @@
                                     {{/parent-ticket-category-select}}
                                 </div>
                                 <div class="col-md-12">
-                                    {{input type="text" placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
+                                    {{textarea placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
                                     {{#validation-error-field submitted=submitted field="request" className="validation validation-under t-request-validation-error" model=model validation=requestValidation}}invalid request{{/validation-error-field}}
                                 </div>
                             </div>
@@ -79,11 +80,6 @@
                     {{#form-group title="ticket.label.location-name" for="location"}}
                     {{ticket-location-select ticket=model}}
                     {{#validation-error-field submitted=submitted field="location" className="validation validation-under t-location-validation-error" model=model validation=locationValidation}}invalid location{{/validation-error-field}}
-                    {{/form-group}}
-                </div>
-                <div class="col-md-12">
-                    {{#form-group title="ticket.label.requester" for="requester"}}
-                    {{input type="text" placeholder=(t "ticket.label.requester") value=model.requester.name class="form-control t-ticket-requester ticket-requester"}}
                     {{/form-group}}
                 </div>
                 <div class="col-md-12">

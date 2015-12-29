@@ -1,5 +1,5 @@
 <span class="activity-icon">{{fa-icon "paperclip"}}</span>
-<span class="activity-person">{{#link-to "admin.people.person" activity.person.id}}{{person}}{{/link-to}}</span> <span class="activity-type">{{begString}} {{count}}</span> <span class="activity-timestamp">{{timestamp}}</span>
+<span class="activity-person">{{#link-to "admin.people.person" activity.person.id}}{{person}}{{/link-to}}</span> <span class="activity-type">{{begString}} {{count}}</span> <span class="activity-timestamp t-activity-timestamp" title="{{fulltime}}">{{timestamp}}</span>
 <div class="activity-files">
 {{#each attachments as |attachment|}}
     <span class="activity-file">

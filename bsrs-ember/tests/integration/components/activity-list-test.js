@@ -2,6 +2,7 @@ import Ember from 'ember';
 import trim from 'bsrs-ember/utilities/trim';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import timemachine from 'vendor/timemachine';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
@@ -11,6 +12,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import GD from 'bsrs-ember/vendor/defaults/general';
 import TAD from 'bsrs-ember/vendor/defaults/ticket_activity';
 import TAF from 'bsrs-ember/vendor/ticket_activity_fixtures';
+import moment from 'moment';
 
 const ALL_TAB = '.t-activity-tab-all_updates';
 const COMMENT_TAB = '.t-activity-tab-comments';
@@ -26,13 +28,17 @@ moduleForComponent('activity-list', 'integration: activity-list', {
     setup() {
         translation.initialize(this);
         store = module_registry(this.container, this.registry, ['model:ticket-status', 'model:ticket-priority', 'model:activity/cc-add', 'model:activity', 'model:activity/assignee', 'model:activity/person']);
+
+        timemachine.config({
+            dateString: 'December 25, 1991 13:12:59'
+        });
         trans = this.container.lookup('service:i18n');
         loadTranslations(trans, translations.generate('en'));
         translation.initialize(this);
     }
 });
 
-test('activity list will dynamically generate a mix of activity types', function(assert) {
+test('amk activity list will dynamically generate a mix of activity types', function(assert) {
     let person_to_and_from_json = TAF.get_assignee_person_and_to_from_json(TAD.idAssigneeOne);
     store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
     store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwo});
@@ -59,6 +65,7 @@ test('activity list will dynamically generate a mix of activity types', function
     this.render(hbs`{{activity-list model=model}}`);
     let $component = this.$(`${ACTIVITY_ITEMS}`);
     assert.equal($component.length, 8);
+
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added person1 person2 to CC 15 days ago`);
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} removed person1 person2 from CC 20 days ago`);
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${trans.t(TD.statusTwo)} to ${trans.t(TD.statusOne)} a month ago`);
@@ -68,6 +75,47 @@ test('activity list will dynamically generate a mix of activity types', function
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(6)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
     assert.equal(trim(this.$(`${ACTIVITY_ITEMS}:eq(7)`).text()), `${PD.fullname} uploaded 1 files 6 months ago ${GD.nameTicketAttachmentOne}`);
     // assert.equal(this.$(`${ATTACHMENT_FILE}:eq(2)`).attr('href'), `/media/${TAD.fileAttachmentAddOne}`);//not sure where this cam from....there is only 8 activity push above
+
+    let d = new Date();
+    let formatted_date = d.setDate(d.getDate()-15);
+    let time = moment(formatted_date).format('dddd, MMMM Do YYYY, h:mm:ss a z').trim();
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(0) .t-activity-timestamp:eq(0)`)[0].title.trim(), time);
+
+    d = new Date();
+    formatted_date = d.setDate(d.getDate()-20);
+    time = moment(formatted_date).format('dddd, MMMM Do YYYY, h:mm:ss a z').trim();
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(1) .t-activity-timestamp:eq(0)`)[0].title.trim(), time);
+
+    d = new Date();
+    formatted_date = d.setDate(d.getDate()-30);
+    time = moment(formatted_date).format('dddd, MMMM Do YYYY, h:mm:ss a z').trim();
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(2) .t-activity-timestamp:eq(0)`)[0].title.trim(), time);
+
+    d = new Date();
+    formatted_date = d.setDate(d.getDate()-45);
+    time = moment(formatted_date).format('dddd, MMMM Do YYYY, h:mm:ss a z').trim();
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(3) .t-activity-timestamp:eq(0)`)[0].title.trim(), time);
+
+    d = new Date();
+    formatted_date = d.setDate(d.getDate()-60);
+    time = moment(formatted_date).format('dddd, MMMM Do YYYY, h:mm:ss a z').trim();
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(4) .t-activity-timestamp:eq(0)`)[0].title.trim(), time);
+
+    d = new Date();
+    formatted_date = d.setDate(d.getDate()-90);
+    time = moment(formatted_date).format('dddd, MMMM Do YYYY, h:mm:ss a z').trim();
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(5) .t-activity-timestamp:eq(0)`)[0].title.trim(), time);
+
+    d = new Date();
+    formatted_date = d.setDate(d.getDate()-120);
+    time = moment(formatted_date).format('dddd, MMMM Do YYYY, h:mm:ss a z').trim();
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(6) .t-activity-timestamp:eq(0)`)[0].title.trim(), time);
+
+    d = new Date();
+    formatted_date = d.setDate(d.getDate()-180);
+    time = moment(formatted_date).format('dddd, MMMM Do YYYY, h:mm:ss a z').trim();
+    assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(7) .t-activity-timestamp:eq(0)`)[0].title.trim(), time);
+
 });
 
 test('activity list can be filtered to show comments or status updates', function(assert) {

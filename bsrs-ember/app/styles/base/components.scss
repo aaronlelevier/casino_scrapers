@@ -334,6 +334,7 @@ input.cmn-toggle-round:checked + label:after {
 .comment{
     min-height: 7em;
     padding: 9px 12px;
+    resize: none;
 }
 
 /* ============================================================

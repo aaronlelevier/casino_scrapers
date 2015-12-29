@@ -112,9 +112,20 @@ div.buttonGroup {
 		}
 	}
 }
-.ticket-request{
-	margin: 15px 0 10px;
+textarea.ticket-request{
+
 	font-size: 1.2rem;
+	border-color: $white;
+	height: 2.7em;
+	padding: 6px 0;
+	margin: 8px 0 17px;
+	resize: none;
+	
+	&:focus{
+		border-color: $activeColor;
+		padding: 6px 12px;
+		margin: 15px 0 10px;
+	}
 }
 .meta-data{
 	line-height: 30px;
