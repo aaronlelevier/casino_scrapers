@@ -16,7 +16,7 @@ import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-var store, personProxy, subject, personCurrent, uuid, location_deserializer, location_level_deserializer, status, person;
+var store, personProxy, subject, personCurrent, uuid, location_deserializer, location_level_deserializer, status, person, run = Ember.run;
 
 module('unit: person deserializer test', {
     beforeEach() {
@@ -25,16 +25,20 @@ module('unit: person deserializer test', {
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
         subject = PersonDeserializer.create({store: store, uuid: uuid, LocationDeserializer: location_deserializer});
-        status = store.push('status', {id: SD.activeId, name: SD.activeName});
-        person = store.push('person', {id: PD.idOne, status_fk: SD.activeId});
+        run(function() {
+            status = store.push('status', {id: SD.activeId, name: SD.activeName});
+            person = store.push('person', {id: PD.idOne, status_fk: SD.activeId});
+        });
     }
 });
 
 /* STATUS */
 test('person setup correct status fk with bootstrapped data (detail)', (assert) => {
-    let status = store.push('status', {id: SD.activeId, name: SD.activeName});
     let response = PF.generate(PD.idOne);
-    subject.deserialize(response, PD.idOne);
+    run(function() {
+        status = store.push('status', {id: SD.activeId, name: SD.activeName});
+        subject.deserialize(response, PD.idOne);
+    });
     assert.equal(person.get('status_fk'), status.get('id'));
     assert.equal(person.get('status').get('id'), status.get('id'));
     assert.deepEqual(status.get('people'), [PD.idOne]);
@@ -42,9 +46,11 @@ test('person setup correct status fk with bootstrapped data (detail)', (assert) 
 });
 
 test('person setup correct status fk with existing status pointer to person', (assert) => {
-    let status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
     let response = PF.generate(PD.idOne);
-    subject.deserialize(response, PD.idOne);
+    run(function() {
+        status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [PD.idOne]});
+        subject.deserialize(response, PD.idOne);
+    });
     assert.equal(person.get('status_fk'), status.get('id'));
     assert.equal(person.get('status').get('id'), status.get('id'));
     assert.equal(status.get('people').length, 1);
@@ -52,10 +58,12 @@ test('person setup correct status fk with existing status pointer to person', (a
 });
 
 test('person setup correct status fk with bootstrapped data (list)', (assert) => {
-    let person = store.push('person', {id: PD.id});
     let json = PF.generate(PD.idOne);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    subject.deserialize(response);
+    run(function() {
+        person = store.push('person', {id: PD.id});
+        subject.deserialize(response);
+    });
     assert.equal(person.get('status_fk'), status.get('id'));
     assert.equal(person.get('status').get('id'), status.get('id'));
     assert.equal(status.get('people').length, 1);
@@ -64,13 +72,16 @@ test('person setup correct status fk with bootstrapped data (list)', (assert) =>
 });
 
 test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with relationship already in place', (assert) => {
-    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, phone_number_fks: [PND.idOne], role_fk: RD.idOne});
-    let phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, person_fk: PD.id});
+    let location_level, phonenumber;
     let response = PF.generate(PD.id);
     response.phone_numbers = PNF.get();
-    subject.deserialize(response, PD.id);
+    run(function() {
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
+        person = store.push('person', {id: PD.id, phone_number_fks: [PND.idOne], role_fk: RD.idOne});
+        phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne, person_fk: PD.id});
+        subject.deserialize(response, PD.id);
+    });
     let person_pk = phonenumber.get('person_fk');
     assert.ok(person_pk);
     assert.deepEqual(person.get('phone_number_fks'), [PND.idOne, PND.idTwo]);
@@ -81,13 +92,16 @@ test('person will setup the correct relationship with phone numbers when deseria
 
 /* PH and ADDRESSES */
 test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with no relationship in place', (assert) => {
-    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, role_fk: RD.idOne});
-    let phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
+    let location_level, phonenumber;
     let response = PF.generate(PD.id);
     response.phone_numbers = PNF.get();
-    subject.deserialize(response, PD.id);
+    run(function() {
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
+        person = store.push('person', {id: PD.id, role_fk: RD.idOne});
+        phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
+        subject.deserialize(response, PD.id);
+    });
     let person_pk = phonenumber.get('model_fk');
     assert.ok(person_pk);
     assert.deepEqual(person.get('phone_number_fks'), [PND.idOne, PND.idTwo]);
@@ -96,13 +110,15 @@ test('person will setup the correct relationship with phone numbers when deseria
 });
 
 test('person will setup the correct relationship with phone numbers when deserialize_single is invoked with person setup with phone number relationship', (assert) => {
-    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, phone_number_fks: [PND.idOne], role_fk: RD.idOne});
-    let phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
-    let response = PF.generate(PD.id);
+    let location_level, phonenumber, response = PF.generate(PD.id);
     response.phone_numbers = PNF.get();
-    subject.deserialize(response, PD.id);
+    run(function() {
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
+        person = store.push('person', {id: PD.id, phone_number_fks: [PND.idOne], role_fk: RD.idOne});
+        phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
+        subject.deserialize(response, PD.id);
+    });
     let person_pk = phonenumber.get('model_fk');
     assert.ok(person_pk);
     assert.deepEqual(person.get('phone_number_fks'), [PND.idOne, PND.idTwo]);
@@ -112,23 +128,28 @@ test('person will setup the correct relationship with phone numbers when deseria
 
 /* ROLE */
 test('role will keep appending when deserialize_list is invoked with many people who play the same role', (assert) => {
-    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, role_fk: RD.idOne});
+    let location_level;
     let json = PF.generate_single_for_list(PD.unusedId);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    subject.deserialize(response);
+    run(function() {
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
+        person = store.push('person', {id: PD.id, role_fk: RD.idOne});
+        subject.deserialize(response);
+    });
     let original = store.find('role', RD.idOne);
     assert.deepEqual(original.get('people'), [PD.id, PD.unusedId]);
     assert.ok(original.get('isNotDirty'));
 });
 
 test('role will setup the correct relationship with location_level when deserialize_single is invoked', (assert) => {
-    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, role_fk: RD.idOne});
-    let response = PF.generate(PD.id);
-    subject.deserialize(response, PD.id);
+    let location_level, response = PF.generate(PD.id);
+    run(function() {
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
+        person = store.push('person', {id: PD.id, role_fk: RD.idOne});
+        subject.deserialize(response, PD.id);
+    });
     let role_location_level = role.get('location_level');
     assert.ok(role_location_level);
     assert.equal(location_level.get('id'), LLD.idOne);
@@ -139,14 +160,19 @@ test('role will setup the correct relationship with location_level when deserial
 
 /* PERSON LOCATION */
 test('person-location m2m is set up correctly using deserialize single (starting with no m2m relationship)', (assert) => {
-    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, person_location_fks: [], role_fk: RD.idOne});
+    let location_level;
+    run(function() {
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
+        person = store.push('person', {id: PD.id, person_location_fks: [], role_fk: RD.idOne});
+    });
     let response = PF.generate(PD.id);
     response.locations = [LF.get()];
     let locations = person.get('locations');
     assert.equal(locations.get('length'), 0);
-    subject.deserialize(response, PD.id);
+    run(function() {
+        subject.deserialize(response, PD.id);
+    });
     let original = store.find('person', PD.id);
     locations = original.get('locations');
     assert.equal(locations.get('length'), 1);
@@ -157,17 +183,22 @@ test('person-location m2m is set up correctly using deserialize single (starting
 });
 
 test('person-location m2m is added after deserialize single (starting with existing m2m relationship)', (assert) => {
-    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
-    let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne], role_fk: RD.idOne});
-    let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
+    let location_level, m2m, location;
+    run(function() {
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
+        person = store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne], role_fk: RD.idOne});
+        location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
+    });
     assert.equal(person.get('locations.length'), 1);
     let response = PF.generate(PD.id);
     let second_location = LF.get(LD.idTwo);
     second_location.name = LD.storeNameTwo;
     response.locations = [LF.get(), second_location];
-    subject.deserialize(response, PD.id);
+    run(function() {
+        subject.deserialize(response, PD.id);
+    });
     let original = store.find('person', PD.id);
     let locations = original.get('locations');
     assert.equal(locations.get('length'), 2);
@@ -179,11 +210,14 @@ test('person-location m2m is added after deserialize single (starting with exist
 });
 
 test('person-location m2m is removed when server payload no longer reflects what server has for m2m relationship', (assert) => {
-    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
-    let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
-    let person = store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne], role_fk: RD.idOne});
-    let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
+    let location_level, m2m, location;
+    run(function() {
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
+        person = store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne], role_fk: RD.idOne});
+        location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne]});
+    });
     assert.equal(person.get('locations').get('length'), 1);
     let response = PF.generate(PD.id);
     let second_location = LF.get(LD.idTwo);
@@ -191,7 +225,9 @@ test('person-location m2m is removed when server payload no longer reflects what
     let third_location = LF.get(LD.idThree);
     third_location.name = LD.storeNameThree;
     response.locations = [second_location, third_location];
-    subject.deserialize(response, PD.id);
+    run(function() {
+        subject.deserialize(response, PD.id);
+    });
     let original = store.find('person', PD.id);
     let locations = original.get('locations');
     assert.equal(locations.get('length'), 2);
@@ -203,12 +239,17 @@ test('person-location m2m is removed when server payload no longer reflects what
 });
 
 test('person-location m2m added even when person did not exist before the deserializer executes', (assert) => {
-    store.clear('person');
-    let location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
-    let role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
+    let location_level;
+    run(function() {
+        store.clear('person');
+        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, roles: [RD.idOne]});
+        role = store.push('role', {id: RD.idOne, location_level_fk: LLD.idOne, people: [PD.id]});
+    });
     let response = PF.generate(PD.id);
     response.locations = [LF.get()];
-    subject.deserialize(response, PD.id);
+    run(function() {
+        subject.deserialize(response, PD.id);
+    });
     let person = store.find('person', PD.id);
     let locations = person.get('locations');
     assert.equal(locations.get('length'), 1);

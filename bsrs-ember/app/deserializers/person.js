@@ -6,7 +6,7 @@ var extract_status = (model, store) => {
     const status = store.find('status', model.status);
     let existing_people = status.get('people') || [];
     existing_people = existing_people.indexOf(model.id) > -1 ? existing_people : existing_people.concat(model.id);
-    status.set('people', existing_people);
+    store.push('status', {id: status.get('id'), people: existing_people});
     model.status_fk = status.get('id');
     delete model.status;
 };
@@ -47,10 +47,12 @@ var extract_role_location_level = function(model, store) {
             let location_level = store.find('location-level', location_level_pk);
             let existing_roles = location_level.get('roles') || [];
             if (existing_roles.indexOf(role_pk) === -1) {
-                location_level.set('roles', existing_roles.concat([role_pk]));
+                store.push('location-level', {id: location_level.get('id'), roles: existing_roles.concat(role_pk)});
+                // location_level.set('roles', existing_roles.concat([role_pk]));
             }
             location_level.save();
-            role.set('location_level_fk', location_level_pk);
+            store.push('role', {id: role.get('id'), location_level_fk: location_level_pk});
+            // role.set('location_level_fk', location_level_pk);
         }
         return location_level_pk;
     }
@@ -62,7 +64,8 @@ var extract_role = function(model, store) {
     let location_level_fk = extract_role_location_level(model, store);
     let existing_people = role.get('people') || [];
     if (role.get('content') && existing_people.indexOf(model.id) === -1) {
-        role.set('people', existing_people.concat([model.id]));
+        store.push('role', {id: role.get('id'), people: existing_people.concat(model.id)});
+        // role.set('people', existing_people.concat([model.id]));
     }
     delete model.role;
     return [role_pk, location_level_fk];
