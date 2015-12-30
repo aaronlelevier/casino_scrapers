@@ -74,13 +74,32 @@ test('dirty track related - when the first locale isDirtyOrRelatedDirty is true'
     assert.equal(translation.get('locales').objectAt(1).get('id'), LOCALE_TRANSLATION_DEFAULTS.idTwo);
     assert.equal(translation.get('locales').objectAt(2).get('id'), LOCALE_TRANSLATION_DEFAULTS.idThree);
     assert.equal(translation.get('locales').objectAt(0).get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
+    assert.equal(translation.get('locales').objectAt(2).get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
+    assert.ok(translation.get('isNotDirty'));
+    assert.ok(translation.get('isNotDirtyOrRelatedNotDirty'));
     // change a Locale's 'translation', and trigger 'isDirtryOrRelatedDirty'
-    var locale = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
+    var locale = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idTwo);
 
     locale.set('translation', LOCALE_TRANSLATION_DEFAULTS.translationTwo);
 
     assert.ok(locale.get('isDirty'));
     assert.ok(translation.get('isDirtyOrRelatedDirty'));
+
+    locale.rollback();
+
+    // translation.rollbackLocales(); // TODO: Fix this method
+
+    assert.ok(translation.get('isNotDirty'));
+    assert.ok(translation.get('isNotDirtyOrRelatedNotDirty'));
+    var locale_two = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idTwo);
+    var locale_three = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idThree);
+    locale_two.set('translation', LOCALE_TRANSLATION_DEFAULTS.translationThree);
+    locale_three.set('translation', LOCALE_TRANSLATION_DEFAULTS.translationThree);
+    assert.ok(locale_two.get('isDirty'));
+    assert.ok(locale_three.get('isDirty'));
+    assert.ok(translation.get('isDirtyOrRelatedDirty'));
+
+
 });
 
 // NEXT: ``translation.saveRelated();`` - why is this not setting the 'model' and related 'models' back to clean??
