@@ -1,3 +1,4 @@
+import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/i18n/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';

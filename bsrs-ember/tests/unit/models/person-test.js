@@ -53,7 +53,7 @@ test('related addresses are not dirty when no addresses present', (assert) => {
 
 /* STATUS */
 test('related status should return one status for a person', (assert) => {
-    let status
+    let status;
     run(function() {
         status = store.push('status', {id: SD.activeId, name: SD.activeName}); 
     });
@@ -680,7 +680,7 @@ test('when phone number is removed after render, the person model is dirty (two 
     });
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('isNotDirty'));
-    phonenumbers = person.get('phone_numbers');
+    let phonenumbers = person.get('phone_numbers');
     run(function() {
         phonenumbers.remove(PND.idOne);
     });
@@ -763,6 +763,7 @@ test('when phone number is removed after render, the person model is dirty', (as
 });
 
 test('when address is removed after render, the person model is dirty', (assert) => {
+    let address;
     run(function() {
         person = store.push('person', {id: PD.idOne, address_fks: [AD.idOne]});
         address = store.push('address', {id: AD.idOne, address: AD.streetOne, city: AD.cityOne, state: AD.stateOne, postal_code: AD.zipOne,

@@ -13,7 +13,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
 
-var store, location, location_unused, location_level_deserializer, subject, location_status, location_status_two, location_level, run = Ember.run;
+var store, location_unused, location_level_deserializer, subject, location_status, location_status_two, location_level, run = Ember.run;
 
 module('unit: location deserializer test', {
     beforeEach() {
@@ -29,6 +29,7 @@ module('unit: location deserializer test', {
 });
 
 test('location deserializer returns correct data with already present location_level (list)', (assert) => {
+    let location;
     let json = [LF.generate(LD.idOne), LF.generate(LD.unusedId)];
     let response = {'count':2,'next':null,'previous':null,'results': json};
     run(function() {
@@ -49,6 +50,7 @@ test('location deserializer returns correct data with already present location_l
 });
 
 test('location deserializer returns correct data with no current location_level (list)', (assert) => {
+    let location;
     let json = [LF.generate(LD.unusedId)];
     let response = {'count':1,'next':null,'previous':null,'results': json};
     run(function() {
@@ -61,6 +63,7 @@ test('location deserializer returns correct data with no current location_level 
 });
 
 test('location deserializer returns correct data with already present location_level (detail)', (assert) => {
+    let location;
     let json = LF.generate(LD.unusedId);
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
@@ -74,6 +77,7 @@ test('location deserializer returns correct data with already present location_l
 });
 
 test('location deserializer returns correct data with no current location_level (detail)', (assert) => {
+    let location;
     let json = LF.generate(LD.unusedId);
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
@@ -86,6 +90,7 @@ test('location deserializer returns correct data with no current location_level 
 });
 
 test('location array in location level will not be duplicated and deserializer returns correct data with already present location_level (detail)', (assert) => {
+    let location;
     let json = LF.generate(LD.idOne);
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
@@ -100,6 +105,7 @@ test('location array in location level will not be duplicated and deserializer r
 });
 
 test('location location level will correctly be deserialized when server returns location without a different location level (detail)', (assert) => {
+    let location;
     let json = LF.generate(LD.idOne);
     json.location_level.id = LLD.idTwo;
     run(function() {
@@ -119,6 +125,7 @@ test('location location level will correctly be deserialized when server returns
 
 /* LOCATION TO STATUS */
 test('location status will be deserialized into its own store when deserialize detail is invoked', (assert) => {
+    let location;
     let json = LF.generate(LD.idOne);
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
@@ -135,6 +142,7 @@ test('location status will be deserialized into its own store when deserialize d
 });
 
 test('location status will be updated when server returns same status (list)', (assert) => {
+    let location;
     let json = LF.generate(LD.idOne);
     delete json.cc;
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
@@ -151,6 +159,7 @@ test('location status will be updated when server returns same status (list)', (
 });
 
 test('location status will be updated when server returns same status (single)', (assert) => {
+    let location;
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     });
@@ -165,6 +174,7 @@ test('location status will be updated when server returns same status (single)',
 });
 
 test('location status will be updated when server returns different status (list)', (assert) => {
+    let location;
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
     });
@@ -184,6 +194,7 @@ test('location status will be updated when server returns different status (list
 });
 
 test('newly inserted location will have non dirty status when deserialize list executes', (assert) => {
+    let location;
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
         store.clear('location');
@@ -205,6 +216,7 @@ test('newly inserted location will have non dirty status when deserialize list e
 });
 
 test('can push in location with location level as an object', (assert) => {
+    let location;
     let json = LF.generate(LD.idOne);
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
@@ -214,10 +226,11 @@ test('can push in location with location level as an object', (assert) => {
 });
 
 test('can push in location with location level as an id', (assert) => {
+    let location;
     let json = LF.generate(LD.idOne);
     json.location_level = LLD.idOne;
     run(function() {
-        let location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+        location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
         subject.deserialize(json, LD.idOne);
     });
     assert.equal(location.get('location_level').get('id'), LLD.idOne);
@@ -225,7 +238,7 @@ test('can push in location with location level as an id', (assert) => {
 
 /* PH and ADDRESSES */
 test('location will setup the correct relationship with phone numbers when deserialize_single is invoked with no relationship in place', (assert) => {
-    let phonenumber;
+    let location, phonenumber;
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
         phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
@@ -243,6 +256,7 @@ test('location will setup the correct relationship with phone numbers when deser
 });
 
 test('location will setup the correct relationship with phone numbers when deserialize_single is invoked with location setup with phone number relationship', (assert) => {
+    let location, phonenumber;
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, phone_number_fks: [PND.idOne]});
         phonenumber = store.push('phonenumber', {id: PND.idOne, number: PND.numberOne});
@@ -260,7 +274,7 @@ test('location will setup the correct relationship with phone numbers when deser
 });
 
 test('location will setup the correct relationship with addresses when deserialize_single is invoked with no relationship in place', (assert) => {
-    let address;
+    let location, address;
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
         address = store.push('address', {id: AND.idOne, address: AND.streetOne});
@@ -278,7 +292,7 @@ test('location will setup the correct relationship with addresses when deseriali
 });
 
 test('location will setup the correct relationship with address when deserialize_single is invoked with location setup with address relationship', (assert) => {
-    let address;
+    let location, address;
     run(function() {
         location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, address_fks: [AND.idOne]});
         address = store.push('address', {id: AND.idOne, address: AND.streetOne});
