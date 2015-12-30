@@ -1,6 +1,7 @@
 import random
 
 from django.conf import settings
+from django.core.exceptions import ValidationError
 
 from model_mommy import mommy
 
@@ -72,7 +73,13 @@ def create_roles():
 
 PERSON_BASE_ID = "30f530c4-ce6c-4724-9cfd-37a16e787"
 
+
+
 def create_single_person(name=None, role=None, location=None):
+    args_required_together = [role, location]
+    if not all(args_required_together) and any(args_required_together):
+        raise ValidationError("These arguments must all be passed together")
+
     name = name or random.choice(create.LOREM_IPSUM_WORDS.split())
     role = role or create_role()
     location = location or create_location(location_level=role.location_level)
@@ -107,13 +114,13 @@ def update_login_person(person, new_password=None):
     person.save()
 
 
-def create_person(username=None, role=None, _many=1):
+def create_person(username=None, _many=1):
     '''
     Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )
 
     Return: the last user created from the `forloop`
     '''
-    role = role or create_role()
+    # role = role or create_role()
 
     # Single User Create
     if username and _many != 1:
@@ -121,12 +128,12 @@ def create_person(username=None, role=None, _many=1):
             "Can't specify more than 1 user with a specific username. "
             "You specified {} user(s) with username: {}".format(_many, username))
     elif username:
-        return create_single_person(username, role)
+        return create_single_person(username)
         
     # Multiple User Create
     for i in range(_many):
-        name = random.choice(create.LOREM_IPSUM_WORDS.split())
-        user = create_single_person(name, role)
+        username = random.choice(create.LOREM_IPSUM_WORDS.split())
+        user = create_single_person(username)
     
     return user
 

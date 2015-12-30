@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 
@@ -97,8 +98,9 @@ class FactoryTests(TestCase):
     def test_create_single_person__with_role(self):
         username = 'bob'
         role = factory.create_role()
+        location = create_location(location_level=role.location_level)
 
-        person = factory.create_single_person('bob', role)
+        person = factory.create_single_person('bob', role, location)
 
         self.assertIsInstance(person, Person)
         self.assertEqual(person.username, username)
@@ -116,15 +118,27 @@ class FactoryTests(TestCase):
             generate_uuid(factory.PERSON_BASE_ID, incr+1)
         )
 
-    def test_create_single_person__with_location(self):
+    def test_create_single_person__validator_only_role(self):
+        """
+        ``role`` and ``location`` must both be passed in as "kwargs", or 
+        not used. If one or the other is sent, it can lead to validation 
+        errors and leaky state on Jenkins.
+        """
+        role = factory.create_role()
+
+        with self.assertRaises(ValidationError):
+            factory.create_single_person(role=role)
+
+    def test_create_single_person__validator_only_location(self):
+        """
+        ``role`` and ``location`` must both be passed in as "kwargs", or 
+        not used. If one or the other is sent, it can lead to validation 
+        errors and leaky state on Jenkins.
+        """
         location = create_location()
 
-        person = factory.create_single_person(location=location)
-
-        self.assertIn(
-            location,
-            person.locations.all()
-        )
+        with self.assertRaises(ValidationError):
+            factory.create_single_person(location=location)
 
     def test_update_login_person(self):
         person = factory.create_person()

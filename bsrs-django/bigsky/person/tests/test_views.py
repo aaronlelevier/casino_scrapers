@@ -736,8 +736,7 @@ class PasswordTests(APITestCase):
 
     def setUp(self):
         self.roles = create_roles()
-        self.role = Role.objects.get(name="Administrator")
-        self.person = create_single_person(name="aaron", role=self.role)
+        self.person = create_single_person()
         self.person2 = create_single_person()
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)

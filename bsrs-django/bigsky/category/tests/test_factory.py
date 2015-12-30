@@ -89,5 +89,11 @@ class CategoryTestsForMethod(TransactionTestCase):
         ContentType.objects.clear_cache()
 
     def test_with_four_top_levels(self):
-        self.assertEqual(Category.objects.filter(parent=None).count(), 4)
-        self.assertEqual(Category.objects.filter(parent=None).first().name, 'Store Operations')
+        self.assertEqual(
+            Category.objects.filter(parent=None).count(),
+            len(factory.TOP_LEVEL_CATEGORIES)
+        )
+        self.assertEqual(
+            Category.objects.filter(parent=None).order_by('name').first().name,
+            sorted(factory.TOP_LEVEL_CATEGORIES)[0]
+        )

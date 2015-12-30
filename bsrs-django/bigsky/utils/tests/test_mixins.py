@@ -10,6 +10,7 @@ from rest_framework.test import APITestCase, APITransactionTestCase
 from accounting.models import Currency
 from accounting.serializers import CurrencySerializer
 from location.models import LocationLevel
+from location.tests.factory import create_location
 from person.models import Person, Role
 from person.tests.factory import create_single_person, create_role, create_roles, PASSWORD
 from utils import create
@@ -163,9 +164,16 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
         self.role_mgr = create_role(name="Manager", location_level=self.store)
         self.role_staff = create_role(name="staff", location_level=self.department)
 
-        self.admin = create_single_person(name=self.role_admin.name, role=self.role_admin)
-        self.mgr = create_single_person(name=self.role_mgr.name, role=self.role_mgr)
-        self.staff = create_single_person(name=self.role_staff.name, role=self.role_staff)
+        self.admin_location = create_location(location_level=self.role_admin.location_level)
+        self.mgr_location = create_location(location_level=self.role_mgr.location_level)
+        self.staff_location = create_location(location_level=self.role_staff.location_level)
+
+        self.admin = create_single_person(name=self.role_admin.name, role=self.role_admin,
+            location=self.admin_location)
+        self.mgr = create_single_person(name=self.role_mgr.name, role=self.role_mgr,
+            location=self.mgr_location)
+        self.staff = create_single_person(name=self.role_staff.name, role=self.role_staff,
+            location=self.staff_location)
 
         # Login
         self.person = Person.objects.first()
@@ -233,15 +241,16 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
 class FilterRelatedMixinMixin(APITransactionTestCase):
 
     def setUp(self):
+        self.person = create_single_person()
+        self.role = self.person.role
+
         self.roles = create_roles()
-        self.role = self.roles[0]
         for role in self.roles:
-            create_single_person(
-                name=random.choice(create.LOREM_IPSUM_WORDS.split()),
-                role=role
-            )
+            location = create_location(location_level=role.location_level)
+            create_single_person(name=random.choice(create.LOREM_IPSUM_WORDS.split()),
+                role=role, location=location)
+
         # Login User
-        self.person = create_single_person(name="foo", role=self.role)
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):

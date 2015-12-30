@@ -15,7 +15,7 @@ from rest_framework.test import APITestCase
 
 from generic.models import SavedSearch, Attachment
 from generic.serializers import SavedSearchSerializer
-from person.tests.factory import PASSWORD, create_single_person, create_role, create_person
+from person.tests.factory import PASSWORD, create_single_person, create_person
 from utils.tests.helpers import remove_attachment_test_files
 
 
@@ -23,8 +23,7 @@ class SavedSearchTests(APITestCase):
 
     def setUp(self):
         # Role
-        self.role = create_role()
-        self.person = create_single_person(name='aaron', role=self.role)
+        self.person = create_single_person()
         self.client.login(username=self.person.username, password=PASSWORD)
         self.saved_search = mommy.make(SavedSearch, person=self.person,
             endpoint_name='admin.people.index')
@@ -101,8 +100,7 @@ class ExportDataTests(APITestCase):
 
     def setUp(self):
         # Role
-        self.role = create_role()
-        self.person = create_single_person(name='aaron', role=self.role)
+        self.person = create_single_person()
         create_person(_many=10)
         # Login
         self.client.login(username=self.person.username, password=PASSWORD)

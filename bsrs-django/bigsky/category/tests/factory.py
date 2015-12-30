@@ -7,6 +7,8 @@ from utils.helpers import generate_uuid
 
 CATEGORY_BASE_ID = "24f530c4-ce6c-4724-9cfd-37a16e787"
 
+TOP_LEVEL_CATEGORIES = ['repair', 'Building', 'IT', 'Store Operations']
+
 
 def create_single_category(name):
     status = create_category_status()
@@ -19,7 +21,7 @@ def create_single_category(name):
     
 def create_categories(_many=None):
     statuses = create_category_statuses()
-    top_levels = ['repair', 'Building', 'IT', 'Store Operations']
+    top_levels = TOP_LEVEL_CATEGORIES
     top_level_children = [['plumbing','electrical'], ['Alarm', 'Carpet'], ['Computer', 'Monitor'], ['HR', 'Loss Prevention']]
     for i, name in enumerate(top_levels):
         incr = Category.objects.count()
