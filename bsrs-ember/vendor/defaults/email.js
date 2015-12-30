@@ -16,11 +16,11 @@ var BSRS_EMAIL_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    module.exports = new BSRS_EMAIL_DEFAULTS_OBJECT.defaults();
+    module.exports = new BSRS_EMAIL_DEFAULTS_OBJECT().defaults();
 } else {
     define('bsrs-ember/vendor/defaults/email', ['exports'], function (exports) {
         'use strict';
-        return new BSRS_EMAIL_DEFAULTS_OBJECT.defaults();
+        return new BSRS_EMAIL_DEFAULTS_OBJECT().defaults();
     });
 }
 

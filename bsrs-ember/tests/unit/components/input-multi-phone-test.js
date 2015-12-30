@@ -9,7 +9,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
 var store, eventbus, person, run = Ember.run;
 
-module('scott unit: input-multi-phone component test', {
+module('unit: input-multi-phone component test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:phonenumber', 'service:eventbus']);
         eventbus = this.container.lookup('service:eventbus');
