@@ -6,6 +6,8 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import TranslationMixin from 'bsrs-ember/mixins/model/translation';
 
+var run = Ember.run;
+
 var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
@@ -49,7 +51,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         const filter = function(cat) {
             return Ember.$.inArray(cat.get('id'), related_fks) > -1;
         };
-        return this.get('store').find('category', filter, []);
+        return this.get('store').find('category', filter);
     }),
     child_ids: Ember.computed('has_many_children.[]', function() {
         return this.get('has_many_children').mapBy('id'); 
@@ -61,7 +63,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         const filter = function(category) {
             return parent_id === category.get('id');
         };
-        return store.find('category', filter, ['id']);
+        return store.find('category', filter);
     }),
     add_child(child_pk) {
         let related_fks = this.get('children_fks');
@@ -75,7 +77,11 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         this.set('children_fks', updated_fks);
     },
     removeRecord() {
-        this.get('store').remove('category', this.get('id'));
+        const pk = this.get('id');
+        const store = this.get('store');
+        run(function() {
+            store.remove('category', pk);
+        });
     },
     rollbackChildren() {
         let children_fks = this.get('children_fks');
