@@ -13,7 +13,7 @@ import AD from 'bsrs-ember/vendor/defaults/address';
 
 var store, location, run = Ember.run;
 
-module('toran unit: location test', {
+module('unit: location test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:location', 'model:location-level', 'model:location-status', 'model:address', 'model:phonenumber', 'service:i18n']);
     }
