@@ -16,7 +16,7 @@ var proxy = function() {
 
 var store, eventbus, requested, run = Ember.run;
 
-module('toran unit: grid-view test', {
+module('unit: grid-view test', {
     beforeEach() {
         store = module_registry(this.container, this.registry, ['model:person', 'service:eventbus', 'model:role']);
         eventbus = this.container.lookup('service:eventbus');
