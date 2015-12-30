@@ -70,12 +70,10 @@ test('valid computed should ignore models with an empty or undefined email attr 
     assert.equal(subject.get('valid'), true);
 });
 
-test('scott valid computed should ignore models with an empty or undefined email attr (when the middle model is blank)', (assert) => {
+test('valid computed should ignore models with an empty or undefined email attr (when the middle model is blank)', (assert) => {
     let email_one;
     let email_two;
     let email_three;
-    let person = store.push('person', {id: PD.idOne});
-    let email_types = [EmailType.create({ id: ETD.personalId, name: ETD.personalEmail }), EmailType.create({ id: ETD.workId, name: ETD.workEmail })];
     let model = store.find('email', {model_fk: PD.idOne});
     let subject = InputMultiEmailComponent.create({model: model, eventbus: eventbus});
     assert.equal(subject.get('valid'), true);
