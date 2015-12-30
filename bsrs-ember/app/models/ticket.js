@@ -133,7 +133,12 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
         }
     },
     saveAttachments() {
-        this.set('previous_attachments_fks', this.get('ticket_attachments_fks'));
+        const store = this.get('store');
+        const ticket_pk = this.get('id');
+        const fks = this.get('ticket_attachments_fks');
+        run(function() {
+            store.push('ticket', {id: ticket_pk, previous_attachments_fks: fks});
+        });
         this.get('attachments').forEach(function(attachment) {
             attachment.save();
         });
@@ -203,7 +208,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
             let updated_old_assignee_tickets = old_assignee_tickets.filter(function(id) {
                 return id !== ticket_id;
             });
-            old_assignee.set('assigned_tickets', updated_old_assignee_tickets);
+            run(function() {
+                store.push('person', {id: old_assignee.get('id'), assigned_tickets: updated_old_assignee_tickets});
+            });
         }
     },
     change_assignee: function(new_assignee_id) {
@@ -263,7 +270,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
         let updated_fks = current_fks.filter(function(id) {
             return id !== attachment_id;
         });
-        this.set('ticket_attachments_fks', updated_fks);
+        run(function() {
+            store.push('ticket', {id: ticket_id, ticket_attachments_fks: updated_fks});
+        });
     },
     add_attachment(attachment_id) {
         let store = this.get('store');
@@ -271,7 +280,9 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
         attachment.set('rollback', undefined);
         let ticket_id = this.get('id');
         let current_fks = this.get('ticket_attachments_fks') || [];
-        this.set('ticket_attachments_fks', current_fks.concat(attachment_id).uniq());
+        run(function() {
+            store.push('ticket', {id: ticket_id, ticket_attachments_fks: current_fks.concat(attachment_id).uniq()});
+        });
     },
     change_status(new_status_id) {
         let ticket_id = this.get('id');
