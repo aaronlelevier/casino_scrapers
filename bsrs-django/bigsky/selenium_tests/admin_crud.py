@@ -70,8 +70,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         category_option.click()
         role_ll_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
         role_ll_input.click()
-        ll_option = self.wait_for_xhr_request("ember-power-select-option--highlighted")
-        ll_option.click()
+        ll_options = self.wait_for_xhr_request("ember-power-select-option", plural=True)
+        ll_options[0].click()
         self.gen_elem_page.click_save_btn()
         # new Role in List view
         role = role_page.find_list_data()
