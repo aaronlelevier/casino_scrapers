@@ -14,18 +14,3 @@ test('new will return true until the model is saved', function(assert) {
     subject.save();
     assert.ok(!subject.get('new'));
 });
-
-// test('isNewAndNotDirty will return a sum of both new and isNotDirty', function(assert) {
-//     let subject = TestDouble.create({name: undefined, new: true});
-//     assert.equal(subject.get('new'), true);
-//     assert.equal(subject.get('isNotDirty'), true);
-//     assert.equal(subject.get('isNewAndNotDirty'), true);
-//     subject.set('name', 'x');
-//     assert.equal(subject.get('new'), true);
-//     assert.equal(subject.get('isNotDirty'), false);
-//     assert.equal(subject.get('isNewAndNotDirty'), false);
-//     subject.save();
-//     assert.equal(subject.get('new'), undefined);
-//     assert.equal(subject.get('isNotDirty'), true);
-//     assert.equal(subject.get('isNewAndNotDirty'), undefined);
-// });
