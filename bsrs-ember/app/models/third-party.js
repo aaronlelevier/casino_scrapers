@@ -3,7 +3,10 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import StatusMixin from 'bsrs-ember/mixins/model/status';
 
+var run = Ember.run;
+
 var ThirdPartyModel = Model.extend(StatusMixin, {
+    type: 'third-party',
     store: inject('main'),
     name: attr(),
     number: attr(),
@@ -19,7 +22,11 @@ var ThirdPartyModel = Model.extend(StatusMixin, {
         this.rollbackStatus();
     },
     removeRecord() {
-        this.get('store').remove('third-party', this.get('id'));
+        const pk = this.get('id');
+        const store = this.get('store');
+        run(function() {
+            store.remove('third-party', pk);
+        });
     },
     serialize() {
         return {

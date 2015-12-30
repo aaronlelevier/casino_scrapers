@@ -12,6 +12,7 @@ import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 
 var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, NewMixin, {
+    type: 'person',
     uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),

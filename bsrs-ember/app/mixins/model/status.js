@@ -11,13 +11,13 @@ var StatusMixin = Ember.Mixin.create({
         }
     },
     saveStatus() {
+        const type = this.get('type');
         const store = this.get('store');
         const pk = this.get('id');
         const status = this.get('status');
         if (status) {
-            //TODO: we need to get the "type" below dynamically (third-party/person share this mixin)
             run(function() {
-                store.push('person', {id: pk, status_fk: status.get('id')});
+                store.push(type, {id: pk, status_fk: status.get('id')});
             });
         }
     },
