@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
+var run = Ember.run;
+
 var LocationMixin = Ember.Mixin.create({
     location_level_pk: Ember.computed('role.id', function() {
         const role = this.get('role');
@@ -18,26 +20,32 @@ var LocationMixin = Ember.Mixin.create({
             let location_pks = this.mapBy('location_pk');
             return Ember.$.inArray(location.get('id'), location_pks) > -1;
         };
-        return store.find('location', filter.bind(person_locations), []);
+        return store.find('location', filter.bind(person_locations));
     }),
     person_locations: Ember.computed(function() {
+        const pk = this.get('id');
         const store = this.get('store');
-        let filter = function(join_model) {
-            return join_model.get('person_pk') === this.get('id') && !join_model.get('removed');
+        const filter = function(join_model) {
+            return join_model.get('person_pk') === pk && !join_model.get('removed');
         };
-        return store.find('person-location', filter.bind(this), ['removed']);
+        return store.find('person-location', filter);
     }),
     add_locations(location_pk) {
+        const pk = this.get('id');
         const store = this.get('store');
         const uuid = this.get('uuid');
-        store.push('person-location', {id: uuid.v4(), person_pk: this.get('id'), location_pk: location_pk});
+        run(function() {
+            store.push('person-location', {id: uuid.v4(), person_pk: pk, location_pk: location_pk});
+        });
     },
     remove_locations(location_pk) {
         let store = this.get('store');
         let m2m_pk = this.get('person_locations').filter((m2m) => {
             return m2m.get('location_pk') === location_pk;
         }).objectAt(0).get('id');
-        store.push('person-location', {id: m2m_pk, removed: true});
+        run(function() {
+            store.push('person-location', {id: m2m_pk, removed: true});
+        });
     },
     locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
     locationsIsDirty: Ember.computed('person_location_fks.[]', 'locations.@each.isDirty', function() {
@@ -64,41 +72,44 @@ var LocationMixin = Ember.Mixin.create({
         const store = this.get('store');
         const locations = this.get('locations');
         const previous_m2m_fks = this.get('person_location_fks');
-        const m2m_to_throw_out = store.find('person-location', function(join_model) {
+        const m2m_array = store.find('person-location').toArray();
+        const m2m_to_throw_out = m2m_array.filter(function(join_model) {
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
-        }, ['removed']);
-        m2m_to_throw_out.forEach(function(join_model) {
-            join_model.set('removed', true);
         });
-        previous_m2m_fks.forEach(function(pk) {
-            var m2m_to_keep = store.find('person-location', pk);
-            if (m2m_to_keep.get('id')) {
-                m2m_to_keep.set('removed', undefined);
-            }
+        run(function() {
+            m2m_to_throw_out.forEach(function(join_model) {
+                store.push('person-location', {id: join_model.get('id'), removed: true});
+            });
+            previous_m2m_fks.forEach(function(pk) {
+                store.push('person-location', {id: pk, removed: undefined});
+            });
         });
         this.resetPersonLocationFks();
     },
     resetPersonLocationFks(options) {
         let saved_m2m_pks = [];
+        const person_id = this.get('id');
         const store = this.get('store');
         const locations = this.get('locations');
         locations.forEach((location) => {
             if(options && options.save === true) {
                 location.save();
             }
-            let filter = function(location_model, join_model) {
+            const m2m_array = store.find('person-location').toArray();
+            const m2m = m2m_array.filter(function(location_model, join_model) {
                 const removed = join_model.get('removed');
                 const person_pk = join_model.get('person_pk');
                 const location_pk = join_model.get('location_pk');
                 return person_pk === this.get('id') &&
                     location_pk === location_model.get('id') && !removed;
-            };
-            const m2m = store.find('person-location', filter.bind(this, location), ['removed']);
+            }.bind(this, location));
             m2m.forEach(function(join_model) {
                 saved_m2m_pks.push(join_model.get('id'));
             });
         });
-        this.set('person_location_fks', saved_m2m_pks);
+        run(function() {
+            store.push('person', {id: person_id, person_location_fks: saved_m2m_pks});
+        });
     }
 });
 
