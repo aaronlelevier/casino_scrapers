@@ -34,8 +34,9 @@ class TicketManagerTests(TestCase):
 
     def setUp(self):
         create_categories()
-        create_single_person()
-        create_tickets(_many=2)
+        self.person = create_single_person()
+        self.ticket = create_ticket(requester=self.person, assignee=self.person)
+        self.ticket_two = create_ticket()
 
     def test_deleted(self):
         ticket = Ticket.objects.first()
@@ -57,6 +58,16 @@ class TicketManagerTests(TestCase):
             ).count()
 
         ret = Ticket.objects.search_multi(keyword=search).count()
+
+        self.assertEqual(ret, raw_qs_count)
+
+    def test_filter_on_categories_and_location(self):
+        raw_qs_count = Ticket.objects.filter(
+            categories__id__in=self.person.role.categories.values_list('id', flat=True),
+            location__id__in=self.person.locations.values_list('id', flat=True)
+        ).count()
+
+        ret = Ticket.objects.filter_on_categories_and_location(self.person).count()
 
         self.assertEqual(ret, raw_qs_count)
 

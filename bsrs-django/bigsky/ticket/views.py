@@ -18,17 +18,9 @@ class TicketQuerySetFilters(object):
         queryset = super(TicketQuerySetFilters, self).get_queryset()
 
         if settings.TICKET_FILTERING_ON:
-            queryset = self._filter_by_person_attrs(queryset)
+            queryset = queryset.filter_on_categories_and_location(self.request.user)
 
         return queryset
-
-    def _filter_by_person_attrs(self, queryset):
-        kwargs = {}
-        kwargs.update({
-            'categories__id__in': self.request.user.role.categories.values_list('id', flat=True),
-            'location__id__in': self.request.user.locations.values_list('id', flat=True)
-        })
-        return queryset.filter(**kwargs)
 
 
 class TicketViewSet(TicketQuerySetFilters, CreateTicketModelMixin,

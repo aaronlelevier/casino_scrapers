@@ -106,6 +106,35 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         self.assertEqual(assignee['title'], self.ticket.assignee.title)
         self.assertEqual(assignee['role'], str(self.ticket.assignee.role.id))
 
+    # Ticket specific "filter" tests
+
+    def test_filter__category_name(self):
+        """
+        Filter for all 'light fixture' Tickets for example.
+        """
+        keyword = self.category.name[:5]
+
+        response = self.client.get('/api/tickets/?categories__name__icontains={}'.format(keyword))
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(
+            data['count'],
+            Ticket.objects.filter(categories__name__icontains=keyword).count()
+        )
+
+    def test_filter__category(self):
+        """
+        Filter for all Tickets in a single Category, for example: 'HVAC'.
+        """
+        response = self.client.get('/api/tickets/?categories={}'.format(self.category.id))
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(
+            data['count'],
+            Ticket.objects.filter(categories=self.category.id).count()
+        )
+
+
 class TicketDetailTests(TicketSetupMixin, APITestCase):
 
     def test_response(self):
@@ -943,8 +972,8 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             self.client.login(username=self.person_two.username, password=PASSWORD)
 
             response = self.client.get('/api/tickets/')
-
             data = json.loads(response.content.decode('utf8'))
+
             self.assertEqual(data['count'], 0)
 
     def test_can_view_tickets(self):
@@ -952,9 +981,12 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             self.client.login(username=self.person.username, password=PASSWORD)
 
             response = self.client.get('/api/tickets/')
-
             data = json.loads(response.content.decode('utf8'))
-            self.assertEqual(data['count'], 2)
+
+            self.assertEqual(
+                data['count'],
+                Ticket.objects.filter_on_categories_and_location(self.person).count()
+            )
 
     def test_can_view_tickets__location(self):
         """
@@ -967,9 +999,12 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             self.ticket_two.save()
 
             response = self.client.get('/api/tickets/')
-
             data = json.loads(response.content.decode('utf8'))
-            self.assertEqual(data['count'], 1)
+
+            self.assertEqual(
+                data['count'],
+                Ticket.objects.filter_on_categories_and_location(self.person).count()
+            )
 
     def test_can_view_tickets__category(self):
         """
@@ -983,6 +1018,9 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             self.ticket_two.categories.add(other_category)
 
             response = self.client.get('/api/tickets/')
-
             data = json.loads(response.content.decode('utf8'))
-            self.assertEqual(data['count'], 1)
+
+            self.assertEqual(
+                data['count'],
+                Ticket.objects.filter_on_categories_and_location(self.person).count()
+            )

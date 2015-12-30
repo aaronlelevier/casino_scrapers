@@ -87,6 +87,12 @@ class TicketQuerySet(BaseQuerySet):
                     .prefetch_related('categories')
                     .exclude(categories__isnull=True))
 
+    def filter_on_categories_and_location(self, person):
+        return self.filter(
+            categories__id__in=person.role.categories.values_list('id', flat=True),
+            location__id__in=person.locations.values_list('id', flat=True)
+        )
+
 
 class TicketManager(BaseManager):
 
@@ -98,6 +104,9 @@ class TicketManager(BaseManager):
 
     def all_with_ordered_categories(self):
         return self.get_queryset().all_with_ordered_categories()
+
+    def filter_on_categories_and_location(self, person):
+        return self.get_queryset().filter_on_categories_and_location(person)
 
 
 class Ticket(BaseModel):
