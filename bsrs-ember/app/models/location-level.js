@@ -33,7 +33,11 @@ var LocationLevel = Model.extend(NewMixin, {
         this.set('children_fks', new_children.mapBy('id')); 
     },
     removeRecord() {
-        this.get('store').remove('location-level', this.get('id'));
+        const pk = this.get('id');
+        const store = this.get('store');
+        run(function() {
+            store.remove('location-level', pk);
+        });
     },
     children: Ember.computed('children_fks.[]', function() {
         const children_fks = this.get('children_fks');

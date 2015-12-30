@@ -126,7 +126,11 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
 
     },
     removeRecord() {
-        this.get('store').remove('person', this.get('id'));
+        const pk = this.get('id');
+        const store = this.get('store');
+        run(function() {
+            store.remove('person', pk);
+        });
     }
 });
 
