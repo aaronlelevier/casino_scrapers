@@ -12,8 +12,7 @@
   </span>
 
   {{input-dynamic obj=email prop=fieldNames placeholder=placeholder}}
-  {{#validation-error-field field="number" class="t-input-multi-email-validation-format-error" submitted=submitted model=email index=index validation="numberFormat"}}invalid email number{{/validation-error-field}}
-  {{#validation-error-field field="number" class="t-input-multi-email-validation-region-error" submitted=submitted model=email index=index validation="numberRegion"}}invalid email number region{{/validation-error-field}}
+  {{#validation-error-field field="email" class="t-input-multi-email-validation-format-error" submitted=submitted model=email index=index validation="emailFormat"}}invalid email email{{/validation-error-field}}
 </div>
 {{/each}}
 <button class="t-add-btn add-btn btn btn-default btn-sm" type="button" {{action 'append'}}><span class="btn-label">{{fa-icon "plus"}} {{t "admin.email.add"}}</span></button>
