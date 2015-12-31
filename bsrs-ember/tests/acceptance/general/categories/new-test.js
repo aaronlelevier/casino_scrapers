@@ -25,7 +25,7 @@ const CATEGORY = '.t-category-children-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-category-children-select-dropdown > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let application, store, payload, list_xhr, children_xhr, original_uuid;
+let application, store, payload, list_xhr, children_xhr, original_uuid, run = Ember.run;
 
 module('Acceptance | category-new', {
     beforeEach() {
@@ -46,7 +46,9 @@ module('Acceptance | category-new', {
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, CATEGORY_FIXTURES.empty());
         let category_children_endpoint = PREFIX + '/admin/categories/' + '?name__icontains=2z&page_size=25';
         children_xhr = xhr(category_children_endpoint, 'GET', null, {}, 200, CATEGORY_FIXTURES.list());
-        store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
+        run(function() {
+            store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
+        });
         original_uuid = random.uuid;
         random.uuid = function() { return UUID.value; };
     },

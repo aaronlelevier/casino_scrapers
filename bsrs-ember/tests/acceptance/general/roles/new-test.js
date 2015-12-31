@@ -27,7 +27,7 @@ const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let application, store, payload, list_xhr, original_uuid, url, counter;
+let application, store, payload, list_xhr, original_uuid, url, counter, run = Ember.run;
 
 module('Acceptance | role-new', {
     beforeEach() {
@@ -46,7 +46,9 @@ module('Acceptance | role-new', {
         random.uuid = function() { return UUID.value; };
         url = `${PREFIX}${BASE_URL}/`;
         counter=0;
-        store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
+        run(function() {
+            store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
+        });
     },
     afterEach() {
         counter=0;

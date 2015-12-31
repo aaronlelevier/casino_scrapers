@@ -26,7 +26,7 @@ const BASE_URL = BASEURLS.base_locations_url;
 const LOCATION_URL = `${BASE_URL}/index`;
 const DETAIL_URL = BASE_URL + '/' + LD.idOne;
 
-let application, store, endpoint, list_xhr, url, original_uuid;
+let application, store, endpoint, list_xhr, url, original_uuid, run = Ember.run;
 
 module('Acceptance | detail-test', {
     beforeEach() {
@@ -507,7 +507,9 @@ test('when you deep link to the location detail view you can add a new phone num
     });
     var phone_numbers = PNF.put();
     var response = LF.detail(LD.idOne);
-    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
+    run(function() {
+        phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
+    });
     var payload = LF.put({id: LD.idOne, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -536,7 +538,9 @@ test('when you deep link to the location detail view you can add a new address',
     });
     var addresses = AF.put();
     var response = LF.detail(LD.idOne);
-    addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
+    run(function() {
+        addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
+    });
     var payload = LF.put({id: LD.idOne, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -649,7 +653,9 @@ test('when you deep link to the location detail view you can change the phone nu
     var phone_numbers = PNF.put();
     phone_numbers[0].type = PNTD.mobileId;
     var response = LF.detail(LD.idOne);
-    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
+    run(function() {
+        phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
+    });
     var payload = LF.put({id: LD.idOne, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -672,7 +678,9 @@ test('when you deep link to the location detail view you can change the address 
     var addresses = AF.put();
     addresses[0].type = ATD.shippingId;
     var response = LF.detail(LD.idOne);
-    addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
+    run(function() {
+        addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
+    });
     var payload = LF.put({id: LD.idOne, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();

@@ -46,7 +46,7 @@ const LOCATIONS = `${LOCATION} > .ember-power-select-multiple-option`;
 const LOCATION_ONE = `${LOCATIONS}:eq(0)`;
 const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url;
+var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url, run = Ember.run;
 
 module('Acceptance | detail test', {
     beforeEach() {
@@ -513,7 +513,9 @@ test('when you deep link to the person detail view you can add a new phone numbe
     });
     var phone_numbers = PNF.put();
     var response = PF.detail(PD.id);
-    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
+    run(function() {
+        phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
+    });
     var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -542,7 +544,9 @@ test('when you deep link to the person detail view you can add a new address', (
     });
     var addresses = AF.put();
     var response = PF.detail(PD.id);
-    addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
+    run(function() {
+        addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
+    });
     var payload = PF.put({id: PD.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -655,7 +659,9 @@ test('when you deep link to the person detail view you can change the phone numb
     var phone_numbers = PNF.put();
     phone_numbers[0].type = PNTD.mobileId;
     var response = PF.detail(PD.id);
-    phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
+    run(function() {
+        phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
+    });
     var payload = PF.put({id: PD.id, phone_numbers: phone_numbers});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
@@ -678,7 +684,9 @@ test('when you deep link to the person detail view you can change the address ty
     var addresses = AF.put();
     addresses[0].type = ATD.shippingId;
     var response = PF.detail(PD.id);
-    addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
+    run(function() {
+        addresses.push({id: UUID.value, type: ATD.officeId, address: AD.streetThree});
+    });
     var payload = PF.put({id: PD.id, addresses: addresses});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();

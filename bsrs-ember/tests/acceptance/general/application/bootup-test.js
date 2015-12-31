@@ -18,7 +18,7 @@ import BSRS_PERSON_CURRENT_DEFAULTS_OBJECT from 'bsrs-ember/vendor/defaults/pers
 
 const HOME_URL = '/';
 
-var application, store;
+var application, store, run = Ember.run;
 
 module('Acceptance | bootup test', {
     beforeEach() {
@@ -183,7 +183,9 @@ test('on boot we should fetch and load the role types configuration', function(a
 });
 
 test('on boot we should fetch and load the location level configuration', function(assert) {
-    store.clear('location-level');
+    run(function() {
+        store.clear('location-level');
+    });
     visit(HOME_URL);
     andThen(() => {
         var location_level_models = store.find('location-level');
