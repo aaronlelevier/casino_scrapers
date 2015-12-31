@@ -33,7 +33,6 @@ en,admin.approval.one,Approval,,"'admin.approval.one':'Approval',",Approval
 en,admin.approval.other,Approvals,,"'admin.approval.other':'Approvals',",Approvals
 en,admin.assignment.one,Assignment Profile,,"'admin.assignment.one':'Assignment Profile',",Assignment Profile
 en,admin.assignment.other,Assignment Profiles,,"'admin.assignment.other':'Assignment Profiles',",Assignment Profiles
-en,admin.category.search,Search Categories,,"'admin.category.search':'Search Categories',",Search Categories
 en,admin.category.label.children,Sub Categories,,"'admin.category.label.children':'Sub Categories',",Sub Categories
 en,admin.category.label.cost_amount,Cost Amount,,"'admin.category.label.cost_amount':'Cost Amount',",Cost Amount
 en,admin.category.label.cost_code,Cost Code,,"'admin.category.label.cost_code':'Cost Code',",Cost Code
@@ -51,6 +50,7 @@ en,admin.category.name.maintenance,Maintenance,,"'admin.category.name.maintenanc
 en,admin.category.name.repair,Repair,,"'admin.category.name.repair':'Repair',",Repair
 en,admin.category.one,Category,,"'admin.category.one':'Category',",Category
 en,admin.category.other,Categories,,"'admin.category.other':'Categories',",Categories
+en,admin.category.search,Search Categories,,"'admin.category.search':'Search Categories',",Search Categories
 en,admin.category.status.active,Active,,"'admin.category.status.active':'Active',",Active
 en,admin.categoryType.one,Category Type,,"'admin.categoryType.one':'Category Type',",Category Type
 en,admin.categoryType.other,Category Types,,"'admin.categoryType.other':'Category Types',",Category Types
@@ -62,7 +62,6 @@ en,admin.contractorAssignment.one,Contractor Assignment,,"'admin.contractorAssig
 en,admin.contractorAssignment.other,Contractor Assignments,,"'admin.contractorAssignment.other':'Contractor Assignments',",Contractor Assignments
 en,admin.general.one,General Setting,,"'admin.general.one':'General Setting',",General Setting
 en,admin.general.other,General Settings,,"'admin.general.other':'General Settings',",General Settings
-en,admin.location.search,Search Locations,,"'admin.location.search':'Search Locations',",Search Locations
 en,admin.location.label.general,General,,"'admin.location.label.general':'General',",General
 en,admin.location.label.location_level,Organization,,"'admin.location.label.location_level':'Organization',",Organization
 en,admin.location.label.name,Name,,"'admin.location.label.name':'Name',",Name
@@ -70,6 +69,7 @@ en,admin.location.label.number,Number,,"'admin.location.label.number':'Number',"
 en,admin.location.label.status-name,Status,,"'admin.location.label.status-name':'Status',",Status
 en,admin.location.one,Location,,"'admin.location.one':'Location',",Location
 en,admin.location.other,Locations,,"'admin.location.other':'Locations',",Locations
+en,admin.location.search,Search Locations,,"'admin.location.search':'Search Locations',",Search Locations
 en,admin.location.status.closed,Closed,,"'admin.location.status.closed':'Closed',",Closed
 en,admin.location.status.future,Future,,"'admin.location.status.future':'Future',",Future
 en,admin.location.status.open,Open,,"'admin.location.status.open':'Open',",Open
@@ -131,9 +131,9 @@ en,admin.role.label.name,Role Name,,"'admin.role.label.name':'Role Name',",Role 
 en,admin.role.label.number_users,# of People,,"'admin.role.label.number_users':'# of People',",# of People
 en,admin.role.label.role_type,Role Type,,"'admin.role.label.role_type':'Role Type',",Role Type
 en,admin.role.one,Role,,"'admin.role.one':'Role',",Role
-en,admin.role.search,Search Role,,"'admin.role.search':'Search Role',",Role
 en,admin.role.other,Roles,,"'admin.role.other':'Roles',",Roles
 en,admin.role.regional_manager,Reginal Manager,,"'admin.role.regional_manager':'Reginal Manager',",Reginal Manager
+en,admin.role.search,Search Role,,"'admin.role.search':'Search Role',",Role
 en,admin.role.store_manager,Store Manager,,"'admin.role.store_manager':'Store Manager',",Store Manager
 en,admin.role.system_administrator,Administrator,,"'admin.role.system_administrator':'Administrator',",Administrator
 en,admin.setting.one,Setting,,"'admin.setting.one':'Setting',",Setting
@@ -176,11 +176,12 @@ en,modules.rfqs.titleShort,RFQs,,"'modules.rfqs.titleShort':'RFQs',",RFQs
 en,modules.tasks.titleShort,Tasks,,"'modules.tasks.titleShort':'Tasks',",Tasks
 en,modules.tickets.titleShort,Tickets,,"'modules.tickets.titleShort':'Tickets',",Tickets
 en,modules.workOrders.titleShort,Work Orders,,"'modules.workOrders.titleShort':'Work Orders',",Work Orders
+en,ticket.created,{{requester}} created this ticket {{timestamp}},,"'ticket.created':'{{requester}} created this ticket {{timestamp}}',",
 en,ticket.label.assignee-fullname,Assignee,,"'ticket.label.assignee-fullname':'Assignee',",Assignee
 en,ticket.label.category-name,Category,,"'ticket.label.category-name':'Category',",Category
 en,ticket.label.cc,CC,,"'ticket.label.cc':'CC',",CC
-en,ticket.label.formatted_date,Created,,"'ticket.label.formatted_date':'Created',",Created
 en,ticket.label.created,Created,,"'ticket.label.created':'Created',",Created
+en,ticket.label.formatted_date,Created,,"'ticket.label.formatted_date':'Created',",Created
 en,ticket.label.location-name,Location,,"'ticket.label.location-name':'Location',",Location
 en,ticket.label.number,Ticket Number,,"'ticket.label.number':'Ticket Number',",Ticket Number
 en,ticket.label.priority-name,Priority,,"'ticket.label.priority-name':'Priority',",Priority
@@ -201,8 +202,8 @@ en,ticket.status.denied,Denied,,"'ticket.status.denied':'Denied',",Denied
 en,ticket.status.draft,Draft,,"'ticket.status.draft':'Draft',",Draft
 en,ticket.status.in_progress,In Progress,,"'ticket.status.in_progress':'In Progress',",In Progress
 en,ticket.status.new,New,,"'ticket.status.new':'New',",New
-en,ticket.status.unsatisfactory_completion,Unsatisfactory Completion,,"'ticket.status.unsatisfactory_completion':'Unsatisfactory Completion',",Unsatisfactory Completion
 en,ticket.status.problem_solved,Problem Solved,,"'ticket.status.problem_solved':'Problem Solved',",Problem Solved
+en,ticket.status.unsatisfactory_completion,Unsatisfactory Completion,,"'ticket.status.unsatisfactory_completion':'Unsatisfactory Completion',",Unsatisfactory Completion
 en,upload.progress,Progress,,"'upload.progress':'Progress',",Progress
 en,validation.invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid
 en,validation.valid,Valid,,"'validation.valid':'Valid',",Valid
