@@ -20,7 +20,7 @@ var extract_categories = function(model, store, uuid, category_deserializer) {
             return m2m.get('category_pk') === category.id && m2m.get('ticket_pk') === model.id;
         });
         if(ticket_categories.length === 0) {
-            let pk = uuid.v4();
+            let pk = Ember.uuid();
             server_sum.push(pk);
             store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
             category_deserializer.deserialize(category, category.id);

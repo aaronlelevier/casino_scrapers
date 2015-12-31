@@ -11,6 +11,8 @@ import StatusMixin from 'bsrs-ember/mixins/model/status';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 
+var run = Ember.run;
+
 var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, NewMixin, {
     type: 'person',
     uuid: injectUUID('uuid'),
