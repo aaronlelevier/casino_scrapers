@@ -27,7 +27,7 @@ const INDEX_ROUTE = 'admin.roles.index';
 const DETAIL_ROUTE = 'admin.roles.role';
 const DOC_TYPE = 'role';
 
-let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, original_uuid;
+let application, store, list_xhr, role_detail_data, endpoint, detail_xhr, original_uuid, run = Ember.run;
 
 module('Acceptance | tab role test', {
     beforeEach() {
@@ -37,7 +37,9 @@ module('Acceptance | tab role test', {
         role_detail_data = RF.detail(RD.idGridTen);
         detail_xhr = xhr(endpoint + RD.idGridTen + '/', 'GET', null, {}, 200, role_detail_data);
         original_uuid = random.uuid;
-        store.push('role', {id: RD.idGridTen, name: 'wat', categories: [CF.detail()]});
+        run(function() {
+            store.push('role', {id: RD.idGridTen, name: 'wat', categories: [CF.detail()]});
+        });
     },
     afterEach() {
         random.uuid = original_uuid;
