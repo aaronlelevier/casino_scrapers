@@ -1,7 +1,4 @@
-import os
-import sys
 import json
-import pprint
 import importlib
 import inspect
 import itertools
@@ -11,9 +8,6 @@ from django.utils.text import capfirst
 
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.serializers import ModelSerializer, ListSerializer
-
-from category.serializers import CategoryListSerializer
-from category.views import CategoryViewSet
 
 
 class SerializerData(object):

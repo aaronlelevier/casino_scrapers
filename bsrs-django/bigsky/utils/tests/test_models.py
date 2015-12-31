@@ -1,19 +1,13 @@
-import uuid
-import json
-
 from django.test import TestCase, TransactionTestCase
 from django.utils import timezone
-from django.conf import settings
 from django.contrib.auth.models import ContentType, Permission
 from django.core.exceptions import ObjectDoesNotExist
 
 from model_mommy import mommy
 
-from generic.models import MainSetting
-from person.models import Role, PersonStatus
+from person.models import PersonStatus
 from person.tests.factory import create_single_person, create_role
-from translation.models import Locale
-from utils import create, choices, helpers
+from utils import create
 from utils.models import Tester
 from utils.permissions import perms_map
 
@@ -106,20 +100,3 @@ class BaseStatusModelTests(TestCase):
 
         status2 = PersonStatus.objects.get(id=status2.id)
         self.assertFalse(status2.default)
-
-
-class MainSettingTests(TestCase):
-    # Only testing one ``Setting` Model b/c they are inheriting
-    # from the same Base Model
-
-    def setUp(self):
-        self.person = create_single_person()
-
-    def test_setting(self):
-        ct = ContentType.objects.get(app_label='person', model='person')
-        s = MainSetting.objects.create(
-            content_type=ct,
-            object_id=self.person.id,
-            content_object=self.person
-            )
-        self.assertEqual(str(s.content_object.id), str(self.person.id))

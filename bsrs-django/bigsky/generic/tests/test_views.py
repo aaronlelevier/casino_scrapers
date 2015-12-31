@@ -3,10 +3,8 @@ from os.path import dirname, join
 import json
 import uuid
 from io import BytesIO
-import shutil
 
 from django.conf import settings
-from django.test.client import MULTIPART_CONTENT, BOUNDARY, encode_multipart
 from django.core.urlresolvers import reverse
 from django.apps import apps
 

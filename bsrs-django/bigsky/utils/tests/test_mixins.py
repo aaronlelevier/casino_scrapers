@@ -1,5 +1,4 @@
 import json
-import uuid
 import random
 
 from django.db.models.functions import Lower
@@ -11,7 +10,7 @@ from accounting.models import Currency
 from accounting.serializers import CurrencySerializer
 from location.models import LocationLevel
 from location.tests.factory import create_location
-from person.models import Person, Role
+from person.models import Person
 from person.tests.factory import create_single_person, create_role, create_roles, PASSWORD
 from utils import create
 

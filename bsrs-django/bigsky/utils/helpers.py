@@ -1,8 +1,4 @@
 import json
-import sys
-import uuid
-
-from translation.models import Locale
 
 
 def model_to_json(model):
