@@ -16,9 +16,11 @@ moduleForComponent('person-role-select', 'integration: person-role-select test',
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:role']);
-        person = store.push('person', {id: PD.idOne});
-        roles = RF.list();
-        roles.results.forEach((role) => { store.push('role', role); } );
+        run(function() {
+            person = store.push('person', {id: PD.idOne});
+            roles = RF.list();
+            roles.results.forEach((role) => { store.push('role', role); } );
+        });
         role = store.find('role', RD.idOne);
         roles = store.find('role');
     }
@@ -41,7 +43,9 @@ test('should render a selectbox when role options are empty (initial state of se
 });
 
 test('should be able to select same role when person already has a role', function(assert) {
-    store.push('role', {id: RD.idOne, people: [PD.idOne]});
+    run(function() {
+        store.push('role', {id: RD.idOne, people: [PD.idOne]});
+    });
     this.set('model', person);
     this.set('roles', roles);
     this.render(hbs`{{role-select model=model options=roles role_change=role_change}}`);
@@ -62,8 +66,10 @@ test('should be able to select same role when person already has a role', functi
 });
 
 test('should be able to select new person level when person already has a person level', function(assert) {
-    store.push('person', {id: PD.idOne});
-    store.push('role', {id: RD.idOne, people: [PD.idOne]});
+    run(function() {
+        store.push('person', {id: PD.idOne});
+        store.push('role', {id: RD.idOne, people: [PD.idOne]});
+    });
     this.set('model', person);
     this.set('roles', roles);
     this.render(hbs`{{role-select model=model options=roles role_change=role_change}}`);

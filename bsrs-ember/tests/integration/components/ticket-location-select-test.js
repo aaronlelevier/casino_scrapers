@@ -20,9 +20,11 @@ moduleForComponent('ticket-location-select', 'integration: ticket-location-selec
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:location']);
         ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, location_fk: LOCATION_DEFAULTS.idOne});
-        location_one = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName});
-        location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo});
-        location_three = store.push('location', {id: LOCATION_DEFAULTS.unusedId, name: LOCATION_DEFAULTS.storeNameThree});
+        run(function() {
+            location_one = store.push('location', {id: LOCATION_DEFAULTS.idOne, name: LOCATION_DEFAULTS.storeName});
+            location_two = store.push('location', {id: LOCATION_DEFAULTS.idTwo, name: LOCATION_DEFAULTS.storeNameTwo});
+            location_three = store.push('location', {id: LOCATION_DEFAULTS.unusedId, name: LOCATION_DEFAULTS.storeNameThree});
+        });
         location_repo = repository.initialize(this.container, this.registry, 'location');
         location_repo.findTicket = function() {
             return store.find('location');

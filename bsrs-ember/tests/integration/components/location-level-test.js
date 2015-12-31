@@ -10,17 +10,19 @@ import LOCATION_LEVEL_DEFAULTS from 'bsrs-ember/vendor/defaults/location-level';
 import LOCATION_LEVEL_FIXTURES from 'bsrs-ember/vendor/location_level_fixtures';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 
-let store, location_level, all_location_levels, location_levels, location_level_repo;
+let store, location_level, all_location_levels, location_levels, location_level_repo, run = Ember.run;
 
 moduleForComponent('location-level', 'integration: location-level test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:location-level']);
         all_location_levels = LOCATION_LEVEL_FIXTURES.all_location_levels();
-        all_location_levels.forEach((location_level) => { 
-            location_level.children_fks = location_level.children || [];
-            delete location_level.children;
-            store.push('location-level', location_level); 
+        run(function() {
+            all_location_levels.forEach((location_level) => { 
+                location_level.children_fks = location_level.children || [];
+                delete location_level.children;
+                store.push('location-level', location_level); 
+            });
         });
         location_level = store.find('location-level', LOCATION_LEVEL_DEFAULTS.idOne);
         location_levels = store.find('location-level');

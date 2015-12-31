@@ -8,7 +8,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import waitFor from 'ember-test-helpers/wait';
 
-var store, phone_number_types, default_phone_number_type, address_types, default_address_type;
+var store, phone_number_types, default_phone_number_type, address_types, default_address_type, run = Ember.run;
 
 moduleForComponent('location-single', 'integration: location-single test', {
     integration: true,
@@ -20,15 +20,19 @@ moduleForComponent('location-single', 'integration: location-single test', {
         loadTranslations(service, json);
         let pn_types = [{ 'id': '2bff27c7-ca0c-463a-8e3b-6787dffbe7de', 'name': 'admin.phonenumbertype.office' }, 
         { 'id': '9416c657-6f96-434d-aaa6-0c867aff3270', 'name': 'admin.phonenumbertype.mobile' }];
-        pn_types.forEach(function(pnt) {
-            store.push('phone-number-type', pnt);
+        run(function() {
+            pn_types.forEach(function(pnt) {
+                store.push('phone-number-type', pnt);
+            });
         });
         phone_number_types = store.find('phone-number-type');
         default_phone_number_type = phone_number_types.objectAt(0);
         let ad_types = [{ "id": "8e16a68c-fda6-4c30-ba7d-fee98257e92d", "name": "admin.address_type.office" }, 
             { "id": "f7e55e71-1ff2-4cc2-8700-139802738bd0", "name": "admin.address_type.shipping" }];
-        ad_types.forEach(function(ad) {
-            store.push('address-type', ad);
+        run(function() {
+            ad_types.forEach(function(ad) {
+                store.push('address-type', ad);
+            });
         });
         address_types = store.find('phone-number-type');
         default_address_type = address_types.objectAt(0);
@@ -36,7 +40,9 @@ moduleForComponent('location-single', 'integration: location-single test', {
 });
 
 test('filling in invalid name reveal validation messages', function(assert) {
-    this.model = store.push('location', {id: LD.idOne, name: LD.storeName});
+    run(() => {
+        this.model = store.push('location', {id: LD.idOne, name: LD.storeName});
+    });
     this.phone_number_types = phone_number_types;
     this.default_phone_number_type = default_phone_number_type;
     this.render(hbs`{{location-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
@@ -50,7 +56,9 @@ test('filling in invalid name reveal validation messages', function(assert) {
 });
 
 test('filling in invalid phone number reveal validation messages', function(assert) {
-    this.model = store.push('location', {});
+    run(() => {
+        this.model = store.push('location', {});
+    });
     this.phone_number_types = phone_number_types;
     this.default_phone_number_type = default_phone_number_type;
     this.render(hbs`{{location-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
@@ -70,7 +78,9 @@ test('filling in invalid phone number reveal validation messages', function(asse
 });
 
 test('filling in invalid address reveals validation messages', function(assert) {
-    this.model = store.push('location', {});
+    run(() => {
+        this.model = store.push('location', {});
+    });
     this.address_types = address_types;
     this.default_address_type = default_address_type;
     this.render(hbs`{{location-single model=model address_types=address_types default_address_type=default_address_type}}`);

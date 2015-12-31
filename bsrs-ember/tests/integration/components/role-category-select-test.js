@@ -27,12 +27,14 @@ moduleForComponent('role-category-select', 'integration: role-category-select te
         store = module_registry(this.container, this.registry, ['model:role', 'model:category', 'model:role-category']);
         let service = this.container.lookup('service:i18n');
         loadTranslations(service, translations.generate('en'));
-        m2m = store.push('role-category', {id: ROLE_CD.idOne, role_fk: RD.idOne, category_fk: CD.idOne});
-        m2m_two = store.push('role-category', {id: ROLE_CD.idTwo, role_fk: RD.idOne, category_fk: CD.idTwo});
-        role = store.push('role', {id: RD.idOne, role_category_fks: [ROLE_CD.idOne, ROLE_CD.idTwo]});
-        category_one = store.push('category', {id: CD.idOne, name: CD.nameOne});
-        category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo});
-        category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree});
+        run(function() {
+            m2m = store.push('role-category', {id: ROLE_CD.idOne, role_fk: RD.idOne, category_fk: CD.idOne});
+            m2m_two = store.push('role-category', {id: ROLE_CD.idTwo, role_fk: RD.idOne, category_fk: CD.idTwo});
+            role = store.push('role', {id: RD.idOne, role_category_fks: [ROLE_CD.idOne, ROLE_CD.idTwo]});
+            category_one = store.push('category', {id: CD.idOne, name: CD.nameOne});
+            category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo});
+            category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree});
+        });
         category_repo = repository.initialize(this.container, this.registry, 'category');
         category_repo.findCategoryChildren = function() {
             return store.find('category');

@@ -15,10 +15,12 @@ moduleForComponent('ticket-status-select', 'integration: ticket-status-select te
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status']);
-        ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusOneId});
-        status_one = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
-        status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
-        status_three = store.push('ticket-status', {id: TD.statusThreeId, name: TD.statusThree});
+        run(function() {
+            ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusOneId});
+            status_one = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
+            status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
+            status_three = store.push('ticket-status', {id: TD.statusThreeId, name: TD.statusThree});
+        });
         trans = this.container.lookup('service:i18n');
     }
 });

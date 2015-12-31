@@ -12,7 +12,7 @@ import PHONE_NUMBER_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number';
 import PHONE_NUMBER_TYPE_DEFAULTS from 'bsrs-ember/vendor/defaults/phone-number-type';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
-var store, default_type;
+var store, person, default_type, run = Ember.run;
 
 moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
     integration: true,
@@ -27,7 +27,9 @@ moduleForComponent('input-multi-phone', 'integration: input-multi-phone test', {
 });
 
 test('defaults to use phone number model with field name of number', function(assert) {
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    run(function() {
+        person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    });
     var model = store.find('phonenumber', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.set('related_pk', PEOPLE_DEFAULTS.id);
@@ -101,8 +103,10 @@ test('changing the phone number type will alter the bound value', function(asser
 });
 
 test('changing existing phone number type will alter the model regardless of the primary key value', function(assert) {
-    store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, model_fk: PEOPLE_DEFAULTS.id});
-    store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, model_fk: PEOPLE_DEFAULTS.id});
+    run(function() {
+        store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, model_fk: PEOPLE_DEFAULTS.id});
+        store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, model_fk: PEOPLE_DEFAULTS.id});
+    });
     var model = store.find('phonenumber', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.set('related_pk', PEOPLE_DEFAULTS.id);
@@ -123,10 +127,12 @@ test('changing existing phone number type will alter the model regardless of the
 
 test('click delete btn will remove input', function(assert) {
     //todo: reduce the duplication on phone_number_types
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, phone_number_fks: [PHONE_NUMBER_DEFAULTS.idOne, PHONE_NUMBER_DEFAULTS.idTwo]});
     var phone_number_types = [PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName }), PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, name: PHONE_NUMBER_TYPE_DEFAULTS.mobileName})];
-    store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, model_fk: PEOPLE_DEFAULTS.id});
-    store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, model_fk: PEOPLE_DEFAULTS.id});
+    run(function() {
+        person = store.push('person', {id: PEOPLE_DEFAULTS.id, phone_number_fks: [PHONE_NUMBER_DEFAULTS.idOne, PHONE_NUMBER_DEFAULTS.idTwo]});
+        store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idOne, number: PHONE_NUMBER_DEFAULTS.numberOne, type: PHONE_NUMBER_TYPE_DEFAULTS.officeId, model_fk: PEOPLE_DEFAULTS.id});
+        store.push('phonenumber', {id: PHONE_NUMBER_DEFAULTS.idTwo, number: PHONE_NUMBER_DEFAULTS.numberTwo, type: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, model_fk: PEOPLE_DEFAULTS.id});
+    });
     var model = store.find('phonenumber', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.set('related_pk', PEOPLE_DEFAULTS.id);

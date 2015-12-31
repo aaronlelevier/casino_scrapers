@@ -21,12 +21,14 @@ moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-selec
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-person']);
-        m2m = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
-        m2m_two = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.idTwo});
-        ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_people_fks: [TICKET_PEOPLE_DEFAULTS.idOne, TICKET_PEOPLE_DEFAULTS.idTwo]});
-        person_one = store.push('person', {id: PEOPLE_DEFAULTS.id, first_name: PEOPLE_DEFAULTS.first_name, last_name: PEOPLE_DEFAULTS.last_name});
-        person_two = store.push('person', {id: PEOPLE_DEFAULTS.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
-        person_three = store.push('person', {id: PEOPLE_DEFAULTS.unusedId, first_name: 'Aaron', last_name: 'Wat'});
+        run(function() {
+            m2m = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
+            m2m_two = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.idTwo});
+            ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_people_fks: [TICKET_PEOPLE_DEFAULTS.idOne, TICKET_PEOPLE_DEFAULTS.idTwo]});
+            person_one = store.push('person', {id: PEOPLE_DEFAULTS.id, first_name: PEOPLE_DEFAULTS.first_name, last_name: PEOPLE_DEFAULTS.last_name});
+            person_two = store.push('person', {id: PEOPLE_DEFAULTS.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
+            person_three = store.push('person', {id: PEOPLE_DEFAULTS.unusedId, first_name: 'Aaron', last_name: 'Wat'});
+        });
         person_repo = repository.initialize(this.container, this.registry, 'person');
         person_repo.findTicketPeople = function() {
             return store.find('person');
@@ -35,7 +37,9 @@ moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-selec
 });
 
 test('should render a selectbox when with options selected (initial state)', function(assert) {
-    store.clear('ticket-person');
+    run(function() {
+        store.clear('ticket-person');
+    });
     let ticket_cc_options = Ember.A([]);
     this.set('ticket', ticket);
     this.render(hbs`{{ticket-cc-power-select ticket=ticket}}`);

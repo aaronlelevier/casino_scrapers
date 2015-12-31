@@ -15,10 +15,12 @@ moduleForComponent('location-status-select', 'integration: location-status-selec
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:location', 'model:location-status']);
-        location_one = store.push('location', {id: LD.idOne, status_fk: LDS.openId});
-        status_one = store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
-        status_two = store.push('location-status', {id: LDS.closedId, name: LDS.closedName});
-        status_three = store.push('location-status', {id: LDS.futureId, name: LDS.futureName});
+        run(function() {
+            location_one = store.push('location', {id: LD.idOne, status_fk: LDS.openId});
+            status_one = store.push('location-status', {id: LDS.openId, name: LDS.openName, locations: [LD.idOne]});
+            status_two = store.push('location-status', {id: LDS.closedId, name: LDS.closedName});
+            status_three = store.push('location-status', {id: LDS.futureId, name: LDS.futureName});
+        });
     }
 });
 

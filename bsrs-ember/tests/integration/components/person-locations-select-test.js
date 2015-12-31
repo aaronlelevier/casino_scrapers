@@ -27,12 +27,14 @@ moduleForComponent('person-locations-select', 'integration: person-locations-sel
         store = module_registry(this.container, this.registry, ['model:person', 'model:location', 'model:person-location']);
         let service = this.container.lookup('service:i18n');
         loadTranslations(service, translations.generate('en'));
-        m2m = store.push('person-location', {id: PLD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-        m2m_two = store.push('person-location', {id: PLD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
-        person = store.push('person', {id: PD.idOne});
-        location_one = store.push('location', {id: LD.idOne, name: LD.storeName});
-        location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo});
-        location_three = store.push('location', {id: LD.unusedId, name: LD.storeNameThree});
+        run(function() {
+            m2m = store.push('person-location', {id: PLD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+            m2m_two = store.push('person-location', {id: PLD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
+            person = store.push('person', {id: PD.idOne});
+            location_one = store.push('location', {id: LD.idOne, name: LD.storeName});
+            location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo});
+            location_three = store.push('location', {id: LD.unusedId, name: LD.storeNameThree});
+        });
         location_repo = repository.initialize(this.container, this.registry, 'location');
         location_repo.findLocationSelect = function() {
             return store.find('location');

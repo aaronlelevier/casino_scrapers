@@ -15,7 +15,7 @@ import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import STATE_DEFAULTS from 'bsrs-ember/vendor/defaults/state';
 import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 
-var store, default_type;
+var store, person, default_type, run = Ember.run;
 
 var STATE_LIST = [StateSingle.create({ id: STATE_DEFAULTS.idTwo, name: STATE_DEFAULTS.nameTwo }), StateSingle.create({ id: STATE_DEFAULTS.id, name: STATE_DEFAULTS.name })];
 var COUNTRIES = [Country.create({ id: COUNTRY_DEFAULTS.id, name: COUNTRY_DEFAULTS.name }), Country.create({ id: COUNTRY_DEFAULTS.idTwo, name: COUNTRY_DEFAULTS.nameTwo })];
@@ -33,7 +33,9 @@ moduleForComponent('input-multi-address', 'integration: input-multi-address test
 });
 
 test('renders a single button with a class of t-add-btn', function(assert){
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    run(function() {
+        person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    });
     var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.render(hbs`{{input-multi-address model=model}}`);
@@ -42,7 +44,9 @@ test('renders a single button with a class of t-add-btn', function(assert){
 });
 
 test('click add btn will append blank entry to list of entries and binds value to model', function(assert) {
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    run(function() {
+        person = store.push('person', {id: PEOPLE_DEFAULTS.id});
+    });
     var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.set('related_pk', PEOPLE_DEFAULTS.id);
@@ -100,9 +104,11 @@ test('once added a button for address type appears with a button to delete it', 
 });
 
 test('click delete btn will remove input', function(assert) {
-    var person = store.push('person', {id: PEOPLE_DEFAULTS.id, address_fks: [ADDRESS_DEFAULTS.idOne, ADDRESS_DEFAULTS.idTwo]});
-    store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPE_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, model_fk: PEOPLE_DEFAULTS.id});
-    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, address: ADDRESS_DEFAULTS.streetTwo, city: ADDRESS_DEFAULTS.cityTwo, state: ADDRESS_DEFAULTS.stateTwo, postal_code: ADDRESS_DEFAULTS.zipTwo, country: ADDRESS_DEFAULTS.countryTwo, model_fk: PEOPLE_DEFAULTS.id});
+    run(function() {
+        person = store.push('person', {id: PEOPLE_DEFAULTS.id, address_fks: [ADDRESS_DEFAULTS.idOne, ADDRESS_DEFAULTS.idTwo]});
+        store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPE_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, model_fk: PEOPLE_DEFAULTS.id});
+        store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, address: ADDRESS_DEFAULTS.streetTwo, city: ADDRESS_DEFAULTS.cityTwo, state: ADDRESS_DEFAULTS.stateTwo, postal_code: ADDRESS_DEFAULTS.zipTwo, country: ADDRESS_DEFAULTS.countryTwo, model_fk: PEOPLE_DEFAULTS.id});
+    });
     var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.render(hbs`{{input-multi-address model=model}}`);
@@ -118,8 +124,10 @@ test('click delete btn will remove input', function(assert) {
 
 test('model with existing array of entries is shown at render and bound to model', function(assert) {
     var address_types = [AddressType.create({id: ADDRESS_TYPE_DEFAULTS.officeId}), AddressType.create({id: ADDRESS_TYPE_DEFAULTS.shippingId})];
-    store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPE_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, model_fk: PEOPLE_DEFAULTS.id});
-    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, address: ADDRESS_DEFAULTS.streetTwo, city: ADDRESS_DEFAULTS.cityTwo, state: ADDRESS_DEFAULTS.stateTwo, postal_code: ADDRESS_DEFAULTS.zipTwo, country: ADDRESS_DEFAULTS.countryTwo, model_fk: PEOPLE_DEFAULTS.id});
+    run(function() {
+        store.push('address', {id: ADDRESS_DEFAULTS.idOne, type: ADDRESS_TYPE_DEFAULTS.officeId, address: ADDRESS_DEFAULTS.streetOne, city: ADDRESS_DEFAULTS.cityOne, state: ADDRESS_DEFAULTS.stateOne, postal_code: ADDRESS_DEFAULTS.zipOne, country: ADDRESS_DEFAULTS.countryOne, model_fk: PEOPLE_DEFAULTS.id});
+        store.push('address', {id: ADDRESS_DEFAULTS.idTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, address: ADDRESS_DEFAULTS.streetTwo, city: ADDRESS_DEFAULTS.cityTwo, state: ADDRESS_DEFAULTS.stateTwo, postal_code: ADDRESS_DEFAULTS.zipTwo, country: ADDRESS_DEFAULTS.countryTwo, model_fk: PEOPLE_DEFAULTS.id});
+    });
     var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.set('state_list', STATE_LIST);
@@ -147,8 +155,10 @@ test('model with existing array of entries is shown at render and bound to model
 });
 
 test('changing existing address type will alter the model regardless of the primary key value', function(assert) {
-    store.push('address', {id: ADDRESS_DEFAULTS.idOne, number: ADDRESS_DEFAULTS.numberOne, type: ADDRESS_TYPE_DEFAULTS.officeId, model_fk: PEOPLE_DEFAULTS.id});
-    store.push('address', {id: ADDRESS_DEFAULTS.idTwo, number: ADDRESS_DEFAULTS.numberTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, model_fk: PEOPLE_DEFAULTS.id});
+    run(function() {
+        store.push('address', {id: ADDRESS_DEFAULTS.idOne, number: ADDRESS_DEFAULTS.numberOne, type: ADDRESS_TYPE_DEFAULTS.officeId, model_fk: PEOPLE_DEFAULTS.id});
+        store.push('address', {id: ADDRESS_DEFAULTS.idTwo, number: ADDRESS_DEFAULTS.numberTwo, type: ADDRESS_TYPE_DEFAULTS.shippingId, model_fk: PEOPLE_DEFAULTS.id});
+    });
     var model = store.find('address', {model_fk: PEOPLE_DEFAULTS.id});
     this.set('model', model);
     this.set('related_pk', PEOPLE_DEFAULTS.id);

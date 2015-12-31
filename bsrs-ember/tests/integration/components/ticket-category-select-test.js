@@ -17,20 +17,24 @@ moduleForComponent('ticket-category-select', 'integration: ticket-category-selec
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:category', 'model:ticket-category']);
-        m2m = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
-        m2m_two = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
-        m2m_three = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.unusedId});
-        ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_category_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo, TICKET_CATEGORY_DEFAULTS.idThree]});
-        category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo});
-        category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId});
-        category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null});
-        category_four = store.push('category', {id: CATEGORY_DEFAULTS.idThree, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: null});
+        run(function() {
+            m2m = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idOne});
+            m2m_two = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.idTwo});
+            m2m_three = store.push('ticket-category', {id: TICKET_CATEGORY_DEFAULTS.idThree, ticket_pk: TICKET_DEFAULTS.idOne, category_pk: CATEGORY_DEFAULTS.unusedId});
+            ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_category_fks: [TICKET_CATEGORY_DEFAULTS.idOne, TICKET_CATEGORY_DEFAULTS.idTwo, TICKET_CATEGORY_DEFAULTS.idThree]});
+            category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo});
+            category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId});
+            category_three = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: null});
+            category_four = store.push('category', {id: CATEGORY_DEFAULTS.idThree, name: CATEGORY_DEFAULTS.nameRepairChild, parent_id: null});
+        });
     }
 });
 
 test('should render a selectbox when the options are empty (initial state of power-select)', function(assert) {
-    store.clear('category');
-    store.clear('ticket-category');
+    run(function() {
+        store.clear('category');
+        store.clear('ticket-category');
+    });
     ticket.set('ticket_category_fks', []);
     let ticket_category_options = Ember.A([]);
     this.set('ticket', ticket);

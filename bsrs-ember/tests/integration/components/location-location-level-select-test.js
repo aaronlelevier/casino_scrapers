@@ -16,9 +16,11 @@ moduleForComponent('location-location-level-select', 'integration: location-loca
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:location', 'model:location-level']);
-        locationz = store.push('location', {id: LD.idOne});
-        location_levels = LLF.all_location_levels();
-        location_levels.forEach((location_level) => { store.push('location-level', location_level); } );
+        run(function() {
+            locationz = store.push('location', {id: LD.idOne});
+            location_levels = LLF.all_location_levels();
+            location_levels.forEach((location_level) => { store.push('location-level', location_level); } );
+        });
         location_level = store.find('location-level', LLD.idOne);
         all_location_levels = store.find('location-level');
     }
@@ -73,8 +75,10 @@ test('should be able to select new location level when one doesnt exist', functi
 });
 
 test('should be able to select same location level when location already has a location level', function(assert) {
-    store.push('location', {id: LD.idOne});
-    store.push('location-level', {id: LLD.idOne, locations: [LD.idOne]});
+    run(function() {
+        store.push('location', {id: LD.idOne});
+        store.push('location-level', {id: LLD.idOne, locations: [LD.idOne]});
+    });
     this.set('model', locationz);
     this.set('all_location_levels', all_location_levels);
     this.render(hbs`{{location-level-select model=model options=all_location_levels}}`);
@@ -95,8 +99,10 @@ test('should be able to select same location level when location already has a l
 });
 
 test('should be able to select new location level when location already has a location level', function(assert) {
-    store.push('location', {id: LD.idOne});
-    store.push('location-level', {id: LLD.idOne, locations: [LD.idOne]});
+    run(function() {
+        store.push('location', {id: LD.idOne});
+        store.push('location-level', {id: LLD.idOne, locations: [LD.idOne]});
+    });
     this.set('model', locationz);
     this.set('all_location_levels', all_location_levels);
     this.render(hbs`{{location-level-select model=model options=all_location_levels}}`);
