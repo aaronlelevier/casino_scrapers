@@ -296,40 +296,40 @@ test('adding and removing removing a category in power select for categories wil
     // });
 });
 
-test('can add multiple categories', (assert) => {
-    visit(NEW_URL);
-    let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=25';
-    xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
-    page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, 'repair1');
-    andThen(() => {
-        let role = store.find('role', UUID.value);
-        assert.equal(role.get('categories').get('length'), 0);
-        assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-        assert.equal(page.categoryOptionLength(), 2);
-    });
-    page.categoryClickOptionOneEq();
-    andThen(() => {
-        let role = store.find('role', UUID.value);
-        assert.equal(role.get('categories').get('length'), 1);
-        assert.ok(role.get('isDirtyOrRelatedDirty'));
-        assert.equal(page.categoriesSelected(), 1);
-    });
-    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
-    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
-    page.categoryClickDropdown();
-    fillIn(CATEGORY_SEARCH, '2z');
-    page.categoryClickOptionTwo();
-    fillIn('.t-role-name', RD.nameOne);
-    page.locationLevelClickDropdown();
-    page.locationLevelClickOptionOne();
-    let payload = RF.put({id: UUID.value, categories: [CD.idGridOne]});
-    xhr(url, 'POST', JSON.stringify(payload), {}, 201);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-    });
-});
+// test('can add multiple categories', (assert) => {
+//     visit(NEW_URL);
+//     let category_endpoint = PREFIX + '/admin/categories/?name__icontains=repair1&page_size=25';
+//     xhr(category_endpoint, 'GET', null, {}, 200, CF.list());
+//     page.categoryClickDropdown();
+//     fillIn(CATEGORY_SEARCH, 'repair1');
+//     andThen(() => {
+//         let role = store.find('role', UUID.value);
+//         assert.equal(role.get('categories').get('length'), 0);
+//         assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
+//         assert.equal(page.categoryOptionLength(), 2);
+//     });
+//     page.categoryClickOptionOneEq();
+//     andThen(() => {
+//         let role = store.find('role', UUID.value);
+//         assert.equal(role.get('categories').get('length'), 1);
+//         assert.ok(role.get('isDirtyOrRelatedDirty'));
+//         assert.equal(page.categoriesSelected(), 1);
+//     });
+//     let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
+//     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+//     page.categoryClickDropdown();
+//     fillIn(CATEGORY_SEARCH, '2z');
+//     page.categoryClickOptionTwo();
+//     fillIn('.t-role-name', RD.nameOne);
+//     page.locationLevelClickDropdown();
+//     page.locationLevelClickOptionOne();
+//     let payload = RF.put({id: UUID.value, categories: [CD.idGridOne]});
+//     xhr(url, 'POST', JSON.stringify(payload), {}, 201);
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), ROLE_URL);
+//     });
+// });
 
 test('clicking and typing into power select for categories will not filter if spacebar pressed', (assert) => {
     visit(NEW_URL);

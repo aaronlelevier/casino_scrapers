@@ -68,7 +68,7 @@ var extract_cc = function(model, store, uuid, person_deserializer) {
         });
         //push new one in
         if(ticket_people.length === 0) {
-            let pk = uuid.v4();
+            let pk = Ember.uuid();
             server_sum.push(pk);
             store.push('ticket-person', {id: pk, ticket_pk: model.id, person_pk: cc.id});  
             person_deserializer.deserialize(cc, cc.id);
