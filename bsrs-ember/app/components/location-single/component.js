@@ -8,7 +8,7 @@ import RelaxedMixin from 'bsrs-ember/mixins/validation/relaxed';
 
 var LocationSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
     repository: inject('location'),
-    child_components: ['input-multi-phone', 'input-multi-address'],
+    child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
     classNames: ['wrapper', 'form'],
     nameValidation: validate('model.name'),
     actions: {

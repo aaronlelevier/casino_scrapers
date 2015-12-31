@@ -2,18 +2,20 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import inject from 'bsrs-ember/utilities/store';
+import EmailMixin from 'bsrs-ember/mixins/model/email';
 import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
 import AddressMixin from 'bsrs-ember/mixins/model/address';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 
 var run = Ember.run;
 
-var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberMixin, {
+var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberMixin, EmailMixin, {
     store: inject('main'),
     name: attr(''),
     number: attr(''),
     status_fk: undefined,
     tickets: [],
+    email_fks: [],
     phone_number_fks: [],
     address_fks: [],
     location_level_fk: undefined,

@@ -14,7 +14,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 
 var store, default_type, trans, email_types;
 
-moduleForComponent('input-multi-email', 'scott integration: input-multi-email test', {
+moduleForComponent('input-multi-email', 'integration: input-multi-email test', {
     integration: true,
     setup() {
         translation.initialize(this);

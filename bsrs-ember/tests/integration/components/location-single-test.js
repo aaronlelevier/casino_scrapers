@@ -6,14 +6,15 @@ import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import waitFor from 'ember-test-helpers/wait';
 
-var store, phone_number_types, default_phone_number_type, address_types, default_address_type, run = Ember.run;
+var store, phone_number_types, default_phone_number_type, address_types, default_address_type, default_email_type, email_types, run = Ember.run;
 
 moduleForComponent('location-single', 'integration: location-single test', {
     integration: true,
     setup() {
-        store = module_registry(this.container, this.registry, ['model:location', 'model:phonenumber', 'model:phone-number-type', 'model:address-type', 'model:address']);
+        store = module_registry(this.container, this.registry, ['model:location', 'model:phonenumber', 'model:phone-number-type', 'model:address-type', 'model:address', 'model:email', 'model:email-type']);
         translation.initialize(this);
         var service = this.container.lookup('service:i18n');
         var json = translations.generate('en');
@@ -36,6 +37,13 @@ moduleForComponent('location-single', 'integration: location-single test', {
         });
         address_types = store.find('phone-number-type');
         default_address_type = address_types.objectAt(0);
+        let em_types = [{ 'id': ETD.personalId, 'name': ETD.personalEmail }, 
+        { 'id': ETD.workId, 'name': ETD.workEmail }];
+        em_types.forEach(function(emt) {
+            store.push('email-type', emt);
+        });
+        email_types = store.find('email-type');
+        default_email_type = email_types.objectAt(0);
     }
 });
 
@@ -110,4 +118,24 @@ test('filling in invalid address reveals validation messages', function(assert) 
     $component = this.$('.t-input-multi-address-zip-validation-error');
     assert.ok($component.is(':hidden'));
     assert.equal($component.length, 1);
+});
+
+test('filling in invalid emails reveal validation messages', function(assert) {
+    this.model = store.push('location', {});
+    this.email_types = email_types;
+    this.default_email_type = default_email_type;
+    this.render(hbs`{{location-single model=model email_types=email_types default_email_type=default_email_type}}`);
+    var $component = this.$('.t-input-multi-email-validation-format-error');
+    assert.equal($component.length, 0);
+    this.$('.t-add-email-btn:eq(0)').click();
+    $component = this.$('.t-input-multi-email-validation-format-error');
+    assert.ok($component.is(':hidden'));
+    assert.equal($component.length, 1);
+    this.$('.t-new-entry').val('a').trigger('change');
+    $component = this.$('.t-input-multi-email-validation-format-error');
+    assert.ok($component.is(':visible'));
+    assert.equal($component.length, 1);
+    this.$('.t-new-entry').val('snewcomer24@gmail.com').trigger('change');
+    $component = this.$('.t-input-multi-email-validation-format-error');
+    assert.ok($component.is(':hidden'));
 });
