@@ -9,7 +9,6 @@ var EmailMixin = Ember.Mixin.create({
         return store.find('email', filter.bind(this), ['removed']);
     }),
     emails: Ember.computed(function() {
-        debugger;
         let store = this.get('store');
         let filter = function(email) {
             return this.get('id') === email.get('model_fk') && !email.get('removed');

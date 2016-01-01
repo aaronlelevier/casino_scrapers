@@ -19,9 +19,9 @@ var InputMultiEmail = ChildValidationComponent.extend(ValidationMixin, CustomVal
             });
         },
         append() {
-            var id = this.get('uuid').v4();
-            var type = this.get('default_type').get('id');
-            var related_pk = this.get('related_pk');
+            const id = this.get('uuid').v4();
+            const type = this.get('default_type').get('id');
+            const related_pk = this.get('related_pk');
             var model = {id: id, type: type};
             model['model_fk'] = related_pk;
             this.get('model').push(model);

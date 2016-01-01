@@ -21,7 +21,7 @@ moduleForComponent('location-single', 'integration: location-single test', {
         loadTranslations(service, json);
         let pn_types = [{ 'id': '2bff27c7-ca0c-463a-8e3b-6787dffbe7de', 'name': 'admin.phonenumbertype.office' }, 
         { 'id': '9416c657-6f96-434d-aaa6-0c867aff3270', 'name': 'admin.phonenumbertype.mobile' }];
-        run(function() {
+        run(() => {
             pn_types.forEach(function(pnt) {
                 store.push('phone-number-type', pnt);
             });
@@ -30,7 +30,7 @@ moduleForComponent('location-single', 'integration: location-single test', {
         default_phone_number_type = phone_number_types.objectAt(0);
         let ad_types = [{ "id": "8e16a68c-fda6-4c30-ba7d-fee98257e92d", "name": "admin.address_type.office" }, 
             { "id": "f7e55e71-1ff2-4cc2-8700-139802738bd0", "name": "admin.address_type.shipping" }];
-        run(function() {
+        run(() => {
             ad_types.forEach(function(ad) {
                 store.push('address-type', ad);
             });
@@ -39,8 +39,10 @@ moduleForComponent('location-single', 'integration: location-single test', {
         default_address_type = address_types.objectAt(0);
         let em_types = [{ 'id': ETD.personalId, 'name': ETD.personalEmail }, 
         { 'id': ETD.workId, 'name': ETD.workEmail }];
-        em_types.forEach(function(emt) {
-            store.push('email-type', emt);
+        run(() => {
+            em_types.forEach(function(emt) {
+                store.push('email-type', emt);
+            });
         });
         email_types = store.find('email-type');
         default_email_type = email_types.objectAt(0);
@@ -57,8 +59,8 @@ test('filling in invalid name reveal validation messages', function(assert) {
     var $component = this.$('.t-input-multi-phone-validation-format-error');
     assert.equal($component.length, 0);
     this.$('.t-location-name').val('').trigger('change');
-    // var save_btn = this.$('.t-save-btn');
-    // save_btn.trigger('click').trigger('change');
+    var save_btn = this.$('.t-save-btn');
+    save_btn.trigger('click').trigger('change');
     $component = this.$('.t-name-validation-error');
     assert.equal($component.length, 1);
 });
@@ -121,7 +123,9 @@ test('filling in invalid address reveals validation messages', function(assert) 
 });
 
 test('filling in invalid emails reveal validation messages', function(assert) {
-    this.model = store.push('location', {});
+    run(() => {
+        this.model = store.push('location', {});
+    });
     this.email_types = email_types;
     this.default_email_type = default_email_type;
     this.render(hbs`{{location-single model=model email_types=email_types default_email_type=default_email_type}}`);
