@@ -135,10 +135,8 @@ var RoleModel = Model.extend(NewMixin, {
         };
     },
     removeRecord() {
-        const pk = this.get('id');
-        const store = this.get('store');
-        run(function() {
-            store.remove('role', pk);
+        run(() => {
+            this.get('store').remove('role', this.get('id'));
         });
     },
     rollbackRelated() {

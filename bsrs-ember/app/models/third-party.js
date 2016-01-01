@@ -22,10 +22,8 @@ var ThirdPartyModel = Model.extend(StatusMixin, {
         this.rollbackStatus();
     },
     removeRecord() {
-        const pk = this.get('id');
-        const store = this.get('store');
-        run(function() {
-            store.remove('third-party', pk);
+        run(() => {
+            this.get('store').remove('third-party', this.get('id'));
         });
     },
     serialize() {

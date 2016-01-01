@@ -329,10 +329,8 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
         return payload;
     },
     removeRecord() {
-        const pk = this.get('id');
-        const store = this.get('store');
-        run(function() {
-            store.remove('ticket', pk);
+        run(() => {
+            this.get('store').remove('ticket', this.get('id'));
         });
     },
     rollbackRelated() {

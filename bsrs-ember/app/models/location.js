@@ -192,12 +192,9 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         };
     },
     removeRecord() {
-        const pk = this.get('id');
-        const store = this.get('store');
-        run(function() {
-            store.remove('location', pk);
+        run(() => {
+            this.get('store').remove('location', this.get('id'));
         });
-        // this.get('store').remove('location', this.get('id'));
     }
 });
 

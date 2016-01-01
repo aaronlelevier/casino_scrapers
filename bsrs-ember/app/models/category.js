@@ -77,10 +77,8 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         this.set('children_fks', updated_fks);
     },
     removeRecord() {
-        const pk = this.get('id');
-        const store = this.get('store');
-        run(function() {
-            store.remove('category', pk);
+        run(() => {
+            this.get('store').remove('category', this.get('id'));
         });
     },
     rollbackChildren() {
