@@ -64,7 +64,6 @@ test('click add btn will append blank entry to list of entries and binds value t
     assert.equal($component.find('.t-address-state').length, 1);
     assert.equal($component.find('.t-address-state option').length, 3);
     assert.equal($component.find('.t-address-country option').length, 3);
-    // assert.equal(model.objectAt(0).get('id').length, 36);//toggles from 36 to 6
     assert.equal(model.objectAt(0).get('type'), ADDRESS_TYPE_DEFAULTS.officeId);
     assert.equal(model.objectAt(0).get('model_fk'), PEOPLE_DEFAULTS.id);
     assert.equal(model.objectAt(0).get('address'), undefined);
