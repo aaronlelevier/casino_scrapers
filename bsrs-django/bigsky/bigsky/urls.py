@@ -99,7 +99,7 @@ urlpatterns += required(
                 'submit_button': 'Login'
                 }
             },
-            name=''),
+            name='login'),
     )
 )
 
