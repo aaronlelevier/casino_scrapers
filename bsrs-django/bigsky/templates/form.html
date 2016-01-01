@@ -50,8 +50,8 @@
 
             img { max-width: 100%; }
 
-            ::-moz-selection { background: #4aaf51; color: #fff; text-shadow: none; }
-            ::selection { background: #4aaf51; color: #fff; text-shadow: none; }
+            ::-moz-selection { background: #1abc9c; color: #fff; text-shadow: none; }
+            ::selection { background: #1abc9c; color: #fff; text-shadow: none; }
 
 
             .btn-link-1 {
@@ -96,35 +96,15 @@
             .btn-link-2:active, .btn-link-2:active:focus { outline: 0; opacity: 0.6; background: rgba(0, 0, 0, 0.3); color: #fff; }
 
             input[type="text"], input[type="password"], textarea {
+                font-family: 'Roboto', sans-serif;
                 display: block;
                 width: 100%;
                 height: 34px;
                 padding: 6px 12px;
-                font-size: 14px;
-                line-height: 1.42857143;
                 color: #555;
                 background-color: #fff;
                 background-image: none;
                 border: 1px solid #ccc;
-                border-radius: 4px;
-                -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-                box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
-                -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
-                -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-                transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
-            }
-            input[type="text"], input[type="password"], textarea, textarea.form-control {
-                height: 50px;
-                margin: 0;
-                padding: 0 20px;
-                vertical-align: middle;
-                background: #f8f8f8;
-                border: 3px solid #ddd;
-                font-family: 'Roboto', sans-serif;
-                font-size: 16px;
-                font-weight: 300;
-                line-height: 50px;
-                color: #888;
                 -moz-border-radius: 4px;
                 -webkit-border-radius: 4px;
                 border-radius: 4px;
@@ -136,6 +116,18 @@
                 -webkit-transition: all .3s;
                 -ms-transition: all .3s;
                 transition: all .3s;
+            }
+            input[type="text"], input[type="password"], textarea, textarea.form-control {
+                height: 50px;
+                margin: 0;
+                padding: 0 20px;
+                vertical-align: middle;
+                background: #f8f8f8;
+                border: 1px solid #ddd;
+                font-size: 16px;
+                font-weight: 300;
+                line-height: 50px;
+
             }
             .login{
                 background-color: #1abc9c;
@@ -155,7 +147,7 @@
             .errorlist{
                 padding: 15px;
                 margin-bottom: 20px;
-                border: 3px solid transparent;
+                border: 1px solid transparent;
                 border-radius: 4px;
                 color: #a94442;
                 background-color: #f2dede;
@@ -164,8 +156,8 @@
             .errorlist li{
                 list-style-type: none;
             }
-            .form-top-left img{
-                width: 180px;
+            .form-top-center img{
+                width: 200px;
                 height: auto;
             }
             /***** Top content *****/
@@ -204,23 +196,13 @@
             	text-align: left;
             }
 
-            .form-top-left {
-            	float: left;
-            	width: 75%;
+            .form-top-center {
+            	text-align: center;
             	padding-top: 25px;
+            	padding-bottom: 15px;
             }
 
-            .form-top-left h3 { margin-top: 0; }
-
-            .form-top-right {
-            	float: left;
-            	width: 25%;
-            	padding-top: 5px;
-            	font-size: 50px;
-            	color: #ddd;
-            	line-height: 100px;
-            	text-align: right;
-            }
+            .form-top-center h3 { margin-top: 0; }
 
             .form-bottom {
             	padding: 25px 25px 30px 25px;
@@ -255,7 +237,11 @@
 
 
             /***** Media queries *****/
-
+            @media (min-width: 1200px){
+                .container {
+                    width: 970px;
+                }
+            }
             @media (min-width: 992px) and (max-width: 1199px) {}
 
             @media (min-width: 768px) and (max-width: 991px) {}
@@ -287,11 +273,8 @@
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3 form-box">
                         	<div class="form-top">
-                        		<div class="form-top-left">
+                        		<div class="form-top-center">
                         			<img src="https://www.bigskytech.com/wp-content/uploads/2015/04/sg-logo-blue-green.png">
-                        		</div>
-                        		<div class="form-top-right">
-                        			<i class="fa fa-key"></i>
                         		</div>
                             </div>
                             <div class="form-bottom">
