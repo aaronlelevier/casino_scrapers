@@ -39,23 +39,23 @@ test('ticket formatted date returns correct value yesterday', (assert) => {
     assert.equal(ticket.get('formatted_date'), `${TD.createdFormattedYesterday} ${time}`);
 });
 
-// test('ticket formatted date returns correct value < 7 days ago', (assert) => {
-//     run(() => {
-//         ticket = store.push('ticket', {id: 1, created: TD.createdISOTwoDaysAgo});
-//     });
-//     assert.equal(ticket.get('created'), TD.createdISOTwoDaysAgo);
-//     time = moment(TD.createdISOTwoDaysAgo).format('h:mm a');
-//     assert.equal(ticket.get('formatted_date'), `${TD.createdFormattedTwoDaysAgo} ${time}`);
-// });
+test('ticket formatted date returns correct value < 7 days ago', (assert) => {
+    run(() => {
+        ticket = store.push('ticket', {id: 1, created: TD.createdISOTwoDaysAgo});
+    });
+    assert.equal(ticket.get('created'), TD.createdISOTwoDaysAgo);
+    time = moment(TD.createdISOTwoDaysAgo).format('h:mm a');
+    assert.equal(ticket.get('formatted_date'), `${TD.createdFormattedTwoDaysAgo} ${time}`);
+});
 
-// test('ticket formatted date returns correct value > 7 days ago', (assert) => {
-//     run(() => {
-//         ticket = store.push('ticket', {id: 1, created: TD.createdISOTwoWeeksAgo});
-//     });
-//     assert.equal(ticket.get('created'), TD.createdISOTwoWeeksAgo);
-//     time = moment(TD.createdISOTwoWeeksAgo).format('h:mm a');
-//     assert.equal(ticket.get('formatted_date'), `${TD.createdFormattedTwoWeeksAgo} ${time}`);
-// });
+test('ticket formatted date returns correct value > 7 days ago', (assert) => {
+    run(() => {
+        ticket = store.push('ticket', {id: 1, created: TD.createdISOTwoWeeksAgo});
+    });
+    assert.equal(ticket.get('created'), TD.createdISOTwoWeeksAgo);
+    time = moment(TD.createdISOTwoWeeksAgo).format('h:mm a');
+    assert.equal(ticket.get('formatted_date'), `${TD.createdFormattedTwoWeeksAgo} ${time}`);
+});
 
 test('ticket with undefined date returns undefined', (assert) => {
     run(() => {
