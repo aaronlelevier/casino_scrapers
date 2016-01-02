@@ -30,7 +30,7 @@
                                     {{/parent-ticket-category-select}}
                                 </div>
                                 <div class="col-md-12">
-                                    {{textarea placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
+                                    {{textarea autoresize=true placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
                                     {{#validation-error-field submitted=submitted field="request" className="validation validation-under t-request-validation-error" model=model validation=requestValidation}}invalid request{{/validation-error-field}}
                                 </div>
                             </div>
