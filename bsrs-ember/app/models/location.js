@@ -163,6 +163,14 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         this.rollbackAddresses();
     },
     serialize() {
+        var emails = this.get('emails').filter(function(email) {
+            if(email.get('invalid_email')) {
+                return;
+            }
+            return email;
+        }).map((email) => {
+            return email.serialize();
+        });
         var phone_numbers = this.get('phone_numbers').filter(function(num) {
             if(num.get('invalid_number')) {
                 return;
@@ -187,6 +195,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             location_level: this.get('location_level.id'),
             children: [],
             parents: [],
+            emails: emails,
             phone_numbers: phone_numbers,
             addresses: addresses,
         };

@@ -1,9 +1,10 @@
 var BSRS_LOCATION_FACTORY = (function() {
-    var factory = function(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, phone_number_fixtures, address_fixtures, config) {
+    var factory = function(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, email_fixtures, phone_number_fixtures, address_fixtures, config) {
         this.location_defaults = location_defaults;
         this.location_level_defaults = location_level_defaults;
         this.location_status_defaults = location_status_defaults;
         this.location_level_fixtures = location_level_fixtures.default || location_level_fixtures;
+        this.emails = email_fixtures;
         this.phone_numbers = phone_number_fixtures;
         this.addresses = address_fixtures;
         this.config = config;
@@ -66,6 +67,7 @@ var BSRS_LOCATION_FACTORY = (function() {
     };
     factory.prototype.detail = function(i) {
         var model = this.generate(this.location_defaults.idOne);
+        model.emails = this.emails.get();
         model.phone_numbers = this.phone_numbers.get();
         model.addresses = this.addresses.get();
         return model;
@@ -73,6 +75,7 @@ var BSRS_LOCATION_FACTORY = (function() {
     factory.prototype.put = function(location) {
         var response = this.generate(location.id);
         response.location_level = this.location_level_fixtures.detail().id;
+        response.emails = this.emails.get();
         response.phone_numbers = this.phone_numbers.get();
         response.addresses = this.addresses.get();
         for(var key in location) {
@@ -106,15 +109,16 @@ if (typeof window === 'undefined') {
     var location_level_fixtures = require('../vendor/location_level_fixtures');
     var location_level_defaults = require('../vendor/defaults/location-level');
     var address_fixtures = require('../vendor/address_fixtures');
+    var email_fixtures = require('../vendor/email_fixtures');
     var phone_number_fixtures = require('../vendor/phone_number_fixtures');
     var config = require('../config/environment');
     objectAssign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
-    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, phone_number_fixtures, address_fixtures, config);
+    module.exports = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, email_fixtures, phone_number_fixtures, address_fixtures, config);
 } else {
-    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/phone_number_fixtures', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, phone_number_fixtures, address_fixtures, mixin, config) {
+    define('bsrs-ember/vendor/location_fixtures', ['exports', 'bsrs-ember/vendor/defaults/location', 'bsrs-ember/vendor/defaults/location-status', 'bsrs-ember/vendor/defaults/location-level', 'bsrs-ember/vendor/location_level_fixtures', 'bsrs-ember/vendor/email_fixtures', 'bsrs-ember/vendor/phone_number_fixtures', 'bsrs-ember/vendor/address_fixtures', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], function (exports, location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, email_fixtures, phone_number_fixtures, address_fixtures, mixin, config) {
         'use strict';
         Object.assign(BSRS_LOCATION_FACTORY.prototype, mixin.prototype);
-        var Factory = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, phone_number_fixtures, address_fixtures, config);
+        var Factory = new BSRS_LOCATION_FACTORY(location_defaults, location_status_defaults, location_level_defaults, location_level_fixtures, email_fixtures, phone_number_fixtures, address_fixtures, config);
         return {default: Factory};
     });
 }

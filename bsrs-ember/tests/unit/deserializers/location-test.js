@@ -5,10 +5,12 @@ import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
+import ED from 'bsrs-ember/vendor/defaults/email';
+import EF from 'bsrs-ember/vendor/email_fixtures';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
+import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import AND from 'bsrs-ember/vendor/defaults/address';
 import ANF from 'bsrs-ember/vendor/address_fixtures';
-import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import LocationDeserializer from 'bsrs-ember/deserializers/location';
 import LocationLevelDeserializer from 'bsrs-ember/deserializers/location-level';
@@ -17,7 +19,7 @@ var store, location_unused, location_level_deserializer, subject, location_statu
 
 module('unit: location deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:location', 'model:location-level', 'model:location-status', 'model:address', 'model:phonenumber', 'service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:location', 'model:location-level', 'model:location-status', 'model:address', 'model:phonenumber', 'model:email', 'service:i18n']);
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         subject = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
         run(function() {
@@ -236,7 +238,43 @@ test('can push in location with location level as an id', (assert) => {
     assert.equal(location.get('location_level').get('id'), LLD.idOne);
 });
 
-/* PH and ADDRESSES */
+/* PH and ADDRESSES and Emails*/
+test('location will setup the correct relationship with emails when deserialize_single is invoked with no relationship in place', (assert) => {
+    let location, email;
+    run(function() {
+        location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
+        email = store.push('email', {id: ED.idOne, email: ED.emailOne});
+    });
+    let response = LF.generate(LD.idOne);
+    response.emails = EF.get();
+    run(function() {
+        subject.deserialize(response, LD.idOne);
+    });
+    let location_pk = email.get('model_fk');
+    assert.ok(location_pk);
+    assert.deepEqual(location.get('email_fks'), [ED.idOne, ED.idTwo]);
+    assert.ok(location.get('isNotDirty'));
+    assert.equal(email.get('model_fk'), LD.idOne);
+});
+
+test('location will setup the correct relationship with emails when deserialize_single is invoked with location setup with phone number relationship', (assert) => {
+    let location, email;
+    run(function() {
+        location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId, email_fks: [ED.idOne]});
+        email = store.push('email', {id: ED.idOne, number: ED.emailOne});
+    });
+    let response = LF.generate(LD.idOne);
+    response.emails = EF.get();
+    run(function() {
+        subject.deserialize(response, LD.idOne);
+    });
+    let location_pk = email.get('model_fk');
+    assert.ok(location_pk);
+    assert.deepEqual(location.get('email_fks'), [ED.idOne, ED.idTwo]);
+    assert.ok(location.get('isNotDirty'));
+    assert.equal(email.get('model_fk'), LD.idOne);
+});
+
 test('location will setup the correct relationship with phone numbers when deserialize_single is invoked with no relationship in place', (assert) => {
     let location, phonenumber;
     run(function() {

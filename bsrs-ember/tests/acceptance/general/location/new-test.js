@@ -37,6 +37,7 @@ module('Acceptance | location-new', {
             location_level: LLD.idOne,
             children: [],
             parents: [],
+            emails: [],
             phone_numbers: [],
             addresses: []
         };
