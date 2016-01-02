@@ -136,6 +136,7 @@ function loadFixtures {
     ./manage.py loaddata fixtures/location.State.json
     ./manage.py loaddata fixtures/translation.json
     ./manage.py loaddata fixtures/accounting.Currency.json
+    ./manage.py loaddata fixtures/contact.EmailType.json
     ./manage.py loaddata fixtures/contact.PhoneNumberType.json
     ./manage.py loaddata fixtures/contact.AddressType.json
     ./manage.py loaddata fixtures/category.json

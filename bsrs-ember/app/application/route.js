@@ -15,6 +15,10 @@ var ApplicationRoute = Ember.Route.extend({
     tabList: inject.service(),
     beforeModel() {
         let store = this.get('store');
+        const email_types = Ember.$('[data-preload-email_types]').data('configuration');
+        email_types.forEach((model) => {
+            store.push('email-type', model);
+        });
         const phone_number_types = Ember.$('[data-preload-phonenumber_types]').data('configuration');
         phone_number_types.forEach((model) => {
             store.push('phone-number-type', model);

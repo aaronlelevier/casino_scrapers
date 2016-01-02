@@ -23,6 +23,7 @@ module.exports = function(defaults) {
       app.import('vendor/mixin.js');
       app.import('vendor/address_fixtures.js');
       app.import('vendor/admin_translation_fixtures.js');
+      app.import('vendor/email_fixtures.js');
       app.import('vendor/location_fixtures.js');
       app.import('vendor/location_level_fixtures.js');
       app.import('vendor/people_fixtures.js');

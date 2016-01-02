@@ -4,6 +4,7 @@ import inject from 'bsrs-ember/utilities/inject';
 var ContactRouteMixin = Ember.Mixin.create({
     phone_number_type_repo: inject('phone-number-type'),
     address_type_repo: inject('address-type'),
+    email_type_repo: inject('email-type'),
     state_repo: inject('state'),
     country_repo: inject('country'),
     init() {
@@ -15,6 +16,8 @@ var ContactRouteMixin = Ember.Mixin.create({
         this.set('address_type_repo', address_type_repo);
         const phone_number_type_repo = this.get('phone_number_type_repo');
         this.set('phone_number_type_repo', phone_number_type_repo);
+        const email_type_repo = this.get('email_type_repo');
+        this.set('email_type_repo', email_type_repo);
     }
 });
 

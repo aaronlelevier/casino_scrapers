@@ -10,6 +10,8 @@ import LF from 'bsrs-ember/vendor/location_fixtures';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
+import ED from 'bsrs-ember/vendor/defaults/email';
+import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
 import PNTD from 'bsrs-ember/vendor/defaults/phone-number-type';
@@ -28,7 +30,7 @@ const DETAIL_URL = BASE_URL + '/' + LD.idOne;
 
 let application, store, endpoint, list_xhr, url, original_uuid, run = Ember.run;
 
-module('Acceptance | detail-test', {
+module('scott Acceptance | detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -67,6 +69,13 @@ test('visiting admin/location', (assert) => {
         assert.equal(location.get('location_level').get('id'), LLD.idOne);
         assert.equal(find('.t-location-name').val(), LD.baseStoreName);
         assert.equal(find('.t-location-number').val(), LD.storeNumber);
+        assert.equal(find('.t-input-multi-email').find('select:eq(0)').val(), ETD.workId);
+        assert.equal(find('.t-input-multi-email').find('select:eq(1)').val(), ETD.personalId);
+        assert.equal(find('.t-input-multi-email').find('select:eq(0) option:selected').text(), t(ETD.workEmail));
+        assert.equal(find('.t-input-multi-email').find('select:eq(1) option:selected').text(), t(ETD.personalEmail));
+        assert.equal(find('.t-input-multi-email').find('input').length, 2);
+        assert.equal(find('.t-input-multi-email').find('input:eq(0)').val(), ED.emailOne);
+        assert.equal(find('.t-input-multi-email').find('input:eq(1)').val(), ED.emailTwo);
         assert.equal(find('.t-input-multi-phone').find('select:eq(0)').val(), PNTD.officeId);
         assert.equal(find('.t-input-multi-phone').find('select:eq(1)').val(), PNTD.mobileId);
         assert.equal(find('.t-input-multi-phone').find('select:eq(0) option:selected').text(), t(PNTD.officeName));
