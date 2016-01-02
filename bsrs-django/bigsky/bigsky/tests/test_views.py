@@ -12,7 +12,7 @@ from model_mommy import mommy
 from accounting.models import Currency
 from category.models import Category
 from category.tests.factory import create_categories
-from contact.models import PhoneNumberType, AddressType
+from contact.models import PhoneNumberType, AddressType, EmailType
 from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus, State, Country
 from person.models import PersonStatus, Role
@@ -134,6 +134,7 @@ class ConfigurationTests(TestCase):
         self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
             endpoint_name="admin.people.index")
 
+        mommy.make(EmailType)
         mommy.make(AddressType)
         mommy.make(State)
         mommy.make(Country)
@@ -149,6 +150,10 @@ class ConfigurationTests(TestCase):
 
     def test_get(self):
         self.assertEqual(self.response.status_code, 200)
+
+    def test_email_types(self):
+        configuration = json.loads(self.response.context['email_types_config'])
+        self.assertTrue(len(configuration) > 0)
 
     def test_phone_number_types(self):
         configuration = json.loads(self.response.context['phone_number_types_config'])

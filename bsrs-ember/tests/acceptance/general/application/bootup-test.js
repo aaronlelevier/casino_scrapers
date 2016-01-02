@@ -10,6 +10,7 @@ import CD from 'bsrs-ember/vendor/defaults/category';
 import COUNTRY_DEFAULTS from 'bsrs-ember/vendor/defaults/country';
 import ATD from 'bsrs-ember/vendor/defaults/address-type';
 import PND from 'bsrs-ember/vendor/defaults/phone-number-type';
+import ED from 'bsrs-ember/vendor/defaults/email-type';
 import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/ticket';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
@@ -29,6 +30,17 @@ module('Acceptance | bootup test', {
         store = null;
         Ember.run(application, 'destroy');
     }
+});
+
+test('on boot we should fetch and load the email configuration', function(assert) {
+    visit(HOME_URL);
+    andThen(() => {
+        assert.equal(store.find('email-type').get('length'), 2);
+        assert.equal(store.find('email-type').objectAt(0).get('id'), ED.workId);
+        assert.equal(store.find('email-type').objectAt(0).get('name'), ED.workEmail);
+        assert.equal(store.find('email-type').objectAt(1).get('id'), ED.personalId);
+        assert.equal(store.find('email-type').objectAt(1).get('name'), ED.personalEmail);
+    });
 });
 
 test('on boot we should fetch and load the phone number configuration', function(assert) {
