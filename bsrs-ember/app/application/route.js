@@ -121,10 +121,10 @@ var ApplicationRoute = Ember.Route.extend({
         // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220
         // TODO: allow timezone to be overridden at the system/role/user level
         let zone = '';
-        if(!Intl){
+        if(!window.Intl){
             zone = 'America/Los_Angeles';
         }else{
-            zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            zone = window.Intl.DateTimeFormat().resolvedOptions().timeZone;
         }
         this.get('moment').changeTimeZone(zone);
 
