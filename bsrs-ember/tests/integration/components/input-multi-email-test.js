@@ -66,11 +66,11 @@ test('once added a button for email type appears with a button to delete it', fu
     var $component = this.$('.t-input-multi-email');
     var $first_btn = $component.find('.t-add-email-btn:eq(0)');
     var $first_type_select = $component.find('.t-multi-email-type');
-    var $first_del = $component.find('.t-del-btn:eq(0)');
+    var $first_del = $component.find('.t-del-email-btn:eq(0)');
     assert.equal($first_type_select.length, 0);
     assert.equal($first_del.length, 0);
     $first_btn.trigger('click');
-    $first_del = $component.find('.t-del-btn:eq(0)');
+    $first_del = $component.find('.t-del-email-btn:eq(0)');
     $first_type_select = $component.find('.t-multi-email-type');
     assert.equal($first_del.length, 1);
     assert.equal($first_type_select.length, 1);
@@ -139,7 +139,7 @@ test('click delete btn will remove input', function(assert) {
     this.render(hbs`{{input-multi-email model=model types=email_types related_pk=related_pk related_field=related_field default_type=default_type}}`);
     var $component = this.$('.t-input-multi-email');
     assert.equal(this.$('.t-new-entry').length, 2);
-    var $first_del_btn = $component.find('.t-del-btn:eq(0)');
+    var $first_del_btn = $component.find('.t-del-email-btn:eq(0)');
     assert.equal($first_del_btn.length, 1);
     $first_del_btn.trigger('click');
     var emails = store.find('email');

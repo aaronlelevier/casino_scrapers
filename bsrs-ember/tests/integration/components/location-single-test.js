@@ -4,6 +4,7 @@ import { moduleForComponent, test } from 'ember-qunit';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
+import LF from "bsrs-ember/vendor/location_fixtures";
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
@@ -142,4 +143,43 @@ test('filling in invalid emails reveal validation messages', function(assert) {
     this.$('.t-new-entry').val('snewcomer24@gmail.com').trigger('change');
     $component = this.$('.t-input-multi-email-validation-format-error');
     assert.ok($component.is(':hidden'));
+});
+
+test('can remove a new phone number', function(assert) {
+    run(() => {
+        this.model = store.push('location', {});
+    });
+    this.phone_number_types = phone_number_types;
+    this.default_phone_number_type = default_phone_number_type;
+    this.render(hbs`{{location-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
+    this.$('.t-add-btn:eq(0)').click();
+    assert.equal(this.$('.t-new-entry').length, 1);
+    this.$('.t-del-btn:eq(0)').click();
+    assert.equal(this.$('.t-new-entry').length, 0);
+});
+
+test('can add and remove new email', function(assert) {
+    run(() => {
+        this.model = store.push('location', {});
+    });
+    this.email_types = email_types;
+    this.default_email_type = default_email_type;
+    this.render(hbs`{{location-single model=model email_types=email_types default_email_type=default_email_type}}`);
+    this.$('.t-add-email-btn:eq(0)').click();
+    assert.equal(this.$('.t-new-entry').length, 1);
+    this.$('.t-del-email-btn:eq(0)').click();
+    assert.equal(this.$('.t-new-entry').length, 0);
+});
+
+test('can add and remove new address', function(assert) {
+    run(() => {
+        this.model = store.push('location', {});
+    });
+    this.address_types = address_types;
+    this.default_address_type = default_address_type;
+    this.render(hbs`{{location-single model=model address_types=address_types default_address_type=default_address_type}}`);
+    this.$('.t-add-address-btn:eq(0)').click();
+    assert.equal(this.$('.t-address-address').length, 1);
+    this.$('.t-del-address-btn:eq(0)').click();
+    assert.equal(this.$('.t-address-address').length, 0);
 });
