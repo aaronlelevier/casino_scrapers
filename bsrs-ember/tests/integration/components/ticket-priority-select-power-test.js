@@ -3,7 +3,6 @@ import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
-import tHelper from 'ember-i18n/helper';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
