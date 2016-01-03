@@ -1,12 +1,13 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
 
-let store, location_one, status_one, status_two, status_three, run = Ember.run;
+let store, location_one, status_one, status_two, status_three, run = Ember.run, trans;
 const PowerSelect = '.ember-power-select-trigger';
 const COMPONENT = '.t-location-status-select';
 const DROPDOWN = '.ember-power-select-dropdown';
@@ -21,6 +22,8 @@ moduleForComponent('location-status-select', 'integration: location-status-selec
             status_two = store.push('location-status', {id: LDS.closedId, name: LDS.closedName});
             status_three = store.push('location-status', {id: LDS.futureId, name: LDS.futureName});
         });
+        trans = this.container.lookup('service:i18n');
+        translation.initialize(this);
     }
 });
 
@@ -31,7 +34,7 @@ test('should render a selectbox with bound options (defaulted to open on new tem
     this.set('all_statuses', all_statuses);
     this.render(hbs`{{location-status-select location=location all_statuses=all_statuses}}`);
     let $component = this.$(`${COMPONENT}`);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), LDS.openName);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
     clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
@@ -46,7 +49,7 @@ test('should be able to select same status when location already has a status', 
     this.set('all_statuses', all_statuses);
     this.render(hbs`{{location-status-select location=location all_statuses=all_statuses}}`);
     let $component = this.$(`${COMPONENT}`);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), LDS.openName);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
     clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
@@ -55,7 +58,7 @@ test('should be able to select same status when location already has a status', 
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), LDS.openName);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
     assert.equal(location_one.get('status').get('id'), LDS.openId);
     assert.deepEqual(status_one.get('locations'), [LD.idOne]);
 });
@@ -67,7 +70,7 @@ test('should be able to select new status when location already has a status', f
     this.set('all_statuses', all_statuses);
     this.render(hbs`{{location-status-select location=location all_statuses=all_statuses}}`);
     let $component = this.$(`${COMPONENT}`);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), LDS.openName);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.openName));
     clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
@@ -76,7 +79,7 @@ test('should be able to select new status when location already has a status', f
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
-    assert.equal($component.find(`${PowerSelect}`).text().trim(), LDS.closedName);
+    assert.equal($component.find(`${PowerSelect}`).text().trim(), trans.t(LDS.closedName));
     assert.equal(location_one.get('status').get('id'), LDS.closedId);
     assert.deepEqual(status_one.get('locations'), []);
     assert.deepEqual(status_two.get('locations'), [LD.idOne]);

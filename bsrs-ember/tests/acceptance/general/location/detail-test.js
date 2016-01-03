@@ -11,6 +11,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
 import ED from 'bsrs-ember/vendor/defaults/email';
+import EF from 'bsrs-ember/vendor/email_fixtures';
 import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import PNF from 'bsrs-ember/vendor/phone_number_fixtures';
 import PND from 'bsrs-ember/vendor/defaults/phone-number';
@@ -30,7 +31,7 @@ const DETAIL_URL = BASE_URL + '/' + LD.idOne;
 
 let application, store, endpoint, list_xhr, url, original_uuid, run = Ember.run;
 
-module('scott Acceptance | detail-test', {
+module('Acceptance | detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
@@ -98,7 +99,7 @@ test('visiting admin/location', (assert) => {
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-state').val(), AD.stateTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-postal-code').val(), AD.zipTwo);
         assert.equal(find('.t-input-multi-address').find('.t-address-group:eq(1) .t-address-country').val(), AD.countryTwo);
-        assert.equal(page.statusInput(), LDS.openName);
+        assert.equal(page.statusInput(), t(LDS.openName));
     });
     fillIn('.t-location-name', LD.storeNameTwo);
     andThen(() => {
@@ -265,6 +266,26 @@ test('newly added phone numbers without a valid number are ignored and removed w
     });
 });
 
+test('newly added email without a valid email are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
+    visit(DETAIL_URL);
+    click('.t-add-email-btn:eq(0)');
+    andThen(() => {
+        assert.equal(store.find('email').get('length'), 3);
+        let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    fillIn('.t-new-entry:eq(4)', '34');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+    });
+    fillIn('.t-new-entry:eq(4)', '');
+    generalPage.cancel();
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
+    });
+});
+
 test('newly added addresses without a valid name are ignored and removed when user navigates away (no rollback prompt)', (assert) => {
     visit(DETAIL_URL);
     click('.t-add-address-btn:eq(0)');
@@ -314,6 +335,37 @@ test('phone numbers without a valid number are ignored and removed on save', (as
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(store.find('phonenumber').get('length'), 2);
+    });
+});
+
+test('emails without a valid email are ignored and removed on save', (assert) => {
+    visit(DETAIL_URL);
+    click('.t-add-email-btn:eq(0)');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
+        assert.equal(visible_errors.length, 0);
+    });
+    fillIn('.t-new-entry:eq(4)', '34');
+    andThen(() => {
+        let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+        assert.equal(find('.t-input-multi-email-validation-format-error:not(:hidden):eq(0)').text().trim(), 'invalid email');
+    });
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let visible_errors = find('.t-input-multi-email-validation-format-error:not(:hidden)');
+        assert.equal(visible_errors.length, 1);
+        assert.equal(store.find('email').get('length'), 3);
+    });
+    fillIn('.t-new-entry:eq(4)', '');
+    var response = LF.detail(LD.idOne);
+    var payload = LF.put({id: LD.idOne});
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
+        assert.equal(store.find('email').get('length'), 2);
     });
 });
 
@@ -401,6 +453,18 @@ test('when you change a related phone numbers type it will be persisted correctl
     });
 });
 
+test('when you change a related phone numbers type it will be persisted correctly', (assert) => {
+    visit(DETAIL_URL);
+    var emails = EF.put({id: ED.idOne, type: ETD.personalId});
+    var payload = LF.put({id: LD.idOne, emails: emails});
+    fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
+    xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL);
+    });
+});
+
 test('when you change a related address type it will be persisted correctly', (assert) => {
     visit(DETAIL_URL);
     var addresses = AF.put({id: AD.idOne, type: ATD.shippingId});
@@ -430,6 +494,27 @@ test('when user changes an attribute on phonenumber and clicks cancel we prompt 
             var location = store.find('location', LD.idOne);
             var phone_numbers = store.find('phonenumber', LD.idOne);
             assert.equal(phone_numbers.source[0].get('type'), PNTD.officeId);
+        });
+    });
+});
+
+test('when user changes an attribute on email and clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+    visit(DETAIL_URL);
+    fillIn('.t-multi-email-type:eq(0)', ETD.personalId);
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible());
+        });
+    });
+    generalPage.clickModalRollback();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), LOCATION_URL);
+            var location = store.find('location', LD.idOne);
+            var email = store.find('email', LD.idOne);
+            assert.equal(email.source[0].get('type'), ETD.workId);
         });
     });
 });
@@ -472,6 +557,27 @@ test('when user removes a phone number clicks cancel we prompt them with a modal
             var location = store.find('location', LD.idOne);
             var phone_numbers = store.find('phonenumber', LD.idOne);
             assert.equal(phone_numbers.source[0].get('type'), PNTD.officeId);
+        });
+    });
+});
+
+test('when user removes a email clicks cancel we prompt them with a modal and the related model gets rolled back', (assert) => {
+    visit(DETAIL_URL);
+    click('.t-del-email-btn:eq(0)');
+    generalPage.cancel();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), DETAIL_URL);
+            assert.ok(generalPage.modalIsVisible());
+        });
+    });
+    generalPage.clickModalRollback();
+    andThen(() => {
+        waitFor(() => {
+            assert.equal(currentURL(), LOCATION_URL);
+            var location = store.find('location', LD.idOne);
+            var emails = store.find('email', LD.idOne);
+            assert.equal(emails.source[0].get('type'), ETD.workId);
         });
     });
 });
@@ -520,6 +626,39 @@ test('when you deep link to the location detail view you can add a new phone num
         phone_numbers.push({id: UUID.value, number: PND.numberThree, type: PNTD.officeId});
     });
     var payload = LF.put({id: LD.idOne, phone_numbers: phone_numbers});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL);
+        var location = store.find('location', LD.idOne);
+        assert.ok(location.get('isNotDirty'));
+        assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when you deep link to the location detail view you can add a new email', (assert) => {
+    random.uuid = function() { return UUID.value; };
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var location = store.find('location', LD.idOne);
+        assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-input-multi-email').find('input').length, 2);
+    });
+    click('.t-add-email-btn:eq(0)');
+    fillIn('.t-new-entry:eq(4)', ED.emailThree);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-input-multi-email').find('input').length, 3);
+        var location = store.find('location', LD.idOne);
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+    });
+    var email = EF.put();
+    var response = LF.detail(LD.idOne);
+    run(function() {
+        email.push({id: UUID.value, email: ED.emailThree, type: ETD.workId});
+    });
+    var payload = LF.put({id: LD.idOne, emails: email});
     xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
     andThen(() => {
@@ -589,6 +728,34 @@ test('when you deep link to the location detail view you can remove a new phone 
     });
 });
 
+test('when you deep link to the location detail view you can remove a new email', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var location = store.find('location', LD.idOne);
+        assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-input-multi-email').find('input').length, 2);
+    });
+    click('.t-del-email-btn:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find('.t-input-multi-email').find('input').length, 1);
+        var location = store.find('location', LD.idOne);
+        assert.ok(location.get('isDirtyOrRelatedDirty'));
+    });
+    var email = EF.put();
+    var response = LF.detail(LD.idOne);
+    var payload = LF.put({id: LD.idOne, emails: [email[1]]});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL);
+        var location = store.find('location', LD.idOne);
+        assert.ok(location.get('isNotDirty'));
+        assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
 test('when you deep link to the location detail view you can remove a new address', (assert) => {
     visit(DETAIL_URL);
     andThen(() => {
@@ -628,6 +795,24 @@ test('when you deep link to the location detail view you can add and remove a ne
     });
     click('.t-add-btn:eq(0)');
     click('.t-del-btn:eq(2)');
+    andThen(() => {
+        var location = store.find('location', LD.idOne);
+        assert.ok(location.get('isNotDirty'));
+        assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    });
+});
+
+test('when you deep link to the location detail view you can add and remove a new email', (assert) => {
+    clearxhr(list_xhr);
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        var location = store.find('location', LD.idOne);
+        assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+        assert.equal(find('.t-input-multi-email').find('input').length, 2);
+    });
+    click('.t-add-email-btn:eq(0)');
+    click('.t-del-email-btn:eq(2)');
     andThen(() => {
         var location = store.find('location', LD.idOne);
         assert.ok(location.get('isNotDirty'));
@@ -675,6 +860,31 @@ test('when you deep link to the location detail view you can change the phone nu
         assert.equal(location.get('phone_numbers').objectAt(0).get('type'), PNTD.mobileId);
         assert.equal(location.get('phone_numbers').objectAt(2).get('type'), PNTD.officeId);
         assert.ok(location.get('phone_numbers').objectAt(0).get('isNotDirty'));
+    });
+});
+
+test('when you deep link to the location detail view you can change the email type and add a new email', (assert) => {
+    random.uuid = function() { return UUID.value; };
+    visit(DETAIL_URL);
+    fillIn('.t-input-multi-email select:eq(0)', ETD.personalId);
+    click('.t-add-email-btn:eq(0)');
+    fillIn('.t-new-entry:eq(4)', ED.emailThree);
+    var email = EF.put();
+    email[0].type = ETD.personalId;
+    var response = LF.detail(LD.idOne);
+    run(function() {
+        email.push({id: UUID.value, email: ED.emailThree, type: ETD.workId});
+    });
+    var payload = LF.put({id: LD.idOne, emails: email});
+    xhr(PREFIX + DETAIL_URL + '/', 'PUT', JSON.stringify(payload), {}, 200, response);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(),LOCATION_URL);
+        var location = store.find('location', LD.idOne);
+        assert.ok(location.get('isNotDirty'));
+        assert.equal(location.get('emails').objectAt(0).get('type'), ETD.personalId);
+        assert.equal(location.get('emails').objectAt(2).get('type'), ETD.workId);
+        assert.ok(location.get('emails').objectAt(0).get('isNotDirty'));
     });
 });
 

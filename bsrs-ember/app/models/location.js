@@ -99,8 +99,8 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             this.change_status(status_fk);
         }
     },
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', function() {
-        return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'emailsIsDirty', function() {
+        return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('emailsIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     change_location_level(new_location_level_id) {
@@ -153,12 +153,14 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
     saveRelated() {
         this.saveLocationLevel();
         this.saveStatus();
+        this.saveEmails();
         this.savePhoneNumbers();
         this.saveAddresses();
     },
     rollbackRelated() {
         this.rollbackLocationLevel();
         this.rollbackStatus();
+        this.rollbackEmails();
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
     },

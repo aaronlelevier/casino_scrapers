@@ -8,6 +8,7 @@ var BSRS_LOC_STATUS_DEFAULTS_OBJECT = (function() {
             openNameTranslated: 'Open',
             closedId: 'aca00958-987d-4576-aa4c-2093dc7d40f5',
             closedName: 'admin.location.status.closed',
+            closedNameTranslated: 'Closed',
             futureId: 'aca00958-987d-4576-aa4c-2093dc7d40f6',
             futureName: 'admin.location.status.future'
         };
