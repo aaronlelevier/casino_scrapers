@@ -1,100 +1,106 @@
 <form {{action "return false" this on="submit"}}>
-  {{base-component
-  model=model
-  save="save"
-  cancel="cancel"
-  delete="delete"
-  }}
-  <section class="docSection container-fluid">
-    <div class="row">
-      <div class="col-md-12">
-        <section style="padding-bottom: 0">
-          <div class="row card-title">
-            <h1 class="col-md-12">
-              {{model.name}}
-              {{#if model.number}}
-              <small>({{model.number}})</small>
-              {{/if}}
-            </h1>
-          </div>
-        </section>
-      </div>
-      <div class="col-md-12">
-        <section>
-          <div class="row">
+    {{base-component
+        model=model
+        save="save"
+        cancel="cancel"
+        delete="delete"
+    }}
+    <section class="docSection container-fluid">
+        <div class="row">
             <div class="col-md-12">
-              {{#form-group title="admin.location.label.name" for="name"}}
-              {{input type="text" placeholder=(t "admin.location.label.name") value=model.name class="form-control t-location-name" id="location_name" required="required"}}
-              {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.location.label.name"}}{{/validation-error-field}}
-              {{/form-group}}
+                <section style="padding-bottom: 0">
+                    <div class="row card-title">
+                        <h1 class="col-md-12">
+                            {{model.name}} <small>{{model.number}}</small>
+                        </h1>
+                        <p class="col-md-12">{{model.location_level.name}}</p>
+                    </div>
+                </section>
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.number" for="number"}}
-              {{input type="text" placeholder=(t "admin.location.label.number") value=model.number class="form-control t-location-number" id="location_number" required="required"}}
-              {{/form-group}}
+            <div class="col-md-4 user-info">
+                <section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-photo location-photo">{{fa-icon "building"}}</div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.location.label.name" for="name"}}
+                                {{input type="text" placeholder=(t "admin.location.label.name") value=model.name class="form-control t-location-name" id="location_name" required="required"}}
+                                {{#validation-error-field submitted=submitted field="name" className="validation validation-under t-name-validation-error" model=model validation=nameValidation}}{{t "validation.invalid"}} {{t "admin.location.label.name"}}{{/validation-error-field}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.location.label.number" for="number"}}
+                                {{input type="text" placeholder=(t "admin.location.label.number") value=model.number class="form-control t-location-number" id="location_number" required="required"}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.location.label.location_level" for="location_location_level_select"}}
+                                {{location-level-select model=model options=all_location_levels}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.location.label.status-name" for="location_status"}}
+                                {{location-status-select location=model all_statuses=all_statuses}}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                </section>
+
             </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{#form-group title="admin.location.label.location_level" for="location_location_level_select"}}
-              {{location-level-select model=model options=all_location_levels}}
-              {{/form-group}}
-            </div>
-          </div>
-          <div class="row">
-            <div class="col-md-12">
-              {{location-status-select location=model all_statuses=all_statuses}}
-            </div>
-          </div>
+
             <div class="col-md-8">
-              <section>
-                <div class="row card-title">
-                  <h2 class="col-md-12">{{t "admin.location.label.contact"}}</h2>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    {{#form-group title="admin.location.label.phone_number.other"}}
-                      {{input-multi-phone placeholder=(t "admin.location.label.phone_number.one")
-                        model=model.phone_numbers
-                        types=phone_number_types
-                        default_type=default_phone_number_type
-                        related_pk=model.id
-                      }}
-                    {{/form-group}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    {{#form-group title="admin.location.label.address"}}
-                      {{input-multi-address
-                        model=model.addresses
-                        state_list=state_list
-                        countries=countries
-                        types=address_types
-                        default_type=default_address_type
-                        related_pk=model.id
-                      }}
-                    {{/form-group}}
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-md-12">
-                    {{#form-group title="admin.location.label.email.other"}}
-                      {{input-multi-email placeholder=(t "admin.location.label.email.one")
-                        model=model.emails
-                        types=email_types
-                        default_type=default_email_type
-                        related_pk=model.id
-                      }}
-                    {{/form-group}}
-                  </div>
-                </div>
-              </section>
+                <section>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.location.label.phone_number.other"}}
+                                {{input-multi-phone
+                                    placeholder=(t "admin.location.label.phone_number.one")
+                                    model=model.phone_numbers
+                                    types=phone_number_types
+                                    default_type=default_phone_number_type
+                                    related_pk=model.id
+                                }}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.location.label.address.other"}}
+                                {{input-multi-address
+                                    model=model.addresses
+                                    state_list=state_list
+                                    countries=countries
+                                    types=address_types
+                                    default_type=default_address_type
+                                    related_pk=model.id
+                                }}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            {{#form-group title="admin.location.label.email.other"}}
+                                {{input-multi-email
+                                    placeholder=(t "admin.location.label.email.one")
+                                    model=model.emails
+                                    types=email_types
+                                    default_type=default_email_type
+                                    related_pk=model.id
+                                }}
+                            {{/form-group}}
+                        </div>
+                    </div>
+                </section>
             </div>
-        </section>
-      </div>
-    </div>
-  </section>
+        </div>
+    </section>
 </form>
