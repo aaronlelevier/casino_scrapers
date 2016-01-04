@@ -10,7 +10,7 @@ const LONG_AUTH_AMOUNT = '50000.0000';
 
 var container, registry, store, model, service, run = Ember.run;
 
-moduleForComponent('input-currency', 'integration: input-currency test', {
+moduleForComponent('input-currency', 'integration: amk input-currency test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:currency', 'service:currency']);
@@ -38,6 +38,7 @@ test('renders a component with currency and label', function(assert) {
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
     var $component = this.$('.t-input-currency');
+    $component.find('.t-amount').trigger('blur');
     assert.equal($component.find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol_native);
     assert.equal($component.find('.t-currency-code').text().trim(), CURRENCY_DEFAULTS.code);
     assert.equal($component.find('.t-amount').val(), PEOPLE_DEFAULTS.auth_amount);
@@ -50,9 +51,10 @@ test('the models bound field will update both the formatted input value and the 
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
     var $component = this.$('.t-input-currency');
-    $component.find('.t-amount').val('30').trigger('change');
+    $component.find('.t-amount').val('30').trigger('blur');
     assert.equal($component.find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol_native);
     assert.equal($component.find('.t-currency-code').text().trim(), CURRENCY_DEFAULTS.code);
     assert.equal($component.find('.t-amount').val(), '30.00');
+    $component.find('.t-amount').val('30').trigger('blur');
     assert.equal(model.get('auth_amount'), '30');
 });
