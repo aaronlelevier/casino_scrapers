@@ -1,7 +1,5 @@
 import Ember from 'ember';
 
-var run = Ember.run;
-
 var LocationMixin = Ember.Mixin.create({
     location_level_pk: Ember.computed('role.id', function() {
         const role = this.get('role');
@@ -34,18 +32,14 @@ var LocationMixin = Ember.Mixin.create({
         const pk = this.get('id');
         const store = this.get('store');
         const uuid = this.get('uuid');
-        run(function() {
-            store.push('person-location', {id: uuid.v4(), person_pk: pk, location_pk: location_pk});
-        });
+        store.push('person-location', {id: uuid.v4(), person_pk: pk, location_pk: location_pk});
     },
     remove_locations(location_pk) {
         let store = this.get('store');
         let m2m_pk = this.get('person_locations').filter((m2m) => {
             return m2m.get('location_pk') === location_pk;
         }).objectAt(0).get('id');
-        run(function() {
-            store.push('person-location', {id: m2m_pk, removed: true});
-        });
+        store.push('person-location', {id: m2m_pk, removed: true});
     },
     locationsIsNotDirty: Ember.computed.not('locationsIsDirty'),
     locationsIsDirty: Ember.computed('person_location_fks.[]', 'locations.@each.isDirty', function() {
@@ -76,13 +70,11 @@ var LocationMixin = Ember.Mixin.create({
         const m2m_to_throw_out = m2m_array.filter(function(join_model) {
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
         });
-        run(function() {
-            m2m_to_throw_out.forEach(function(join_model) {
-                store.push('person-location', {id: join_model.get('id'), removed: true});
-            });
-            previous_m2m_fks.forEach(function(pk) {
-                store.push('person-location', {id: pk, removed: undefined});
-            });
+        m2m_to_throw_out.forEach(function(join_model) {
+            store.push('person-location', {id: join_model.get('id'), removed: true});
+        });
+        previous_m2m_fks.forEach(function(pk) {
+            store.push('person-location', {id: pk, removed: undefined});
         });
         this.resetPersonLocationFks();
     },
@@ -107,9 +99,7 @@ var LocationMixin = Ember.Mixin.create({
                 saved_m2m_pks.push(join_model.get('id'));
             });
         });
-        run(function() {
-            store.push('person', {id: person_id, person_location_fks: saved_m2m_pks});
-        });
+        store.push('person', {id: person_id, person_location_fks: saved_m2m_pks});
     }
 });
 

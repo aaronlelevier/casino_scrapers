@@ -3,8 +3,6 @@ import inject from 'bsrs-ember/utilities/store';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 
-var run = Ember.run;
-
 var LocationLevel = Model.extend(NewMixin, {
     store: inject('main'),
     name: attr(''),
@@ -35,9 +33,7 @@ var LocationLevel = Model.extend(NewMixin, {
         this.set('children_fks', new_children.mapBy('id')); 
     },
     removeRecord() {
-        run(() => {
-            this.get('store').remove('location-level', this.get('id'));
-        });
+        this.get('store').remove('location-level', this.get('id'));
     },
     children: Ember.computed('children_fks.[]', function() {
         const children_fks = this.get('children_fks');

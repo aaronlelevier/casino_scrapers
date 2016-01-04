@@ -1,7 +1,5 @@
 import Ember from 'ember';
 
-var run = Ember.run;
-
 var EmailMixin = Ember.Mixin.create({
     emails_all: Ember.computed(function() {
         let store = this.get('store');
@@ -72,9 +70,7 @@ var EmailMixin = Ember.Mixin.create({
         emails.forEach((email) => {
             //remove
             if (email.get('removed')) {
-                run(function() {
-                    store.push('email', {id: email.get('id'), removed: undefined});
-                });
+                store.push('email', {id: email.get('id'), removed: undefined});
             }
             //add
             if(email.get('invalid_email') && email.get('isNotDirty')) {

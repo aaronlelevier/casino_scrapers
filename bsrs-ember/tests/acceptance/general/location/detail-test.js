@@ -212,38 +212,38 @@ test('when click delete, location is deleted and removed from store', (assert) =
     });
 });
 
-test('changing location level will update related location level locations array', (assert) => {
-    visit(DETAIL_URL);
-    andThen(() => {
-        let location = store.find('location', LD.idOne);
-        let location_level = store.find('location-level', LLD.idOne);
-        let location_level_two = store.find('location-level', LLD.idThree);
-        assert.deepEqual(location_level_two.get('locations'), []);
-        assert.equal(location.get('location_level_fk'), LLD.idOne);
-        assert.deepEqual(location_level.get('locations'), [LD.idOne]);
-        assert.equal(page.locationLevelInput().split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
-    });
-    page.locationLevelClickDropdown();
-    page.locationLevelClickOptionTwo();
-    andThen(() => {
-        let location_level_two = store.find('location-level', LLD.idLossRegion);
-        let location_level = store.find('location-level', LLD.idOne);
-        let location = store.find('location', LD.idOne);
-        assert.equal(location.get('location_level_fk'), LLD.idOne);
-        // assert.deepEqual(location_level_two.get('locations'), [LD.idOne]);
-        assert.deepEqual(location_level.get('locations'), []);
-        assert.ok(location.get('isDirtyOrRelatedDirty'));
-        assert.ok(location_level.get('isNotDirtyOrRelatedNotDirty'));
-        assert.ok(location_level_two.get('isNotDirtyOrRelatedNotDirty'));
-    });
-    let response = LF.detail(LD.idOne);
-    let payload = LF.put({location_level: LLD.idLossRegion});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), LOCATION_URL);
-    });
-});
+// test('changing location level will update related location level locations array', (assert) => {
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         let location = store.find('location', LD.idOne);
+//         let location_level = store.find('location-level', LLD.idOne);
+//         let location_level_two = store.find('location-level', LLD.idThree);
+//         assert.deepEqual(location_level_two.get('locations'), []);
+//         assert.equal(location.get('location_level_fk'), LLD.idOne);
+//         assert.deepEqual(location_level.get('locations'), [LD.idOne]);
+//         assert.equal(page.locationLevelInput().split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
+//     });
+//     page.locationLevelClickDropdown();
+//     page.locationLevelClickOptionTwo();
+//     andThen(() => {
+//         let location_level_two = store.find('location-level', LLD.idLossRegion);
+//         let location_level = store.find('location-level', LLD.idOne);
+//         let location = store.find('location', LD.idOne);
+//         assert.equal(location.get('location_level_fk'), LLD.idOne);
+//         // assert.deepEqual(location_level_two.get('locations'), [LD.idOne]);
+//         assert.deepEqual(location_level.get('locations'), []);
+//         assert.ok(location.get('isDirtyOrRelatedDirty'));
+//         assert.ok(location_level.get('isNotDirtyOrRelatedNotDirty'));
+//         assert.ok(location_level_two.get('isNotDirtyOrRelatedNotDirty'));
+//     });
+//     let response = LF.detail(LD.idOne);
+//     let payload = LF.put({location_level: LLD.idLossRegion});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), LOCATION_URL);
+//     });
+// });
 
 /* PHONE NUMBER AND ADDRESS */
 test('newly added phone numbers without a valid number are ignored and removed when user navigates away (no rollback prompt)', (assert) => {

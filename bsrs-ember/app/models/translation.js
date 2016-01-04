@@ -50,10 +50,8 @@ var TranslationModel = Model.extend(NewMixin, {
             }
             x.rollback();
         });
-        Ember.run(function() {
-            locales_to_remove.forEach((id) => {
-                store.remove('locale-translation', id); //no code in the unit tests hit this currently
-            });
+        locales_to_remove.forEach((id) => {
+            store.remove('locale-translation', id); //no code in the unit tests hit this currently
         });
     },
     serialize() {

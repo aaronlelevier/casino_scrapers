@@ -14,9 +14,7 @@ var MultiAddressComponent = ChildValidationComponent.extend(ValidationMixin, Cus
     postal_codeFormat: validateEach('postal_code', postalCodeValidation),
     actions: {
         changed(address, val) {
-            Ember.run(() => {
-                address.set('type', val);
-            });
+            address.set('type', val);
         },
         append() {
             const id = this.get('uuid').v4();
@@ -30,15 +28,11 @@ var MultiAddressComponent = ChildValidationComponent.extend(ValidationMixin, Cus
             this.get('model').push({id: entry.get('id'), removed: true});
         },
         changeState(state, val) {
-            Ember.run(() => {
-                const state_id = parseInt(val, 10);
-                state.set('state', state_id);
-            });
+            const state_id = parseInt(val, 10);
+            state.set('state', state_id);
         },
         changeCountry(country, val) {
-            Ember.run(() => {
-                country.set('country', val);
-            });
+            country.set('country', val);
         }
     }
 });

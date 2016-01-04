@@ -1,7 +1,5 @@
 import Ember from 'ember';
 
-var run = Ember.run;
-
 var CategoriesMixin = Ember.Mixin.create({
     construct_category_tree(category, child_nodes=[]) {
         child_nodes.push(category);
@@ -75,9 +73,7 @@ var CategoriesMixin = Ember.Mixin.create({
             return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
         });
         m2m_models.forEach((m2m) => {
-            run(function() {
-                store.push('ticket-category', {id: m2m.get('id'), removed: true});
-            });
+            store.push('ticket-category', {id: m2m.get('id'), removed: true});
         });
     },
     change_category_tree(category_pk) {
@@ -89,40 +85,30 @@ var CategoriesMixin = Ember.Mixin.create({
             return m2m.get('ticket_pk') === ticket_pk && Ember.$.inArray(m2m.get('category_pk'), parent_ids) === -1;
         });
         m2m_models.forEach((m2m) => {
-            run(function() {
-                store.push('ticket-category', {id: m2m.get('id'), removed: true});
-            });
+            store.push('ticket-category', {id: m2m.get('id'), removed: true});
         });
         const matching_m2m = this.get('ticket_categories_with_removed').filter((m2m) => {
             return m2m.get('ticket_pk') === ticket_pk && category_pk === m2m.get('category_pk') && m2m.get('removed') === true;
         }).objectAt(0); 
         if (matching_m2m) {
-            run(function() {
-                store.push('ticket-category', {id: matching_m2m.get('id'), removed: undefined});
-            });
+            store.push('ticket-category', {id: matching_m2m.get('id'), removed: undefined});
         }else{
             const uuid = this.get('uuid');
-            run(function() {
-                store.push('ticket-category', {id: uuid.v4(), ticket_pk: ticket_pk, category_pk: category_pk});
-            });
+            store.push('ticket-category', {id: uuid.v4(), ticket_pk: ticket_pk, category_pk: category_pk});
         }
     },
     add_category(category_pk) {
         const ticket_pk = this.get('id');
         const uuid = this.get('uuid');
         const store = this.get('store');
-        run(function() {
-            store.push('ticket-category', {id: uuid.v4(), ticket_pk: ticket_pk, category_pk: category_pk});
-        });
+        store.push('ticket-category', {id: uuid.v4(), ticket_pk: ticket_pk, category_pk: category_pk});
     },
     remove_category(category_pk) {
         const store = this.get('store');
         let m2m_pk = this.get('ticket_categories').filter((m2m) => {
             return m2m.get('category_pk') === category_pk;
         }).objectAt(0).get('id');
-        run(function() {
-            store.push('ticket-category', {id: m2m_pk, removed: true});
-        });
+        store.push('ticket-category', {id: m2m_pk, removed: true});
     },
     rollbackCategories() {
         const store = this.get('store');
@@ -132,16 +118,12 @@ var CategoriesMixin = Ember.Mixin.create({
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
         });
         m2m_to_throw_out.forEach(function(join_model) {
-            run(function() {
-                store.push('ticket-category', {id: join_model.get('id'), removed: true});
-            });
+            store.push('ticket-category', {id: join_model.get('id'), removed: true});
         });
         previous_m2m_fks.forEach(function(pk) {
             var m2m_to_keep = store.find('ticket-category', pk);
             if (m2m_to_keep.get('id')) {
-                run(function() {
-                    store.push('ticket-category', {id: m2m_to_keep.get('id'), removed: undefined});
-                });
+                store.push('ticket-category', {id: m2m_to_keep.get('id'), removed: undefined});
             }
         });
     },
@@ -162,9 +144,7 @@ var CategoriesMixin = Ember.Mixin.create({
                 saved_m2m_pks.push(join_model.get('id'));
             });
         });
-        run(function() {
-            store.push('ticket', {id: ticket_pk, ticket_categories_fks: saved_m2m_pks});
-        });
+        store.push('ticket', {id: ticket_pk, ticket_categories_fks: saved_m2m_pks});
     },
 });
 

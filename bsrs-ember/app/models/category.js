@@ -6,8 +6,6 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import TranslationMixin from 'bsrs-ember/mixins/model/translation';
 
-var run = Ember.run;
-
 var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
@@ -77,9 +75,7 @@ var CategoryModel = Model.extend(NewMixin, TranslationMixin, {
         this.set('children_fks', updated_fks);
     },
     removeRecord() {
-        run(() => {
-            this.get('store').remove('category', this.get('id'));
-        });
+        this.get('store').remove('category', this.get('id'));
     },
     rollbackChildren() {
         let children_fks = this.get('children_fks');

@@ -13,10 +13,7 @@ var InputMultiEmail = ChildValidationComponent.extend(ValidationMixin, CustomVal
     emailFormat: validateEach('email', emailIsValidFormat),
     actions: {
         changed(email, val) {
-            Ember.run(() => {
-                //move to model
-                email.set('type', val);
-            });
+            email.set('type', val);
         },
         append() {
             const id = this.get('uuid').v4();
