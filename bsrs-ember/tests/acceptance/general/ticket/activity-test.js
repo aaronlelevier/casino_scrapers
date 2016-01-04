@@ -327,7 +327,7 @@ test('can deep link to cc removed (multiple cc_remove)', (assert) => {
     });
 });
 
-//ATTACHMENTS
+//ATTACHMENT
 test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_add)', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2, TD.idTwo));
     page.visitDetail();
