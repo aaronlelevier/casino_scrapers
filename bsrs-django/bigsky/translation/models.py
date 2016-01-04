@@ -79,7 +79,7 @@ class TranslationManager(BaseManager):
     def translation_dir(self):
         "Directory to hold all Translation documents."
         current_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        return os.path.join(current_dir, 'source/translation')
+        return os.path.join(settings.MEDIA_ROOT, 'translation')
 
     def import_csv(self, language):
         '''

@@ -12,6 +12,7 @@ from rest_framework.routers import Route, SimpleRouter
 
 from accounting import views as accounting_views
 from bigsky import views as bigsky_views
+from bigsky.forms import BsAuthenticationForm
 from category import views as category_views
 from contact import views as contact_views
 from generic import views as generic_views
@@ -94,7 +95,7 @@ urlpatterns += required(
     patterns('',
         url(r'^login/', auth_views.login,
             {'template_name': 'form.html',
-            'authentication_form': forms.AuthenticationForm,
+            'authentication_form': BsAuthenticationForm,
             'extra_context': {
                 'submit_button': 'Login'
                 }

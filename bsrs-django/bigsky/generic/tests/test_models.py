@@ -3,9 +3,10 @@ from os.path import dirname, join
 import shutil
 
 from django.test import TestCase
+from django.conf import settings
+from django.contrib.auth.models import ContentType
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
-from django.contrib.auth.models import ContentType
 
 from model_mommy import mommy
 from rest_framework.exceptions import ValidationError
@@ -74,10 +75,10 @@ class AttachmentModelTests(TestCase):
         # test upload file save in source control
         self.base_dir = dirname(dirname(dirname(__file__)))
 
-        self.file = join(self.base_dir, "source/test_in/es.csv")
+        self.file = join(settings.MEDIA_ROOT, "test_in/es.csv")
         self.file_filename = os.path.split(self.file)[1]
 
-        self.image = join(self.base_dir, "source/test_in/aaron.jpeg")
+        self.image = join(settings.MEDIA_ROOT, "test_in/aaron.jpeg")
         self.image_filename = os.path.split(self.image)[1]
 
     def tearDown(self):

@@ -76,6 +76,21 @@ class LoginTests(TestCase):
         response = self.client.get(reverse('login'))
         self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
 
+    def test_post(self):
+        data = {'username': self.person.username, 'password': PASSWORD}
+        response = self.client.post(reverse('login'), data, follow=True)
+        self.assertRedirects(response, reverse('index'))
+
+    def test_post_form_errors(self):
+        data = {'username': self.person.username, 'password': "this isn't my password"}
+        response = self.client.post(reverse('login'), data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['form'].non_field_errors)
+
+    def test_favicon_and_media_url(self):
+        response = self.client.get(reverse('login'))
+        self.assertIn("{}/images/favicon.ico".format(settings.MEDIA_URL), response.content.decode('utf8'))
+
 
 class LogoutTests(TestCase):
     # Only a POST or PUT will be accepted request types to logout a Person
