@@ -60,403 +60,403 @@ test('wat', (assert) => {
     });
 });
 
-// test('can deep link to the person who created the activity', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
-//     });
-//     ajax(`/api/admin/people/${PD.idOne}/`, 'GET', null, {}, 200, PF.detail());
-//     click('.t-person-activity');
-//     andThen(() => {
-//         assert.equal(currentURL(), `/admin/people/${PD.idOne}`);
-//     });
-// });
+test('can deep link to the person who created the activity', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+    });
+    ajax(`/api/admin/people/${PD.idOne}/`, 'GET', null, {}, 200, PF.detail());
+    click('.t-person-activity');
+    andThen(() => {
+        assert.equal(currentURL(), `/admin/people/${PD.idOne}`);
+    });
+});
 
-// test('can deep link to new assignee', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
-//     });
-//     ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
-//     click('.t-to-from-new');
-//     andThen(() => {
-//         assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
-//     });
-// });
+test('can deep link to new assignee', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+    });
+    ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+    click('.t-to-from-new');
+    andThen(() => {
+        assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
+    });
+});
 
-// test('can deep link to old assignee', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
-//     });
-//     ajax(`/api/admin/people/${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
-//     click('.t-to-from-old');
-//     andThen(() => {
-//         assert.equal(currentURL(), `/admin/people/${PD.idSearch}`);
-//     });
-// });
+test('can deep link to old assignee', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+    });
+    ajax(`/api/admin/people/${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
+    click('.t-to-from-old');
+    andThen(() => {
+        assert.equal(currentURL(), `/admin/people/${PD.idSearch}`);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (assignee)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} 2 months ago`);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} 2 months ago`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (assignee)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} 2 months ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the assignee from ${PD.fullnameBoy2} to ${PD.fullnameBoy} 2 months ago`);
+    });
+});
 
-// test('ticket detail does not show the activity list without a matching ticket for the activity (assignee)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only(TD.idTwo));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
-//     });
-// });
+test('ticket detail does not show the activity list without a matching ticket for the activity (assignee)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only(TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (create)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} created this ticket 3 months ago`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (create)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} created this ticket 3 months ago`);
+    });
+});
 
-// test('ticket detail does not show the activity list without a matching ticket for the activity (create)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only(TD.idTwo));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
-//     });
-// });
+test('ticket detail does not show the activity list without a matching ticket for the activity (create)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.created_only(TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (status)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (status)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+    });
+});
 
-// test('ticket detail does not show the activity list without a matching ticket for the activity (status)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only(TD.idTwo));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
-//     });
-// });
+test('ticket detail does not show the activity list without a matching ticket for the activity (status)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only(TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (priority)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (priority)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the priority from ${TD.priorityTwo} to ${TD.priorityOne} 2 months ago`);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (category)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo} to ${CD.nameOne} 3 months ago`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (category)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo} to ${CD.nameOne} 3 months ago`);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (multiple categories for to / from)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_multiple_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo}/${CD.namePlumbingChild} to ${CD.nameOne}/${CD.nameThree} 3 months ago`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (multiple categories for to / from)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_multiple_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo}/${CD.namePlumbingChild} to ${CD.nameOne}/${CD.nameThree} 3 months ago`);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (category multiple)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only(TD.idOne, 2));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo} to ${CD.nameOne} 3 months ago`);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo} to ${CD.nameOne} 3 months ago`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (category multiple)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.categories_only(TD.idOne, 2));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo} to ${CD.nameOne} 3 months ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the category from ${CD.nameTwo} to ${CD.nameOne} 3 months ago`);
+    });
+});
 
-// test('ticket detail does not show the activity list without a matching ticket for the activity (priority)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only(TD.idTwo));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
-//     });
-// });
+test('ticket detail does not show the activity list without a matching ticket for the activity (priority)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.priority_only(TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
 
-// //CC
-// test('ticket detail shows the activity list including event data (cc_add)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} to CC 24 days ago`);
-//     });
-// });
+//CC
+test('ticket detail shows the activity list including event data (cc_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} to CC 25 days ago`);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (multiple cc_add)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} ${PD.fullnameBoy} to CC 24 days ago`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (multiple cc_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} ${PD.fullnameBoy} to CC 25 days ago`);
+    });
+});
 
-// test('can deep link to cc added (cc_add)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} to CC 24 days ago`);
-//     });
-//     ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
-//     click('.t-ticket-cc-add-remove:eq(0)');
-//     andThen(() => {
-//         assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
-//     });
-// });
+test('can deep link to cc added (cc_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} to CC 25 days ago`);
+    });
+    ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+    click('.t-ticket-cc-add-remove:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
+    });
+});
 
-// test('can deep link to cc added (multiple cc_add)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} ${PD.fullnameBoy} to CC 24 days ago`);
-//     });
-//     ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
-//     click('.t-ticket-cc-add-remove:eq(0)');
-//     andThen(() => {
-//         assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
-//     });
-//     page.visitDetail();
-//     ajax(`/api/admin/people/${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
-//     click('.t-ticket-cc-add-remove:eq(1)');
-//     andThen(() => {
-//         assert.equal(currentURL(), `/admin/people/${PD.idSearch}`);
-//     });
-// });
+test('can deep link to cc added (multiple cc_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_add_only(2));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} added ${PD.fullnameBoy} ${PD.fullnameBoy} to CC 25 days ago`);
+    });
+    ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+    click('.t-ticket-cc-add-remove:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
+    });
+    page.visitDetail();
+    ajax(`/api/admin/people/${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
+    click('.t-ticket-cc-add-remove:eq(1)');
+    andThen(() => {
+        assert.equal(currentURL(), `/admin/people/${PD.idSearch}`);
+    });
+});
 
-// test('ticket detail does not show the activity list without a matching ticket for the activity (cc_remove)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
-//     });
-// });
+test('ticket detail does not show the activity list without a matching ticket for the activity (cc_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (cc_remove)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(1));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} from CC a month ago`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (cc_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} from CC a month ago`);
+    });
+});
 
-// test('ticket detail does not show the activity list without a matching ticket for the activity (cc_remove)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
-//     });
-// });
+test('ticket detail does not show the activity list without a matching ticket for the activity (cc_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2, TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
 
-// test('can deep link to cc removed (cc_remove)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(1));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} from CC a month ago`);
-//     });
-//     ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
-//     click('.t-ticket-cc-add-remove:eq(0)');
-//     andThen(() => {
-//         assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
-//     });
-// });
+test('can deep link to cc removed (cc_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} from CC a month ago`);
+    });
+    ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+    click('.t-ticket-cc-add-remove:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
+    });
+});
 
-// test('can deep link to cc removed (multiple cc_remove)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} ${PD.fullnameBoy} from CC a month ago`);
-//     });
-//     ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
-//     click('.t-ticket-cc-add-remove:eq(0)');
-//     andThen(() => {
-//         assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
-//     });
-//     page.visitDetail();
-//     ajax(`/api/admin/people/${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
-//     click('.t-ticket-cc-add-remove:eq(1)');
-//     andThen(() => {
-//         assert.equal(currentURL(), `/admin/people/${PD.idSearch}`);
-//     });
-// });
+test('can deep link to cc removed (multiple cc_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.cc_remove_only(2));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} removed ${PD.fullnameBoy} ${PD.fullnameBoy} from CC a month ago`);
+    });
+    ajax(`/api/admin/people/${PD.idBoy}/`, 'GET', null, {}, 200, PF.detail(PD.idBoy));
+    click('.t-ticket-cc-add-remove:eq(0)');
+    andThen(() => {
+        assert.equal(currentURL(), `/admin/people/${PD.idBoy}`);
+    });
+    page.visitDetail();
+    ajax(`/api/admin/people/${PD.idSearch}/`, 'GET', null, {}, 200, PF.detail(PD.idSearch));
+    click('.t-ticket-cc-add-remove:eq(1)');
+    andThen(() => {
+        assert.equal(currentURL(), `/admin/people/${PD.idSearch}`);
+    });
+});
 
-// //ATTACHMENT
-// test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_add)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2, TD.idTwo));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
-//     });
-// });
+//ATTACHMENT
+test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2, TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (attachment_add)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(1));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 1 files 6 months ago ${GD.nameTicketAttachmentOne}`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (attachment_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 1 files 6 months ago ${GD.nameTicketAttachmentOne}`);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (multiple attachment_add)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 2 files 6 months ago ${GD.nameTicketAttachmentOne} ${GD.nameTicketAttachmentTwo}`);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-pdf').length, 1);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(1) img').length, 1);
-//     });
-// });
-// test('ticket detail shows the activity list including file attachment icons (multiple attachment_add)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(5));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 5 files 6 months ago ${GD.nameTicketAttachmentOne} ${GD.nameTicketAttachmentTwo} ${GD.nameTicketAttachmentThree} ${GD.nameTicketAttachmentFour} ${GD.nameTicketAttachmentFive}`);
+test('ticket detail shows the activity list including event data (multiple attachment_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(2));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 2 files 6 months ago ${GD.nameTicketAttachmentOne} ${GD.nameTicketAttachmentTwo}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-pdf').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(1) img').length, 1);
+    });
+});
+test('ticket detail shows the activity list including file attachment icons (multiple attachment_add)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_add_only(5));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 5 files 6 months ago ${GD.nameTicketAttachmentOne} ${GD.nameTicketAttachmentTwo} ${GD.nameTicketAttachmentThree} ${GD.nameTicketAttachmentFour} ${GD.nameTicketAttachmentFive}`);
 
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-pdf').length, 1);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(0) img').length, 0);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0)').attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0) .t-ext-pdf').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(0) img').length, 0);
 
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(1)').attr('href'), `/media/${TAD.fileAttachmentAddTwo}`);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(1) .t-ext-jpg').length, 1);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(1) img').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(1)').attr('href'), `/media/${TAD.fileAttachmentAddTwo}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(1) .t-ext-jpg').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(1) img').length, 1);
 
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(2)').attr('href'), `/media/${TAD.fileAttachmentAddThree}`);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(2) .t-ext-docx').length, 1);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(2) img').length, 0);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(2)').attr('href'), `/media/${TAD.fileAttachmentAddThree}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(2) .t-ext-docx').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(2) img').length, 0);
 
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(3)').attr('href'), `/media/${TAD.fileAttachmentAddFour}`);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(3) .t-ext-xlsx').length, 1);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(3) img').length, 0);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(3)').attr('href'), `/media/${TAD.fileAttachmentAddFour}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(3) .t-ext-xlsx').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(3) img').length, 0);
 
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(4)').attr('href'), `/media/${TAD.fileAttachmentAddFive}`);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(4) .t-ext-file').length, 1);
-//         assert.equal(find('.t-ticket-attachment-add-remove:eq(4) img').length, 0);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(4)').attr('href'), `/media/${TAD.fileAttachmentAddFive}`);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(4) .t-ext-file').length, 1);
+        assert.equal(find('.t-ticket-attachment-add-remove:eq(4) img').length, 0);
 
-//     });
-// });
+    });
+});
 
-// test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_remove)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2, TD.idTwo));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
-//     });
-// });
+test('ticket detail does not show the activity list without a matching ticket for the activity (attachment_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2, TD.idTwo));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 0);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (attachment_remove)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(1));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 1 files 6 months ago ${GD.nameTicketAttachmentOne}`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (attachment_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(1));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 1 files 6 months ago ${GD.nameTicketAttachmentOne}`);
+    });
+});
 
-// test('ticket detail shows the activity list including event data (multiple attachment_remove)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 2 files 6 months ago ${GD.nameTicketAttachmentOne} ${GD.nameTicketAttachmentTwo}`);
-//     });
-// });
+test('ticket detail shows the activity list including event data (multiple attachment_remove)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.attachment_remove_only(2));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 2 files 6 months ago ${GD.nameTicketAttachmentOne} ${GD.nameTicketAttachmentTwo}`);
+    });
+});
 
-// //COMMENT
-// test('ticket detail shows the activity comment', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
-//     });
-// });
+//COMMENT
+test('ticket detail shows the activity comment', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
+    });
+});
 
-// test('ticket detail shows the activity comment (multiple activities with comments)', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only(TD.idOne, 2));
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
-//     });
-// });
+test('ticket detail shows the activity comment (multiple activities with comments)', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.comment_only(TD.idOne, 2));
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 2);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
+    });
+});
 
-// test('activities are sorted descending based on created at', (assert) => {
-//     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
-//     page.visitDetail();
-//     andThen(() => {
-//         assert.equal(currentURL(), DETAIL_URL);
-//         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-//         assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
-//     });
-// });
+test('activities are sorted descending based on created at', (assert) => {
+    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.status_only());
+    page.visitDetail();
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        assert.equal(find(`${ACTIVITY_ITEMS}`).length, 3);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(0)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(1)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+        assert.equal(find(`${ACTIVITY_ITEMS}:eq(2)`).text().trim(), `${PD.fullname} changed the status from ${TD.statusTwo} to ${TD.statusOne} a month ago`);
+    });
+});
