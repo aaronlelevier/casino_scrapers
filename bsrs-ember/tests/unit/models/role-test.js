@@ -94,7 +94,9 @@ test('when role suddently has location level assigned to it, it is shown as dirt
     });
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.change_location_level(location_level.get('id'));
+    run(function() {
+        role.change_location_level(location_level.get('id'));
+    });
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
 });
@@ -107,7 +109,9 @@ test('when role suddently has location level assigned to it starting with non em
     });
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.change_location_level(location_level.get('id'));
+    run(function() {
+        role.change_location_level(location_level.get('id'));
+    });
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
 });
@@ -122,25 +126,35 @@ test('rollback location level will reset the previously used location level when
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(role.get('location_level.name'), LLD.nameRegion); 
-    role.change_location_level();
+    run(function() {
+        role.change_location_level();
+    });
     assert.equal(role.get('location_level.name'), undefined); 
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.change_location_level(location_level_two.get('id'));
+    run(function() {
+        role.change_location_level(location_level_two.get('id'));
+    });
     assert.equal(role.get('location_level.name'), LLD.nameDepartment); 
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.save();
-    role.saveRelated();
+    run(function() {
+        role.save();
+        role.saveRelated();
+    });
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.change_location_level(location_level_one.get('id'));
+    run(function() {
+        role.change_location_level(location_level_one.get('id'));
+    });
     assert.equal(role.get('location_level.name'), LLD.nameRegion);
     assert.equal(role.get('location_level_fk'), LLD.idTwo);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollback();
-    role.rollbackLocationLevel();
+    run(function() {
+        role.rollback();
+        role.rollbackLocationLevel();
+    });
     assert.equal(role.get('location_level.name'), LLD.nameDepartment);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
@@ -157,18 +171,26 @@ test('rollback location level will reset the previously used location level when
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(role.get('location_level.name'), LLD.nameRegion); 
-    role.change_location_level(location_level_two.get('id'));
+    run(function() {
+        role.change_location_level(location_level_two.get('id'));
+    });
     assert.equal(role.get('location_level.name'), LLD.nameDepartment); 
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.save();
-    role.saveRelated();
-    role.change_location_level(another_location_level.get('id'));
+    run(function() {
+        role.save();
+        role.saveRelated();
+    });
+    run(function() {
+        role.change_location_level(another_location_level.get('id'));
+    });
     assert.equal(role.get('location_level.name'), LLD.nameDistrict);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollback();
-    role.rollbackLocationLevel();
+    run(function() {
+        role.rollback();
+        role.rollbackLocationLevel();
+    });
     assert.equal(role.get('location_level.name'), LLD.nameDepartment);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
@@ -186,7 +208,9 @@ test('categories property only returns the single matching item even when multip
         store.push('category', {id: CD.idTwo});
         role = store.push('role', {id: RD.idOne, role_category_fks: [ROLE_CD.idOne]});
     });
-    role.add_category(CD.idTwo);
+    run(function() {
+        role.add_category(CD.idTwo);
+    });
     let categories = role.get('categories');
     assert.equal(categories.get('length'), 1);
     assert.equal(categories.objectAt(0).get('id'), CD.idTwo);
@@ -215,7 +239,9 @@ test('categories property will update when add category is invoked and add new m
     assert.equal(role.get('categories').get('length'), 0);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.add_category(CD.idOne);
+    run(function() {
+        role.add_category(CD.idOne);
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.equal(role.get('categories').objectAt(0).get('id'), CD.idOne);
     assert.ok(role.get('categoryIsDirty'));
@@ -233,7 +259,9 @@ test('categories property will update when add category is invoked and add new m
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.add_category(CD.idTwo);
+    run(function() {
+        role.add_category(CD.idTwo);
+    });
     assert.equal(role.get('categories').get('length'), 2);
     assert.equal(role.get('categories').objectAt(0).get('id'), CD.idOne);
     assert.equal(role.get('categories').objectAt(1).get('id'), CD.idTwo);
@@ -249,7 +277,9 @@ test('categories property will update when the m2m array suddenly removes the ca
         category = store.push('category', {id: CD.idOne});
     });
     assert.equal(role.get('categories').get('length'), 1);
-    role.remove_category(CD.idOne);
+    run(function() {
+        role.remove_category(CD.idOne);
+    });
     assert.equal(role.get('categories').get('length'), 0);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
@@ -266,7 +296,9 @@ test('when category is suddently removed it shows as a dirty relationship (when 
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.remove_category(CD.idTwo);
+    run(function() {
+        role.remove_category(CD.idTwo);
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
@@ -281,19 +313,27 @@ test('when categories is changed dirty tracking works as expected (removing)', (
     });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
-    role.remove_category(CD.idOne);
+    run(function() {
+        role.remove_category(CD.idOne);
+    });
     assert.equal(role.get('categories').get('length'), 0);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollbackRelated();
+    run(function() {
+        role.rollbackRelated();
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.remove_category(CD.idOne);
+    run(function() {
+        role.remove_category(CD.idOne);
+    });
     assert.equal(role.get('categories').get('length'), 0);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollbackRelated();
+    run(function() {
+        role.rollbackRelated();
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
@@ -308,24 +348,34 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
     });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
-    role.remove_category(CD.idOne);
+    run(function() {
+        role.remove_category(CD.idOne);
+    });
     assert.ok(role.get('categoryIsDirty'));
     assert.equal(role.get('categories').get('length'), 0);
-    role.add_category(CD.idTwo);
+    run(function() {
+        role.add_category(CD.idTwo);
+    });
     assert.ok(role.get('categoryIsDirty'));
     assert.equal(role.get('categories').get('length'), 1);
     assert.equal(role.get('categories').objectAt(0).get('id'), CD.idTwo);
-    role.rollbackRelated();
+    run(function() {
+        role.rollbackRelated();
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(role.get('categories').objectAt(0).get('id'), CD.idOne);
-    role.remove_category(CD.idOne);
-    role.add_category(CD.idTwo);
+    run(function() {
+        role.remove_category(CD.idOne);
+        role.add_category(CD.idTwo);
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollbackRelated();
+    run(function() {
+        role.rollbackRelated();
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
@@ -343,20 +393,28 @@ test('rollback role will reset the previously used people (categories) when swit
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.remove_category(CD.idTwo);
+    run(function() {
+        role.remove_category(CD.idTwo);
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollbackRelated();
+    run(function() {
+        role.rollbackRelated();
+    });
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.remove_category(CD.idTwo);
-    role.remove_category(CD.idOne);
+    run(function() {
+        role.remove_category(CD.idTwo);
+        role.remove_category(CD.idOne);
+    });
     assert.equal(role.get('categories').get('length'), 0);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.rollbackRelated();
+    run(function() {
+        role.rollbackRelated();
+    });
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
@@ -374,22 +432,30 @@ test('rollback categories will reset the previous people (categories) when switc
         role = store.push('role', {id: RD.idOne, role_category_fks: [ROLE_CD.idOne, ROLE_CD.idTwo]});
     });
     assert.equal(role.get('categories').get('length'), 2);
-    role.remove_category(CD.idOne);
+    run(function() {
+        role.remove_category(CD.idOne);
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.save();
-    role.saveRelated();
+    run(function() {
+        role.save();
+        role.saveRelated();
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('categoryIsNotDirty'));
     assert.ok(role.get('isNotDirtyOrRelatedNotDirty'));
-    role.add_category(CD.unusedId);
+    run(function() {
+        role.add_category(CD.unusedId);
+    });
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('categoryIsDirty'));
     assert.ok(role.get('isDirtyOrRelatedDirty'));
-    role.save();
-    role.saveRelated();
+    run(function() {
+        role.save();
+        role.saveRelated();
+    });
     assert.equal(role.get('categories').get('length'), 2);
     assert.ok(role.get('isNotDirty'));
     assert.ok(role.get('categoryIsNotDirty'));
@@ -406,7 +472,9 @@ test('categories_ids computed returns a flat list of ids for each category', (as
     });
     assert.equal(role.get('categories').get('length'), 2);
     assert.deepEqual(role.get('categories_ids'), [CD.idOne, CD.idTwo]);
-    role.remove_category(CD.idOne);
+    run(function() {
+        role.remove_category(CD.idOne);
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.deepEqual(role.get('categories_ids'), [CD.idTwo]);
 });
@@ -421,7 +489,9 @@ test('role_categories_ids computed returns a flat list of ids for each category'
     });
     assert.equal(role.get('categories').get('length'), 2);
     assert.deepEqual(role.get('role_categories_ids'), [ROLE_CD.idOne, ROLE_CD.idTwo]);
-    role.remove_category(CD.idOne);
+    run(function() {
+        role.remove_category(CD.idOne);
+    });
     assert.equal(role.get('categories').get('length'), 1);
     assert.deepEqual(role.get('role_categories_ids'), [ROLE_CD.idTwo]);
 });
