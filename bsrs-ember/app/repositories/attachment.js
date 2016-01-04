@@ -12,10 +12,10 @@ var AttachmentRepo = Ember.Object.extend({
     },
     removeAllUnrelated() {
         let store = this.get('store');
-        let filter = function(attachment) {
+        let ids_array = store.find('attachment').toArray();
+        let ids = ids_array.filter(function(attachment) {
             return attachment.get('rollback');
-        };
-        let ids = store.find('attachment', filter, []).mapBy('id');
+        }).mapBy('id');
         ids.forEach((id) => {
             store.remove('attachment', id);
         });

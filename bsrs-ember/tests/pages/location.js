@@ -25,6 +25,7 @@ export default PageObject.create({
   statusInput: text(`${STATUS}`),
   statusClickDropdown: clickable(`${STATUS}`),
   statusClickOptionOne: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${LDS.openName})`),
-  statusClickOptionTwo: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${LDS.closedName})`),
+  //TODO: translate inline
+  statusClickOptionTwo: clickable(`${STATUS_DROPDOWN} > .ember-power-select-option:contains(${LDS.closedNameTranslated})`),
   statusOptionLength: count(`${STATUS_DROPDOWN} > li`),
 });

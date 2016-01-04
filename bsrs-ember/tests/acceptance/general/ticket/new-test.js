@@ -168,7 +168,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     });
 });
 
-test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+test('amk selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
     page.visit();
     patchRandom(counter);
     click('.t-add-new');
@@ -179,7 +179,7 @@ test('selecting a top level category will alter the url and can cancel/discard c
         assert.equal(store.find('category').get('length'), 4);
         let tickets = store.find('ticket');
         assert.equal(tickets.objectAt(0).get('categories').get('length'), 0);
-        // assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));//
+        // assert.ok(tickets.objectAt(0).get('isDirtyOrRelatedDirty'));
         assert.ok(tickets.objectAt(0).get('categoriesIsNotDirty'));
         assert.equal(components, 1);
     });

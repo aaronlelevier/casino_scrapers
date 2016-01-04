@@ -29,8 +29,8 @@
                                     <span class="validation validation-under category-validation-error t-category-validation-error {{child-validation submitted child_valid}}">invalid category</span>
                                     {{/parent-ticket-category-select}}
                                 </div>
-                                <div class="col-md-12">
-                                    {{textarea placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
+                                <div class="col-md-12 request-wrap">
+                                    {{textarea autoresize=true placeholder=(t "ticket.label.request") value=model.request class="form-control t-ticket-request ticket-request"}}
                                     {{#validation-error-field submitted=submitted field="request" className="validation validation-under t-request-validation-error" model=model validation=requestValidation}}invalid request{{/validation-error-field}}
                                 </div>
                             </div>

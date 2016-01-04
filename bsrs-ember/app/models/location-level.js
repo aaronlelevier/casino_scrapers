@@ -3,6 +3,8 @@ import inject from 'bsrs-ember/utilities/store';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import { attr, Model } from 'ember-cli-simple-store/model';
 
+var run = Ember.run;
+
 var LocationLevel = Model.extend(NewMixin, {
     store: inject('main'),
     name: attr(''),
@@ -33,21 +35,23 @@ var LocationLevel = Model.extend(NewMixin, {
         this.set('children_fks', new_children.mapBy('id')); 
     },
     removeRecord() {
-        this.get('store').remove('location-level', this.get('id'));
+        run(() => {
+            this.get('store').remove('location-level', this.get('id'));
+        });
     },
     children: Ember.computed('children_fks.[]', function() {
         const children_fks = this.get('children_fks');
         const filter = (loc_level) => {
             return Ember.$.inArray(loc_level.get('id'), children_fks) > -1 && loc_level.get('name') !== this.get('name');
         };
-        return this.get('store').find('location-level', filter.bind(this), ['id']);
+        return this.get('store').find('location-level', filter.bind(this));
     }),
     parents: Ember.computed('parent_fks.[]', function() {
         const parent_fks = this.get('parent_fks');
         const filter = (loc_level) => {
             return Ember.$.inArray(loc_level.get('id'), parent_fks) > -1 && loc_level.get('name') !== this.get('name');
         };
-        return this.get('store').find('location-level', filter.bind(this), ['id']);
+        return this.get('store').find('location-level', filter.bind(this));
     }),
     toString: function() {
         const name = this.get('name');

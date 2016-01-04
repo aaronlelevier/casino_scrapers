@@ -8,19 +8,23 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
 const LONG_AUTH_AMOUNT = '50000.0000';
 
-var container, registry, store, service;
+var container, registry, store, model, service, run = Ember.run;
 
 moduleForComponent('input-currency', 'integration: input-currency test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:currency', 'service:currency']);
-        store.push('currency', CURRENCY_DEFAULTS);
+        run(function() {
+            store.push('currency', CURRENCY_DEFAULTS);
+        });
         translation.initialize(this);
     }
 });
 
 test('renders a component with no value when bound attr is undefined', function(assert) {
-    var model = store.push('person', {id: PEOPLE_DEFAULTS.id, auth_amount: undefined});
+    run(function() {
+        model = store.push('person', {id: PEOPLE_DEFAULTS.id, auth_amount: undefined});
+    });
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
     var $component = this.$('.t-input-currency');
@@ -28,7 +32,9 @@ test('renders a component with no value when bound attr is undefined', function(
 });
 
 test('renders a component with currency and label', function(assert) {
-    var model = store.push('person', {id: PEOPLE_DEFAULTS.id, auth_amount: LONG_AUTH_AMOUNT, currency: CURRENCY_DEFAULTS.id});
+    run(function() {
+        model = store.push('person', {id: PEOPLE_DEFAULTS.id, auth_amount: LONG_AUTH_AMOUNT, currency: CURRENCY_DEFAULTS.id});
+    });
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
     var $component = this.$('.t-input-currency');
@@ -38,7 +44,9 @@ test('renders a component with currency and label', function(assert) {
 });
 
 test('the models bound field will update both the formatted input value and the model itself', function(assert) {
-    var model = store.push('person', {id: PEOPLE_DEFAULTS.id, auth_amount: LONG_AUTH_AMOUNT, currency: CURRENCY_DEFAULTS.id});
+    run(function() {
+        model = store.push('person', {id: PEOPLE_DEFAULTS.id, auth_amount: LONG_AUTH_AMOUNT, currency: CURRENCY_DEFAULTS.id});
+    });
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
     var $component = this.$('.t-input-currency');

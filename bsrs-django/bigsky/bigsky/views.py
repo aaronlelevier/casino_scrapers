@@ -12,7 +12,7 @@ from django.utils import timezone
 
 from accounting.models import Currency
 from category.models import Category
-from contact.models import PhoneNumberType, AddressType
+from contact.models import PhoneNumberType, AddressType, EmailType
 from generic.models import SavedSearch
 from person.models import Role, PersonStatus
 from ticket.models import TicketStatus, TicketPriority
@@ -46,6 +46,7 @@ class IndexView(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
         context.update({
+            'email_types_config': model_to_json(EmailType),
             'phone_number_types_config': model_to_json(PhoneNumberType),
             'address_types': model_to_json(AddressType),
             'states_us': model_to_json(State),

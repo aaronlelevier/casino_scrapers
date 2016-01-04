@@ -10,11 +10,8 @@ const PATH = PREFIX + '/translations/?locale=';
 
 export default Service.extend({
   i18n: inject.service(),
-  moment: Ember.inject.service(),
   fetch() {
     let currentLocale = config.i18n.currentLocale;
-    // set the moment locale
-    this.get('moment').changeLocale(currentLocale);
     return PromiseMixin.xhr(PATH + currentLocale).then(this._addTranslations.bind(this));
   },
   _addTranslations(json) {

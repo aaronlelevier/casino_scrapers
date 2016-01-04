@@ -50,7 +50,7 @@ var ticket_payload_with_attachment = {
     status: TD.statusOneId,
     priority: TD.priorityOneId,
     cc: [PD.idOne],
-    categories: [CD.idPlumbingChild],
+    categories: [CD.idPlumbing, CD.idOne, CD.idPlumbingChild],
     requester: PD.idOne,
     assignee: PD.idOne,
     location: LD.idOne,

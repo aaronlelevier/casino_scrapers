@@ -13,7 +13,10 @@ var GridRepositoryMixin = Ember.Mixin.create({
         });
     },
     findCount() {
-        var count = this.get('store').find(this.get('type'), {new: true}).get('length');
+        var count_array = this.get('store').find(this.get('type')).toArray();
+        var count = count_array.filter(function(m) {
+            return m.get('new') === true;
+        }).get('length');
         return count+1;
     },
     findWithQuery(page, sort, search, find, page_size) {

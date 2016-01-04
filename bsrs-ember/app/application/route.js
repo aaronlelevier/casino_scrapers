@@ -15,6 +15,10 @@ var ApplicationRoute = Ember.Route.extend({
     tabList: inject.service(),
     beforeModel() {
         let store = this.get('store');
+        const email_types = Ember.$('[data-preload-email_types]').data('configuration');
+        email_types.forEach((model) => {
+            store.push('email-type', model);
+        });
         const phone_number_types = Ember.$('[data-preload-phonenumber_types]').data('configuration');
         phone_number_types.forEach((model) => {
             store.push('phone-number-type', model);
@@ -117,10 +121,10 @@ var ApplicationRoute = Ember.Route.extend({
         // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220
         // TODO: allow timezone to be overridden at the system/role/user level
         let zone = '';
-        if(!Intl){
+        if(!window.Intl){
             zone = 'America/Los_Angeles';
         }else{
-            zone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            zone = window.Intl.DateTimeFormat().resolvedOptions().timeZone;
         }
         this.get('moment').changeTimeZone(zone);
 

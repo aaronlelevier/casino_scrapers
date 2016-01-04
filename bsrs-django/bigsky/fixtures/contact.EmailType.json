@@ -1,0 +1,24 @@
+[
+{
+  "model": "contact.emailtype",
+  "pk": "62ce6280-9ad5-4795-bdd6-a63aa68b4bd2",
+  "fields": {
+    "created": "2016-01-02T06:46:25.959Z",
+    "modified": "2016-01-02T06:46:25.959Z",
+    "deleted": null,
+    "name": "admin.emailtype.personal",
+    "order": 0
+  }
+},
+{
+  "model": "contact.emailtype",
+  "pk": "a316556b-92bd-4df0-8b13-aa9e64a43deb",
+  "fields": {
+    "created": "2016-01-02T06:46:25.950Z",
+    "modified": "2016-01-02T06:46:25.950Z",
+    "deleted": null,
+    "name": "admin.emailtype.work",
+    "order": 0
+  }
+}
+]

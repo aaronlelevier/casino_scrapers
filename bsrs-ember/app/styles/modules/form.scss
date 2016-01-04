@@ -38,7 +38,8 @@ div.buttonGroup {
 	.input-group{
 		margin-bottom: 10px;
 	}
-	.phonenumber-type{
+	.phonenumber-type,
+	.email-type{
 		min-width: 6em;
 		-webkit-appearance: none;
 		-moz-appearance: none;
@@ -112,19 +113,52 @@ div.buttonGroup {
 		}
 	}
 }
+.request-wrap{
+
+	&:before{
+		color: $white;
+		font-family: 'FontAwesome';
+		content: '\f040';
+		position: absolute;
+		top: 15px;
+		right: 24px;
+		-webkit-transition: all ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+	    -o-transition: all ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+	    transition: all ease-in-out 0.15s, box-shadow ease-in-out 0.15s;
+		z-index: 1;
+	}
+	textarea{
+		position: relative;
+		z-index: 2;
+	}
+}
+.request-wrap:hover{
+	&:before{
+		color: $medGray;
+		z-index: 3;
+	}
+	textarea{
+	}
+}
 textarea.ticket-request{
 
 	font-size: 1.2rem;
 	border-color: $white;
 	height: 2.7em;
 	padding: 6px 0;
-	margin: 8px 0 17px;
+	margin: 8px 0 0;
 	resize: none;
-	
+	&:hover{
+		background-color: $light;
+		border-color: $light;
+		cursor: pointer;
+	}
 	&:focus{
 		border-color: $activeColor;
+		background: $white;
 		padding: 6px 12px;
 		margin: 15px 0 10px;
+		cursor: text;
 	}
 }
 .meta-data{
@@ -165,4 +199,14 @@ textarea.ticket-request{
 		background: $orange;
 		border-color: $orange;
 	}
+}
+.form-photo{
+	border: $borderStyle;
+	margin: 0 0 20px 0;
+	line-height: 200px;
+	height: 200px;
+	background: $light;
+	font-size:100px;
+	text-align:center;
+	color: $gray;
 }

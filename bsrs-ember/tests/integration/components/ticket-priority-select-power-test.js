@@ -3,7 +3,6 @@ import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
-import tHelper from 'ember-i18n/helper';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 
@@ -16,10 +15,12 @@ moduleForComponent('ticket-priority-select', 'integration: ticket-priority-selec
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-priority']);
-        ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId});
-        priority_one = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey});
-        priority_two = store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwoKey});
-        priority_three = store.push('ticket-priority', {id: TD.priorityThreeId, name: TD.priorityThreeKey});
+        run(function() {
+            ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId});
+            priority_one = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOneKey});
+            priority_two = store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwoKey});
+            priority_three = store.push('ticket-priority', {id: TD.priorityThreeId, name: TD.priorityThreeKey});
+        });
         trans = this.container.lookup('service:i18n');
         translation.initialize(this);
     }

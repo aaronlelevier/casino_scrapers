@@ -7,7 +7,7 @@ import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
 
-var store;
+var store, run = Ember.run;
 
 module('unit: ticket-category-select component test', {
     beforeEach() {
@@ -16,17 +16,20 @@ module('unit: ticket-category-select component test', {
 });
 
 test('categories_selected will always return the correct category object based on index', function(assert) {
-    let ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
-    //rando child
-    let category_huh = store.push('category', {id: CATEGORY_DEFAULTS.idLossPreventionChild, name: CATEGORY_DEFAULTS.nameLossPreventionChild, parent_id: CATEGORY_DEFAULTS.idWatChild, children_fks: []});
-    //new 2nd level
-    let category_rando = store.push('category', {id: CATEGORY_DEFAULTS.idWatChild, name: CATEGORY_DEFAULTS.nameWatChild, parent_id: CATEGORY_DEFAULTS.unusedId, children_fks: [CATEGORY_DEFAULTS.idLossPreventionChild]});
-    //top level
-    let category_top_level = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: undefined, children_fks: [CATEGORY_DEFAULTS.idTwo, CATEGORY_DEFAULTS.idWatChild]});
-    //second level
-    let category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId, children_fks: [CATEGORY_DEFAULTS.idOne]});
-    //third level
-    let category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo, children_fks: []});
+    let ticket, category_huh, category_rando, category_top_level, category_two, category_one;
+    run(function() {
+        ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne});
+        //rando child
+        category_huh = store.push('category', {id: CATEGORY_DEFAULTS.idLossPreventionChild, name: CATEGORY_DEFAULTS.nameLossPreventionChild, parent_id: CATEGORY_DEFAULTS.idWatChild, children_fks: []});
+        //new 2nd level
+        category_rando = store.push('category', {id: CATEGORY_DEFAULTS.idWatChild, name: CATEGORY_DEFAULTS.nameWatChild, parent_id: CATEGORY_DEFAULTS.unusedId, children_fks: [CATEGORY_DEFAULTS.idLossPreventionChild]});
+        //top level
+        category_top_level = store.push('category', {id: CATEGORY_DEFAULTS.unusedId, name: CATEGORY_DEFAULTS.nameThree, parent_id: undefined, children_fks: [CATEGORY_DEFAULTS.idTwo, CATEGORY_DEFAULTS.idWatChild]});
+        //second level
+        category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId, children_fks: [CATEGORY_DEFAULTS.idOne]});
+        //third level
+        category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo, children_fks: []});
+    });
 
     let subject_one = TicketCategories.create({ticket: ticket, index: undefined});
     let subject_two = TicketCategories.create({ticket: ticket, index: 1});

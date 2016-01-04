@@ -7,7 +7,7 @@ import LocationLevel from 'bsrs-ember/models/location-level';
 import LocationLevelComponent from "bsrs-ember/components/location-level/component";
 import repository from 'bsrs-ember/tests/helpers/repository';
 
-var store, location_level_repo;
+var store, location_level_repo, run = Ember.run;
 
 module('prevent duplicate name tests', {
     beforeEach() {
@@ -18,10 +18,12 @@ module('prevent duplicate name tests', {
 });
 
 test('should have correct filtered out available location names and will prevent duplicate name entries', (assert) => {
-    var person = LocationLevel.create({store: store, id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, children_fks: [LOCATION_LEVEL_DEFAULTS.idTwo] });
-    var model = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany}); 
-    var location_level_two = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idTwo, name: LOCATION_LEVEL_DEFAULTS.nameRegion}); 
-    var location_level_three = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idThree, name: LOCATION_LEVEL_DEFAULTS.nameDepartment}); 
+    var model, location_level_two, location_level_three, person = LocationLevel.create({store: store, id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany, children_fks: [LOCATION_LEVEL_DEFAULTS.idTwo] });
+    run(function() {
+        model = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idOne, name: LOCATION_LEVEL_DEFAULTS.nameCompany});
+        location_level_two = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idTwo, name: LOCATION_LEVEL_DEFAULTS.nameRegion});
+        location_level_three = store.push('location-level', {id: LOCATION_LEVEL_DEFAULTS.idThree, name: LOCATION_LEVEL_DEFAULTS.nameDepartment});
+    });
     var subject = LocationLevelComponent.create({model: model, repository: location_level_repo});
     subject.set('all_location_levels', store.find('location-level'));
     subject.set('model', model);

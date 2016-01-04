@@ -14,9 +14,11 @@ moduleForComponent('role-role-type-select', 'integration: role-role-type-select 
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:role', 'model:role-type']);
-        role = store.push('role', {id: RD.idOne});
-        store.push('role-type', {id:1, name: RD.roleTypeGeneral});
-        store.push('role-type', {id:2, name: 'Third Party'});
+        run(function() {
+            role = store.push('role', {id: RD.idOne});
+            store.push('role-type', {id:1, name: RD.roleTypeGeneral});
+            store.push('role-type', {id:2, name: 'Third Party'});
+        });
         all_role_types = store.find('role-type');
     }
 });
@@ -70,7 +72,9 @@ test('should be able to select new role_type when one doesnt exist', function(as
 });
 
 test('should be able to select same role_type when role already has a role_type', function(assert) {
-    store.push('role', {id: RD.idOne, role_type: RD.roleTypeGeneral});
+    run(function() {
+        store.push('role', {id: RD.idOne, role_type: RD.roleTypeGeneral});
+    });
     this.set('role', role);
     this.set('all_role_types', all_role_types);
     this.render(hbs`{{role-type-select role=role all_role_types=all_role_types}}`);
@@ -91,7 +95,9 @@ test('should be able to select same role_type when role already has a role_type'
 });
 
 test('should be able to select new role_type when role already has a role_type', function(assert) {
-    store.push('role', {id: RD.idOne, role_type: RD.roleTypeGeneral});
+    run(function() {
+        store.push('role', {id: RD.idOne, role_type: RD.roleTypeGeneral});
+    });
     let all_role_types = store.find('role-type');
     this.set('role', role);
     this.set('all_role_types', all_role_types);

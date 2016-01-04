@@ -1,10 +1,11 @@
 import Ember from 'ember';
 
-var extract_status = (model, store) => {
+var extract_status = function(model, store) {
     const status = store.find('status', model.status);
     let existing_people = status.get('people') || [];
     existing_people = existing_people.indexOf(model.id) > -1 ? existing_people : existing_people.concat(model.id);
-    status.set('people', existing_people);
+    store.push('status', {id: status.get('id'), people: existing_people});
+    // status.set('people', existing_people);
     model.status_fk = status.get('id');
     delete model.status;
 };

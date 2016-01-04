@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
+var run = Ember.run;
+
 var StatusMixin = Ember.Mixin.create({
     rollbackStatus() {
         let status = this.get('status');
@@ -9,8 +11,15 @@ var StatusMixin = Ember.Mixin.create({
         }
     },
     saveStatus() {
-        let status = this.get('status');
-        if (status) { this.set('status_fk', status.get('id')); }
+        const type = this.get('type');
+        const store = this.get('store');
+        const pk = this.get('id');
+        const status = this.get('status');
+        if (status) {
+            run(function() {
+                store.push(type, {id: pk, status_fk: status.get('id')});
+            });
+        }
     },
     statusIsDirty: Ember.computed('status', 'status_fk', function() {
         let status = this.get('status');
@@ -29,19 +38,23 @@ var StatusMixin = Ember.Mixin.create({
             let updated_old_status_people = people_ids.filter((id) => {
                 return id !== id; 
             });
-            old_status.set('people', updated_old_status_people);
+            run(function() {
+                store.push('status', {id: old_status.get('id'), people: updated_old_status_people});
+            });
         }
         const new_status = store.find('status', status_id);
         const new_status_people = new_status.get('people') || [];
-        new_status.set('people', new_status_people.concat(id));
+        run(function() {
+            store.push('status', {id: new_status.get('id'), people: new_status_people.concat(id)});
+        });
     },
     status: Ember.computed.alias('belongs_to_status.firstObject'),
     belongs_to_status: Ember.computed(function() {
-        const status_fk = this.get('status_fk');
+        const id = this.get('id');
         const filter = (status) => {
-            return Ember.$.inArray(this.get('id'), status.get('people')) > -1;
+            return Ember.$.inArray(id, status.get('people')) > -1;
         };
-        return this.get('store').find('status', filter, ['people']);
+        return this.get('store').find('status', filter);
     }),
 });
 

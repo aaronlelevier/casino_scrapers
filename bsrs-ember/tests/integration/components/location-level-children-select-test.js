@@ -15,11 +15,13 @@ moduleForComponent('location-level-children-select', 'integration: location-leve
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:location-level']);
+        run(function() {
         location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany});
-        store.push('location-level', {id: LLD.idTwo, name: LLD.nameDepartment});
-        store.push('location-level', {id: LLD.idThree, name: LLD.nameRegion});
-        store.push('location-level', {id: LLD.idDistrict, name: LLD.nameDistrict});
-        store.push('location-level', {id: LLD.idStore, name: LLD.nameStore});
+            store.push('location-level', {id: LLD.idTwo, name: LLD.nameDepartment});
+            store.push('location-level', {id: LLD.idThree, name: LLD.nameRegion});
+            store.push('location-level', {id: LLD.idDistrict, name: LLD.nameDistrict});
+            store.push('location-level', {id: LLD.idStore, name: LLD.nameStore});
+        });
         location_levels = store.find('location-level');
     }
 });
@@ -93,7 +95,9 @@ test('should be able to select new location level when one doesnt exist', functi
 });
 
 test('selecting same location level will remove that location level', function(assert) {
-    store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, children_fks: [LLD.idTwo, LLD.idThree]});
+    run(function() {
+        store.push('location-level', {id: LLD.idOne, name: LLD.nameCompany, children_fks: [LLD.idTwo, LLD.idThree]});
+    });
     this.set('model', location_level);
     this.set('options', location_levels);
     this.render(hbs`{{location-level-children-power-select model=model options=options}}`);
@@ -114,7 +118,9 @@ test('selecting same location level will remove that location level', function(a
 });
 
 test('should be able to select new location level when location already has a location level', function(assert) {
-    store.push('location-level', {id: LLD.idOne, children_fks: [LLD.idTwo, LLD.idThree]});
+    run(function() {
+        store.push('location-level', {id: LLD.idOne, children_fks: [LLD.idTwo, LLD.idThree]});
+    });
     this.set('model', location_level);
     this.set('options', location_levels);
     this.render(hbs`{{location-level-children-power-select model=model options=options}}`);
