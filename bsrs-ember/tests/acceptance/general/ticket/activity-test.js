@@ -52,14 +52,6 @@ module('Acceptance | ticket activity test', {
     }
 });
 
-test('wat', (assert) => {
-    ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
-    page.visitDetail();
-    andThen(() => {
-        assert.equal(1,1);
-    });
-});
-
 test('can deep link to the person who created the activity', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
     page.visitDetail();
