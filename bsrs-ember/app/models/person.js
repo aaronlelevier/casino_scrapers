@@ -37,8 +37,8 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
     translationsFetcher: Ember.inject.service('translations-fetcher'),
     i18n: Ember.inject.service(),
     changeLocale(){
-        var personCurrent = this.get('personCurrent');
-        var personCurrentId = personCurrent.get('model.id');
+        const personCurrent = this.get('personCurrent');
+        const personCurrentId = personCurrent.get('model.id');
         if(personCurrentId === this.get('id')){
             config.i18n.currentLocale = this.get('locale');
             return this.get('translationsFetcher').fetch().then(function(){
@@ -47,8 +47,8 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
         }
     },
     fullname: Ember.computed('first_name', 'last_name', function() {
-        var first_name = this.get('first_name');
-        var last_name = this.get('last_name');
+        const first_name = this.get('first_name');
+        const last_name = this.get('last_name');
         return first_name + ' ' + last_name;
     }),
     isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', function() {
@@ -85,8 +85,8 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
         };
     },
     serialize() {
-        var store = this.get('store');
-        var emails = this.get('emails').filter(function(email) {
+        const store = this.get('store');
+        const emails = this.get('emails').filter(function(email) {
             if(email.get('invalid_email')) {
                 return;
             }
@@ -94,7 +94,7 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
         }).map((email) => {
             return email.serialize();
         });
-        var phone_numbers = this.get('phone_numbers').filter(function(num) {
+        const phone_numbers = this.get('phone_numbers').filter(function(num) {
             if(num.get('invalid_number')) {
                 return;
             }
@@ -102,7 +102,7 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
         }).map(function(num) {
             return num.serialize();
         });
-        var addresses = this.get('addresses').filter(function(address) {
+        const addresses = this.get('addresses').filter(function(address) {
             if (address.get('invalid_address')) {
                 return;
             }
@@ -110,8 +110,8 @@ var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin,
         }).map(function(address) {
             return address.serialize();
         });
-        var locale = store.find('locale', {locale: this.get('locale')});
-        var locale_fk = locale.objectAt(0) ? locale.objectAt(0).get('id') : '';
+        const locale = store.find('locale', {locale: this.get('locale')});
+        const locale_fk = locale.objectAt(0) ? locale.objectAt(0).get('id') : '';
 
         var payload = {
             id: this.get('id'),
