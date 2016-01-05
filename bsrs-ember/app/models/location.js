@@ -7,6 +7,8 @@ import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
 import AddressMixin from 'bsrs-ember/mixins/model/address';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 
+var run = Ember.run;
+
 var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberMixin, EmailMixin, {
     store: inject('main'),
     name: attr(''),
@@ -66,13 +68,17 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             let updated_old_status_locations = old_status_locations.filter((id) => {
                 return id !== location_id;
             });
-            store.push('location-status', {id: old_status.get('id'), locations: updated_old_status_locations});
+            run(function() {
+                store.push('location-status', {id: old_status.get('id'), locations: updated_old_status_locations});
+            });
             // old_status.set('locations', updated_old_status_locations);
         }
         let new_status = store.find('location-status', new_status_id);
         let new_status_locations = new_status.get('locations') || [];
         if (new_status_locations) {
-            store.push('location-status', {id: new_status.get('id'), locations: new_status_locations.concat(location_id)});
+            run(function() {
+                store.push('location-status', {id: new_status.get('id'), locations: new_status_locations.concat(location_id)});
+            });
             // new_status.set('locations', new_status_locations.concat(location_id));
         }
     },
@@ -81,7 +87,9 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         const store = this.get('store');
         const status = this.get('status');
         if (status) {
-            store.push('location', {id: pk, status_fk: status.get('id')});
+            run(function() {
+                store.push('location', {id: pk, status_fk: status.get('id')});
+            });
         }
     },
     rollbackStatus() {
@@ -104,7 +112,9 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             let updated_old_locations = old_locations.filter((id) => {
                 return id !== location_id;
             });
-            store.push('location-level', {id: old_location_level.get('id'), locations: updated_old_locations});
+            run(function() {
+                store.push('location-level', {id: old_location_level.get('id'), locations: updated_old_locations});
+            });
             // old_location_level.set('locations', updated_old_locations);
         }
         if(!new_location_level_id){
@@ -112,7 +122,9 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         } else{
             const new_location_level = store.find('location-level', new_location_level_id);
             const new_locations = new_location_level.get('locations') || [];
-            store.push('location-level', {id: new_location_level.get('id'), locations: new_locations.concat(location_id)});
+            run(function() {
+                store.push('location-level', {id: new_location_level.get('id'), locations: new_locations.concat(location_id)});
+            });
             // new_location_level.set('locations', new_locations.concat(location_id));
         }
     },
@@ -122,10 +134,14 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         const location_level = this.get('location_level');
         if (location_level) {
             location_level.save();
-            store.push('location', {id: pk, location_level_fk: location_level.get('id')});
+            run(function() {
+                store.push('location', {id: pk, location_level_fk: location_level.get('id')});
+            });
             // this.set('location_level_fk', this.get('location_level').get('id'));
         } else {
-            store.push('location', {id: pk, location_level_fk: undefined});
+            run(function() {
+                store.push('location', {id: pk, location_level_fk: undefined});
+            });
             // this.set('location_level_fk', undefined);
         }
     },
@@ -187,7 +203,9 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         };
     },
     removeRecord() {
-        this.get('store').remove('location', this.get('id'));
+        run(() => {
+            this.get('store').remove('location', this.get('id'));
+        });
     }
 });
 

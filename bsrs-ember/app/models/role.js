@@ -5,6 +5,8 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import equal from 'bsrs-ember/utilities/equal';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 
+var run = Ember.run;
+
 var RoleModel = Model.extend(NewMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
@@ -55,7 +57,9 @@ var RoleModel = Model.extend(NewMixin, {
         let role_pk = this.get('id');
         let uuid = this.get('uuid');
         let store = this.get('store');
-        store.push('role-category', {id: uuid.v4(), role_fk: role_pk, category_fk: category_pk});
+        run(function() {
+            store.push('role-category', {id: uuid.v4(), role_fk: role_pk, category_fk: category_pk});
+        });
     },
     remove_category(category_pk) {
         const uuid = this.get('uuid');
@@ -63,7 +67,9 @@ var RoleModel = Model.extend(NewMixin, {
         let m2m_pk = this.get('role_categories').filter((m2m) => {
             return m2m.get('category_fk') === category_pk;
         }).objectAt(0).get('id');
-        store.push('role-category', {id: m2m_pk, removed: true});
+        run(function() {
+            store.push('role-category', {id: m2m_pk, removed: true});
+        });
     },
     location_level: Ember.computed.alias('location_levels.firstObject'),
     location_levels: Ember.computed(function() {
@@ -84,14 +90,18 @@ var RoleModel = Model.extend(NewMixin, {
                 return id !== role_id;
             });
             // old_location_level.set('roles', updated_old_roles);
-            store.push('location-level', {id: old_location_level.get('id'), roles: updated_old_roles});
+            run(function() {
+                store.push('location-level', {id: old_location_level.get('id'), roles: updated_old_roles});
+            });
         }
         if(!new_location_level_id){
             return;
         } else{
             const new_location_level = store.find('location-level', new_location_level_id);
             const new_roles = new_location_level.get('roles') || [];
-            store.push('location-level', {id: new_location_level.get('id'), roles: new_roles.concat(role_id)});
+            run(function() {
+                store.push('location-level', {id: new_location_level.get('id'), roles: new_roles.concat(role_id)});
+            });
             // new_location_level.set('roles', new_roles.concat(role_id));
         }
     },
@@ -125,7 +135,9 @@ var RoleModel = Model.extend(NewMixin, {
         };
     },
     removeRecord() {
-        this.get('store').remove('role', this.get('id'));
+        run(() => {
+            this.get('store').remove('role', this.get('id'));
+        });
     },
     rollbackRelated() {
         this.rollbackLocationLevel();
@@ -140,9 +152,13 @@ var RoleModel = Model.extend(NewMixin, {
         const store = this.get('store');
         const location_level = this.get('location_level');
         if(location_level) {
-            store.push('role', {id: pk, location_level_fk: location_level.get('id')});
+            run(function() {
+                store.push('role', {id: pk, location_level_fk: location_level.get('id')});
+            });
         }else{
-            store.push('role', {id: pk, location_level_fk: undefined});
+            run(function() {
+                store.push('role', {id: pk, location_level_fk: undefined});
+            });
         }
         // this.set('location_level_fk', location_level ? location_level.get('id') : undefined);
     },
@@ -158,11 +174,13 @@ var RoleModel = Model.extend(NewMixin, {
         const role_categories_ids = this.get('role_categories_ids');
         const previous_m2m_fks = this.get('role_category_fks');
         //add
-        role_categories.forEach((join_model) => {
-            if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
-                store.push('role', {id: role_id, role_category_fks: previous_m2m_fks.concat(join_model.get('id'))});
-                // this.set('role_category_fks', previous_m2m_fks.concat(join_model.get('id')));
-            } 
+        run(function() {
+            role_categories.forEach((join_model) => {
+                if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
+                    store.push('role', {id: role_id, role_category_fks: previous_m2m_fks.concat(join_model.get('id'))});
+                    // this.set('role_category_fks', previous_m2m_fks.concat(join_model.get('id')));
+                } 
+            });
         });
         //remove
         const previous_m2m_fks_updated = this.get('role_category_fks');
@@ -179,16 +197,18 @@ var RoleModel = Model.extend(NewMixin, {
         const m2m_to_throw_out = m2m_array.filter(function(join_model) {
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
         });
-        m2m_to_throw_out.forEach(function(join_model) {
-            store.push('role-category', {id: join_model.get('id'), removed: true});
-            // join_model.set('removed', true);
-        });
-        previous_m2m_fks.forEach(function(pk) {
-            store.push('role-category', {id: pk, removed: undefined});
-            // const m2m_to_keep = store.find('role-category', pk);
-            // if (m2m_to_keep.get('id')) {
-            //     m2m_to_keep.set('removed', undefined);
-            // }
+        run(function() {
+            m2m_to_throw_out.forEach(function(join_model) {
+                store.push('role-category', {id: join_model.get('id'), removed: true});
+                // join_model.set('removed', true);
+            });
+            previous_m2m_fks.forEach(function(pk) {
+                store.push('role-category', {id: pk, removed: undefined});
+                // const m2m_to_keep = store.find('role-category', pk);
+                // if (m2m_to_keep.get('id')) {
+                //     m2m_to_keep.set('removed', undefined);
+                // }
+            });
         });
     },
     toString: function() {

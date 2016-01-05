@@ -8,10 +8,8 @@ var ApplicationModalComponent = Ember.Component.extend({
             let transition = this.trx.attemptedTransition;
             let model = this.trx.attemptedTransitionModel;
             let action = this.trx.attemptedAction;
-            Ember.run(function() {
-                model.rollback();
-                model.rollbackRelated();
-            });
+            model.rollback();
+            model.rollbackRelated();
             if(action){
                 this.sendAction(action, tab);
             }else{

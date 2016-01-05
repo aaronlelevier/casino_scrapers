@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
+var run = Ember.run;
+
 var AddressMixin = Ember.Mixin.create({
     addresses_all: Ember.computed(function() {
         let pk = this.get('id');
@@ -65,17 +67,19 @@ var AddressMixin = Ember.Mixin.create({
         let store = this.get('store');
         let addresses_to_remove = [];
         let addresses = this.get('addresses_all');
-        addresses.forEach((address) => {
-            if (address.get('removed')) {
-                store.push('address', {id: address.get('id'), removed: undefined});
-            }
-            if(address.get('invalid_address') && address.get('isNotDirty')) {
-                addresses_to_remove.push(address.get('id'));
-            }
-            address.rollback();
-        });
-        addresses_to_remove.forEach((id) => {
-            store.remove('address', id);
+        run(function() {
+            addresses.forEach((address) => {
+                if (address.get('removed')) {
+                    store.push('address', {id: address.get('id'), removed: undefined});
+                }
+                if(address.get('invalid_address') && address.get('isNotDirty')) {
+                    addresses_to_remove.push(address.get('id'));
+                }
+                address.rollback();
+            });
+            addresses_to_remove.forEach((id) => {
+                store.remove('address', id);
+            });
         });
     },
     cleanupAddresses: function() {
@@ -90,8 +94,10 @@ var AddressMixin = Ember.Mixin.create({
                 addresses_to_remove.push(address.get('id'));
             }
         });
-        addresses_to_remove.forEach((id) => {
-            store.remove('address', id);
+        run(function() {
+            addresses_to_remove.forEach((id) => {
+                store.remove('address', id);
+            });
         });
         this.cleanupAddressFKs();
     },

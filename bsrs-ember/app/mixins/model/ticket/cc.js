@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
+var run = Ember.run;
+
 var CCMixin = Ember.Mixin.create({
     cc_ids: Ember.computed('cc.[]', function() {
         return this.get('cc').mapBy('id');
@@ -29,19 +31,23 @@ var CCMixin = Ember.Mixin.create({
         const id = uuid.v4();
         //check for existing
         const ticket_people = store.find('ticket-person').toArray();
-        ticket_people.forEach((tp) => {
-            if (tp.get('person_pk') === person_pk) {
-                store.push('ticket-person', {id: tp.get('id'), removed: undefined});
-            }
+        run(function() {
+            ticket_people.forEach((tp) => {
+                if (tp.get('person_pk') === person_pk) {
+                    store.push('ticket-person', {id: tp.get('id'), removed: undefined});
+                }
+            });
+            store.push('ticket-person', {id: id, ticket_pk: ticket_pk, person_pk: person_pk});
         });
-        store.push('ticket-person', {id: id, ticket_pk: ticket_pk, person_pk: person_pk});
     },
     remove_person(person_pk) {
         const store = this.get('store');
         const m2m_pk = this.get('ticket_cc').filter((m2m) => {
             return m2m.get('person_pk') === person_pk;
         }).objectAt(0).get('id');
-        store.push('ticket-person', {id: m2m_pk, removed: true});
+        run(function() {
+            store.push('ticket-person', {id: m2m_pk, removed: true});
+        });
     },
     rollbackCC() {
         const store = this.get('store');
@@ -51,12 +57,16 @@ var CCMixin = Ember.Mixin.create({
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed') && this.get('id') === join_model.get('ticket_pk');
         });
         m2m_to_throw_out.forEach(function(join_model) {
-            store.push('ticket-person', {id: join_model.get('id'), removed: true});
+            run(function() {
+                store.push('ticket-person', {id: join_model.get('id'), removed: true});
+            });
         });
         previous_m2m_fks.forEach((pk) => {
             var m2m_to_keep = store.find('ticket-person', pk);
             if (m2m_to_keep.get('id')) {
-                store.push('ticket-person', {id: pk, removed: undefined});
+                run(function() {
+                    store.push('ticket-person', {id: pk, removed: undefined});
+                });
             }
         });
     },

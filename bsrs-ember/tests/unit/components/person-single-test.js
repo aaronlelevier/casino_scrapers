@@ -64,9 +64,7 @@ test('locations computed will be filtered by person.role.location_level', (asser
     assert.equal(person_location_three.get('removed'), undefined);
     assert.equal(person_location_four.get('removed'), undefined);
     assert.equal(person.get('role_fk'), RD.idTwo);
-    run(function() {
-        person.change_role(role_invalid, role);
-    });
+    person.change_role(role_invalid, role);
     assert.equal(person.get('role_fk'), role.get('id'));
     assert.equal(person_location_one.get('removed'), true);
     assert.equal(person_location_two.get('removed'), true);
@@ -74,9 +72,7 @@ test('locations computed will be filtered by person.role.location_level', (asser
     assert.equal(person_location_four.get('removed'), undefined);
     assert.equal(person.get('location_level_pk'), LLD.idTwo);
     assert.equal(location_select.get('person_locations_selected').get('length'), 0);
-    run(function() {
-        person.change_role(role, role_invalid);
-    });
+    person.change_role(role, role_invalid);
     assert.equal(person_location_one.get('removed'), undefined);
     assert.equal(person_location_two.get('removed'), undefined);
     assert.equal(person_location_three.get('removed'), undefined);

@@ -2,6 +2,8 @@ import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/uuid';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
+var run = Ember.run;
+
 var extract_attachments = function(model, store) {
     model.attachments.forEach((attachment_id) => {
         store.push('attachment', {id: attachment_id});

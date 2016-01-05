@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
+var run = Ember.run;
+
 var RequesterMixin = Ember.Mixin.create({
     requester: Ember.computed(function() {
         let requester_id = this.get('requester_id');
@@ -20,7 +22,9 @@ var RequesterMixin = Ember.Mixin.create({
     change_requester(people_id) {
         const store = this.get('store');
         const ticket_pk = this.get('id');
-        store.push('ticket', {id: ticket_pk, requester_id: people_id});
+        run(function() {
+            store.push('ticket', {id: ticket_pk, requester_id: people_id});
+        });
     }
 });
 

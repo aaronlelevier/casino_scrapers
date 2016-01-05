@@ -1,5 +1,7 @@
 import Ember from 'ember';
 
+var run = Ember.run;
+
 var StatusMixin = Ember.Mixin.create({
     rollbackStatus() {
         let status = this.get('status');
@@ -14,7 +16,9 @@ var StatusMixin = Ember.Mixin.create({
         const pk = this.get('id');
         const status = this.get('status');
         if (status) {
-            store.push(type, {id: pk, status_fk: status.get('id')});
+            run(function() {
+                store.push(type, {id: pk, status_fk: status.get('id')});
+            });
         }
     },
     statusIsDirty: Ember.computed('status', 'status_fk', function() {
@@ -34,11 +38,15 @@ var StatusMixin = Ember.Mixin.create({
             let updated_old_status_people = people_ids.filter((id) => {
                 return id !== id; 
             });
-            store.push('status', {id: old_status.get('id'), people: updated_old_status_people});
+            run(function() {
+                store.push('status', {id: old_status.get('id'), people: updated_old_status_people});
+            });
         }
         const new_status = store.find('status', status_id);
         const new_status_people = new_status.get('people') || [];
-        store.push('status', {id: new_status.get('id'), people: new_status_people.concat(id)});
+        run(function() {
+            store.push('status', {id: new_status.get('id'), people: new_status_people.concat(id)});
+        });
     },
     status: Ember.computed.alias('belongs_to_status.firstObject'),
     belongs_to_status: Ember.computed(function() {
