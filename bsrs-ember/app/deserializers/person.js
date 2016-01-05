@@ -11,6 +11,18 @@ var extract_status = (model, store) => {
     delete model.status;
 };
 
+var extract_emails = function(model, store) {
+    let email_fks = [];
+    let emails = model.emails || [];
+    emails.forEach((email) => {
+        email_fks.push(email.id);
+        email.model_fk = model.id;
+        store.push('email', email);
+    });
+    delete model.emails;
+    return email_fks;
+};
+
 var extract_phone_numbers = function(model, store) {
     let phone_number_fks = [];
     let phone_numbers = model.phone_numbers || [];
@@ -128,6 +140,7 @@ var PersonDeserializer = Ember.Object.extend({
         let person_check = store.find('person', id);
         let location_level_fk;
         if (!person_check.get('id') || person_check.get('isNotDirtyOrRelatedNotDirty')) {
+            model.email_fks = extract_emails(model, store);
             model.phone_number_fks = extract_phone_numbers(model, store);
             model.address_fks = extract_addresses(model, store);
             [model.role_fk, location_level_fk] = extract_role(model, store);

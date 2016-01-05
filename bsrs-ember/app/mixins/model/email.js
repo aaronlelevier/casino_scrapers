@@ -55,7 +55,7 @@ var EmailMixin = Ember.Mixin.create({
         }
         return email_dirty;
     }),
-    emailIsNotDirty: Ember.computed.not('emailsIsDirty'),
+    emailsIsNotDirty: Ember.computed.not('emailsIsDirty'),
     saveEmails() {
         this.cleanupEmails();
         let emails = this.get('emails');
@@ -114,7 +114,7 @@ var EmailMixin = Ember.Mixin.create({
                email_fks.splice(indx, 1); 
             }
         });
-    },
+    }
 });
 
 export default EmailMixin;

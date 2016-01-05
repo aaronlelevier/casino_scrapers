@@ -164,6 +164,19 @@
                         {{/form-group}}
                     </div>
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                      {{#form-group title="admin.person.label.email.other"}}
+                        {{input-multi-email
+                            placeholder=(t "admin.person.label.email.one")
+                            model=model.emails
+                            types=email_types
+                            default_type=default_email_type
+                            related_pk=model.id
+                        }}
+                      {{/form-group}}
+                    </div>
+                </div>
             </section>
         </div>
     </div>

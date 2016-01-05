@@ -3,6 +3,7 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
+import EmailMixin from 'bsrs-ember/mixins/model/email';
 import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
 import AddressMixin from 'bsrs-ember/mixins/model/address';
 import RoleMixin from 'bsrs-ember/mixins/model/person/role';
@@ -11,7 +12,7 @@ import StatusMixin from 'bsrs-ember/mixins/model/status';
 import config from 'bsrs-ember/config/environment';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 
-var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, NewMixin, {
+var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, NewMixin, {
     type: 'person',
     uuid: injectUUID('uuid'),
     store: inject('main'),
@@ -28,6 +29,7 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
     status_fk: '',
     phone_number_fks: [],
     address_fks: [],
+    email_fks: [],
     person_location_fks: [],
     isModelDirty: false,
     changingPassword: false,
@@ -49,14 +51,15 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
         var last_name = this.get('last_name');
         return first_name + ' ' + last_name;
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', function() {
-        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'emailsIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'roleIsDirty', 'locationsIsDirty', 'statusIsDirty', function() {
+        return this.get('isDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('roleIsDirty') || this.get('locationsIsDirty') || this.get('statusIsDirty') || this.get('emailsIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     clearPassword() {
         this.set('password', '');
     },
     saveRelated() {
+        this.saveEmails();
         this.savePhoneNumbers();
         this.saveAddresses();
         this.saveRole();
@@ -66,6 +69,7 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
     },
     rollbackRelated() {
         this.changeLocale();
+        this.rollbackEmails();
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
         this.rollbackRole();
@@ -82,6 +86,14 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
     },
     serialize() {
         var store = this.get('store');
+        var emails = this.get('emails').filter(function(email) {
+            if(email.get('invalid_email')) {
+                return;
+            }
+            return email;
+        }).map((email) => {
+            return email.serialize();
+        });
         var phone_numbers = this.get('phone_numbers').filter(function(num) {
             if(num.get('invalid_number')) {
                 return;
@@ -112,8 +124,8 @@ var Person = Model.extend(CopyMixin, PhoneNumberMixin, AddressMixin, RoleMixin, 
             auth_amount: this.get('auth_amount'),
             status: this.get('status').get('id'),
             role: this.get('role').get('id'),
-            emails: [],
             locations: this.get('location_ids'),
+            emails: emails,
             phone_numbers: phone_numbers,
             addresses: addresses,
             locale: locale_fk,
