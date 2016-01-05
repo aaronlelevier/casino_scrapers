@@ -838,10 +838,13 @@ class TicketAndTicketActivityTests(APITestCase):
     def test_categories(self):
         name = 'categories'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        # ticket_activity_type = create_ticket_activity_type(name=name)
         # Only one Category on the Ticket
         [self.ticket.categories.remove(c) for c in self.ticket.categories.all()[:self.ticket.categories.count()-1]]
         new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()
+        # repopulate `self.data`
+        serializer = TicketCreateSerializer(self.ticket)
+        self.data = serializer.data
+        # test setup correctly
         self.assertEqual(len(self.data['categories']), 1)
         self.assertNotEqual(self.data['categories'][0], str(new_category.id))
         # data
