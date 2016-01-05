@@ -80,8 +80,10 @@ var EmailMixin = Ember.Mixin.create({
             }
             email.rollback();
         });
-        emails_to_remove.forEach((id) => {
-            store.remove('email', id);
+        run(function() {
+            emails_to_remove.forEach((id) => {
+                store.remove('email', id);
+            });
         });
     },
     cleanupEmails() {
@@ -96,8 +98,10 @@ var EmailMixin = Ember.Mixin.create({
                 emails_to_remove.push(email.get('id'));
             }
         });
-        emails_to_remove.forEach((id) => {
-            store.remove('email', id);
+        run(function() {
+            emails_to_remove.forEach((id) => {
+                store.remove('email', id);
+            });
         });
         this.cleanupEmailFKs();
     },
