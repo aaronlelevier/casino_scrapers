@@ -17,9 +17,7 @@ var ThirdPartysNewComponent = Ember.Component.extend(TabMixin, NewMixin, Validat
             }
         },
         changedStatus(model, val) {
-            Ember.run(() => {
-                model.set('status', val);
-            });
+            model.set('status', val);
         }
     }
 });

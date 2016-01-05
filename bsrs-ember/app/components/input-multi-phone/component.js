@@ -14,9 +14,7 @@ var InputMultiPhone = ChildValidationComponent.extend(ValidationMixin, CustomVal
     numberRegion: validateEach('number', phoneIsAllowedRegion),
     actions: {
         changed(phonenumber, val) {
-            Ember.run(() => {
-                phonenumber.set('type', val);
-            });
+            phonenumber.set('type', val);
         },
         append() {
             var id = this.get('uuid').v4();
