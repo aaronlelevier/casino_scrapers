@@ -140,7 +140,7 @@ class LocationManagerTests(TestCase):
         parents = Location.objects.get_level_parents(location, location_level.id)
         self.assertEqual(parents.count(), 2)
 
-    def test_locations_and_children(self):
+    def test_objects_and_their_children(self):
         person = create_single_person()
         [person.locations.remove(x) for x in person.locations.all()]
         east = Location.objects.get(name='east')
@@ -148,7 +148,7 @@ class LocationManagerTests(TestCase):
         self.assertEqual(person.locations.count(), 1)
         self.assertEqual(person.locations.first().children.count(), 2)
 
-        ret = person.locations.locations_and_children()
+        ret = person.locations.objects_and_their_children()
 
         self.assertEqual(len(ret), 5)
         self.assertIn(person.locations.first().id, ret)

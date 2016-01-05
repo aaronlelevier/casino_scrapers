@@ -1023,7 +1023,7 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             ticket = self.ticket_two
             ticket.location = child_location
             ticket.save()
-            self.assertIn(ticket.location.id, self.person.locations.locations_and_children())
+            self.assertIn(ticket.location.id, self.person.locations.objects_and_their_children())
 
             response = self.client.get('/api/tickets/')
             data = json.loads(response.content.decode('utf8'))
@@ -1050,4 +1050,23 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             self.assertEqual(
                 data['count'],
                 Ticket.objects.filter_on_categories_and_location(self.person).count()
+            )
+
+    def test_can_view_tickets__child_category(self):
+        """
+        If the Person has to Parent Category, the can view their Children's 
+        Category Tickets.
+        """
+        with self.settings(TICKET_FILTERING_ON=True):
+            self.client.login(username=self.person.username, password=PASSWORD)
+            child_category = create_single_category(parent=self.person.role.categories.first())
+            [self.ticket_two.categories.remove(c) for c in self.ticket_two.categories.all()]
+            self.ticket_two.categories.add(child_category)
+
+            response = self.client.get('/api/tickets/')
+            data = json.loads(response.content.decode('utf8'))
+
+            self.assertIn(
+                str(self.ticket_two.id),
+                [x['id'] for x in data['results']]
             )

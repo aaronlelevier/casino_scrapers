@@ -2,6 +2,7 @@ from django.db import models
 from django.conf import settings
 
 from accounting.models import Currency
+from location.models import SelfRefrencingQuerySet, SelfRefrencingManager
 from utils.models import BaseModel, BaseManager, BaseNameModel
 
 
@@ -26,6 +27,16 @@ class CategoryStatus(BaseNameModel):
         verbose_name_plural = "Category Statuses"
 
 
+class CategoryQuerySet(SelfRefrencingQuerySet):
+    pass
+
+
+class CategoryManager(SelfRefrencingManager):
+
+    def get_queryset(self):
+        return CategoryQuerySet(self.model, self._db).filter(deleted__isnull=True)
+
+
 class Category(BaseModel):
     """
     Category tree. Categories are self referencing OneToMany.  A Parent has 
@@ -46,6 +57,8 @@ class Category(BaseModel):
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
     status = models.ForeignKey(CategoryStatus, blank=True, null=True)
     level = models.IntegerField(blank=True, default=0)
+
+    objects = CategoryManager()
 
     class Meta:
         ordering = ('level',)

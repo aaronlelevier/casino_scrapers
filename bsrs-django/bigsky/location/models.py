@@ -82,9 +82,28 @@ class SelfRefrencingQuerySet(models.query.QuerySet):
 
         return self.filter(id__in=all_parents).exclude(id=first_child_id)
 
+    def objects_and_their_children(self):
+        """
+        Meant to be called from a RelatedManager standpoint, otherwise 
+        would just return all model objects.
+
+        Ex: person.locations.objects_and_their_children()
+
+        Exp: returns the Person's related Locations and their Children.
+        """
+        master_set = set()
+
+        for obj in self.all():
+            # parent
+            master_set.add(obj.id)
+            # children
+            children = type(obj).objects.get_all_children(obj)
+            master_set.update(children.values_list("id", flat=True))
+
+        return master_set
+
 
 class SelfRefrencingManager(BaseManager):
-    ''' '''
     
     def get_queryset(self):
         return SelfRefrencingQuerySet(self.model, self._db).filter(deleted__isnull=True)
@@ -94,6 +113,9 @@ class SelfRefrencingManager(BaseManager):
 
     def get_all_parents(self, child, first_child_id=None, all_parents=None):
         return self.get_queryset().get_all_parents(child, first_child_id, all_parents)
+
+    def objects_and_their_children(self):
+        return self.get_queryset().objects_and_their_children()
 
 
 class SelfRefrencingBaseModel(models.Model):
@@ -229,21 +251,8 @@ class LocationQuerySet(SelfRefrencingQuerySet):
             Q(addresses__zip__icontains=keyword)
         )
 
-    def locations_and_children(self):
-        master_set = set()
-
-        for location in self.all():
-            # parent
-            master_set.add(location.id)
-            # children
-            children = Location.objects.get_all_children(location)
-            master_set.update(children.values_list("id", flat=True))
-
-        return master_set
-
 
 class LocationManager(SelfRefrencingManager):
-    ''' '''
     
     def get_queryset(self):
         return LocationQuerySet(self.model, self._db).filter(deleted__isnull=True)
@@ -262,9 +271,6 @@ class LocationManager(SelfRefrencingManager):
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
-
-    def locations_and_children(self):
-        return self.get_queryset().locations_and_children()
 
 
 class Location(SelfRefrencingBaseModel, BaseModel):
