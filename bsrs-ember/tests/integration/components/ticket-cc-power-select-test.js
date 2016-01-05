@@ -1,6 +1,10 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+
+import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
@@ -11,7 +15,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
 
-let store, m2m, m2m_two, ticket, person_one, person_two, person_three, run = Ember.run, person_repo;
+let store, m2m, m2m_two, ticket, person_one, person_two, person_three, trans, run = Ember.run, person_repo;
 const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-ticket-cc-select';
@@ -20,6 +24,11 @@ const OPTION = 'li.ember-power-select-option';
 moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-select test', {
     integration: true,
     setup() {
+
+        trans = this.container.lookup('service:i18n');
+        loadTranslations(trans, translations.generate('en'));
+        translation.initialize(this);
+
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-person']);
         run(function() {
             m2m = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});

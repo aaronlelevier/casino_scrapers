@@ -181,7 +181,7 @@ textarea.ticket-request{
 	padding: 0 7px;
 	border-radius: 3px;
 	text-transform: uppercase;
-	margin: 0 10px 0 0;
+	margin: 0 4px 0 0;
 	position: relative;
 	&.ticket-status-new{
 		background: $lightGreen;
@@ -209,4 +209,23 @@ textarea.ticket-request{
 	font-size:100px;
 	text-align:center;
 	color: $gray;
+}
+.category-select {
+    float: left;
+    margin-right: -1px;
+	min-width: 120px;
+    .ember-power-select-trigger{
+        font-size: 0.8em;
+        min-height: 26px;
+        height: 26px;
+        line-height: 24px;
+        border-radius: 0;
+		width: 100%;
+    }
+	.ember-power-select-dropdown{
+		top: 26px;
+	}
+    .ember-power-select-option{
+        font-size: 0.8em;
+    }
 }

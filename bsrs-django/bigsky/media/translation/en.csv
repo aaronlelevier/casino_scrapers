@@ -217,3 +217,7 @@ en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,P
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
 en,welcome,Hello,Hello,,"'welcome':'Hello',",Hello,Hello
+en,selects.loading,Loading,Loading,,"'selects.loading':'Loading',",Loading,Loading
+en,selects.searchMessage,Type to search,Type to search,,"'selects.searchMessage':'Type to search',",Type to search,Type to search
+en,selects.searchPlaceholder,Search,Search,,"'selects.searchPlaceholder':'Search',",Search,Search
+en,selects.noMatchesMessage,No Matches,No Matches,,"'selects.noMatchesMessage':'No Matches',",No Matches,No Matches

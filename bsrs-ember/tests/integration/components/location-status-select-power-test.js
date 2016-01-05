@@ -7,7 +7,7 @@ import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import LDS from 'bsrs-ember/vendor/defaults/location-status';
 
-let store, location_one, status_one, status_two, status_three, run = Ember.run, trans;
+let store, location_one, status_one, status_two, status_three, trans, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
 const COMPONENT = '.t-location-status-select';
 const DROPDOWN = '.ember-power-select-dropdown';
@@ -53,8 +53,8 @@ test('should be able to select same status when location already has a status', 
     clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
-    run(() => { 
-        $(`.ember-power-select-option:contains(${LDS.openName})`).mouseup(); 
+    run(() => {
+        $(`.ember-power-select-option:contains(${LDS.openName})`).mouseup();
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
@@ -74,8 +74,8 @@ test('should be able to select new status when location already has a status', f
     clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 3);
-    run(() => { 
-        $(`.ember-power-select-option:contains(${LDS.closedName})`).mouseup(); 
+    run(() => {
+        $(`.ember-power-select-option:contains(${LDS.closedName})`).mouseup();
     });
     assert.equal($(`${DROPDOWN}`).length, 0);
     assert.equal($('.ember-power-select-options > li').length, 0);
@@ -84,4 +84,3 @@ test('should be able to select new status when location already has a status', f
     assert.deepEqual(status_one.get('locations'), []);
     assert.deepEqual(status_two.get('locations'), [LD.idOne]);
 });
-

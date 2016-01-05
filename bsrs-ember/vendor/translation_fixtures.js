@@ -212,7 +212,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'ticket.priority.medium':'Medium',
                     'ticket.search':'Search Tickets',
                     'ticket.status.closed':'Closed',
-                    'ticket.status.completed':'Complete',
+                    'ticket.status.complete':'Complete',
                     'ticket.status.deferred':'Deferred',
                     'ticket.status.denied':'Denied',
                     'ticket.status.draft':'Draft',
@@ -223,7 +223,11 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'Progress',
                     'validation.invalid':'Invalid',
                     'validation.valid':'Valid',
-                    'welcome':'Hello'
+                    'welcome':'Hello',
+                    'selects.loading':'Loading',
+                    'selects.searchMessage':'Type to search',
+                    'selects.searchPlaceholder':'Search',
+                    'selects.noMatchesMessage':'No Matches'
                 }
             }
             break;
@@ -447,7 +451,11 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'Progreso',
                     'validation.invalid':'Inválido',
                     'validation.valid':'Válido',
-                    'welcome':'Hola'
+                    'welcome':'Hola',
+                    'selects.loading':'Cargando',
+                    'selects.searchMessage':'Escriba para buscar',
+                    'selects.searchPlaceholder':'Buscar',
+                    'selects.noMatchesMessage':'No hay coincidencias'
                 }
             }
             break;
@@ -671,7 +679,11 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'Progrès',
                     'validation.invalid':'Invalide',
                     'validation.valid':'Valide',
-                    'welcome':'Salut'
+                    'welcome':'Salut',
+                    'selects.loading':'Chargement',
+                    'selects.searchMessage':'Tapez à la recherche',
+                    'selects.searchPlaceholder':'Recherche',
+                    'selects.noMatchesMessage':'Pas de correspondance'
                 }
             }
             break;
@@ -895,7 +907,11 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'进展',
                     'validation.invalid':'无效',
                     'validation.valid':'有效',
-                    'welcome':'您好'
+                    'welcome':'您好',
+                    'selects.loading':'载入中',
+                    'selects.searchMessage':'键入搜索内容',
+                    'selects.searchPlaceholder':'搜索',
+                    'selects.noMatchesMessage':'不匹配'
                 }
             }
             break;
@@ -986,7 +1002,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'admin.location.status.future':'将来',
                     'admin.location.status.open':'オープン',
                     'admin.locationlevel.company':'会社',
-                    'admin.locationlevel.department':'部門',
+                    'admin.locationlevel.department':'省',
                     'admin.locationlevel.district':'地区',
                     'admin.locationlevel.fmd':'施設管理区',
                     'admin.locationlevel.fmu':'ファシリティマネジメントリージョン',
@@ -1119,7 +1135,11 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'進捗',
                     'validation.invalid':'無効',
                     'validation.valid':'正当な',
-                    'welcome':'こんにちは'
+                    'welcome':'こんにちは',
+                    'selects.loading':'読み込んでいます',
+                    'selects.searchMessage':'検索するタイ​​プ',
+                    'selects.searchPlaceholder':'サーチ',
+                    'selects.noMatchesMessage':'一致なし'
                 }
             }
             break;

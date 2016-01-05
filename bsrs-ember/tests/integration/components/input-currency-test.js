@@ -10,7 +10,7 @@ const LONG_AUTH_AMOUNT = '50000.0000';
 
 var container, registry, store, model, service, run = Ember.run;
 
-moduleForComponent('input-currency', 'integration: amk input-currency test', {
+moduleForComponent('input-currency', 'integration: input-currency test', {
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:person', 'model:currency', 'service:currency']);

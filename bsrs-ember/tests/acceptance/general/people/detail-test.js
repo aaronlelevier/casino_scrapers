@@ -48,7 +48,7 @@ const LOCATION_SEARCH = '.ember-power-select-trigger-multiple-input';
 
 var application, store, list_xhr, people_detail_data, endpoint, detail_xhr, original_uuid, url, run = Ember.run;
 
-module('Acceptance | detail test', {
+module('Acceptance | person detail test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
