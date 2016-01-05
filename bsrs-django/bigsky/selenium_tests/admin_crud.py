@@ -5,8 +5,9 @@ import random
 import string
 
 from selenium import webdriver
-from selenium.webdriver.support.ui import Select
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import Select
 
 from helpers import (
     LoginMixin, FillInHelper, JavascriptMixin, InputHelper,
@@ -44,6 +45,46 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
     def test_translated_value(self):
         """Translation key 'menu.home' -> 'home' in 'en' """
         self.driver.find_element_by_link_text('Home')
+
+    def test_keypress__enter(self):
+        # Go to Location Area
+        self.nav_page.find_location_link().click()
+        # Create Location Page Object
+        location_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-location-name",
+            list_data = "t-grid-data"
+        )
+        # click first record in list data
+        locations = location_page.find_list_data()
+        locations[0].click()
+        # save H1 name
+        init_title = self.wait_for_xhr_request_xpath("//*/div/h1")
+        self.wait_for_xhr_request("t-location-name").send_keys(Keys.RETURN)
+        post_title = self.wait_for_xhr_request_xpath("//*/div/h1")
+        assert init_title == post_title
+
+    def test_keypress__backspace(self):
+        # Go to Location Area
+        self.nav_page.find_location_link().click()
+        # Create Location Page Object
+        location_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-location-name",
+            list_data = "t-grid-data"
+        )
+        # click first record in list data
+        locations = location_page.find_list_data()
+        locations[0].click()
+        # save H1 name
+        init_title = self.wait_for_xhr_request_xpath("//*/div/h1")
+        # Need a target element to 'send_keys', and, since H1 isn't an input 
+        # field, this is fine.
+        init_title.send_keys(Keys.BACKSPACE)
+        post_title = self.wait_for_xhr_request_xpath("//*/div/h1")
+        assert init_title == post_title
 
     def test_role(self):
         ### CREATE
