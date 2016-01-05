@@ -1006,6 +1006,33 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
                 Ticket.objects.filter_on_categories_and_location(self.person).count()
             )
 
+    def test_can_view_tickets__child_location(self):
+        """
+        Make a Ticket belonging to the child_location, and make sure it's 
+        viewable by the Person.
+        """
+        create_locations()
+
+        with self.settings(TICKET_FILTERING_ON=True):
+            self.client.login(username=self.person.username, password=PASSWORD)
+            # make sure a child_location exists for one of the Person's Locations
+            location = self.person.locations.first()
+            child_location = Location.objects.exclude(id=location.id)[0]
+            location.children.add(child_location)
+            # create ticket for child_location
+            ticket = self.ticket_two
+            ticket.location = child_location
+            ticket.save()
+            self.assertIn(ticket.location.id, self.person.locations.locations_and_children())
+
+            response = self.client.get('/api/tickets/')
+            data = json.loads(response.content.decode('utf8'))
+
+            self.assertIn(
+                str(ticket.id),
+                [x['id'] for x in data['results']]
+            )
+
     def test_can_view_tickets__category(self):
         """
         Checks that at least one of Ticket's 'Categories' are in the 

@@ -229,6 +229,18 @@ class LocationQuerySet(SelfRefrencingQuerySet):
             Q(addresses__zip__icontains=keyword)
         )
 
+    def locations_and_children(self):
+        master_set = set()
+
+        for location in self.all():
+            # parent
+            master_set.add(location.id)
+            # children
+            children = Location.objects.get_all_children(location)
+            master_set.update(children.values_list("id", flat=True))
+
+        return master_set
+
 
 class LocationManager(SelfRefrencingManager):
     ''' '''
@@ -250,6 +262,9 @@ class LocationManager(SelfRefrencingManager):
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
+
+    def locations_and_children(self):
+        return self.get_queryset().locations_and_children()
 
 
 class Location(SelfRefrencingBaseModel, BaseModel):
