@@ -62,9 +62,7 @@ test('ticket is dirty or related is dirty when existing status is altered', (ass
     });
     assert.equal(ticket.get('status.id'), TD.statusOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_status(TD.statusTwoId);
-    });
+    ticket.change_status(TD.statusTwoId);
     assert.equal(ticket.get('status.id'), TD.statusTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
@@ -78,9 +76,7 @@ test('ticket is dirty or related is dirty when existing status is altered (start
     });
     assert.equal(ticket.get('status'), undefined);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_status(TD.statusTwoId);
-    });
+    ticket.change_status(TD.statusTwoId);
     assert.equal(ticket.get('status.id'), TD.statusTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
@@ -93,24 +89,16 @@ test('rollback status will revert and reboot the dirty status to clean', (assert
     });
     assert.equal(ticket.get('status.id'), TD.statusOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_status(TD.statusTwoId);
-    });
+    ticket.change_status(TD.statusTwoId);
     assert.equal(ticket.get('status.id'), TD.statusTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('status.id'), TD.statusOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_status(TD.statusTwoId);
-    });
+    ticket.change_status(TD.statusTwoId);
     assert.equal(ticket.get('status.id'), TD.statusTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.saveRelated();
-    });
+    ticket.saveRelated();
     assert.equal(ticket.get('status.id'), TD.statusTwoId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -136,9 +124,7 @@ test('change_status will append the ticket id to the new status tickets array', 
         ticket = store.push('ticket', {id: TD.idOne});
         status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [9]});
     });
-    run(function() {
-        ticket.change_status(TD.statusOneId);
-    });
+    ticket.change_status(TD.statusOneId);
     assert.deepEqual(status.get('tickets'), [9, TD.idOne]);
 });
 
@@ -149,9 +135,7 @@ test('change_status will remove the ticket id from the prev status tickets array
         status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [9, TD.idOne]});
         store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwo, tickets: []});
     });
-    run(function() {
-        ticket.change_status(TD.statusTwoId);
-    });
+    ticket.change_status(TD.statusTwoId);
     assert.deepEqual(status.get('tickets'), [9]);
 });
 
@@ -160,9 +144,7 @@ test('status will save correctly as undefined', (assert) => {
         ticket = store.push('ticket', {id: TD.idOne, status_fk: undefined});
         store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: []});
     });
-    run(function() {
-        ticket.saveRelated();
-    });
+    ticket.saveRelated();
     let status = ticket.get('status');
     assert.equal(ticket.get('status_fk'), undefined);
 });
@@ -229,9 +211,7 @@ test('removing a ticket-person will mark the ticket as dirty and reduce the asso
     });
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
-    run(function() {
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.id);
     assert.ok(ticket.get('ccIsDirty'));
     assert.equal(ticket.get('cc').get('length'), 0);
 });
@@ -246,15 +226,11 @@ test('replacing a ticket-person with some other ticket-person still shows the ti
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.id);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(ticket.get('cc').get('length'), 0);
-    run(function() {
-        ticket.add_person(PD.idTwo);
-    });
+    ticket.add_person(PD.idTwo);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(ticket.get('cc').get('length'), 1);
@@ -268,9 +244,7 @@ test('cc property only returns the single matching item even when multiple peopl
         store.push('person', {id: PD.idTwo});
         ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne]});
     });
-    run(function() {
-        ticket.add_person(PD.idTwo);
-    });
+    ticket.add_person(PD.idTwo);
     let cc = ticket.get('cc');
     assert.equal(cc.get('length'), 1);
     assert.equal(cc.objectAt(0).get('id'), PD.idTwo);
@@ -299,9 +273,7 @@ test('cc property will update when the m2m array suddenly has the person pk (sta
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_person(PD.id);
-    });
+    ticket.add_person(PD.id);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.id);
     assert.ok(ticket.get('ccIsDirty'));
@@ -319,9 +291,7 @@ test('cc property will update when the m2m array suddenly has the person pk', (a
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_person(PD.idTwo);
-    });
+    ticket.add_person(PD.idTwo);
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.id);
     assert.equal(ticket.get('cc').objectAt(1).get('id'), PD.idTwo);
@@ -337,9 +307,7 @@ test('cc property will update when the m2m array suddenly removes the person', (
         person = store.push('person', {id: PD.id});
     });
     assert.equal(ticket.get('cc').get('length'), 1);
-    run(function() {
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.id);
     assert.equal(ticket.get('cc').get('length'), 0);
 });
 
@@ -352,27 +320,19 @@ test('when cc is changed dirty tracking works as expected (removing)', (assert) 
     });
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
-    run(function() {
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.id);
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.id);
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -390,33 +350,25 @@ test('multiple ticket\'s with same cc will rollback correctly', (assert) => {
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket_two.get('ccIsNotDirty'));
-    run(function() {
-        ticket_two.remove_person(PD.id);
-    });
+    ticket_two.remove_person(PD.id);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.equal(ticket_two.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket_two.get('ccIsDirty'));
-    run(function() {
-        ticket_two.rollbackRelated();
-    });
+    ticket_two.rollbackRelated();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(ticket_two.get('ccIsNotDirty'));
     assert.equal(ticket_two.get('cc').get('length'), 1);
     assert.ok(ticket_two.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.id);
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     assert.equal(ticket_two.get('cc').get('length'), 1);
     assert.ok(ticket_two.get('ccIsNotDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -433,33 +385,23 @@ test('when cc is changed dirty tracking works as expected (replacing)', (assert)
     });
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
-    run(function() {
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.id);
     assert.ok(ticket.get('ccIsDirty'));
     assert.equal(ticket.get('cc').get('length'), 0);
-    run(function() {
-        ticket.add_person(PD.idTwo);
-    });
+    ticket.add_person(PD.idTwo);
     assert.ok(ticket.get('ccIsDirty'));
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.equal(ticket.get('cc').objectAt(0).get('id'), PD.idTwo);
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_person(PD.id);
-        ticket.add_person(PD.idTwo);
-    });
+    ticket.remove_person(PD.id);
+    ticket.add_person(PD.idTwo);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -476,9 +418,7 @@ test('when person is suddently removed it shows as a dirty relationship (when it
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_person(PD.idTwo);
-    });
+    ticket.remove_person(PD.idTwo);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
@@ -495,28 +435,20 @@ test('rollback ticket will reset the previously used people (cc) when switching 
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_person(PD.idTwo);
-    });
+    ticket.remove_person(PD.idTwo);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_person(PD.idTwo);
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.idTwo);
+    ticket.remove_person(PD.id);
     assert.equal(ticket.get('cc').get('length'), 0);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -534,30 +466,22 @@ test('rollback cc will reset the previous people (cc) when switching from one pe
         ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne, TPD.idTwo]});
     });
     assert.equal(ticket.get('cc').get('length'), 2);
-    run(function() {
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.id);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.save();
-        ticket.saveRelated();
-    });
+    ticket.save();
+    ticket.saveRelated();
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('ccIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_person(PD.unusedId);
-    });
+    ticket.add_person(PD.unusedId);
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('ccIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.save();
-        ticket.saveRelated();
-    });
+    ticket.save();
+    ticket.saveRelated();
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('ccIsNotDirty'));
@@ -574,9 +498,7 @@ test('cc_ids computed returns a flat list of ids for each person', (assert) => {
     });
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.deepEqual(ticket.get('cc_ids'), [PD.id, PD.idTwo]);
-    run(function() {
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.id);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.deepEqual(ticket.get('cc_ids'), [PD.idTwo]);
 });
@@ -591,9 +513,7 @@ test('ticket_cc_ids computed returns a flat list of ids for each person', (asser
     });
     assert.equal(ticket.get('cc').get('length'), 2);
     assert.deepEqual(ticket.get('ticket_cc_ids'), [TPD.idOne, TPD.idTwo]);
-    run(function() {
-        ticket.remove_person(PD.id);
-    });
+    ticket.remove_person(PD.id);
     assert.equal(ticket.get('cc').get('length'), 1);
     assert.deepEqual(ticket.get('ticket_cc_ids'), [TPD.idTwo]);
 });
@@ -652,9 +572,7 @@ test('changing top level category will reset category tree', (assert) => {
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
-    run(function() {
-        ticket.change_category_tree(CD.unusedId);
-    });
+    ticket.change_category_tree(CD.unusedId);
     assert.equal(ticket.get('categories.length'), 1);
     assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);
 });
@@ -674,9 +592,7 @@ test('removing top level category will reset category tree', (assert) => {
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
-    run(function() {
-        ticket.remove_categories_down_tree(CD.idTwo);
-    });
+    ticket.remove_categories_down_tree(CD.idTwo);
     assert.equal(ticket.get('categories.length'), 0);
 });
 
@@ -695,9 +611,7 @@ test('removing leaf node category will remove leaf node m2m join model', (assert
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
-    run(function() {
-        ticket.remove_categories_down_tree(CD.idThree);
-    });
+    ticket.remove_categories_down_tree(CD.idThree);
     assert.equal(ticket.get('categories.length'), 2);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
 });
@@ -717,9 +631,7 @@ test('removing middle node category will remove leaf node m2m join model', (asse
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idThree);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idOne);
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
-    run(function() {
-        ticket.remove_categories_down_tree(CD.idOne);
-    });
+    ticket.remove_categories_down_tree(CD.idOne);
     assert.equal(ticket.get('categories.length'), 1);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
 });
@@ -741,15 +653,11 @@ test('rollback categories will also restore the category tree (when top node cha
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_category_tree(CD.unusedId);
-    });
+    ticket.change_category_tree(CD.unusedId);
     assert.equal(ticket.get('categories.length'), 1);
     assert.equal(ticket.get('top_level_category').get('id'), CD.unusedId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
@@ -775,17 +683,13 @@ test('rollback categories will also restore the category tree (when middle node 
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_category_tree(CD.unusedId);
-    });
+    ticket.change_category_tree(CD.unusedId);
     assert.equal(ticket.get('categories.length'), 2);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idTwo);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.unusedId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
@@ -811,9 +715,7 @@ test('rollback categories will also restore the category tree (when leaf node ch
     assert.equal(ticket.get('categories').objectAt(2).get('id'), CD.idTwo);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_category_tree(CD.unusedId);
-    });
+    ticket.change_category_tree(CD.unusedId);
     assert.equal(ticket.get('categories.length'), 3);
     assert.equal(ticket.get('top_level_category').get('id'), CD.idTwo);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idOne);
@@ -836,9 +738,7 @@ test('categories property only returns the single matching item even when multip
         store.push('category', {id: CD.idTwo});
         ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne]});
     });
-    run(function() {
-        ticket.add_category(CD.idTwo);
-    });
+    ticket.add_category(CD.idTwo);
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 1);
     assert.equal(categories.objectAt(0).get('id'), CD.idTwo);
@@ -867,9 +767,7 @@ test('categories property will update when the m2m array suddenly has the catego
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_category(CD.idOne);
-    });
+    ticket.add_category(CD.idOne);
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idOne);
     assert.ok(ticket.get('categoriesIsDirty'));
@@ -887,9 +785,7 @@ test('categories property will update when the m2m array suddenly has the catego
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_category(CD.idTwo);
-    });
+    ticket.add_category(CD.idTwo);
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idOne);
     assert.equal(ticket.get('categories').objectAt(1).get('id'), CD.idTwo);
@@ -905,9 +801,7 @@ test('categories property will update when the m2m array suddenly removes the ca
         category = store.push('category', {id: CD.idOne});
     });
     assert.equal(ticket.get('categories').get('length'), 1);
-    run(function() {
-        ticket.remove_category(CD.idOne);
-    });
+    ticket.remove_category(CD.idOne);
     assert.equal(ticket.get('categories').get('length'), 0);
 });
 
@@ -920,27 +814,19 @@ test('when categories is changed dirty tracking works as expected (removing)', (
     });
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
-    run(function() {
-        ticket.remove_category(CD.idOne);
-    });
+    ticket.remove_category(CD.idOne);
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_category(CD.idOne);
-    });
+    ticket.remove_category(CD.idOne);
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -955,33 +841,23 @@ test('when categories is changed dirty tracking works as expected (replacing)', 
     });
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
-    run(function() {
-        ticket.remove_category(CD.idOne);
-    });
+    ticket.remove_category(CD.idOne);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.equal(ticket.get('categories').get('length'), 0);
-    run(function() {
-        ticket.add_category(CD.idTwo);
-    });
+    ticket.add_category(CD.idTwo);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.equal(ticket.get('categories').objectAt(0).get('id'), CD.idTwo);
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_category(CD.idOne);
-        ticket.add_category(CD.idTwo);
-    });
+    ticket.remove_category(CD.idOne);
+    ticket.add_category(CD.idTwo);
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -998,9 +874,7 @@ test('when category is suddently removed it shows as a dirty relationship (when 
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_category(CD.idTwo);
-    });
+    ticket.remove_category(CD.idTwo);
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
@@ -1017,28 +891,20 @@ test('rollback ticket will reset the previously used people (categories) when sw
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_category(CD.idTwo);
-    });
+    ticket.remove_category(CD.idTwo);
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_category(CD.idTwo);
-        ticket.remove_category(CD.idOne);
-    });
+    ticket.remove_category(CD.idTwo);
+    ticket.remove_category(CD.idOne);
     assert.equal(ticket.get('categories').get('length'), 0);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -1056,30 +922,22 @@ test('rollback categories will reset the previous people (categories) when switc
         ticket = store.push('ticket', {id: TD.idOne, ticket_categories_fks: [TCD.idOne, TCD.idTwo]});
     });
     assert.equal(ticket.get('categories').get('length'), 2);
-    run(function() {
-        ticket.remove_category(CD.idOne);
-    });
+    ticket.remove_category(CD.idOne);
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.save();
-        ticket.saveRelated();
-    });
+    ticket.save();
+    ticket.saveRelated();
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('categoriesIsNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_category(CD.unusedId);
-    });
+    ticket.add_category(CD.unusedId);
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.ok(ticket.get('categoriesIsDirty'));
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.save();
-        ticket.saveRelated();
-    });
+    ticket.save();
+    ticket.saveRelated();
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('categoriesIsNotDirty'));
@@ -1096,9 +954,7 @@ test('categories_ids computed returns a flat list of ids for each category', (as
     });
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.deepEqual(ticket.get('categories_ids'), [CD.idOne, CD.idTwo]);
-    run(function() {
-        ticket.remove_category(CD.idOne);
-    });
+    ticket.remove_category(CD.idOne);
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.deepEqual(ticket.get('categories_ids'), [CD.idTwo]);
 });
@@ -1113,9 +969,7 @@ test('ticket_categories_ids computed returns a flat list of ids for each categor
     });
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.deepEqual(ticket.get('ticket_categories_ids'), [TCD.idOne, TCD.idTwo]);
-    run(function() {
-        ticket.remove_category(CD.idOne);
-    });
+    ticket.remove_category(CD.idOne);
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.deepEqual(ticket.get('ticket_categories_ids'), [TCD.idTwo]);
 });
@@ -1143,9 +997,7 @@ test('change_priority will append the ticket id to the new priority tickets arra
         ticket = store.push('ticket', {id: TD.idOne});
         priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [9]});
     });
-    run(function() {
-        ticket.change_priority(TD.priorityOneId);
-    });
+    ticket.change_priority(TD.priorityOneId);
     assert.deepEqual(priority.get('tickets'), [9, TD.idOne]);
 });
 
@@ -1156,9 +1008,7 @@ test('change_priority will remove the ticket id from the prev priority tickets a
         priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [9, TD.idOne]});
         store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityTwo, tickets: []});
     });
-    run(function() {
-        ticket.change_priority(TD.priorityTwoId);
-    });
+    ticket.change_priority(TD.priorityTwoId);
     assert.deepEqual(priority.get('tickets'), [9]);
 });
 
@@ -1167,9 +1017,7 @@ test('priority will save correctly as undefined', (assert) => {
         ticket = store.push('ticket', {id: TD.idOne, priority_fk: undefined});
         store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: []});
     });
-    run(function() {
-        ticket.saveRelated();
-    });
+    ticket.saveRelated();
     let priority = ticket.get('priority');
     assert.equal(ticket.get('priority_fk'), undefined);
 });
@@ -1182,9 +1030,7 @@ test('ticket is dirty or related is dirty when existing priority is altered', (a
     });
     assert.equal(ticket.get('priority.id'), TD.priorityOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_priority(TD.priorityTwoId);
-    });
+    ticket.change_priority(TD.priorityTwoId);
     assert.equal(ticket.get('priority.id'), TD.priorityTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
@@ -1196,9 +1042,7 @@ test('ticket is dirty or related is dirty when existing priority is altered (sta
     });
     assert.equal(ticket.get('priority'), undefined);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_priority(TD.priorityTwoId);
-    });
+    ticket.change_priority(TD.priorityTwoId);
     assert.equal(ticket.get('priority.id'), TD.priorityTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
@@ -1211,24 +1055,16 @@ test('rollback priority will revert and reboot the dirty priority to clean', (as
     });
     assert.equal(ticket.get('priority.id'), TD.priorityOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_priority(TD.priorityTwoId);
-    });
+    ticket.change_priority(TD.priorityTwoId);
     assert.equal(ticket.get('priority.id'), TD.priorityTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('priority.id'), TD.priorityOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_priority(TD.priorityTwoId);
-    });
+    ticket.change_priority(TD.priorityTwoId);
     assert.equal(ticket.get('priority.id'), TD.priorityTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.saveRelated();
-    });
+    ticket.saveRelated();
     assert.equal(ticket.get('priority.id'), TD.priorityTwoId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -1250,9 +1086,7 @@ test('requester can be added starting with no requester', (assert) => {
         store.push('person', {id: PD.id});
     });
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_requester(PD.id);
-    });
+    ticket.change_requester(PD.id);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
 
@@ -1263,9 +1097,7 @@ test('requester can be updated with new name and is dirty tracked with _oldState
         store.push('person', {id: PD.idTwo});
     });
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_requester(PD.idTwo);
-    });
+    ticket.change_requester(PD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
 
@@ -1276,13 +1108,9 @@ test('requester can be updated multiple times with new name and is dirty tracked
         store.push('person', {id: PD.idTwo});
     });
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_requester(PD.idTwo);
-    });
+    ticket.change_requester(PD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.change_requester(PD.id);
-    });
+    ticket.change_requester(PD.id);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
@@ -1293,9 +1121,7 @@ test('requester can be updated and saved', (assert) => {
         store.push('person', {id: PD.idTwo});
     });
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_requester(PD.idTwo);
-    });
+    ticket.change_requester(PD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     ticket.save();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -1308,9 +1134,7 @@ test('requester can be saved as undefined', (assert) => {
         store.push('person', {id: PD.idTwo});
     });
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_requester();
-    });
+    ticket.change_requester();
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
     ticket.save();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -1324,13 +1148,9 @@ test('requester can be updated and rolled back', (assert) => {
         store.push('person', {id: PD.idTwo});
     });
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_requester(PD.idTwo);
-    });
+    ticket.change_requester(PD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollback();
-    });
+    ticket.rollback();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('requester_id'), PD.id);
 });
@@ -1357,9 +1177,7 @@ test('change_assignee will append the ticket id to the new assignee assigned_tic
         ticket = store.push('ticket', {id: TD.idOne});
         assignee = store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [9]});
     });
-    run(function() {
-        ticket.change_assignee(TD.assigneeOneId);
-    });
+    ticket.change_assignee(TD.assigneeOneId);
     assert.deepEqual(assignee.get('assigned_tickets'), [9, TD.idOne]);
 });
 
@@ -1370,9 +1188,7 @@ test('change_assignee will remove the ticket id from the prev assignee assigned_
         assignee = store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [9, TD.idOne]});
         store.push('person', {id: TD.assigneeTwoId, name: TD.assigneeTwo, assigned_tickets: []});
     });
-    run(function() {
-        ticket.change_assignee(TD.assigneeTwoId);
-    });
+    ticket.change_assignee(TD.assigneeTwoId);
     assert.deepEqual(assignee.get('assigned_tickets'), [9]);
 });
 
@@ -1383,9 +1199,7 @@ test('remove_assignee will remove the ticket id from the assignee assigned_ticke
         assignee = store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: [9, TD.idOne]});
     });
     assert.deepEqual(assignee.get('assigned_tickets'), [9, TD.idOne]);
-    run(function() {
-        ticket.remove_assignee();
-    });
+    ticket.remove_assignee();
     assert.deepEqual(assignee.get('assigned_tickets'), [9]);
 });
 
@@ -1394,9 +1208,7 @@ test('remove_assignee will do nothing if the ticket has no assignee', function(a
         ticket = store.push('ticket', {id: TD.idOne});
     });
     assert.ok(!ticket.get('assignee'));
-    run(function() {
-        ticket.remove_assignee();
-    });
+    ticket.remove_assignee();
     assert.ok(!ticket.get('assignee'));
 });
 
@@ -1405,9 +1217,7 @@ test('assignee will save correctly as undefined', (assert) => {
         ticket = store.push('ticket', {id: TD.idOne, assignee_fk: undefined});
         store.push('person', {id: TD.assigneeOneId, name: TD.assigneeOne, assigned_tickets: []});
     });
-    run(function() {
-        ticket.saveRelated();
-    });
+    ticket.saveRelated();
     let assignee = ticket.get('assignee');
     assert.equal(ticket.get('assignee_fk'), undefined);
 });
@@ -1420,9 +1230,7 @@ test('ticket is dirty or related is dirty when existing assignee is altered', (a
     });
     assert.equal(ticket.get('assignee.id'), TD.assigneeOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_assignee(TD.assigneeTwoId);
-    });
+    ticket.change_assignee(TD.assigneeTwoId);
     assert.equal(ticket.get('assignee.id'), TD.assigneeTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
@@ -1434,9 +1242,7 @@ test('ticket is dirty or related is dirty when existing assignee is altered (sta
     });
     assert.equal(ticket.get('assignee'), undefined);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_assignee(TD.assigneeTwoId);
-    });
+    ticket.change_assignee(TD.assigneeTwoId);
     assert.equal(ticket.get('assignee.id'), TD.assigneeTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
@@ -1449,24 +1255,16 @@ test('rollback assignee will revert and reboot the dirty assignee to clean', (as
     });
     assert.equal(ticket.get('assignee.id'), TD.assigneeOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_assignee(TD.assigneeTwoId);
-    });
+    ticket.change_assignee(TD.assigneeTwoId);
     assert.equal(ticket.get('assignee.id'), TD.assigneeTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('assignee.id'), TD.assigneeOneId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_assignee(TD.assigneeTwoId);
-    });
+    ticket.change_assignee(TD.assigneeTwoId);
     assert.equal(ticket.get('assignee.id'), TD.assigneeTwoId);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.saveRelated();
-    });
+    ticket.saveRelated();
     assert.equal(ticket.get('assignee.id'), TD.assigneeTwoId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -1488,9 +1286,7 @@ test('change_location will append the ticket id to the new location tickets arra
         location = store.push('location', {id: LD.idOne});
         location_two = store.push('location', {id: LD.idTwo});
     });
-    run(function() {
-        ticket.change_location(LD.idTwo);
-    });
+    ticket.change_location(LD.idTwo);
     assert.deepEqual(location.get('tickets'), []);
     assert.deepEqual(location_two.get('tickets'), [TD.idOne]);
 });
@@ -1502,9 +1298,7 @@ test('change_location will remove the ticket id from the prev location tickets a
         location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [9, TD.idOne]});
         store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, tickets: []});
     });
-    run(function() {
-        ticket.change_location(LD.idTwo);
-    });
+    ticket.change_location(LD.idTwo);
     assert.deepEqual(location.get('tickets'), [9]);
 });
 
@@ -1515,9 +1309,7 @@ test('remove_location will remove the ticket id from the location tickets array'
         location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [9, TD.idOne]});
     });
     assert.deepEqual(location.get('tickets'), [9, TD.idOne]);
-    run(function() {
-        ticket.remove_location();
-    });
+    ticket.remove_location();
     assert.deepEqual(location.get('tickets'), [9]);
 });
 
@@ -1526,9 +1318,7 @@ test('remove_location will do nothing if the ticket has no location', function(a
         ticket = store.push('ticket', {id: TD.idOne});
     });
     assert.ok(!ticket.get('location'));
-    run(function() {
-        ticket.remove_location();
-    });
+    ticket.remove_location();
     assert.ok(!ticket.get('location'));
 });
 
@@ -1537,9 +1327,7 @@ test('location will save correctly as undefined', (assert) => {
         ticket = store.push('ticket', {id: TD.idOne, location_fk: undefined});
         store.push('location', {id: LD.idOne, name: LD.storeName, tickets: []});
     });
-    run(function() {
-        ticket.saveRelated();
-    });
+    ticket.saveRelated();
     let location = ticket.get('location');
     assert.equal(ticket.get('location_fk'), undefined);
 });
@@ -1552,9 +1340,7 @@ test('ticket is dirty or related is dirty when existing location is altered', (a
     });
     assert.equal(ticket.get('location.id'), LD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_location(LD.idTwo);
-    });
+    ticket.change_location(LD.idTwo);
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
@@ -1566,9 +1352,7 @@ test('ticket is dirty or related is dirty when existing location is altered (sta
     });
     assert.equal(ticket.get('location'), undefined);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_location(LD.idTwo);
-    });
+    ticket.change_location(LD.idTwo);
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
@@ -1581,24 +1365,16 @@ test('rollback location will revert and reboot the dirty location to clean', (as
     });
     assert.equal(ticket.get('location.id'), LD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_location(LD.idTwo);
-    });
+    ticket.change_location(LD.idTwo);
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('location.id'), LD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.change_location(LD.idTwo);
-    });
+    ticket.change_location(LD.idTwo);
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.saveRelated();
-    });
+    ticket.saveRelated();
     assert.equal(ticket.get('location.id'), LD.idTwo);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -1644,14 +1420,10 @@ test('add_attachment will add the attachment id to the tickets fks array', funct
         attachment = store.push('attachment', {id: 8});
     });
     assert.equal(ticket.get('attachments').get('length'), 0);
-    run(function() {
-        ticket.add_attachment(8);
-    });
+    ticket.add_attachment(8);
     assert.deepEqual(ticket.get('ticket_attachments_fks'), [8]);
     assert.equal(ticket.get('attachments').get('length'), 1);
-    run(function() {
-        ticket.add_attachment(8);
-    });
+    ticket.add_attachment(8);
     assert.deepEqual(ticket.get('ticket_attachments_fks'), [8]);
     assert.equal(ticket.get('attachments').get('length'), 1);
 });
@@ -1664,14 +1436,10 @@ test('remove_attachment will remove ticket_fk from the attachment', function(ass
     });
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.deepEqual(ticket.get('ticket_attachments_fks'), [8]);
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.deepEqual(ticket.get('ticket_attachments_fks'), []);
     assert.equal(ticket.get('attachments').get('length'), 0);
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.deepEqual(ticket.get('ticket_attachments_fks'), []);
     assert.equal(ticket.get('attachments').get('length'), 0);
 });
@@ -1683,17 +1451,11 @@ test('add and remove attachment work as expected', function(assert) {
         attachment = store.push('attachment', {id: 8});
     });
     assert.equal(ticket.get('attachments').get('length'), 0);
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 0);
-    run(function() {
-        ticket.add_attachment(8);
-    });
+    ticket.add_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 1);
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 0);
 });
 
@@ -1705,24 +1467,16 @@ test('ticket is dirty or related is dirty when attachment is added or removed (s
     });
     assert.equal(ticket.get('attachments').get('length'), 0);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 0);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_attachment(8);
-    });
+    ticket.add_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 0);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_attachment(8);
-    });
+    ticket.add_attachment(8);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
 
@@ -1734,19 +1488,13 @@ test('ticket is dirty or related is dirty when attachment is added or removed (s
     });
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 0);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 0);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.add_attachment(8);
-    });
+    ticket.add_attachment(8);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
 });
 
@@ -1758,44 +1506,28 @@ test('rollback attachments will revert and reboot the dirty attachments to clean
     });
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 0);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_attachment(9);
-    });
+    ticket.add_attachment(9);
     assert.equal(ticket.get('attachments').get('length'), 2);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.rollbackRelated();
-    });
+    ticket.rollbackRelated();
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_attachment(9);
-    });
+    ticket.add_attachment(9);
     assert.equal(ticket.get('attachments').get('length'), 2);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.saveRelated();
-    });
+    ticket.saveRelated();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('attachments').get('length'), 2);
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.saveRelated();
-    });
+    ticket.saveRelated();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('attachments').get('length'), 1);
 });
@@ -1808,14 +1540,10 @@ test('attachments should be dirty even when the number of previous matches curre
     });
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.remove_attachment(8);
-    });
+    ticket.remove_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 0);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.add_attachment(9);
-    });
+    ticket.add_attachment(9);
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
 });
@@ -1828,15 +1556,11 @@ test('ticket is not dirty after save and save related (starting with none)', (as
     });
     assert.equal(ticket.get('attachments').get('length'), 0);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        ticket.add_attachment(8);
-    });
+    ticket.add_attachment(8);
     assert.equal(ticket.get('attachments').get('length'), 1);
     assert.ok(ticket.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        ticket.save();
-        ticket.saveRelated();
-    });
+    ticket.save();
+    ticket.saveRelated();
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('attachments').get('length'), 1);
 });

@@ -71,9 +71,7 @@ test('change_status will update the persons status and dirty the model', (assert
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('status_fk'), SD.activeId); 
     assert.equal(person.get('status.id'), SD.activeId); 
-    run(function() {
-        person.change_status(inactive_status.get('id'));
-    });
+    person.change_status(inactive_status.get('id'));
     assert.equal(person.get('status_fk'), SD.activeId); 
     assert.equal(person.get('status.id'), SD.inactiveId); 
     assert.ok(person.get('isDirtyOrRelatedDirty')); 
@@ -89,16 +87,12 @@ test('save person will set status_fk to current status id', (assert) => {
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('status_fk'), SD.activeId); 
     assert.equal(person.get('status.id'), SD.activeId); 
-    run(function() {
-        person.change_status(inactive_status.get('id'));
-    });
+    person.change_status(inactive_status.get('id'));
     assert.equal(person.get('status_fk'), SD.activeId); 
     assert.equal(person.get('status.id'), SD.inactiveId); 
     assert.ok(person.get('isDirtyOrRelatedDirty')); 
     assert.ok(person.get('statusIsDirty')); 
-    run(function() {
-        person.saveRelated();
-    });
+    person.saveRelated();
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
     assert.ok(!person.get('statusIsDirty')); 
     assert.equal(person.get('status_fk'), SD.inactiveId); 
@@ -114,16 +108,12 @@ test('rollback person will set status to current status_fk', (assert) => {
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('status_fk'), SD.activeId); 
     assert.equal(person.get('status.id'), SD.activeId); 
-    run(function() {
-        person.change_status(inactive_status.get('id'));
-    });
+    person.change_status(inactive_status.get('id'));
     assert.equal(person.get('status_fk'), SD.activeId); 
     assert.equal(person.get('status.id'), SD.inactiveId); 
     assert.ok(person.get('isDirtyOrRelatedDirty')); 
     assert.ok(person.get('statusIsDirty')); 
-    run(function() {
-        person.rollbackRelated();
-    });
+    person.rollbackRelated();
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty')); 
     assert.ok(!person.get('statusIsDirty')); 
     assert.equal(person.get('status.id'), SD.activeId); 
@@ -150,9 +140,7 @@ test('related role will update when the roles people array suddenly has the pers
         role = store.push('role', {id: RD.idOne, people: [PD.unusedId]});
     });
     assert.equal(person.get('role'), undefined);
-    run(function() {
-        person.change_role(role);
-    });
+    person.change_role(role);
     assert.ok(person.get('role'));
     assert.equal(person.get('role.id'), RD.idOne);
 });
@@ -164,9 +152,7 @@ test('related role will update when the roles people array changes and is dirty'
         role = store.push('role', {id: RD.idOne, people: [PD.unusedId]});
     });
     assert.equal(person.get('role'), undefined);
-    run(function() {
-        person.change_role(role);
-    });
+    person.change_role(role);
     assert.ok(person.get('role'));
     assert.equal(person.get('role.id'), RD.idOne);
     assert.ok(person.get('roleIsDirty'));
@@ -185,17 +171,13 @@ test('related role is not dirty if changed back to original role', (assert) => {
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('roleIsNotDirty'));
     assert.ok(person.get('locationsIsNotDirty'));
-    run(function() {
-        person.change_role(role_change);
-    });
+    person.change_role(role_change);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.ok(person.get('roleIsDirty'));
     assert.ok(person.get('locationsIsNotDirty'));
     assert.equal(person.get('role').get('id'), RD.idTwo);
     assert.equal(person.get('role_fk'), RD.idOne);
-    run(function() {
-        person.change_role(role);
-    });
+    person.change_role(role);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('roleIsNotDirty'));
     assert.ok(person.get('locationsIsNotDirty'));
@@ -215,32 +197,24 @@ test('related role is not dirty if after rollback and save', (assert) => {
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('roleIsNotDirty'));
     assert.ok(person.get('locationsIsNotDirty'));
-    run(function() {
-        person.change_role(role_change);
-    });
+    person.change_role(role_change);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.ok(person.get('roleIsDirty'));
     assert.ok(person.get('locationsIsNotDirty'));
     assert.equal(person.get('role').get('id'), RD.idTwo);
     assert.equal(person.get('role_fk'), RD.idOne);
-    run(function() {
-        person.rollbackRole();
-    });
+    person.rollbackRole();
     assert.equal(person.get('role').get('id'), RD.idOne);
     assert.equal(person.get('role_fk'), RD.idOne);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.ok(person.get('roleIsNotDirty'));
-    run(function() {
-        person.change_role(role_change);
-    });
+    person.change_role(role_change);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.ok(person.get('roleIsDirty'));
     assert.ok(person.get('locationsIsNotDirty'));
     assert.equal(person.get('role').get('id'), RD.idTwo);
     assert.equal(person.get('role_fk'), RD.idOne);
-    run(function() {
-        person.saveRole();
-    });
+    person.saveRole();
     assert.equal(person.get('role').get('id'), RD.idTwo);
     assert.equal(person.get('role_fk'), RD.idTwo);
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -352,15 +326,11 @@ test('save related will iterate over each phone number and save that model', (as
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     assert.ok(person.get('phoneNumbersIsDirty'));
-    run(function() {
-        person.savePhoneNumbers();
-    });
+    person.savePhoneNumbers();
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
     assert.ok(person.get('phoneNumbersIsDirty'));
-    run(function() {
-        person.savePhoneNumbers();
-    });
+    person.savePhoneNumbers();
     assert.ok(person.get('phoneNumbersIsNotDirty'));
 });
 
@@ -374,15 +344,11 @@ test('save related will iterate over each address and save that model', (assert)
     assert.ok(person.get('addressesIsNotDirty'));
     first_address.set('type', ADDRESS_TYPES_DEFAULTS.shippingId);
     assert.ok(person.get('addressesIsDirty'));
-    run(function() {
-        person.saveAddresses();
-    });
+    person.saveAddresses();
     assert.ok(person.get('addressesIsNotDirty'));
     second_address.set('type', ADDRESS_TYPES_DEFAULTS.officeId);
     assert.ok(person.get('addressesIsDirty'));
-    run(function() {
-        person.saveAddresses();
-    });
+    person.saveAddresses();
     assert.ok(person.get('addressesIsNotDirty'));
 });
 
@@ -400,22 +366,16 @@ test('savePhoneNumbers will remove any phone number model with no (valid) value'
     first_phone_number.set('number', PND.numberOne);
     second_phone_number.set('number', PND.numberTwo);
     assert.equal(store.find('phonenumber').get('length'), 3);
-    run(function() {
-        person.savePhoneNumbers();
-    });
+    person.savePhoneNumbers();
     assert.equal(store.find('phonenumber').get('length'), 2);
     assert.equal(store.find('phonenumber').objectAt(0).get('id'), PND.idOne);
     assert.equal(store.find('phonenumber').objectAt(1).get('id'), PND.idTwo);
     first_phone_number.set('number', '');
-    run(function() {
-        person.savePhoneNumbers();
-    });
+    person.savePhoneNumbers();
     assert.equal(store.find('phonenumber').get('length'), 1);
     assert.equal(store.find('phonenumber').objectAt(0).get('id'), PND.idTwo);
     second_phone_number.set('number', ' ');
-    run(function() {
-        person.savePhoneNumbers();
-    });
+    person.savePhoneNumbers();
     assert.equal(store.find('phonenumber').get('length'), 0);
 });
 
@@ -433,22 +393,16 @@ test('saveAddresses will remove any address model with no (valid) value', (asser
     first_phone_number.set('number', PND.numberOne);
     second_phone_number.set('number', PND.numberTwo);
     assert.equal(store.find('phonenumber').get('length'), 3);
-    run(function() {
-        person.savePhoneNumbers();
-    });
+    person.savePhoneNumbers();
     assert.equal(store.find('phonenumber').get('length'), 2);
     assert.equal(store.find('phonenumber').objectAt(0).get('id'), PND.idOne);
     assert.equal(store.find('phonenumber').objectAt(1).get('id'), PND.idTwo);
     first_phone_number.set('number', '');
-    run(function() {
-        person.savePhoneNumbers();
-    });
+    person.savePhoneNumbers();
     assert.equal(store.find('phonenumber').get('length'), 1);
     assert.equal(store.find('phonenumber').objectAt(0).get('id'), PND.idTwo);
     second_phone_number.set('number', ' ');
-    run(function() {
-        person.savePhoneNumbers();
-    });
+    person.savePhoneNumbers();
     assert.equal(store.find('phonenumber').get('length'), 0);
 });
 
@@ -574,15 +528,11 @@ test('rollback related will iterate over each phone number and rollback that mod
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     first_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.mobileId);
     assert.ok(person.get('phoneNumbersIsDirty'));
-    run(function() {
-        person.rollbackRelated();
-    });
+    person.rollbackRelated();
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     second_phone_number.set('type', PHONE_NUMBER_TYPES_DEFAULTS.officeId);
     assert.ok(person.get('phoneNumbersIsDirty'));
-    run(function() {
-        person.rollbackRelated();
-    });
+    person.rollbackRelated();
     assert.ok(person.get('phoneNumbersIsNotDirty'));
 });
 
@@ -597,15 +547,11 @@ test('rollback related will iterate over each address and rollback that model', 
     first_address.set('type', ADDRESS_TYPES_DEFAULTS.shippingId);
     assert.ok(person.get('addressesIsDirty'));
     assert.ok(first_address.get('isDirty'));
-    run(function() {
-        person.rollbackRelated();
-    });
+    person.rollbackRelated();
     assert.ok(person.get('addressesIsNotDirty'));
     second_address.set('type', ADDRESS_TYPES_DEFAULTS.officeId);
     assert.ok(second_address.get('isDirty'));
-    run(function() {
-        person.rollbackRelated();
-    });
+    person.rollbackRelated();
     assert.ok(person.get('addressesIsNotDirty'));
 });
 
@@ -795,9 +741,7 @@ test('when no address and new address is added and updated, expect related isDir
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     address.set('type', ADDRESS_TYPES_DEFAULTS.shippingId);
     assert.ok(person.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        address.rollback();
-    });
+    address.rollback();
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     address.set('address', '123 Baja');
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -850,24 +794,18 @@ test('rollback role will reset the previously used role when switching from one 
     assert.ok(person.get('phoneNumbersIsNotDirty'));
     assert.ok(person.get('addressesIsNotDirty'));
     assert.equal(person.get('role.name'), RD.nameTwo);
-    run(function() {
-        person.change_role(admin_role);
-    });
+    person.change_role(admin_role);
     assert.equal(person.get('role.name'), RD.nameOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        person.save();
-        person.saveRelated();
-        person.change_role(another_role);
-    });
+    person.save();
+    person.saveRelated();
+    person.change_role(another_role);
     assert.equal(person.get('role.name'), 'another');
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        person.rollback();
-        person.rollbackRelated();
-    });
+    person.rollback();
+    person.rollbackRelated();
     assert.equal(person.get('role.name'), RD.nameOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -876,16 +814,12 @@ test('rollback role will reset the previously used role when switching from one 
     assert.deepEqual(admin_role.get('people'), [PD.unusedId, PD.idOne]);
     assert.ok(another_role.get('isNotDirty'));
     assert.ok(admin_role.get('isNotDirty'));
-    run(function() {
-        person.change_role(another_role);
-    });
+    person.change_role(another_role);
     assert.equal(person.get('role.name'), 'another');
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        person.rollback();
-        person.rollbackRelated();
-    });
+    person.rollback();
+    person.rollbackRelated();
     assert.equal(person.get('role.name'), RD.nameOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -983,9 +917,7 @@ test('locations property will update when the m2m array suddenly has the person 
         store.push('location', {id: LD.idTwo, person_location_fks: []});
     });
     assert.equal(person.get('locations').get('length'), 0);
-    run(function() {
-        person.add_locations(LD.idOne);
-    });
+    person.add_locations(LD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
     assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
 });
@@ -999,9 +931,7 @@ test('locations property will update when the m2m array suddenly has the person 
         location_two = store.push('location', {id: LD.idTwo, person_location_fks: []});
     });
     assert.equal(person.get('locations').get('length'), 1);
-    run(function() {
-        person.add_locations(LD.idTwo);
-    });
+    person.add_locations(LD.idTwo);
     assert.equal(person.get('locations').get('length'), 2);
     assert.equal(person.get('locations').objectAt(0).get('id'), LD.idOne);
     assert.equal(person.get('locations').objectAt(1).get('id'), LD.idTwo);
@@ -1015,9 +945,7 @@ test('locations property will update when the m2m array suddenly removes the per
         location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
     });
     assert.equal(person.get('locations').get('length'), 1);
-    run(function() {
-        person.remove_locations(LD.idOne);
-    });
+    person.remove_locations(LD.idOne);
     assert.equal(person.get('locations').get('length'), 0);
 });
 
@@ -1036,17 +964,13 @@ test('when location is changed dirty tracking works as expected', (assert) => {
     assert.ok(location.get('isDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        location.rollback();
-    });
+    location.rollback();
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     location.set('name', LD.storeNameTwo);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        location.rollback();
-    });
+    location.rollback();
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
 });
@@ -1061,9 +985,7 @@ test('when location is suddently assigned it shows as a dirty relationship (star
     assert.ok(person.get('locationsIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        person.add_locations(LD.idOne);
-    });
+    person.add_locations(LD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1079,9 +1001,7 @@ test('when location is suddently assigned it shows as a dirty relationship (star
     assert.ok(person.get('locationsIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        person.add_locations(LD.idOne);
-    });
+    person.add_locations(LD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1099,9 +1019,7 @@ test('when location is suddently assigned it shows as a dirty relationship (star
     assert.ok(person.get('locationsIsNotDirty'));
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        person.add_locations(LD.idTwo);
-    });
+    person.add_locations(LD.idTwo);
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1117,9 +1035,7 @@ test('when location is suddently removed it shows as a dirty relationship', (ass
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        person.remove_locations(LD.idOne);
-    });
+    person.remove_locations(LD.idOne);
     assert.equal(person.get('locations').get('length'), 0);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
@@ -1137,57 +1053,44 @@ test('when location is suddently removed it shows as a dirty relationship (when 
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        person.remove_locations(LD.idOne);
-    });
+    person.remove_locations(LD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
 });
 
-// legit regression worth looking at
-// test('rollback location will reset the previously used locations when switching from valid locations to nothing', (assert) => {
-//     let m2m, m2m_two, location, location_two;
-//     run(function() {
-//         m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-//         m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
-//         person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
-//         location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
-//         location_two = store.push('location', {id: LD.idTwo, person_location_fks: [PERSON_LD.idTwo]});
-//     });
-//     assert.equal(person.get('locations').get('length'), 2);
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//     run(function() {
-//         person.remove_locations(LD.idOne);
-//     });
-//     assert.equal(person.get('locations').get('length'), 1);
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isDirtyOrRelatedDirty'));
-//     run(function() {
-//         person.rollback();
-//         person.rollbackLocations();
-//     });
-//     assert.equal(person.get('locations').get('length'), 2);
-//     assert.ok(person.get('isNotDirty'));
-//     // assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//     run(function() {
-//         person.remove_locations(LD.idOne);
-//         person.remove_locations(LD.idTwo);
-//     });
-//     assert.equal(person.get('locations').get('length'), 0);
-//     assert.ok(person.get('isNotDirty'));
-//     assert.ok(person.get('isDirtyOrRelatedDirty'));
-//     run(function() {
-//         person.rollback();
-//         person.rollbackLocations();
-//     });
-//     run(function() {
-//         assert.equal(person.get('locations').get('length'), 2);
-//         assert.ok(person.get('isNotDirty'));
-//         // assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-//     });
-// });
+test('rollback location will reset the previously used locations when switching from valid locations to nothing', (assert) => {
+    let m2m, m2m_two, location, location_two;
+    run(function() {
+        m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+        m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
+        person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne, PERSON_LD.idTwo]});
+        location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
+        location_two = store.push('location', {id: LD.idTwo, person_location_fks: [PERSON_LD.idTwo]});
+    });
+    assert.equal(person.get('locations').get('length'), 2);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    person.remove_locations(LD.idOne);
+    assert.equal(person.get('locations').get('length'), 1);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.rollback();
+    person.rollbackLocations();
+    assert.equal(person.get('locations').get('length'), 2);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+    person.remove_locations(LD.idOne);
+    person.remove_locations(LD.idTwo);
+    assert.equal(person.get('locations').get('length'), 0);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isDirtyOrRelatedDirty'));
+    person.rollback();
+    person.rollbackLocations();
+    assert.equal(person.get('locations').get('length'), 2);
+    assert.ok(person.get('isNotDirty'));
+    assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
+});
 
 test('rollback location will reset the previous locations when switching from one location to another and saving in between each step', (assert) => {
     let m2m, m2m_two, location, location_two, location_three, location_four;
@@ -1204,61 +1107,43 @@ test('rollback location will reset the previous locations when switching from on
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     location.set('name', 'watwat');
-    run(function() {
-        person.save();
-        person.saveRelated();
-    });
+    person.save();
+    person.saveRelated();
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        person.remove_locations(LD.idOne);
-    });
+    person.remove_locations(LD.idOne);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.equal(person.get('locations').get('length'), 1);
-    run(function() {
-        person.save();
-        person.saveRelated();
-    });
+    person.save();
+    person.saveRelated();
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        person.add_locations(LD.unusedId);
-    });
+    person.add_locations(LD.unusedId);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        person.save();
-        person.saveRelated();
-    });
+    person.save();
+    person.saveRelated();
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
-    run(function() {
-        person.remove_locations(LD.idTwo);
-    });
+    person.remove_locations(LD.idTwo);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
     assert.equal(person.get('locations').get('length'), 1);
-    run(function() {
-        person.save();
-        person.saveRelated();
-    });
+    person.save();
+    person.saveRelated();
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(person.get('locations').get('length'), 1);
-    run(function() {
-        person.add_locations(LD.anotherId);
-    });
+    person.add_locations(LD.anotherId);
     assert.equal(person.get('locations').get('length'), 2);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isDirtyOrRelatedDirty'));
-    run(function() {
-        person.rollback();
-        person.rollbackRelated();
-    });
+    person.rollback();
+    person.rollbackRelated();
     assert.equal(person.get('locations').get('length'), 1);
     assert.ok(person.get('isNotDirty'));
     assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
@@ -1277,9 +1162,7 @@ test('location_ids computed returns a flat list of ids for each location', (asse
     });
     assert.equal(person.get('locations').get('length'), 2);
     assert.deepEqual(person.get('location_ids'), [LD.idOne, LD.idTwo]);
-    run(function() {
-        person.remove_locations(LD.idOne);
-    });
+    person.remove_locations(LD.idOne);
     assert.equal(person.get('locations').get('length'), 1);
     assert.deepEqual(person.get('location_ids'), [LD.idTwo]);
 });
@@ -1338,9 +1221,7 @@ test('cleanup phone numbers works as expected on removal and rollback', (assert)
         store.push('phonenumber', {id: second_phone_number.get('id'), removed: true});
     });
     assert.ok(person.get('phoneNumbersIsDirty'));
-    run(function() {
-        person.rollbackPhoneNumbers();
-    });
+    person.rollbackPhoneNumbers();
     assert.deepEqual(person.get('removed'), undefined);
 });
 
@@ -1359,9 +1240,7 @@ test('cleanup phone numbers works as expected on add and rollback', (assert) => 
     assert.ok(second_phone_number.get('invalid_number'));
     assert.equal(person.get('phone_numbers').get('length'), 2);
     assert.equal(person.get('phone_numbers_all').get('length'), 2);
-    run(function() {
-        person.rollbackPhoneNumbers();
-    });
+    person.rollbackPhoneNumbers();
     assert.equal(person.get('phone_numbers').get('length'), 1);
     assert.equal(person.get('phone_numbers_all').get('length'), 1);
 });
@@ -1418,9 +1297,7 @@ test('cleanup addresses works as expected on removal and rollback', (assert) => 
         store.push('address', {id: second_address.get('id'), removed: true});
     });
     assert.ok(person.get('addressesIsDirty'));
-    run(function() {
-        person.rollbackAddresses();
-    });
+    person.rollbackAddresses();
     assert.deepEqual(person.get('removed'), undefined);
 });
 
@@ -1439,9 +1316,7 @@ test('cleanup addresses works as expected on add and rollback', (assert) => {
     assert.ok(second_address.get('invalid_address'));
     assert.equal(person.get('addresses').get('length'), 2);
     assert.equal(person.get('addresses_all').get('length'), 2);
-    run(function() {
-        person.rollbackAddresses();
-    });
+    person.rollbackAddresses();
     assert.equal(person.get('addresses').get('length'), 1);
     assert.equal(person.get('addresses_all').get('length'), 1);
 });

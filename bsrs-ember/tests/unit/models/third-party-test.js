@@ -31,9 +31,7 @@ test('change_status will update the third_partys status and dirty the model', (a
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(third_party.get('status_fk'), SD.activeId); 
     assert.equal(third_party.get('status.id'), SD.activeId); 
-    run(function() {
-        third_party.change_status(inactive_status.get('id'));
-    });
+    third_party.change_status(inactive_status.get('id'));
     assert.equal(third_party.get('status_fk'), SD.activeId); 
     assert.equal(third_party.get('status.id'), SD.inactiveId); 
     assert.ok(third_party.get('isDirtyOrRelatedDirty')); 
@@ -50,16 +48,12 @@ test('save third_party will set status_fk to current status id', (assert) => {
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(third_party.get('status_fk'), SD.activeId); 
     assert.equal(third_party.get('status.id'), SD.activeId); 
-    run(function() {
-        third_party.change_status(inactive_status.get('id'));
-    });
+    third_party.change_status(inactive_status.get('id'));
     assert.equal(third_party.get('status_fk'), SD.activeId); 
     assert.equal(third_party.get('status.id'), SD.inactiveId); 
     assert.ok(third_party.get('isDirtyOrRelatedDirty')); 
     assert.ok(third_party.get('statusIsDirty')); 
-    run(function() {
-        third_party.saveRelated();
-    });
+    third_party.saveRelated();
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty')); 
     assert.ok(!third_party.get('statusIsDirty')); 
     assert.equal(third_party.get('status_fk'), SD.inactiveId); 
@@ -76,16 +70,12 @@ test('rollback third_party will set status to current status_fk', (assert) => {
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(third_party.get('status_fk'), SD.activeId); 
     assert.equal(third_party.get('status.id'), SD.activeId); 
-    run(function() {
-        third_party.change_status(inactive_status.get('id'));
-    });
+    third_party.change_status(inactive_status.get('id'));
     assert.equal(third_party.get('status_fk'), SD.activeId); 
     assert.equal(third_party.get('status.id'), SD.inactiveId); 
     assert.ok(third_party.get('isDirtyOrRelatedDirty')); 
     assert.ok(third_party.get('statusIsDirty')); 
-    run(function() {
-        third_party.rollbackRelated();
-    });
+    third_party.rollbackRelated();
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty')); 
     assert.ok(!third_party.get('statusIsDirty')); 
     assert.equal(third_party.get('status.id'), SD.activeId); 
