@@ -3,11 +3,16 @@ import inject from 'bsrs-ember/utilities/store';
 
 var TabModel = Ember.Object.extend({
     init() {
-        var dynamicField = this.get('templateModelField');
+        const dynamicField = this.get('templateModelField');
         Ember.defineProperty(this, 'modelBindingToTemplate', Ember.computed(function() {
-            var model = this.get('model');
+            const model = this.get('model');
             if (model.get('content')) {
-                return model.get('new') ? `New ${dynamicField}` : model.get(dynamicField);
+                switch(dynamicField) {
+                    case 'ticket':
+                        return `${model.get('number')} ${model.get('leaf_category.name')}`;
+                    default:
+                        return model.get('new') ? `New ${dynamicField}` : model.get(dynamicField);
+                }
             }
         }).property('model.' + dynamicField));
     },

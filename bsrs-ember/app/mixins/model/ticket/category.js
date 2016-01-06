@@ -24,6 +24,10 @@ var CategoriesMixin = Ember.Mixin.create({
             return category.get('parent_id') === undefined || category.get('parent_id') === null;
         }).objectAt(0);
     }),
+    leaf_category: Ember.computed('categories.[]', function() {
+        const sorted_categories = this.get('sorted_categories') || [];
+        return sorted_categories[sorted_categories.length-1];
+    }),
     categories_ids: Ember.computed('categories.[]', function() {
         return this.get('categories').mapBy('id');
     }),

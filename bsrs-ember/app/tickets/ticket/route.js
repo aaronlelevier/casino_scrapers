@@ -13,7 +13,7 @@ var TicketSingleRoute = TabRoute.extend({
     transitionCallback() { this.get('attachmentRepository').removeAllUnrelated(); },
     redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
     modelName: Ember.computed(function() { return 'ticket'; }),
-    templateModelField: Ember.computed(function() { return 'subject'; }),
+    templateModelField: Ember.computed(function() { return 'ticket'; }),
     top_level_category_options: Ember.computed(function() {
         const categoryRepo = this.get('categoryRepository');
         return categoryRepo.findTopLevelCategories();
