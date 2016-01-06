@@ -1,19 +1,23 @@
 import Ember from 'ember';
 
+var run = Ember.run;
+
 var PhoneNumberMixin = Ember.Mixin.create({
     phone_numbers_all: Ember.computed(function() {
+        let pk = this.get('id');
         let store = this.get('store');
         let filter = function(phone_number) {
-            return this.get('id') === phone_number.get('model_fk');
+            return pk === phone_number.get('model_fk');
         };
-        return store.find('phonenumber', filter.bind(this), ['removed']);
+        return store.find('phonenumber', filter);
     }),
     phone_numbers: Ember.computed(function() {
+        let pk = this.get('id');
         let store = this.get('store');
         let filter = function(phone_number) {
-            return this.get('id') === phone_number.get('model_fk') && !phone_number.get('removed');
+            return pk === phone_number.get('model_fk') && !phone_number.get('removed');
         };
-        return store.find('phonenumber', filter.bind(this), ['removed']);
+        return store.find('phonenumber', filter);
     }),
     phone_number_ids: Ember.computed('phone_numbers.[]', function() {
         return this.get('phone_numbers').mapBy('id');
@@ -35,7 +39,6 @@ var PhoneNumberMixin = Ember.Mixin.create({
             });
         }
         phone_numbers.forEach((num) => {
-            //if dirty
             if (num.get('isDirty')) {
                 phone_number_dirty = true;
             }
@@ -70,7 +73,9 @@ var PhoneNumberMixin = Ember.Mixin.create({
         phone_numbers.forEach((num) => {
             //remove
             if (num.get('removed')) {
-                num.set('removed', undefined);
+                run(function() {
+                    store.push('phonenumber', {id: num.get('id'), removed: undefined});
+                });
             }
             //add
             if(num.get('invalid_number') && num.get('isNotDirty')) {
@@ -78,8 +83,10 @@ var PhoneNumberMixin = Ember.Mixin.create({
             }
             num.rollback();
         });
-        phone_numbers_to_remove.forEach((id) => {
-            store.remove('phonenumber', id);
+        run(function() {
+            phone_numbers_to_remove.forEach((id) => {
+                store.remove('phonenumber', id);
+            });
         });
     },
     cleanupPhoneNumbers() {
@@ -89,13 +96,15 @@ var PhoneNumberMixin = Ember.Mixin.create({
         let phone_numbers_all = this.get('phone_numbers_all');
         let phone_fks = this.get('phone_number_fks');
         let phone_number_ids = this.get('phone_number_ids');
-        phone_numbers_all.forEach((num) => {//TODO: write test for this
+        phone_numbers_all.forEach((num) => {
             if(num.get('invalid_number') || num.get('removed')) {
                 phone_numbers_to_remove.push(num.get('id'));
             }
         });
-        phone_numbers_to_remove.forEach((id) => {
-            store.remove('phonenumber', id);
+        run(function() {
+            phone_numbers_to_remove.forEach((id) => {
+                store.remove('phonenumber', id);
+            });
         });
         this.cleanupPhoneNumberFKs();
     },

@@ -12,6 +12,7 @@ from rest_framework.routers import Route, SimpleRouter
 
 from accounting import views as accounting_views
 from bigsky import views as bigsky_views
+from bigsky.forms import BsAuthenticationForm
 from category import views as category_views
 from contact import views as contact_views
 from generic import views as generic_views
@@ -94,7 +95,7 @@ urlpatterns += required(
     patterns('',
         url(r'^login/', auth_views.login,
             {'template_name': 'form.html',
-            'authentication_form': forms.AuthenticationForm,
+            'authentication_form': BsAuthenticationForm,
             'extra_context': {
                 'submit_button': 'Login'
                 }
@@ -123,7 +124,7 @@ urlpatterns += required(
         url(r'^logout/$', bigsky_views.logout, name='logout'),
         url(r'^django-admin/', include(admin.site.urls)),
         url(r'', include('generic.urls')),
-        # This URL must be the last Django URL defined, or else the URLs defined 
+        # This URL must be the last Django URL defined, or else the URLs defined
         # below it won't resolve, and this URL will catch the URL request.
         url(r'^.*$', bigsky_views.IndexView.as_view(), name='index'),
     )

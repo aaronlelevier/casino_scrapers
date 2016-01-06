@@ -1,10 +1,16 @@
 import Ember from 'ember';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
+var run = Ember.run;
+
 var GridRepositoryMixin = Ember.Mixin.create({
     create(new_pk) {
-        let pk = this.get('uuid').v4();
-        return this.store.push(this.get('type'), {id: pk, new: true, new_pk: new_pk});
+        let created;
+        const pk = this.get('uuid').v4();
+        run(() => {
+            created = this.get('store').push(this.get('type'), {id: pk, new: true, new_pk: new_pk});
+        });
+        return created;
     },
     insert(model) {
         return PromiseMixin.xhr(this.get('url'), 'POST', {data: JSON.stringify(model.serialize())}).then(() => {
@@ -13,7 +19,10 @@ var GridRepositoryMixin = Ember.Mixin.create({
         });
     },
     findCount() {
-        var count = this.get('store').find(this.get('type'), {new: true}).get('length');
+        var count_array = this.get('store').find(this.get('type')).toArray();
+        var count = count_array.filter(function(m) {
+            return m.get('new') === true;
+        }).get('length');
         return count+1;
     },
     findWithQuery(page, sort, search, find, page_size) {

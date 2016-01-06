@@ -29,7 +29,7 @@ const CATEGORY = '.t-role-category-select > .ember-basic-dropdown-trigger';
 const CATEGORY_DROPDOWN = '.t-role-category-select-dropdown > .ember-power-select-options';
 const CATEGORY_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-let application, store, list_xhr, endpoint, detail_data, url;
+let application, store, list_xhr, endpoint, detail_data, url, run = Ember.run;
 
 module('Acceptance | role-detail', {
     beforeEach() {
@@ -40,7 +40,9 @@ module('Acceptance | role-detail', {
         list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, RF.list());
         xhr(endpoint + RD.idOne + '/', 'GET', null, {}, 200, detail_data);
         url = `${PREFIX}${DETAIL_URL}/`;
-        store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
+        run(function() {
+            store.push('category', {id: CD.idTwo+'2z', name: CD.nameOne+'2z'});//used for category selection to prevent fillIn helper firing more than once
+        });
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -227,7 +229,9 @@ test('clicking and typing into power select for categories will fire off xhr req
     xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
     page.categoryClickDropdown();
     //test filter out new
-    store.push('category', {id: 'testingNewFilter', name: 'wataA', new: true});
+    run(function() {
+        store.push('category', {id: 'testingNewFilter', name: 'wataA', new: true});
+    });
     fillIn(CATEGORY_SEARCH, 'a');
     andThen(() => {
         assert.equal(page.categoryOptionLength(), PAGE_SIZE+3); 

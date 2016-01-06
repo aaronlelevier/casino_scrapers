@@ -37,7 +37,7 @@ class TicketListSerializer(serializers.ModelSerializer):
     @staticmethod
     def eager_load(queryset):
         return (queryset.select_related('location', 'assignee', 'status',
-                                        'priority', 'requester')
+                                        'priority')
                         .prefetch_related('categories', 'categories__children'))
 
 
@@ -45,7 +45,6 @@ class TicketSerializer(serializers.ModelSerializer):
 
     location = LocationSerializer()
     assignee = PersonTicketSerializer(required=False)
-    requester = PersonTicketSerializer()
     categories = CategoryIDNameSerializer(many=True)
     cc = PersonTicketSerializer(many=True)
 
@@ -56,7 +55,7 @@ class TicketSerializer(serializers.ModelSerializer):
     @staticmethod
     def eager_load(queryset):
         return (queryset.select_related('location', 'assignee', 'status',
-                                        'priority', 'requester')
+                                        'priority')
                         .prefetch_related('cc', 'categories', 'attachments',
                                           'categories__children'))
 

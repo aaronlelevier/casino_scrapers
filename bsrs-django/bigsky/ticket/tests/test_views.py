@@ -61,7 +61,7 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         self.assertEqual(ticket['id'], str(self.ticket.id))
         self.assertEqual(ticket['status'], str(self.ticket.status.id))
         self.assertEqual(ticket['priority'], str(self.ticket.priority.id))
-        self.assertEqual(ticket['requester'], str(self.ticket.requester.id))
+        self.assertEqual(ticket['requester'], str(self.ticket.requester))
         self.assertEqual(ticket['request'], self.ticket.request)
         self.assertEqual(ticket['number'], self.ticket.number)
         self.assertEqual(
@@ -183,19 +183,6 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(assignee['last_name'], self.ticket.assignee.last_name)
         self.assertEqual(assignee['title'], self.ticket.assignee.title)
         self.assertEqual(assignee['role'], str(self.ticket.assignee.role.id))
-
-    def test_requester(self):
-        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
-
-        data = json.loads(response.content.decode('utf8'))
-        requester = data['requester']
-
-        self.assertEqual(requester['id'], str(self.ticket.requester.id))
-        self.assertEqual(requester['first_name'], self.ticket.requester.first_name)
-        self.assertEqual(requester['middle_initial'], self.ticket.requester.middle_initial)
-        self.assertEqual(requester['last_name'], self.ticket.requester.last_name)
-        self.assertEqual(requester['title'], self.ticket.requester.title)
-        self.assertEqual(requester['role'], str(self.ticket.requester.role.id))
 
     def test_data_categories(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
@@ -331,7 +318,7 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data['status'], str(ticket.status.id))
         self.assertEqual(data['priority'], str(ticket.priority.id))
         self.assertEqual(data['assignee'], str(ticket.assignee.id))
-        self.assertEqual(data['requester'], str(ticket.requester.id))
+        self.assertEqual(data['requester'], str(ticket.requester))
         self.assertIn(data['categories'][0],
             [str(id) for id in ticket.categories.values_list('id', flat=True)])
         self.assertEqual(data['attachments'],
@@ -515,7 +502,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
 
         self.dm = DistrictManager()
         self.person = self.dm.person
-        self.ticket = create_ticket(requester=self.person)
+        self.ticket = create_ticket(assignee=self.person)
 
         # Add additional 'child' Category to Ticket and Role.
         # These are needed to correct test the 'from'/'to' category change for the 'parent' key
@@ -679,7 +666,7 @@ class TicketAndTicketActivityTests(APITestCase):
 
         self.dm = DistrictManager()
         self.person = self.dm.person
-        self.ticket = create_ticket(requester=self.person)
+        self.ticket = create_ticket(assignee=self.person)
 
         create_ticket_activity_types()
         # Data
@@ -838,10 +825,13 @@ class TicketAndTicketActivityTests(APITestCase):
     def test_categories(self):
         name = 'categories'
         self.assertEqual(TicketActivity.objects.count(), 0)
-        # ticket_activity_type = create_ticket_activity_type(name=name)
         # Only one Category on the Ticket
         [self.ticket.categories.remove(c) for c in self.ticket.categories.all()[:self.ticket.categories.count()-1]]
         new_category = Category.objects.exclude(id=self.ticket.categories.first().id).first()
+        # repopulate `self.data`
+        serializer = TicketCreateSerializer(self.ticket)
+        self.data = serializer.data
+        # test setup correctly
         self.assertEqual(len(self.data['categories']), 1)
         self.assertNotEqual(self.data['categories'][0], str(new_category.id))
         # data
@@ -1006,6 +996,33 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
                 Ticket.objects.filter_on_categories_and_location(self.person).count()
             )
 
+    def test_can_view_tickets__child_location(self):
+        """
+        Make a Ticket belonging to the child_location, and make sure it's 
+        viewable by the Person.
+        """
+        create_locations()
+
+        with self.settings(TICKET_FILTERING_ON=True):
+            self.client.login(username=self.person.username, password=PASSWORD)
+            # make sure a child_location exists for one of the Person's Locations
+            location = self.person.locations.first()
+            child_location = Location.objects.exclude(id=location.id)[0]
+            location.children.add(child_location)
+            # create ticket for child_location
+            ticket = self.ticket_two
+            ticket.location = child_location
+            ticket.save()
+            self.assertIn(ticket.location.id, self.person.locations.objects_and_their_children())
+
+            response = self.client.get('/api/tickets/')
+            data = json.loads(response.content.decode('utf8'))
+
+            self.assertIn(
+                str(ticket.id),
+                [x['id'] for x in data['results']]
+            )
+
     def test_can_view_tickets__category(self):
         """
         Checks that at least one of Ticket's 'Categories' are in the 
@@ -1023,4 +1040,23 @@ class TicketQuerySetFiltersTests(TicketSetupNoLoginMixin, APITestCase):
             self.assertEqual(
                 data['count'],
                 Ticket.objects.filter_on_categories_and_location(self.person).count()
+            )
+
+    def test_can_view_tickets__child_category(self):
+        """
+        If the Person has to Parent Category, the can view their Children's 
+        Category Tickets.
+        """
+        with self.settings(TICKET_FILTERING_ON=True):
+            self.client.login(username=self.person.username, password=PASSWORD)
+            child_category = create_single_category(parent=self.person.role.categories.first())
+            [self.ticket_two.categories.remove(c) for c in self.ticket_two.categories.all()]
+            self.ticket_two.categories.add(child_category)
+
+            response = self.client.get('/api/tickets/')
+            data = json.loads(response.content.decode('utf8'))
+
+            self.assertIn(
+                str(self.ticket_two.id),
+                [x['id'] for x in data['results']]
             )

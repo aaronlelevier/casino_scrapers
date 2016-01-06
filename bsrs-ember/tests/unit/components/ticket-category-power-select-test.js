@@ -7,7 +7,7 @@ import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/category';
 import TICKET_CATEGORY_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-category';
 
-var store;
+var store, run = Ember.run;
 
 module('unit: ticket-category-select component test', {
     beforeEach() {
@@ -27,7 +27,6 @@ test('categories_selected will always return the correct category object based o
     let category_two = store.push('category', {id: CATEGORY_DEFAULTS.idTwo, name: CATEGORY_DEFAULTS.nameTwo, parent_id: CATEGORY_DEFAULTS.unusedId, children_fks: [CATEGORY_DEFAULTS.idOne]});
     //third level
     let category_one = store.push('category', {id: CATEGORY_DEFAULTS.idOne, name: CATEGORY_DEFAULTS.nameOne, parent_id: CATEGORY_DEFAULTS.idTwo, children_fks: []});
-
     let subject_one = TicketCategories.create({ticket: ticket, index: undefined});
     let subject_two = TicketCategories.create({ticket: ticket, index: 1});
     let subject_three = TicketCategories.create({ticket: ticket, index: 2});
@@ -39,9 +38,7 @@ test('categories_selected will always return the correct category object based o
     assert.equal(ticket.get('ticket_categories').get('length'), 0);
     assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 0);
 
-    Ember.run(function() {
-        ticket.change_category_tree(category_top_level.get('id'));
-    });
+    ticket.change_category_tree(category_top_level.get('id'));
 
     assert.equal(ticket.get('categories').get('length'), 1);
     assert.equal(ticket.get('sorted_categories').get('length'), 1);
@@ -52,9 +49,7 @@ test('categories_selected will always return the correct category object based o
     assert.equal(ticket.get('ticket_categories').get('length'), 1);
     assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 1);
 
-    Ember.run(function() {
-        ticket.change_category_tree(category_two.get('id'));
-    });
+    ticket.change_category_tree(category_two.get('id'));
 
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').get('length'), 2);
@@ -66,9 +61,7 @@ test('categories_selected will always return the correct category object based o
     assert.equal(ticket.get('ticket_categories').get('length'), 2);
     assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 2);
 
-    Ember.run(function() {
-        ticket.change_category_tree(category_one.get('id'));
-    });
+    ticket.change_category_tree(category_one.get('id'));
 
     assert.equal(ticket.get('categories').get('length'), 3);
     assert.equal(ticket.get('sorted_categories').get('length'), 3);
@@ -81,10 +74,8 @@ test('categories_selected will always return the correct category object based o
     assert.equal(ticket.get('ticket_categories').get('length'), 3);
     assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 3);
 
-    Ember.run(function() {
-        //select rando in place of category_two
-        ticket.change_category_tree(category_rando.get('id'));
-    });
+    //select rando in place of category_two
+    ticket.change_category_tree(category_rando.get('id'));
 
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').get('length'), 2);
@@ -96,9 +87,7 @@ test('categories_selected will always return the correct category object based o
     assert.equal(ticket.get('ticket_categories').get('length'), 2);
     assert.equal(ticket.get('ticket_categories_with_removed').get('length'), 4);
 
-    Ember.run(function() {
-        ticket.change_category_tree(category_two.get('id'));
-    });
+    ticket.change_category_tree(category_two.get('id'));
 
     assert.equal(ticket.get('categories').get('length'), 2);
     assert.equal(ticket.get('sorted_categories').get('length'), 2);

@@ -36,6 +36,6 @@ module('Acceptance | application redirect test', {
 test('403 response code will redirect to login page', (assert) => {
     visit(PEOPLE_URL);
     andThen(() => {
-        assert.equal(windowProxy.locationUrl, '/login');
+        assert.equal(windowProxy.locationUrl, '/login/');
     });
 });

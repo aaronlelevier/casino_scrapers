@@ -1,6 +1,10 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+
+import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
+import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
@@ -11,7 +15,7 @@ import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
 
-let store, m2m, m2m_two, ticket, person_one, person_two, person_three, run = Ember.run, person_repo;
+let store, m2m, m2m_two, ticket, person_one, person_two, person_three, trans, run = Ember.run, person_repo;
 const PowerSelect = '.ember-power-select-trigger';
 const DROPDOWN = '.ember-power-select-dropdown';
 const COMPONENT = '.t-ticket-cc-select';
@@ -20,13 +24,20 @@ const OPTION = 'li.ember-power-select-option';
 moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-select test', {
     integration: true,
     setup() {
+
+        trans = this.container.lookup('service:i18n');
+        loadTranslations(trans, translations.generate('en'));
+        translation.initialize(this);
+
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-person']);
-        m2m = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
-        m2m_two = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.idTwo});
-        ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_people_fks: [TICKET_PEOPLE_DEFAULTS.idOne, TICKET_PEOPLE_DEFAULTS.idTwo]});
-        person_one = store.push('person', {id: PEOPLE_DEFAULTS.id, first_name: PEOPLE_DEFAULTS.first_name, last_name: PEOPLE_DEFAULTS.last_name});
-        person_two = store.push('person', {id: PEOPLE_DEFAULTS.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
-        person_three = store.push('person', {id: PEOPLE_DEFAULTS.unusedId, first_name: 'Aaron', last_name: 'Wat'});
+        run(function() {
+            m2m = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
+            m2m_two = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.idTwo});
+            ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_people_fks: [TICKET_PEOPLE_DEFAULTS.idOne, TICKET_PEOPLE_DEFAULTS.idTwo]});
+            person_one = store.push('person', {id: PEOPLE_DEFAULTS.id, first_name: PEOPLE_DEFAULTS.first_name, last_name: PEOPLE_DEFAULTS.last_name});
+            person_two = store.push('person', {id: PEOPLE_DEFAULTS.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
+            person_three = store.push('person', {id: PEOPLE_DEFAULTS.unusedId, first_name: 'Aaron', last_name: 'Wat'});
+        });
         person_repo = repository.initialize(this.container, this.registry, 'person');
         person_repo.findTicketPeople = function() {
             return store.find('person');
@@ -35,7 +46,9 @@ moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-selec
 });
 
 test('should render a selectbox when with options selected (initial state)', function(assert) {
-    store.clear('ticket-person');
+    run(function() {
+        store.clear('ticket-person');
+    });
     let ticket_cc_options = Ember.A([]);
     this.set('ticket', ticket);
     this.render(hbs`{{ticket-cc-power-select ticket=ticket}}`);

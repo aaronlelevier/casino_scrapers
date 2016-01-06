@@ -5,7 +5,7 @@ import CF from 'bsrs-ember/vendor/category_fixtures';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import CategoryDeserializer from 'bsrs-ember/deserializers/category';
 
-var store, subject;
+var store, subject, category, category_unused;
 
 module('unit: category deserializer test', {
     beforeEach() {
@@ -15,9 +15,9 @@ module('unit: category deserializer test', {
 });
 
 test('category deserializer returns correct data with existing category (list)', (assert) => {
-    let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
                               label: CD.labelOne});
-    let category_unused = store.push('category', {id: CD.unusedId, name: CD.nameTwo, description: CD.descriptionMaintenance});
+    category_unused = store.push('category', {id: CD.unusedId, name: CD.nameTwo, description: CD.descriptionMaintenance});
     let json = [CF.generate(CD.idOne), CF.generate(CD.unusedId)];
     let response = {'count':2,'next':null,'previous':null,'results': json};
     subject.deserialize(response);
@@ -85,8 +85,8 @@ test('category deserializer returns correct data with existing category and same
 });
 
 test('category deserializer returns correct data with existing category that has no children (detail)', (assert) => {
-    let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
-                              label: CD.labelOne, has_many_children:[{id: CD.idChild, name: CD.nameThree, children: []}]});
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
+                            label: CD.labelOne, has_many_children:[{id: CD.idChild, name: CD.nameThree, children: []}]});
     let json = CF.generate(CD.idOne);
     json.children = [];
     subject.deserialize(json, CD.idOne);
@@ -97,7 +97,7 @@ test('category deserializer returns correct data with existing category that has
 });
 
 test('deserializer correctly sets previous_children_fks', (assert) => {
-    let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
                               label: CD.labelOne, has_many_children:[{id: CD.idChild, name: CD.nameThree, children: []}], children_fks: [CD.idChild], previous_children_fks: [CD.idChild]});
     let json = CF.generate(CD.idOne);
     json.children = CF.children();
@@ -107,7 +107,7 @@ test('deserializer correctly sets previous_children_fks', (assert) => {
 });
 
 test('deserializer correctly sets previous_children_fks with no children to start', (assert) => {
-    let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
                               label: CD.labelOne, has_many_children:[]});
     let json = CF.generate(CD.idOne);
     json.children = CF.children();
@@ -116,7 +116,7 @@ test('deserializer correctly sets previous_children_fks with no children to star
 });
 
 test('deserializer correctly sets previous_children_fks with different array to start', (assert) => {
-    let category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne, description: CD.descriptionRepair, 
                               label: CD.labelOne, has_many_children:[{id: CD.idTwo, name: CD.nameThree, children: []}], previous_children_fks: [CD.idTwo], children_fks: [CD.idTwo]});
     let json = CF.generate(CD.idOne);
     json.children = CF.children();

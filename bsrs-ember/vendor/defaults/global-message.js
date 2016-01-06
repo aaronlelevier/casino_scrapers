@@ -4,12 +4,12 @@ var BSRS_GLOBAL_MESSAGE_DEFAULTS_OBJECT = (function() {
     factory.prototype.defaults = function() {
         return {
             modal_unsaved_msg: 'You have unsaved changes. Are you sure?',
-            category_power_select: 'Please select a category',
-            assignee_power_select: 'Please select an assignee',
-            cc_power_select: 'Please select a cc',
-            location_power_select: 'Please select a location',
+            category_power_select: '',
+            assignee_power_select: '',
+            cc_power_select: '',
+            location_power_select: '',
             power_search: 'Type to search',
-            no_results: 'No results found',
+            no_results: 'No Matches',
         };
     };
     return factory;
@@ -23,4 +23,3 @@ if (typeof window === 'undefined') {
         return new BSRS_GLOBAL_MESSAGE_DEFAULTS_OBJECT().defaults();
     });
 }
-

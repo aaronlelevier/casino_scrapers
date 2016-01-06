@@ -40,8 +40,9 @@ var CategoryDeserializer = Ember.Object.extend({
                 response.children_fks = temp;
             }
             let category = store.push('category', response);
-            category.set('children_fks', response.children_fks);
-            category.set('previous_children_fks', response.children_fks);
+            store.push('category', {id: category.get('id'), children_fks: response.children_fks, previous_children_fks: response.children_fks});
+            // category.set('children_fks', response.children_fks);
+            // category.set('previous_children_fks', response.children_fks);
             category.save();
         }
     },

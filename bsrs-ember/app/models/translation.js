@@ -3,6 +3,8 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import inject from 'bsrs-ember/utilities/store';
 
+var run = Ember.run;
+
 var TranslationModel = Model.extend(NewMixin, {
     store: inject('main'),
     key: Ember.computed.alias('id'),
@@ -12,7 +14,7 @@ var TranslationModel = Model.extend(NewMixin, {
             const key = locale_trans.get('translation_key');
             return key === trans_key;
         };
-        return this.get('store').find('locale-translation', filter, ['isDirty', 'translation_key']);
+        return this.get('store').find('locale-translation', filter);
     }),
     locale_ids: Ember.computed('locales.[]', function() {
         return this.get('locales').mapBy('id');
@@ -26,7 +28,7 @@ var TranslationModel = Model.extend(NewMixin, {
         return bool;
     }),
     isDirtyOrRelatedDirty: Ember.computed('localeIsDirty', function() {
-        // others use this.get('isDirty') || this.get('localeIsDirty')
+        // when this has an attr itself update the line below... this.get('isDirty') || this.get('localeIsDirty')
         return this.get('localeIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
@@ -50,8 +52,10 @@ var TranslationModel = Model.extend(NewMixin, {
             }
             x.rollback();
         });
-        locales_to_remove.forEach((id) => {
-            store.remove('locale-translation', id);
+        run(function() {
+            locales_to_remove.forEach((id) => {
+                store.remove('locale-translation', id); //no code in the unit tests hit this currently
+            });
         });
     },
     serialize() {

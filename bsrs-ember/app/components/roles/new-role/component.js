@@ -15,14 +15,10 @@ var RoleNew = Ember.Component.extend(TabMixin, NewTabMixin, ValidationMixin, {
     categoryValidation: validate('model.categories', categoryValidation),
     actions: {
         changed(model, val) {
-            Ember.run(() => {
-                model.set('role_type', val);
-            });
+            model.set('role_type', val);
         },
         changedLocLevel(model, val) {
-            Ember.run(() => {
-                model.set('location_level', val);
-            });
+            model.set('location_level', val);
         },
         save() {
             this.set('submitted', true);

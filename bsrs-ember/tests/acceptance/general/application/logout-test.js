@@ -28,6 +28,6 @@ test('logout of application correctly directs to login page', (assert) => {
     xhr( '/api-auth/logout/','GET',undefined,{},200,{} );
     click('.t-logout');
     andThen(() => {
-        assert.equal(windowProxy.locationUrl, '/login');
+        assert.equal(windowProxy.locationUrl, '/');
     });
 });

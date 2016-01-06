@@ -4,53 +4,72 @@ import { moduleForComponent, test } from 'ember-qunit';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import translation from "bsrs-ember/instance-initializers/ember-i18n";
 import translations from "bsrs-ember/vendor/translation_fixtures";
+import LF from "bsrs-ember/vendor/location_fixtures";
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import LD from 'bsrs-ember/vendor/defaults/location';
+import ETD from 'bsrs-ember/vendor/defaults/email-type';
 import waitFor from 'ember-test-helpers/wait';
 
-var store, phone_number_types, default_phone_number_type, address_types, default_address_type;
+var store, phone_number_types, default_phone_number_type, address_types, default_address_type, default_email_type, email_types, run = Ember.run;
 
 moduleForComponent('location-single', 'integration: location-single test', {
     integration: true,
     setup() {
-        store = module_registry(this.container, this.registry, ['model:location', 'model:phonenumber', 'model:phone-number-type', 'model:address-type', 'model:address']);
+        store = module_registry(this.container, this.registry, ['model:location', 'model:phonenumber', 'model:phone-number-type', 'model:address-type', 'model:address', 'model:email', 'model:email-type']);
         translation.initialize(this);
         var service = this.container.lookup('service:i18n');
         var json = translations.generate('en');
         loadTranslations(service, json);
         let pn_types = [{ 'id': '2bff27c7-ca0c-463a-8e3b-6787dffbe7de', 'name': 'admin.phonenumbertype.office' }, 
         { 'id': '9416c657-6f96-434d-aaa6-0c867aff3270', 'name': 'admin.phonenumbertype.mobile' }];
-        pn_types.forEach(function(pnt) {
-            store.push('phone-number-type', pnt);
+        run(() => {
+            pn_types.forEach(function(pnt) {
+                store.push('phone-number-type', pnt);
+            });
         });
         phone_number_types = store.find('phone-number-type');
         default_phone_number_type = phone_number_types.objectAt(0);
         let ad_types = [{ "id": "8e16a68c-fda6-4c30-ba7d-fee98257e92d", "name": "admin.address_type.office" }, 
             { "id": "f7e55e71-1ff2-4cc2-8700-139802738bd0", "name": "admin.address_type.shipping" }];
-        ad_types.forEach(function(ad) {
-            store.push('address-type', ad);
+        run(() => {
+            ad_types.forEach(function(ad) {
+                store.push('address-type', ad);
+            });
         });
         address_types = store.find('phone-number-type');
         default_address_type = address_types.objectAt(0);
+        let em_types = [{ 'id': ETD.personalId, 'name': ETD.personalEmail }, 
+        { 'id': ETD.workId, 'name': ETD.workEmail }];
+        run(() => {
+            em_types.forEach(function(emt) {
+                store.push('email-type', emt);
+            });
+        });
+        email_types = store.find('email-type');
+        default_email_type = email_types.objectAt(0);
     }
 });
 
 test('filling in invalid name reveal validation messages', function(assert) {
-    this.model = store.push('location', {id: LD.idOne, name: LD.storeName});
+    run(() => {
+        this.model = store.push('location', {id: LD.idOne, name: LD.storeName});
+    });
     this.phone_number_types = phone_number_types;
     this.default_phone_number_type = default_phone_number_type;
     this.render(hbs`{{location-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
     var $component = this.$('.t-input-multi-phone-validation-format-error');
     assert.equal($component.length, 0);
     this.$('.t-location-name').val('').trigger('change');
-    // var save_btn = this.$('.t-save-btn');
-    // save_btn.trigger('click').trigger('change');
+    var save_btn = this.$('.t-save-btn');
+    save_btn.trigger('click').trigger('change');
     $component = this.$('.t-name-validation-error');
     assert.equal($component.length, 1);
 });
 
 test('filling in invalid phone number reveal validation messages', function(assert) {
-    this.model = store.push('location', {});
+    run(() => {
+        this.model = store.push('location', {});
+    });
     this.phone_number_types = phone_number_types;
     this.default_phone_number_type = default_phone_number_type;
     this.render(hbs`{{location-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
@@ -70,7 +89,9 @@ test('filling in invalid phone number reveal validation messages', function(asse
 });
 
 test('filling in invalid address reveals validation messages', function(assert) {
-    this.model = store.push('location', {});
+    run(() => {
+        this.model = store.push('location', {});
+    });
     this.address_types = address_types;
     this.default_address_type = default_address_type;
     this.render(hbs`{{location-single model=model address_types=address_types default_address_type=default_address_type}}`);
@@ -100,4 +121,65 @@ test('filling in invalid address reveals validation messages', function(assert) 
     $component = this.$('.t-input-multi-address-zip-validation-error');
     assert.ok($component.is(':hidden'));
     assert.equal($component.length, 1);
+});
+
+test('filling in invalid emails reveal validation messages', function(assert) {
+    run(() => {
+        this.model = store.push('location', {});
+    });
+    this.email_types = email_types;
+    this.default_email_type = default_email_type;
+    this.render(hbs`{{location-single model=model email_types=email_types default_email_type=default_email_type}}`);
+    var $component = this.$('.t-input-multi-email-validation-format-error');
+    assert.equal($component.length, 0);
+    this.$('.t-add-email-btn:eq(0)').click();
+    $component = this.$('.t-input-multi-email-validation-format-error');
+    assert.ok($component.is(':hidden'));
+    assert.equal($component.length, 1);
+    this.$('.t-new-entry').val('a').trigger('change');
+    $component = this.$('.t-input-multi-email-validation-format-error');
+    assert.ok($component.is(':visible'));
+    assert.equal($component.length, 1);
+    this.$('.t-new-entry').val('snewcomer24@gmail.com').trigger('change');
+    $component = this.$('.t-input-multi-email-validation-format-error');
+    assert.ok($component.is(':hidden'));
+});
+
+test('can remove a new phone number', function(assert) {
+    run(() => {
+        this.model = store.push('location', {});
+    });
+    this.phone_number_types = phone_number_types;
+    this.default_phone_number_type = default_phone_number_type;
+    this.render(hbs`{{location-single model=model phone_number_types=phone_number_types default_phone_number_type=default_phone_number_type}}`);
+    this.$('.t-add-btn:eq(0)').click();
+    assert.equal(this.$('.t-new-entry').length, 1);
+    this.$('.t-del-btn:eq(0)').click();
+    assert.equal(this.$('.t-new-entry').length, 0);
+});
+
+test('can add and remove new email', function(assert) {
+    run(() => {
+        this.model = store.push('location', {});
+    });
+    this.email_types = email_types;
+    this.default_email_type = default_email_type;
+    this.render(hbs`{{location-single model=model email_types=email_types default_email_type=default_email_type}}`);
+    this.$('.t-add-email-btn:eq(0)').click();
+    assert.equal(this.$('.t-new-entry').length, 1);
+    this.$('.t-del-email-btn:eq(0)').click();
+    assert.equal(this.$('.t-new-entry').length, 0);
+});
+
+test('can add and remove new address', function(assert) {
+    run(() => {
+        this.model = store.push('location', {});
+    });
+    this.address_types = address_types;
+    this.default_address_type = default_address_type;
+    this.render(hbs`{{location-single model=model address_types=address_types default_address_type=default_address_type}}`);
+    this.$('.t-add-address-btn:eq(0)').click();
+    assert.equal(this.$('.t-address-address').length, 1);
+    this.$('.t-del-address-btn:eq(0)').click();
+    assert.equal(this.$('.t-address-address').length, 0);
 });

@@ -10,7 +10,7 @@ import LD from 'bsrs-ember/vendor/defaults/location';
 import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 
-var store, location_repo, eventbus, tabList;
+var store, location_repo, eventbus, tabList, run = Ember.run;
 
 module('unit: person-single component test', {
     beforeEach() {
@@ -23,6 +23,7 @@ module('unit: person-single component test', {
 });
 
 test('locations computed will be filtered by person.role.location_level', (assert) => {
+    let location_two, m2m_two, location_three, m2m_four;
     let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
     let m2m_three = store.push('person-location', {id: PERSON_LD.idThree, person_pk: PD.unusedId, location_pk: LD.idTwo});
     let role = store.push('role', {id: RD.idTwo, name: RD.nameTwo, people: [PD.id], location_level_fk: LLD.idOne});
@@ -37,13 +38,17 @@ test('locations computed will be filtered by person.role.location_level', (asser
     let subject = PersonSingleComponent.create({model: person, location_repo: location_repo, eventbus: eventbus, tabList: tabList, person_locations_children: person_locations_children});
     let location_select = PersonLocationSelect.create({model: person.get('locations'), person: person, repository: location_repo});
     assert.equal(location_select.get('person_locations_selected').get('length'), 1);
-    let location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, person_location_fks: [PERSON_LD.idTwo], location_level_fk: LLD.idOne});
-    let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.id, location_pk: LD.idTwo});
+    run(function() {
+        location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo, person_location_fks: [PERSON_LD.idTwo], location_level_fk: LLD.idOne});
+        m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.id, location_pk: LD.idTwo});
+    });
     person.set('person_location_fks', [PERSON_LD.idOne, PERSON_LD.idTwo]);
     location_level.set('locations', [LD.idOne, LD.idTwo]);
     assert.equal(location_select.get('person_locations_selected').get('length'), 2);
-    let location_three = store.push('location', {id: LD.unusedId, name: LD.storeNameThree, person_location_fks: [PERSON_LD.idFour], location_level_fk: LLD.idTwo});
-    let m2m_four = store.push('person-location', {id: PERSON_LD.idFour, person_pk: PD.unusedId, location_pk: LD.unusedId});
+    run(function() {
+        location_three = store.push('location', {id: LD.unusedId, name: LD.storeNameThree, person_location_fks: [PERSON_LD.idFour], location_level_fk: LLD.idTwo});
+        m2m_four = store.push('person-location', {id: PERSON_LD.idFour, person_pk: PD.unusedId, location_pk: LD.unusedId});
+    });
     person_two.set('person_location_fks', [PERSON_LD.idThree, PERSON_LD.idFour]);
     location_level_two.set('locations', [LD.unusedId]);
     assert.equal(location_select.get('person_locations_selected').get('length'), 2);

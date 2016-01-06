@@ -6,7 +6,7 @@ import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import tHelper from 'ember-i18n/helper';
 
-var store, ticket, status_one, status_two, status_three, run = Ember.run, trans;
+var store, ticket, status_one, status_two, status_three, trans, run = Ember.run;
 const PowerSelect = '.ember-power-select-trigger';
 const COMPONENT = '.t-ticket-status-select';
 const DROPDOWN = '.ember-power-select-dropdown';
@@ -14,11 +14,14 @@ const DROPDOWN = '.ember-power-select-dropdown';
 moduleForComponent('ticket-status-select', 'integration: ticket-status-select test', {
     integration: true,
     setup() {
+
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-status']);
-        ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusOneId});
-        status_one = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
-        status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
-        status_three = store.push('ticket-status', {id: TD.statusThreeId, name: TD.statusThree});
+        run(function() {
+            ticket = store.push('ticket', {id: TD.idOne, status_fk: TD.statusOneId});
+            status_one = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOneKey});
+            status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusTwoKey});
+            status_three = store.push('ticket-status', {id: TD.statusThreeId, name: TD.statusThree});
+        });
         trans = this.container.lookup('service:i18n');
     }
 });
@@ -33,7 +36,7 @@ test('should render a selectbox when status options are empty (initial state of 
     clickTrigger();
     assert.equal($(DROPDOWN).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 1);
-    assert.equal($('li.ember-power-select-option').text(), 'No results found');
+    //assert.equal($('li.ember-power-select-option').text(), 'No Matches');
     assert.ok(!ticket.get('status'));
     assert.notOk($('.ember-power-select-search').text());
 });

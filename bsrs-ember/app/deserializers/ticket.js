@@ -18,7 +18,7 @@ var extract_categories = function(model, store, uuid, category_deserializer) {
             return m2m.get('category_pk') === category.id && m2m.get('ticket_pk') === model.id;
         });
         if(ticket_categories.length === 0) {
-            let pk = uuid.v4();
+            let pk = Ember.uuid();
             server_sum.push(pk);
             store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
             category_deserializer.deserialize(category, category.id);
@@ -51,7 +51,8 @@ var extract_assignee = function(assignee_json, store, person_deserializer, ticke
     let assignee_id = assignee_json.id;
     person_deserializer.deserialize(assignee_json, assignee_id);
     ticket_model.change_assignee(assignee_id);
-    ticket_model.set('assignee_fk', assignee_id);
+    store.push('ticket', {id: ticket_model.get('id'), assignee_fk: assignee_id});
+    // ticket_model.set('assignee_fk', assignee_id);
 };
 
 var extract_cc = function(model, store, uuid, person_deserializer) {
@@ -65,7 +66,7 @@ var extract_cc = function(model, store, uuid, person_deserializer) {
         });
         //push new one in
         if(ticket_people.length === 0) {
-            let pk = uuid.v4();
+            let pk = Ember.uuid();
             server_sum.push(pk);
             store.push('ticket-person', {id: pk, ticket_pk: model.id, person_pk: cc.id});  
             person_deserializer.deserialize(cc, cc.id);
@@ -89,13 +90,15 @@ var extract_ticket_location = function(model, store, location_deserializer) {
     let location_pk = model.location.id;
     let ticket = store.find('ticket', model.id);
     if (ticket.get('location')) {
-        ticket.set('location_fk', undefined);
+        store.push('ticket', {id: ticket.get('id'), location_fk: undefined});
+        // ticket.set('location_fk', undefined);
         let location = ticket.get('location');
         if (location) {
             let mutated_array = location.get('tickets').filter((ticket) => {
                 return ticket !== model.id;
             });
-            location.set('tickets', mutated_array);
+            store.push('location', {id: location.get('id'), tickets: mutated_array});
+            // location.set('tickets', mutated_array);
         }
     }
 
@@ -103,10 +106,12 @@ var extract_ticket_location = function(model, store, location_deserializer) {
         let location = store.find('location', model.location.id);
         let existing_tickets = location.get('tickets') || [];
         if (location.get('content') && existing_tickets.indexOf(model.id) === -1) {
-            location.set('tickets', existing_tickets.concat([model.id]));
+            store.push('location', {id: location.get('id'), tickets: existing_tickets.concat(model.id)});
+            // location.set('tickets', existing_tickets.concat([model.id]));
         } else {
             location_deserializer.deserialize(model.location, model.location.id);
-            location.set('tickets', [model.id]);
+            store.push('location', {id: location.get('id'), tickets: [model.id]});
+            // location.set('tickets', [model.id]);
         }
         delete model.location;
         model.location_fk = location_pk;
@@ -124,7 +129,8 @@ var extract_ticket_priority = function(model, store) {
     let new_priority = store.find('ticket-priority', priority_id);
     let new_priority_tickets = new_priority.get('tickets') || [];
     let updated_new_priority_tickets = new_priority_tickets.concat(model.id).uniq();
-    new_priority.set('tickets', updated_new_priority_tickets);
+    store.push('ticket-priority', {id: new_priority.get('id'), tickets: updated_new_priority_tickets});
+    // new_priority.set('tickets', updated_new_priority_tickets);
 
     delete model.priority;
     return priority_id;
@@ -139,7 +145,8 @@ var extract_ticket_status = function(model, store) {
         let new_status = store.find('ticket-status', status_id);
         let new_status_tickets = new_status.get('tickets') || [];
         let updated_new_status_tickets = new_status_tickets.concat(model.id).uniq();
-        new_status.set('tickets', updated_new_status_tickets);
+        store.push('ticket-status', {id: new_status.get('id'), tickets: updated_new_status_tickets});
+        // new_status.set('tickets', updated_new_status_tickets);
     }
     delete model.status;
     return status_id;

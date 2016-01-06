@@ -1,4 +1,4 @@
-from django.test import TransactionTestCase
+from django.test import TestCase, TransactionTestCase
 from django.contrib.auth.models import ContentType
 
 from model_mommy import mommy
@@ -6,6 +6,32 @@ from model_mommy import mommy
 from category.tests import factory
 from category.models import Category, CategoryStatus, CATEGORY_STATUSES
 from utils.helpers import generate_uuid
+
+
+class CreateSingleCategoryTests(TestCase):
+
+    def test_default(self):
+        category = factory.create_single_category()
+
+        self.assertTrue(category.name)
+        self.assertIsNone(category.parent)
+
+    def test_name(self):
+        name = 'My Cool Category'
+
+        category = factory.create_single_category(name)
+
+        self.assertEqual(category.name, name)
+        self.assertEqual(category.subcategory_label, 'trade')
+        self.assertIsInstance(category.status, CategoryStatus)
+
+    def test_parent(self):
+        parent = factory.create_single_category()
+
+        category = factory.create_single_category(parent=parent)
+
+        self.assertEqual(category.parent, parent)
+        self.assertEqual(category.label, parent.subcategory_label)
 
 
 class CategoryTests(TransactionTestCase):

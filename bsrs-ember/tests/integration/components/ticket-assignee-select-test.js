@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
@@ -19,10 +20,12 @@ moduleForComponent('ticket-assignee-select', 'integration: ticket-assignee-selec
     integration: true,
     setup() {
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:person']);
-        ticket = store.push('ticket', {id: TD.idOne, assignee_fk: PD.idOne});
-        person_one = store.push('person', {id: PD.idOne, first_name: PD.nameOne, last_name: PD.lastNameOne, username: PD.usernameOne, title: PD.titleOne});
-        person_two = store.push('person', {id: PD.idTwo, first_name: PD.nameTwo, last_name: PD.lastNameTwo, username: PD.usernameTwo, title: PD.titleTwo});
-        person_three = store.push('person', {id: PD.unusedId, first_name: PD.nameThree, last_name: PD.lastNameThree, username: PD.usernameThree, title: PD.titleThree});
+        run(function() {
+            ticket = store.push('ticket', {id: TD.idOne, assignee_fk: PD.idOne});
+            person_one = store.push('person', {id: PD.idOne, first_name: PD.nameOne, last_name: PD.lastNameOne, username: PD.usernameOne, title: PD.titleOne});
+            person_two = store.push('person', {id: PD.idTwo, first_name: PD.nameTwo, last_name: PD.lastNameTwo, username: PD.usernameTwo, title: PD.titleTwo});
+            person_three = store.push('person', {id: PD.unusedId, first_name: PD.nameThree, last_name: PD.lastNameThree, username: PD.usernameThree, title: PD.titleThree});
+        });
         person_repo = repository.initialize(this.container, this.registry, 'person');
         person_repo.findTicketAssignee = function() {
             return store.find('person');
@@ -72,8 +75,8 @@ test('should be able to select new person when one doesnt exist', function(asser
         then(() => {
             assert.equal($(`${DROPDOWN}`).length, 1);
             assert.equal($('.ember-power-select-options > li').length, 3);
-            run(() => { 
-                $(`.ember-power-select-option:contains(${PD.nameOne})`).mouseup(); 
+            run(() => {
+                $(`.ember-power-select-option:contains(${PD.nameOne})`).mouseup();
             });
             assert.equal($(`${PowerSelect}`).text().trim(), `${PD.nameOne} ${PD.lastNameOne}`);
             assert.equal(ticket.get('assignee').get('id'), PD.idOne);
@@ -94,8 +97,8 @@ test('should be able to select same person when ticket already has a person', fu
             assert.equal($(`${DROPDOWN}`).length, 1);
             assert.equal($('.ember-basic-dropdown-content').length, 1);
             assert.equal($('.ember-power-select-options > li').length, 3);
-            run(() => { 
-                $(`.ember-power-select-option:contains(${PD.nameOne})`).mouseup(); 
+            run(() => {
+                $(`.ember-power-select-option:contains(${PD.nameOne})`).mouseup();
             });
             assert.equal($(`${DROPDOWN}`).length, 0);
             assert.equal($('.ember-basic-dropdown-content').length, 0);
@@ -120,8 +123,8 @@ test('should be able to select new person when ticket already has a person', fun
             assert.equal($(`${DROPDOWN}`).length, 1);
             assert.equal($('.ember-basic-dropdown-content').length, 1);
             assert.equal($('.ember-power-select-options > li').length, 3);
-            run(() => { 
-                $(`.ember-power-select-option:contains(${PD.nameTwo})`).mouseup(); 
+            run(() => {
+                $(`.ember-power-select-option:contains(${PD.nameTwo})`).mouseup();
             });
             assert.equal($(`${DROPDOWN}`).length, 0);
             assert.equal($('.ember-basic-dropdown-content').length, 0);
@@ -132,4 +135,3 @@ test('should be able to select new person when ticket already has a person', fun
             assert.deepEqual(person_two.get('assigned_tickets'), [TD.idOne]);
     });
 });
-

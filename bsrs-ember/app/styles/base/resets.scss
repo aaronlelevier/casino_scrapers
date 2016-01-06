@@ -99,9 +99,11 @@ input[type="text"]:disabled {
 		}
 	}
 }
-#ember-basic-dropdown-wormhole{
+#ember-basic-dropdown-wormhole,
+.ember-basic-dropdown--in-place{
 	.ember-power-select-dropdown{
-		border-color: $activeColor;
+		font-size: 1.4rem;
+		border-color: $activeColor !important;
 	    border-radius: $borderRadius;
 		&.below{
 			border-radius: $borderRadiusBottom;
@@ -112,12 +114,18 @@ input[type="text"]:disabled {
 	}
 	.ember-power-select-search input{
 		border: $borderStyle;
+		&:focus{
+			border-color: $activeColor;
+		}
 	}
 	.ember-power-select-option{
-		&.selected{
+		padding: 3px 12px;
+		&.ember-power-select-option--selected{
+			color: $medGray;
 			background-color: $light;
 		}
-		&.highlighted{
+		&.ember-power-select-option--highlighted{
+			color: $white;
 			background-color: $hoverColor;
 		}
 	}

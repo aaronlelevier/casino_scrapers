@@ -1,39 +1,60 @@
+{% load staticfiles form_filters %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
+
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <title>Login</title>
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-
-        <link rel="shortcut icon" type="image/png" href="{{ MEDIA_URL }}favicon.ico"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}"/>
+        <link rel="shortcut icon" type="image/png" href="{{ MEDIA_URL }}/images/favicon.ico"/>
+        <link rel="stylesheet" type="text/css" href="{% static 'css/custom.css' %}"/>
+        <style type="text/css">
+            body {
+                background: url('{{ MEDIA_URL }}/images/hero-mountains-gradient.jpg')  no-repeat center center fixed;
+            }
+        </style>
     </head>
     <body>
-        <div class="container">
-            <div class="navbar navbar-default">
-                <div class="navbar-header">
-                    <div>
-                        <a class="navbar-brand" href="/">My Website</a>
+
+        <!-- Top content -->
+        <div class="top-content">
+            <div class="inner-bg">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-8 col-sm-offset-2 text">
+                            <h1></h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6 col-sm-offset-3 form-box">
+                        	<div class="form-top">
+                        		<div class="form-top-center">
+                        			<img src="{{ MEDIA_URL }}/images/sg-logo-blue-green.png">
+                        		</div>
+                            </div>
+                            <div class="form-bottom">
+			                    <form role="form" action="" method="post" class="login-form">
+                                    {% csrf_token %}
+                                    {% for field in form %}
+                                    <div class="form-group">
+                                        <div class="form-group">
+                                            {{ field.errors }}
+    			                    		<label class="sr-only" for="form-username">{{ field.label_tag }}</label>
+                                            <input id="{{ field.id_for_label }}" name="{{ field.name }}" type="{{ field|fieldtype }}" />
+    			                        </div>
+                                    </div>
+                                    {% endfor %}
+                                    {{ form.non_field_errors }}
+			                        <button type="submit" class="btn login">{% if submit_button %}{{ submit_button }}{% else %}Submit{% endif %}</button>
+                                    <input type="hidden" name="next" value="{{ next }}" />
+                                </form>
+		                    </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="container">
-            {{ form.non_field_errors }}
-            <form role="form" action="" method="post" id="login-form">
-                <fieldset>
-                    {% csrf_token %}
-                    {% for field in form %}
-                        <div class="form-group">
-                            {{ field.errors }}
-                            {{ field.label_tag }} {{ field }}
-                        </div>
-                    {% endfor %}
-                    <input type="submit" value="{% if submit_button %}{{ submit_button }}{% else %}Submit{% endif %}" />
-                    <input type="hidden" name="next" value="{{ next }}" />
-                </fieldset>
-            </form>
         </div>
     </body>
 </html>

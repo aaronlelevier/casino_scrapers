@@ -12,7 +12,7 @@ from model_mommy import mommy
 from accounting.models import Currency
 from category.models import Category
 from category.tests.factory import create_categories
-from contact.models import PhoneNumberType, AddressType
+from contact.models import PhoneNumberType, AddressType, EmailType
 from generic.models import SavedSearch
 from location.models import LocationLevel, LocationStatus, State, Country
 from person.models import PersonStatus, Role
@@ -76,6 +76,21 @@ class LoginTests(TestCase):
         response = self.client.get(reverse('login'))
         self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
 
+    def test_post(self):
+        data = {'username': self.person.username, 'password': PASSWORD}
+        response = self.client.post(reverse('login'), data, follow=True)
+        self.assertRedirects(response, reverse('index'))
+
+    def test_post_form_errors(self):
+        data = {'username': self.person.username, 'password': "this isn't my password"}
+        response = self.client.post(reverse('login'), data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['form'].non_field_errors)
+
+    def test_favicon_and_media_url(self):
+        response = self.client.get(reverse('login'))
+        self.assertIn("{}/images/favicon.ico".format(settings.MEDIA_URL), response.content.decode('utf8'))
+
 
 class LogoutTests(TestCase):
     # Only a POST or PUT will be accepted request types to logout a Person
@@ -134,6 +149,7 @@ class ConfigurationTests(TestCase):
         self.saved_search = mommy.make(SavedSearch, person=self.person, name="foo",
             endpoint_name="admin.people.index")
 
+        mommy.make(EmailType)
         mommy.make(AddressType)
         mommy.make(State)
         mommy.make(Country)
@@ -149,6 +165,10 @@ class ConfigurationTests(TestCase):
 
     def test_get(self):
         self.assertEqual(self.response.status_code, 200)
+
+    def test_email_types(self):
+        configuration = json.loads(self.response.context['email_types_config'])
+        self.assertTrue(len(configuration) > 0)
 
     def test_phone_number_types(self):
         configuration = json.loads(self.response.context['phone_number_types_config'])

@@ -70,8 +70,8 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        {{input type="text" placeholder=(t "ticket.label.requester") value=model.requester.name class="form-control t-ticket-requester"}}
-                                        {{#validation-error-field submitted=submitted field="request" className="validation validation-under t-request-validation-error" model=model validation=requestValidation}}invalid request{{/validation-error-field}}
+                                        {{input type="text" placeholder=(t "ticket.label.requester") value=model.requester class="form-control t-ticket-requester"}}
+                                        {{#validation-error-field submitted=submitted field="requester" className="validation validation-under t-requester-validation-error" model=model validation=requesterValidation}}invalid requester{{/validation-error-field}}
                                     </div>
                                 </div>
                                 <div class="row">

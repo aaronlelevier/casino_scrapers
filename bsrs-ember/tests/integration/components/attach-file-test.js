@@ -14,9 +14,12 @@ moduleForComponent('attach-file', 'integration: attach-file', {
 });
 
 test('progress bar should transform from green to blue once upload is complete', function(assert) {
+    let attachment, ticket;
     assert.expect(5);
-    let attachment = store.push('attachment', {id: 7, percent: 25, new: true});
-    let ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [7], previous_attachments_fks: []});
+    run(function() {
+        attachment = store.push('attachment', {id: 7, percent: 25, new: true});
+        ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [7], previous_attachments_fks: []});
+    });
     this.set('model', ticket);
     this.render(hbs`{{attach-file model=model}}`);
     let $component = this.$('.progress-bar');

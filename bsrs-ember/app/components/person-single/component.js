@@ -22,7 +22,7 @@ function validateSingleChar(middle_init){
 
 var PersonSingle = ParentValidationComponent.extend(RelaxedMixin, TabMixin, EditMixin, {
     repository: inject('person'),
-    child_components: ['input-multi-phone', 'input-multi-address'],
+    child_components: ['input-multi-phone', 'input-multi-address', 'input-multi-email'],
     classNames: ['wrapper', 'form'],
     attemptedTransition: '',
     usernameValidation: validate('model.username'),

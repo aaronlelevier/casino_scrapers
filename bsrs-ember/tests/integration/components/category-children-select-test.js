@@ -27,9 +27,11 @@ moduleForComponent('category-children-select', 'integration: category-children-s
         store = module_registry(this.container, this.registry, ['model:category']);
         const service = this.container.lookup('service:i18n');
         loadTranslations(service, translations.generate('en'));
-        category = store.push('category', {id: CD.idOne, name: CD.nameOne, children_fks: [CD.idTwo]});
-        category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, children_fks: []});
-        category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, children_fks: []});
+        run(function() {
+            category = store.push('category', {id: CD.idOne, name: CD.nameOne, children_fks: [CD.idTwo]});
+            category_two = store.push('category', {id: CD.idTwo, name: CD.nameTwo, children_fks: []});
+            category_three = store.push('category', {id: CD.unusedId, name: CD.nameThree, children_fks: []});
+        });
         category_repo = repository.initialize(this.container, this.registry, 'category');
         category_repo.findCategoryChildren = function() {
             return store.find('category');

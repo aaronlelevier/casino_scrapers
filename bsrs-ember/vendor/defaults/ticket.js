@@ -7,6 +7,7 @@ var BSRS_TICKET_DEFAULTS_OBJECT = (function() {
             idTwo: '6ff90fb2-17ca-434d-9943-4035ea386b13',
             unusedId: 'cadba3ba-a533-44e0-ab1f-57cc1b056789',
             numberOne: '123zz',
+            requesterOne: 'Winnie the Pooh',
             requestOne: 'working',
             commentOne: 'yeah commments are cool',
             commentTwo: 'yeah commmentTwo is awesome',

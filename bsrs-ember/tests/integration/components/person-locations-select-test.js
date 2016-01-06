@@ -1,13 +1,13 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
 import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import waitFor from 'ember-test-helpers/wait';
-import translation from 'bsrs-ember/instance-initializers/ember-i18n';
-import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
@@ -27,12 +27,14 @@ moduleForComponent('person-locations-select', 'integration: person-locations-sel
         store = module_registry(this.container, this.registry, ['model:person', 'model:location', 'model:person-location']);
         let service = this.container.lookup('service:i18n');
         loadTranslations(service, translations.generate('en'));
-        m2m = store.push('person-location', {id: PLD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
-        m2m_two = store.push('person-location', {id: PLD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
-        person = store.push('person', {id: PD.idOne});
-        location_one = store.push('location', {id: LD.idOne, name: LD.storeName});
-        location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo});
-        location_three = store.push('location', {id: LD.unusedId, name: LD.storeNameThree});
+        run(function() {
+            m2m = store.push('person-location', {id: PLD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+            m2m_two = store.push('person-location', {id: PLD.idTwo, person_pk: PD.idOne, location_pk: LD.idTwo});
+            person = store.push('person', {id: PD.idOne});
+            location_one = store.push('location', {id: LD.idOne, name: LD.storeName});
+            location_two = store.push('location', {id: LD.idTwo, name: LD.storeNameTwo});
+            location_three = store.push('location', {id: LD.unusedId, name: LD.storeNameThree});
+        });
         location_repo = repository.initialize(this.container, this.registry, 'location');
         location_repo.findLocationSelect = function() {
             return store.find('location');

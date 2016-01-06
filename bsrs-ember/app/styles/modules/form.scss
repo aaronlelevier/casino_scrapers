@@ -38,7 +38,8 @@ div.buttonGroup {
 	.input-group{
 		margin-bottom: 10px;
 	}
-	.phonenumber-type{
+	.phonenumber-type,
+	.email-type{
 		min-width: 6em;
 		-webkit-appearance: none;
 		-moz-appearance: none;
@@ -112,24 +113,16 @@ div.buttonGroup {
 		}
 	}
 }
+.request-wrap{
+	margin: 15px 0 15px;
+}
 textarea.ticket-request{
-
 	font-size: 1.2rem;
-	border-color: $white;
-	height: 2.7em;
-	padding: 6px 0;
-	margin: 8px 0 17px;
 	resize: none;
-	
-	&:focus{
-		border-color: $activeColor;
-		padding: 6px 12px;
-		margin: 15px 0 10px;
-	}
 }
 .meta-data{
 	line-height: 30px;
-	padding-bottom: 12px;
+	margin: 0 0 8px;
 }
 .create-date{
 	font-size: 1.2rem;
@@ -147,7 +140,7 @@ textarea.ticket-request{
 	padding: 0 7px;
 	border-radius: 3px;
 	text-transform: uppercase;
-	margin: 0 10px 0 0;
+	margin: 0 8px 0 0;
 	position: relative;
 	&.ticket-status-new{
 		background: $lightGreen;
@@ -164,5 +157,70 @@ textarea.ticket-request{
 	&.ticket-priority-high{
 		background: $orange;
 		border-color: $orange;
+	}
+}
+.form-photo{
+	border: $borderStyle;
+	margin: 0 0 20px 0;
+	line-height: 200px;
+	height: 200px;
+	background: $light;
+	font-size:100px;
+	text-align:center;
+	color: $gray;
+}
+label.small-label{
+	display: block;
+	height: 26px;
+	line-height: 23px;
+	font-size: 1rem !important;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	overflow: hidden;
+	margin: 0 -1px -1px 0;
+	float: left;
+	background: $lightGray;
+	border: $borderStyle;
+	color: $medGray !important;
+	padding: 0 12px;
+	&:after{
+		content: ":";
+	}
+}
+.ember-power-select.ember-basic-dropdown--opened input[type="search"]{
+	padding: 0 7px;
+}
+.request-wrap{
+	label.small-label{
+		float: none;
+	}
+}
+.ticket-category-wrap{
+	float: left;
+    margin-right: -1px;
+	min-width: 120px;
+	max-width: 220px;
+
+	.category-select {
+		float: left;
+	    .ember-power-select-trigger{
+	        font-size: 1.2rem;
+	        min-height: 26px;
+	        height: 26px;
+	        line-height: 24px;
+	        border-radius: 0;
+			width: 100%;
+			position: relative;
+			&:focus{
+				z-index: 3;
+			}
+	    }
+		.ember-power-select-dropdown{
+			top: 26px;
+		}
+	    .ember-power-select-option,
+		.ember-power-select-search input{
+	        font-size: 1.2rem;
+	    }
 	}
 }

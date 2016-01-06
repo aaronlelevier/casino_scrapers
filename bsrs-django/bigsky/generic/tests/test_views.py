@@ -142,10 +142,10 @@ class AttachmentTests(APITestCase):
 
         self.base_dir = dirname(dirname(dirname(__file__)))
         # file
-        self.file = join(self.base_dir, "source/test_in/es.csv")
+        self.file = join(settings.MEDIA_ROOT, "test_in/es.csv")
         self.file_filename = os.path.split(self.file)[1]
         # file2
-        self.file2 = join(self.base_dir, "source/test_in/jp.csv")
+        self.file2 = join(settings.MEDIA_ROOT, "test_in/jp.csv")
         self.file2_filename = os.path.split(self.file2)[1]
 
         # Login

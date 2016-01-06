@@ -23,6 +23,8 @@ module.exports = function(defaults) {
       app.import('vendor/mixin.js');
       app.import('vendor/address_fixtures.js');
       app.import('vendor/admin_translation_fixtures.js');
+      app.import('vendor/email_fixtures.js');
+      app.import('vendor/locale_fixtures.js');
       app.import('vendor/location_fixtures.js');
       app.import('vendor/location_level_fixtures.js');
       app.import('vendor/people_fixtures.js');
@@ -38,6 +40,8 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/country.js');
       app.import('vendor/defaults/currencies.js');
       app.import('vendor/defaults/category.js');
+      app.import('vendor/defaults/email.js');
+      app.import('vendor/defaults/email-type.js');
       app.import('vendor/defaults/general.js');
       app.import('vendor/defaults/locale.js');
       app.import('vendor/defaults/locale-translation.js');

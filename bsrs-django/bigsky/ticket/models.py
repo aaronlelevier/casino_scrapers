@@ -89,8 +89,8 @@ class TicketQuerySet(BaseQuerySet):
 
     def filter_on_categories_and_location(self, person):
         return self.filter(
-            categories__id__in=person.role.categories.values_list('id', flat=True),
-            location__id__in=person.locations.values_list('id', flat=True)
+            categories__id__in=person.role.categories.objects_and_their_children(),
+            location__id__in=person.locations.objects_and_their_children()
         )
 
 
@@ -126,8 +126,7 @@ class Ticket(BaseModel):
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name="assignee_tickets")
     cc = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
-    requester = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
-        related_name="requester_tickets")
+    requester = models.CharField(max_length=150, blank=True, null=True)
     categories = models.ManyToManyField(Category, blank=True)
     # Fields
     request = models.CharField(max_length=1000, blank=True, null=True)

@@ -36,6 +36,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'accounting',
+    'bigsky',
     'category',
     'contact',
     'generic',
@@ -158,6 +159,7 @@ USE_TZ = True
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'ember'),
+    os.path.join(BASE_DIR, 'source'),
     ]
 
 STATIC_URL = '/static/'
@@ -166,7 +168,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'source')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 ### Native Configurations ###

@@ -6,8 +6,8 @@ var CurrencyService = Ember.Service.extend({
     format_currency(val, attr, currency) {
         var store = this.get('store');
         var currency_found = store.find('currency').objectAt(0);
-        var formatted_value = parseInt(val);
-        return formatted_value ? formatted_value.toFixed(currency_found[attr]) : '';
+        var formatted_value = parseInt(val, 10);
+        return formatted_value || formatted_value === 0 ? formatted_value.toFixed(currency_found[attr]) : '';
     },
     format_symbol(currency) {
         var store = this.get('store');

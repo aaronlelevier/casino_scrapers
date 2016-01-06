@@ -73,7 +73,8 @@ class Address(BaseContactModel):
 
 
 EMAIL_TYPES = [
-    'location'
+    'admin.emailtype.work',
+    'admin.emailtype.personal',
 ]
 
 class EmailType(BaseNameOrderModel):

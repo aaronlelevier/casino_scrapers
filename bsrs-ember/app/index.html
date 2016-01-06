@@ -21,5 +21,18 @@
     <script src="assets/bsrs-ember.js" integrity=""></script>
 
     {{content-for 'body-footer'}}
+    <script type="text/javascript">
+      document.addEventListener('keydown', function(evt) {
+        // Hitting "backspace" on "body" doesn't let the User navigate to
+        // the previous window.
+        if (evt.keyCode===8 && evt.target.className==="ember-application") {
+          evt.preventDefault();
+        }
+        // Hitting "enter" in a text input field doesn't save the form.
+        if (evt.keyCode===13 && evt.target.localName==="input") {
+          evt.preventDefault();
+        }
+      });
+    </script>
   </body>
 </html>

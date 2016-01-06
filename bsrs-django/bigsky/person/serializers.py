@@ -68,6 +68,10 @@ PERSON_FIELDS = (
 )
 
 
+PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('locale', 'locations', 'last_login', 'date_joined',
+    'emails', 'phone_numbers', 'addresses',)
+
+
 class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
     '''
     Base Create serializer because ``Role`` needed before second step 
@@ -108,14 +112,28 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS + ('locale', 'locations', 'last_login', 'date_joined',
-            'emails', 'phone_numbers', 'addresses',)
+        fields = PERSON_DETAIL_FIELDS
 
     @staticmethod
     def eager_load(queryset):
         return (queryset.select_related('role')
                         .prefetch_related('emails', 'phone_numbers', 'addresses',
                                           'locations', 'locations__location_level'))
+
+
+class PersonCurrentSerializer(PersonDetailSerializer):
+
+    all_locations_and_children = serializers.ListField(
+        child=serializers.UUIDField(),
+    )
+    all_role_categories_and_children = serializers.ListField(
+        child=serializers.UUIDField(),
+    )
+
+    class Meta:
+        model = Person
+        fields = PERSON_DETAIL_FIELDS + ('all_locations_and_children',
+                                         'all_role_categories_and_children',)
 
 
 class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSerializerMixin,

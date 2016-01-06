@@ -2,16 +2,20 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import inject from 'bsrs-ember/utilities/store';
+import EmailMixin from 'bsrs-ember/mixins/model/email';
 import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
 import AddressMixin from 'bsrs-ember/mixins/model/address';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 
-var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberMixin, {
+var run = Ember.run;
+
+var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberMixin, EmailMixin, {
     store: inject('main'),
     name: attr(''),
     number: attr(''),
     status_fk: undefined,
     tickets: [],
+    email_fks: [],
     phone_number_fks: [],
     address_fks: [],
     location_level_fk: undefined,
@@ -28,11 +32,12 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
     locationLevelIsNotDirty: Ember.computed.not('locationLevelIsDirty'),
     location_level: Ember.computed.alias('location_levels.firstObject'),
     location_levels: Ember.computed(function() {
+        const pk = this.get('id');
         let filter = (location_level) => {
             let location_pks = location_level.get('locations') || [];
-            return Ember.$.inArray(this.get('id'), location_pks) > -1;
+            return Ember.$.inArray(pk, location_pks) > -1;
         };
-        return this.get('store').find('location-level', filter.bind(this), ['locations']);
+        return this.get('store').find('location-level', filter);
     }),
     status: Ember.computed.alias('belongs_to.firstObject'),
     belongs_to: Ember.computed(function() {
@@ -41,7 +46,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             let locations = status.get('locations');
             return Ember.$.inArray(location_id, locations) > -1;
         };
-        return this.get('store').find('location-status', filter, ['locations']);
+        return this.get('store').find('location-status', filter);
     }),
     statusIsDirty: Ember.computed('status', 'status_fk', function() {
         let status = this.get('status');
@@ -63,17 +68,29 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             let updated_old_status_locations = old_status_locations.filter((id) => {
                 return id !== location_id;
             });
-            old_status.set('locations', updated_old_status_locations);
+            run(function() {
+                store.push('location-status', {id: old_status.get('id'), locations: updated_old_status_locations});
+            });
+            // old_status.set('locations', updated_old_status_locations);
         }
         let new_status = store.find('location-status', new_status_id);
         let new_status_locations = new_status.get('locations') || [];
         if (new_status_locations) {
-            new_status.set('locations', new_status_locations.concat(location_id));
+            run(function() {
+                store.push('location-status', {id: new_status.get('id'), locations: new_status_locations.concat(location_id)});
+            });
+            // new_status.set('locations', new_status_locations.concat(location_id));
         }
     },
     saveStatus() {
-        let status = this.get('status');
-        if (status) { this.set('status_fk', status.get('id')); }
+        const pk = this.get('id');
+        const store = this.get('store');
+        const status = this.get('status');
+        if (status) {
+            run(function() {
+                store.push('location', {id: pk, status_fk: status.get('id')});
+            });
+        }
     },
     rollbackStatus() {
         let status = this.get('status');
@@ -82,8 +99,8 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             this.change_status(status_fk);
         }
     },
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', function() {
-        return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'emailsIsDirty', function() {
+        return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('emailsIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     change_location_level(new_location_level_id) {
@@ -95,23 +112,37 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             let updated_old_locations = old_locations.filter((id) => {
                 return id !== location_id;
             });
-            old_location_level.set('locations', updated_old_locations);
+            run(function() {
+                store.push('location-level', {id: old_location_level.get('id'), locations: updated_old_locations});
+            });
+            // old_location_level.set('locations', updated_old_locations);
         }
         if(!new_location_level_id){
             return;
         } else{
             const new_location_level = store.find('location-level', new_location_level_id);
             const new_locations = new_location_level.get('locations') || [];
-            new_location_level.set('locations', new_locations.concat(location_id));
+            run(function() {
+                store.push('location-level', {id: new_location_level.get('id'), locations: new_locations.concat(location_id)});
+            });
+            // new_location_level.set('locations', new_locations.concat(location_id));
         }
     },
     saveLocationLevel() {
+        const pk = this.get('id');
+        const store = this.get('store');
         const location_level = this.get('location_level');
         if (location_level) {
             location_level.save();
-            this.set('location_level_fk', this.get('location_level').get('id'));
+            run(function() {
+                store.push('location', {id: pk, location_level_fk: location_level.get('id')});
+            });
+            // this.set('location_level_fk', this.get('location_level').get('id'));
         } else {
-            this.set('location_level_fk', undefined);
+            run(function() {
+                store.push('location', {id: pk, location_level_fk: undefined});
+            });
+            // this.set('location_level_fk', undefined);
         }
     },
     rollbackLocationLevel() {
@@ -122,16 +153,26 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
     saveRelated() {
         this.saveLocationLevel();
         this.saveStatus();
+        this.saveEmails();
         this.savePhoneNumbers();
         this.saveAddresses();
     },
     rollbackRelated() {
         this.rollbackLocationLevel();
         this.rollbackStatus();
+        this.rollbackEmails();
         this.rollbackPhoneNumbers();
         this.rollbackAddresses();
     },
     serialize() {
+        var emails = this.get('emails').filter(function(email) {
+            if(email.get('invalid_email')) {
+                return;
+            }
+            return email;
+        }).map((email) => {
+            return email.serialize();
+        });
         var phone_numbers = this.get('phone_numbers').filter(function(num) {
             if(num.get('invalid_number')) {
                 return;
@@ -156,12 +197,15 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             location_level: this.get('location_level.id'),
             children: [],
             parents: [],
+            emails: emails,
             phone_numbers: phone_numbers,
             addresses: addresses,
         };
     },
     removeRecord() {
-        this.get('store').remove('location', this.get('id'));
+        run(() => {
+            this.get('store').remove('location', this.get('id'));
+        });
     }
 });
 

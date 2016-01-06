@@ -47,13 +47,15 @@ let extract_location_level = (model, store) => {
     } else {
         let role = store.find('role', model.id);
         if (role.get('location_level')) {
-            role.set('location_level_fk', undefined);
+            store.push('role', {id: role.get('id'), location_level_fk: undefined});
+            // role.set('location_level_fk', undefined);
             let location_level = role.get('location_level');
             let role_array = location_level.get('roles');
             let mutated_array = role_array.filter((role) => {
                 return role !== model.id;
             });
-            location_level.set('roles', mutated_array);
+            store.push('location-level', {id: location_level.get('id'), roles: mutated_array});
+            // location_level.set('roles', mutated_array);
             location_level.save();
         }
         return undefined;
@@ -62,7 +64,8 @@ let extract_location_level = (model, store) => {
         let location_level = store.find('location-level', fk);//
         let existing_roles = location_level.get('roles') || [];
         if (location_level.get('content') && existing_roles.indexOf(model.id) === -1) {
-            location_level.set('roles', existing_roles.concat([model.id]));
+            store.push('location-level', {id: location_level.get('id'), roles: existing_roles.concat(model.id)});
+            // location_level.set('roles', existing_roles.concat([model.id]));
             location_level.save();
         }
         delete model.location_level;

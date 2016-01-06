@@ -6,6 +6,7 @@ var extract_locale_translation = function(model, store) {
         var data = {
             'id': obj.locale + ':' + model.key,
             'locale': obj.locale,
+            'locale_name': store.find('locale', obj.locale).get('name'),
             'translation': obj.translation
         };
         let locale_trans = store.push('locale-translation', data);

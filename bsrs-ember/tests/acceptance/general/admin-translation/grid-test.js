@@ -22,7 +22,7 @@ const NUMBER_ONE = {keyCode: 49};
 const NUMBER_FOUR = {keyCode: 52};
 const BACKSPACE = {keyCode: 8};
 
-var application, store, endpoint, list_xhr, original_uuid;
+var application, store, endpoint, list_xhr, original_uuid, run = Ember.run;
 
 module('Acceptance | admin-traslation-grid-list', {
     beforeEach() {
@@ -516,7 +516,9 @@ test('delete filterset will fire off xhr and remove item from the sidebar naviga
     visit(ADMIN_TRANSLATION_URL);
     clearAll(store, 'filterset');
     andThen(() => {
-        store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
+        run(function() {
+            store.push('filterset', {id: UUID.value, name: name, endpoint_name: routePath, endpoint_uri: query});
+        });
     });
     andThen(() => {
         let section = find('.t-grid-wrap');

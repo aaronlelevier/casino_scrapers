@@ -37,6 +37,7 @@ module('Acceptance | location-new', {
             location_level: LLD.idOne,
             children: [],
             parents: [],
+            emails: [],
             phone_numbers: [],
             addresses: []
         };
@@ -58,7 +59,7 @@ test('visiting /location/new', (assert) => {
         assert.equal(store.find('location').get('length'), 1);
         const location = store.find('location', UUID.value);
         assert.ok(location.get('new'));
-        assert.equal(page.locationLevelInput(), 'Select One');
+        // assert.equal(page.locationLevelInput(), 'Select One');
     });
     fillIn('.t-location-name', LD.storeName);
     fillIn('.t-location-number', LD.storeNumber);
