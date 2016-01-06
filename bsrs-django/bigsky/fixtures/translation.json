@@ -90,6 +90,51 @@
   }
 },
 {
+  "pk": "67401178-7860-4b78-a316-67f90a6f38ee",
+  "model": "translation.locale",
+  "fields": {
+    "presentation_name": "ay",
+    "modified": "2016-01-04T21:55:48.955Z",
+    "created": "2016-01-04T21:55:48.955Z",
+    "locale": "ay",
+    "native_name": "aYodle",
+    "deleted": null,
+    "rtl": false,
+    "default": false,
+    "name": "aYodle"
+  }
+},
+{
+  "pk": "875f6f3a-66cc-40d9-be3e-245d45ffca1c",
+  "model": "translation.locale",
+  "fields": {
+    "presentation_name": "by",
+    "modified": "2016-01-04T21:55:48.955Z",
+    "created": "2016-01-04T21:55:48.955Z",
+    "locale": "by",
+    "native_name": "bYodle",
+    "deleted": null,
+    "rtl": false,
+    "default": false,
+    "name": "bYodle"
+  }
+},
+{
+  "pk": "5b168ad5-7ffe-4460-a539-7613ac892dbe",
+  "model": "translation.locale",
+  "fields": {
+    "presentation_name": "cy",
+    "modified": "2016-01-04T21:55:48.955Z",
+    "created": "2016-01-04T21:55:48.955Z",
+    "locale": "cy",
+    "native_name": "cYodle",
+    "deleted": null,
+    "rtl": false,
+    "default": false,
+    "name": "cYodle"
+  }
+},
+{
   "pk": "14095303-0dfc-4358-89e5-7ca83a35cfdf",
   "model": "translation.translation",
   "fields": {
