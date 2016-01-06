@@ -16,12 +16,17 @@ export default Ember.Object.extend(GridRepositoryMixin, {
     deserializer: Ember.computed.alias('PersonDeserializer'),
     create(new_pk) {
         let pk = this.get('uuid').v4();
+        const store = this.get('store');
         const role = this.get('store').find('role').filter((role) => {
             return role.get('default') ? true : false;
         }).objectAt(0);
         const people = role.get('people') || [];
-        const person = this.store.push('person', {id: pk, new: true, new_pk: new_pk, role_fk: role.get('id')});
-        role.set('people', people.concat(person.get('id')));
+        let person;
+        run(() => {
+            person = store.push('person', {id: pk, new: true, new_pk: new_pk, role_fk: role.get('id')});
+            store.push('role', {id: role.get('id'), people: people.concat(person.get('id'))});
+            // role.set('people', people.concat(person.get('id')));
+        });
         return person;
     },
     insert(model) {

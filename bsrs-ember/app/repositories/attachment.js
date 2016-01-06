@@ -2,12 +2,14 @@ import Ember from 'ember';
 import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 
-var PREFIX = config.APP.NAMESPACE;
+var PREFIX = config.APP.NAMESPACE, run = Ember.run;
 
 var AttachmentRepo = Ember.Object.extend({
     remove(id) {
-        let store = this.get('store');
-        store.remove('attachment', id);
+        const store = this.get('store');
+        run(() => {
+            store.remove('attachment', id);
+        });
         PromiseMixin.xhr(`${PREFIX}/admin/attachments/${id}/`, 'DELETE');
     },
     removeAllUnrelated() {
@@ -16,8 +18,10 @@ var AttachmentRepo = Ember.Object.extend({
         let ids = ids_array.filter(function(attachment) {
             return attachment.get('rollback');
         }).mapBy('id');
-        ids.forEach((id) => {
-            store.remove('attachment', id);
+        run(() => {
+            ids.forEach((id) => {
+                store.remove('attachment', id);
+            });
         });
         if(ids.length > 0) {
             let endpoint = `${PREFIX}/admin/attachments/batch-delete/`;
@@ -32,7 +36,9 @@ var AttachmentRepo = Ember.Object.extend({
     },
     upload(id, file, model) {
         let store = this.get('store');
-        store.push('attachment', {id: id, new: true, percent: 25});
+        run(() => {
+            store.push('attachment', {id: id, new: true, percent: 25});
+        });
         model.add_attachment(id);
         let data = new FormData();
         data.append('id', id);

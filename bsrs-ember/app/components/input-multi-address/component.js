@@ -6,6 +6,8 @@ import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/
 import addressNameValidation from 'bsrs-ember/validation/address_name';
 import postalCodeValidation from 'bsrs-ember/validation/postal_code';
 
+var run = Ember.run;
+
 var MultiAddressComponent = ChildValidationComponent.extend(ValidationMixin, CustomValidMixin, {
     uuid: inject('uuid'),
     tagName: 'div',
@@ -22,10 +24,14 @@ var MultiAddressComponent = ChildValidationComponent.extend(ValidationMixin, Cus
             const related_pk = this.get('related_pk');
             var model = {id: id, type: type};
             model['model_fk'] = related_pk;
-            this.get('model').push(model);
+            run(() => {
+                this.get('model').push(model);
+            });
         },
         delete(entry) {
-            this.get('model').push({id: entry.get('id'), removed: true});
+            run(() => {
+                this.get('model').push({id: entry.get('id'), removed: true});
+            });
         },
         changeState(state, val) {
             const state_id = parseInt(val, 10);

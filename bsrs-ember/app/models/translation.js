@@ -3,6 +3,8 @@ import { attr, Model } from 'ember-cli-simple-store/model';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import inject from 'bsrs-ember/utilities/store';
 
+var run = Ember.run;
+
 var TranslationModel = Model.extend(NewMixin, {
     store: inject('main'),
     key: Ember.computed.alias('id'),
@@ -50,7 +52,7 @@ var TranslationModel = Model.extend(NewMixin, {
             }
             x.rollback();
         });
-        Ember.run(function() {
+        run(function() {
             locales_to_remove.forEach((id) => {
                 store.remove('locale-translation', id); //no code in the unit tests hit this currently
             });

@@ -56,18 +56,16 @@ var CCMixin = Ember.Mixin.create({
         const m2m_to_throw_out = m2m_array.filter((join_model) => {
             return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed') && this.get('id') === join_model.get('ticket_pk');
         });
-        m2m_to_throw_out.forEach(function(join_model) {
-            run(function() {
+        run(function() {
+            m2m_to_throw_out.forEach(function(join_model) {
                 store.push('ticket-person', {id: join_model.get('id'), removed: true});
             });
-        });
-        previous_m2m_fks.forEach((pk) => {
-            var m2m_to_keep = store.find('ticket-person', pk);
-            if (m2m_to_keep.get('id')) {
-                run(function() {
+            previous_m2m_fks.forEach((pk) => {
+                var m2m_to_keep = store.find('ticket-person', pk);
+                if (m2m_to_keep.get('id')) {
                     store.push('ticket-person', {id: pk, removed: undefined});
-                });
-            }
+                }
+            });
         });
     },
     saveCC() {
