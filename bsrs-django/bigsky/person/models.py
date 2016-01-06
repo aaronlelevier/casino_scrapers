@@ -440,6 +440,12 @@ class Person(BaseModel, AbstractUser):
             setattr(self, 'password_history',
                 self.password_history[len(self.password_history)-settings.MAX_PASSWORDS_STORED:])
 
+    def all_locations_and_children(self):
+        return self.locations.objects_and_their_children()
+
+    def all_role_categories_and_children(self):
+        return self.role.categories.objects_and_their_children()
+
 
 @receiver(post_save, sender=Person)
 def update_group(sender, instance=None, created=False, **kwargs):
