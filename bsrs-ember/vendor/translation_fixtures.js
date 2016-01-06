@@ -192,10 +192,15 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'modules.tasks.titleShort':'Tasks',
                     'modules.tickets.titleShort':'Tickets',
                     'modules.workOrders.titleShort':'Work Orders',
+                    'selects.loading':'Loading',
+                    'selects.noMatchesMessage':'No Matches',
+                    'selects.searchMessage':'Type to search',
+                    'selects.searchPlaceholder':'Search',
                     'ticket.created':'{{requester}} created this ticket {{timestamp}}',
                     'ticket.label.assignee-fullname':'Assignee',
                     'ticket.label.category-name':'Category',
                     'ticket.label.cc':'CC',
+                    'ticket.label.comment_add':'Add a comment',
                     'ticket.label.created':'Created',
                     'ticket.label.formatted_date':'Created',
                     'ticket.label.location-name':'Location',
@@ -223,11 +228,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'Progress',
                     'validation.invalid':'Invalid',
                     'validation.valid':'Valid',
-                    'welcome':'Hello',
-                    'selects.loading':'Loading',
-                    'selects.searchMessage':'Type to search',
-                    'selects.searchPlaceholder':'Search',
-                    'selects.noMatchesMessage':'No Matches'
+                    'welcome':'Hello'
                 }
             }
             break;
@@ -420,10 +421,15 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'modules.tasks.titleShort':'Tareas',
                     'modules.tickets.titleShort':'Entradas',
                     'modules.workOrders.titleShort':'Órdenes de trabajo',
+                    'selects.loading':'Cargando',
+                    'selects.noMatchesMessage':'No hay coincidencias',
+                    'selects.searchMessage':'Escriba para buscar',
+                    'selects.searchPlaceholder':'Buscar',
                     'ticket.created':'{{requester}} creado este {{timestamp}} billete',
                     'ticket.label.assignee-fullname':'Cesionario',
                     'ticket.label.category-name':'Categoría',
                     'ticket.label.cc':'CC',
+                    'ticket.label.comment_add':'Añadir un comentario',
                     'ticket.label.created':'Creado',
                     'ticket.label.formatted_date':'Creado',
                     'ticket.label.location-name':'Localización',
@@ -451,11 +457,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'Progreso',
                     'validation.invalid':'Inválido',
                     'validation.valid':'Válido',
-                    'welcome':'Hola',
-                    'selects.loading':'Cargando',
-                    'selects.searchMessage':'Escriba para buscar',
-                    'selects.searchPlaceholder':'Buscar',
-                    'selects.noMatchesMessage':'No hay coincidencias'
+                    'welcome':'Hola'
                 }
             }
             break;
@@ -580,7 +582,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'admin.person.label.role-name':'Rôle',
                     'admin.person.label.status':'statut',
                     'admin.person.label.title':'Titre',
-                    'admin.person.label.username':'le nom d\'utilisateur',
+                    'admin.person.label.username':'le nom dutilisateur',
                     'admin.person.one':'La personne',
                     'admin.person.other':'Personnes',
                     'admin.person.search':'Recherche de membres',
@@ -648,10 +650,15 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'modules.tasks.titleShort':'Tâches',
                     'modules.tickets.titleShort':'Billets',
                     'modules.workOrders.titleShort':'Ordres de travail',
+                    'selects.loading':'Chargement',
+                    'selects.noMatchesMessage':'Pas de correspondance',
+                    'selects.searchMessage':'Tapez à la recherche',
+                    'selects.searchPlaceholder':'Recherche',
                     'ticket.created':'{{requester}} créé ce billet {{timestamp}}',
                     'ticket.label.assignee-fullname':'Cessionnaire',
                     'ticket.label.category-name':'Catégorie',
                     'ticket.label.cc':'CC',
+                    'ticket.label.comment_add':'Ajouter un commentaire',
                     'ticket.label.created':'Créé',
                     'ticket.label.formatted_date':'Créé',
                     'ticket.label.location-name':'Lieu',
@@ -679,11 +686,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'Progrès',
                     'validation.invalid':'Invalide',
                     'validation.valid':'Valide',
-                    'welcome':'Salut',
-                    'selects.loading':'Chargement',
-                    'selects.searchMessage':'Tapez à la recherche',
-                    'selects.searchPlaceholder':'Recherche',
-                    'selects.noMatchesMessage':'Pas de correspondance'
+                    'welcome':'Salut'
                 }
             }
             break;
@@ -876,10 +879,15 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'modules.tasks.titleShort':'任务',
                     'modules.tickets.titleShort':'门票',
                     'modules.workOrders.titleShort':'工作订单',
+                    'selects.loading':'载入中',
+                    'selects.noMatchesMessage':'不匹配',
+                    'selects.searchMessage':'键入搜索内容',
+                    'selects.searchPlaceholder':'搜索',
                     'ticket.created':'{{requester}}创造了这个票{{timestamp}}',
                     'ticket.label.assignee-fullname':'受让人',
                     'ticket.label.category-name':'类别',
                     'ticket.label.cc':'CC',
+                    'ticket.label.comment_add':'添加评论',
                     'ticket.label.created':'创建',
                     'ticket.label.formatted_date':'创建',
                     'ticket.label.location-name':'位置',
@@ -907,11 +915,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'进展',
                     'validation.invalid':'无效',
                     'validation.valid':'有效',
-                    'welcome':'您好',
-                    'selects.loading':'载入中',
-                    'selects.searchMessage':'键入搜索内容',
-                    'selects.searchPlaceholder':'搜索',
-                    'selects.noMatchesMessage':'不匹配'
+                    'welcome':'您好'
                 }
             }
             break;
@@ -1002,7 +1006,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'admin.location.status.future':'将来',
                     'admin.location.status.open':'オープン',
                     'admin.locationlevel.company':'会社',
-                    'admin.locationlevel.department':'省',
+                    'admin.locationlevel.department':'部門',
                     'admin.locationlevel.district':'地区',
                     'admin.locationlevel.fmd':'施設管理区',
                     'admin.locationlevel.fmu':'ファシリティマネジメントリージョン',
@@ -1083,7 +1087,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'crud.create.error':'{{model}}の作成エラーが発生しました。',
                     'crud.create.success':'{{model}}正常に作成されました。',
                     'crud.delete.button':'削除',
-                    'crud.delete.confirm':'あなたは \'{{ record}}の\'を{{model}}のを削除してもよろしいですか？',
+                    'crud.delete.confirm':'あなたは \'{{ record}}の\'を{{model}}の\を削除してもよろしいですか？',
                     'crud.delete.error':'エラーが{{model}}削除します。',
                     'crud.restore.button':'リストア',
                     'crud.restore.error':'エラー復元{{model}}',
@@ -1104,10 +1108,15 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'modules.tasks.titleShort':'タスク',
                     'modules.tickets.titleShort':'チケット',
                     'modules.workOrders.titleShort':'作業オーダー',
+                    'selects.loading':'読み込んでいます',
+                    'selects.noMatchesMessage':'一致なし',
+                    'selects.searchMessage':'検索するタイ​​プ',
+                    'selects.searchPlaceholder':'サーチ',
                     'ticket.created':'このチケット{{timestamp}}を作成{{requester}}',
                     'ticket.label.assignee-fullname':'譲受人',
                     'ticket.label.category-name':'カテゴリ',
                     'ticket.label.cc':'CC',
+                    'ticket.label.comment_add':'コメントを追加します',
                     'ticket.label.created':'作成',
                     'ticket.label.formatted_date':'作成',
                     'ticket.label.location-name':'ロケーション',
@@ -1135,11 +1144,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'upload.progress':'進捗',
                     'validation.invalid':'無効',
                     'validation.valid':'正当な',
-                    'welcome':'こんにちは',
-                    'selects.loading':'読み込んでいます',
-                    'selects.searchMessage':'検索するタイ​​プ',
-                    'selects.searchPlaceholder':'サーチ',
-                    'selects.noMatchesMessage':'一致なし'
+                    'welcome':'こんにちは'
                 }
             }
             break;

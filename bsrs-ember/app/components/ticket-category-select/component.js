@@ -1,6 +1,7 @@
 import Ember from 'ember';
 
 var TicketCategories = Ember.Component.extend({
+    classNames: ['ticket-category-wrap'],
     categories_selected: Ember.computed('ticket.top_level_category', 'ticket.categories.[]', function() {
         let index = this.get('index');
         let ticket = this.get('ticket');

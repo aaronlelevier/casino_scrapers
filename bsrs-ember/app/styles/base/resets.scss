@@ -119,12 +119,13 @@ input[type="text"]:disabled {
 		}
 	}
 	.ember-power-select-option{
-		padding: 3px 6px;
+		padding: 3px 12px;
 		&.ember-power-select-option--selected{
 			color: $medGray;
 			background-color: $light;
 		}
 		&.ember-power-select-option--highlighted{
+			color: $white;
 			background-color: $hoverColor;
 		}
 	}
