@@ -748,60 +748,60 @@ test('location.name is a functional related filter', function(assert) {
     });
 });
 
-// test('assignee.fullname is a functional related filter', function(assert) {
-//     let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-assignee__fullname&assignee__fullname__icontains=ra';
-//     xhr(option_four,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
-//     let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-assignee__fullname';
-//     xhr(option_three,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
-//     let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=assignee__fullname';
-//     xhr(option_two,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
-//     let option_one = PREFIX + BASE_URL + '/?page=1&search=ra';
-//     xhr(option_one,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
-//     visit(TICKET_URL);
-//     andThen(() => {
-//         assert.equal(currentURL(), TICKET_URL);
-//         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-//         assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
-//         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
-//     });
-//     fillIn('.t-grid-search-input', 'ra');
-//     triggerEvent('.t-grid-search-input', 'keyup', LETTER_R);
-//     andThen(() => {
-//         assert.equal(currentURL(),TICKET_URL + '?search=ra');
-//         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-//         assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
-//         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
-//     });
-//     fillIn('.t-grid-search-input', '');
-//     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
-//     andThen(() => {
-//         assert.equal(currentURL(),TICKET_URL + '?search=');
-//         assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
-//         assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
-//         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-//     });
-//     click(SORT_ASSIGNEE_DIR);
-//     andThen(() => {
-//         assert.equal(currentURL(),TICKET_URL + '?search=&sort=assignee.fullname');
-//         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-//         assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
-//         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
-//     });
-//     click(SORT_ASSIGNEE_DIR);
-//     andThen(() => {
-//         assert.equal(currentURL(),TICKET_URL + '?search=&sort=-assignee.fullname');
-//         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-//         assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
-//         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
-//     });
-//     filterGrid('assignee.fullname', 'ra');
-//     andThen(() => {
-//         assert.equal(currentURL(),TICKET_URL + '?find=assignee.fullname%3Ara&search=&sort=-assignee.fullname');
-//         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
-//         assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
-//         assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
-//     });
-// });
+test('assignee.fullname is a functional related filter', function(assert) {
+    let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-assignee__fullname&assignee__fullname__icontains=ra';
+    xhr(option_four,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
+    let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-assignee__fullname';
+    xhr(option_three,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
+    let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=assignee__fullname';
+    xhr(option_two,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
+    let option_one = PREFIX + BASE_URL + '/?page=1&search=ra';
+    xhr(option_one,'GET',null,{},200,TF.searched_related(TD.assigneeTwoId, 'assignee'));
+    visit(TICKET_URL);
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+    });
+    fillIn('.t-grid-search-input', 'ra');
+    triggerEvent('.t-grid-search-input', 'keyup', LETTER_R);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=ra');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+    });
+    fillIn('.t-grid-search-input', '');
+    triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=');
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-request').text(), TD.requestOneGrid);
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+    });
+    click(SORT_ASSIGNEE_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=&sort=assignee.fullname');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), PD.fullname);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'sub');
+    });
+    click(SORT_ASSIGNEE_DIR);
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?search=&sort=-assignee.fullname');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+    });
+    filterGrid('assignee.fullname', 'ra');
+    andThen(() => {
+        assert.equal(currentURL(),TICKET_URL + '?find=assignee.fullname%3Ara&search=&sort=-assignee.fullname');
+        assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);
+        assert.equal(find('.t-grid-data:eq(0) .t-ticket-assignee-fullname').text(), `${TD.assigneeTwo} ${TD.assigneeTwo}`);
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-ticket-request').text()), 'ape');
+    });
+});
 
 test('category.name is a functional related filter (search only)', function(assert) {
     let option_four = PREFIX + BASE_URL + '/?page=1&categories__name__icontains=x';
