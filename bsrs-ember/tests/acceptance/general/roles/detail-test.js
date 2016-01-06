@@ -62,43 +62,43 @@ module('Acceptance | role-detail', {
 //     });
 // });
 
-test('when you deep link to the role detail view you get bound attrs', (assert) => {
-    clearxhr(list_xhr);
-    visit(DETAIL_URL);
-    andThen(() => {
-        assert.equal(currentURL(), DETAIL_URL);
-        let role = store.find('role').objectAt(0);  
-        assert.ok(role.get('isNotDirty'));
-        assert.equal(role.get('location_level').get('id'), LLD.idOne);
-        assert.equal(page.roleTypeInput(), RD.roleTypeGeneral);
-        assert.equal(page.categorySelected().indexOf(CD.nameOne), 2);
-        assert.equal(page.locationLevelInput().split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
-    });
-    let response = RF.detail(RD.idOne);
-    let location_level = LLF.put({id: LLD.idLossRegion, name: LLD.nameLossPreventionRegion});
-    let payload = RF.put({id: RD.idOne, name: RD.namePut, role_type: RD.roleTypeContractor, location_level: location_level.id, categories: [CD.idOne]});
-    xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
-    fillIn('.t-role-name', RD.namePut);
-    page.roleTypeClickDropdown();
-    page.roleTypeClickOptionTwo();
-    page.locationLevelClickDropdown();
-    page.locationLevelClickOptionTwo();
-    andThen(() => {
-        let role = store.find('role').objectAt(0);  
-        assert.ok(role.get('isDirty'));
-    });
-    let list = RF.list();
-    list.results[0].name = RD.namePut;
-    list.results[0].role_type = RD.roleTypeContractor;
-    list.results[0].location_level = LLD.idLossRegion;
-    xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
-    generalPage.save();
-    andThen(() => {
-        assert.equal(currentURL(), ROLE_URL);
-        let role = store.find('role').objectAt(0);  
-        assert.ok(role.get('isNotDirty'));
-    });
-});
+// test('when you deep link to the role detail view you get bound attrs', (assert) => {
+//     clearxhr(list_xhr);
+//     visit(DETAIL_URL);
+//     andThen(() => {
+//         assert.equal(currentURL(), DETAIL_URL);
+//         let role = store.find('role').objectAt(0);  
+//         assert.ok(role.get('isNotDirty'));
+//         assert.equal(role.get('location_level').get('id'), LLD.idOne);
+//         assert.equal(page.roleTypeInput(), RD.roleTypeGeneral);
+//         assert.equal(page.categorySelected().indexOf(CD.nameOne), 2);
+//         assert.equal(page.locationLevelInput().split(' +')[0].trim().split(' ')[0], LLD.nameCompany);
+//     });
+//     let response = RF.detail(RD.idOne);
+//     let location_level = LLF.put({id: LLD.idLossRegion, name: LLD.nameLossPreventionRegion});
+//     let payload = RF.put({id: RD.idOne, name: RD.namePut, role_type: RD.roleTypeContractor, location_level: location_level.id, categories: [CD.idOne]});
+//     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
+//     fillIn('.t-role-name', RD.namePut);
+//     page.roleTypeClickDropdown();
+//     page.roleTypeClickOptionTwo();
+//     page.locationLevelClickDropdown();
+//     page.locationLevelClickOptionTwo();
+//     andThen(() => {
+//         let role = store.find('role').objectAt(0);  
+//         assert.ok(role.get('isDirty'));
+//     });
+//     let list = RF.list();
+//     list.results[0].name = RD.namePut;
+//     list.results[0].role_type = RD.roleTypeContractor;
+//     list.results[0].location_level = LLD.idLossRegion;
+//     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
+//     generalPage.save();
+//     andThen(() => {
+//         assert.equal(currentURL(), ROLE_URL);
+//         let role = store.find('role').objectAt(0);  
+//         assert.ok(role.get('isNotDirty'));
+//     });
+// });
 
 test('validation works and when hit save, we do same post', (assert) => {
     visit(DETAIL_URL);
