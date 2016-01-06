@@ -50,9 +50,7 @@ test('ticket will be deserialized without error when requester as null (not a re
 });
 
 test('ticket requester will be deserialized into its own store when deserialize detail is invoked (with existing requester)', (assert) => {
-    run(function() {
-        store.push('person', {id: PD.unusedId});
-    });
+    store.push('person', {id: PD.unusedId});
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     let json = TF.generate(TD.idOne);
     run(function() {
@@ -75,9 +73,7 @@ test('ticket assignee will be deserialized into its own store when deserialize d
 test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with existing assignee)(detail)', (assert) => {
     ticket.set('assignee_fk', PD.unusedId);
     ticket.save();
-    run(function() {
-        store.push('person', {id: PD.unusedId, assigned_tickets: [TD.idOne]});
-    });
+    store.push('person', {id: PD.unusedId, assigned_tickets: [TD.idOne]});
     assert.equal(ticket.get('assignee').get('id'), PD.unusedId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     let json = TF.generate(TD.idOne);
@@ -102,9 +98,7 @@ test('ticket assignee will be deserialized into its own store when deserialize d
 test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with existing assignee)(list)', (assert) => {
     ticket.set('assignee_fk', PD.unusedId);
     ticket.save();
-    run(function() {
-        store.push('person', {id: PD.unusedId, assigned_tickets: [TD.idOne]});
-    });
+    store.push('person', {id: PD.unusedId, assigned_tickets: [TD.idOne]});
     assert.equal(ticket.get('assignee').get('id'), PD.unusedId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     let json = TF.generate(TD.idOne);
@@ -119,9 +113,7 @@ test('ticket assignee will be deserialized into its own store when deserialize d
 /*TICKET LOCATION 1-2-Many*/
 test('ticket location will be deserialized into its own store when deserialize list is invoked (no existing location)', (assert) => {
     let location;
-    run(function() {
-        location = store.push('location', {id: LD.idOne, name: LD.storeName});
-    });
+    location = store.push('location', {id: LD.idOne, name: LD.storeName});
     let json = TF.generate(TD.idOne);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -150,9 +142,7 @@ test('ticket location will be deserialized into its own store when deserialize d
     let location;
     ticket.set('location_fk', LD.idOne);
     ticket.save();
-    run(function() {
-        location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
-    });
+    location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
     let json = TF.generate(TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
@@ -179,9 +169,7 @@ test('ticket location will be deserialized into its own store when deserialize d
     let location;
     ticket.set('location_fk', LD.idOne);
     ticket.save();
-    run(function() {
-        location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
-    });
+    location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
     let json = TF.generate(TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
@@ -196,9 +184,7 @@ test('ticket location will be updated when server returns different location (li
     let location;
     ticket.set('location_fk', LD.idOne);
     ticket.save();
-    run(function() {
-        location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
-    });
+    location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne]});
     let json = TF.generate(TD.idOne);
     delete json.cc;
     json.location = {id: LD.idTwo, name: LD.storeNameTwo, location_level: LLD.idOne};
@@ -217,9 +203,7 @@ test('ticket location will be updated when server returns different location (de
     let location;
     ticket.set('location_fk', LD.idOne);
     ticket.save();
-    run(function() {
-        location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne], location_level: LLD.idOne});
-    });
+    location = store.push('location', {id: LD.idOne, name: LD.storeName, tickets: [TD.idOne], location_level: LLD.idOne});
     let json = TF.generate(TD.idOne);
     json.location = {id: LD.idTwo, name: LD.storeNameTwo, location_level: LLD.idOne};
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -281,9 +265,7 @@ test('ticket priority will be deserialized into its own store when deserialize d
 
 test('ticket priority will be deserialized into its own store when deserialize detail is invoked (with existing already-wired priority model)', (assert) => {
     let ticket_priority;
-    run(function() {
-        ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne, 99]});
-    });
+    ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne, 99]});
     let json = TF.generate(TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     run(function() {
@@ -296,12 +278,10 @@ test('ticket priority will be deserialized into its own store when deserialize d
 
 test('ticket priority will be updated when server returns different priority (list)', (assert) => {
     let ticket, ticket_status, ticket_priority, ticket_priority_two;
-    run(function() {
-        ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId});
-        ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
-        ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
-        ticket_priority_two = store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityOne, tickets: []});
-    });
+    ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId});
+    ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
+    ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
+    ticket_priority_two = store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityOne, tickets: []});
     let json = TF.generate(TD.idOne);
     delete json.cc;
     json.priority = TD.priorityTwoId;
@@ -319,9 +299,7 @@ test('ticket priority will be updated when server returns different priority (li
 
 test('ticket priority will be updated when server returns different priority (detail)', (assert) => {
     let ticket_priority_two;
-    run(function() {
-        ticket_priority_two = store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityOne, tickets: []});
-    });
+    ticket_priority_two = store.push('ticket-priority', {id: TD.priorityTwoId, name: TD.priorityOne, tickets: []});
     let json = TF.generate(TD.idOne);
     json.priority = TD.priorityTwoId;
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -385,10 +363,8 @@ test('ticket status will be updated when server returns same status (single)', (
 
 test('ticket status will be updated when server returns different status (list)', (assert) => {
     let ticket_status_two, ticket_priority;
-    run(function() {
-        ticket_status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusOne, tickets: []});
-        ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
-    });
+    ticket_status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusOne, tickets: []});
+    ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
     let json = TF.generate(TD.idOne);
     delete json.cc;
     json.status = TD.statusTwoId;
@@ -406,12 +382,10 @@ test('ticket status will be updated when server returns different status (list)'
 
 test('newly inserted ticket will have non dirty status when deserialize list executes', (assert) => {
     let ticket_status, ticket_status_two, ticket_priority;
-    run(function() {
-        store.clear('ticket');
-        ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: []});
-        ticket_status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusOne, tickets: []});
-        ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
-    });
+    store.clear('ticket');
+    ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: []});
+    ticket_status_two = store.push('ticket-status', {id: TD.statusTwoId, name: TD.statusOne, tickets: []});
+    ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
     let json = TF.generate(TD.idOne);
     delete json.cc;
     json.status = TD.statusTwoId;
@@ -449,10 +423,8 @@ test('ticket-status m2m is added after deserialize single (starting with existin
     let m2m, person;
     ticket.set('ticket_people_fks', [TICKET_PERSON_DEFAULTS.idOne]);
     ticket.save();
-    run(function() {
-        m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-        person = store.push('person', {id: PD.id, fullname: PD.fullname});
-    });
+    m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+    person = store.push('person', {id: PD.id, fullname: PD.fullname});
     assert.equal(ticket.get('cc.length'), 1);
     let response = TF.generate(TD.idOne);
     let second_person = PF.get(PD.unusedId);
@@ -475,10 +447,8 @@ test('ticket-person m2m is removed when server payload no longer reflects what s
     let m2m, person;
     ticket.set('ticket_people_fks', [TICKET_PERSON_DEFAULTS.idOne]);
     ticket.save();
-    run(function() {
-        m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
-        person = store.push('person', {id: PD.id, name: PD.fullname});
-    });
+    m2m = store.push('ticket-person', {id: TICKET_PERSON_DEFAULTS.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+    person = store.push('person', {id: PD.id, name: PD.fullname});
     assert.equal(ticket.get('cc').get('length'), 1);
     let response = TF.generate(TD.id);
     let second_person = PF.get(PD.unusedId);
@@ -499,9 +469,7 @@ test('ticket-person m2m is removed when server payload no longer reflects what s
 });
 
 test('ticket-category m2m added including parent id for categories without a fat parent model', (assert) => {
-    run(function() {
-        store.clear('ticket');
-    });
+    store.clear('ticket');
     let response = TF.generate(TD.idOne);
     response.cc = [PF.get()];
     run(function() {
@@ -526,9 +494,7 @@ test('ticket-category m2m added including parent id for categories without a fat
 });
 
 test('ticket-person m2m added even when ticket did not exist before the deserializer executes', (assert) => {
-    run(function() {
-        store.clear('ticket');
-    });
+    store.clear('ticket');
     let response = TF.generate(TD.idOne);
     response.cc = [PF.get()];
     run(function() {
@@ -595,10 +561,8 @@ test('ticket-status m2m is added after deserialize single (starting with existin
     let m2m, category;
     ticket.set('ticket_categories_fks', [TICKET_CD.idOne]);
     ticket.save();
-    run(function() {
-        m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-        category = store.push('category', {id: CD.idOne, name: CD.nameOne});
-    });
+    m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     assert.equal(ticket.get('categories.length'), 1);
     let response = TF.generate(TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -620,10 +584,8 @@ test('ticket-status m2m is added after deserialize list (starting with existing 
     let m2m, category;
     ticket.set('ticket_categories_fks', [TICKET_CD.idOne]);
     ticket.save();
-    run(function() {
-        m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-        category = store.push('category', {id: CD.idOne, name: CD.nameOne});
-    });
+    m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     assert.equal(ticket.get('categories.length'), 1);
     let json = TF.generate(TD.idOne);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
@@ -646,10 +608,8 @@ test('ticket-category m2m is removed when server payload no longer reflects what
     let m2m, category;
     ticket.set('ticket_categories_fks', [TICKET_CD.idOne]);
     ticket.save();
-    run(function() {
-        m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-        category = store.push('category', {id: CD.idOne, name: CD.nameOne});
-    });
+    m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     assert.equal(ticket.get('categories').get('length'), 1);
     let response = TF.generate(TD.id);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
@@ -671,10 +631,8 @@ test('ticket-category m2m is removed when server payload no longer reflects what
     let m2m, category;
     ticket.set('ticket_categories_fks', [TICKET_CD.idOne]);
     ticket.save();
-    run(function() {
-        m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
-        category = store.push('category', {id: CD.idOne, name: CD.nameOne});
-    });
+    m2m = store.push('ticket-category', {id: TICKET_CD.idOne, ticket_pk: TD.idOne, category_pk: CD.idOne});
+    category = store.push('category', {id: CD.idOne, name: CD.nameOne});
     assert.equal(ticket.get('categories').get('length'), 1);
     let json = TF.generate(TD.id);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
@@ -742,13 +700,9 @@ test('attachment added for each attachment on ticket', (assert) => {
 });
 
 test('attachment added for each attachment on ticket (when ticket has existing attachments)', (assert) => {
-    run(function() {
-        ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [TD.attachmentTwoId], previous_attachments_fks: [TD.attachmentTwoId]});
-    });
+    ticket = store.push('ticket', {id: TD.idOne, ticket_attachments_fks: [TD.attachmentTwoId], previous_attachments_fks: [TD.attachmentTwoId]});
     ticket.save();
-    run(function() {
-        store.push('attachment', {id: TD.attachmentTwoId});
-    });
+    store.push('attachment', {id: TD.attachmentTwoId});
     assert.equal(ticket.get('attachments').get('length'), 1);
     let json = TF.generate(TD.id);
     json.attachments = [TD.attachmentTwoId, TD.attachmentOneId];

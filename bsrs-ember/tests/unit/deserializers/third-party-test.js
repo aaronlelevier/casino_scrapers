@@ -20,9 +20,9 @@ module('unit: third-party deserializer test', {
 
 test('third_party setup correct status fk with bootstrapped data (detail)', (assert) => {
     let response = TPF.generate(TPD.idOne);
-    run(function() {
-        third_party = store.push('third-party', {id: TPD.idOne});
-        status = store.push('status', {id: SD.activeId, name: SD.activeName});
+    third_party = store.push('third-party', {id: TPD.idOne});
+    status = store.push('status', {id: SD.activeId, name: SD.activeName});
+    run(() => {
         subject.deserialize(response, TPD.idOne);
     });
     assert.equal(third_party.get('status_fk'), status.get('id'));
@@ -33,9 +33,9 @@ test('third_party setup correct status fk with bootstrapped data (detail)', (ass
 
 test('third_party setup correct status fk with existing status pointer to third_party', (assert) => {
     let response = TPF.generate(TPD.idOne);
-    run(function() {
-        third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
-        status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]});
+    third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
+    status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]});
+    run(() => {
         subject.deserialize(response, TPD.idOne);
     });
     assert.equal(third_party.get('status_fk'), status.get('id'));
@@ -45,17 +45,14 @@ test('third_party setup correct status fk with existing status pointer to third_
 });
 
 test('third_party setup correct status fk with bootstrapped data (list)', (assert) => {
-    run(function() {
-        third_party = store.push('third-party', {id: TPD.idOne});
-    });
+    third_party = store.push('third-party', {id: TPD.idOne});
     let json = TPF.generate(TPD.idOne);
     let response = {'count':1,'next':null,'previous':null,'results': [json]};
-    run(function() {
+    run(() => {
         subject.deserialize(response);
     });
     assert.equal(third_party.get('status_fk'), status.get('id'));
-    //TODO @toranb => is this a true regression in the deserializer?
-    // assert.equal(third_party.get('status').get('id'), status.get('id'));
+    assert.equal(third_party.get('status').get('id'), status.get('id'));
     assert.equal(status.get('people').length, 1);
     assert.deepEqual(status.get('people'), [TPD.idOne]);
     assert.ok(third_party.get('isNotDirty'));

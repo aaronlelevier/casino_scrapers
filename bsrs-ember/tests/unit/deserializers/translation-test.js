@@ -9,7 +9,7 @@ import LocaleDeserializer from 'bsrs-ember/deserializers/locale';
 import TranslationDeserializer from 'bsrs-ember/deserializers/translation';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, subject, subjectLocale, run = Ember.run;
+let store, subject, subjectLocale;
 
 module('unit: translation deserializer test', {
     beforeEach() {
@@ -22,11 +22,7 @@ module('unit: translation deserializer test', {
 test('deserialize_list - translations only created from list of strings', (assert) => {
     let json = ['home.welcome1', 'home.welcome2'];
     let response = {'count':2,'next':null,'previous':null,'results': json};
-
-    run(function() {
-        subject.deserialize(response);
-    });
-
+    subject.deserialize(response);
     let translations = store.find('translation');
     assert.ok(translations.get('length'), 2);
     assert.equal(store.find('locales').get('length'), 0);
@@ -38,9 +34,7 @@ test('deserialize_list - if the object already exists in the store, do not repla
     // computed, so re-pushing into the store doesn't affect the related 'locales' 
     // based on this test.
     let response = TRANSLATION_FIXTURES.get();
-    run(function() {
-        subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
-    });
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
     let translation = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
     let locale = translation.get('locales').objectAt(0);
     let newTranslation = 'foo';
@@ -50,14 +44,8 @@ test('deserialize_list - if the object already exists in the store, do not repla
     // 2nd `deserialize` will push 'translation' into store a 2nd time
     let json = [translation.get('id')];
     response = {'count':1,'next':null,'previous':null,'results': json};
-
-    run(function() {
-        subject.deserialize(response);
-    });
-
-    run(function() {
-        translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
-    });
+    subject.deserialize(response);
+    translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
     locale = translation.get('locales').objectAt(0);
     assert.ok(locale.get('translation'), newTranslation);
     assert.ok(locale.get('isDirty'));
@@ -65,11 +53,7 @@ test('deserialize_list - if the object already exists in the store, do not repla
 
 test('deserialize_single - translation', (assert) => {
     let response = TRANSLATION_FIXTURES.get();
-
-    run(function() {
-        subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
-    });
-
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
     let translation = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
     assert.ok(translation);
     assert.equal(translation.get('id'), TRANSLATION_DEFAULTS.keyOneGrid);
@@ -86,10 +70,8 @@ test('deserialize_single - translation.locales attr is an array of "locale-trans
         locale: LOCALE_TRANSLATION_DEFAULTS.localeOther,
         translation: LOCALE_TRANSLATION_DEFAULTS.translationOther
     };
-    run(function() {
-        locale_trans = store.push('locale-translation', model);
-        subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
-    });
+    locale_trans = store.push('locale-translation', model);
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
     let translation = store.find('translation', TRANSLATION_DEFAULTS.keyOneGrid);
     assert.ok(translation);
     assert.equal(store.find('locale-translation').get('length'), 4);
@@ -98,21 +80,15 @@ test('deserialize_single - translation.locales attr is an array of "locale-trans
 });
 
 test('deserialize_single - locale-translation - including locale_name', (assert) => {
-    run(function() {
-        store.clear();
-    });
+    store.clear();
     // bootstrapped Locale
     let responseLocale = LOCALE_FIXTURES.get();
-    run(function() {
-        subjectLocale.deserialize(responseLocale, LOCALE_DEFAULTS.idOne); // may need to change to match the "locale-translation"
-    });
+    subjectLocale.deserialize(responseLocale, LOCALE_DEFAULTS.idOne); // may need to change to match the "locale-translation"
 
     // Locale-Translation
     let response = TRANSLATION_FIXTURES.get();
 
-    run(function() {
-        subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
-    });
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
 
     let locale = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
     assert.ok(locale);
@@ -123,15 +99,11 @@ test('deserialize_single - locale-translation - including locale_name', (assert)
 });
 
 test('deserialize_single - multiple deserializes from hitting detail endpoint would not affect state.', (assert) => {
-    run(function() {
-        store.clear();
-    });
+    store.clear();
     let response = TRANSLATION_FIXTURES.get();
 
     // 1st `deserialize`
-    run(function() {
-        subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
-    });
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
     let locale = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
     assert.equal(locale.get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
     let newTranslation = 'foo';
@@ -140,9 +112,7 @@ test('deserialize_single - multiple deserializes from hitting detail endpoint wo
 
     // 2nd `deserialize` where store push would happen again
     response = TRANSLATION_FIXTURES.get();
-    run(function() {
-        subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
-    });
+    subject.deserialize(response, TRANSLATION_DEFAULTS.keyOneGrid);
     locale = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
     assert.equal(locale.get('translation'), newTranslation);
     assert.ok(locale.get('isDirty'));

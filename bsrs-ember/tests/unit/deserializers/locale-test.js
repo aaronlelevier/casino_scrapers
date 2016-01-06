@@ -4,7 +4,7 @@ import LOCALE_DEFAULTS from 'bsrs-ember/vendor/defaults/locale';
 import LocaleDeserializer from 'bsrs-ember/deserializers/locale';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, subject, run = Ember.run;
+let store, subject;
 
 module('unit: locale deserializer test', {
     beforeEach() {
@@ -23,9 +23,7 @@ test('deserialize_single - locale', (assert) => {
         rtl: LOCALE_DEFAULTS.rtlOne
     };
 
-    run(function() {
-        subject.deserialize(data, LOCALE_DEFAULTS.idOne);
-    });
+    subject.deserialize(data, LOCALE_DEFAULTS.idOne);
 
     let locale = store.find('locale', LOCALE_DEFAULTS.idOne);
     assert.ok(locale);
