@@ -24,7 +24,7 @@ class TicketSetupNoLoginMixin(object):
 
         create_ticket_statuses()
         create_ticket_priorites()
-        self.ticket = create_ticket(requester=self.person, assignee=self.person)
+        self.ticket = create_ticket(assignee=self.person)
         self.ticket_two = create_ticket()
 
 

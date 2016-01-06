@@ -12,4 +12,4 @@ class Command(BaseCommand):
         person = Person.objects.get(username='aaron')
         create_ticket_statuses()
         create_ticket_priorites()
-        create_tickets_with_single_category(requester=person, _many=51)
+        create_tickets_with_single_category(assignee=person, _many=51)

@@ -61,7 +61,7 @@ class TicketListTests(TicketSetupMixin, APITestCase):
         self.assertEqual(ticket['id'], str(self.ticket.id))
         self.assertEqual(ticket['status'], str(self.ticket.status.id))
         self.assertEqual(ticket['priority'], str(self.ticket.priority.id))
-        self.assertEqual(ticket['requester'], str(self.ticket.requester.id))
+        self.assertEqual(ticket['requester'], str(self.ticket.requester))
         self.assertEqual(ticket['request'], self.ticket.request)
         self.assertEqual(ticket['number'], self.ticket.number)
         self.assertEqual(
@@ -183,19 +183,6 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(assignee['last_name'], self.ticket.assignee.last_name)
         self.assertEqual(assignee['title'], self.ticket.assignee.title)
         self.assertEqual(assignee['role'], str(self.ticket.assignee.role.id))
-
-    def test_requester(self):
-        response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
-
-        data = json.loads(response.content.decode('utf8'))
-        requester = data['requester']
-
-        self.assertEqual(requester['id'], str(self.ticket.requester.id))
-        self.assertEqual(requester['first_name'], self.ticket.requester.first_name)
-        self.assertEqual(requester['middle_initial'], self.ticket.requester.middle_initial)
-        self.assertEqual(requester['last_name'], self.ticket.requester.last_name)
-        self.assertEqual(requester['title'], self.ticket.requester.title)
-        self.assertEqual(requester['role'], str(self.ticket.requester.role.id))
 
     def test_data_categories(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))
@@ -331,7 +318,7 @@ class TicketCreateTests(TicketSetupMixin, APITestCase):
         self.assertEqual(data['status'], str(ticket.status.id))
         self.assertEqual(data['priority'], str(ticket.priority.id))
         self.assertEqual(data['assignee'], str(ticket.assignee.id))
-        self.assertEqual(data['requester'], str(ticket.requester.id))
+        self.assertEqual(data['requester'], str(ticket.requester))
         self.assertIn(data['categories'][0],
             [str(id) for id in ticket.categories.values_list('id', flat=True)])
         self.assertEqual(data['attachments'],
@@ -515,7 +502,7 @@ class TicketActivityViewSetReponseTests(APITestCase):
 
         self.dm = DistrictManager()
         self.person = self.dm.person
-        self.ticket = create_ticket(requester=self.person)
+        self.ticket = create_ticket(assignee=self.person)
 
         # Add additional 'child' Category to Ticket and Role.
         # These are needed to correct test the 'from'/'to' category change for the 'parent' key
@@ -679,7 +666,7 @@ class TicketAndTicketActivityTests(APITestCase):
 
         self.dm = DistrictManager()
         self.person = self.dm.person
-        self.ticket = create_ticket(requester=self.person)
+        self.ticket = create_ticket(assignee=self.person)
 
         create_ticket_activity_types()
         # Data

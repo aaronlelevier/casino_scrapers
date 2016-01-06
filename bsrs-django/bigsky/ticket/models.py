@@ -126,8 +126,7 @@ class Ticket(BaseModel):
     assignee = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
         related_name="assignee_tickets")
     cc = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True)
-    requester = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True,
-        related_name="requester_tickets")
+    requester = models.CharField(max_length=150, blank=True, null=True)
     categories = models.ManyToManyField(Category, blank=True)
     # Fields
     request = models.CharField(max_length=1000, blank=True, null=True)

@@ -25,18 +25,17 @@ def construct_tree(category, tree):
 
 TICKET_BASE_ID = "40f530c4-ce6c-4724-9cfd-37a16e787"
 
-def _create_ticket(request=None, requester=None, assignee=None):
+def _create_ticket(request=None, assignee=None):
     people = Person.objects.all()
 
     request = request or _generate_chars()
-    requester = requester or random.choice(people)
     assignee = assignee or random.choice(people)
 
     kwargs = {
-        'location': requester.locations.first(),
+        'location': assignee.locations.first(),
         'status': TicketStatus.objects.default(),
         'priority': TicketPriority.objects.default(),
-        'requester': requester,
+        'requester': _generate_chars(),
         'assignee': assignee,
         'request': request
     }
@@ -54,8 +53,8 @@ def _create_ticket(request=None, requester=None, assignee=None):
     return ticket
 
 
-def create_ticket(request=None, requester=None, assignee=None):
-    ticket = _create_ticket(request, requester, assignee)
+def create_ticket(request=None, assignee=None):
+    ticket = _create_ticket(request, assignee)
     top_level_category = Category.objects.filter(parent__isnull=True).first()
     tree = construct_tree(top_level_category, [])
     for category in tree:
@@ -67,15 +66,15 @@ def create_tickets(_many=1):
     return [create_ticket() for x in range(_many)]
 
 
-def create_ticket_with_single_category(request=None, requester=None, assignee=None):
-    ticket = _create_ticket(request, requester, assignee)
-    category = ticket.requester.role.categories.first()
+def create_ticket_with_single_category(request=None, assignee=None):
+    ticket = _create_ticket(request, assignee)
+    category = ticket.assignee.role.categories.first()
     ticket.categories.add(category)
     return ticket
 
 
-def create_tickets_with_single_category(requester=None, _many=0):
-    return [create_ticket_with_single_category(requester=requester) for x in range(_many)]
+def create_tickets_with_single_category(assignee=None, _many=0):
+    return [create_ticket_with_single_category(assignee=assignee) for x in range(_many)]
 
 
 def create_extra_ticket_with_categories():
@@ -147,7 +146,7 @@ def create_ticket_activity(ticket=None, type=None, content=None):
     return mommy.make(TicketActivity,
         type = type,
         ticket = ticket,
-        person = ticket.requester,
+        person = ticket.assignee,
         content = content
     )
 
