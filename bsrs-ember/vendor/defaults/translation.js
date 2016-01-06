@@ -14,10 +14,10 @@ var BSRS_TRANSLATION_DEFAULTS_OBJECT = (function() {
             helperTwo: 'home.hello.helper',
             helperThree: 'home.goodbye.helper',
             //TODO: Need to look up real locale ids
-            localeOneId: '1d4396a9-b91e-471b-91a0-c3e2440ae93b',
+            localeOneId: 'a7ae2835-ee7c-4604-92f7-045f3994936e',
             localeOneTranslation: 'Welcome',
             localeOneHelper: 'Welcomes people to the site',
-            localeTwoId: 'b990d583-eb4f-41f0-a7b0-9fd5a0efc4f1',
+            localeTwoId: '51905ba8-024f-4739-ae5c-2d90ffc3f726',
             localeTwoTranslation: 'Bienvenido',
             localeTwoHelper: 'Acoge con satisfacción la gente al sitio',
             localeThreeId: 'fe0a7aa5-54b0-4bb1-a79d-bc22621562ec',

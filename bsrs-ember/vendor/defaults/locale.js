@@ -3,17 +3,17 @@ var BSRS_LOCALE_DEFAULTS_OBJECT = (function() {
     factory.prototype.defaults = function() {
         return {
             // one
-            idOne: '1d4396a9-b91e-471b-91a0-c3e2440ae93b',
+            idOne: 'a7ae2835-ee7c-4604-92f7-045f3994936e',
             native_nameOne: 'Español',
             localeOne: 'es',
             nameOne: 'Spanish',
             presentation_nameOne: 'Español',
             rtlOne: false,
             // two
-            idTwo: '7f3afd8b-8f2b-43e0-879a-3b60f81388ee',
+            idTwo: '51905ba8-024f-4739-ae5c-2d90ffc3f726',
             native_nameTwo: '',
             localeTwo: 'en',
-            nameTwo: '',
+            nameTwo: 'English',
             presentation_nameTwo: '',
             rtlTwo: false,
             // three

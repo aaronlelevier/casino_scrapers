@@ -1,17 +1,21 @@
 import Ember from 'ember';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import TRANSLATION_DEFAULTS from 'bsrs-ember/vendor/defaults/translation';
+import LOCALE_DEFAULTS from 'bsrs-ember/vendor/defaults/locale';
+import LOCALE_FIXTURES from 'bsrs-ember/vendor/locale_fixtures';
 import LOCALE_TRANSLATION_DEFAULTS from 'bsrs-ember/vendor/defaults/locale-translation';
 import TRANSLATION_FIXTURES from 'bsrs-ember/vendor/admin_translation_fixtures';
+import LocaleDeserializer from 'bsrs-ember/deserializers/locale';
 import TranslationDeserializer from 'bsrs-ember/deserializers/translation';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, subject, run = Ember.run;
+let store, subject, subjectLocale, run = Ember.run;
 
 module('unit: translation deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:translation', 'model:locale-translation']);
+        store = module_registry(this.container, this.registry, ['model:locale', 'model:translation', 'model:locale-translation']);
         subject = TranslationDeserializer.create({store: store});
+        subjectLocale = LocaleDeserializer.create({store: store});
     }
 });
 
@@ -93,10 +97,17 @@ test('deserialize_single - translation.locales attr is an array of "locale-trans
     assert.equal(translation.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
 });
 
-test('deserialize_single - locale-translation', (assert) => {
+test('deserialize_single - locale-translation - including locale_name', (assert) => {
     run(function() {
         store.clear();
     });
+    // bootstrapped Locale
+    let responseLocale = LOCALE_FIXTURES.get();
+    run(function() {
+        subjectLocale.deserialize(responseLocale, LOCALE_DEFAULTS.idOne); // may need to change to match the "locale-translation"
+    });
+
+    // Locale-Translation
     let response = TRANSLATION_FIXTURES.get();
 
     run(function() {
@@ -107,6 +118,7 @@ test('deserialize_single - locale-translation', (assert) => {
     assert.ok(locale);
     assert.equal(locale.get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
     assert.equal(locale.get('locale'), LOCALE_TRANSLATION_DEFAULTS.localeOne);
+    assert.equal(locale.get('locale_name'), LOCALE_DEFAULTS.nameOne);
     assert.equal(locale.get('translation'), LOCALE_TRANSLATION_DEFAULTS.translationOne);
 });
 
