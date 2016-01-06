@@ -5,19 +5,18 @@ import injectUUID from 'bsrs-ember/utilities/uuid';
 import equal from 'bsrs-ember/utilities/equal';
 import CcMixin from 'bsrs-ember/mixins/model/ticket/cc';
 import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
-import RequesterMixin from 'bsrs-ember/mixins/model/ticket/requester';
 import TicketLocationMixin from 'bsrs-ember/mixins/model/ticket/location';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import DateFormatMixin from 'bsrs-ember/mixins/model/date-format';
 
 var run = Ember.run;
 
-var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixin, TicketLocationMixin, DateFormatMixin, {
+var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocationMixin, DateFormatMixin, {
     store: inject('main'),
     uuid: injectUUID('uuid'),
     number: attr(''),
-    requester_id: attr(),
     request: attr(),
+    // requester: attr(''),
     ticket_people_fks: [],
     ticket_categories_fks: [],
     previous_attachments_fks: [],
@@ -195,8 +194,8 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
             return true;
         }
     }),
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'requesterIsDirty', 'locationIsDirty', 'attachmentsIsDirty', function() {
-        return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty') || this.get('requesterIsDirty') || this.get('locationIsDirty') || this.get('attachmentsIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'assigneeIsDirty', 'statusIsDirty', 'priorityIsDirty', 'ccIsDirty', 'categoriesIsDirty', 'locationIsDirty', 'attachmentsIsDirty', function() {
+        return this.get('isDirty') || this.get('assigneeIsDirty') || this.get('statusIsDirty') || this.get('priorityIsDirty') || this.get('ccIsDirty') || this.get('categoriesIsDirty') || this.get('locationIsDirty') || this.get('attachmentsIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     remove_assignee: function() {
@@ -315,7 +314,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, RequesterMixi
             priority: this.get('priority.id'),
             cc: this.get('cc_ids'),
             categories: this.get('categories_ids'),
-            requester: this.get('requester_id'),
+            requester: this.get('requester'),
             assignee: this.get('assignee.id'),
             location: this.get('location.id'),
             attachments: this.get('attachment_ids'),

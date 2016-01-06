@@ -96,7 +96,8 @@ var BSRS_TICKET_FACTORY = (function() {
     factory.prototype.put = function(ticket) {
         var response = this.generate(ticket.id);
         response.cc = [response.cc[0].id];
-        response.requester = response.requester.id;
+        // response.requester = response.requester.id;
+        delete response.requester;
         response.location = response.location.id;
         response.assignee = response.assignee.id;
         response.categories = response.categories.map(function(cat) { return cat.id; });

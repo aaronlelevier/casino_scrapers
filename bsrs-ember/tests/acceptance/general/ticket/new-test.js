@@ -83,7 +83,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-assignee-validation-error').is(':hidden'));
         assert.ok(find('.t-location-validation-error').is(':hidden'));
         assert.ok(find('.t-category-validation-error').is(':hidden'));
-        assert.ok(find('.t-request-validation-error').is(':hidden'));
+        assert.ok(find('.t-requester-validation-error').is(':hidden'));
     });
     generalPage.save();
     andThen(() => {
@@ -93,16 +93,16 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
         assert.ok(find('.t-category-validation-error').is(':visible'));
-        assert.ok(find('.t-request-validation-error').is(':visible'));
+        assert.ok(find('.t-requester-validation-error').is(':visible'));
     });
-    fillIn('.t-ticket-request', TD.requestOne);
+    page.requesterFillIn(TD.requesterOne);
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-priority-validation-error').is(':visible'));
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
         assert.ok(find('.t-category-validation-error').is(':visible'));
-        assert.ok(find('.t-request-validation-error').is(':hidden'));
+        assert.ok(find('.t-requester-validation-error').is(':hidden'));
     });
     page.statusClickDropdown();
     page.statusClickOptionOne();
@@ -161,6 +161,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-category-validation-error').is(':hidden'));
     });
+    fillIn('.t-ticket-request', TD.requestOne);
     generalPage.save();
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     andThen(() => {
@@ -686,6 +687,7 @@ test('all required fields persist correctly when the user submits a new ticket f
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
     page.requestFillIn(TD.requestOneGrid);
+    page.requesterFillIn(TD.requesterOne);
     required_ticket_payload.request = TD.requestOneGrid;
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     generalPage.save();

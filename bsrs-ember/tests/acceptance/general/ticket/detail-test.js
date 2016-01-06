@@ -159,7 +159,7 @@ test('validation works for request field', (assert) => {
 });
 
 test('validation works for non required fields and when hit save, we do same post', (assert) => {
-    //assignee, requester, cc, request
+    //assignee, cc, request
     detail_data.assignee = null;
     page.visitDetail();
     andThen(() => {
