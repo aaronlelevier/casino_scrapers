@@ -10,7 +10,7 @@ var TicketSingleRoute = TabRoute.extend({
     statusRepository: inject('ticket-status'),
     priorityRepository: inject('ticket-priority'),
     attachmentRepository: inject('attachment'),
-    transitionCallback: function() { this.get('attachmentRepository').removeAllUnrelated(); },
+    transitionCallback() { this.get('attachmentRepository').removeAllUnrelated(); },
     redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
     modelName: Ember.computed(function() { return 'ticket'; }),
     templateModelField: Ember.computed(function() { return 'subject'; }),
@@ -28,18 +28,14 @@ var TicketSingleRoute = TabRoute.extend({
         const pk = params.ticket_id;
         const repository = this.get('repository');
         let ticket = repository.fetch(pk);
-        let statuses = this.get('statuses');
-        let priorities = this.get('priorities');
-
-        let top_level_category_options = this.get('top_level_category_options');
-
+        const statuses = this.get('statuses');
+        const priorities = this.get('priorities');
+        const top_level_category_options = this.get('top_level_category_options');
         if (!ticket.get('content') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             //NOTE: if not dirty on search change, then will bring in new data
             ticket = repository.findById(pk);
         }
-
         let activities = this.get('activityRepository').find('ticket', 'tickets', pk);
-
         return {
             model: ticket,
             statuses: statuses,
