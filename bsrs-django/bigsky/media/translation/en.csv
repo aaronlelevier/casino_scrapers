@@ -185,10 +185,15 @@ en,modules.rfqs.titleShort,RFQs,RFQs,,"'modules.rfqs.titleShort':'RFQs',",RFQs,R
 en,modules.tasks.titleShort,Tasks,Tasks,,"'modules.tasks.titleShort':'Tasks',",Tasks,Tasks
 en,modules.tickets.titleShort,Tickets,Tickets,,"'modules.tickets.titleShort':'Tickets',",Tickets,Tickets
 en,modules.workOrders.titleShort,Work Orders,Work Orders,,"'modules.workOrders.titleShort':'Work Orders',",Work Orders,Work Orders
+en,selects.loading,Loading,Loading,,"'selects.loading':'Loading',",Loading,Loading
+en,selects.noMatchesMessage,No Matches,No Matches,,"'selects.noMatchesMessage':'No Matches',",No Matches,No Matches
+en,selects.searchMessage,Type to search,Type to search,,"'selects.searchMessage':'Type to search',",Type to search,Type to search
+en,selects.searchPlaceholder,Search,Search,,"'selects.searchPlaceholder':'Search',",Search,Search
 en,ticket.created,{{requester}} created this ticket {{timestamp}},{{requester}} created this ticket {{timestamp}},,"'ticket.created':'{{requester}} created this ticket {{timestamp}}',",{{requester_var_ created this ticket {{timestamp_var_,_requester_var_ created this ticket _timestamp_var_
 en,ticket.label.assignee-fullname,Assignee,Assignee,,"'ticket.label.assignee-fullname':'Assignee',",Assignee,Assignee
 en,ticket.label.category-name,Category,Category,,"'ticket.label.category-name':'Category',",Category,Category
 en,ticket.label.cc,CC,CC,,"'ticket.label.cc':'CC',",CC,CC
+en,ticket.label.comment_add,Add a comment,Add a comment,,"'ticket.label.comment_add':'Add a comment',",Add a comment,Add a comment
 en,ticket.label.created,Created,Created,,"'ticket.label.created':'Created',",Created,Created
 en,ticket.label.formatted_date,Created,Created,,"'ticket.label.formatted_date':'Created',",Created,Created
 en,ticket.label.location-name,Location,Location,,"'ticket.label.location-name':'Location',",Location,Location
@@ -217,7 +222,3 @@ en,upload.progress,Progress,Progress,,"'upload.progress':'Progress',",Progress,P
 en,validation.invalid,Invalid,Invalid,,"'validation.invalid':'Invalid',",Invalid,Invalid
 en,validation.valid,Valid,Valid,,"'validation.valid':'Valid',",Valid,Valid
 en,welcome,Hello,Hello,,"'welcome':'Hello',",Hello,Hello
-en,selects.loading,Loading,Loading,,"'selects.loading':'Loading',",Loading,Loading
-en,selects.searchMessage,Type to search,Type to search,,"'selects.searchMessage':'Type to search',",Type to search,Type to search
-en,selects.searchPlaceholder,Search,Search,,"'selects.searchPlaceholder':'Search',",Search,Search
-en,selects.noMatchesMessage,No Matches,No Matches,,"'selects.noMatchesMessage':'No Matches',",No Matches,No Matches
