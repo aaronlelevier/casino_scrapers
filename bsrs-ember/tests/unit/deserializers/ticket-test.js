@@ -37,29 +37,6 @@ module('unit: ticket deserializer test', {
     }
 });
 
-test('ticket will be deserialized without error when requester as null (not a required field currently)', (assert) => {
-    assert.equal(ticket.get('requester'), undefined);
-    let json = TF.generate(TD.idOne);
-    delete json.requester;
-    json.requester = null;
-    run(function() {
-        subject.deserialize(json, json.id);
-    });
-    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(ticket.get('requester'), undefined);
-});
-
-test('ticket requester will be deserialized into its own store when deserialize detail is invoked (with existing requester)', (assert) => {
-    store.push('person', {id: PD.unusedId});
-    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    let json = TF.generate(TD.idOne);
-    run(function() {
-        subject.deserialize(json, json.id);
-    });
-    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
-    assert.equal(ticket.get('requester_id'), PD.idOne);
-});
-
 test('ticket assignee will be deserialized into its own store when deserialize detail is invoked (with no existing assignee)(detail)', (assert) => {
     let json = TF.generate(TD.idOne);
     run(function() {

@@ -37,16 +37,6 @@ var extract_categories = function(model, store, uuid, category_deserializer) {
     return server_sum;
 };
 
-var extract_requester = function(model, store, person_deserializer) {
-    let requester_id;
-    if(model.requester) {
-        requester_id = model.requester.id;
-        person_deserializer.deserialize(model.requester, requester_id);
-        delete model.requester;
-    }
-    return requester_id;
-};
-
 var extract_assignee = function(assignee_json, store, person_deserializer, ticket_model) {
     let assignee_id = assignee_json.id;
     person_deserializer.deserialize(assignee_json, assignee_id);
@@ -176,7 +166,6 @@ var TicketDeserializer = Ember.Object.extend({
             response.priority_fk = extract_ticket_priority(response, store);
             response.location_fk = extract_ticket_location(response, store, location_deserializer);
             response.ticket_people_fks = extract_cc(response, store, uuid, person_deserializer);
-            response.requester_id = extract_requester(response, store, person_deserializer);
             response.ticket_categories_fks = extract_categories(response, store, uuid, category_deserializer);
             let assignee_json = response.assignee;
             delete response.assignee;
