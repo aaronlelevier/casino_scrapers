@@ -53,7 +53,6 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.request = 'sub' + i;
             delete ticket.cc;
             delete ticket.attachments;
-            ticket.created = new Date();
             response.push(ticket);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component

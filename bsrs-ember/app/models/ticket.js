@@ -325,7 +325,15 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
                 store.push('ticket', {id: ticket_pk, comment: ''});
             });
         }
+        if(!this.get('created')) { this.createdAt(); }
         return payload;
+    },
+    createdAt() {
+        const date = new Date();
+        const iso = date.toISOString();
+        run(() => {
+            this.get('store').push('ticket', {id: this.get('id'), created: iso});
+        });
     },
     removeRecord() {
         run(() => {

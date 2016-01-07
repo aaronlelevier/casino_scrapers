@@ -23,6 +23,7 @@ import random from 'bsrs-ember/models/random';
 import page from 'bsrs-ember/tests/pages/tickets';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import selectize from 'bsrs-ember/tests/pages/selectize';
+import timemachine from 'vendor/timemachine';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -60,6 +61,9 @@ module('Acceptance | ticket detail test', {
         let top_level_categories_endpoint = PREFIX + '/admin/categories/parents/';
         top_level_xhr = xhr(top_level_categories_endpoint, 'GET', null, {}, 200, CF.top_level());
         activity_one = xhr(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.empty());
+        timemachine.config({
+            dateString: 'December 25, 2015 13:12:59'
+        });
     },
     afterEach() {
         Ember.run(application, 'destroy');
@@ -85,10 +89,20 @@ test('clicking a tickets will redirect to the given detail view and can save to 
     });
 });
 
-test('you can add a comment and post it', (assert) => {
+test('you can add a comment and post it while not updating created property', (assert) => {
     clearxhr(list_xhr);
     page.visitDetail();
+    andThen(() => {
+        const date = new Date();
+        date.setMonth(date.getMonth()-1);
+        const iso = date.toISOString();
+        store.push('ticket', {id: TD.idOne, created: iso});
+    });
     page.commentFillIn(TD.commentOne);
+    andThen(() => {
+        const ticket = store.find('ticket', TD.idOne);
+        assert.equal(ticket.get('created'), '2015-11-25T12:12:59.000Z');
+    });
     let response = TF.detail(TD.idOne);
     xhr(TICKET_PUT_URL, 'PUT', JSON.stringify(ticket_payload_with_comment), {}, 200, response);
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, TF.list());
@@ -98,9 +112,9 @@ test('you can add a comment and post it', (assert) => {
         let ticket = store.find('ticket', TD.idOne);
         assert.ok(ticket.get('isNotDirty'));
         assert.equal(ticket.get('comment'), '');
+        assert.equal(ticket.get('created'), '2015-11-25T12:12:59.000Z');
     });
 });
-
 
 test('when you deep link to the ticket detail view you get bound attrs', (assert) => {
     clearxhr(list_xhr);

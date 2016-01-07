@@ -8,6 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
+import timemachine from 'vendor/timemachine';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LF from 'bsrs-ember/vendor/location_fixtures';
@@ -63,6 +64,9 @@ module('Acceptance | ticket new test', {
         let category_three = {id: CD.idChild, name: CD.nameElectricalChild, parent: {id: CD.idTwo}, children_fks: []};
         category_three_xhr = xhr(`${PREFIX}/admin/categories/${CD.idChild}/`, 'GET', null, {}, 200, category_three);
         counter = 0;
+        timemachine.config({
+            dateString: 'December 25, 2015 13:12:59'
+        });
     },
     afterEach() {
         counter = 0;
@@ -166,6 +170,8 @@ test('validation works and when hit save, we do same post', (assert) => {
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
+        const ticket = store.find('ticket').objectAt(0);
+        assert.equal(ticket.get('created'), '2015-12-25T12:12:59.000Z');
     });
 });
 
