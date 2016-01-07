@@ -955,7 +955,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     });
 });
 
-test('amk textarea autoresize working for the request field', (assert) => {
+test('textarea autoresize working for the request field', (assert) => {
     page.visit();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
