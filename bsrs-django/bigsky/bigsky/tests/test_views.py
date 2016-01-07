@@ -251,6 +251,12 @@ class ConfigurationTests(TestCase):
         Currency.objects.default()
         configuration = json.loads(self.response.context['person_current'])
         self.assertTrue(len(configuration) > 0)
+        self.assertIn('all_locations_and_children', configuration)
+        self.assertEqual(len(configuration['all_locations_and_children']), 1)
+        self.assertEqual(
+            configuration['all_locations_and_children'][0],
+            str(self.person.locations.first().id)
+        )
 
     def test_default_model_ordering(self):
         configuration = json.loads(self.response.context['default_model_ordering'])

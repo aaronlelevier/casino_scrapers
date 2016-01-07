@@ -344,7 +344,8 @@ class Person(BaseModel, AbstractUser):
             'title': self.title,
             'employee_id': self.employee_id,
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
-            'role': str(self.role.id)
+            'role': str(self.role.id),
+            'all_locations_and_children': [str(x) for x in self.all_locations_and_children()]
         }
 
     def to_simple_dict(self):
