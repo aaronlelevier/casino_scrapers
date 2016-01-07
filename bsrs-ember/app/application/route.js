@@ -107,6 +107,14 @@ var ApplicationRoute = Ember.Route.extend({
         config.i18n.currentLocale = current_locale.get('locale');
 
         store.push('person-current', person_current);
+
+        var person_location_pks = [];
+        person_current.all_locations_and_children.forEach(function(location_pk) {
+            const person_location_pk = Ember.uuid();
+            store.push('person-location', {id: person_location_pk, person_pk: person_current.id, location_pk: location_pk});
+            store.push('location', {id: location_pk, person_location_fks: [person_location_pk]});
+            person_location_pks.push(person_location_pk);
+        });
         store.push('person', {
             id: person_current.id,
             first_name: person_current.first_name,
@@ -114,7 +122,8 @@ var ApplicationRoute = Ember.Route.extend({
             username: person_current.username,
             title: person_current.title,
             role_fk: person_current.role,
-            locale: current_locale.get('locale')
+            locale: current_locale.get('locale'),
+            person_location_fks: person_location_pks
         });
 
         // Set the current user's time zone

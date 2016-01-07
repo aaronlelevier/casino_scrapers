@@ -84,6 +84,35 @@ var BSRS_TICKET_FACTORY = (function() {
         }
         return {'count':page_size*2-1,'next':null,'previous':null,'results': response};
     };
+    factory.prototype.list_three_diff_locations = function() {
+        var response = [];
+        var page_size = this.config.default ? this.config.default.APP.PAGE_SIZE : 10;
+        for (var i=1; i <= page_size; i++) {
+            var uuid = 'bf2b9c85-f6bd-4345-9834-c5d51de53d';
+            if (i < page_size) {
+                uuid = uuid + '0' + i;
+            } else{
+                uuid = uuid + i;
+            }
+            var ticket = this.generate(uuid);
+            ticket.number = 'bye' + i;
+            ticket.request = 'sub' + i;
+            delete ticket.cc;
+            delete ticket.attachments;
+            if (i % 2 == 0) {
+                ticket.location = this.location_fixtures.get(this.ticket.locationOneId, this.ticket.locationOne);
+            }
+            else {
+                ticket.location = this.location_fixtures.get(this.ticket.locationTwoId, this.ticket.locationTwo);
+            }
+            response.push(ticket);
+        }
+        //we do a reverse order sort here to verify a real sort occurs in the component
+        var sorted = response.sort(function(a,b) {
+            return b.id - a.id;
+        });
+        return {'count':page_size*2-1,'next':null,'previous':null,'results': sorted};
+    };
     factory.prototype.detail = function(i) {
         var pk = i || this.ticket.idOne;
         var detail = this.generate(pk);
