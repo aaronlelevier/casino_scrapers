@@ -22,6 +22,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import selectize from 'bsrs-ember/tests/pages/selectize';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/tickets';
+import moment from 'moment';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -171,7 +172,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
         const ticket = store.find('ticket').objectAt(0);
-        assert.equal(ticket.get('created'), '2015-12-25T12:12:59.000Z');
+        assert.equal(ticket.get('created'), moment(new Date()).toISOString());
     });
 });
 
