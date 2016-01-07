@@ -2,6 +2,9 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import injectUUID from 'bsrs-ember/utilities/uuid';
+//start-non-standard
+import computed from 'ember-computed-decorators';
+//end-non-standard
 import equal from 'bsrs-ember/utilities/equal';
 import CcMixin from 'bsrs-ember/mixins/model/ticket/cc';
 import CategoriesMixin from 'bsrs-ember/mixins/model/ticket/category';
@@ -25,57 +28,69 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     priority_fk: undefined,
     location_fk: undefined,
     assignee_fk: undefined,
-    categoriesIsDirty: Ember.computed('categories.[]', 'categories_ids.[]', 'ticket_categories_fks.[]', function() {
-        const categories = this.get('categories');
+    //start-non-standard
+    @computed('categories.[]', 'categories_ids.[]', 'ticket_categories_fks.[]')
+    //end-non-standard
+    categoriesIsDirty(categories, categories_ids, ticket_categories_fks) {
+        const ticket_categories = this.get('categories');
         const ticket_categories_ids = this.get('ticket_categories_ids');
         const previous_m2m_fks = this.get('ticket_categories_fks') || [];
-        if(categories.get('length') !== previous_m2m_fks.length) {
+        if(ticket_categories.get('length') !== previous_m2m_fks.length) {
             return equal(ticket_categories_ids, previous_m2m_fks) ? false : true;
         }
         return equal(ticket_categories_ids, previous_m2m_fks) ? false : true;
-    }),
+    },
     categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
-    ccIsDirty: Ember.computed('cc.[]', 'cc_ids.[]', 'ticket_people_fks.[]', function() {
-        const cc = this.get('cc');
+    //start-non-standard
+    @computed('cc.[]', 'cc_ids.[]', 'ticket_people_fks.[]')
+    //end-non-standard
+    ccIsDirty(cc, cc_ids, ticket_people_fks) {
+        const ticket_cc = this.get('cc');
         const ticket_cc_ids = this.get('ticket_cc_ids');
         const previous_m2m_fks = this.get('ticket_people_fks') || [];
-        if(cc.get('length') !== previous_m2m_fks.length) {
+        if(ticket_cc.get('length') !== previous_m2m_fks.length) {
             return equal(ticket_cc_ids, previous_m2m_fks) ? false : true;
         }
         return equal(ticket_cc_ids, previous_m2m_fks) ? false : true;
-    }),
+    },
     ccIsNotDirty: Ember.computed.not('ccIsDirty'),
     assignee: Ember.computed.alias('belongs_to_assignee.firstObject'),
-    belongs_to_assignee: Ember.computed(function() {
+    /*start-non-standard*/ @computed /*end-non-standard*/
+    belongs_to_assignee() {
         const ticket_id = this.get('id');
         const filter = function(assignee) {
             const tickets = assignee.get('assigned_tickets');
             return Ember.$.inArray(ticket_id, tickets) > -1;
         };
         return this.get('store').find('person', filter);
-    }),
+    },
     priority: Ember.computed.alias('belongs_to_priority.firstObject'),
-    belongs_to_priority: Ember.computed(function() {
+    /*start-non-standard*/ @computed /*end-non-standard*/
+    belongs_to_priority() {
         const ticket_id = this.get('id');
         const filter = function(status) {
             const tickets = status.get('tickets');
             return Ember.$.inArray(ticket_id, tickets) > -1;
         };
         return this.get('store').find('ticket-priority', filter);
-    }),
+    },
     status: Ember.computed.alias('belongs_to.firstObject'),
-    belongs_to: Ember.computed(function() {
+    /*start-non-standard*/ @computed /*end-non-standard*/
+    belongs_to() {
         const ticket_id = this.get('id');
         const filter = function(status) {
             const tickets = status.get('tickets');
             return Ember.$.inArray(ticket_id, tickets) > -1;
         };
         return this.get('store').find('ticket-status', filter);
-    }),
-    status_class: Ember.computed('status', function(){
+    },
+    //start-non-standard
+    @computed('status')
+    //end-non-standard
+    status_class(status){
         const name = this.get('status.name');
         return name ? name.replace(/\./g, '-') : '';
-    }),
+    },
     priority_class: Ember.computed('priority', function(){
         const name = this.get('priority.name');
         return name ? name.replace(/\./g, '-') : '';

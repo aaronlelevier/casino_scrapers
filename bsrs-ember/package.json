@@ -65,6 +65,7 @@
     "object-assign": "^4.0.1"
   },
   "dependencies": {
+    "ember-computed-decorators": "^0.2.2",
     "ember-responsive": "^1.2.5"
   }
 }
