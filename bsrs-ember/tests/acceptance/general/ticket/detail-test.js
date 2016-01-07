@@ -955,7 +955,7 @@ test('assignee component shows assignee for ticket and will fire off xhr to fetc
     });
 });
 
-test('textarea autoresize working for the request field', (assert) => {
+test('amk textarea autoresize working for the request field', (assert) => {
     page.visit();
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
@@ -968,7 +968,7 @@ test('textarea autoresize working for the request field', (assert) => {
         andThen(() => {
             waitFor(() => {
                 let n_height = find('.t-ticket-request').innerHeight();
-                assert.notEqual(o_height, n_height);
+                assert.ok(n_height > o_height);
             });
         });
     });
