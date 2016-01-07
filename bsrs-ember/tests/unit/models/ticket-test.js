@@ -32,6 +32,40 @@ test('ticket request field is dirty trackable with existing', (assert) => {
     assert.ok(ticket.get('isDirty'));
 });
 
+test('ticket request field is not dirty with empty string and no existing', (assert) => {
+    run(function() {
+        ticket = store.push('ticket', {id: TD.idOne});
+    });
+    ticket.set('request', 'wat');
+    ticket.set('request', '');
+    assert.ok(ticket.get('isNotDirty'));
+});
+
+test('ticket requester field is dirty trackable', (assert) => {
+    run(function() {
+        ticket = store.push('ticket', {id: TD.idOne});
+    });
+    ticket.set('requester', 'wat');
+    assert.ok(ticket.get('isDirty'));
+});
+
+test('ticket requester field is dirty trackable with existing', (assert) => {
+    run(function() {
+        ticket = store.push('ticket', {id: TD.idOne, requester: 'who'});
+    });
+    ticket.set('requester', 'wat');
+    assert.ok(ticket.get('isDirty'));
+});
+
+test('ticket requester field is not dirty with empty string and no existing', (assert) => {
+    run(function() {
+        ticket = store.push('ticket', {id: TD.idOne});
+    });
+    ticket.set('requester', 'wat');
+    ticket.set('requester', '');
+    assert.ok(ticket.get('isNotDirty'));
+});
+
 test('ticket is dirty or related is dirty when model has been updated', (assert) => {
     run(function() {
         ticket = store.push('ticket', {id: TD.idOne, number: TD.numberOne, status_fk: TD.statusOneId});
