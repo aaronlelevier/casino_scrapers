@@ -14,20 +14,15 @@ module('unit: third-party test', {
 
 /* STATUS */
 test('related status should return one status for a third_party', (assert) => {
-    run(function() {
-        status = store.push('status', {id: SD.activeId, name: SD.activeName}); 
-        third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
-    });
+    status = store.push('status', {id: SD.activeId, name: SD.activeName}); 
+    third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty'));
 });
 
 test('change_status will update the third_partys status and dirty the model', (assert) => {
-    let inactive_status;
-    run(function() {
-        status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]}); 
-        inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []}); 
-        third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
-    });
+    status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]}); 
+    let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []}); 
+    third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(third_party.get('status_fk'), SD.activeId); 
     assert.equal(third_party.get('status.id'), SD.activeId); 
@@ -39,12 +34,9 @@ test('change_status will update the third_partys status and dirty the model', (a
 });
 
 test('save third_party will set status_fk to current status id', (assert) => {
-    let inactive_status;
-    run(function() {
-        status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]}); 
-        inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []}); 
-        third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
-    });
+    status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]}); 
+    let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []}); 
+    third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(third_party.get('status_fk'), SD.activeId); 
     assert.equal(third_party.get('status.id'), SD.activeId); 
@@ -61,12 +53,9 @@ test('save third_party will set status_fk to current status id', (assert) => {
 });
 
 test('rollback third_party will set status to current status_fk', (assert) => {
-    let inactive_status;
-    run(function() {
-        status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]}); 
-        inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []}); 
-        third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
-    });
+    status = store.push('status', {id: SD.activeId, name: SD.activeName, people: [TPD.idOne]}); 
+    let inactive_status = store.push('status', {id: SD.inactiveId, name: SD.inactiveName, people: []}); 
+    third_party = store.push('third-party', {id: TPD.idOne, status_fk: SD.activeId});
     assert.ok(third_party.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(third_party.get('status_fk'), SD.activeId); 
     assert.equal(third_party.get('status.id'), SD.activeId); 

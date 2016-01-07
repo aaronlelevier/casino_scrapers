@@ -4,7 +4,7 @@ import LOCALE_DEFAULTS from 'bsrs-ember/vendor/defaults/locale';
 import LOCALE_FIXTURES from 'bsrs-ember/vendor/locale_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 
-let store, locale, run = Ember.run;
+let store, locale;
 
 module('unit: locale', {
     beforeEach() {
@@ -14,11 +14,7 @@ module('unit: locale', {
 
 test('test generic attrs on the model', (assert) => {
     let data = LOCALE_FIXTURES.get();
-
-    run(function() {
-        locale = store.push('locale', data);
-    });
-
+    locale = store.push('locale', data);
     assert.equal(locale.get('id'), LOCALE_DEFAULTS.idOne);
     assert.equal(locale.get('native_name'), LOCALE_DEFAULTS.native_nameOne);
     assert.equal(locale.get('locale'), LOCALE_DEFAULTS.localeOne);

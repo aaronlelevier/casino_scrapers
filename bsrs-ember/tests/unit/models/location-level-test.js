@@ -13,9 +13,7 @@ module('unit: location level test', {
 });
 
 test('location level is dirty when model has been updated', (assert) => {
-    run(function() {
-        location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion});
-    });
+    location_level = store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion});
     assert.ok(location_level.get('isNotDirty'));
     location_level.set('name', LLD.nameCompany);
     assert.ok(location_level.get('isDirty'));
@@ -24,12 +22,10 @@ test('location level is dirty when model has been updated', (assert) => {
 });
 
 test('location level can have child location levels', (assert) => {
-    let location_level_child, location_level_dept;
-    var model = {id: LLD.idOne, name: LLD.nameRegion, children_fks: [LLD.idTwo]};
-    run(function() {
-        location_level = store.push('location-level', model);
-        location_level_child = store.push('location-level', {id: LLD.idTwo, name: LLD.nameDepartment});
-    });
+    let location_level_dept;
+    let model = {id: LLD.idOne, name: LLD.nameRegion, children_fks: [LLD.idTwo]};
+    location_level = store.push('location-level', model);
+    let location_level_child = store.push('location-level', {id: LLD.idTwo, name: LLD.nameDepartment});
     assert.equal(location_level.get('children').get('length'), 1);
     run(function() {
         location_level_dept = store.push('location-level', {id: LLD.idThree, name: LLD.nameDepartment});
@@ -40,12 +36,9 @@ test('location level can have child location levels', (assert) => {
 });
 
 test('location level can have parent location levels', (assert) => {
-    let location_level_parent;
-    var model = {id: LLD.idTwo, name: LLD.nameDepartment, parent_fks: [LLD.idOne]};
-    run(function() {
-        location_level = store.push('location-level', model);
-        location_level_parent = store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion});
-    });
+    let model = {id: LLD.idTwo, name: LLD.nameDepartment, parent_fks: [LLD.idOne]};
+    location_level = store.push('location-level', model);
+    let location_level_parent = store.push('location-level', {id: LLD.idOne, name: LLD.nameRegion});
     assert.equal(location_level.get('parents').get('length'), 1);
     run(function() {
         store.push('location-level', {id: LLD.idThree, name: LLD.nameStore});
@@ -55,12 +48,10 @@ test('location level can have parent location levels', (assert) => {
 });
 
 test('location level can roll back children', (assert) => {
-    let location_level_child, location_level_dept;
-    var model = {id: LLD.idOne, name: LLD.nameRegion, children_fks: [LLD.idTwo]};
-    run(function() {
-        location_level = store.push('location-level', model);
-        location_level_child = store.push('location-level', {id: LLD.idTwo, name: LLD.nameDepartment});
-    });
+    let location_level_dept;
+    let model = {id: LLD.idOne, name: LLD.nameRegion, children_fks: [LLD.idTwo]};
+    location_level = store.push('location-level', model);
+    let location_level_child = store.push('location-level', {id: LLD.idTwo, name: LLD.nameDepartment});
     assert.equal(location_level.get('children').get('length'), 1);
     run(function() {
         location_level_dept = store.push('location-level', {id: LLD.idThree, name: LLD.nameDepartment});
