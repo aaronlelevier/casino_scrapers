@@ -3,7 +3,6 @@ from os.path import dirname, join
 
 from django.test import TestCase
 from django.conf import settings
-from django.contrib.auth.models import ContentType
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -11,7 +10,7 @@ from model_mommy import mommy
 from rest_framework.exceptions import ValidationError
 
 from category.tests.factory import create_categories
-from generic.models import MainSetting, Attachment, SavedSearch
+from generic.models import Attachment, SavedSearch
 from person.tests.factory import create_single_person
 from ticket.tests.factory import create_ticket
 from utils.tests.helpers import remove_attachment_test_files
@@ -59,23 +58,6 @@ class SavedSearchTests(TestCase):
         ret = SavedSearch.objects.person_saved_searches(self.person)
         self.assertIsInstance(ret, list)
         self.assertIsInstance(ret[0], dict)
-
-
-class MainSettingTests(TestCase):
-    # Only testing one ``Setting` Model b/c they are inheriting
-    # from the same Base Model
-
-    def setUp(self):
-        self.person = create_single_person()
-
-    def test_setting(self):
-        ct = ContentType.objects.get(app_label='person', model='person')
-        s = MainSetting.objects.create(
-            content_type=ct,
-            object_id=self.person.id,
-            content_object=self.person
-            )
-        self.assertEqual(str(s.content_object.id), str(self.person.id))
 
 
 class AttachmentModelTests(TestCase):

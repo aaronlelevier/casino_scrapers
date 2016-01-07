@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import UserManager, Group, AbstractUser
 from django.contrib.auth.hashers import make_password, identify_hasher
 from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.fields import ArrayField, JSONField
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -21,12 +21,12 @@ from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location
 from category.models import Category
 from person import helpers
-from work_order.models import WorkOrderStatus
 from translation.models import Locale
 from utils import choices
 from utils.models import BaseModel, BaseStatusModel, BaseStatusManager
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
+from work_order.models import WorkOrderStatus
 
 
 class Role(BaseModel):
@@ -112,6 +112,8 @@ class Role(BaseModel):
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
 
+    settings = JSONField(blank=True, default={})
+
     __original_values = {}
 
     def __init__(self, *args, **kwargs):
@@ -156,6 +158,24 @@ class Role(BaseModel):
 
         if not self.default_auth_currency:
             self.default_auth_currency = Currency.objects.default()
+
+        self._update_settings()
+
+    def _update_settings(self):
+        default_settings_keys = self.default_settings.keys()
+        explicit_settings_keys = self.settings.keys()
+
+        settings_needed = set(default_settings_keys) - set(explicit_settings_keys)
+
+        for s in settings_needed:
+            self.settings[s] = self.default_settings.get(s)
+
+    @property
+    def default_settings(self):
+        return {
+            'login_grace': 1,
+            'proj_preapprove': False
+        }
 
     def _update_password_history_length(self):
         """

@@ -2,9 +2,6 @@ import os
 
 from django.db import models
 from django.conf import settings
-from django.contrib.auth.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
-from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError as DjangoValidationError
 
 from PIL import Image
@@ -74,36 +71,6 @@ class SavedSearch(BaseModel):
             "endpoint_name": self.endpoint_name,
             "endpoint_uri": self.endpoint_uri
         }
-
-
-### SETTINGS
-
-class BaseSettingModel(BaseModel):
-    '''
-    ``Setting`` records will be either Standard or Custom. and be set 
-    at levels. ex - Location, Role, User.
-    '''
-    settings = JSONField(blank=True, default={})
-
-    # Generic ForeignKey Settings, so ``Setting`` can be set 
-    # for any Django Model
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.UUIDField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        return self.settings
-
-
-class MainSetting(BaseSettingModel):
-    pass
-
-
-class CustomSetting(BaseSettingModel):
-    pass
 
 
 ### ATTACHMENT

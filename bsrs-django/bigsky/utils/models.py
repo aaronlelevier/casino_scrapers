@@ -4,6 +4,7 @@ should be Abstract.
 """
 import uuid
 
+from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
@@ -133,3 +134,27 @@ class BaseStatusModel(BaseNameModel):
         be loaded into the `Boostrap` data under a single Array of Statuses.
         """
         return True
+
+
+### SETTINGS
+
+class BaseSettingModel(BaseModel):
+    '''
+    ``Setting`` records will be either Standard or Custom. and be set 
+    at levels. ex - Location, Role, User.
+    '''
+    settings = JSONField(blank=True, default={})
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.settings
+
+
+class MainSetting(BaseSettingModel):
+    pass
+
+
+class CustomSetting(BaseSettingModel):
+    pass
