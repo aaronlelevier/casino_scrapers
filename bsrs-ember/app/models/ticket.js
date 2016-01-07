@@ -28,9 +28,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     priority_fk: undefined,
     location_fk: undefined,
     assignee_fk: undefined,
-    //start-non-standard
-    @computed('categories.[]', 'categories_ids.[]', 'ticket_categories_fks.[]')
-    //end-non-standard
+    /*start-non-standard*/ @computed('categories.[]', 'categories_ids.[]', 'ticket_categories_fks.[]') /*end-non-standard*/
     categoriesIsDirty(categories, categories_ids, ticket_categories_fks) {
         const ticket_categories = this.get('categories');
         const ticket_categories_ids = this.get('ticket_categories_ids');
@@ -41,9 +39,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         return equal(ticket_categories_ids, previous_m2m_fks) ? false : true;
     },
     categoriesIsNotDirty: Ember.computed.not('categoriesIsDirty'),
-    //start-non-standard
-    @computed('cc.[]', 'cc_ids.[]', 'ticket_people_fks.[]')
-    //end-non-standard
+    /*start-non-standard*/ @computed('cc.[]', 'cc_ids.[]', 'ticket_people_fks.[]') /*end-non-standard*/
     ccIsDirty(cc, cc_ids, ticket_people_fks) {
         const ticket_cc = this.get('cc');
         const ticket_cc_ids = this.get('ticket_cc_ids');
@@ -55,9 +51,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
     },
     ccIsNotDirty: Ember.computed.not('ccIsDirty'),
     assignee: Ember.computed.alias('belongs_to_assignee.firstObject'),
-    //start-non-standard
-    @computed 
-    //end-non-standard
+    /*start-non-standard*/ @computed /*end-non-standard*/
     belongs_to_assignee() {
         const ticket_id = this.get('id');
         const filter = function(assignee) {
@@ -67,9 +61,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         return this.get('store').find('person', filter);
     },
     priority: Ember.computed.alias('belongs_to_priority.firstObject'),
-    //start-non-standard
-    @computed 
-    //end-non-standard
+    /*start-non-standard*/ @computed /*end-non-standard*/
     belongs_to_priority() {
         const ticket_id = this.get('id');
         const filter = function(status) {
@@ -79,9 +71,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         return this.get('store').find('ticket-priority', filter);
     },
     status: Ember.computed.alias('belongs_to.firstObject'),
-    //start-non-standard
-    @computed 
-    //end-non-standard
+    /*start-non-standard*/ @computed /*end-non-standard*/
     belongs_to() {
         const ticket_id = this.get('id');
         const filter = function(status) {
@@ -90,9 +80,7 @@ var TicketModel = Model.extend(NewMixin, CcMixin, CategoriesMixin, TicketLocatio
         };
         return this.get('store').find('ticket-status', filter);
     },
-    //start-non-standard
-    @computed('status')
-    //end-non-standard
+    /*start-non-standard*/ @computed('status') /*end-non-standard*/
     status_class(status){
         const name = this.get('status.name');
         return name ? name.replace(/\./g, '-') : '';

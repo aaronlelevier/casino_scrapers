@@ -14,34 +14,22 @@ var TicketSingleRoute = TabRoute.extend({
     priorityRepository: inject('ticket-priority'),
     attachmentRepository: inject('attachment'),
     transitionCallback() { this.get('attachmentRepository').removeAllUnrelated(); },
-    //start-non-standard
-    @computed 
-    //end-non-standard
+    /*start-non-standard*/ @computed /*end-non-standard*/
     redirectRoute() { return 'tickets.index'; },
-    //start-non-standard
-    @computed 
-    //end-non-standard
+    /*start-non-standard*/ @computed /*end-non-standard*/
     modelName() { return 'ticket'; },
-    //start-non-standard
-    @computed 
-    //end-non-standard
+    /*start-non-standard*/ @computed /*end-non-standard*/
     templateModelField() { return 'ticket'; },
-    //start-non-standard
-    @computed 
-    //end-non-standard
+    /*start-non-standard*/ @computed /*end-non-standard*/
     top_level_category_options() {
         const categoryRepo = this.get('categoryRepository');
         return categoryRepo.findTopLevelCategories();
     },
-    //start-non-standard
-    @computed 
-    //end-non-standard
+    /*start-non-standard*/ @computed /*end-non-standard*/
     priorities() {
         return this.get('priorityRepository').fetch();
     },
-    //start-non-standard
-    @computed 
-    //end-non-standard
+    /*start-non-standard*/ @computed /*end-non-standard*/
     statuses() {
         return this.get('statusRepository').fetch();
     },
