@@ -77,7 +77,7 @@ test('deep linking the ticket detail url should push a tab into the tab store wi
         const tab = store.find('tab', TD.idOne);
         const ticket = store.find('ticket', TD.idOne);
         const sorted_cat = ticket.get('sorted_categories');
-        assert.equal(find(TAB_TITLE).text(), `${ticket.get('number')} ${sorted_cat[sorted_cat.length-1].get('name')}`);
+        assert.equal(find(TAB_TITLE).text(), `#${ticket.get('number')} - ${sorted_cat[sorted_cat.length-1].get('name')}`);
         assert.equal(tab.get('doc_type'), DOC_TYPE);
         assert.equal(tab.get('doc_route'), DETAIL_ROUTE);
         assert.equal(tab.get('redirect'), INDEX_ROUTE);

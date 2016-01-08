@@ -14,24 +14,18 @@ module('unit: translation', {
 });
 
 test('copy attr "key" as "id" ', (assert) => {
-    run(function() {
-        translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
-    });
+    translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
     assert.equal(translation.get('id'), translation.get('key'));
 });
 
 test('isNotDirty - test property', (assert) => {
-    run(function() {
-        translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
-    });
+    translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
     assert.ok(translation.get('key'));
     assert.ok(translation.get('isNotDirty'));
 });
 
 test('locales - push in actual object structure w/ 3 key:value', (assert) => {
-    run(function() {
-        translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
-    });
+    translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
     var locale_trans = {
         id: LOCALE_TRANSLATION_DEFAULTS.idOne,
         locale: LOCALE_TRANSLATION_DEFAULTS.localeOne,
@@ -67,12 +61,10 @@ test('dirty track related - when the first locale isDirtyOrRelatedDirty is true'
         locale: LOCALE_TRANSLATION_DEFAULTS.localeThree,
         translation: LOCALE_TRANSLATION_DEFAULTS.translationOne
     };
-    run(function() {
-        translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
-        store.push('locale-translation', one);
-        store.push('locale-translation', two);
-        store.push('locale-translation', three);
-    });
+    translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
+    store.push('locale-translation', one);
+    store.push('locale-translation', two);
+    store.push('locale-translation', three);
     // confirm setUp
     assert.equal(translation.get('locales').get('length'), 3);
     assert.equal(translation.get('locales').objectAt(0).get('id'), LOCALE_TRANSLATION_DEFAULTS.idOne);
@@ -112,11 +104,9 @@ test('saveRelated - will call "saveLocales"', (assert) => {
         locale: LOCALE_TRANSLATION_DEFAULTS.localeOne,
         translation: LOCALE_TRANSLATION_DEFAULTS.translationOne
     };
-    run(function() {
-        translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
-        locale_trans = store.push('locale-translation', model);
-        store.push('locale-translation', {id: locale_trans.get('id'), translation: LOCALE_TRANSLATION_DEFAULTS.translationTwo});
-    });
+    translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
+    locale_trans = store.push('locale-translation', model);
+    store.push('locale-translation', {id: locale_trans.get('id'), translation: LOCALE_TRANSLATION_DEFAULTS.translationTwo});
     assert.ok(locale_trans.get('isDirty'));
     // assert.ok(translation.get('isDirtyOrRelatedDirty')); //TODO @toranb => should have fired the relationship filter
     translation.saveRelated();
@@ -134,11 +124,9 @@ test('rollbackLocales', (assert) => {
         locale: LOCALE_TRANSLATION_DEFAULTS.localeOne,
         translation: LOCALE_TRANSLATION_DEFAULTS.translationOne
     };
-    run(function() {
-        translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
-        locale_trans = store.push('locale-translation', model);
-        store.push('locale-translation', {id: locale_trans.get('id'), translation: LOCALE_TRANSLATION_DEFAULTS.translationTwo});
-    });
+    translation = store.push('translation', {id: TRANSLATION_DEFAULTS.keyOneGrid});
+    locale_trans = store.push('locale-translation', model);
+    store.push('locale-translation', {id: locale_trans.get('id'), translation: LOCALE_TRANSLATION_DEFAULTS.translationTwo});
     assert.ok(locale_trans.get('isDirty'));
     assert.ok(translation.get('isDirtyOrRelatedDirty'));
     translation.rollbackLocales();

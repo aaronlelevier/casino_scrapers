@@ -183,6 +183,7 @@ class TicketDetailTests(TicketSetupMixin, APITestCase):
         self.assertEqual(assignee['last_name'], self.ticket.assignee.last_name)
         self.assertEqual(assignee['title'], self.ticket.assignee.title)
         self.assertEqual(assignee['role'], str(self.ticket.assignee.role.id))
+        self.assertEqual(assignee['status'], str(self.ticket.assignee.status.id))
 
     def test_data_categories(self):
         response = self.client.get('/api/tickets/{}/'.format(self.ticket.id))

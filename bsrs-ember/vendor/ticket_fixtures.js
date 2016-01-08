@@ -33,7 +33,6 @@ var BSRS_TICKET_FACTORY = (function() {
             priority: this.ticket.priorityOneId,
             cc: [{id: this.people_defaults.idOne, fullname: this.people_defaults.fullname, email: this.people_defaults.emails, role: this.people_defaults.role}],
             categories: [child_category, parent_category, child_child_category],
-            requester: this.people_fixtures.get(),
             assignee: this.people_fixtures.get(),
             location: this.location_fixtures.get(),
             attachments: [],
@@ -54,8 +53,6 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.request = 'sub' + i;
             delete ticket.cc;
             delete ticket.attachments;
-            delete ticket.requester;
-            ticket.created = new Date();
             response.push(ticket);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component
@@ -96,8 +93,6 @@ var BSRS_TICKET_FACTORY = (function() {
     factory.prototype.put = function(ticket) {
         var response = this.generate(ticket.id);
         response.cc = [response.cc[0].id];
-        // response.requester = response.requester.id;
-        delete response.requester;
         response.location = response.location.id;
         response.assignee = response.assignee.id;
         response.categories = response.categories.map(function(cat) { return cat.id; });

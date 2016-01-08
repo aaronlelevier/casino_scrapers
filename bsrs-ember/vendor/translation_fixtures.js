@@ -164,6 +164,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'admin.translation.label.translation':'Translation',
                     'admin.translation.one':'Translation',
                     'admin.translation.other':'Translations',
+                    'admin.translation.search':'Search Translations',
                     'button.add':'Add new {{model}}',
                     'button.upload':'Attach file',
                     'crud.cancel.button':'Cancel',
