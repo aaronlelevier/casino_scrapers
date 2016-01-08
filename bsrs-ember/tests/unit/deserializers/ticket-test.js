@@ -3,6 +3,7 @@ import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import TICKET_PERSON_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
 import TICKET_CD from 'bsrs-ember/vendor/defaults/ticket-category';
+import PERSON_LD from 'bsrs-ember/vendor/defaults/person-location';
 import PD from 'bsrs-ember/vendor/defaults/person';
 import CD from 'bsrs-ember/vendor/defaults/category';
 import LD from 'bsrs-ember/vendor/defaults/location';
@@ -21,7 +22,7 @@ let store, subject, uuid, person_deserializer, location_level_deserializer, loca
 
 module('unit: ticket deserializer test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:location', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n']);
+        store = module_registry(this.container, this.registry, ['model:ticket', 'model:ticket-person', 'model:ticket-category', 'model:ticket-status', 'model:ticket-priority', 'model:status', 'model:location', 'model:person-location', 'model:person', 'model:category', 'model:uuid', 'model:location-level', 'model:attachment', 'model:location-status', 'service:person-current','service:translations-fetcher','service:i18n']);
         uuid = this.container.lookup('model:uuid');
         location_level_deserializer = LocationLevelDeserializer.create({store: store});
         location_deserializer = LocationDeserializer.create({store: store, LocationLevelDeserializer: location_level_deserializer});
@@ -29,6 +30,7 @@ module('unit: ticket deserializer test', {
         category_deserializer = CategoryDeserializer.create({store: store});
         subject = TicketDeserializer.create({store: store, uuid: uuid, PersonDeserializer: person_deserializer, CategoryDeserializer: category_deserializer, LocationDeserializer: location_deserializer});
         run(function() {
+            store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne]});
             ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
             ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne, tickets: [TD.idOne]});
             ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId, status_fk: TD.statusOneId});
@@ -85,6 +87,24 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     });
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('assignee').get('id'), PD.id);
+});
+
+test('ticket with existing assignee should not modify locations as it will not be in the json payload from the api', (assert) => {
+    ticket = store.push('ticket', {id: TD.idOne, assignee_fk: PD.id});
+    store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.id, location_pk: LD.idOne});
+    store.push('person', {id: PD.id, person_location_fks: [PERSON_LD.idOne], assigned_tickets: [TD.idOne]});
+    assert.equal(ticket.get('assignee').get('id'), PD.id);
+    assert.equal(ticket.get('assignee').get('locations').get('length'), 1);
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    let json = TF.generate(TD.idOne);
+    assert.equal(json.assignee.locations, undefined);
+    let response = {'count':1,'next':null,'previous':null,'results': [json]};
+    run(function() {
+        subject.deserialize(response);
+    });
+    assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
+    assert.equal(ticket.get('assignee').get('id'), PD.id);
+    assert.equal(ticket.get('assignee').get('locations').get('length'), 1);
 });
 
 /*TICKET LOCATION 1-2-Many*/
