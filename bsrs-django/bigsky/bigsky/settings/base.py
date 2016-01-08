@@ -114,7 +114,7 @@ DATABASES = {
 #     'PORT': '5432',
 # }
 
-# INSTALLED_APPS += ('utils_transform.tlocation',)
+# INSTALLED_APPS += ('utils_transform.tlocation', 'utils_transform.trole')
 
 # DATABASE_ROUTERS = ['bigsky.db_router.TransformRouter', 'bigsky.db_router.DefaultRouter']
 
