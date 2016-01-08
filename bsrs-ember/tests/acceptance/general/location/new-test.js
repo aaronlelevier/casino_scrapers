@@ -56,7 +56,7 @@ test('visiting /location/new', (assert) => {
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_NEW_URL);
-        assert.equal(store.find('location').get('length'), 2);
+        assert.equal(store.find('location').get('length'), 1);
         const location = store.find('location', UUID.value);
         assert.ok(location.get('new'));
         // assert.equal(page.locationLevelInput(), 'Select One');
@@ -73,7 +73,7 @@ test('visiting /location/new', (assert) => {
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
-        assert.equal(store.find('location').get('length'), 2);
+        assert.equal(store.find('location').get('length'), 1);
         let location = store.find('location', UUID.value);
         assert.equal(location.get('new'), undefined);
         assert.equal(location.get('name'), LD.storeName);
@@ -167,7 +167,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), LOCATION_URL);
             let location = store.find('location', {id: UUID.value});
             assert.equal(location.get('length'), 0);
-            assert.equal(find('tr.t-grid-data').length, 1);
+            assert.equal(find('tr.t-grid-data').length, 0);
         });
     });
 });
