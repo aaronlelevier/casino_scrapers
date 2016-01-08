@@ -25,12 +25,11 @@ from translation.tests.factory import create_locales
 class IndexTests(TestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         create_categories()
         self.person = create_person()
 
     def test_logged_in(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
@@ -39,15 +38,15 @@ class IndexTests(TestCase):
         self.assertRedirects(response, reverse('login')+'?next='+reverse('index'))
 
     def test_password_change_get(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get(reverse('password_change'))
         self.assertEqual(response.status_code, 200)
 
     def test_password_change_post(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         new_password = "my-new-password"
         response = self.client.post(reverse('password_change'),
-            {'old_password': self.password, 'new_password1': new_password,
+            {'old_password': PASSWORD, 'new_password1': new_password,
             'new_password2': new_password})
         self.assertRedirects(response, reverse('index'))
         self.assertIn('_auth_user_id', self.client.session)
@@ -55,7 +54,7 @@ class IndexTests(TestCase):
     def test_password_expired(self):
         self.person.password_expire_date = timezone.now().date() - timedelta(days=1)
         self.person.save()
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get(reverse('index'))
         self.assertRedirects(response, reverse('password_change')+'?next='+reverse('index'))
 
@@ -63,7 +62,6 @@ class IndexTests(TestCase):
 class LoginTests(TestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         create_categories()
         self.person = create_person()
 
@@ -73,7 +71,7 @@ class LoginTests(TestCase):
         self.assertEqual(response.context['submit_button'], 'Login')
 
     def test_login_authenticated(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get(reverse('login'))
         self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
 
@@ -90,31 +88,30 @@ class LoginTests(TestCase):
 
     def test_favicon_and_media_url(self):
         response = self.client.get(reverse('login'))
-        self.assertIn("{}/images/favicon.ico".format(settings.MEDIA_URL), response.content.decode('utf8'))
+        self.assertIn("{}images/favicon.ico".format(settings.MEDIA_URL), response.content.decode('utf8'))
 
 
 class LogoutTests(TestCase):
     # Only a POST or PUT will be accepted request types to logout a Person
 
     def setUp(self):
-        self.password = PASSWORD
         create_categories()
         self.person = create_person()
 
     def test_logout_post(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         self.assertIn('_auth_user_id', self.client.session)
         self.client.post(reverse('logout'))
         self.assertNotIn('_auth_user_id', self.client.session)
 
     def test_logout_put(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         self.assertIn('_auth_user_id', self.client.session)
         self.client.put(reverse('logout'))
         self.assertNotIn('_auth_user_id', self.client.session)
 
     def test_logout_wrong_request(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         self.assertIn('_auth_user_id', self.client.session)
         response = self.client.get(reverse('logout'))
         self.assertEqual(response.status_code, 404)
@@ -124,7 +121,6 @@ class LogoutTests(TestCase):
 class ConfigurationTests(TestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         create_categories()
         self.person = create_person()
         self.phone_number_types = mommy.make(PhoneNumberType)
@@ -157,7 +153,7 @@ class ConfigurationTests(TestCase):
         create_locales()
         
         # Login
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
 
         self.response = self.client.get(reverse('index'))
 
@@ -343,10 +339,10 @@ class SessionTests(TestCase):
 
     def test_session_expiry(self):
         with self.settings(SESSION_COOKIE_AGE=1):
-            response = self.client.post(reverse('login'), self.login_data, follow=True)
-            self.assertRedirects(response, reverse('index'))
+            response = self.client.post(reverse('login'), self.login_data)
+            self.assertIsNotNone(self.client.session.get('_auth_user_id', None))
             # simulate User inactivity, which leads to a "session timeout"
             time.sleep(1)
-            response = self.client.get(reverse('index'), follow=True)
-            self.assertRedirects(response, '/login/?next=/')
+            response = self.client.get('/dashboard', follow=True)
+            self.assertRedirects(response, '/login/?next=/dashboard')
             self.assertIsNone(self.client.session.get('_auth_user_id', None))
