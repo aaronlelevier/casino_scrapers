@@ -231,8 +231,6 @@ test('on boot we should fetch and load the current person configuration', functi
         assert.equal(person_current_model.get('id'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.id);
         assert.equal(person_current_model.get('first_name'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.first_name);
         assert.equal(person_current_model.get('last_name'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.last_name);
-        let person = person_current_model.get('person');
-        assert.equal(person.get('locations').get('length'), 1);
     });
 });
 
