@@ -519,23 +519,19 @@ class TicketActivityViewSetReponseTests(APITestCase):
     def tearDown(self):
         self.client.logout()
 
-    def test_type(self):
+    def test_create(self):
         type = 'create'
         ticket_activity = create_ticket_activity(ticket=self.ticket, type=type)
 
         response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
 
         data = json.loads(response.content.decode('utf8'))
+        self.assertIn('id', data['results'][0])
+        self.assertIn('created', data['results'][0])
         self.assertEqual(data['results'][0]['type'], type)
-
-    def test_create(self):
-        ticket_activity = create_ticket_activity(ticket=self.ticket, type='create')
-
-        response = self.client.get('/api/tickets/{}/activity/'.format(self.ticket.id))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data['count'], 1)
         self.assertEqual(data['results'][0]['ticket'], str(self.ticket.id))
+        self.assertEqual(data['results'][0]['person']['id'], str(self.dm.person.id))
+        self.assertEqual(data['results'][0]['person']['fullname'], self.dm.person.fullname)
         self.assertIsNone(data['results'][0]['content'])
 
     def test_assignee(self):
@@ -909,7 +905,6 @@ class TicketAndTicketActivityTests(APITestCase):
         self.assertEqual(TicketActivity.objects.count(), 1)
 
         self.client.put('/api/tickets/{}/'.format(self.ticket.id), self.data, format='json')
-
         self.assertEqual(TicketActivity.objects.count(), 1)
 
     def test_attachment_add__then_add_ticket(self):
