@@ -44,8 +44,7 @@ class RoleDetailSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        fields = ('id', 'name', 'role_type', 'location_level', 'categories',
-                  'settings',)
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories',)
 
     @staticmethod
     def eager_load(queryset):

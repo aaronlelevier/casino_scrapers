@@ -2,8 +2,8 @@
 from __future__ import unicode_literals
 
 from django.db import migrations, models
-import uuid
 import utils.fields
+import uuid
 
 
 class Migration(migrations.Migration):
@@ -15,17 +15,17 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Currency',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
-                ('name', models.CharField(max_length=50, help_text='US Dollar')),
-                ('name_plural', models.CharField(max_length=50, help_text='US Dollars', blank=True)),
-                ('code', utils.fields.UpperCaseCharField(unique=True, max_length=3, help_text='i.e. USD, JPY, etc...')),
-                ('symbol', models.CharField(max_length=10, help_text='$')),
-                ('symbol_native', models.CharField(max_length=10, help_text='$', blank=True)),
-                ('decimal_digits', models.IntegerField(default=0, blank=True)),
-                ('rounding', models.IntegerField(default=0, blank=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
+                ('name', models.CharField(help_text='US Dollar', max_length=50)),
+                ('name_plural', models.CharField(help_text='US Dollars', blank=True, max_length=50)),
+                ('code', utils.fields.UpperCaseCharField(help_text='i.e. USD, JPY, etc...', unique=True, max_length=3)),
+                ('symbol', models.CharField(help_text='$', max_length=10)),
+                ('symbol_native', models.CharField(help_text='$', blank=True, max_length=10)),
+                ('decimal_digits', models.IntegerField(blank=True, default=0)),
+                ('rounding', models.IntegerField(blank=True, default=0)),
             ],
             options={
                 'verbose_name_plural': 'Currencies',

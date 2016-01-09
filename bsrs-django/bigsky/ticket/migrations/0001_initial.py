@@ -3,18 +3,18 @@ from __future__ import unicode_literals
 
 from django.db import migrations, models
 import ticket.models
-import uuid
-import django.contrib.postgres.fields.hstore
-from django.contrib.postgres.operations import HStoreExtension
 from django.conf import settings
+import django.contrib.postgres.fields.hstore
+import uuid
+from django.contrib.postgres.operations import HStoreExtension
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
         ('location', '0001_initial'),
         ('category', '0001_initial'),
-        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
@@ -22,15 +22,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Ticket',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
-                ('request', models.CharField(blank=True, max_length=1000, null=True)),
-                ('number', models.IntegerField(default=ticket.models.Ticket.no_ticket_models, blank=True)),
-                ('assignee', models.ForeignKey(to=settings.AUTH_USER_MODEL, blank=True, related_name='assignee_tickets', null=True)),
-                ('categories', models.ManyToManyField(to='category.Category', blank=True)),
-                ('cc', models.ManyToManyField(to=settings.AUTH_USER_MODEL, blank=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
+                ('requester', models.CharField(null=True, blank=True, max_length=150)),
+                ('request', models.CharField(null=True, blank=True, max_length=1000)),
+                ('number', models.IntegerField(blank=True, default=ticket.models.Ticket.no_ticket_models)),
+                ('assignee', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='assignee_tickets', blank=True, null=True)),
+                ('categories', models.ManyToManyField(blank=True, to='category.Category')),
+                ('cc', models.ManyToManyField(blank=True, to=settings.AUTH_USER_MODEL)),
                 ('location', models.ForeignKey(to='location.Location')),
             ],
             options={
@@ -40,7 +41,7 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TicketActivity',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('content', django.contrib.postgres.fields.hstore.HStoreField(blank=True, null=True)),
                 ('person', models.ForeignKey(to=settings.AUTH_USER_MODEL, related_name='ticket_activities', help_text='Person who did the TicketActivity')),
@@ -53,12 +54,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TicketActivityType',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
-                ('weight', models.PositiveIntegerField(default=1, blank=True)),
+                ('weight', models.PositiveIntegerField(blank=True, default=1)),
             ],
             options={
                 'abstract': False,
@@ -67,10 +68,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TicketPriority',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
@@ -80,10 +81,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='TicketStatus',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={
@@ -99,11 +100,6 @@ class Migration(migrations.Migration):
             model_name='ticket',
             name='priority',
             field=models.ForeignKey(to='ticket.TicketPriority', blank=True, null=True),
-        ),
-        migrations.AddField(
-            model_name='ticket',
-            name='requester',
-            field=models.ForeignKey(to=settings.AUTH_USER_MODEL, blank=True, related_name='requester_tickets', null=True),
         ),
         migrations.AddField(
             model_name='ticket',

@@ -74,9 +74,6 @@ class RoleViewSetTests(APITestCase):
         self.assertIn('name', data['categories'][0])
         self.assertIn('status', data['categories'][0])
         self.assertIn('parent', data['categories'][0])
-        # default settings
-        self.assertEqual(data['settings']['login_grace'], 1)
-        self.assertEqual(data['settings']['proj_preapprove'], False)
 
     def test_create(self):
         role_data = {

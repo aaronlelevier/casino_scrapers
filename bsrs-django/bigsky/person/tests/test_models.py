@@ -39,22 +39,6 @@ class RoleTests(TestCase):
         )
 
 
-class RoleSettingsTests(TestCase):
-
-    def setUp(self):
-        self.role = create_role()
-
-    def test_settings(self):
-        self.role.settings = {'login_grace': 2}
-        self.role.save()
-
-        self.assertEqual(self.role.settings.get('login_grace'), 2)
-
-    def test_settings__defualts(self):
-        self.assertEqual(self.role.settings.get('login_grace'), 1)
-        self.assertEqual(self.role.settings.get('proj_preapprove'), False)
-
-
 class RolePasswordTests(TestCase):
 
     def setUp(self):

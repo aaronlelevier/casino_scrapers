@@ -15,19 +15,19 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Category',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(max_length=100)),
-                ('description', models.CharField(blank=True, max_length=100, null=True)),
-                ('label', models.CharField(editable=False, blank=True, max_length=100, help_text='This field cannot be set directly.  It is either set from a system setting, or defaulted from the Parent Category.', null=True)),
+                ('description', models.CharField(null=True, blank=True, max_length=100)),
+                ('label', models.CharField(help_text='This field cannot be set directly.  It is either set from a system setting, or defaulted from the Parent Category.', blank=True, max_length=100, editable=False, null=True)),
                 ('subcategory_label', models.CharField(max_length=100)),
-                ('cost_amount', models.DecimalField(default=0, decimal_places=4, max_digits=15, blank=True)),
-                ('cost_code', models.CharField(blank=True, max_length=100, null=True)),
-                ('level', models.IntegerField(default=0, blank=True)),
+                ('cost_amount', models.DecimalField(decimal_places=4, blank=True, default=0, max_digits=15)),
+                ('cost_code', models.CharField(null=True, blank=True, max_length=100)),
+                ('level', models.IntegerField(blank=True, default=0)),
                 ('cost_currency', models.ForeignKey(to='accounting.Currency', blank=True, null=True)),
-                ('parent', models.ForeignKey(to='category.Category', blank=True, related_name='children', null=True)),
+                ('parent', models.ForeignKey(to='category.Category', related_name='children', blank=True, null=True)),
             ],
             options={
                 'ordering': ('level',),
@@ -36,10 +36,10 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='CategoryStatus',
             fields=[
-                ('id', models.UUIDField(editable=False, default=uuid.uuid4, serialize=False, primary_key=True)),
+                ('id', models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, serialize=False)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('deleted', models.DateTimeField(blank=True, help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', null=True)),
+                ('deleted', models.DateTimeField(help_text='If NULL the record is not deleted, otherwise this is the timestamp of when the record was deleted.', blank=True, null=True)),
                 ('name', models.CharField(unique=True, max_length=100)),
             ],
             options={

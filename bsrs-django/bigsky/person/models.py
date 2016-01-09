@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import UserManager, Group, AbstractUser
 from django.contrib.auth.hashers import make_password, identify_hasher
 from django.contrib.contenttypes.fields import GenericRelation
-from django.contrib.postgres.fields import ArrayField, JSONField
+from django.contrib.postgres.fields import ArrayField
 from django.utils import timezone
 from django.db.models.signals import post_save
 from django.dispatch import receiver
@@ -112,8 +112,6 @@ class Role(BaseModel):
     msg_copy_default = models.BooleanField(blank=True, default=False)
     msg_stored_link = models.BooleanField(blank=True, default=False)
 
-    settings = JSONField(blank=True, default={})
-
     __original_values = {}
 
     def __init__(self, *args, **kwargs):
@@ -158,24 +156,6 @@ class Role(BaseModel):
 
         if not self.default_auth_currency:
             self.default_auth_currency = Currency.objects.default()
-
-        self._update_settings()
-
-    def _update_settings(self):
-        default_settings_keys = self.default_settings.keys()
-        explicit_settings_keys = self.settings.keys()
-
-        settings_needed = set(default_settings_keys) - set(explicit_settings_keys)
-
-        for s in settings_needed:
-            self.settings[s] = self.default_settings.get(s)
-
-    @property
-    def default_settings(self):
-        return {
-            'login_grace': 1,
-            'proj_preapprove': False
-        }
 
     def _update_password_history_length(self):
         """

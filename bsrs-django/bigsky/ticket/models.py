@@ -3,7 +3,7 @@ import uuid
 from django.db import models
 from django.db.models import Q
 from django.conf import settings
-from django.contrib.postgres.fields import JSONField
+from django.contrib.postgres.fields import HStoreField
 from django.db.models.signals import m2m_changed
 
 from category.models import Category
@@ -174,7 +174,7 @@ class TicketActivity(models.Model):
     ticket = models.ForeignKey(Ticket, related_name="activities")
     person = models.ForeignKey(Person, related_name="ticket_activities",
         help_text="Person who did the TicketActivity")
-    content = JSONField(blank=True, null=True)
+    content = HStoreField(blank=True, null=True)
     
     class Meta:
         ordering = ('-created',)
