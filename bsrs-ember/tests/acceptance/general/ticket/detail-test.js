@@ -99,6 +99,7 @@ test('you can add a comment and post it while not updating created property', (a
         date.setMonth(date.getMonth()-1);
         iso = date.toISOString();
         store.push('ticket', {id: TD.idOne, created: iso});
+        assert.equal(find('.t-ticket-comment').attr('placeholder'), 'Enter a comment');
     });
     page.commentFillIn(TD.commentOne);
     andThen(() => {

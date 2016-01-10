@@ -157,6 +157,7 @@ en,admin.translation.label.key,Key,Key,,"'admin.translation.label.key':'Key',",K
 en,admin.translation.label.translation,Translation,Translation,,"'admin.translation.label.translation':'Translation',",Translation,Translation
 en,admin.translation.one,Translation,Translation,,"'admin.translation.one':'Translation',",Translation,Translation
 en,admin.translation.other,Translations,Translations,,"'admin.translation.other':'Translations',",Translations,Translations
+en,admin.translation.search,Search Translations,Search Translations,,"'admin.translation.search':'Search Translations',",Search Translations,
 en,button.add,Add new {{model}},Add new {{model}},,"'button.add':'Add new {{model}}',",Add new {{model_var_,Add new _model_var_
 en,button.upload,Attach file,Attach file,,"'button.upload':'Attach file',",Attach file,Attach file
 en,crud.cancel.button,Cancel,Cancel,,"'crud.cancel.button':'Cancel',",Cancel,Cancel
@@ -193,7 +194,7 @@ en,ticket.created,{{requester}} created this ticket {{timestamp}},{{requester}} 
 en,ticket.label.assignee-fullname,Assignee,Assignee,,"'ticket.label.assignee-fullname':'Assignee',",Assignee,Assignee
 en,ticket.label.category-name,Category,Category,,"'ticket.label.category-name':'Category',",Category,Category
 en,ticket.label.cc,CC,CC,,"'ticket.label.cc':'CC',",CC,CC
-en,ticket.label.comment_add,Add a comment,Add a comment,,"'ticket.label.comment_add':'Add a comment',",Add a comment,Add a comment
+en,ticket.label.comment_add,Enter a comment,Enter a comment,,"'ticket.label.comment_add':'Enter a comment',",Enter a comment,Enter a comment
 en,ticket.label.created,Created,Created,,"'ticket.label.created':'Created',",Created,Created
 en,ticket.label.formatted_date,Created,Created,,"'ticket.label.formatted_date':'Created',",Created,Created
 en,ticket.label.location-name,Location,Location,,"'ticket.label.location-name':'Location',",Location,Location
