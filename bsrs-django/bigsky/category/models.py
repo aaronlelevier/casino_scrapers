@@ -56,7 +56,8 @@ class Category(BaseModel):
     cost_code = models.CharField(max_length=100, blank=True, null=True)
     parent = models.ForeignKey("self", related_name="children", blank=True, null=True)
     status = models.ForeignKey(CategoryStatus, blank=True, null=True)
-    level = models.IntegerField(blank=True, default=0)
+    level = models.IntegerField(blank=True, default=0,
+        help_text="A count of how many parent categories that this Category has.")
 
     objects = CategoryManager()
 
