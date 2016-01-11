@@ -619,9 +619,11 @@ class TicketActivityViewSetReponseTests(APITestCase):
         self.assertEqual(data['results'][0]['content']['from'][0]['id'], str(from_category.id))
         self.assertEqual(data['results'][0]['content']['from'][0]['parent'], str(from_category.parent.id))
         self.assertEqual(data['results'][0]['content']['from'][0]['name'], from_category.name)
+        self.assertEqual(data['results'][0]['content']['from'][0]['level'], from_category.level)
         self.assertEqual(data['results'][0]['content']['to'][0]['id'], str(to_category.id))
         self.assertEqual(data['results'][0]['content']['to'][0]['parent'], str(to_category.parent.id))
         self.assertEqual(data['results'][0]['content']['to'][0]['name'], to_category.name)
+        self.assertEqual(data['results'][0]['content']['to'][0]['level'], to_category.level)
         # old keys gone
         with self.assertRaises(KeyError):
             data['results'][0]['content']['from_0']

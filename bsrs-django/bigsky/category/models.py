@@ -118,5 +118,6 @@ class Category(BaseModel):
         return {
             'id': str(self.id),
             'name': self.name,
-            'parent': str(self.parent.id) if self.parent else None
+            'parent': str(self.parent.id) if self.parent else None,
+            'level': self.level
         }
