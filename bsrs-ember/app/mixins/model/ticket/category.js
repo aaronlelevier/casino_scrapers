@@ -130,10 +130,13 @@ var CategoriesMixin = Ember.Mixin.create({
     },
     rollbackCategories() {
         const store = this.get('store');
+        const ticket_id = this.get('id');
         let previous_m2m_fks = this.get('ticket_categories_fks') || [];
         let m2m_array = store.find('ticket-category').toArray();
         let m2m_to_throw_out = m2m_array.filter(function(join_model) {
-            return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
+            if(join_model.get('ticket_pk') === ticket_id) {
+                return Ember.$.inArray(join_model.get('id'), previous_m2m_fks) < 0 && !join_model.get('removed');
+            }
         });
         m2m_to_throw_out.forEach(function(join_model) {
             run(function() {
