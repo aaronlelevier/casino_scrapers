@@ -112,6 +112,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
         person.addresses = this.address_fixtures.get();
         person.locale = this.person_defaults.locale_id;
         person.locations = [this.location_fixtures.get()];
+        person.status = this.person_defaults.status;
         return person;
     };
     factory.prototype.put = function(person) {
