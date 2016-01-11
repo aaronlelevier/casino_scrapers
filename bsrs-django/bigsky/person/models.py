@@ -21,12 +21,12 @@ from contact.models import PhoneNumber, Address, Email
 from location.models import LocationLevel, Location
 from category.models import Category
 from person import helpers
-from work_order.models import WorkOrderStatus
 from translation.models import Locale
 from utils import choices
 from utils.models import BaseModel, BaseStatusModel, BaseStatusManager
 from utils.validators import (contains_digit, contains_upper_char, contains_lower_char,
     contains_special_char, contains_no_whitespaces)
+from work_order.models import WorkOrderStatus
 
 
 class Role(BaseModel):
@@ -344,7 +344,9 @@ class Person(BaseModel, AbstractUser):
             'title': self.title,
             'employee_id': self.employee_id,
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
-            'role': str(self.role.id)
+            'role': str(self.role.id),
+            'all_locations_and_children': [str(x) for x in self.all_locations_and_children()],
+            'all_role_categories_and_children': [str(x) for x in self.all_role_categories_and_children()],
         }
 
     def to_simple_dict(self):
@@ -439,6 +441,12 @@ class Person(BaseModel, AbstractUser):
         if len(self.password_history) > settings.MAX_PASSWORDS_STORED:
             setattr(self, 'password_history',
                 self.password_history[len(self.password_history)-settings.MAX_PASSWORDS_STORED:])
+
+    def all_locations_and_children(self):
+        return self.locations.objects_and_their_children()
+
+    def all_role_categories_and_children(self):
+        return self.role.categories.objects_and_their_children()
 
 
 @receiver(post_save, sender=Person)

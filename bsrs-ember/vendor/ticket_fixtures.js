@@ -11,15 +11,16 @@ var BSRS_TICKET_FACTORY = (function() {
     factory.prototype.generate = function(i) {
         var id = i || this.ticket.idOne;
 
-        var child_category = this.category_fixtures.get(this.category_defaults.idPlumbing, this.category_defaults.nameRepairChild);
-        var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent: child_category.id, children_fks: []};
+        var child_category = this.category_fixtures.generate(this.category_defaults.idPlumbing, this.category_defaults.nameRepairChild);
+        var child_child_category = {id: this.category_defaults.idPlumbingChild, name: this.category_defaults.namePlumbingChild, parent: child_category.id, label: this.category_defaults.labelThree, children_fks: []};
         child_category.children_fks = [this.category_defaults.idPlumbingChild];
         child_category.parent = this.category_defaults.idOne;
+        child_category.label = this.category_defaults.labelTwo;
 
-        var parent_category = this.category_fixtures.get(this.category_defaults.idOne, this.category_defaults.nameOne);
+        var parent_category = this.category_fixtures.generate(this.category_defaults.idOne, this.category_defaults.nameOne);
         parent_category.children_fks = [this.category_defaults.idPlumbing, this.category_defaults.idTwo];
         parent_category.parent = null;
-        
+
         delete parent_category.status;
         delete child_category.status;
         delete child_child_category.status;
@@ -32,7 +33,6 @@ var BSRS_TICKET_FACTORY = (function() {
             priority: this.ticket.priorityOneId,
             cc: [{id: this.people_defaults.idOne, fullname: this.people_defaults.fullname, email: this.people_defaults.emails, role: this.people_defaults.role}],
             categories: [child_category, parent_category, child_child_category],
-            requester: this.people_fixtures.get(),
             assignee: this.people_fixtures.get(),
             location: this.location_fixtures.get(),
             attachments: [],
@@ -53,8 +53,6 @@ var BSRS_TICKET_FACTORY = (function() {
             ticket.request = 'sub' + i;
             delete ticket.cc;
             delete ticket.attachments;
-            delete ticket.requester;
-            ticket.created = new Date();
             response.push(ticket);
         }
         //we do a reverse order sort here to verify a real sort occurs in the component
@@ -95,7 +93,6 @@ var BSRS_TICKET_FACTORY = (function() {
     factory.prototype.put = function(ticket) {
         var response = this.generate(ticket.id);
         response.cc = [response.cc[0].id];
-        response.requester = response.requester.id;
         response.location = response.location.id;
         response.assignee = response.assignee.id;
         response.categories = response.categories.map(function(cat) { return cat.id; });
@@ -121,7 +118,7 @@ if (typeof window === 'undefined') {
     objectAssign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
     module.exports = new BSRS_TICKET_FACTORY(ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, config);
 } else {
-    define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/people_fixtures', 'bsrs-ember/vendor/location_fixtures', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'], 
+    define('bsrs-ember/vendor/ticket_fixtures', ['exports', 'bsrs-ember/vendor/defaults/ticket', 'bsrs-ember/vendor/defaults/person', 'bsrs-ember/vendor/people_fixtures', 'bsrs-ember/vendor/location_fixtures', 'bsrs-ember/vendor/category_fixtures', 'bsrs-ember/vendor/defaults/category', 'bsrs-ember/vendor/mixin', 'bsrs-ember/config/environment'],
            function (exports, ticket_defaults, person_defaults, people_fixtures, location_fixtures, category_fixtures, category_defaults, mixin, config) {
         'use strict';
         Object.assign(BSRS_TICKET_FACTORY.prototype, mixin.prototype);
@@ -129,5 +126,3 @@ if (typeof window === 'undefined') {
         return {default: Factory};
     });
 }
-
-

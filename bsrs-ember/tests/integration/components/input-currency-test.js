@@ -31,6 +31,19 @@ test('renders a component with no value when bound attr is undefined', function(
     assert.equal($component.find('.t-amount').val(), '');
 });
 
+test('renders a component with 0.00 when the field returns a truly zero value', function(assert) {
+    run(function() {
+        model = store.push('person', {id: PEOPLE_DEFAULTS.id, auth_amount: 0, currency: CURRENCY_DEFAULTS.id});
+    });
+    this.set('model', model);
+    this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
+    var $component = this.$('.t-input-currency');
+    $component.find('.t-amount').trigger('blur');
+    assert.equal($component.find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol_native);
+    assert.equal($component.find('.t-currency-code').text().trim(), CURRENCY_DEFAULTS.code);
+    assert.equal($component.find('.t-amount').val(), '0.00');
+});
+
 test('renders a component with currency and label', function(assert) {
     run(function() {
         model = store.push('person', {id: PEOPLE_DEFAULTS.id, auth_amount: LONG_AUTH_AMOUNT, currency: CURRENCY_DEFAULTS.id});
@@ -38,6 +51,7 @@ test('renders a component with currency and label', function(assert) {
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
     var $component = this.$('.t-input-currency');
+    $component.find('.t-amount').trigger('blur');
     assert.equal($component.find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol_native);
     assert.equal($component.find('.t-currency-code').text().trim(), CURRENCY_DEFAULTS.code);
     assert.equal($component.find('.t-amount').val(), PEOPLE_DEFAULTS.auth_amount);
@@ -50,9 +64,10 @@ test('the models bound field will update both the formatted input value and the 
     this.set('model', model);
     this.render(hbs`{{input-currency model=model field="auth_amount"}}`);
     var $component = this.$('.t-input-currency');
-    $component.find('.t-amount').val('30').trigger('change');
+    $component.find('.t-amount').val('30').trigger('blur');
     assert.equal($component.find('.t-currency-symbol').text().trim(), CURRENCY_DEFAULTS.symbol_native);
     assert.equal($component.find('.t-currency-code').text().trim(), CURRENCY_DEFAULTS.code);
     assert.equal($component.find('.t-amount').val(), '30.00');
+    $component.find('.t-amount').val('30').trigger('blur');
     assert.equal(model.get('auth_amount'), '30');
 });

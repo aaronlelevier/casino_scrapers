@@ -7,8 +7,6 @@ import uuid
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
 from django.utils import timezone
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.contenttypes.fields import GenericForeignKey
 
 
 ########
@@ -137,21 +135,25 @@ class BaseStatusModel(BaseNameModel):
         return True
 
 
+### SETTINGS
+
 class BaseSettingModel(BaseModel):
     '''
     ``Setting`` records will be either Standard or Custom. and be set 
     at levels. ex - Location, Role, User.
     '''
-    settings = models.TextField(blank=True, help_text="JSON Dict saved as a string in DB")
-
-    # Generic ForeignKey Settings, so ``Setting`` can be set 
-    # for any Django Model
-    content_type = models.ForeignKey(ContentType)
-    object_id = models.UUIDField()
-    content_object = GenericForeignKey('content_type', 'object_id')
+    settings = models.CharField(max_length=1000, blank=True)
 
     class Meta:
         abstract = True
 
     def __str__(self):
         return self.settings
+
+
+class MainSetting(BaseSettingModel):
+    pass
+
+
+class CustomSetting(BaseSettingModel):
+    pass

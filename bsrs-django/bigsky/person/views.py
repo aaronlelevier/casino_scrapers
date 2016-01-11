@@ -102,7 +102,7 @@ class PersonViewSet(EagerLoadQuerySetMixin, BaseModelViewSet):
     @list_route(methods=['GET'])
     def current(self, request):
         instance = get_object_or_404(Person, id=request.user.id)
-        serializer = ps.PersonDetailSerializer(instance)
+        serializer = ps.PersonCurrentSerializer(instance)
         return Response(serializer.data)
 
     # TODO

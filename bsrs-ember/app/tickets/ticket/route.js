@@ -1,6 +1,9 @@
 import Ember from 'ember';
 import inject from 'bsrs-ember/utilities/inject';
 import TabRoute from 'bsrs-ember/route/tab/route';
+//start-non-standard
+import computed from 'ember-computed-decorators';
+//end-non-standard
 
 var TicketSingleRoute = TabRoute.extend({
     activityRepository: inject('activity'),
@@ -10,36 +13,38 @@ var TicketSingleRoute = TabRoute.extend({
     statusRepository: inject('ticket-status'),
     priorityRepository: inject('ticket-priority'),
     attachmentRepository: inject('attachment'),
-    transitionCallback: function() { this.get('attachmentRepository').removeAllUnrelated(); },
-    redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
-    modelName: Ember.computed(function() { return 'ticket'; }),
-    templateModelField: Ember.computed(function() { return 'subject'; }),
-    top_level_category_options: Ember.computed(function() {
+    transitionCallback() { this.get('attachmentRepository').removeAllUnrelated(); },
+    /*start-non-standard*/ @computed /*end-non-standard*/
+    redirectRoute() { return 'tickets.index'; },
+    /*start-non-standard*/ @computed /*end-non-standard*/
+    modelName() { return 'ticket'; },
+    /*start-non-standard*/ @computed /*end-non-standard*/
+    templateModelField() { return 'ticket'; },
+    /*start-non-standard*/ @computed /*end-non-standard*/
+    top_level_category_options() {
         const categoryRepo = this.get('categoryRepository');
         return categoryRepo.findTopLevelCategories();
-    }),
-    priorities: Ember.computed(function() {
+    },
+    /*start-non-standard*/ @computed /*end-non-standard*/
+    priorities() {
         return this.get('priorityRepository').fetch();
-    }),
-    statuses: Ember.computed(function() {
+    },
+    /*start-non-standard*/ @computed /*end-non-standard*/
+    statuses() {
         return this.get('statusRepository').fetch();
-    }),
+    },
     model(params, transition) {
         const pk = params.ticket_id;
         const repository = this.get('repository');
         let ticket = repository.fetch(pk);
-        let statuses = this.get('statuses');
-        let priorities = this.get('priorities');
-
-        let top_level_category_options = this.get('top_level_category_options');
-
+        const statuses = this.get('statuses');
+        const priorities = this.get('priorities');
+        const top_level_category_options = this.get('top_level_category_options');
         if (!ticket.get('content') || ticket.get('isNotDirtyOrRelatedNotDirty')) { 
             //NOTE: if not dirty on search change, then will bring in new data
             ticket = repository.findById(pk);
         }
-
         let activities = this.get('activityRepository').find('ticket', 'tickets', pk);
-
         return {
             model: ticket,
             statuses: statuses,

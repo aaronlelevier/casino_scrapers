@@ -1,6 +1,5 @@
 import Ember from 'ember';
-import {test} from 'qunit';
-import {module as qunitModule} from 'bsrs-ember/tests/helpers/qunit';
+import {module as qunitModule, test} from 'bsrs-ember/tests/helpers/qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';

@@ -18,9 +18,7 @@ module('unit: input-multi-phone component test', {
 
 test('valid computed should ignore models with an empty or undefined number attr (starting with no bound models)', (assert) => {
     let phone_number;
-    run(function() {
-        person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    });
+    person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let phone_number_types = [PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName }), PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, name: PHONE_NUMBER_TYPE_DEFAULTS.mobileName })];
     let model = store.find('phonenumber', {person: PEOPLE_DEFAULTS.id});
     let subject = InputMultiPhoneComponent.create({model: model, eventbus: eventbus});
@@ -48,9 +46,7 @@ test('valid computed should ignore models with an empty or undefined number attr
 
 test('valid computed should ignore models with an empty or undefined number attr (when the middle model is modified)', (assert) => {
     let phone_number_two;
-    run(function() {
-        person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    });
+    person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let phone_number_types = [PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName }), PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, name: PHONE_NUMBER_TYPE_DEFAULTS.mobileName })];
     let model = store.find('phonenumber', {person: PEOPLE_DEFAULTS.id});
     let subject = InputMultiPhoneComponent.create({model: model, eventbus: eventbus});
@@ -82,9 +78,7 @@ test('valid computed should ignore models with an empty or undefined number attr
     let phone_number_one;
     let phone_number_two;
     let phone_number_three;
-    run(function() {
-        person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    });
+    person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let phone_number_types = [PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.officeId, name: PHONE_NUMBER_TYPE_DEFAULTS.officeName }), PhoneNumberType.create({ id: PHONE_NUMBER_TYPE_DEFAULTS.mobileId, name: PHONE_NUMBER_TYPE_DEFAULTS.mobileName })];
     let model = store.find('phonenumber', {person: PEOPLE_DEFAULTS.id});
     let subject = InputMultiPhoneComponent.create({model: model, eventbus: eventbus});

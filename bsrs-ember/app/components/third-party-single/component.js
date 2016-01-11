@@ -16,9 +16,7 @@ var ThirdPartySingle = Ember.Component.extend(TabMixin, EditMixin, ValidationMix
             }
         },
         changedStatus(model, val) {
-            Ember.run(() => {
-                model.set('status', val);
-            });
+            model.set('status', val);
         }
     }
 });

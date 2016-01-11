@@ -8,6 +8,7 @@ import {waitFor} from 'bsrs-ember/tests/helpers/utilities';
 import random from 'bsrs-ember/models/random';
 import UUID from 'bsrs-ember/vendor/defaults/uuid';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
+import timemachine from 'vendor/timemachine';
 import TF from 'bsrs-ember/vendor/ticket_fixtures';
 import TD from 'bsrs-ember/vendor/defaults/ticket';
 import LF from 'bsrs-ember/vendor/location_fixtures';
@@ -21,6 +22,7 @@ import PD from 'bsrs-ember/vendor/defaults/person';
 import selectize from 'bsrs-ember/tests/pages/selectize';
 import generalPage from 'bsrs-ember/tests/pages/general';
 import page from 'bsrs-ember/tests/pages/tickets';
+import moment from 'moment';
 
 const PREFIX = config.APP.NAMESPACE;
 const BASE_URL = BASEURLS.base_tickets_url;
@@ -63,6 +65,9 @@ module('Acceptance | ticket new test', {
         let category_three = {id: CD.idChild, name: CD.nameElectricalChild, parent: {id: CD.idTwo}, children_fks: []};
         category_three_xhr = xhr(`${PREFIX}/admin/categories/${CD.idChild}/`, 'GET', null, {}, 200, category_three);
         counter = 0;
+        timemachine.config({
+            dateString: 'December 25, 2015 13:12:59'
+        });
     },
     afterEach() {
         counter = 0;
@@ -83,7 +88,7 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-assignee-validation-error').is(':hidden'));
         assert.ok(find('.t-location-validation-error').is(':hidden'));
         assert.ok(find('.t-category-validation-error').is(':hidden'));
-        assert.ok(find('.t-request-validation-error').is(':hidden'));
+        assert.ok(find('.t-requester-validation-error').is(':hidden'));
     });
     generalPage.save();
     andThen(() => {
@@ -93,16 +98,16 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
         assert.ok(find('.t-category-validation-error').is(':visible'));
-        assert.ok(find('.t-request-validation-error').is(':visible'));
+        assert.ok(find('.t-requester-validation-error').is(':visible'));
     });
-    fillIn('.t-ticket-request', TD.requestOne);
+    page.requesterFillIn(TD.requesterOne);
     andThen(() => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-priority-validation-error').is(':visible'));
         assert.ok(find('.t-assignee-validation-error').is(':visible'));
         assert.ok(find('.t-location-validation-error').is(':visible'));
         assert.ok(find('.t-category-validation-error').is(':visible'));
-        assert.ok(find('.t-request-validation-error').is(':hidden'));
+        assert.ok(find('.t-requester-validation-error').is(':hidden'));
     });
     page.statusClickDropdown();
     page.statusClickOptionOne();
@@ -161,14 +166,17 @@ test('validation works and when hit save, we do same post', (assert) => {
         assert.equal(currentURL(), TICKET_NEW_URL);
         assert.ok(find('.t-category-validation-error').is(':hidden'));
     });
+    fillIn('.t-ticket-request', TD.requestOne);
     generalPage.save();
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL);
+        const ticket = store.find('ticket').objectAt(0);
+        assert.equal(ticket.get('created'), moment(new Date()).toISOString());
     });
 });
 
-test('amk selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
+test('selecting a top level category will alter the url and can cancel/discard changes and return to index', (assert) => {
     page.visit();
     patchRandom(counter);
     click('.t-add-new');
@@ -525,7 +533,7 @@ test('removes location dropdown on search to change location', (assert) => {
     });
     fillIn(`${SEARCH}`, ' ');
     andThen(() => {
-        assert.equal(find(`${LOCATION_DROPDOWN}`).text().trim(), 'No results found');
+        assert.equal(find(`${LOCATION_DROPDOWN}`).text().trim(), 'No Matches');
     });
     fillIn(`${SEARCH}`, '6');
     andThen(() => {
@@ -686,6 +694,7 @@ test('all required fields persist correctly when the user submits a new ticket f
     page.categoryThreeClickDropdown();
     page.categoryThreeClickOptionOne();
     page.requestFillIn(TD.requestOneGrid);
+    page.requesterFillIn(TD.requesterOne);
     required_ticket_payload.request = TD.requestOneGrid;
     xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
     generalPage.save();

@@ -1,8 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
-
-from rest_framework import viewsets, status
-from rest_framework.exceptions import ValidationError
-from rest_framework.response import Response
+from rest_framework import viewsets
 
 from utils.mixins import (CheckIdCreateMixin, DestroyModelMixin, OrderingQuerySetMixin,
     FilterRelatedMixin, RelatedOrderingQuerySetMixin)

@@ -80,7 +80,4 @@ def contains_special_char(chars):
 def contains_no_whitespaces(chars):
     regex = r'[\s]'
     whitespaces = regex_check_contains(regex, chars)
-    if not whitespaces:
-        return True
-    else:
-        return False
+    return not whitespaces

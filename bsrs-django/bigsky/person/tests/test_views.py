@@ -11,6 +11,7 @@ from model_mommy import mommy
 
 from accounting.models import Currency
 from category.models import Category
+from category.tests.factory import create_single_category
 from contact.models import (Address, AddressType, Email, EmailType,
     PhoneNumber, PhoneNumberType)
 from contact.tests.factory import create_contact, create_contacts
@@ -385,9 +386,27 @@ class PersonDetailTests(TestCase):
     def test_current(self):
         # 'self.person' is the currently logged in 'Person'
         response = self.client.get('/api/admin/people/current/'.format(self.person.id))
-        self.assertEqual(response.status_code, 200)
+
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.person.id))
+
+    def test_current__all_locations_and_children(self):
+        child_location = mommy.make(Location)
+        self.location.children.add(child_location)
+
+        response = self.client.get('/api/admin/people/current/'.format(self.person.id))
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertIn(str(child_location.id), data['all_locations_and_children'])
+
+    def test_current__all_role_categories_and_children(self):
+        parent_category = self.person.role.categories.first()
+        child_category = create_single_category(parent=parent_category)
+
+        response = self.client.get('/api/admin/people/current/'.format(self.person.id))
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertIn(str(child_category.id), data['all_role_categories_and_children'])
 
 
 class PersonPutTests(APITestCase):

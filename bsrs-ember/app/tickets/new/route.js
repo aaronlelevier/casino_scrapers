@@ -10,7 +10,6 @@ var TicketNewRoute = TabNewRoute.extend({
     priorityRepository: inject('ticket-priority'),
     redirectRoute: Ember.computed(function() { return 'tickets.index'; }),
     modelName: Ember.computed(function() { return 'ticket'; }),
-    //TODO: tab tests say 'New ticket', not 'New Ticket'
     templateModelField: Ember.computed(function() { return 'Ticket'; }),
     priorities: Ember.computed(function() {
         return this.get('priorityRepository').fetch();
@@ -19,10 +18,10 @@ var TicketNewRoute = TabNewRoute.extend({
         return this.get('statusRepository').fetch();
     }),
     model(params) {
-        let new_pk = parseInt(params.new_id, 10);
-        let statuses = this.get('statuses');
-        let priorities = this.get('priorities');
-        let top_level_category_options = this.get('categoryRepository').findTopLevelCategories() || [];
+        const new_pk = parseInt(params.new_id, 10);
+        const statuses = this.get('statuses');
+        const priorities = this.get('priorities');
+        const top_level_category_options = this.get('categoryRepository').findTopLevelCategories() || [];
         let model = this.get('store').find('ticket', {new_pk: new_pk}).objectAt(0);
         if(!model){
             model = this.get('repository').create(new_pk);

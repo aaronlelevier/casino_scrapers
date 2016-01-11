@@ -22,17 +22,13 @@ module('unit: locale-translation', {
 });
 
 test('translation_key - computed property that returns the "translation key" of the related "translation"', (assert) => {
-    run(function() {
-        locale_trans = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
-    });
+    locale_trans = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
     ret = locale_trans.get('translation_key');
     assert.equal(ret, locale_trans.get('id').split(":")[1]);
 });
 
 test('translation_key - computed property that returns an empty "translation key" if one doesnt exist', (assert) => {
-    run(function() {
-        locale_trans = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
-    });
+    locale_trans = store.find('locale-translation', LOCALE_TRANSLATION_DEFAULTS.idOne);
     locale_trans.set('id', 'fooblah');
     ret = locale_trans.get('translation_key');
     assert.equal(ret, '');

@@ -14,40 +14,28 @@ module('unit: model translation test', {
 });
 
 test('category translated name returns correct value', (assert) => {
-    let category;
-    run(function() {
-        category = store.push('category', {id: 1, name: ''});
-    });
+    let category = store.push('category', {id: 1, name: ''});
     assert.equal(category.get('translated_name'), '');
     category.set('name', CD.nameRepairKey);
     assert.equal(category.get('translated_name'), CD.nameSolo);
 });
 
 test('ticket-priority translated name returns correct value', (assert) => {
-    let priority;
-    run(function() {
-        priority = store.push('ticket-priority', {id: 1, name: ''});
-    });
+    let priority = store.push('ticket-priority', {id: 1, name: ''});
     assert.equal(priority.get('translated_name'), '');
     priority.set('name', TD.priorityTwoKey);
     assert.equal(priority.get('translated_name'), TD.priorityTwo);
 });
 
 test('ticket-status translated name returns correct value', (assert) => {
-    let status;
-    run(function() {
-        status = store.push('ticket-status', {id: 1, name: ''});
-    });
+    let status = store.push('ticket-status', {id: 1, name: ''});
     assert.equal(status.get('translated_name'), '');
     status.set('name', TD.statusSevenKey);
     assert.equal(status.get('translated_name'), TD.statusSeven);
 });
 
 test('location-status translated name returns correct value', (assert) => {
-    let status;
-    run(function() {
-        status = store.push('location-status', {id: 1, name: ''});
-    });
+    let status = store.push('location-status', {id: 1, name: ''});
     assert.equal(status.get('translated_name'), '');
     status.set('name', LDS.openName);
     assert.equal(status.get('translated_name'), LDS.openNameTranslated);

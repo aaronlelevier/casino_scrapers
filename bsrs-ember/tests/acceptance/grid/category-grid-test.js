@@ -166,7 +166,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?sort=label%2Cname');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CD.nameOne + '1');
+        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), 'cococat11');
     });
 });
 
@@ -199,21 +199,21 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?search=4&sort=label');
         assert.equal(find('.t-grid-data').length, 2);
-        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CD.nameOne + '4');
-        assert.equal(find('.t-grid-data:eq(1) .t-category-name').text(), 'cococat14');
+        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), 'cococat14');
+        assert.equal(find('.t-grid-data:eq(1) .t-category-name').text(), CD.nameOne + '4');
     });
     fillIn('.t-grid-search-input', '');
     triggerEvent('.t-grid-search-input', 'keyup', BACKSPACE);
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?search=&sort=label');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CD.nameOne + '1');
+        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), 'cococat11');
     });
     click('.t-page:eq(1) a');
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?page=2&search=&sort=label');
         assert.equal(find('.t-grid-data').length, 9);
-        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-category-name').text()), 'cococat');
+        assert.equal(substring_up_to_num(find('.t-grid-data:eq(0) .t-category-name').text()), CD.nameOne);
     });
     fillIn('.t-grid-search-input', '14');
     triggerEvent('.t-grid-search-input', 'keyup', NUMBER_ONE);
@@ -252,7 +252,7 @@ test('multiple sort options appear in the query string as expected', function(as
     andThen(() => {
         assert.equal(currentURL(),CATEGORY_URL + '?sort=label%2Cname');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CD.nameOne + '1');
+        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), 'cococat11');
     });
 });
 
@@ -288,7 +288,7 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-label-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), CD.nameOne + '1');
+        assert.equal(find('.t-grid-data:eq(0) .t-category-name').text(), 'cococat11');
     });
     click('.t-sort-name-dir');
     andThen(() => {

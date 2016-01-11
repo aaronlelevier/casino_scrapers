@@ -21,13 +21,13 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             unusedId: 'ec62006b-6275-4aa9-abfa-38b146383d50',
             nameOne: 'Repair',
             nameTwo: 'Electrical',
-            nameThree: 'Loss Prevention', 
-            nameRepairChild: 'Plumbing', 
-            namePlumbingChild: 'Toilet Leak', 
-            nameLossPreventionChild: 'Security', 
-            nameElectricalChild: 'Outlet', 
-            nameUnused: 'wat', 
-            nameWatChild: 'scott', 
+            nameThree: 'Loss Prevention',
+            nameRepairChild: 'Plumbing',
+            namePlumbingChild: 'Toilet Leak',
+            nameLossPreventionChild: 'Security',
+            nameElectricalChild: 'Outlet',
+            nameUnused: 'wat',
+            nameWatChild: 'scott',
             idNew: 'abc123',
             status: 'admin.category.status.active',
             descriptionRepair: 'Interior and Exterior Store Repair',
@@ -37,9 +37,9 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
             currency: this.currency.id,
             costCodeOne: '12584',
             costCodeTwo: '12585',
-            labelOne: 'admin.category.labelCat.type',
-            labelTwo: 'admin.category.labelCat.trade',
-            labelThree: 'admin.category.labelCat.issue',
+            labelOne: 'Type',
+            labelTwo: 'Trade',
+            labelThree: 'Issue',
             subCatLabelOne: 'Trade',
             subCatLabelTwo: 'Issue',
             parent: [],
@@ -53,7 +53,7 @@ var BSRS_CATEGORY_DEFAULTS_OBJECT = (function() {
 })();
 
 if (typeof window === 'undefined') {
-    var currency_defaults = require('./currencies'); 
+    var currency_defaults = require('./currencies');
     module.exports = new BSRS_CATEGORY_DEFAULTS_OBJECT(currency_defaults).defaults();
 } else {
     define('bsrs-ember/vendor/defaults/category', ['exports', 'bsrs-ember/vendor/defaults/currencies'], function (exports, currency_defaults) {

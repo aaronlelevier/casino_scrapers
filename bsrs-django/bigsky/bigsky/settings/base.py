@@ -36,6 +36,7 @@ THIRD_PARTY_APPS = [
 
 LOCAL_APPS = [
     'accounting',
+    'bigsky',
     'category',
     'contact',
     'generic',
@@ -80,7 +81,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
-                # 'django.template.context_processors.media',
+                'django.template.context_processors.media',
             ],
         },
     },
@@ -113,7 +114,7 @@ DATABASES = {
 #     'PORT': '5432',
 # }
 
-# INSTALLED_APPS += ('utils_transform.tlocation',)
+# INSTALLED_APPS += ('utils_transform.tlocation', 'utils_transform.trole')
 
 # DATABASE_ROUTERS = ['bigsky.db_router.TransformRouter', 'bigsky.db_router.DefaultRouter']
 
@@ -158,6 +159,7 @@ USE_TZ = True
 
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'ember'),
+    os.path.join(BASE_DIR, 'source'),
     ]
 
 STATIC_URL = '/static/'
@@ -166,7 +168,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, 'source')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 ### Native Configurations ###
@@ -174,6 +176,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'source')
 LOGIN_URL = '/login/'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_URL = '/logout/'
+
+SESSION_COOKIE_AGE = 5400
+SESSION_SAVE_EVERY_REQUEST = True
 
 
 ### FILES

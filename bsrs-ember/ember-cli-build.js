@@ -14,6 +14,9 @@ module.exports = function(defaults) {
     'fingerprint': {
       prepend: '/static/'
     },
+    babel: {
+        optional: ['es7.decorators']
+    }
   });
   app.import('vendor/defaults/uuid.js');
   app.import('vendor/defaults/global-message.js');
@@ -24,6 +27,7 @@ module.exports = function(defaults) {
       app.import('vendor/address_fixtures.js');
       app.import('vendor/admin_translation_fixtures.js');
       app.import('vendor/email_fixtures.js');
+      app.import('vendor/locale_fixtures.js');
       app.import('vendor/location_fixtures.js');
       app.import('vendor/location_level_fixtures.js');
       app.import('vendor/people_fixtures.js');

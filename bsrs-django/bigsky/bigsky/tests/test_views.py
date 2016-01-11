@@ -18,18 +18,18 @@ from location.models import LocationLevel, LocationStatus, State, Country
 from person.models import PersonStatus, Role
 from person.tests.factory import PASSWORD, create_person, create_single_person, create_role
 from ticket.models import TicketStatus, TicketPriority
+from translation.models import Locale
 from translation.tests.factory import create_locales
 
 
 class IndexTests(TestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         create_categories()
         self.person = create_person()
 
     def test_logged_in(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get(reverse('index'))
         self.assertEqual(response.status_code, 200)
 
@@ -38,15 +38,15 @@ class IndexTests(TestCase):
         self.assertRedirects(response, reverse('login')+'?next='+reverse('index'))
 
     def test_password_change_get(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get(reverse('password_change'))
         self.assertEqual(response.status_code, 200)
 
     def test_password_change_post(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         new_password = "my-new-password"
         response = self.client.post(reverse('password_change'),
-            {'old_password': self.password, 'new_password1': new_password,
+            {'old_password': PASSWORD, 'new_password1': new_password,
             'new_password2': new_password})
         self.assertRedirects(response, reverse('index'))
         self.assertIn('_auth_user_id', self.client.session)
@@ -54,7 +54,7 @@ class IndexTests(TestCase):
     def test_password_expired(self):
         self.person.password_expire_date = timezone.now().date() - timedelta(days=1)
         self.person.save()
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get(reverse('index'))
         self.assertRedirects(response, reverse('password_change')+'?next='+reverse('index'))
 
@@ -62,7 +62,6 @@ class IndexTests(TestCase):
 class LoginTests(TestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         create_categories()
         self.person = create_person()
 
@@ -72,33 +71,47 @@ class LoginTests(TestCase):
         self.assertEqual(response.context['submit_button'], 'Login')
 
     def test_login_authenticated(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         response = self.client.get(reverse('login'))
         self.assertRedirects(response, settings.LOGIN_REDIRECT_URL)
+
+    def test_post(self):
+        data = {'username': self.person.username, 'password': PASSWORD}
+        response = self.client.post(reverse('login'), data, follow=True)
+        self.assertRedirects(response, reverse('index'))
+
+    def test_post_form_errors(self):
+        data = {'username': self.person.username, 'password': "this isn't my password"}
+        response = self.client.post(reverse('login'), data)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.context['form'].non_field_errors)
+
+    def test_favicon_and_media_url(self):
+        response = self.client.get(reverse('login'))
+        self.assertIn("{}images/favicon.ico".format(settings.MEDIA_URL), response.content.decode('utf8'))
 
 
 class LogoutTests(TestCase):
     # Only a POST or PUT will be accepted request types to logout a Person
 
     def setUp(self):
-        self.password = PASSWORD
         create_categories()
         self.person = create_person()
 
     def test_logout_post(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         self.assertIn('_auth_user_id', self.client.session)
         self.client.post(reverse('logout'))
         self.assertNotIn('_auth_user_id', self.client.session)
 
     def test_logout_put(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         self.assertIn('_auth_user_id', self.client.session)
         self.client.put(reverse('logout'))
         self.assertNotIn('_auth_user_id', self.client.session)
 
     def test_logout_wrong_request(self):
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
         self.assertIn('_auth_user_id', self.client.session)
         response = self.client.get(reverse('logout'))
         self.assertEqual(response.status_code, 404)
@@ -108,7 +121,6 @@ class LogoutTests(TestCase):
 class ConfigurationTests(TestCase):
 
     def setUp(self):
-        self.password = PASSWORD
         create_categories()
         self.person = create_person()
         self.phone_number_types = mommy.make(PhoneNumberType)
@@ -141,7 +153,7 @@ class ConfigurationTests(TestCase):
         create_locales()
         
         # Login
-        self.client.login(username=self.person.username, password=self.password)
+        self.client.login(username=self.person.username, password=PASSWORD)
 
         self.response = self.client.get(reverse('index'))
 
@@ -152,24 +164,35 @@ class ConfigurationTests(TestCase):
         self.assertEqual(self.response.status_code, 200)
 
     def test_email_types(self):
-        configuration = json.loads(self.response.context['email_types_config'])
-        self.assertTrue(len(configuration) > 0)
+        data = json.loads(self.response.context['email_types_config'])
+
+        obj = EmailType.objects.get(id=data[0]['id'])
+        self.assertEqual(obj.name, data[0]['name'])
 
     def test_phone_number_types(self):
-        configuration = json.loads(self.response.context['phone_number_types_config'])
-        self.assertTrue(len(configuration) > 0)
+        data = json.loads(self.response.context['phone_number_types_config'])
+
+        obj = PhoneNumberType.objects.get(id=data[0]['id'])
+        self.assertEqual(obj.name, data[0]['name'])
 
     def test_address_types(self):
-        configuration = json.loads(self.response.context['address_types'])
-        self.assertTrue(len(configuration) > 0)
+        data = json.loads(self.response.context['address_types'])
+
+        obj = AddressType.objects.get(id=data[0]['id'])
+        self.assertEqual(obj.name, data[0]['name'])
 
     def test_states_us(self):
-        configuration = json.loads(self.response.context['states_us'])
-        self.assertTrue(len(configuration) > 0)
+        data = json.loads(self.response.context['states_us'])
+
+        obj = State.objects.get(id=data[0]['id'])
+        self.assertEqual(obj.name, data[0]['name'])
+        self.assertEqual(obj.abbr, data[0]['abbr'])
 
     def test_countries(self):
-        configuration = json.loads(self.response.context['countries'])
-        self.assertTrue(len(configuration) > 0)
+        data = json.loads(self.response.context['countries'])
+
+        obj = Country.objects.get(id=data[0]['id'])
+        self.assertEqual(obj.name, data[0]['name'])
 
     def test_roles(self):
         configuration = json.loads(self.response.context['role_config'])
@@ -220,43 +243,81 @@ class ConfigurationTests(TestCase):
         )
 
     def test_locales(self):
-        configuration = json.loads(self.response.context['locales'])
-        self.assertTrue(len(configuration) > 0)
+        data = json.loads(self.response.context['locales'])
+
+        locale = Locale.objects.get(id=data[0]['id'])
+        self.assertIsInstance(locale, Locale)
+        self.assertEqual(locale.locale, data[0]['locale'])
+        self.assertEqual(locale.name, data[0]['name'])
+        self.assertEqual(locale.native_name, data[0]['native_name'])
+        self.assertEqual(locale.presentation_name, data[0]['presentation_name'])
+        self.assertEqual(locale.rtl, data[0]['rtl'])
 
     def test_currency(self):
         currency = Currency.objects.default()
         configuration = json.loads(self.response.context['currencies'])
         # test
         self.assertTrue(len(configuration) > 0)
-        configuration_usd = configuration[currency.code]
-        self.assertTrue(configuration_usd)
-        self.assertEqual(configuration_usd['name'], currency.name)
+        usd = configuration[currency.code]
+        self.assertTrue(usd)
+        self.assertEqual(usd['name'], currency.name)
+        self.assertEqual(usd['name_plural'], currency.name_plural)
+        self.assertEqual(usd['code'], currency.code)
+        self.assertEqual(usd['symbol'], currency.symbol)
+        self.assertEqual(usd['symbol_native'], currency.symbol_native)
+        self.assertEqual(usd['decimal_digits'], currency.decimal_digits)
+        self.assertEqual(usd['rounding'], currency.rounding)
 
     def test_person_current(self):
         Currency.objects.default()
-        configuration = json.loads(self.response.context['person_current'])
-        self.assertTrue(len(configuration) > 0)
+        data = json.loads(self.response.context['person_current'])
+        self.assertEqual(data['id'], str(self.person.id))
+        self.assertEqual(data['first_name'], self.person.first_name)
+        self.assertEqual(data['middle_initial'], self.person.middle_initial)
+        self.assertEqual(data['last_name'], self.person.last_name)
+        self.assertEqual(data['username'], self.person.username)
+        self.assertEqual(data['title'], self.person.title)
+        self.assertEqual(data['employee_id'], self.person.employee_id)
+        self.assertEqual(data['locale'], str(Locale.objects.get(locale='en').id))
+        self.assertEqual(data['role'], str(self.person.role.id))
+        self.assertIn('all_locations_and_children', data)
+        self.assertEqual(len(data['all_locations_and_children']), 1)
+        self.assertEqual(
+            data['all_locations_and_children'][0],
+            str(self.person.locations.first().id)
+        )
+        self.assertEqual(
+            data['all_role_categories_and_children'][0],
+            str(self.person.role.categories.first().id)
+        )
 
     def test_default_model_ordering(self):
-        configuration = json.loads(self.response.context['default_model_ordering'])
-        self.assertTrue(len(configuration) > 0)
+        # Note: this is a Dict Object generated off off URL's and the models,
+        # so just assert True here
+        data = json.loads(self.response.context['default_model_ordering'])
+        self.assertTrue(len(data) > 0)
 
     def test_saved_search(self):
-        configuration = json.loads(self.response.context['saved_search'])
-        self.assertTrue(len(configuration) > 0)
+        data = json.loads(self.response.context['saved_search'])
+
+        saved_search = SavedSearch.objects.filter(person=self.person)[0]
+        self.assertEqual(str(saved_search.id), data[0]['id'])
+        self.assertEqual(saved_search.name, data[0]['name'])
+        self.assertEqual(saved_search.endpoint_name, data[0]['endpoint_name'])
+        self.assertEqual(saved_search.endpoint_uri, data[0]['endpoint_uri'])
 
     def test_ticket_statuses(self):
-        configuration = json.loads(self.response.context['ticket_statuses'])
-        self.assertTrue(len(configuration) > 0)
-        self.assertIn(str(self.ticket_status.id), [c['id'] for c in configuration])
-        self.assertIn(str(self.ticket_status.name), [c['name'] for c in configuration])
-        self.assertTrue([c['default'] for c in configuration])
+        data = json.loads(self.response.context['ticket_statuses'])
+        self.assertTrue(len(data) > 0)
+        self.assertIn(str(self.ticket_status.id), [c['id'] for c in data])
+        self.assertIn(str(self.ticket_status.name), [c['name'] for c in data])
+        self.assertTrue([c['default'] for c in data])
 
     def test_ticket_priorities(self):
-        configuration = json.loads(self.response.context['ticket_priorities'])
-        self.assertTrue(len(configuration) > 0)
-        self.assertIn(str(self.ticket_priority.id), [c['id'] for c in configuration])
-        self.assertIn(str(self.ticket_priority.name), [c['name'] for c in configuration])
+        data = json.loads(self.response.context['ticket_priorities'])
+        self.assertTrue(len(data) > 0)
+        self.assertIn(str(self.ticket_priority.id), [c['id'] for c in data])
+        self.assertIn(str(self.ticket_priority.name), [c['name'] for c in data])
 
 
 class ErrorPageTests(TestCase):
@@ -278,10 +339,10 @@ class SessionTests(TestCase):
 
     def test_session_expiry(self):
         with self.settings(SESSION_COOKIE_AGE=1):
-            response = self.client.post(reverse('login'), self.login_data, follow=True)
-            self.assertRedirects(response, reverse('index'))
+            response = self.client.post(reverse('login'), self.login_data)
+            self.assertIsNotNone(self.client.session.get('_auth_user_id', None))
             # simulate User inactivity, which leads to a "session timeout"
             time.sleep(1)
-            response = self.client.get(reverse('index'), follow=True)
-            self.assertRedirects(response, '/login/?next=/')
+            response = self.client.get('/dashboard', follow=True)
+            self.assertRedirects(response, '/login/?next=/dashboard')
             self.assertIsNone(self.client.session.get('_auth_user_id', None))

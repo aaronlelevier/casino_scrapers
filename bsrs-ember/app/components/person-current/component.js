@@ -16,7 +16,7 @@ export default Ember.Component.extend({
     actions: {
         logout() {
             Ember.$.get('/api-auth/logout/', function(data){
-                windowProxy.changeLocation('/login');
+                windowProxy.changeLocation('/');
             });
             /*
             TODO:

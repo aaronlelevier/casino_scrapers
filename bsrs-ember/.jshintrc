@@ -1,4 +1,7 @@
 {
+  "ignoreDelimiters": [
+    { "start": "start-non-standard", "end": "end-non-standard" }
+  ],
   "predef": [
     "document",
     "window",

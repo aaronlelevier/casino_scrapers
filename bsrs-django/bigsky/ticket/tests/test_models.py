@@ -35,7 +35,7 @@ class TicketManagerTests(TestCase):
     def setUp(self):
         create_categories()
         self.person = create_single_person()
-        self.ticket = create_ticket(requester=self.person, assignee=self.person)
+        self.ticket = create_ticket(assignee=self.person)
         self.ticket_two = create_ticket()
 
     def test_deleted(self):

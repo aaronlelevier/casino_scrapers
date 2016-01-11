@@ -44,7 +44,7 @@ class RoleDetailSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Role
-        fields = ('id', 'name', 'role_type', 'location_level', 'categories')
+        fields = ('id', 'name', 'role_type', 'location_level', 'categories',)
 
     @staticmethod
     def eager_load(queryset):
@@ -66,6 +66,10 @@ PERSON_FIELDS = (
     'last_name', 'status', 'role', 'title', 'employee_id',
     'auth_amount', 'auth_currency',
 )
+
+
+PERSON_DETAIL_FIELDS = PERSON_FIELDS + ('locale', 'locations', 'last_login', 'date_joined',
+    'emails', 'phone_numbers', 'addresses',)
 
 
 class PersonCreateSerializer(RemovePasswordSerializerMixin, BaseCreateSerializer):
@@ -96,7 +100,7 @@ class PersonTicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = ('id', 'first_name', 'middle_initial', 'last_name', 'role', 'title')
+        fields = ('id', 'first_name', 'middle_initial', 'last_name', 'status', 'role', 'title')
 
 
 class PersonDetailSerializer(serializers.ModelSerializer):
@@ -108,14 +112,28 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Person
-        fields = PERSON_FIELDS + ('locale', 'locations', 'last_login', 'date_joined',
-            'emails', 'phone_numbers', 'addresses',)
+        fields = PERSON_DETAIL_FIELDS
 
     @staticmethod
     def eager_load(queryset):
         return (queryset.select_related('role')
                         .prefetch_related('emails', 'phone_numbers', 'addresses',
                                           'locations', 'locations__location_level'))
+
+
+class PersonCurrentSerializer(PersonDetailSerializer):
+
+    all_locations_and_children = serializers.ListField(
+        child=serializers.UUIDField(),
+    )
+    all_role_categories_and_children = serializers.ListField(
+        child=serializers.UUIDField(),
+    )
+
+    class Meta:
+        model = Person
+        fields = PERSON_DETAIL_FIELDS + ('all_locations_and_children',
+                                         'all_role_categories_and_children',)
 
 
 class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSerializerMixin,

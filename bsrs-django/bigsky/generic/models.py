@@ -7,9 +7,8 @@ from django.core.exceptions import ValidationError as DjangoValidationError
 from PIL import Image
 from rest_framework.exceptions import ValidationError
 
-from person.models import Person
 from ticket.models import Ticket
-from utils.models import BaseModel, BaseManager, BaseSettingModel
+from utils.models import BaseModel, BaseManager
 
 
 ### SAVED SEARCHES
@@ -74,26 +73,10 @@ class SavedSearch(BaseModel):
         }
 
 
-### SETTINGS
-
-class MainSetting(BaseSettingModel):
-    pass
-
-
-class CustomSetting(BaseSettingModel):
-    pass
-
-
-###############
-# ATTACHMENTS #
-###############
-
-### HELPERS
+### ATTACHMENT
 
 IMAGE_EXTENSIONS = ['.jpg', '.jpeg', '.gif', '.png']
 
-
-### FILE PATHS
 
 def upload_to(instance, filename):
     name, extension = os.path.splitext(filename)
@@ -111,8 +94,6 @@ def upload_to_images_medium(instance, filename):
 def upload_to_images_thumbnail(instance, filename):
     return '/'.join([settings.IMAGE_THUMBNAIL_SUB_PATH, filename])
 
-
-### ATTACHMENT
 
 class Attachment(BaseModel):
     """

@@ -1,6 +1,7 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
@@ -73,7 +74,7 @@ test('should render a selectbox with bound options and can change top level cate
     clickTrigger();
     assert.equal($(`${DROPDOWN}`).length, 1);
     assert.equal($('.ember-power-select-options > li').length, 2);
-    run(() => { 
+    run(() => {
         $(`.ember-power-select-option:contains(${CATEGORY_DEFAULTS.nameRepairChild})`).mouseup();
     });
     clickTrigger();
@@ -81,4 +82,3 @@ test('should render a selectbox with bound options and can change top level cate
     assert.equal($('.ember-power-select-options > li').length, 2);
     assert.equal(ticket.get('top_level_category').get('id'), CATEGORY_DEFAULTS.idThree);
 });
-

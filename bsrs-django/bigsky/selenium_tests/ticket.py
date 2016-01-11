@@ -55,7 +55,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         attach_file_btn = self.driver.find_element_by_xpath("//input[@type='file']")
         attach_file_btn.send_keys(os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "source/test_in/es.csv"
+            "media/test_in/es.csv"
         ))
         self.gen_elem_page.click_save_btn()
         # List View
@@ -76,7 +76,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         attach_file_btn = self.driver.find_element_by_xpath("//input[@type='file']")
         attach_file_btn.send_keys(os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "source/test_in/aaron.jpeg"
+            "media/test_in/aaron.jpeg"
         ))
         self.gen_elem_page.click_save_btn()
         # List View
@@ -103,13 +103,13 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         attach_file_btn = self.driver.find_element_by_xpath("//input[@type='file']")
         attach_file_btn.send_keys(os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "source/test_in/es.csv"
+            "media/test_in/es.csv"
         ))
         # File 2
         attach_file_btn = self.driver.find_element_by_xpath("//input[@type='file']")
         attach_file_btn.send_keys(os.path.join(
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-            "source/test_in/jp.csv"
+            "media/test_in/jp.csv"
         ))
 
         # Go to Ticket Area

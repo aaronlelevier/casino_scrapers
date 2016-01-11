@@ -1,6 +1,6 @@
 from datetime import date
 
-from django.test import TestCase
+from django.test import TestCase, TransactionTestCase
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser, Group
 from django.core.exceptions import ValidationError
@@ -14,6 +14,7 @@ from person.tests.factory import PASSWORD, create_person, create_role
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create
+from utils.models import MainSetting
 from utils.tests.test_validators import (DIGITS, NO_DIGITS, UPPER_CHARS, NO_UPPER_CHARS,
     LOWER_CHARS, NO_LOWER_CHARS, SPECIAL_CHARS, NO_SPECIAL_CHARS)
 

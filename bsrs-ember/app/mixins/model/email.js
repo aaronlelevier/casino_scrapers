@@ -4,26 +4,24 @@ var run = Ember.run;
 
 var EmailMixin = Ember.Mixin.create({
     emails_all: Ember.computed(function() {
-        let store = this.get('store');
-        let filter = (email) => {
+        const filter = (email) => {
             return this.get('id') === email.get('model_fk');
         };
-        return store.find('email', filter);
+        return this.get('store').find('email', filter);
     }),
     emails: Ember.computed(function() {
-        let store = this.get('store');
-        let filter = (email) => {
+        const filter = (email) => {
             return this.get('id') === email.get('model_fk') && !email.get('removed');
         };
-        return store.find('email', filter);
+        return this.get('store').find('email', filter);
     }),
     email_ids: Ember.computed('emails.[]', function() {
         return this.get('emails').mapBy('id');
     }),
     emailsIsDirty: Ember.computed('emails.[]', 'emails.@each.{isDirty,email,type}', function() {
         let email_dirty = false;
-        let emails = this.get('emails');
-        let email_fks = this.get('email_fks');
+        const emails = this.get('emails');
+        const email_fks = this.get('email_fks');
         let filtered_emails = emails.map((email) => {
             return this.copy(email);
         });
@@ -57,18 +55,18 @@ var EmailMixin = Ember.Mixin.create({
         }
         return email_dirty;
     }),
-    emailIsNotDirty: Ember.computed.not('emailsIsDirty'),
+    emailsIsNotDirty: Ember.computed.not('emailsIsDirty'),
     saveEmails() {
         this.cleanupEmails();
-        let emails = this.get('emails');
+        const emails = this.get('emails');
         emails.forEach((email) => {
             email.save();
         });
     },
     rollbackEmails() {
-        let store = this.get('store');
-        let emails_to_remove = [];
-        let emails = this.get('emails_all');
+        const store = this.get('store');
+        const emails_to_remove = [];
+        const emails = this.get('emails_all');
         emails.forEach((email) => {
             //remove
             if (email.get('removed')) {
@@ -82,30 +80,34 @@ var EmailMixin = Ember.Mixin.create({
             }
             email.rollback();
         });
-        emails_to_remove.forEach((id) => {
-            store.remove('email', id);
+        run(function() {
+            emails_to_remove.forEach((id) => {
+                store.remove('email', id);
+            });
         });
     },
     cleanupEmails() {
-        let store = this.get('store');
-        let emails_to_remove = [];
-        let emails = this.get('emails');
-        let emails_all = this.get('emails_all');
-        let email_fks = this.get('email_fks');
-        let email_ids = this.get('email_ids');
+        const store = this.get('store');
+        const emails_to_remove = [];
+        const emails = this.get('emails');
+        const emails_all = this.get('emails_all');
+        const email_fks = this.get('email_fks');
+        const email_ids = this.get('email_ids');
         emails_all.forEach((email) => {
             if(email.get('invalid_email') || email.get('removed')) {
                 emails_to_remove.push(email.get('id'));
             }
         });
-        emails_to_remove.forEach((id) => {
-            store.remove('email', id);
+        run(function() {
+            emails_to_remove.forEach((id) => {
+                store.remove('email', id);
+            });
         });
         this.cleanupEmailFKs();
     },
     cleanupEmailFKs() {
-        let email_fks = this.get('email_fks');
-        let email_ids = this.get('email_ids');
+        const email_fks = this.get('email_fks');
+        const email_ids = this.get('email_ids');
         //add
         email_ids.forEach((id) => {
             if (Ember.$.inArray(id, email_fks) < 0) {
@@ -118,7 +120,7 @@ var EmailMixin = Ember.Mixin.create({
                email_fks.splice(indx, 1); 
             }
         });
-    },
+    }
 });
 
 export default EmailMixin;

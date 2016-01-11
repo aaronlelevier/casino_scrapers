@@ -15,15 +15,11 @@ export default Ember.Component.extend({
         var field = this.get('field');
         Ember.Binding.from('model.' + field).to('bound_field').connect(this);
     }),
-    formatted_auth_amount: Ember.computed('bound_field', {
-        get(key){
+    actions: {
+        format_currency(){
+            var field = this.get('field');
             var currency_service = this.get('currency');
-            return currency_service.format_currency(this.get('bound_field'), 'decimal_digits', 'USD');
-        },
-        set(key, value){
-            this.set('bound_field', value);
-            var currency_service = this.get('currency');
-            return currency_service.format_currency(this.get('bound_field'), 'decimal_digits', 'USD');
+            this.set('model.' + field, currency_service.format_currency(this.get('bound_field'), 'decimal_digits', 'USD'));
         }
-    })
+    }
 });

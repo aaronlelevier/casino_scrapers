@@ -18,9 +18,7 @@ module('unit: input-multi-address component test', {
 
 test('valid computed should ignore models with an empty or undefined address attr (starting with no bound models)', (assert) => {
     let address;
-    run(() => {
-        person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    });
+    person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let address_types = [AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName })];
     let model = store.find('address', {person_fk: PEOPLE_DEFAULTS.id});
     let subject = InputMultiAddressComponent.create({model: model, eventbus: eventbus});
@@ -58,9 +56,7 @@ test('valid computed should ignore models with an empty or undefined address att
 
 test('valid computed should ignore models with an empty or undefined zip code attr (starting with no bound models)', (assert) => {
     let address;
-    run(function() {
-        person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    });
+    person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let address_types = [AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName })];
     let model = store.find('address', {person_fk: PEOPLE_DEFAULTS.id});
     let subject = InputMultiAddressComponent.create({model: model, eventbus: eventbus});
@@ -103,9 +99,7 @@ test('valid computed should ignore models with an empty or undefined zip code at
 
 test('valid computed should ignore models with an empty or undefined address attr (when the middle model is modified)', (assert) => {
     let address_two;
-    run(function() {
-        person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    });
+    person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let address_types = [AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName })];
     let model = store.find('address', {person_fk: PEOPLE_DEFAULTS.id});
     let subject = InputMultiAddressComponent.create({model: model, eventbus: eventbus});
@@ -167,9 +161,7 @@ test('valid computed should ignore models with an empty or undefined address att
     let address_one;
     let address_two;
     let address_three;
-    run(function() {
-        person = store.push('person', {id: PEOPLE_DEFAULTS.id});
-    });
+    person = store.push('person', {id: PEOPLE_DEFAULTS.id});
     let address_types = [AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.officeId, name: ADDRESS_TYPE_DEFAULTS.officeName }), AddressType.create({ id: ADDRESS_TYPE_DEFAULTS.shippingId, name: ADDRESS_TYPE_DEFAULTS.shippingName })];
     let model = store.find('address', {person_fk: PEOPLE_DEFAULTS.id});
     let subject = InputMultiAddressComponent.create({model: model, eventbus: eventbus});

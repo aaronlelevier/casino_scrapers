@@ -2,6 +2,7 @@ import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';

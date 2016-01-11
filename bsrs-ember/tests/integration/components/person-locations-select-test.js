@@ -1,13 +1,13 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
+import translation from 'bsrs-ember/instance-initializers/ember-i18n';
+import translations from 'bsrs-ember/vendor/translation_fixtures';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
 import repository from 'bsrs-ember/tests/helpers/repository';
 import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
 import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import waitFor from 'ember-test-helpers/wait';
-import translation from 'bsrs-ember/instance-initializers/ember-i18n';
-import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 import LD from 'bsrs-ember/vendor/defaults/location';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';

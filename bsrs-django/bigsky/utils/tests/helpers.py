@@ -1,5 +1,5 @@
 import os
-from os.path import dirname, join
+from os.path import join
 
 from django.conf import settings
 

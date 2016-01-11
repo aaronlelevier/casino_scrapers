@@ -10,12 +10,17 @@ CATEGORY_BASE_ID = "24f530c4-ce6c-4724-9cfd-37a16e787"
 TOP_LEVEL_CATEGORIES = ['repair', 'Building', 'IT', 'Store Operations']
 
 
-def create_single_category(name):
+def create_single_category(name=None, parent=None):
+    if not name:
+        name = random_lorem()
+
     status = create_category_status()
+
     return Category.objects.create(
         name=name,
         subcategory_label='trade',
-        status=status
+        status=status,
+        parent=parent
     )
 
     

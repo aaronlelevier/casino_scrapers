@@ -14,7 +14,7 @@ var proxy = function() {
     });
 };
 
-var store, eventbus, requested, run = Ember.run;
+var store, eventbus, requested;
 
 module('unit: grid-view test', {
     beforeEach() {
@@ -25,30 +25,22 @@ module('unit: grid-view test', {
 });
 
 test('knows how to sort a list of people even when sortable column is null', (assert) => {
-    run(function() {
-        store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: PEOPLE_DEFAULTS.username, title: PEOPLE_DEFAULTS.title});
-    });
+    store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: PEOPLE_DEFAULTS.username, title: PEOPLE_DEFAULTS.title});
     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     var people = subject.get('searched_content');
     assert.equal(people.get('length'), 1);
-    run(function() {
-        store.push('person', {id: 1, username: 'wat', title: PEOPLE_DEFAULTS.title});
-    });
+    store.push('person', {id: 1, username: 'wat', title: PEOPLE_DEFAULTS.title});
     people = subject.get('searched_content');
     assert.equal(people.get('length'), 2);
-    run(function() {
-        store.push('person', {id: 3, username: 'wat', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
-    });
+    store.push('person', {id: 3, username: 'wat', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
     people = subject.get('searched_content');
     assert.equal(people.get('length'), 3);
 });
 
 test('sorted content is sorted by the defaultSort provided if no other value is specified and breaks cache when sort is updated', (assert) => {
-    run(function() {
-        store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
-        store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title});
-        store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title});
-    });
+    store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: ''});
+    store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title});
+    store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title});
     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title']});
     var people = subject.get('sorted_content');
     assert.equal(people.objectAt(0).get('id'), 1);
@@ -59,9 +51,7 @@ test('sorted content is sorted by the defaultSort provided if no other value is 
     assert.equal(people.objectAt(0).get('id'), 3);
     assert.equal(people.objectAt(1).get('id'), 1);
     assert.equal(people.objectAt(2).get('id'), 2);
-    run(function() {
-        store.push('person', {id: 4, username: 'babel', first_name: PEOPLE_DEFAULTS.first_name});
-    });
+    store.push('person', {id: 4, username: 'babel', first_name: PEOPLE_DEFAULTS.first_name});
     people = subject.get('sorted_content');
     assert.equal(people.objectAt(0).get('id'), 3);
     assert.equal(people.objectAt(1).get('id'), 4);
@@ -70,11 +60,9 @@ test('sorted content is sorted by the defaultSort provided if no other value is 
 });
 
 test('given a list of people and page number, should only return those people on that page', (assert) => {
-    run(function() {
-        store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
-        store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
-        store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
-    });
+    store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
+    store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
+    store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
     var model = store.find('person');
     model.set('count', 3);
     requested.pushObject(1);
@@ -86,20 +74,16 @@ test('given a list of people and page number, should only return those people on
     subject.set('page', 2);
     people = subject.get('paginated_content');
     assert.equal(people.get('length'), 1);
-    run(function() {
-        store.push('person', {id: 4, username: 'yehuda'});
-    });
+    store.push('person', {id: 4, username: 'yehuda'});
     people = subject.get('paginated_content');
     assert.equal(people.get('length'), 2);
 });
 
 test('given a list of people and page number, should only return those people on that page (4 people)', (assert) => {
-    run(function() {
-        store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
-        store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
-        store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
-        store.push('person', {id: 4, username: 'crb', first_name: '', last_name: ''});
-    });
+    store.push('person', {id: 3, username: 'abc', first_name: '', last_name: ''});
+    store.push('person', {id: 1, username: 'def', first_name: '', last_name: ''});
+    store.push('person', {id: 2, username: 'zzz', first_name: '', last_name: ''});
+    store.push('person', {id: 4, username: 'crb', first_name: '', last_name: ''});
     var model = store.find('person');
     model.set('count', 4);
     requested.pushObject(1);
@@ -107,19 +91,15 @@ test('given a list of people and page number, should only return those people on
     var pages = subject.get('pages');
     assert.equal(pages.get('length'), 2);
     model.set('count', 5);
-    run(function() {
-        store.push('person', {id: 5, username: 'drb'});
-    });
+    store.push('person', {id: 5, username: 'drb'});
     pages = subject.get('pages');
     assert.equal(pages.get('length'), 3);
 });
 
 test('searched content allows you to look through searchable keys and filter accordingly', (assert) => {
-    run(function() {
-        store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer'});
-        store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups'});
-        store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier'});
-    });
+    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer'});
+    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups'});
+    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier'});
     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     var people = subject.get('searched_content');
     assert.deepEqual(subject.get('searchable'), ['fullname', 'username', 'title']);
@@ -144,9 +124,7 @@ test('searched content allows you to look through searchable keys and filter acc
     assert.equal(people.get('length'), 2);
     assert.equal(people.objectAt(0).get('id'), 2);
     assert.equal(people.objectAt(1).get('id'), 1);
-    run(function() {
-        store.push('person', {id: 4, first_name: 'mmm', username: 'n', title: 'cup lelevier'});
-    });
+    store.push('person', {id: 4, first_name: 'mmm', username: 'n', title: 'cup lelevier'});
     people = subject.get('searched_content');
     assert.equal(people.get('length'), 3);
     assert.equal(people.objectAt(0).get('id'), 2);
@@ -165,11 +143,9 @@ test('searched content allows you to look through searchable keys and filter acc
 });
 
 test('found content allows you to look through searchable keys and filter accordingly', (assert) => {
-    run(function() {
-        store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
-        store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'yzq', title: 'toran billups'});
-        store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'zed', title: 'aaron lelevier'});
-    });
+    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'azd', title: 'scott newcomer'});
+    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'yzq', title: 'toran billups'});
+    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'zed', title: 'aaron lelevier'});
     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 3);
@@ -190,16 +166,14 @@ test('found content allows you to look through searchable keys and filter accord
 });
 
 test('found will filter out null objects when that column is searched on explicitly', (assert) => {
-    run(function() {
-        store.push('person', {id: 1, first_name: '', last_name: '', username: 'aaron', title: 'abz'});
-        store.push('person', {id: 2, first_name: '', last_name: '', username: 'aute', title: 'abc'});
-        store.push('person', {id: 3, first_name: '', last_name: '', username: 'veniam', title: null});
-        store.push('person', {id: 4, first_name: '', last_name: '', username: 'cupidatat', title: null});
-        store.push('person', {id: 5, first_name: '', last_name: '', username: 'laborum.', title: null});
-        store.push('person', {id: 6, first_name: '', last_name: '', username: 'pariatur', title: null});
-        store.push('person', {id: 7, first_name: '', last_name: '', username: 'voluptate', title: null});
-        store.push('person', {id: 8, first_name: '', last_name: '', username: 'adipisicing', title: null});
-    });
+    store.push('person', {id: 1, first_name: '', last_name: '', username: 'aaron', title: 'abz'});
+    store.push('person', {id: 2, first_name: '', last_name: '', username: 'aute', title: 'abc'});
+    store.push('person', {id: 3, first_name: '', last_name: '', username: 'veniam', title: null});
+    store.push('person', {id: 4, first_name: '', last_name: '', username: 'cupidatat', title: null});
+    store.push('person', {id: 5, first_name: '', last_name: '', username: 'laborum.', title: null});
+    store.push('person', {id: 6, first_name: '', last_name: '', username: 'pariatur', title: null});
+    store.push('person', {id: 7, first_name: '', last_name: '', username: 'voluptate', title: null});
+    store.push('person', {id: 8, first_name: '', last_name: '', username: 'adipisicing', title: null});
     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     subject.set('find', 'username:a');
     var people = subject.get('found_content');
@@ -216,16 +190,14 @@ test('found will filter out null objects when that column is searched on explici
 });
 
 test('found filter will only match those exactly in all columns', (assert) => {
-    run(function() {
-        store.push('person', {id: 1, foo: 'baa', username: 'xyzz', title: 'deaa'});
-        store.push('person', {id: 2, foo: 'bab', username: 'xyyy', title: 'deaa'});
-        store.push('person', {id: 3, foo: 'babc', username: 'xyyx', title: 'deaa'});
-        store.push('person', {id: 4, foo: 'babcd', username: 'xyyw', title: 'deaa'});
-        store.push('person', {id: 5, foo: 'babcde', username: 'xyyv1', title: 'deaab'});
-        store.push('person', {id: 6, foo: 'babcde', username: 'xyyv2', title: 'deaabc'});
-        store.push('person', {id: 7, foo: 'babcde', username: 'xyyv3', title: 'deaabcd'});
-        store.push('person', {id: 8, foo: 'babcdeq', username: 'xyyv4', title: 'deaabcde'});
-    });
+    store.push('person', {id: 1, foo: 'baa', username: 'xyzz', title: 'deaa'});
+    store.push('person', {id: 2, foo: 'bab', username: 'xyyy', title: 'deaa'});
+    store.push('person', {id: 3, foo: 'babc', username: 'xyyx', title: 'deaa'});
+    store.push('person', {id: 4, foo: 'babcd', username: 'xyyw', title: 'deaa'});
+    store.push('person', {id: 5, foo: 'babcde', username: 'xyyv1', title: 'deaab'});
+    store.push('person', {id: 6, foo: 'babcde', username: 'xyyv2', title: 'deaabc'});
+    store.push('person', {id: 7, foo: 'babcde', username: 'xyyv3', title: 'deaabcd'});
+    store.push('person', {id: 8, foo: 'babcdeq', username: 'xyyv4', title: 'deaabcde'});
     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
     subject.set('find', 'username:x');
     var people = subject.get('found_content');
@@ -261,11 +233,9 @@ test('found filter will only match those exactly in all columns', (assert) => {
 });
 
 test('rolling pagination shows only ten records at a time', (assert) => {
-    run(function() {
-        for(var i=1; i < 179; i++) {
-            store.push('person', {id: i});
-        }
-    });
+    for(var i=1; i < 179; i++) {
+        store.push('person', {id: i});
+    }
     let model = store.find('person');
     model.set('count', 179);
     let subject = GridViewComponent.create({page: 1, model: model, eventbus: eventbus, searchable: ['fullname', 'username', 'title']});
@@ -326,28 +296,24 @@ test('rolling pagination shows only ten records at a time', (assert) => {
     subject.set('page', 18);
     shown = subject.get('shown_pages');
     assert.deepEqual(shown, [9, 10, 11, 12, 13, 14, 15, 16, 17, 18]);
-    run(function() {
-        store.push('person', {id: 180});
-        store.push('person', {id: 181});
-    });
+    store.push('person', {id: 180});
+    store.push('person', {id: 181});
     model.set('count', 181);
     shown = subject.get('shown_pages');
     assert.deepEqual(shown, [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]);
 });
 
 test('given a dynamic list of people and page number, should return the correct records starting deeper and working backwards', (assert) => {
-    run(function() {
-        store.push('person', {id: 11, username: 'zzz1'});
-        store.push('person', {id: 12, username: 'zzz2'});
-        store.push('person', {id: 13, username: 'zzz3'});
-        store.push('person', {id: 14, username: 'zzz4'});
-        store.push('person', {id: 15, username: 'zzz5'});
-        store.push('person', {id: 16, username: 'zzz6'});
-        store.push('person', {id: 17, username: 'zzz7'});
-        store.push('person', {id: 18, username: 'zzz8'});
-        store.push('person', {id: 19, username: 'zzz9'});
-        store.push('person', {id: 20, username: 'zzz99'});
-    });
+    store.push('person', {id: 11, username: 'zzz1'});
+    store.push('person', {id: 12, username: 'zzz2'});
+    store.push('person', {id: 13, username: 'zzz3'});
+    store.push('person', {id: 14, username: 'zzz4'});
+    store.push('person', {id: 15, username: 'zzz5'});
+    store.push('person', {id: 16, username: 'zzz6'});
+    store.push('person', {id: 17, username: 'zzz7'});
+    store.push('person', {id: 18, username: 'zzz8'});
+    store.push('person', {id: 19, username: 'zzz9'});
+    store.push('person', {id: 20, username: 'zzz99'});
     var model = store.find('person');
     model.set('count', 187);
     requested.pushObject(3);
@@ -359,18 +325,16 @@ test('given a dynamic list of people and page number, should return the correct 
     requested.pushObject(2);
     subject.set('page', 2);
     model.set('count', 187);
-    run(function() {
-        store.push('person', {id: 3, username: 'abc3'});
-        store.push('person', {id: 1, username: 'abc1'});
-        store.push('person', {id: 2, username: 'abc2'});
-        store.push('person', {id: 4, username: 'abc4'});
-        store.push('person', {id: 5, username: 'abc5'});
-        store.push('person', {id: 6, username: 'abc6'});
-        store.push('person', {id: 7, username: 'abc7'});
-        store.push('person', {id: 8, username: 'abc8'});
-        store.push('person', {id: 9, username: 'abc9'});
-        store.push('person', {id: 10, username: 'abc99'});
-    });
+    store.push('person', {id: 3, username: 'abc3'});
+    store.push('person', {id: 1, username: 'abc1'});
+    store.push('person', {id: 2, username: 'abc2'});
+    store.push('person', {id: 4, username: 'abc4'});
+    store.push('person', {id: 5, username: 'abc5'});
+    store.push('person', {id: 6, username: 'abc6'});
+    store.push('person', {id: 7, username: 'abc7'});
+    store.push('person', {id: 8, username: 'abc8'});
+    store.push('person', {id: 9, username: 'abc9'});
+    store.push('person', {id: 10, username: 'abc99'});
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 1);
@@ -378,18 +342,16 @@ test('given a dynamic list of people and page number, should return the correct 
 });
 
 test('given another dynamic list of people and page number, should return the correct records starting deeper and working backwards', (assert) => {
-    run(function() {
-        store.push('person', {id: 21, username: 'zzz1'});
-        store.push('person', {id: 22, username: 'zzz2'});
-        store.push('person', {id: 23, username: 'zzz3'});
-        store.push('person', {id: 24, username: 'zzz4'});
-        store.push('person', {id: 25, username: 'zzz5'});
-        store.push('person', {id: 26, username: 'zzz6'});
-        store.push('person', {id: 27, username: 'zzz7'});
-        store.push('person', {id: 28, username: 'zzz8'});
-        store.push('person', {id: 29, username: 'zzz9'});
-        store.push('person', {id: 30, username: 'zzz99'});
-    });
+    store.push('person', {id: 21, username: 'zzz1'});
+    store.push('person', {id: 22, username: 'zzz2'});
+    store.push('person', {id: 23, username: 'zzz3'});
+    store.push('person', {id: 24, username: 'zzz4'});
+    store.push('person', {id: 25, username: 'zzz5'});
+    store.push('person', {id: 26, username: 'zzz6'});
+    store.push('person', {id: 27, username: 'zzz7'});
+    store.push('person', {id: 28, username: 'zzz8'});
+    store.push('person', {id: 29, username: 'zzz9'});
+    store.push('person', {id: 30, username: 'zzz99'});
     var model = store.find('person');
     model.set('count', 187);
     requested.pushObject(5);
@@ -401,18 +363,16 @@ test('given another dynamic list of people and page number, should return the co
     requested.pushObject(1);
     subject.set('page', 1);
     model.set('count', 187);
-    run(function() {
-        store.push('person', {id: 3, username: 'abc3'});
-        store.push('person', {id: 1, username: 'abc1'});
-        store.push('person', {id: 2, username: 'abc2'});
-        store.push('person', {id: 4, username: 'abc4'});
-        store.push('person', {id: 5, username: 'abc5'});
-        store.push('person', {id: 6, username: 'abc6'});
-        store.push('person', {id: 7, username: 'abc7'});
-        store.push('person', {id: 8, username: 'abc8'});
-        store.push('person', {id: 9, username: 'abc9'});
-        store.push('person', {id: 10, username: 'abc99'});
-    });
+    store.push('person', {id: 3, username: 'abc3'});
+    store.push('person', {id: 1, username: 'abc1'});
+    store.push('person', {id: 2, username: 'abc2'});
+    store.push('person', {id: 4, username: 'abc4'});
+    store.push('person', {id: 5, username: 'abc5'});
+    store.push('person', {id: 6, username: 'abc6'});
+    store.push('person', {id: 7, username: 'abc7'});
+    store.push('person', {id: 8, username: 'abc8'});
+    store.push('person', {id: 9, username: 'abc9'});
+    store.push('person', {id: 10, username: 'abc99'});
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 1);
@@ -420,18 +380,16 @@ test('given another dynamic list of people and page number, should return the co
     requested.pushObject(3);
     subject.set('page', 3);
     model.set('count', 187);
-    run(function() {
-        store.push('person', {id: 11, username: 'zzz1'});
-        store.push('person', {id: 12, username: 'zzz2'});
-        store.push('person', {id: 13, username: 'zzz3'});
-        store.push('person', {id: 14, username: 'zzz4'});
-        store.push('person', {id: 15, username: 'zzz5'});
-        store.push('person', {id: 16, username: 'zzz6'});
-        store.push('person', {id: 17, username: 'zzz7'});
-        store.push('person', {id: 18, username: 'zzz8'});
-        store.push('person', {id: 19, username: 'zzz9'});
-        store.push('person', {id: 20, username: 'zzz99'});
-    });
+    store.push('person', {id: 11, username: 'zzz1'});
+    store.push('person', {id: 12, username: 'zzz2'});
+    store.push('person', {id: 13, username: 'zzz3'});
+    store.push('person', {id: 14, username: 'zzz4'});
+    store.push('person', {id: 15, username: 'zzz5'});
+    store.push('person', {id: 16, username: 'zzz6'});
+    store.push('person', {id: 17, username: 'zzz7'});
+    store.push('person', {id: 18, username: 'zzz8'});
+    store.push('person', {id: 19, username: 'zzz9'});
+    store.push('person', {id: 20, username: 'zzz99'});
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 11);
@@ -439,18 +397,16 @@ test('given another dynamic list of people and page number, should return the co
 });
 
 test('requesting pages in order still returns the correct results even when the same page is viewed twice', (assert) => {
-    run(function() {
-        store.push('person', {id: 3, username: 'abc3'});
-        store.push('person', {id: 1, username: 'abc1'});
-        store.push('person', {id: 2, username: 'abc2'});
-        store.push('person', {id: 4, username: 'abc4'});
-        store.push('person', {id: 5, username: 'abc5'});
-        store.push('person', {id: 6, username: 'abc6'});
-        store.push('person', {id: 7, username: 'abc7'});
-        store.push('person', {id: 8, username: 'abc8'});
-        store.push('person', {id: 9, username: 'abc9'});
-        store.push('person', {id: 10, username: 'abc99'});
-    });
+    store.push('person', {id: 3, username: 'abc3'});
+    store.push('person', {id: 1, username: 'abc1'});
+    store.push('person', {id: 2, username: 'abc2'});
+    store.push('person', {id: 4, username: 'abc4'});
+    store.push('person', {id: 5, username: 'abc5'});
+    store.push('person', {id: 6, username: 'abc6'});
+    store.push('person', {id: 7, username: 'abc7'});
+    store.push('person', {id: 8, username: 'abc8'});
+    store.push('person', {id: 9, username: 'abc9'});
+    store.push('person', {id: 10, username: 'abc99'});
     var model = store.find('person');
     model.set('count', 187);
     requested.pushObject(1);
@@ -462,18 +418,16 @@ test('requesting pages in order still returns the correct results even when the 
     requested.pushObject(2);
     subject.set('page', 2);
     model.set('count', 187);
-    run(function() {
-        store.push('person', {id: 11, username: 'zzz1'});
-        store.push('person', {id: 12, username: 'zzz2'});
-        store.push('person', {id: 13, username: 'zzz3'});
-        store.push('person', {id: 14, username: 'zzz4'});
-        store.push('person', {id: 15, username: 'zzz5'});
-        store.push('person', {id: 16, username: 'zzz6'});
-        store.push('person', {id: 17, username: 'zzz7'});
-        store.push('person', {id: 18, username: 'zzz8'});
-        store.push('person', {id: 19, username: 'zzz9'});
-        store.push('person', {id: 20, username: 'zzz99'});
-    });
+    store.push('person', {id: 11, username: 'zzz1'});
+    store.push('person', {id: 12, username: 'zzz2'});
+    store.push('person', {id: 13, username: 'zzz3'});
+    store.push('person', {id: 14, username: 'zzz4'});
+    store.push('person', {id: 15, username: 'zzz5'});
+    store.push('person', {id: 16, username: 'zzz6'});
+    store.push('person', {id: 17, username: 'zzz7'});
+    store.push('person', {id: 18, username: 'zzz8'});
+    store.push('person', {id: 19, username: 'zzz9'});
+    store.push('person', {id: 20, username: 'zzz99'});
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 11);
@@ -481,18 +435,16 @@ test('requesting pages in order still returns the correct results even when the 
     requested.pushObject(3);
     subject.set('page', 3);
     model.set('count', 187);
-    run(function() {
-        store.push('person', {id: 21, username: 'zzz1'});
-        store.push('person', {id: 22, username: 'zzz2'});
-        store.push('person', {id: 23, username: 'zzz3'});
-        store.push('person', {id: 24, username: 'zzz4'});
-        store.push('person', {id: 25, username: 'zzz5'});
-        store.push('person', {id: 26, username: 'zzz6'});
-        store.push('person', {id: 27, username: 'zzz7'});
-        store.push('person', {id: 28, username: 'zzz8'});
-        store.push('person', {id: 29, username: 'zzz9'});
-        store.push('person', {id: 30, username: 'zzz99'});
-    });
+    store.push('person', {id: 21, username: 'zzz1'});
+    store.push('person', {id: 22, username: 'zzz2'});
+    store.push('person', {id: 23, username: 'zzz3'});
+    store.push('person', {id: 24, username: 'zzz4'});
+    store.push('person', {id: 25, username: 'zzz5'});
+    store.push('person', {id: 26, username: 'zzz6'});
+    store.push('person', {id: 27, username: 'zzz7'});
+    store.push('person', {id: 28, username: 'zzz8'});
+    store.push('person', {id: 29, username: 'zzz9'});
+    store.push('person', {id: 30, username: 'zzz99'});
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 21);
@@ -500,18 +452,16 @@ test('requesting pages in order still returns the correct results even when the 
     requested.pushObject(4);
     subject.set('page', 4);
     model.set('count', 187);
-    run(function() {
-        store.push('person', {id: 31, username: 'qqq1'});
-        store.push('person', {id: 32, username: 'qqq2'});
-        store.push('person', {id: 33, username: 'qqq3'});
-        store.push('person', {id: 34, username: 'qqq4'});
-        store.push('person', {id: 35, username: 'qqq5'});
-        store.push('person', {id: 36, username: 'qqq6'});
-        store.push('person', {id: 37, username: 'qqq7'});
-        store.push('person', {id: 38, username: 'qqq8'});
-        store.push('person', {id: 39, username: 'qqq9'});
-        store.push('person', {id: 40, username: 'qqq99'});
-    });
+    store.push('person', {id: 31, username: 'qqq1'});
+    store.push('person', {id: 32, username: 'qqq2'});
+    store.push('person', {id: 33, username: 'qqq3'});
+    store.push('person', {id: 34, username: 'qqq4'});
+    store.push('person', {id: 35, username: 'qqq5'});
+    store.push('person', {id: 36, username: 'qqq6'});
+    store.push('person', {id: 37, username: 'qqq7'});
+    store.push('person', {id: 38, username: 'qqq8'});
+    store.push('person', {id: 39, username: 'qqq9'});
+    store.push('person', {id: 40, username: 'qqq99'});
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 31);
@@ -519,18 +469,16 @@ test('requesting pages in order still returns the correct results even when the 
     requested.pushObject(3);
     subject.set('page', 3);
     model.set('count', 187);
-    run(function() {
-        store.push('person', {id: 21, username: 'zzz1'});
-        store.push('person', {id: 22, username: 'zzz2'});
-        store.push('person', {id: 23, username: 'zzz3'});
-        store.push('person', {id: 24, username: 'zzz4'});
-        store.push('person', {id: 25, username: 'zzz5'});
-        store.push('person', {id: 26, username: 'zzz6'});
-        store.push('person', {id: 27, username: 'zzz7'});
-        store.push('person', {id: 28, username: 'zzz8'});
-        store.push('person', {id: 29, username: 'zzz9'});
-        store.push('person', {id: 30, username: 'zzz99'});
-    });
+    store.push('person', {id: 21, username: 'zzz1'});
+    store.push('person', {id: 22, username: 'zzz2'});
+    store.push('person', {id: 23, username: 'zzz3'});
+    store.push('person', {id: 24, username: 'zzz4'});
+    store.push('person', {id: 25, username: 'zzz5'});
+    store.push('person', {id: 26, username: 'zzz6'});
+    store.push('person', {id: 27, username: 'zzz7'});
+    store.push('person', {id: 28, username: 'zzz8'});
+    store.push('person', {id: 29, username: 'zzz9'});
+    store.push('person', {id: 30, username: 'zzz99'});
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 21);
@@ -538,18 +486,16 @@ test('requesting pages in order still returns the correct results even when the 
     requested.pushObject(5);
     subject.set('page', 5);
     model.set('count', 187);
-    run(function() {
-        store.push('person', {id: 41, username: 'wat1'});
-        store.push('person', {id: 42, username: 'wat2'});
-        store.push('person', {id: 43, username: 'wat3'});
-        store.push('person', {id: 44, username: 'wat4'});
-        store.push('person', {id: 45, username: 'wat5'});
-        store.push('person', {id: 46, username: 'wat6'});
-        store.push('person', {id: 47, username: 'wat7'});
-        store.push('person', {id: 48, username: 'wat8'});
-        store.push('person', {id: 49, username: 'wat9'});
-        store.push('person', {id: 50, username: 'wat99'});
-    });
+    store.push('person', {id: 41, username: 'wat1'});
+    store.push('person', {id: 42, username: 'wat2'});
+    store.push('person', {id: 43, username: 'wat3'});
+    store.push('person', {id: 44, username: 'wat4'});
+    store.push('person', {id: 45, username: 'wat5'});
+    store.push('person', {id: 46, username: 'wat6'});
+    store.push('person', {id: 47, username: 'wat7'});
+    store.push('person', {id: 48, username: 'wat8'});
+    store.push('person', {id: 49, username: 'wat9'});
+    store.push('person', {id: 50, username: 'wat99'});
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 41);
@@ -557,18 +503,16 @@ test('requesting pages in order still returns the correct results even when the 
     requested.pushObject(4);
     subject.set('page', 4);
     model.set('count', 187);
-    run(function() {
-        store.push('person', {id: 31, username: 'qqq1'});
-        store.push('person', {id: 32, username: 'qqq2'});
-        store.push('person', {id: 33, username: 'qqq3'});
-        store.push('person', {id: 34, username: 'qqq4'});
-        store.push('person', {id: 35, username: 'qqq5'});
-        store.push('person', {id: 36, username: 'qqq6'});
-        store.push('person', {id: 37, username: 'qqq7'});
-        store.push('person', {id: 38, username: 'qqq8'});
-        store.push('person', {id: 39, username: 'qqq9'});
-        store.push('person', {id: 40, username: 'qqq99'});
-    });
+    store.push('person', {id: 31, username: 'qqq1'});
+    store.push('person', {id: 32, username: 'qqq2'});
+    store.push('person', {id: 33, username: 'qqq3'});
+    store.push('person', {id: 34, username: 'qqq4'});
+    store.push('person', {id: 35, username: 'qqq5'});
+    store.push('person', {id: 36, username: 'qqq6'});
+    store.push('person', {id: 37, username: 'qqq7'});
+    store.push('person', {id: 38, username: 'qqq8'});
+    store.push('person', {id: 39, username: 'qqq9'});
+    store.push('person', {id: 40, username: 'qqq99'});
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 31);
@@ -576,18 +520,16 @@ test('requesting pages in order still returns the correct results even when the 
     requested.pushObject(12);
     subject.set('page', 12);
     model.set('count', 187);
-    run(function() {
-        store.push('person', {id: 81, username: 'hat1'});
-        store.push('person', {id: 82, username: 'hat2'});
-        store.push('person', {id: 83, username: 'hat3'});
-        store.push('person', {id: 84, username: 'hat4'});
-        store.push('person', {id: 85, username: 'hat5'});
-        store.push('person', {id: 86, username: 'hat6'});
-        store.push('person', {id: 87, username: 'hat7'});
-        store.push('person', {id: 88, username: 'hat8'});
-        store.push('person', {id: 89, username: 'hat9'});
-        store.push('person', {id: 90, username: 'hat99'});
-    });
+    store.push('person', {id: 81, username: 'hat1'});
+    store.push('person', {id: 82, username: 'hat2'});
+    store.push('person', {id: 83, username: 'hat3'});
+    store.push('person', {id: 84, username: 'hat4'});
+    store.push('person', {id: 85, username: 'hat5'});
+    store.push('person', {id: 86, username: 'hat6'});
+    store.push('person', {id: 87, username: 'hat7'});
+    store.push('person', {id: 88, username: 'hat8'});
+    store.push('person', {id: 89, username: 'hat9'});
+    store.push('person', {id: 90, username: 'hat99'});
     content = subject.get('paginated_content');
     assert.equal(content.get('length'), 10);
     assert.equal(content.objectAt(0).get('id'), 81);
@@ -595,13 +537,11 @@ test('requesting pages in order still returns the correct results even when the 
 });
 
 test('searched content allows you to look through related models', (assert) => {
-    run(function() {
-        store.push('role', {id: 1, name: 'role1', people: [1,2]});
-        store.push('role', {id: 2, name: 'role2', people: [3]});
-        store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
-        store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
-        store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
-    });
+    store.push('role', {id: 1, name: 'role1', people: [1,2]});
+    store.push('role', {id: 2, name: 'role2', people: [3]});
+    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
+    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
+    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title', 'role.name']});
     var people = subject.get('searched_content');
     assert.deepEqual(subject.get('searchable'), ['fullname', 'username', 'title', 'role.name']);
@@ -617,13 +557,11 @@ test('searched content allows you to look through related models', (assert) => {
 });
 
 test('found content allows you to look through related models', (assert) => {
-    run(function() {
-        store.push('role', {id: 1, name: 'role1', people: [1,2]});
-        store.push('role', {id: 2, name: 'role2', people: [3]});
-        store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
-        store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
-        store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
-    });
+    store.push('role', {id: 1, name: 'role1', people: [1,2]});
+    store.push('role', {id: 2, name: 'role2', people: [3]});
+    store.push('person', {id: 1, first_name: 'ab', last_name: '', username: 'x', title: 'scott newcomer', role_fk: 1});
+    store.push('person', {id: 2, first_name: 'cd', last_name: '', username: 'y', title: 'toran lillups', role_fk: 1});
+    store.push('person', {id: 3, first_name: 'de', last_name: '', username: 'z', title: 'aaron lelevier', role_fk: 2});
     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, searchable: ['fullname', 'username', 'title', 'role.name']});
     var people = subject.get('found_content');
     assert.equal(people.get('length'), 3);
@@ -634,13 +572,11 @@ test('found content allows you to look through related models', (assert) => {
 });
 
 test('sorted content is sorted related models', (assert) => {
-    run(function() {
-        store.push('role', {id: 1, name: 'zzz', people: [1,2]});
-        store.push('role', {id: 2, name: 'aaa', people: [3]});
-        store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: '', role_fks: 1});
-        store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title, role_fk: 1});
-        store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title, role_fk: 2});
-    });
+    store.push('role', {id: 1, name: 'zzz', people: [1,2]});
+    store.push('role', {id: 2, name: 'aaa', people: [3]});
+    store.push('person', {id: 3, username: 'abc', first_name: PEOPLE_DEFAULTS.first_name, last_name: '', role_fks: 1});
+    store.push('person', {id: 1, username: 'def', title: PEOPLE_DEFAULTS.title, role_fk: 1});
+    store.push('person', {id: 2, first_name: PEOPLE_DEFAULTS.first_name, username: 'zzz', title: PEOPLE_DEFAULTS.title, role_fk: 2});
     var subject = GridViewComponent.create({model: store.find('person'), eventbus: eventbus, defaultSort: ['id'], searchable: ['fullname', 'username', 'title', 'role.name']});
     var people = subject.get('sorted_content');
     assert.equal(people.objectAt(0).get('id'), 1);

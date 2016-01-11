@@ -1,5 +1,4 @@
-<!--  TODO: i18n the Please select -->
-<option value="" class="t-locale-option">Please select</option>
+<option value="" class="t-locale-option">-</option>
 {{#each locales as |locale|}}
 <option value={{locale.locale}} class="t-locale-option" selected={{is-equal current locale.locale}}>{{locale.name}} - {{locale.native_name}}</option>
 {{/each}}

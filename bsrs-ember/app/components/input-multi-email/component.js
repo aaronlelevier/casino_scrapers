@@ -5,6 +5,8 @@ import CustomValidMixin from 'bsrs-ember/mixins/validation/custom';
 import {ValidationMixin, validateEach} from 'ember-cli-simple-validation/mixins/validate';
 import { emailIsValidFormat } from 'bsrs-ember/validation/email';
 
+var run = Ember.run;
+
 var InputMultiEmail = ChildValidationComponent.extend(ValidationMixin, CustomValidMixin, {
     uuid: inject('uuid'),
     tagName: 'div',
@@ -13,10 +15,7 @@ var InputMultiEmail = ChildValidationComponent.extend(ValidationMixin, CustomVal
     emailFormat: validateEach('email', emailIsValidFormat),
     actions: {
         changed(email, val) {
-            Ember.run(() => {
-                //move to model
-                email.set('type', val);
-            });
+            email.set('type', val);
         },
         append() {
             const id = this.get('uuid').v4();
@@ -24,10 +23,14 @@ var InputMultiEmail = ChildValidationComponent.extend(ValidationMixin, CustomVal
             const related_pk = this.get('related_pk');
             var model = {id: id, type: type};
             model['model_fk'] = related_pk;
-            this.get('model').push(model);
+            run(() => {
+                this.get('model').push(model);
+            });
         },
         delete(entry) {
-            this.get('model').push({id: entry.get('id'), removed: true});
+            run(() => {
+                this.get('model').push({id: entry.get('id'), removed: true});
+            });
         }
     }
 });

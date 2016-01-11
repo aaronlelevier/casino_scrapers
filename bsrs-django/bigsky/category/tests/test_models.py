@@ -4,6 +4,7 @@ from django.conf import settings
 from accounting.models import Currency
 from category.models import Category
 from category.tests import factory
+from person.tests.factory import create_single_person
 
 
 class CategorySetupMixin(object):
@@ -13,6 +14,24 @@ class CategorySetupMixin(object):
         self.type = Category.objects.filter(subcategory_label='trade').first()
         self.trade = Category.objects.filter(label='trade').first()
         self.child = Category.objects.filter(subcategory_label='sub_issue').first()
+
+
+class CategoryManagerTests(TestCase):
+
+    def setUp(self):
+        self.repair = factory.create_single_category('repair')
+        self.store = factory.create_single_category('store', self.repair)
+        self.windows = factory.create_single_category('windows', self.store)
+
+        self.person = create_single_person()
+        self.role = self.person.role
+        self.role.categories.add(self.store)
+        self.role.categories.add(self.windows)
+
+    def test_get_all_children(self):
+        ret = self.person.role.categories.objects_and_their_children()
+
+        self.assertEqual(len(ret), 3)
 
 
 class CategoryTests(CategorySetupMixin, TestCase):

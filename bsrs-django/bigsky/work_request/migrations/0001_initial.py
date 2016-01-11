@@ -16,16 +16,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='WorkRequest',
             fields=[
-                ('id', models.AutoField(auto_created=True, verbose_name='ID', serialize=False, primary_key=True)),
-                ('request', models.CharField(blank=True, max_length=254, null=True)),
+                ('id', models.AutoField(auto_created=True, primary_key=True, verbose_name='ID', serialize=False)),
+                ('request', models.CharField(null=True, blank=True, max_length=254)),
                 ('approver', models.ForeignKey(to=settings.AUTH_USER_MODEL, blank=True, null=True)),
             ],
         ),
         migrations.CreateModel(
             name='WorkRequestStatus',
             fields=[
-                ('id', models.CharField(editable=False, default='def11673-d4ab-41a6-a37f-0c6846b96006', max_length=50, serialize=False, primary_key=True)),
-                ('label', models.CharField(max_length=254, help_text="String value of the ID 'key'.", blank=True)),
+                ('id', models.CharField(max_length=50, primary_key=True, default='def11673-d4ab-41a6-a37f-0c6846b96006', editable=False, serialize=False)),
+                ('label', models.CharField(help_text="String value of the ID 'key'.", blank=True, max_length=254)),
             ],
         ),
         migrations.AddField(
