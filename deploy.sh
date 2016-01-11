@@ -125,6 +125,9 @@ echo "DJANGO - COLLECTSTATIC"
 ../venv/bin/python manage.py collectstatic --noinput
 TEST=$?; if [ "$TEST" == 1 ]; then echo "django collectstatic failed"; exit $TEST; fi
 
+wait
+echo "COPY MEDIA ASSETS TO JENKINS LOCATION"
+cp -r media/* /var/www/media/deploy/
 
 echo "RELOAD SERVER SCRIPTS"
 
