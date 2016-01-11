@@ -47,29 +47,6 @@ Virtualenv
     sudo virtualenv -p /usr/local/bin/python3 ~/.virtualenvs/bs_py3
 
 
-Postgres
---------
-
-.. code-block::
-
-    sudo yum install postgresql-server
-    sudo yum install postgresql-devel
-
-    sudo service postgresql initdb
-    sudo service postgresql start
-
-    sudo su postgres
-    psql
-
-    create role bsdev with password 'tango';
-    alter role bsdev superuser login;
-    create database ci owner bsdev;
-    \q
-
-    # change to peer auth to md5 
-    sudo vi /var/lib/pgsql/data/pg_hba.conf
-
-
 Node
 ----
 
