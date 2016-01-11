@@ -193,6 +193,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'modules.tasks.titleShort':'Tasks',
                     'modules.tickets.titleShort':'Tickets',
                     'modules.workOrders.titleShort':'Work Orders',
+                    'save_filter':'Save Filter',
                     'selects.loading':'Loading',
                     'selects.noMatchesMessage':'No Matches',
                     'selects.searchMessage':'Type to search',
