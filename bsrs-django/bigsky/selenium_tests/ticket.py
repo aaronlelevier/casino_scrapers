@@ -139,7 +139,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         with self.assertRaises(InvalidSelectorException):
             self.driver.find_elements_by_class_name("progress active")
 
-    # # COMMENT OUT: While `Ticket` and `ember-power-select` are WIP
+    # COMMENT OUT: While `Ticket` and `ember-power-select` are WIP
     def test_ticket(self):
         ### CREATE
         # Create Ticket Page Object
@@ -193,41 +193,41 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         ticket_page.find_list_data()
         self.driver.refresh()
         ticket_list_view = ticket_page.find_list_name()
-    #     new_ticket = ticket_page.click_name_in_list_pages(ticket_request, new_model=None)
-    #     try:
-    #         new_ticket.click()
-    #     except AttributeError as e:
-    #         raise e("new ticket not found")
-    #     ### UPDATE
-    #     # Go to ticket Detail view, Change request and hit "save"
-    #     ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request)
-    #     ticket_request_two = rand_chars()
-    #     self.driver.find_element_by_class_name("t-ticket-request").clear()
-    #     ticket = InputHelper(ticket_request=ticket_request_two)
-    #     self._fill_in_using_class(ticket)
-    #     self.gen_elem_page.click_save_btn()
-    #     # # List view contains new request
-    #     ticket_page.find_list_data()
-    #     self.driver.refresh()
-    #     ticket_list_view_two = ticket_page.find_list_name()
-    #     new_ticket_two = ticket_page.click_name_in_list_pages(ticket_request_two, new_model=None)
-    #     try:
-    #         new_ticket_two.click()
-    #     except AttributeError as e:
-    #         raise e("new ticket not found")
-    #     ### DELETE
-    #     # Go to Ticket Detail view click Delete
-    #     self.gen_elem_page.click_dropdown_delete()
-    #     self.gen_elem_page.click_delete_btn()
-    #     # check Ticket is deleted
-    #     self.driver.refresh()
-    #     tickets = ticket_page.find_list_data()
-    #     ticket_list_view = ticket_page.find_list_name()
-    #     # this needs to be improved to look through all the pages
-    #     self.assertNotIn(
-    #         ticket_request_two,
-    #         [r.text for r in ticket_list_view]
-    #     )
+        new_ticket = ticket_page.click_name_in_list_pages(ticket_request, new_model=None)
+        try:
+            new_ticket.click()
+        except AttributeError as e:
+            raise e("new ticket not found")
+        ### UPDATE
+        # Go to ticket Detail view, Change request and hit "save"
+        ticket_page.find_wait_and_assert_elem("t-ticket-request", ticket_request)
+        ticket_request_two = rand_chars()
+        self.driver.find_element_by_class_name("t-ticket-request").clear()
+        ticket = InputHelper(ticket_request=ticket_request_two)
+        self._fill_in_using_class(ticket)
+        self.gen_elem_page.click_save_btn()
+        # # List view contains new request
+        ticket_page.find_list_data()
+        self.driver.refresh()
+        ticket_list_view_two = ticket_page.find_list_name()
+        new_ticket_two = ticket_page.click_name_in_list_pages(ticket_request_two, new_model=None)
+        try:
+            new_ticket_two.click()
+        except AttributeError as e:
+            raise e("new ticket not found")
+        ### DELETE
+        # Go to Ticket Detail view click Delete
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        # check Ticket is deleted
+        self.driver.refresh()
+        tickets = ticket_page.find_list_data()
+        ticket_list_view = ticket_page.find_list_name()
+        # this needs to be improved to look through all the pages
+        self.assertNotIn(
+            ticket_request_two,
+            [r.text for r in ticket_list_view]
+        )
 
 
 if __name__ == "__main__":
