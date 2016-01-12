@@ -4,16 +4,16 @@
             <div class="col-md-12">
                 <div class="pull-right btn-group btn-group-sm">
                     {{#if hasActiveFilterSet}}
-                      <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>{{t 'save_filter'}}</button>
+                        <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>{{t 'save_filter'}}</button>
                     {{/if}}
                     {{#if count}}
-                      {{#link-to add_model_url count class="t-add-new add-btn btn btn-default btn-sm"}}
-                          {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
-                      {{/link-to}}
+                        {{#link-to add_model_url count class="t-add-new add-btn btn btn-default btn-sm"}}
+                        {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+                        {{/link-to}}
                     {{else}}
                         {{#if add_model_url}}
                             {{#link-to add_model_url class="t-add-new add-btn btn btn-default btn-sm"}}
-                                {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
+                            {{fa-icon "plus-circle"}} {{t 'button.add' model=add_model_text}}
                             {{/link-to}}
                         {{/if}}
                     {{/if}}
@@ -22,27 +22,27 @@
         </div>
     </header>
     {{#if savingFilter}}
-    {{#focus-tether-dialog target='.t-show-save-filterset-modal' close='toggleSaveFilterSetModal' clickOutsideToClose=true}}
-      <div class="form-group">
-       {{input value=filtersetName class="form-control input-sm t-filterset-name-input" placeholder="Name"}}
-       <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>Save</button>
-      </div>
-    {{/focus-tether-dialog}}
+        {{#focus-tether-dialog target='.t-show-save-filterset-modal' close='toggleSaveFilterSetModal' clickOutsideToClose=true}}
+        <div class="form-group">
+            {{input value=filtersetName class="form-control input-sm t-filterset-name-input" placeholder="Name"}}
+            <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>Save</button>
+        </div>
+        {{/focus-tether-dialog}}
     {{/if}}
     {{#if toggleFilter}}
-      {{#focus-tether-dialog container-class='column-filter' target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='center left' targetAttachment='center left' offset='0 14px'}}
-      {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
-      {{/focus-tether-dialog}}
+        {{#focus-tether-dialog container-class='column-filter' target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='center left' targetAttachment='center left' offset='0 14px'}}
+        {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
+        {{/focus-tether-dialog}}
     {{/if}}
     <section class="docSection docSectionWithFooter container-fluid t-grid-wrap">
         <div class="row">
-			<div class="col-md-12">
-				<section style="padding-bottom: 0">
-					<div class="row card-title">
+            <div class="col-md-12">
+                <section style="padding-bottom: 0">
+                    <div class="row card-title">
                         <h1 class="col-md-8">
                             <span class="t-grid-title">{{grid_title}}</span>
                             {{#if (filters-applied sort find search)}}
-                            <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>{{t grid.reset_all_options}}</span>
+                                <span class="t-reset-grid reset-grid" {{action "resetGrid"}}>{{t 'grid.reset_all_options'}}</span>
                             {{/if}}
                             {{#unless model.isLoaded}}
                             {{grid-loading-graphic}}
@@ -55,8 +55,8 @@
                             {{filterset-navigation filtersets=filtersets route=routePath}}
                         </div>
                     </div>
-				</section>
-			</div>
+                </section>
+            </div>
         </div>
         <div class="table-responsive">
             <table class="table table-striped table-hover">
@@ -72,17 +72,17 @@
                     </tr>
                 </thead>
                 <tbody>
-                  {{#each paginated_content as |item|}}
-                  {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
-                  <td><input type="checkbox" /></td>
-                  {{#each searchable as |column|}}
+                    {{#each paginated_content as |item|}}
+                    {{#link-to detail_url item.id tagName="tr" class="t-grid-data"}}
+                    <td><input type="checkbox" /></td>
+                    {{#each searchable as |column|}}
                     <td class="{{grid-row-class noun column}}">{{grid-column-text item column}}</td>
-                  {{/each}}
-                  {{#each nonsearchable as |column|}}
-                  <td class="{{grid-row-class noun column}} {{add-text-right nonsearchable column}}">{{get item column}}</td>
-                  {{/each}}
-                  {{/link-to}}
-                  {{/each}}
+                    {{/each}}
+                    {{#each nonsearchable as |column|}}
+                    <td class="{{grid-row-class noun column}} {{add-text-right nonsearchable column}}">{{get item column}}</td>
+                    {{/each}}
+                    {{/link-to}}
+                    {{/each}}
                 </tbody>
             </table>
         </div>
@@ -97,11 +97,11 @@
                     <ul class="pagination t-pages">
                         <li class="t-first {{if first '' 'disabled'}}" disabled={{if first disabled ''}}>{{#link-to list_url (query-params page=first) disabled=notFirst}}&laquo;{{/link-to}}</li>
                         <li class="t-previous {{if previous '' 'disabled'}}" disabled={{if previous disabled ''}}>{{#link-to list_url (query-params page=previous) disabled=notPrevious}}&lsaquo;{{/link-to}}</li>
-                      {{#each shown_pages as |page|}}
+                        {{#each shown_pages as |page|}}
                         <li class="t-page">
-                          {{#link-to list_url (query-params page=page)}}{{page}}{{/link-to}}
+                            {{#link-to list_url (query-params page=page)}}{{page}}{{/link-to}}
                         </li>
-                      {{/each}}
+                        {{/each}}
                         <li class="t-next {{if next '' 'disabled'}}" disabled={{if next disabled ''}}>{{#link-to list_url (query-params page=next) disabled=notNext}}&rsaquo;{{/link-to}}</li>
                         <li class="t-last {{if last '' 'disabled'}}" disabled={{if last disabled ''}}>{{#link-to list_url (query-params page=last) disabled=notLast}}&raquo;{{/link-to}}</li>
                     </ul>
@@ -109,11 +109,11 @@
             </div>
             <div class="col-md-2">
                 <span class="text-right pull-right page-size t-page-size">
-                  <select class="form-control input-sm" onchange={{action "togglePageSize" value="target.value"}}>
-                    {{#each page_sizes as |size|}}
-                    <option value={{size}} selected={{is-equal page_size size}}>{{size}} per page</option>
-                    {{/each}}
-                  </select>
+                    <select class="form-control input-sm" onchange={{action "togglePageSize" value="target.value"}}>
+                        {{#each page_sizes as |size|}}
+                        <option value={{size}} selected={{is-equal page_size size}}>{{size}} per page</option>
+                        {{/each}}
+                    </select>
                 </span>
             </div>
         </div>
