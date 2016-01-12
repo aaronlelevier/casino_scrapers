@@ -61,6 +61,14 @@ class LocationTypeSerializer(BaseCreateSerializer):
 
 ### LOCATION
 
+class LocationIdNameOnlySerializer(serializers.ModelSerializer):
+    """Leaf node serializer for Person-Current Bootstrapped data."""
+
+    class Meta:
+        model = Location
+        fields = ('id', 'name',)
+
+
 class LocationIdNameSerializer(BaseCreateSerializer):
     """Leaf node serializer for PersonDetailSerializer."""
 

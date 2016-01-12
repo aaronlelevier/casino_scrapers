@@ -7,10 +7,11 @@ from django.core.exceptions import ValidationError
 
 from model_mommy import mommy
 
+from category.models import Category
 from location.models import Location
 from location.tests.factory import create_locations
 from person.models import Person, PersonStatus, Role
-from person.tests.factory import PASSWORD, create_person, create_role
+from person.tests.factory import PASSWORD, create_person, create_role, create_single_person
 from translation.models import Locale
 from translation.tests.factory import create_locales
 from utils import create
@@ -156,7 +157,7 @@ class PersonTests(TestCase):
     def setUp(self):
         create_locations()
         self.password = PASSWORD
-        self.person = create_person()
+        self.person = create_single_person()
 
     def test_person_is_user_subclass(self):
         self.assertIsInstance(self.person, AbstractUser)
@@ -287,6 +288,20 @@ class PersonTests(TestCase):
             self.person._get_locale(None),
             str(Locale.objects.system_default().id)
         )
+
+    def test_all_locations_and_children(self):
+        """
+        Tests that a full Location object is being returned, which will later 
+        be used by a DRF serializer in the Person-Current Bootstrapped data.
+        """
+        locations = self.person.all_locations_and_children()
+        location = locations[0]
+        self.assertIsInstance(location, Location)
+
+    def test_all_role_categories_and_children(self):
+        ret = self.person.all_role_categories_and_children()
+        self.assertIsInstance(ret[0], str)
+        self.assertIsInstance(Category.objects.get(id=ret[0]), Category)
 
 
 ### PASSWORD

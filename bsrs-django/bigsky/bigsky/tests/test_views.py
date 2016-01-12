@@ -118,7 +118,7 @@ class LogoutTests(TestCase):
         self.assertIn('_auth_user_id', self.client.session)
 
 
-class ConfigurationTests(TestCase):
+class BootstrappedDataTests(TestCase):
 
     def setUp(self):
         create_categories()
@@ -282,14 +282,9 @@ class ConfigurationTests(TestCase):
         self.assertEqual(data['role'], str(self.person.role.id))
         self.assertIn('all_locations_and_children', data)
         self.assertEqual(len(data['all_locations_and_children']), 1)
-        self.assertEqual(
-            data['all_locations_and_children'][0],
-            str(self.person.locations.first().id)
-        )
-        self.assertEqual(
-            data['all_role_categories_and_children'][0],
-            str(self.person.role.categories.first().id)
-        )
+        self.assertEqual(data['all_locations_and_children'][0]['id'], str(self.person.locations.first().id))
+        self.assertEqual(data['all_locations_and_children'][0]['name'], self.person.locations.first().name)
+        self.assertEqual(data['all_role_categories_and_children'][0], str(self.person.role.categories.first().id))
 
     def test_default_model_ordering(self):
         # Note: this is a Dict Object generated off off URL's and the models,

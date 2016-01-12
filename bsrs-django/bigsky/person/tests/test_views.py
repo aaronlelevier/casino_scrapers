@@ -392,12 +392,15 @@ class PersonDetailTests(TestCase):
 
     def test_current__all_locations_and_children(self):
         child_location = mommy.make(Location)
-        self.location.children.add(child_location)
+        self.person.locations.first().children.add(child_location)
 
         response = self.client.get('/api/admin/people/current/'.format(self.person.id))
         data = json.loads(response.content.decode('utf8'))
 
-        self.assertIn(str(child_location.id), data['all_locations_and_children'])
+        self.assertIn(
+            str(child_location.id),
+            [str(x['id']) for x in data['all_locations_and_children']]
+        )
 
     def test_current__all_role_categories_and_children(self):
         parent_category = self.person.role.categories.first()

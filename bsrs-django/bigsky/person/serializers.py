@@ -4,7 +4,7 @@ from contact.serializers import   (
     PhoneNumberFlatSerializer, PhoneNumberSerializer,
     EmailFlatSerializer, EmailSerializer,
     AddressFlatSerializer, AddressSerializer)
-from location.serializers import LocationIdNameSerializer
+from location.serializers import LocationIdNameSerializer, LocationIdNameOnlySerializer
 from category.serializers import CategoryRoleSerializer
 from person.models import Person, Role
 from person.validators import RoleLocationValidator
@@ -123,9 +123,7 @@ class PersonDetailSerializer(serializers.ModelSerializer):
 
 class PersonCurrentSerializer(PersonDetailSerializer):
 
-    all_locations_and_children = serializers.ListField(
-        child=serializers.UUIDField(),
-    )
+    all_locations_and_children = LocationIdNameOnlySerializer(many=True)
     all_role_categories_and_children = serializers.ListField(
         child=serializers.UUIDField(),
     )

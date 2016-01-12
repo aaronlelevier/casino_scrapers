@@ -345,8 +345,9 @@ class Person(BaseModel, AbstractUser):
             'employee_id': self.employee_id,
             'locale': str(self.locale.id if self.locale else self._get_locale(locale)),
             'role': str(self.role.id),
-            'all_locations_and_children': [str(x) for x in self.all_locations_and_children()],
-            'all_role_categories_and_children': [str(x) for x in self.all_role_categories_and_children()],
+            'all_locations_and_children': [{'id': str(x.id), 'name': x.name}
+                                          for x in self.all_locations_and_children()],
+            'all_role_categories_and_children': self.all_role_categories_and_children(),
         }
 
     def to_simple_dict(self):
@@ -426,10 +427,7 @@ class Person(BaseModel, AbstractUser):
     def _validate_locations(self):
         """
         Remove invalid Locations from the Person based on
-        their Role.location_level
-
-        TODO: Change this to raise an ``Exception`` here, so can debug easier if 
-        ``locations`` are getting silenty removed from the ``Person``
+        their Role.location_level.
         """
         for l in self.locations.all():
             if l.location_level != self.role.location_level:
@@ -443,10 +441,11 @@ class Person(BaseModel, AbstractUser):
                 self.password_history[len(self.password_history)-settings.MAX_PASSWORDS_STORED:])
 
     def all_locations_and_children(self):
-        return self.locations.objects_and_their_children()
+        ids = self.locations.objects_and_their_children()
+        return Location.objects.filter(id__in=ids)
 
     def all_role_categories_and_children(self):
-        return self.role.categories.objects_and_their_children()
+        return [str(x) for x in self.role.categories.objects_and_their_children()]
 
 
 @receiver(post_save, sender=Person)
