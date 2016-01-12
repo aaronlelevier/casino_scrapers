@@ -1,10 +1,11 @@
-{{#power-select
+{{#power-select-multiple
   multiple=true
   options=options
   selected=model.children
   class="t-location-level-children-select"
+  noMatchesMessage="No Matches"
   onchange=(action "selected")
   as |child|
 }}
   {{child.name}}
-{{/power-select}}
+{{/power-select-multiple}}
