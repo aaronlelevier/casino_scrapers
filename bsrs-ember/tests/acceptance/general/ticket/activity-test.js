@@ -34,7 +34,7 @@ const ACTIVITY_ITEMS = '.t-activity-list-item';
 
 let application, store, endpoint, list_xhr, detail_xhr, top_level_xhr, detail_data, random_uuid, original_uuid;
 
-module('Acceptance | ticket activity test', {
+module('Acceptance | amk ticket activity test', {
     beforeEach() {
         timemachine.config({
             dateString: 'December 25, 2015 13:12:59'
@@ -343,7 +343,7 @@ test('ticket detail shows the activity list including event data (attachment_add
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 1 files 6 months ago ${GD.nameTicketAttachmentOne}`);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} uploaded 1 file 6 months ago ${GD.nameTicketAttachmentOne}`);
     });
 });
 
@@ -405,7 +405,7 @@ test('ticket detail shows the activity list including event data (attachment_rem
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
         assert.equal(find(`${ACTIVITY_ITEMS}`).length, 1);
-        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 1 files 6 months ago ${GD.nameTicketAttachmentOne}`);
+        assert.equal(trim(find(`${ACTIVITY_ITEMS}:eq(0)`).text()), `${PD.fullname} removed 1 file 6 months ago ${GD.nameTicketAttachmentOne}`);
     });
 });
 
