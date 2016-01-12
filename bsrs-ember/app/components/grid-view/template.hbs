@@ -4,7 +4,7 @@
             <div class="col-md-12">
                 <div class="pull-right btn-group btn-group-sm">
                     {{#if hasActiveFilterSet}}
-                        <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>{{t 'save_filter'}}</button>
+                        <button class="t-show-save-filterset-modal btn btn-primary btn-sm" {{action "toggleSaveFilterSetModal"}}>{{t 'grid.save_filter'}}</button>
                     {{/if}}
                     {{#if count}}
                         {{#link-to add_model_url count class="t-add-new add-btn btn btn-default btn-sm"}}
@@ -111,7 +111,7 @@
                 <span class="text-right pull-right page-size t-page-size">
                     <select class="form-control input-sm" onchange={{action "togglePageSize" value="target.value"}}>
                         {{#each page_sizes as |size|}}
-                        <option value={{size}} selected={{is-equal page_size size}}>{{size}} per page</option>
+                        <option value={{size}} selected={{is-equal page_size size}}>{{t 'grid.per_page' size=size}}</option>
                         {{/each}}
                     </select>
                 </span>
