@@ -135,7 +135,7 @@ def create_ticket_priority(name=None):
     return obj
 
 
-def create_ticket_priorites():
+def create_ticket_priorities():
     return [create_ticket_priority(p) for p in TICKET_PRIORITIES]
 
 

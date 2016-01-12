@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 from accounting.models import Currency
-from location.models import SelfRefrencingQuerySet, SelfRefrencingManager
+from location.models import SelfReferencingQuerySet, SelfReferencingManager
 from utils.models import BaseModel, BaseManager, BaseNameModel
 
 
@@ -27,11 +27,11 @@ class CategoryStatus(BaseNameModel):
         verbose_name_plural = "Category Statuses"
 
 
-class CategoryQuerySet(SelfRefrencingQuerySet):
+class CategoryQuerySet(SelfReferencingQuerySet):
     pass
 
 
-class CategoryManager(SelfRefrencingManager):
+class CategoryManager(SelfReferencingManager):
 
     def get_queryset(self):
         return CategoryQuerySet(self.model, self._db).filter(deleted__isnull=True)

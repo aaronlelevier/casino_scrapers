@@ -234,7 +234,7 @@ class CreatePriorityTests(TestCase):
         self.assertIn(obj.name, TICKET_PRIORITIES)
 
     def test_multiple(self):
-        factory.create_ticket_priorites()
+        factory.create_ticket_priorities()
         self.assertTrue(TicketPriority.objects.all())
         self.assertEqual(TicketPriority.objects.first().name, 'ticket.priority.emergency')
         self.assertEqual(TicketPriority.objects.all()[1].name, 'ticket.priority.high')
