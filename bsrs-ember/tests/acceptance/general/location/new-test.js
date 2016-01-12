@@ -59,7 +59,8 @@ test('visiting /location/new', (assert) => {
         assert.equal(store.find('location').get('length'), 1);
         const location = store.find('location', UUID.value);
         assert.ok(location.get('new'));
-        // assert.equal(page.locationLevelInput(), 'Select One');
+        assert.notOk(location.get('name'));
+        assert.notOk(location.get('number'));
     });
     fillIn('.t-location-name', LD.storeName);
     fillIn('.t-location-number', LD.storeNumber);
@@ -149,7 +150,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('aaron when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     visit(LOCATION_NEW_URL);
     fillIn('.t-location-name', LD.storeName);
     generalPage.cancel();
