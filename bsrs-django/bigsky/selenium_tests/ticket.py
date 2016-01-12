@@ -126,87 +126,73 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         )
 
         # click "rollback button"
-        # rollback_btn = self.wait_for_xhr_request("t-modal-rollback-btn", debounce=True)
-        # rollback_btn.click()
+        rollback_btn = self.wait_for_xhr_request("t-modal-rollback-btn", debounce=True)
+        rollback_btn.click()
 
-        # # revisit page
-        # tickets = ticket_page.find_list_data()
-        # tickets[0].click()
+        # revisit page
+        tickets = ticket_page.find_list_data()
+        tickets[0].click()
 
-        # # no more attachments on page
-        # self.driver.refresh()
+        # no more attachments on page
+        self.driver.refresh()
 
-        # with self.assertRaises(InvalidSelectorException):
-        #     self.driver.find_elements_by_class_name("progress active")
+        with self.assertRaises(InvalidSelectorException):
+            self.driver.find_elements_by_class_name("progress active")
 
     # # COMMENT OUT: While `Ticket` and `ember-power-select` are WIP
-    # def test_ticket(self):
-    #     ### CREATE
-    #     # Create Ticket Page Object
-    #     ticket_page = ModelPage(
-    #         driver = self.driver,
-    #         new_link = "t-add-new",
-    #         list_name = "t-ticket-request",
-    #         list_data = "t-grid-data"
-    #     )
-    #     ticket_page.find_list_data()
-    #     # Get to "ticket create view"
-    #     ticket_new_link = ticket_page.find_new_link()
-    #     ticket_new_link.click()
-    #     # Enter info and hit "save"
-
-    #     # will enter once get component in place
-    #     ticket_request = rand_chars()
-    #     ticket = InputHelper(ticket_request=ticket_request)
-    #     self._fill_in_using_class(ticket)
-    #     ticket_priority_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-priority-select ')]/div")
-    #     ticket_priority_input.click()
-    #     priority_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
-    #     priority_option.click()
-    #     ticket_status_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-status-select ')]/div")
-    #     ticket_status_input.click()
-    #     status_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
-    #     status_option.click()
-    #     ticket_location = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
-    #     ticket_location.click()
-    #     ticket_location_input = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/div/input")
-    #     ticket_location_input.send_keys("a")
-    #     self.wait_for_xhr_request_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]", debounce=True)
-    #     location_option = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]")
-    #     location_option.click()
-    #     ticket_assignee = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-assignee-select ')]/div")
-    #     ticket_assignee.click()
-    #     ticket_assignee_input = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/div/input")
-    #     ticket_assignee_input.send_keys("a")
-    #     self.wait_for_xhr_request_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]", debounce=True)
-    #     assignee_option = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]")
-    #     assignee_option.click()
-    #     ticket_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-category-select ')]/div")
-    #     ticket_category.click()
-    #     ticket_category_input = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/div/input")
-    #     ticket_category_input.send_keys("a")
-    #     self.wait_for_xhr_request_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]", debounce=True)
-    #     category_option = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]")
-    #     category_option.click()
-    #     ticket_category_two = self.driver.find_element_by_xpath("(//div[contains(concat(' ', @class, ' '), ' t-ticket-category-select ')]/div)[2]")
-    #     ticket_category_two.click()
-    #     ticket_category_two_input = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/div/input")
-    #     ticket_category_two_input.send_keys("a")
-    #     self.wait_for_xhr_request_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]", debounce=True)
-    #     category_two_option = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]")
-    #     category_two_option.click()
-    #     ticket_category_three = self.driver.find_element_by_xpath("(//div[contains(concat(' ', @class, ' '), ' t-ticket-category-select ')]/div)[3]")
-    #     ticket_category_three.click()
-    #     ticket_category_three_input = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/div/input")
-    #     ticket_category_three_input.send_keys("a")
-    #     self.wait_for_xhr_request_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]", debounce=True)
-    #     category_three_option = self.driver.find_element_by_xpath("//*[@id='ember-basic-dropdown-wormhole']/div/ul/li[1]")
-    #     category_three_option.click()
-    #     self.gen_elem_page.click_save_btn()
-    #     # Go to newly created ticket's Detail view
-    #     ticket_page.find_list_data()
-    #     self.driver.refresh()
-    #     ticket_list_view = ticket_page.find_list_name()
+    def test_ticket(self):
+        ### CREATE
+        # Create Ticket Page Object
+        ticket_page = ModelPage(
+            driver = self.driver,
+            new_link = "t-add-new",
+            list_name = "t-ticket-request",
+            list_data = "t-grid-data"
+        )
+        ticket_page.find_list_data()
+        # Get to "ticket create view"
+        ticket_new_link = ticket_page.find_new_link()
+        ticket_new_link.click()
+        # Enter info and hit "save"
+        ticket_request = rand_chars()
+        ticket_requester = rand_chars()
+        ticket = InputHelper(ticket_request=ticket_request, ticket_requester=ticket_requester)
+        self._fill_in_using_class(ticket)
+        ticket_priority_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-priority-select ')]/div")
+        ticket_priority_input.click()
+        priority_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
+        priority_option.click()
+        ticket_status_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-status-select ')]/div")
+        ticket_status_input.click()
+        status_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
+        status_option.click()
+        ticket_location = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-location-select ')]/div")
+        ticket_location.click()
+        ticket_location_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-search ')]/input")
+        ticket_location_input.send_keys("a")
+        self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
+        location_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
+        location_option.click()
+        ticket_assignee = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-assignee-select ')]/div")
+        ticket_assignee.click()
+        ticket_assignee_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-search ')]/input")
+        ticket_assignee_input.send_keys("a")
+        self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
+        assignee_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
+        assignee_option.click()
+        ticket_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-category-select ')]/div")
+        ticket_category.click()
+        ticket_category_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-search ')]/input")
+        ticket_category_input.send_keys("a")
+        self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
+        category_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
+        category_option.click()
+        # need to click on more but repair is not bringing back children
+        self.gen_elem_page.click_save_btn()
+        # Go to newly created ticket's Detail view
+        ticket_page.find_list_data()
+        self.driver.refresh()
+        ticket_list_view = ticket_page.find_list_name()
     #     new_ticket = ticket_page.click_name_in_list_pages(ticket_request, new_model=None)
     #     try:
     #         new_ticket.click()
