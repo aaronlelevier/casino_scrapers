@@ -99,6 +99,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'admin.locationlevel.label.childOrg':'Child Organization(s)',
                     'admin.locationlevel.label.general':'General',
                     'admin.locationlevel.label.name':'Name',
+                    'admin.locationlevel.new':'New Location Level',
                     'admin.locationlevel.one':'Location Level',
                     'admin.locationlevel.other':'Location Levels',
                     'admin.locationlevel.region':'Region',
