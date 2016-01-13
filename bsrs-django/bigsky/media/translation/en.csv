@@ -5,8 +5,10 @@ en,activity.tabs.all_updates,All Updates,All Updates,,"'activity.tabs.all_update
 en,activity.tabs.comments,Comments,Comments,,"'activity.tabs.comments':'Comments',",Comments,Comments
 en,activity.tabs.status_updates,Status Updates,Status Updates,,"'activity.tabs.status_updates':'Status Updates',",Status Updates,Status Updates
 en,activity.ticket.assignee,changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}},changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}},,"'activity.ticket.assignee':'changed the {{type}} from ${{from}} $to ${{to}} ${{timestamp}}',",changed the {{type_var_ from ${{from_var_ $to ${{to_var_ ${{timestamp_var_,changed the _type_var_ from $_from_var_ $to $_to_var_ $_timestamp_var_
-en,activity.ticket.attachment_add,uploaded ${{count}} files ${{timestamp}} ${{added}},uploaded ${{count}} files ${{timestamp}} ${{added}},,"'activity.ticket.attachment_add':'uploaded ${{count}} files ${{timestamp}} ${{added}}',",uploaded ${{count_var_ files ${{timestamp_var_ ${{added_var_,uploaded $_count_var_ files $_timestamp_var_ $_added_var_
-en,activity.ticket.attachment_remove,removed ${{count}} files ${{timestamp}} ${{removed}},removed ${{count}} files ${{timestamp}} ${{removed}},,"'activity.ticket.attachment_remove':'removed ${{count}} files ${{timestamp}} ${{removed}}',",removed ${{count_var_ files ${{timestamp_var_ ${{removed_var_,removed $_count_var_ files $_timestamp_var_ $_removed_var_
+en,activity.ticket.attachment_add.one,uploaded ${{count}} file ${{timestamp}} ${{added}},uploaded ${{count}} file ${{timestamp}} ${{added}},,"'activity.ticket.attachment_add.one':'uploaded ${{count}} file ${{timestamp}} ${{added}}',",uploaded ${{count_var_ file ${{timestamp_var_ ${{added_var_,uploaded $_count_var_ file $_timestamp_var_ $_added_var_
+en,activity.ticket.attachment_add.other,uploaded ${{count}} files ${{timestamp}} ${{added}},uploaded ${{count}} files ${{timestamp}} ${{added}},,"'activity.ticket.attachment_add.other':'uploaded ${{count}} files ${{timestamp}} ${{added}}',",uploaded ${{count_var_ files ${{timestamp_var_ ${{added_var_,uploaded $_count_var_ files $_timestamp_var_ $_added_var_
+en,activity.ticket.attachment_remove.one,removed ${{count}} file ${{timestamp}} ${{removed}},removed ${{count}} file ${{timestamp}} ${{removed}},,"'activity.ticket.attachment_remove.one':'removed ${{count}} file ${{timestamp}} ${{removed}}',",removed ${{count_var_ file ${{timestamp_var_ ${{removed_var_,removed $_count_var_ file $_timestamp_var_ $_removed_var_
+en,activity.ticket.attachment_remove.other,removed ${{count}} files ${{timestamp}} ${{removed}},removed ${{count}} files ${{timestamp}} ${{removed}},,"'activity.ticket.attachment_remove.other':'removed ${{count}} files ${{timestamp}} ${{removed}}',",removed ${{count_var_ files ${{timestamp_var_ ${{removed_var_,removed $_count_var_ files $_timestamp_var_ $_removed_var_
 en,activity.ticket.categories,changed the category from ${{from}} $to ${{to}} ${{timestamp}},changed the category from ${{from}} $to ${{to}} ${{timestamp}},,"'activity.ticket.categories':'changed the category from ${{from}} $to ${{to}} ${{timestamp}}',",changed the category from ${{from_var_ $to ${{to_var_ ${{timestamp_var_,changed the category from $_from_var_ $to $_to_var_ $_timestamp_var_
 en,activity.ticket.cc_add,added ${{added}} $to CC ${{timestamp}},added ${{added}} $to CC ${{timestamp}},,"'activity.ticket.cc_add':'added ${{added}} $to CC ${{timestamp}}',",added ${{added_var_ $to CC ${{timestamp_var_,added $_added_var_ $to CC $_timestamp_var_
 en,activity.ticket.cc_remove,removed ${{removed}} $from CC ${{timestamp}},removed ${{removed}} $from CC ${{timestamp}},,"'activity.ticket.cc_remove':'removed ${{removed}} $from CC ${{timestamp}}',",removed ${{removed_var_ $from CC ${{timestamp_var_,removed $_removed_var_ $from CC $_timestamp_var_
@@ -48,6 +50,7 @@ en,admin.category.labelCat.type,Type,Type,,"'admin.category.labelCat.type':'Type
 en,admin.category.name.loss_prevention,Loss Prevention,Loss Prevention,,"'admin.category.name.loss_prevention':'Loss Prevention',",Loss Prevention,Loss Prevention
 en,admin.category.name.maintenance,Maintenance,Maintenance,,"'admin.category.name.maintenance':'Maintenance',",Maintenance,Maintenance
 en,admin.category.name.repair,Repair,Repair,,"'admin.category.name.repair':'Repair',",Repair,Repair
+en,admin.category.new,New Category,New Category,,"'admin.category.new':'New Category',",New Category,New Category
 en,admin.category.one,Category,Category,,"'admin.category.one':'Category',",Category,Category
 en,admin.category.other,Categories,Categories,,"'admin.category.other':'Categories',",Categories,Categories
 en,admin.category.search,Search Categories,Search Categories,,"'admin.category.search':'Search Categories',",Search Categories,Search Categories
@@ -90,6 +93,7 @@ en,admin.locationlevel.fmu,Facility Management Region,Facility Management Region
 en,admin.locationlevel.label.childOrg,Child Organization(s),Child Organization(s),,"'admin.locationlevel.label.childOrg':'Child Organization(s)',",Child Organization(s),Child Organization(s)
 en,admin.locationlevel.label.general,General,General,,"'admin.locationlevel.label.general':'General',",General,General
 en,admin.locationlevel.label.name,Name,Name,,"'admin.locationlevel.label.name':'Name',",Name,Name
+en,admin.locationlevel.new,New Location Level,New Location Level,,"'admin.locationlevel.new':'New Location Level',",New Location Level,New Location Level
 en,admin.locationlevel.one,Location Level,Location Level,,"'admin.locationlevel.one':'Location Level',",Location Level,Location Level
 en,admin.locationlevel.other,Location Levels,Location Levels,,"'admin.locationlevel.other':'Location Levels',",Location Levels,Location Levels
 en,admin.locationlevel.region,Region,Region,,"'admin.locationlevel.region':'Region',",Region,Region
@@ -175,7 +179,9 @@ en,crud.save.error,Error saving {{model}}.,Error saving {{model}}.,,"'crud.save.
 en,crud.save.success,{{model}} saved successfully.,{{model}} saved successfully.,,"'crud.save.success':'{{model}} saved successfully.',",{{model_var_ saved successfully.,_model_var_ saved successfully.
 en,crud.titles.edit,Edit {{model}},Edit {{model}},,"'crud.titles.edit':'Edit {{model}}',",Edit {{model_var_,Edit _model_var_
 en,crud.titles.new,New {{model}},New {{model}},,"'crud.titles.new':'New {{model}}',",New {{model_var_,New _model_var_
+en,grid.per_page,{{size}} per page,{{size}} per page,,"'grid.per_page':'{{size}} per page',",{{size_var_ per page,_size_var_ per page
 en,grid.reset_all_options,Reset All Options,Reset All Options,,"'grid.reset_all_options':'Reset All Options',",Reset All Options,Reset All Options
+en,grid.save_filter,Save Filter,Save Filter,,"'grid.save_filter':'Save Filter',",Save Filter,Save Filter
 en,menu.home,Home,Home,,"'menu.home':'Home',",Home,Home
 en,modules.assets.titleShort,Assets,Assets,,"'modules.assets.titleShort':'Assets',",Assets,Assets
 en,modules.invoices.titleShort,Invoices,Invoices,,"'modules.invoices.titleShort':'Invoices',",Invoices,Invoices

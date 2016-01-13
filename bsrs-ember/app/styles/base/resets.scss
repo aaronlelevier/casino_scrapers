@@ -72,12 +72,12 @@ input[type="text"]:disabled {
 .ember-power-select-multiple{
 	.ember-power-select-trigger{
 		line-height: 0;
-		padding: 1px 36px 3px 4px !important;
+		padding: 1px 36px 4px 4px !important;
 		.ember-power-select-multiple-option{
 			border-radius: $borderRadius;
 			border: $borderStyle;
 			background: $light;
-			margin: 4px 0 0;
+			margin: 4px 4px 0 0;
 			padding: 0 3px 0 5px;
 		    line-height: 20px;
 			.ember-power-select-multiple-remove-btn:hover,
