@@ -19,7 +19,7 @@ var ThirdPartyDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(model, id) {
-        let store = this.get('store');
+        const store = this.get('store');
         let existing_third_party = store.find('third-party', id);
         if (!existing_third_party.get('id') || existing_third_party.get('isNotDirtyOrRelatedNotDirty')) {
             extract_status(model, store);
@@ -28,7 +28,7 @@ var ThirdPartyDeserializer = Ember.Object.extend({
         }
     },
     deserialize_list(model) {
-        let store = this.get('store');
+        const store = this.get('store');
         model.results.forEach((model) => {
             let existing_third_party = store.find('third-party', model.id);
             if (!existing_third_party.get('id') || existing_third_party.get('isNotDirtyOrRelatedNotDirty')) {

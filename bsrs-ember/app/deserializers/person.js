@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/uuid';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
 var extract_status = (model, store) => {
@@ -83,7 +82,7 @@ var extract_role = function(model, store) {
     return [role_pk, location_level_fk];
 };
 
-var extract_person_location = function(model, store, uuid, location_level_fk, location_deserializer) {
+var extract_person_location = function(model, store, location_level_fk, location_deserializer) {
     if (typeof model.locations !== 'undefined') {
         let server_locations_sum = [];
         let prevented_duplicate_m2m = [];
@@ -94,7 +93,7 @@ var extract_person_location = function(model, store, uuid, location_level_fk, lo
                 return m2m.get('location_pk') === location_json.id && m2m.get('person_pk') === model.id;
             });
             if(person_locations.length === 0) {
-                let pk = uuid.v4();
+                const pk = Ember.uuid();
                 server_locations_sum.push(pk);
                 location_deserializer.deserialize(location_json, location_json.id);
                 store.push('person-location', {id: pk, person_pk: model.id, location_pk: location_json.id});
@@ -126,7 +125,6 @@ var extract_locale = function(model, store) {
 };
 
 var PersonDeserializer = Ember.Object.extend({
-    uuid: inject('uuid'),
     LocationDeserializer: injectDeserializer('location'),
     deserialize(response, options) {
         let location_deserializer = this.get('LocationDeserializer');
@@ -137,7 +135,6 @@ var PersonDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(model, id, location_deserializer) {
-        let uuid = this.get('uuid');
         let store = this.get('store');
         let person_check = store.find('person', id);
         let location_level_fk;
@@ -146,7 +143,7 @@ var PersonDeserializer = Ember.Object.extend({
             model.phone_number_fks = extract_phone_numbers(model, store);
             model.address_fks = extract_addresses(model, store);
             [model.role_fk, location_level_fk] = extract_role(model, store);
-            extract_person_location(model, store, uuid, location_level_fk, location_deserializer);
+            extract_person_location(model, store, location_level_fk, location_deserializer);
             model.locale_fk = extract_locale(model, store);
             extract_status(model, store);
             let person = store.push('person', model);
