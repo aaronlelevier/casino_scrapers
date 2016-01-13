@@ -319,7 +319,7 @@ test('you can add and remove child from category', (assert) => {
     });
 });
 
-test('adding a new location should allow for another new location to be created after the first is persisted', (assert) => {
+test('adding a new category should allow for another new category to be created after the first is persisted', (assert) => {
     clearxhr(children_xhr);
     let category_count;
     random.uuid = original_uuid;

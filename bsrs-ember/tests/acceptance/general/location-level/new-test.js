@@ -156,7 +156,7 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     });
 });
 
-test('adding a new location should allow for another new location to be created after the first is persisted', (assert) => {
+test('adding a new location-level should allow for another new location-level to be created after the first is persisted', (assert) => {
     let location_level_count;
     random.uuid = original_uuid;
     payload.id = 'abc123';
