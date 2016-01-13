@@ -123,7 +123,8 @@ test('when editing the category name to invalid, it checks for validation', (ass
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), DETAIL_URL);
-        assert.equal(find('.t-name-validation-error').text().trim(), 'invalid name');
+        assert.equal(find('.t-name-validation-error').text().trim(), 'Invalid Name');
+        assert.ok(find('.t-name-validation-error').hasClass('validation'));
     });
     page.nameFill(CD.nameTwo);
     page.descriptionFill(CD.descriptionRepair);
@@ -409,9 +410,10 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
     });
 });
 
-test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
+test('amk when user changes an attribute and clicks cancel we prompt them with a modal and then roll back the model', (assert) => {
     visit(DETAIL_URL);
     page.nameFill(CD.nameTwo);
+    page.subLabelFill(CD.subCatLabelOne);
     generalPage.cancel();
     andThen(() => {
         waitFor(() => {
@@ -425,6 +427,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
             assert.equal(currentURL(), CATEGORIES_URL);
             let category = store.find('category', CD.idOne);
             assert.equal(category.get('name'), CD.nameOne);
+            assert.equal(category.get('subcategory_label'), CD.subCatLabelOne);
         });
     });
 });
