@@ -74,7 +74,6 @@ def create_roles():
 PERSON_BASE_ID = "30f530c4-ce6c-4724-9cfd-37a16e787"
 
 
-
 def create_single_person(name=None, role=None, location=None):
     args_required_together = [role, location]
     if not all(args_required_together) and any(args_required_together):
@@ -106,14 +105,6 @@ def create_single_person(name=None, role=None, location=None):
     return person
 
 
-def update_login_person(person, new_password=None):
-    person.is_superuser = True
-    person.is_staff = True
-    if new_password:
-        person.set_password(new_password)
-    person.save()
-
-
 def create_person(username=None, _many=1):
     '''
     Create all ``Person`` objects using this function.  ( Not mommy.make(<object>) )
@@ -136,6 +127,65 @@ def create_person(username=None, _many=1):
         user = create_single_person(username)
     
     return user
+
+
+def update_login_person(person, new_password=None):
+    """
+    Will allow 'person' to login to Django admin.
+    """
+    person.is_superuser = True
+    person.is_staff = True
+    if new_password:
+        person.set_password(new_password)
+    person.save()
+
+
+def update_admin(person):
+    """
+    Update the Person with all Locations where:
+    ``location.location_level == person.role.location_level``
+    And all Parent Categories, so they can view all Tickets.
+    """
+    add_all_locations(person)
+    add_all_parent_categores(person)
+
+
+def update_admin_repair(person):
+    """
+    Update person with a single Category 'repair' and all Locations where:
+    ``location.location_level == person.role.location_level``
+    """
+    add_all_locations(person)
+
+    try:
+        category = Category.objects.get(name='repair')
+    except Category.DoesNotExist:
+        category = create_single_category(name='repair')
+    finally:
+        person.role.categories.add(category)
+
+
+def update_admin_location(person):
+    """
+    Update Person with all Parent Categories, but only a single Location.
+    """
+    add_all_parent_categores(person)
+
+    for location in person.locations.all():
+        person.locations.remove(location)
+
+    location = Location.objects.filter(location_level=person.role.location_level)[0]
+    person.locations.add(location)
+
+
+def add_all_locations(person):
+    for location in Location.objects.filter(location_level=person.role.location_level):
+        person.locations.add(location)
+
+
+def add_all_parent_categores(person):
+    for category in Category.objects.filter(parent__isnull=True):
+        person.role.categories.add(category)
 
 
 """
@@ -166,6 +216,12 @@ def create_all_people():
         # create
         create_single_person(name=name, role=role, location=location)
 
-    # Person used to Login (so needs a 'password' set here)
-    aaron = Person.objects.get(username="aaron")
-    update_login_person(aaron, new_password='tango')
+    # Update Persons to login as
+    person = Person.objects.get(username='admin')
+    update_admin(person)
+
+    person = Person.objects.get(username='admin-repair')
+    update_admin_repair(person)
+
+    person = Person.objects.get(username='admin-location')
+    update_admin_location(person)

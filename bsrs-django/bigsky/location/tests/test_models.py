@@ -9,9 +9,9 @@ from location.models import LocationLevel, LocationStatus, LocationType, Locatio
 from person.tests.factory import create_single_person
 
 
-class SelfRefrencingManagerTests(TestCase):
+class SelfReferencingManagerTests(TestCase):
     '''
-    ``LocationLevel`` Model used for testing of: ``SelfRefrencingManager``
+    ``LocationLevel`` Model used for testing of: ``SelfReferencingManager``
     '''
 
     def setUp(self):

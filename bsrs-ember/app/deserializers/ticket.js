@@ -1,5 +1,4 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/uuid';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
 var extract_attachments = function(model, store) {
@@ -9,7 +8,7 @@ var extract_attachments = function(model, store) {
     return model.attachments;
 };
 
-var extract_categories = function(model, store, uuid, category_deserializer) {
+var extract_categories = function(model, store, category_deserializer) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
     let all_ticket_categories = store.find('ticket-category');
@@ -18,7 +17,7 @@ var extract_categories = function(model, store, uuid, category_deserializer) {
             return m2m.get('category_pk') === category.id && m2m.get('ticket_pk') === model.id;
         });
         if(ticket_categories.length === 0) {
-            let pk = Ember.uuid();
+            const pk = Ember.uuid();
             server_sum.push(pk);
             store.push('ticket-category', {id: pk, ticket_pk: model.id, category_pk: category.id});  
             category_deserializer.deserialize(category, category.id);
@@ -45,7 +44,7 @@ var extract_assignee = function(assignee_json, store, person_deserializer, ticke
     // ticket_model.set('assignee_fk', assignee_id);
 };
 
-var extract_cc = function(model, store, uuid, person_deserializer) {
+var extract_cc = function(model, store, person_deserializer) {
     let server_sum = [];
     let prevented_duplicate_m2m = [];
     let all_ticket_people = store.find('ticket-person');
@@ -56,7 +55,7 @@ var extract_cc = function(model, store, uuid, person_deserializer) {
         });
         //push new one in
         if(ticket_people.length === 0) {
-            let pk = Ember.uuid();
+            const pk = Ember.uuid();
             server_sum.push(pk);
             store.push('ticket-person', {id: pk, ticket_pk: model.id, person_pk: cc.id});  
             person_deserializer.deserialize(cc, cc.id);
@@ -143,7 +142,6 @@ var extract_ticket_status = function(model, store) {
 };
 
 var TicketDeserializer = Ember.Object.extend({
-    uuid: inject('uuid'),
     PersonDeserializer: injectDeserializer('person'),
     CategoryDeserializer: injectDeserializer('category'),
     LocationDeserializer: injectDeserializer('location'),
@@ -158,15 +156,14 @@ var TicketDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(response, id, person_deserializer, category_deserializer, location_deserializer) {
-        let uuid = this.get('uuid');
         let store = this.get('store');
         let existing_ticket = store.find('ticket', id);
         if (!existing_ticket.get('id') || existing_ticket.get('isNotDirtyOrRelatedNotDirty')) {
             response.status_fk = extract_ticket_status(response, store);
             response.priority_fk = extract_ticket_priority(response, store);
             response.location_fk = extract_ticket_location(response, store, location_deserializer);
-            response.ticket_people_fks = extract_cc(response, store, uuid, person_deserializer);
-            response.ticket_categories_fks = extract_categories(response, store, uuid, category_deserializer);
+            response.ticket_people_fks = extract_cc(response, store, person_deserializer);
+            response.ticket_categories_fks = extract_categories(response, store, category_deserializer);
             let assignee_json = response.assignee;
             delete response.assignee;
             response.ticket_attachments_fks = extract_attachments(response, store);
@@ -180,7 +177,6 @@ var TicketDeserializer = Ember.Object.extend({
         }
     },
     deserialize_list(response, person_deserializer, category_deserializer, location_deserializer) {
-        let uuid = this.get('uuid');
         let store = this.get('store');
         response.results.forEach((model) => {
             let existing_ticket = store.find('ticket', model.id);
@@ -188,7 +184,7 @@ var TicketDeserializer = Ember.Object.extend({
                 model.status_fk = extract_ticket_status(model, store);
                 model.priority_fk = extract_ticket_priority(model, store);
                 model.location_fk = extract_ticket_location(model, store, location_deserializer);
-                model.ticket_categories_fks = extract_categories(model, store, uuid, category_deserializer);
+                model.ticket_categories_fks = extract_categories(model, store, category_deserializer);
                 let assignee_json = model.assignee;
                 delete model.assignee;
                 let ticket = store.push('ticket', model);

@@ -38,7 +38,7 @@ input[type="text"]:disabled {
 
 	.ember-power-select-trigger{
 		min-height: 34px;
-		min-width: 160px;
+		min-width: 120px;
 		background-image: none;
 		line-height: 34px;
 		padding: 0 36px 0 12px !important;
@@ -49,37 +49,6 @@ input[type="text"]:disabled {
 			right: 10px;
 		    border-width: 5px 4px 0 4px;
 		    border-color: $darkGray transparent transparent transparent;
-		}
-	}
-	&.multiple{
-		.ember-power-select-trigger{
-			line-height: 0;
-    		padding: 1px 36px 3px 4px !important;
-			.ember-power-select-multiple-option{
-				border-radius: $borderRadius;
-				border: $borderStyle;
-				background: $light;
-				margin: 4px 0 0;
-				padding: 0 3px 0 5px;
-				.ember-power-select-multiple-remove-btn:hover,
-				.ember-power-select-multiple-remove-btn:not(:hover){
-					opacity: 1;
-					color: $medGray;
-					border-radius: $borderRadius;
-					background: $gray;
-				    float: right;
-				    height: 15px;
-				    width: 15px;
-				    line-height: 15px;
-				    text-align: center;
-				    margin: 3px 0 0 3px;
-				}
-				.ember-power-select-multiple-remove-btn:hover{
-					background: $orange;
-					color: $white;
-				}
-
-			}
 		}
 	}
 	&.ember-basic-dropdown--opened{
@@ -97,6 +66,38 @@ input[type="text"]:disabled {
 		    display: block;
 		    margin: 4px 0 0;
 			padding: 0 1px;
+		}
+	}
+}
+.ember-power-select-multiple{
+	.ember-power-select-trigger{
+		line-height: 0;
+		padding: 1px 36px 4px 4px !important;
+		.ember-power-select-multiple-option{
+			border-radius: $borderRadius;
+			border: $borderStyle;
+			background: $light;
+			margin: 4px 4px 0 0;
+			padding: 0 3px 0 5px;
+		    line-height: 20px;
+			.ember-power-select-multiple-remove-btn:hover,
+			.ember-power-select-multiple-remove-btn:not(:hover){
+				opacity: 1;
+				color: $medGray;
+				border-radius: $borderRadius;
+				background: $gray;
+				float: right;
+				height: 15px;
+				width: 15px;
+				line-height: 15px;
+				text-align: center;
+				margin: 3px 0 0 3px;
+			}
+			.ember-power-select-multiple-remove-btn:hover{
+				background: $orange;
+				color: $white;
+			}
+
 		}
 	}
 }

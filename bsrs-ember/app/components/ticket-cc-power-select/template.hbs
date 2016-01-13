@@ -1,5 +1,4 @@
-{{#power-select
-  multiple=true
+{{#power-select-multiple
   selected=ticket.cc
   search=(action "update_filter")
   onchange=(action "change_cc")
@@ -8,4 +7,4 @@
   as |person|
 }}
   {{person.fullname}}
-{{/power-select}}
+{{/power-select-multiple}}

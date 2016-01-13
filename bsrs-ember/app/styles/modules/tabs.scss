@@ -16,7 +16,7 @@ nav.tabs{
             border: $borderStyle;
             padding: 0 10px;
             float: left;
-            font-size: 1.2em;
+            font-size: 1.2rem;
             width: $tabWidth;
             margin: 0 3px 0 0;
             border-radius: $borderRadiusTop;
@@ -63,7 +63,7 @@ nav.tabs{
         }//li
 
         li.new{
-            width: 40px;
+            width: 36px;
             text-align: center;
             color: $darkGray;
             &:hover{

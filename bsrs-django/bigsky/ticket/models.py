@@ -19,7 +19,7 @@ TICKET_STATUSES = [
     'ticket.status.deferred',
     'ticket.status.denied',
     'ticket.status.problem_solved',
-    'ticket.status.completed',
+    'ticket.status.complete',
     'ticket.status.closed',
     'ticket.status.unsatisfactory_completion'
 ]

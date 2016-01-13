@@ -28,7 +28,7 @@ class Country(BaseNameModel):
 
 ### SELF REFERENCING BASE
 
-class SelfRefrencingQuerySet(models.query.QuerySet):
+class SelfReferencingQuerySet(models.query.QuerySet):
     "Query Parent / Child relationships for all SelfRefrencing Objects."
 
     def get_all_children(self, parent, all_children=None):
@@ -103,10 +103,10 @@ class SelfRefrencingQuerySet(models.query.QuerySet):
         return master_set
 
 
-class SelfRefrencingManager(BaseManager):
+class SelfReferencingManager(BaseManager):
     
     def get_queryset(self):
-        return SelfRefrencingQuerySet(self.model, self._db).filter(deleted__isnull=True)
+        return SelfReferencingQuerySet(self.model, self._db).filter(deleted__isnull=True)
         
     def get_all_children(self, parent, all_children=None):
         return self.get_queryset().get_all_children(parent, all_children)
@@ -129,7 +129,7 @@ class SelfRefrencingBaseModel(models.Model):
         symmetrical=False, related_name='parents')
 
     # Manager
-    objects = SelfRefrencingManager()
+    objects = SelfReferencingManager()
 
     class Meta:
         abstract = True
@@ -204,7 +204,7 @@ class LocationType(BaseNameModel):
 
 ### LOCATION
 
-class LocationQuerySet(SelfRefrencingQuerySet):
+class LocationQuerySet(SelfReferencingQuerySet):
     ''' '''
 
     def get_level_children(self, location, level_id):
@@ -252,7 +252,7 @@ class LocationQuerySet(SelfRefrencingQuerySet):
         )
 
 
-class LocationManager(SelfRefrencingManager):
+class LocationManager(SelfReferencingManager):
     
     def get_queryset(self):
         return LocationQuerySet(self.model, self._db).filter(deleted__isnull=True)

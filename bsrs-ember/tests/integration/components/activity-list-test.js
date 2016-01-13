@@ -75,7 +75,7 @@ test('activity list will dynamically generate a mix of activity types', function
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(4)`).text().trim(), `${PD.fullname} changed the priority from ${trans.t(TD.priorityTwo)} to ${trans.t(TD.priorityOne)} 2 months ago`);
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(5)`).text().trim(), `${PD.fullname} created this ticket 3 months ago`);
     assert.equal(this.$(`${ACTIVITY_ITEMS}:eq(6)`).text().trim(), `${PD.fullname} commented 4 months ago ${TD.commentOne}`);
-    assert.equal(trim(this.$(`${ACTIVITY_ITEMS}:eq(7)`).text()), `${PD.fullname} uploaded 1 files 6 months ago ${GD.nameTicketAttachmentOne}`);
+    assert.equal(trim(this.$(`${ACTIVITY_ITEMS}:eq(7)`).text()), `${PD.fullname} uploaded 1 file 6 months ago ${GD.nameTicketAttachmentOne}`);
     assert.equal(this.$(`${ATTACHMENT_FILE}:eq(0)`).attr('href'), `/media/${TAD.fileAttachmentAddOne}`);
 
     let d = new Date();

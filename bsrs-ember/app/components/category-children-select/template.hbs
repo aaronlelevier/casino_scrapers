@@ -1,5 +1,4 @@
-{{#power-select
-  multiple=true
+{{#power-select-multiple
   selected=categories_selected
   search=(action "update_filter")
   onchange=(action "change_children")
@@ -7,4 +6,4 @@
   as |category|
 }}
   {{category.name}}
-{{/power-select}}
+{{/power-select-multiple}}

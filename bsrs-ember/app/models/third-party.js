@@ -2,10 +2,11 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
 import StatusMixin from 'bsrs-ember/mixins/model/status';
+import NewMixin from 'bsrs-ember/mixins/model/new';
 
 var run = Ember.run;
 
-var ThirdPartyModel = Model.extend(StatusMixin, {
+var ThirdPartyModel = Model.extend(NewMixin, StatusMixin, {
     type: 'third-party',
     store: inject('main'),
     name: attr(),

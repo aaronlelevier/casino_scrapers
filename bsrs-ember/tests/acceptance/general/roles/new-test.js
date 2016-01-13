@@ -354,3 +354,32 @@ test('clicking and typing into power select for categories will not filter if sp
         assert.equal(currentURL(), ROLE_URL);
     });
 });
+
+test('adding a new role should allow for another new role to be created after the first is persisted', (assert) => {
+    let role_count;
+    random.uuid = original_uuid;
+    payload.id = 'abc123';
+    patchRandomAsync(0);
+    visit(ROLE_URL);
+    click('.t-add-new');
+    fillIn('.t-role-name', RD.nameOne);
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionOne();
+    let category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=2z&page_size=25';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(CATEGORY_SEARCH, '2z');
+    page.categoryClickOptionTwo();
+    ajax(url, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), ROLE_URL);
+        role_count = store.find('role').get('length');
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), NEW_URL);
+        assert.equal(store.find('role').get('length'), role_count + 1);
+        assert.equal(find('.t-role-name').val(), '');
+    });
+});
