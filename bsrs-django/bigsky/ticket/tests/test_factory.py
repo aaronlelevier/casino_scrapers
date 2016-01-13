@@ -205,7 +205,7 @@ class CreateStatusTests(TestCase):
         self.assertEqual(TicketStatus.objects.all()[3].name, 'ticket.status.deferred')
         self.assertEqual(TicketStatus.objects.all()[4].name, 'ticket.status.denied')
         self.assertEqual(TicketStatus.objects.all()[5].name, 'ticket.status.problem_solved')
-        self.assertEqual(TicketStatus.objects.all()[6].name, 'ticket.status.completed')
+        self.assertEqual(TicketStatus.objects.all()[6].name, 'ticket.status.complete')
         self.assertEqual(TicketStatus.objects.all()[7].name, 'ticket.status.closed')
         self.assertEqual(TicketStatus.objects.last().name, 'ticket.status.unsatisfactory_completion')
 
