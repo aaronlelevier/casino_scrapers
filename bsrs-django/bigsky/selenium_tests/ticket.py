@@ -182,10 +182,21 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         assignee_option.click()
         ticket_category = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-ticket-category-select ')]/div")
         ticket_category.click()
-        ticket_category_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-search ')]/input")
+        # Select 3 Categories for this Ticket
+        # one
+        ticket_category_input = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-ticket-category-select-trigger')])[last()]")
         ticket_category_input.send_keys("a")
-        self.wait_for_xhr_request_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]", debounce=True)
-        category_option = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' ember-power-select-options ')]/li[1]")
+        category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        category_option.click()
+        # two
+        ticket_category_input = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-ticket-category-select-trigger')])[last()]")
+        ticket_category_input.click()
+        category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
+        category_option.click()
+        # three
+        ticket_category_input = self.wait_for_xhr_request_xpath("(//*[contains(@class, 't-ticket-category-select-trigger')])[last()]")
+        ticket_category_input.click()
+        category_option = self.wait_for_xhr_request_xpath("//*[contains(@class, 'ember-power-select-options')]/li[1]")
         category_option.click()
         # need to click on more but repair is not bringing back children
         self.gen_elem_page.click_save_btn()
