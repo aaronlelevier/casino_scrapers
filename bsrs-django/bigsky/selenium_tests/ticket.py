@@ -125,19 +125,19 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
             EC.presence_of_element_located((By.CLASS_NAME, "modal-title"))
         )
 
-        # click "rollback button"
-        rollback_btn = self.wait_for_xhr_request("t-modal-rollback-btn", debounce=True)
-        rollback_btn.click()
+        # # click "rollback button"
+        # rollback_btn = self.wait_for_xhr_request("t-modal-rollback-btn", debounce=True)
+        # rollback_btn.click()
 
-        # revisit page
-        tickets = ticket_page.find_list_data()
-        tickets[0].click()
+        # # revisit page
+        # tickets = ticket_page.find_list_data()
+        # tickets[0].click()
 
-        # no more attachments on page
-        self.driver.refresh()
+        # # no more attachments on page
+        # self.driver.refresh()
 
-        with self.assertRaises(InvalidSelectorException):
-            self.driver.find_elements_by_class_name("progress active")
+        # with self.assertRaises(InvalidSelectorException):
+        #     self.driver.find_elements_by_class_name("progress active")
 
     # COMMENT OUT: While `Ticket` and `ember-power-select` are WIP
     def test_ticket(self):
