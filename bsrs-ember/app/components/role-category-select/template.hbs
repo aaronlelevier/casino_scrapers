@@ -1,14 +1,10 @@
 {{#power-select-multiple
-  multiple=true
   selected=categories_selected
   search=(action "update_filter")
   onchange=(action "change_category")
-  noMatchesMessage="No Matches"
   class="t-role-category-select"
-  searchPlaceholder="Type a category"
   searchField="name"
   as |category|
 }}
   {{category.name}}
 {{/power-select-multiple}}
-

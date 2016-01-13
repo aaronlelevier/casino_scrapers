@@ -1,9 +1,7 @@
 {{#power-select-multiple
-  multiple=true
   selected=person_locations_selected
   onchange=(action "change_location")
   class="t-person-locations-select"
-  noMatchesMessage="No Matches"
   search=(action "update_filter")
   searchField="name"
   as |location|
