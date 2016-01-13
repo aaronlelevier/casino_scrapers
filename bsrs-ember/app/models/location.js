@@ -57,6 +57,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         if(!status && status_fk) {
             return true;
         }
+        return false;
     }),
     statusIsNotDirty: Ember.computed.not('statusIsDirty'),
     change_status(new_status_id) {

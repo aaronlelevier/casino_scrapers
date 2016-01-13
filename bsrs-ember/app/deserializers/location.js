@@ -95,6 +95,7 @@ var LocationDeserializer = Ember.Object.extend({
     deserialize_single(response, id, location_level_deserializer) {
         let store = this.get('store');
         let existing_location = store.find('location', id);
+        // TODO: examine this 'if' stmt
         if (!existing_location.get('id') || existing_location.get('isNotDirtyOrRelatedNotDirty')) {
             response.email_fks = extract_emails(response, store);
             response.phone_number_fks = extract_phone_numbers(response, store);

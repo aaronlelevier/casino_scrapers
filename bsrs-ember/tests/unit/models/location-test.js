@@ -899,3 +899,14 @@ test('when email is removed after render, the location model is dirty', (assert)
     assert.ok(location.get('isNotDirty'));
     assert.ok(location.get('isDirtyOrRelatedDirty'));
 });
+
+test('locationLevelIsDirty - when the related location_level and location_level_fk are the same', (assert) => {
+    let location_level = store.push('location-level', {id: LLD.idOne, locations: [LD.idOne]});
+    let location = store.push('location', {id: LD.idOne, location_level_fk: LLD.idOne, location_level: location_level});
+    assert.equal(location.get('locationLevelIsDirty'), false);
+});
+
+test('when status is undefined, return false - this test is to confirm statusIsDirty for Location', (assert) => {
+    let location = store.push('location', {id: LD.idOne, email_fks: [ED.idOne]});
+    assert.equal(location.get('statusIsDirty'), false)
+});

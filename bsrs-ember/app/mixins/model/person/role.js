@@ -47,8 +47,11 @@ var RoleMixin = Ember.Mixin.create({
             });
             //reset removed person-locations as a result of the new role set and update person_location_fks so locationIsNotDirty
             const all_person_locations = store.find('person-location');
-            all_person_locations.forEach((person_location) => {
-                const location = store.find('location', person_location.get('location_pk')); 
+            const matched_person_locations = all_person_locations.filter(function(join_model){
+                return join_model.get('person_pk') === person_id;
+            });
+            matched_person_locations.forEach((person_location) => {
+                const location = store.find('location', person_location.get('location_pk'));
                 if (new_role.get('location_level_fk') === location.get('location_level').get('id')) {
                     store.push('person-location', {id: person_location.get('id'), removed: undefined});
                     person_location_fks.pushObject(person_location.get('id'));

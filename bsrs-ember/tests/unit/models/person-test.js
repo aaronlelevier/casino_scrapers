@@ -21,7 +21,7 @@ var store, uuid, person, role, run = Ember.run;
 
 module('unit: person test', {
     beforeEach() {
-        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'model:person-location', 'service:currency','service:person-current','service:translations-fetcher','service:i18n', 'model:uuid', 'model:status', 'model:email']);
+        store = module_registry(this.container, this.registry, ['model:person', 'model:role', 'model:currency', 'model:phonenumber', 'model:address', 'model:location', 'model:location-level', 'model:person-location', 'service:currency','service:person-current','service:translations-fetcher','service:i18n', 'model:uuid', 'model:status', 'model:email']);
         run(function() {
             person = store.push('person', {id: PD.idOne, first_name: PD.first_name, last_name: PD.last_name, role_fk: RD.idOne, status_fk: SD.activeId});
             role = store.push('role', {id: RD.idOne, name: RD.nameOne, people: [PD.idOne]});
@@ -1368,4 +1368,19 @@ test('cleanup addresses works as expected on add and rollback', (assert) => {
     person.rollbackAddresses();
     assert.equal(person.get('addresses').get('length'), 1);
     assert.equal(person.get('addresses_all').get('length'), 1);
+});
+
+test('person-location join models are correctly filtered on for the current User when calling change_role and updating a Users Locations', (assert) => {
+    store.push('location-level', {id: LLD.idOne, roles: [RD.idOne, RD.idTwo], locations: [LD.idOne]});
+    store.push('location-level', {id: LLD.idTwo, roles: [RD.idOne, RD.idTwo], locations: []});
+    let old_role = store.push('role', {id: RD.idOne, people: [PD.idOne], location_level_fk: LLD.idTwo});
+    let new_role = store.push('role', {id: RD.idTwo, people: [], location_level_fk: LLD.idOne});
+    let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+    let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.unusedId, location_pk: LD.idOne});
+    person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
+    let location = store.push('location', {id: LD.idOne, name: LD.storeName, person_location_fks: [PERSON_LD.idOne], location_level_fk: LLD.idOne});
+    assert.equal(person.get('locations').get('length'), 1);
+    person.change_role(new_role);
+    assert.equal(person.get('locations').get('length'), 1);
+    assert.equal(person.get('locationsIsDirty'), false);
 });

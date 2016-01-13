@@ -107,6 +107,18 @@ var ApplicationRoute = Ember.Route.extend({
         config.i18n.currentLocale = current_locale.get('locale');
 
         store.push('person-current', person_current);
+
+        var person_location_pks = [];
+        person_current.all_locations_and_children.forEach(function(location) {
+            const person_location_pk = Ember.uuid();
+            store.push('person-location', {id: person_location_pk, person_pk: person_current.id, location_pk: location.id});
+            // LocationLevel - setup relationship
+            let location_level = store.find('location-level', location.location_level);
+            store.push('location-level', {id: location_level.get('id'), locations: [location.id]});
+            // Location
+            store.push('location', {id: location.id, name: location.name, location_level: location_level, person_location_fks: [person_location_pk]});
+            person_location_pks.push(person_location_pk);
+        });
         store.push('person', {
             id: person_current.id,
             first_name: person_current.first_name,
@@ -114,9 +126,9 @@ var ApplicationRoute = Ember.Route.extend({
             username: person_current.username,
             title: person_current.title,
             role_fk: person_current.role,
-            locale: current_locale.get('locale')
+            locale: current_locale.get('locale'),
+            person_location_fks: person_location_pks
         });
-
         // Set the current user's time zone
         // TODO: use moment.tz.guess() when it becomes available - https://github.com/moment/moment-timezone/pull/220
         // TODO: allow timezone to be overridden at the system/role/user level

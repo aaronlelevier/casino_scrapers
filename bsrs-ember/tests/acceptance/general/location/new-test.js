@@ -56,7 +56,7 @@ test('visiting /location/new', (assert) => {
     click('.t-add-new');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_NEW_URL);
-        assert.equal(store.find('location').get('length'), 1);
+        assert.equal(store.find('location').get('length'), 2);
         const location = store.find('location', UUID.value);
         assert.ok(location.get('new'));
         assert.notOk(location.get('name'));
@@ -74,7 +74,7 @@ test('visiting /location/new', (assert) => {
     generalPage.save();
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
-        assert.equal(store.find('location').get('length'), 1);
+        assert.equal(store.find('location').get('length'), 2);
         let location = store.find('location', UUID.value);
         assert.equal(location.get('new'), undefined);
         assert.equal(location.get('name'), LD.storeName);
@@ -150,7 +150,7 @@ test('when user clicks cancel we prompt them with a modal and they cancel to kee
     });
 });
 
-test('aaron when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
+test('when user changes an attribute and clicks cancel we prompt them with a modal and then roll back model to remove from store', (assert) => {
     visit(LOCATION_NEW_URL);
     fillIn('.t-location-name', LD.storeName);
     generalPage.cancel();
@@ -158,17 +158,17 @@ test('aaron when user changes an attribute and clicks cancel we prompt them with
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_NEW_URL);
             assert.equal(find('.t-modal').is(':visible'), true);
-            let location = store.find('location', {id: UUID.value});
-            assert.equal(location.get('length'), 1);
+            let locations = store.find('location');
+            assert.equal(locations.get('length'), 2);
         });
     });
     click('.t-modal-footer .t-modal-rollback-btn');
     andThen(() => {
         waitFor(() => {
             assert.equal(currentURL(), LOCATION_URL);
-            let location = store.find('location', {id: UUID.value});
-            assert.equal(location.get('length'), 0);
-            assert.equal(find('tr.t-grid-data').length, 0);
+            let locations = store.find('location');
+            assert.equal(locations.get('length'), 1);
+            assert.equal(find('tr.t-grid-data').length, 1);
         });
     });
 });
@@ -177,6 +177,6 @@ test('when user enters new form and doesnt enter data, the record is correctly r
     visit(LOCATION_NEW_URL);
     generalPage.cancel();
     andThen(() => {
-        assert.equal(store.find('location').get('length'), 0);
+        assert.equal(store.find('location').get('length'), 1);
     });
 });
