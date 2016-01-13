@@ -20,6 +20,14 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.saveRelated();
         });   
     },
+    findModelsForGrid(locations) {
+        let filterFunc = function(ticket) {
+            var location_id = ticket.get('location.id');
+            var location_ids = locations.mapBy('id');
+            return Ember.$.inArray(location_id, location_ids) > -1;
+        };
+        return this.get('store').find('ticket', filterFunc);
+    },
     find() {
         PromiseMixin.xhr(TICKET_URL, 'GET').then((response) => {
             this.get('TicketDeserializer').deserialize(response);
