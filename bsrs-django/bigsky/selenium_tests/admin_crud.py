@@ -65,27 +65,6 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         post_title = self.wait_for_xhr_request_xpath("//*/div/h1")
         assert init_title == post_title
 
-    def test_keypress__backspace(self):
-        # Go to Location Area
-        self.nav_page.find_location_link().click()
-        # Create Location Page Object
-        location_page = ModelPage(
-            driver = self.driver,
-            new_link = "t-add-new",
-            list_name = "t-location-name",
-            list_data = "t-grid-data"
-        )
-        # click first record in list data
-        locations = location_page.find_list_data()
-        locations[0].click()
-        # save H1 name
-        init_title = self.wait_for_xhr_request_xpath("//*/div/h1")
-        # Need a target element to 'send_keys', and, since H1 isn't an input 
-        # field, this is fine.
-        init_title.send_keys(Keys.BACKSPACE)
-        post_title = self.wait_for_xhr_request_xpath("//*/div/h1")
-        assert init_title == post_title
-
     def test_role(self):
         ### CREATE
         # Go to Role Area
