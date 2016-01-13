@@ -318,3 +318,31 @@ test('you can add and remove child from category', (assert) => {
         assert.equal(currentURL(), CATEGORIES_URL);
     });
 });
+
+test('adding a new location should allow for another new location to be created after the first is persisted', (assert) => {
+    clearxhr(children_xhr);
+    let category_count;
+    random.uuid = original_uuid;
+    payload.id = 'abc123';
+    patchRandomAsync(0);
+    xhr(`${PREFIX}${BASE_URL}/`, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
+    visit(CATEGORIES_URL);
+    click('.t-add-new');
+    fillIn('.t-category-name', CD.nameOne);
+    fillIn('.t-category-description', CD.descriptionMaintenance);
+    fillIn('.t-category-cost-code', CD.costCodeOne);
+    fillIn('.t-category-label', CD.labelOne);
+    fillIn('.t-category-subcategory-label', CD.subCatLabelTwo);
+    fillIn('.t-amount', CD.costAmountOne);
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORIES_URL);
+        category_count = store.find('category').get('length');
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), CATEGORY_NEW_URL);
+        assert.equal(store.find('category').get('length'), category_count + 1);
+        assert.equal(find('.t-category-name').val(), '');
+    });
+});

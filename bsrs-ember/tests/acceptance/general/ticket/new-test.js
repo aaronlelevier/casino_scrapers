@@ -713,3 +713,44 @@ test('all required fields persist correctly when the user submits a new ticket f
         assert.ok(persisted.get('isNotDirtyOrRelatedNotDirty'));
     });
 });
+
+test('adding a new ticket should allow for another new ticket to be created after the first is persisted', (assert) => {
+    ajax(`${PREFIX}/admin/people/?fullname__icontains=b`, 'GET', null, {}, 200, PF.search());
+    page.visit();
+    andThen(() => {
+        patchRandom(counter);
+    });
+    click('.t-add-new');
+    page.assigneeClickDropdown();
+    fillIn(`${SEARCH}`, 'b');
+    page.assigneeClickOptionTwo();
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
+    page.priorityClickDropdown();
+    page.priorityClickOptionOne();
+    page.locationClickDropdown();
+    fillIn(`${SEARCH}`, '6');
+    page.locationClickOptionTwo();
+    page.categoryOneClickDropdown();
+    page.categoryOneClickOptionOne();
+    page.categoryTwoClickDropdown();
+    page.categoryTwoClickOptionOne();
+    clearxhr(category_three_xhr);
+    page.categoryThreeClickDropdown();
+    page.categoryThreeClickOptionOne();
+    page.requestFillIn(TD.requestOneGrid);
+    page.requesterFillIn(TD.requesterOne);
+    required_ticket_payload.request = TD.requestOneGrid;
+    xhr(TICKET_POST_URL, 'POST', JSON.stringify(required_ticket_payload), {}, 201, Ember.$.extend(true, {}, required_ticket_payload));
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_URL);
+        assert.equal(store.find('ticket').get('length'), 1);
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), TICKET_NEW_URL);
+        assert.equal(store.find('ticket').get('length'), 2);
+        assert.equal(find('.t-ticket-request').val(), '');
+    });
+});

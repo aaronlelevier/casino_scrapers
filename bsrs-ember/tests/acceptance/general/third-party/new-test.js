@@ -154,3 +154,28 @@ test('when user enters new form and doesnt enter data, the record is correctly r
         assert.equal(store.find('third-party').get('length'), 0);
     });
 });
+
+test('adding a new third-party should allow for another new third-party to be created after the first is persisted', (assert) => {
+    random.uuid = original_uuid;
+    payload.id = 'abc123';
+    patchRandomAsync(0);
+    visit(THIRD_PARTY_URL);
+    click('.t-add-new');
+    fillIn('.t-third-party-name', TPD.nameOne);
+    fillIn('.t-third-party-name', TPD.nameOne);
+    fillIn('.t-third-party-number', TPD.numberOne);
+    page.statusClickDropdown();
+    page.statusClickOptionOne();
+    ajax(DJANGO_THIRD_PARTY_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), THIRD_PARTY_URL);
+        assert.equal(store.find('third-party').get('length'), 1);
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), THIRD_PARTY_NEW_URL);
+        assert.equal(store.find('third-party').get('length'), 2);
+        assert.equal(find('.t-third-party-name').val(), '');
+    });
+});

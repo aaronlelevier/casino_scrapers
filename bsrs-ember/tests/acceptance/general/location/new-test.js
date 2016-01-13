@@ -179,3 +179,28 @@ test('when user enters new form and doesnt enter data, the record is correctly r
         assert.equal(store.find('location').get('length'), 0);
     });
 });
+
+test('adding a new location should allow for another new location to be created after the first is persisted', (assert) => {
+    let location_count;
+    random.uuid = original_uuid;
+    payload.id = 'abc123';
+    patchRandomAsync(0);
+    visit(LOCATION_URL);
+    click('.t-add-new');
+    fillIn('.t-location-name', LD.storeName);
+    fillIn('.t-location-number', LD.storeNumber);
+    page.locationLevelClickDropdown();
+    page.locationLevelClickOptionOne();
+    xhr(DJANGO_LOCATION_URL, 'POST', JSON.stringify(payload), {}, 201, Ember.$.extend(true, {}, payload));
+    generalPage.save();
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_URL);
+        location_count = store.find('location').get('length');
+    });
+    click('.t-add-new');
+    andThen(() => {
+        assert.equal(currentURL(), LOCATION_NEW_URL);
+        assert.equal(store.find('location').get('length'), location_count + 1);
+        assert.equal(find('.t-location-name').val(), '');
+    });
+});
