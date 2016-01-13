@@ -189,6 +189,7 @@ class TicketTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase):
         category_option.click()
         # need to click on more but repair is not bringing back children
         self.gen_elem_page.click_save_btn()
+        import time;time.sleep(1000)
         # Go to newly created ticket's Detail view
         ticket_page.find_list_data()
         self.driver.refresh()

@@ -6,7 +6,8 @@ from location.tests.factory import create_location
 from person.tests.factory import (create_single_person, create_role, PASSWORD,
     DistrictManager)
 from ticket.models import Ticket
-from ticket.tests.factory import create_ticket, create_ticket_statuses, create_ticket_priorities
+from ticket.tests.factory import (create_ticket, create_ticket_statuses,
+    create_ticket_priorities)
 
 
 class TicketSetupNoLoginMixin(object):
