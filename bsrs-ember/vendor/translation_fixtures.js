@@ -57,6 +57,7 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'admin.category.name.loss_prevention':'Loss Prevention',
                     'admin.category.name.maintenance':'Maintenance',
                     'admin.category.name.repair':'Repair',
+                    'admin.category.new':'New Category',
                     'admin.category.one':'Category',
                     'admin.category.other':'Categories',
                     'admin.category.search':'Search Categories',
