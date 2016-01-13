@@ -259,7 +259,7 @@ test('clicking and typing into power select for categories children will not fil
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, ' ');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 1); 
+        assert.equal(page.categoryOptionLength(), 1);
     });
     andThen(() => {
         let category = store.find('category', UUID.value);
@@ -296,7 +296,7 @@ test('you can add and remove child from category', (assert) => {
     page.categoryClickDropdown();
     fillIn(`${CATEGORY_SEARCH}`, '2z');
     andThen(() => {
-        assert.equal(page.categoryOptionLength(), 1); 
+        assert.equal(page.categoryOptionLength(), 1);
         const category = store.find('category', UUID.value);
         assert.equal(category.get('has_many_children').get('length'), 0);
         assert.equal(category.get('children_fks').get('length'), 0);
@@ -319,7 +319,7 @@ test('you can add and remove child from category', (assert) => {
     });
 });
 
-test('adding a new location should allow for another new location to be created after the first is persisted', (assert) => {
+test('adding a new category should allow for another new category to be created after the first is persisted', (assert) => {
     clearxhr(children_xhr);
     let category_count;
     random.uuid = original_uuid;

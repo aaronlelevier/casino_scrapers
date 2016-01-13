@@ -70,7 +70,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     });
     let url = PREFIX + DETAIL_URL + '/';
     let response = CF.detail(CD.idOne);
-    let payload = CF.put({id: CD.idOne, name: CD.nameTwo, description: CD.descriptionMaintenance, 
+    let payload = CF.put({id: CD.idOne, name: CD.nameTwo, description: CD.descriptionMaintenance,
     label: CD.labelTwo, cost_amount: CD.costAmountTwo, cost_code: CD.costCodeTwo});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     page.nameFill(CD.nameTwo);
@@ -88,7 +88,7 @@ test('when you deep link to the category detail view you get bound attrs', (asse
     list.results[0].label = CD.labelTwo;
     list.results[0].cost_amount = CD.costAmountTwo;
     list.results[0].cost_code = CD.costCodeTwo;
-    //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me. 
+    //just leaving here until I can figure out how to do destructuring w/o jshint blowing up on me.
     // let results = list.results[0];
     // ({nameTwo: results.name, descriptionMaintenance: results.description, labelTwo: results.label, costAmountTwo: results.cost_amount, costCodeTwo: results.cost_code} = CD);
     xhr(endpoint + '?page=1', 'GET', null, {}, 200, list);
@@ -224,7 +224,7 @@ test('validation works and when hit save, we do same post', (assert) => {
     page.subLabelFill(CD.subCatLabelTwo);
     let url = PREFIX + DETAIL_URL + '/';
     let response = CF.detail(CD.idOne);
-    let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance, 
+    let payload = CF.put({id: CD.idOne, name: CD.nameOne, description: CD.descriptionMaintenance,
     label: CD.labelOne, subcategory_label: CD.subCatLabelTwo, cost_amount: CD.costAmountOne, cost_code: CD.costCodeOne});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200, response);
     generalPage.save();
