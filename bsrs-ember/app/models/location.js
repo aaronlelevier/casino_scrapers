@@ -207,7 +207,40 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         run(() => {
             this.get('store').remove('location', this.get('id'));
         });
-    }
+    },
+    /////////
+    parents: Ember.computed(function() {
+        const location_parents = this.get('location_parents'); 
+        const filter = function(parent) {
+            const parent_pks = this.mapBy('parent_pk');
+            return Ember.$.inArray(parent.get('id'), parent_pks) > -1;
+        };
+        return this.get('store').find('location', filter.bind(location_parents));
+    }),
+    location_parents: Ember.computed(function() {
+        const pk = this.get('id');
+        const filter = (join_model) => {
+            return join_model.get('location_pk') === pk && !join_model.get('removed');
+        };
+        return this.get('store').find('location-parents', filter);
+    }),
+    location_children_fks: [],
+    location_parents_fks: [],
+    children: Ember.computed('location_children.[]', function() {
+        const location_children = this.get('location_children'); 
+        const filter = function(child) {
+            const child_pks = this.mapBy('child_pk');
+            return Ember.$.inArray(child.get('id'), child_pks) > -1;
+        };
+        return this.get('store').find('location', filter.bind(location_children));
+    }),
+    location_children: Ember.computed(function() {
+        const pk = this.get('id');
+        const filter = (join_model) => {
+            return join_model.get('location_pk') === pk && !join_model.get('removed');
+        };
+        return this.get('store').find('location-children', filter);
+    }),
 });
 
 export default LocationModel;

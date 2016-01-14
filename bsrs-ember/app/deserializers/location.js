@@ -82,6 +82,64 @@ var extract_location_status = function(model, store) {
     return status_id;
 };
 
+var extract_parents = function(model, store, location_deserializer) {
+    const parents = model.parents || [];
+    let prevented_duplicate_m2m = [];
+    const server_sum = [];
+    const all_location_parents = store.find('location-parents');
+    parents.forEach((parent) => {
+        const location_parents = all_location_parents.filter((m2m) => {
+            return m2m.get('parent_pk') === parent.id && m2m.get('location_pk') === model.id;
+        });
+        if(location_parents.length === 0) {
+            const pk = Ember.uuid();
+            server_sum.push(pk);
+            location_deserializer.deserialize(parent, parent.id);
+            store.push('location-parents', {id: pk, location_pk: model.id, parent_pk: parent.id});
+        }else{
+            prevented_duplicate_m2m.push(location_parents[0].get('id'));
+        }
+    });
+    server_sum.push(...prevented_duplicate_m2m);
+    let m2m_to_remove = all_location_parents.filter((m2m) => {
+        return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('location_pk') === model.id;
+    });
+    m2m_to_remove.forEach((m2m) => {
+        store.push('location-parents', {id: m2m.get('id'), removed: true});
+    });
+    delete model.parents;
+    return server_sum;
+};
+
+var extract_children = function(model, store, location_deserializer) {
+    const children = model.children || [];
+    let prevented_duplicate_m2m = [];
+    const server_sum = [];
+    const all_location_children = store.find('location-children');
+    children.forEach((child) => {
+        const location_children = all_location_children.filter((m2m) => {
+            return m2m.get('child_pk') === child.id && m2m.get('location_pk') === model.id;
+        });
+        if(location_children.length === 0) {
+            const pk = Ember.uuid();
+            server_sum.push(pk);
+            store.push('location', child);
+            store.push('location-children', {id: pk, location_pk: model.id, child_pk: child.id});
+        }else{
+            prevented_duplicate_m2m.push(location_children[0].get('id'));
+        }
+    });
+    server_sum.push(...prevented_duplicate_m2m);
+    let m2m_to_remove = all_location_children.filter((m2m) => {
+        return Ember.$.inArray(m2m.get('id'), server_sum) < 0 && m2m.get('location_pk') === model.id;
+    });
+    m2m_to_remove.forEach((m2m) => {
+        store.push('location-children', {id: m2m.get('id'), removed: true});
+    });
+    delete model.children;
+    return server_sum;
+};
+
 var LocationDeserializer = Ember.Object.extend({
     LocationLevelDeserializer: injectDeserializer('location-level'),
     deserialize(response, options) {
@@ -93,24 +151,26 @@ var LocationDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(response, id, location_level_deserializer) {
-        let store = this.get('store');
-        let existing_location = store.find('location', id);
-        // TODO: examine this 'if' stmt
-        if (!existing_location.get('id') || existing_location.get('isNotDirtyOrRelatedNotDirty')) {
+        const store = this.get('store');
+        const existing = store.find('location', id);
+        const location_deserializer = this;
+        if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.email_fks = extract_emails(response, store);
             response.phone_number_fks = extract_phone_numbers(response, store);
             response.address_fks = extract_addresses(response, store);
             response.status_fk = extract_location_status(response, store);
             response.location_level_fk = extract_location_level(response, store, location_level_deserializer);
+            response.location_children_fks = extract_children(response, store, location_deserializer);
+            response.location_parents_fks = extract_parents(response, store, location_deserializer);
             let location = store.push('location', response);
             location.save();
         }
     },
     deserialize_list(response, location_level_deserializer) {
+        const store = this.get('store');
         response.results.forEach((model) => {
-            let store = this.get('store');
-            let existing_location = store.find('location', model.id);
-            if (!existing_location.get('id') || existing_location.get('isNotDirtyOrRelatedNotDirty')) {
+            const existing = store.find('location', model.id);
+            if (!existing.get('id') || existing.get('isNotDirtyOrRelatedNotDirty')) {
                 model.status_fk = extract_location_status(model, store);
                 model.location_level_fk = extract_location_level(model, store, location_level_deserializer);
                 let location = store.push('location', model);
