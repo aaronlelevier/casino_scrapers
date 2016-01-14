@@ -32,21 +32,6 @@ test('save filterset button is not available when page size or page is altered a
     andThen(() => {
         assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
     });
-    ajax(`${PREFIX}${BASE_URL}/?page=1&page_size=${updated_pg_size}`, 'GET',null,{},200,RF.paginated(updated_pg_size));
-    alterPageSize('.t-page-size', updated_pg_size);
-    andThen(() => {
-        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
-    });
-    ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&page_size=${updated_pg_size}` ,'GET',null,{},200,RF.paginated(updated_pg_size));
-    click(SORT_NAME_DIR);
-    andThen(() => {
-        assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
-    });
-    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
-    click('.t-reset-grid');
-    andThen(() => {
-        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
-    });
     ajax(`${PREFIX}${BASE_URL}/?page=2`, 'GET',null,{},200,RF.list_two());
     click('.t-page:eq(1) a');
     andThen(() => {
