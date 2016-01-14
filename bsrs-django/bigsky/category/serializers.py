@@ -8,6 +8,8 @@ CATEGORY_FIELDS = ('id', 'name', 'description', 'label',
     'cost_amount', 'cost_currency', 'cost_code',)
 
 
+# Leaf Node
+
 class CategoryIDNameSerializer(BaseCreateSerializer):
 
     class Meta:
@@ -34,13 +36,6 @@ class CategoryRoleSerializer(BaseCreateSerializer):
         fields = ('id', 'name', 'status', 'parent',)
 
 
-class CategoryListSerializer(BaseCreateSerializer):
-
-    class Meta:
-        model = Category
-        fields = CATEGORY_FIELDS
-
-
 class CategoryParentSerializer(BaseCreateSerializer):
 
     parent = CategoryIDNameSerializer(read_only=True)
@@ -51,6 +46,15 @@ class CategoryParentSerializer(BaseCreateSerializer):
         fields = CATEGORY_FIELDS + ('parent', 'children',)
 
 
+# Main
+
+class CategoryListSerializer(BaseCreateSerializer):
+
+    class Meta:
+        model = Category
+        fields = CATEGORY_FIELDS + ('level',)
+
+
 class CategoryDetailSerializer(BaseCreateSerializer):
 
     parent = CategoryIDNameSerializer(read_only=True)
@@ -58,7 +62,7 @@ class CategoryDetailSerializer(BaseCreateSerializer):
 
     class Meta:
         model = Category
-        fields = CATEGORY_FIELDS + ('subcategory_label', 'parent', 'children',)
+        fields = CATEGORY_FIELDS + ('level', 'subcategory_label', 'parent', 'children',)
 
     @staticmethod
     def eager_load(queryset):

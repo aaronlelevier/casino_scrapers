@@ -87,17 +87,28 @@ class CategoryLevelTests(CategorySetupMixin, TestCase):
         self.assertFalse(self.trade.parent.parent)
         self.assertEqual(self.trade._set_level(), 1)
 
-    def test_set_level__one_parent(self):
+    def test_set_level__two_parent(self):
         self.assertTrue(self.child.parent)
         self.assertTrue(self.child.parent.parent)
         self.assertFalse(self.child.parent.parent.parent)
         self.assertEqual(self.child._set_level(), 2)
 
-    def test_level_type(self):
+    def test_level__type(self):
         self.assertEqual(self.type.level, 0)
 
-    def test_level_trade(self):
+    def test_level__trade(self):
         self.assertEqual(self.trade.level, 1)
 
-    def test_level_trade(self):
+    def test_level__child(self):
         self.assertEqual(self.child.level, 2)
+
+    def test_add_category_changes_level(self):
+        parent = factory.create_single_category()
+        child = factory.create_single_category()
+        self.assertEqual(parent.level, 0)
+        self.assertEqual(child.level, 0)
+
+        parent.children.add(child)
+
+        self.assertEqual(parent.level, 0)
+        self.assertEqual(child.level, 1)

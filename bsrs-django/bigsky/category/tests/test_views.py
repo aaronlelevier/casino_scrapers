@@ -66,6 +66,7 @@ class CategoryListTests(APITestCase):
         self.assertEqual(data['cost_amount'], str(category.cost_amount))
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
+        self.assertEqual(data['level'], category.level)
         self.assertNotIn('parent', data)
         self.assertNotIn('children', data)
 
@@ -102,6 +103,7 @@ class CategoryDetailTests(APITestCase):
         self.assertEqual(data['cost_amount'], str(category.cost_amount))
         self.assertEqual(data['cost_currency'], str(category.cost_currency.id))
         self.assertEqual(data['cost_code'], category.cost_code)
+        self.assertEqual(data['level'], category.level)
 
     def test_data_parent(self):
         category = Category.objects.filter(label='issue').first()
