@@ -146,6 +146,7 @@ def update_admin(person):
     ``location.location_level == person.role.location_level``
     And all Parent Categories, so they can view all Tickets.
     """
+    update_login_person(person)
     add_all_locations(person)
     add_all_parent_categores(person)
 

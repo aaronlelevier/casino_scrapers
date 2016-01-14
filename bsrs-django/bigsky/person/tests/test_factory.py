@@ -197,6 +197,9 @@ class UpdateAdminTests(TestCase):
 
         factory.update_admin(person)
 
+        # django-admin access attrs
+        self.assertTrue(person.is_superuser)
+        self.assertTrue(person.is_superuser)
         # Locations
         person_locations = person.locations.values_list('id', flat=True)
         for location in (Location.objects.filter(location_level=person.role.location_level)
