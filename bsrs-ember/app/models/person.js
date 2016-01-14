@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import inject from 'bsrs-ember/utilities/store';
-import injectUUID from 'bsrs-ember/utilities/uuid';
 import CopyMixin from 'bsrs-ember/mixins/model/copy';
 import EmailMixin from 'bsrs-ember/mixins/model/email';
 import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
@@ -16,7 +15,6 @@ var run = Ember.run;
 
 var Person = Model.extend(CopyMixin, EmailMixin, PhoneNumberMixin, AddressMixin, RoleMixin, LocationMixin, StatusMixin, NewMixin, {
     type: 'person',
-    uuid: injectUUID('uuid'),
     store: inject('main'),
     username: attr(''),
     password: attr(''),

@@ -105,18 +105,16 @@ var CategoriesMixin = Ember.Mixin.create({
                 store.push('ticket-category', {id: matching_m2m.get('id'), removed: undefined});
             });
         }else{
-            const uuid = this.get('uuid');
             run(function() {
-                store.push('ticket-category', {id: uuid.v4(), ticket_pk: ticket_pk, category_pk: category_pk});
+                store.push('ticket-category', {id: Ember.uuid(), ticket_pk: ticket_pk, category_pk: category_pk});
             });
         }
     },
     add_category(category_pk) {
         const ticket_pk = this.get('id');
-        const uuid = this.get('uuid');
         const store = this.get('store');
         run(function() {
-            store.push('ticket-category', {id: uuid.v4(), ticket_pk: ticket_pk, category_pk: category_pk});
+            store.push('ticket-category', {id: Ember.uuid(), ticket_pk: ticket_pk, category_pk: category_pk});
         });
     },
     remove_category(category_pk) {

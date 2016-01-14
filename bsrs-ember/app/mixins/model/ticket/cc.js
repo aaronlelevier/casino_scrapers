@@ -26,9 +26,7 @@ var CCMixin = Ember.Mixin.create({
     }),
     add_person(person_pk) {
         const ticket_pk = this.get('id');
-        const uuid = this.get('uuid');
         const store = this.get('store');
-        const id = uuid.v4();
         //check for existing
         const ticket_people = store.find('ticket-person').toArray();
         run(function() {
@@ -37,7 +35,7 @@ var CCMixin = Ember.Mixin.create({
                     store.push('ticket-person', {id: tp.get('id'), removed: undefined});
                 }
             });
-            store.push('ticket-person', {id: id, ticket_pk: ticket_pk, person_pk: person_pk});
+            store.push('ticket-person', {id: Ember.uuid(), ticket_pk: ticket_pk, person_pk: person_pk});
         });
     },
     remove_person(person_pk) {
