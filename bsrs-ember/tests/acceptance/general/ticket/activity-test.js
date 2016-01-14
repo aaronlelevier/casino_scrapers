@@ -66,6 +66,7 @@ test('can deep link to the person who created the activity', (assert) => {
     });
 });
 
+//TODO: this is the line where chrome fails when running full test suite
 test('can deep link to new assignee', (assert) => {
     ajax(`/api/tickets/${TD.idOne}/activity/`, 'GET', null, {}, 200, TA_FIXTURES.assignee_only());
     page.visitDetail();
