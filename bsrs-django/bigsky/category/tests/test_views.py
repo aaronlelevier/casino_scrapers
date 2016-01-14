@@ -2,7 +2,7 @@ import json
 import uuid
 
 from model_mommy import mommy
-from rest_framework.test import APITestCase
+from rest_framework.test import APITestCase, APITransactionTestCase
 
 from category.models import Category
 from category.serializers import CategorySerializer
@@ -328,7 +328,7 @@ class CategoryCreateTests(APITestCase):
         self.assertIn(str(new_sub_category.id), data['children'])
 
 
-class CategoryFilterTests(APITestCase):
+class CategoryFilterTests(APITransactionTestCase):
 
     # NOTE: These tests are testing the ``FilterRelatedMixin`` with Categories
     # needed API endpoints
