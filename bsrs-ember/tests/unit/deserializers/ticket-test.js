@@ -392,7 +392,7 @@ test('newly inserted ticket will have non dirty status when deserialize list exe
     });
     assert.deepEqual(ticket_status.get('tickets'), []);
     assert.deepEqual(ticket_status_two.get('tickets'), [TD.idOne]);
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.equal(ticket.get('status.id'), TD.statusTwoId);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('status_fk'), TD.statusTwoId);
@@ -472,7 +472,7 @@ test('ticket-category m2m added including parent id for categories without a fat
     run(function() {
         subject.deserialize(response, TD.idOne);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(store.find('ticket-person').get('length'), 1);
@@ -497,7 +497,7 @@ test('ticket-person m2m added even when ticket did not exist before the deserial
     run(function() {
         subject.deserialize(response, TD.idOne);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     let cc = ticket.get('cc');
     assert.equal(cc.get('length'), 1);
     assert.equal(cc.objectAt(0).get('id'), PD.id);
@@ -654,7 +654,7 @@ test('ticket-category m2m added even when ticket did not exist before the deseri
     run(function() {
         subject.deserialize(response, TD.idOne);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 2);
     assert.equal(categories.objectAt(0).get('id'), CD.idPlumbing);
@@ -671,7 +671,7 @@ test('ticket-category m2m added even when ticket did not exist before the deseri
     run(function() {
         subject.deserialize(response);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     let categories = ticket.get('categories');
     assert.equal(categories.get('length'), 2);
     assert.equal(categories.objectAt(0).get('id'), CD.idPlumbing);
@@ -687,7 +687,7 @@ test('attachment added for each attachment on ticket', (assert) => {
     run(function() {
         subject.deserialize(json, json.id);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     let attachments = ticket.get('attachments');
     assert.equal(attachments.get('length'), 1);
     assert.equal(attachments.objectAt(0).get('id'), TD.attachmentOneId);
@@ -706,7 +706,7 @@ test('attachment added for each attachment on ticket (when ticket has existing a
     run(function() {
         subject.deserialize(json, json.id);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     let attachments = ticket.get('attachments');
     assert.equal(attachments.get('length'), 2);
     assert.equal(attachments.objectAt(0).get('id'), TD.attachmentTwoId);
