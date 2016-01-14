@@ -32,7 +32,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
                 let name = category.get('name');
                 return name.toLowerCase().indexOf(search.toLowerCase()) > -1 && !category.get('new');
             };
-            return this.get('store').find('category', filterFunc, ['id']);
+            return this.get('store').find('category', filterFunc);
         }
     },
     findTopLevelCategories() {
@@ -45,7 +45,7 @@ var CategoryRepo = Ember.Object.extend(GridRepositoryMixin, {
         let filterFunc = function(category) {
             return category.get('parent_id') === undefined;
         };
-        return this.get('store').find('category', filterFunc, ['id']);
+        return this.get('store').find('category', filterFunc);
     },
     find() {
         PromiseMixin.xhr(CATEGORY_URL, 'GET').then((response) => {

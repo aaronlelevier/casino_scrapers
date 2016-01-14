@@ -31,7 +31,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
                     let name = location.get('name');
                     return name.toLowerCase().indexOf(search_criteria.toLowerCase()) > -1 && !location.get('new');
                 };
-                return this.get('store').find('location', filterFunc, ['id']);
+                return this.get('store').find('location', filterFunc);
             });
         }
         return Ember.A([]);
@@ -48,7 +48,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
                 return location_level_fk === filter.location_level;
             };
             //TODO: this will return those locations with a certain location level but doesn't include the search parameters
-            return this.get('store').find('location', filterFunc, ['id', 'location_level']);
+            return this.get('store').find('location', filterFunc);
         });
     },
     find(filter) {

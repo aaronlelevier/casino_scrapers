@@ -42,7 +42,7 @@ var CategoriesMixin = Ember.Mixin.create({
             let category_pks = this.mapBy('category_pk');
             return Ember.$.inArray(category.get('id'), category_pks) > -1;
         };
-        return this.get('store').find('category', filter.bind(ticket_categories), []);
+        return this.get('store').find('category', filter.bind(ticket_categories));
     }),
     ticket_categories_ids: Ember.computed('ticket_categories.[]', function() {
         return this.get('ticket_categories').mapBy('id'); 
