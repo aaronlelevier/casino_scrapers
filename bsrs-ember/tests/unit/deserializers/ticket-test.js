@@ -44,7 +44,7 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     run(function() {
         subject.deserialize(json, json.id);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('assignee').get('id'), PD.id);
 });
@@ -69,7 +69,7 @@ test('ticket assignee will be deserialized into its own store when deserialize d
     run(function() {
         subject.deserialize(response);
     });
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirtyOrRelatedNotDirty'));
     assert.equal(ticket.get('assignee').get('id'), PD.id);
 });
@@ -130,7 +130,7 @@ test('ticket location will be deserialized into its own store when deserialize l
     });
     let location = store.findOne('location'); 
     assert.deepEqual(location.get('tickets'), [TD.idOne]);
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('location.id'), LD.idOne);
 });
@@ -157,7 +157,7 @@ test('ticket location will be deserialized into its own store when deserialize d
     });
     let location = store.findOne('location'); 
     assert.deepEqual(location.get('tickets'), [TD.idOne]);
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('location.id'), LD.idOne);
 });
@@ -233,7 +233,7 @@ test('ticket priority will be deserialized into its own store when deserialize l
         subject.deserialize(response);
     });
     assert.deepEqual(ticket_priority.get('tickets'), [TD.idOne]);
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('priority.id'), TD.priorityOneId);
 });
@@ -255,7 +255,7 @@ test('ticket priority will be deserialized into its own store when deserialize d
         subject.deserialize(json, TD.idOne);
     });
     assert.deepEqual(ticket_priority.get('tickets'), [TD.idOne]);
-    let ticket = store.find('ticket', TD.idOne);
+    ticket = store.find('ticket', TD.idOne);
     assert.ok(ticket.get('isNotDirty'));
     assert.equal(ticket.get('priority.id'), TD.priorityOneId);
 });
@@ -274,7 +274,7 @@ test('ticket priority will be deserialized into its own store when deserialize d
 });
 
 test('ticket priority will be updated when server returns different priority (list)', (assert) => {
-    let ticket, ticket_status, ticket_priority, ticket_priority_two;
+    let ticket_status, ticket_priority, ticket_priority_two;
     ticket = store.push('ticket', {id: TD.idOne, priority_fk: TD.priorityOneId});
     ticket_status = store.push('ticket-status', {id: TD.statusOneId, name: TD.statusOne});
     ticket_priority = store.push('ticket-priority', {id: TD.priorityOneId, name: TD.priorityOne, tickets: [TD.idOne]});
