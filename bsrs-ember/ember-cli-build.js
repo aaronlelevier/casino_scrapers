@@ -49,6 +49,8 @@ module.exports = function(defaults) {
       app.import('vendor/defaults/locale.js');
       app.import('vendor/defaults/locale-translation.js');
       app.import('vendor/defaults/location.js');
+      app.import('vendor/defaults/location-children.js');
+      app.import('vendor/defaults/location-parents.js');
       app.import('vendor/defaults/location-level.js');
       app.import('vendor/defaults/location-status.js');
       app.import('vendor/defaults/person.js');
