@@ -1,0 +1,12 @@
+{{#power-select-multiple
+  selected=location.children
+  search=(action "update_filter")
+  onchange=(action "change_children")
+  class="t-location-children-select"
+  searchField="name"
+  as |location|
+}}
+  {{location.name}}
+{{/power-select-multiple}}
+
+

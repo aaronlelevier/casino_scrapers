@@ -19,6 +19,7 @@ class SelfReferencingManagerTests(TestCase):
         self.district = mommy.make(LocationLevel, name='district')
         self.store1 = mommy.make(LocationLevel, name='store1')
         self.store2 = mommy.make(LocationLevel, name='store2')
+        self.store3 = mommy.make(LocationLevel, name='wat')
 
         # test that ``get_all_children()`` traverses multiple levels, and
         # doesn't just get the ``children`` for a single ``LocationLevel``

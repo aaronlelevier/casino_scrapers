@@ -20,6 +20,21 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
             model.saveRelated();
         });
     },
+    findLocationChildren(id, search_criteria) {
+        // let url = this.format_url(filter);
+        // if (search_criteria) {
+        //     url += `&name__icontains=${search_criteria}`;
+        // }
+        // return PromiseMixin.xhr(url, 'GET').then((response) => {
+        //     this.get('LocationDeserializer').deserialize(response);
+        //     let filterFunc = function(location) {
+        //         let location_level_fk = location.get('location_level').get('id');
+        //         return location_level_fk === filter.location_level;
+        //     };
+        //     //TODO: this will return those locations with a certain location level but doesn't include the search parameters
+        //     return this.get('store').find('location', filterFunc);
+        // });
+    },
     findTicket(search_criteria) {
         let url = LOCATION_URL;
         search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
