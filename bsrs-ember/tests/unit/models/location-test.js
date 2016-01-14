@@ -908,5 +908,5 @@ test('locationLevelIsDirty - when the related location_level and location_level_
 
 test('when status is undefined, return false - this test is to confirm statusIsDirty for Location', (assert) => {
     let location = store.push('location', {id: LD.idOne, email_fks: [ED.idOne]});
-    assert.equal(location.get('statusIsDirty'), false)
+    assert.equal(location.get('statusIsDirty'), false);
 });

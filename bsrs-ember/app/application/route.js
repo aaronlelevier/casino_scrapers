@@ -113,10 +113,15 @@ var ApplicationRoute = Ember.Route.extend({
             const person_location_pk = Ember.uuid();
             store.push('person-location', {id: person_location_pk, person_pk: person_current.id, location_pk: location.id});
             // LocationLevel - setup relationship
-            let location_level = store.find('location-level', location.location_level);
-            store.push('location-level', {id: location_level.get('id'), locations: [location.id]});
+            var location_level_fk;
+            if (!location.location_level) {
+                location_level_fk = store.find('location-level').objectAt(0).get('id');
+            } else {
+                location_level_fk = location.location_level;
+            }
+            store.push('location', {id: location.id, name: location.name, location_level_fk: location_level_fk, person_location_fks: [person_location_pk]});
+            store.push('location-level', {id: location_level_fk, locations: [location.id]});
             // Location
-            store.push('location', {id: location.id, name: location.name, location_level: location_level, person_location_fks: [person_location_pk]});
             person_location_pks.push(person_location_pk);
         });
         store.push('person', {

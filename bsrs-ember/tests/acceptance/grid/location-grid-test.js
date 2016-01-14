@@ -50,7 +50,7 @@ test(`initial load should only show first ${PAGE_SIZE} records ordered by id wit
         assert.equal(find('.t-grid-title').text(), 'Locations');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-number').text(), LD.storeNumber + '1');
+        assert.equal(find('.t-grid-data:eq(1) .t-location-number').text(), LD.storeNumber + '2');
         // assert.equal(find('.t-grid-data:eq(0) .t-location-status').text(), LD.status);//put back once get grid v2 out
         assert.equal(find('.t-grid-data:eq(0) .t-location-location_level').text(), LLD.nameCompany);
         var pagination = find('.t-pages');
@@ -355,7 +355,7 @@ test('loading screen shown before any xhr and hidden after', function(assert) {
     xhr(sort_one ,"GET",null,{},200,LF.sorted('name'));
     visitSync(LOCATION_URL);
     Ember.run.later(function() {
-        assert.equal(find('.t-grid-data').length, 0);
+        assert.equal(find('.t-grid-data').length, 1);
         assert.equal(find('.t-grid-loading-graphic').length, 1);
     }, 0);
     andThen(() => {
@@ -633,7 +633,7 @@ test('status.translated_name is a functional related filter', function(assert) {
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-status-translated_name').text(), t(LDS.openName));
+        assert.equal(find('.t-grid-data:eq(1) .t-location-status-translated_name').text(), t(LDS.openName));
     });
     fillIn('.t-grid-search-input', 'cl');
     triggerEvent('.t-grid-search-input', 'keyup', LETTER_C);

@@ -235,6 +235,9 @@ test('on boot we should fetch and load the current person configuration', functi
         assert.equal(person.get('locations').get('length'), 1);
         assert.ok(person.get('locations').objectAt(0).get('id'));
         assert.ok(person.get('locations').objectAt(0).get('name'));
+        assert.ok(person.get('locations').objectAt(0).get('location_level_fk'));
+        let location_level_fk = person.get('locations').objectAt(0).get('location_level_fk');
+        assert.equal(store.find('location-level', location_level_fk).get('locations').get('length'), 1);
     });
 });
 
