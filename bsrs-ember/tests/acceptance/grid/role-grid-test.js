@@ -681,3 +681,35 @@ test('save filterset button is not available when page size or page is altered a
         assert.equal(filterset.get('endpoint_uri'), query);
     });
 });
+
+//this test is specifically for applying saved filtersets ... it just happens to use this module and the role fixture data
+test('applying a saved filterset will reset the page to 1 by default', function(assert) {
+    const filter_name = 'foobar';
+    const updated_pg_size = PAGE_SIZE*2;
+    Ember.run(function() {
+        store.push('filterset', {id: 'def456', name: filter_name, endpoint_name: 'admin.roles.index', endpoint_uri: '?find=name%3Axav&sort=name'});
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+        assert.equal(find('.t-filterset-wrap li:eq(0) a').text().trim(), filter_name);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=2`, 'GET',null,{},200,RF.list_two());
+    click('.t-page:eq(1) a');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&name__icontains=xav` ,'GET',null,{},200,RF.paginated(updated_pg_size));
+    click('.t-filterset-wrap li:eq(0) a');
+    andThen(() => {
+        // assert.equal(find(SAVE_FILTERSET_MODAL).length, 0); next bug to fix in #111
+        assert.equal(currentURL(), '/admin/roles/index?find=name%3Axav&sort=name');
+        var pagination = find('.t-pages');
+        assert.equal(pagination.find('.t-page').length, 2);
+        assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
+        assert.equal(pagination.find('.t-page:eq(1) a').text(), '2');
+        assert.ok(pagination.find('.t-page:eq(0) a').hasClass('active'));
+        assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
+    });
+});

@@ -49,6 +49,13 @@ var GridViewRoute = Ember.Route.extend({
         controller.set('requested', hash.requested);
         controller.set('filterModel', this.filterModel);
         controller.set('filtersets', hash.filtersets);
+    },
+    actions: {
+        apply_filterset: function(route, params) {
+            params.values['page'] = 1;
+            params.queryParams = params.values;
+            this.transitionTo(route, params);
+        }
     }
 });
 
