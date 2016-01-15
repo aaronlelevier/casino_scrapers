@@ -212,8 +212,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         location_page.find_wait_and_assert_elem("t-location-name", new_location_name)
         location_page.assert_phone_number_inputs(new_phone_one, new_phone_two)
         location_page.assert_email_inputs(new_email_one, new_email_two)
-        location_page.assert_address_inputs(2, new_street_one, new_city_one, new_zip_one)
-        location_page.assert_address_inputs(1, new_street_two, new_city_two, new_zip_two)
+        location_page.assert_address_inputs(1, new_street_one, new_city_one, new_zip_one)
+        location_page.assert_address_inputs(2, new_street_two, new_city_two, new_zip_two)
         ### DELETE
         # Go to Location Detail view click Delete
         self.gen_elem_page.click_dropdown_delete()
@@ -351,8 +351,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
             middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
         person_page.assert_phone_number_inputs(new_phone_one, new_phone_two)
         person_page.assert_email_inputs(new_email_one, new_email_two)
-        person_page.assert_address_inputs(2, new_street_one, new_city_one, new_zip_one)
-        person_page.assert_address_inputs(1, new_street_two, new_city_two, new_zip_two)
+        person_page.assert_address_inputs(1, new_street_one, new_city_one, new_zip_one)
+        person_page.assert_address_inputs(2, new_street_two, new_city_two, new_zip_two)
         self.driver.refresh()
         person_page.find_wait_and_assert_elem("t-person-username", username)
         person_page.find_and_assert_elems(username=username, first_name=first_name,

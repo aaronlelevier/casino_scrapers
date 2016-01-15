@@ -106,6 +106,7 @@ class PersonTicketSerializer(serializers.ModelSerializer):
 class PersonDetailSerializer(serializers.ModelSerializer):
 
     locations = LocationIdNameSerializer(many=True)
+    #TODO: why are these the full serializers
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)
     addresses = AddressSerializer(required=False, many=True)

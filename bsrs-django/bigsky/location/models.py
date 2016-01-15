@@ -246,9 +246,8 @@ class LocationQuerySet(SelfReferencingQuerySet):
             Q(name__icontains=keyword) | \
             Q(number__icontains=keyword) | \
             Q(addresses__city__icontains=keyword) | \
-            Q(addresses__address1__icontains=keyword) | \
-            Q(addresses__address2__icontains=keyword) | \
-            Q(addresses__zip__icontains=keyword)
+            Q(addresses__address__icontains=keyword) | \
+            Q(addresses__postal_code__icontains=keyword)
         )
 
 

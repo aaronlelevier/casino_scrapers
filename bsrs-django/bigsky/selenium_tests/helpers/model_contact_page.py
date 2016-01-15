@@ -47,9 +47,9 @@ class ModelContactPage(ModelPage):
         street_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/textarea" % index)
         city_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/input" % index)
         zip_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/input" % index)
-        # assert street_input.get_attribute("value") == new_street
+        assert street_input.get_attribute("value") == new_street
         assert city_input.get_attribute("value") == new_city
-        # assert zip_input.get_attribute("value") == new_zip
+        assert zip_input.get_attribute("value") == new_zip
 
     def find_email_new_entry_send_keys(self, email_num):
         first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
