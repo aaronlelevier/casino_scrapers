@@ -63,10 +63,8 @@
     "express": "^4.13.3",
     "glob": "^4.5.3",
     "morgan": "^1.6.1",
-    "object-assign": "^4.0.1"
-  },
-  "dependencies": {
+    "object-assign": "^4.0.1",
     "ember-computed-decorators": "^0.2.2",
-    "ember-responsive": "^1.2.5"
+    "ember-responsive": "^0.2.5"
   }
 }
