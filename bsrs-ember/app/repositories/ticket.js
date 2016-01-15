@@ -14,7 +14,7 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     url: Ember.computed(function() { return TICKET_URL; }),
     TicketDeserializer: inject('ticket'),
     deserializer: Ember.computed.alias('TicketDeserializer'),
-    filter(person) {
+    findFiltered(person) {
         const locations = person.get('locations');
         const filterFunc = function(ticket) {
             var location_id = ticket.get('location.id');

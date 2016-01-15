@@ -54,7 +54,7 @@ var GridRepositoryMixin = Ember.Mixin.create({
                 endpoint = endpoint + '&' + field + '__icontains=' + encodeURIComponent(value);
             });
         }
-        const all = this.filter ? this.filter(person) : store.find(type);
+        const all = this.findFiltered ? this.findFiltered(person) : store.find(type);
         PromiseMixin.xhr(endpoint).then((response) => {
             all.set('isLoaded', true);
             all.set('count', response.count);

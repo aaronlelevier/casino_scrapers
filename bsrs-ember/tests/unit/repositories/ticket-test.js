@@ -44,6 +44,6 @@ test('filter - will only return Tickets where the Ticket.location is in the Pers
     assert.equal(tickets.objectAt(0).get('location.id'), LD.idOne);
     assert.equal(tickets.objectAt(1).get('location.id'), LD.idTwo);
     let subject = TicketRepository.create({store: store});
-    let ticket_array_proxy = subject.filter(person);
+    let ticket_array_proxy = subject.findFiltered(person);
     assert.equal(ticket_array_proxy.get('length'), 1);
 });
