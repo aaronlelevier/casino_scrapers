@@ -111,4 +111,4 @@ class CategoryLevelTests(CategorySetupMixin, TestCase):
         parent.children.add(child)
 
         self.assertEqual(parent.level, 0)
-        # self.assertEqual(child.level, 1)
+        self.assertEqual(child.level, 1)
