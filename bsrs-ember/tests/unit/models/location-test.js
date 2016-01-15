@@ -977,3 +977,47 @@ test('removed location parents join models are excluded', (assert) => {
     assert.equal(location.get('location_parents').get('length'), 0);
     assert.equal(location.get('parents').get('length'), 0);
 });
+
+test('add_child correctly adds child when none exists', (assert) => {
+    const location = store.push('location', {id: LD.idOne, location_children_fks: []});
+    const location_two = store.push('location', {id: LD.idTwo});
+    location.add_child(location_two.get('id'));
+    assert.equal(location.get('children').get('length'), 1);
+    assert.ok(location.get('childrenIsDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+});
+
+test('add_child correctly adds child when already has one', (assert) => {
+    const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne]});
+    const location_two = store.push('location', {id: LD.idTwo});
+    const location_three = store.push('location', {id: LD.idThree});
+    store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+    location.add_child(location_three.get('id'));
+    assert.equal(location.get('children').get('length'), 2);
+});
+
+test('clicking save will make location model not dirty', (assert) => {
+    const location = store.push('location', {id: LD.idOne, location_children_fks: []});
+    const location_two = store.push('location', {id: LD.idTwo});
+    location.add_child(location_two.get('id'));
+    assert.equal(location.get('children').get('length'), 1);
+    assert.ok(location.get('childrenIsDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    location.saveChildren();
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(location.get('childrenIsNotDirty'));
+});
+
+test('clicking save will make location model not dirty with existing', (assert) => {
+    const location = store.push('location', {id: LD.idOne, location_children_fks: [LCD.idOne]});
+    const location_two = store.push('location', {id: LD.idTwo});
+    const location_three = store.push('location', {id: LD.idThree});
+    store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
+    location.add_child(location_three.get('id'));
+    assert.equal(location.get('children').get('length'), 2);
+    assert.ok(location.get('childrenIsDirty'));
+    assert.ok(location.get('isDirtyOrRelatedDirty'));
+    location.saveChildren();
+    assert.ok(location.get('isNotDirtyOrRelatedNotDirty'));
+    assert.ok(location.get('childrenIsNotDirty'));
+});

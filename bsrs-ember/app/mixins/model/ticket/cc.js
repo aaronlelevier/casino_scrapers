@@ -19,7 +19,7 @@ var CCMixin = Ember.Mixin.create({
     }),
     ticket_cc: Ember.computed(function() {
         const ticket_pk = this.get('id');
-        const filter = function(join_model) {
+        const filter = (join_model) => {
             return join_model.get('ticket_pk') === ticket_pk && !join_model.get('removed');
         };
         return this.get('store').find('ticket-person', filter);
@@ -29,12 +29,12 @@ var CCMixin = Ember.Mixin.create({
         const store = this.get('store');
         //check for existing
         const ticket_people = store.find('ticket-person').toArray();
-        run(function() {
-            ticket_people.forEach((tp) => {
-                if (tp.get('person_pk') === person_pk) {
-                    store.push('ticket-person', {id: tp.get('id'), removed: undefined});
-                }
-            });
+        run(() => {
+            // ticket_people.forEach((tp) => {
+            //     if (tp.get('person_pk') === person_pk) {
+            //         store.push('ticket-person', {id: tp.get('id'), removed: undefined});
+            //     }
+            // });
             store.push('ticket-person', {id: Ember.uuid(), ticket_pk: ticket_pk, person_pk: person_pk});
         });
     },
@@ -43,7 +43,7 @@ var CCMixin = Ember.Mixin.create({
         const m2m_pk = this.get('ticket_cc').filter((m2m) => {
             return m2m.get('person_pk') === person_pk;
         }).objectAt(0).get('id');
-        run(function() {
+        run(() => {
             store.push('ticket-person', {id: m2m_pk, removed: true});
         });
     },

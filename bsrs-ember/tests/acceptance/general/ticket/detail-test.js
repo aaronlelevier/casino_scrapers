@@ -288,7 +288,7 @@ test('when user changes an attribute and clicks cancel we prompt them with a mod
 });
 
 //*TICKET CC M2M*/
-test('clicking and typing into selectize for people will fire off xhr request for all people', (assert) => {
+test('clicking and typing into power select for people will fire off xhr request for all people', (assert) => {
     page.visitDetail();
     andThen(() => {
         let ticket = store.find('ticket', TD.idOne);

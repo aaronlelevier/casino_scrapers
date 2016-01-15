@@ -14,7 +14,7 @@ import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
 
-var store, location, location_repo, m2m, m2m_two, trans, run = Ember.run;
+var store, locationz, location_repo, m2m, m2m_two, trans, run = Ember.run;
 
 const PowerSelect = '.ember-power-select-trigger';
 const COMPONENT = '.t-location-children-select';
@@ -31,7 +31,7 @@ moduleForComponent('location-children-select', 'integration: location-children-s
         run(function() {
             m2m = store.push('location-children', {id: LCD.idOne, location_pk: LD.idOne, child_pk: LD.idTwo});
             m2m_two = store.push('location-children', {id: LCD.idTwo, location_pk: LD.idOne, child_pk: LD.idThree});
-            location = store.push('location', {id: LD.idOne, name: LD.storeName, location_children_fks: [LCD.idOne, LCD.idTwo]});
+            locationz = store.push('location', {id: LD.idOne, name: LD.storeName, location_children_fks: [LCD.idOne, LCD.idTwo]});
             store.push('location', {id: LD.idTwo, name: 'wat', location_level: LLD.idOne});
             store.push('location', {id: LD.idThree, name: 'bat', location_level: LLD.idOne});
             store.push('location', {id: LD.unusedId, name: 'wit', location_level: LLD.idTwo});
@@ -50,7 +50,7 @@ test('should render a selectbox when with options selected (initial state)', fun
         store.clear('location-children');
     });
     let location_children_options = Ember.A([]);
-    this.set('location', location);
+    this.set('location', locationz);
     this.render(hbs`{{location-children-select location=location}}`);
     let $component = this.$(COMPONENT);
     clickTrigger();
@@ -62,10 +62,10 @@ test('should render a selectbox when with options selected (initial state)', fun
 
 test('should render a selectbox with bound options after type ahead for search', function(assert) {
     let location_children_options = store.find('location');
-    this.set('location', location);
+    this.set('location', locationz);
     this.render(hbs`{{location-children-select location=location}}`);
     let $component = this.$(COMPONENT);
-    assert.equal(location.get('children').get('length'), 2);
+    assert.equal(locationz.get('children').get('length'), 2);
     clickTrigger();
     run(() => { typeInSearch('a'); });
     return waitFor().
