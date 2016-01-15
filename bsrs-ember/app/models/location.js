@@ -2,6 +2,7 @@ import Ember from 'ember';
 import { attr, Model } from 'ember-cli-simple-store/model';
 import NewMixin from 'bsrs-ember/mixins/model/new';
 import inject from 'bsrs-ember/utilities/store';
+import equal from 'bsrs-ember/utilities/equal';
 import EmailMixin from 'bsrs-ember/mixins/model/email';
 import PhoneNumberMixin from 'bsrs-ember/mixins/model/phone_number';
 import AddressMixin from 'bsrs-ember/mixins/model/address';
@@ -100,8 +101,8 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             this.change_status(status_fk);
         }
     },
-    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'emailsIsDirty', function() {
-        return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('emailsIsDirty');
+    isDirtyOrRelatedDirty: Ember.computed('isDirty', 'locationLevelIsDirty', 'statusIsDirty', 'phoneNumbersIsDirty', 'addressesIsDirty', 'emailsIsDirty', 'childrenIsDirty', function() {
+        return this.get('isDirty') || this.get('locationLevelIsDirty') || this.get('statusIsDirty') || this.get('phoneNumbersIsDirty') || this.get('addressesIsDirty') || this.get('emailsIsDirty') || this.get('childrenIsDirty');
     }),
     isNotDirtyOrRelatedNotDirty: Ember.computed.not('isDirtyOrRelatedDirty'),
     change_location_level(new_location_level_id) {
@@ -157,6 +158,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         this.saveEmails();
         this.savePhoneNumbers();
         this.saveAddresses();
+        this.saveChildren();
     },
     rollbackRelated() {
         this.rollbackLocationLevel();
@@ -196,7 +198,7 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
             number: this.get('number'),
             status: this.get('status.id'),
             location_level: this.get('location_level.id'),
-            children: [],
+            children: this.get('children_ids'),
             parents: [],
             emails: emails,
             phone_numbers: phone_numbers,
@@ -226,6 +228,9 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
     }),
     location_children_fks: [],
     location_parents_fks: [],
+    children_ids: Ember.computed('children.[]', function() {
+        return this.get('children').mapBy('id'); 
+    }),
     children: Ember.computed('location_children.[]', function() {
         const location_children = this.get('location_children'); 
         const filter = function(child) {
@@ -234,6 +239,9 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         };
         return this.get('store').find('location', filter.bind(location_children));
     }),
+    location_children_ids: Ember.computed('location_children.[]', function() {
+        return this.get('location_children').mapBy('id'); 
+    }),
     location_children: Ember.computed(function() {
         const pk = this.get('id');
         const filter = (join_model) => {
@@ -241,6 +249,41 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
         };
         return this.get('store').find('location-children', filter);
     }),
+    add_child(child_id) {
+        const store = this.get('store'); 
+        run(() => {
+            store.push('location-children', {id: Ember.uuid(), location_pk: this.get('id'), child_pk: child_id});
+        });
+    },
+    childrenIsDirty: Ember.computed('children.[]', 'location_children_fks.[]', function() {
+        const location_children = this.get('children');
+        const location_children_ids = this.get('location_children_ids');
+        const previous_m2m_fks = this.get('location_children_fks') || [];
+        if(location_children.get('length') !== previous_m2m_fks.length) {
+            return equal(location_children_ids, previous_m2m_fks) ? false : true;
+        }
+        return equal(location_children_ids, previous_m2m_fks) ? false : true;
+    }),
+    childrenIsNotDirty: Ember.computed.not('childrenIsDirty'),
+    saveChildren() {
+        const location_children = this.get('location_children');
+        const location_children_ids = this.get('location_children_ids') || [];
+        const previous_m2m_fks = this.get('location_children_fks') || [];
+        //add
+        location_children.forEach((join_model) => {
+            if (Ember.$.inArray(join_model.get('id'), previous_m2m_fks) === -1) {
+                //TODO: use concat but won't work for multiple
+                // store.push('location', {id: location_id, location_children_fks: previous_m2m_fks.concat(join_model.get('id'))});
+                previous_m2m_fks.pushObject(join_model.get('id'));
+            } 
+        });
+        //remove
+        for (let i=previous_m2m_fks.length-1; i>=0; --i) {
+            if (Ember.$.inArray(previous_m2m_fks[i], location_children_ids) === -1) {
+                previous_m2m_fks.removeObject(previous_m2m_fks[i]);
+            } 
+        }
+    },
 });
 
 export default LocationModel;

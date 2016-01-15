@@ -10,7 +10,7 @@ var LocationLevelComponent = Ember.Component.extend({
         const filter = (location_level) => {
             return location_level.get('id') !== location_level_id;
         };
-        return repository.peek(filter, ['id']);
+        return repository.peek(filter);
     }),
     available_location_level_names: Ember.computed('available_location_levels.[]', function() {
         const available_location_levels = this.get('available_location_levels');

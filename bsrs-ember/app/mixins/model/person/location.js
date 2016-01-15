@@ -33,9 +33,8 @@ var LocationMixin = Ember.Mixin.create({
     add_locations(location_pk) {
         const pk = this.get('id');
         const store = this.get('store');
-        const uuid = this.get('uuid');
         run(function() {
-            store.push('person-location', {id: uuid.v4(), person_pk: pk, location_pk: location_pk});
+            store.push('person-location', {id: Ember.uuid(), person_pk: pk, location_pk: location_pk});
         });
     },
     remove_locations(location_pk) {

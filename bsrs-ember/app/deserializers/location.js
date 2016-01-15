@@ -94,7 +94,7 @@ var extract_parents = function(model, store, location_deserializer) {
         if(location_parents.length === 0) {
             const pk = Ember.uuid();
             server_sum.push(pk);
-            location_deserializer.deserialize(parent, parent.id);
+            store.push('location', parent);
             store.push('location-parents', {id: pk, location_pk: model.id, parent_pk: parent.id});
         }else{
             prevented_duplicate_m2m.push(location_parents[0].get('id'));

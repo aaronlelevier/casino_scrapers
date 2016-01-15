@@ -26,7 +26,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             number : this.location_defaults.storeNumber,
             status: this.location_defaults.status,
             location_level: this.location_level_fixtures.detail(),
-            children: [],
+            children: [this.get(this.location_defaults.idTwo, this.location_defaults.storeNameTwo), this.get(this.location_defaults.idThree, this.location_defaults.storeNameThree)],
             parents: [],
         }
     };
@@ -41,6 +41,8 @@ var BSRS_LOCATION_FACTORY = (function() {
                 uuid = uuid + i;
             }
             var location = this.generate(uuid);
+            delete location.children;//to be consistent with API
+            delete location.parents;
             location.name = location.name + i;
             location.number = location.number + i;
             location.status = this.location_status_defaults.openId;
@@ -58,6 +60,8 @@ var BSRS_LOCATION_FACTORY = (function() {
         for (var i=page_size+1; i <= page_size*2-1; i++) {
             var uuid = '232z46cf-9fbb-456z-4hc3-59728vu3099';
             var location = this.generate(uuid + i);
+            delete location.children;
+            delete location.parents;
             location.name = 'vzoname' + i;
             location.number = 'sconumber' + i;
             location.status = this.location_status_defaults.closedId;
@@ -78,6 +82,9 @@ var BSRS_LOCATION_FACTORY = (function() {
         response.emails = this.emails.get();
         response.phone_numbers = this.phone_numbers.get();
         response.addresses = this.addresses.get();
+        response.children = response.children.map(function(map) {
+            return map.id;
+        });
         for(var key in location) {
             response[key] = location[key];
         }

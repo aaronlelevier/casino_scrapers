@@ -1,7 +1,6 @@
 import Ember from 'ember';
 import hbs from 'htmlbars-inline-precompile';
 import { moduleForComponent, test } from 'ember-qunit';
-
 import translation from 'bsrs-ember/instance-initializers/ember-i18n';
 import translations from 'bsrs-ember/vendor/translation_fixtures';
 import loadTranslations from 'bsrs-ember/tests/helpers/translations';
@@ -11,9 +10,9 @@ import typeInSearch from 'bsrs-ember/tests/helpers/type-in-search';
 import clickTrigger from 'bsrs-ember/tests/helpers/click-trigger';
 import waitFor from 'ember-test-helpers/wait';
 import GLOBALMSG from 'bsrs-ember/vendor/defaults/global-message';
-import PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/person';
-import TICKET_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket';
-import TICKET_PEOPLE_DEFAULTS from 'bsrs-ember/vendor/defaults/ticket-person';
+import PD from 'bsrs-ember/vendor/defaults/person';
+import TD from 'bsrs-ember/vendor/defaults/ticket';
+import TPD from 'bsrs-ember/vendor/defaults/ticket-person';
 
 let store, m2m, m2m_two, ticket, person_one, person_two, person_three, trans, run = Ember.run, person_repo;
 const PowerSelect = '.ember-power-select-trigger';
@@ -31,12 +30,12 @@ moduleForComponent('ticket-cc-power-select', 'integration: ticket-cc-power-selec
 
         store = module_registry(this.container, this.registry, ['model:ticket', 'model:person', 'model:ticket-person']);
         run(function() {
-            m2m = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idOne, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.id});
-            m2m_two = store.push('ticket-person', {id: TICKET_PEOPLE_DEFAULTS.idTwo, ticket_pk: TICKET_DEFAULTS.idOne, person_pk: PEOPLE_DEFAULTS.idTwo});
-            ticket = store.push('ticket', {id: TICKET_DEFAULTS.idOne, ticket_people_fks: [TICKET_PEOPLE_DEFAULTS.idOne, TICKET_PEOPLE_DEFAULTS.idTwo]});
-            person_one = store.push('person', {id: PEOPLE_DEFAULTS.id, first_name: PEOPLE_DEFAULTS.first_name, last_name: PEOPLE_DEFAULTS.last_name});
-            person_two = store.push('person', {id: PEOPLE_DEFAULTS.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
-            person_three = store.push('person', {id: PEOPLE_DEFAULTS.unusedId, first_name: 'Aaron', last_name: 'Wat'});
+            m2m = store.push('ticket-person', {id: TPD.idOne, ticket_pk: TD.idOne, person_pk: PD.id});
+            m2m_two = store.push('ticket-person', {id: TPD.idTwo, ticket_pk: TD.idOne, person_pk: PD.idTwo});
+            ticket = store.push('ticket', {id: TD.idOne, ticket_people_fks: [TPD.idOne, TPD.idTwo]});
+            person_one = store.push('person', {id: PD.id, first_name: PD.first_name, last_name: PD.last_name});
+            person_two = store.push('person', {id: PD.idTwo, first_name: 'Scooter', last_name: 'McGavin'});
+            person_three = store.push('person', {id: PD.unusedId, first_name: 'Aaron', last_name: 'Wat'});
         });
         person_repo = repository.initialize(this.container, this.registry, 'person');
         person_repo.findTicketPeople = function() {
@@ -71,11 +70,11 @@ test('should render a selectbox with bound options after type ahead for search',
         then(() => {
             assert.equal($(`${DROPDOWN}`).length, 1);
             assert.equal($('.ember-power-select-options > li').length, 3);
-            assert.equal($(`${OPTION}:eq(0)`).text().trim(), PEOPLE_DEFAULTS.fullname);
+            assert.equal($(`${OPTION}:eq(0)`).text().trim(), PD.fullname);
             assert.equal($(`${OPTION}:eq(1)`).text().trim(), 'Scooter McGavin');
             assert.equal($(`${OPTION}:eq(2)`).text().trim(), 'Aaron Wat');
             assert.equal($(`${PowerSelect} > .ember-power-select-multiple-option`).length, 2);
-            assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${PEOPLE_DEFAULTS.fullname})`));
+            assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains(${PD.fullname})`));
             assert.ok($(`${PowerSelect} > span.ember-power-select-multiple-option:contains('Scooter McGavin')`));
         });
 });
