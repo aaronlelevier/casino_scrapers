@@ -735,9 +735,9 @@ class LocationSearchTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
 
-    def test_search_address_address1(self):
+    def test_search_address_address(self):
         keyword = create._generate_chars()
-        address = mommy.make(Address, address1=keyword, content_object=self.location,
+        address = mommy.make(Address, address=keyword, content_object=self.location,
             object_id=self.location.id)
 
         response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
@@ -745,19 +745,9 @@ class LocationSearchTests(APITestCase):
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
 
-    def test_search_address_address2(self):
+    def test_search_address_postal_code(self):
         keyword = create._generate_chars()
-        address = mommy.make(Address, address2=keyword, content_object=self.location,
-            object_id=self.location.id)
-
-        response = self.client.get('/api/admin/locations/?search={}'.format(keyword))
-
-        data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(data["count"], Location.objects.search_multi(keyword).count())
-
-    def test_search_address_zip(self):
-        keyword = create._generate_chars()
-        address = mommy.make(Address, zip=keyword, content_object=self.location,
+        address = mommy.make(Address, postal_code=keyword, content_object=self.location,
             object_id=self.location.id)
 
         response = self.client.get('/api/admin/locations/?search={}'.format(keyword))

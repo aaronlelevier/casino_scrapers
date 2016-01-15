@@ -61,15 +61,14 @@ class Address(BaseContactModel):
     populated, but not both.
     """
     type = models.ForeignKey(AddressType, blank=True, null=True)
-    address1 = models.TextField(blank=True, null=True)
-    address2 = models.TextField(blank=True, null=True)
+    address = models.TextField(blank=True, null=True)
     city = models.TextField(blank=True, null=True)
     state = models.TextField(blank=True, null=True)
-    zip = models.TextField(blank=True, null=True)
+    postal_code = models.TextField(blank=True, null=True)
     country = models.TextField(blank=True, null=True)
 
     class Meta:
-        ordering = ('address1',)
+        ordering = ('address',)
 
 
 EMAIL_TYPES = [

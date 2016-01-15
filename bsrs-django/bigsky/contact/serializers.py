@@ -42,16 +42,16 @@ class AddressFlatSerializer(BaseCreateSerializer):
     
     class Meta:
         model = Address
-        fields = ('id', 'type', 'address1', 'address2', 'city', 'state',
-            'country', 'zip',)
+        fields = ('id', 'type', 'address', 'city', 'state',
+            'country', 'postal_code',)
 
 
 class AddressSerializer(BaseCreateSerializer):
     
     class Meta:
         model = Address
-        fields = ('id', 'type', 'address1', 'address2', 'city', 'state',
-            'country', 'zip',)
+        fields = ('id', 'type', 'address', 'city', 'state',
+            'country', 'postal_code',)
 
 
 ### EMAIL ###
