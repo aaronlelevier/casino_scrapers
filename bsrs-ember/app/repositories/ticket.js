@@ -23,6 +23,19 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
         };
         return this.get('store').find('ticket', filterFunc);
     },
+    findFilteredbyCategory(person) {
+        const role_category_ids = person.get('role').get('categories').mapBy('id');
+        const filterFunc = function(ticket) {
+            var ticket_category_ids = ticket.get('categories').mapBy('id');
+            var result = false;
+            ticket_category_ids.forEach((cid) => {
+                var temp_result = Ember.$.inArray(cid, role_category_ids) > -1;
+                result = result || temp_result;
+            });
+            return result;
+        };
+        return this.get('store').find('ticket', filterFunc);
+    },
     update(model) {
         return PromiseMixin.xhr(TICKET_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
             model.save();
