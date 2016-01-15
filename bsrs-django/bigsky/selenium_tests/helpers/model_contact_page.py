@@ -3,9 +3,9 @@ import selenium
 from .model_page import ModelPage
 
 
-class PersonPage(ModelPage):
+class ModelContactPage(ModelPage):
     '''
-    Person page containing all DOM nodes
+    Contact page containing all DOM nodes
     '''
 
     def __init__(self, driver, new_link, list_name, list_data, *args, **kwargs):
@@ -65,13 +65,13 @@ class PersonPage(ModelPage):
         assert first_email_input.get_attribute("value") == email_two
         assert second_email_input.get_attribute("value") == email_one
 
-    def assert_name_not_in_list(self, name, new_person):
+    def assert_name_not_in_list(self, name, new_model):
         pagination = self.driver.find_element_by_class_name("t-pages")
         element_list = pagination.find_elements_by_tag_name("li")
         element_list_len = len(element_list)
         count = 0
         while count < element_list_len:
-            new_person, count = self._loop_over_names(name, new_person, count)
+            new_model, count = self._loop_over_names(name, new_model, count)
 
             pagination = self.driver.find_element_by_class_name("t-pages")
             try:
@@ -81,4 +81,4 @@ class PersonPage(ModelPage):
             except selenium.common.exceptions.ElementNotVisibleException:
                 pass
             except IndexError:
-                assert new_person == None
+                assert new_model == None

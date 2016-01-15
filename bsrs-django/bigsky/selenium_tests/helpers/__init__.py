@@ -20,8 +20,8 @@ from .model_page import (
 from .nav_page import (
     NavPage
 )
-from .person_page import (
-    PersonPage
+from .model_contact_page import (
+    ModelContactPage
 )
 from .url_helper import (
     URLHelper
