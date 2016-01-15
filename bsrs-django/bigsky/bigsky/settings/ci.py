@@ -1,6 +1,8 @@
 from .base import *
 
 
+TICKET_FILTERING_ON = False
+
 CI_APPS = [
     'nose',
     'django_nose',

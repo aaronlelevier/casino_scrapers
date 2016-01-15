@@ -3,9 +3,6 @@ from .base import *
 
 TEMPLATE_DEBUG = DEBUG = False
 
-### TICKETS
-TICKET_FILTERING_ON = True
-
 # SSL_ENABLED = True
 # CSRF_COOKIE_SECURE = True
 # CSRF_COOKIE_HTTPONLY = True
