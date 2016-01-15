@@ -380,6 +380,40 @@ class LocationDetailTests(APITestCase):
         self.assertIn(str(region1.id), response.content.decode('utf8'))
         self.assertEqual(len(data), 2)
 
+    ### DETAIL ROUTES - FILTERED
+
+    def test_get_level_children__filtered(self):
+        location = Location.objects.get(name='east')
+        location_level = LocationLevel.objects.get(name='store')
+        keyword = 'san_die'
+
+        response = self.client.get(
+            '/api/admin/locations/{pk}/get-level-children/{level_id}/?name__icontains={name}'
+            .format(pk=location.id, level_id=location_level.id, name=keyword))
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(
+            len(data),
+            Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
+        )
+
+    def test_get_level_parents__filtered(self):
+        location = Location.objects.get(name='ca')
+        location_level = LocationLevel.objects.get(name='region')
+        east_lp = mommy.make(Location, location_level=location_level, name='east_lp')
+        east_lp.children.add(location)
+        keyword = 'east_l'
+
+        response = self.client.get(
+            '/api/admin/locations/{pk}/get-level-parents/{level_id}/?name__icontains={name}'
+            .format(pk=location.id, level_id=location_level.id, name=keyword))
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(
+            len(data),
+            Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
+        )
+
 
 class LocationCreateTests(APITestCase):
 

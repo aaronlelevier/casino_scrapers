@@ -140,7 +140,10 @@ class FilterRelatedMixin(object):
 
     def get_queryset(self):
         queryset = super(FilterRelatedMixin, self).get_queryset()
+        queryset = self.filter_by_query_params(queryset)
+        return queryset
 
+    def filter_by_query_params(self, queryset):
         if self.filter_fields:
             kwargs = {}
 
@@ -153,6 +156,6 @@ class FilterRelatedMixin(object):
 
                     kwargs.update({param: value})
 
-            queryset = queryset.filter(**kwargs)
-
+            return queryset.filter(**kwargs)
         return queryset
+
