@@ -94,6 +94,11 @@ class SelfReferencingQuerySet(models.query.QuerySet):
         master_set = set()
 
         for obj in self.all():
+
+            if obj.name == settings.LOCATION_TOP_LEVEL_NAME:
+                master_set.update(type(obj).objects.values_list("id", flat=True))
+                continue
+
             # parent
             master_set.add(obj.id)
             # children
@@ -116,6 +121,10 @@ class SelfReferencingManager(BaseManager):
 
     def objects_and_their_children(self):
         return self.get_queryset().objects_and_their_children()
+
+    def create_top_level(self):
+        obj, _ = self.get_or_create(name=settings.LOCATION_TOP_LEVEL_NAME)
+        return obj
 
 
 class SelfRefrencingBaseModel(models.Model):
@@ -271,6 +280,11 @@ class LocationManager(SelfReferencingManager):
 
     def search_multi(self, keyword):
         return self.get_queryset().search_multi(keyword)
+
+    def create_top_level(self):
+        location_level = LocationLevel.objects.create_top_level()
+        obj, _ = self.get_or_create(name=settings.LOCATION_TOP_LEVEL_NAME, location_level=location_level)
+        return obj
 
 
 class Location(SelfRefrencingBaseModel, BaseModel):

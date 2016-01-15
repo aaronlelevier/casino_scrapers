@@ -84,6 +84,11 @@ class LocationLevelManagerTests(TestCase):
         self.district.children.add(self.store2)
         self.assertEqual(self.district.parents.count(), 1)
 
+    def test_create_top_level(self):
+        ret = LocationLevel.objects.create_top_level()
+        self.assertIsInstance(ret, LocationLevel)
+        self.assertEqual(ret.name, settings.LOCATION_TOP_LEVEL_NAME)
+
 
 class LocationLevelTests(TestCase):
 
@@ -153,6 +158,23 @@ class LocationManagerTests(TestCase):
 
         self.assertEqual(len(ret), 5)
         self.assertIn(person.locations.first().id, ret)
+
+    def test_objects_and_their_children__top_level(self):
+        # All Locations should be returned if the 'person' has the 'top level location'
+        person = create_single_person()
+        [person.locations.remove(x) for x in person.locations.all()]
+        company = Location.objects.create_top_level()
+        person.locations.add(company)
+
+        ret = person.locations.objects_and_their_children()
+
+        self.assertEqual(len(ret), Location.objects.count())
+
+    def test_create_top_level(self):
+        ret = Location.objects.create_top_level()
+        self.assertIsInstance(ret, Location)
+        self.assertEqual(ret.name, settings.LOCATION_TOP_LEVEL_NAME)
+        self.assertEqual(ret.location_level.name, settings.LOCATION_TOP_LEVEL_NAME)
 
 
 class LocationTests(TestCase):
