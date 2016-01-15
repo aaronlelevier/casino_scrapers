@@ -8,6 +8,7 @@ var nameRoute = function(route) {
 
 var GridViewRoute = Ember.Route.extend({
     pagination: Ember.inject.service(),
+    personCurrent: Ember.inject.service(),
     filtersetRepository: inject('filterset'),
     init() {
         this.filterModel = Ember.Object.create();
@@ -39,9 +40,10 @@ var GridViewRoute = Ember.Route.extend({
         let repository = this.get('repository');
         let requested = this.get('pagination').requested(name, page);
         set_filter_model_attrs(this.filterModel, query.find);
-        let model = repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size);
+        const person = this.get('personCurrent').get('model').get('person');
+        let model = repository.findWithQuery(query.page, query.sort, query.search, query.find, query.page_size, person);
         const count = repository.findCount();
-        return {count: count, model: model, requested: requested, filtersets: filtersets};
+        return {count, model, requested, filtersets};
     },
     setupController: function(controller, hash) {
         controller.set('count', hash.count);

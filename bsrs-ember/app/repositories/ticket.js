@@ -14,19 +14,20 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     url: Ember.computed(function() { return TICKET_URL; }),
     TicketDeserializer: inject('ticket'),
     deserializer: Ember.computed.alias('TicketDeserializer'),
-    update(model) {
-        return PromiseMixin.xhr(TICKET_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
-            model.save();
-            model.saveRelated();
-        });   
-    },
-    findModelsForGrid(locations) {
-        let filterFunc = function(ticket) {
+    filter(person) {
+        const locations = person.get('locations');
+        const filterFunc = function(ticket) {
             var location_id = ticket.get('location.id');
             var location_ids = locations.mapBy('id');
             return Ember.$.inArray(location_id, location_ids) > -1;
         };
         return this.get('store').find('ticket', filterFunc);
+    },
+    update(model) {
+        return PromiseMixin.xhr(TICKET_URL + model.get('id') + '/', 'PUT', {data: JSON.stringify(model.serialize())}).then(() => {
+            model.save();
+            model.saveRelated();
+        });
     },
     find() {
         PromiseMixin.xhr(TICKET_URL, 'GET').then((response) => {

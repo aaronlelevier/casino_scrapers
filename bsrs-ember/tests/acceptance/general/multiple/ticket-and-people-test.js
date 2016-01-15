@@ -19,6 +19,7 @@ const PAGE_SIZE = config.APP.PAGE_SIZE;
 const TICKET_LIST_URL = `${BASEURLS.base_tickets_url}/index`;
 const TICKET_DETAIL_URL = `${BASEURLS.base_tickets_url}/${TD.idOne}`;
 const PEOPLE_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idOne}`;
+const PEOPLE_DONALD_DETAIL_URL = `${BASEURLS.base_people_url}/${PD.idDonald}`;
 const TOP_LEVEL_CATEGORIES_URL = `${PREFIX}/admin/categories/parents/`;
 const TICKET_ACTIVITIES_URL = `${PREFIX}/tickets/${TD.idOne}/activity/`;
 const LOCATION = '.t-person-locations-select > .ember-basic-dropdown-trigger';
@@ -77,7 +78,6 @@ test('clicking between person detail and ticket detail will not dirty the active
     });
 });
 
-// TODO: resume w/ Andy n Toran
 test('filter tickets by their location matching the logged in Persons location', (assert) => {
     // Tickets - are all viewable
     ajax(`${PREFIX}${BASEURLS.base_tickets_url}/?page=1`, 'GET', null, {}, 200, TF.list());
@@ -87,20 +87,26 @@ test('filter tickets by their location matching the logged in Persons location',
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
     });
     // Person - remove Locations
-    ajax(`${PREFIX}${PEOPLE_DETAIL_URL}/`, 'GET', null, {}, 200, PF.detail(PD.idOne));
-    visit(PEOPLE_DETAIL_URL);
+    ajax(`${PREFIX}${PEOPLE_DONALD_DETAIL_URL}/`, 'GET', null, {}, 200, PF.detail(PD.idDonald));
+    visit(PEOPLE_DONALD_DETAIL_URL);
     andThen(() => {
-        assert.equal(currentURL(), PEOPLE_DETAIL_URL);
+        assert.equal(currentURL(), PEOPLE_DONALD_DETAIL_URL);
+        const person = store.find('person', PD.idDonald);
+        assert.equal(person.get('locations').get('length'), 1);
+        const current_person = store.findOne('person-current');
+        assert.equal(current_person.get('person.locations').get('length'), 1);
     });
     click('.t-tab:eq(0)');
     click(`${LOCATION}:eq(0) .ember-power-select-multiple-remove-btn`);
     andThen(() => {
-        let person = store.find('person', PD.idOne);
+        const person = store.find('person', PD.idDonald);
         assert.equal(person.get('locations').get('length'), 0);
+        const current_person = store.findOne('person-current');
+        assert.equal(current_person.get('person.locations').get('length'), 0);
     });
-    let payload = PF.put({id: PD.idOne});
+    let payload = PF.put({id: PD.idDonald});
     payload.locations = [];
-    ajax(`${PREFIX}${BASEURLS.base_people_url}/${PD.idOne}/`, 'PUT', JSON.stringify(payload), {}, 200, {});
+    ajax(`${PREFIX}${BASEURLS.base_people_url}/${PD.idDonald}/`, 'PUT', JSON.stringify(payload), {}, 200, {});
     ajax(`${PREFIX}${BASEURLS.base_people_url}/?page=1`, 'GET', null, {}, 200, PF.list());
     click('.t-save-btn');
     andThen(() => {
@@ -111,6 +117,6 @@ test('filter tickets by their location matching the logged in Persons location',
     visit(TICKET_LIST_URL);
     andThen(() => {
         assert.equal(currentURL(), TICKET_LIST_URL);
-        // assert.equal(find('.t-grid-data').length, 0); // should fail until `ticketLocationFilter` is implemented
+        assert.equal(find('.t-grid-data').length, 0);
     });
 });

@@ -26,7 +26,7 @@ module('unit: ticket repository test', {
     }
 });
 
-test('findModelsForGrid - will only return Tickets where the Ticket.location is in the Person.locations array', (assert) => {
+test('filter - will only return Tickets where the Ticket.location is in the Person.locations array', (assert) => {
     let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
     let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idTwo, location_pk: LD.idTwo});
     let location = store.push('location', {id: LD.idOne, person_location_fks: [PERSON_LD.idOne], tickets: [TD.idOne]});
@@ -44,6 +44,6 @@ test('findModelsForGrid - will only return Tickets where the Ticket.location is 
     assert.equal(tickets.objectAt(0).get('location.id'), LD.idOne);
     assert.equal(tickets.objectAt(1).get('location.id'), LD.idTwo);
     let subject = TicketRepository.create({store: store});
-    let ticket_array_proxy = subject.findModelsForGrid(locations);
+    let ticket_array_proxy = subject.filter(person);
     assert.equal(ticket_array_proxy.get('length'), 1);
 });
