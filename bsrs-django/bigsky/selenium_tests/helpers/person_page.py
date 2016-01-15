@@ -29,6 +29,42 @@ class PersonPage(ModelPage):
         assert inputs[0].get_attribute("value") == args[0]
         assert inputs[1].get_attribute("value") == args[1]
 
+    def assert_phone_number_inputs(self, phone_one, phone_two):
+        first_phone_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-phone ')]/div/input")
+        second_phone_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-phone ')]/div/following-sibling::*[1]/input")
+        assert first_phone_input.get_attribute("value") == phone_one
+        assert second_phone_input.get_attribute("value") == phone_two
+
+    def find_address_new_entry_send_keys(self, index, street, city, zip_code):
+        first_street_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/textarea" % index)
+        first_street_input.send_keys(street)
+        first_city_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/input" % index)
+        first_city_input.send_keys(city)
+        first_zip_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/input" % index)
+        first_zip_input.send_keys(zip_code)
+
+    def assert_address_inputs(self, index, new_street, new_city, new_zip):
+        street_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/textarea" % index)
+        city_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/input" % index)
+        zip_input = self.driver.find_element_by_xpath("(//*[contains(concat(' ', @class, ' '), ' t-address-group ')])[%s]/div/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/following-sibling::*[1]/input" % index)
+        # assert street_input.get_attribute("value") == new_street
+        assert city_input.get_attribute("value") == new_city
+        # assert zip_input.get_attribute("value") == new_zip
+
+    def find_email_new_entry_send_keys(self, email_num):
+        first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
+        first_email_input.send_keys(email_num)
+
+    def find_second_email_new_entry_send_keys(self, email_num):
+        second_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/following-sibling::*[1]/input")
+        second_email_input.send_keys(email_num)
+
+    def assert_email_inputs(self, email_one, email_two):
+        first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
+        second_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/following-sibling::*[1]/input")
+        assert first_email_input.get_attribute("value") == email_two
+        assert second_email_input.get_attribute("value") == email_one
+
     def assert_name_not_in_list(self, name, new_person):
         pagination = self.driver.find_element_by_class_name("t-pages")
         element_list = pagination.find_elements_by_tag_name("li")

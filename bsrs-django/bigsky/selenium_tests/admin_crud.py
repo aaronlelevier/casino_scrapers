@@ -90,41 +90,41 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         category_option.click()
         role_ll_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
         role_ll_input.click()
-        # ll_options = self.wait_for_xhr_request("ember-power-select-option", plural=True)
-        # ll_options[0].click()
-        # self.gen_elem_page.click_save_btn()
-        # # new Role in List view
-        # role = role_page.find_list_data()
-        # self.driver.refresh()
-        # self.wait_for_xhr_request("t-sort-name-dir").click()
-        # role_list_view = role_page.find_list_name()
-        # role_page.click_name_in_list(name, role_list_view)
-        # ### UPDATE
-        # # Go to the first Role's Detail view
-        # role_page.find_wait_and_assert_elem("t-role-name", name)
-        # role_name = rand_chars()
-        # role = InputHelper(role_name=role_name)
-        # self._fill_in(role, clear=True)
-        # self.gen_elem_page.click_save_btn()
-        # # check name change
-        # role = role_page.find_list_data()
-        # self.driver.refresh()
-        # role_list_view = role_page.find_list_name()
-        # role_page.click_name_in_list(role_name, role_list_view)
-        # ### DELETE
-        # # Go to the first Role's Detail view
-        # role_page.find_wait_and_assert_elem("t-role-name", role_name)
-        # # click Delete
-        # self.gen_elem_page.click_dropdown_delete()
-        # self.gen_elem_page.click_delete_btn()
-        # # check Role is deleted
-        # self.driver.refresh()
-        # role = role_page.find_list_data()
-        # role_list_view = role_page.find_list_name()
-        # self.assertNotIn(
-        #     role_name,
-        #     [r.text for r in role_list_view]
-        # )
+        ll_options = self.wait_for_xhr_request("ember-power-select-option", plural=True)
+        ll_options[0].click()
+        self.gen_elem_page.click_save_btn()
+        # new Role in List view
+        role = role_page.find_list_data()
+        self.driver.refresh()
+        self.wait_for_xhr_request("t-sort-name-dir").click()
+        role_list_view = role_page.find_list_name()
+        role_page.click_name_in_list(name, role_list_view)
+        ### UPDATE
+        # Go to the first Role's Detail view
+        role_page.find_wait_and_assert_elem("t-role-name", name)
+        role_name = rand_chars()
+        role = InputHelper(role_name=role_name)
+        self._fill_in(role, clear=True)
+        self.gen_elem_page.click_save_btn()
+        # check name change
+        role = role_page.find_list_data()
+        self.driver.refresh()
+        role_list_view = role_page.find_list_name()
+        role_page.click_name_in_list(role_name, role_list_view)
+        ### DELETE
+        # Go to the first Role's Detail view
+        role_page.find_wait_and_assert_elem("t-role-name", role_name)
+        # click Delete
+        self.gen_elem_page.click_dropdown_delete()
+        self.gen_elem_page.click_delete_btn()
+        # check Role is deleted
+        self.driver.refresh()
+        role = role_page.find_list_data()
+        role_list_view = role_page.find_list_name()
+        self.assertNotIn(
+            role_name,
+            [r.text for r in role_list_view]
+        )
 
     def test_location(self):
         ### CREATE
@@ -262,6 +262,14 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         title = "myTitle"
         new_phone_one = "888-999-7878"
         new_phone_two = "888-999-7899"
+        new_street_one = "112 2nd St"
+        new_street_two = "64th St Ste 203"
+        new_city_one = "Bangladesh"
+        new_city_two = "Madison"
+        new_zip_one = "45322"
+        new_zip_two = "34332-4545"
+        new_email_one = "snewcomer@wat.com"
+        new_email_two = "aaron@foo.com"
         person = InputHelper(first_name=first_name, middle_initial=middle_initial,
                 last_name=last_name, employee_id=employee_id,
                 title=title)
@@ -274,6 +282,16 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         last_phone_number_input = all_phone_number_inputs[1]
         last_phone_number_input.send_keys(new_phone_two)
         person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
+        add_email_btn = self.gen_elem_page.find_add_email_btn()
+        add_email_btn.click()
+        person_page.find_email_new_entry_send_keys(new_email_one)
+        add_email_btn.click()
+        person_page.find_second_email_new_entry_send_keys(new_email_two)
+        add_address_btn = self.gen_elem_page.find_add_address_btn()
+        add_address_btn.click()
+        person_page.find_address_new_entry_send_keys(1, new_street_one, new_city_one, new_zip_one)
+        add_address_btn.click()
+        person_page.find_address_new_entry_send_keys(2, new_street_two, new_city_two, new_zip_two)
         # b/c first save won't work if the 'password' is still attached to the person.
         self.gen_elem_page.click_save_btn()
         person_page.find_list_data()
@@ -287,6 +305,10 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.find_wait_and_assert_elem("t-person-username", username)
         person_page.find_and_assert_elems(username=username, first_name=first_name,
             middle_initial=middle_initial, last_name=last_name, employee_id=employee_id, title=title)
+        person_page.assert_phone_number_inputs(new_phone_one, new_phone_two)
+        person_page.assert_email_inputs(new_email_one, new_email_two)
+        person_page.assert_address_inputs(2, new_street_one, new_city_one, new_zip_one)
+        person_page.assert_address_inputs(1, new_street_two, new_city_two, new_zip_two)
         self.driver.refresh()
         person_page.find_wait_and_assert_elem("t-person-username", username)
         person_page.find_and_assert_elems(username=username, first_name=first_name,
