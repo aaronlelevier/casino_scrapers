@@ -128,11 +128,10 @@ class LocationManagerTests(TestCase):
 
     def test_get_level_children(self):
         # setup
-        location = Location.objects.get(name='east')
-        location_level = LocationLevel.objects.get(name='store')
+        location = Location.objects.get(name='ca')
         # test
-        children = Location.objects.get_level_children(location, location_level.id)
-        self.assertEqual(children.count(), 2)
+        children = Location.objects.get_level_children(location)
+        self.assertEqual(children.count(), 3)
 
     def test_get_level_parents(self):
         # 'ca' is a 'distrinct' that now has 2 parents at the 'region' ``LocationLevel``
@@ -153,9 +152,7 @@ class LocationManagerTests(TestCase):
         person.locations.add(east)
         self.assertEqual(person.locations.count(), 1)
         self.assertEqual(person.locations.first().children.count(), 2)
-
         ret = person.locations.objects_and_their_children()
-
         self.assertEqual(len(ret), 5)
         self.assertIn(person.locations.first().id, ret)
 

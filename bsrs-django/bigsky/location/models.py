@@ -216,7 +216,7 @@ class LocationType(BaseNameModel):
 class LocationQuerySet(SelfReferencingQuerySet):
     ''' '''
 
-    def get_level_children(self, location, level_id):
+    def get_level_children(self, location):
         '''
         Includes error handling that the level_id is valid.
 
@@ -227,11 +227,9 @@ class LocationQuerySet(SelfReferencingQuerySet):
         '''
         try:
             child_levels = LocationLevel.objects.get_all_children(location.location_level)
-            location_level = LocationLevel.objects.filter(
-                id__in=child_levels.values_list('id', flat=True)).get(id=level_id)
         except ObjectDoesNotExist:
             raise
-        return self.filter(location_level=location_level)
+        return self.filter(location_level__in=child_levels)
 
     def get_level_parents(self, location, level_id):
         '''
@@ -265,11 +263,11 @@ class LocationManager(SelfReferencingManager):
     def get_queryset(self):
         return LocationQuerySet(self.model, self._db).filter(deleted__isnull=True)
         
-    def get_level_children(self, location, level_id):
+    def get_level_children(self, location):
         '''
         Get all child Locations at a specific LocationLevel.
         '''
-        return self.get_queryset().get_level_children(location, level_id)
+        return self.get_queryset().get_level_children(location)
 
     def get_level_parents(self, location, level_id):
         '''

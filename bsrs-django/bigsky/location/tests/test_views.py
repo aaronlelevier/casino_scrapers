@@ -356,14 +356,13 @@ class LocationDetailTests(APITestCase):
     def test_get_level_children(self):
         # SetUp
         location = Location.objects.get(name='east')
-        location_level = LocationLevel.objects.get(name='store')
         # Test
         response = self.client.get('/api/admin/locations/{pk}/get-level-children/{level_id}/'.format(
-            pk=location.id, level_id=location_level.id))
+            pk=location.id, level_id=location.location_level.id))
         data = json.loads(response.content.decode('utf8'))
-        store1 = Location.objects.filter(location_level=location_level).first()
+        store1 = Location.objects.filter(location_level=location.location_level).first()
         self.assertIn(str(store1.id), response.content.decode('utf8'))
-        self.assertEqual(len(data), 2)
+        self.assertEqual(len(data), 6)
 
     def test_get_level_parents(self):
         # SetUp
