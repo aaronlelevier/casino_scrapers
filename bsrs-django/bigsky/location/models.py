@@ -218,12 +218,7 @@ class LocationQuerySet(SelfReferencingQuerySet):
 
     def get_level_children(self, location):
         '''
-        Includes error handling that the level_id is valid.
-
-        :location: Parent ``Location``
-        :level_id: 
-            ``LocationLevel.id`` of the ``Child Locations`` 
-            to return.
+        :location: Parent ``Location`` to find one all of the locations one llevel deep
         '''
         try:
             child_levels = LocationLevel.objects.get_all_children(location.location_level)

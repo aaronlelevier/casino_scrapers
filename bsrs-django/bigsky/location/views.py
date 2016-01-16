@@ -154,7 +154,7 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
     @property
     def _all_related_serializer(self):
-        return ls.LocationDetailSerializer
+        return ls.LocationListSerializer
 
     def get_queryset(self):
         queryset = super(LocationViewSet, self).get_queryset()

@@ -88,7 +88,7 @@ class LocationSerializer(serializers.ModelSerializer):
 
         
 class LocationListSerializer(serializers.ModelSerializer):
-    
+    #TODO: why does this have to be the full object? remove
     location_level = LocationLevelSerializer()
     
     class Meta:
