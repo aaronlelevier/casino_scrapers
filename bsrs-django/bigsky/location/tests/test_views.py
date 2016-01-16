@@ -357,8 +357,8 @@ class LocationDetailTests(APITestCase):
         # SetUp
         location = Location.objects.get(name='east')
         # Test
-        response = self.client.get('/api/admin/locations/{pk}/get-level-children/{level_id}/'.format(
-            pk=location.id, level_id=location.location_level.id))
+        response = self.client.get('/api/admin/locations/{pk}/get-level-children/'.format(
+            pk=location.id))
         data = json.loads(response.content.decode('utf8'))
         child = Location.objects.get(name='ca')
         data = json.loads(response.content.decode('utf8'))
@@ -389,8 +389,8 @@ class LocationDetailTests(APITestCase):
         keyword = 'san_die'
 
         response = self.client.get(
-            '/api/admin/locations/{pk}/get-level-children/{level_id}/?name__icontains={name}'
-            .format(pk=location.id, level_id=location_level.id, name=keyword))
+            '/api/admin/locations/{pk}/get-level-children/?name__icontains={name}'
+            .format(pk=location.id, name=keyword))
         data = json.loads(response.content.decode('utf8'))
 
         self.assertEqual(

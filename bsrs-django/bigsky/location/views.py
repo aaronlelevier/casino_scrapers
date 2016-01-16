@@ -2,7 +2,7 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import detail_route
+from rest_framework.decorators import detail_route, list_route
 from rest_framework.exceptions import MethodNotAllowed
 
 from location.models import Location, LocationLevel, LocationStatus, LocationType
@@ -165,8 +165,8 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
         return queryset
 
-    @detail_route(methods=['GET'], url_path=r'get-level-children/(?P<level_id>[\w\-]+)')
-    def get_level_children(self, request, pk=None, level_id=None):
+    @detail_route(methods=['GET'], url_path=r'get-level-children')
+    def get_level_children(self, request, pk=None):
         instance = get_object_or_404(self.model, pk=pk)
         queryset = Location.objects.get_level_children(instance)
         queryset = self.filter_by_query_params(queryset)
