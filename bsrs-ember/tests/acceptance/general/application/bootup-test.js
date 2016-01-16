@@ -233,9 +233,10 @@ test('on boot we should fetch and load the current person configuration', functi
         assert.equal(person_current_model.get('last_name'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.last_name);
         let person = person_current_model.get('person');
         assert.equal(person.get('locations').get('length'), 1);
-        assert.ok(person.get('locations').objectAt(0).get('id'));
-        assert.ok(person.get('locations').objectAt(0).get('name'));
-        assert.ok(person.get('locations').objectAt(0).get('location_level_fk'));
+        let person_location = BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.all_locations_and_children[0];
+        assert.equal(person.get('locations').objectAt(0).get('id'), person_location.id);
+        assert.equal(person.get('locations').objectAt(0).get('name'), person_location.name);
+        assert.equal(person.get('locations').objectAt(0).get('location_level_fk'), person_location.location_level_fk);
         let location_level_fk = person.get('locations').objectAt(0).get('location_level_fk');
         assert.equal(store.find('location-level', location_level_fk).get('locations').get('length'), 1);
     });

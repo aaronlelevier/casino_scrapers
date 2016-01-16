@@ -1,4 +1,5 @@
 import Ember from 'ember';
+import config from 'bsrs-ember/config/environment';
 import PromiseMixin from 'ember-promise/mixins/promise';
 import {test, module} from 'bsrs-ember/tests/helpers/qunit';
 import module_registry from 'bsrs-ember/tests/helpers/module_registry';
@@ -51,6 +52,31 @@ test('findFiltered - will only return Tickets where the Ticket.location is in th
     let ticket_array_proxy = subject.findFiltered(person);
     assert.equal(ticket_array_proxy.get('length'), 1);
     assert.equal(ticket_array_proxy.objectAt(0).get('id'), TD.idOne);
+});
+
+test('DEFAULT_LOCATION_LEVEL', (assert) => {
+    assert.equal(config.DEFAULT_LOCATION_LEVEL, 'Company');
+});
+
+test('findFiltered - if a Person belongs to the "top level location", they can see all Tickets', (assert) => {
+    let m2m = store.push('person-location', {id: PERSON_LD.idOne, person_pk: PD.idOne, location_pk: LD.idOne});
+    let m2m_two = store.push('person-location', {id: PERSON_LD.idTwo, person_pk: PD.idTwo, location_pk: LD.idTwo});
+    let location = store.push('location', {id: LD.idOne, name: config.DEFAULT_LOCATION_LEVEL, person_location_fks: [PERSON_LD.idOne], tickets: [TD.idOne]});
+    let location_two = store.push('location', {id: LD.idTwo, name:'Foo', person_location_fks: [PERSON_LD.idTwo], tickets: [TD.idTwo]});
+    let person = store.push('person', {id: PD.idOne, person_location_fks: [PERSON_LD.idOne]});
+    let ticket = store.push('ticket', {id: TD.idOne});
+    let ticket_two = store.push('ticket', {id: TD.idTwo});
+    let locations = person.get('locations');
+    assert.equal(locations.get('length'), 1);
+    assert.equal(locations.objectAt(0).get('id'), location.get('id'));
+    let tickets = store.find('ticket');
+    assert.equal(tickets.get('length'), 2);
+    assert.equal(tickets.objectAt(0).get('id'), ticket.get('id'));
+    assert.equal(tickets.objectAt(1).get('id'), ticket_two.get('id'));
+    assert.equal(tickets.objectAt(0).get('location.id'), LD.idOne);
+    assert.equal(tickets.objectAt(1).get('location.id'), LD.idTwo);
+    let ticket_array_proxy = subject.findFiltered(person);
+    assert.equal(ticket_array_proxy.get('length'), store.find('ticket').get('length'));
 });
 
 test('findFilteredbyCategory - filter Tickets by Categories matching a Person.role.category(s)', (assert) => {

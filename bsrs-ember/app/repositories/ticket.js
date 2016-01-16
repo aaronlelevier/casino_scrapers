@@ -16,12 +16,17 @@ var TicketRepo = Ember.Object.extend(GridRepositoryMixin, {
     deserializer: Ember.computed.alias('TicketDeserializer'),
     findFiltered(person) {
         const locations = person.get('locations');
-        const filterFunc = function(ticket) {
-            var location_id = ticket.get('location.id');
-            var location_ids = locations.mapBy('id');
-            return Ember.$.inArray(location_id, location_ids) > -1;
-        };
-        return this.get('store').find('ticket', filterFunc);
+        const location_names = locations.mapBy('name');
+        if (Ember.$.inArray(config.DEFAULT_LOCATION_LEVEL, location_names) > -1) {
+            return this.get('store').find('ticket');
+        } else {
+            const filterFunc = function(ticket) {
+                var location_id = ticket.get('location.id');
+                var location_ids = locations.mapBy('id');
+                return Ember.$.inArray(location_id, location_ids) > -1;
+            };
+            return this.get('store').find('ticket', filterFunc);
+        }
     },
     findFilteredbyCategory(person) {
         const role_category_ids = person.get('role').get('categories').mapBy('id');

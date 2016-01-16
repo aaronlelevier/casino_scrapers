@@ -16,6 +16,7 @@ import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/
 import random from 'bsrs-ember/models/random';
 import timemachine from 'vendor/timemachine';
 import moment from 'moment';
+import BSRS_PERSON_CURRENT_DEFAULTS_OBJECT from 'bsrs-ember/vendor/defaults/person-current';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -45,6 +46,12 @@ module('Acceptance | ticket grid test', {
         endpoint = PREFIX + BASE_URL + '/?page=1';
         list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
         original_uuid = random.uuid;
+        // person-current
+        // andThen(() => {
+        //     BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.all_locations_and_children[0].name = config.DEFAULT_LOCATION_LEVEL; // 'Company' Location name!
+        //     store.clear('person-current');
+        //     store.push('person-current', BSRS_PERSON_CURRENT_DEFAULTS_OBJECT);
+        // });
     },
     afterEach() {
         random.uuid = original_uuid;
@@ -102,7 +109,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     });
 });
 
-test('clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
+test('aaron clicking first,last,next and previous will request page 1 and 2 correctly', function(assert) {
     var page_two = PREFIX + BASE_URL + '/?page=2';
     xhr(page_two ,"GET",null,{},200,TF.list_two());
     visit(TICKET_URL);
@@ -115,6 +122,7 @@ test('clicking first,last,next and previous will request page 1 and 2 correctly'
         isNotDisabledElement('.t-last');
     });
     click('.t-next a');
+    debugger;
     andThen(() => {
         assert.equal(currentURL(), TICKET_URL + '?page=2');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE-1);

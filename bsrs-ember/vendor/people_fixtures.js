@@ -59,7 +59,7 @@ var BSRS_PEOPLE_FACTORY = (function() {
             var uuid = '139543cf-8fea-426a-8bc3-09778cd799';
             if (i < 25) {
                 uuid = uuid + '0' + i;
-            } else{
+            } else {
                 uuid = uuid + i;
             }
             var person = this.generate(uuid);
