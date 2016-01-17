@@ -191,8 +191,10 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # if it fails here, might be due to size of browser.  Jenkins is headless so should pass
         add_location_email_btn = self.gen_elem_page.find_add_email_btn()
         add_location_email_btn.click()
+        import time; time.sleep(1)
         location_page.find_email_new_entry_send_keys(new_email_one)
         add_location_email_btn.click()
+        import time; time.sleep(1)
         location_page.find_second_email_new_entry_send_keys(new_email_two)
         
         add_address_btn = self.gen_elem_page.find_add_address_btn()
@@ -330,8 +332,10 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         person_page.assert_ph_inputs(all_phone_number_inputs, new_phone_one, new_phone_two)
         add_email_btn = self.gen_elem_page.find_add_email_btn()
         add_email_btn.click()
+        import time; time.sleep(1)
         person_page.find_email_new_entry_send_keys(new_email_one)
         add_email_btn.click()
+        import time; time.sleep(1)
         person_page.find_second_email_new_entry_send_keys(new_email_two)
         add_address_btn = self.gen_elem_page.find_add_address_btn()
         add_address_btn.click()
