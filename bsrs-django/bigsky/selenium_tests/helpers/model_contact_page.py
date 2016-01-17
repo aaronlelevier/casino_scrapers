@@ -51,13 +51,13 @@ class ModelContactPage(ModelPage):
         assert city_input.get_attribute("value") == new_city
         assert zip_input.get_attribute("value") == new_zip
 
-    def find_email_new_entry_send_keys(self, email_num):
+    def find_email_new_entry_send_keys(self, email):
         first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
-        first_email_input.send_keys(email_num)
+        first_email_input.send_keys(email)
 
-    def find_second_email_new_entry_send_keys(self, email_num):
+    def find_second_email_new_entry_send_keys(self, email):
         second_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/following-sibling::*[1]/input")
-        second_email_input.send_keys(email_num)
+        second_email_input.send_keys(email)
 
     def assert_email_inputs(self, email_one, email_two):
         first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
