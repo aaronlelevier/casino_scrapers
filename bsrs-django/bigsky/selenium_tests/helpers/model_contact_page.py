@@ -62,8 +62,8 @@ class ModelContactPage(ModelPage):
     def assert_email_inputs(self, email_one, email_two):
         first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
         second_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/following-sibling::*[1]/input")
-        assert first_email_input.get_attribute("value") == email_two
-        assert second_email_input.get_attribute("value") == email_one
+        assert first_email_input.get_attribute("value") == email_two or first_email_input.get_attribute("value") == email_one
+        assert second_email_input.get_attribute("value") == email_one or second_email_input.get_attribute("value") == email_one == email_two
 
     def assert_name_not_in_list(self, name, new_model):
         pagination = self.driver.find_element_by_class_name("t-pages")
