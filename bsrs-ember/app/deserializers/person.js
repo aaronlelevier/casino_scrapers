@@ -76,7 +76,6 @@ var extract_role = function(model, store) {
     let existing_people = role.get('people') || [];
     if (role.get('content') && existing_people.indexOf(model.id) === -1) {
         store.push('role', {id: role.get('id'), people: existing_people.concat(model.id)});
-        // role.set('people', existing_people.concat([model.id]));
     }
     delete model.role;
     return [role_pk, location_level_fk];

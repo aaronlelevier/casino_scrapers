@@ -1,8 +1,7 @@
 import Ember from 'ember';
-import inject from 'bsrs-ember/utilities/uuid';
 import injectDeserializer from 'bsrs-ember/utilities/deserializer';
 
-let extract_category = (model, store, role_existing, uuid, category_deserializer) => {
+let extract_category = (model, store, role_existing, category_deserializer) => {
     let server_sum_category_fks = [];
     let prevented_duplicate_m2m = [];
     let all_join_models = store.find('role-category', {role_fk: model.id});
@@ -14,7 +13,7 @@ let extract_category = (model, store, role_existing, uuid, category_deserializer
         });
         if (filtered_model.length === 0) {
             category_deserializer.deserialize(category_json, category_json.id);
-            let pk = uuid.v4();
+            let pk = Ember.uuid();
             server_sum_category_fks.push(pk);  
             store.push('role-category', {id: pk, role_fk: model.id, category_fk: category_json.id});
         } else {
@@ -40,32 +39,26 @@ let extract_category = (model, store, role_existing, uuid, category_deserializer
 };
 
 let extract_location_level = (model, store) => {
-    let location_level_pk;
-    let fk = model.location_level || model.location_level_fk;//
-    if (fk) {
-        location_level_pk = fk;//
-    } else {
-        let role = store.find('role', model.id);
+    const location_level_pk = model.location_level;
+    if (!location_level_pk) {
+        const role = store.find('role', model.id);
         if (role.get('location_level')) {
             store.push('role', {id: role.get('id'), location_level_fk: undefined});
-            // role.set('location_level_fk', undefined);
-            let location_level = role.get('location_level');
-            let role_array = location_level.get('roles');
-            let mutated_array = role_array.filter((role) => {
+            const location_level = role.get('location_level');
+            const role_array = location_level.get('roles');
+            const mutated_array = role_array.filter((role) => {
                 return role !== model.id;
             });
             store.push('location-level', {id: location_level.get('id'), roles: mutated_array});
-            // location_level.set('roles', mutated_array);
             location_level.save();
         }
         return undefined;
     }
     if(location_level_pk) {
-        let location_level = store.find('location-level', fk);//
-        let existing_roles = location_level.get('roles') || [];
+        const location_level = store.find('location-level', location_level_pk);
+        const existing_roles = location_level.get('roles') || [];
         if (location_level.get('content') && existing_roles.indexOf(model.id) === -1) {
             store.push('location-level', {id: location_level.get('id'), roles: existing_roles.concat(model.id)});
-            // location_level.set('roles', existing_roles.concat([model.id]));
             location_level.save();
         }
         delete model.location_level;
@@ -75,7 +68,6 @@ let extract_location_level = (model, store) => {
 };
 
 var RoleDeserializer = Ember.Object.extend({
-    uuid: inject('uuid'),
     CategoryDeserializer: injectDeserializer('category'),
     deserialize(response, options) {
         let category_deserializer = this.get('CategoryDeserializer');
@@ -86,12 +78,11 @@ var RoleDeserializer = Ember.Object.extend({
         }
     },
     deserialize_single(response, id, category_deserializer) {
-        let uuid = this.get('uuid');
         let store = this.get('store');
         let role_existing = store.find('role', id);
         if (!role_existing.get('id') || role_existing.get('isNotDirtyOrRelatedNotDirty')) {
             response.location_level_fk = extract_location_level(response, store);
-            response.role_category_fks = extract_category(response, store, role_existing, uuid, category_deserializer);
+            response.role_category_fks = extract_category(response, store, role_existing, category_deserializer);
             let originalRole = store.push('role', response);
             originalRole.save();
         }

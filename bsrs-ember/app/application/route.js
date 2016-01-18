@@ -63,7 +63,7 @@ var ApplicationRoute = Ember.Route.extend({
             delete model.parents;
             store.push('location-level', model);
         });
-        const role_list = Ember.$('[data-preload-roles]').data('configuration');
+        const role_list = Ember.$.extend(true, [], Ember.$('[data-preload-roles]').data('configuration'));
         const role_deserializer = this.get('RoleDeserializer');
         role_list.forEach((model) => {
             role_deserializer.deserialize(model, model.id);
