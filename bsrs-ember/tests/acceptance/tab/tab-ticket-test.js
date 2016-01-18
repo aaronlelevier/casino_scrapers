@@ -85,6 +85,29 @@ test('deep linking the ticket detail url should push a tab into the tab store wi
     });
 });
 
+test('changing the categories should update the tab title', (assert) => {
+    visit(DETAIL_URL);
+    andThen(() => {
+        assert.equal(currentURL(), DETAIL_URL);
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        const tab = store.find('tab', TD.idOne);
+        const ticket = store.find('ticket', TD.idOne);
+        const sorted_cat = ticket.get('sorted_categories');
+        assert.equal(find(TAB_TITLE).text(), `#${ticket.get('number')} - ${sorted_cat[sorted_cat.length-1].get('name')}`);
+    });
+    page.categoryTwoClickDropdown();
+    page.categoryTwoClickOptionElectrical();
+    andThen(() => {
+        let tabs = store.find('tab');
+        assert.equal(tabs.get('length'), 1);
+        const tab = store.find('tab', TD.idOne);
+        const ticket = store.find('ticket', TD.idOne);
+        const sorted_cat = ticket.get('sorted_categories');
+        assert.equal(find(TAB_TITLE).text(), `#${ticket.get('number')} - ${sorted_cat[sorted_cat.length-1].get('name')}`);
+    });
+});
+
 test('visiting the ticket detail url from the list url should push a tab into the tab store', (assert) => {
     let ticket_list_data = TF.list();
     list_xhr = xhr(endpoint + '?page=1', 'GET', null, {}, 200, ticket_list_data);

@@ -19,7 +19,7 @@ var TicketSingleRoute = TabRoute.extend({
     /*start-non-standard*/ @computed /*end-non-standard*/
     modelName() { return 'ticket'; },
     /*start-non-standard*/ @computed /*end-non-standard*/
-    templateModelField() { return 'ticket'; },
+    templateModelField() { return 'categories'; },
     /*start-non-standard*/ @computed /*end-non-standard*/
     top_level_category_options() {
         const categoryRepo = this.get('categoryRepository');

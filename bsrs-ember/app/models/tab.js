@@ -8,7 +8,7 @@ var TabModel = Ember.Object.extend({
             const model = this.get('model');
             if (model.get('content')) {
                 switch(dynamicField) {
-                    case 'ticket':
+                    case 'categories':
                         return `#${model.get('number')} - ${model.get('leaf_category.name')}`;
                     default:
                         return model.get('new') ? `New ${dynamicField}` : model.get(dynamicField);
