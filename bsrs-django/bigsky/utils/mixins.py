@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import CharField, TextField
 
 from rest_framework import status
 from rest_framework.exceptions import ValidationError
@@ -85,8 +86,12 @@ class OrderingQuerySetMixin(object):
 
         for param in ordering.split(','):
             field, asc = self._get_field(param)
-            select_dict[self._get_key(field)] = self._get_value(field)
-            order_by_list.append(self._get_asc_desc_value(field, asc))
+
+            if self._is_str_field(field):
+                select_dict[self._get_key(field)] = self._get_value(field)
+                order_by_list.append(self._get_asc_desc_value(field, asc))
+            else:
+                order_by_list.append(param)
 
         return queryset.extra(select=select_dict).order_by(*order_by_list)
 
@@ -98,6 +103,11 @@ class OrderingQuerySetMixin(object):
             return (param[1:], False)
         else:
             return (param, True)
+
+    def _is_str_field(self, param):
+        model_field = self.model._meta.get_field(param)
+        if isinstance(model_field, (CharField, TextField,)):
+            return True
 
     def _get_key(self, field):
         return "lower_{}".format(field)

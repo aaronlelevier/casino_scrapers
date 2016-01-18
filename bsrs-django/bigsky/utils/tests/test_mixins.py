@@ -4,7 +4,7 @@ import random
 from django.db.models.functions import Lower
 
 from model_mommy import mommy
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 
 from accounting.models import Currency
 from accounting.serializers import CurrencySerializer
@@ -70,7 +70,7 @@ class DestroyModelMixinTests(APITestCase):
             Person.objects_all.get(id=self.person2.id)
 
 
-class OrderingQuerySetMixinTests(APITransactionTestCase):
+class OrderingQuerySetMixinTests(APITestCase):
 
     def setUp(self):
         # Role
@@ -151,8 +151,32 @@ class OrderingQuerySetMixinTests(APITransactionTestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
 
+    def test_ordering_data_type__date(self):
+        create_single_person()
+        create_single_person()
+        raw_qs_first = Person.objects.order_by('created').first()
 
-class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
+        response = self.client.get('/api/admin/people/?ordering=created')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(str(raw_qs_first.id), data['results'][0]['id'])
+
+    def test_ordering_data_type__int(self):
+        person = create_single_person()
+        person.auth_amount = 1
+        person.save()
+        person_two = create_single_person()
+        person_two.auth_amount = 2
+        person.save()
+        raw_qs_first = Person.objects.order_by('-auth_amount').first()
+
+        response = self.client.get('/api/admin/people/?ordering=-auth_amount')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(str(raw_qs_first.id), data['results'][0]['id'])
+
+
+class RelatedOrderingQuerySetMixinTests(APITestCase):
 
     def setUp(self):
         # Role
@@ -237,7 +261,7 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
         )
 
 
-class FilterRelatedMixinMixin(APITransactionTestCase):
+class FilterRelatedMixinMixin(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
