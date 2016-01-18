@@ -13,15 +13,15 @@ var FilterSet = Ember.Object.extend({
         return query;
     }),
     params: Ember.computed('query', function() {
+        var query = Ember.$.extend(true, {}, this.get('query'));
+        query['page'] = 1;
         return Ember.Object.create({
             isQueryParams: true,
-            values: this.get('query')
+            values: query
         });
     }),
     filter_exists: function(path, incoming) {
-        //TODO: remove this extend + delete after params takes on the page 1 logic
-        var query = Ember.$.extend(true, {}, this.get('query'));
-        delete query.page;
+        var query = this.get('query');
         var endpoint = this.get('endpoint_name');
         if(path !== endpoint) {
             return false;
