@@ -158,6 +158,5 @@ class EmailTests(APITestCase):
 
         data = json.loads(response.content.decode('utf8'))
         self.assertEqual(data['id'], str(self.email.id))
-        self.assertEqual(data['type']['id'], str(self.email.type.id))
-        self.assertEqual(data['type']['name'], str(self.email.type.name))
+        self.assertEqual(data['type'], str(self.email.type.id))
         self.assertEqual(data['email'], str(self.email.email))

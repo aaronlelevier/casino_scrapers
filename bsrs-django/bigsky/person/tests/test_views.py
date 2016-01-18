@@ -345,8 +345,7 @@ class PersonDetailTests(TestCase):
         email = Email.objects.get(id=self.data['emails'][0]['id'])
         
         self.assertEqual(self.data['emails'][0]['id'], str(email.id))
-        self.assertEqual(self.data['emails'][0]['type']['id'], str(email.type.id))
-        self.assertEqual(self.data['emails'][0]['type']['name'], email.type.name)
+        self.assertEqual(self.data['emails'][0]['type'], str(email.type.id))
         self.assertEqual(self.data['emails'][0]['email'], email.email)
 
     def test_data_phone_numbers(self):

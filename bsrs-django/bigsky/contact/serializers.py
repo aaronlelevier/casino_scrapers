@@ -72,8 +72,6 @@ class EmailFlatSerializer(BaseCreateSerializer):
 
 class EmailSerializer(BaseCreateSerializer):
 
-    type = EmailTypeSerializer()
-    
     class Meta:
         model = Email
         fields = ('id', 'type', 'email',)

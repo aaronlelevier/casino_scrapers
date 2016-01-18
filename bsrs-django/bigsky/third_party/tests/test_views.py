@@ -64,8 +64,7 @@ class ThirdPartyTests(APITestCase):
         email = Email.objects.get(id=data['emails'][0]['id'])
 
         self.assertEqual(data['emails'][0]['id'], str(email.id))
-        self.assertEqual(data['emails'][0]['type']['id'], str(email.type.id))
-        self.assertEqual(data['emails'][0]['type']['name'], email.type.name)
+        self.assertEqual(data['emails'][0]['type'], str(email.type.id))
         self.assertEqual(data['emails'][0]['email'], email.email)
 
     def test_data_phone_numbers(self):
@@ -106,7 +105,7 @@ class ThirdPartyTests(APITestCase):
         response = self.client.get('/api/admin/third-parties/{}/'.format(self.third_party.id))
         data = json.loads(response.content.decode('utf8'))
         self.assertIsInstance(
-            EmailType.objects.get(id=data['emails'][0]['type']['id']),
+            EmailType.objects.get(id=data['emails'][0]['type']),
             EmailType
         )
 
@@ -120,7 +119,7 @@ class ThirdPartyTests(APITestCase):
         email = create_contact(Email, self.third_party)
         response = self.client.get('/api/admin/third-parties/{}/'.format(self.third_party.id))
         data = json.loads(response.content.decode('utf8'))
-        self.assertTrue(data['emails'][0]['type']['id'])
+        self.assertTrue(data['emails'][0]['type'])
 
     ### UPDATE
 
