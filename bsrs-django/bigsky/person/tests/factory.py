@@ -147,7 +147,7 @@ def update_admin(person):
     And all Parent Categories, so they can view all Tickets.
     """
     update_login_person(person)
-    add_all_locations(person)
+    add_top_level_location(person)
     add_all_parent_categores(person)
 
 
@@ -179,6 +179,19 @@ def update_admin_location(person):
     person.locations.add(location)
 
 
+def add_top_level_location(person):
+    """
+    `person.Role.location_level` must match `Location.location_level`
+    """
+    [person.locations.remove(x) for x in person.locations.all()]
+    
+    location = Location.objects.create_top_level()
+    person.role.location_level = location.location_level
+    person.role.save()
+    
+    person.locations.add(location)
+
+
 def add_all_locations(person):
     for location in Location.objects.filter(location_level=person.role.location_level):
         person.locations.add(location)
@@ -197,7 +210,7 @@ create_all_people()
 """
 def create_all_people():
 
-    if not Location.objects.first():
+    if not Location.objects.filter(name=settings.LOCATION_TOP_LEVEL_NAME):
         create_locations()
 
     # initial Roles

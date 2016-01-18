@@ -179,8 +179,19 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         new_zip_two = "34332-4545"
         new_email_one = "snewcomer@wat.com"
         new_email_two = "aaron@foo.com"
+        # New 'name'
         location = InputHelper(location_name=new_location_name)
         self._fill_in(location, True)
+        # re-fill out "name, number, location-level" if needed
+        location_number = rand_chars()
+        location_level = rand_chars()
+        location = InputHelper(location_number=location_number)
+        self._fill_in(location)
+        location_level_select = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-level-select ')]/div")
+        location_level_select.click()
+        ll_option = self.driver.find_element_by_class_name("ember-power-select-option--highlighted")
+        ll_option.click()
+        # Fill in Contact data
         add_phone_number_btn = self.gen_elem_page.find_add_btn()
         add_phone_number_btn.click()
         location_page.find_ph_new_entry_send_keys(new_phone_one)

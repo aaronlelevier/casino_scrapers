@@ -193,6 +193,8 @@ class UpdateAdminTests(TestCase):
         self.assertEqual(self.client.session['_auth_user_id'], person.pk)
 
     def test_update_admin(self):
+        top_level_location = Location.objects.create_top_level()
+        top_level_location_level = LocationLevel.objects.create_top_level()
         person = factory.create_single_person()
 
         factory.update_admin(person)
@@ -200,11 +202,10 @@ class UpdateAdminTests(TestCase):
         # django-admin access attrs
         self.assertTrue(person.is_superuser)
         self.assertTrue(person.is_superuser)
-        # Locations
+        # Locations - 'admin' belongs to the top level
         person_locations = person.locations.values_list('id', flat=True)
-        for location in (Location.objects.filter(location_level=person.role.location_level)
-                                         .values_list('id', flat=True)):
-            self.assertIn(location, person_locations)
+        self.assertIn(top_level_location.id, person_locations)
+        self.assertEqual(person.role.location_level, top_level_location_level)
         # Categories
         person_role_categories = person.role.categories.values_list('id', flat=True)
         for category in Category.objects.filter(parent__isnull=True).values_list('id', flat=True):
