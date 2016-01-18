@@ -1,9 +1,6 @@
 from rest_framework import serializers
 
-from contact.serializers import   (
-    PhoneNumberFlatSerializer, PhoneNumberSerializer,
-    EmailFlatSerializer, EmailSerializer,
-    AddressFlatSerializer, AddressSerializer)
+from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer)
 from location.serializers import LocationIdNameSerializer, LocationIdNameOnlySerializer
 from category.serializers import CategoryRoleSerializer
 from person.models import Person, Role
@@ -147,9 +144,9 @@ class PersonUpdateSerializer(RemovePasswordSerializerMixin, NestedContactSeriali
 
     '''
     password = serializers.CharField(required=False, style={'input_type': 'password'})
-    emails = EmailFlatSerializer(required=False, many=True)
-    phone_numbers = PhoneNumberFlatSerializer(required=False, many=True)
-    addresses = AddressFlatSerializer(required=False, many=True)
+    emails = EmailSerializer(required=False, many=True)
+    phone_numbers = PhoneNumberSerializer(required=False, many=True)
+    addresses = AddressSerializer(required=False, many=True)
 
     class Meta:
         model = Person
