@@ -713,3 +713,38 @@ test('applying a saved filterset will reset the page to 1 by default', function(
         assert.ok(!pagination.find('.t-page:eq(1) a').hasClass('active'));
     });
 });
+
+//this test is specifically for applying saved filtersets ... it just happens to use this module and the role fixture data
+test('each time you apply a saved filterset the query params are reset to reflect only the currently active filterset', function(assert) {
+    const filter_one = 'foobar';
+    const filter_two = 'adminOnly';
+    Ember.run(function() {
+        store.push('filterset', {id: 'def456', name: filter_one, endpoint_name: 'admin.roles.index', endpoint_uri: '?find=name%3Axav&search=zap'});
+        store.push('filterset', {id: 'ghi789', name: filter_two, endpoint_name: 'admin.roles.index', endpoint_uri: '?search=admin&sort=name'});
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+        assert.equal(find('.t-filterset-wrap li:eq(0) a').text().trim(), filter_one);
+        assert.equal(find('.t-filterset-wrap li:eq(1) a').text().trim(), filter_two);
+        assert.ok(!find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
+        assert.ok(!find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&search=zap&name__icontains=xav` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+    click('.t-filterset-wrap li:eq(0) a');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+        assert.equal(currentURL(), '/admin/roles/index?find=name%3Axav&search=zap');
+        assert.ok(find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
+        assert.ok(!find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&search=admin` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+    click('.t-filterset-wrap li:eq(1) a');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+        assert.equal(currentURL(), '/admin/roles/index?search=admin&sort=name');
+        assert.ok(!find('.t-filterset-wrap li:eq(0) a').hasClass('active'));
+        assert.ok(find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
+    });
+});

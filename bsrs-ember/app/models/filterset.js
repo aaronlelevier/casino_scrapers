@@ -13,11 +13,12 @@ var FilterSet = Ember.Object.extend({
         return query;
     }),
     params: Ember.computed('query', function() {
+        var reset = {find: undefined, sort: undefined, search: undefined, page: 1};
         var query = Ember.$.extend(true, {}, this.get('query'));
-        query['page'] = 1;
+        var queryParams = Ember.$.extend(reset, query);
         return Ember.Object.create({
             isQueryParams: true,
-            values: query
+            values: queryParams
         });
     }),
     filter_exists: function(path, incoming) {
