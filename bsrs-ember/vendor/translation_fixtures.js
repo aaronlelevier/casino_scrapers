@@ -186,6 +186,8 @@ var BSRS_TRANSLATION_FACTORY = (function() {
                     'crud.save.success':'{{model}} saved successfully.',
                     'crud.titles.edit':'Edit {{model}}',
                     'crud.titles.new':'New {{model}}',
+                    'grid.filter':'Filter',
+                    'grid.filterset_name':'Name your filter',
                     'grid.per_page':'{{size}} per page',
                     'grid.reset_all_options':'Reset All Options',
                     'grid.save_filter':'Save Filter',

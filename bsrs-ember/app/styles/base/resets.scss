@@ -249,3 +249,7 @@ fieldset[disabled] .form-control,
 		color: $white;
 	}
 }
+.ember-modal-overlay{
+	background-color: $dark;
+	opacity: 0.3;
+}

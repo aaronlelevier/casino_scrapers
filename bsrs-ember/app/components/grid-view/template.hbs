@@ -22,17 +22,24 @@
         </div>
     </header>
     {{#if savingFilter}}
-        {{#focus-tether-dialog target='.t-show-save-filterset-modal' close='toggleSaveFilterSetModal' clickOutsideToClose=true}}
-        <div class="form-group">
-            {{input value=filtersetName class="form-control input-sm t-filterset-name-input" placeholder="Name"}}
-            <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>Save</button>
+        {{#tether-dialog close='toggleSaveFilterSetModal' containerClassNames='save-filterset-dialog' hasOverlay=true clickOutsideToClose=true}}
+        <div class="form-group input-group">
+            {{input value=filtersetName class="form-control input-md t-filterset-name-input" placeholder=(t 'grid.filterset_name')}}
+            <div class="input-group-btn">
+                <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "invokeSaveFilterSet"}}>{{t 'grid.save_filter'}}</button>
+            </div>
         </div>
-        {{/focus-tether-dialog}}
+        {{/tether-dialog}}
     {{/if}}
     {{#if toggleFilter}}
-        {{#focus-tether-dialog container-class='column-filter' target=targetFilter close='toggleFilterModal' hasOverlay=false clickOutsideToClose=true attachment='center left' targetAttachment='center left' offset='0 14px'}}
-        {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
-        {{/focus-tether-dialog}}
+        {{#tether-dialog containerClassNames='save-filterset-dialog' close='toggleFilterModal' hasOverlay=true clickOutsideToClose=true}}
+        <div class="form-group input-group">
+            {{input-dynamic-filter close='toggleFilterModal' obj=filterModel prop=filterField placeholder=filterPlaceholder}}
+            <div class="input-group-btn">
+                <button class="btn btn-primary btn-sm t-filterset-save-btn" {{action "toggleFilterModal"}}>{{t 'grid.filter'}}</button>
+            </div>
+        </div>
+        {{/tether-dialog}}
     {{/if}}
     <section class="docSection docSectionWithFooter container-fluid t-grid-wrap">
         <div class="row">
