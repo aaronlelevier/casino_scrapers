@@ -61,3 +61,42 @@ test('params will transform multi-fulltext query string into valid ember route q
     params = subject.get('params');
     assert.deepEqual(params.get('values'), {find: 'fullname:tr,title:ex'});
 });
+
+test('filter_exists will return true when a match occurs for sort/find/search and path (regardless of order)', (assert) => {
+    let path = 'admin.roles.index';
+    subject = store.push('filterset', {id: 1, endpoint_name: path, endpoint_uri: '?search=wa'});
+    assert.deepEqual(subject.get('params').get('values'), {search: 'wa'});
+    assert.ok(!subject.filter_exists(path, {search: 'wa', find: 'fullname:tru', sort: 'title'}));
+    subject.set('endpoint_uri', '?find=fullname%3Atru&search=wa');
+    assert.deepEqual(subject.get('params').get('values'), {find: 'fullname:tru', search: 'wa'});
+    assert.ok(!subject.filter_exists(path, {search: 'wa', find: 'fullname:tru', sort: 'title'}));
+    subject.set('endpoint_uri', '?find=fullname%3Atru&search=wa&sort=title');
+    assert.deepEqual(subject.get('params').get('values'), {find: 'fullname:tru', search: 'wa', sort: 'title'});
+    assert.ok(subject.filter_exists(path, {search: 'wa', find: 'fullname:tru', sort: 'title'}));
+    assert.ok(subject.filter_exists(path, {find: 'fullname:tru', search: 'wa', sort: 'title'}));
+    assert.ok(!subject.filter_exists('admin.people.index', {find: 'fullname:tru', search: 'wa', sort: 'title'}));
+    subject.set('endpoint_uri', '?find=fullname%3Atru&search=wa&sort=titlez');
+    assert.deepEqual(subject.get('params').get('values'), {find: 'fullname:tru', search: 'wa', sort: 'titlez'});
+    assert.ok(!subject.filter_exists(path, {search: 'wa', find: 'fullname:tru', sort: 'title'}));
+    subject.set('endpoint_uri', '?find=fullname%3Atru&search=wa');
+    assert.deepEqual(subject.get('params').get('values'), {find: 'fullname:tru', search: 'wa'});
+    assert.ok(!subject.filter_exists(path, {search: 'wa', find: 'fullname:tru', sort: 'title'}));
+    subject.set('endpoint_uri', '?find=fullname%3Atru&search=wa&sort=title');
+    assert.deepEqual(subject.get('params').get('values'), {find: 'fullname:tru', search: 'wa', sort: 'title'});
+    assert.ok(subject.filter_exists(path, {search: 'wa', find: 'fullname:tru', sort: 'title'}));
+    assert.ok(!subject.filter_exists(path, {search: 'wa', find: undefined, sort: 'title'}));
+});
+
+test('filter_exists will return true when a match occurs for sort/find/search but page is present', (assert) => {
+    let path = 'admin.roles.index';
+    subject = store.push('filterset', {id: 1, endpoint_name: path, endpoint_uri: '?page=1&find=fullname%3Atru&search=wa&sort=title'});
+    assert.deepEqual(subject.get('params').get('values'), {page: '1', find: 'fullname:tru', search: 'wa', sort: 'title'});
+    assert.ok(subject.filter_exists(path, {search: 'wa', find: 'fullname:tru', sort: 'title'}));
+});
+
+test('filter_exists will return true when a match occurs for sort/find/search but params is missing a particular key', (assert) => {
+    let path = 'admin.roles.index';
+    subject = store.push('filterset', {id: 1, endpoint_name: path, endpoint_uri: '?page=1&find=fullname%3Atru&search=wa'});
+    assert.deepEqual(subject.get('params').get('values'), {page: '1', find: 'fullname:tru', search: 'wa'});
+    assert.ok(subject.filter_exists(path, {search: 'wa', find: 'fullname:tru', sort: undefined}));
+});

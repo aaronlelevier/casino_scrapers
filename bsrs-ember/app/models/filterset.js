@@ -17,7 +17,31 @@ var FilterSet = Ember.Object.extend({
             isQueryParams: true,
             values: this.get('query')
         });
-    })
+    }),
+    filter_exists: function(path, incoming) {
+        //TODO: remove this extend + delete after params takes on the page 1 logic
+        var query = Ember.$.extend(true, {}, this.get('query'));
+        delete query.page;
+        var endpoint = this.get('endpoint_name');
+        if(path !== endpoint) {
+            return false;
+        }
+        for(var i in incoming){
+            if(incoming.hasOwnProperty(i)){
+                if(incoming[i] !== query[i]){
+                    return false;
+                }
+            }
+        }
+        for(var q in query){
+            if(query.hasOwnProperty(q)){
+                if(incoming[q] !== query[q]){
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
 });
 
 export default FilterSet;

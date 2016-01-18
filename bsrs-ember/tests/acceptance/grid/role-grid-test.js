@@ -703,7 +703,7 @@ test('applying a saved filterset will reset the page to 1 by default', function(
     ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name&name__icontains=xav` ,'GET',null,{},200,RF.paginated(updated_pg_size));
     click('.t-filterset-wrap li:eq(0) a');
     andThen(() => {
-        // assert.equal(find(SAVE_FILTERSET_MODAL).length, 0); next bug to fix in #111
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
         assert.equal(currentURL(), '/admin/roles/index?find=name%3Axav&sort=name');
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);

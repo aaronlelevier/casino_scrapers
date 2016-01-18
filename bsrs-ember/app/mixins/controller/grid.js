@@ -11,22 +11,28 @@ var GridViewController = Ember.Controller.extend({
     repository: inject('filterset'),
     application: Ember.inject.controller(),
     queryParams: ['page', 'sort', 'search', 'find'],
-    routePath: Ember.computed.alias('application.currentRouteName'),
     hasActiveFilterSet: Ember.computed('sort', 'find', 'search', function() {
+        let filtersets = this.get('filtersets');
         let sort = this.get('sort');
         let find = this.get('find');
         let search = this.get('search');
-        return sort || find || search;
+        let active = sort || find || search;
+        let path = this.get('routeName');
+        let result = true;
+        filtersets.forEach(function(model) {
+            result = !model.filter_exists(path, {search: search, find: find, sort: sort}) && result;
+        });
+        return active && result;
     }),
     defaultSort: Ember.computed(function() {
         let store = this.get('store');
-        let routePath = this.get('routePath');
-        let configuration = store.find('model-ordering', routePath);
+        let path = this.get('routeName');
+        let configuration = store.find('model-ordering', path);
         return configuration.get('order') || ['id'];
     }),
     actions: {
         save_filterset(name) {
-            let path = this.get('routePath');
+            let path = this.get('routeName');
             let url = this.get('target.url');
             let params = filterset_regex(url);
             let repository = this.get('repository');
