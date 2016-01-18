@@ -165,13 +165,14 @@ class LocationViewSet(SelfReferencingRouteMixin, BaseModelViewSet):
 
         return queryset
 
-    @detail_route(methods=['GET'], url_path=r'get-level-children')
+    @list_route(methods=['GET'], url_path=r'get-level-children/(?P<pk>[\w\-]+)')
     def get_level_children(self, request, pk=None):
         instance = get_object_or_404(self.model, pk=pk)
         queryset = Location.objects.get_level_children(instance)
         queryset = self.filter_by_query_params(queryset)
-        serializer = self._all_related_serializer(queryset, many=True)
-        return Response(serializer.data)
+        page = self.paginate_queryset(queryset)
+        serializer = self._all_related_serializer(page, many=True)
+        return self.get_paginated_response(serializer.data)
 
     @detail_route(methods=['GET'], url_path=r'get-level-parents/(?P<level_id>[\w\-]+)')
     def get_level_parents(self, request, pk=None, level_id=None):

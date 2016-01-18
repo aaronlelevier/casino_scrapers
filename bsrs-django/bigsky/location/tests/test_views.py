@@ -357,11 +357,12 @@ class LocationDetailTests(APITestCase):
         # SetUp
         location = Location.objects.get(name='east')
         # Test
-        response = self.client.get('/api/admin/locations/{pk}/get-level-children/'.format(
+        response = self.client.get('/api/admin/locations/get-level-children/{pk}/'.format(
             pk=location.id))
         data = json.loads(response.content.decode('utf8'))
+        self.assertIn('results', data)
+        data = data['results']
         child = Location.objects.get(name='ca')
-        data = json.loads(response.content.decode('utf8'))
         self.assertIn(str(child.id), [loc['id'] for loc in data])
         self.assertNotIn(str(location.id), [loc['id'] for loc in data])
         self.assertEqual(len(data), 6)
@@ -387,12 +388,11 @@ class LocationDetailTests(APITestCase):
         location = Location.objects.get(name='east')
         location_level = LocationLevel.objects.get(name='store')
         keyword = 'san_die'
-
         response = self.client.get(
-            '/api/admin/locations/{pk}/get-level-children/?name__icontains={name}'
+            '/api/admin/locations/get-level-children/{pk}/?name__icontains={name}'
             .format(pk=location.id, name=keyword))
         data = json.loads(response.content.decode('utf8'))
-
+        data = data['results']
         self.assertEqual(
             len(data),
             Location.objects.filter(location_level=location_level, name__icontains=keyword).count()
