@@ -193,8 +193,8 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         add_location_email_btn = self.gen_elem_page.find_add_email_btn()
         add_location_email_btn.click()
         location_page.find_email_new_entry_send_keys(new_email_one)
-        # add_location_email_btn.click()
-        # location_page.find_second_email_new_entry_send_keys(new_email_two)
+        add_location_email_btn.click()
+        location_page.find_second_email_new_entry_send_keys(new_email_two)
         
         add_address_btn = self.gen_elem_page.find_add_address_btn()
         add_address_btn.click()
@@ -214,7 +214,7 @@ class SeleniumTests(JavascriptMixin, LoginMixin, FillInHelper, unittest.TestCase
         # Check to see if address/email/phone numbers saved
         location_page.find_wait_and_assert_elem("t-location-name", new_location_name)
         location_page.assert_phone_number_inputs(new_phone_one, new_phone_two)
-        # location_page.assert_email_inputs(new_email_one, new_email_two)
+        location_page.assert_email_inputs(new_email_one, new_email_two)
         location_page.assert_address_inputs(1, new_street_one, new_city_one, new_zip_one)
         location_page.assert_address_inputs(2, new_street_two, new_city_two, new_zip_two)
         ### DELETE
