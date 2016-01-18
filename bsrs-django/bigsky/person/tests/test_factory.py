@@ -239,6 +239,42 @@ class UpdateAdminTests(TestCase):
         for category in Category.objects.filter(parent__isnull=True).values_list('id', flat=True):
             self.assertIn(category, person_role_categories)
 
+    def test_add_top_level_location(self):
+        person = factory.create_single_person()
+        top_level_location = Location.objects.create_top_level()
+
+        factory.add_top_level_location(person)
+
+        self.assertEqual(person.locations.count(), 1)
+        self.assertEqual(person.locations.first(), top_level_location)
+        self.assertEqual(person.role.location_level, top_level_location.location_level)
+
+    def test_add_all_locations(self):
+        create_locations()
+        person = factory.create_single_person()
+
+        factory.add_all_locations(person)
+
+        for location in Location.objects.filter(location_level=person.role.location_level):
+            self.assertIn(location, person.locations.all())
+
+    def test_remove_all_locations(self):
+        create_locations()
+        person = factory.create_single_person()
+
+        factory.remove_all_locations(person)
+
+        self.assertEqual(person.locations.count(), 0)
+
+    def test_add_all_parent_categores(self):
+        create_locations()
+        person = factory.create_single_person()
+
+        factory.add_all_parent_categores(person)
+
+        for category in Category.objects.filter(parent__isnull=True):
+            self.assertIn(category, person.role.categories.all())
+
 
 class CreateAllPeopleTests(TestCase):
 

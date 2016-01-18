@@ -710,7 +710,7 @@ class PersonSearchTests(APITransactionTestCase):
         self.role = create_role()
         create_all_people()
         # Login
-        self.person = Person.objects.first()
+        self.person = Person.objects.get(username='admin')
         self.client.login(username=self.person.username, password=PASSWORD)
 
     def tearDown(self):

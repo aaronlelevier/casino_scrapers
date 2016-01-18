@@ -172,8 +172,7 @@ def update_admin_location(person):
     """
     add_all_parent_categores(person)
 
-    for location in person.locations.all():
-        person.locations.remove(location)
+    remove_all_locations(person)
 
     location = Location.objects.filter(location_level=person.role.location_level)[0]
     person.locations.add(location)
@@ -183,7 +182,7 @@ def add_top_level_location(person):
     """
     `person.Role.location_level` must match `Location.location_level`
     """
-    [person.locations.remove(x) for x in person.locations.all()]
+    remove_all_locations(person)
     
     location = Location.objects.create_top_level()
     person.role.location_level = location.location_level
@@ -200,6 +199,10 @@ def add_all_locations(person):
 def add_all_parent_categores(person):
     for category in Category.objects.filter(parent__isnull=True):
         person.role.categories.add(category)
+
+
+def remove_all_locations(person):
+    [person.locations.remove(x) for x in person.locations.all()]
 
 
 """

@@ -9,7 +9,7 @@ from rest_framework.test import APITestCase
 from accounting.models import Currency
 from accounting.serializers import CurrencySerializer
 from location.models import LocationLevel
-from location.tests.factory import create_location
+from location.tests.factory import create_location, create_location_level
 from person.models import Person
 from person.tests.factory import create_single_person, create_role, create_roles, PASSWORD
 from utils import create
@@ -176,7 +176,7 @@ class OrderingQuerySetMixinTests(APITestCase):
         self.assertEqual(str(raw_qs_first.id), data['results'][0]['id'])
 
 
-class RelatedOrderingQuerySetMixinTests(APITestCase):
+class RelatedOrderingTests(APITestCase):
 
     def setUp(self):
         # Role
@@ -207,7 +207,7 @@ class RelatedOrderingQuerySetMixinTests(APITestCase):
 
     def test_list(self):
         params = ["role__name"]
-        response = self.client.get('/api/admin/people/?related_ordering={}'
+        response = self.client.get('/api/admin/people/?ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -218,7 +218,7 @@ class RelatedOrderingQuerySetMixinTests(APITestCase):
 
     def test_list_reverse(self):
         params = ["-role__name"]
-        response = self.client.get('/api/admin/people/?related_ordering={}'
+        response = self.client.get('/api/admin/people/?ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -229,7 +229,7 @@ class RelatedOrderingQuerySetMixinTests(APITestCase):
 
     def test_list_multiple(self):
         params = ["role__name", "role__location_level__name"]
-        response = self.client.get('/api/admin/people/?related_ordering={}'
+        response = self.client.get('/api/admin/people/?ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -240,7 +240,20 @@ class RelatedOrderingQuerySetMixinTests(APITestCase):
 
     def test_list_multiple_with_non_related(self):
         params = ["username", "role__location_level__name"]
-        response = self.client.get('/api/admin/people/?related_ordering={}'
+        response = self.client.get('/api/admin/people/?ordering={}'
+            .format(','.join(params)))
+        self.assertEqual(response.status_code, 200)
+        data = json.loads(response.content.decode('utf8'))
+        self.assertEqual(
+            data['results'][0]['role'],
+            str(Person.objects.extra(select={'lower_username': 'lower(username)'})
+                              .order_by("lower_username", "role__location_level__name")
+                              .first().role.id)
+        )
+
+    def test_list_reverse_multiple(self):
+        params = ["-role__name", "role__location_level__name"]
+        response = self.client.get('/api/admin/people/?ordering={}'
             .format(','.join(params)))
         self.assertEqual(response.status_code, 200)
         data = json.loads(response.content.decode('utf8'))
@@ -249,16 +262,23 @@ class RelatedOrderingQuerySetMixinTests(APITestCase):
             str(Person.objects.order_by(*params).first().role.id)
         )
 
-    def test_list_reverse_multiple(self):
-        params = ["-role__name", "role__location_level__name"]
-        response = self.client.get('/api/admin/people/?related_ordering={}'
-            .format(','.join(params)))
-        self.assertEqual(response.status_code, 200)
+    def test_list_related__date(self):
+        raw_qs_first = Person.objects.order_by('role__created').first()
+
+        response = self.client.get('/api/admin/people/?ordering=role__created')
         data = json.loads(response.content.decode('utf8'))
-        self.assertEqual(
-            data['results'][0]['role'],
-            str(Person.objects.order_by(*params).first().role.id)
-        )
+
+        self.assertEqual(str(raw_qs_first.role.id), data['results'][0]['role'])
+
+    def test_list_related__int(self):
+        # assumes this is the highest, so 'desc' will return 1st
+        self.role_admin.password_min_length = 100
+        self.role_admin.save()
+
+        response = self.client.get('/api/admin/people/?ordering=-role__password_min_length')
+        data = json.loads(response.content.decode('utf8'))
+
+        self.assertEqual(str(self.role_admin.id), data['results'][0]['role'])
 
 
 class FilterRelatedMixinMixin(APITestCase):

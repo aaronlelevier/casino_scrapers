@@ -1,4 +1,4 @@
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import FieldDoesNotExist, ObjectDoesNotExist
 from django.db.models import CharField, TextField
 
 from rest_framework import status
@@ -105,7 +105,15 @@ class OrderingQuerySetMixin(object):
             return (param, True)
 
     def _is_str_field(self, param):
-        model_field = self.model._meta.get_field(param)
+        """
+        Only return `True` for str fields on the model.
+        Return `False` for non-str fields, and related fields.
+        """
+        try:
+            model_field = self.model._meta.get_field(param)
+        except FieldDoesNotExist:
+            return False
+
         if isinstance(model_field, (CharField, TextField,)):
             return True
 
@@ -117,24 +125,6 @@ class OrderingQuerySetMixin(object):
 
     def _get_asc_desc_value(self, field, asc):
         return "{}{}".format("" if asc else "-", self._get_key(field))
-
-
-class RelatedOrderingQuerySetMixin(object):
-    """
-    Return a case-sensitive ordered queryset for Related Fields.
-
-    :param: related_ordering
-    """
-    def get_queryset(self):
-        queryset = super(RelatedOrderingQuerySetMixin, self).get_queryset()
-
-        ordering = self.request.query_params.get('related_ordering', None)
-
-        if ordering:
-            params = ordering.split(',')
-            queryset = queryset.order_by(*params)
-
-        return queryset
 
 
 class FilterRelatedMixin(object):
@@ -168,4 +158,3 @@ class FilterRelatedMixin(object):
 
             return queryset.filter(**kwargs)
         return queryset
-
