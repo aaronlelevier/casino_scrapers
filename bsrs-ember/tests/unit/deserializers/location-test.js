@@ -108,25 +108,6 @@ test('location array in location level will not be duplicated and deserializer r
     assert.equal(store.find('location', LD.idOne).get('location_level.name'), LLD.nameCompany);
 });
 
-test('location location level will correctly be deserialized when server returns location without a different location level (detail)', (assert) => {
-    let location;
-    let json = LF.generate(LD.idOne);
-    json.location_level.id = LLD.idTwo;
-    location = store.push('location', {id: LD.idOne, name: LD.storeName, location_level_fk: LLD.idOne, status_fk: LDS.openId});
-    store.push('location-level', {id: LLD.idTwo, name: LLD.nameDepartment, locations: []});
-    run(() => {
-        subject.deserialize(json, LD.idOne);
-    });
-    let original = store.find('location-level', LLD.idOne);
-    assert.deepEqual(original.get('locations'), []);
-    let newLocationLevel = store.find('location-level', LLD.idTwo);
-    assert.deepEqual(newLocationLevel.get('locations'), [LD.idOne]);
-    let loc = store.find('location', LD.idOne);
-    assert.ok(original.get('isNotDirty'));
-    assert.ok(newLocationLevel.get('isNotDirty'));
-    assert.ok(location.get('isNotDirty'));
-});
-
 /* LOCATION TO STATUS */
 test('location status will be deserialized into its own store when deserialize detail is invoked', (assert) => {
     let location;

@@ -15,7 +15,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             id: i || this.location_defaults.idOne,
             name: name,
             number: this.location_defaults.storeName,
-            location_level: this.location_level_fixtures.detail()
+            location_level: this.location_level_fixtures.detail().id
         }
     },
     factory.prototype.generate = function(i) {
@@ -25,7 +25,7 @@ var BSRS_LOCATION_FACTORY = (function() {
             name : this.location_defaults.baseStoreName,
             number : this.location_defaults.storeNumber,
             status: this.location_defaults.status,
-            location_level: this.location_level_fixtures.detail(),
+            location_level: this.location_level_fixtures.detail().id,
             children: [this.get(this.location_defaults.idTwo, this.location_defaults.storeNameTwo), this.get(this.location_defaults.idThree, this.location_defaults.storeNameThree)],
             parents: [],
         }
