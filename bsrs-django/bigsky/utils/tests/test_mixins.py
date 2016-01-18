@@ -4,7 +4,7 @@ import random
 from django.db.models.functions import Lower
 
 from model_mommy import mommy
-from rest_framework.test import APITestCase, APITransactionTestCase
+from rest_framework.test import APITestCase
 
 from accounting.models import Currency
 from accounting.serializers import CurrencySerializer
@@ -70,7 +70,7 @@ class DestroyModelMixinTests(APITestCase):
             Person.objects_all.get(id=self.person2.id)
 
 
-class OrderingQuerySetMixinTests(APITransactionTestCase):
+class OrderingQuerySetMixinTests(APITestCase):
 
     def setUp(self):
         # Role
@@ -152,7 +152,7 @@ class OrderingQuerySetMixinTests(APITransactionTestCase):
         self.assertEqual(data['results'][0]['first_name'], self._get_name(10))
 
 
-class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
+class RelatedOrderingQuerySetMixinTests(APITestCase):
 
     def setUp(self):
         # Role
@@ -237,7 +237,7 @@ class RelatedOrderingQuerySetMixinTests(APITransactionTestCase):
         )
 
 
-class FilterRelatedMixinMixin(APITransactionTestCase):
+class FilterRelatedMixinMixin(APITestCase):
 
     def setUp(self):
         self.person = create_single_person()
