@@ -777,7 +777,7 @@ test('clicking and typing into power select for location will fire off xhr reque
         assert.equal(location.get('children').objectAt(0).get('name'), LD.storeNameTwo);
         assert.equal(page.childrenSelected().indexOf(LD.storeNameTwo), 2);
     });
-    let location_endpoint = `${PREFIX}/admin/locations/${LD.idOne}/get-level-children/?name__icontains=a`;
+    let location_endpoint = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=a`;
     let response = LF.search();
     response.results.push(LF.get(LD.unusedId, LD.apple));
     xhr(location_endpoint, 'GET', null, {}, 200, response);
@@ -825,7 +825,7 @@ test('clicking and typing into power select for location will fire off xhr reque
     });
     //search specific children
     page.childrenClickDropdown();
-    let location_endpoint_2 = `${PREFIX}/admin/locations/${LD.idOne}/get-level-children/?name__icontains=BooNdocks`;
+    let location_endpoint_2 = `${PREFIX}/admin/locations/get-level-children/${LD.idOne}/?name__icontains=BooNdocks`;
     let response_2 = LF.list();
     response_2.results.push(LF.get('abc123', LD.boondocks));
     xhr(location_endpoint_2, 'GET', null, {}, 200, response_2);

@@ -21,7 +21,7 @@ var LocationRepo = Ember.Object.extend(GridRepositoryMixin, {
         });
     },
     findLocationChildren(id, search_criteria) {
-        let url = `${LOCATION_URL}${id}/get-level-children/`;
+        let url = `${LOCATION_URL}get-level-children/${id}/`;
         // search_criteria = search_criteria ? search_criteria.trim() : search_criteria;
         if (search_criteria) {
             url += `?name__icontains=${search_criteria}`;
