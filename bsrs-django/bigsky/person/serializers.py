@@ -1,7 +1,7 @@
 from rest_framework import serializers
 
 from contact.serializers import (PhoneNumberSerializer, EmailSerializer, AddressSerializer)
-from location.serializers import LocationIdNameSerializer, LocationIdNameOnlySerializer
+from location.serializers import LocationSerializer, LocationIdNameOnlySerializer
 from category.serializers import CategoryRoleSerializer
 from person.models import Person, Role
 from person.validators import RoleLocationValidator
@@ -102,7 +102,7 @@ class PersonTicketSerializer(serializers.ModelSerializer):
 
 class PersonDetailSerializer(serializers.ModelSerializer):
 
-    locations = LocationIdNameSerializer(many=True)
+    locations = LocationSerializer(many=True)
     #TODO: why are these the full serializers
     emails = EmailSerializer(required=False, many=True)
     phone_numbers = PhoneNumberSerializer(required=False, many=True)

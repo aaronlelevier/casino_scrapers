@@ -330,15 +330,13 @@ class PersonDetailTests(TestCase):
 
         location = Location.objects.get(id=self.data['locations'][0]['id'])
         location_level = LocationLevel.objects.get(
-            id=self.data['locations'][0]['location_level']['id'])
+            id=self.data['locations'][0]['location_level'])
 
         self.assertEqual(self.data['locations'][0]['id'], str(location.id))
         self.assertEqual(self.data['locations'][0]['name'], location.name)
         self.assertEqual(self.data['locations'][0]['number'], location.number)
-        self.assertEqual(self.data['locations'][0]['location_level']['id'],
+        self.assertEqual(self.data['locations'][0]['location_level'],
             str(location.location_level.id))
-        self.assertEqual(self.data['locations'][0]['location_level']['name'],
-            location.location_level.name)
 
     def test_data_emails(self):
         self.assertTrue(self.data['emails'])

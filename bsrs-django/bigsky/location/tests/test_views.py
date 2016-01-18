@@ -258,10 +258,10 @@ class LocationListTests(APITestCase):
 
     def test_data_location_level(self):
         location_level = LocationLevel.objects.get(
-            id=self.data['results'][0]['location_level']['id'])
+            id=self.data['results'][0]['location_level'])
 
-        self.assertEqual(self.data['results'][0]['location_level']['name'],
-            location_level.name)
+        self.assertEqual(self.data['results'][0]['location_level'],
+            str(location_level.id))
 
     def test_filter_by_can_create_tickets(self):
         location = Location.objects.get(name='nv')

@@ -66,18 +66,8 @@ class LocationIdNameOnlySerializer(serializers.ModelSerializer):
         fields = ('id', 'name',)
 
 
-class LocationIdNameSerializer(BaseCreateSerializer):
-    """Leaf node serializer for PersonDetailSerializer."""
-
-    location_level = LocationLevelSerializer()
-
-    class Meta:
-        model = Location
-        fields = ('id', 'name', 'number', 'location_level')
-
-
 class LocationSerializer(serializers.ModelSerializer):
-    """Leaf node serializer for LocationDetailSerializer."""
+    """Leaf node serializer for LocationDetailSerializer and PersonDetailSerializer"""
 
     class Meta:
         model = Location
@@ -85,8 +75,6 @@ class LocationSerializer(serializers.ModelSerializer):
 
         
 class LocationListSerializer(serializers.ModelSerializer):
-    #TODO: why does this have to be the full object? remove
-    location_level = LocationLevelSerializer()
     
     class Meta:
         model = Location
