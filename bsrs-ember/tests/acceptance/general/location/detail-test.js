@@ -37,7 +37,7 @@ const CHILDREN = '.t-location-children-select > .ember-basic-dropdown-trigger';
 const CHILDREN_DROPDOWN = '.t-location-children-select-dropdown > .ember-power-select-options';
 const CHILDREN_SEARCH = '.ember-power-select-trigger-multiple-input';
 
-module('Acceptance | detail-test', {
+module('Acceptance | location detail-test', {
     beforeEach() {
         application = startApp();
         store = application.__container__.lookup('store:main');
