@@ -82,7 +82,7 @@ test('clicking page 2 will load in another set of data as well as clicking page 
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeNameOne);
         var pagination = find('.t-pages');
         assert.equal(pagination.find('.t-page').length, 2);
         assert.equal(pagination.find('.t-page:eq(0) a').text(), '1');
@@ -171,7 +171,7 @@ test('clicking header will sort by given property and reset page to 1 (also requ
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?sort=number%2Cname');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeNameOne);
     });
 });
 
@@ -212,7 +212,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(),LOCATION_URL + '?search=&sort=number');
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeNameOne);
     });
     click('.t-page:eq(1) a');
     andThen(() => {
@@ -232,7 +232,7 @@ test('typing a search will reset page to 1 and require an additional xhr and res
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeNameOne);
     });
 });
 
@@ -309,13 +309,13 @@ test('clicking the same sort option over and over will flip the direction and re
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
         assert.ok(find('.t-sort-number-dir').hasClass('fa-sort-asc'));
         assert.ok(find('.t-sort-name-dir').hasClass('fa-sort-asc'));
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeNameOne);
     });
     click('.t-reset-grid');
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeNameOne);
     });
 });
 
@@ -346,7 +346,7 @@ test('full text search will filter down the result set and query django accordin
     andThen(() => {
         assert.equal(currentURL(), LOCATION_URL);
         assert.equal(find('.t-grid-data').length, PAGE_SIZE);
-        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeName);
+        assert.equal(find('.t-grid-data:eq(0) .t-location-name').text(), LD.storeNameOne);
     });
 });
 

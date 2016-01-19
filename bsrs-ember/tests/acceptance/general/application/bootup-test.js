@@ -15,7 +15,7 @@ import RD from 'bsrs-ember/vendor/defaults/role';
 import LD from 'bsrs-ember/vendor/defaults/ticket';
 import LLD from 'bsrs-ember/vendor/defaults/location-level';
 import CURRENCY_DEFAULTS from 'bsrs-ember/vendor/defaults/currencies';
-import BSRS_PERSON_CURRENT_DEFAULTS_OBJECT from 'bsrs-ember/vendor/defaults/person-current';
+import PERSON_CURRENT from 'bsrs-ember/vendor/defaults/person-current';
 
 const HOME_URL = '/';
 
@@ -224,18 +224,23 @@ test('on boot we should fetch and load the location level configuration', functi
     });
 });
 
-test('on boot we should fetch and load the current person configuration', function(assert) {
+test('aaron on boot we should fetch and load the person-current, logged in Person, configuration', function(assert) {
     visit(HOME_URL);
     andThen(() => {
-        var person_current_model = store.findOne('person-current');
-        assert.equal(person_current_model.get('id'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.id);
-        assert.equal(person_current_model.get('first_name'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.first_name);
-        assert.equal(person_current_model.get('last_name'), BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.last_name);
-        let person = person_current_model.get('person');
+        var person_current = store.findOne('person-current');
+        assert.equal(person_current.get('id'), PERSON_CURRENT.id);
+        assert.equal(person_current.get('first_name'), PERSON_CURRENT.first_name);
+        assert.equal(person_current.get('last_name'), PERSON_CURRENT.last_name);
+        assert.equal(person_current.get('username'), PERSON_CURRENT.username);
+        assert.equal(person_current.get('title'), PERSON_CURRENT.title);
+        assert.equal(person_current.get('role'), store.find('person', PERSON_CURRENT.id).get('role').get('id'));
+        // Location
+        let person = person_current.get('person');
         assert.equal(person.get('locations').get('length'), 1);
-        assert.ok(person.get('locations').objectAt(0).get('id'));
-        assert.ok(person.get('locations').objectAt(0).get('name'));
-        assert.ok(person.get('locations').objectAt(0).get('location_level_fk'));
+        let person_location = PERSON_CURRENT.all_locations_and_children[0];
+        assert.equal(person.get('locations').objectAt(0).get('id'), person_location.id);
+        assert.equal(person.get('locations').objectAt(0).get('name'), person_location.name);
+        assert.equal(person.get('locations').objectAt(0).get('location_level_fk'), person_location.location_level_fk);
         let location_level_fk = person.get('locations').objectAt(0).get('location_level_fk');
         assert.equal(store.find('location-level', location_level_fk).get('locations').get('length'), 1);
     });

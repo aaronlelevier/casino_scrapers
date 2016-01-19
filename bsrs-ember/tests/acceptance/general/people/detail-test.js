@@ -1024,7 +1024,7 @@ test('deep link to person and clicking in the person-locations-select component 
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 2);
-        assert.equal(page.locationOneSelected().indexOf(LD.storeName), 2);
+        assert.equal(page.locationOneSelected().indexOf(LD.storeNameOne), 2);
         assert.equal(page.locationTwoSelected().indexOf('ABC1234'), 2);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
@@ -1059,7 +1059,7 @@ test('can remove and add back same location', (assert) => {
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 1);
-        assert.equal(page.locationOneSelected().indexOf(LD.storeName), 2);
+        assert.equal(page.locationOneSelected().indexOf(LD.storeNameOne), 2);
         assert.ok(person.get('isNotDirtyOrRelatedNotDirty'));
     });
     let url = PREFIX + DETAIL_URL + "/";
@@ -1096,7 +1096,7 @@ test('starting with multiple locations, can remove all locations (while not popu
     andThen(() => {
         let person = store.find('person', PD.idOne);
         assert.equal(person.get('locations').get('length'), 1);
-        assert.equal(page.locationOneSelected().indexOf(LD.storeName), 2);
+        assert.equal(page.locationOneSelected().indexOf(LD.storeNameOne), 2);
         assert.ok(person.get('isDirtyOrRelatedDirty'));
     });
     let url = PREFIX + DETAIL_URL + "/";

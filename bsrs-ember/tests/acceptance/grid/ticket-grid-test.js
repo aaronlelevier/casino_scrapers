@@ -16,6 +16,7 @@ import {isDisabledElement, isNotDisabledElement} from 'bsrs-ember/tests/helpers/
 import random from 'bsrs-ember/models/random';
 import timemachine from 'vendor/timemachine';
 import moment from 'moment';
+import BSRS_PERSON_CURRENT_DEFAULTS_OBJECT from 'bsrs-ember/vendor/defaults/person-current';
 
 const PREFIX = config.APP.NAMESPACE;
 const PAGE_SIZE = config.APP.PAGE_SIZE;
@@ -45,6 +46,12 @@ module('Acceptance | ticket grid test', {
         endpoint = PREFIX + BASE_URL + '/?page=1';
         list_xhr = xhr(endpoint, 'GET', null, {}, 200, TF.list());
         original_uuid = random.uuid;
+        // person-current
+        // andThen(() => {
+        //     BSRS_PERSON_CURRENT_DEFAULTS_OBJECT.all_locations_and_children[0].name = config.DEFAULT_LOCATION_LEVEL; // 'Company' Location name!
+        //     store.clear('person-current');
+        //     store.push('person-current', BSRS_PERSON_CURRENT_DEFAULTS_OBJECT);
+        // });
     },
     afterEach() {
         random.uuid = original_uuid;

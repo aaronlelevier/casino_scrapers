@@ -35,7 +35,8 @@ module.exports = function(environment) {
         APP: {
             // Here you can pass flags/options to your application instance
             // when it is created
-        }
+        },
+        DEFAULT_LOCATION_LEVEL: 'Company'
     };
 
     ENV.APP.NAMESPACE = '/api';
