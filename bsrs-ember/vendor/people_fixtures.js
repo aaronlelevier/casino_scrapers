@@ -175,7 +175,7 @@ if (typeof window === 'undefined') {
     var location_level_defaults = require('../vendor/defaults/location-level');
     var location_defaults = require('../vendor/defaults/location');
     var location_fixtures = require('../vendor/location_fixtures');
-    var locale_fixtures = require('../vendor/locale_fixtures');
+    var locale_defaults = require('../vendor/defaults/locale');
     var config = require('../config/environment');
     objectAssign(BSRS_PEOPLE_FACTORY.prototype, mixin.prototype);
     module.exports = new BSRS_PEOPLE_FACTORY(email_fixtures, address_fixtures, phone_number_fixtures, person_defaults, role_defaults, status_defaults, location_level_defaults, role_fixtures, location_fixtures, location_defaults, locale_defaults, config);
