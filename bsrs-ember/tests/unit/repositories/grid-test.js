@@ -29,7 +29,7 @@ module('unit: grid repository test', {
 
 test('findWithQuery will format sort url string correctly', (assert) => {
     assert.expect(1);
-    expected_endpoint = '?page=1&related_ordering=status__name,request,priority__name';
+    expected_endpoint = '?page=1&ordering=status__name,request,priority__name';
     let subject = FakeRepo.create({store: store, type: 'ticket', url:''});
     subject.findWithQuery(1, 'status.translated_name,request,priority.translated_name');
 });

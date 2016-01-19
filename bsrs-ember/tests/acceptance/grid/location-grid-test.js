@@ -621,11 +621,11 @@ test('save filterset button only available when a dynamic filter is present', fu
 });
 
 test('status.translated_name is a functional related filter', function(assert) {
-    let option_four = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name&status__name__icontains=cl';
+    let option_four = PREFIX + BASE_URL + '/?page=1&ordering=-status__name&status__name__icontains=cl';
     xhr(option_four,'GET',null,{},200,LF.searched_related(LDS.closedId, 'status'));
-    let option_three = PREFIX + BASE_URL + '/?page=1&related_ordering=-status__name';
+    let option_three = PREFIX + BASE_URL + '/?page=1&ordering=-status__name';
     xhr(option_three,'GET',null,{},200,LF.searched_related(LDS.closedId, 'status'));
-    let option_two = PREFIX + BASE_URL + '/?page=1&related_ordering=status__name';
+    let option_two = PREFIX + BASE_URL + '/?page=1&ordering=status__name';
     xhr(option_two,'GET',null,{},200,LF.searched_related(LD.openId, 'status'));
     let option_one = PREFIX + BASE_URL + '/?page=1&search=cl';
     xhr(option_one,'GET',null,{},200,LF.searched_related(LDS.closedId, 'status'));
