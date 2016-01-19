@@ -281,7 +281,13 @@ test('can remove and add back same category', (assert) => {
         assert.ok(role.get('isDirtyOrRelatedDirty'));
         assert.equal(page.categoriesSelected(), 1);
     });
-    let payload = RF.put({id: RD.idOne, categories: [CD.idTwo+'2z']});
+    page.categoryOneRemove();
+    category_children_endpoint = PREFIX + '/admin/categories/?name__icontains=Re&page_size=25';
+    xhr(category_children_endpoint, 'GET', null, {}, 200, CF.list());
+    page.categoryClickDropdown();
+    fillIn(CATEGORY_SEARCH, 'Re');
+    page.categoryClickOptionTwoEq();
+    let payload = RF.put({id: RD.idOne, categories: [CD.idOne]});
     xhr(url, 'PUT', JSON.stringify(payload), {}, 200);
     generalPage.save();
     andThen(() => {

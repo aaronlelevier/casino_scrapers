@@ -29,13 +29,12 @@ var CCMixin = Ember.Mixin.create({
         const store = this.get('store');
         //check for existing
         const ticket_people = store.find('ticket-person').toArray();
+        let existing = ticket_people.filter((m2m) => {
+            return m2m.get('person_pk') === person_pk;
+        }).objectAt(0);
         run(() => {
-            // ticket_people.forEach((tp) => {
-            //     if (tp.get('person_pk') === person_pk) {
-            //         store.push('ticket-person', {id: tp.get('id'), removed: undefined});
-            //     }
-            // });
-            store.push('ticket-person', {id: Ember.uuid(), ticket_pk: ticket_pk, person_pk: person_pk});
+            if(existing){ store.push('ticket-person', {id: existing.get('id'), removed: undefined}); }
+            else{ store.push('ticket-person', {id: Ember.uuid(), ticket_pk: this.get('id'), person_pk: person_pk}); }
         });
     },
     remove_person(person_pk) {

@@ -251,15 +251,30 @@ var LocationModel = Model.extend(CopyMixin, NewMixin, AddressMixin, PhoneNumberM
     }),
     add_child(child_id) {
         const store = this.get('store'); 
+        const location_children = store.find('location-children').toArray();
+        //check existing
+        let existing = location_children.filter((m2m) => {
+            return m2m.get('child_pk') === child_id;
+        }).objectAt(0);
         run(() => {
-            store.push('location-children', {id: Ember.uuid(), location_pk: this.get('id'), child_pk: child_id});
+            if(existing){ store.push('location-children', {id: existing.get('id'), removed: undefined}); }
+            else{ store.push('location-children', {id: Ember.uuid(), location_pk: this.get('id'), child_pk: child_id}); }
+        });
+    },
+    remove_child(child_id) {
+        const store = this.get('store'); 
+        const m2m_pk = this.get('location_children').filter((m2m) => {
+            return m2m.get('child_pk') === child_id;
+        }).objectAt(0).get('id'); 
+        run(() => {
+            store.push('location-children', {id: m2m_pk, removed: true});
         });
     },
     childrenIsDirty: Ember.computed('children.[]', 'location_children_fks.[]', function() {
-        const location_children = this.get('children');
+        const children = this.get('children');
         const location_children_ids = this.get('location_children_ids');
         const previous_m2m_fks = this.get('location_children_fks') || [];
-        if(location_children.get('length') !== previous_m2m_fks.length) {
+        if(children.get('length') !== previous_m2m_fks.length) {
             return equal(location_children_ids, previous_m2m_fks) ? false : true;
         }
         return equal(location_children_ids, previous_m2m_fks) ? false : true;

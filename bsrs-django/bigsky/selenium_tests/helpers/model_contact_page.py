@@ -17,6 +17,11 @@ class ModelContactPage(ModelPage):
         self.list_name = list_name
         self.list_data = list_data
 
+    def assert_children(self, child_one):
+        first_loc = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-location-children-select-trigger ')]/span")
+        text = first_loc.text
+        assert child_one in text
+
     def find_ph_new_entry_send_keys(self, phone_num):
         first_phone_number_input = self.driver.find_element_by_class_name("t-new-entry")
         first_phone_number_input.send_keys(phone_num)
@@ -52,9 +57,8 @@ class ModelContactPage(ModelPage):
         assert zip_input.get_attribute("value") == new_zip
 
     def find_email_new_entry_send_keys(self, email):
-        assert self.driver.find_element_by_class_name("t-input-multi-email")
-        # first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
-        # first_email_input.send_keys(email)
+        first_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/input")
+        first_email_input.send_keys(email)
 
     def find_second_email_new_entry_send_keys(self, email):
         second_email_input = self.driver.find_element_by_xpath("//*[contains(concat(' ', @class, ' '), ' t-input-multi-email ')]/div/following-sibling::*[1]/input")
