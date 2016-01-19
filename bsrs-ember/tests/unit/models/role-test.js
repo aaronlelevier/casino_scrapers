@@ -235,6 +235,19 @@ test('when category is suddently removed it shows as a dirty relationship (when 
     assert.ok(role.get('isDirtyOrRelatedDirty'));
 });
 
+test('add_category will add back old join model after it was removed and dirty the model (multiple)', (assert) => {
+    const role = store.push('role', {id: RD.idOne, role_category_fks: [ROLE_CD.idOne, ROLE_CD.idTwo]});
+    const category_two = store.push('category', {id: CD.idTwo});
+    const category_three = store.push('category', {id: CD.idThree});
+    store.push('role-category', {id: ROLE_CD.idOne, role_fk: RD.idOne, category_fk: CD.idTwo});
+    store.push('role-category', {id: ROLE_CD.idTwo, role_fk: RD.idOne, category_fk: CD.idThree});
+    role.remove_category(category_three.get('id'));
+    assert.equal(role.get('categories').get('length'), 1);
+    role.add_category(category_three.get('id'));
+    assert.equal(role.get('categories').get('length'), 2);
+    assert.ok(role.get('categoryIsNotDirty'));
+});
+
 test('when categories is changed dirty tracking works as expected (removing)', (assert) => {
     store.push('role-category', {id: ROLE_CD.idOne, role_fk: RD.idOne, category_fk: CD.idOne});
     let category = store.push('category', {id: CD.idOne});

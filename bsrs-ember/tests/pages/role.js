@@ -36,6 +36,7 @@ export default PageObject.create({
   // categoryThreeSelected: text(`${CATEGORY_THREE}`),
   categoryClickOptionOne: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CD.nameOne}1)`),
   categoryClickOptionOneEq: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:eq(0)`),
+  categoryClickOptionTwoEq: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:eq(1)`),
   categoryClickOptionTwo: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CD.nameOne}2)`),
   categoryClickOptionThree: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains(${CD.nameOne}3)`),
   categoryClickOptionScooter: clickable(`${CATEGORY_DROPDOWN} > .ember-power-select-option:contains('scooter')`),
