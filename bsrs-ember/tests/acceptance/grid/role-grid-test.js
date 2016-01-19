@@ -748,3 +748,26 @@ test('each time you apply a saved filterset the query params are reset to reflec
         assert.ok(find('.t-filterset-wrap li:eq(1) a').hasClass('active'));
     });
 });
+
+//this test is specifically for applying saved filtersets ... it just happens to use this module and the role fixture data
+test('after saving a filterset the save button button is not visible', function(assert) {
+    ajax(`${PREFIX}${BASE_URL}/?page=1`, 'GET', null, {}, 200, RF.list());
+    visit(ROLE_URL);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+    });
+    ajax(`${PREFIX}${BASE_URL}/?page=1&ordering=name` ,'GET',null,{},200,RF.paginated(PAGE_SIZE));
+    click(SORT_NAME_DIR);
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 1);
+    });
+    let query = '?sort=name';
+    let payload = {id: 'abc123', name: 'example', endpoint_name: 'admin.roles.index', endpoint_uri: query};
+    patchRandomAsync(0);
+    click(SAVE_FILTERSET_MODAL);
+    ajax('/api/admin/saved-searches/', 'POST', JSON.stringify(payload), {}, 200, {});
+    saveFilterSet('example', 'admin.roles.index');
+    andThen(() => {
+        assert.equal(find(SAVE_FILTERSET_MODAL).length, 0);
+    });
+});
